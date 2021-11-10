@@ -1,9 +1,6 @@
 name: Build & Test CentOS
 
-on:
-  push:
-    branches:
-      - master
+on: push
 
 ## Build ##
 

@@ -1,9 +1,6 @@
 name: Build & Test Windows
 
-on:
-  push:
-    branches:
-      - master
+on: push
 
 ## Build ##
 
