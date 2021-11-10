@@ -26,6 +26,26 @@ jobs:
          push: true
          tags: sogno/dpsim:dev-centos
 
+  create-docker-fedora-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_SECRET }}
+
+      - name: Build and push
+        id: docker_build_release
+        uses: docker/build-push-action@v2
+        with:
+         file: Packaging/Docker/Dockerfile
+         push: true
+         tags: sogno/dpsim:latest
+
   create-docker-fedora-dev:
     runs-on: ubuntu-latest
     steps:
