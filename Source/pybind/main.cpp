@@ -58,6 +58,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	m.attr("RMS3PH_TO_PEAK1PH") = RMS3PH_TO_PEAK1PH;
 	m.attr("PEAK1PH_TO_RMS3PH") = PEAK1PH_TO_RMS3PH;
+	m.attr("P_SNUB_TRANSFORMER") = P_SNUB_TRANSFORMER;
+	m.attr("Q_SNUB_TRANSFORMER") = Q_SNUB_TRANSFORMER;
 
 	py::enum_<DPsim::Solver::Behaviour>(m, "SolverBehaviour")
 		.value("Initialization", DPsim::Solver::Behaviour::Initialization)
@@ -90,7 +92,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("do_frequency_parallelization", &DPsim::Simulation::doFrequencyParallelization)
 		.def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
 		.def("add_event", &DPsim::Simulation::addEvent)
-		.def("set_solver_component_behaviour", &DPsim::Simulation::setSolverAndComponentBehaviour);
+		.def("set_solver_component_behaviour", &DPsim::Simulation::setSolverAndComponentBehaviour)
+		.def("set_mna_solver_implementation", &DPsim::Simulation::setMnaSolverImplementation);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info)
@@ -178,6 +181,14 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("MNA", DPsim::Solver::Type::MNA)
 		.value("DAE", DPsim::Solver::Type::DAE)
 		.value("NRP", DPsim::Solver::Type::NRP);
+
+	py::enum_<DPsim::MnaSolverFactory::MnaSolverImpl>(m, "MnaSolverImpl")
+		.value("Undef", DPsim::MnaSolverFactory::MnaSolverImpl::Undef)
+		.value("EigenDense", DPsim::MnaSolverFactory::MnaSolverImpl::EigenDense)
+		.value("EigenSparse", DPsim::MnaSolverFactory::MnaSolverImpl::EigenSparse)
+		.value("CUDADense", DPsim::MnaSolverFactory::MnaSolverImpl::CUDADense)
+		.value("CUDASparse", DPsim::MnaSolverFactory::MnaSolverImpl::CUDASparse)
+		.value("CUDAMagma", DPsim::MnaSolverFactory::MnaSolverImpl::CUDAMagma);
 
 	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
 		.value("AUTO", CPS::CSVReader::Mode::AUTO)
