@@ -27,7 +27,7 @@ Real lineInductance = lineCIGREHV.lineReactancePerKm * lineLength*std::pow(ratio
 Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength/std::pow(ratio,2) / nomOmega;
 Real lineConductance = 8e-2;
 
-void EMT_3ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTime, Real H,
+void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Real H,
 	Real startTimeFault, Real endTimeFault, Real switchClosed, Real logDownSampling) {
 
 	//  // ----- POWERFLOW FOR INITIALIZATION -----
@@ -149,7 +149,8 @@ void EMT_3ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
     loggerEMT->addAttribute("w_r", 		genEMT->attribute("w_r"));
 	loggerEMT->addAttribute("Vdq0", 		genEMT->attribute("Vdq0"));
 	loggerEMT->addAttribute("Idq0", 		genEMT->attribute("Idq0"));
-	//loggerEMT->addAttribute("Eabc", 	genEMT->attribute("Eabc"));
+	loggerEMT->addAttribute("Edq0", 	genEMT->attribute("Edq0_t"));
+	loggerEMT->addAttribute("NIterations", 	genEMT->attribute("NIterations"));
 
 	Simulation simEMT(simNameEMT, Logger::Level::off);
 	simEMT.doInitFromNodesAndTerminals(true);
@@ -167,7 +168,7 @@ void EMT_3ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	simEMT.addEvent(sw2);
 	
 	simEMT.run();
-
+	simEMT.logStepTimes(simNameEMT + "_step_times");
 }
 
 int main(int argc, char* argv[]) {	
@@ -188,10 +189,10 @@ int main(int argc, char* argv[]) {
 	Real H = 3.7;
 	Real timeStep = 10e-6;
 	Real logDownSampling = (10e-6) / timeStep;
-	Real finalTime = 10.0;
+	Real finalTime = 20.0;
 	Real startTimeFault = 1.0;
 	Real endTimeFault   = 1.1;
-	std::string simName ="EMT_SynGen4Order_SMIB_Fault" + rfault_str;
-	EMT_3ph_SynGenTrStab_SteadyState(simName, timeStep, finalTime, H,
+	std::string simName ="EMT_SynGen4OrderIter_SMIB_Fault" + rfault_str;
+	EMT_3ph_4OrderSynGenIter(simName, timeStep, finalTime, H,
 		startTimeFault, endTimeFault, switchClosed, logDownSampling);
 }

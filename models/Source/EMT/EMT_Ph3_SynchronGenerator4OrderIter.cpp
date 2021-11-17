@@ -38,7 +38,7 @@ EMT::Ph3::SynchronGenerator4OrderIter::SynchronGenerator4OrderIter
      // Register attributes
 	addAttribute<Int>("NIterations", &mNumIterations2 , Flags::read);
 	addAttribute<Real>("Etorque", &mElecTorque, Flags::read);
-	addAttribute<Real>("delta", &mDelta_prev, Flags::read);
+	addAttribute<Real>("delta", &mDelta, Flags::read);
 	addAttribute<Real>("Theta", &mThetaMech, Flags::read);
     addAttribute<Real>("w_r", &mOmMech, Flags::read);
 	addAttribute<Matrix>("Edq0_t", &mEdq0_t, Flags::read);
@@ -118,7 +118,7 @@ void EMT::Ph3::SynchronGenerator4OrderIter::initializeFromNodesAndTerminals(Real
 }
 
 void EMT::Ph3::SynchronGenerator4OrderIter::initialize() {
-	mDelta = mDelta_prev;
+	mDelta_prev = mDelta;
 	mdDelta = 0;
 	mdDelta0 = 0;
 
@@ -239,7 +239,6 @@ void EMT::Ph3::SynchronGenerator4OrderIter::MnaPreStep::execute(Real time, Int t
 void EMT::Ph3::SynchronGenerator4OrderIter::stepInPerUnit() {
 	mNumIterations = 0;
 	mStepNumber = 0;
-	std::cout << "Test" << std::endl;
 	return;
 }
 
@@ -274,7 +273,6 @@ bool EMT::Ph3::SynchronGenerator4OrderIter::step() {
 		return true;
 	} 
 	*/
-	std::cout << "Test1" << std::endl;
 	mEdq0_t = mEdq0_t_prev + mdEdq0_t_prev;
 	if (mStepNumber==0)
 		// Predictor step (euler)

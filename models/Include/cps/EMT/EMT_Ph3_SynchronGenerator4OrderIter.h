@@ -27,8 +27,6 @@ namespace Ph3 {
 		public SharedFactory<SynchronGenerator4OrderIter> {
 	protected:
 		///
-		Real mTimeStep;
-		Real mSimTime;
 		Int mStepNumber;
 		Int mNumIterations2;
 		Real mFaultClearingTime;
@@ -72,14 +70,11 @@ namespace Ph3 {
 		/// derivative of rotor speed
 		Real mdOmMech;
 		Real mdOmMech0;
-		/// mechanical system angle
-		Real mThetaMech;
 		/// prediction of mechanical system angle
 		Real mThetaMech_pred;
 		/// derivative of mechanical system angle
 		Real mdThetaMech;
 		/// Load angle
-		Real mDelta;
 		Real mDelta_prev;
 		///
 		Real mdDelta;
