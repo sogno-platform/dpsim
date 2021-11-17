@@ -84,6 +84,7 @@
 #include <cps/EMT/EMT_Ph3_SeriesSwitch.h>
 #include <cps/EMT/EMT_Ph3_VoltageSource.h>
 #include <cps/EMT/EMT_Ph3_VoltageSourceNorton.h>
+#include <cps/EMT/EMT_Ph3_SynchronGenerator4OrderIter.h>
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorDQ.h>
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorDQTrapez.h>
 #ifdef WITH_SUNDIALS

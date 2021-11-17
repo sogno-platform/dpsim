@@ -19,6 +19,7 @@
 #include <dpsim/DataLogger.h>
 #include <cps/AttributeList.h>
 #include <cps/Solver/MNASwitchInterface.h>
+#include <cps/Solver/MNASyncGenInterface.h>
 #include <cps/Solver/MNAVariableCompInterface.h>
 #include <cps/SimSignalComp.h>
 #include <cps/SimPowerComp.h>
@@ -68,6 +69,8 @@ namespace DPsim {
 		CPS::MNASwitchInterface::List mSwitches;
 		/// List of switches if they must be accessed as MNAInterface objects
 		CPS::MNAInterface::List mMNAIntfSwitches;
+		/// List of synchronous generators that need iterate to solve the differential equations
+		CPS::MNASyncGenInterface::List mSyncGen;
 		/// List of components that indicate the solver to recompute the system matrix
 		/// depending on their state
 		CPS::MNAVariableCompInterface::List mVariableComps;
