@@ -121,7 +121,13 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 	mRs= Rs;
 	//The units of D are per unit power divided by per unit speed deviation.
 	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
-	mKd= D*mNomPower/mNomOmega;
+	// mKd= D*mNomPower/mNomOmega;
+
+	// if in p.u of base power and base omega:
+	// mKd= (D*mNomPower/mNomOmega)*sqrt(mNomOmega);
+	
+	// if in p.u of base power:
+	mKd= D*mNomPower;
 
 	mSLog->info("\n--- Parameters ---"
 				"\nXpd: {:f} [Ohm]"
@@ -221,10 +227,10 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	mElecActivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
 	mElecReactivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).imag();
 
-	if (1e-9 < (time - 10))
-	{
-	mMechPower =0.605*mNomPower;
-	}
+	// if (1e-9 < (time - 10))
+	// {
+	// mMechPower =0.6*mNomPower + 0.005*mNomPower;
+	// }
 
 	// Mechanical speed derivative at time step k
 	// convert torque to power with actual rotor angular velocity or nominal omega

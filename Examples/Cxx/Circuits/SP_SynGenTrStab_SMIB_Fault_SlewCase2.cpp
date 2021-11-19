@@ -17,7 +17,7 @@ ScenarioConfig smib;
 
 //Switch to trigger fault at generator terminal
 Real SwitchOpen = 1e6;
-Real SwitchClosed = 1e6;
+Real SwitchClosed = 1e4;
 
 void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia, Real cmdDamping) {
 	// ----- POWERFLOW FOR INITIALIZATION -----
@@ -145,8 +145,8 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	loggerSP->addAttribute("v_line", lineSP->attribute("v_intf"));
 	loggerSP->addAttribute("i_line", lineSP->attribute("i_intf"));
 	//slack
-	// loggerSP->addAttribute("v_slack", extnetSP->attribute("v_intf"));
-	// loggerSP->addAttribute("i_slack", extnetSP->attribute("i_intf"));
+	loggerSP->addAttribute("v_slack", extnetSP->attribute("v_intf"));
+	loggerSP->addAttribute("i_slack", extnetSP->attribute("i_intf"));
 
 
 	Simulation simSP(simNameSP, Logger::Level::debug);
@@ -160,14 +160,12 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	// Events
 	if (startFaultEvent){
 		auto sw1 = SwitchEvent::make(startTimeFault, faultSP, true);
-
 		simSP.addEvent(sw1);
 	}
 
 	if(endFaultEvent){
-		std::cout<< endFaultEvent << std::endl;
-		// auto sw2 = SwitchEvent::make(endTimeFault, faultSP, false);
-		// simSP.addEvent(sw2);
+		auto sw2 = SwitchEvent::make(endTimeFault, faultSP, false);
+		simSP.addEvent(sw2);
 
 	}
 
@@ -182,7 +180,7 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 30;
 	Real timeStep = 0.001;
 	Bool startFaultEvent=true;
-	Bool endFaultEvent=true;
+	Bool endFaultEvent=false;
 	Real startTimeFault=10;
 	Real endTimeFault=10.2;
 	Real cmdInertia= 1.0;
@@ -192,7 +190,7 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;
-		if (args.name != "SPsim")
+		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA") != args.options.end())
 			cmdInertia = args.options["SCALEINERTIA"];
