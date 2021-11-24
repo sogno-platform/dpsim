@@ -134,7 +134,10 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 			"init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a)
 		.def("apply_parameters_from_json", [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez> syngen, const CPS::String json) {
 				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
-			});
+			})
+		.def("set_initial_values", &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setInitialValues,
+			"init_active_power"_a, "init_reactive_power"_a,
+			"init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a);
 
 	#ifdef WITH_SUNDIALS
 
@@ -149,7 +152,10 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 			"init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a)
 		.def("apply_parameters_from_json", [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQODE> syngen, const CPS::String json) {
 				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
-			});
+			})
+		.def("set_initial_values", &CPS::EMT::Ph3::SynchronGeneratorDQODE::setInitialValues,
+			"init_active_power"_a, "init_reactive_power"_a,
+			"init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a);
 
 	#endif
 
