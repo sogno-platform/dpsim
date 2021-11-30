@@ -1,7 +1,7 @@
 <map id="CPS::Exception" name="CPS::Exception">
-<area shape="rect" id="node1" title=" " alt="" coords="244,80,363,107"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_access_exception.html" title=" " alt="" coords="5,155,169,181"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_invalid_attribute_exception.html" title=" " alt="" coords="193,155,413,181"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_type_exception.html" title=" " alt="" coords="438,155,587,181"/>
-<area shape="rect" id="node2" title=" " alt="" coords="246,5,361,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="231,80,346,107"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_access_exception.html" title=" " alt="" coords="5,155,164,181"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_invalid_attribute_exception.html" title=" " alt="" coords="188,155,389,181"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_type_exception.html" title=" " alt="" coords="413,155,556,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="237,5,340,32"/>
 </map>

@@ -1,9 +1,9 @@
 <map id="DPsim::RealTimeSimulation" name="DPsim::RealTimeSimulation">
-<area shape="rect" id="node1" title="Extending Simulation class by real&#45;time functionality." alt="" coords="299,184,503,211"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="255,95,397,121"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="5,5,140,32"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_system_topology.html" title=" " alt="" coords="165,5,327,32"/>
-<area shape="rect" id="node5" href="$class_d_psim_1_1_event_queue.html" title=" " alt="" coords="352,5,503,32"/>
-<area shape="rect" id="node6" href="$class_d_psim_1_1_timer.html" title=" " alt="" coords="461,95,572,121"/>
-<area shape="rect" id="node7" title=" " alt="" coords="527,5,586,32"/>
+<area shape="rect" id="node1" title="Extending Simulation class by real&#45;time functionality." alt="" coords="287,184,473,211"/>
+<area shape="rect" id="node2" href="$class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="245,95,376,121"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="5,5,133,32"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_system_topology.html" title=" " alt="" coords="157,5,312,32"/>
+<area shape="rect" id="node5" href="$class_d_psim_1_1_event_queue.html" title=" " alt="" coords="336,5,477,32"/>
+<area shape="rect" id="node6" href="$class_d_psim_1_1_timer.html" title=" " alt="" coords="439,95,542,121"/>
+<area shape="rect" id="node7" title=" " alt="" coords="502,5,557,32"/>
 </map>

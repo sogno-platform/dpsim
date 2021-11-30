@@ -1,6 +1,6 @@
 <map id="CPS::SimPowerComp&lt; VarType &gt;" name="CPS::SimPowerComp&lt; VarType &gt;">
-<area shape="rect" id="node1" title="Base class for all components that are transmitting power." alt="" coords="24,229,193,271"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="5,155,212,181"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="29,80,188,107"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="41,5,176,32"/>
+<area shape="rect" id="node1" title="Base class for all components that are transmitting power." alt="" coords="23,229,183,271"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="5,155,200,181"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="28,80,177,107"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="39,5,167,32"/>
 </map>
