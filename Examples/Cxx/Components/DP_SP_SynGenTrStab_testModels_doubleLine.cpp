@@ -191,8 +191,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simName, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, system);
+	system.initWithPowerflow(systemPF);
 
 
 	// Logging
@@ -348,8 +347,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 			SystemComponentList{gen, line1, line21, fault, line22, extnet});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simName, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, system);
+	system.initWithPowerflow(systemPF);
 
 
 	// Logging

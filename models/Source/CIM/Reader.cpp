@@ -666,17 +666,6 @@ TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(CIMPP::EquivalentShunt* shu
 	return cpsShunt;
 }
 
-void Reader::initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, SystemTopology& system) {
-	for (auto nodePF : systemPF.mNodes) {
-		if (auto node = system.node<TopologicalNode>(nodePF->name())) {
-			mSLog->info("Updating initial voltage of {} according to powerflow", node->name());
-			mSLog->info("Former initial voltage: {}", node->initialSingleVoltage());
-			node->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(nodePF)->singleVoltage());
-			mSLog->info("Updated initial voltage: {}", node->initialSingleVoltage());
-		}
-	}
-}
-
 Real Reader::determineBaseVoltageAssociatedWithEquipment(CIMPP::ConductingEquipment* equipment){
 	Real baseVoltage = 0;
 

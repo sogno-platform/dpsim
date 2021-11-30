@@ -75,7 +75,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_idobj_attr", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setIdObjAttr))
 		.def("get_real_idobj_attr", &DPsim::Simulation::getRealIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a = 0)
 		.def("get_comp_idobj_attr", &DPsim::Simulation::getComplexIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a = 0)
-		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a, "syncStart"_a = false)
+		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a, "syncStart"_a = false) // cppcheck-suppress assignBoolToPointer
 		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::AttributeBase::Modifier, CPS::UInt, CPS::UInt, DPsim::Interface*>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "modifier"_a, "row"_a = 0, "col"_a = 0, "intf"_a = nullptr)
 		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::UInt, CPS::UInt, CPS::Complex, DPsim::Interface*>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "row"_a = 0, "col"_a = 0, "scale"_a = CPS::Complex(1, 0), "intf"_a = nullptr)
 		.def("import_attr", &DPsim::Simulation::importIdObjAttr, "obj"_a, "attr"_a, "idx"_a, "intf"_a = nullptr)
@@ -101,7 +101,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_idobj_attr", static_cast<void (DPsim::RealTimeSimulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setIdObjAttr))
 		.def("get_real_idobj_attr", &DPsim::RealTimeSimulation::getRealIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a= 0)
 		.def("get_comp_idobj_attr", &DPsim::RealTimeSimulation::getComplexIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a= 0)
-		.def("add_interface", &DPsim::RealTimeSimulation::addInterface, "interface"_a, "syncStart"_a = false)
+		.def("add_interface", &DPsim::RealTimeSimulation::addInterface, "interface"_a, "syncStart"_a = false) // cppcheck-suppress assignBoolToPointer
 		.def("log_attr", &DPsim::RealTimeSimulation::logIdObjAttr);
 
 	py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(m, "SystemTopology")
@@ -121,7 +121,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
 		.def_readwrite("components", &DPsim::SystemTopology::mComponents)
 		.def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
-		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects);
+		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
+		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow);
 
 	py::class_<DPsim::Interface>(m, "Interface");
 
@@ -186,8 +187,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
 		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info, "comploglevel"_a = CPS::Logger::Level::off)
-		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM)
-		.def("init_dynamic_system_topology_with_powerflow", &CPS::CIM::Reader::initDynamicSystemTopologyWithPowerflow);
+		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM);
 
 	py::class_<CPS::CSVReader>(m, "CSVReader")
 		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())

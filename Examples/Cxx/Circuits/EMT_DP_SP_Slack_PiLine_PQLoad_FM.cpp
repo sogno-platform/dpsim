@@ -107,8 +107,7 @@ void simulateDP(SystemTopology& systemPF, String waveform) {
 			SystemComponentList{extnetDP, lineDP, loadDP});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simNameDP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);
+	systemDP.initWithPowerflow(systemPF);
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
@@ -163,8 +162,7 @@ void simulateSP(SystemTopology& systemPF, String waveform) {
 			SystemComponentList{extnetSP, lineSP, loadSP});
 
 	// Initialization of dynamic topology with values from powerflow
-	CIM::Reader reader(simNameSP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemSP);
+	systemSP.initWithPowerflow(systemPF);
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
@@ -218,8 +216,7 @@ void simulateEMT(SystemTopology& systemPF, String waveform) {
 			SystemComponentList{extnetEMT, lineEMT, loadEMT});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simNameEMT, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);
+	systemEMT.initWithPowerflow(systemPF);
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);

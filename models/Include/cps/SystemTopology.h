@@ -155,6 +155,18 @@ namespace CPS {
 				addComponent(comp);
 		}
 
+		/// Initialize nodes from PowerFlow
+		void initWithPowerflow(SystemTopology& systemPF) {
+			for (auto nodePF : systemPF.mNodes) {
+				if (auto node = this->node<TopologicalNode>(nodePF->name())) {
+					//mSLog->info("Updating initial voltage of {} according to powerflow", node->name());
+					//mSLog->info("Former initial voltage: {}", node->initialSingleVoltage());
+					node->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(nodePF)->singleVoltage());
+					//mSLog->info("Updated initial voltage: {}", node->initialSingleVoltage());
+				}
+			}
+		}
+
 		/// Adds component and initializes frequencies
 		void addTearComponent(IdentifiedObject::Ptr component) {
 			auto powerCompComplex = std::dynamic_pointer_cast<SimPowerComp<Complex>>(component);

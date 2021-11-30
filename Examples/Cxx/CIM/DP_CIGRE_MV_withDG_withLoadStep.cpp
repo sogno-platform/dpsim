@@ -74,7 +74,7 @@ int main(int argc, char** argv){
 	CIM::Reader reader2(simName, Logger::Level::info, Logger::Level::debug);
     SystemTopology systemDP = reader2.loadCIM(scenario.systemFrequency, filenames, CPS::Domain::DP);
 	Examples::Grids::CIGREMV::addInvertersToCIGREMV(systemDP, scenario, Domain::DP);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);
+	systemDP.initWithPowerflow(systemPF);
 
 	auto logger = DPsim::DataLogger::make(simName);
 
