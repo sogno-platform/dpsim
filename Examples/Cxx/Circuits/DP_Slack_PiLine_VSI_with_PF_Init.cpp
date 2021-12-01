@@ -119,8 +119,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{extnetDP, lineDP, pv});
 
 	// Initialization of dynamic topology with values from powerflow
-	CIM::Reader reader(simNameDP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);
+	systemDP.initWithPowerflow(systemPF);
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);

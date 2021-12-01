@@ -97,14 +97,14 @@ void addDPPh1Components(py::module_ mDPPh1) {
 
 	py::class_<CPS::DP::Ph1::Switch, std::shared_ptr<CPS::DP::Ph1::Switch>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(mDPPh1, "Switch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("set_parameters", &CPS::DP::Ph1::Switch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
+        .def("set_parameters", &CPS::DP::Ph1::Switch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false) // cppcheck-suppress assignBoolToPointer
 		.def("open", &CPS::DP::Ph1::Switch::open)
 		.def("close", &CPS::DP::Ph1::Switch::close)
 		.def("connect", &CPS::DP::Ph1::Switch::connect);
 
 	py::class_<CPS::DP::Ph1::varResSwitch, std::shared_ptr<CPS::DP::Ph1::varResSwitch>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(mDPPh1, "varResSwitch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("set_parameters", &CPS::DP::Ph1::varResSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
+        .def("set_parameters", &CPS::DP::Ph1::varResSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false) // cppcheck-suppress assignBoolToPointer
 		.def("open", &CPS::DP::Ph1::varResSwitch::open)
 		.def("close", &CPS::DP::Ph1::varResSwitch::close)
 		.def("set_init_parameters", &CPS::DP::Ph1::varResSwitch::setInitParameters, "time_step"_a)
@@ -126,7 +126,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
 
 	py::class_<CPS::DP::Ph1::AvVoltageSourceInverterDQ, std::shared_ptr<CPS::DP::Ph1::AvVoltageSourceInverterDQ>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "AvVoltageSourceInverterDQ", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_trafo"_a=false)
+		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
 		.def("set_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setParameters, "sys_omega"_a, "sys_volt_nom"_a, "p_ref"_a, "q_ref"_a)
 		.def("set_filter_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
 		.def("set_controller_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters,
@@ -145,7 +145,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
 
 	py::class_<CPS::DP::Ph1::Transformer, std::shared_ptr<CPS::DP::Ph1::Transformer>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Transformer", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_resistive_losses"_a = false)
+		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_resistive_losses"_a = false) // cppcheck-suppress assignBoolToPointer
 		.def("set_parameters", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::Transformer::setParameters), "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
 		.def("connect", &CPS::DP::Ph1::Transformer::connect);
 }
@@ -184,7 +184,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
 
 	py::class_<CPS::DP::Ph3::SeriesSwitch, std::shared_ptr<CPS::DP::Ph3::SeriesSwitch>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(mDPPh3, "SeriesSwitch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("set_parameters", &CPS::DP::Ph3::SeriesSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
+        .def("set_parameters", &CPS::DP::Ph3::SeriesSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false) // cppcheck-suppress assignBoolToPointer
 		.def("open", &CPS::DP::Ph3::SeriesSwitch::open)
 		.def("close", &CPS::DP::Ph3::SeriesSwitch::close)
 		.def("connect", &CPS::DP::Ph3::SeriesSwitch::connect);

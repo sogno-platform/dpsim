@@ -1,0 +1,85 @@
+name: Build & Test CentOS
+
+on: push
+
+## Build ##
+
+jobs:
+  linux-centos:
+    name: Build on CentOS Linux
+    runs-on: ubuntu-latest
+    container: sogno/dpsim:dev-centos
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Create Build Environment
+      run: mkdir build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake $GITHUB_WORKSPACE -DWITH_SPDLOG_SUBMODULE=ON
+
+    - name: Build every target
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake --build .
+      env:
+        MAKEFLAGS: "-j2"
+
+    - name: Cache build directory
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-centos-${{ github.sha }}
+
+  profiling:
+    name: Build with Profiling options
+    runs-on: ubuntu-latest
+    container: sogno/dpsim:dev-centos
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Create Build Environment
+      run: mkdir build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake $GITHUB_WORKSPACE -DWITH_PROFILING=ON -DWITH_ASAN=ON -DWITH_CUDA=OFF -DWITH_SPDLOG_SUBMODULE=ON
+
+    - name: Build every target
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake --build .
+      env:
+        MAKEFLAGS: "-j2"
+
+    - name: Cache build directory
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-centos-profiling-${{ github.sha }}
+
+## Tests ##
+  test-examples-1:
+    name: Test Examples 1/2
+    needs: [profiling]
+    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@master
+    with:
+      path: ./build/Examples/Cxx/WSCC_9bus_mult_decoupled
+      name: WSCC_9bus_mult_decoupled
+
+  test-examples-2:
+    name: Test Examples 2/2
+    needs: [profiling]
+    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@master
+    with:
+      path: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
+      name: WSCC_9bus_mult_coupled
