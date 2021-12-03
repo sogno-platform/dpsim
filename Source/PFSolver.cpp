@@ -114,10 +114,8 @@ void PFSolver::setBaseApparentPower() {
 				maxPower = trafo->attribute<Real>("S")->get();
 	}
     if (maxPower != 0.)
-        // mBaseApparentPower = pow(10, 1 + floor(log10(maxPower)));
-		mBaseApparentPower = maxPower;
-	else
-	{
+        mBaseApparentPower = pow(10, 1 + floor(log10(maxPower)));
+	else {
 		mBaseApparentPower = 100000000;
 		mSLog->warn("No suitable quantity found for setting mBaseApparentPower. Using {} VA.", mBaseApparentPower);
 	}
