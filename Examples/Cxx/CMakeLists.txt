@@ -74,6 +74,9 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
 	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
 
+	# Two Area System
+	Circuits/DP_SynGenTrStab_KRK_TwoArea_Fault.cpp
+
 )
 
 set(SYNCGEN_SOURCES
