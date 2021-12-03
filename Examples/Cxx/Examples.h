@@ -246,7 +246,105 @@ namespace ThreeBus {
         Real lineConductance23 = lineCIGREHV.lineConductancePerKm*80;
     };
 }
+namespace KRK_TwoArea {
+    struct ScenarioConfig {
 
+        //-----------Network-----------//
+        Real Vnom = 230e3;
+        Real nomFreq = 60;
+        Real nomOmega= nomFreq* 2*PI;
+
+        //-----------Generator 1 (bus1)-----------//
+        Real nomPower_G1 = 900e6;
+        Real nomPhPhVoltRMS_G1 = 20e3;
+        Real nomFreq_G1 = 60;
+        Real H_G1 = 6.5;
+        // Initialization parameters
+        Real initActivePower_G1 = 700e6;
+        Real initMechPower_G1 = 7006;
+        Real setPointVoltage_G1=nomPhPhVoltRMS_G1+0.03*nomPhPhVoltRMS_G1;
+
+        //-----------Generator 2 (bus2)-----------//
+        Real nomPower_G2 = 900e6;
+        Real nomPhPhVoltRMS_G2 = 20e3;
+        Real nomFreq_G2 = 60;
+        Real H_G2 = 6.5;
+        // Initialization parameters
+        Real initActivePower_G2 = 700e6;
+        Real initMechPower_G2 = 700e6;
+        Real setPointVoltage_G2=nomPhPhVoltRMS_G2-0.01*nomPhPhVoltRMS_G2;
+
+        //-----------Generator 3 (bus3)-----------//
+        Real nomPower_G3 = 900e6;
+        Real nomPhPhVoltRMS_G3 = 20e3;
+        Real nomFreq_G3 = 60;
+        Real H_G3 = 6.175;
+        // Initialization parameters
+        Real initActivePower_G3 = 719e6;
+        Real initMechPower_G3 = 719e6;
+        Real setPointVoltage_G3=nomPhPhVoltRMS_G3-0.03*nomPhPhVoltRMS_G3;
+
+        //-----------Generator 4 (bus4)-----------//
+        Real nomPower_G4 = 900e6;
+        Real nomPhPhVoltRMS_G4 = 20e3;
+        Real nomFreq_G4 = 60;
+        Real H_G4 = 6.175;
+        // Initialization parameters
+        Real initActivePower_G4 = 700e6;
+        Real initMechPower_G4 = 700e6;
+        Real setPointVoltage_G4=nomPhPhVoltRMS_G4-0.01*nomPhPhVoltRMS_G4;
+
+        //-----------Transformers-----------//
+        Real t1_ratio=Vnom/nomPhPhVoltRMS_G1;
+        Real t2_ratio=Vnom/nomPhPhVoltRMS_G2;
+        Real t3_ratio=Vnom/nomPhPhVoltRMS_G3;
+        Real t4_ratio=Vnom/nomPhPhVoltRMS_G4;
+
+        //-----------Load (bus7 and bus9)-----------
+        Real activePower_L7= 967e6;
+        Real reactivePower_L7_inductive= 100e6;
+        Real reactivePower_L7_capacitive= 200e6;
+
+        Real activePower_L9= 1167e6;
+        Real reactivePower_L9_inductive= 100e6;
+        Real reactivePower_L9_capacitive= 350e6;
+
+
+        // -----------Transmission Lines-----------//
+        // CIGREHVAmerican (230 kV)
+        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
+        //line 5-6 (25km)
+        Real lineResistance56 = lineCIGREHV.lineResistancePerKm*25;
+        Real lineInductance56 = lineCIGREHV.lineReactancePerKm/nomOmega*25;
+        Real lineCapacitance56 = lineCIGREHV.lineSusceptancePerKm/nomOmega*25;
+        Real lineConductance56 = lineCIGREHV.lineConductancePerKm*25;
+        //line 6-7 (10km)
+        Real lineResistance67 = lineCIGREHV.lineResistancePerKm*10;
+        Real lineInductance67 = lineCIGREHV.lineReactancePerKm/nomOmega*10;
+        Real lineCapacitance67 = lineCIGREHV.lineSusceptancePerKm/nomOmega*10;
+        Real lineConductance67 = lineCIGREHV.lineConductancePerKm*10;
+        //line 7-8 (110km)
+        Real lineResistance78 = lineCIGREHV.lineResistancePerKm*110;
+        Real lineInductance78 = lineCIGREHV.lineReactancePerKm/nomOmega*110;
+        Real lineCapacitance78 = lineCIGREHV.lineSusceptancePerKm/nomOmega*110;
+        Real lineConductance78 = lineCIGREHV.lineConductancePerKm*110;
+        //line 8-9 (110km)
+        Real lineResistance89 = lineCIGREHV.lineResistancePerKm*110;
+        Real lineInductance89 = lineCIGREHV.lineReactancePerKm/nomOmega*110;
+        Real lineCapacitance89 = lineCIGREHV.lineSusceptancePerKm/nomOmega*110;
+        Real lineConductance89 = lineCIGREHV.lineConductancePerKm*110;
+        //line 9-10 (10km)
+        Real lineResistance910 = lineCIGREHV.lineResistancePerKm*10;
+        Real lineInductance910 = lineCIGREHV.lineReactancePerKm/nomOmega*10;
+        Real lineCapacitance910 = lineCIGREHV.lineSusceptancePerKm/nomOmega*10;
+        Real lineConductance910 = lineCIGREHV.lineConductancePerKm*10;
+        //line 10-11 (25km)
+        Real lineResistance1011 = lineCIGREHV.lineResistancePerKm*25;
+        Real lineInductance1011 = lineCIGREHV.lineReactancePerKm/nomOmega*25;
+        Real lineCapacitance1011 = lineCIGREHV.lineSusceptancePerKm/nomOmega*25;
+        Real lineConductance1011 = lineCIGREHV.lineConductancePerKm*25;
+    };
+}
 namespace SGIB {
 
     struct ScenarioConfig {
