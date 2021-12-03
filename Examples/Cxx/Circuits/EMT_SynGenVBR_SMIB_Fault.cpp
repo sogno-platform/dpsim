@@ -28,7 +28,7 @@ Real lineConductance = 8e-2; //change to allow bigger time steps and to stabiliz
 Real BreakerOpen = 1e9;
 Real BreakerClosed = 0.001;
 
-//Synchronous generator 
+//Synchronous generator
 Real setPointActivePower=300e6;
 Real setPointVoltage=1.05*VnomMV;
 
@@ -38,7 +38,7 @@ Real finalTime = 1.0;
 Real timeStep = 10e-6;
 Real startTimeFault=0.2;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	if (argc > 1) {
 		CommandLineArgs args(argc, argv);
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(VnomMV);
 	extnetPF->setBaseVoltage(VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
@@ -103,10 +103,10 @@ int main(int argc, char* argv[]) {
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
-	// ----- Dynamic simulation ------	
+	// ----- Dynamic simulation ------
 	Logger::setLogDir("logs/"+simName);
 
-	// Nodes	
+	// Nodes
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2 = SimNode<Real>::make("n2", PhaseType::ABC);
 
@@ -115,22 +115,22 @@ int main(int argc, char* argv[]) {
 	auto gen = CPS::EMT::Ph3::SynchronGeneratorVBR::make("SynGen", Logger::Level::debug);
 	gen->setBaseAndFundamentalPerUnitParameters(
 		syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.poleNum, syngenKundur.nomFieldCurr,
-		syngenKundur.Rs, syngenKundur.Ll, syngenKundur.Lmd, syngenKundur.Lmq, syngenKundur.Rfd, syngenKundur.Llfd, syngenKundur.Rkd, 
+		syngenKundur.Rs, syngenKundur.Ll, syngenKundur.Lmd, syngenKundur.Lmq, syngenKundur.Rfd, syngenKundur.Llfd, syngenKundur.Rkd,
 		syngenKundur.Llkd, syngenKundur.Rkq1, syngenKundur.Llkq1, syngenKundur.Rkq2, syngenKundur.Llkq2, syngenKundur.H);
-	
+
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
 	// Line
 	auto line = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(lineInductance), 
+	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance),
+	                      Math::singlePhaseParameterToThreePhase(lineInductance),
 					      Math::singlePhaseParameterToThreePhase(lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(lineConductance));
-				  
+
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::debug);
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen), 
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen),
 						 Math::singlePhaseParameterToThreePhase(BreakerClosed));
 	fault->openSwitch();
 
@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simName, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, system);
+	system.initWithPowerflow(systemPF);
 	gen->terminal(0)->setPower(-genPF->getApparentPower());
 
 	// Logging
