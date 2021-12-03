@@ -1,0 +1,7 @@
+{
+    "name": "SP_SynGenTrStab_SMIB_Fault_JsonSyngenParams_Underdamped",
+    "options": {
+      "H" : 4.0,
+      "D" : 0.0031825
+    }
+}

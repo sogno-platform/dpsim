@@ -67,6 +67,7 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
 	Circuits/DP_SynGenTrStab_SMIB_Fault_SlewCase2.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault_SlewCase2.cpp
+	Circuits/SP_SynGenTrStab_SMIB_Fault_SlewCase2_JsonSyngenParams.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp

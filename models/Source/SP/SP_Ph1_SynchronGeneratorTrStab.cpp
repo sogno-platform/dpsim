@@ -16,7 +16,11 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
-	// Register attributes
+	// Register attributes of parameters
+	addAttribute<Real>("H", &mInertia, Flags::read | Flags::write);
+	addAttribute<Real>("D", &mD, Flags::read | Flags::write);
+
+	// Register attributes of variables
 	addAttribute<Complex>("Ep", &mEp, Flags::read);
 	addAttribute<Real>("Ep_mag", &mEp_abs, Flags::read);
 	addAttribute<Real>("Ep_phase", &mEp_phase, Flags::read);
@@ -25,7 +29,6 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	addAttribute<Real>("Q_elec", &mElecReactivePower, Flags::read);
 	addAttribute<Real>("P_mech", &mMechPower, Flags::read);
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
-	addAttribute<Real>("inertia", &mInertia, Flags::read | Flags::write);
 	addAttribute<Real>("w_ref", Flags::read | Flags::write);
 	addAttribute<Real>("delta_ref", Flags::read | Flags::write);
 
@@ -63,13 +66,14 @@ void SP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower,
 
 	//The units of D are per unit power divided by per unit speed deviation.
 	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
-	mKd= D*mNomPower/mNomOmega;
+	mD=D;
+	mKd= mD*mNomPower/mNomOmega;
 
 	mSLog->info("\n--- Parameters ---"
 				"\nimpedance: {:f}"
 				"\ninductance: {:f}"
 				"\ninertia: {:f}"
-				"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+				"\ndamping Kd: {:f}", mXpd, mLpd, mInertia, mKd);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
@@ -94,7 +98,7 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Re
 				"\nimpedance: {:f}"
 			"\ninductance: {:f}"
 			"\ninertia: {:f}"
-			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+			"\ndamping Kd: {:f}", mXpd, mLpd, mInertia, mKd);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
@@ -118,7 +122,8 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 	mXpd = Xpd * mBase_Z;
 	mLpd = Xpd * mBase_L;
 
-	mRs= Rs;
+	mRs=Rs;
+	mD=D;
 	//The units of D are per unit power divided by per unit speed deviation.
 	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
 	// mKd= D*mNomPower/mNomOmega;
@@ -127,14 +132,24 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 	// mKd= (D*mNomPower/mNomOmega)*sqrt(mNomOmega);
 	
 	// if in p.u of base power:
-	mKd= D*mNomPower;
+	mKd= mD*mNomPower;
 
 	mSLog->info("\n--- Parameters ---"
 				"\nXpd: {:f} [Ohm]"
 				"\nLpd: {:f} [H]"
-				"\nInertia: {:f} [s]"
-				"\nDamping: {:f}", mXpd, mLpd, mInertia, mKd);
+				"\nH: {:f} [s]"
+				"\nKd: {:f}", mXpd, mLpd, mInertia, mKd);
 }
+
+void SP::Ph1::SynchronGeneratorTrStab::applyStandardParametersPU(){
+	// if in p.u of base power:
+	mKd= mD*mNomPower;
+
+	mSLog->info("\n--- Parameters ---"
+		"\nD: {:f}"
+		"\nKd: {:f}", mD, mKd);
+}
+
 
 void SP::Ph1::SynchronGeneratorTrStab::setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech) {
 	mUseOmegaRef = useOmegaRef;

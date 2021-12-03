@@ -1,0 +1,7 @@
+{
+    "name": "SP_SynGenTrStab_SMIB_Fault_JsonSyngenParams_CriticallyDamped",
+    "options": {
+      "H" : 4.0,
+      "D" : 0.44972
+    }
+}

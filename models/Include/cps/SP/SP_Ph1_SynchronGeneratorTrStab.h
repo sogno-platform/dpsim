@@ -39,7 +39,9 @@ namespace Ph1 {
  		Real mXpd;
 		/// Absolute d-axis transient inductance
 		Real mLpd;
-		/// Absolute damping coefficient
+		/// Damping coefficient D in per unit
+		Real mD;
+		/// Absolute damping coefficient Kd
 		Real mKd;
 		/// Equivalent impedance for loadflow calculation
 		Complex mImpedance;
@@ -62,6 +64,9 @@ namespace Ph1 {
 
 		SimPowerComp<Complex>::Ptr clone(String name);
 
+		///
+		const std::vector<String> attrParamNames = {"H","D"};
+
 		// #### General Functions ####
 		/// Flags to modify model behavior
 		void setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech);
@@ -76,6 +81,10 @@ namespace Ph1 {
 		/// \brief Initializes the machine parameters
 		void setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd, Real inertia,
 			Real Rs=0, Real D=0);
+
+		/// Apply updated parameters to further model quantities
+		void applyStandardParametersPU();
+
 		///
 		void step(Real time);
 		///

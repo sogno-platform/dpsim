@@ -121,6 +121,7 @@ namespace Utils {
 
 void applySimulationParametersFromJson(const json config, Simulation &sim);
 void applySynchronousGeneratorParametersFromJson(const json config, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQ> syngen);
+void applySynchronousGeneratorParametersFromJson(const json config, std::shared_ptr<CPS::SP::Ph1::SynchronGeneratorTrStab> syngen);
 
 String encodeXml(String& data);
 

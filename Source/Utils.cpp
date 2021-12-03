@@ -470,3 +470,17 @@ void DPsim::Utils::applySynchronousGeneratorParametersFromJson(const json config
 			syngen->applyParametersOperationalPerUnit();
 	}
 }
+
+void DPsim::Utils::applySynchronousGeneratorParametersFromJson(const json config, std::shared_ptr<CPS::SP::Ph1::SynchronGeneratorTrStab> syngen){
+	if (config.contains("options")) {
+		Bool containsSyngenOptions = false;
+		for (String attrName : syngen->attrParamNames) {
+			if (config["options"].contains(attrName)) {
+				syngen->attribute<Real>(attrName)->set(config["options"][attrName].get<double>());
+				containsSyngenOptions = true;
+			}
+		}
+		if (containsSyngenOptions)
+			syngen->applyStandardParametersPU();
+	}
+}
