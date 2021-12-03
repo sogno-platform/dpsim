@@ -311,35 +311,40 @@ namespace KRK_TwoArea {
 
 
         // -----------Transmission Lines-----------//
+        Real r= 0.0529;
+        Real x= 0.529;
+        Real b= 3.308e-6;
+        Real g= 0;
+
         //line 5-6 (25km)
-        Real lineResistance56 = 0.0529*25;
-        Real lineInductance56 = (0.529/nomOmega)*25;
-        Real lineCapacitance56 = (3.308e-6/nomOmega)*25;
+        Real lineResistance56 = r*25;
+        Real lineInductance56 = (x/nomOmega)*25;
+        Real lineCapacitance56 = (b/nomOmega)*25;
         Real lineConductance56 = 0;
         //line 6-7 (10km)
-        Real lineResistance67 = 0.0529*10;
-        Real lineInductance67 = (0.529/nomOmega)*10;
-        Real lineCapacitance67 = (3.308e-6/nomOmega)*10;
+        Real lineResistance67 = r*10;
+        Real lineInductance67 = (x/nomOmega)*10;
+        Real lineCapacitance67 = (b/nomOmega)*10;
         Real lineConductance67 = 0;
         //line 7-8 (110km)
-        Real lineResistance78 = 0.0529*110;
-        Real lineInductance78 = (0.529/nomOmega)*110;
-        Real lineCapacitance78 = (3.308e-6/nomOmega)*110;
+        Real lineResistance78 = r*110;
+        Real lineInductance78 = (x/nomOmega)*110;
+        Real lineCapacitance78 = (b/nomOmega)*110;
         Real lineConductance78 = 0;
         //line 8-9 (110km)
-        Real lineResistance89 = 0.0529*110;
-        Real lineInductance89 = (0.529/nomOmega)*110;
-        Real lineCapacitance89 = (3.308e-6/nomOmega)*110;
+        Real lineResistance89 = r*110;
+        Real lineInductance89 = (x/nomOmega)*110;
+        Real lineCapacitance89 = (b/nomOmega)*110;
         Real lineConductance89 = 0;
         //line 9-10 (10km)
-        Real lineResistance910 = 0.0529*10;
-        Real lineInductance910 = (0.529/nomOmega)*10;
-        Real lineCapacitance910 = (3.308e-6/nomOmega)*10;
+        Real lineResistance910 = r*10;
+        Real lineInductance910 = (x/nomOmega)*10;
+        Real lineCapacitance910 = (b/nomOmega)*10;
         Real lineConductance910 = 0;
         //line 10-11 (25km)
-        Real lineResistance1011 = 0.0529*25;
-        Real lineInductance1011 = (0.529/nomOmega)*25;
-        Real lineCapacitance1011 = (3.308e-6/nomOmega)*25;
+        Real lineResistance1011 = r*25;
+        Real lineInductance1011 = (x/nomOmega)*25;
+        Real lineCapacitance1011 = (b/nomOmega)*25;
         Real lineConductance1011 = 0;
     };
 }
