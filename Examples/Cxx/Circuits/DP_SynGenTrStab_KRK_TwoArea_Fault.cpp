@@ -23,10 +23,10 @@ void DP_SynGenTrStab_KRK_TwoArea_Fault(String simName, Real timeStep, Real final
 	Logger::setLogDir("logs/" + simNamePF);
 
 	// Components
-	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
-	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
-	auto n3PF = SimNode<Complex>::make("n3", PhaseType::Single);
-    auto n4PF = SimNode<Complex>::make("n4", PhaseType::Single);
+	// auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
+	// auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
+	// auto n3PF = SimNode<Complex>::make("n3", PhaseType::Single);
+    // auto n4PF = SimNode<Complex>::make("n4", PhaseType::Single);
 	auto n5PF = SimNode<Complex>::make("n5", PhaseType::Single);
 	auto n6PF = SimNode<Complex>::make("n6", PhaseType::Single);
     auto n7PF = SimNode<Complex>::make("n7", PhaseType::Single);
@@ -63,10 +63,15 @@ void DP_SynGenTrStab_KRK_TwoArea_Fault(String simName, Real timeStep, Real final
 	auto load7PF = SP::Ph1::Shunt::make("Load7", Logger::Level::debug);
 	load7PF->setParameters(KRK_TwoArea.activePower_L7 / std::pow(KRK_TwoArea.Vnom, 2), (KRK_TwoArea.reactivePower_L7_inductive + KRK_TwoArea.reactivePower_L7_capacitive) / std::pow(KRK_TwoArea.Vnom, 2));
 	load7PF->setBaseVoltage(KRK_TwoArea.Vnom);
+	// auto load7PF = SP::Ph1::Load::make("Load7", Logger::Level::debug);	
+	// load7PF->setParameters(KRK_TwoArea.activePower_L7 , (KRK_TwoArea.reactivePower_L7_inductive + KRK_TwoArea.reactivePower_L7_capacitive), KRK_TwoArea.Vnom );
+
 
     auto load9PF = SP::Ph1::Shunt::make("Load9", Logger::Level::debug);
 	load9PF->setParameters(KRK_TwoArea.activePower_L9 / std::pow(KRK_TwoArea.Vnom, 2), (KRK_TwoArea.reactivePower_L9_inductive + KRK_TwoArea.reactivePower_L9_capacitive) / std::pow(KRK_TwoArea.Vnom, 2));
 	load9PF->setBaseVoltage(KRK_TwoArea.Vnom);
+	// auto load9PF = SP::Ph1::Load::make("Load9", Logger::Level::debug);
+	// load9PF->setParameters(KRK_TwoArea.activePower_L9 , (KRK_TwoArea.reactivePower_L9_inductive + KRK_TwoArea.reactivePower_L9_capacitive), KRK_TwoArea.Vnom);
 
 	//Line56
 	auto line56PF = SP::Ph1::PiLine::make("PiLine56", Logger::Level::debug);
@@ -94,10 +99,10 @@ void DP_SynGenTrStab_KRK_TwoArea_Fault(String simName, Real timeStep, Real final
 	line1011PF->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	// Topology
-	gen1PF->connect({ n1PF });
-	gen2PF->connect({ n2PF });
-    gen3PF->connect({ n3PF });
-    gen4PF->connect({ n4PF });
+	gen1PF->connect({ n5PF });
+	gen2PF->connect({ n6PF });
+    gen3PF->connect({ n11PF });
+    gen4PF->connect({ n10PF });
 	load7PF->connect({ n7PF });
     load9PF->connect({ n9PF });
 	line56PF->connect({ n5PF, n6PF });
@@ -107,15 +112,15 @@ void DP_SynGenTrStab_KRK_TwoArea_Fault(String simName, Real timeStep, Real final
     line910PF->connect({ n9PF, n10PF });
     line1011PF->connect({ n10PF, n11PF });
 	auto systemPF = SystemTopology(60,
-			SystemNodeList{n1PF, n2PF, n3PF, n4PF, n5PF, n6PF, n7PF, n8PF, n9PF, n10PF, n11PF},
+			SystemNodeList{ n5PF, n6PF, n7PF, n8PF, n9PF, n10PF, n11PF},
 			SystemComponentList{gen1PF, gen2PF, gen3PF, gen4PF, load7PF, load9PF, line56PF, line67PF, line78PF, line89PF, line910PF, line1011PF});
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v_bus1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v_bus2", n2PF->attribute("v"));
-	loggerPF->addAttribute("v_bus3", n3PF->attribute("v"));
-    loggerPF->addAttribute("v_bus4", n4PF->attribute("v"));
+	// loggerPF->addAttribute("v_bus1", n1PF->attribute("v"));
+	// loggerPF->addAttribute("v_bus2", n2PF->attribute("v"));
+	// loggerPF->addAttribute("v_bus3", n3PF->attribute("v"));
+    // loggerPF->addAttribute("v_bus4", n4PF->attribute("v"));
 	loggerPF->addAttribute("v_bus5", n5PF->attribute("v"));
 	loggerPF->addAttribute("v_bus6", n6PF->attribute("v"));
     loggerPF->addAttribute("v_bus7", n7PF->attribute("v"));
