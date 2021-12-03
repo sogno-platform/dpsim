@@ -311,38 +311,36 @@ namespace KRK_TwoArea {
 
 
         // -----------Transmission Lines-----------//
-        // CIGREHVAmerican (230 kV)
-        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
         //line 5-6 (25km)
-        Real lineResistance56 = lineCIGREHV.lineResistancePerKm*25;
-        Real lineInductance56 = lineCIGREHV.lineReactancePerKm/nomOmega*25;
-        Real lineCapacitance56 = lineCIGREHV.lineSusceptancePerKm/nomOmega*25;
-        Real lineConductance56 = lineCIGREHV.lineConductancePerKm*25;
+        Real lineResistance56 = 0.0529*25;
+        Real lineInductance56 = (0.529/nomOmega)*25;
+        Real lineCapacitance56 = (3.308e-6/nomOmega)*25;
+        Real lineConductance56 = 0;
         //line 6-7 (10km)
-        Real lineResistance67 = lineCIGREHV.lineResistancePerKm*10;
-        Real lineInductance67 = lineCIGREHV.lineReactancePerKm/nomOmega*10;
-        Real lineCapacitance67 = lineCIGREHV.lineSusceptancePerKm/nomOmega*10;
-        Real lineConductance67 = lineCIGREHV.lineConductancePerKm*10;
+        Real lineResistance67 = 0.0529*10;
+        Real lineInductance67 = (0.529/nomOmega)*10;
+        Real lineCapacitance67 = (3.308e-6/nomOmega)*10;
+        Real lineConductance67 = 0;
         //line 7-8 (110km)
-        Real lineResistance78 = lineCIGREHV.lineResistancePerKm*110;
-        Real lineInductance78 = lineCIGREHV.lineReactancePerKm/nomOmega*110;
-        Real lineCapacitance78 = lineCIGREHV.lineSusceptancePerKm/nomOmega*110;
-        Real lineConductance78 = lineCIGREHV.lineConductancePerKm*110;
+        Real lineResistance78 = 0.0529*110;
+        Real lineInductance78 = (0.529/nomOmega)*110;
+        Real lineCapacitance78 = (3.308e-6/nomOmega)*110;
+        Real lineConductance78 = 0;
         //line 8-9 (110km)
-        Real lineResistance89 = lineCIGREHV.lineResistancePerKm*110;
-        Real lineInductance89 = lineCIGREHV.lineReactancePerKm/nomOmega*110;
-        Real lineCapacitance89 = lineCIGREHV.lineSusceptancePerKm/nomOmega*110;
-        Real lineConductance89 = lineCIGREHV.lineConductancePerKm*110;
+        Real lineResistance89 = 0.0529*110;
+        Real lineInductance89 = (0.529/nomOmega)*110;
+        Real lineCapacitance89 = (3.308e-6/nomOmega)*110;
+        Real lineConductance89 = 0;
         //line 9-10 (10km)
-        Real lineResistance910 = lineCIGREHV.lineResistancePerKm*10;
-        Real lineInductance910 = lineCIGREHV.lineReactancePerKm/nomOmega*10;
-        Real lineCapacitance910 = lineCIGREHV.lineSusceptancePerKm/nomOmega*10;
-        Real lineConductance910 = lineCIGREHV.lineConductancePerKm*10;
+        Real lineResistance910 = 0.0529*10;
+        Real lineInductance910 = (0.529/nomOmega)*10;
+        Real lineCapacitance910 = (3.308e-6/nomOmega)*10;
+        Real lineConductance910 = 0;
         //line 10-11 (25km)
-        Real lineResistance1011 = lineCIGREHV.lineResistancePerKm*25;
-        Real lineInductance1011 = lineCIGREHV.lineReactancePerKm/nomOmega*25;
-        Real lineCapacitance1011 = lineCIGREHV.lineSusceptancePerKm/nomOmega*25;
-        Real lineConductance1011 = lineCIGREHV.lineConductancePerKm*25;
+        Real lineResistance1011 = 0.0529*25;
+        Real lineInductance1011 = (0.529/nomOmega)*25;
+        Real lineCapacitance1011 = (3.308e-6/nomOmega)*25;
+        Real lineConductance1011 = 0;
     };
 }
 namespace SGIB {

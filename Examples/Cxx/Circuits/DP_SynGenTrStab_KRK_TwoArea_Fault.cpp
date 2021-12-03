@@ -15,14 +15,10 @@ using namespace CIM::Examples::Grids::KRK_TwoArea;
 
 ScenarioConfig KRK_TwoArea;
 
-//Switch to trigger fault at generator terminal
-Real SwitchOpen = 1e12;
-Real SwitchClosed = 0.1;
-
 void DP_SynGenTrStab_KRK_TwoArea_Fault(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia_G1, Real cmdInertia_G2, Real cmdInertia_G3, Real cmdInertia_G4, Real cmdDamping_G1, Real cmdDamping_G2, Real cmdDamping_G3, Real cmdDamping_G4) {
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
-	Real finalTimePF = finalTime+timeStepPF;
+	Real finalTimePF = finalTime+ timeStepPF;
 	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
 
@@ -40,36 +36,36 @@ void DP_SynGenTrStab_KRK_TwoArea_Fault(String simName, Real timeStep, Real final
 	auto n11PF = SimNode<Complex>::make("n11", PhaseType::Single);
 
 	//Synchronous generator 1
-	auto gen1PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen1PF = SP::Ph1::SynchronGenerator::make("Generator1", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen1PF->setParameters(KRK_TwoArea.nomPower_G1, KRK_TwoArea.nomPhPhVoltRMS_G1, KRK_TwoArea.initActivePower_G1, KRK_TwoArea.setPointVoltage_G1*KRK_TwoArea.t1_ratio, PowerflowBusType::PV);
 	gen1PF->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	//Synchronous generator 2
-	auto gen2PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen2PF = SP::Ph1::SynchronGenerator::make("Generator2", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen2PF->setParameters(KRK_TwoArea.nomPower_G2, KRK_TwoArea.nomPhPhVoltRMS_G2, KRK_TwoArea.initActivePower_G2, KRK_TwoArea.setPointVoltage_G2*KRK_TwoArea.t2_ratio, PowerflowBusType::VD);
 	gen2PF->setBaseVoltage(KRK_TwoArea.Vnom);
 
     //Synchronous generator 3
-	auto gen3PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen3PF = SP::Ph1::SynchronGenerator::make("Generator3", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen3PF->setParameters(KRK_TwoArea.nomPower_G3, KRK_TwoArea.nomPhPhVoltRMS_G3, KRK_TwoArea.initActivePower_G3, KRK_TwoArea.setPointVoltage_G3*KRK_TwoArea.t3_ratio, PowerflowBusType::PV);
 	gen3PF->setBaseVoltage(KRK_TwoArea.Vnom);
 
     //Synchronous generator 4
-	auto gen4PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen4PF = SP::Ph1::SynchronGenerator::make("Generator4", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen4PF->setParameters(KRK_TwoArea.nomPower_G4, KRK_TwoArea.nomPhPhVoltRMS_G4, KRK_TwoArea.initActivePower_G4, KRK_TwoArea.setPointVoltage_G4*KRK_TwoArea.t4_ratio, PowerflowBusType::PV);
 	gen4PF->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	//use Shunt as Load for powerflow
 	auto load7PF = SP::Ph1::Shunt::make("Load7", Logger::Level::debug);
-	load7PF->setParameters(KRK_TwoArea.activePower_L7 / std::pow(KRK_TwoArea.Vnom, 2), - KRK_TwoArea.reactivePower_L7_inductive / std::pow(KRK_TwoArea.Vnom, 2));
+	load7PF->setParameters(KRK_TwoArea.activePower_L7 / std::pow(KRK_TwoArea.Vnom, 2), (KRK_TwoArea.reactivePower_L7_inductive + KRK_TwoArea.reactivePower_L7_capacitive) / std::pow(KRK_TwoArea.Vnom, 2));
 	load7PF->setBaseVoltage(KRK_TwoArea.Vnom);
 
     auto load9PF = SP::Ph1::Shunt::make("Load9", Logger::Level::debug);
-	load9PF->setParameters(KRK_TwoArea.activePower_L9 / std::pow(KRK_TwoArea.Vnom, 2), - KRK_TwoArea.reactivePower_L9_inductive / std::pow(KRK_TwoArea.Vnom, 2));
+	load9PF->setParameters(KRK_TwoArea.activePower_L9 / std::pow(KRK_TwoArea.Vnom, 2), (KRK_TwoArea.reactivePower_L9_inductive + KRK_TwoArea.reactivePower_L9_capacitive) / std::pow(KRK_TwoArea.Vnom, 2));
 	load9PF->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	//Line56
@@ -96,10 +92,6 @@ void DP_SynGenTrStab_KRK_TwoArea_Fault(String simName, Real timeStep, Real final
 	auto line1011PF = SP::Ph1::PiLine::make("PiLine1011", Logger::Level::debug);
 	line1011PF->setParameters(KRK_TwoArea.lineResistance1011, KRK_TwoArea.lineInductance1011, KRK_TwoArea.lineCapacitance1011, KRK_TwoArea.lineConductance1011);
 	line1011PF->setBaseVoltage(KRK_TwoArea.Vnom);
-	//Switch
-	auto faultPF = CPS::SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
-	faultPF->setParameters(SwitchOpen, SwitchClosed);
-	faultPF->open();
 
 	// Topology
 	gen1PF->connect({ n1PF });
@@ -114,12 +106,9 @@ void DP_SynGenTrStab_KRK_TwoArea_Fault(String simName, Real timeStep, Real final
     line89PF->connect({ n8PF, n9PF });
     line910PF->connect({ n9PF, n10PF });
     line1011PF->connect({ n10PF, n11PF });
-	// faultPF->connect({SP::SimNode::GND , n1PF }); //terminal of generator 1
-	faultPF->connect({SP::SimNode::GND , n2PF }); //terminal of generator 2
-	// faultPF->connect({SP::SimNode::GND , n3PF }); //Load bus
 	auto systemPF = SystemTopology(60,
 			SystemNodeList{n1PF, n2PF, n3PF, n4PF, n5PF, n6PF, n7PF, n8PF, n9PF, n10PF, n11PF},
-			SystemComponentList{gen1PF, gen2PF, gen3PF, load7PF, load9PF, line56PF, line67PF, line78PF, line89PF, line910PF, line1011PF, faultPF});
+			SystemComponentList{gen1PF, gen2PF, gen3PF, gen4PF, load7PF, load9PF, line56PF, line67PF, line78PF, line89PF, line910PF, line1011PF});
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
