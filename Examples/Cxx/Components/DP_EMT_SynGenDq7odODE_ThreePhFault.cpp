@@ -142,6 +142,7 @@ void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, String exten
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::EMT);
+	sim.doInitFromNodesAndTerminals(false);
 	sim.addLogger(logger);
 
 	// Events

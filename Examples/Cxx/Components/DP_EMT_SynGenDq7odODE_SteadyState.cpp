@@ -123,6 +123,7 @@ void EMT_SynGenDq7odODE_SteadyState(Real timeStep, Real finalTime) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::EMT);
+	sim.doInitFromNodesAndTerminals(false);
 	sim.addLogger(logger);
 
 	sim.run();

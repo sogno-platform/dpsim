@@ -144,6 +144,7 @@ void EMT_SynGenDq7odODE_LoadStep(Real timeStep, Real finalTime, Real breakerClos
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::EMT);
+	sim.doInitFromNodesAndTerminals(false);
 	sim.addLogger(logger);
 
 	// Events

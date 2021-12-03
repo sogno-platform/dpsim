@@ -108,7 +108,8 @@ void MnaSolver<Real>::initializeComponents() {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Real>>(comp);
 		if (!pComp)	continue;
 		pComp->checkForUnconnectedTerminals();
-		pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
+		if (mInitFromNodesAndTerminals)
+			pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 
 	// Initialize signal components.
@@ -141,7 +142,8 @@ void MnaSolver<Complex>::initializeComponents() {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
 		pComp->checkForUnconnectedTerminals();
-		pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
+		if (mInitFromNodesAndTerminals)
+			pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 
 	// Initialize signal components.
@@ -250,7 +252,7 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 
 template <typename VarType>
 void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
-	
+
 	// Collect index pairs of varying matrix entries from components
 	for (auto varElem : mVariableComps)
 		for (auto varEntry : varElem->mVariableSystemMatrixEntries)
