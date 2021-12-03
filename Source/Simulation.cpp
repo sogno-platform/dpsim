@@ -165,6 +165,7 @@ void Simulation::createMNASolver() {
 			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
 			solver->setSystem(subnets[net]);
 			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
+			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
 			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
 			solver->initialize();
 		}
@@ -513,7 +514,7 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 	if (intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
-	
+
 	Bool found = false;
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
@@ -562,7 +563,7 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 	if(intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
-	
+
 	Bool found = false;
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
