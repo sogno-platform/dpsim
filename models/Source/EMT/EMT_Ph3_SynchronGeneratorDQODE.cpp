@@ -25,6 +25,8 @@ void EMT::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, 
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
+	SynchronGeneratorDQ::initializeMatrixAndStates();
+
 	mDim = mNumDampingWindings + 7;
 	mOdePreState = Matrix::Zero(mDim, 1);
 	mOdePostState = Matrix::Zero(mDim, 1);
