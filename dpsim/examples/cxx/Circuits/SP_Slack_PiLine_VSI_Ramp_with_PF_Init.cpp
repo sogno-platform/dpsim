@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
 	loggerSP->addAttribute("i12", lineSP->attribute("i_intf"));
 	loggerSP->addAttribute("f_src", extnetSP->attribute("f_src"));
 
-	CIM::Examples::CIGREMV::logPVAttributes(loggerSP, pv);
+	CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerSP, pv);
 
 	// load step sized in absolute terms
 	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemSP, Domain::SP, loggerSP);
