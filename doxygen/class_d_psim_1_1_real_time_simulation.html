@@ -133,6 +133,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setDomain</b> (CPS::D
 <tr class="memitem:a14a8a9a31e3ef02a81357f49643d2393 inherit pub_methods_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="a14a8a9a31e3ef02a81357f49643d2393"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setSolverType</b> (<a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a> solverType=Solver::Type::MNA)</td></tr>
 <tr class="separator:a14a8a9a31e3ef02a81357f49643d2393 inherit pub_methods_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a9d71f217dfef37de2d8dcb954a4cd8 inherit pub_methods_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="a7a9d71f217dfef37de2d8dcb954a4cd8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_simulation.html#a7a9d71f217dfef37de2d8dcb954a4cd8">setSolverAndComponentBehaviour</a> (Solver::Behaviour behaviour)</td></tr>
+<tr class="memdesc:a7a9d71f217dfef37de2d8dcb954a4cd8 inherit pub_methods_class_d_psim_1_1_simulation"><td class="mdescLeft">&#160;</td><td class="mdescRight">set solver and component to initialization or simulation behaviour <br /></td></tr>
+<tr class="separator:a7a9d71f217dfef37de2d8dcb954a4cd8 inherit pub_methods_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d0720af5286248597bb9c6102906843 inherit pub_methods_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="a7d0720af5286248597bb9c6102906843"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMnaSolverImplementation</b> (<a class="el" href="class_d_psim_1_1_mna_solver_factory.html#aa07d5509ef58aaca2d8714ebcdee14b3">MnaSolverFactory::MnaSolverImpl</a> mnaImpl)</td></tr>
+<tr class="separator:a7d0720af5286248597bb9c6102906843 inherit pub_methods_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a718d453f6cda6e823deb9fd8caab880c inherit pub_methods_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="a718d453f6cda6e823deb9fd8caab880c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>doInitFromNodesAndTerminals</b> (Bool f=true)</td></tr>
 <tr class="separator:a718d453f6cda6e823deb9fd8caab880c inherit pub_methods_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -339,6 +346,18 @@ Int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <a class="el" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_simulation.html#ab9276aae51038aeeced98e11b2c3f3f6">mSystem</a></td></tr>
 <tr class="memdesc:ab9276aae51038aeeced98e11b2c3f3f6 inherit pro_attribs_class_d_psim_1_1_simulation"><td class="mdescLeft">&#160;</td><td class="mdescRight">System list. <br /></td></tr>
 <tr class="separator:ab9276aae51038aeeced98e11b2c3f3f6 inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adacbfc101b3e337e62771066e6154f7b inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="adacbfc101b3e337e62771066e6154f7b"></a>
+std::chrono::time_point&lt; std::chrono::steady_clock &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_simulation.html#adacbfc101b3e337e62771066e6154f7b">mSimulationStartTimePoint</a></td></tr>
+<tr class="memdesc:adacbfc101b3e337e62771066e6154f7b inherit pro_attribs_class_d_psim_1_1_simulation"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start time point to measure calculation time. <br /></td></tr>
+<tr class="separator:adacbfc101b3e337e62771066e6154f7b inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af84beb9d033ce58f9bca3a25ae8b5d1f inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="af84beb9d033ce58f9bca3a25ae8b5d1f"></a>
+std::chrono::time_point&lt; std::chrono::steady_clock &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_simulation.html#af84beb9d033ce58f9bca3a25ae8b5d1f">mSimulationEndTimePoint</a></td></tr>
+<tr class="memdesc:af84beb9d033ce58f9bca3a25ae8b5d1f inherit pro_attribs_class_d_psim_1_1_simulation"><td class="mdescLeft">&#160;</td><td class="mdescRight">End time point to measure calculation time. <br /></td></tr>
+<tr class="separator:af84beb9d033ce58f9bca3a25ae8b5d1f inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13a6638a4ff34984e11ce600e30779ff inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="a13a6638a4ff34984e11ce600e30779ff"></a>
+std::chrono::duration&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_simulation.html#a13a6638a4ff34984e11ce600e30779ff">mSimulationCalculationTime</a></td></tr>
+<tr class="memdesc:a13a6638a4ff34984e11ce600e30779ff inherit pro_attribs_class_d_psim_1_1_simulation"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measured calculation time for simulation. <br /></td></tr>
+<tr class="separator:a13a6638a4ff34984e11ce600e30779ff inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24d3f7ee425511c68f055ff2459ffdd2 inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="a24d3f7ee425511c68f055ff2459ffdd2"></a>
 CPS::Logger::Level&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_simulation.html#a24d3f7ee425511c68f055ff2459ffdd2">mLogLevel</a></td></tr>
 <tr class="memdesc:a24d3f7ee425511c68f055ff2459ffdd2 inherit pro_attribs_class_d_psim_1_1_simulation"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> log level. <br /></td></tr>
@@ -353,6 +372,9 @@ CPS::Domain&#160;</td><td class="memItemRight" valign="bottom"><b>mDomain</b> = 
 <tr class="memitem:a90780a0284b22006b800a3cb9537394b inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="a90780a0284b22006b800a3cb9537394b"></a>
 <a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mSolverType</b> = Solver::Type::MNA</td></tr>
 <tr class="separator:a90780a0284b22006b800a3cb9537394b inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d688321e0e20b0bd49a8dc2333293f5 inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="a8d688321e0e20b0bd49a8dc2333293f5"></a>
+Solver::Behaviour&#160;</td><td class="memItemRight" valign="bottom"><b>mSolverBehaviour</b> = Solver::Behaviour::Simulation</td></tr>
+<tr class="separator:a8d688321e0e20b0bd49a8dc2333293f5 inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fb67ce7bacb58de79a0dfa03805a746 inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memItemLeft" align="right" valign="top"><a id="a5fb67ce7bacb58de79a0dfa03805a746"></a>
 Solver::List&#160;</td><td class="memItemRight" valign="bottom"><b>mSolvers</b></td></tr>
 <tr class="separator:a5fb67ce7bacb58de79a0dfa03805a746 inherit pro_attribs_class_d_psim_1_1_simulation"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -1,11 +1,10 @@
 <map id="DPsim::MnaSolver&lt; VarType &gt;" name="DPsim::MnaSolver&lt; VarType &gt;">
-<area shape="rect" id="node1" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="181,79,384,106"/>
-<area shape="rect" id="node4" href="$class_d_psim_1_1_mna_solver_eigen_dense.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="434,23,637,64"/>
-<area shape="rect" id="node6" href="$class_d_psim_1_1_mna_solver_eigen_sparse.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="432,104,639,145"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="16,54,123,81"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="5,105,133,131"/>
-<area shape="rect" id="node5" href="$class_d_psim_1_1_mna_solver_gpu_dense.html" title=" " alt="" coords="691,5,884,47"/>
-<area shape="rect" id="node7" href="$class_d_psim_1_1_mna_solver_gpu_magma.html" title=" " alt="" coords="688,71,887,112"/>
-<area shape="rect" id="node8" href="$class_d_psim_1_1_mna_solver_gpu_sparse.html" title=" " alt="" coords="689,136,886,177"/>
-<area shape="rect" id="node9" href="$class_d_psim_1_1_mna_solver_sys_recomp.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="687,201,888,243"/>
+<area shape="rect" id="node1" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="181,46,384,73"/>
+<area shape="rect" id="node4" href="$class_d_psim_1_1_mna_solver_eigen_dense.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="434,5,637,47"/>
+<area shape="rect" id="node6" href="$class_d_psim_1_1_mna_solver_eigen_sparse.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="432,71,639,112"/>
+<area shape="rect" id="node2" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="16,21,123,47"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="5,71,133,98"/>
+<area shape="rect" id="node5" href="$class_d_psim_1_1_mna_solver_gpu_dense.html" title=" " alt="" coords="689,5,883,47"/>
+<area shape="rect" id="node7" href="$class_d_psim_1_1_mna_solver_gpu_magma.html" title=" " alt="" coords="687,71,885,112"/>
+<area shape="rect" id="node8" href="$class_d_psim_1_1_mna_solver_gpu_sparse.html" title=" " alt="" coords="687,136,885,177"/>
 </map>

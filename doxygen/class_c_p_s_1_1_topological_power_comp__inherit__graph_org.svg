@@ -49,9 +49,9 @@
 <path fill="none" stroke="midnightblue" d="M398.78,-798.34C418.72,-793.28 442.89,-788 465,-785.5 539.39,-777.08 625.79,-778.94 681.83,-781.66"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="397.85,-794.96 389.06,-800.87 399.62,-801.74 397.85,-794.96"/>
 </g>
-<!-- Node93 -->
+<!-- Node95 -->
 <g id="node49" class="node">
-<title>Node93</title>
+<title>Node95</title>
 <g id="a_node49"><a xlink:href="class_c_p_s_1_1_sim_power_comp.html" target="_top" xlink:title="Base class for all components that are transmitting power.">
 <polygon fill="none" stroke="black" points="465,-795.5 465,-825.5 585,-825.5 585,-795.5 465,-795.5"/>
 <text text-anchor="start" x="473" y="-813.5" font-family="Helvetica" font-size="10.00">CPS::SimPowerComp&lt;</text>
@@ -59,9 +59,9 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node93 -->
+<!-- Node1&#45;&gt;Node95 -->
 <g id="edge48" class="edge">
-<title>Node1&#45;&gt;Node93</title>
+<title>Node1&#45;&gt;Node95</title>
 <path fill="none" stroke="midnightblue" d="M438.34,-810.5C447.34,-810.5 456.36,-810.5 464.99,-810.5"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="438.22,-807 428.22,-810.5 438.22,-814 438.22,-807"/>
 </g>
@@ -747,16 +747,16 @@
 <path fill="none" stroke="midnightblue" d="M790.77,-822.32C795.19,-818.64 799.09,-814.39 802,-809.5 821.23,-777.23 815.72,-170.82 820,-133.5 824.8,-91.59 810.01,-71.15 839,-40.5 847.2,-31.83 858.02,-26.03 869.42,-22.18"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="788.45,-819.68 782.36,-828.35 792.53,-825.36 788.45,-819.68"/>
 </g>
-<!-- Node93&#45;&gt;Node4 -->
+<!-- Node95&#45;&gt;Node4 -->
 <g id="edge49" class="edge">
-<title>Node93&#45;&gt;Node4</title>
+<title>Node95&#45;&gt;Node4</title>
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M595.12,-821.11C623.02,-825.39 654.9,-830.28 681.72,-834.4"/>
 <polygon fill="orange" stroke="orange" points="595.45,-817.62 585.03,-819.56 594.39,-824.54 595.45,-817.62"/>
 <text text-anchor="middle" x="633.5" y="-834.5" font-family="Helvetica" font-size="10.00"> &lt; Complex &gt;</text>
 </g>
-<!-- Node93&#45;&gt;Node62 -->
+<!-- Node95&#45;&gt;Node62 -->
 <g id="edge50" class="edge">
-<title>Node93&#45;&gt;Node62</title>
+<title>Node95&#45;&gt;Node62</title>
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M595.31,-799.5C597.9,-799.15 600.47,-798.82 603,-798.5 628.79,-795.28 657.38,-792.46 681.82,-790.28"/>
 <polygon fill="orange" stroke="orange" points="594.65,-796.06 585.22,-800.9 595.61,-802.99 594.65,-796.06"/>
 <text text-anchor="middle" x="633.5" y="-801.5" font-family="Helvetica" font-size="10.00"> &lt; Real &gt;</text>

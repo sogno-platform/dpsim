@@ -43,9 +43,9 @@
 <area shape="rect" id="node38" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" title="average inverter model with LC filter" alt="" coords="459,1823,661,1865"/>
 <area shape="rect" id="node39" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html" title=" " alt="" coords="469,1889,651,1930"/>
 <area shape="rect" id="node40" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="471,1955,649,1981"/>
-<area shape="rect" id="node41" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="475,2005,645,2032"/>
-<area shape="rect" id="node42" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html" title="Network injection model." alt="" coords="449,2056,671,2083"/>
-<area shape="rect" id="node43" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="480,2107,640,2133"/>
-<area shape="rect" id="node44" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html" title="TODO: currently modelled as an impedance, which obviously doesn&#39;t have a constant power characteristi..." alt="" coords="475,2157,645,2184"/>
-<area shape="rect" id="node45" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html" title="EMT Resistor." alt="" coords="474,2208,646,2235"/>
+<area shape="rect" id="node41" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html" title="Ideal current source model." alt="" coords="456,2005,664,2032"/>
+<area shape="rect" id="node42" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="475,2056,645,2083"/>
+<area shape="rect" id="node43" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html" title="Network injection model." alt="" coords="449,2107,671,2133"/>
+<area shape="rect" id="node44" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="480,2157,640,2184"/>
+<area shape="rect" id="node45" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html" title="TODO: currently modelled as an impedance, which obviously doesn&#39;t have a constant power characteristi..." alt="" coords="475,2208,645,2235"/>
 </map>

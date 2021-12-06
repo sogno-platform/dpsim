@@ -114,7 +114,7 @@ $(function() {
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keywordtype">void</span> EMT::Ph3::SynchronGeneratorDQSmpl::initialize(Real om, Real dt,</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    Real initActivePower, Real initReactivePower, Real initTerminalVolt,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    Real initVoltAngle, Real initMechPower) {</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    mSystemOmega = om;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    mSystemTimeStep = dt;</div>
@@ -149,7 +149,7 @@ $(function() {
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    mReactanceMat = mInductanceMat.inverse();</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// steady state per unit initial value</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// Calculation of operational parameters</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    mXd = mOmMech*(mLl + mLmd);</div>

@@ -104,7 +104,7 @@ $(function() {
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordtype">void</span> EMT::Ph3::SynchronGeneratorDQSmplCompSource::initialize(Real om, Real dt,</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    Real initActivePower, Real initReactivePower, Real initTerminalVolt,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    Real initVoltAngle, Real initMechPower) {</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    mSystemOmega = om;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    mSystemTimeStep = dt;</div>
@@ -136,7 +136,7 @@ $(function() {
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    mReactanceMat = mInductanceMat.inverse();</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">// steady state per unit initial value</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">//mMechTorque = -mMechTorque;</span></div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// Calculation of operational parameters</span></div>

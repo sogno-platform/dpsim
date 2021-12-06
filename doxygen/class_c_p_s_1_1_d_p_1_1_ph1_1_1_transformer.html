@@ -114,6 +114,10 @@ Public Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a26a48f32c47df359fc007f06d71838cd">setParameters</a> (Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance)</td></tr>
 <tr class="memdesc:a26a48f32c47df359fc007f06d71838cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines component parameters. <br /></td></tr>
 <tr class="separator:a26a48f32c47df359fc007f06d71838cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50e2a8a68a5a3e376f19f64f1659a4d7"><td class="memItemLeft" align="right" valign="top"><a id="a50e2a8a68a5a3e376f19f64f1659a4d7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a50e2a8a68a5a3e376f19f64f1659a4d7">setParameters</a> (Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance)</td></tr>
+<tr class="memdesc:a50e2a8a68a5a3e376f19f64f1659a4d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set transformer specific parameters. <br /></td></tr>
+<tr class="separator:a50e2a8a68a5a3e376f19f64f1659a4d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3ca36e3467197fb5f9d40fa3710632c"><td class="memItemLeft" align="right" valign="top"><a id="ab3ca36e3467197fb5f9d40fa3710632c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#ab3ca36e3467197fb5f9d40fa3710632c">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
 <tr class="memdesc:ab3ca36e3467197fb5f9d40fa3710632c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
@@ -414,7 +418,8 @@ typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bott
 <tr class="separator:a820b19d65a66e64d40ac2b1b94831b1c inherit pub_types_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_class_c_p_s_1_1_topological_power_comp"><td colspan="2" onclick="javascript:toggleInherit('pub_types_class_c_p_s_1_1_topological_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a></td></tr>
 <tr class="memitem:ab9d4f348a42dc1f2617102595eba1f47 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="ab9d4f348a42dc1f2617102595eba1f47"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>Behaviour</b> { <b>Initialization</b>
-, <b>Simulation</b>
+, <b>MNASimulation</b>
+, <b>PFSimulation</b>
  }</td></tr>
 <tr class="separator:ab9d4f348a42dc1f2617102595eba1f47 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab92768bb51c7160c9151d81038eebd90 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="ab92768bb51c7160c9151d81038eebd90"></a>
@@ -512,8 +517,8 @@ Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 Logger::Level&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a113e3e3f5ce50c5162079cad7d206a40">mLogLevel</a></td></tr>
 <tr class="memdesc:a113e3e3f5ce50c5162079cad7d206a40 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Component logger control for internal variables. <br /></td></tr>
 <tr class="separator:a113e3e3f5ce50c5162079cad7d206a40 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e8c43bee6b7f5a2f0643c2d57036fe5 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a7e8c43bee6b7f5a2f0643c2d57036fe5">mBehaviour</a> = Behaviour::Simulation</td></tr>
-<tr class="separator:a7e8c43bee6b7f5a2f0643c2d57036fe5 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00c092e98151b59937b66751d416128d inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memItemLeft" align="right" valign="top">Behaviour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a00c092e98151b59937b66751d416128d">mBehaviour</a> = Behaviour::MNASimulation</td></tr>
+<tr class="separator:a00c092e98151b59937b66751d416128d inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7be81a0a95fe67af7776aad6e22b9665 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="a7be81a0a95fe67af7776aad6e22b9665"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a7be81a0a95fe67af7776aad6e22b9665">mParametersSet</a> = false</td></tr>
 <tr class="memdesc:a7be81a0a95fe67af7776aad6e22b9665 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating that parameters are set via setParameters() function. <br /></td></tr>
@@ -543,6 +548,10 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a4cc4a16c87a314af669c6a00838948a6">mNominalVoltageEnd2</a></td></tr>
 <tr class="memdesc:a4cc4a16c87a314af669c6a00838948a6 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nominal voltage of secondary side. <br /></td></tr>
 <tr class="separator:a4cc4a16c87a314af669c6a00838948a6 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5df6392c67225f58c9778d69fefa545 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memItemLeft" align="right" valign="top"><a id="aa5df6392c67225f58c9778d69fefa545"></a>
+Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#aa5df6392c67225f58c9778d69fefa545">mRatedPower</a></td></tr>
+<tr class="memdesc:aa5df6392c67225f58c9778d69fefa545 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rated Apparent Power [VA]. <br /></td></tr>
+<tr class="separator:aa5df6392c67225f58c9778d69fefa545 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a466ce692e2b921216c833c01a1d359b0 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memItemLeft" align="right" valign="top"><a id="a466ce692e2b921216c833c01a1d359b0"></a>
 Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a466ce692e2b921216c833c01a1d359b0">mRatio</a></td></tr>
 <tr class="memdesc:a466ce692e2b921216c833c01a1d359b0 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Complex transformer ratio. <br /></td></tr>
@@ -559,7 +568,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html" title="Transformer that includes an inductance and resistance.">Transformer</a> that includes an inductance and resistance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8h_source.html#l00021">21</a> of file <a class="el" href="_d_p___ph1___transformer_8h_source.html">DP_Ph1_Transformer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8h_source.html#l00022">22</a> of file <a class="el" href="_d_p___ph1___transformer_8h_source.html">DP_Ph1_Transformer.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ac055a04c345f1c925186b87375d26d46"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac055a04c345f1c925186b87375d26d46">&#9670;&nbsp;</a></span>clone()</h2>
@@ -588,7 +597,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#ae30ce3121733956d353e627aa6f115a7">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00033">33</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00032">32</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>

@@ -108,9 +108,9 @@ $(function() {
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    mHasTurbineGovernor = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a1b3ec128aa0246663b4e8e5da836ee78">   40</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#abfa357e39d49bb6f0e0f48068fd47477">DP::Ph3::SynchronGeneratorVBR::initialize</a>(Real om, Real dt,</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a29d55a81b28b29bc90d84841c968ee52">   40</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#abfa357e39d49bb6f0e0f48068fd47477">DP::Ph3::SynchronGeneratorVBR::initialize</a>(Real om, Real dt,</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    Real initActivePower, Real initReactivePower,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    Real initTerminalVolt, Real initVoltAngle, Real initMechPower) {</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    mSystemOmega = om;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    mSystemTimeStep = dt;</div>
@@ -142,7 +142,7 @@ $(function() {
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        -mLa / 2, -mLa / 2, mLl + mLa;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">// steady state per unit initial value</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    mThetaMech2 = mThetaMech + PI / 2;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    mThetaMech = mThetaMech + PI / 2;</div>

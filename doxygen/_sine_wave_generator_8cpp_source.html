@@ -86,19 +86,26 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    mInitialPhase = Math::phase(initialPhasor);</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    mFrequency = frequency;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    attribute&lt;Complex&gt;(<span class="stringliteral">&quot;sigOut&quot;</span>)-&gt;set(initialPhasor);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    attribute&lt;Real&gt;(<span class="stringliteral">&quot;freq&quot;</span>)-&gt;set(frequency);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a8c3c119165f39326b9bc5998a4908fe0">   22</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a8c3c119165f39326b9bc5998a4908fe0">Signal::SineWaveGenerator::step</a>(Real time) {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordflow">if</span> (mFrequency != 0.0) {</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        attribute&lt;Complex&gt;(<span class="stringliteral">&quot;sigOut&quot;</span>)-&gt;set(Complex(</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            mMagnitude * cos(time * 2.*PI*mFrequency + mInitialPhase),</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            mMagnitude * sin(time * 2.*PI*mFrequency + mInitialPhase)));</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="class_c_p_s_1_1_topological_signal_comp.html#af317515bcc0e823009d2cb9a816d7dfa">mSLog</a>-&gt;info(    <span class="stringliteral">&quot;Parameters: \n&quot;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                     <span class="stringliteral">&quot;Sine wave magnitude: {} [V] \n&quot;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                     <span class="stringliteral">&quot;Sine wave initial phase: {} [rad] \n&quot;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                     <span class="stringliteral">&quot;Sine wave frequency: {} [Hz] \n&quot;</span>,</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;                    mMagnitude, mInitialPhase, mFrequency);              </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    attribute&lt;Complex&gt;(<span class="stringliteral">&quot;sigOut&quot;</span>)-&gt;set(initialPhasor);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    attribute&lt;Real&gt;(<span class="stringliteral">&quot;freq&quot;</span>)-&gt;set(frequency);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a8c3c119165f39326b9bc5998a4908fe0">   28</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a8c3c119165f39326b9bc5998a4908fe0">Signal::SineWaveGenerator::step</a>(Real time) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">if</span> (mFrequency != 0.0) {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        attribute&lt;Complex&gt;(<span class="stringliteral">&quot;sigOut&quot;</span>)-&gt;set(Complex(</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            mMagnitude * cos(time * 2.*PI*mFrequency + mInitialPhase),</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            mMagnitude * sin(time * 2.*PI*mFrequency + mInitialPhase)));</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    }</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_sine_wave_generator_html_a0a45155b01669f8d31bbbbd8e3d05bc0"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a0a45155b01669f8d31bbbbd8e3d05bc0">CPS::Signal::SineWaveGenerator::setParameters</a></div><div class="ttdeci">void setParameters(Complex initialPhasor, Real frequency=0.0)</div><div class="ttdoc">set the source's parameters</div><div class="ttdef"><b>Definition:</b> <a href="_sine_wave_generator_8cpp_source.html#l00013">SineWaveGenerator.cpp:13</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_sine_wave_generator_html_a8c3c119165f39326b9bc5998a4908fe0"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a8c3c119165f39326b9bc5998a4908fe0">CPS::Signal::SineWaveGenerator::step</a></div><div class="ttdeci">void step(Real time)</div><div class="ttdoc">implementation of inherited method step to update and return the current signal value</div><div class="ttdef"><b>Definition:</b> <a href="_sine_wave_generator_8cpp_source.html#l00022">SineWaveGenerator.cpp:22</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_sine_wave_generator_html_a8c3c119165f39326b9bc5998a4908fe0"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a8c3c119165f39326b9bc5998a4908fe0">CPS::Signal::SineWaveGenerator::step</a></div><div class="ttdeci">void step(Real time)</div><div class="ttdoc">implementation of inherited method step to update and return the current signal value</div><div class="ttdef"><b>Definition:</b> <a href="_sine_wave_generator_8cpp_source.html#l00028">SineWaveGenerator.cpp:28</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_signal_comp_html_af317515bcc0e823009d2cb9a816d7dfa"><div class="ttname"><a href="class_c_p_s_1_1_topological_signal_comp.html#af317515bcc0e823009d2cb9a816d7dfa">CPS::TopologicalSignalComp::mSLog</a></div><div class="ttdeci">Logger::Log mSLog</div><div class="ttdoc">Component logger.</div><div class="ttdef"><b>Definition:</b> <a href="_topological_signal_comp_8h_source.html#l00021">TopologicalSignalComp.h:21</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

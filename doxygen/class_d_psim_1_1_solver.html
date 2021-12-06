@@ -88,6 +88,10 @@ Inheritance diagram for DPsim::Solver:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:abf97ba7da8f4320061ac8101ef45cf2f"><td class="memItemLeft" align="right" valign="top"><a id="abf97ba7da8f4320061ac8101ef45cf2f"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>Behaviour</b> { <b>Initialization</b>
+, <b>Simulation</b>
+ }</td></tr>
+<tr class="separator:abf97ba7da8f4320061ac8101ef45cf2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc3b0db5925f348e9a41093c1759919e"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Type</a> { <b>MNA</b>
 , <b>DAE</b>
 , <b>NRP</b>
@@ -114,6 +118,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>doFrequencyParalleliz
 <tr class="memitem:a55d0b0fd08980de35d936ea167bf8a86"><td class="memItemLeft" align="right" valign="top"><a id="a55d0b0fd08980de35d936ea167bf8a86"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setSystem</b> (const <a class="el" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system)</td></tr>
 <tr class="separator:a55d0b0fd08980de35d936ea167bf8a86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaca0ec55e6c02924c09da8de629912e"><td class="memItemLeft" align="right" valign="top"><a id="acaca0ec55e6c02924c09da8de629912e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>doSystemMatrixRecomputation</b> (Bool value)</td></tr>
+<tr class="separator:acaca0ec55e6c02924c09da8de629912e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e851429fec0ddfaf3b20be40ab4cad3"><td class="memItemLeft" align="right" valign="top"><a id="a8e851429fec0ddfaf3b20be40ab4cad3"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>initialize</b> ()</td></tr>
 <tr class="separator:a8e851429fec0ddfaf3b20be40ab4cad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,6 +136,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a1b43ecdd64e83a3e4d5762355647b3ea">setSteadStIniAccLimit</a> (Real v)</td></tr>
 <tr class="memdesc:a1b43ecdd64e83a3e4d5762355647b3ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">set steady state initialization accuracy limit <br /></td></tr>
 <tr class="separator:a1b43ecdd64e83a3e4d5762355647b3ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9acdaabc5d46b35299fd5af1d893b840"><td class="memItemLeft" align="right" valign="top"><a id="a9acdaabc5d46b35299fd5af1d893b840"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a9acdaabc5d46b35299fd5af1d893b840">setSolverAndComponentBehaviour</a> (Solver::Behaviour behaviour)</td></tr>
+<tr class="memdesc:a9acdaabc5d46b35299fd5af1d893b840"><td class="mdescLeft">&#160;</td><td class="mdescRight">set solver and component to initialization or simulation behaviour <br /></td></tr>
+<tr class="separator:a9acdaabc5d46b35299fd5af1d893b840"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0d672f76696567eeffb57b333d62be3"><td class="memItemLeft" align="right" valign="top"><a id="af0d672f76696567eeffb57b333d62be3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#af0d672f76696567eeffb57b333d62be3">doInitFromNodesAndTerminals</a> (Bool f)</td></tr>
 <tr class="memdesc:af0d672f76696567eeffb57b333d62be3"><td class="mdescLeft">&#160;</td><td class="mdescRight">activate powerflow initialization <br /></td></tr>
@@ -182,6 +193,14 @@ Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:a4135fe35cf60bb7b97523f2c2dc48c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66d6160868a4ffe137ec6def456026b1"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a66d6160868a4ffe137ec6def456026b1">mInitFromNodesAndTerminals</a> = true</td></tr>
 <tr class="separator:a66d6160868a4ffe137ec6def456026b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27917cc7464e85a81151488e8f1ff3a7"><td class="memItemLeft" align="right" valign="top"><a id="a27917cc7464e85a81151488e8f1ff3a7"></a>
+Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a27917cc7464e85a81151488e8f1ff3a7">mSystemMatrixRecomputation</a> = false</td></tr>
+<tr class="memdesc:a27917cc7464e85a81151488e8f1ff3a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable recomputation of system matrix during simulation. <br /></td></tr>
+<tr class="separator:a27917cc7464e85a81151488e8f1ff3a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2978a74153340b65c3f3efd0a0617dda"><td class="memItemLeft" align="right" valign="top"><a id="a2978a74153340b65c3f3efd0a0617dda"></a>
+Behaviour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a2978a74153340b65c3f3efd0a0617dda">mBehaviour</a> = Solver::Behaviour::Simulation</td></tr>
+<tr class="memdesc:a2978a74153340b65c3f3efd0a0617dda"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> behaviour initialization or simulation. <br /></td></tr>
+<tr class="separator:a2978a74153340b65c3f3efd0a0617dda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for more specific solvers such as MNA, ODE or IDA. </p>
@@ -209,7 +228,7 @@ Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div><div class="memdoc">
 <p><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> types: Modified Nodal Analysis, Differential Algebraic, Newton Raphson </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00070">70</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00079">79</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -235,7 +254,7 @@ Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div><div class="memdoc">
 <p>Activates powerflow initialization If this is false, all voltages are initialized with zero </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00053">53</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00059">59</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>

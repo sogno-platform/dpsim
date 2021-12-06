@@ -135,6 +135,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setTimeStep</b> (Real
 <tr class="memitem:a9680fc1be173642556299eb91e300002 inherit pub_methods_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="a9680fc1be173642556299eb91e300002"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>doFrequencyParallelization</b> (Bool freqParallel)</td></tr>
 <tr class="separator:a9680fc1be173642556299eb91e300002 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaca0ec55e6c02924c09da8de629912e inherit pub_methods_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="acaca0ec55e6c02924c09da8de629912e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>doSystemMatrixRecomputation</b> (Bool value)</td></tr>
+<tr class="separator:acaca0ec55e6c02924c09da8de629912e inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67ae1b76aa257df267fd660c8c542813 inherit pub_methods_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="a67ae1b76aa257df267fd660c8c542813"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a67ae1b76aa257df267fd660c8c542813">doSteadyStateInit</a> (Bool f)</td></tr>
 <tr class="memdesc:a67ae1b76aa257df267fd660c8c542813 inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">activate steady state initialization <br /></td></tr>
@@ -147,6 +150,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a1b43ecdd64e83a3e4d5762355647b3ea">setSteadStIniAccLimit</a> (Real v)</td></tr>
 <tr class="memdesc:a1b43ecdd64e83a3e4d5762355647b3ea inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">set steady state initialization accuracy limit <br /></td></tr>
 <tr class="separator:a1b43ecdd64e83a3e4d5762355647b3ea inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9acdaabc5d46b35299fd5af1d893b840 inherit pub_methods_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="a9acdaabc5d46b35299fd5af1d893b840"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a9acdaabc5d46b35299fd5af1d893b840">setSolverAndComponentBehaviour</a> (Solver::Behaviour behaviour)</td></tr>
+<tr class="memdesc:a9acdaabc5d46b35299fd5af1d893b840 inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">set solver and component to initialization or simulation behaviour <br /></td></tr>
+<tr class="separator:a9acdaabc5d46b35299fd5af1d893b840 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0d672f76696567eeffb57b333d62be3 inherit pub_methods_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="af0d672f76696567eeffb57b333d62be3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#af0d672f76696567eeffb57b333d62be3">doInitFromNodesAndTerminals</a> (Bool f)</td></tr>
 <tr class="memdesc:af0d672f76696567eeffb57b333d62be3 inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">activate powerflow initialization <br /></td></tr>
@@ -203,6 +210,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a827a6ab37d3facc10e7b21e0bf38340e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves system for single frequency. <br /></td></tr>
 <tr class="separator:a827a6ab37d3facc10e7b21e0bf38340e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html">DPsim::MnaSolverEigenSparse&lt; VarType &gt;</a></td></tr>
+<tr class="memitem:a1128bb3b8b44c5e6948e2742d60a0991 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="a1128bb3b8b44c5e6948e2742d60a0991"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a1128bb3b8b44c5e6948e2742d60a0991">createEmptySystemMatrix</a> () override</td></tr>
+<tr class="memdesc:a1128bb3b8b44c5e6948e2742d60a0991 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create system matrix. <br /></td></tr>
+<tr class="separator:a1128bb3b8b44c5e6948e2742d60a0991 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e05eaa2ef377be668441b858a63e73e inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="a3e05eaa2ef377be668441b858a63e73e"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a3e05eaa2ef377be668441b858a63e73e">switchedMatrixEmpty</a> (std::size_t index) override</td></tr>
 <tr class="memdesc:a3e05eaa2ef377be668441b858a63e73e inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets all entries in the matrix with the given switch index to zero. <br /></td></tr>
@@ -211,14 +222,26 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a80dd5cc2b88d4fa464104967d41ea035">switchedMatrixEmpty</a> (std::size_t swIdx, Int freqIdx) override</td></tr>
 <tr class="memdesc:a80dd5cc2b88d4fa464104967d41ea035 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets all entries in the matrix with the given switch index and frequency index to zero. <br /></td></tr>
 <tr class="separator:a80dd5cc2b88d4fa464104967d41ea035 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1128bb3b8b44c5e6948e2742d60a0991 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="a1128bb3b8b44c5e6948e2742d60a0991"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a1128bb3b8b44c5e6948e2742d60a0991">createEmptySystemMatrix</a> () override</td></tr>
-<tr class="memdesc:a1128bb3b8b44c5e6948e2742d60a0991 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create system matrix. <br /></td></tr>
-<tr class="separator:a1128bb3b8b44c5e6948e2742d60a0991 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ef6fd1fb41a9a0cccef6b702054b815 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="a8ef6fd1fb41a9a0cccef6b702054b815"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a8ef6fd1fb41a9a0cccef6b702054b815">switchedMatrixStamp</a> (std::size_t index, std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">CPS::MNAInterface</a> &gt;&gt; &amp;comp) override</td></tr>
 <tr class="memdesc:a8ef6fd1fb41a9a0cccef6b702054b815 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies a component stamp to the matrix with the given switch index. <br /></td></tr>
 <tr class="separator:a8ef6fd1fb41a9a0cccef6b702054b815 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25f181c768154b5f7b76423847e4882c inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="a25f181c768154b5f7b76423847e4882c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a25f181c768154b5f7b76423847e4882c">stampVariableSystemMatrix</a> () override</td></tr>
+<tr class="memdesc:a25f181c768154b5f7b76423847e4882c inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps components into the variable system matrix. <br /></td></tr>
+<tr class="separator:a25f181c768154b5f7b76423847e4882c inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa73b7001a17bc36f7ca013c19eae5be9 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="aa73b7001a17bc36f7ca013c19eae5be9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#aa73b7001a17bc36f7ca013c19eae5be9">solveWithSystemMatrixRecomputation</a> (Real time, Int timeStepCount) override</td></tr>
+<tr class="memdesc:aa73b7001a17bc36f7ca013c19eae5be9 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the system with variable system matrix. <br /></td></tr>
+<tr class="separator:aa73b7001a17bc36f7ca013c19eae5be9 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3798f979c27929aea6fc74bf17a54ab inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="ae3798f979c27929aea6fc74bf17a54ab"></a>
+virtual std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_task.html">CPS::Task</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#ae3798f979c27929aea6fc74bf17a54ab">createSolveTaskRecomp</a> () override</td></tr>
+<tr class="memdesc:ae3798f979c27929aea6fc74bf17a54ab inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a solve task for recomputation solver. <br /></td></tr>
+<tr class="separator:ae3798f979c27929aea6fc74bf17a54ab inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a367ac1a9ecfe02bcd8b7fd831327cd5f inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="a367ac1a9ecfe02bcd8b7fd831327cd5f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a367ac1a9ecfe02bcd8b7fd831327cd5f">recomputeSystemMatrix</a> (Real time)</td></tr>
+<tr class="memdesc:a367ac1a9ecfe02bcd8b7fd831327cd5f inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recomputes systems matrix. <br /></td></tr>
+<tr class="separator:a367ac1a9ecfe02bcd8b7fd831327cd5f inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e61c36802f4f4753028f81007025e23 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="a3e61c36802f4f4753028f81007025e23"></a>
 virtual std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_task.html">CPS::Task</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a3e61c36802f4f4753028f81007025e23">createSolveTask</a> () override</td></tr>
 <tr class="memdesc:a3e61c36802f4f4753028f81007025e23 inherit pro_methods_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a solve task for this solver implementation. <br /></td></tr>
@@ -272,6 +295,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#ac5255df10111ba5e9dca7ca1bd0da8a1">initializeSystemWithPrecomputedMatrices</a> ()</td></tr>
 <tr class="memdesc:ac5255df10111ba5e9dca7ca1bd0da8a1 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization of system matrices and source vector. <br /></td></tr>
 <tr class="separator:ac5255df10111ba5e9dca7ca1bd0da8a1 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b2219458eb7dfb3192f3eb2a608d0fd inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a3b2219458eb7dfb3192f3eb2a608d0fd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a3b2219458eb7dfb3192f3eb2a608d0fd">initializeSystemWithVariableMatrix</a> ()</td></tr>
+<tr class="memdesc:a3b2219458eb7dfb3192f3eb2a608d0fd inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization of system matrices and source vector. <br /></td></tr>
+<tr class="separator:a3b2219458eb7dfb3192f3eb2a608d0fd inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a9ede2b8e16702b0d957d42c000798c inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a1a9ede2b8e16702b0d957d42c000798c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a1a9ede2b8e16702b0d957d42c000798c">identifyTopologyObjects</a> ()</td></tr>
 <tr class="memdesc:a1a9ede2b8e16702b0d957d42c000798c inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identify Nodes and SimPowerComps and SimSignalComps. <br /></td></tr>
@@ -293,6 +320,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a712caed0fbf4c18dd53dc6fc069fe4c9">switchedMatrixStamp</a> (std::size_t swIdx, Int freqIdx, CPS::MNAInterface::List &amp;components, CPS::MNASwitchInterface::List &amp;switches)</td></tr>
 <tr class="memdesc:a712caed0fbf4c18dd53dc6fc069fe4c9 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies a component and switch stamp to the matrix with the given switch index. <br /></td></tr>
 <tr class="separator:a712caed0fbf4c18dd53dc6fc069fe4c9 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a469cd23e273c61769bf250352dc90b66 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a469cd23e273c61769bf250352dc90b66"></a>
+Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a469cd23e273c61769bf250352dc90b66">hasVariableComponentChanged</a> ()</td></tr>
+<tr class="memdesc:a469cd23e273c61769bf250352dc90b66 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the status of variable MNA elements have changed. <br /></td></tr>
+<tr class="separator:a469cd23e273c61769bf250352dc90b66 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e1ed4449c74fcbfe4f68e8576aee3d4 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a5e1ed4449c74fcbfe4f68e8576aee3d4"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a5e1ed4449c74fcbfe4f68e8576aee3d4">log</a> (Real time, Int timeStepCount) override</td></tr>
 <tr class="memdesc:a5e1ed4449c74fcbfe4f68e8576aee3d4 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs left and right vector. <br /></td></tr>
@@ -353,10 +384,6 @@ CPS::Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 <tr class="memdesc:a2de9056c6c0ed70185170bdb111478a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger. <br /></td></tr>
 <tr class="separator:a2de9056c6c0ed70185170bdb111478a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html">DPsim::MnaSolverEigenSparse&lt; VarType &gt;</a></td></tr>
-<tr class="memitem:a06972446e05d8521ed2741ef128cb821 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="a06972446e05d8521ed2741ef128cb821"></a>
-SparseMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a06972446e05d8521ed2741ef128cb821">mBaseSystemMatrix</a></td></tr>
-<tr class="memdesc:a06972446e05d8521ed2741ef128cb821 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base matrix that includes all static MNA elements to speed up recomputation. <br /></td></tr>
-<tr class="separator:a06972446e05d8521ed2741ef128cb821 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbfaaf48156944b2177b26d5399b39c5 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="adbfaaf48156944b2177b26d5399b39c5"></a>
 std::unordered_map&lt; std::bitset&lt; SWITCH_NUM &gt;, std::vector&lt; SparseMatrix &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#adbfaaf48156944b2177b26d5399b39c5">mSwitchedMatrices</a></td></tr>
 <tr class="memdesc:adbfaaf48156944b2177b26d5399b39c5 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of system matrices where the key is the bitset describing the switch states. <br /></td></tr>
@@ -365,6 +392,18 @@ std::unordered_map&lt; std::bitset&lt; SWITCH_NUM &gt;, std::vector&lt; SparseMa
 std::unordered_map&lt; std::bitset&lt; SWITCH_NUM &gt;, std::vector&lt; std::shared_ptr&lt; CPS::LUFactorizedSparse &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a45c05989595b0aaa3689ed39778f42e4">mLuFactorizations</a></td></tr>
 <tr class="memdesc:a45c05989595b0aaa3689ed39778f42e4 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of LU factorizations related to the system matrices. <br /></td></tr>
 <tr class="separator:a45c05989595b0aaa3689ed39778f42e4 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06972446e05d8521ed2741ef128cb821 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="a06972446e05d8521ed2741ef128cb821"></a>
+SparseMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a06972446e05d8521ed2741ef128cb821">mBaseSystemMatrix</a></td></tr>
+<tr class="memdesc:a06972446e05d8521ed2741ef128cb821 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">System matrix including all static elements. <br /></td></tr>
+<tr class="separator:a06972446e05d8521ed2741ef128cb821 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fbea7cc0f7f28fd298237c9349c5631 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="a9fbea7cc0f7f28fd298237c9349c5631"></a>
+SparseMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a9fbea7cc0f7f28fd298237c9349c5631">mVariableSystemMatrix</a></td></tr>
+<tr class="memdesc:a9fbea7cc0f7f28fd298237c9349c5631 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">System matrix including stamp of static and variable elements. <br /></td></tr>
+<tr class="separator:a9fbea7cc0f7f28fd298237c9349c5631 inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6e3c2499f56eb443cee4cdb1d923f4c inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memItemLeft" align="right" valign="top"><a id="af6e3c2499f56eb443cee4cdb1d923f4c"></a>
+CPS::LUFactorizedSparse&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#af6e3c2499f56eb443cee4cdb1d923f4c">mLuFactorizationVariableSystemMatrix</a></td></tr>
+<tr class="memdesc:af6e3c2499f56eb443cee4cdb1d923f4c inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="mdescLeft">&#160;</td><td class="mdescRight">LU factorization of variable system matrix. <br /></td></tr>
+<tr class="separator:af6e3c2499f56eb443cee4cdb1d923f4c inherit pro_attribs_class_d_psim_1_1_mna_solver_eigen_sparse"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_d_psim_1_1_mna_solver"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_d_psim_1_1_mna_solver')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_d_psim_1_1_mna_solver.html">DPsim::MnaSolver&lt; VarType &gt;</a></td></tr>
 <tr class="memitem:a04b00295551c86652e0d35078f475357 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a04b00295551c86652e0d35078f475357"></a>
 CPS::Domain&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a04b00295551c86652e0d35078f475357">mDomain</a></td></tr>
@@ -402,6 +441,10 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a5f51900788d1df9456a42953d6a45061">mNumTotalMatrixNodeIndices</a> = 0</td></tr>
 <tr class="memdesc:a5f51900788d1df9456a42953d6a45061 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total number of network and virtual nodes, considering individual phases and additional frequencies. <br /></td></tr>
 <tr class="separator:a5f51900788d1df9456a42953d6a45061 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85c387ebdd9f35c08f85d8e90f4aa801 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a85c387ebdd9f35c08f85d8e90f4aa801"></a>
+std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a85c387ebdd9f35c08f85d8e90f4aa801">mListVariableSystemMatrixEntries</a></td></tr>
+<tr class="memdesc:a85c387ebdd9f35c08f85d8e90f4aa801 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of index pairs of varying matrix entries. <br /></td></tr>
+<tr class="separator:a85c387ebdd9f35c08f85d8e90f4aa801 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27f136ea59231eb91018f0c3f69661c3 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a27f136ea59231eb91018f0c3f69661c3"></a>
 <a class="el" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a27f136ea59231eb91018f0c3f69661c3">mSystem</a></td></tr>
 <tr class="memdesc:a27f136ea59231eb91018f0c3f69661c3 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">System topology. <br /></td></tr>
@@ -420,12 +463,6 @@ CPS::MNAInterface::List&#160;</td><td class="memItemRight" valign="bottom"><a cl
 CPS::MNAInterface::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a6487775095e366f311ae4130837c23b0">mMNAIntfSwitches</a></td></tr>
 <tr class="memdesc:a6487775095e366f311ae4130837c23b0 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of switches if they must be accessed as MNAInterface objects. <br /></td></tr>
 <tr class="separator:a6487775095e366f311ae4130837c23b0 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89871661065c310cb04d19b3d7983f7a inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top">CPS::MNAVariableCompInterface::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a89871661065c310cb04d19b3d7983f7a">mVariableComps</a></td></tr>
-<tr class="separator:a89871661065c310cb04d19b3d7983f7a inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d82f975a2bd257deddcbcf034015579 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a4d82f975a2bd257deddcbcf034015579"></a>
-CPS::MNAInterface::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a4d82f975a2bd257deddcbcf034015579">mMNAIntfVariableComps</a></td></tr>
-<tr class="memdesc:a4d82f975a2bd257deddcbcf034015579 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of variable components if they must be accessed as MNAInterface objects. <br /></td></tr>
-<tr class="separator:a4d82f975a2bd257deddcbcf034015579 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7fb661a5024dbc6c5efe6e8cc52cd1a inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="ac7fb661a5024dbc6c5efe6e8cc52cd1a"></a>
 CPS::SimSignalComp::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#ac7fb661a5024dbc6c5efe6e8cc52cd1a">mSimSignalComps</a></td></tr>
 <tr class="memdesc:ac7fb661a5024dbc6c5efe6e8cc52cd1a inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of signal type components that do not directly interact with the MNA solver. <br /></td></tr>
@@ -457,6 +494,16 @@ std::vector&lt; Matrix &gt;&#160;</td><td class="memItemRight" valign="bottom"><
 <tr class="memitem:abb64390134c4de9d777d7878eca76fd5 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="abb64390134c4de9d777d7878eca76fd5"></a>
 std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Matrix &gt;::Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mLeftVectorHarmAttributes</b></td></tr>
 <tr class="separator:abb64390134c4de9d777d7878eca76fd5 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97bc986ded0185829ea7056e23558cd4 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a97bc986ded0185829ea7056e23558cd4"></a>
+Int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a97bc986ded0185829ea7056e23558cd4">mNumRecomputations</a></td></tr>
+<tr class="memdesc:a97bc986ded0185829ea7056e23558cd4 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of system matrix recomputations. <br /></td></tr>
+<tr class="separator:a97bc986ded0185829ea7056e23558cd4 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89871661065c310cb04d19b3d7983f7a inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top">CPS::MNAVariableCompInterface::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a89871661065c310cb04d19b3d7983f7a">mVariableComps</a></td></tr>
+<tr class="separator:a89871661065c310cb04d19b3d7983f7a inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d82f975a2bd257deddcbcf034015579 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a4d82f975a2bd257deddcbcf034015579"></a>
+CPS::MNAInterface::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a4d82f975a2bd257deddcbcf034015579">mMNAIntfVariableComps</a></td></tr>
+<tr class="memdesc:a4d82f975a2bd257deddcbcf034015579 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of variable components if they must be accessed as MNAInterface objects. <br /></td></tr>
+<tr class="separator:a4d82f975a2bd257deddcbcf034015579 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a8be8b5d1fc96ec711742d348139764 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memItemLeft" align="right" valign="top"><a id="a6a8be8b5d1fc96ec711742d348139764"></a>
 UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a6a8be8b5d1fc96ec711742d348139764">mSwitchTimeIndex</a> = 0</td></tr>
 <tr class="memdesc:a6a8be8b5d1fc96ec711742d348139764 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index of the next switching event. <br /></td></tr>
@@ -516,10 +563,22 @@ Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:a4135fe35cf60bb7b97523f2c2dc48c4f inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66d6160868a4ffe137ec6def456026b1 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a66d6160868a4ffe137ec6def456026b1">mInitFromNodesAndTerminals</a> = true</td></tr>
 <tr class="separator:a66d6160868a4ffe137ec6def456026b1 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27917cc7464e85a81151488e8f1ff3a7 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="a27917cc7464e85a81151488e8f1ff3a7"></a>
+Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a27917cc7464e85a81151488e8f1ff3a7">mSystemMatrixRecomputation</a> = false</td></tr>
+<tr class="memdesc:a27917cc7464e85a81151488e8f1ff3a7 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable recomputation of system matrix during simulation. <br /></td></tr>
+<tr class="separator:a27917cc7464e85a81151488e8f1ff3a7 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2978a74153340b65c3f3efd0a0617dda inherit pro_attribs_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="a2978a74153340b65c3f3efd0a0617dda"></a>
+Behaviour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a2978a74153340b65c3f3efd0a0617dda">mBehaviour</a> = Solver::Behaviour::Simulation</td></tr>
+<tr class="memdesc:a2978a74153340b65c3f3efd0a0617dda inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> behaviour initialization or simulation. <br /></td></tr>
+<tr class="separator:a2978a74153340b65c3f3efd0a0617dda inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_class_d_psim_1_1_solver"><td colspan="2" onclick="javascript:toggleInherit('pub_types_class_d_psim_1_1_solver')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td></tr>
+<tr class="memitem:abf97ba7da8f4320061ac8101ef45cf2f inherit pub_types_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="abf97ba7da8f4320061ac8101ef45cf2f"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>Behaviour</b> { <b>Initialization</b>
+, <b>Simulation</b>
+ }</td></tr>
+<tr class="separator:abf97ba7da8f4320061ac8101ef45cf2f inherit pub_types_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc3b0db5925f348e9a41093c1759919e inherit pub_types_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Type</a> { <b>MNA</b>
 , <b>DAE</b>
 , <b>NRP</b>

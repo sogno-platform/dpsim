@@ -142,136 +142,134 @@ $(function() {
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        mSwitchedMatrices[bit].push_back(Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices));</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        mLuFactorizations[bit].push_back(Eigen::PartialPivLU&lt;Matrix&gt;());</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    mBaseSystemMatrix = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#a11428dca2d3b5b6c824240581bfe419a">   78</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#ac22771fb42f00b76f10c2017a8a55fd4">MnaSolverEigenDense&lt;Complex&gt;::createEmptySystemMatrix</a>() {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">if</span> (mSwitches.size() &gt; SWITCH_NUM)</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordflow">throw</span> <a class="code" href="class_c_p_s_1_1_system_error.html">SystemError</a>(<span class="stringliteral">&quot;Too many Switches.&quot;</span>);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">if</span> (mFrequencyParallel) {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">for</span> (UInt i = 0; i &lt; std::pow(2,mSwitches.size()); ++i) {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keywordflow">for</span>(Int freq = 0; freq &lt; mSystem.mFrequencies.size(); ++freq) {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                <span class="keyword">auto</span> bit = std::bitset&lt;SWITCH_NUM&gt;(i);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                mLuFactorizations[bit].push_back(Eigen::PartialPivLU&lt;Matrix&gt;());</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        }</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; (1ULL &lt;&lt; mSwitches.size()); i++) {</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keyword">auto</span> bit = std::bitset&lt;SWITCH_NUM&gt;(i);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            mLuFactorizations[bit].push_back(Eigen::PartialPivLU&lt;Matrix&gt;());</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        mBaseSystemMatrix = Matrix::Zero(2 * (mNumTotalMatrixNodeIndices), 2 * (mNumTotalMatrixNodeIndices));</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#a32d0ec06ca345f30534a53a683fdcb84">  102</a></span>&#160;std::shared_ptr&lt;CPS::Task&gt; <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#a32d0ec06ca345f30534a53a683fdcb84">MnaSolverEigenDense&lt;VarType&gt;::createSolveTask</a>()</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;{</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">return</span> std::make_shared&lt;MnaSolverEigenDense&lt;VarType&gt;::SolveTask&gt;(*this);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
-<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#af727edef0ec2958ef8059d482f60857a">  108</a></span>&#160;std::shared_ptr&lt;CPS::Task&gt; <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#af727edef0ec2958ef8059d482f60857a">MnaSolverEigenDense&lt;VarType&gt;::createSolveTaskHarm</a>(UInt freqIdx)</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;{</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">return</span> std::make_shared&lt;MnaSolverEigenDense&lt;VarType&gt;::SolveTaskHarm&gt;(*<span class="keyword">this</span>, freqIdx);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;}</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
-<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#af3479227616b3e21aa49270783e4a51e">  114</a></span>&#160;std::shared_ptr&lt;CPS::Task&gt; <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#af3479227616b3e21aa49270783e4a51e">MnaSolverEigenDense&lt;VarType&gt;::createLogTask</a>()</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;{</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">return</span> std::make_shared&lt;MnaSolverEigenDense&lt;VarType&gt;::LogTask&gt;(*this);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;}</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
-<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#a9a4c999c62ba5e2c7a05943fff1c6805">  120</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#a9a4c999c62ba5e2c7a05943fff1c6805">MnaSolverEigenDense&lt;VarType&gt;::solve</a>(Real time, Int timeStepCount) {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="comment">// Reset source vector</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    mRightSideVector.setZero();</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="comment">// Add together the right side vector (computed by the components&#39;</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="comment">// pre-step tasks)</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> stamp : mRightVectorStamps)</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        mRightSideVector += *stamp;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordflow">if</span> (!mIsInInitialization)</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <a class="code" href="class_d_psim_1_1_mna_solver.html#a7bf9fb141c483f932de2073ca8f64547">MnaSolver&lt;VarType&gt;::updateSwitchStatus</a>();</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">if</span> (mSwitchedMatrices.size() &gt; 0)</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0].solve(mRightSideVector);</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="comment">// TODO split into separate task? (dependent on x, updating all v attributes)</span></div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">for</span> (UInt nodeIdx = 0; nodeIdx &lt; mNumNetNodes; ++nodeIdx)</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        mNodes[nodeIdx]-&gt;mnaUpdateVoltage(mLeftSideVector);</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="comment">// Components&#39; states will be updated by the post-step tasks</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;}</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
-<div class="line"><a name="l00143"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#adf1065b921d4e79a4493b57dbf1fcb09">  143</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#adf1065b921d4e79a4493b57dbf1fcb09">MnaSolverEigenDense&lt;VarType&gt;::solveWithHarmonics</a>(Real time, Int timeStepCount, Int freqIdx) {</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    mRightSideVectorHarm[freqIdx].setZero();</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="comment">// Sum of right side vectors (computed by the components&#39; pre-step tasks)</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> stamp : mRightVectorStamps)</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        mRightSideVectorHarm[freqIdx] += stamp-&gt;col(freqIdx);</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    mLeftSideVectorHarm[freqIdx] =  mLuFactorizations[mCurrentSwitchStatus][freqIdx].solve(mRightSideVectorHarm[freqIdx]);</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;}</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
-<div class="line"><a name="l00154"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#ae9308cae4cf371dec827e762a1e34508">  154</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#ae9308cae4cf371dec827e762a1e34508">MnaSolverEigenDense&lt;VarType&gt;::logSystemMatrices</a>() {</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordflow">if</span> (mFrequencyParallel) {</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        <span class="keywordflow">for</span> (UInt i = 0; i &lt; mSwitchedMatrices[std::bitset&lt;SWITCH_NUM&gt;(0)].size(); ++i) {</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            mSLog-&gt;info(<span class="stringliteral">&quot;System matrix for frequency: {:d} \n{:s}&quot;</span>, i,</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;                Logger::matrixToString(mSwitchedMatrices[std::bitset&lt;SWITCH_NUM&gt;(0)][i]));</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            <span class="comment">//mSLog-&gt;info(&quot;LU decomposition for frequency: {:d} \n{:s}&quot;, i,</span></div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;            <span class="comment">//  Logger::matrixToString(mLuFactorizations[std::bitset&lt;SWITCH_NUM&gt;(0)][i].matrixLU()));</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        }</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="keywordflow">for</span> (UInt i = 0; i &lt; mRightSideVectorHarm.size(); ++i)</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;            mSLog-&gt;info(<span class="stringliteral">&quot;Right side vector for frequency: {:d} \n{:s}&quot;</span>, i,</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;                Logger::matrixToString(mRightSideVectorHarm[i]));</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    }</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        <span class="keywordflow">if</span> (mSwitches.size() &lt; 1) {</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            mSLog-&gt;info(<span class="stringliteral">&quot;System matrix: \n{}&quot;</span>, mSwitchedMatrices[std::bitset&lt;SWITCH_NUM&gt;(0)][0]);</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            <span class="comment">//mSLog-&gt;info(&quot;LU decomposition: \n{}&quot;, mLuFactorizations[std::bitset&lt;SWITCH_NUM&gt;(0)].matrixLU());</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        }</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            mSLog-&gt;info(<span class="stringliteral">&quot;Initial switch status: {:s}&quot;</span>, mCurrentSwitchStatus.to_string());</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> sys : mSwitchedMatrices) {</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;                mSLog-&gt;info(<span class="stringliteral">&quot;Switching System matrix {:s} \n{:s}&quot;</span>,</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;                    sys.first.to_string(), Logger::matrixToString(sys.second[0]));</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;                <span class="comment">//mSLog-&gt;info(&quot;LU Factorization for System Matrix {:s} \n{:s}&quot;,</span></div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;                <span class="comment">//  sys.first.to_string(), Logger::matrixToString(mLuFactorizations[sys.first].matrixLU()));</span></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            }</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        }</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        mSLog-&gt;info(<span class="stringliteral">&quot;Right side vector: \n{}&quot;</span>, mRightSideVector);</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    }</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;}</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;}</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="keyword">template</span> <span class="keyword">class </span><a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html">DPsim::MnaSolverEigenDense&lt;Real&gt;</a>;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="keyword">template</span> <span class="keyword">class </span><a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html">DPsim::MnaSolverEigenDense&lt;Complex&gt;</a>;</div>
-<div class="ttc" id="aclass_c_p_s_1_1_system_error_html"><div class="ttname"><a href="class_c_p_s_1_1_system_error.html">CPS::SystemError</a></div><div class="ttdef"><b>Definition:</b> <a href="models_2_include_2cps_2_definitions_8h_source.html#l00108">Definitions.h:108</a></div></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#a11428dca2d3b5b6c824240581bfe419a">   77</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#ac22771fb42f00b76f10c2017a8a55fd4">MnaSolverEigenDense&lt;Complex&gt;::createEmptySystemMatrix</a>() {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">if</span> (mSwitches.size() &gt; SWITCH_NUM)</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">throw</span> <a class="code" href="class_c_p_s_1_1_system_error.html">SystemError</a>(<span class="stringliteral">&quot;Too many Switches.&quot;</span>);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">if</span> (mFrequencyParallel) {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">for</span> (UInt i = 0; i &lt; std::pow(2,mSwitches.size()); ++i) {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keywordflow">for</span>(Int freq = 0; freq &lt; mSystem.mFrequencies.size(); ++freq) {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                <span class="keyword">auto</span> bit = std::bitset&lt;SWITCH_NUM&gt;(i);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                mLuFactorizations[bit].push_back(Eigen::PartialPivLU&lt;Matrix&gt;());</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; (1ULL &lt;&lt; mSwitches.size()); i++) {</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keyword">auto</span> bit = std::bitset&lt;SWITCH_NUM&gt;(i);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            mLuFactorizations[bit].push_back(Eigen::PartialPivLU&lt;Matrix&gt;());</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        }</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#a32d0ec06ca345f30534a53a683fdcb84">  100</a></span>&#160;std::shared_ptr&lt;CPS::Task&gt; <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#a32d0ec06ca345f30534a53a683fdcb84">MnaSolverEigenDense&lt;VarType&gt;::createSolveTask</a>()</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;{</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordflow">return</span> std::make_shared&lt;MnaSolverEigenDense&lt;VarType&gt;::SolveTask&gt;(*this);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#af727edef0ec2958ef8059d482f60857a">  106</a></span>&#160;std::shared_ptr&lt;CPS::Task&gt; <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#af727edef0ec2958ef8059d482f60857a">MnaSolverEigenDense&lt;VarType&gt;::createSolveTaskHarm</a>(UInt freqIdx)</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;{</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">return</span> std::make_shared&lt;MnaSolverEigenDense&lt;VarType&gt;::SolveTaskHarm&gt;(*<span class="keyword">this</span>, freqIdx);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;}</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
+<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#af3479227616b3e21aa49270783e4a51e">  112</a></span>&#160;std::shared_ptr&lt;CPS::Task&gt; <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#af3479227616b3e21aa49270783e4a51e">MnaSolverEigenDense&lt;VarType&gt;::createLogTask</a>()</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;{</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">return</span> std::make_shared&lt;MnaSolverEigenDense&lt;VarType&gt;::LogTask&gt;(*this);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
+<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#a9a4c999c62ba5e2c7a05943fff1c6805">  118</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#a9a4c999c62ba5e2c7a05943fff1c6805">MnaSolverEigenDense&lt;VarType&gt;::solve</a>(Real time, Int timeStepCount) {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="comment">// Reset source vector</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    mRightSideVector.setZero();</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="comment">// Add together the right side vector (computed by the components&#39;</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="comment">// pre-step tasks)</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> stamp : mRightVectorStamps)</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        mRightSideVector += *stamp;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">if</span> (!mIsInInitialization)</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <a class="code" href="class_d_psim_1_1_mna_solver.html#a7bf9fb141c483f932de2073ca8f64547">MnaSolver&lt;VarType&gt;::updateSwitchStatus</a>();</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">if</span> (mSwitchedMatrices.size() &gt; 0)</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0].solve(mRightSideVector);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="comment">// TODO split into separate task? (dependent on x, updating all v attributes)</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordflow">for</span> (UInt nodeIdx = 0; nodeIdx &lt; mNumNetNodes; ++nodeIdx)</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        mNodes[nodeIdx]-&gt;mnaUpdateVoltage(mLeftSideVector);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="comment">// Components&#39; states will be updated by the post-step tasks</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;}</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
+<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#adf1065b921d4e79a4493b57dbf1fcb09">  141</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#adf1065b921d4e79a4493b57dbf1fcb09">MnaSolverEigenDense&lt;VarType&gt;::solveWithHarmonics</a>(Real time, Int timeStepCount, Int freqIdx) {</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    mRightSideVectorHarm[freqIdx].setZero();</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="comment">// Sum of right side vectors (computed by the components&#39; pre-step tasks)</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> stamp : mRightVectorStamps)</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        mRightSideVectorHarm[freqIdx] += stamp-&gt;col(freqIdx);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    mLeftSideVectorHarm[freqIdx] =  mLuFactorizations[mCurrentSwitchStatus][freqIdx].solve(mRightSideVectorHarm[freqIdx]);</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;}</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
+<div class="line"><a name="l00152"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_eigen_dense.html#ae9308cae4cf371dec827e762a1e34508">  152</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html#ae9308cae4cf371dec827e762a1e34508">MnaSolverEigenDense&lt;VarType&gt;::logSystemMatrices</a>() {</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordflow">if</span> (mFrequencyParallel) {</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        <span class="keywordflow">for</span> (UInt i = 0; i &lt; mSwitchedMatrices[std::bitset&lt;SWITCH_NUM&gt;(0)].size(); ++i) {</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            mSLog-&gt;info(<span class="stringliteral">&quot;System matrix for frequency: {:d} \n{:s}&quot;</span>, i,</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;                Logger::matrixToString(mSwitchedMatrices[std::bitset&lt;SWITCH_NUM&gt;(0)][i]));</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            <span class="comment">//mSLog-&gt;info(&quot;LU decomposition for frequency: {:d} \n{:s}&quot;, i,</span></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            <span class="comment">//  Logger::matrixToString(mLuFactorizations[std::bitset&lt;SWITCH_NUM&gt;(0)][i].matrixLU()));</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordflow">for</span> (UInt i = 0; i &lt; mRightSideVectorHarm.size(); ++i)</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            mSLog-&gt;info(<span class="stringliteral">&quot;Right side vector for frequency: {:d} \n{:s}&quot;</span>, i,</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                Logger::matrixToString(mRightSideVectorHarm[i]));</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    }</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="keywordflow">if</span> (mSwitches.size() &lt; 1) {</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            mSLog-&gt;info(<span class="stringliteral">&quot;System matrix: \n{}&quot;</span>, mSwitchedMatrices[std::bitset&lt;SWITCH_NUM&gt;(0)][0]);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            <span class="comment">//mSLog-&gt;info(&quot;LU decomposition: \n{}&quot;, mLuFactorizations[std::bitset&lt;SWITCH_NUM&gt;(0)].matrixLU());</span></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        }</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            mSLog-&gt;info(<span class="stringliteral">&quot;Initial switch status: {:s}&quot;</span>, mCurrentSwitchStatus.to_string());</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> sys : mSwitchedMatrices) {</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;                mSLog-&gt;info(<span class="stringliteral">&quot;Switching System matrix {:s} \n{:s}&quot;</span>,</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;                    sys.first.to_string(), Logger::matrixToString(sys.second[0]));</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;                <span class="comment">//mSLog-&gt;info(&quot;LU Factorization for System Matrix {:s} \n{:s}&quot;,</span></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;                <span class="comment">//  sys.first.to_string(), Logger::matrixToString(mLuFactorizations[sys.first].matrixLU()));</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            }</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        }</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        mSLog-&gt;info(<span class="stringliteral">&quot;Right side vector: \n{}&quot;</span>, mRightSideVector);</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    }</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;}</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;}</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="keyword">template</span> <span class="keyword">class </span><a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html">DPsim::MnaSolverEigenDense&lt;Real&gt;</a>;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="keyword">template</span> <span class="keyword">class </span><a class="code" href="class_d_psim_1_1_mna_solver_eigen_dense.html">DPsim::MnaSolverEigenDense&lt;Complex&gt;</a>;</div>
+<div class="ttc" id="aclass_c_p_s_1_1_system_error_html"><div class="ttname"><a href="class_c_p_s_1_1_system_error.html">CPS::SystemError</a></div><div class="ttdef"><b>Definition:</b> <a href="models_2_include_2cps_2_definitions_8h_source.html#l00113">Definitions.h:113</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html">DPsim::MnaSolverEigenDense</a></div><div class="ttdoc">Solver class using Modified Nodal Analysis (MNA).</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8h_source.html#l00032">MNASolverEigenDense.h:32</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_a32d0ec06ca345f30534a53a683fdcb84"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#a32d0ec06ca345f30534a53a683fdcb84">DPsim::MnaSolverEigenDense::createSolveTask</a></div><div class="ttdeci">virtual std::shared_ptr&lt; CPS::Task &gt; createSolveTask() override</div><div class="ttdoc">Create a solve task for this solver implementation.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00102">MNASolverEigenDense.cpp:102</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_a32d0ec06ca345f30534a53a683fdcb84"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#a32d0ec06ca345f30534a53a683fdcb84">DPsim::MnaSolverEigenDense::createSolveTask</a></div><div class="ttdeci">virtual std::shared_ptr&lt; CPS::Task &gt; createSolveTask() override</div><div class="ttdoc">Create a solve task for this solver implementation.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00100">MNASolverEigenDense.cpp:100</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_a57885fb7b0572b079446f2abc6248c44"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#a57885fb7b0572b079446f2abc6248c44">DPsim::MnaSolverEigenDense::switchedMatrixEmpty</a></div><div class="ttdeci">virtual void switchedMatrixEmpty(std::size_t index) override</div><div class="ttdoc">Sets all entries in the matrix with the given switch index to zero.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00023">MNASolverEigenDense.cpp:23</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_a9a4c999c62ba5e2c7a05943fff1c6805"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#a9a4c999c62ba5e2c7a05943fff1c6805">DPsim::MnaSolverEigenDense::solve</a></div><div class="ttdeci">virtual void solve(Real time, Int timeStepCount) override</div><div class="ttdoc">Solves system for single frequency.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00120">MNASolverEigenDense.cpp:120</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_a9a4c999c62ba5e2c7a05943fff1c6805"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#a9a4c999c62ba5e2c7a05943fff1c6805">DPsim::MnaSolverEigenDense::solve</a></div><div class="ttdeci">virtual void solve(Real time, Int timeStepCount) override</div><div class="ttdoc">Solves system for single frequency.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00118">MNASolverEigenDense.cpp:118</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_abba9626fb787348b08494bae97084056"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#abba9626fb787348b08494bae97084056">DPsim::MnaSolverEigenDense::MnaSolverEigenDense</a></div><div class="ttdeci">MnaSolverEigenDense(String name, CPS::Domain domain=CPS::Domain::DP, CPS::Logger::Level logLevel=CPS::Logger::Level::info)</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00019">MNASolverEigenDense.cpp:19</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_ac22771fb42f00b76f10c2017a8a55fd4"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#ac22771fb42f00b76f10c2017a8a55fd4">DPsim::MnaSolverEigenDense::createEmptySystemMatrix</a></div><div class="ttdeci">virtual void createEmptySystemMatrix() override</div><div class="ttdoc">Create system matrix.</div></div>
 <div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_acab3df8221e9cfcb70665bcfdd757b6d"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#acab3df8221e9cfcb70665bcfdd757b6d">DPsim::MnaSolverEigenDense::switchedMatrixStamp</a></div><div class="ttdeci">virtual void switchedMatrixStamp(std::size_t index, std::vector&lt; std::shared_ptr&lt; CPS::MNAInterface &gt;&gt; &amp;comp) override</div><div class="ttdoc">Applies a component stamp to the matrix with the given switch index.</div></div>
-<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_adf1065b921d4e79a4493b57dbf1fcb09"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#adf1065b921d4e79a4493b57dbf1fcb09">DPsim::MnaSolverEigenDense::solveWithHarmonics</a></div><div class="ttdeci">virtual void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) override</div><div class="ttdoc">Solves system for multiple frequencies.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00143">MNASolverEigenDense.cpp:143</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_ae9308cae4cf371dec827e762a1e34508"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#ae9308cae4cf371dec827e762a1e34508">DPsim::MnaSolverEigenDense::logSystemMatrices</a></div><div class="ttdeci">virtual void logSystemMatrices() override</div><div class="ttdoc">Logging of system matrices and source vector.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00154">MNASolverEigenDense.cpp:154</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_af3479227616b3e21aa49270783e4a51e"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#af3479227616b3e21aa49270783e4a51e">DPsim::MnaSolverEigenDense::createLogTask</a></div><div class="ttdeci">virtual std::shared_ptr&lt; CPS::Task &gt; createLogTask() override</div><div class="ttdoc">Create a solve task for this solver implementation.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00114">MNASolverEigenDense.cpp:114</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_af727edef0ec2958ef8059d482f60857a"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#af727edef0ec2958ef8059d482f60857a">DPsim::MnaSolverEigenDense::createSolveTaskHarm</a></div><div class="ttdeci">virtual std::shared_ptr&lt; CPS::Task &gt; createSolveTaskHarm(UInt freqIdx) override</div><div class="ttdoc">Create a solve task for this solver implementation.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00108">MNASolverEigenDense.cpp:108</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_adf1065b921d4e79a4493b57dbf1fcb09"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#adf1065b921d4e79a4493b57dbf1fcb09">DPsim::MnaSolverEigenDense::solveWithHarmonics</a></div><div class="ttdeci">virtual void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) override</div><div class="ttdoc">Solves system for multiple frequencies.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00141">MNASolverEigenDense.cpp:141</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_ae9308cae4cf371dec827e762a1e34508"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#ae9308cae4cf371dec827e762a1e34508">DPsim::MnaSolverEigenDense::logSystemMatrices</a></div><div class="ttdeci">virtual void logSystemMatrices() override</div><div class="ttdoc">Logging of system matrices and source vector.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00152">MNASolverEigenDense.cpp:152</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_af3479227616b3e21aa49270783e4a51e"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#af3479227616b3e21aa49270783e4a51e">DPsim::MnaSolverEigenDense::createLogTask</a></div><div class="ttdeci">virtual std::shared_ptr&lt; CPS::Task &gt; createLogTask() override</div><div class="ttdoc">Create a solve task for this solver implementation.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00112">MNASolverEigenDense.cpp:112</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_mna_solver_eigen_dense_html_af727edef0ec2958ef8059d482f60857a"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_eigen_dense.html#af727edef0ec2958ef8059d482f60857a">DPsim::MnaSolverEigenDense::createSolveTaskHarm</a></div><div class="ttdeci">virtual std::shared_ptr&lt; CPS::Task &gt; createSolveTaskHarm(UInt freqIdx) override</div><div class="ttdoc">Create a solve task for this solver implementation.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_eigen_dense_8cpp_source.html#l00106">MNASolverEigenDense.cpp:106</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_mna_solver_html"><div class="ttname"><a href="class_d_psim_1_1_mna_solver.html">DPsim::MnaSolver</a></div><div class="ttdoc">Solver class using Modified Nodal Analysis (MNA).</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_8h_source.html#l00037">MNASolver.h:37</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_mna_solver_html_a7bf9fb141c483f932de2073ca8f64547"><div class="ttname"><a href="class_d_psim_1_1_mna_solver.html#a7bf9fb141c483f932de2073ca8f64547">DPsim::MnaSolver::updateSwitchStatus</a></div><div class="ttdeci">void updateSwitchStatus()</div><div class="ttdoc">Collects the status of switches to select correct system matrix.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_8cpp_source.html#l00239">MNASolver.cpp:239</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_mna_solver_html_a7bf9fb141c483f932de2073ca8f64547"><div class="ttname"><a href="class_d_psim_1_1_mna_solver.html#a7bf9fb141c483f932de2073ca8f64547">DPsim::MnaSolver::updateSwitchStatus</a></div><div class="ttdeci">void updateSwitchStatus()</div><div class="ttdoc">Collects the status of switches to select correct system matrix.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_solver_8cpp_source.html#l00294">MNASolver.cpp:294</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition:</b> <a href="_diakoptics_solver_8cpp_source.html#l00020">DiakopticsSolver.cpp:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

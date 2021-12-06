@@ -92,7 +92,8 @@ Collaboration diagram for CPS::TopologicalPowerComp:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:ab9d4f348a42dc1f2617102595eba1f47"><td class="memItemLeft" align="right" valign="top"><a id="ab9d4f348a42dc1f2617102595eba1f47"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>Behaviour</b> { <b>Initialization</b>
-, <b>Simulation</b>
+, <b>MNASimulation</b>
+, <b>PFSimulation</b>
  }</td></tr>
 <tr class="separator:ab9d4f348a42dc1f2617102595eba1f47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab92768bb51c7160c9151d81038eebd90"><td class="memItemLeft" align="right" valign="top"><a id="ab92768bb51c7160c9151d81038eebd90"></a>
@@ -213,8 +214,8 @@ Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 Logger::Level&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a113e3e3f5ce50c5162079cad7d206a40">mLogLevel</a></td></tr>
 <tr class="memdesc:a113e3e3f5ce50c5162079cad7d206a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Component logger control for internal variables. <br /></td></tr>
 <tr class="separator:a113e3e3f5ce50c5162079cad7d206a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e8c43bee6b7f5a2f0643c2d57036fe5"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a7e8c43bee6b7f5a2f0643c2d57036fe5">mBehaviour</a> = Behaviour::Simulation</td></tr>
-<tr class="separator:a7e8c43bee6b7f5a2f0643c2d57036fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00c092e98151b59937b66751d416128d"><td class="memItemLeft" align="right" valign="top">Behaviour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a00c092e98151b59937b66751d416128d">mBehaviour</a> = Behaviour::MNASimulation</td></tr>
+<tr class="separator:a00c092e98151b59937b66751d416128d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7be81a0a95fe67af7776aad6e22b9665"><td class="memItemLeft" align="right" valign="top"><a id="a7be81a0a95fe67af7776aad6e22b9665"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a7be81a0a95fe67af7776aad6e22b9665">mParametersSet</a> = false</td></tr>
 <tr class="memdesc:a7be81a0a95fe67af7776aad6e22b9665"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating that parameters are set via setParameters() function. <br /></td></tr>
@@ -242,8 +243,8 @@ template&lt;typename T , typename... Args&gt; </td></tr>
 
 <p class="definition">Definition at line <a class="el" href="_topological_power_comp_8h_source.html#l00024">24</a> of file <a class="el" href="_topological_power_comp_8h_source.html">TopologicalPowerComp.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a7e8c43bee6b7f5a2f0643c2d57036fe5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e8c43bee6b7f5a2f0643c2d57036fe5">&#9670;&nbsp;</a></span>mBehaviour</h2>
+<a id="a00c092e98151b59937b66751d416128d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00c092e98151b59937b66751d416128d">&#9670;&nbsp;</a></span>mBehaviour</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -252,7 +253,7 @@ template&lt;typename T , typename... Args&gt; </td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Bool CPS::TopologicalPowerComp::mBehaviour = Behaviour::Simulation</td>
+          <td class="memname">Behaviour CPS::TopologicalPowerComp::mBehaviour = Behaviour::MNASimulation</td>
         </tr>
       </table>
   </td>

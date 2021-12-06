@@ -257,7 +257,7 @@ and to parameterize all components of the network from Python.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dpsimpy.GeneratorType.NONE">
-<span class="sig-name descname"><span class="pre">NONE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;GeneratorType.NONE:</span> <span class="pre">3&gt;</span></em><a class="headerlink" href="#dpsimpy.GeneratorType.NONE" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">NONE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;GeneratorType.NONE:</span> <span class="pre">6&gt;</span></em><a class="headerlink" href="#dpsimpy.GeneratorType.NONE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -267,7 +267,7 @@ and to parameterize all components of the network from Python.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dpsimpy.GeneratorType.TransientStability">
-<span class="sig-name descname"><span class="pre">TransientStability</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;GeneratorType.TransientStability:</span> <span class="pre">2&gt;</span></em><a class="headerlink" href="#dpsimpy.GeneratorType.TransientStability" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">TransientStability</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;GeneratorType.TransientStability:</span> <span class="pre">3&gt;</span></em><a class="headerlink" href="#dpsimpy.GeneratorType.TransientStability" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -407,6 +407,58 @@ and to parameterize all components of the network from Python.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.Math.single_phase_variable_to_three_phase">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">single_phase_variable_to_three_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">complex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.complex128</span><span class="p"><span class="pre">[</span></span><span class="pre">m</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">n</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.Math.single_phase_variable_to_three_phase" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.MnaSolverImpl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">MnaSolverImpl</span></span><a class="headerlink" href="#dpsimpy.MnaSolverImpl" title="Permalink to this definition"></a></dt>
+<dd><p>Members:</p>
+<p>Undef</p>
+<p>EigenDense</p>
+<p>EigenSparse</p>
+<p>CUDADense</p>
+<p>CUDASparse</p>
+<p>CUDAMagma</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.MnaSolverImpl.CUDADense">
+<span class="sig-name descname"><span class="pre">CUDADense</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MnaSolverImpl.CUDADense:</span> <span class="pre">3&gt;</span></em><a class="headerlink" href="#dpsimpy.MnaSolverImpl.CUDADense" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.MnaSolverImpl.CUDAMagma">
+<span class="sig-name descname"><span class="pre">CUDAMagma</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MnaSolverImpl.CUDAMagma:</span> <span class="pre">5&gt;</span></em><a class="headerlink" href="#dpsimpy.MnaSolverImpl.CUDAMagma" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.MnaSolverImpl.CUDASparse">
+<span class="sig-name descname"><span class="pre">CUDASparse</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MnaSolverImpl.CUDASparse:</span> <span class="pre">4&gt;</span></em><a class="headerlink" href="#dpsimpy.MnaSolverImpl.CUDASparse" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.MnaSolverImpl.EigenDense">
+<span class="sig-name descname"><span class="pre">EigenDense</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MnaSolverImpl.EigenDense:</span> <span class="pre">1&gt;</span></em><a class="headerlink" href="#dpsimpy.MnaSolverImpl.EigenDense" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.MnaSolverImpl.EigenSparse">
+<span class="sig-name descname"><span class="pre">EigenSparse</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MnaSolverImpl.EigenSparse:</span> <span class="pre">2&gt;</span></em><a class="headerlink" href="#dpsimpy.MnaSolverImpl.EigenSparse" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.MnaSolverImpl.Undef">
+<span class="sig-name descname"><span class="pre">Undef</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MnaSolverImpl.Undef:</span> <span class="pre">0&gt;</span></em><a class="headerlink" href="#dpsimpy.MnaSolverImpl.Undef" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.MnaSolverImpl.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#dpsimpy.MnaSolverImpl.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.MnaSolverImpl.value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.MnaSolverImpl.value" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -581,6 +633,11 @@ and to parameterize all components of the network from Python.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.SimPowerCompComplex.get_terminal">
+<span class="sig-name descname"><span class="pre">get_terminal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SimPowerCompComplex" title="dpsimpy.SimPowerCompComplex"><span class="pre">dpsimpy.SimPowerCompComplex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPS::SimTerminal&lt;std::complex&lt;double&gt;</span> <span class="pre">&gt;</span></span></span><a class="headerlink" href="#dpsimpy.SimPowerCompComplex.get_terminal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.SimPowerCompComplex.set_intf_current">
 <span class="sig-name descname"><span class="pre">set_intf_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SimPowerCompComplex" title="dpsimpy.SimPowerCompComplex"><span class="pre">dpsimpy.SimPowerCompComplex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.complex128</span><span class="p"><span class="pre">[</span></span><span class="pre">m</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">n</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.SimPowerCompComplex.set_intf_current" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -601,6 +658,11 @@ and to parameterize all components of the network from Python.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.SimPowerCompReal.get_terminal">
+<span class="sig-name descname"><span class="pre">get_terminal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SimPowerCompReal" title="dpsimpy.SimPowerCompReal"><span class="pre">dpsimpy.SimPowerCompReal</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPS::SimTerminal&lt;double&gt;</span></span></span><a class="headerlink" href="#dpsimpy.SimPowerCompReal.get_terminal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.SimPowerCompReal.set_intf_current">
 <span class="sig-name descname"><span class="pre">set_intf_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SimPowerCompReal" title="dpsimpy.SimPowerCompReal"><span class="pre">dpsimpy.SimPowerCompReal</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">[</span></span><span class="pre">m</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">n</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.SimPowerCompReal.set_intf_current" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -611,6 +673,16 @@ and to parameterize all components of the network from Python.</p>
 <dd></dd></dl>
 
 </dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.SimTerminalComplex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">SimTerminalComplex</span></span><a class="headerlink" href="#dpsimpy.SimTerminalComplex" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.SimTerminalReal">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">SimTerminalReal</span></span><a class="headerlink" href="#dpsimpy.SimTerminalReal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dpsimpy.Simulation">
@@ -716,8 +788,18 @@ and to parameterize all components of the network from Python.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.Simulation.set_mna_solver_implementation">
+<span class="sig-name descname"><span class="pre">set_mna_solver_implementation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.Simulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0:</span> <span class="pre">DPsim::MnaSolverFactory::MnaSolverImpl</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.Simulation.set_mna_solver_implementation" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.Simulation.set_solver">
 <span class="sig-name descname"><span class="pre">set_solver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.Simulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0:</span> <span class="pre">DPsim::Solver::Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.Simulation.set_solver" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.Simulation.set_solver_component_behaviour">
+<span class="sig-name descname"><span class="pre">set_solver_component_behaviour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SolverBehaviour" title="dpsimpy.SolverBehaviour"><span class="pre">dpsimpy.SolverBehaviour</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.Simulation.set_solver_component_behaviour" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -772,6 +854,34 @@ and to parameterize all components of the network from Python.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="dpsimpy.Solver.value">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.Solver.value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.SolverBehaviour">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">SolverBehaviour</span></span><a class="headerlink" href="#dpsimpy.SolverBehaviour" title="Permalink to this definition"></a></dt>
+<dd><p>Members:</p>
+<p>Initialization</p>
+<p>Simulation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.SolverBehaviour.Initialization">
+<span class="sig-name descname"><span class="pre">Initialization</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;SolverBehaviour.Initialization:</span> <span class="pre">0&gt;</span></em><a class="headerlink" href="#dpsimpy.SolverBehaviour.Initialization" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.SolverBehaviour.Simulation">
+<span class="sig-name descname"><span class="pre">Simulation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;SolverBehaviour.Simulation:</span> <span class="pre">1&gt;</span></em><a class="headerlink" href="#dpsimpy.SolverBehaviour.Simulation" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.SolverBehaviour.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#dpsimpy.SolverBehaviour.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.SolverBehaviour.value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.SolverBehaviour.value" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -866,6 +976,21 @@ and to parameterize all components of the network from Python.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">TopologicalPowerComp</span></span><a class="headerlink" href="#dpsimpy.TopologicalPowerComp" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.TopologicalTerminal">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">TopologicalTerminal</span></span><a class="headerlink" href="#dpsimpy.TopologicalTerminal" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.TopologicalTerminal.set_power">
+<span class="sig-name descname"><span class="pre">set_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dpsimpy.TopologicalTerminal.set_power" title="Permalink to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>set_power(self: dpsimpy.TopologicalTerminal, arg0: complex) -&gt; None</p></li>
+<li><p>set_power(self: dpsimpy.TopologicalTerminal, arg0: numpy.ndarray[numpy.complex128[m, n]]) -&gt; None</p></li>
+</ol>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-dpsimpy.dp">
 <span id="dynamic-phasor-sfa-models"></span><h2>Dynamic Phasor / SFA Models<a class="headerlink" href="#module-dpsimpy.dp" title="Permalink to this headline"></a></h2>
@@ -927,7 +1052,7 @@ and to parameterize all components of the network from Python.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_transformer_parameters">
-<span class="sig-name descname"><span class="pre">set_transformer_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id0" title="dpsimpy.dp.ph1.AvVoltageSourceInverterDQ"><span class="pre">dpsimpy.dp.ph1.AvVoltageSourceInverterDQ</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_transformer_parameters" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_transformer_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id0" title="dpsimpy.dp.ph1.AvVoltageSourceInverterDQ"><span class="pre">dpsimpy.dp.ph1.AvVoltageSourceInverterDQ</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rated_power</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_transformer_parameters" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1147,8 +1272,13 @@ and to parameterize all components of the network from Python.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.dp.ph1.Transformer.set_parameters">
-<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id48" title="dpsimpy.dp.ph1.Transformer"><span class="pre">dpsimpy.dp.ph1.Transformer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.dp.ph1.Transformer.set_parameters" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dpsimpy.dp.ph1.Transformer.set_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>set_parameters(self: dpsimpy.dp.ph1.Transformer, nom_voltage_end_1: float, nom_voltage_end_2: float, ratio_abs: float, ratio_phase: float, resistance: float, inductance: float) -&gt; None</p></li>
+<li><p>set_parameters(self: dpsimpy.dp.ph1.Transformer, nom_voltage_end_1: float, nom_voltage_end_2: float, rated_power: float, ratio_abs: float, ratio_phase: float, resistance: float, inductance: float) -&gt; None</p></li>
+</ol>
+</dd></dl>
 
 </dd></dl>
 
@@ -1253,7 +1383,7 @@ and to parameterize all components of the network from Python.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">set_transformer_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id0" title="dpsimpy.dp.ph1.AvVoltageSourceInverterDQ"><span class="pre">dpsimpy.dp.ph1.AvVoltageSourceInverterDQ</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#id6" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_transformer_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id0" title="dpsimpy.dp.ph1.AvVoltageSourceInverterDQ"><span class="pre">dpsimpy.dp.ph1.AvVoltageSourceInverterDQ</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rated_power</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#id6" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1473,8 +1603,13 @@ and to parameterize all components of the network from Python.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id50">
-<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id48" title="dpsimpy.dp.ph1.Transformer"><span class="pre">dpsimpy.dp.ph1.Transformer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#id50" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id50" title="Permalink to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>set_parameters(self: dpsimpy.dp.ph1.Transformer, nom_voltage_end_1: float, nom_voltage_end_2: float, ratio_abs: float, ratio_phase: float, resistance: float, inductance: float) -&gt; None</p></li>
+<li><p>set_parameters(self: dpsimpy.dp.ph1.Transformer, nom_voltage_end_1: float, nom_voltage_end_2: float, rated_power: float, ratio_abs: float, ratio_phase: float, resistance: float, inductance: float) -&gt; None</p></li>
+</ol>
+</dd></dl>
 
 </dd></dl>
 
@@ -1830,7 +1965,7 @@ and to parameterize all components of the network from Python.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_transformer_parameters">
-<span class="sig-name descname"><span class="pre">set_transformer_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id87" title="dpsimpy.sp.ph1.AvVoltageSourceInverterDQ"><span class="pre">dpsimpy.sp.ph1.AvVoltageSourceInverterDQ</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_transformer_parameters" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_transformer_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id87" title="dpsimpy.sp.ph1.AvVoltageSourceInverterDQ"><span class="pre">dpsimpy.sp.ph1.AvVoltageSourceInverterDQ</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rated_power</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_transformer_parameters" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2181,7 +2316,7 @@ and to parameterize all components of the network from Python.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id93">
-<span class="sig-name descname"><span class="pre">set_transformer_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id87" title="dpsimpy.sp.ph1.AvVoltageSourceInverterDQ"><span class="pre">dpsimpy.sp.ph1.AvVoltageSourceInverterDQ</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#id93" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_transformer_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id87" title="dpsimpy.sp.ph1.AvVoltageSourceInverterDQ"><span class="pre">dpsimpy.sp.ph1.AvVoltageSourceInverterDQ</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nom_voltage_end_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rated_power</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#id93" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

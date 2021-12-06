@@ -95,6 +95,8 @@ Collaboration diagram for CPS::SP::Ph1::Transformer:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer_1_1_mna_post_step.html">MnaPostStep</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer_1_1_mna_pre_step.html">MnaPreStep</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -152,6 +154,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a5cd9ccdb505d439a39b220ac88727caa">mnaApplySystemMatrixStamp</a> (Matrix &amp;systemMatrix) override</td></tr>
 <tr class="memdesc:a5cd9ccdb505d439a39b220ac88727caa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
 <tr class="separator:a5cd9ccdb505d439a39b220ac88727caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e1fb9e311d8020cb91b47b355f6c2f0"><td class="memItemLeft" align="right" valign="top"><a id="a4e1fb9e311d8020cb91b47b355f6c2f0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a4e1fb9e311d8020cb91b47b355f6c2f0">mnaApplyRightSideVectorStamp</a> (Matrix &amp;rightVector) override</td></tr>
+<tr class="memdesc:a4e1fb9e311d8020cb91b47b355f6c2f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector. <br /></td></tr>
+<tr class="separator:a4e1fb9e311d8020cb91b47b355f6c2f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab060684b49f123dd14c75becf6026e82"><td class="memItemLeft" align="right" valign="top"><a id="ab060684b49f123dd14c75becf6026e82"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#ab060684b49f123dd14c75becf6026e82">mnaUpdateCurrent</a> (const Matrix &amp;leftVector) override</td></tr>
 <tr class="memdesc:ab060684b49f123dd14c75becf6026e82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates internal current variable of the component. <br /></td></tr>
@@ -160,10 +166,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a94235c8c227c973b430cdccc3e91ab20">mnaUpdateVoltage</a> (const Matrix &amp;leftVector) override</td></tr>
 <tr class="memdesc:a94235c8c227c973b430cdccc3e91ab20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates internal voltage variable of the component. <br /></td></tr>
 <tr class="separator:a94235c8c227c973b430cdccc3e91ab20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fed4543d9853eb9b09c40156a87516b"><td class="memItemLeft" align="right" valign="top"><a id="a2fed4543d9853eb9b09c40156a87516b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a2fed4543d9853eb9b09c40156a87516b">mnaPreStep</a> (Real time, Int timeStepCount)</td></tr>
+<tr class="memdesc:a2fed4543d9853eb9b09c40156a87516b"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA pre step operations. <br /></td></tr>
+<tr class="separator:a2fed4543d9853eb9b09c40156a87516b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc08b668d4ba127007c7efb874a8bd72"><td class="memItemLeft" align="right" valign="top"><a id="afc08b668d4ba127007c7efb874a8bd72"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#afc08b668d4ba127007c7efb874a8bd72">mnaPostStep</a> (Real time, Int timeStepCount, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector)</td></tr>
 <tr class="memdesc:afc08b668d4ba127007c7efb874a8bd72"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA post step operations. <br /></td></tr>
 <tr class="separator:afc08b668d4ba127007c7efb874a8bd72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa03a6675084154eecc50a43f66e034b"><td class="memItemLeft" align="right" valign="top"><a id="aaa03a6675084154eecc50a43f66e034b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#aaa03a6675084154eecc50a43f66e034b">mnaAddPreStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes)</td></tr>
+<tr class="memdesc:aaa03a6675084154eecc50a43f66e034b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA pre step dependencies. <br /></td></tr>
+<tr class="separator:aaa03a6675084154eecc50a43f66e034b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f3fbc7e2fc2dd2d4735ee27ada9fa28"><td class="memItemLeft" align="right" valign="top"><a id="a5f3fbc7e2fc2dd2d4735ee27ada9fa28"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a5f3fbc7e2fc2dd2d4735ee27ada9fa28">mnaAddPostStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector)</td></tr>
 <tr class="memdesc:a5f3fbc7e2fc2dd2d4735ee27ada9fa28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA post step dependencies. <br /></td></tr>
@@ -390,18 +404,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a9da6a575cf0a0dc83e50b22ac917b11d">mnaApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)</td></tr>
 <tr class="memdesc:a9da6a575cf0a0dc83e50b22ac917b11d inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps (sparse) system matrix. <br /></td></tr>
 <tr class="separator:a9da6a575cf0a0dc83e50b22ac917b11d inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a664df999e58b27d21ae2f915569cdc74 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memItemLeft" align="right" valign="top"><a id="a664df999e58b27d21ae2f915569cdc74"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a664df999e58b27d21ae2f915569cdc74">mnaApplyRightSideVectorStamp</a> (Matrix &amp;rightVector)</td></tr>
-<tr class="memdesc:a664df999e58b27d21ae2f915569cdc74 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector. <br /></td></tr>
-<tr class="separator:a664df999e58b27d21ae2f915569cdc74 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d90c1c7fbdb2f4b3b96c2dd14f5d0a6 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memItemLeft" align="right" valign="top"><a id="a3d90c1c7fbdb2f4b3b96c2dd14f5d0a6"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a3d90c1c7fbdb2f4b3b96c2dd14f5d0a6">mnaPreStep</a> (Real time, Int timeStepCount)</td></tr>
-<tr class="memdesc:a3d90c1c7fbdb2f4b3b96c2dd14f5d0a6 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA pre step operations. <br /></td></tr>
-<tr class="separator:a3d90c1c7fbdb2f4b3b96c2dd14f5d0a6 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94063d96a374e99130c516acc8506b57 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memItemLeft" align="right" valign="top"><a id="a94063d96a374e99130c516acc8506b57"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a94063d96a374e99130c516acc8506b57">mnaAddPreStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes)</td></tr>
-<tr class="memdesc:a94063d96a374e99130c516acc8506b57 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA pre step dependencies. <br /></td></tr>
-<tr class="separator:a94063d96a374e99130c516acc8506b57 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19018206898faee53cf3a42c521f3395 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memItemLeft" align="right" valign="top"><a id="a19018206898faee53cf3a42c521f3395"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a19018206898faee53cf3a42c521f3395">mnaInitializeHarm</a> (Real omega, Real timeStep, std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &gt; leftVector)</td></tr>
 <tr class="memdesc:a19018206898faee53cf3a42c521f3395 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of components. <br /></td></tr>
@@ -440,7 +442,8 @@ typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bott
 <tr class="separator:a820b19d65a66e64d40ac2b1b94831b1c inherit pub_types_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_class_c_p_s_1_1_topological_power_comp"><td colspan="2" onclick="javascript:toggleInherit('pub_types_class_c_p_s_1_1_topological_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a></td></tr>
 <tr class="memitem:ab9d4f348a42dc1f2617102595eba1f47 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="ab9d4f348a42dc1f2617102595eba1f47"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>Behaviour</b> { <b>Initialization</b>
-, <b>Simulation</b>
+, <b>MNASimulation</b>
+, <b>PFSimulation</b>
  }</td></tr>
 <tr class="separator:ab9d4f348a42dc1f2617102595eba1f47 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab92768bb51c7160c9151d81038eebd90 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="ab92768bb51c7160c9151d81038eebd90"></a>
@@ -538,8 +541,8 @@ Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 Logger::Level&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a113e3e3f5ce50c5162079cad7d206a40">mLogLevel</a></td></tr>
 <tr class="memdesc:a113e3e3f5ce50c5162079cad7d206a40 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Component logger control for internal variables. <br /></td></tr>
 <tr class="separator:a113e3e3f5ce50c5162079cad7d206a40 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e8c43bee6b7f5a2f0643c2d57036fe5 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a7e8c43bee6b7f5a2f0643c2d57036fe5">mBehaviour</a> = Behaviour::Simulation</td></tr>
-<tr class="separator:a7e8c43bee6b7f5a2f0643c2d57036fe5 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00c092e98151b59937b66751d416128d inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memItemLeft" align="right" valign="top">Behaviour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a00c092e98151b59937b66751d416128d">mBehaviour</a> = Behaviour::MNASimulation</td></tr>
+<tr class="separator:a00c092e98151b59937b66751d416128d inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7be81a0a95fe67af7776aad6e22b9665 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="a7be81a0a95fe67af7776aad6e22b9665"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a7be81a0a95fe67af7776aad6e22b9665">mParametersSet</a> = false</td></tr>
 <tr class="memdesc:a7be81a0a95fe67af7776aad6e22b9665 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating that parameters are set via setParameters() function. <br /></td></tr>
@@ -569,6 +572,10 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a4cc4a16c87a314af669c6a00838948a6">mNominalVoltageEnd2</a></td></tr>
 <tr class="memdesc:a4cc4a16c87a314af669c6a00838948a6 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nominal voltage of secondary side. <br /></td></tr>
 <tr class="separator:a4cc4a16c87a314af669c6a00838948a6 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5df6392c67225f58c9778d69fefa545 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memItemLeft" align="right" valign="top"><a id="aa5df6392c67225f58c9778d69fefa545"></a>
+Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#aa5df6392c67225f58c9778d69fefa545">mRatedPower</a></td></tr>
+<tr class="memdesc:aa5df6392c67225f58c9778d69fefa545 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rated Apparent Power [VA]. <br /></td></tr>
+<tr class="separator:aa5df6392c67225f58c9778d69fefa545 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a466ce692e2b921216c833c01a1d359b0 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memItemLeft" align="right" valign="top"><a id="a466ce692e2b921216c833c01a1d359b0"></a>
 Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a466ce692e2b921216c833c01a1d359b0">mRatio</a></td></tr>
 <tr class="memdesc:a466ce692e2b921216c833c01a1d359b0 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Complex transformer ratio. <br /></td></tr>
@@ -614,7 +621,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#ae30ce3121733956d353e627aa6f115a7">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___transformer_8cpp_source.html#l00073">73</a> of file <a class="el" href="_s_p___ph1___transformer_8cpp_source.html">SP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___transformer_8cpp_source.html#l00074">74</a> of file <a class="el" href="_s_p___ph1___transformer_8cpp_source.html">SP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>

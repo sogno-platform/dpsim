@@ -1,6 +1,7 @@
 <map id="CPS::MNAVariableCompInterface" name="CPS::MNAVariableCompInterface">
-<area shape="rect" id="node1" title="MNA interface to be used by elements that require recomputing of the system matrix." alt="" coords="161,5,379,32"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_v_c.html" title="SVC." alt="" coords="5,80,148,107"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="172,80,368,107"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="393,80,587,107"/>
+<area shape="rect" id="node1" title="MNA interface to be used by elements that require recomputing of the system matrix." alt="" coords="5,81,224,108"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_v_c.html" title="SVC." alt="" coords="333,5,475,32"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="306,56,502,83"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html" title=" " alt="" coords="272,107,536,133"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="307,157,501,184"/>
 </map>
