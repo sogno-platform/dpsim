@@ -58,6 +58,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	m.attr("RMS3PH_TO_PEAK1PH") = RMS3PH_TO_PEAK1PH;
 	m.attr("PEAK1PH_TO_RMS3PH") = PEAK1PH_TO_RMS3PH;
+	m.attr("P_SNUB_TRANSFORMER") = P_SNUB_TRANSFORMER;
+	m.attr("Q_SNUB_TRANSFORMER") = Q_SNUB_TRANSFORMER;
+
+	py::enum_<DPsim::Solver::Behaviour>(m, "SolverBehaviour")
+		.value("Initialization", DPsim::Solver::Behaviour::Initialization)
+		.value("Simulation", DPsim::Solver::Behaviour::Simulation);
 
     py::class_<DPsim::Simulation>(m, "Simulation")
 	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
@@ -85,7 +91,9 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
 		.def("do_frequency_parallelization", &DPsim::Simulation::doFrequencyParallelization)
 		.def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
-		.def("add_event", &DPsim::Simulation::addEvent);
+		.def("add_event", &DPsim::Simulation::addEvent)
+		.def("set_solver_component_behaviour", &DPsim::Simulation::setSolverAndComponentBehaviour)
+		.def("set_mna_solver_implementation", &DPsim::Simulation::setMnaSolverImplementation);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info)
@@ -140,6 +148,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("print_attribute", &printAttribute, "attribute_name"_a)
 		.def("__str__", &getAttributeList);
 
+	//Enums
+
 	py::enum_<CPS::AttributeBase::Modifier>(m, "AttrModifier")
 		.value("real", CPS::AttributeBase::Modifier::real)
 		.value("imag", CPS::AttributeBase::Modifier::imag)
@@ -175,6 +185,14 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("DAE", DPsim::Solver::Type::DAE)
 		.value("NRP", DPsim::Solver::Type::NRP);
 
+	py::enum_<DPsim::MnaSolverFactory::MnaSolverImpl>(m, "MnaSolverImpl")
+		.value("Undef", DPsim::MnaSolverFactory::MnaSolverImpl::Undef)
+		.value("EigenDense", DPsim::MnaSolverFactory::MnaSolverImpl::EigenDense)
+		.value("EigenSparse", DPsim::MnaSolverFactory::MnaSolverImpl::EigenSparse)
+		.value("CUDADense", DPsim::MnaSolverFactory::MnaSolverImpl::CUDADense)
+		.value("CUDASparse", DPsim::MnaSolverFactory::MnaSolverImpl::CUDASparse)
+		.value("CUDAMagma", DPsim::MnaSolverFactory::MnaSolverImpl::CUDAMagma);
+
 	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
 		.value("AUTO", CPS::CSVReader::Mode::AUTO)
 		.value("MANUAL", CPS::CSVReader::Mode::MANUAL);
@@ -193,17 +211,29 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())
 		.def("assignLoadProfile", &CPS::CSVReader::assignLoadProfile);
 
+	//Base Classes
+
 	py::class_<CPS::TopologicalPowerComp, std::shared_ptr<CPS::TopologicalPowerComp>, CPS::IdentifiedObject>(m, "TopologicalPowerComp");
 	py::class_<CPS::SimPowerComp<CPS::Complex>, std::shared_ptr<CPS::SimPowerComp<CPS::Complex>>, CPS::TopologicalPowerComp>(m, "SimPowerCompComplex")
 		.def("connect", &CPS::SimPowerComp<CPS::Complex>::connect)
 		.def("set_intf_current", &CPS::SimPowerComp<CPS::Complex>::setIntfCurrent)
-		.def("set_intf_voltage", &CPS::SimPowerComp<CPS::Complex>::setIntfVoltage);
+		.def("set_intf_voltage", &CPS::SimPowerComp<CPS::Complex>::setIntfVoltage)
+		.def("get_terminal", &CPS::SimPowerComp<CPS::Complex>::terminal, "index"_a);
 	py::class_<CPS::SimPowerComp<CPS::Real>, std::shared_ptr<CPS::SimPowerComp<CPS::Real>>, CPS::TopologicalPowerComp>(m, "SimPowerCompReal")
 		.def("connect", &CPS::SimPowerComp<CPS::Real>::connect)
 		.def("set_intf_current", &CPS::SimPowerComp<CPS::Real>::setIntfCurrent)
-		.def("set_intf_voltage", &CPS::SimPowerComp<CPS::Real>::setIntfVoltage);
+		.def("set_intf_voltage", &CPS::SimPowerComp<CPS::Real>::setIntfVoltage)
+		.def("get_terminal", &CPS::SimPowerComp<CPS::Real>::terminal, "index"_a);
 	py::class_<CPS::TopologicalNode, std::shared_ptr<CPS::TopologicalNode>, CPS::IdentifiedObject>(m, "TopologicalNode")
 		.def("initial_single_voltage", &CPS::TopologicalNode::initialSingleVoltage, "phase_type"_a = CPS::PhaseType::Single);
+
+	py::class_<CPS::TopologicalTerminal, std::shared_ptr<CPS::TopologicalTerminal>, CPS::IdentifiedObject>(m, "TopologicalTerminal")
+		.def("set_power", py::overload_cast<CPS::Complex>(&CPS::TopologicalTerminal::setPower))
+		.def("set_power", py::overload_cast<CPS::MatrixComp>(&CPS::TopologicalTerminal::setPower));
+
+	py::class_<CPS::SimTerminal<CPS::Complex>, std::shared_ptr<CPS::SimTerminal<CPS::Complex>>, CPS::TopologicalTerminal>(m, "SimTerminalComplex");
+	py::class_<CPS::SimTerminal<CPS::Real>, std::shared_ptr<CPS::SimTerminal<CPS::Real>>, CPS::TopologicalTerminal>(m, "SimTerminalReal");
+
 
 	//Events
 	py::module mEvent = m.def_submodule("event", "events");

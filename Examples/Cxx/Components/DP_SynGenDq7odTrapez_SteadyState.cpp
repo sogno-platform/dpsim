@@ -45,7 +45,6 @@ int main(int argc, char* argv[]) {
 	Real initMechPower = 300e6;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -PI / 2;
-	Real fieldVoltage = 7.0821;
 
 	// Define grid parameters
 	Real Rload = 1.92;
@@ -61,7 +60,7 @@ int main(int argc, char* argv[]) {
 	std::shared_ptr<Ph3::SynchronGeneratorDQ> gen = Ph3::SynchronGeneratorDQTrapez::make("DP_SynGen_dq_SteadyState_SynGen");
 	gen->setParametersFundamentalPerUnit(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
+		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 	gen->connect({n1});
 
 	auto res = Ph3::SeriesResistor::make("R_load");

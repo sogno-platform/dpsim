@@ -17,6 +17,8 @@ namespace CPS {
 	public:
 		typedef std::shared_ptr<MNAVariableCompInterface> Ptr;
 		typedef std::vector<Ptr> List;
+		
+		std::vector<std::pair<UInt, UInt>> mVariableSystemMatrixEntries;
 
 		/// Returns true if one of the element paramters has changed
 		virtual Bool hasParameterChanged() = 0;

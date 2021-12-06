@@ -66,8 +66,9 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 
 		// Simulation parameters
-		if (args.name != "dpsim")
-			simName = args.name;
+		simName = args.name;
+		timeStep = args.timeStep;
+		finalTime = args.duration;
 
 		// Machine parameters
 		if (args.options.find("H") != args.options.end())
@@ -149,19 +150,13 @@ int main(int argc, char* argv[]) {
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
+	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
 	// ----- DYNAMIC SIMULATION ------
 	Logger::setLogDir("logs/"+simName);
-
-	// Extract relevant powerflow results
-	Real initTerminalVolt=std::abs(n1PF->singleVoltage())*RMS3PH_TO_PEAK1PH;
-	Real initVoltAngle= Math::phase(n1PF->singleVoltage()); // angle in rad
-	Real initActivePower = genPF->getApparentPower().real();
-	Real initReactivePower = genPF->getApparentPower().imag();
-	Real initMechPower = initActivePower;
 
 	// Nodes
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
@@ -173,10 +168,7 @@ int main(int argc, char* argv[]) {
 	gen->setParametersOperationalPerUnit(
 		syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.poleNum, syngenKundur.nomFieldCurr,
 		Rs, Ld, Lq, Ld_t, Lq_t, Ld_s,
-		Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H,
-	 	initActivePower, initReactivePower, initTerminalVolt,
-	 	initVoltAngle, syngenKundur.fieldVoltage, initMechPower
-	);
+		Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H);
 
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
@@ -205,6 +197,7 @@ int main(int argc, char* argv[]) {
 
 	// Initialization of dynamic topology
 	system.initWithPowerflow(systemPF);
+	gen->terminal(0)->setPower(-genPF->getApparentPower());
 
 	// Logging
 	auto logger = DataLogger::make(simName);

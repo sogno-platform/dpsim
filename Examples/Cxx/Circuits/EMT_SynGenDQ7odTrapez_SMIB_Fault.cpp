@@ -46,6 +46,13 @@ Real startTimeFault=0.2;
 
 int main(int argc, char* argv[]) {
 
+	if (argc > 1) {
+		CommandLineArgs args(argc, argv);
+		simName = args.name;
+		timeStep = args.timeStep;
+		finalTime = args.duration;
+	}
+
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
@@ -97,6 +104,7 @@ int main(int argc, char* argv[]) {
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
+	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
@@ -122,7 +130,7 @@ int main(int argc, char* argv[]) {
 		syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.poleNum, syngenKundur.nomFieldCurr,
 		syngenKundur.Rs, syngenKundur.Ll, syngenKundur.Lmd, syngenKundur.Lmq, syngenKundur.Rfd, syngenKundur.Llfd, syngenKundur.Rkd, syngenKundur.Llkd, syngenKundur.Rkq1, syngenKundur.Llkq1, syngenKundur.Rkq2, syngenKundur.Llkq2, syngenKundur.H,
 		initActivePower, initReactivePower, initTerminalVolt,
-		initVoltAngle, syngenKundur.fieldVoltage, initMechPower);
+		initVoltAngle, initMechPower);
 
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
@@ -162,6 +170,8 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("i_gen", gen->attribute("i_intf"));
 	logger->addAttribute("wr_gen", gen->attribute("w_r"));
 	logger->addAttribute("delta_r", gen->attribute("delta_r"));
+	logger->addAttribute("T_e", gen->attribute("T_e"));
+	logger->addAttribute("T_m", gen->attribute("T_m"));
 
 	// Events
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);

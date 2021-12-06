@@ -15,6 +15,8 @@ using namespace CPS;
 void simTrafoElementsSP1ph() {
 	Real timeStep = 0.00005;
 	Real finalTime = 1;
+	Real frequency = 50;
+	Real omega = 2. * PI * frequency;
 	String simName = "SP_Trafo_Elements";
 	Logger::setLogDir("logs/"+simName);
 
@@ -22,9 +24,14 @@ void simTrafoElementsSP1ph() {
 	Real voltageMVSide = 10000;
 	Real trafoResistance = 1;
 	Real trafoInductance = 0.1;
+	Real trafoPower = 1e6;
+	Real pSnub = P_SNUB_TRANSFORMER*trafoPower;
+	Real qSnub = Q_SNUB_TRANSFORMER*trafoPower;
 	Real loadResistanceHVSide = 10000;
 	Real ratio = voltageHVSide/voltageMVSide;
-	Real snubberResistanceHVSide = ratio*ratio*voltageMVSide*1e6;
+	Real snubberResistanceHVSide = std::pow(std::abs(voltageHVSide),2)/pSnub;
+	Real snubberResistanceMVSideToHVSide = ratio*ratio*std::pow(std::abs(voltageMVSide),2)/pSnub;
+	Real snubberCapacitanceMVSideToHVSide = 1./(omega*ratio*ratio*std::pow(std::abs(voltageMVSide),2)/qSnub);
 
 	// Nodes
 	auto n1 = SimNode<Complex>::make("n1");
@@ -34,7 +41,9 @@ void simTrafoElementsSP1ph() {
 	// Components
 	auto vs = SP::Ph1::VoltageSource::make("v_1");
 	auto trafoRes = SP::Ph1::Resistor::make("trafo_res");
-	auto trafoSnubberRes  = SP::Ph1::Resistor::make("trafo_snub_res");
+	auto trafoSnubberResHVSide  = SP::Ph1::Resistor::make("trafo_snub_res_mv");
+	auto trafoSnubberResMVSide  = SP::Ph1::Resistor::make("trafo_snub_res_hv");
+	auto trafoSnubberCapMVSide  = SP::Ph1::Capacitor::make("trafo_snub_cap_mv");
 	auto trafoInd = SP::Ph1::Inductor::make("trafo_ind");
 	auto loadRes = SP::Ph1::Resistor::make("r_1");
 
@@ -42,18 +51,22 @@ void simTrafoElementsSP1ph() {
 	vs->connect({ SimNode<Complex>::GND, n1 });
 	trafoRes->connect({ n1, vn1 });
 	trafoInd->connect({ vn1, n2 });
-	trafoSnubberRes->connect({ n2, SimNode<Complex>::GND });
+	trafoSnubberResHVSide->connect({ n1, SimNode<Complex>::GND });
+	trafoSnubberResMVSide->connect({ n2, SimNode<Complex>::GND });
+	trafoSnubberCapMVSide->connect({ n2, SimNode<Complex>::GND });
 	loadRes->connect({ n2, SimNode<Complex>::GND });
 
 	// Parameters
 	vs->setParameters(CPS::Math::polar(voltageHVSide, 0));
 	trafoRes->setParameters(trafoResistance);
 	trafoInd->setParameters(trafoInductance);
-	trafoSnubberRes->setParameters(snubberResistanceHVSide);
+	trafoSnubberResHVSide->setParameters(snubberResistanceHVSide);
+	trafoSnubberResMVSide->setParameters(snubberResistanceMVSideToHVSide);
+	trafoSnubberCapMVSide->setParameters(snubberCapacitanceMVSideToHVSide);
 	loadRes->setParameters(loadResistanceHVSide);
 
 	// Define system topology
-	SystemTopology sys(50, SystemNodeList{n1, n2, vn1 }, SystemComponentList{vs, trafoRes, trafoInd, trafoSnubberRes, loadRes});
+	SystemTopology sys(frequency, SystemNodeList{n1, n2, vn1 }, SystemComponentList{vs, trafoRes, trafoInd, trafoSnubberResHVSide, trafoSnubberResMVSide, trafoSnubberCapMVSide, loadRes});
 
 	// Logging
 	auto logger = DataLogger::make(simName);
@@ -81,6 +94,7 @@ void simTrafoSP1ph() {
 	Real voltageMVSide = 10000;
 	Real trafoResistance = 1;
 	Real trafoInductance = 0.1;
+	Real trafoPower = 1e6;
 	Real loadResistanceHVSide = 10000;
 	Real ratio = voltageHVSide/voltageMVSide;
 	Real loadResistanceMVSide = loadResistanceHVSide/(ratio*ratio);
@@ -101,7 +115,7 @@ void simTrafoSP1ph() {
 
 	// Parameters
 	vs->setParameters(CPS::Math::polar(voltageHVSide, 0));
-	trafo->setParameters(voltageHVSide, voltageMVSide, ratio, 0, trafoResistance, trafoInductance);
+	trafo->setParameters(voltageHVSide, voltageMVSide, trafoPower, ratio, 0, trafoResistance, trafoInductance);
 	loadRes->setParameters(loadResistanceMVSide);
 
 	// Define system topology
@@ -126,6 +140,8 @@ void simTrafoSP1ph() {
 void simTrafoElementsDP1ph() {
 	Real timeStep = 0.00005;
 	Real finalTime = 1;
+	Real frequency = 50;
+	Real omega = 2. * PI * frequency;
 	String simName = "DP_Trafo_Elements";
 	Logger::setLogDir("logs/"+simName);
 
@@ -133,9 +149,14 @@ void simTrafoElementsDP1ph() {
 	Real voltageMVSide = 10000;
 	Real trafoResistance = 1;
 	Real trafoInductance = 0.1;
+	Real trafoPower = 1e6;
+	Real pSnub = P_SNUB_TRANSFORMER*trafoPower;
+	Real qSnub = Q_SNUB_TRANSFORMER*trafoPower;
 	Real loadResistanceHVSide = 10000;
 	Real ratio = voltageHVSide/voltageMVSide;
-	Real snubberResistanceHVSide = ratio*ratio*voltageMVSide*1e6;
+	Real snubberResistanceHVSide = std::pow(std::abs(voltageHVSide),2)/pSnub;
+	Real snubberResistanceMVSideToHVSide = ratio*ratio*std::pow(std::abs(voltageMVSide),2)/pSnub;
+	Real snubberCapacitanceMVSideToHVSide = 1./(omega*ratio*ratio*std::pow(std::abs(voltageMVSide),2)/qSnub);
 
 	// Nodes
 	auto n1 = SimNode<Complex>::make("n1");
@@ -145,7 +166,9 @@ void simTrafoElementsDP1ph() {
 	// Components
 	auto vs = DP::Ph1::VoltageSource::make("v_1");
 	auto trafoRes = DP::Ph1::Resistor::make("trafo_res");
-	auto trafoSnubberRes  = DP::Ph1::Resistor::make("trafo_snub_res");
+	auto trafoSnubberResHVSide  = DP::Ph1::Resistor::make("trafo_snub_res_mv");
+	auto trafoSnubberResMVSide  = DP::Ph1::Resistor::make("trafo_snub_res_hv");
+	auto trafoSnubberCapMVSide  = DP::Ph1::Capacitor::make("trafo_snub_cap_mv");
 	auto trafoInd = DP::Ph1::Inductor::make("trafo_ind");
 	auto loadRes = DP::Ph1::Resistor::make("r_1");
 
@@ -153,18 +176,22 @@ void simTrafoElementsDP1ph() {
 	vs->connect({ SimNode<Complex>::GND, n1 });
 	trafoRes->connect({ n1, vn1 });
 	trafoInd->connect({ vn1, n2 });
-	trafoSnubberRes->connect({ n2, SimNode<Complex>::GND });
+	trafoSnubberResHVSide->connect({ n1, SimNode<Complex>::GND });
+	trafoSnubberResMVSide->connect({ n2, SimNode<Complex>::GND });
+	trafoSnubberCapMVSide->connect({ n2, SimNode<Complex>::GND });
 	loadRes->connect({ n2, SimNode<Complex>::GND });
 
 	// Parameters
 	vs->setParameters(CPS::Math::polar(voltageHVSide, 0));
 	trafoRes->setParameters(trafoResistance);
 	trafoInd->setParameters(trafoInductance);
-	trafoSnubberRes->setParameters(snubberResistanceHVSide);
+	trafoSnubberResHVSide->setParameters(snubberResistanceHVSide);
+	trafoSnubberResMVSide->setParameters(snubberResistanceMVSideToHVSide);
+	trafoSnubberCapMVSide->setParameters(snubberCapacitanceMVSideToHVSide);
 	loadRes->setParameters(loadResistanceHVSide);
 
 	// Define system topology
-	SystemTopology sys(50, SystemNodeList{n1, n2, vn1 }, SystemComponentList{vs, trafoRes, trafoInd, trafoSnubberRes, loadRes});
+	SystemTopology sys(frequency, SystemNodeList{n1, n2, vn1 }, SystemComponentList{vs, trafoRes, trafoInd, trafoSnubberResHVSide, trafoSnubberResMVSide, trafoSnubberCapMVSide, loadRes});
 
 	// Logging
 	auto logger = DataLogger::make(simName);
@@ -192,6 +219,7 @@ void simTrafoDP1ph() {
 	Real voltageMVSide = 10000;
 	Real trafoResistance = 1;
 	Real trafoInductance = 0.1;
+	Real trafoPower = 1e6;
 	Real loadResistanceHVSide = 10000;
 	Real ratio = voltageHVSide/voltageMVSide;
 	Real loadResistanceMVSide = loadResistanceHVSide/(ratio*ratio);
@@ -212,7 +240,7 @@ void simTrafoDP1ph() {
 
 	// Parameters
 	vs->setParameters(CPS::Math::polar(voltageHVSide, 0));
-	trafo->setParameters(voltageHVSide, voltageMVSide, ratio, 0, trafoResistance, trafoInductance);
+	trafo->setParameters(voltageHVSide, voltageMVSide, trafoPower, ratio, 0, trafoResistance, trafoInductance);
 	loadRes->setParameters(loadResistanceMVSide);
 
 	// Define system topology
@@ -237,6 +265,8 @@ void simTrafoDP1ph() {
 void simTrafoElementsEMT3ph() {
 	Real timeStep = 0.00005;
 	Real finalTime = 1;
+	Real frequency = 50;
+	Real omega = 2. * PI * frequency;
 	String simName = "EMT_Trafo_Elements";
 	Logger::setLogDir("logs/"+simName);
 
@@ -244,9 +274,14 @@ void simTrafoElementsEMT3ph() {
 	Real voltageMVSide = 10000;
 	Real trafoResistance = 1;
 	Real trafoInductance = 0.1;
+	Real trafoPower = 1e6;
+	Real pSnub = P_SNUB_TRANSFORMER*trafoPower;
+	Real qSnub = Q_SNUB_TRANSFORMER*trafoPower;
 	Real loadResistanceHVSide = 10000;
 	Real ratio = voltageHVSide/voltageMVSide;
-	Real snubberResistanceHVSide = ratio*ratio*voltageMVSide*1e6;
+	Real snubberResistanceHVSide = std::pow(std::abs(voltageHVSide),2)/pSnub;
+	Real snubberResistanceMVSideToHVSide = ratio*ratio*std::pow(std::abs(voltageMVSide),2)/pSnub;
+	Real snubberCapacitanceMVSideToHVSide = 1./(omega*ratio*ratio*std::pow(std::abs(voltageMVSide),2)/qSnub);
 
 	// Nodes
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
@@ -256,7 +291,9 @@ void simTrafoElementsEMT3ph() {
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("v_1");
 	auto trafoRes = EMT::Ph3::Resistor::make("trafo_res");
-	auto trafoSnubberRes  = EMT::Ph3::Resistor::make("trafo_snub_res");
+	auto trafoSnubberResHVSide  = EMT::Ph3::Resistor::make("trafo_snub_res_mv");
+	auto trafoSnubberResMVSide  = EMT::Ph3::Resistor::make("trafo_snub_res_hv");
+	auto trafoSnubberCapMVSide  = EMT::Ph3::Capacitor::make("trafo_snub_cap_mv");
 	auto trafoInd = EMT::Ph3::Inductor::make("trafo_ind");
 	auto loadRes = EMT::Ph3::Resistor::make("r_1");
 
@@ -264,18 +301,22 @@ void simTrafoElementsEMT3ph() {
 	vs->connect({ SimNode<Real>::GND, n1 });
 	trafoRes->connect({ n1, vn1 });
 	trafoInd->connect({ vn1, n2 });
-	trafoSnubberRes->connect({ n2, SimNode<Real>::GND });
+	trafoSnubberResHVSide->connect({ n1, SimNode<Real>::GND });
+	trafoSnubberResMVSide->connect({ n2, SimNode<Real>::GND });
+	trafoSnubberCapMVSide->connect({ n2, SimNode<Real>::GND });
 	loadRes->connect({ n2, SimNode<Real>::GND });
 
 	// Parameters
 	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 	trafoRes->setParameters(CPS::Math::singlePhaseParameterToThreePhase(trafoResistance));
 	trafoInd->setParameters(CPS::Math::singlePhaseParameterToThreePhase(trafoInductance));
-	trafoSnubberRes->setParameters(CPS::Math::singlePhaseParameterToThreePhase(snubberResistanceHVSide));
+	trafoSnubberResHVSide->setParameters(CPS::Math::singlePhaseParameterToThreePhase(snubberResistanceHVSide));
+	trafoSnubberResMVSide->setParameters(CPS::Math::singlePhaseParameterToThreePhase(snubberResistanceMVSideToHVSide));
+	trafoSnubberCapMVSide->setParameters(CPS::Math::singlePhaseParameterToThreePhase(snubberCapacitanceMVSideToHVSide));
 	loadRes->setParameters(CPS::Math::singlePhaseParameterToThreePhase(loadResistanceHVSide));
 
 	// Define system topology
-	SystemTopology sys(50, SystemNodeList{n1, n2, vn1 }, SystemComponentList{vs, trafoRes, trafoInd, trafoSnubberRes, loadRes});
+	SystemTopology sys(frequency, SystemNodeList{n1, n2, vn1 }, SystemComponentList{vs, trafoRes, trafoInd, trafoSnubberResHVSide, trafoSnubberResMVSide, trafoSnubberCapMVSide, loadRes});
 
 	// Logging
 	auto logger = DataLogger::make(simName);
@@ -303,6 +344,7 @@ void simTrafoEMT3ph() {
 	Real voltageMVSide = 10000;
 	Real trafoResistance = 1;
 	Real trafoInductance = 0.1;
+	Real trafoPower = 1e6;
 	Real loadResistanceHVSide = 10000;
 	Real ratio = voltageHVSide/voltageMVSide;
 	Real loadResistanceMVSide = loadResistanceHVSide/(ratio*ratio);
@@ -323,7 +365,7 @@ void simTrafoEMT3ph() {
 
 	// Parameters
 	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
-	trafo->setParameters(voltageHVSide, voltageMVSide, ratio, 0, CPS::Math::singlePhaseParameterToThreePhase(trafoResistance), CPS::Math::singlePhaseParameterToThreePhase(trafoInductance));
+	trafo->setParameters(voltageHVSide, voltageMVSide, trafoPower, ratio, 0, CPS::Math::singlePhaseParameterToThreePhase(trafoResistance), CPS::Math::singlePhaseParameterToThreePhase(trafoInductance));
 	loadRes->setParameters(CPS::Math::singlePhaseParameterToThreePhase(loadResistanceMVSide));
 
 	// Define system topology

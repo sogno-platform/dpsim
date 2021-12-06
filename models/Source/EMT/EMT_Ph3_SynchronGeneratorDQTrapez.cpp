@@ -28,6 +28,8 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::mnaInitialize(Real omega, Real timeSte
 	updateMatrixNodeIndices();
 	mTimeStep = timeStep;
 
+	SynchronGeneratorDQ::initializeMatrixAndStates();
+
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));

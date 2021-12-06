@@ -54,8 +54,6 @@ namespace SynchronousGeneratorKundur {
         Real Lq_s = 0.2500;
         Real Ld = 1.8099;
         Real Lq = 1.7600;
-
-        Real fieldVoltage = 7.0821; //TODO: specify operating conditions
     };
 }
 }
@@ -329,7 +327,7 @@ namespace CIGREMV {
                 pv->setParameters(scenario.systemOmega, scenario.pvUnitNominalVoltage, pvActivePower, pvReactivePower);
                 pv->setControllerParameters(scenario.KpPLL, scenario.KiPLL, scenario.KpPowerCtrl, scenario.KiPowerCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.OmegaCutoff);
                 pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
-                pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvUnitNominalVoltage, scenario.systemNominalVoltage/scenario.pvUnitNominalVoltage, 0, 0, scenario.transformerInductance);
+                pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvUnitNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvUnitNominalVoltage, 0, 0, scenario.transformerInductance);
                 pv->setInitialStateValues(scenario.pInit, scenario.qInit, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
                 system.addComponent(pv);
                 system.connectComponentToNodes<Complex>(pv, { connectionNode });
@@ -339,7 +337,7 @@ namespace CIGREMV {
                 pv->setParameters(scenario.systemOmega, scenario.pvUnitNominalVoltage, pvActivePower, pvReactivePower);
                 pv->setControllerParameters(scenario.KpPLL, scenario.KiPLL, scenario.KpPowerCtrl, scenario.KiPowerCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.OmegaCutoff);
                 pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
-                pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvUnitNominalVoltage, scenario.systemNominalVoltage/scenario.pvUnitNominalVoltage, 0, 0, scenario.transformerInductance);
+                pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvUnitNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvUnitNominalVoltage, 0, 0, scenario.transformerInductance);
                 pv->setInitialStateValues(scenario.pInit, scenario.qInit, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
                 system.addComponent(pv);
                 system.connectComponentToNodes<Complex>(pv, { connectionNode });

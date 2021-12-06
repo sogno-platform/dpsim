@@ -442,7 +442,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 	// TODO: To be extracted from cim class
 	Real ratioPhase = 0;
 
-    // Calculate resistance and inductance referred to high voltage side
+    // Calculate resistance and inductance referred to higher voltage side
 	Real resistance = 0;
     Real inductance = 0;
 	if (voltageNode1 >= voltageNode2 && abs(end1->x.value) > 1e-12) {
@@ -467,7 +467,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 			Matrix inductance_3ph = CPS::Math::singlePhaseParameterToThreePhase(inductance);
 			Bool withResistiveLosses = resistance > 0;
 			auto transformer = std::make_shared<EMT::Ph3::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-			transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
+			transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
 			return transformer;
 		}
 		else
@@ -486,7 +486,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 	else {
 		Bool withResistiveLosses = resistance > 0;
 		auto transformer = std::make_shared<DP::Ph1::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-		transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance, inductance);
+		transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs, ratioPhase, resistance, inductance);
 		return transformer;
 	}
 }
@@ -495,6 +495,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 	mSLog->info("    Found  Synchronous machine {}", machine->name);
 
 	if (mDomain == Domain::DP) {
+		mSLog->info("    Create generator in DP domain.");
 		if (mGeneratorType == GeneratorType::TransientStability) {
 			mSLog->info("    GeneratorType is TransientStability.");
 			Real directTransientReactance;
@@ -529,6 +530,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			throw SystemError("GeneratorType setting unfeasible.");
 		}
 	} else if (mDomain == Domain::SP) {
+		mSLog->info("    Create generator in SP domain.");
 		if (mGeneratorType == GeneratorType::TransientStability) {
 			mSLog->info("    GeneratorType is TransientStability.");
 			Real directTransientReactance;
@@ -603,7 +605,76 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			throw SystemError("GeneratorType setting unfeasible.");
 		}
 	} else {
-        throw SystemError("Mapping of SynchronousMachine for EMT not existent yet!");
+		mSLog->info("    Create generator in EMT domain.");
+		if (mGeneratorType == GeneratorType::FullOrder || mGeneratorType == GeneratorType::FullOrderVBR) {
+			
+			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
+
+			for (auto obj : mModel->Objects) {
+				// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
+				if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
+					dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
+					if (genDyn->SynchronousMachine->mRID == machine->mRID) {
+						
+						// stator
+						Real Rs = genDyn->statorResistance.value;
+						Real Ll = genDyn->statorLeakageReactance.value;
+						
+						// reactances
+						Real Ld = genDyn->xDirectSync.value;
+						Real Lq = genDyn->xQuadSync.value;
+						Real Ld_t = genDyn->xDirectTrans.value;
+						Real Lq_t = genDyn->xQuadTrans.value;
+						Real Ld_s = genDyn->xDirectSubtrans.value;
+						Real Lq_s = genDyn->xQuadSubtrans.value;
+						
+						// time constants
+						Real Td0_t = genDyn->tpdo.value;
+						Real Tq0_t = genDyn->tpqo.value;
+						Real Td0_s = genDyn->tppdo.value;
+						Real Tq0_s = genDyn->tppqo.value;
+
+						// inertia
+						Real H = genDyn->inertia.value;
+
+						// not available in CIM -> set to 0, as actually no impact on machine equations
+						Int poleNum = 0;
+						Real nomFieldCurr = 0;
+
+						if (mGeneratorType == GeneratorType::FullOrder) {
+							mSLog->info("    GeneratorType is FullOrder.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorDQTrapez>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setParametersOperationalPerUnit(
+							ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
+							Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s, Ll, 
+							Td0_t, Tq0_t, Td0_s, Tq0_s, H); 
+							return gen;
+						} else if (mGeneratorType == GeneratorType::FullOrderVBR) {
+							mSLog->info("    GeneratorType is FullOrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setBaseAndOperationalPerUnitParameters(
+							ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
+							Rs, Ld, Lq, Ld_t, Lq_t, Ld_s,
+							Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H); 
+							return gen;
+						}
+						
+						
+					}
+				}
+			}
+		} else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
+			mSLog->info("    GeneratorType is IdealVoltageSource.");
+			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel, GeneratorType::IdealVoltageSource);
+		} else if (mGeneratorType == GeneratorType::IdealCurrentSource) {
+			mSLog->info("    GeneratorType is IdealCurrentSource.");
+			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel, GeneratorType::IdealCurrentSource);
+		} else if (mGeneratorType == GeneratorType::None) {
+			throw SystemError("GeneratorType is None. Specify!");
+		} else {
+			throw SystemError("GeneratorType setting unfeasible.");
+		}
     }
 	return nullptr;
 }

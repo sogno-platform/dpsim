@@ -12,6 +12,7 @@
 #include <cps/Solver/MNAInterface.h>
 #include <cps/EMT/EMT_Ph3_Inductor.h>
 #include <cps/EMT/EMT_Ph3_Resistor.h>
+#include <cps/EMT/EMT_Ph3_Capacitor.h>
 #include <cps/Base/Base_Ph3_Transformer.h>
 
 namespace CPS {
@@ -24,14 +25,28 @@ namespace CPS {
 				public SharedFactory<Transformer>,
 				public Base::Ph3::Transformer {
 			private:
+				/// Internal resistor to model losses
+				std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
 				/// Internal inductor to model losses
 				std::shared_ptr<EMT::Ph3::Inductor> mSubInductor;
-				/// Internal parallel resistance as snubber
-				std::shared_ptr<EMT::Ph3::Resistor> mSubSnubResistor;
-				std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
 
-				/// Snubber resistance added on the low voltage side
-				Matrix mSnubberResistance;
+				/// Internal parallel resistance 1 as snubber
+				std::shared_ptr<EMT::Ph3::Resistor> mSubSnubResistor1;
+				/// Internal parallel resistance 2 as snubber
+				std::shared_ptr<EMT::Ph3::Resistor> mSubSnubResistor2;
+				/// Internal parallel capacitance 1 as snubber
+				std::shared_ptr<EMT::Ph3::Capacitor> mSubSnubCapacitor1;
+				/// Internal parallel capacitance 2 as snubber
+				std::shared_ptr<EMT::Ph3::Capacitor> mSubSnubCapacitor2;
+
+				/// Snubber resistance 1
+				Matrix mSnubberResistance1;
+				/// Snubber resistance 2
+				Matrix mSnubberResistance2;
+				/// Snubber capacitance 1
+				Matrix mSnubberCapacitance1;
+				/// Snubber capacitance 2
+				Matrix mSnubberCapacitance2;
 
 				/// Boolean for considering resistive losses with sub resistor
 				Bool mWithResistiveLosses;
@@ -47,7 +62,7 @@ namespace CPS {
 
 				// #### General ####
 				/// Defines component parameters
-				void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase, Matrix resistance, Matrix inductance);
+				void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, Real ratioPhase, Matrix resistance, Matrix inductance);
 				/// Initializes component from power flow data
 				void initializeFromNodesAndTerminals(Real frequency);
 

@@ -102,7 +102,8 @@ namespace Ph1 {
 		/// Setter for parameters of control loops
 		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
 		/// Setter for parameters of transformer
-		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance);
+		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
+			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance);
 		/// Setter for parameters of filter
 		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
 		/// Setter for initial values applied in controllers

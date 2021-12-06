@@ -35,7 +35,6 @@ Real initReactivePower = 0;
 Real initMechPower = 300e6;
 Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 Real initVoltAngle = -PI / 2;
-Real fieldVoltage = 7.0821;
 
 // Define grid parameters
 // resistance for 300 MW output
@@ -61,7 +60,7 @@ void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
 	auto gen = CPS::DP::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
 	gen->setParametersFundamentalPerUnit(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
+		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 
 	auto res = CPS::DP::Ph3::SeriesResistor::make("R_load", Logger::Level::info);
 	res->setParameters(Rload);
@@ -98,7 +97,7 @@ void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
 	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
 	gen->setParametersFundamentalPerUnit(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
+		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 
 	auto res = CPS::EMT::Ph3::SeriesResistor::make("R_load", Logger::Level::info);
 	res->setParameters(Rload);

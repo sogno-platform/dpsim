@@ -15,6 +15,12 @@ void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real freque
     mInitialPhase = Math::phase(initialPhasor);
 	mFrequency = frequency;
 
+	mSLog->info(	"Parameters: \n"
+					 "Sine wave magnitude: {} [V] \n"
+					 "Sine wave initial phase: {} [rad] \n"
+					 "Sine wave frequency: {} [Hz] \n",
+					mMagnitude, mInitialPhase, mFrequency);				 
+
 	attribute<Complex>("sigOut")->set(initialPhasor);
 	attribute<Real>("freq")->set(frequency);
 }

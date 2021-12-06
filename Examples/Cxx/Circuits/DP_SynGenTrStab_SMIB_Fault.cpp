@@ -74,6 +74,7 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
+	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
@@ -154,6 +155,7 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	simDP.setDomain(Domain::DP);
 	simDP.addLogger(loggerDP);
 	simDP.doSystemMatrixRecomputation(true);
+	simDP.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
 
 	// Events
 	if (startFaultEvent){

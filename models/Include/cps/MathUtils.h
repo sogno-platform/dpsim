@@ -196,7 +196,7 @@ namespace CPS {
 			return var_3ph;
 		}
 
-		/// To convert single phase real variables (voltages, currents) to symmetrical three phase ones
+		/// To convert single phase parameters to symmetrical three phase ones
 		static Matrix singlePhaseParameterToThreePhase(Real parameter) {
 			Matrix param_3ph = Matrix::Zero(3, 3);
 			param_3ph <<

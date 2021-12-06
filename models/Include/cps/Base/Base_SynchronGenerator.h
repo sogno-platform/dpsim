@@ -41,11 +41,13 @@ namespace Base {
 		StateType mStateType = StateType::perUnit;
 		///
 		ParameterType mParameterType;
+		/// Flag to remember when initial values are set
+		Bool mInitialValuesSet = false;
 
 		// ### Machine parameters ###
 		/// nominal power Pn [VA]
 		Real mNomPower = 0;
-		/// nominal voltage Vn [V] (RMS)
+		/// nominal voltage Vn [V] (phase-to-phase RMS)
 		Real mNomVolt = 0;
 		/// nominal frequency fn [Hz]
 		Real mNomFreq = 0;
@@ -120,15 +122,14 @@ namespace Base {
 		// #### Initial Values ####
 		Complex mInitElecPower = 0;
 		Complex mInitTermVoltage = 0;
-		Real mInitFieldVoltage = 0;
 		Real mInitMechPower = 0;
 
 		// ### Stator base values ###
-		/// base stator voltage
+		/// base stator voltage (phase-to-ground peak)
 		Real mBase_V  = 0;
-		/// base stator voltage RMS
+		/// base stator voltage (phase-to-ground RMS)
 		Real mBase_V_RMS = 0;
-		/// base stator current
+		/// base stator current peak
 		Real mBase_I = 0;
 		/// base stator current RMS
 		Real mBase_I_RMS = 0;
@@ -274,44 +275,51 @@ namespace Base {
 		/// Destructor - does nothing.
 		virtual ~SynchronGenerator() { }
 
-		/// \brief Defines UID, name, machine parameters and logging level.
-		///
-		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
-		/// stator referred parameters depending on the setting of parameter type.
-		/// The initialization mode depends on the setting of state type.
+		/// Initializes the base and fundamental machine parameters in per unit
 		void setBaseAndFundamentalPerUnitParameters(
 			Real nomPower, Real nomVolt, Real nomFreq, Real nomFieldCur,
 			Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd,
 			Real Rkd, Real Llkd, Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia);
 
+		/// Initializes the base and operational machine parameters in per unit.
+		/// The fundamental machine parameters in per unit are calculated and set accordingly.
+		void setBaseAndOperationalPerUnitParameters(
+			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+			Real Rs, Real Ld, Real Lq, Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
+			Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s, Real inertia);
+
+		///
 		void setFundamentalPerUnitParameters(Int poleNumber,
 			Real Rs, Real Ll, Real Lmd, Real Lmq,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
 			Real Rkq2, Real Llkq2,
 			Real inertia);
 
+		///
 		void applyFundamentalPerUnitParameters();
 
+		///
 		void setAndApplyFundamentalPerUnitParameters(
 			Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia);
 
+		///
 		void setOperationalPerUnitParameters(
 			Int poleNumber, Real inertia,
 			Real Rs, Real Ld, Real Lq, Real Ll,
 			Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
 			Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s);
 
+		///
 		void calculateFundamentalFromOperationalParameters();
 
 		///
 		void setInitialValues(
 			Real initActivePower, Real initReactivePower,
-			Real initTerminalVolt, Real initVoltAngle,
-			Real initFieldVoltage, Real initMechPower);
+			Real initTerminalVolt, Real initVoltAngle, Real initMechPower);
 
 		/// Switch to determine the integration method for the machine model.
 		void setNumericalMethod(NumericalMethod method) { mNumericalMethod = method; }

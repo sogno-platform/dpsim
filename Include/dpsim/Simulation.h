@@ -56,6 +56,13 @@ namespace DPsim {
 		/// System list
 		CPS::SystemTopology mSystem;
 
+		/// Start time point to measure calculation time
+		std::chrono::time_point<std::chrono::steady_clock> mSimulationStartTimePoint;
+		/// End time point to measure calculation time
+		std::chrono::time_point<std::chrono::steady_clock> mSimulationEndTimePoint;
+		/// Measured calculation time for simulation
+		std::chrono::duration<double> mSimulationCalculationTime;
+
 		// #### Logging ####
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
@@ -67,6 +74,8 @@ namespace DPsim {
 		CPS::Domain mDomain = CPS::Domain::DP;
 		///
 		Solver::Type mSolverType = Solver::Type::MNA;
+		///
+		Solver::Behaviour mSolverBehaviour = Solver::Behaviour::Simulation;
 		///
 		Solver::List mSolvers;
 		///
@@ -166,6 +175,10 @@ namespace DPsim {
 		void setDomain(CPS::Domain domain = CPS::Domain::DP) { mDomain = domain; }
 		///
 		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
+		/// set solver and component to initialization or simulation behaviour
+		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) { mSolverBehaviour = behaviour; }
+		///
+		void setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl mnaImpl) { mMnaImpl = mnaImpl; }
 		///
 		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
 		///

@@ -71,7 +71,6 @@ void MnaSolverEigenDense<Real>::createEmptySystemMatrix() {
 		mSwitchedMatrices[bit].push_back(Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
 		mLuFactorizations[bit].push_back(Eigen::PartialPivLU<Matrix>());
 	}
-	mBaseSystemMatrix = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
 }
 
 template <>
@@ -94,7 +93,6 @@ void MnaSolverEigenDense<Complex>::createEmptySystemMatrix() {
 			mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
 			mLuFactorizations[bit].push_back(Eigen::PartialPivLU<Matrix>());
 		}
-		mBaseSystemMatrix = Matrix::Zero(2 * (mNumTotalMatrixNodeIndices), 2 * (mNumTotalMatrixNodeIndices));
 	}
 }
 

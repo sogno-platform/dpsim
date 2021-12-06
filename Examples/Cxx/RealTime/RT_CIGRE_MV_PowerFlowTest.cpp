@@ -52,6 +52,7 @@ int main(int argc, char** argv){
 	sim.setFinalTime(30);
 	sim.setDomain(Domain::SP);
 	sim.setSolverType(Solver::Type::NRP);
+	sim.setSolverAndComponentBehaviour(Solver::Behaviour::Simulation);
 	sim.doInitFromNodesAndTerminals(true);
 	sim.addLogger(logger);
 	sim.run();

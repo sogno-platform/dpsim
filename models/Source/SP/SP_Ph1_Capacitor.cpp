@@ -29,13 +29,17 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
 	mSusceptance = Complex(0, omega * mCapacitance);
+	mImpedance = Complex(1, 0) / mSusceptance;
+	mAdmittance = Complex(1, 0) / mImpedance;
 	mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	mIntfCurrent = mSusceptance * mIntfVoltage;
 
 	mSLog->info("\nCapacitance [F]: {:s}"
-				"\nImpedance [Ohm]: {:s}",
+				"\nImpedance [Ohm]: {:s}"
+				"\nAdmittance [S]: {:s}",
 				Logger::realToString(mCapacitance),
-				Logger::complexToString(1./mSusceptance));
+				Logger::complexToString(mImpedance),
+				Logger::complexToString(mAdmittance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
@@ -118,4 +122,40 @@ void SP::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void SP::Ph1::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {
 	mIntfCurrent = mSusceptance * mIntfVoltage;
+}
+
+// #### Powerflow section ####
+
+void SP::Ph1::Capacitor::setBaseVoltage(Real baseVoltage){
+	mBaseVoltage = baseVoltage;
+}
+
+void SP::Ph1::Capacitor::calculatePerUnitParameters(Real baseApparentPower){
+	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
+    mBaseApparentPower = baseApparentPower;
+	mSLog->info("Base Power={} [VA]", baseApparentPower);
+
+	mBaseImpedance = mBaseVoltage * mBaseVoltage / mBaseApparentPower;
+	mBaseAdmittance = 1.0 / mBaseImpedance;
+	mBaseCurrent = baseApparentPower / (mBaseVoltage*sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
+	mSLog->info("Base Voltage={} [V]  Base Impedance={} [Ohm]", mBaseVoltage, mBaseImpedance);
+
+	mImpedancePerUnit = mImpedance / mBaseImpedance;
+	mAdmittancePerUnit = 1. / mImpedancePerUnit;
+    mSLog->info("Impedance={} [pu]  Admittance={} [pu]", Logger::complexToString(mImpedancePerUnit), Logger::complexToString(mAdmittancePerUnit));
+}
+
+void SP::Ph1::Capacitor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
+	int bus1 = this->matrixNodeIndex(0);
+
+	if (std::isinf(mAdmittancePerUnit.real()) || std::isinf(mAdmittancePerUnit.imag())) {
+		std::cout << "Y:" << mAdmittancePerUnit << std::endl;
+		std::stringstream ss;
+		ss << "Resistor >>" << this->name() << ": infinite or nan values at node: " << bus1;
+		throw std::invalid_argument(ss.str());
+	}
+
+	//set the circuit matrix values
+	Y.coeffRef(bus1, bus1) += mAdmittancePerUnit;
+	mSLog->info("#### Y matrix stamping: {}", mAdmittancePerUnit);
 }

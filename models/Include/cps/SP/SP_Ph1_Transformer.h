@@ -13,7 +13,7 @@
 #include <cps/Solver/MNAInterface.h>
 #include <cps/SP/SP_Ph1_Resistor.h>
 #include <cps/SP/SP_Ph1_Inductor.h>
-#include <cps/SP/SP_Ph1_Shunt.h>
+#include <cps/SP/SP_Ph1_Capacitor.h>
 #include <cps/Base/Base_Ph1_Transformer.h>
 
 namespace CPS {
@@ -28,18 +28,29 @@ namespace Ph1 {
 		public Base::Ph1::Transformer {
 
 	private:
+		/// Internal resistor to model losses
+		std::shared_ptr<SP::Ph1::Resistor> mSubResistor;
 		/// Internal inductor to model losses
 		std::shared_ptr<SP::Ph1::Inductor> mSubInductor;
-		/// Internal parallel resistance as snubber
-		std::shared_ptr<SP::Ph1::Resistor> mSubSnubResistor;
-		///
-		std::shared_ptr<SP::Ph1::Resistor> mSubResistor;
 
-		/// Snubber resistance added on the low voltage side
-		Real mSnubberResistance;
+		/// Internal parallel resistance 1 as snubber
+		std::shared_ptr<SP::Ph1::Resistor> mSubSnubResistor1;
+		/// Internal parallel resistance 2 as snubber
+		std::shared_ptr<SP::Ph1::Resistor> mSubSnubResistor2;
+		/// Internal parallel capacitance 1 as snubber
+		std::shared_ptr<SP::Ph1::Capacitor> mSubSnubCapacitor1;
+		/// Internal parallel capacitance 2 as snubber
+		std::shared_ptr<SP::Ph1::Capacitor> mSubSnubCapacitor2;
 
-		/// Rated Apparent Power [VA]
-		Real mRatedPower = 0;
+		/// Snubber resistance 1 [Ohm]
+		Real mSnubberResistance1;
+		/// Snubber resistance 2 [Ohm]
+		Real mSnubberResistance2;
+		/// Snubber capacitance 1 [F]
+		Real mSnubberCapacitance1;
+		/// Snubber capacitance 2 [F]
+		Real mSnubberCapacitance2;
+
         /// Transformer ratio magnitude
 		Real mRatioAbs = 1;
         /// Transformer ratio pase [deg]
@@ -147,14 +158,33 @@ namespace Ph1 {
 		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
 		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		/// Stamps right side (source) vector
+		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// Updates internal current variable of the component
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component
 		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		/// MNA pre step operations
+		void mnaPreStep(Real time, Int timeStepCount);
 		/// MNA post step operations
 		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 		/// Add MNA post step dependencies
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+
+		class MnaPreStep : public Task {
+		public:
+			MnaPreStep(Transformer& transformer) :
+				Task(transformer.mName + ".MnaPreStep"), mTransformer(transformer) {
+					mTransformer.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
+			}
+			void execute(Real time, Int timeStepCount) { mTransformer.mnaPreStep(time, timeStepCount); };
+		private:
+			Transformer& mTransformer;
+		};
+
+
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Transformer& transformer, Attribute<Matrix>::Ptr leftVector) :

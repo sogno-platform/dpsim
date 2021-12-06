@@ -221,7 +221,7 @@ namespace Ph3 {
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void initialize(Real omega, Real timeStep,
-			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
+			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.

@@ -36,7 +36,6 @@ Real initReactivePower = 0;
 Real initMechPower = 300e6;
 // Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 // Real initVoltAngle = -PI / 2;
-Real fieldVoltage = 7.0821;
 
 //PiLine parameters calculated from CIGRE Benchmark system (works with 1us)
 //1oo km length 230kV
@@ -125,6 +124,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
+	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
@@ -253,6 +253,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
+	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
