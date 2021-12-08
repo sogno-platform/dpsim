@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
 	pv->setParameters(scenario.systemOmega, scenario.pvNominalVoltage, scenario.pvNominalActivePower, scenario.pvNominalReactivePower);
 	pv->setControllerParameters(cmdScaleP*scenario.KpPLL, cmdScaleI*scenario.KiPLL, cmdScaleP*scenario.KpPowerCtrl, cmdScaleI*scenario.KiPowerCtrl, cmdScaleP*scenario.KpCurrCtrl, cmdScaleI*scenario.KiCurrCtrl, scenario.OmegaCutoff);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
-	pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvNominalVoltage, scenario.systemNominalVoltage/scenario.pvNominalVoltage, 0, 0, scenario.transformerInductance);
+	pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvNominalVoltage, 0, 0, scenario.transformerInductance);
 	pv->setInitialStateValues(scenario.pvNominalActivePower, scenario.pvNominalReactivePower, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
 	pv->withControl(pvWithControl);
 
@@ -119,8 +119,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{extnetSP, lineSP, pv});
 
 	// Initialization of dynamic topology with values from powerflow
-	CIM::Reader reader(simNameSP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemSP);
+	systemSP.initWithPowerflow(systemPF);
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
@@ -131,16 +130,12 @@ int main(int argc, char* argv[]) {
 
 	CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerSP, pv);
 
-	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemSP, Domain::SP, loggerSP);
-
 	// Simulation
 	Simulation sim(simNameSP, Logger::Level::debug);
 	sim.setSystem(systemSP);
 	sim.setTimeStep(timeStepSP);
 	sim.setFinalTime(finalTimeSP);
 	sim.setDomain(Domain::SP);
-	// sim.addEvent(loadStepEvent);
 	sim.addLogger(loggerSP);
 	sim.run();
 
