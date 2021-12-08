@@ -279,7 +279,7 @@ namespace CIGREMV {
         Int numberPVUnitsPerPlant = numberPVUnits / numberPVPlants;
 
         // PV controller parameters
-        Real scalingKp = 0.1;
+        Real scalingKp = 1;
         Real scalingKi = 0.001;
 
 		Real KpPLL = 0.25*scalingKp;
