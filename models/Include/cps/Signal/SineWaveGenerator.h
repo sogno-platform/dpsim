@@ -12,14 +12,19 @@
 
 namespace CPS {
 namespace Signal {
+	/// \brief Model to generate sinusoidal signals
+	///
+	/// Inherits from the abstract SignalGenerator class.
+	/// The generated signal must be characterised by its initial complex phasor and its frequency.
 	class SineWaveGenerator :
 		public SignalGenerator,
         public SharedFactory<SineWaveGenerator>  {
     private:
-		/// initial signal phasor with magnitude and phase
+		/// magnitude of the initial signal phasor
 		Real mMagnitude;
+		/// phase of the initial signal phasor
 		Real mInitialPhase;
-		/// signal's frequency
+		/// frequency of the sine
 		Real mFrequency;
     public:
 		/// init the identified object

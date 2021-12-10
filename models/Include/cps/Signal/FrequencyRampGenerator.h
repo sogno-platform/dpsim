@@ -10,26 +10,40 @@
 
 #include <cps/Signal/SignalGenerator.h>
 
-
 namespace CPS {
 namespace Signal {
+	/// \brief Model to generate signals containing a frequency ramp
+	///
+	/// Inherits from the abstract SignalGenerator class.
+	/// Models a ramp-like change in the signal's frequency with a given RoCoF.
+	/// The ramp is further characterised by start frequency, and the start time and duration of the event.
 	class FrequencyRampGenerator :
 		public SignalGenerator,
         public SharedFactory<FrequencyRampGenerator> {
     private:
-        /// initial signal phasor with magnitude and phase
+        /// magnitude of the initial signal phasor
 		Real mMagnitude;
+		/// phase of the initial signal phasor
 		Real mInitialPhase;
 
-        /// ramp parameters
+        /// frequency before the event
         Real mFreqStart;
+		/// frequency after the event
         Real mFreqEnd;
+		/// event's rate of change of frequency
         Real mRocof;
+		/// moment in time when the event starts
         Real mTimeStart;
+		/// duration of the event
         Real mDuration;
+		/// help variable for calculation
         Real mOldTime;
 
+		/// boolean value to change the mode of calculation.
+		/// If set to false, the current signal value will be calculated based on the previous.
         bool mUseAbsoluteCalc = true;
+		/// to ensure a smooth frequency transition.
+		/// If set to false, a linear frequency ramp with constant rocof and two kinks will be created.
         bool mSmooth = true;
     public:
         FrequencyRampGenerator(String name, Logger::Level logLevel = Logger::Level::off)
