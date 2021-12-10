@@ -10,9 +10,12 @@
 
 #include <dpsim-models/SimSignalComp.h>
 
-
 namespace CPS {
 namespace Signal {
+	/// \brief Model to generate generic signals
+	///
+	/// Abstract model to generate different types of signals.
+	/// Acts as a base class for more specific signal generator classes, such as SineWaveGenerator.
 	class SignalGenerator :
 		public SimSignalComp {
     public:
@@ -33,24 +36,6 @@ namespace Signal {
         virtual void step(Real time) = 0;
 		/// returns current signal value without updating it
 		Complex getSignal();
-
-		/// task not needed, update called by owning object
-		/// TODO: think about changing that and implementing a task here
-		/*
-		Task::List getTasks();
-
-        class Step : public Task {
-		public:
-			Step(SignalGenerator& sigGen) :
-					Task(**sigGen.mName + ".Step"), mSigGen(sigGen) {
-				mModifiedAttributes.push_back();
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SignalGenerator& mSigGen;
-		};*/
     };
 }
 }
