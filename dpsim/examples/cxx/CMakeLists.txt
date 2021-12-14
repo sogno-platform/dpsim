@@ -52,7 +52,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_DP_SP_VS_RLC.cpp
 	Circuits/DP_EMT_RL_SourceStep.cpp
 	Circuits/EMT_DP_SP_Trafo.cpp
-	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FM.cpp
+	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FrequencyRamp_CosineFM.cpp
 
 	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
