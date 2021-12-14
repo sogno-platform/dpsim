@@ -48,10 +48,10 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq)
 	mParametersSet = true;
 }
 
-void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
+void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp) {
 	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(**mName + "_fr");
 	// Complex(1,0) is used as initialPhasor, since magnitude and phase of V_ref are taken into account by updateVoltage
-	srcSigFreqRamp->setParameters(Complex(1,0), freqStart, rocof, timeStart, duration, useAbsoluteCalc);
+	srcSigFreqRamp->setParameters(Complex(1,0), freqStart, rocof, timeStart, duration, smoothRamp);
 	mSrcSig = srcSigFreqRamp;
 
 	**mVoltageRef = voltageRef;

@@ -50,10 +50,10 @@ void SP::Ph1::NetworkInjection::setParameters(Real voltageSetPoint) {
 	mParametersSet = true;
 }
 
-void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
+void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp) {
 	mParametersSet = true;
 
-	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
+	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, smoothRamp);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",

@@ -54,7 +54,7 @@ namespace CPS {
 				/// Setter for reference voltage and frequency with a sine wave generator
 				void setParameters(MatrixComp voltageRef, Real srcFreq);
 				/// Setter for reference signal of type frequency ramp
-				void setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
+				void setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp = true);
 				/// Setter for reference signal of type cosine frequency modulation
 				void setParameters(MatrixComp voltageRef, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 50.0, bool zigzag = false);
 
