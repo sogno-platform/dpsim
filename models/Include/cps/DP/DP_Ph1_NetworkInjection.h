@@ -51,7 +51,7 @@ namespace Ph1 {
 		/// Setter for reference voltage parameters
 		void setParameters(Complex voltageRef, Real srcFreq = 0.0);
 		/// Setter for reference signal of type frequency ramp
-		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
+		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp = true);
 		/// Setter for reference signal of type cosine frequency modulation
 		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 0.0, bool zigzag = false);
 		/// More General setter for voltage source parameters

@@ -12,7 +12,7 @@
 using namespace DPsim;
 using namespace CPS;
 
-String simName = "EMT_DP_SP_Slack_PiLine_PQLoad_FM";
+String simName = "EMT_DP_SP_Slack_PiLine_PQLoad";
 
 // Component parameters
 Real Vnom = 20e3;
@@ -88,10 +88,10 @@ void simulateDP(SystemTopology& systemPF, String waveform) {
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	if(waveform == "cosineFM")
+	if(waveform == "CosineFM")
 		extnetDP->setParameters(Complex(Vnom,0), 1.25, 1.25, -1.25);
 	else
-		extnetDP->setParameters(Complex(Vnom,0), 0.0, -6.25, 0.2, 0.4);
+		extnetDP->setParameters(Complex(Vnom,0), 0.0, -6.25, 0.2, 0.4, false);
 
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance);
@@ -143,10 +143,10 @@ void simulateSP(SystemTopology& systemPF, String waveform) {
 	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	if(waveform == "cosineFM")
+	if(waveform == "CosineFM")
 		extnetSP->setParameters(Complex(Vnom,0), 1.25, 1.25, -1.25);
 	else
-		extnetSP->setParameters(Complex(Vnom,0), 0.0, -6.25, 0.2, 0.4);
+		extnetSP->setParameters(Complex(Vnom,0), 0.0, -6.25, 0.2, 0.4, false);
 
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineSP->setParameters(lineResistance, lineInductance, lineCapacitance);
@@ -185,7 +185,6 @@ void simulateSP(SystemTopology& systemPF, String waveform) {
 
 // ----- EMT SIMULATION -----
 void simulateEMT(SystemTopology& systemPF, String waveform) {
-	String simName = "EMT_DP_SP_Slack_PiLine_PQLoad_FM";
 
 	Real timeStepEMT = timeStep;
 	Real finalTimeEMT = finalTime + timeStepEMT;
@@ -197,10 +196,10 @@ void simulateEMT(SystemTopology& systemPF, String waveform) {
 	auto n2EMT = SimNode<Real>::make("n2", PhaseType::ABC);
 
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
-	if(waveform == "cosineFM")
+	if(waveform == "CosineFM")
 		extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Vnom), 1.25, 1.25, 48.75);
 	else
-		extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Vnom), 50, -6.25, 0.2, 0.4);
+		extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Vnom), 50, -6.25, 0.2, 0.4, false);
 
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
 	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(lineResistance), CPS::Math::singlePhaseParameterToThreePhase(lineInductance), CPS::Math::singlePhaseParameterToThreePhase(lineCapacitance));
@@ -254,10 +253,10 @@ int main(int argc, char* argv[]) {
 
 	SystemTopology systemPF;
 	powerFlow(systemPF);
-	simulateDP(systemPF, "cosineFM");
-	simulateDP(systemPF, "linearRamp");
-	simulateSP(systemPF, "cosineFM");
-	simulateSP(systemPF, "linearRamp");
-	simulateEMT(systemPF, "cosineFM");
-	simulateEMT(systemPF, "linearRamp");
+	simulateDP(systemPF, "CosineFM");
+	simulateDP(systemPF, "FrequencyRamp");
+	simulateSP(systemPF, "CosineFM");
+	simulateSP(systemPF, "FrequencyRamp");
+	simulateEMT(systemPF, "CosineFM");
+	simulateEMT(systemPF, "FrequencyRamp");
 }
