@@ -44,16 +44,14 @@ namespace Signal {
         bool mUseAbsoluteCalc = true;
 		/// to ensure a smooth frequency transition.
 		/// If set to false, a linear frequency ramp with constant rocof and two kinks will be created.
-        bool mSmooth = true;
+        bool mSmoothRamp;
     public:
         FrequencyRampGenerator(String name, Logger::Level logLevel = Logger::Level::off)
             : SignalGenerator(name, logLevel) {
-				mUseAbsoluteCalc = true;
-				mSmooth = false;
 				mSLog->info("Create {} {}", type(), name);
 			}
         /// set frequency ramp specific parameters
-        void setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool useAbsoluteCalc);
+        void setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool smoothRamp = true);
         /// implementation of inherited method step to update and return the current signal value
         void step(Real time);
         /// implementation of inherited method step to update and return the current signal value
