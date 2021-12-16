@@ -57,12 +57,12 @@ void EMT::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 
 	if (terminalNotGrounded(0)) {
-		mSLog->info("Add {:f} to system at ({:d},{:d})", -1, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
-		mSLog->info("Add {:f} to system at ({:d},{:d})", -1, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
+		mSLog->info("Add {:f} to system at ({:d},{:d})", -1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+		mSLog->info("Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
 	}
 	if (terminalNotGrounded(1)) {
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1, matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex());
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1));
+		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex());
+		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1));
 	}
 }
 
