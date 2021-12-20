@@ -39,7 +39,7 @@ namespace Flags {
 		write = 2,
 		setter = 4,
 		getter = 8,
-		owner = 16,
+		//owner = 16,
 		state = 32, /// This attribute constitutes a state of the component which should be resetted between simulation runs
 	};
 }
@@ -106,7 +106,7 @@ namespace Flags {
 		using Setter = std::function<void(const T&)>;
 
 	protected:
-		T *mValue;
+		std::shared_ptr<T> mValue;
 
 		Setter mSetter;
 		Getter mGetter;
@@ -116,7 +116,7 @@ namespace Flags {
 		typedef std::shared_ptr<Attribute<T>> Ptr;
 
 		Attribute(int flags = Flags::read) :
-			AttributeBase(flags | Flags::owner), mValue(new T) { }
+			AttributeBase(flags), mValue(std::make_shared<T>()) { }
 
 		Attribute(T *v, int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
 			AttributeBase(flags, refAttribute),
@@ -137,8 +137,7 @@ namespace Flags {
 		{ };
 
 		virtual ~Attribute() {
-			if (mFlags & Flags::owner)
-				delete mValue;
+			///
 		}
 
 		void set(const T &v) {
