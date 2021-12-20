@@ -24,8 +24,10 @@ namespace CPS {
 
 	protected:
 		template<typename T, typename... Args>
-		void addAttribute(const String &name, Args&&... args) {
-			mAttributes[name] = Attribute<T>::make(std::forward<Args>(args)...);
+		typename Attribute<T>::Ptr addAttribute(const String &name, Args&&... args) {
+			typename Attribute<T>::Ptr newAttr = Attribute<T>::make(std::forward<Args>(args)...);
+			mAttributes[name] = newAttr;
+			return newAttr;
 		}
 
 	public:
