@@ -207,6 +207,13 @@ namespace Flags {
 			return get();
 		}
 
+		/// @brief User-defined dereference operator
+		///
+		/// Allows easier access to the attribute's underlying data
+		const T& operator*(){
+			return get();
+		}
+
 		/// Do not use!
 		/// Only used for Eigen Matrix - Sundials N_Vector interfacing in N_VSetArrayPointer
 		operator T&() {
