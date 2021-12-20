@@ -36,13 +36,6 @@ if(WITH_GSL)
 	list(APPEND DPSIM_LIBRARIES ${GSL_LIBRARIES})
 endif()
 
-if(WITH_PYTHON)
-	list(APPEND DPSIM_INCLUDE_DIRS ${Python_INCLUDE_DIRS})
-	#list(APPEND DPSIM_LIBRARIES ${PYTHON_LIBRARIES})
-
-	add_subdirectory(Python)
-endif()
-
 if(WITH_JSON)
 	list(APPEND DPSIM_LIBRARIES nlohmann_json::nlohmann_json)
 endif()

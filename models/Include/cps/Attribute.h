@@ -13,23 +13,6 @@
 #include <cps/PtrFactory.h>
 #include <cps/MathUtils.h>
 #include <cps/Config.h>
-
-#ifdef WITH_PYTHON
-#ifdef _DEBUG
-  #undef _DEBUG
-  #include <Python.h>
-  #define _DEBUG
-#else
-  #include <Python.h>
-#endif
-#endif
-
-#ifdef WITH_NUMPY
-  #define NO_IMPORT_ARRAY
-  #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
-  #include <numpy/arrayobject.h>
-#endif
-
 namespace CPS {
 
 namespace Flags {
@@ -84,15 +67,6 @@ namespace Flags {
 				p = p->mRefAttribute;
 			return p;
 		}
-
-#ifdef WITH_PYTHON
-		virtual void fromPyObject(PyObject *po) = 0;
-		virtual PyObject * toPyObject() = 0;
-#ifdef WITH_NUMPY
-		virtual PyArray_Descr * toPyArrayDescr() { return nullptr; }
-		virtual PyObject * toPyArray() { return nullptr; }
-#endif
-#endif
 	};
 
 	template<class T>
@@ -231,14 +205,6 @@ namespace Flags {
 			return *this;
 		}
 
-#ifdef WITH_PYTHON
-		virtual void fromPyObject(PyObject *po);
-		virtual PyObject * toPyObject();
-#ifdef WITH_NUMPY
-		virtual PyArray_Descr * toPyArrayDescr() { return nullptr; }
-		virtual PyObject * toPyArray() { return nullptr; }
-#endif
-#endif
 	};
 
 	class ComplexAttribute :
