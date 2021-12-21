@@ -61,7 +61,6 @@ void Simulation::create() {
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
 	addAttribute<Bool>("steady_state_init", &mSteadyStateInit, Flags::read|Flags::write);
 	addAttribute<Bool>("split_subnets", &mSplitSubnets, Flags::read|Flags::write);
-	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
 
 	Eigen::setNbThreads(1);
 

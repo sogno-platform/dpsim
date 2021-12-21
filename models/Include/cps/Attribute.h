@@ -44,8 +44,6 @@ namespace Flags {
 			mFlags(flags), mRefAttribute(refAttribute)
 		{ };
 
-		virtual ~AttributeBase() { }
-
 	public:
 		typedef std::shared_ptr<AttributeBase> Ptr;
 		typedef std::vector<Ptr> List;
@@ -80,6 +78,9 @@ namespace Flags {
 		using Setter = std::function<void(const T&)>;
 
 	protected:
+		//FIXME: When the value is actually an external reference (set by the second constructor), destroying this shared ptr will crash the program.
+		//The goal here should be to eliminate all uses of this second constructor,
+		//storing the attributes themselves as class members instead of references to the underlying data
 		std::shared_ptr<T> mValue;
 
 		Setter mSetter;
@@ -109,10 +110,6 @@ namespace Flags {
 			mValue(nullptr),
 			mGetter(get)
 		{ };
-
-		virtual ~Attribute() {
-			///
-		}
 
 		void set(const T &v) {
 			// Check access
