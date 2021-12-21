@@ -20,9 +20,9 @@ namespace Flags {
 	enum Access : int {
 		read = 1,
 		write = 2,
-		setter = 4,
-		getter = 8,
-		//owner = 16,
+		// setter = 4,
+		// getter = 8,
+		derived = 16, /// This attribute is derived from another attribute, meaning it does not own any data
 		state = 32, /// This attribute constitutes a state of the component which should be resetted between simulation runs
 	};
 }
@@ -33,13 +33,15 @@ namespace Flags {
 	protected:
 		/// Flag to determine access rules for this attribute.
 		int mFlags;
-		/// Pointer that serves as an unique identifier to this attribute.
+		
+		//TODO: Delete
 		std::shared_ptr<AttributeBase> mRefAttribute;
 
 		AttributeBase(int flags) :
 			mFlags(flags)
 		{ };
 
+		//TODO: Delete
 		AttributeBase(int flags, const std::shared_ptr<AttributeBase> &refAttribute) :
 			mFlags(flags), mRefAttribute(refAttribute)
 		{ };
@@ -49,6 +51,7 @@ namespace Flags {
 		typedef std::vector<Ptr> List;
 		typedef std::map<String, Ptr> Map;
 
+		//TODO: Delete
 		enum class Modifier { real, imag, mag, phase };
 
 		virtual String toString() const = 0;
@@ -59,6 +62,7 @@ namespace Flags {
 
 		virtual void reset() = 0;
 
+		//TODO: Delete
 		static AttributeBase::Ptr getRefAttribute(AttributeBase::Ptr &attr) {
 			AttributeBase::Ptr& p = attr;
 			while (p && p->mRefAttribute)
@@ -81,7 +85,7 @@ namespace Flags {
 		//FIXME: When the value is actually an external reference (set by the second constructor), destroying this shared ptr will crash the program.
 		//The goal here should be to eliminate all uses of this second constructor,
 		//storing the attributes themselves as class members instead of references to the underlying data
-		std::shared_ptr<T> mValue;
+		std::shared_ptr<T> mData;
 
 		Setter mSetter;
 		Getter mGetter;
@@ -91,33 +95,33 @@ namespace Flags {
 		typedef std::shared_ptr<Attribute<T>> Ptr;
 
 		Attribute(int flags = Flags::read) :
-			AttributeBase(flags), mValue(std::make_shared<T>()) { }
+			AttributeBase(flags), mData(std::make_shared<T>()) { }
 
 		Attribute(T *v, int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
 			AttributeBase(flags, refAttribute),
-			mValue(v)
+			mData(v)
 		{ };
 
 		Attribute(Setter set = Setter(), Getter get = Getter(), int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
-			AttributeBase(flags | Flags::setter | Flags::getter, refAttribute),
-			mValue(nullptr),
+			AttributeBase(flags, refAttribute),
+			mData(nullptr),
 			mSetter(set),
 			mGetter(get)
 		{ };
 
 		Attribute(Getter get = Getter(), int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
-			AttributeBase(flags | Flags::getter, refAttribute),
-			mValue(nullptr),
+			AttributeBase(flags, refAttribute),
+			mData(nullptr),
 			mGetter(get)
 		{ };
 
 		void set(const T &v) {
 			// Check access
 			if (mFlags & Flags::write) {
-				if (mFlags & Flags::setter)
+				if (mSetter)
 					mSetter(v);
 				else
-					*mValue = v;
+					*mData = v;
 			}
 			else
 				throw AccessException();
@@ -126,13 +130,13 @@ namespace Flags {
 		const T& get() const {
 			// Check access
 			if (mFlags & Flags::read) {
-				if (mFlags & Flags::getter) {
+				if (mGetter) {
 					// TODO: this can be done nicer..
 					std::cerr << "ERROR: do not use get by reference for getter attributes." << std::endl;
 					throw AccessException();
 				}
 				else {
-					return *mValue;
+					return *mData;
 				}
 			}
 			else
@@ -151,10 +155,10 @@ namespace Flags {
 		T getByValue() const {
 			// Check access
 			if (mFlags & Flags::read) {
-				if (mFlags & Flags::getter)
+				if (mGetter)
 					return mGetter();
 				else
-					return *mValue;
+					return *mData;
 			}
 			else
 				throw AccessException();
@@ -187,7 +191,7 @@ namespace Flags {
 		/// Do not use!
 		/// Only used for Eigen Matrix - Sundials N_Vector interfacing in N_VSetArrayPointer
 		operator T&() {
-			return *mValue;
+			return *mData;
 		}
 
 		/// @brief User-defined assignment operator
@@ -231,7 +235,7 @@ namespace Flags {
 				this->set(Complex(realPart, copyValue.imag()));
 			};
 			return Attribute<Real>::make(nullptr, get, mFlags, shared_from_this());
-			//Real *realPart = &reinterpret_cast<Real*>(mValue)[0];
+			//Real *realPart = &reinterpret_cast<Real*>(mData)[0];
 			//return Attribute<Real>::make(realPart, mFlags, shared_from_this());
 		}
 
@@ -244,7 +248,7 @@ namespace Flags {
 				this->set(Complex(copyValue.real(), imagPart));
 			};
 			return Attribute<Real>::make(nullptr, get, mFlags, shared_from_this());
-			//Real *imagPart = &reinterpret_cast<Real*>(mValue)[1];
+			//Real *imagPart = &reinterpret_cast<Real*>(mData)[1];
 			//return Attribute<Real>::make(imagPart, mFlags, shared_from_this());
 		}
 
@@ -285,7 +289,7 @@ namespace Flags {
 	protected:
 		using Index = typename MatrixVar<T>::Index;
 		using Attribute<MatrixVar<T>>::mFlags;
-		using Attribute<MatrixVar<T>>::mValue;
+		using Attribute<MatrixVar<T>>::mData;
 		using std::enable_shared_from_this<AttributeBase>::shared_from_this;
 	public:
 		typedef std::shared_ptr<MatrixAttribute> Ptr;
@@ -300,7 +304,7 @@ namespace Flags {
 			//	this->set(mat);
 			//};
 			return Attribute<T>::make(get, mFlags, shared_from_this());
-			//T *ptr = &mValue->data()[mValue->cols() * row + col]; // Column major
+			//T *ptr = &mData->data()[mData->cols() * row + col]; // Column major
 			//return Attribute<T>::make(ptr, mFlags, shared_from_this());
 		}
 	};
@@ -309,7 +313,7 @@ namespace Flags {
 	protected:
 		using Index = typename Matrix::Index;
 		using Attribute<Matrix>::mFlags;
-		using Attribute<Matrix>::mValue;
+		using Attribute<Matrix>::mData;
 		using std::enable_shared_from_this<AttributeBase>::shared_from_this;
 	public:
 		typedef std::shared_ptr<MatrixRealAttribute> Ptr;
@@ -324,7 +328,7 @@ namespace Flags {
 			//	this->set(mat);
 			//};
 			return Attribute<Real>::make(get, mFlags, shared_from_this());
-			//T *ptr = &mValue->data()[mValue->cols() * row + col]; // Column major
+			//T *ptr = &mData->data()[mData->cols() * row + col]; // Column major
 			//return Attribute<T>::make(ptr, mFlags, shared_from_this());
 		}
 	};
@@ -333,7 +337,7 @@ namespace Flags {
 	protected:
 		using Index = typename MatrixComp::Index;
 		using Attribute<MatrixComp>::mFlags;
-		using Attribute<MatrixComp>::mValue;
+		using Attribute<MatrixComp>::mData;
 		using std::enable_shared_from_this<AttributeBase>::shared_from_this;
 	public:
 		typedef std::shared_ptr<MatrixCompAttribute> Ptr;
@@ -343,7 +347,7 @@ namespace Flags {
 				return this->getByValue()(row, col);
 			};
 			return std::make_shared<ComplexAttribute>(get, mFlags, shared_from_this());
-			//Complex *ptr = &mValue->data()[mValue->cols() * row + col]; // Column major
+			//Complex *ptr = &mData->data()[mData->cols() * row + col]; // Column major
 			//return std::make_shared<ComplexAttribute>(ptr, mFlags, shared_from_this());
 		}
 
@@ -352,7 +356,7 @@ namespace Flags {
 				return this->getByValue()(row,col).real();
 			};
 			return Attribute<Real>::make(get, mFlags, shared_from_this());
-			//Complex *ptr = &mValue->data()[mValue->cols() * row + col]; // Column major
+			//Complex *ptr = &mData->data()[mData->cols() * row + col]; // Column major
 			//Real *realPart = &reinterpret_cast<Real*>(ptr)[0];
 			//return Attribute<Real>::make(&realPart, mFlags, shared_from_this());
 		}
@@ -369,7 +373,7 @@ namespace Flags {
 				return Math::abs(this->get()(row,col));
 			};
 			return Attribute<Real>::make(get, mFlags, shared_from_this());
-			//Complex *ptr = &mValue->data()[mValue->cols() * row + col]; // Column major
+			//Complex *ptr = &mData->data()[mData->cols() * row + col]; // Column major
 			//Real *realPart = &reinterpret_cast<Real*>(ptr)[0];
 			//return Attribute<Real>::make(&realPart, mFlags, shared_from_this());
 		}

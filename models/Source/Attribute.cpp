@@ -22,7 +22,7 @@ template<>
 String Attribute<MatrixComp>::toString() const {
 	std::stringstream ss;
 	ss.precision(2);
-	ss << *mValue;
+	ss << *mData;
 	return ss.str();
 }
 
@@ -30,7 +30,7 @@ template<>
 String Attribute<Matrix>::toString() const {
 	std::stringstream ss;
 	ss.precision(2);
-	ss << *mValue;
+	ss << *mData;
 	return ss.str();
 }
 
@@ -38,13 +38,13 @@ template<>
 String Attribute<Complex>::toString() const {
 	std::stringstream ss;
 	ss.precision(2);
-	ss << mValue->real() << "+" << mValue->imag() << "i";
+	ss << mData->real() << "+" << mData->imag() << "i";
 	return ss.str();
 }
 
 template<>
 String Attribute<String>::toString() const {
-	return String(*mValue);
+	return String(*mData);
 }
 
 template class CPS::Attribute<MatrixComp>;
