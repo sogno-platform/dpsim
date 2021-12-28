@@ -13,7 +13,7 @@
 
 using namespace CPS;
 
-std::ostream &operator<<(std::ostream &output, const AttributeBase &attr) {
+std::ostream &operator<<(std::ostream &output, AttributeBase &attr) {
 	output << attr.toString();
 	return output;
 }

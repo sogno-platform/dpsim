@@ -31,15 +31,49 @@ namespace Flags {
 		UPDATE_ON_SIMULATION_STEP,
 	};
 
-	template<class DependentType, class... DependencyTypes>
-	class AttributeUpdateTask;
+	template<class T>
+	class Attribute;
+
+	template<class T>
+	class AttributeStatic;
 
 	template<class T>
 	class AttributeDynamic;
 
+	template<class DependentType>
+	class AttributeUpdateTaskBase {
 
-	class AttributeBase :
-		public std::enable_shared_from_this<AttributeBase> {
+	public:
+		//FIXME: Why must this not be a pure virtual function, i. e. why can't this class be abstract?
+		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) {
+			throw TypeException();
+		}; 
+	};
+
+	template<class DependentType, class... DependencyTypes>
+	class AttributeUpdateTask :
+		public AttributeUpdateTaskBase<DependentType>,
+		public SharedFactory<AttributeUpdateTask<DependentType, DependencyTypes...>> {
+	
+	public:
+		using Actor = std::function<void(std::shared_ptr<DependentType>&, std::shared_ptr<Attribute<DependencyTypes>>...)>;
+
+	protected:
+		std::tuple<std::shared_ptr<Attribute<DependencyTypes>>...> mDependencies;
+		Actor mActorFunction;
+		UpdateTaskKind mKind;
+
+	public:
+		AttributeUpdateTask(UpdateTaskKind kind, Actor &actorFunction, std::shared_ptr<Attribute<DependencyTypes>>... dependencies)
+			: mKind(kind), mActorFunction(actorFunction), mDependencies(std::forward<std::shared_ptr<Attribute<DependencyTypes>>>(dependencies)...) {}
+
+		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) override {
+			mActorFunction(dependent, std::get<std::shared_ptr<Attribute<DependencyTypes>>...>(mDependencies));
+		}
+	};
+
+
+	class AttributeBase {
 
 	protected:
 		/// Flag to determine access rules for this attribute.
@@ -57,7 +91,7 @@ namespace Flags {
 		// //TODO: Delete
 		// enum class Modifier { real, imag, mag, phase };
 
-		virtual String toString() const = 0;
+		virtual String toString() = 0;
 
 		int flags() const {
 			return mFlags;
@@ -96,7 +130,7 @@ namespace Flags {
 		// 	Attribute(flags)
 		// { };
 
-		virtual void set(const T &value) = 0;
+		virtual void set(T value) = 0;
 
 		virtual const T& get() = 0;
 
@@ -114,7 +148,7 @@ namespace Flags {
 		// 	return *get();
 		// }
 
-		String toString() {
+		virtual String toString() override {
 			return std::to_string(get());
 		}
 
@@ -164,53 +198,55 @@ namespace Flags {
 		template <class U>
 		typename Attribute<U>::Ptr derive(
 			int flags,
-			typename AttributeUpdateTask<U, T>::Actor get = AttributeUpdateTask<U, T>::Actor(),
-			typename AttributeUpdateTask<U, T>::Actor set = AttributeUpdateTask<U, T>::Actor()
+			typename AttributeUpdateTask<U, T>::Actor getter = AttributeUpdateTask<U, T>::Actor(),
+			typename AttributeUpdateTask<U, T>::Actor setter = AttributeUpdateTask<U, T>::Actor()
 		)
 		{
 			auto derivedAttribute = std::make_shared<AttributeDynamic<U>>(flags);
-			if (set) {
-				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_SET, set);
+			if (setter) {
+				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_SET, AttributeUpdateTask<U, T>(UpdateTaskKind::UPDATE_ON_SET, setter, this->shared_from_this()));
 			}
-			if (get) {
-				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_GET, get);
+			if (getter) {
+				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<U, T>(UpdateTaskKind::UPDATE_ON_GET, getter, this->shared_from_this()));
 			}
-			
+			return derivedAttribute;
 		}
 
 		template <class U>
 		typename Attribute<U>::Ptr derive(
-			typename AttributeUpdateTask<U, T>::Actor get = AttributeUpdateTask<U, T>::Actor(),
-			typename AttributeUpdateTask<U, T>::Actor set = AttributeUpdateTask<U, T>::Actor()
+			typename AttributeUpdateTask<U, T>::Actor getter = AttributeUpdateTask<U, T>::Actor(),
+			typename AttributeUpdateTask<U, T>::Actor setter = AttributeUpdateTask<U, T>::Actor()
 		)
 		{
-			return derive<U>(this->mFlags, get, set);
+			return derive<U>(this->mFlags, getter, setter);
 		}
-	};
 
-	template<class DependentType>
-	class AttributeUpdateTaskBase:
-		public SharedFactory<AttributeUpdateTaskBase<DependentType>> {
+		std::shared_ptr<Attribute<Real>> deriveReal()
+			requires std::same_as<T, CPS::Complex>
+		{
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> dependent, std::shared_ptr<Attribute<Complex>> dependency) {
+				*dependent = (**dependency).real();
+			};
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> dependent, std::shared_ptr<Attribute<Complex>> dependency) {
+				CPS::Complex currentValue = dependency->get();
+				currentValue.real(*dependent);
+				dependency->set(currentValue);
+			};
+			return derive<CPS::Real>(getter, setter);
+		}
 
-	public:
-		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) = 0;
-	};
-
-	template<class DependentType, class... DependencyTypes>
-	class AttributeUpdateTask : public AttributeUpdateTaskBase<DependentType> {
-	
-	protected:
-		using Actor = std::function<void(std::shared_ptr<DependentType>&, std::shared_ptr<Attribute<DependencyTypes>>...)>;
-		std::tuple<std::shared_ptr<Attribute<DependencyTypes>>...> mDependencies;
-		Actor mActorFunction;
-		UpdateTaskKind mKind;
-
-	public:
-		AttributeUpdateTask(UpdateTaskKind kind, Actor actorFunction, std::shared_ptr<Attribute<DependencyTypes>>... dependencies)
-			: mKind(kind), mActorFunction(actorFunction), mDependencies(std::forward<std::shared_ptr<Attribute<DependencyTypes>>>(dependencies)...) {}
-
-		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) override {
-			actorFunction(dependent, mDependencies);
+		std::shared_ptr<Attribute<Real>> deriveImag()
+			requires std::same_as<T, CPS::Complex>
+		{
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+				*dependent = (**dependency).imag();
+			};
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+				CPS::Complex currentValue = dependency->get();
+				currentValue.imag(*dependent);
+				dependency->set(currentValue);
+			};
+			return derive<CPS::Real>(getter, setter);
 		}
 	};
 
@@ -221,7 +257,7 @@ namespace Flags {
 		AttributeStatic(int flags = Flags::read) :
 			Attribute<T>(flags) { }
 
-		virtual void set(const T &value) override {
+		virtual void set(T value) override {
 			if (this->mFlags & Flags::write) {
 				*this->mData = value;
 			} else {
@@ -249,10 +285,10 @@ namespace Flags {
 		AttributeDynamic(int flags = Flags::read) :
 			Attribute<T>(flags) { }
 
-		void addTask(UpdateTaskKind kind, typename AttributeUpdateTaskBase<T>::Actor task) {
+		void addTask(UpdateTaskKind kind, AttributeUpdateTaskBase<T> task) {
 			switch (kind) {
 				case UpdateTaskKind::UPDATE_ONCE:
-					throw InvalidArgumentException("UPDATE_ONCE tasks are currently unsupported for dynamic attributes!");
+					throw InvalidArgumentException();
 				case UpdateTaskKind::UPDATE_ON_GET:
 					updateTasksOnGet.push_back(task);
 					break;
@@ -260,15 +296,15 @@ namespace Flags {
 					updateTasksOnSet.push_back(task);
 					break;
 				case UpdateTaskKind::UPDATE_ON_SIMULATION_STEP:
-					throw InvalidArgumentException("UPDATE_ON_SIMULATION_STEP tasks are currently unsupported for dynamic attributes!");
+					throw InvalidArgumentException();
 			};
 		}
 
-		virtual void set(const T &value) override {
+		virtual void set(T value) override {
 			if (this->mFlags & Flags::write) {
 				*this->mData = value;
 				for(auto task : updateTasksOnSet) {
-					task->executeUpdate(&(this->mData));
+					task.executeUpdate(this->mData);
 				}
 			} else {
 				throw AccessException(); 
@@ -278,7 +314,7 @@ namespace Flags {
 		virtual const T& get() override {
 			if (this->mFlags & Flags::read) {
 				for(auto task : updateTasksOnGet) {
-					task->executeUpdate(&(this->mData));
+					task.executeUpdate(this->mData);
 				}
 				return *this->mData;
 			}

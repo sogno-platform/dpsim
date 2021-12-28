@@ -82,47 +82,6 @@ namespace CPS {
 			mAttributes[name] = ref;
 		}
 
-		ComplexAttribute::Ptr attributeComplex(const String &name) {
-			auto attr = attribute<Complex>(name);
-			auto attrPtr = std::static_pointer_cast<ComplexAttribute>(attr);
-
-			if (attrPtr == NULL)
-				throw InvalidAttributeException();
-
-			return attrPtr;
-		}
-
-		template<typename VarType>
-		typename MatrixAttribute<VarType>::Ptr attributeMatrix(const String &name) {
-			auto attr = attribute<MatrixVar<VarType>>(name);
-			auto attrPtr = std::static_pointer_cast<MatrixAttribute<VarType>>(attr);
-
-			if (attrPtr == NULL)
-				throw InvalidAttributeException();
-
-			return attrPtr;
-		}
-
-		MatrixRealAttribute::Ptr attributeMatrixReal(const String &name) {
-			auto attr = attribute<Matrix>(name);
-			auto attrPtr = std::static_pointer_cast<MatrixRealAttribute>(attr);
-
-			if (attrPtr == NULL)
-				throw InvalidAttributeException();
-
-			return attrPtr;
-		}
-
-		MatrixCompAttribute::Ptr attributeMatrixComp(const String &name) {
-			auto attr = attribute<MatrixComp>(name);
-			auto attrPtr = std::static_pointer_cast<MatrixCompAttribute>(attr);
-
-			if (attrPtr == NULL)
-				throw InvalidAttributeException();
-
-			return attrPtr;
-		}
-
 		void reset() {
 			for (auto a : mAttributes) {
 				a.second->reset();
