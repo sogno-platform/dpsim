@@ -24,9 +24,8 @@ namespace Flags {
 	};
 }
 
-	template<class T, class U> 
-	class DerivedAttribute;
-
+	// template<class T, class U> 
+	// class DerivedAttribute;
 	class AttributeBase :
 		public std::enable_shared_from_this<AttributeBase> {
 
@@ -169,6 +168,33 @@ namespace Flags {
 		// 	return derive<U>(set, get, this->mFlags);
 		// }
 	};
+
+	template<class DependentType, class... DependencyTypes>
+	class AttributeUpdateTask :
+		public SharedFactory<AttributeUpdateTask<DependentType, DependencyTypes...>> {
+
+	public:
+		enum UpdateTaskKind {
+			UPDATE_ONCE,
+			UPDATE_ON_GET,
+			UPDATE_ON_SET,
+			UPDATE_ON_SIMULATION_STEP,
+		};
+	protected:
+		using Actor = std::function<bool(std::shared_ptr<DependentType>&, std::shared_ptr<Attribute<DependencyTypes>>...)>;
+		std::tuple<std::shared_ptr<Attribute<DependencyTypes>>...> mDependencies;
+		Actor mActorFunction;
+		UpdateTaskKind mKind;
+
+	public:
+		AttributeUpdateTask(UpdateTaskKind kind, Actor actorFunction, std::shared_ptr<Attribute<DependencyTypes>>... dependencies)
+			: mKind(kind), mActorFunction(actorFunction), mDependencies(std::forward<std::shared_ptr<Attribute<DependencyTypes>>>(dependencies)...) {}
+
+		bool executeUpdate(std::shared_ptr<DependentType> &dependent) {
+			return actorFunction(dependent, mDependencies);
+		}
+	};
+
 
 	// ///T: Type of the derived attribute
 	// ///U: Type of the attribute this attribute is derived from
