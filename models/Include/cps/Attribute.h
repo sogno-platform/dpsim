@@ -24,8 +24,20 @@ namespace Flags {
 	};
 }
 
-	// template<class T, class U> 
-	// class DerivedAttribute;
+	enum UpdateTaskKind {
+		UPDATE_ONCE,
+		UPDATE_ON_GET,
+		UPDATE_ON_SET,
+		UPDATE_ON_SIMULATION_STEP,
+	};
+
+	template<class DependentType, class... DependencyTypes>
+	class AttributeUpdateTask;
+
+	template<class T>
+	class AttributeDynamic;
+
+
 	class AttributeBase :
 		public std::enable_shared_from_this<AttributeBase> {
 
@@ -149,31 +161,31 @@ namespace Flags {
 			return *this;
 		}
 
-		// template <class U>
-		// typename Attribute<U>::Ptr derive(
-		// 	int flags,
-		// 	typename DerivedAttribute<U, T>::Setter set = DerivedAttribute<U, T>::Setter(),
-		// 	typename DerivedAttribute<U, T>::Getter get = DerivedAttribute<U, T>::Getter()
-		// )
-		// {
-		// 	return std::make_shared<DerivedAttribute<U,T>>(shared_from_this(), set, get, flags);
-		// }
+		template <class U>
+		typename Attribute<U>::Ptr derive(
+			int flags,
+			typename AttributeUpdateTask<U, T>::Actor get = AttributeUpdateTask<U, T>::Actor(),
+			typename AttributeUpdateTask<U, T>::Actor set = AttributeUpdateTask<U, T>::Actor()
+		)
+		{
+			auto derivedAttribute = std::make_shared<AttributeDynamic<U>>(flags);
+			if (set) {
+				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_SET, set);
+			}
+			if (get) {
+				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_GET, get);
+			}
+			
+		}
 
-		// template <class U>
-		// typename Attribute<U>::Ptr derive(
-		// 	typename DerivedAttribute<U, T>::Setter set = DerivedAttribute<U, T>::Setter(),
-		// 	typename DerivedAttribute<U, T>::Getter get = DerivedAttribute<U, T>::Getter()
-		// )
-		// {
-		// 	return derive<U>(set, get, this->mFlags);
-		// }
-	};
-
-	enum UpdateTaskKind {
-		UPDATE_ONCE,
-		UPDATE_ON_GET,
-		UPDATE_ON_SET,
-		UPDATE_ON_SIMULATION_STEP,
+		template <class U>
+		typename Attribute<U>::Ptr derive(
+			typename AttributeUpdateTask<U, T>::Actor get = AttributeUpdateTask<U, T>::Actor(),
+			typename AttributeUpdateTask<U, T>::Actor set = AttributeUpdateTask<U, T>::Actor()
+		)
+		{
+			return derive<U>(this->mFlags, get, set);
+		}
 	};
 
 	template<class DependentType>
@@ -237,19 +249,19 @@ namespace Flags {
 		AttributeDynamic(int flags = Flags::read) :
 			Attribute<T>(flags) { }
 
-		void addTask(UpdateTaskKind kind, AttributeUpdateTaskBase::Actor task) {
-			switch kind {
-				UpdateTaskKind::UPDATE_ONCE:
+		void addTask(UpdateTaskKind kind, typename AttributeUpdateTaskBase<T>::Actor task) {
+			switch (kind) {
+				case UpdateTaskKind::UPDATE_ONCE:
 					throw InvalidArgumentException("UPDATE_ONCE tasks are currently unsupported for dynamic attributes!");
-				UpdateTaskKind::UPDATE_ON_GET:
+				case UpdateTaskKind::UPDATE_ON_GET:
 					updateTasksOnGet.push_back(task);
 					break;
-				UpdateTaskKind::UPDATE_ON_SET:
+				case UpdateTaskKind::UPDATE_ON_SET:
 					updateTasksOnSet.push_back(task);
 					break;
-				UpdateTaskKind::UPDATE_ON_SIMULATION_STEP:
+				case UpdateTaskKind::UPDATE_ON_SIMULATION_STEP:
 					throw InvalidArgumentException("UPDATE_ON_SIMULATION_STEP tasks are currently unsupported for dynamic attributes!");
-			}
+			};
 		}
 
 		virtual void set(const T &value) override {
@@ -274,71 +286,6 @@ namespace Flags {
 				throw AccessException();
 		};
 	};
-
-	// ///T: Type of the derived attribute
-	// ///U: Type of the attribute this attribute is derived from
-	// template<class T, class U> 
-	// class DerivedAttribute : public Attribute<T> {
-
-	// public:
-	// 	using Getter = std::function<const T&(std::shared_ptr<Attribute<U>>)>;
-	// 	using Setter = std::function<void(std::shared_ptr<Attribute<U>>, const T&)>;
-
-	// protected:
-	// 	/// The attribute this attribute is derived from
-	// 	std::shared_ptr<Attribute<U>> mParent;
-
-	// 	/// Setter function for this derived attribute. Might be empty to allow direct write access to the parent attribute
-	// 	Setter mSetter;
-	// 	/// Getter function for this derived attribute. Might be empty to allow direct read access to the parent attribute
-	// 	Getter mGetter;
-
-	// 	/// Constructor for a derived attribute. Should only be used in another attribute's `derive`-method
-	// 	DerivedAttribute(Attribute<U> &parent, Setter set = Setter(), Getter get = Getter(), int flags = Flags::read) :
-	// 		Attribute<T>(flags) {
-	// 			if (!get && (typeid(T) != typeid(U))) {
-	// 				throw TypeException("Tried to derive an argument with a type differing from the parent argument, but no Getter function was provided!");
-	// 			}
-	// 			if (!set && (typeid(T) != typeid(U))) {
-	// 				throw TypeException("Tried to derive an argument with a type differing from the parent argument, but no Setter function was provided!");
-	// 			}
-	// 		}
-
-	// public:
-	// 	virtual void set(const T &v) override {
-	// 		if (AttributeBase::mFlags & Flags::write) {
-	// 			if (mSetter) {
-	// 				mSetter(mParent, v);
-	// 			} else {
-	// 				mParent->set(dynamic_cast<const U&>(v));
-	// 			}
-	// 		}
-	// 		else
-	// 			throw AccessException();
-	// 	}
-
-	// 	virtual const T& get() const override {
-	// 		if (AttributeBase::mFlags & Flags::read) {
-	// 			if (mGetter) {
-	// 				return mGetter(mParent);
-	// 			} else {
-	// 				return dynamic_cast<const T&>(mParent->get());
-	// 			}
-	// 		}
-	// 		else
-	// 			throw AccessException();
-	// 	}
-
-	// 	virtual void reset() {
-	// 		// TODO: we might want to provide a default value via the constructor
-	// 		T resetValue = T();
-
-	// 		// Only states are resetted!
-	// 		if (AttributeBase::mFlags & Flags::state)
-	// 			set(resetValue);
-	// 	}
-	// };
-
 
 	// // Replace by DerivedAttribute
 	// class ComplexAttribute :
