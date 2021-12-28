@@ -27,10 +27,10 @@ endif()
 # If you need to compile using C++11, either disable the python interface or modify the source-files in Source/pybind,
 # replacing all occurences of py::overload_cast with py::detail::overload_cast_impl as specified on
 # https://pybind11.readthedocs.io/en/stable/classes.html#overloaded-methods
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 if(CMAKE_CXX_COMPILER_ID STREQUAL Intel)
 	# needed by icc, but for some reason not added by CMake
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 endif()
 
 if(NOT WIN32)
