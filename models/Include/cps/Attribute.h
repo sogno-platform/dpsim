@@ -84,7 +84,7 @@ namespace Flags {
 		// 	Attribute(flags)
 		// { };
 
-		virtual void set(T& value) = 0;
+		virtual void set(const T &value) = 0;
 
 		virtual const T& get() = 0;
 
@@ -169,17 +169,24 @@ namespace Flags {
 		// }
 	};
 
-	template<class DependentType, class... DependencyTypes>
-	class AttributeUpdateTask :
-		public SharedFactory<AttributeUpdateTask<DependentType, DependencyTypes...>> {
+	enum UpdateTaskKind {
+		UPDATE_ONCE,
+		UPDATE_ON_GET,
+		UPDATE_ON_SET,
+		UPDATE_ON_SIMULATION_STEP,
+	};
+
+	template<class DependentType>
+	class AttributeUpdateTaskBase:
+		public SharedFactory<AttributeUpdateTaskBase<DependentType>> {
 
 	public:
-		enum UpdateTaskKind {
-			UPDATE_ONCE,
-			UPDATE_ON_GET,
-			UPDATE_ON_SET,
-			UPDATE_ON_SIMULATION_STEP,
-		};
+		virtual bool executeUpdate(std::shared_ptr<DependentType> &dependent) = 0;
+	};
+
+	template<class DependentType, class... DependencyTypes>
+	class AttributeUpdateTask : public AttributeUpdateTaskBase<DependentType> {
+	
 	protected:
 		using Actor = std::function<bool(std::shared_ptr<DependentType>&, std::shared_ptr<Attribute<DependencyTypes>>...)>;
 		std::tuple<std::shared_ptr<Attribute<DependencyTypes>>...> mDependencies;
@@ -190,7 +197,7 @@ namespace Flags {
 		AttributeUpdateTask(UpdateTaskKind kind, Actor actorFunction, std::shared_ptr<Attribute<DependencyTypes>>... dependencies)
 			: mKind(kind), mActorFunction(actorFunction), mDependencies(std::forward<std::shared_ptr<Attribute<DependencyTypes>>>(dependencies)...) {}
 
-		bool executeUpdate(std::shared_ptr<DependentType> &dependent) {
+		virtual bool executeUpdate(std::shared_ptr<DependentType> &dependent) override {
 			return actorFunction(dependent, mDependencies);
 		}
 	};
