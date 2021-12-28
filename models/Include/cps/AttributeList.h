@@ -19,13 +19,19 @@ namespace CPS {
 	/// Base class of objects having attributes to access member variables.
 	class AttributeList {
 	private:
-		/// Map of all attributes that should be exported to the Python interface
+		/// Map of all attributes
 		AttributeBase::Map mAttributes;
 
 	protected:
 		template<typename T, typename... Args>
-		typename Attribute<T>::Ptr addAttribute(const String &name, Args&&... args) {
-			typename Attribute<T>::Ptr newAttr = Attribute<T>::make(std::forward<Args>(args)...);
+		typename Attribute<T>::Ptr addAttribute(const String &name, bool dynamic, Args&&... args) {
+			typename Attribute<T>::Ptr newAttr;
+			if (dynamic) {
+				newAttr = AttributeDynamic<T>::make(std::forward<Args>(args)...);
+			} else {
+				newAttr = AttributeStatic<T>::make(std::forward<Args>(args)...);
+			}
+			 
 			mAttributes[name] = newAttr;
 			return newAttr;
 		}

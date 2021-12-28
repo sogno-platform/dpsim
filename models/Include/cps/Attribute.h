@@ -108,9 +108,7 @@ namespace Flags {
 	template<class T>
 	class Attribute :
 		public AttributeBase,
-		public SharedFactory<Attribute<T>>,
 		public std::enable_shared_from_this<Attribute<T>> {
-		friend class SharedFactory<Attribute<T>>;
 
 	protected:
 		//FIXME: When the value is actually an external reference (set by the second constructor), destroying this shared ptr will crash the program.
@@ -190,11 +188,6 @@ namespace Flags {
 			return *this;
 		}
 
-		Attribute<T>& operator=(T& other) {
-			set(other);
-			return *this;
-		}
-
 		template <class U>
 		typename Attribute<U>::Ptr derive(
 			int flags,
@@ -251,7 +244,10 @@ namespace Flags {
 	};
 
 	template<class T>
-	class AttributeStatic : public Attribute<T> {
+	class AttributeStatic :
+		public Attribute<T>,
+		public SharedFactory<AttributeStatic<T>> { 
+		friend class SharedFactory<AttributeStatic<T>>;
 
 	public:
 		AttributeStatic(int flags = Flags::read) :
@@ -275,7 +271,11 @@ namespace Flags {
 	};
 
 	template<class T>
-	class AttributeDynamic : public Attribute<T> {
+	class AttributeDynamic :
+		public Attribute<T>,
+		public SharedFactory<AttributeDynamic<T>> { 
+		friend class SharedFactory<AttributeDynamic<T>>;
+
 	
 	protected:
 		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnGet;
