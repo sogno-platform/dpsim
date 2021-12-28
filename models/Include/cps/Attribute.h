@@ -43,8 +43,8 @@ namespace Flags {
 		typedef std::vector<Ptr> List;
 		typedef std::map<String, Ptr> Map;
 
-		//TODO: Delete
-		enum class Modifier { real, imag, mag, phase };
+		// //TODO: Delete
+		// enum class Modifier { real, imag, mag, phase };
 
 		virtual String toString() const = 0;
 
@@ -54,10 +54,10 @@ namespace Flags {
 
 		virtual void reset() = 0;
 
-		//TODO: Delete
-		static AttributeBase::Ptr getRefAttribute(AttributeBase::Ptr &attr) {
-			return attr;
-		}
+		// //TODO: Delete
+		// static AttributeBase::Ptr getRefAttribute(AttributeBase::Ptr &attr) {
+		// 	return attr;
+		// }
 	};
 
 	template<class T>
@@ -71,43 +71,23 @@ namespace Flags {
 		//FIXME: When the value is actually an external reference (set by the second constructor), destroying this shared ptr will crash the program.
 		//The goal here should be to eliminate all uses of this second constructor,
 		//storing the attributes themselves as class members instead of references to the underlying data
-		std::unique_ptr<std::shared_ptr<T>> mData;
+		std::shared_ptr<T> mData;
 
 	public:
 		typedef T Type;
 		typedef std::shared_ptr<Attribute<T>> Ptr;
 
 		Attribute(int flags = Flags::read) :
-			AttributeBase(flags), mData(std::make_unique<std::shared_ptr<T>>(std::make_shared<T>())) { }
+			AttributeBase(flags), mData(std::make_shared<T>()) { }
 
-		// Delete
-		Attribute(T *v, int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
-			Attribute(flags)
-		{ };
+		// // Delete
+		// Attribute(T *v, int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
+		// 	Attribute(flags)
+		// { };
 
-		virtual void set(T value) {
-			if (mFlags & Flags::write) {
-				**mData = value;
-			}
-			else
-				throw AccessException();
-		}
+		virtual void set(T& value) = 0;
 
-		virtual void set(std::shared_ptr<T> value) {
-			if (mFlags & Flags::write) {
-				*mData = value;
-			}
-			else
-				throw AccessException();
-		}
-
-		virtual std::shared_ptr<T> get() const {
-			if (mFlags & Flags::read) {
-				return *mData;
-			}
-			else
-				throw AccessException();
-		}
+		virtual const T& get() = 0;
 
 		virtual void reset() {
 			// TODO: we might want to provide a default value via the constructor
@@ -119,12 +99,12 @@ namespace Flags {
 		}
 
 		// (Maybe delete)
-		virtual T getByValue() const {
-			return *get();
-		}
+		// virtual T getByValue() const {
+		// 	return *get();
+		// }
 
-		String toString() const {
-			return std::to_string(*get());
+		String toString() {
+			return std::to_string(get());
 		}
 
 		/// @brief User-defined cast operator
@@ -136,26 +116,22 @@ namespace Flags {
 		///
 		/// Real x = v;
 		///
-		operator T() {
-			return *(this->get());
-		}
-
-		operator std::shared_ptr<T>() {
+		operator const T&() {
 			return this->get();
 		}
 
 		/// @brief User-defined dereference operator
 		///
 		/// Allows easier access to the attribute's underlying data
-		std::shared_ptr<T> operator*(){
+		const T& operator*(){
 			return this->get();
 		}
 
-		/// Do not use!
-		/// Only used for Eigen Matrix - Sundials N_Vector interfacing in N_VSetArrayPointer
-		operator T&() {
-			return this->get()->get();
-		}
+		// /// Do not use!
+		// /// Only used for Eigen Matrix - Sundials N_Vector interfacing in N_VSetArrayPointer
+		// operator T&() {
+		// 	return this->get()->get();
+		// }
 
 		/// @brief User-defined assignment operator
 		///
@@ -169,94 +145,94 @@ namespace Flags {
 			return *this;
 		}
 
-		Attribute<T>& operator=(std::shared_ptr<T> other) {
+		Attribute<T>& operator=(T& other) {
 			set(other);
 			return *this;
 		}
 
-		template <class U>
-		typename Attribute<U>::Ptr derive(
-			int flags,
-			typename DerivedAttribute<U, T>::Setter set = DerivedAttribute<U, T>::Setter(),
-			typename DerivedAttribute<U, T>::Getter get = DerivedAttribute<U, T>::Getter()
-		)
-		{
-			return std::make_shared<DerivedAttribute<U,T>>(shared_from_this(), set, get, flags);
-		}
+		// template <class U>
+		// typename Attribute<U>::Ptr derive(
+		// 	int flags,
+		// 	typename DerivedAttribute<U, T>::Setter set = DerivedAttribute<U, T>::Setter(),
+		// 	typename DerivedAttribute<U, T>::Getter get = DerivedAttribute<U, T>::Getter()
+		// )
+		// {
+		// 	return std::make_shared<DerivedAttribute<U,T>>(shared_from_this(), set, get, flags);
+		// }
 
-		template <class U>
-		typename Attribute<U>::Ptr derive(
-			typename DerivedAttribute<U, T>::Setter set = DerivedAttribute<U, T>::Setter(),
-			typename DerivedAttribute<U, T>::Getter get = DerivedAttribute<U, T>::Getter()
-		)
-		{
-			return derive<U>(set, get, this->mFlags);
-		}
+		// template <class U>
+		// typename Attribute<U>::Ptr derive(
+		// 	typename DerivedAttribute<U, T>::Setter set = DerivedAttribute<U, T>::Setter(),
+		// 	typename DerivedAttribute<U, T>::Getter get = DerivedAttribute<U, T>::Getter()
+		// )
+		// {
+		// 	return derive<U>(set, get, this->mFlags);
+		// }
 	};
 
-	///T: Type of the derived attribute
-	///U: Type of the attribute this attribute is derived from
-	template<class T, class U> 
-	class DerivedAttribute : public Attribute<T> {
+	// ///T: Type of the derived attribute
+	// ///U: Type of the attribute this attribute is derived from
+	// template<class T, class U> 
+	// class DerivedAttribute : public Attribute<T> {
 
-	public:
-		using Getter = std::function<const T&(std::shared_ptr<Attribute<U>>)>;
-		using Setter = std::function<void(std::shared_ptr<Attribute<U>>, const T&)>;
+	// public:
+	// 	using Getter = std::function<const T&(std::shared_ptr<Attribute<U>>)>;
+	// 	using Setter = std::function<void(std::shared_ptr<Attribute<U>>, const T&)>;
 
-	protected:
-		/// The attribute this attribute is derived from
-		std::shared_ptr<Attribute<U>> mParent;
+	// protected:
+	// 	/// The attribute this attribute is derived from
+	// 	std::shared_ptr<Attribute<U>> mParent;
 
-		/// Setter function for this derived attribute. Might be empty to allow direct write access to the parent attribute
-		Setter mSetter;
-		/// Getter function for this derived attribute. Might be empty to allow direct read access to the parent attribute
-		Getter mGetter;
+	// 	/// Setter function for this derived attribute. Might be empty to allow direct write access to the parent attribute
+	// 	Setter mSetter;
+	// 	/// Getter function for this derived attribute. Might be empty to allow direct read access to the parent attribute
+	// 	Getter mGetter;
 
-		/// Constructor for a derived attribute. Should only be used in another attribute's `derive`-method
-		DerivedAttribute(Attribute<U> &parent, Setter set = Setter(), Getter get = Getter(), int flags = Flags::read) :
-			Attribute<T>(flags) {
-				if (!get && (typeid(T) != typeid(U))) {
-					throw TypeException("Tried to derive an argument with a type differing from the parent argument, but no Getter function was provided!");
-				}
-				if (!set && (typeid(T) != typeid(U))) {
-					throw TypeException("Tried to derive an argument with a type differing from the parent argument, but no Setter function was provided!");
-				}
-			}
+	// 	/// Constructor for a derived attribute. Should only be used in another attribute's `derive`-method
+	// 	DerivedAttribute(Attribute<U> &parent, Setter set = Setter(), Getter get = Getter(), int flags = Flags::read) :
+	// 		Attribute<T>(flags) {
+	// 			if (!get && (typeid(T) != typeid(U))) {
+	// 				throw TypeException("Tried to derive an argument with a type differing from the parent argument, but no Getter function was provided!");
+	// 			}
+	// 			if (!set && (typeid(T) != typeid(U))) {
+	// 				throw TypeException("Tried to derive an argument with a type differing from the parent argument, but no Setter function was provided!");
+	// 			}
+	// 		}
 
-	public:
-		virtual void set(const T &v) override {
-			if (AttributeBase::mFlags & Flags::write) {
-				if (mSetter) {
-					mSetter(mParent, v);
-				} else {
-					mParent->set(dynamic_cast<const U&>(v));
-				}
-			}
-			else
-				throw AccessException();
-		}
+	// public:
+	// 	virtual void set(const T &v) override {
+	// 		if (AttributeBase::mFlags & Flags::write) {
+	// 			if (mSetter) {
+	// 				mSetter(mParent, v);
+	// 			} else {
+	// 				mParent->set(dynamic_cast<const U&>(v));
+	// 			}
+	// 		}
+	// 		else
+	// 			throw AccessException();
+	// 	}
 
-		virtual const T& get() const override {
-			if (AttributeBase::mFlags & Flags::read) {
-				if (mGetter) {
-					return mGetter(mParent);
-				} else {
-					return dynamic_cast<const T&>(mParent->get());
-				}
-			}
-			else
-				throw AccessException();
-		}
+	// 	virtual const T& get() const override {
+	// 		if (AttributeBase::mFlags & Flags::read) {
+	// 			if (mGetter) {
+	// 				return mGetter(mParent);
+	// 			} else {
+	// 				return dynamic_cast<const T&>(mParent->get());
+	// 			}
+	// 		}
+	// 		else
+	// 			throw AccessException();
+	// 	}
 
-		virtual void reset() {
-			// TODO: we might want to provide a default value via the constructor
-			T resetValue = T();
+	// 	virtual void reset() {
+	// 		// TODO: we might want to provide a default value via the constructor
+	// 		T resetValue = T();
 
-			// Only states are resetted!
-			if (AttributeBase::mFlags & Flags::state)
-				set(resetValue);
-		}
-	};
+	// 		// Only states are resetted!
+	// 		if (AttributeBase::mFlags & Flags::state)
+	// 			set(resetValue);
+	// 	}
+	// };
 
 
 	// // Replace by DerivedAttribute
@@ -443,14 +419,14 @@ namespace Flags {
 	// };
 
 	template<>
-	String Attribute<Complex>::toString() const;
+	String Attribute<Complex>::toString();
 
 	template<>
-	String Attribute<String>::toString() const;
+	String Attribute<String>::toString();
 
 	template<>
-	String Attribute<MatrixComp>::toString() const;
+	String Attribute<MatrixComp>::toString();
 
 	template<>
-	String Attribute<Matrix>::toString() const;
+	String Attribute<Matrix>::toString();
 }

@@ -19,32 +19,32 @@ std::ostream &operator<<(std::ostream &output, const AttributeBase &attr) {
 }
 
 template<>
-String Attribute<MatrixComp>::toString() const {
+String Attribute<MatrixComp>::toString() {
 	std::stringstream ss;
 	ss.precision(2);
-	ss << *mData;
+	ss << this->get();
 	return ss.str();
 }
 
 template<>
-String Attribute<Matrix>::toString() const {
+String Attribute<Matrix>::toString() {
 	std::stringstream ss;
 	ss.precision(2);
-	ss << *this->get();
+	ss << this->get();
 	return ss.str();
 }
 
 template<>
-String Attribute<Complex>::toString() const {
+String Attribute<Complex>::toString() {
 	std::stringstream ss;
 	ss.precision(2);
-	ss << this->get()->real() << "+" << this->get()->imag() << "i";
+	ss << this->get().real() << "+" << this->get().imag() << "i";
 	return ss.str();
 }
 
 template<>
-String Attribute<String>::toString() const {
-	return String(*this->get());
+String Attribute<String>::toString() {
+	return String(this->get());
 }
 
 template class CPS::Attribute<MatrixComp>;
