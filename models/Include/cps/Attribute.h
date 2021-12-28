@@ -24,6 +24,9 @@ namespace Flags {
 	};
 }
 
+	template<class U>
+	concept Arithmetic = std::is_arithmetic<U>::value;
+
 	enum UpdateTaskKind {
 		UPDATE_ONCE,
 		UPDATE_ON_GET,
@@ -241,6 +244,56 @@ namespace Flags {
 			};
 			return derive<CPS::Real>(getter, setter);
 		}
+
+		std::shared_ptr<Attribute<Real>> deriveMag()
+			requires std::same_as<T, CPS::Complex>
+		{
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+				*dependent = Math::abs(**dependency);
+			};
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+				CPS::Complex currentValue = dependency->get();
+				dependency->set(Math::polar(*dependent, Math::phase(currentValue)));
+			};
+			return derive<CPS::Real>(getter, setter);
+		}
+
+		std::shared_ptr<Attribute<Real>> derivePhase()
+			requires std::same_as<T, CPS::Complex>
+		{
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+				*dependent = Math::phase(**dependency);
+			};
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+				CPS::Complex currentValue = dependency->get();
+				dependency->set(Math::polar(Math::abs(currentValue), *dependent));
+			};
+			return derive<CPS::Real>(getter, setter);
+		}
+
+		std::shared_ptr<Attribute<T>> deriveScaled(CPS::Complex scale)
+			requires std::same_as<T, CPS::Complex>
+		{
+			typename AttributeUpdateTask<T, T>::Actor getter = [scale](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
+				*dependent = scale * (**dependency);
+			};
+			typename AttributeUpdateTask<T, T>::Actor setter = [scale](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
+				dependency->set((*dependent) / scale);
+			};
+			return derive<T>(getter, setter);
+		}
+
+		std::shared_ptr<Attribute<T>> deriveScaled(CPS::Real scale)
+			requires std::same_as<T, CPS::Real>
+		{
+			typename AttributeUpdateTask<T, T>::Actor getter = [scale](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
+				*dependent = scale * (**dependency);
+			};
+			typename AttributeUpdateTask<T, T>::Actor setter = [scale](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
+				dependency->set((*dependent) / scale);
+			};
+			return derive<T>(getter, setter);
+		}
 	};
 
 	template<class T>
@@ -322,83 +375,6 @@ namespace Flags {
 				throw AccessException();
 		};
 	};
-
-	// // Replace by DerivedAttribute
-	// class ComplexAttribute :
-	// 	public Attribute<Complex> {
-	// public:
-	// 	typedef std::shared_ptr<ComplexAttribute> Ptr;
-
-	// 	ComplexAttribute(Complex *v, int flags = Flags::read,
-	// 		const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
-	// 		Attribute<Complex>(v, flags, refAttribute) { };
-
-	// 	ComplexAttribute(Getter get = Getter(), int flags = Flags::read,
-	// 		const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
-	// 		Attribute<Complex>(get, flags, refAttribute) { };
-
-	// 	// From the C++ standard:
-	// 	// For any pointer to an element of an array of complex<T> named p and any valid array index i,
-	// 	// reinterpret_cast<T*>(p)[2*i] is the real part of the complex number p[i], and
-	// 	// reinterpret_cast<T*>(p)[2*i + 1] is the imaginary part of the complex number p[i]
-
-	// 	Attribute<Real>::Ptr real() {
-	// 		Attribute<Real>::Getter get = [this]() -> Real {
-	// 			return this->getByValue().real();
-	// 		};
-	// 		Attribute<Real>::Setter set = [this](Real realPart) -> void {
-	// 			Complex copyValue = this->getByValue();
-	// 			this->set(Complex(realPart, copyValue.imag()));
-	// 		};
-	// 		return Attribute<Real>::make(nullptr, get, mFlags, shared_from_this());
-	// 		//Real *realPart = &reinterpret_cast<Real*>(mData)[0];
-	// 		//return Attribute<Real>::make(realPart, mFlags, shared_from_this());
-	// 	}
-
-	// 	Attribute<Real>::Ptr imag() {
-	// 		Attribute<Real>::Getter get = [this]() -> Real {
-	// 			return this->getByValue().imag();
-	// 		};
-	// 		Attribute<Real>::Setter set = [this](Real imagPart) -> void {
-	// 			Complex copyValue = this->getByValue();
-	// 			this->set(Complex(copyValue.real(), imagPart));
-	// 		};
-	// 		return Attribute<Real>::make(nullptr, get, mFlags, shared_from_this());
-	// 		//Real *imagPart = &reinterpret_cast<Real*>(mData)[1];
-	// 		//return Attribute<Real>::make(imagPart, mFlags, shared_from_this());
-	// 	}
-
-	// 	Attribute<Real>::Ptr mag() {
-	// 		Attribute<Real>::Getter get = [this]() -> Real {
-	// 			return Math::abs(this->getByValue());
-	// 		};
-	// 		Attribute<Real>::Setter set = [this](Real r) -> void {
-	// 			Complex z = this->getByValue();
-	// 			this->set(Math::polar(r, Math::phase(z)));
-	// 		};
-	// 		return Attribute<Real>::make(set, get, mFlags, shared_from_this());
-	// 	}
-
-	// 	Attribute<Real>::Ptr phase(Bool isRad = true) {
-	// 		Attribute<Real>::Getter get = [this, isRad]() -> Real {
-	// 			return isRad ? Math::phase(this->getByValue())
-	// 			             : Math::phaseDeg(this->getByValue());
-	// 		};
-	// 		Attribute<Real>::Setter set = [this, isRad](Real p) -> void {
-	// 			Complex z = this->getByValue();
-	// 			this->set(isRad ? Math::polar(std::abs(z), p)
-	// 			                : Math::polarDeg(std::abs(z), p));
-	// 		};
-	// 		return Attribute<Real>::make(set, get, mFlags, shared_from_this());
-	// 	}
-
-	// 	ComplexAttribute::Ptr scale(Complex factor) {
-	// 		ComplexAttribute::Getter get = [this, factor]() -> Complex {
-	// 			return factor*this->getByValue();
-	// 		};
-	// 		return std::make_shared<ComplexAttribute>(get, mFlags, shared_from_this());
-	// 	}
-	// };
 
 	// // Replace by DerivedAttribute
 	// template<typename T>
