@@ -202,6 +202,29 @@ namespace Flags {
 		}
 	};
 
+	template<class T>
+	class AttributeStatic : public Attribute<T> {
+
+	public:
+		AttributeStatic(int flags = Flags::read) :
+			Attribute<T>(flags) { }
+
+		virtual void set(const T &value) override {
+			if (this->mFlags & Flags::write) {
+				*this->mData = value;
+			} else {
+				throw AccessException(); 
+			}
+		};
+
+		virtual const T& get() override {
+			if (this->mFlags & Flags::read) {
+				return *this->mData;
+			}
+			else
+				throw AccessException();
+		};
+	};
 
 	// ///T: Type of the derived attribute
 	// ///U: Type of the attribute this attribute is derived from
