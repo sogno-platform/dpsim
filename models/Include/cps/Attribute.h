@@ -181,14 +181,14 @@ namespace Flags {
 		public SharedFactory<AttributeUpdateTaskBase<DependentType>> {
 
 	public:
-		virtual bool executeUpdate(std::shared_ptr<DependentType> &dependent) = 0;
+		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) = 0;
 	};
 
 	template<class DependentType, class... DependencyTypes>
 	class AttributeUpdateTask : public AttributeUpdateTaskBase<DependentType> {
 	
 	protected:
-		using Actor = std::function<bool(std::shared_ptr<DependentType>&, std::shared_ptr<Attribute<DependencyTypes>>...)>;
+		using Actor = std::function<void(std::shared_ptr<DependentType>&, std::shared_ptr<Attribute<DependencyTypes>>...)>;
 		std::tuple<std::shared_ptr<Attribute<DependencyTypes>>...> mDependencies;
 		Actor mActorFunction;
 		UpdateTaskKind mKind;
@@ -197,8 +197,8 @@ namespace Flags {
 		AttributeUpdateTask(UpdateTaskKind kind, Actor actorFunction, std::shared_ptr<Attribute<DependencyTypes>>... dependencies)
 			: mKind(kind), mActorFunction(actorFunction), mDependencies(std::forward<std::shared_ptr<Attribute<DependencyTypes>>>(dependencies)...) {}
 
-		virtual bool executeUpdate(std::shared_ptr<DependentType> &dependent) override {
-			return actorFunction(dependent, mDependencies);
+		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) override {
+			actorFunction(dependent, mDependencies);
 		}
 	};
 
@@ -219,6 +219,55 @@ namespace Flags {
 
 		virtual const T& get() override {
 			if (this->mFlags & Flags::read) {
+				return *this->mData;
+			}
+			else
+				throw AccessException();
+		};
+	};
+
+	template<class T>
+	class AttributeDynamic : public Attribute<T> {
+	
+	protected:
+		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnGet;
+		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnSet;
+
+	public:
+		AttributeDynamic(int flags = Flags::read) :
+			Attribute<T>(flags) { }
+
+		void addTask(UpdateTaskKind kind, AttributeUpdateTaskBase::Actor task) {
+			switch kind {
+				UpdateTaskKind::UPDATE_ONCE:
+					throw InvalidArgumentException("UPDATE_ONCE tasks are currently unsupported for dynamic attributes!");
+				UpdateTaskKind::UPDATE_ON_GET:
+					updateTasksOnGet.push_back(task);
+					break;
+				UpdateTaskKind::UPDATE_ON_SET:
+					updateTasksOnSet.push_back(task);
+					break;
+				UpdateTaskKind::UPDATE_ON_SIMULATION_STEP:
+					throw InvalidArgumentException("UPDATE_ON_SIMULATION_STEP tasks are currently unsupported for dynamic attributes!");
+			}
+		}
+
+		virtual void set(const T &value) override {
+			if (this->mFlags & Flags::write) {
+				*this->mData = value;
+				for(auto task : updateTasksOnSet) {
+					task->executeUpdate(&(this->mData));
+				}
+			} else {
+				throw AccessException(); 
+			}
+		};
+
+		virtual const T& get() override {
+			if (this->mFlags & Flags::read) {
+				for(auto task : updateTasksOnGet) {
+					task->executeUpdate(&(this->mData));
+				}
 				return *this->mData;
 			}
 			else
