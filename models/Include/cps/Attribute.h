@@ -271,8 +271,8 @@ namespace Flags {
 			return derive<CPS::Real>(getter, setter);
 		}
 
-		std::shared_ptr<Attribute<T>> deriveScaled(CPS::Complex scale)
-			requires std::same_as<T, CPS::Complex>
+		std::shared_ptr<Attribute<T>> deriveScaled(T scale)
+			requires std::same_as<T, CPS::Complex> || std::same_as<T, CPS::Real>
 		{
 			typename AttributeUpdateTask<T, T>::Actor getter = [scale](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
 				*dependent = scale * (**dependency);
@@ -283,17 +283,21 @@ namespace Flags {
 			return derive<T>(getter, setter);
 		}
 
-		std::shared_ptr<Attribute<T>> deriveScaled(CPS::Real scale)
-			requires std::same_as<T, CPS::Real>
+		template<class U>
+		std::shared_ptr<Attribute<U>> deriveCoeff(CPS::MatrixVar<U>::Index row, CPS::MatrixVar<U>::Index column)
+			requires std::same_as<T, CPS::MatrixVar<U>>
 		{
-			typename AttributeUpdateTask<T, T>::Actor getter = [scale](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
-				*dependent = scale * (**dependency);
+			typename AttributeUpdateTask<U, T>::Actor getter = [row, column](std::shared_ptr<U> dependent, Attribute<T>::Ptr dependency) {
+				*dependent = (**dependency)(row, column);
 			};
-			typename AttributeUpdateTask<T, T>::Actor setter = [scale](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
-				dependency->set((*dependent) / scale);
+			typename AttributeUpdateTask<U, T>::Actor setter = [row, column](std::shared_ptr<U> dependent, Attribute<T>::Ptr dependency) {
+				CPS::MatrixVar<U> currentValue = dependency->get();
+				currentValue(row, column) = *dependent;
+				dependency->set(currentValue);
 			};
-			return derive<T>(getter, setter);
+			return derive<U>(getter, setter);
 		}
+
 	};
 
 	template<class T>
@@ -375,112 +379,6 @@ namespace Flags {
 				throw AccessException();
 		};
 	};
-
-	// // Replace by DerivedAttribute
-	// template<typename T>
-	// class MatrixAttribute : public Attribute<MatrixVar<T>> {
-	// protected:
-	// 	using Index = typename MatrixVar<T>::Index;
-	// 	using Attribute<MatrixVar<T>>::mFlags;
-	// 	using Attribute<MatrixVar<T>>::mData;
-	// 	using std::enable_shared_from_this<AttributeBase>::shared_from_this;
-	// public:
-	// 	typedef std::shared_ptr<MatrixAttribute> Ptr;
-
-	// 	typename Attribute<T>::Ptr coeff(Index row, Index col) {
-	// 		typename Attribute<T>::Getter get = [this, row, col]() -> T {
-	// 			return this->getByValue()(row, col);
-	// 		};
-	// 		//typename Attribute<T>::Setter set = [](T n) -> void {
-	// 		//	MatrixVar<T> &mat = this->getByValue();
-	// 		//	mat(row, col) = n;
-	// 		//	this->set(mat);
-	// 		//};
-	// 		return Attribute<T>::make(get, mFlags, shared_from_this());
-	// 		//T *ptr = &mData->data()[mData->cols() * row + col]; // Column major
-	// 		//return Attribute<T>::make(ptr, mFlags, shared_from_this());
-	// 	}
-	// };
-
-	// // Replace by DerivedAttribute
-	// class MatrixRealAttribute : public Attribute<Matrix> {
-	// protected:
-	// 	using Index = typename Matrix::Index;
-	// 	using Attribute<Matrix>::mFlags;
-	// 	using Attribute<Matrix>::mData;
-	// 	using std::enable_shared_from_this<AttributeBase>::shared_from_this;
-	// public:
-	// 	typedef std::shared_ptr<MatrixRealAttribute> Ptr;
-
-	// 	typename Attribute<Real>::Ptr coeff(Index row, Index col) {
-	// 		typename Attribute<Real>::Getter get = [this, row, col]() -> Real {
-	// 			return this->getByValue()(row, col);
-	// 		};
-	// 		//typename Attribute<T>::Setter set = [](T n) -> void {
-	// 		//	Matrix &mat = this->get();
-	// 		//	mat(row, col) = n;
-	// 		//	this->set(mat);
-	// 		//};
-	// 		return Attribute<Real>::make(get, mFlags, shared_from_this());
-	// 		//T *ptr = &mData->data()[mData->cols() * row + col]; // Column major
-	// 		//return Attribute<T>::make(ptr, mFlags, shared_from_this());
-	// 	}
-	// };
-
-	// // Replace by DerivedAttribute
-	// class MatrixCompAttribute : public Attribute<MatrixComp> {
-	// protected:
-	// 	using Index = typename MatrixComp::Index;
-	// 	using Attribute<MatrixComp>::mFlags;
-	// 	using Attribute<MatrixComp>::mData;
-	// 	using std::enable_shared_from_this<AttributeBase>::shared_from_this;
-	// public:
-	// 	typedef std::shared_ptr<MatrixCompAttribute> Ptr;
-
-	// 	ComplexAttribute::Ptr coeff(Index row, Index col) {
-	// 		ComplexAttribute::Getter get = [this, row, col]() -> Complex {
-	// 			return this->getByValue()(row, col);
-	// 		};
-	// 		return std::make_shared<ComplexAttribute>(get, mFlags, shared_from_this());
-	// 		//Complex *ptr = &mData->data()[mData->cols() * row + col]; // Column major
-	// 		//return std::make_shared<ComplexAttribute>(ptr, mFlags, shared_from_this());
-	// 	}
-
-	// 	Attribute<Real>::Ptr coeffReal(Index row, Index col) {
-	// 		Attribute<Real>::Getter get = [this, row, col]() -> Real {
-	// 			return this->getByValue()(row,col).real();
-	// 		};
-	// 		return Attribute<Real>::make(get, mFlags, shared_from_this());
-	// 		//Complex *ptr = &mData->data()[mData->cols() * row + col]; // Column major
-	// 		//Real *realPart = &reinterpret_cast<Real*>(ptr)[0];
-	// 		//return Attribute<Real>::make(&realPart, mFlags, shared_from_this());
-	// 	}
-
-	// 	Attribute<Real>::Ptr coeffImag(Index row, Index col) {
-	// 		Attribute<Real>::Getter get = [this, row, col]() -> Real {
-	// 			return this->getByValue()(row,col).imag();;
-	// 		};
-	// 		return Attribute<Real>::make(get, mFlags, shared_from_this());
-	// 	}
-
-	// 	Attribute<Real>::Ptr coeffMag(Index row, Index col) {
-	// 		Attribute<Real>::Getter get = [this, row, col]() -> Real {
-	// 			return Math::abs(this->get()(row,col));
-	// 		};
-	// 		return Attribute<Real>::make(get, mFlags, shared_from_this());
-	// 		//Complex *ptr = &mData->data()[mData->cols() * row + col]; // Column major
-	// 		//Real *realPart = &reinterpret_cast<Real*>(ptr)[0];
-	// 		//return Attribute<Real>::make(&realPart, mFlags, shared_from_this());
-	// 	}
-
-	// 	Attribute<Real>::Ptr coeffPhase(Index row, Index col) {
-	// 		Attribute<Real>::Getter get = [this, row, col]() -> Real {
-	// 			return Math::phase(this->get()(row,col));
-	// 		};
-	// 		return Attribute<Real>::make(get, mFlags, shared_from_this());
-	// 	}
-
-	// };
 
 	template<>
 	String Attribute<Complex>::toString();
