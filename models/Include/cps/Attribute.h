@@ -335,6 +335,8 @@ namespace Flags {
 
 	
 	protected:
+		//FIXME: The UPDATE_ONCE tasks are currently never triggered. Maybe at start of simulation?
+		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnce;
 		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnGet;
 		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnSet;
 
@@ -345,7 +347,7 @@ namespace Flags {
 		void addTask(UpdateTaskKind kind, AttributeUpdateTaskBase<T> task) {
 			switch (kind) {
 				case UpdateTaskKind::UPDATE_ONCE:
-					throw InvalidArgumentException();
+					updateTasksOnce.push_back(task);
 				case UpdateTaskKind::UPDATE_ON_GET:
 					updateTasksOnGet.push_back(task);
 					break;
@@ -355,6 +357,39 @@ namespace Flags {
 				case UpdateTaskKind::UPDATE_ON_SIMULATION_STEP:
 					throw InvalidArgumentException();
 			};
+		}
+
+		void clearTasks(UpdateTaskKind kind) {
+			switch (kind) {
+				case UpdateTaskKind::UPDATE_ONCE:
+					updateTasksOnce.clear();
+				case UpdateTaskKind::UPDATE_ON_GET:
+					updateTasksOnGet.clear();
+					break;
+				case UpdateTaskKind::UPDATE_ON_SET:
+					updateTasksOnSet.clear();
+					break;
+				case UpdateTaskKind::UPDATE_ON_SIMULATION_STEP:
+					throw InvalidArgumentException();
+			};
+		}
+
+		void clearAllTasks() {
+			updateTasksOnce.clear();
+			updateTasksOnGet.clear();
+			updateTasksOnSet.clear();
+		}
+
+		void setReference(Attribute<T>::Ptr reference) {
+			typename AttributeUpdateTask<T, T>::Actor getter = [](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
+				dependent = *dependency;
+			};
+			this->clearAllTasks();
+			if(dynamic_cast<std::shared_ptr<AttributeStatic<T>>>(reference)) {
+				this->addTask(UpdateTaskKind::UPDATE_ONCE, getter);
+			} else {
+				this->addTask(UpdateTaskKind::UPDATE_ON_GET, getter);
+			}
 		}
 
 		virtual void set(T value) override {
