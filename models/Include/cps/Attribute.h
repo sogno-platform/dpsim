@@ -123,8 +123,10 @@ namespace Flags {
 		typedef T Type;
 		typedef std::shared_ptr<Attribute<T>> Ptr;
 
-		Attribute(int flags = Flags::read) :
-			AttributeBase(flags), mData(std::make_shared<T>()) { }
+		Attribute(int flags = Flags::read, T initialValue = T()) :
+			AttributeBase(flags), mData(std::make_shared<T>()) {
+				*mData = initialValue;
+			}
 
 		// // Delete
 		// Attribute(T *v, int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
@@ -134,6 +136,10 @@ namespace Flags {
 		virtual void set(T value) = 0;
 
 		virtual const T& get() = 0;
+
+		virtual bool isStatic() const = 0;
+
+		virtual void setReference(Attribute<T>::Ptr reference) = 0;
 
 		virtual void reset() {
 			// TODO: we might want to provide a default value via the constructor
@@ -307,8 +313,8 @@ namespace Flags {
 		friend class SharedFactory<AttributeStatic<T>>;
 
 	public:
-		AttributeStatic(int flags = Flags::read) :
-			Attribute<T>(flags) { }
+		AttributeStatic(int flags = Flags::read, T initialValue = T()) :
+			Attribute<T>(flags, initialValue) { }
 
 		virtual void set(T value) override {
 			if (this->mFlags & Flags::write) {
@@ -325,6 +331,14 @@ namespace Flags {
 			else
 				throw AccessException();
 		};
+
+		virtual bool isStatic() const override {
+			return true;
+		}
+
+		virtual void setReference(Attribute<T>::Ptr reference) {
+			throw TypeException();
+		}
 	};
 
 	template<class T>
@@ -341,8 +355,8 @@ namespace Flags {
 		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnSet;
 
 	public:
-		AttributeDynamic(int flags = Flags::read) :
-			Attribute<T>(flags) { }
+		AttributeDynamic(int flags = Flags::read, T initialValue = T()) :
+			Attribute<T>(flags, initialValue) { }
 
 		void addTask(UpdateTaskKind kind, AttributeUpdateTaskBase<T> task) {
 			switch (kind) {
@@ -380,12 +394,12 @@ namespace Flags {
 			updateTasksOnSet.clear();
 		}
 
-		void setReference(Attribute<T>::Ptr reference) {
+		virtual void setReference(Attribute<T>::Ptr reference) override {
 			typename AttributeUpdateTask<T, T>::Actor getter = [](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
 				dependent = *dependency;
 			};
 			this->clearAllTasks();
-			if(dynamic_cast<std::shared_ptr<AttributeStatic<T>>>(reference)) {
+			if(reference.isStatic()) {
 				this->addTask(UpdateTaskKind::UPDATE_ONCE, getter);
 			} else {
 				this->addTask(UpdateTaskKind::UPDATE_ON_GET, getter);
@@ -413,6 +427,10 @@ namespace Flags {
 			else
 				throw AccessException();
 		};
+
+		virtual bool isStatic() const override {
+			return false;
+		}
 	};
 
 	template<>

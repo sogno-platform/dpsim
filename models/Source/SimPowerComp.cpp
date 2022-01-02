@@ -13,8 +13,8 @@ using namespace CPS;
 template <typename VarType>
 SimPowerComp<VarType>::SimPowerComp(String uid, String name, Logger::Level logLevel)
 	: TopologicalPowerComp(uid, name, logLevel) {
-	addAttribute<MatrixVar<VarType>>("v_intf", &mIntfVoltage, Flags::read);
-	addAttribute<MatrixVar<VarType>>("i_intf", &mIntfCurrent, Flags::read);
+	mIntfVoltage = addAttribute<MatrixVar<VarType>>("v_intf", Flags::read | Flags::write);
+	mIntfCurrent = addAttribute<MatrixVar<VarType>>("i_intf", Flags::read | Flags::write);
 	mTerminals.clear();
 }
 
@@ -156,12 +156,12 @@ void SimPowerComp<VarType>::initialize(Matrix frequencies) {
 	mNumFreqs = static_cast<UInt>(mFrequencies.size());
 
 	if (mPhaseType != PhaseType::ABC) {
-		mIntfVoltage = MatrixVar<VarType>::Zero(1, mNumFreqs);
-		mIntfCurrent = MatrixVar<VarType>::Zero(1, mNumFreqs);
+		*mIntfVoltage = MatrixVar<VarType>::Zero(1, mNumFreqs);
+		*mIntfCurrent = MatrixVar<VarType>::Zero(1, mNumFreqs);
 	}
 	else {
-		mIntfVoltage = MatrixVar<VarType>::Zero(3, mNumFreqs);
-		mIntfCurrent = MatrixVar<VarType>::Zero(3, mNumFreqs);
+		*mIntfVoltage = MatrixVar<VarType>::Zero(3, mNumFreqs);
+		*mIntfCurrent = MatrixVar<VarType>::Zero(3, mNumFreqs);
 	}
 
 	for (auto node : mVirtualNodes)

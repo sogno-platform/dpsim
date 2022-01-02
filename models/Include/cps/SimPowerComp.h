@@ -23,9 +23,9 @@ namespace CPS {
 		/// List of virtual nodes
 		typename SimNode<VarType>::List mVirtualNodes;
 		/// Voltage between terminals
-		MatrixVar<VarType> mIntfVoltage;
+		Attribute<MatrixVar<VarType>>::Ptr mIntfVoltage;
 		/// Current through component
-		MatrixVar<VarType> mIntfCurrent;
+		Attribute<MatrixVar<VarType>>::Ptr mIntfCurrent;
 		/// List of considered network frequencies
 		Matrix mFrequencies;
 		/// Number of network frequencies
@@ -123,9 +123,9 @@ namespace CPS {
 		UInt virtualSimNode(UInt nodeIndex, UInt phaseIndex = 0) { return virtualMatrixNodeIndices(nodeIndex)[phaseIndex]; }
 
 		// #### States ####
-		const MatrixVar<VarType>& intfCurrent() { return mIntfCurrent; }
+		const MatrixVar<VarType>& intfCurrent() { return **mIntfCurrent; }
 		///
-		const MatrixVar<VarType>& intfVoltage() { return mIntfVoltage; }
+		const MatrixVar<VarType>& intfVoltage() { return **mIntfVoltage; }
 		///
 		MatrixComp initialVoltage(UInt index) { return mTerminals[index]->initialVoltage(); }
 		///
@@ -134,9 +134,9 @@ namespace CPS {
 		Bool terminalNotGrounded(UInt index) { return !mMatrixNodeIndexIsGround[index]; }
 
 		// #### Setters ####
-		void setIntfCurrent(MatrixVar<VarType> current) { mIntfCurrent = current; }
+		void setIntfCurrent(MatrixVar<VarType> current) { *mIntfCurrent = current; }
 		///
-		void setIntfVoltage(MatrixVar<VarType> voltage) { mIntfVoltage = voltage; }
+		void setIntfVoltage(MatrixVar<VarType> voltage) { *mIntfVoltage = voltage; }
 		///
 		void setVirtualNodeNumber(UInt num);
 		/// Sets the virtual node at index nodeNum.

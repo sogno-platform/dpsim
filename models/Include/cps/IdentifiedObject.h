@@ -19,9 +19,9 @@ namespace CPS {
 	class IdentifiedObject: virtual public AttributeList {
 	protected:
 		/// Human readable name
-		String mName;
+		Attribute<String>::Ptr mName;
 		/// Unique identifier
-		String mUID;
+		Attribute<String>::Ptr mUID;
 	public:
 		typedef std::shared_ptr<IdentifiedObject> Ptr;
 		typedef std::vector<Ptr> List;
@@ -29,10 +29,10 @@ namespace CPS {
 		IdentifiedObject() { }
 
 		IdentifiedObject(String uid, String name)
-		: mName(name), mUID(uid) {
+		{
 
-			addAttribute<String>("uid", &mUID, Flags::read);
-			addAttribute<String>("name", &mName, Flags::read);
+			mName = addAttribute<String>("uid", false, Flags::read, name);
+			mUID = addAttribute<String>("name", false, Flags::read, uid);
 		}
 
 		IdentifiedObject(String name) :
@@ -41,9 +41,9 @@ namespace CPS {
 		virtual ~IdentifiedObject() { }
 
 		/// Returns component name
-		String name() { return mName; }
+		String name() { return **mName; }
 		/// Returns unique id
-		String uid() { return mUID; }
+		String uid() { return **mUID; }
 		/// Get component type (cross-platform)
 		String type() { return Utils::className(this); }
 	};
