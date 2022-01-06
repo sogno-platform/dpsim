@@ -64,30 +64,6 @@ namespace CPS {
 			return attrPtr;
 		}
 
-		template<typename T, typename... Args>
-		void addAttributeRef(const String& name, const std::shared_ptr<AttributeBase> &ref, Args&&... args){
-			addAttribute<T>(name, std::forward<Args>(args)...);
-			setAttributeRef(name, ref);
-		}
-
-		void setAttributeRef(const String& name, const std::shared_ptr<AttributeBase> &ref) {
-			auto attr = attribute(name);
-
-			// clang complains here for some reason that the expressions in the typeid
-			// might be evaluated (which is the whole point)
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpotentially-evaluated-expression"
-#endif
-			if (typeid(*attr) != typeid(*ref))
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
-				throw InvalidAttributeException();
-
-			mAttributes[name] = ref;
-		}
-
 		void reset() {
 			for (auto a : mAttributes) {
 				a.second->reset();
