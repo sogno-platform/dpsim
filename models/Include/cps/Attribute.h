@@ -141,6 +141,10 @@ namespace Flags {
 
 		virtual void setReference(Attribute<T>::Ptr reference) = 0;
 
+		virtual const std::shared_ptr<T> asRawPointer() {
+			return this->mData;
+		}
+
 		virtual void reset() {
 			// TODO: we might want to provide a default value via the constructor
 			T resetValue = T();
@@ -226,10 +230,10 @@ namespace Flags {
 		std::shared_ptr<Attribute<Real>> deriveReal()
 			requires std::same_as<T, CPS::Complex>
 		{
-			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> dependent, std::shared_ptr<Attribute<Complex>> dependency) {
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, std::shared_ptr<Attribute<Complex>> dependency) {
 				*dependent = (**dependency).real();
 			};
-			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> dependent, std::shared_ptr<Attribute<Complex>> dependency) {
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> &dependent, std::shared_ptr<Attribute<Complex>> dependency) {
 				CPS::Complex currentValue = dependency->get();
 				currentValue.real(*dependent);
 				dependency->set(currentValue);
@@ -240,10 +244,10 @@ namespace Flags {
 		std::shared_ptr<Attribute<Real>> deriveImag()
 			requires std::same_as<T, CPS::Complex>
 		{
-			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
 				*dependent = (**dependency).imag();
 			};
-			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
 				CPS::Complex currentValue = dependency->get();
 				currentValue.imag(*dependent);
 				dependency->set(currentValue);
@@ -254,10 +258,10 @@ namespace Flags {
 		std::shared_ptr<Attribute<Real>> deriveMag()
 			requires std::same_as<T, CPS::Complex>
 		{
-			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
 				*dependent = Math::abs(**dependency);
 			};
-			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
 				CPS::Complex currentValue = dependency->get();
 				dependency->set(Math::polar(*dependent, Math::phase(currentValue)));
 			};
@@ -267,10 +271,10 @@ namespace Flags {
 		std::shared_ptr<Attribute<Real>> derivePhase()
 			requires std::same_as<T, CPS::Complex>
 		{
-			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
 				*dependent = Math::phase(**dependency);
 			};
-			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> dependent, Attribute<Complex>::Ptr dependency) {
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
 				CPS::Complex currentValue = dependency->get();
 				dependency->set(Math::polar(Math::abs(currentValue), *dependent));
 			};
@@ -280,10 +284,10 @@ namespace Flags {
 		std::shared_ptr<Attribute<T>> deriveScaled(T scale)
 			requires std::same_as<T, CPS::Complex> || std::same_as<T, CPS::Real>
 		{
-			typename AttributeUpdateTask<T, T>::Actor getter = [scale](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
+			typename AttributeUpdateTask<T, T>::Actor getter = [scale](std::shared_ptr<T> &dependent, Attribute<T>::Ptr dependency) {
 				*dependent = scale * (**dependency);
 			};
-			typename AttributeUpdateTask<T, T>::Actor setter = [scale](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
+			typename AttributeUpdateTask<T, T>::Actor setter = [scale](std::shared_ptr<T> &dependent, Attribute<T>::Ptr dependency) {
 				dependency->set((*dependent) / scale);
 			};
 			return derive<T>(getter, setter);
@@ -293,10 +297,10 @@ namespace Flags {
 		std::shared_ptr<Attribute<U>> deriveCoeff(CPS::MatrixVar<U>::Index row, CPS::MatrixVar<U>::Index column)
 			requires std::same_as<T, CPS::MatrixVar<U>>
 		{
-			typename AttributeUpdateTask<U, T>::Actor getter = [row, column](std::shared_ptr<U> dependent, Attribute<T>::Ptr dependency) {
+			typename AttributeUpdateTask<U, T>::Actor getter = [row, column](std::shared_ptr<U> &dependent, Attribute<T>::Ptr dependency) {
 				*dependent = (**dependency)(row, column);
 			};
-			typename AttributeUpdateTask<U, T>::Actor setter = [row, column](std::shared_ptr<U> dependent, Attribute<T>::Ptr dependency) {
+			typename AttributeUpdateTask<U, T>::Actor setter = [row, column](std::shared_ptr<U> &dependent, Attribute<T>::Ptr dependency) {
 				CPS::MatrixVar<U> currentValue = dependency->get();
 				currentValue(row, column) = *dependent;
 				dependency->set(currentValue);
@@ -395,8 +399,8 @@ namespace Flags {
 		}
 
 		virtual void setReference(Attribute<T>::Ptr reference) override {
-			typename AttributeUpdateTask<T, T>::Actor getter = [](std::shared_ptr<T> dependent, Attribute<T>::Ptr dependency) {
-				dependent = *dependency;
+			typename AttributeUpdateTask<T, T>::Actor getter = [](std::shared_ptr<T> &dependent, Attribute<T>::Ptr dependency) {
+				dependent = dependency->asRawPointer();
 			};
 			this->clearAllTasks();
 			if(reference.isStatic()) {
