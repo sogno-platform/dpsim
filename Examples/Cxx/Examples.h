@@ -264,6 +264,20 @@ namespace KRK_TwoArea {
         Real initMechPower_G1 = 7006;
         Real setPointVoltage_G1=nomPhPhVoltRMS_G1+0.03*nomPhPhVoltRMS_G1;
 
+        //-----------Generator 1 (bus1)-----------//
+        // Real nomPower_G1_alt = 300e6;
+        // Real nomPhPhVoltRMS_G1_alt = 25e3;
+        // Real nomFreq_G1_alt = 60;
+        // Real H_G1_alt = 6;
+        // Real Xpd_G1=0.3; //in p.u
+        // Real Rs_G1 = 0.003*0; //in p.u
+        // Real D_G1 = 1.5; //in p.u
+        // // Initialization parameters
+        // Real initActivePower_G1_alt = 270e6;
+        // Real initMechPower_G1_alt = 270e6;
+        // Real setPointVoltage_G1_alt = nomPhPhVoltRMS_G1_alt+0.05*nomPhPhVoltRMS_G1_alt;
+        // Real t1_ratio_alt=Vnom/nomPhPhVoltRMS_G1_alt;
+
         //-----------Generator 2 (bus2)-----------//
         Real nomPower_G2 = 900e6;
         Real nomPhPhVoltRMS_G2 = 20e3;
@@ -272,7 +286,7 @@ namespace KRK_TwoArea {
         // Initialization parameters
         Real initActivePower_G2 = 700e6;
         Real initMechPower_G2 = 700e6;
-        Real setPointVoltage_G2=nomPhPhVoltRMS_G2-0.01*nomPhPhVoltRMS_G2;
+        Real setPointVoltage_G2=nomPhPhVoltRMS_G2+0.01*nomPhPhVoltRMS_G2;
 
         //-----------Generator 3 (bus3)-----------//
         Real nomPower_G3 = 900e6;
@@ -282,7 +296,7 @@ namespace KRK_TwoArea {
         // Initialization parameters
         Real initActivePower_G3 = 719e6;
         Real initMechPower_G3 = 719e6;
-        Real setPointVoltage_G3=nomPhPhVoltRMS_G3-0.03*nomPhPhVoltRMS_G3;
+        Real setPointVoltage_G3=nomPhPhVoltRMS_G3+0.03*nomPhPhVoltRMS_G3;
 
         //-----------Generator 4 (bus4)-----------//
         Real nomPower_G4 = 900e6;
@@ -292,20 +306,21 @@ namespace KRK_TwoArea {
         // Initialization parameters
         Real initActivePower_G4 = 700e6;
         Real initMechPower_G4 = 700e6;
-        Real setPointVoltage_G4=nomPhPhVoltRMS_G4-0.01*nomPhPhVoltRMS_G4;
+        Real setPointVoltage_G4=nomPhPhVoltRMS_G4+0.01*nomPhPhVoltRMS_G4;
 
         //-----------Transformers-----------//
         Real t1_ratio=Vnom/nomPhPhVoltRMS_G1;
         Real t2_ratio=Vnom/nomPhPhVoltRMS_G2;
         Real t3_ratio=Vnom/nomPhPhVoltRMS_G3;
         Real t4_ratio=Vnom/nomPhPhVoltRMS_G4;
+        Real transformerInductance = 0.15 * std::pow(t1_ratio, 2);
 
         //-----------Load (bus7 and bus9)-----------
         Real activePower_L7= 967e6;
         Real reactivePower_L7_inductive= 100e6;
         Real reactivePower_L7_capacitive= 200e6;
 
-        Real activePower_L9= 1167e6;
+        Real activePower_L9= 1767e6;
         Real reactivePower_L9_inductive= 100e6;
         Real reactivePower_L9_capacitive= 350e6;
 
