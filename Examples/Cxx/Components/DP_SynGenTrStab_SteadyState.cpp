@@ -51,10 +51,10 @@ int main(int argc, char* argv[]) {
 
 		// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
-	logger->addAttribute("i_gen", gen->attributeMatrixComp("i_intf"));
-	logger->addAttribute("i_load", res->attributeMatrixComp("i_intf"));
-	logger->addAttribute("wr_gen", gen->attribute("w_r"));
+	logger->logAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->logAttribute("i_gen", gen->attributeMatrixComp("i_intf"));
+	logger->logAttribute("i_load", res->attributeMatrixComp("i_intf"));
+	logger->logAttribute("wr_gen", gen->attribute("w_r"));
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});

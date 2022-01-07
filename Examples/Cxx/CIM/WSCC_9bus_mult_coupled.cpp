@@ -91,7 +91,7 @@ void simulateCoupled(std::list<fs::path> filenames, CommandLineArgs& args, Int c
 	//			attrName = "v" + std::to_string(bus);
 	//			nodeName = "BUS" + std::to_string(bus);
 	//		}
-	//		logger->addAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
+	//		logger->logAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
 	//	}
 	//}
 	//sim.addLogger(logger);

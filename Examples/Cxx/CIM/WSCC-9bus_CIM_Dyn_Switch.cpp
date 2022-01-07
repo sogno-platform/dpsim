@@ -45,18 +45,18 @@ int main(int argc, char *argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
-	logger->addAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
-	logger->addAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));
-	logger->addAttribute("v4", sys.node<SimNode>("BUS4")->attribute("v"));
-	logger->addAttribute("v5", sys.node<SimNode>("BUS5")->attribute("v"));
-	logger->addAttribute("v6", sys.node<SimNode>("BUS6")->attribute("v"));
-	logger->addAttribute("v7", sys.node<SimNode>("BUS7")->attribute("v"));
-	logger->addAttribute("v8", sys.node<SimNode>("BUS8")->attribute("v"));
-	logger->addAttribute("v9", sys.node<SimNode>("BUS9")->attribute("v"));
-	logger->addAttribute("wr_1", sys.component<Ph1::SynchronGeneratorTrStab>("GEN1")->attribute("w_r"));
-	logger->addAttribute("wr_2", sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->attribute("w_r"));
-	logger->addAttribute("wr_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("w_r"));
+	logger->logAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
+	logger->logAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
+	logger->logAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));
+	logger->logAttribute("v4", sys.node<SimNode>("BUS4")->attribute("v"));
+	logger->logAttribute("v5", sys.node<SimNode>("BUS5")->attribute("v"));
+	logger->logAttribute("v6", sys.node<SimNode>("BUS6")->attribute("v"));
+	logger->logAttribute("v7", sys.node<SimNode>("BUS7")->attribute("v"));
+	logger->logAttribute("v8", sys.node<SimNode>("BUS8")->attribute("v"));
+	logger->logAttribute("v9", sys.node<SimNode>("BUS9")->attribute("v"));
+	logger->logAttribute("wr_1", sys.component<Ph1::SynchronGeneratorTrStab>("GEN1")->attribute("w_r"));
+	logger->logAttribute("wr_2", sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->attribute("w_r"));
+	logger->logAttribute("wr_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("w_r"));
 
 
 	Simulation sim(simName, Logger::Level::info);

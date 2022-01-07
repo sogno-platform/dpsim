@@ -138,9 +138,9 @@ PYBIND11_MODULE(dpsimpy, m) {
         .def(py::init<std::string>())
 		.def_static("set_log_dir", &CPS::Logger::setLogDir)
 		.def_static("get_log_dir", &CPS::Logger::logDir)
-		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute)
-		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr, CPS::UInt, CPS::UInt)) &DPsim::DataLogger::addAttribute)
-		.def("log_attribute", (void (DPsim::DataLogger::*)(const std::vector<CPS::String> &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute);
+		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::logAttribute)
+		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr, CPS::UInt, CPS::UInt)) &DPsim::DataLogger::logAttribute)
+		.def("log_attribute", (void (DPsim::DataLogger::*)(const std::vector<CPS::String> &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::logAttribute);
 
 	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
 		.def("name", &CPS::IdentifiedObject::name)

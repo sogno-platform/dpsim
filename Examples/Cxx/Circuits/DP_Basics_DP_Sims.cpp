@@ -62,10 +62,10 @@ void DP_VS_RL_f60_largeTs() {
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
-	logger->addAttribute("v2", n2->attributeMatrixComp("v"));
-	logger->addAttribute("v3", n3->attributeMatrixComp("v"));
-	logger->addAttribute("i_line", rline->attributeMatrixComp("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->logAttribute("v2", n2->attributeMatrixComp("v"));
+	logger->logAttribute("v3", n3->attributeMatrixComp("v"));
+	logger->logAttribute("i_line", rline->attributeMatrixComp("i_intf"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -112,10 +112,10 @@ void DP_VS_RL_f60_vlargeTs() {
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
-	logger->addAttribute("v2", n2->attributeMatrixComp("v"));
-	logger->addAttribute("v3", n3->attributeMatrixComp("v"));
-	logger->addAttribute("i_line", rline->attributeMatrixComp("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->logAttribute("v2", n2->attributeMatrixComp("v"));
+	logger->logAttribute("v3", n3->attributeMatrixComp("v"));
+	logger->logAttribute("i_line", rline->attributeMatrixComp("i_intf"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -162,10 +162,10 @@ void DP_VS_RL_f60() {
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
-	logger->addAttribute("v2", n2->attributeMatrixComp("v"));
-	logger->addAttribute("v3", n3->attributeMatrixComp("v"));
-	logger->addAttribute("i_line", rline->attributeMatrixComp("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->logAttribute("v2", n2->attributeMatrixComp("v"));
+	logger->logAttribute("v3", n3->attributeMatrixComp("v"));
+	logger->logAttribute("i_line", rline->attributeMatrixComp("i_intf"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -212,10 +212,10 @@ void DP_VS_RL_f500_largeTs() {
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
-	logger->addAttribute("v2", n2->attributeMatrixComp("v"));
-	logger->addAttribute("v3", n3->attributeMatrixComp("v"));
-	logger->addAttribute("i_line", rline->attributeMatrixComp("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->logAttribute("v2", n2->attributeMatrixComp("v"));
+	logger->logAttribute("v3", n3->attributeMatrixComp("v"));
+	logger->logAttribute("i_line", rline->attributeMatrixComp("i_intf"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -262,10 +262,10 @@ void DP_VS_RL_f500_ph500() {
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
-	logger->addAttribute("v2", n2->attributeMatrixComp("v"));
-	logger->addAttribute("v3", n3->attributeMatrixComp("v"));
-	logger->addAttribute("i_line", rline->attributeMatrixComp("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->logAttribute("v2", n2->attributeMatrixComp("v"));
+	logger->logAttribute("v3", n3->attributeMatrixComp("v"));
+	logger->logAttribute("i_line", rline->attributeMatrixComp("i_intf"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -312,10 +312,10 @@ void DP_VS_RL_f500() {
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
-	logger->addAttribute("v2", n2->attributeMatrixComp("v"));
-	logger->addAttribute("v3", n3->attributeMatrixComp("v"));
-	logger->addAttribute("i_line", rline->attributeMatrixComp("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->logAttribute("v2", n2->attributeMatrixComp("v"));
+	logger->logAttribute("v3", n3->attributeMatrixComp("v"));
+	logger->logAttribute("i_line", rline->attributeMatrixComp("i_intf"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);

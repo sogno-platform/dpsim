@@ -58,21 +58,21 @@ namespace DPsim {
 
 		void setColumnNames(std::vector<String> names);
 
-		void addAttribute(const String &name, CPS::AttributeBase::Ptr attr);
-		void addAttribute(const String &name, CPS::Attribute<Int>::Ptr attr);
-		void addAttribute(const String &name, CPS::Attribute<Real>::Ptr attr);
-		void addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr);
-		void addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr attr);
-		void addAttribute(const String &name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax = 0, UInt colsMax = 0);
-		void addAttribute(const String &name, const String &attr, CPS::IdentifiedObject::Ptr obj);
-		void addAttribute(const String &name, const String &attr, CPS::IdentifiedObject::Ptr obj, UInt rowsMax, UInt colsMax);
-		void addAttribute(const std::vector<String> &name, const String &attr, CPS::IdentifiedObject::Ptr obj);
-		void addAttribute(const std::vector<String> &name, CPS::AttributeBase::Ptr attr);
-		void addAttribute(const std::vector<String> &name, CPS::MatrixRealAttribute::Ptr attr);
+		void logAttribute(const String &name, CPS::AttributeBase::Ptr attr);
+		void logAttribute(const String &name, CPS::Attribute<Int>::Ptr attr);
+		void logAttribute(const String &name, CPS::Attribute<Real>::Ptr attr);
+		void logAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr);
+		void logAttribute(const String &name, CPS::MatrixRealAttribute::Ptr attr);
+		void logAttribute(const String &name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax = 0, UInt colsMax = 0);
+		void logAttribute(const String &name, const String &attr, CPS::IdentifiedObject::Ptr obj);
+		void logAttribute(const String &name, const String &attr, CPS::IdentifiedObject::Ptr obj, UInt rowsMax, UInt colsMax);
+		void logAttribute(const std::vector<String> &name, const String &attr, CPS::IdentifiedObject::Ptr obj);
+		void logAttribute(const std::vector<String> &name, CPS::AttributeBase::Ptr attr);
+		void logAttribute(const std::vector<String> &name, CPS::MatrixRealAttribute::Ptr attr);
 
 		template<typename VarType>
 		void addNode(typename CPS::SimNode<VarType>::Ptr node) {
-			addAttribute(node->name() + ".voltage", node->attributeMatrix("voltage"));
+			logAttribute(node->name() + ".voltage", node->attributeMatrix("voltage"));
 		}
 
 		void log(Real time, Int timeStepCount);

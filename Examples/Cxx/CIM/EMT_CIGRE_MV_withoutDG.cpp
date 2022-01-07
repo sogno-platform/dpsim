@@ -51,7 +51,7 @@ int main(int argc, char** argv){
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
     for (auto node : systemPF.mNodes)
     {
-        loggerPF->addAttribute(node->name() + ".V", node->attribute("v"));
+        loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
     }
     Simulation simPF(simNamePF, Logger::Level::debug);
 	simPF.setSystem(systemPF);
@@ -75,18 +75,18 @@ int main(int argc, char** argv){
 
 	// log node voltages
 	for (auto node : systemEMT.mNodes)
-		logger->addAttribute(node->name() + ".V", node->attribute("v"));
+		logger->logAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log line currents
 	for (auto comp : systemEMT.mComponents) {
 		if (dynamic_pointer_cast<CPS::EMT::Ph3::PiLine>(comp))
-			logger->addAttribute(comp->name() + ".I", comp->attribute("i_intf"));
+			logger->logAttribute(comp->name() + ".I", comp->attribute("i_intf"));
 	}
 
 	// log load currents
 	for (auto comp : systemEMT.mComponents) {
 		if (dynamic_pointer_cast<CPS::EMT::Ph3::RXLoad>(comp))
-			logger->addAttribute(comp->name() + ".I", comp->attribute("i_intf"));
+			logger->logAttribute(comp->name() + ".I", comp->attribute("i_intf"));
 	}
 
 	Simulation sim(simName, Logger::Level::debug);

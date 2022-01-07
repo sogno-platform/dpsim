@@ -39,10 +39,10 @@ static void DP_RL_SourceStep(Real timeStep, Real finalTime,
 		SystemComponentList{ vs, r, l, sw });
 
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
-	logger->addAttribute("v2", n2->attributeMatrixComp("v"));
-	logger->addAttribute("v3", n3->attributeMatrixComp("v"));
-	logger->addAttribute("i_r", r->attributeMatrixComp("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->logAttribute("v2", n2->attributeMatrixComp("v"));
+	logger->logAttribute("v3", n3->attributeMatrixComp("v"));
+	logger->logAttribute("i_r", r->attributeMatrixComp("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -81,10 +81,10 @@ static void EMT_RL_SourceStep(Real timeStep, Real finalTime,
 		SystemComponentList{ vs, r, l, sw });
 
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixReal("v"));
-	logger->addAttribute("v2", n2->attributeMatrixReal("v"));
-	logger->addAttribute("v3", n3->attributeMatrixReal("v"));
-	logger->addAttribute("i_r", r->attributeMatrixReal("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixReal("v"));
+	logger->logAttribute("v2", n2->attributeMatrixReal("v"));
+	logger->logAttribute("v3", n3->attributeMatrixReal("v"));
+	logger->logAttribute("i_r", r->attributeMatrixReal("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);

@@ -477,22 +477,22 @@ namespace CIGREMV {
         std::vector<String> inputNames = {  pv->name() + "_powerctrl_input_pref", pv->name() + "_powerctrl_input_qref",
                                             pv->name() + "_powerctrl_input_vcd", pv->name() + "_powerctrl_input_vcq",
                                             pv->name() + "_powerctrl_input_ircd", pv->name() + "_powerctrl_input_ircq"};
-        logger->addAttribute(inputNames, pv->attribute("powerctrl_inputs"));
+        logger->logAttribute(inputNames, pv->attribute("powerctrl_inputs"));
         std::vector<String> stateNames = {  pv->name() + "_powerctrl_state_p", pv->name() + "_powerctrl_state_q",
                                             pv->name() + "_powerctrl_state_phid", pv->name() + "_powerctrl_state_phiq",
                                             pv->name() + "_powerctrl_state_gammad", pv->name() + "_powerctrl_state_gammaq"};
-        logger->addAttribute(stateNames, pv->attribute("powerctrl_states"));
+        logger->logAttribute(stateNames, pv->attribute("powerctrl_states"));
         std::vector<String> outputNames = {  pv->name() + "_powerctrl_output_vsd", pv->name() + "_powerctrl_output_vsq"};
-        logger->addAttribute(outputNames, pv->attribute("powerctrl_outputs"));
+        logger->logAttribute(outputNames, pv->attribute("powerctrl_outputs"));
 
         // interface variables
-        logger->addAttribute(pv->name() + "_v_intf", pv->attribute("v_intf"));
-        logger->addAttribute(pv->name() + "_i_intf", pv->attribute("i_intf"));
+        logger->logAttribute(pv->name() + "_v_intf", pv->attribute("v_intf"));
+        logger->logAttribute(pv->name() + "_i_intf", pv->attribute("i_intf"));
 
         // additional variables
-        logger->addAttribute(pv->name() + "_pll_output", pv->attribute("pll_output"));
-        logger->addAttribute(pv->name() + "_vsref", pv->attribute("Vsref"));
-        logger->addAttribute(pv->name() + "_vs", pv->attribute("Vs"));
+        logger->logAttribute(pv->name() + "_pll_output", pv->attribute("pll_output"));
+        logger->logAttribute(pv->name() + "_vsref", pv->attribute("Vsref"));
+        logger->logAttribute(pv->name() + "_vs", pv->attribute("Vs"));
     }
 
 }
@@ -510,7 +510,7 @@ namespace Events {
             loadSwitch->open();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
-            logger->addAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
+            logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
             return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
         } else if (domain == CPS::Domain::SP) {
             auto loadSwitch = SP::Ph1::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
@@ -520,7 +520,7 @@ namespace Events {
             loadSwitch->open();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
-            logger->addAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
+            logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
             return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
         } else {
             return nullptr;
@@ -538,7 +538,7 @@ namespace Events {
             loadSwitch->openSwitch();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Real>(loadSwitch, { CPS::SimNode<Real>::GND, system.node<CPS::SimNode<Real>>(nodeName) });
-            logger->addAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
+            logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
             return DPsim::SwitchEvent3Ph::make(eventTime, loadSwitch, true);
         } else {
             return nullptr;

@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
     for (auto node : systemPF.mNodes)
     {
-        loggerPF->addAttribute(node->name() + ".V", node->attribute("v"));
+        loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
     }
 
 	// run powerflow
@@ -76,20 +76,20 @@ int main(int argc, char *argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
-	logger->addAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
-	logger->addAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));
-	logger->addAttribute("v4", sys.node<SimNode>("BUS4")->attribute("v"));
-	logger->addAttribute("v5", sys.node<SimNode>("BUS5")->attribute("v"));
-	logger->addAttribute("v6", sys.node<SimNode>("BUS6")->attribute("v"));
-	logger->addAttribute("v7", sys.node<SimNode>("BUS7")->attribute("v"));
-	logger->addAttribute("v8", sys.node<SimNode>("BUS8")->attribute("v"));
-	logger->addAttribute("v9", sys.node<SimNode>("BUS9")->attribute("v"));
+	logger->logAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
+	logger->logAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
+	logger->logAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));
+	logger->logAttribute("v4", sys.node<SimNode>("BUS4")->attribute("v"));
+	logger->logAttribute("v5", sys.node<SimNode>("BUS5")->attribute("v"));
+	logger->logAttribute("v6", sys.node<SimNode>("BUS6")->attribute("v"));
+	logger->logAttribute("v7", sys.node<SimNode>("BUS7")->attribute("v"));
+	logger->logAttribute("v8", sys.node<SimNode>("BUS8")->attribute("v"));
+	logger->logAttribute("v9", sys.node<SimNode>("BUS9")->attribute("v"));
 
 	// log generator's current
 	for (auto comp : sys.mComponents) {
 		if (std::dynamic_pointer_cast<CPS::DP::Ph1::SynchronGeneratorIdeal>(comp))
-			logger->addAttribute(comp->name() + ".I", comp->attribute("i_intf"));
+			logger->logAttribute(comp->name() + ".I", comp->attribute("i_intf"));
 	}
 
 	Simulation sim(simName, Logger::Level::info);

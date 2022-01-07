@@ -33,7 +33,7 @@ void vsSetParamsDP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -67,7 +67,7 @@ void vsSetParamsSP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -101,7 +101,7 @@ void vsSetParamsEMT3ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -137,7 +137,7 @@ void vsSetAttrDP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -173,7 +173,7 @@ void vsSetAttrSP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -209,7 +209,7 @@ void vsSetAttrEMT3ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -245,7 +245,7 @@ void vsSetFromNodeDP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -281,7 +281,7 @@ void vsSetFromNodeSP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -317,7 +317,7 @@ void vsSetFromNodeEMT3ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
 	Simulation sim(simName);

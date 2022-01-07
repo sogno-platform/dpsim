@@ -56,10 +56,10 @@ void EMT_VS_RL_f60_largeTs() {
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixReal("v"));
-	logger->addAttribute("v2", n2->attributeMatrixReal("v"));
-	logger->addAttribute("v3", n3->attributeMatrixReal("v"));
-	logger->addAttribute("i_line", rline->attributeMatrixReal("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixReal("v"));
+	logger->logAttribute("v2", n2->attributeMatrixReal("v"));
+	logger->logAttribute("v3", n3->attributeMatrixReal("v"));
+	logger->logAttribute("i_line", rline->attributeMatrixReal("i_intf"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -107,10 +107,10 @@ void EMT_VS_RL_f60() {
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixReal("v"));
-	logger->addAttribute("v2", n2->attributeMatrixReal("v"));
-	logger->addAttribute("v3", n3->attributeMatrixReal("v"));
-	logger->addAttribute("i_line", rline->attributeMatrixReal("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixReal("v"));
+	logger->logAttribute("v2", n2->attributeMatrixReal("v"));
+	logger->logAttribute("v3", n3->attributeMatrixReal("v"));
+	logger->logAttribute("i_line", rline->attributeMatrixReal("i_intf"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -158,10 +158,10 @@ void EMT_VS_RL_f500() {
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixReal("v"));
-	logger->addAttribute("v2", n2->attributeMatrixReal("v"));
-	logger->addAttribute("v3", n3->attributeMatrixReal("v"));
-	logger->addAttribute("i_line", rline->attributeMatrixReal("i_intf"));
+	logger->logAttribute("v1", n1->attributeMatrixReal("v"));
+	logger->logAttribute("v2", n2->attributeMatrixReal("v"));
+	logger->logAttribute("v3", n3->attributeMatrixReal("v"));
+	logger->logAttribute("i_line", rline->attributeMatrixReal("i_intf"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);

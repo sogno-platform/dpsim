@@ -53,8 +53,8 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
 
 	// Simulation
 	Simulation sim(simName, Logger::Level::debug);
