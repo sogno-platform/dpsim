@@ -670,7 +670,7 @@ void Simulation::logIdObjAttr(const String &comp, const String &attr) {
 		try {
 			auto name = compObj->name() + "." + attr;
 			auto v = compObj->attribute(attr);
-			mLoggers[0]->addAttribute(name, v);
+			mLoggers[0]->logAttribute(name, v);
 
 		} catch (InvalidAttributeException &e) {
 			mLog->error("Attribute not found");
@@ -679,7 +679,7 @@ void Simulation::logIdObjAttr(const String &comp, const String &attr) {
 		try {
 			auto name = nodeObj->name() + "." + attr;
 			auto v = nodeObj->attribute(attr);
-			mLoggers[0]->addAttribute(name, v);
+			mLoggers[0]->logAttribute(name, v);
 
 		} catch (InvalidAttributeException &e) {
 			mLog->error("Attribute not found");
