@@ -262,6 +262,7 @@ namespace KRK_TwoArea {
         // Initialization parameters
         Real initActivePower_G1 = 700e6;
         Real initMechPower_G1 = 7006;
+        Real initReactivePower_G1 = 185e6;
         Real setPointVoltage_G1=nomPhPhVoltRMS_G1+0.03*nomPhPhVoltRMS_G1;
 
         //-----------Generator 1 (bus1)-----------//
@@ -286,6 +287,7 @@ namespace KRK_TwoArea {
         // Initialization parameters
         Real initActivePower_G2 = 700e6;
         Real initMechPower_G2 = 700e6;
+        Real initReactivePower_G2 = 235e6;
         Real setPointVoltage_G2=nomPhPhVoltRMS_G2+0.01*nomPhPhVoltRMS_G2;
 
         //-----------Generator 3 (bus3)-----------//
@@ -296,6 +298,7 @@ namespace KRK_TwoArea {
         // Initialization parameters
         Real initActivePower_G3 = 719e6;
         Real initMechPower_G3 = 719e6;
+        Real initReactivePower_G3 = 176e6;
         Real setPointVoltage_G3=nomPhPhVoltRMS_G3+0.03*nomPhPhVoltRMS_G3;
 
         //-----------Generator 4 (bus4)-----------//
@@ -306,6 +309,7 @@ namespace KRK_TwoArea {
         // Initialization parameters
         Real initActivePower_G4 = 700e6;
         Real initMechPower_G4 = 700e6;
+        Real initReactivePower_G4 = 202e6;
         Real setPointVoltage_G4=nomPhPhVoltRMS_G4+0.01*nomPhPhVoltRMS_G4;
 
         //-----------Transformers-----------//

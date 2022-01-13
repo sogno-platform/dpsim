@@ -75,7 +75,8 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
 
 	# Two Area System
-	Circuits/DP_SynGenTrStab_KRK_TwoArea_Fault.cpp
+	Circuits/SP_SynGenTrStab_KRK_TwoArea_SteadyState.cpp
+	Circuits/SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState.cpp
 
 )
 
