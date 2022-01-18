@@ -20,7 +20,7 @@ namespace CPS {
 		typedef std::vector<Ptr> List;
 
 		/// Returns true if it needs to iterate
-		virtual bool step()=0;
+		virtual void correctorStep()=0;
 		///
 		virtual void updateVoltage(const Matrix& leftVector)=0;
 		///
@@ -28,15 +28,15 @@ namespace CPS {
 
 		/// Setters
 		/// Default = 100000
-		void setMaxIterations(Int maxIterations) {mMaxIterations = maxIterations;}
+		void setMaxIterations(Int maxIterations) {mMaxIter = maxIterations;}
 		/// Default=1e-6
-		void setTolerance(Real Tolerance) {mMaxError = Tolerance;}	
+		void setTolerance(Real Tolerance) {mTolerance = Tolerance;}	
 
 		///
-		Int mNumIterations = 0;
+		Int mNumIter = 0;
 		///
-		Int mMaxIterations = 10;
+		Int mMaxIter = 10;
 		///
-		Real mMaxError = 1e-6;
+		Real mTolerance = 1e-6;
 	};
 }

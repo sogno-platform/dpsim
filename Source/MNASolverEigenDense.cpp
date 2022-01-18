@@ -119,7 +119,13 @@ std::shared_ptr<CPS::Task> MnaSolverEigenDense<VarType>::createLogTask()
 template <typename VarType>
 void MnaSolverEigenDense<VarType>::solve(Real time, Int timeStepCount) {
 	
-	bool iterate = true;
+	bool iterate;
+	if 	(mSyncGen.size()==0) 
+		// if there is no syncGen components, then it is not necessary to iterate
+		iterate = false;
+	else 
+		iterate = true;
+
 	while (iterate) {
 		// Reset source vector
 		mRightSideVector.setZero();
@@ -127,22 +133,8 @@ void MnaSolverEigenDense<VarType>::solve(Real time, Int timeStepCount) {
 		if (!mIsInInitialization)
 			MnaSolver<VarType>::updateSwitchStatus();
 		
-		if 	(mSyncGen.size()==0) {
-			// if there is no syncGen components, then it is not necessary to iterate
-			iterate = false;
-		} else {
-			// check if some numerical method need iterations (Modified euler & runge Kutta)
-			int count=0;
-			for (auto syncGen : mSyncGen) {
-				if (syncGen->step())
-					count = count+1;
-			}
-			if (count==0) {
-				iterate=false;
-			} else {
-				iterate=true;
-			}
-		}
+		for (auto syncGen : mSyncGen)
+			syncGen->correctorStep();
 
 		// Add together the right side vector (computed by the components'
 		// pre-step tasks)
@@ -152,24 +144,18 @@ void MnaSolverEigenDense<VarType>::solve(Real time, Int timeStepCount) {
 		if (mSwitchedMatrices.size() > 0)
 			mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0].solve(mRightSideVector);
 
-		if 	(mSyncGen.size()>0) {
-			int count=0;
-			for (auto syncGen : mSyncGen) {
-				//update voltages
-				syncGen->updateVoltage(mLeftSideVector);
-			}
+		for (auto syncGen : mSyncGen)
+			//update voltages
+			syncGen->updateVoltage(mLeftSideVector);
 
-			// check if there is sync generators that need iterate (it does not depdend
-			// on the numerical method!)
-			if (!iterate) {
-				for (auto syncGen : mSyncGen) {
-					if (syncGen->checkVoltageDifference())
-						count = count+1;
-				}
-				if (count>0) 
-					iterate=true;
-			}
+		// check if there is sync generators that need iterate
+		int count=0; 
+		for (auto syncGen : mSyncGen) {
+			if (syncGen->checkVoltageDifference())
+				count = count+1;
 		}
+		if (count==0) 
+			iterate=false;
 	}
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)

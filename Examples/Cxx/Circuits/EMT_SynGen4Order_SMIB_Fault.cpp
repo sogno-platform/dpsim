@@ -28,7 +28,8 @@ Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength/std::pow(ra
 Real lineConductance = 8e-2;
 
 void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Real H,
-	Real startTimeFault, Real endTimeFault, Real switchClosed, Real logDownSampling) {
+	Real startTimeFault, Real endTimeFault, Real switchClosed, Real logDownSampling,
+	Real maxIterations, Real tolerance) {
 
 	//  // ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
@@ -112,6 +113,8 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t,
 		syngenKundur.Tq0_t); 
     genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+	genEMT->setMaxIterations(maxIterations);
+	genEMT->setTolerance(tolerance);
 
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::off);
@@ -124,8 +127,8 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 						  Math::singlePhaseParameterToThreePhase(lineConductance));
 
 	//Breaker
-	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::debug);
-	Real switchOpen = 1e12;
+	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::off);
+	Real switchOpen = 1e6;
 	fault->setParameters(Math::singlePhaseParameterToThreePhase(switchOpen), 
 						 Math::singlePhaseParameterToThreePhase(switchClosed));
 	fault->openSwitch();
@@ -176,23 +179,36 @@ int main(int argc, char* argv[]) {
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
 	Real switchClosed = 0.001;
+	Real iteration = 20;
+	Real tolerance = 1e-6;
+	Real timeStep = 10e-6;
 
-	std::string rfault_str = "";
+	std::string stepSize_str = "";
+	std::string iteration_str = "";
+	std::string tolerance_str = "";
 	if (argc > 1) {
-		if (args.options.find("RSwitchClosed") != args.options.end()) {
-			switchClosed = args.options["RSwitchClosed"];
-			rfault_str = "_RFault_" + std::to_string(switchClosed);
+		if (args.options.find("StepSize") != args.options.end()){
+			timeStep = args.options["StepSize"];
+			stepSize_str = "_StepSize_" + std::to_string(timeStep);
+		}
+		if (args.options.find("MaxIter") != args.options.end()){
+			iteration = args.options["MaxIter"];
+			iteration_str = "_MaxIter_" + std::to_string(iteration);
+		}
+		if (args.options.find("Tol") != args.options.end()){
+			tolerance = args.options["Tol"];
+			tolerance_str = "_Tolerance_" + std::to_string(tolerance*1e6);
 		}
 	}
 
 	//Simultion parameters
 	Real H = 3.7;
-	Real timeStep = 10e-6;
-	Real logDownSampling = (10e-6) / timeStep;
+	Real logDownSampling = (100e-6) / timeStep;
 	Real finalTime = 20.0;
 	Real startTimeFault = 1.0;
 	Real endTimeFault   = 1.1;
-	std::string simName ="EMT_SynGen4OrderIter_SMIB_Fault" + rfault_str;
+	std::string simName ="EMT_SynGen4OrderIter_SMIB_Fault" + stepSize_str + tolerance_str + iteration_str;
 	EMT_3ph_4OrderSynGenIter(simName, timeStep, finalTime, H,
-		startTimeFault, endTimeFault, switchClosed, logDownSampling);
+		startTimeFault, endTimeFault, switchClosed, logDownSampling,
+		iteration, tolerance);
 }
