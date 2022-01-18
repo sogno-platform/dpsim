@@ -101,14 +101,14 @@ namespace CPS {
 		// 	Attribute(flags)
 		// { };
 
-		static Attribute<T>::Ptr create(String name, AttributeBase::Map attrMap, bool dynamic = false, T intitialValue = T()) {
-			Attribute<T>::Ptr newAttr;
-			if (dynamic) {
-				newAttr = AttributeDynamic<T>::make(intitialValue);
-			} else {
-				newAttr = AttributeStatic<T>::make(intitialValue);
-			}
-			 
+		static Attribute<T>::Ptr create(String name, AttributeBase::Map attrMap, T intitialValue = T()) {
+			Attribute<T>::Ptr newAttr = AttributeStatic<T>::make(intitialValue);
+			attrMap[name] = newAttr;
+			return newAttr;
+		}
+
+		static Attribute<T>::Ptr createDynamic(String name, AttributeBase::Map attrMap) {
+			Attribute<T>::Ptr newAttr = AttributeDynamic<T>::make(intitialValue);
 			attrMap[name] = newAttr;
 			return newAttr;
 		}

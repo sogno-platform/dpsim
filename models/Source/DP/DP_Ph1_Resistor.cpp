@@ -12,7 +12,7 @@ using namespace CPS;
 
 DP::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
-		mResistance(Attribute<Real>::create("R", this->mAttributes)) {
+		mResistance(Attribute<Real>::create("R", mAttributes)) {
 	mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
