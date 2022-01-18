@@ -101,6 +101,18 @@ namespace CPS {
 		// 	Attribute(flags)
 		// { };
 
+		static Attribute<T>::Ptr create(String name, AttributeBase::Map attrMap, bool dynamic = false, T intitialValue = T()) {
+			Attribute<T>::Ptr newAttr;
+			if (dynamic) {
+				newAttr = AttributeDynamic<T>::make(intitialValue);
+			} else {
+				newAttr = AttributeStatic<T>::make(intitialValue);
+			}
+			 
+			attrMap[name] = newAttr;
+			return newAttr;
+		}
+
 		virtual void set(T value) = 0;
 
 		virtual const T& get() = 0;

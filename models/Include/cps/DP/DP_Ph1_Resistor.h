@@ -23,6 +23,9 @@ namespace Ph1 {
 		public DAEInterface,
 		public SimPowerComp<Complex>,
 		public SharedFactory<Resistor> {
+	protected:
+		///Resistance [ohm]
+		const CPS::Attribute<Real>::Ptr mResistance;
 	public:
 		/// Defines UID, name and logging level
 		Resistor(String uid, String name, Logger::Level loglevel = Logger::Level::off);

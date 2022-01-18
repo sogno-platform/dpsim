@@ -11,12 +11,12 @@
 using namespace CPS;
 
 DP::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+		mResistance(Attribute<Real>::create("R", this->mAttributes)) {
 	mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
 
-	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Resistor::clone(String name) {

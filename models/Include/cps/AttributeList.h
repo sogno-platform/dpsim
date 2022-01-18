@@ -18,23 +18,23 @@
 namespace CPS {
 	/// Base class of objects having attributes to access member variables.
 	class AttributeList {
-	private:
+	protected:
+
 		/// Map of all attributes
 		AttributeBase::Map mAttributes;
 
-	protected:
-		template<typename T, typename... Args>
-		typename Attribute<T>::Ptr addAttribute(const String &name, bool dynamic, Args&&... args) {
-			typename Attribute<T>::Ptr newAttr;
-			if (dynamic) {
-				newAttr = AttributeDynamic<T>::make(std::forward<Args>(args)...);
-			} else {
-				newAttr = AttributeStatic<T>::make(std::forward<Args>(args)...);
-			}
+		// template<typename T, typename... Args>
+		// typename Attribute<T>::Ptr addAttribute(const String &name, bool dynamic, Args&&... args) {
+		// 	typename Attribute<T>::Ptr newAttr;
+		// 	if (dynamic) {
+		// 		newAttr = AttributeDynamic<T>::make(std::forward<Args>(args)...);
+		// 	} else {
+		// 		newAttr = AttributeStatic<T>::make(std::forward<Args>(args)...);
+		// 	}
 			 
-			mAttributes[name] = newAttr;
-			return newAttr;
-		}
+		// 	mAttributes[name] = newAttr;
+		// 	return newAttr;
+		// }
 
 	public:
 		typedef std::shared_ptr<AttributeList> Ptr;
@@ -64,10 +64,10 @@ namespace CPS {
 			return attrPtr;
 		}
 
-		void reset() {
-			for (auto a : mAttributes) {
-				a.second->reset();
-			}
-		}
+		// void reset() {
+		// 	for (auto a : mAttributes) {
+		// 		a.second->reset();
+		// 	}
+		// }
 	};
 }
