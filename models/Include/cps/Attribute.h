@@ -14,16 +14,6 @@
 #include <cps/MathUtils.h>
 #include <cps/Config.h>
 namespace CPS {
-
-namespace Flags {
-	// TODO clarify access rules for within simulation
-	enum Access : int {
-		read = 1,
-		write = 2,
-		state = 32, /// This attribute constitutes a state of the component which should be resetted between simulation runs
-	};
-}
-
 	template<class U>
 	concept Arithmetic = std::is_arithmetic<U>::value;
 
@@ -77,35 +67,13 @@ namespace Flags {
 
 
 	class AttributeBase {
-
-	protected:
-		/// Flag to determine access rules for this attribute.
-		int mFlags;
-
-		AttributeBase(int flags) :
-			mFlags(flags)
-		{ };
-
 	public:
 		typedef std::shared_ptr<AttributeBase> Ptr;
 		typedef std::vector<Ptr> List;
 		typedef std::map<String, Ptr> Map;
 
-		// //TODO: Delete
-		// enum class Modifier { real, imag, mag, phase };
-
 		virtual String toString() = 0;
-
-		int flags() const {
-			return mFlags;
-		}
-
-		virtual void reset() = 0;
-
-		// //TODO: Delete
-		// static AttributeBase::Ptr getRefAttribute(AttributeBase::Ptr &attr) {
-		// 	return attr;
-		// }
+		//virtual void reset() = 0;
 	};
 
 	template<class T>
@@ -123,8 +91,8 @@ namespace Flags {
 		typedef T Type;
 		typedef std::shared_ptr<Attribute<T>> Ptr;
 
-		Attribute(int flags = Flags::read, T initialValue = T()) :
-			AttributeBase(flags), mData(std::make_shared<T>()) {
+		Attribute(T initialValue = T()) :
+			AttributeBase(), mData(std::make_shared<T>()) {
 				*mData = initialValue;
 			}
 
@@ -145,18 +113,13 @@ namespace Flags {
 			return this->mData;
 		}
 
-		virtual void reset() {
-			// TODO: we might want to provide a default value via the constructor
-			T resetValue = T();
+		// virtual void reset() {
+		// 	// TODO: we might want to provide a default value via the constructor
+		// 	T resetValue = T();
 
-			// Only states are resetted!
-			if (mFlags & Flags::state)
-				set(resetValue);
-		}
-
-		// (Maybe delete)
-		// virtual T getByValue() const {
-		// 	return *get();
+		// 	// Only states are resetted!
+		// 	if (mFlags & Flags::state)
+		// 		set(resetValue);
 		// }
 
 		virtual String toString() override {
@@ -179,7 +142,7 @@ namespace Flags {
 		/// @brief User-defined dereference operator
 		///
 		/// Allows easier access to the attribute's underlying data
-		const T& operator*(){
+		T& operator*(){
 			return this->get();
 		}
 
@@ -189,26 +152,13 @@ namespace Flags {
 		// 	return this->get()->get();
 		// }
 
-		/// @brief User-defined assignment operator
-		///
-		/// Real v = 1.2;
-		/// auto a = Attribute<Real>(&v);
-		///
-		/// a = 3;
-		///
-		Attribute<T>& operator=(T other) {
-			set(other);
-			return *this;
-		}
-
 		template <class U>
 		typename Attribute<U>::Ptr derive(
-			int flags,
 			typename AttributeUpdateTask<U, T>::Actor getter = AttributeUpdateTask<U, T>::Actor(),
 			typename AttributeUpdateTask<U, T>::Actor setter = AttributeUpdateTask<U, T>::Actor()
 		)
 		{
-			auto derivedAttribute = std::make_shared<AttributeDynamic<U>>(flags);
+			auto derivedAttribute = std::make_shared<AttributeDynamic<U>>();
 			if (setter) {
 				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_SET, AttributeUpdateTask<U, T>(UpdateTaskKind::UPDATE_ON_SET, setter, this->shared_from_this()));
 			}
@@ -216,15 +166,6 @@ namespace Flags {
 				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<U, T>(UpdateTaskKind::UPDATE_ON_GET, getter, this->shared_from_this()));
 			}
 			return derivedAttribute;
-		}
-
-		template <class U>
-		typename Attribute<U>::Ptr derive(
-			typename AttributeUpdateTask<U, T>::Actor getter = AttributeUpdateTask<U, T>::Actor(),
-			typename AttributeUpdateTask<U, T>::Actor setter = AttributeUpdateTask<U, T>::Actor()
-		)
-		{
-			return derive<U>(this->mFlags, getter, setter);
 		}
 
 		std::shared_ptr<Attribute<Real>> deriveReal()
@@ -317,23 +258,15 @@ namespace Flags {
 		friend class SharedFactory<AttributeStatic<T>>;
 
 	public:
-		AttributeStatic(int flags = Flags::read, T initialValue = T()) :
-			Attribute<T>(flags, initialValue) { }
+		AttributeStatic(T initialValue = T()) :
+			Attribute<T>(initialValue) { }
 
 		virtual void set(T value) override {
-			if (this->mFlags & Flags::write) {
-				*this->mData = value;
-			} else {
-				throw AccessException(); 
-			}
+			*this->mData = value;
 		};
 
-		virtual const T& get() override {
-			if (this->mFlags & Flags::read) {
-				return *this->mData;
-			}
-			else
-				throw AccessException();
+		virtual T& get() override {
+			return *this->mData;
 		};
 
 		virtual bool isStatic() const override {
@@ -359,8 +292,8 @@ namespace Flags {
 		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnSet;
 
 	public:
-		AttributeDynamic(int flags = Flags::read, T initialValue = T()) :
-			Attribute<T>(flags, initialValue) { }
+		AttributeDynamic(T initialValue = T()) :
+			Attribute<T>(initialValue) { }
 
 		void addTask(UpdateTaskKind kind, AttributeUpdateTaskBase<T> task) {
 			switch (kind) {
@@ -411,25 +344,17 @@ namespace Flags {
 		}
 
 		virtual void set(T value) override {
-			if (this->mFlags & Flags::write) {
-				*this->mData = value;
-				for(auto task : updateTasksOnSet) {
-					task.executeUpdate(this->mData);
-				}
-			} else {
-				throw AccessException(); 
+			*this->mData = value;
+			for(auto task : updateTasksOnSet) {
+				task.executeUpdate(this->mData);
 			}
 		};
 
-		virtual const T& get() override {
-			if (this->mFlags & Flags::read) {
-				for(auto task : updateTasksOnGet) {
-					task.executeUpdate(this->mData);
-				}
-				return *this->mData;
+		virtual T& get() override {
+			for(auto task : updateTasksOnGet) {
+				task.executeUpdate(this->mData);
 			}
-			else
-				throw AccessException();
+			return *this->mData;
 		};
 
 		virtual bool isStatic() const override {
