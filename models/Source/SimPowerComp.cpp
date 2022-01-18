@@ -12,9 +12,9 @@ using namespace CPS;
 
 template <typename VarType>
 SimPowerComp<VarType>::SimPowerComp(String uid, String name, Logger::Level logLevel)
-	: TopologicalPowerComp(uid, name, logLevel) {
-	mIntfVoltage = addAttribute<MatrixVar<VarType>>("v_intf", Flags::read | Flags::write);
-	mIntfCurrent = addAttribute<MatrixVar<VarType>>("i_intf", Flags::read | Flags::write);
+	: 	TopologicalPowerComp(uid, name, logLevel),
+		mIntfVoltage(Attribute<MatrixVar<VarType>>::create("v_intf", this->mAttributes)),
+		mIntfCurrent(Attribute<MatrixVar<VarType>>::create("i_intf", this->mAttributes)) {
 	mTerminals.clear();
 }
 
@@ -112,7 +112,7 @@ void SimPowerComp<VarType>::setVirtualNodeNumber(UInt num) {
 	mVirtualNodes.resize(mNumVirtualNodes, nullptr);
 
 	for (UInt idx = 0; idx < mNumVirtualNodes; idx++) {
-		String nodeName = mName + "_vnode_" + std::to_string(idx);
+		String nodeName = **mName + "_vnode_" + std::to_string(idx);
 		setVirtualNodeAt(std::make_shared<SimNode<VarType>>(nodeName, mPhaseType), idx);
 	}
 }
@@ -139,11 +139,11 @@ typename SimNode<VarType>::Ptr SimPowerComp<VarType>::virtualNode(UInt index) {
 template<typename VarType>
 void SimPowerComp<VarType>::connect(typename SimNode<VarType>::List nodes) {
 	if (mNumTerminals < nodes.size()) {
-		mSLog->error("Number of Nodes is too large for Component {} - Ignoring", mName);
+		mSLog->error("Number of Nodes is too large for Component {} - Ignoring", **mName);
 		return;
 	}
 	for (UInt i = 0; i < nodes.size(); i++) {
-		String name = mName + "_T" + std::to_string(i);
+		String name = **mName + "_T" + std::to_string(i);
 		typename SimTerminal<VarType>::Ptr terminal = SimTerminal<VarType>::make(name);
 		terminal->setNode(nodes[i]);
 		setTerminalAt(terminal, i);
@@ -156,12 +156,12 @@ void SimPowerComp<VarType>::initialize(Matrix frequencies) {
 	mNumFreqs = static_cast<UInt>(mFrequencies.size());
 
 	if (mPhaseType != PhaseType::ABC) {
-		*mIntfVoltage = MatrixVar<VarType>::Zero(1, mNumFreqs);
-		*mIntfCurrent = MatrixVar<VarType>::Zero(1, mNumFreqs);
+		**mIntfVoltage = MatrixVar<VarType>::Zero(1, mNumFreqs);
+		**mIntfCurrent = MatrixVar<VarType>::Zero(1, mNumFreqs);
 	}
 	else {
-		*mIntfVoltage = MatrixVar<VarType>::Zero(3, mNumFreqs);
-		*mIntfCurrent = MatrixVar<VarType>::Zero(3, mNumFreqs);
+		**mIntfVoltage = MatrixVar<VarType>::Zero(3, mNumFreqs);
+		**mIntfCurrent = MatrixVar<VarType>::Zero(3, mNumFreqs);
 	}
 
 	for (auto node : mVirtualNodes)

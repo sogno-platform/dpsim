@@ -23,9 +23,9 @@ namespace CPS {
 		/// List of virtual nodes
 		typename SimNode<VarType>::List mVirtualNodes;
 		/// Voltage between terminals
-		Attribute<MatrixVar<VarType>>::Ptr mIntfVoltage;
+		const Attribute<MatrixVar<VarType>>::Ptr mIntfVoltage;
 		/// Current through component
-		Attribute<MatrixVar<VarType>>::Ptr mIntfCurrent;
+		const Attribute<MatrixVar<VarType>>::Ptr mIntfCurrent;
 		/// List of considered network frequencies
 		Matrix mFrequencies;
 		/// Number of network frequencies

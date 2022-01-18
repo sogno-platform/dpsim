@@ -19,9 +19,9 @@ namespace CPS {
 	class IdentifiedObject: virtual public AttributeList {
 	protected:
 		/// Human readable name
-		Attribute<String>::Ptr mName;
+		const Attribute<String>::Ptr mName;
 		/// Unique identifier
-		Attribute<String>::Ptr mUID;
+		const Attribute<String>::Ptr mUID;
 	public:
 		typedef std::shared_ptr<IdentifiedObject> Ptr;
 		typedef std::vector<Ptr> List;
@@ -29,11 +29,9 @@ namespace CPS {
 		IdentifiedObject() { }
 
 		IdentifiedObject(String uid, String name)
-		{
-
-			mName = addAttribute<String>("uid", false, Flags::read, name);
-			mUID = addAttribute<String>("name", false, Flags::read, uid);
-		}
+			: 	mName(Attribute<String>::create("uid", this->mAttributes)),
+				mUID(Attribute<String>::create("name", this->mAttributes))
+			{ }
 
 		IdentifiedObject(String name) :
 			IdentifiedObject(name, name) { }
