@@ -73,7 +73,6 @@ namespace CPS {
 		typedef std::map<String, Ptr> Map;
 
 		virtual String toString() = 0;
-		//virtual void reset() = 0;
 	};
 
 	template<class T>
@@ -96,11 +95,6 @@ namespace CPS {
 				*mData = initialValue;
 			}
 
-		// // Delete
-		// Attribute(T *v, int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
-		// 	Attribute(flags)
-		// { };
-
 		static Attribute<T>::Ptr create(String name, AttributeBase::Map &attrMap, T intitialValue = T()) {
 			Attribute<T>::Ptr newAttr = AttributeStatic<T>::make(intitialValue);
 			attrMap[name] = newAttr;
@@ -115,7 +109,7 @@ namespace CPS {
 
 		virtual void set(T value) = 0;
 
-		virtual const T& get() = 0;
+		virtual T& get() = 0;
 
 		virtual bool isStatic() const = 0;
 
