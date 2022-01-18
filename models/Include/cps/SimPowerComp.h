@@ -134,9 +134,9 @@ namespace CPS {
 		Bool terminalNotGrounded(UInt index) { return !mMatrixNodeIndexIsGround[index]; }
 
 		// #### Setters ####
-		void setIntfCurrent(MatrixVar<VarType> current) { *mIntfCurrent = current; }
+		void setIntfCurrent(MatrixVar<VarType> current) { **mIntfCurrent = current; }
 		///
-		void setIntfVoltage(MatrixVar<VarType> voltage) { *mIntfVoltage = voltage; }
+		void setIntfVoltage(MatrixVar<VarType> voltage) { **mIntfVoltage = voltage; }
 		///
 		void setVirtualNodeNumber(UInt num);
 		/// Sets the virtual node at index nodeNum.
