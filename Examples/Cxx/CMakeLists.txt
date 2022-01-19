@@ -67,6 +67,16 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
 	Circuits/EMT_SynGenVBR_OperationalParams_SMIB_Fault.cpp
 	Circuits/EMT_SynGenVBR_SMIB_Fault.cpp
+	Circuits/DP_SynGen3OrderVBR_SMIB_Fault.cpp
+	Circuits/DP_SynGen4OrderVBR_SMIB_Fault.cpp
+	Circuits/DP_SynGen6OrderVBR_SMIB_Fault.cpp
+	Circuits/EMT_SynGen3OrderVBR_SMIB_Fault.cpp
+	Circuits/EMT_SynGen4OrderVBR_SMIB_Fault.cpp
+	Circuits/EMT_SynGen6OrderVBR_SMIB_Fault.cpp
+	Circuits/SP_SynGen3OrderVBR_SMIB_Fault.cpp
+	Circuits/SP_SynGen4OrderVBR_SMIB_Fault.cpp
+	Circuits/SP_SynGen6OrderVBR_SMIB_Fault.cpp
+	Circuits/SP_SynGen4OrderDQ_SMIB_Fault.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
