@@ -15,7 +15,7 @@ SP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);
-	mIntfCurrent = MatrixComp::Zero(3, 1);
+	**mIntfCurrent = MatrixComp::Zero(3, 1);
 	addAttribute<Matrix>("C", &mCapacitance, Flags::read | Flags::write);
 }
 
@@ -39,15 +39,15 @@ void SP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage(1, 0) = **mIntfVoltage(0, 0) * Complex(cos(-2. / 3. * M_PI), sin(-2. / 3. * M_PI));
 	**mIntfVoltage(2, 0) = **mIntfVoltage(0, 0) * Complex(cos(2. / 3. * M_PI), sin(2. / 3. * M_PI));
 
-	mIntfCurrent = mSusceptance * **mIntfVoltage;
+	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 	// TODO: add updated logger
 	/*
 	mLog.info() << "\n--- Initialize from power flow ---" << std::endl
 		<< "Impedance: " << impedance << std::endl
 		<< "Voltage across: " << std::abs(**mIntfVoltage(0, 0))
 		<< "<" << Math::phaseDeg(**mIntfVoltage(0, 0)) << std::endl
-		<< "Current: " << std::abs(mIntfCurrent(0, 0))
-		<< "<" << Math::phaseDeg(mIntfCurrent(0, 0)) << std::endl
+		<< "Current: " << std::abs(**mIntfCurrent(0, 0))
+		<< "<" << Math::phaseDeg(**mIntfCurrent(0, 0)) << std::endl
 		<< "Terminal 0 voltage: " << std::abs(initialSingleVoltage(0))
 		<< "<" << Math::phaseDeg(initialSingleVoltage(0)) << std::endl
 		<< "Terminal 1 voltage: " << std::abs(initialSingleVoltage(1))
@@ -62,8 +62,8 @@ void SP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	/*mLog.info() << "\n--- MNA Initialization ---" << std::endl
 		<< "Initial voltage " << Math::abs(**mIntfVoltage(0, 0))
 		<< "<" << Math::phaseDeg(**mIntfVoltage(0, 0)) << std::endl
-		<< "Initial current " << Math::abs(mIntfCurrent(0, 0))
-		<< "<" << Math::phaseDeg(mIntfCurrent(0, 0)) << std::endl
+		<< "Initial current " << Math::abs(**mIntfCurrent(0, 0))
+		<< "<" << Math::phaseDeg(**mIntfCurrent(0, 0)) << std::endl
 		<< "--- MNA initialization finished ---" << std::endl;*/
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -160,5 +160,5 @@ void SP::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph3::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mSusceptance * **mIntfVoltage;
+	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 }

@@ -15,7 +15,7 @@ SP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);
-	mIntfCurrent = MatrixComp::Zero(3, 1);
+	**mIntfCurrent = MatrixComp::Zero(3, 1);
 	addAttribute<Matrix>("L", &mInductance, Flags::read | Flags::write);
 }
 
@@ -39,7 +39,7 @@ void SP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	**mIntfVoltage(1, 0) = **mIntfVoltage(0, 0) * Complex(cos(-2. / 3. * M_PI), sin(-2. / 3. * M_PI));
 	**mIntfVoltage(2, 0) = **mIntfVoltage(0, 0) * Complex(cos(2. / 3. * M_PI), sin(2. / 3. * M_PI));
-	mIntfCurrent = mSusceptance * **mIntfVoltage;
+	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 
 	mSLog->info("--- Initialize according to power flow ---");
 /*
@@ -47,8 +47,8 @@ void SP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 		<< "in phase A: " << std::endl
 		<< "Voltage across: " << std::abs(**mIntfVoltage(0, 0))
 		<< "<" << Math::phaseDeg(**mIntfVoltage(0, 0)) << std::endl
-		<< "Current: " << std::abs(mIntfCurrent(0, 0))
-		<< "<" << Math::phaseDeg(mIntfCurrent(0, 0)) << std::endl
+		<< "Current: " << std::abs(**mIntfCurrent(0, 0))
+		<< "<" << Math::phaseDeg(**mIntfCurrent(0, 0)) << std::endl
 		<< "Terminal 0 voltage: " << std::abs(initialSingleVoltage(0))
 		<< "<" << Math::phaseDeg(initialSingleVoltage(0)) << std::endl
 		<< "Terminal 1 voltage: " << std::abs(initialSingleVoltage(1))
@@ -63,8 +63,8 @@ void SP::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 /*
 	mLog.info() << "Initial voltage " << Math::abs(**mIntfVoltage(0, 0))
 		<< "<" << Math::phaseDeg(**mIntfVoltage(0, 0)) << std::endl
-		<< "Initial current " << Math::abs(mIntfCurrent(0, 0))
-		<< "<" << Math::phaseDeg(mIntfCurrent(0, 0)) << std::endl;
+		<< "Initial current " << Math::abs(**mIntfCurrent(0, 0))
+		<< "<" << Math::phaseDeg(**mIntfCurrent(0, 0)) << std::endl;
 */
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -149,7 +149,7 @@ void SP::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph3::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mSusceptance * **mIntfVoltage;
+	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 }
 
 

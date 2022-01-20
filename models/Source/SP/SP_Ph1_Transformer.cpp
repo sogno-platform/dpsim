@@ -20,7 +20,7 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
 
 	addAttribute<Real>("nominal_voltage_end1", &mNominalVoltageEnd1, Flags::read | Flags::write);
@@ -107,7 +107,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// Static calculations from load flow data
 	Complex impedance = { mResistance, mReactance };
 	**mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
-	mIntfCurrent(0, 0) = **mIntfVoltage(0, 0) / impedance;
+	**mIntfCurrent(0, 0) = **mIntfVoltage(0, 0) / impedance;
 
 	// Create series sub components
 	mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mUid + "_ind", **mName + "_ind", Logger::Level::off);
@@ -185,7 +185,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)),
+		Logger::phasorToString(**mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)),
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
@@ -398,8 +398,8 @@ void SP::Ph1::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<M
 }
 
 void SP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = mSubInductor->intfCurrent()(0, 0);
-	mSLog->debug("Current {:s}", Logger::phasorToString(mIntfCurrent(0, 0)));
+	**mIntfCurrent(0, 0) = mSubInductor->intfCurrent()(0, 0);
+	mSLog->debug("Current {:s}", Logger::phasorToString(**mIntfCurrent(0, 0)));
 
 }
 

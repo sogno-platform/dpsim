@@ -15,7 +15,7 @@ SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, L
 	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
     setTerminalNumber(2);
 
 	addAttribute<Real>("P_ref", &mPref, Flags::read | Flags::write);

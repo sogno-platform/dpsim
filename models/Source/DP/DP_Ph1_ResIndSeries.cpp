@@ -14,7 +14,7 @@ DP::Ph1::ResIndSeries::ResIndSeries(String uid, String name, Logger::Level logLe
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
 
 	addAttribute<Real>("L", &mInductance, Flags::read | Flags::write);
@@ -40,7 +40,7 @@ void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2. * PI * frequency;
 	Complex impedance = { 0, omega * mInductance };
 	**mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent(0,0) = **mIntfVoltage(0,0) / impedance;
+	**mIntfCurrent(0,0) = **mIntfVoltage(0,0) / impedance;
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -50,7 +50,7 @@ void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -70,8 +70,8 @@ void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
 		mPrevCurrFac(freq,0) = { preCurrFracReal, preCurrFracImag };
 
 		// TODO: check if this is correct or if it should be only computed before the step
-		mEquivCurrent(freq,0) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mPrevCurrFac(freq,0) * mIntfCurrent(0,freq);
-		mIntfCurrent(0,freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
+		mEquivCurrent(freq,0) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mPrevCurrFac(freq,0) * **mIntfCurrent(0,freq);
+		**mIntfCurrent(0,freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
 	}
 }
 
@@ -92,7 +92,7 @@ void DP::Ph1::ResIndSeries::mnaInitialize(Real omega, Real timeStep, Attribute<M
 		"\nEquiv. current {:s}"
 		"\n--- MNA initialization finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::complexToString(mEquivCurrent(0,0)));
 }
 
@@ -164,7 +164,7 @@ void DP::Ph1::ResIndSeries::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 		// Calculate equivalent current source for next time step
 		mEquivCurrent(freq,0) =
 			mEquivCond(freq,0) * **mIntfVoltage(0,freq)
-			+ mPrevCurrFac(freq,0) * mIntfCurrent(0,freq);
+			+ mPrevCurrFac(freq,0) * **mIntfCurrent(0,freq);
 
 		if (terminalNotGrounded(0))
 			Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freq,0), mNumFreqs, freq);
@@ -186,7 +186,7 @@ void DP::Ph1::ResIndSeries::mnaApplyRightSideVectorStampHarm(Matrix& rightVector
 		// Calculate equivalent current source for next time step
 		mEquivCurrent(freq,0) =
 			mEquivCond(freq,0) * **mIntfVoltage(0,freq)
-			+ mPrevCurrFac(freq,0) * mIntfCurrent(0,freq);
+			+ mPrevCurrFac(freq,0) * **mIntfCurrent(0,freq);
 
 		if (terminalNotGrounded(0))
 			Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freq,0), 1, 0, freq);
@@ -240,15 +240,15 @@ void DP::Ph1::ResIndSeries::mnaUpdateVoltageHarm(const Matrix& leftVector, Int f
 
 void DP::Ph1::ResIndSeries::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(mIntfCurrent(0,freq)));
+		**mIntfCurrent(0,freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(**mIntfCurrent(0,freq)));
 	}
 }
 
 void DP::Ph1::ResIndSeries::mnaUpdateCurrentHarm() {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(mIntfCurrent(0,freq)));
+		**mIntfCurrent(0,freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(**mIntfCurrent(0,freq)));
 	}
 }
 
@@ -262,12 +262,12 @@ void DP::Ph1::ResIndSeries::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
 }
 
 void DP::Ph1::ResIndSeries::mnaTearApplyVoltageStamp(Matrix& voltageVector) {
-	mEquivCurrent(0,0) = mEquivCond(0,0) * **mIntfVoltage(0,0) + mPrevCurrFac(0,0) * mIntfCurrent(0,0);
+	mEquivCurrent(0,0) = mEquivCond(0,0) * **mIntfVoltage(0,0) + mPrevCurrFac(0,0) * **mIntfCurrent(0,0);
 	Math::addToVectorElement(voltageVector, mTearIdx, mEquivCurrent(0,0) / mEquivCond(0,0));
 }
 
 void DP::Ph1::ResIndSeries::mnaTearPostStep(Complex voltage, Complex current) {
 	**mIntfVoltage(0, 0) = voltage;
-	mIntfCurrent(0, 0) = mEquivCond(0,0) * voltage + mEquivCurrent(0,0);
+	**mIntfCurrent(0, 0) = mEquivCond(0,0) * voltage + mEquivCurrent(0,0);
 
 }

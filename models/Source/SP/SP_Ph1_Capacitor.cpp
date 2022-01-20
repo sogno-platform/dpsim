@@ -13,7 +13,7 @@ using namespace CPS;
 SP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
 
 	addAttribute<Real>("C", &mCapacitance, Flags::read | Flags::write);
@@ -32,7 +32,7 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	mImpedance = Complex(1, 0) / mSusceptance;
 	mAdmittance = Complex(1, 0) / mImpedance;
 	**mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent = mSusceptance * **mIntfVoltage;
+	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 
 	mSLog->info("\nCapacitance [F]: {:s}"
 				"\nImpedance [Ohm]: {:s}"
@@ -48,7 +48,7 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)),
+		Logger::phasorToString(**mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -67,7 +67,7 @@ void SP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 		"\nInitial current {:s}"
 		"\n--- MNA initialization finished ---",
 		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)));
+		Logger::phasorToString(**mIntfCurrent(0, 0)));
 }
 
 void SP::Ph1::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -121,7 +121,7 @@ void SP::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph1::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mSusceptance * **mIntfVoltage;
+	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 }
 
 // #### Powerflow section ####

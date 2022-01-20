@@ -17,7 +17,7 @@ EMT::Ph3::CurrentSource::CurrentSource(String uid, String name, Logger::Level lo
 	setVirtualNodeNumber(0);
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<MatrixComp>("I_ref", Flags::read | Flags::write);  // rms-value
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
@@ -87,14 +87,14 @@ void EMT::Ph3::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute
 
 void EMT::Ph3::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (terminalNotGrounded(1)) {
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), - mIntfCurrent(0, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), - mIntfCurrent(1, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), - mIntfCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), - **mIntfCurrent(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), - **mIntfCurrent(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), - **mIntfCurrent(2, 0));
 	}
 	if (terminalNotGrounded(0)) {
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), mIntfCurrent(0, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), mIntfCurrent(1, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 2), mIntfCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), **mIntfCurrent(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), **mIntfCurrent(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 2), **mIntfCurrent(2, 0));
 	}
 }
 
@@ -102,15 +102,15 @@ void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
 	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
 		for(int i = 0; i < 3; i++) {
-			mIntfCurrent(i, 0) = RMS_TO_PEAK * Math::abs(attribute<MatrixComp>("I_ref")->get()(i, 0)) 
+			**mIntfCurrent(i, 0) = RMS_TO_PEAK * Math::abs(attribute<MatrixComp>("I_ref")->get()(i, 0)) 
 				* cos(Math::phase(mSrcSig->getSignal()) + Math::phase(attribute<MatrixComp>("I_ref")->get()(i, 0)));
 		}
 	} else {
-		mIntfCurrent = RMS_TO_PEAK * attribute<MatrixComp>("I_ref")->get().real();
+		**mIntfCurrent = RMS_TO_PEAK * attribute<MatrixComp>("I_ref")->get().real();
 	}
 	mSLog->debug(
 		"\nUpdate current: {:s}",
-		Logger::matrixToString(mIntfCurrent)
+		Logger::matrixToString(**mIntfCurrent)
 	);
 }
 

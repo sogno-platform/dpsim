@@ -14,7 +14,7 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Register attributes
 	addAttribute<Complex>("Ep", &mEp, Flags::read);
@@ -159,12 +159,12 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 		: mInitMechPower;
 
 	//I_intf is the current which is flowing into the Component, while mInitElecPower is flowing out of it
-	mIntfCurrent(0,0) = std::conj( - mInitElecPower / **mIntfVoltage(0,0) );
+	**mIntfCurrent(0,0) = std::conj( - mInitElecPower / **mIntfVoltage(0,0) );
 
 	mImpedance = Complex(mRs, mXpd);
 
 	// Calculate initial emf behind reactance from power flow results
-	mEp = **mIntfVoltage(0,0) - mImpedance * mIntfCurrent(0,0);
+	mEp = **mIntfVoltage(0,0) - mImpedance * **mIntfCurrent(0,0);
 
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
@@ -173,8 +173,8 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 
 	// Update electrical power
 	// TODO: review for Rs != 0
-	mElecActivePower = ( **mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
-	mElecReactivePower = ( **mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).imag();
+	mElecActivePower = ( **mIntfVoltage(0,0) *  std::conj( -**mIntfCurrent(0,0)) ).real();
+	mElecReactivePower = ( **mIntfVoltage(0,0) *  std::conj( -**mIntfCurrent(0,0)) ).imag();
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
@@ -218,8 +218,8 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	// #### Calculations based on values from time step k ####
 	// Electrical power at time step k
 	// TODO: review for Rs != 0
-	mElecActivePower = (**mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
-	mElecReactivePower = (**mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).imag();
+	mElecActivePower = (**mIntfVoltage(0,0) *  std::conj( -**mIntfCurrent(0,0)) ).real();
+	mElecReactivePower = (**mIntfVoltage(0,0) *  std::conj( -**mIntfCurrent(0,0)) ).imag();
 
 	// Mechanical speed derivative at time step k
 	// convert torque to power with actual rotor angular velocity or nominal omega
@@ -313,7 +313,7 @@ void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector
 void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
 	//Current flowing out of component
-	mIntfCurrent = mSubInductor->attribute<MatrixComp>("i_intf")->get();
+	**mIntfCurrent = mSubInductor->attribute<MatrixComp>("i_intf")->get();
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setReferenceOmega(Attribute<Real>::Ptr refOmegaPtr, Attribute<Real>::Ptr refDeltaPtr) {

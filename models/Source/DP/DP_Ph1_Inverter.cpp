@@ -18,7 +18,7 @@ DP::Ph1::Inverter::Inverter(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(1);
 	setVirtualNodeNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 }
 
 void DP::Ph1::Inverter::setParameters(const std::vector<Int> &carrierHarms, const std::vector<Int> &modulHarms,

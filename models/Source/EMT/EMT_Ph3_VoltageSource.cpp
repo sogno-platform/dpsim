@@ -17,7 +17,7 @@ EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level lo
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<MatrixComp>("V_ref", Flags::read | Flags::write);  // rms-value, phase-to-phase
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
@@ -188,7 +188,7 @@ void EMT::Ph3::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribut
 }
 
 void EMT::Ph3::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
-	mIntfCurrent(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
-	mIntfCurrent(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
+	**mIntfCurrent(0, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
+	**mIntfCurrent(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
+	**mIntfCurrent(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
 }

@@ -18,7 +18,7 @@ EMT::Ph3::RXLoad::RXLoad(String uid, String name,
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("P", &mActivePower, Flags::read | Flags::write);
 	addAttribute<Matrix>("Q", &mReactivePower, Flags::read | Flags::write);
@@ -149,7 +149,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	Complex v_ = vInitABC(0, 0)*vInitABC(0, 0) + vInitABC(1, 0)*vInitABC(1, 0) + vInitABC(2, 0)*vInitABC(2, 0);
 	MatrixComp rhs_ = Complex(1, 0) / v_ * vInitABC.transpose() * mPower;
 	iInitABC = rhs_.conjugate().transpose();
-	mIntfCurrent = iInitABC.real();
+	**mIntfCurrent = iInitABC.real();
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -162,7 +162,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		"\nReactance: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(**mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::matrixToString(mActivePower),
 		Logger::matrixToString(mReactivePower),
@@ -233,11 +233,11 @@ void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 	if (mSubResistor)
-		mIntfCurrent += mSubResistor->intfCurrent();
+		**mIntfCurrent += mSubResistor->intfCurrent();
 	if (mSubInductor)
-		mIntfCurrent += mSubInductor->intfCurrent();
+		**mIntfCurrent += mSubInductor->intfCurrent();
 	if (mSubCapacitor)
-		mIntfCurrent += mSubCapacitor->intfCurrent();
+		**mIntfCurrent += mSubCapacitor->intfCurrent();
 }

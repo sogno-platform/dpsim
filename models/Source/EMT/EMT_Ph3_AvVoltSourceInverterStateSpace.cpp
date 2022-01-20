@@ -17,7 +17,7 @@ EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(String 
 : SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("V_cabc", &mVcabc, Flags::read | Flags::write);
 	addAttribute<Complex>("V_ref", &mVoltageRef, Flags::read | Flags::write);
@@ -109,8 +109,8 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::initializeStates(Real omega, Real
 		mB <<
 			1, 0, 0, Matrix::Zero(1, 3),
 			0, 0, 0, Matrix::Zero(1, 3),
-			0, 0, 0, 3. / 2. * mOmegaCutoff * sqrt(3)*(Td * mIntfCurrent * Td + Tq * mIntfCurrent * Tq),
-			0, 0, 0, 3. / 2. * mOmegaCutoff * sqrt(3)*(Tq * mIntfCurrent * Td - Td * mIntfCurrent * Tq),
+			0, 0, 0, 3. / 2. * mOmegaCutoff * sqrt(3)*(Td * **mIntfCurrent * Td + Tq * **mIntfCurrent * Tq),
+			0, 0, 0, 3. / 2. * mOmegaCutoff * sqrt(3)*(Tq * **mIntfCurrent * Td - Td * **mIntfCurrent * Tq),
 			0, 1, 0, Matrix::Zero(1, 3),
 			0, 0, 1, Matrix::Zero(1, 3),
 			0, 0, 0, Matrix::Zero(1, 3),
@@ -130,8 +130,8 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::initializeStates(Real omega, Real
 
 		mThetaPLL = 0;
 		mPhiPLL = -0.000060;
-		mP = sqrt(3)*(3. / 2. * (Td * mIntfCurrent * Td *mVcabc + Tq * mIntfCurrent * Tq * mVcabc)).coeff(0, 0);
-		mQ = sqrt(3)*(3. / 2. * (Tq * mIntfCurrent * Td *mVcabc - Td * mIntfCurrent * Tq *mVcabc)).coeff(0, 0);
+		mP = sqrt(3)*(3. / 2. * (Td * **mIntfCurrent * Td *mVcabc + Tq * **mIntfCurrent * Tq * mVcabc)).coeff(0, 0);
+		mQ = sqrt(3)*(3. / 2. * (Tq * **mIntfCurrent * Td *mVcabc - Td * **mIntfCurrent * Tq *mVcabc)).coeff(0, 0);
 		mPhi_d = 113.612992;
 		mPhi_q = 22.045339;
 		mGamma_d = 0.155978;
@@ -282,7 +282,7 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaInitialize(Real omega, Real ti
 	**mIntfVoltage(0, 0) = voltageRef.real() * cos(Math::phase(voltageRef));
 	**mIntfVoltage(1, 0) = voltageRef.real() * cos(Math::phase(voltageRef) - 2. / 3. * M_PI);
 	**mIntfVoltage(2, 0) = voltageRef.real() * cos(Math::phase(voltageRef) + 2. / 3. * M_PI);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 	initializeStates(omega, timeStep, leftVector);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -354,9 +354,9 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateVoltage(const Matrix& le
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateCurrent(const Matrix& leftVector) {
 	// signs are not verified
-	mIntfCurrent(0, 0) = mEquivCurrent(0, 0) - **mIntfVoltage(0, 0) / mRc;
-	mIntfCurrent(1, 0) = mEquivCurrent(1, 0) - **mIntfVoltage(1, 0) / mRc;
-	mIntfCurrent(2, 0) = mEquivCurrent(2, 0) - **mIntfVoltage(2, 0) / mRc;
+	**mIntfCurrent(0, 0) = mEquivCurrent(0, 0) - **mIntfVoltage(0, 0) / mRc;
+	**mIntfCurrent(1, 0) = mEquivCurrent(1, 0) - **mIntfVoltage(1, 0) / mRc;
+	**mIntfCurrent(2, 0) = mEquivCurrent(2, 0) - **mIntfVoltage(2, 0) / mRc;
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::updateEquivCurrent(Real time) {

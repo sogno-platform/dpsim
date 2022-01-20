@@ -72,10 +72,10 @@ void EMT::Ph3::SynchronGeneratorDQODE::odePostStep() {
 	mIdq0(0, 0) = mIsr(0, 0);
 	mIdq0(1, 0) = mIsr(3, 0);
 	mIdq0(2, 0) = mIsr(6, 0);
-	mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
+	**mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "\nCurrent: \n{:s}",
-		Logger::matrixCompToString(mIntfCurrent));
+		Logger::matrixCompToString(**mIntfCurrent));
 }
 
 // ODE-Class simulation state-space

@@ -19,7 +19,7 @@ SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
 	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
     setTerminalNumber(1);
 
 	addAttribute<Real>("P_pu", &mActivePowerPerUnit, Flags::read | Flags::write);
@@ -141,7 +141,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	**mIntfVoltage(0, 0) = mTerminals[0]->initialSingleVoltage();
-	mIntfCurrent(0, 0) = std::conj(Complex(attribute<Real>("P")->get(), attribute<Real>("Q")->get()) / **mIntfVoltage(0, 0));
+	**mIntfCurrent(0, 0) = std::conj(Complex(attribute<Real>("P")->get(), attribute<Real>("Q")->get()) / **mIntfVoltage(0, 0));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -150,7 +150,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)),
+		Logger::phasorToString(**mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 	mSLog->info(
 		"Updated parameters according to powerflow:\n"
@@ -208,11 +208,11 @@ void SP::Ph1::Load::mnaUpdateVoltage(const Matrix& leftVector) {
 
 
 void SP::Ph1::Load::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = 0;
+	**mIntfCurrent(0, 0) = 0;
 	if (mSubResistor)
-		mIntfCurrent(0, 0) += mSubResistor->intfCurrent()(0, 0);
+		**mIntfCurrent(0, 0) += mSubResistor->intfCurrent()(0, 0);
 	if (mSubInductor)
-		mIntfCurrent(0, 0) += mSubInductor->intfCurrent()(0, 0);
+		**mIntfCurrent(0, 0) += mSubInductor->intfCurrent()(0, 0);
 	if (mSubCapacitor)
-		mIntfCurrent(0, 0) += mSubCapacitor->intfCurrent()(0, 0);
+		**mIntfCurrent(0, 0) += mSubCapacitor->intfCurrent()(0, 0);
 }

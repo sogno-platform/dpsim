@@ -24,7 +24,7 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 
 	mSLog->info("Create {} {}", type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Create electrical sub components
 	mSubResistorF = SP::Ph1::Resistor::make(**mName + "_resF", mLogLevel);
@@ -152,7 +152,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real fr
 
 	// set initial interface quantities
 	**mIntfVoltage(0, 0) = initialSingleVoltage(0);
-	mIntfCurrent(0, 0) = - std::conj(Complex(mPref, mQref) / **mIntfVoltage(0,0));
+	**mIntfCurrent(0, 0) = - std::conj(Complex(mPref, mQref) / **mIntfVoltage(0,0));
 
 	Complex filterInterfaceInitialVoltage;
 	Complex filterInterfaceInitialCurrent;
@@ -160,7 +160,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real fr
 	if (mWithConnectionTransformer) {
 		// calculate quantities of low voltage side of transformer (being the interface quantities of the filter)
 		filterInterfaceInitialVoltage = (**mIntfVoltage(0, 0) - Complex(mTransformerResistance, mTransformerInductance*mOmegaN)*mIntfCurrent(0, 0)) / Complex(mTransformerRatioAbs, mTransformerRatioPhase);
-		filterInterfaceInitialCurrent = mIntfCurrent(0, 0) * Complex(mTransformerRatioAbs, mTransformerRatioPhase);
+		filterInterfaceInitialCurrent = **mIntfCurrent(0, 0) * Complex(mTransformerRatioAbs, mTransformerRatioPhase);
 
 		// connect transformer
 		mVirtualNodes[3]->setInitialVoltage(filterInterfaceInitialVoltage);
@@ -168,7 +168,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real fr
 	} else {
 		// if no transformer used, filter interface equal to inverter interface
 		filterInterfaceInitialVoltage = **mIntfVoltage(0, 0);
-		filterInterfaceInitialCurrent = mIntfCurrent(0, 0);
+		filterInterfaceInitialCurrent = **mIntfCurrent(0, 0);
 	}
 
 	// derive initialization quantities of filter
@@ -224,7 +224,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real fr
 		"\nVirtual node 1 initial voltage: {:s}"
 		"\nVirtual node 2 initial voltage: {:s}",
 		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)),
+		Logger::phasorToString(**mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()),
@@ -372,9 +372,9 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCoun
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {
 	if (mWithConnectionTransformer)
-		mIntfCurrent = mConnectionTransformer->attribute<MatrixComp>("i_intf")->get();
+		**mIntfCurrent = mConnectionTransformer->attribute<MatrixComp>("i_intf")->get();
 	else
-		mIntfCurrent = mSubResistorC->attribute<MatrixComp>("i_intf")->get();
+		**mIntfCurrent = mSubResistorC->attribute<MatrixComp>("i_intf")->get();
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {

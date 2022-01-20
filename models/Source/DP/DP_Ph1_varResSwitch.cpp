@@ -14,7 +14,7 @@ DP::Ph1::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLe
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
     **mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Real>("R_open", &mOpenResistance, Flags::read | Flags::write);
 	addAttribute<Real>("R_closed", &mClosedResistance, Flags::read | Flags::write);
@@ -35,7 +35,7 @@ void DP::Ph1::varResSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
 
 	**mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent(0,0)  = **mIntfVoltage(0,0) / impedance;
+	**mIntfCurrent(0,0)  = **mIntfVoltage(0,0) / impedance;
 }
 
 // #### MNA functions ####
@@ -115,7 +115,7 @@ void DP::Ph1::varResSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph1::varResSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0,0) = (mIsClosed) ?
+	**mIntfCurrent(0,0) = (mIsClosed) ?
 		**mIntfVoltage(0,0) / mClosedResistance :
 		**mIntfVoltage(0,0) / mOpenResistance;
 }

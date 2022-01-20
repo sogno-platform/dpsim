@@ -17,7 +17,7 @@ DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	addAttribute<Real>("R", &mSeriesRes, Flags::read | Flags::write);
 	addAttribute<Real>("L", &mSeriesInd, Flags::read | Flags::write);
@@ -33,8 +33,8 @@ void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 
 	**mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	Complex impedance = { mSeriesRes, mSeriesInd * 2.*PI * frequency };
-	mIntfCurrent(0, 0) = mVoltage / impedance;
-	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(0) + mIntfCurrent(0, 0) * mSeriesRes );
+	**mIntfCurrent(0, 0) = mVoltage / impedance;
+	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(0) + **mIntfCurrent(0, 0) * mSeriesRes );
 
 	// Default model with virtual node in between
 	mSubResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
@@ -63,7 +63,7 @@ void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -118,5 +118,5 @@ void DP::Ph1::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph1::RxLine::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = mSubInductor->intfCurrent()(0,0);
+	**mIntfCurrent(0, 0) = mSubInductor->intfCurrent()(0,0);
 }

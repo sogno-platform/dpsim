@@ -18,7 +18,7 @@ EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String uid, String name, Lo
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3,1);
-	mIntfCurrent = Matrix::Zero(3,1);
+	**mIntfCurrent = Matrix::Zero(3,1);
 
 	addAttribute<Real>("Rs", &mRs, Flags::read | Flags::write);
 	addAttribute<Real>("Ll", &mLl, Flags::read | Flags::write);
@@ -427,7 +427,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaPostStep(Real time, Int timeStepCount, A
 		mDVc;
 
 	**mIntfVoltage = mVabc*mBase_V;
-	mIntfCurrent = mIabc*mBase_I;
+	**mIntfCurrent = mIabc*mBase_I;
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

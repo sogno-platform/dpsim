@@ -21,7 +21,7 @@ EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("R", &mSeriesRes, Flags::read | Flags::write);
 	addAttribute<Matrix>("L", &mSeriesInd, Flags::read | Flags::write);
@@ -49,7 +49,7 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 
-	mIntfCurrent = (impedance.inverse() * vInitABC).real();
+	**mIntfCurrent = (impedance.inverse() * vInitABC).real();
 	**mIntfVoltage = vInitABC.real();
 	// Initialization of virtual node
 	// Initial voltage of phase B,C is set after A
@@ -58,7 +58,7 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	vInitTerm0(1, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_B;
 	vInitTerm0(2, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_C;
 
-	mVirtualNodes[0]->setInitialVoltage(vInitTerm0 + mSeriesRes * mIntfCurrent);
+	mVirtualNodes[0]->setInitialVoltage(vInitTerm0 + mSeriesRes * **mIntfCurrent);
 
 	// Default model with virtual node in between
 	mSubResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
@@ -89,7 +89,7 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(**mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -151,5 +151,5 @@ void EMT::Ph3::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::RxLine::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mSubInductor->intfCurrent();
+	**mIntfCurrent = mSubInductor->intfCurrent();
 }

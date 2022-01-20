@@ -14,7 +14,7 @@ EMT::Ph1::CurrentSource::CurrentSource(String uid, String name,	Logger::Level lo
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);
-	mIntfCurrent = Matrix::Zero(1,1);
+	**mIntfCurrent = Matrix::Zero(1,1);
 
 	addAttribute<Complex>("I_ref", Flags::read | Flags::write);
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
@@ -39,7 +39,7 @@ void EMT::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute
 
 	mCurrentRef = attribute<Complex>("I_ref");
 	mSrcFreq = attribute<Real>("f_src");
-	mIntfCurrent(0,0) = Math::abs(mCurrentRef->get()) * cos(Math::phase(mCurrentRef->get()));
+	**mIntfCurrent(0,0) = Math::abs(mCurrentRef->get()) * cos(Math::phase(mCurrentRef->get()));
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -47,19 +47,19 @@ void EMT::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute
 
 void EMT::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (terminalNotGrounded(0))
-		Math::setVectorElement(rightVector, matrixNodeIndex(0), -mIntfCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0), -**mIntfCurrent(0,0));
 
 	if (terminalNotGrounded(1))
-		Math::setVectorElement(rightVector, matrixNodeIndex(1), mIntfCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1), **mIntfCurrent(0,0));
 }
 
 void EMT::Ph1::CurrentSource::updateState(Real time) {
 	Complex currentRef = mCurrentRef->get();
 	Real srcFreq = mSrcFreq->get();
 	if (srcFreq > 0)
-		mIntfCurrent(0,0) = Math::abs(currentRef) * cos(time * 2.*PI*srcFreq + Math::phase(currentRef));
+		**mIntfCurrent(0,0) = Math::abs(currentRef) * cos(time * 2.*PI*srcFreq + Math::phase(currentRef));
 	else
-		mIntfCurrent(0,0) = currentRef.real();
+		**mIntfCurrent(0,0) = currentRef.real();
 }
 
 void EMT::Ph1::CurrentSource::MnaPreStep::execute(Real time, Int timeStepCount) {

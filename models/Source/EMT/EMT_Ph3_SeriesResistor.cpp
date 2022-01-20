@@ -37,7 +37,7 @@ void EMT::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage(1, 0) = Complex(phasorA * pow(alpha,2)).real();
 	**mIntfVoltage(2, 0) = Complex(phasorA * alpha).real();
 
-	mIntfCurrent = **mIntfVoltage / mResistance;
+	**mIntfCurrent = **mIntfVoltage / mResistance;
 
 	mSLog->info("\n--- Initialization from powerflow ---"
 		"\nVoltage across amplitude and phase: \n{}"
@@ -46,7 +46,7 @@ void EMT::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage amplitude and phase: \n{}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorMatrixToString(**mIntfVoltage),
-		Logger::phasorMatrixToString(mIntfCurrent),
+		Logger::phasorMatrixToString(**mIntfCurrent),
 		Logger::phasorMatrixToString(initialVoltage(0)),
 		Logger::phasorMatrixToString(initialVoltage(1)));
 }
@@ -105,7 +105,7 @@ void EMT::Ph3::SeriesResistor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::SeriesResistor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = **mIntfVoltage / mResistance;
+	**mIntfCurrent = **mIntfVoltage / mResistance;
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", mIntfCurrent(0,0));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", **mIntfCurrent(0,0));
 }

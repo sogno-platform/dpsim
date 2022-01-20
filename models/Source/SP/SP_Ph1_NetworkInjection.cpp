@@ -17,7 +17,7 @@ SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
 	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
 
@@ -212,7 +212,7 @@ void SP::Ph1::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph1::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mSubVoltageSource->attribute<MatrixComp>("i_intf")->get();
+	**mIntfCurrent = mSubVoltageSource->attribute<MatrixComp>("i_intf")->get();
 }
 
 void SP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
@@ -235,8 +235,8 @@ void SP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[], 
 	int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation
 	resid[c_offset] = (state[Pos2] - state[Pos1]) - state[c_offset]; // Voltage equation for Resistor
 	//resid[++c_offset] = ; //TODO : add inductance equation
-	resid[n_offset_1] += mIntfCurrent(0, 0).real();
-	resid[n_offset_2] += mIntfCurrent(0, 0).real();
+	resid[n_offset_1] += **mIntfCurrent(0, 0).real();
+	resid[n_offset_2] += **mIntfCurrent(0, 0).real();
 	off[1] += 1;
 }
 

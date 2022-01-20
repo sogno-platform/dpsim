@@ -18,7 +18,7 @@ EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("R_series", &mSeriesRes, Flags::read | Flags::write);
 	addAttribute<Matrix>("L_series", &mSeriesInd, Flags::read | Flags::write);
@@ -57,7 +57,7 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	MatrixComp iInit = impedance.inverse() * vInitABC;
-	mIntfCurrent = iInit.real();
+	**mIntfCurrent = iInit.real();
 	**mIntfVoltage = vInitABC.real();
 
 	// Initialization of virtual node
@@ -131,7 +131,7 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(**mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)),
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
@@ -259,5 +259,5 @@ void EMT::Ph3::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::PiLine::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mSubSeriesInductor->intfCurrent();
+	**mIntfCurrent = mSubSeriesInductor->intfCurrent();
 }

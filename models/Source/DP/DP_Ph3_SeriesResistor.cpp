@@ -15,7 +15,7 @@ DP::Ph3::SeriesResistor::SeriesResistor(String uid, String name,
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3,1);
-	mIntfCurrent = MatrixComp::Zero(3,1);
+	**mIntfCurrent = MatrixComp::Zero(3,1);
 
 	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
 }
@@ -47,7 +47,7 @@ void DP::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 		voltMag * cos(voltPhase + 2. / 3. * PI),
 		voltMag * sin(voltPhase + 2. / 3. * PI));
 
-	mIntfCurrent = impedance.cwiseInverse().cwiseProduct(**mIntfVoltage);
+	**mIntfCurrent = impedance.cwiseInverse().cwiseProduct(**mIntfVoltage);
 
 	mSLog->info("\n--- Initialization from powerflow ---"
 		"\nVoltage across amplitude and phase: \n{:s}"
@@ -56,7 +56,7 @@ void DP::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage amplitude and phase: \n{:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorMatrixToString(**mIntfVoltage),
-		Logger::phasorMatrixToString(mIntfCurrent),
+		Logger::phasorMatrixToString(**mIntfCurrent),
 		Logger::phasorMatrixToString(initialVoltage(0)),
 		Logger::phasorMatrixToString(initialVoltage(1)));
 }
@@ -129,7 +129,7 @@ void DP::Ph3::SeriesResistor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph3::SeriesResistor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = **mIntfVoltage / mResistance;
+	**mIntfCurrent = **mIntfVoltage / mResistance;
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs(mIntfCurrent(0,0)), std::arg(mIntfCurrent(0,0)));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs(**mIntfCurrent(0,0)), std::arg(**mIntfCurrent(0,0)));
 }

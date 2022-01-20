@@ -15,7 +15,7 @@ SP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
@@ -119,7 +119,7 @@ void SP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 		"\nInitial current {:s}"
 		"\n--- MNA initialization finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)));
+		Logger::phasorToString(**mIntfCurrent(0,0)));
 }
 
 void SP::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -174,7 +174,7 @@ void SP::Ph1::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute
 
 void SP::Ph1::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);
+		**mIntfCurrent(0,freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);
 	}
 }
 

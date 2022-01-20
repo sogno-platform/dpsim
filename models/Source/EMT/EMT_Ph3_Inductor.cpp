@@ -16,7 +16,7 @@ EMT::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(2);
 	mEquivCurrent = Matrix::Zero(3, 1);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("L", &mInductance, Flags::read | Flags::write);
 }
@@ -42,7 +42,7 @@ void EMT::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	**mIntfVoltage = vInitABC.real();
 	MatrixComp admittance = impedance.inverse();
-	mIntfCurrent = (admittance * vInitABC).real();
+	**mIntfCurrent = (admittance * vInitABC).real();
 
 	mSLog->info("\nInductance [H]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
@@ -56,7 +56,7 @@ void EMT::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(**mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
 }
@@ -67,7 +67,7 @@ void EMT::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	updateMatrixNodeIndices();
 	mEquivCond = timeStep / 2. * mInductance.inverse();
 	// Update internal state
-	mEquivCurrent = mEquivCond * **mIntfVoltage + mIntfCurrent;
+	mEquivCurrent = mEquivCond * **mIntfVoltage + **mIntfCurrent;
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -80,7 +80,7 @@ void EMT::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 		"\nEquiv. current {:s}"
 		"\n--- MNA initialization finished ---",
 		Logger::matrixToString(**mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(**mIntfCurrent),
 		Logger::matrixToString(mEquivCurrent));
 	mSLog->flush();
 }
@@ -141,7 +141,7 @@ void EMT::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 void EMT::Ph3::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// Update internal state
-	mEquivCurrent = mEquivCond * **mIntfVoltage + mIntfCurrent;
+	mEquivCurrent = mEquivCond * **mIntfVoltage + **mIntfCurrent;
 	if (terminalNotGrounded(0)) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), mEquivCurrent(0, 0));
 		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), mEquivCurrent(1, 0));
@@ -200,10 +200,10 @@ void EMT::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
+	**mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
 	mSLog->debug(
 		"\nUpdate Current: {:s}",
-		Logger::matrixToString(mIntfCurrent)
+		Logger::matrixToString(**mIntfCurrent)
 	);
 	mSLog->flush();
 }

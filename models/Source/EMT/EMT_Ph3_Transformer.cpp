@@ -23,7 +23,7 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(1, 1);
+	**mIntfCurrent = Matrix::Zero(1, 1);
 
 	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
 }
@@ -85,7 +85,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 
 	MatrixComp iInit = impedance.inverse() * vInitABC;
-	mIntfCurrent = iInit.real();
+	**mIntfCurrent = iInit.real();
 	**mIntfVoltage = vInitABC.real();
 
 	// Create series sub components
@@ -162,7 +162,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(**mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * mVirtualNodes[0]->initialSingleVoltage()));
@@ -295,7 +295,7 @@ void EMT::Ph3::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<
 }
 
 void EMT::Ph3::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mSubInductor->intfCurrent();
+	**mIntfCurrent = mSubInductor->intfCurrent();
 }
 
 void EMT::Ph3::Transformer::mnaUpdateVoltage(const Matrix& leftVector) {

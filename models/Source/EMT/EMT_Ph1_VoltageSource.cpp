@@ -15,7 +15,7 @@ EMT::Ph1::VoltageSource::VoltageSource(String uid, String name,	Logger::Level lo
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);
-	mIntfCurrent = Matrix::Zero(1,1);
+	**mIntfCurrent = Matrix::Zero(1,1);
 
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
@@ -89,5 +89,5 @@ void EMT::Ph1::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount)
 }
 
 void EMT::Ph1::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0,0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
+	**mIntfCurrent(0,0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
 }

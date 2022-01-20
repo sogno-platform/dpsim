@@ -35,7 +35,7 @@ EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String na
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3,1);
-	mIntfCurrent = Matrix::Zero(3,1);
+	**mIntfCurrent = Matrix::Zero(3,1);
 
 
 	// Register attributes
@@ -155,7 +155,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 
 	//save real interface quantities calculated from complex ones
 	**mIntfVoltage = intfVoltageComplex.real();
-	mIntfCurrent = intfCurrentComplex.real();
+	**mIntfCurrent = intfCurrentComplex.real();
 
 	mImpedance = Complex(mRs, mXpd);
 
@@ -215,7 +215,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 	// #### Calculations on input of time step k ####
 	// Transform interface quantities to synchronously rotating DQ reference frame
 	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
-	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, mIntfCurrent);
+	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
 	// Update electrical power (minus sign to calculate generated power from consumed current)
 	mElecActivePower = - 1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
 
@@ -302,5 +302,5 @@ void EMT::Ph3::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVecto
 void EMT::Ph3::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
 
-	mIntfCurrent = mSubInductor->attribute<Matrix>("i_intf")->get();
+	**mIntfCurrent = mSubInductor->attribute<Matrix>("i_intf")->get();
 }

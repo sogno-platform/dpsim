@@ -92,5 +92,5 @@ void DP::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 	mIdq0(0,0) = mIsr(0,0);
 	mIdq0(1,0) = mIsr(3,0);
 	mIdq0(2,0) = mIsr(6,0);
-	mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
+	**mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 }

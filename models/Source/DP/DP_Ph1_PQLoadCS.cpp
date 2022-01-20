@@ -15,7 +15,7 @@ DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name,
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	addAttribute<Real>("P", Flags::read | Flags::write);
 	addAttribute<Real>("Q", Flags::read | Flags::write);
@@ -91,7 +91,7 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 		"\nCurrent set point: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(current));
 }
@@ -135,7 +135,7 @@ void DP::Ph1::PQLoadCS::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::PQLoadCS::updateIntfValues() {
-	mIntfCurrent = mSubCurrentSource->intfCurrent();
+	**mIntfCurrent = mSubCurrentSource->intfCurrent();
 	**mIntfVoltage = mSubCurrentSource->intfVoltage();
 }
 

@@ -22,7 +22,7 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
 	addAttribute<Real>("R", &mResistance, Flags::write | Flags::read);
@@ -83,7 +83,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	Complex impedance = { mResistance, omega * mInductance };
 	mSLog->info("Reactance={} [Ohm] (referred to primary side)", omega * mInductance );
 	**mIntfVoltage(0,0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
-	mIntfCurrent(0,0) = **mIntfVoltage(0,0) / impedance;
+	**mIntfCurrent(0,0) = **mIntfVoltage(0,0) / impedance;
 
 	// Create series sub components
 	mSubInductor = std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
@@ -154,7 +154,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)),
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
@@ -259,7 +259,7 @@ void DP::Ph1::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<M
 }
 
 void DP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0,0) = mSubInductor->intfCurrent()(0, 0);
+	**mIntfCurrent(0,0) = mSubInductor->intfCurrent()(0, 0);
 }
 
 void DP::Ph1::Transformer::mnaUpdateVoltage(const Matrix& leftVector) {

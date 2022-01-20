@@ -16,7 +16,7 @@ EMT::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(2);
 	mEquivCurrent = Matrix::Zero(3, 1);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("C", &mCapacitance, Flags::read | Flags::write);
 }
@@ -41,7 +41,7 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	**mIntfVoltage = vInitABC.real();
-	mIntfCurrent = (admittance * vInitABC).real();
+	**mIntfCurrent = (admittance * vInitABC).real();
 
 	mSLog->info("\nCapacitance [F]: {:s}"
 				"\nAdmittance [S]: {:s}",
@@ -55,7 +55,7 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(**mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
 }
@@ -65,7 +65,7 @@ void EMT::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Mat
 	updateMatrixNodeIndices();
 	mEquivCond = (2.0 * mCapacitance) / timeStep;
 	// Update internal state
-	mEquivCurrent = - mIntfCurrent + - mEquivCond * **mIntfVoltage;
+	mEquivCurrent = - **mIntfCurrent + - mEquivCond * **mIntfVoltage;
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -128,7 +128,7 @@ void EMT::Ph3::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void EMT::Ph3::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mEquivCurrent = -mIntfCurrent + -mEquivCond * **mIntfVoltage;
+	mEquivCurrent = -**mIntfCurrent + -mEquivCond * **mIntfVoltage;
 	if (terminalNotGrounded(0)) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), mEquivCurrent(0, 0));
 		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), mEquivCurrent(1, 0));
@@ -182,10 +182,10 @@ void EMT::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
+	**mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
 	mSLog->debug(
 		"\nCurrent: {:s}",
-		Logger::matrixToString(mIntfCurrent)
+		Logger::matrixToString(**mIntfCurrent)
 	);
 }
 

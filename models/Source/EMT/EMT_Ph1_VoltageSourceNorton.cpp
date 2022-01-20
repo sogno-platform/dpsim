@@ -14,7 +14,7 @@ EMT::Ph1::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logg
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);
-	mIntfCurrent = Matrix::Zero(1,1);
+	**mIntfCurrent = Matrix::Zero(1,1);
 
 	addAttribute<Complex>("V_ref", &mVoltageRef, Flags::read | Flags::write);
 	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
@@ -93,5 +93,5 @@ void EMT::Ph1::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void EMT::Ph1::VoltageSourceNorton::mnaUpdateCurrent(const Matrix& leftVector) {
 	// TODO: verify signs
-	mIntfCurrent(0,0) = mEquivCurrent - **mIntfVoltage(0,0) / mResistance;
+	**mIntfCurrent(0,0) = mEquivCurrent - **mIntfVoltage(0,0) / mResistance;
 }

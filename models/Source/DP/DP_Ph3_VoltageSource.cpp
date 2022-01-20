@@ -17,7 +17,7 @@ DP::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);
-	mIntfCurrent = MatrixComp::Zero(3, 1);
+	**mIntfCurrent = MatrixComp::Zero(3, 1);
 
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
 }
@@ -123,9 +123,9 @@ void DP::Ph3::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) 
 }
 
 void DP::Ph3::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
-	mIntfCurrent(1, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
-	mIntfCurrent(2, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
+	**mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
+	**mIntfCurrent(1, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
+	**mIntfCurrent(2, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
 }
 
 void DP::Ph3::VoltageSource::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {

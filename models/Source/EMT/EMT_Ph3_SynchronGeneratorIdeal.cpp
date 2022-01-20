@@ -23,7 +23,7 @@ EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name
 		
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<MatrixComp>("V_ref", Flags::read | Flags::write);
 }
@@ -117,7 +117,7 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaPostStep(Real time, Int timeStepCount,
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateCurrent(const Matrix& leftvector) {
-	mIntfCurrent = mSubComponents[0]->attribute<Matrix>("i_intf")->get();
+	**mIntfCurrent = mSubComponents[0]->attribute<Matrix>("i_intf")->get();
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateVoltage(const Matrix& leftVector) {

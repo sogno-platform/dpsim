@@ -15,7 +15,7 @@ DP::Ph1::SVC::SVC(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(1);
 	setVirtualNodeNumber(2);
     **mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Real>("B", &mBPrev, Flags::read | Flags::write);
 	addAttribute<Real>("DeltaV", &mDeltaV, Flags::read | Flags::write);
@@ -40,7 +40,7 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 	Complex impedance = LImpedance * CImpedance / (LImpedance + CImpedance);
 
 	**mIntfVoltage(0, 0) = initialSingleVoltage(0);
-	mIntfCurrent(0,0)  = **mIntfVoltage(0,0) / impedance;
+	**mIntfCurrent(0,0)  = **mIntfVoltage(0,0) / impedance;
 
 	mBPrev = 0;
 	mPrevVoltage = **mIntfVoltage(0, 0).real();
@@ -60,9 +60,9 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 		mTr, mKr, mRefVolt, mQN, mBN, mBMax, mBMin, mBPrev);
 
 	// set voltages at virtual nodes
-	Complex VLSwitch = **mIntfVoltage(0, 0) - LImpedance * mIntfCurrent(0, 0);
+	Complex VLSwitch = **mIntfVoltage(0, 0) - LImpedance * **mIntfCurrent(0, 0);
 	mVirtualNodes[0]->setInitialVoltage(VLSwitch);
-	Complex VCSwitch = **mIntfVoltage(0, 0) - CImpedance * mIntfCurrent(0, 0);
+	Complex VCSwitch = **mIntfVoltage(0, 0) - CImpedance * **mIntfCurrent(0, 0);
 	mVirtualNodes[1]->setInitialVoltage(VCSwitch);
 
 	// create elements
@@ -101,7 +101,7 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 		"\n--- Initialization from powerflow finished ---",
 		impedance,
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
 
@@ -209,9 +209,9 @@ void DP::Ph1::SVC::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph1::SVC::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = 0;
-	mIntfCurrent(0, 0) += mSubInductor->intfCurrent()(0, 0);
-	mIntfCurrent(0, 0) += mSubCapacitor->intfCurrent()(0, 0);
+	**mIntfCurrent(0, 0) = 0;
+	**mIntfCurrent(0, 0) += mSubInductor->intfCurrent()(0, 0);
+	**mIntfCurrent(0, 0) += mSubCapacitor->intfCurrent()(0, 0);
 }
 
 void DP::Ph1::SVC::checkProtection(Real time) {

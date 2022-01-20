@@ -16,7 +16,7 @@ DP::Ph1::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	addAttribute<Real>("P", &mActivePower, Flags::read | Flags::write);
 	addAttribute<Real>("Q", &mReactivePower, Flags::read | Flags::write);
@@ -78,7 +78,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	**mIntfVoltage(0, 0) = mTerminals[0]->initialSingleVoltage();
-	mIntfCurrent(0, 0) = std::conj(Complex(mActivePower, mReactivePower) / **mIntfVoltage(0, 0));
+	**mIntfCurrent(0, 0) = std::conj(Complex(mActivePower, mReactivePower) / **mIntfVoltage(0, 0));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -89,7 +89,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		"\nReactance: {:f}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		mResistance,
 		mReactance);
@@ -150,13 +150,13 @@ void DP::Ph1::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph1::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = 0;
+	**mIntfCurrent(0, 0) = 0;
 	if (mSubResistor)
-		mIntfCurrent(0, 0) += mSubResistor->intfCurrent()(0,0);
+		**mIntfCurrent(0, 0) += mSubResistor->intfCurrent()(0,0);
 	if (mSubInductor)
-		mIntfCurrent(0, 0) += mSubInductor->intfCurrent()(0,0);
+		**mIntfCurrent(0, 0) += mSubInductor->intfCurrent()(0,0);
 	if (mSubCapacitor)
-		mIntfCurrent(0, 0) += mSubCapacitor->intfCurrent()(0,0);
+		**mIntfCurrent(0, 0) += mSubCapacitor->intfCurrent()(0,0);
 }
 
 void DP::Ph1::RXLoad::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {

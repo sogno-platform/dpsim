@@ -14,7 +14,7 @@ DP::Ph1::CurrentSource::CurrentSource(String uid, String name, Logger::Level log
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Complex>("I_ref", Flags::read | Flags::write);
 }
@@ -39,7 +39,7 @@ void DP::Ph1::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 
 	**mIntfVoltage(0,0) = initialSingleVoltage(0) - initialSingleVoltage(1);
 	mCurrentRef = attribute<Complex>("I_ref");
-	mIntfCurrent(0,0) = mCurrentRef->get();
+	**mIntfCurrent(0,0) = mCurrentRef->get();
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -49,7 +49,7 @@ void DP::Ph1::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -59,7 +59,7 @@ void DP::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	updateMatrixNodeIndices();
 
 	mCurrentRef = attribute<Complex>("I_ref");
-	mIntfCurrent(0,0) = mCurrentRef->get();
+	**mIntfCurrent(0,0) = mCurrentRef->get();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -70,12 +70,12 @@ void DP::Ph1::CurrentSource::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mIntfCurrent(0,0) = mCurrentRef->get();
+	**mIntfCurrent(0,0) = mCurrentRef->get();
 
 	if (terminalNotGrounded(0))
-		Math::setVectorElement(rightVector, matrixNodeIndex(0), -mIntfCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0), -**mIntfCurrent(0,0));
 	if (terminalNotGrounded(1))
-		Math::setVectorElement(rightVector, matrixNodeIndex(1), mIntfCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1), **mIntfCurrent(0,0));
 }
 
 void DP::Ph1::CurrentSource::MnaPostStep::execute(Real time, Int timeStepCount) {

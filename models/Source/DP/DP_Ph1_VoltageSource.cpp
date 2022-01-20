@@ -15,7 +15,7 @@ DP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
@@ -119,7 +119,7 @@ void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 		"\nInitial current {:s}"
 		"\n--- MNA initialization finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)));
+		Logger::phasorToString(**mIntfCurrent(0,0)));
 }
 
 void DP::Ph1::VoltageSource::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
@@ -224,7 +224,7 @@ void DP::Ph1::VoltageSource::MnaPostStepHarm::execute(Real time, Int timeStepCou
 
 void DP::Ph1::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);
+		**mIntfCurrent(0,freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);
 	}
 }
 
@@ -248,8 +248,8 @@ void DP::Ph1::VoltageSource::daeResidual(double ttime, const double state[], con
 	int n_offset_2 = c_offset + Pos2 +1;// current offset for second nodal equation
 	resid[c_offset] = (state[Pos2]-state[Pos1]) - state[c_offset]; // Voltage equation for Resistor
 	//resid[++c_offset] = ; //TODO : add inductance equation
-	resid[n_offset_1] += mIntfCurrent(0, 0).real();
-	resid[n_offset_2] += mIntfCurrent(0, 0).real();
+	resid[n_offset_1] += **mIntfCurrent(0, 0).real();
+	resid[n_offset_2] += **mIntfCurrent(0, 0).real();
 	off[1] += 1;
 }
 

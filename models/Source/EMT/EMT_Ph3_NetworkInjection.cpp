@@ -16,7 +16,7 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	mSLog->info("Create {} {}", this->type(), name);
 
@@ -178,5 +178,5 @@ void EMT::Ph3::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mSubVoltageSource->attribute<Matrix>("i_intf")->get();
+	**mIntfCurrent = mSubVoltageSource->attribute<Matrix>("i_intf")->get();
 }

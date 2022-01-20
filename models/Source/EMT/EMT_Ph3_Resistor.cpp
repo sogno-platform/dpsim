@@ -15,7 +15,7 @@ EMT::Ph3::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("R", &mResistance, Flags::read | Flags::write);
 }
@@ -35,7 +35,7 @@ void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	**mIntfVoltage = vInitABC.real();
 	mConductance = mResistance.inverse();
-	mIntfCurrent = (mConductance * vInitABC).real();
+	**mIntfCurrent = (mConductance * vInitABC).real();
 
 	mSLog->info("\nResistance [Ohm]: {:s}"
 				"\nConductance [S]: {:s}",
@@ -49,7 +49,7 @@ void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(**mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
 }
@@ -149,10 +149,10 @@ void EMT::Ph3::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mConductance * **mIntfVoltage;
+	**mIntfCurrent = mConductance * **mIntfVoltage;
 	mSLog->debug(
 		"\nCurrent: {:s}",
-		Logger::matrixToString(mIntfCurrent)
+		Logger::matrixToString(**mIntfCurrent)
 	);
 	mSLog->flush();
 }

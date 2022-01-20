@@ -14,7 +14,7 @@ EMT::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	mEquivCurrent = 0;
 	**mIntfVoltage = Matrix::Zero(1,1);
-	mIntfCurrent = Matrix::Zero(1,1);
+	**mIntfCurrent = Matrix::Zero(1,1);
 	setTerminalNumber(2);
 
 	addAttribute<Real>("L", &mInductance, Flags::read | Flags::write);
@@ -31,7 +31,7 @@ void EMT::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2 * PI * frequency;
 	Complex impedance = { 0, omega * mInductance };
 	**mIntfVoltage(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
-	mIntfCurrent(0,0) = (**mIntfVoltage(0,0) / impedance).real();
+	**mIntfCurrent(0,0) = (**mIntfVoltage(0,0) / impedance).real();
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -41,7 +41,7 @@ void EMT::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:f}"
 		"\n--- Initialization from powerflow finished ---",
 		**mIntfVoltage(0,0),
-		mIntfCurrent(0,0),
+		**mIntfCurrent(0,0),
 		initialSingleVoltage(0).real(),
 		initialSingleVoltage(1).real());
 }
@@ -52,7 +52,7 @@ void EMT::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 
 	mEquivCond = timeStep / (2.0 * mInductance);
 	// Update internal state
-	mEquivCurrent = mEquivCond * **mIntfVoltage(0,0) + mIntfCurrent(0,0);
+	mEquivCurrent = mEquivCond * **mIntfVoltage(0,0) + **mIntfCurrent(0,0);
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -72,7 +72,7 @@ void EMT::Ph1::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 void EMT::Ph1::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// Update internal state
-	mEquivCurrent = mEquivCond * **mIntfVoltage(0,0) + mIntfCurrent(0,0);
+	mEquivCurrent = mEquivCond * **mIntfVoltage(0,0) + **mIntfCurrent(0,0);
 	if (terminalNotGrounded(0))
 		Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent);
 	if (terminalNotGrounded(1))
@@ -98,6 +98,6 @@ void EMT::Ph1::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph1::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0,0) = mEquivCond * **mIntfVoltage(0,0) + mEquivCurrent;
+	**mIntfCurrent(0,0) = mEquivCond * **mIntfVoltage(0,0) + mEquivCurrent;
 }
 

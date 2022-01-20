@@ -15,7 +15,7 @@ DP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
 
 	addAttribute<Real>("C", &mCapacitance, Flags::read | Flags::write);
@@ -40,7 +40,7 @@ void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2 * PI * frequency;
 	Complex impedance = { 0, - 1. / (omega * mCapacitance) };
 	**mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent(0,0) = **mIntfVoltage(0,0) / impedance;
+	**mIntfCurrent(0,0) = **mIntfVoltage(0,0) / impedance;
 
 	mSLog->info("\nCapacitance [F]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
@@ -54,7 +54,7 @@ void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -72,8 +72,8 @@ void DP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 		Real prevVoltCoeffImag = - 2.*PI * mFrequencies(freq,0) * mCapacitance;
 		mPrevVoltCoeff(freq,0) = { prevVoltCoeffReal, prevVoltCoeffImag };
 
-		mEquivCurrent(freq,0) = -mIntfCurrent(0,freq) + -mPrevVoltCoeff(freq,0) * **mIntfVoltage(0,freq);
-		mIntfCurrent(0, freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
+		mEquivCurrent(freq,0) = -**mIntfCurrent(0,freq) + -mPrevVoltCoeff(freq,0) * **mIntfVoltage(0,freq);
+		**mIntfCurrent(0, freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
 	}
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -87,7 +87,7 @@ void DP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 		"\nEquiv. current {:s}"
 		"\n--- MNA initialization finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::complexToString(mEquivCurrent(0,0)));
 }
 
@@ -104,8 +104,8 @@ void DP::Ph1::Capacitor::mnaInitializeHarm(Real omega, Real timeStep, std::vecto
 		Real prevVoltCoeffImag = - 2.*PI * mFrequencies(freq,0) * mCapacitance;
 		mPrevVoltCoeff(freq,0) = { prevVoltCoeffReal, prevVoltCoeffImag };
 
-		mEquivCurrent(freq,0) = -mIntfCurrent(0,freq) + -mPrevVoltCoeff(freq,0) * **mIntfVoltage(0,freq);
-		mIntfCurrent(0, freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
+		mEquivCurrent(freq,0) = -**mIntfCurrent(0,freq) + -mPrevVoltCoeff(freq,0) * **mIntfVoltage(0,freq);
+		**mIntfCurrent(0, freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
 	}
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
@@ -169,7 +169,7 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		//mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
 		//mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
-		mEquivCurrent(freq,0) = -mIntfCurrent(0,freq)
+		mEquivCurrent(freq,0) = -**mIntfCurrent(0,freq)
 			+ -mPrevVoltCoeff(freq,0) * **mIntfVoltage(0,freq);
 
 		if (terminalNotGrounded(0))
@@ -192,7 +192,7 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		//mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
 		//mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
-		mEquivCurrent(freq,0) = -mIntfCurrent(0,freq)
+		mEquivCurrent(freq,0) = -**mIntfCurrent(0,freq)
 			+ -mPrevVoltCoeff(freq,0) * **mIntfVoltage(0,freq);
 
 		if (terminalNotGrounded(0))
@@ -205,7 +205,7 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 void DP::Ph1::Capacitor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector, Int freq) {
 		//mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
 		//mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
-		mEquivCurrent(freq,0) = -mIntfCurrent(0,freq)
+		mEquivCurrent(freq,0) = -**mIntfCurrent(0,freq)
 			+ -mPrevVoltCoeff(freq,0) * **mIntfVoltage(0,freq);
 
 		if (terminalNotGrounded(0))
@@ -272,14 +272,14 @@ void DP::Ph1::Capacitor::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freq
 
 void DP::Ph1::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(mIntfCurrent(0,freq)));
+		**mIntfCurrent(0,freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(**mIntfCurrent(0,freq)));
 	}
 }
 
 void DP::Ph1::Capacitor::mnaUpdateCurrentHarm() {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(mIntfCurrent(0,freq)));
+		**mIntfCurrent(0,freq) = mEquivCond(freq,0) * **mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(**mIntfCurrent(0,freq)));
 	}
 }

@@ -14,7 +14,7 @@ DP::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLe
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3,1);
-	mIntfCurrent = MatrixComp::Zero(3,1);
+	**mIntfCurrent = MatrixComp::Zero(3,1);
 
 	addAttribute<Real>("R_open", &mOpenResistance, Flags::read | Flags::write);
 	addAttribute<Real>("R_closed", &mClosedResistance, Flags::read | Flags::write);
@@ -25,7 +25,7 @@ void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
 	**mIntfVoltage = initialVoltage(1) - initialVoltage(0);
-	mIntfCurrent = **mIntfVoltage / impedance;
+	**mIntfCurrent = **mIntfVoltage / impedance;
 
 	mSLog->info("\n--- Initialization from powerflow ---"
 		"\nVoltage across phasor: \n{}"
@@ -35,7 +35,7 @@ void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialVoltage(0)(0,0)),
 		Logger::phasorToString(initialVoltage(1)(0,0)),
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)));
+		Logger::phasorToString(**mIntfCurrent(0,0)));
 }
 
 void DP::Ph3::SeriesSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -121,7 +121,7 @@ void DP::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void DP::Ph3::SeriesSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
 	Real impedance = (mIsClosed)? mClosedResistance : mOpenResistance;
-	mIntfCurrent = **mIntfVoltage / impedance;
+	**mIntfCurrent = **mIntfVoltage / impedance;
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs(mIntfCurrent(0,0)), std::arg(mIntfCurrent(0,0)));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs(**mIntfCurrent(0,0)), std::arg(**mIntfCurrent(0,0)));
 }

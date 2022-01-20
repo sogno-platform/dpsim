@@ -18,7 +18,7 @@ EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logg
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3,1);
-	mIntfCurrent = Matrix::Zero(3,1);
+	**mIntfCurrent = Matrix::Zero(3,1);
 
 	addAttribute<Real>("Rs", &mRs, Flags::read | Flags::write);
 	addAttribute<Real>("Ll", &mLl, Flags::read | Flags::write);
@@ -199,7 +199,7 @@ void EMT::Ph3::SynchronGeneratorDQ::initializeMatrixAndStates(){
 	}
 
 	**mIntfVoltage = mBase_V * dq0ToAbcTransform(mThetaMech, mVdq0);
-	mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
+	**mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -226,9 +226,9 @@ void EMT::Ph3::SynchronGeneratorDQ::mnaApplyRightSideVectorStamp(Matrix& rightVe
 	// Therefore, the generator is interfaced as a consumer but since the currents are reversed the equations
 	// are in generator mode.
 	if (terminalNotGrounded(0)) {
-		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), -mIntfCurrent(0,0) + mCompensationCurrent(0,0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0,1), -mIntfCurrent(1,0) + mCompensationCurrent(1,0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0,2), -mIntfCurrent(2,0) + mCompensationCurrent(2,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), -**mIntfCurrent(0,0) + mCompensationCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,1), -**mIntfCurrent(1,0) + mCompensationCurrent(1,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,2), -**mIntfCurrent(2,0) + mCompensationCurrent(2,0));
 	}
 }
 

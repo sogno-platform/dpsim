@@ -19,7 +19,7 @@ SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	setVirtualNodeNumber(1);
     setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	addAttribute<Real>("base_Voltage", &mBaseVoltage, Flags::read | Flags::write);
 	addAttribute<Real>("R_series", &mSeriesRes, Flags::read | Flags::write);
@@ -161,10 +161,10 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2. * PI * frequency;
 	Complex impedance = { mSeriesRes, omega * mSeriesInd };
 	**mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent(0, 0) = **mIntfVoltage(0, 0) / impedance;
+	**mIntfCurrent(0, 0) = **mIntfVoltage(0, 0) / impedance;
 
 	// Initialization of virtual node
-	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) + mIntfCurrent(0, 0) * mSeriesRes);
+	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) + **mIntfCurrent(0, 0) * mSeriesRes);
 
 	// Create series sub components
 	mSubSeriesResistor = std::make_shared<SP::Ph1::Resistor>(**mName + "_res", mLogLevel);
@@ -217,7 +217,7 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)),
+		Logger::phasorToString(**mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)),
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
@@ -313,7 +313,7 @@ void SP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph1::PiLine::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = mSubSeriesInductor->intfCurrent()(0, 0);
+	**mIntfCurrent(0, 0) = mSubSeriesInductor->intfCurrent()(0, 0);
 }
 
 MNAInterface::List SP::Ph1::PiLine::mnaTearGroundComponents() {

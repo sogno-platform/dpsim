@@ -16,7 +16,7 @@ SP::Ph1::Resistor::Resistor(String uid, String name,
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
 }
@@ -31,7 +31,7 @@ void SP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	mConductance = 1 / mResistance;
 	**mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent = mConductance*mIntfVoltage;
+	**mIntfCurrent = mConductance*mIntfVoltage;
 
 	mSLog->info("\nResistance [Ohm]: {:s}",
 				Logger::realToString(mResistance));
@@ -43,7 +43,7 @@ void SP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)),
+		Logger::phasorToString(**mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -98,7 +98,7 @@ void SP::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 		"\nInitial current {:s}"
 		"\n--- MNA initialization finished ---",
 		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)));
+		Logger::phasorToString(**mIntfCurrent(0, 0)));
 }
 
 void SP::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -154,8 +154,8 @@ void SP::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void SP::Ph1::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = **mIntfVoltage(0,freq) / mResistance;
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(mIntfCurrent(0,freq)));
+		**mIntfCurrent(0,freq) = **mIntfVoltage(0,freq) / mResistance;
+		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(**mIntfCurrent(0,freq)));
 	}
 }
 

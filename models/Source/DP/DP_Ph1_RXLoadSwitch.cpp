@@ -15,7 +15,7 @@ DP::Ph1::RXLoadSwitch::RXLoadSwitch(String uid, String name, Logger::Level logLe
 	setTerminalNumber(1);
 	setVirtualNodeNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Create sub components
 	mSubRXLoad = std::make_shared<DP::Ph1::RXLoad>(**mName + "_rxload", mLogLevel);
@@ -48,7 +48,7 @@ void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSwitch->initializeFromNodesAndTerminals(frequency);
 
 	**mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
-	mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
+	**mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -57,7 +57,7 @@ void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
 
@@ -139,7 +139,7 @@ void DP::Ph1::RXLoadSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<
 	this->mSubSwitch->mnaPostStep(time, timeStepCount, leftVector);
 
 	**mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
-	mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
+	**mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
 }
 
 void DP::Ph1::RXLoadSwitch::updateSwitchState(Real time) {

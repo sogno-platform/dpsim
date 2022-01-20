@@ -17,7 +17,7 @@ SP::Ph3::Resistor::Resistor(String uid, String name,
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);
-	mIntfCurrent = MatrixComp::Zero(3, 1);
+	**mIntfCurrent = MatrixComp::Zero(3, 1);
 	addAttribute<Matrix>("R", &mResistance, Flags::read | Flags::write);
 }
 
@@ -38,14 +38,14 @@ void SP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		voltMag * cos(voltPhase + 2. / 3. * M_PI),
 		voltMag * sin(voltPhase + 2. / 3. * M_PI));
 	mConductance = mResistance.inverse();
-	mIntfCurrent = mConductance * **mIntfVoltage;
+	**mIntfCurrent = mConductance * **mIntfVoltage;
 
 	mSLog->info("Node 1 : {}", Logger::phasorToString(initialVoltage(0)(0, 0)));
 	mSLog->info("Node 2 : {}", Logger::phasorToString(initialVoltage(1)(0, 0)));
 	mSLog->info("initialize {} {} voltage to {} and current to {}",
 		this->type(), this->name(),
 		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)));
+		Logger::phasorToString(**mIntfCurrent(0, 0)));
 }
 
 void SP::Ph3::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -137,9 +137,9 @@ void SP::Ph3::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph3::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mConductance * **mIntfVoltage;
-	//mLog.debug() << "Current A: " << std::abs(mIntfCurrent(0, 0))
-	//	<< "<" << std::arg(mIntfCurrent(0, 0)) << std::endl;
+	**mIntfCurrent = mConductance * **mIntfVoltage;
+	//mLog.debug() << "Current A: " << std::abs(**mIntfCurrent(0, 0))
+	//	<< "<" << std::arg(**mIntfCurrent(0, 0)) << std::endl;
 }
 
 

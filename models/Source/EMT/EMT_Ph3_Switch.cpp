@@ -17,7 +17,7 @@ EMT::Ph3::Switch::Switch(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);
-	mIntfCurrent = Matrix::Zero(1,1);
+	**mIntfCurrent = Matrix::Zero(1,1);
 
 	addAttribute<Matrix>("R_open", &mOpenResistance, Flags::read | Flags::write);
 	addAttribute<Matrix>("R_closed", &mClosedResistance, Flags::read | Flags::write);
@@ -38,7 +38,7 @@ void EMT::Ph3::Switch::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	**mIntfVoltage = vInitABC.real();
-	mIntfCurrent = (impedance.inverse() * vInitABC).real();
+	**mIntfCurrent = (impedance.inverse() * vInitABC).real();
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -48,7 +48,7 @@ void EMT::Ph3::Switch::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(**mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -198,7 +198,7 @@ void EMT::Ph3::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = (mSwitchClosed) ?
+	**mIntfCurrent = (mSwitchClosed) ?
 		mClosedResistance.inverse() * **mIntfVoltage:
 		mOpenResistance.inverse() *mIntfVoltage;
 }

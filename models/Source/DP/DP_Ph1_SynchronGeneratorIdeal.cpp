@@ -17,7 +17,7 @@ DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Complex>("V_ref", &mVoltageRef, Flags::read);
 }
@@ -47,7 +47,7 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequ
 		"\nTerminal 0 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
 
@@ -99,7 +99,7 @@ void DP::Ph1::SynchronGeneratorIdeal::mnaPostStep(Real time, Int timeStepCount, 
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaUpdateCurrent(const Matrix& leftvector) {
-	mIntfCurrent = mSubComponents[0]->attribute<MatrixComp>("i_intf")->get();
+	**mIntfCurrent = mSubComponents[0]->attribute<MatrixComp>("i_intf")->get();
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaUpdateVoltage(const Matrix& leftVector) {

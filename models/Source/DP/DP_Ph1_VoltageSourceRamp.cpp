@@ -16,7 +16,7 @@ DP::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Complex>("V_ref", &mVoltageRef, Flags::read | Flags::write);
 	addAttribute<Real>("f_src", &mSrcFreq, Flags::read | Flags::write);

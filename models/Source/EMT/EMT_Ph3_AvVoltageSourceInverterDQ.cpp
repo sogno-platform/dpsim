@@ -26,7 +26,7 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 
 	mSLog->info("Create {} {}", type(), name);
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
 	// Create electrical sub components
 	mSubResistorF = EMT::Ph3::Resistor::make(**mName + "_resF", mLogLevel);
@@ -191,7 +191,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 
 	// save real interface quantities calculated from complex ones
 	**mIntfVoltage = intfVoltageComplex.real();
-	mIntfCurrent = intfCurrentComplex.real();
+	**mIntfCurrent = intfCurrentComplex.real();
 
 	// Initialize controlled source
 	mSubCtrledVoltageSource->setParameters(mVirtualNodes[0]->initialVoltage(), 0.0);
@@ -431,9 +431,9 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCou
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {
 	if (mWithConnectionTransformer)
-		mIntfCurrent = mConnectionTransformer->attribute<Matrix>("i_intf")->get();
+		**mIntfCurrent = mConnectionTransformer->attribute<Matrix>("i_intf")->get();
 	else
-		mIntfCurrent = mSubResistorC->attribute<Matrix>("i_intf")->get();
+		**mIntfCurrent = mSubResistorC->attribute<Matrix>("i_intf")->get();
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {

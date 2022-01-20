@@ -14,7 +14,7 @@ DP::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
 		mResistance(Attribute<Real>::create("R", mAttributes)) {
 	**mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
 
 }
@@ -29,7 +29,7 @@ void DP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Complex impedance = { mResistance, 0 };
 	**mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent(0,0) = **mIntfVoltage(0,0) / impedance;
+	**mIntfCurrent(0,0) = **mIntfVoltage(0,0) / impedance;
 
 	mSLog->info("\nResistance [Ohm]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
@@ -42,7 +42,7 @@ void DP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString(**mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -59,7 +59,7 @@ void DP::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 		"\nInitial current {:s}"
 		"\n--- MNA initialization finished ---",
 		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)));
+		Logger::phasorToString(**mIntfCurrent(0, 0)));
 }
 
 void DP::Ph1::Resistor::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
@@ -152,8 +152,8 @@ void DP::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void DP::Ph1::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = **mIntfVoltage(0,freq) / mResistance;
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(mIntfCurrent(0,freq)));
+		**mIntfCurrent(0,freq) = **mIntfVoltage(0,freq) / mResistance;
+		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(**mIntfCurrent(0,freq)));
 	}
 }
 
@@ -170,8 +170,8 @@ void DP::Ph1::Resistor::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqI
 
 void DP::Ph1::Resistor::mnaUpdateCurrentHarm() {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = **mIntfVoltage(0,freq) / mResistance;
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(mIntfCurrent(0,freq)));
+		**mIntfCurrent(0,freq) = **mIntfVoltage(0,freq) / mResistance;
+		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(**mIntfCurrent(0,freq)));
 	}
 }
 
