@@ -63,24 +63,19 @@ void InterfaceVillas::open(CPS::Logger::Log log) {
 	}
 	String nodeTypeString = json_string_value(nodeType);
 
-	node::NodeType* nodeTypeStruct = node::node_type_lookup(nodeTypeString);
-	if (nodeTypeStruct != nullptr) {
-		mNode = std::make_unique<node::Node>(nodeTypeStruct);
-		int ret = 0;
-		uuid_t fakeSuperNodeUUID;
-		uuid_generate_random(fakeSuperNodeUUID);
-		ret = mNode->parse(config, fakeSuperNodeUUID);
-		if (ret < 0) {
-			mLog->error("Error: Node in InterfaceVillas failed to parse config. Parse returned code {}", ret);
-			std::exit(1);
-		}
-		ret = mNode->check();
-		if (ret < 0) {
-			mLog->error("Error: Node in InterfaceVillas failed check. Check returned code {}", ret);
-			std::exit(1);
-		}
-	} else {
-		mLog->error("Error: NodeType {} is not known to VILLASnode!", nodeTypeString);
+	mNode = node::NodeFactory::make(nodeTypeString);
+
+	int ret = 0;
+	uuid_t fakeSuperNodeUUID;
+	uuid_generate_random(fakeSuperNodeUUID);
+	ret = mNode->parse(config, fakeSuperNodeUUID);
+	if (ret < 0) {
+		mLog->error("Error: Node in InterfaceVillas failed to parse config. Parse returned code {}", ret);
+		std::exit(1);
+	}
+	ret = mNode->check();
+	if (ret < 0) {
+		mLog->error("Error: Node in InterfaceVillas failed check. Check returned code {}", ret);
 		std::exit(1);
 	}
 
@@ -114,9 +109,7 @@ void InterfaceVillas::prepareNode() {
 		std::exit(1);
 	}
 
-	ret = node::node_type_start(mNode->getType(), nullptr); //We have no SuperNode, so just hope type_start doesnt use it...
-	if (ret)
-		throw RuntimeError("Failed to start node-type: {}", *mNode->getType());
+	mNode->getFactory()->start(nullptr); //We have no SuperNode, so just hope type_start doesnt use it...
 
 	ret = mNode->start();
 	if (ret < 0) {
@@ -167,6 +160,8 @@ void InterfaceVillas::close() {
 		mLog->error("Error: failed to destroy SamplePool in InterfaceVillas. pool_destroy returned code {}", ret);
 		std::exit(1);
 	}
+
+	mNode->getFactory()->stop();
 }
 
 void InterfaceVillas::readValues(bool blocking) {

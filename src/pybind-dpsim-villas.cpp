@@ -49,7 +49,7 @@ public:
 
 			auto signal = py::dict(
 				"name"_a = s->name,
-				"type"_a = node::signal_type_to_str(s->type)
+				"type"_a = node::signalTypeToString(s->type)
 			);
 
 			if (!s->unit.empty()) {

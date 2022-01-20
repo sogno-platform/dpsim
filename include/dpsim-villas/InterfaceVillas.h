@@ -44,7 +44,7 @@ namespace DPsim {
 	protected:
 		//Villas node to send / receive data to / from
 		String mNodeConfig;
-		std::unique_ptr<node::Node> mNode;
+		node::Node* mNode;
 
 		int mQueueLength;
 		int mSampleLength;
