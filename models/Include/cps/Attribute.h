@@ -102,7 +102,7 @@ namespace CPS {
 		}
 
 		static Attribute<T>::Ptr createDynamic(String name, AttributeBase::Map &attrMap) {
-			Attribute<T>::Ptr newAttr = AttributeDynamic<T>::make(intitialValue);
+			Attribute<T>::Ptr newAttr = AttributeDynamic<T>::make();
 			attrMap[name] = newAttr;
 			return newAttr;
 		}
