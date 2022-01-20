@@ -30,6 +30,10 @@ namespace Base {
 		enum class StateType { perUnit, statorReferred, rotorReferred };
 		/// \brief Machine parameters type.
 		enum class ParameterType { perUnit, statorReferred, operational };
+		
+		/// Add governor and turbine
+		void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
+			Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
 	protected:
 		///
 		NumericalMethod mNumericalMethod; //not needed if sundials used; could instead determine implicit / explicit solve
@@ -247,6 +251,8 @@ namespace Base {
 		Bool mHasExciter = false;
 		/// Determines if Turbine and Governor are activated
 		Bool mHasTurbineGovernor = false;
+		/// Signal component modelling governor control and steam turbine
+		std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
 		// Deprecated
 		Real mInitTerminalVoltage = 0;
 		Real mInitVoltAngle = 0;
@@ -262,9 +268,6 @@ namespace Base {
 		///
 		void addExciter(Real Ta, Real Ka, Real Te, Real Ke,
 			Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
-		///
-		void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
-			Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
 
 		///
 		void calcStateSpaceMatrixDQ();

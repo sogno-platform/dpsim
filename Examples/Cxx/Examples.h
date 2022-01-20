@@ -54,6 +54,22 @@ namespace SynchronousGeneratorKundur {
         Real Lq_s = 0.2500;
         Real Ld = 1.8099;
         Real Lq = 1.7600;
+
+        // Turbine model parameters (tandem compound single reheat turbine)
+        // from P. Kundur, "Power System Stability and Control", 1994, p. 427
+        Real Ta_t = 0.3;    // fossil-fuelled or nuclear
+        Real Fa = 0.3;      // fossil-fuelled or nuclear
+        Real Tb = 7.0;      // fossil-fuelled
+        Real Fb = 0.3;      // fossil-fuelled
+        Real Tc = 0.2;      // nuclear
+        Real Fc = 0.4;      // fossil-fuelled
+
+        // Governor parameters (mechanical-hydraulic control)
+        // from P. Kundur, "Power System Stability and Control", 1994, p. 437
+        Real Kg = 20;       // 5% droop
+        Real Tsr = 0.1;
+        Real Tsm = 0.3;
+
     };
 }
 }
