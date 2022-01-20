@@ -162,6 +162,8 @@ void InterfaceVillas::close() {
 	}
 
 	mNode->getFactory()->stop();
+
+	delete mNode;
 }
 
 void InterfaceVillas::readValues(bool blocking) {
