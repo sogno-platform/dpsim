@@ -152,7 +152,7 @@ namespace Ph3 {
 		class ControlPreStep : public CPS::Task {
 		public:
 			ControlPreStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(AvVoltageSourceInverterDQ.mName + ".ControlPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
+				Task(**AvVoltageSourceInverterDQ.mName + ".ControlPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
 					mAvVoltageSourceInverterDQ.addControlPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.controlPreStep(time, timeStepCount); };
@@ -164,7 +164,7 @@ namespace Ph3 {
 		class ControlStep : public CPS::Task {
 		public:
 			ControlStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(AvVoltageSourceInverterDQ.mName + ".ControlStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
+				Task(**AvVoltageSourceInverterDQ.mName + ".ControlStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
 					mAvVoltageSourceInverterDQ.addControlStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.controlStep(time, timeStepCount); };
@@ -176,7 +176,7 @@ namespace Ph3 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(AvVoltageSourceInverterDQ.mName + ".MnaPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
+				Task(**AvVoltageSourceInverterDQ.mName + ".MnaPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
 					mAvVoltageSourceInverterDQ.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.mnaPreStep(time, timeStepCount); };
@@ -188,7 +188,7 @@ namespace Ph3 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ, Attribute<Matrix>::Ptr leftVector) :
-				Task(AvVoltageSourceInverterDQ.mName + ".MnaPostStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ), mLeftVector(leftVector) {
+				Task(**AvVoltageSourceInverterDQ.mName + ".MnaPostStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ), mLeftVector(leftVector) {
 				mAvVoltageSourceInverterDQ.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.mnaPostStep(time, timeStepCount, mLeftVector); };

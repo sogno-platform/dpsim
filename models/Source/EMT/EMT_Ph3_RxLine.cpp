@@ -61,17 +61,17 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	mVirtualNodes[0]->setInitialVoltage(vInitTerm0 + mSeriesRes * mIntfCurrent);
 
 	// Default model with virtual node in between
-	mSubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_res", mLogLevel);
+	mSubResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
 	mSubResistor->setParameters(mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubResistor->initializeFromNodesAndTerminals(frequency);
 
-	mSubInductor = std::make_shared<EMT::Ph3::Inductor>(mName + "_ind", mLogLevel);
+	mSubInductor = std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
-	mInitialResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_snubber_res", mLogLevel);
+	mInitialResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_snubber_res", mLogLevel);
 	Matrix defaultSnubRes = Matrix::Zero(3, 1);
 	defaultSnubRes <<
 		1e6, 0, 0,

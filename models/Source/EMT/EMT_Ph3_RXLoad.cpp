@@ -104,7 +104,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	if (mActivePower(0,0) != 0) {
 		mResistance = std::pow(mNomVoltage/sqrt(3), 2) * mActivePower.inverse();
 		mConductance = mResistance.inverse();
-		mSubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_res", mLogLevel);
+		mSubResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
@@ -119,7 +119,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	if (mReactance(0,0) > 0) {
 		mInductance = mReactance / (2 * PI * frequency);
 
-		mSubInductor = std::make_shared<EMT::Ph3::Inductor>(mName + "_ind", mLogLevel);
+		mSubInductor = std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
 		mSubInductor->setParameters(mInductance);
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
@@ -128,7 +128,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	else if (mReactance(0,0) < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) * mReactance.inverse();
 
-		mSubCapacitor = std::make_shared<EMT::Ph3::Capacitor>(mName + "_cap", mLogLevel);
+		mSubCapacitor = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_cap", mLogLevel);
 		mSubCapacitor->setParameters(mCapacitance);
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);

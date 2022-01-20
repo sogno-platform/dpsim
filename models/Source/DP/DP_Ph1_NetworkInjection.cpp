@@ -20,7 +20,7 @@ DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name, Logger::Lev
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
 	// Create electrical sub components
-	mSubVoltageSource = std::make_shared<DP::Ph1::VoltageSource>(mName + "_vs", mLogLevel);
+	mSubVoltageSource = std::make_shared<DP::Ph1::VoltageSource>(**mName + "_vs", mLogLevel);
 	mSubComponents.push_back(mSubVoltageSource);
 	mSLog->info("Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)

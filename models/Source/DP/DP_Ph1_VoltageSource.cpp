@@ -31,7 +31,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 }
 
 void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
-	auto srcSigSine = Signal::SineWaveGenerator::make(mName + "_sw");
+	auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
 	srcSigSine->setParameters(voltageRef, srcFreq);
 	mSrcSig = srcSigSine;
 
@@ -42,7 +42,7 @@ void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 }
 
 void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
-	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(mName + "_fr");
+	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(**mName + "_fr");
 	srcSigFreqRamp->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 	mSrcSig = srcSigFreqRamp;
 
@@ -53,7 +53,7 @@ void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart
 }
 
 void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {
-    auto srcSigFm = Signal::CosineFMGenerator::make(mName + "_fm");
+    auto srcSigFm = Signal::CosineFMGenerator::make(**mName + "_fm");
 	srcSigFm->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 	mSrcSig = srcSigFm;
 
@@ -70,7 +70,7 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
 	if (mSrcSig == nullptr) {
-		Signal::SineWaveGenerator srcSigSine(mName);
+		Signal::SineWaveGenerator srcSigSine(**mName);
 		srcSigSine.setParameters(voltageRef);
 		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
 

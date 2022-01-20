@@ -68,7 +68,7 @@ namespace CPS {
 				class MnaPreStep : public Task {
 				public:
 					MnaPreStep(Capacitor& capacitor)
-						: Task(capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
+						: Task(**capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
 							mCapacitor.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 					}
 					void execute(Real time, Int timeStepCount) { mCapacitor.mnaPreStep(time, timeStepCount); };
@@ -79,7 +79,7 @@ namespace CPS {
 				class MnaPostStep : public Task {
 				public:
 					MnaPostStep(Capacitor& capacitor, Attribute<Matrix>::Ptr leftVector)
-						: Task(capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
+						: Task(**capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
 							mCapacitor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 					}
 					void execute(Real time, Int timeStepCount) { mCapacitor.mnaPostStep(time, timeStepCount, mLeftVector); };

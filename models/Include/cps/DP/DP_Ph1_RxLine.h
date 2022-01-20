@@ -63,7 +63,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(RxLine& line) :
-				Task(line.mName + ".MnaPreStep"), mLine(line) {
+				Task(**line.mName + ".MnaPreStep"), mLine(line) {
 				mAttributeDependencies.push_back(line.mSubResistor->attribute("right_vector"));
 				mAttributeDependencies.push_back(line.mSubInductor->attribute("right_vector"));
 				mModifiedAttributes.push_back(line.attribute("right_vector"));
@@ -78,7 +78,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(RxLine& line, Attribute<Matrix>::Ptr leftVector) :
-				Task(line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
+				Task(**line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(leftVector);
 				mAttributeDependencies.push_back(line.mSubInductor->attribute("i_intf"));
 				mModifiedAttributes.push_back(line.attribute("i_intf"));

@@ -184,7 +184,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	vref= CPS::Math::singlePhaseVariableToThreePhase(mEp);
 
 	// Create sub voltage source for emf
-	mSubVoltageSource = EMT::Ph3::VoltageSource::make(mName + "_src", mLogLevel);
+	mSubVoltageSource = EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
 	mSubVoltageSource->setParameters(vref,frequency);
 	mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
@@ -192,7 +192,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
 
 	// Create sub inductor as Xpd
-	mSubInductor = EMT::Ph3::Inductor::make(mName + "_ind", mLogLevel);
+	mSubInductor = EMT::Ph3::Inductor::make(**mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(CPS::Math::singlePhaseParameterToThreePhase(mLpd));
 	mSubInductor->connect({mVirtualNodes[0],terminal(0)->node()});
 	mSubInductor->initialize(mFrequencies);

@@ -42,7 +42,7 @@ namespace Signal {
 		class Step : public Task {
 		public:
 			Step(FIRFilter& filter) :
-				Task(filter.mName + ".Step"), mFilter(filter) {
+				Task(**filter.mName + ".Step"), mFilter(filter) {
 				mAttributeDependencies.push_back(filter.mInput);
 				mModifiedAttributes.push_back(filter.attribute("output"));
 			}

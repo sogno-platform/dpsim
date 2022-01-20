@@ -77,7 +77,7 @@ namespace Signal {
         class PreStep : public Task {
         public:
 			PreStep(PLL& pll) :
-                Task(pll.mName + ".PreStep"), mPLL(pll) {
+                Task(**pll.mName + ".PreStep"), mPLL(pll) {
 					mPLL.signalAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mPLL.signalPreStep(time, timeStepCount); };
@@ -88,7 +88,7 @@ namespace Signal {
 		class Step : public Task {
 		public:
 			Step(PLL& pll) :
-				Task(pll.mName + ".Step"), mPLL(pll) {
+				Task(**pll.mName + ".Step"), mPLL(pll) {
 					mPLL.signalAddStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mPLL.signalStep(time, timeStepCount); };

@@ -82,7 +82,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(VoltageSource& voltageSource) :
-				Task(voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
+				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
 					mVoltageSource.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 				}
 				void execute(Real time, Int timeStepCount) { mVoltageSource.mnaPreStep(time, timeStepCount); };
@@ -93,7 +93,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(voltageSource.mName + ".MnaPostStep"),
+				Task(**voltageSource.mName + ".MnaPostStep"),
 				mVoltageSource(voltageSource), mLeftVector(leftVector) {
 					mVoltageSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}

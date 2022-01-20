@@ -12,7 +12,7 @@ using namespace CPS;
 
 SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
-	mSLog->info("Create {} of type {}", mName, this->type());
+	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -47,9 +47,9 @@ void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(Real freque
     if ((mPref * mP2) > 0){
         throw std::invalid_argument("power at primary and secondary sides should be opposite");
     }
-    mSubLoadSide1 = Load::make(mName + "_subLoad1", mLogLevel);
+    mSubLoadSide1 = Load::make(**mName + "_subLoad1", mLogLevel);
     mSubLoadSide1->setParameters(mPref, mQ1ref, mNominalVoltageEnd1);
-    mSubLoadSide2 = Load::make(mName + "_subLoad2", mLogLevel);
+    mSubLoadSide2 = Load::make(**mName + "_subLoad2", mLogLevel);
     mSubLoadSide2->setParameters(mP2, mQ2ref, mNominalVoltageEnd2);
     mSubLoadSide1->connect({mTerminals[0]->node()});
     mSubLoadSide2->connect({mTerminals[1]->node()});
@@ -76,7 +76,7 @@ void SP::Ph1::SolidStateTransformer::calculatePerUnitParameters(Real baseApparen
         "\nTerminal 0 power flow: {:s} p.u."
         "\nTerminal 1 power flow: {:s} p.u."
         "\n#### Calculate Per Unit Parameters finished ---",
-        mName,
+        **mName,
         Logger::complexToString(Complex(mPref_perUnit, mQ1ref_perUnit)),
         Logger::complexToString(Complex(mP2_perUnit, mQ2ref_perUnit)));
 }

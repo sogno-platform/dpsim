@@ -68,7 +68,7 @@ namespace CPS {
 				class MnaPreStep : public Task {
 				public:
 					MnaPreStep(CurrentSource& currentSource) :
-						Task(currentSource.mName + ".MnaPreStep"), mCurrentSource(currentSource) {
+						Task(**currentSource.mName + ".MnaPreStep"), mCurrentSource(currentSource) {
 							mCurrentSource.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 						}
 						void execute(Real time, Int timeStepCount) { mCurrentSource.mnaPreStep(time, timeStepCount); };
@@ -79,7 +79,7 @@ namespace CPS {
 				class MnaPostStep : public Task {
 				public:
 					MnaPostStep(CurrentSource& currentSource, Attribute<Matrix>::Ptr leftVector) :
-						Task(currentSource.mName + ".MnaPostStep"),			
+						Task(**currentSource.mName + ".MnaPostStep"),			
 						mCurrentSource(currentSource), mLeftVector(leftVector) {
 							mCurrentSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 					}

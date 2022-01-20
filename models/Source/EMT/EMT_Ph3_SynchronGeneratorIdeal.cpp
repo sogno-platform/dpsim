@@ -39,10 +39,10 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorIdeal::clone(String name) {
 void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequency) {
 
 	if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {
-		mSubVoltageSource = EMT::Ph3::VoltageSource::make(mName + "_vs", mLogLevel);
+		mSubVoltageSource = EMT::Ph3::VoltageSource::make(**mName + "_vs", mLogLevel);
 		mSubComponents.push_back(mSubVoltageSource);
 	} else {
-		mSubCurrentSource = EMT::Ph3::CurrentSource::make(mName + "_cs", mLogLevel);
+		mSubCurrentSource = EMT::Ph3::CurrentSource::make(**mName + "_cs", mLogLevel);
 		mSubComponents.push_back(mSubCurrentSource);
 	}
 

@@ -28,7 +28,7 @@ EMT::Ph3::CurrentSource::CurrentSource(String uid, String name, Logger::Level lo
 void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 	mSLog->info("\n--- Initialization from node voltages and terminal ---");	
 	if (!mParametersSet) {
-		auto srcSigSine = Signal::SineWaveGenerator::make(mName + "_sw", Logger::Level::off);
+		auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw", Logger::Level::off);
 		// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
 		srcSigSine->setParameters(Complex(1,0), frequency);
 		mSrcSig = srcSigSine; 

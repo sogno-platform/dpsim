@@ -61,7 +61,7 @@ void SP::Ph1::RXLine::setPerUnitSystem(Real baseApparentPower, Real baseOmega) {
 	/// I_base = S_base / V_line
 	mBaseCurrent = baseApparentPower / (mBaseVoltage * sqrt(3));
 /*
-	mLog.Log(Logger::Level::INFO) << "#### Set Per Unit System for " << mName << std::endl;
+	mLog.Log(Logger::Level::INFO) << "#### Set Per Unit System for " << **mName << std::endl;
 	mLog.Log(Logger::Level::INFO) << " Base Voltage= " << mBaseVoltage << " [V] " << " Base Impedance= " << mBaseImpedance << " [Ohm] " << std::endl;
 	*/
 
@@ -154,17 +154,17 @@ void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
 	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) + mIntfCurrent(0, 0) * mSeriesRes);
 
 	// Default model with virtual node in between
-	mSubResistor = std::make_shared<SP::Ph1::Resistor>(mName + "_res", mLogLevel);
+	mSubResistor = std::make_shared<SP::Ph1::Resistor>(**mName + "_res", mLogLevel);
 	mSubResistor->setParameters(mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubResistor->initializeFromNodesAndTerminals(frequency);
 
-	mSubInductor = std::make_shared<SP::Ph1::Inductor>(mName + "_ind", mLogLevel);
+	mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
-	mInitialResistor = std::make_shared<SP::Ph1::Resistor>(mName + "_snubber_res", mLogLevel);
+	mInitialResistor = std::make_shared<SP::Ph1::Resistor>(**mName + "_snubber_res", mLogLevel);
 	mInitialResistor->setParameters(1e6);
 	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromNodesAndTerminals(frequency);

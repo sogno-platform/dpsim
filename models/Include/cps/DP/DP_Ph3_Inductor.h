@@ -70,7 +70,7 @@ namespace Ph3 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(Inductor& inductor) :
-				Task(inductor.mName + ".MnaPreStep"), mInductor(inductor) {
+				Task(**inductor.mName + ".MnaPreStep"), mInductor(inductor) {
 				// actually depends on L, but then we'd have to modify the system matrix anyway
 				mModifiedAttributes.push_back(inductor.attribute("right_vector"));
 				mPrevStepDependencies.push_back(inductor.attribute("v_intf"));
@@ -86,7 +86,7 @@ namespace Ph3 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Inductor& inductor, Attribute<Matrix>::Ptr leftVector) :
-				Task(inductor.mName + ".MnaPostStep"), mInductor(inductor), mLeftVector(leftVector) {
+				Task(**inductor.mName + ".MnaPostStep"), mInductor(inductor), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(mInductor.attribute("v_intf"));
 				mModifiedAttributes.push_back(mInductor.attribute("i_intf"));

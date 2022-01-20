@@ -57,7 +57,7 @@ namespace CPS {
 				class MnaPostStep : public CPS::Task {
 				public:
 					MnaPostStep(Capacitor& capacitor, Attribute<Matrix>::Ptr leftVector)
-						: Task(capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
+						: Task(**capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
 						mAttributeDependencies.push_back(mLeftVector);
 						mModifiedAttributes.push_back(mCapacitor.attribute("v_intf"));
 						mModifiedAttributes.push_back(mCapacitor.attribute("i_intf"));

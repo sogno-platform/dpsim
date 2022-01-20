@@ -54,7 +54,7 @@ namespace Ph3 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Switch& switchRef, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(switchRef.mName + ".MnaPostStep"), mSwitch(switchRef), mLeftVector(leftSideVector) {
+				Task(**switchRef.mName + ".MnaPostStep"), mSwitch(switchRef), mLeftVector(leftSideVector) {
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(mSwitch.attribute("v_intf"));
 				mModifiedAttributes.push_back(mSwitch.attribute("i_intf"));

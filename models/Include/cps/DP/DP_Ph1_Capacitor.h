@@ -78,7 +78,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(Capacitor& capacitor)
-				: Task(capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
+				: Task(**capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
 					mCapacitor.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mCapacitor.mnaPreStep(time, timeStepCount); };
@@ -89,7 +89,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Capacitor& capacitor, Attribute<Matrix>::Ptr leftVector)
-				: Task(capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
+				: Task(**capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
 					mCapacitor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mCapacitor.mnaPostStep(time, timeStepCount, mLeftVector); };
@@ -101,7 +101,7 @@ namespace Ph1 {
 		class MnaPreStepHarm : public CPS::Task {
 		public:
 			MnaPreStepHarm(Capacitor& capacitor)
-				: Task(capacitor.mName + ".MnaPreStepHarm"),
+				: Task(**capacitor.mName + ".MnaPreStepHarm"),
 				mCapacitor(capacitor) {
 				// actually depends on C, but then we'd have to modify the system matrix anyway
 				mModifiedAttributes.push_back(capacitor.attribute("right_vector"));
@@ -116,7 +116,7 @@ namespace Ph1 {
 		class MnaPostStepHarm : public CPS::Task {
 		public:
 			MnaPostStepHarm(Capacitor& capacitor, const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
-				: Task(capacitor.mName + ".MnaPostStepHarm"),
+				: Task(**capacitor.mName + ".MnaPostStepHarm"),
 				mCapacitor(capacitor), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
 					mAttributeDependencies.push_back(mLeftVectors[i]);

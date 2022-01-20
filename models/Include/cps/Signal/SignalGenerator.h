@@ -37,7 +37,7 @@ namespace Signal {
         class Step : public Task {
 		public:
 			Step(SignalGenerator& sigGen) :
-					Task(sigGen.mName + ".Step"), mSigGen(sigGen) {
+					Task(**sigGen.mName + ".Step"), mSigGen(sigGen) {
 				mModifiedAttributes.push_back();
 			}
 

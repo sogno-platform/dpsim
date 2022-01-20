@@ -150,7 +150,7 @@ namespace Ph3 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(AvVoltSourceInverterStateSpace& avVoltSourceInverterStateSpace) :
-				Task(avVoltSourceInverterStateSpace.mName + ".MnaPreStep"), mAvVoltSourceInverterStateSpace(avVoltSourceInverterStateSpace) {
+				Task(**avVoltSourceInverterStateSpace.mName + ".MnaPreStep"), mAvVoltSourceInverterStateSpace(avVoltSourceInverterStateSpace) {
 				mAttributeDependencies.push_back(avVoltSourceInverterStateSpace.attribute("P_ref"));
 				mModifiedAttributes.push_back(mAvVoltSourceInverterStateSpace.attribute("right_vector"));
 				mModifiedAttributes.push_back(mAvVoltSourceInverterStateSpace.attribute("v_intf"));
@@ -165,7 +165,7 @@ namespace Ph3 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(AvVoltSourceInverterStateSpace& avVoltSourceInverterStateSpace, Attribute<Matrix>::Ptr leftVector) :
-				Task(avVoltSourceInverterStateSpace.mName + ".MnaPostStep"), mAvVoltSourceInverterStateSpace(avVoltSourceInverterStateSpace), mLeftVector(leftVector)
+				Task(**avVoltSourceInverterStateSpace.mName + ".MnaPostStep"), mAvVoltSourceInverterStateSpace(avVoltSourceInverterStateSpace), mLeftVector(leftVector)
 			{
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(mAvVoltSourceInverterStateSpace.attribute("i_intf"));

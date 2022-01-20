@@ -112,7 +112,7 @@ namespace Ph1 {
 
 		class MnaPreStep : public Task {
 		public:
-			MnaPreStep(SVC& svc) : Task(svc.mName + ".MnaPreStep"), mSVC(svc) {
+			MnaPreStep(SVC& svc) : Task(**svc.mName + ".MnaPreStep"), mSVC(svc) {
 				mSVC.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mSVC.mnaPreStep(time, timeStepCount); }
@@ -123,7 +123,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(SVC& svc, Attribute<Matrix>::Ptr leftVector) :
-				Task(svc.mName + ".MnaPostStep"), mSVC(svc), mLeftVector(leftVector) {
+				Task(**svc.mName + ".MnaPostStep"), mSVC(svc), mLeftVector(leftVector) {
 				mSVC.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mSVC.mnaPostStep(time, timeStepCount, mLeftVector); }

@@ -60,7 +60,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Resistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(resistor.mName + ".MnaPostStep"),
+				Task(**resistor.mName + ".MnaPostStep"),
 				mResistor(resistor), mLeftVector(leftSideVector) {
 				mResistor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
@@ -73,7 +73,7 @@ namespace Ph1 {
 		class MnaPostStepHarm : public Task {
 		public:
 			MnaPostStepHarm(Resistor& resistor, std::vector<Attribute<Matrix>::Ptr> &leftVectors) :
-				Task(resistor.mName + ".MnaPostStepHarm"),
+				Task(**resistor.mName + ".MnaPostStepHarm"),
 				mResistor(resistor), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
 					mAttributeDependencies.push_back(mLeftVectors[i]);

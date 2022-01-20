@@ -64,7 +64,7 @@ void SimPowerComp<VarType>::setTerminalNumber(UInt num) {
 template <typename VarType>
 void SimPowerComp<VarType>::setTerminals(typename SimTerminal<VarType>::List terminals) {
 	if (mNumTerminals < terminals.size()) {
-		mSLog->error("Number of Terminals is too large for Component {} - Ignoring", mName);
+		mSLog->error("Number of Terminals is too large for Component {} - Ignoring", **mName);
 		return;
 	}
 	mTerminals = terminals;
@@ -73,7 +73,7 @@ void SimPowerComp<VarType>::setTerminals(typename SimTerminal<VarType>::List ter
 template <typename VarType>
 void SimPowerComp<VarType>::setTerminalAt(typename SimTerminal<VarType>::Ptr terminal, UInt terminalPosition) {
 	if (mNumTerminals <= terminalPosition) {
-		mSLog->error("Terminal position number too large for Component {} - Ignoring", mName);
+		mSLog->error("Terminal position number too large for Component {} - Ignoring", **mName);
 		return;
 	}
 	mTerminals[terminalPosition] = terminal;
@@ -120,7 +120,7 @@ void SimPowerComp<VarType>::setVirtualNodeNumber(UInt num) {
 template <typename VarType>
 void SimPowerComp<VarType>::setVirtualNodeAt(typename SimNode<VarType>::Ptr virtualNode, UInt nodeNum) {
 	if (mNumVirtualNodes <= nodeNum) {
-		mSLog->error("Virtual Node position number too large for Component {} - Ignoring", mName);
+		mSLog->error("Virtual Node position number too large for Component {} - Ignoring", **mName);
 	}
 	mVirtualNodes[nodeNum] = virtualNode;
 	mSLog->info("Set virtual Node at position {} to Node {}, simulation node {}",

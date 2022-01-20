@@ -131,7 +131,7 @@ void SP::Ph1::Capacitor::setBaseVoltage(Real baseVoltage){
 }
 
 void SP::Ph1::Capacitor::calculatePerUnitParameters(Real baseApparentPower){
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
+	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
     mBaseApparentPower = baseApparentPower;
 	mSLog->info("Base Power={} [VA]", baseApparentPower);
 

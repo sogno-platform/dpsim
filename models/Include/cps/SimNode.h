@@ -110,7 +110,7 @@ namespace CPS {
 		class MnaPostStepHarm : public Task {
 		public:
 			MnaPostStepHarm(SimNode& node, const std::vector<Attribute<Matrix>::Ptr> &leftVectors) :
-				Task(node.mName + ".MnaPostStepHarm"),
+				Task(**node.mName + ".MnaPostStepHarm"),
 				mNode(node), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
 					mAttributeDependencies.push_back(mLeftVectors[i]);

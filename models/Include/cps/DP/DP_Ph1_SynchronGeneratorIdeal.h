@@ -61,7 +61,7 @@ namespace Ph1 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(SynchronGeneratorIdeal& SynchronGeneratorIdeal) :
-				Task(SynchronGeneratorIdeal.mName + ".MnaPreStep"), mSynchronGeneratorIdeal(SynchronGeneratorIdeal) {
+				Task(**SynchronGeneratorIdeal.mName + ".MnaPreStep"), mSynchronGeneratorIdeal(SynchronGeneratorIdeal) {
 					mSynchronGeneratorIdeal.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mSynchronGeneratorIdeal.mnaPreStep(time, timeStepCount); };
@@ -73,7 +73,7 @@ namespace Ph1 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(SynchronGeneratorIdeal& SynchronGeneratorIdeal, Attribute<Matrix>::Ptr leftVector) :
-				Task(SynchronGeneratorIdeal.mName + ".MnaPostStep"), mSynchronGeneratorIdeal(SynchronGeneratorIdeal), mLeftVector(leftVector) {
+				Task(**SynchronGeneratorIdeal.mName + ".MnaPostStep"), mSynchronGeneratorIdeal(SynchronGeneratorIdeal), mLeftVector(leftVector) {
 				mSynchronGeneratorIdeal.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mSynchronGeneratorIdeal.mnaPostStep(time, timeStepCount, mLeftVector); };

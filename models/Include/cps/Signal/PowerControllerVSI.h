@@ -102,7 +102,7 @@ namespace Signal {
 		class PreStep : public Task {
         public:
 			PreStep(PowerControllerVSI& powerControllerVSI) :
-                Task(powerControllerVSI.mName + ".PreStep"), mPowerControllerVSI(powerControllerVSI) {
+                Task(**powerControllerVSI.mName + ".PreStep"), mPowerControllerVSI(powerControllerVSI) {
 					mPowerControllerVSI.signalAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mPowerControllerVSI.signalPreStep(time, timeStepCount); };
@@ -112,7 +112,7 @@ namespace Signal {
 		class Step : public Task {
 		public:
 			Step(PowerControllerVSI& powerControllerVSI) :
-				Task(powerControllerVSI.mName + ".Step"), mPowerControllerVSI(powerControllerVSI) {
+				Task(**powerControllerVSI.mName + ".Step"), mPowerControllerVSI(powerControllerVSI) {
 					mPowerControllerVSI.signalAddStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mPowerControllerVSI.signalStep(time, timeStepCount); };

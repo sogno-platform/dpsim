@@ -45,7 +45,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 	if (mActivePower != 0) {
 		mResistance = std::pow(mNomVoltage, 2) / mActivePower;
-		mSubResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_res", mLogLevel);
+		mSubResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
@@ -62,7 +62,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 	if (mReactance > 0) {
 		mInductance = mReactance / (2.*PI*frequency);
-		mSubInductor = std::make_shared<DP::Ph1::Inductor>(mName + "_ind", mLogLevel);
+		mSubInductor = std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 		mSubInductor->setParameters(mInductance);
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
@@ -70,7 +70,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	}
 	else if (mReactance < 0) {
 		mCapacitance = -1. / (2.*PI*frequency) / mReactance;
-		mSubCapacitor = std::make_shared<DP::Ph1::Capacitor>(mName + "_cap", mLogLevel);
+		mSubCapacitor = std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap", mLogLevel);
 		mSubCapacitor->setParameters(mCapacitance);
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);

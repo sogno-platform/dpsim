@@ -80,7 +80,7 @@ namespace Ph1 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(NetworkInjection& networkInjection) :
-				Task(networkInjection.mName + ".MnaPreStep"), mNetworkInjection(networkInjection) {
+				Task(**networkInjection.mName + ".MnaPreStep"), mNetworkInjection(networkInjection) {
 					mNetworkInjection.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPreStep(time, timeStepCount); };
@@ -92,7 +92,7 @@ namespace Ph1 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(NetworkInjection& networkInjection, Attribute<Matrix>::Ptr leftVector) :
-				Task(networkInjection.mName + ".MnaPostStep"), mNetworkInjection(networkInjection), mLeftVector(leftVector) {
+				Task(**networkInjection.mName + ".MnaPostStep"), mNetworkInjection(networkInjection), mLeftVector(leftVector) {
 				mNetworkInjection.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPostStep(time, timeStepCount, mLeftVector); };

@@ -36,7 +36,7 @@ void SP::Ph1::Shunt::setBaseVoltage(Real baseVoltage) {
 
 
 void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
+	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
 	mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);

@@ -89,13 +89,13 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfVoltage = vInitABC.real();
 
 	// Create series sub components
-	mSubInductor = std::make_shared<EMT::Ph3::Inductor>(mName + "_ind", mLogLevel);
+	mSubInductor = std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
 	mSubComponents.push_back(mSubInductor);
 	mSubInductor->setParameters(mInductance);
 
 	if (mNumVirtualNodes == 3) {
 		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
-		mSubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_res", mLogLevel);
+		mSubResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
 		mSubComponents.push_back(mSubResistor);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ node(0), mVirtualNodes[2] });
@@ -112,7 +112,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// A snubber conductance is added on the higher voltage side
 	Real snubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1),2) / pSnub;
 	mSnubberResistance1 = Math::singlePhaseParameterToThreePhase(snubberResistance1);
-	mSubSnubResistor1 = std::make_shared<EMT::Ph3::Resistor>(mName + "_snub_res1", mLogLevel);
+	mSubSnubResistor1 = std::make_shared<EMT::Ph3::Resistor>(**mName + "_snub_res1", mLogLevel);
 	mSubSnubResistor1->setParameters(mSnubberResistance1);
 	mSubSnubResistor1->connect({ node(0), EMT::SimNode::GND });
 	mSLog->info("Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]", node(0)->name(), Logger::matrixToString(mSnubberResistance1));
@@ -121,7 +121,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// A snubber conductance is added on the lower voltage side
 	Real snubberResistance2 = std::pow(std::abs(mNominalVoltageEnd2),2) / pSnub;
 	mSnubberResistance2 = Math::singlePhaseParameterToThreePhase(snubberResistance2);
-	mSubSnubResistor2 = std::make_shared<EMT::Ph3::Resistor>(mName + "_snub_res2", mLogLevel);
+	mSubSnubResistor2 = std::make_shared<EMT::Ph3::Resistor>(**mName + "_snub_res2", mLogLevel);
 	mSubSnubResistor2->setParameters(mSnubberResistance2);
 	mSubSnubResistor2->connect({ node(1), EMT::SimNode::GND });
 	mSLog->info("Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]", node(1)->name(), Logger::matrixToString(mSnubberResistance2));
@@ -130,7 +130,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
 	// Real snubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltageEnd1),2) / omega;
 	// mSnubberCapacitance1 = Math::singlePhaseParameterToThreePhase*(snubberCapacitance1);
-	// mSubSnubCapacitor1 = std::make_shared<EMT::Ph3::Capacitor>(mName + "_snub_cap1", mLogLevel);
+	// mSubSnubCapacitor1 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap1", mLogLevel);
 	// mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);
 	// mSubSnubCapacitor1->connect({ node(0), EMT::SimNode::GND });
 	// mSLog->info("Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::matrixToString(mSnubberCapacitance1));
@@ -139,7 +139,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// A snubber capacitance is added to lower voltage side
 	Real snubberCapacitance2 = qSnub / std::pow(std::abs(mNominalVoltageEnd2),2) / omega;
 	mSnubberCapacitance2 = Math::singlePhaseParameterToThreePhase(snubberCapacitance2);
-	mSubSnubCapacitor2 = std::make_shared<EMT::Ph3::Capacitor>(mName + "_snub_cap2", mLogLevel);
+	mSubSnubCapacitor2 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap2", mLogLevel);
 	mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
 	mSubSnubCapacitor2->connect({ node(1), EMT::SimNode::GND });
 	mSLog->info("Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]", node(1)->name(), Logger::matrixToString(mSnubberCapacitance2));

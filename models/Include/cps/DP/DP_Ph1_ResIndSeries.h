@@ -67,7 +67,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(Inductor& ResIndSeries) :
-				Task(inductor.mName + ".MnaPreStep"), mResIndSeries(resIndSeries) {
+				Task(**inductor.mName + ".MnaPreStep"), mResIndSeries(resIndSeries) {
 				// actually depends on L, but then we'd have to modify the system matrix anyway
 				mModifiedAttributes.push_back(mResIndSeries.attribute("right_vector"));
 				mPrevStepDependencies.push_back(mResIndSeries.attribute("v_intf"));
@@ -81,7 +81,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(ResIndSeries& inductor, Attribute<Matrix>::Ptr leftVector) :
-				Task(inductor.mName + ".MnaPostStep"),
+				Task(**inductor.mName + ".MnaPostStep"),
 				mResIndSeries(resIndSeries), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(mResIndSeries.attribute("v_intf"));

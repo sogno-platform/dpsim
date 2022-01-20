@@ -87,7 +87,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(VoltageSource& voltageSource) :
-				Task(voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
+				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
 					mVoltageSource.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 				}
 				void execute(Real time, Int timeStepCount) { mVoltageSource.mnaPreStep(time, timeStepCount); };
@@ -98,7 +98,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(voltageSource.mName + ".MnaPostStep"),
+				Task(**voltageSource.mName + ".MnaPostStep"),
 				mVoltageSource(voltageSource), mLeftVector(leftVector) {
 					mVoltageSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
@@ -111,7 +111,7 @@ namespace Ph1 {
 		class MnaPreStepHarm : public CPS::Task {
 		public:
 			MnaPreStepHarm(VoltageSource& voltageSource) :
-				Task(voltageSource.mName + ".MnaPreStepHarm"),
+				Task(**voltageSource.mName + ".MnaPreStepHarm"),
 				mVoltageSource(voltageSource) {
 				mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
 				mModifiedAttributes.push_back(mVoltageSource.attribute("right_vector"));
@@ -125,7 +125,7 @@ namespace Ph1 {
 		class MnaPostStepHarm : public CPS::Task {
 		public:
 			MnaPostStepHarm(VoltageSource& voltageSource, const std::vector<Attribute<Matrix>::Ptr> &leftVectors) :
-				Task(voltageSource.mName + ".MnaPostStepHarm"),
+				Task(**voltageSource.mName + ".MnaPostStepHarm"),
 				mVoltageSource(voltageSource), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
 					mAttributeDependencies.push_back(mLeftVectors[i]);

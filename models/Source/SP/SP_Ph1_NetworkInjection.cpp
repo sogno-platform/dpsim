@@ -14,7 +14,7 @@ using namespace CPS;
 SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
     Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
 
-	mSLog->info("Create {} of type {}", mName, this->type());
+	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -22,7 +22,7 @@ SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
 	setTerminalNumber(1);
 
 	// Create electrical sub components
-	mSubVoltageSource = std::make_shared<SP::Ph1::VoltageSource>(mName + "_vs", mLogLevel);
+	mSubVoltageSource = std::make_shared<SP::Ph1::VoltageSource>(**mName + "_vs", mLogLevel);
 	mSubComponents.push_back(mSubVoltageSource);
 	mSLog->info("Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)
@@ -82,7 +82,7 @@ void SP::Ph1::NetworkInjection::setBaseVoltage(Real baseVoltage) {
 }
 
 void SP::Ph1::NetworkInjection::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-    mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
+    mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
 	mSLog->info("Base Voltage={} [V]", mBaseVoltage);
 
     mVoltageSetPointPerUnit = mVoltageSetPoint / mBaseVoltage;

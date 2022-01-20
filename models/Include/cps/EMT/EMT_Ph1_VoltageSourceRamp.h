@@ -65,7 +65,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(VoltageSourceRamp& voltageSource) :
-				Task(voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
+				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
 				// rampTime etc. aren't attributes (yet), so doesn't really depend on anything
 				mModifiedAttributes.push_back(voltageSource.mSubVoltageSource->attribute("V_ref"));
 			}

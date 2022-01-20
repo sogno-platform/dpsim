@@ -110,13 +110,13 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfCurrent(0, 0) = mIntfVoltage(0, 0) / impedance;
 
 	// Create series sub components
-	mSubInductor = std::make_shared<SP::Ph1::Inductor>(mUID + "_ind", mName + "_ind", Logger::Level::off);
+	mSubInductor = std::make_shared<SP::Ph1::Inductor>(mUID + "_ind", **mName + "_ind", Logger::Level::off);
 	mSubInductor->setParameters(mInductance);
 	mSubComponents.push_back(mSubInductor);
 
 	if (mNumVirtualNodes == 3) {
 		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
-		mSubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_res", mName + "_res", Logger::Level::off);
+		mSubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_res", **mName + "_res", Logger::Level::off);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ node(0), mVirtualNodes[2] });
 		mSubInductor->connect({ mVirtualNodes[2], mVirtualNodes[0] });
@@ -133,7 +133,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 		// A snubber conductance is added on the higher voltage side
 		mSnubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1),2) / pSnub;
-		mSubSnubResistor1 = std::make_shared<SP::Ph1::Resistor>(mName + "_snub_res1", mLogLevel);
+		mSubSnubResistor1 = std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
 		mSubSnubResistor1->setParameters(mSnubberResistance1);
 		mSubSnubResistor1->connect({ node(0), SP::SimNode::GND });
 		mSLog->info("Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]", node(0)->name(), Logger::realToString(mSnubberResistance1));
@@ -142,7 +142,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 		// A snubber conductance is added on the lower voltage side
 		mSnubberResistance2 = std::pow(std::abs(mNominalVoltageEnd2),2) / pSnub;
-		mSubSnubResistor2 = std::make_shared<SP::Ph1::Resistor>(mName + "_snub_res2", mLogLevel);
+		mSubSnubResistor2 = std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
 		mSubSnubResistor2->setParameters(mSnubberResistance2);
 		mSubSnubResistor2->connect({ node(1), SP::SimNode::GND });
 		mSLog->info("Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]", node(1)->name(), Logger::realToString(mSnubberResistance2));
@@ -151,7 +151,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 		// // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
 		// mSnubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltageEnd1),2) / mNominalOmega;
-		// mSubSnubCapacitor1 = std::make_shared<SP::Ph1::Capacitor>(mName + "_snub_cap1", mLogLevel);
+		// mSubSnubCapacitor1 = std::make_shared<SP::Ph1::Capacitor>(**mName + "_snub_cap1", mLogLevel);
 		// mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);
 		// mSubSnubCapacitor1->connect({ node(0), SP::SimNode::GND });
 		// mSLog->info("Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::realToString(mSnubberCapacitance1));
@@ -160,7 +160,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 		// A snubber capacitance is added to lower voltage side
 		mSnubberCapacitance2 = qSnub / std::pow(std::abs(mNominalVoltageEnd2),2) / mNominalOmega;
-		mSubSnubCapacitor2 = std::make_shared<SP::Ph1::Capacitor>(mName + "_snub_cap2", mLogLevel);
+		mSubSnubCapacitor2 = std::make_shared<SP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
 		mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
 		mSubSnubCapacitor2->connect({ node(1), SP::SimNode::GND });
 		mSLog->info("Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]", node(1)->name(), Logger::realToString(mSnubberCapacitance2));
@@ -201,7 +201,7 @@ void SP::Ph1::Transformer::setBaseVoltage(Real baseVoltage) {
 }
 
 void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
+	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
     mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);

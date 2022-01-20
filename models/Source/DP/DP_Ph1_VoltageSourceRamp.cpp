@@ -46,7 +46,7 @@ void DP::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
 	if (mVoltageRef == Complex(0, 0))
 		mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
-	mSubVoltageSource = VoltageSource::make(mName + "_src", mLogLevel);
+	mSubVoltageSource = VoltageSource::make(**mName + "_src", mLogLevel);
 	mSubVoltageSource->setParameters(mVoltageRef, mSrcFreq);
 	mSubVoltageSource->connect({ node(0), node(1) });
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);

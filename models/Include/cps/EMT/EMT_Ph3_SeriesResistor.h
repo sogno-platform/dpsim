@@ -51,7 +51,7 @@ namespace Ph3 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(SeriesResistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(resistor.mName + ".MnaPostStep"),
+				Task(**resistor.mName + ".MnaPostStep"),
 				mResistor(resistor), mLeftVector(leftSideVector) {
 
 				mAttributeDependencies.push_back(mLeftVector);

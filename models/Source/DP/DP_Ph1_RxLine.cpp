@@ -37,19 +37,19 @@ void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(0) + mIntfCurrent(0, 0) * mSeriesRes );
 
 	// Default model with virtual node in between
-	mSubResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_res", mLogLevel);
+	mSubResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
 	mSubResistor->setParameters(mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubResistor->initialize(mFrequencies);
 	mSubResistor->initializeFromNodesAndTerminals(frequency);
 
-	mSubInductor = std::make_shared<DP::Ph1::Inductor>(mName + "_ind", mLogLevel);
+	mSubInductor = std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubInductor->initialize(mFrequencies);
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
-	mInitialResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_snubber_res", mLogLevel);
+	mInitialResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_snubber_res", mLogLevel);
 	mInitialResistor->setParameters(1e6);
 	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initialize(mFrequencies);

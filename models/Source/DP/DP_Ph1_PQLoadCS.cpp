@@ -75,7 +75,7 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 	else
 		current = 0;
 
-	mSubCurrentSource = std::make_shared<DP::Ph1::CurrentSource>(mName + "_cs", mLogLevel);
+	mSubCurrentSource = std::make_shared<DP::Ph1::CurrentSource>(**mName + "_cs", mLogLevel);
 	mSubCurrentSource->setParameters(current);
 	mCurrentSourceRef = mSubCurrentSource->attribute<Complex>("I_ref");
 	// A positive power should result in a positive current to ground.

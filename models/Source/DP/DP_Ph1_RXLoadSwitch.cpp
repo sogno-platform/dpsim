@@ -18,8 +18,8 @@ DP::Ph1::RXLoadSwitch::RXLoadSwitch(String uid, String name, Logger::Level logLe
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Create sub components
-	mSubRXLoad = std::make_shared<DP::Ph1::RXLoad>(mName + "_rxload", mLogLevel);
-	mSubSwitch = std::make_shared<DP::Ph1::Switch>(mName + "_switch", mLogLevel);
+	mSubRXLoad = std::make_shared<DP::Ph1::RXLoad>(**mName + "_rxload", mLogLevel);
+	mSubSwitch = std::make_shared<DP::Ph1::Switch>(**mName + "_switch", mLogLevel);
 	mSubComponents.push_back(mSubRXLoad);
 	mSubComponents.push_back(mSubSwitch);
 	// Set switch default values

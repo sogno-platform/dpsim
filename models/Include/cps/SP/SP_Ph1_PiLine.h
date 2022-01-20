@@ -136,7 +136,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(PiLine& line, Attribute<Matrix>::Ptr leftVector) :
-				Task(line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
+				Task(**line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
 					mLine.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mLine.mnaPostStep(time, timeStepCount, mLeftVector); };

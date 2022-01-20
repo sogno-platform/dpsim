@@ -71,7 +71,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(VoltageSourceNorton& voltageSource) :
-				Task(voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
+				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
 				mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
 				mModifiedAttributes.push_back(voltageSource.attribute("right_vector"));
 			}
@@ -86,7 +86,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(VoltageSourceNorton& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource),
+				Task(**voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource),
 				mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(leftVector);
 				mModifiedAttributes.push_back(voltageSource.attribute("i_intf"));

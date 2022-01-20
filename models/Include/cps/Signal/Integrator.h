@@ -56,7 +56,7 @@ namespace Signal {
         class PreStep : public Task {
         public:
 			PreStep(Integrator& integrator) :
-                Task(integrator.mName + ".PreStep"), mIntegrator(integrator) {
+                Task(**integrator.mName + ".PreStep"), mIntegrator(integrator) {
 					mIntegrator.signalAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mIntegrator.signalPreStep(time, timeStepCount); };
@@ -67,7 +67,7 @@ namespace Signal {
 		class Step : public Task {
 		public:
 			Step(Integrator& integrator) :
-				Task(integrator.mName + ".Step"), mIntegrator(integrator) {
+				Task(**integrator.mName + ".Step"), mIntegrator(integrator) {
 					mIntegrator.signalAddStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mIntegrator.signalStep(time, timeStepCount); };

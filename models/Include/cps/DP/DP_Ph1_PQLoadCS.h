@@ -66,7 +66,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(PQLoadCS& load) :
-				Task(load.mName + ".MnaPreStep"), mLoad(load) {
+				Task(**load.mName + ".MnaPreStep"), mLoad(load) {
 				mAttributeDependencies.push_back(load.attribute("P"));
 				mAttributeDependencies.push_back(load.attribute("Q"));
 				mAttributeDependencies.push_back(load.attribute("V_nom"));
@@ -82,7 +82,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(PQLoadCS& load) :
-				Task(load.mName + ".MnaPostStep"), mLoad(load) {
+				Task(**load.mName + ".MnaPostStep"), mLoad(load) {
 				mAttributeDependencies.push_back(load.mSubCurrentSource->attribute("i_intf"));
 				mAttributeDependencies.push_back(load.mSubCurrentSource->attribute("v_intf"));
 				mModifiedAttributes.push_back(load.attribute("i_intf"));

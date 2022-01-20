@@ -21,7 +21,7 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 	mSLog->info("Create {} {}", this->type(), name);
 
 	// Create electrical sub components
-	mSubVoltageSource = std::make_shared<EMT::Ph3::VoltageSource>(mName + "_vs", mLogLevel);
+	mSubVoltageSource = std::make_shared<EMT::Ph3::VoltageSource>(**mName + "_vs", mLogLevel);
 	mSubComponents.push_back(mSubVoltageSource);
 	mSLog->info("Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)

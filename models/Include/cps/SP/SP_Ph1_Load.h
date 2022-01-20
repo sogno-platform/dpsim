@@ -108,7 +108,7 @@ namespace SP { namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Load& load, Attribute<Matrix>::Ptr leftVector) :
-				Task(load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
+				Task(**load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(leftVector);
 				if (load.mSubResistor)
 					mAttributeDependencies.push_back(load.mSubResistor->attribute("i_intf"));

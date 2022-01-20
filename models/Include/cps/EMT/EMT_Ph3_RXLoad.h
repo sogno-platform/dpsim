@@ -89,7 +89,7 @@ namespace CPS {
 				class MnaPreStep : public Task {
 				public:
 					MnaPreStep(RXLoad& load) :
-						Task(load.mName + ".MnaPreStep"), mLoad(load) {
+						Task(**load.mName + ".MnaPreStep"), mLoad(load) {
 						if (load.mSubResistor)
 							mAttributeDependencies.push_back(load.mSubResistor->attribute("right_vector"));
 						if (load.mSubInductor)
@@ -109,7 +109,7 @@ namespace CPS {
 				class MnaPostStep : public Task {
 				public:
 					MnaPostStep(RXLoad& load, Attribute<Matrix>::Ptr leftVector) :
-						Task(load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
+						Task(**load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
 						mAttributeDependencies.push_back(leftVector);
 						if (load.mSubResistor)
 							mAttributeDependencies.push_back(load.mSubResistor->attribute("i_intf"));

@@ -269,7 +269,7 @@ namespace Ph3 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(SynchronGeneratorVBR& SynchronGeneratorVBR) :
-				Task(SynchronGeneratorVBR.mName + ".MnaPreStep"), mSynchronGeneratorVBR(SynchronGeneratorVBR) {
+				Task(**SynchronGeneratorVBR.mName + ".MnaPreStep"), mSynchronGeneratorVBR(SynchronGeneratorVBR) {
 					mSynchronGeneratorVBR.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mSynchronGeneratorVBR.mnaPreStep(time, timeStepCount); };
@@ -281,7 +281,7 @@ namespace Ph3 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(SynchronGeneratorVBR& SynchronGeneratorVBR, Attribute<Matrix>::Ptr leftVector) :
-				Task(SynchronGeneratorVBR.mName + ".MnaPostStep"), mSynchronGeneratorVBR(SynchronGeneratorVBR), mLeftVector(leftVector) {
+				Task(**SynchronGeneratorVBR.mName + ".MnaPostStep"), mSynchronGeneratorVBR(SynchronGeneratorVBR), mLeftVector(leftVector) {
 				mSynchronGeneratorVBR.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mSynchronGeneratorVBR.mnaPostStep(time, timeStepCount, mLeftVector); };

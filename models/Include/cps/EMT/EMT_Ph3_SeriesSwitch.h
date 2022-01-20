@@ -59,7 +59,7 @@ namespace Ph3 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(SeriesSwitch& sSwitch, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(sSwitch.mName + ".MnaPostStep"),
+				Task(**sSwitch.mName + ".MnaPostStep"),
 				mSwitch(sSwitch), mLeftVector(leftSideVector) {
 
 				mAttributeDependencies.push_back(mLeftVector);

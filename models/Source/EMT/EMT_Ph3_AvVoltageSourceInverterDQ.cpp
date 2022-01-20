@@ -16,7 +16,7 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 	mPhaseType = PhaseType::ABC;
 	if (withTrafo) {
 		setVirtualNodeNumber(4);
-		mConnectionTransformer = EMT::Ph3::Transformer::make(mName + "_trans", mName + "_trans", mLogLevel, false);
+		mConnectionTransformer = EMT::Ph3::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel, false);
 		mSubComponents.push_back(mConnectionTransformer);
 	} else {
 		setVirtualNodeNumber(3);
@@ -29,11 +29,11 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 	mIntfCurrent = Matrix::Zero(3, 1);
 
 	// Create electrical sub components
-	mSubResistorF = EMT::Ph3::Resistor::make(mName + "_resF", mLogLevel);
-	mSubResistorC = EMT::Ph3::Resistor::make(mName + "_resC", mLogLevel);
-	mSubCapacitorF = EMT::Ph3::Capacitor::make(mName + "_capF", mLogLevel);
-	mSubInductorF = EMT::Ph3::Inductor::make(mName + "_indF", mLogLevel);
-	mSubCtrledVoltageSource = EMT::Ph3::VoltageSource::make(mName + "_src", mLogLevel);
+	mSubResistorF = EMT::Ph3::Resistor::make(**mName + "_resF", mLogLevel);
+	mSubResistorC = EMT::Ph3::Resistor::make(**mName + "_resC", mLogLevel);
+	mSubCapacitorF = EMT::Ph3::Capacitor::make(**mName + "_capF", mLogLevel);
+	mSubInductorF = EMT::Ph3::Inductor::make(**mName + "_indF", mLogLevel);
+	mSubCtrledVoltageSource = EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
 	mSubComponents.push_back(mSubResistorF);
 	mSubComponents.push_back(mSubResistorC);
 	mSubComponents.push_back(mSubCapacitorF);
@@ -45,8 +45,8 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 		mSLog->info("- {}", subcomp->name());
 
 	// Create control sub components
-	mPLL = Signal::PLL::make(mName + "_PLL", mLogLevel);
-	mPowerControllerVSI = Signal::PowerControllerVSI::make(mName + "_PowerControllerVSI", mLogLevel);
+	mPLL = Signal::PLL::make(**mName + "_PLL", mLogLevel);
+	mPowerControllerVSI = Signal::PowerControllerVSI::make(**mName + "_PowerControllerVSI", mLogLevel);
 
 	// general variables of inverter
 	addAttribute<Real>("Omega_nom", &mOmegaN, Flags::read | Flags::write);

@@ -64,7 +64,7 @@ namespace Ph3 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(VoltageSource& voltageSource) :
-				Task(voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
+				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
 				mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
 				mModifiedAttributes.push_back(mVoltageSource.attribute("right_vector"));
 				mModifiedAttributes.push_back(mVoltageSource.attribute("v_intf"));
@@ -79,7 +79,7 @@ namespace Ph3 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource), mLeftVector(leftVector)
+				Task(**voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource), mLeftVector(leftVector)
 			{
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(mVoltageSource.attribute("i_intf"));

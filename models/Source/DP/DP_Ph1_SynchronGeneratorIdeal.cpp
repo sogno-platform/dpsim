@@ -31,7 +31,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorIdeal::clone(String name) {
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequency) {
-	mSubVoltageSource = DP::Ph1::VoltageSource::make(mName + "_src", mLogLevel);
+	mSubVoltageSource = DP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
 	mSubComponents.push_back(mSubVoltageSource);
 	mSubComponents[0]->connect({ SimNode::GND, node(0) });
 	mSubComponents[0]->setVirtualNodeAt(mVirtualNodes[0], 0);

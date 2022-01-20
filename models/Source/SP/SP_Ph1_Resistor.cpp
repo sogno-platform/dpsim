@@ -55,7 +55,7 @@ void SP::Ph1::Resistor::setBaseVoltage(Real baseVoltage){
 }
 
 void SP::Ph1::Resistor::calculatePerUnitParameters(Real baseApparentPower){
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
+	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
     mBaseApparentPower = baseApparentPower;
 	mSLog->info("Base Power={} [VA]", baseApparentPower);
 

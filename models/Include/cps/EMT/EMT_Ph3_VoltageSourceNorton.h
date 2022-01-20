@@ -62,7 +62,7 @@ namespace CPS {
 				class MnaPreStep : public CPS::Task {
 				public:
 					MnaPreStep(VoltageSourceNorton& VoltageSourceNorton) :
-						Task(VoltageSourceNorton.mName + ".MnaPreStep"), mVoltageSourceNorton(VoltageSourceNorton) {
+						Task(**VoltageSourceNorton.mName + ".MnaPreStep"), mVoltageSourceNorton(VoltageSourceNorton) {
 						mAttributeDependencies.push_back(VoltageSourceNorton.attribute("V_ref"));
 						mModifiedAttributes.push_back(mVoltageSourceNorton.attribute("right_vector"));
 						mModifiedAttributes.push_back(mVoltageSourceNorton.attribute("v_intf"));
@@ -77,7 +77,7 @@ namespace CPS {
 				class MnaPostStep : public CPS::Task {
 				public:
 					MnaPostStep(VoltageSourceNorton& VoltageSourceNorton, Attribute<Matrix>::Ptr leftVector) :
-						Task(VoltageSourceNorton.mName + ".MnaPostStep"), mVoltageSourceNorton(VoltageSourceNorton), mLeftVector(leftVector)
+						Task(**VoltageSourceNorton.mName + ".MnaPostStep"), mVoltageSourceNorton(VoltageSourceNorton), mLeftVector(leftVector)
 					{
 						mAttributeDependencies.push_back(mLeftVector);
 						mModifiedAttributes.push_back(mVoltageSourceNorton.attribute("i_intf"));

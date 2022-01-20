@@ -147,7 +147,7 @@ namespace Ph1 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(Inverter& inverter) :
-				Task(inverter.mName + ".MnaPreStep"), mInverter(inverter) {
+				Task(**inverter.mName + ".MnaPreStep"), mInverter(inverter) {
 				mModifiedAttributes.push_back(mInverter.attribute("right_vector"));
 				mModifiedAttributes.push_back(mInverter.attribute("v_intf"));
 			}
@@ -159,7 +159,7 @@ namespace Ph1 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(Inverter& inverter, Attribute<Matrix>::Ptr leftVector) :
-				Task(inverter.mName + ".MnaPostStep"),
+				Task(**inverter.mName + ".MnaPostStep"),
 				mInverter(inverter), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(mInverter.attribute("i_intf"));
@@ -173,7 +173,7 @@ namespace Ph1 {
 		class MnaPreStepHarm : public CPS::Task {
 		public:
 			MnaPreStepHarm(Inverter& inverter) :
-				Task(inverter.mName + ".MnaPreStepHarm"),
+				Task(**inverter.mName + ".MnaPreStepHarm"),
 				mInverter(inverter) {
 				mModifiedAttributes.push_back(mInverter.attribute("right_vector"));
 				mModifiedAttributes.push_back(mInverter.attribute("v_intf"));
@@ -186,7 +186,7 @@ namespace Ph1 {
 		class MnaPostStepHarm : public CPS::Task {
 		public:
 			MnaPostStepHarm(Inverter& inverter, const std::vector<Attribute<Matrix>::Ptr> &leftVectors) :
-				Task(inverter.mName + ".MnaPostStepHarm"),
+				Task(**inverter.mName + ".MnaPostStepHarm"),
 				mInverter(inverter), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
 					mAttributeDependencies.push_back(mLeftVectors[i]);

@@ -60,7 +60,7 @@ namespace Signal {
 		class PreStep : public Task {
 		public:
 			PreStep(DecouplingLineEMT& line) :
-				Task(line.mName + ".MnaPreStep"), mLine(line) {
+				Task(**line.mName + ".MnaPreStep"), mLine(line) {
 				mPrevStepDependencies.push_back(mLine.attribute("states"));
 				mModifiedAttributes.push_back(mLine.mSrc1->attribute("I_ref"));
 				mModifiedAttributes.push_back(mLine.mSrc2->attribute("I_ref"));
@@ -75,7 +75,7 @@ namespace Signal {
 		class PostStep : public Task {
 		public:
 			PostStep(DecouplingLineEMT& line) :
-				Task(line.mName + ".PostStep"), mLine(line) {
+				Task(**line.mName + ".PostStep"), mLine(line) {
 				mAttributeDependencies.push_back(mLine.mRes1->attribute("v_intf"));
 				mAttributeDependencies.push_back(mLine.mRes1->attribute("i_intf"));
 				mAttributeDependencies.push_back(mLine.mRes2->attribute("v_intf"));

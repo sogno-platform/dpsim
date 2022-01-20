@@ -43,13 +43,13 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(0) + mIntfCurrent(0,0) * mSeriesRes );
 
 	// Create series sub components
-	mSubSeriesResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_res", mLogLevel);
+	mSubSeriesResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
 	mSubSeriesResistor->setParameters(mSeriesRes);
 	mSubSeriesResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubSeriesResistor->initialize(mFrequencies);
 	mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
 
-	mSubSeriesInductor = std::make_shared<DP::Ph1::Inductor>(mName + "_ind", mLogLevel);
+	mSubSeriesInductor = std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 	mSubSeriesInductor->setParameters(mSeriesInd);
 	mSubSeriesInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubSeriesInductor->initialize(mFrequencies);
@@ -61,13 +61,13 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	mParallelCond = (mParallelCond > 0) ? mParallelCond : defaultParallelCond;
 
 	// Create parallel sub components
-	mSubParallelResistor0 = std::make_shared<DP::Ph1::Resistor>(mName + "_con0", mLogLevel);
+	mSubParallelResistor0 = std::make_shared<DP::Ph1::Resistor>(**mName + "_con0", mLogLevel);
 	mSubParallelResistor0->setParameters(2./mParallelCond);
 	mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 	mSubParallelResistor0->initialize(mFrequencies);
 	mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
 
-	mSubParallelResistor1 = std::make_shared<DP::Ph1::Resistor>(mName + "_con1", mLogLevel);
+	mSubParallelResistor1 = std::make_shared<DP::Ph1::Resistor>(**mName + "_con1", mLogLevel);
 	mSubParallelResistor1->setParameters(2./mParallelCond);
 	mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 	mSubParallelResistor1->initialize(mFrequencies);
@@ -75,13 +75,13 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 
 
 	if (mParallelCap >= 0) {
-		mSubParallelCapacitor0 = std::make_shared<DP::Ph1::Capacitor>(mName + "_cap0", mLogLevel);
+		mSubParallelCapacitor0 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap0", mLogLevel);
 		mSubParallelCapacitor0->setParameters(mParallelCap/2.);
 		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelCapacitor0->initialize(mFrequencies);
 		mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
 
-		mSubParallelCapacitor1 = std::make_shared<DP::Ph1::Capacitor>(mName + "_cap1", mLogLevel);
+		mSubParallelCapacitor1 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap1", mLogLevel);
 		mSubParallelCapacitor1->setParameters(mParallelCap/2.);
 		mSubParallelCapacitor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelCapacitor1->initialize(mFrequencies);
