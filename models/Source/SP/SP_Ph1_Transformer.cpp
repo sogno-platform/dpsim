@@ -110,13 +110,13 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfCurrent(0, 0) = mIntfVoltage(0, 0) / impedance;
 
 	// Create series sub components
-	mSubInductor = std::make_shared<SP::Ph1::Inductor>(mUID + "_ind", **mName + "_ind", Logger::Level::off);
+	mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mUid + "_ind", **mName + "_ind", Logger::Level::off);
 	mSubInductor->setParameters(mInductance);
 	mSubComponents.push_back(mSubInductor);
 
 	if (mNumVirtualNodes == 3) {
 		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
-		mSubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_res", **mName + "_res", Logger::Level::off);
+		mSubResistor = std::make_shared<SP::Ph1::Resistor>(**mUid + "_res", **mName + "_res", Logger::Level::off);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ node(0), mVirtualNodes[2] });
 		mSubInductor->connect({ mVirtualNodes[2], mVirtualNodes[0] });
