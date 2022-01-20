@@ -22,7 +22,7 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 	setTerminalNumber(2);
 
 	mSLog->info("Create {} {}", this->type(), name);
-	mIntfVoltage = Matrix::Zero(3, 1);
+	**mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(1, 1);
 
 	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
@@ -86,7 +86,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 	MatrixComp iInit = impedance.inverse() * vInitABC;
 	mIntfCurrent = iInit.real();
-	mIntfVoltage = vInitABC.real();
+	**mIntfVoltage = vInitABC.real();
 
 	// Create series sub components
 	mSubInductor = std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
@@ -161,7 +161,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::matrixToString(mIntfVoltage),
+		Logger::matrixToString(**mIntfVoltage),
 		Logger::matrixToString(mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)),
@@ -300,16 +300,16 @@ void EMT::Ph3::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
 
 void EMT::Ph3::Transformer::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
-	mIntfVoltage = Matrix::Zero(3, 1);
+	**mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
+		**mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		**mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		**mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+		**mIntfVoltage(0, 0) = **mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		**mIntfVoltage(1, 0) = **mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		**mIntfVoltage(2, 0) = **mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 

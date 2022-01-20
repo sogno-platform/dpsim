@@ -19,7 +19,7 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 		setVirtualNodeNumber(2);
 
 	mSLog->info("Create {} {}", this->type(), name);
-	mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
 
@@ -106,8 +106,8 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 	// Static calculations from load flow data
 	Complex impedance = { mResistance, mReactance };
-	mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
-	mIntfCurrent(0, 0) = mIntfVoltage(0, 0) / impedance;
+	**mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
+	mIntfCurrent(0, 0) = **mIntfVoltage(0, 0) / impedance;
 
 	// Create series sub components
 	mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mUid + "_ind", **mName + "_ind", Logger::Level::off);
@@ -184,7 +184,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0, 0)),
+		Logger::phasorToString(**mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)),
@@ -405,8 +405,8 @@ void SP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
 
 void SP::Ph1::Transformer::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
-	mIntfVoltage(0, 0) = 0;
-	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
-	mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
-	mSLog->debug("Voltage {:s}", Logger::phasorToString(mIntfVoltage(0, 0)));
+	**mIntfVoltage(0, 0) = 0;
+	**mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+	**mIntfVoltage(0, 0) = **mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
+	mSLog->debug("Voltage {:s}", Logger::phasorToString(**mIntfVoltage(0, 0)));
 }

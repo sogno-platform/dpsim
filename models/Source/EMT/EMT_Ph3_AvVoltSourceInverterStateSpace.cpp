@@ -16,7 +16,7 @@ using namespace CPS;
 EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(String uid, String name, Logger::Level logLevel)
 : SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
-	mIntfVoltage = Matrix::Zero(3, 1);
+	**mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("V_cabc", &mVcabc, Flags::read | Flags::write);
@@ -159,7 +159,7 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::updateStates() {
 	Matrix newU = Matrix::Zero(6, 1);
 
 	newU <<
-		mOmegaN, mPref, mQref, mIntfVoltage;
+		mOmegaN, mPref, mQref, **mIntfVoltage;
 
 	newStates = Math::StateSpaceTrapezoidal(mStates, mA, mB, mTimeStep, newU, mU);
 
@@ -279,9 +279,9 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaInitialize(Real omega, Real ti
 	Attribute<Matrix>::Ptr leftVector){
 	updateMatrixNodeIndices();
 	Complex voltageRef = attribute<Complex>("V_ref")->get();
-	mIntfVoltage(0, 0) = voltageRef.real() * cos(Math::phase(voltageRef));
-	mIntfVoltage(1, 0) = voltageRef.real() * cos(Math::phase(voltageRef) - 2. / 3. * M_PI);
-	mIntfVoltage(2, 0) = voltageRef.real() * cos(Math::phase(voltageRef) + 2. / 3. * M_PI);
+	**mIntfVoltage(0, 0) = voltageRef.real() * cos(Math::phase(voltageRef));
+	**mIntfVoltage(1, 0) = voltageRef.real() * cos(Math::phase(voltageRef) - 2. / 3. * M_PI);
+	**mIntfVoltage(2, 0) = voltageRef.real() * cos(Math::phase(voltageRef) + 2. / 3. * M_PI);
 	mIntfCurrent = Matrix::Zero(3, 1);
 	initializeStates(omega, timeStep, leftVector);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -340,23 +340,23 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::MnaPostStep::execute(Real time, I
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateVoltage(const Matrix& leftVector) {
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
+		**mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		**mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		**mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+		**mIntfVoltage(0, 0) = **mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		**mIntfVoltage(1, 0) = **mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		**mIntfVoltage(2, 0) = **mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateCurrent(const Matrix& leftVector) {
 	// signs are not verified
-	mIntfCurrent(0, 0) = mEquivCurrent(0, 0) - mIntfVoltage(0, 0) / mRc;
-	mIntfCurrent(1, 0) = mEquivCurrent(1, 0) - mIntfVoltage(1, 0) / mRc;
-	mIntfCurrent(2, 0) = mEquivCurrent(2, 0) - mIntfVoltage(2, 0) / mRc;
+	mIntfCurrent(0, 0) = mEquivCurrent(0, 0) - **mIntfVoltage(0, 0) / mRc;
+	mIntfCurrent(1, 0) = mEquivCurrent(1, 0) - **mIntfVoltage(1, 0) / mRc;
+	mIntfCurrent(2, 0) = mEquivCurrent(2, 0) - **mIntfVoltage(2, 0) / mRc;
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::updateEquivCurrent(Real time) {

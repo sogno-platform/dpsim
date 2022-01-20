@@ -14,7 +14,7 @@ SP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
-	mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
@@ -108,7 +108,7 @@ void SP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mIntfVoltage(0,0) = mSrcSig->getSignal();
+	**mIntfVoltage(0,0) = mSrcSig->getSignal();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -118,7 +118,7 @@ void SP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"
 		"\n--- MNA initialization finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
+		Logger::phasorToString(**mIntfVoltage(0,0)),
 		Logger::phasorToString(mIntfCurrent(0,0)));
 }
 
@@ -147,20 +147,20 @@ void SP::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 void SP::Ph1::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// TODO: Is this correct with two nodes not gnd?
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0,0), mNumFreqs);
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), **mIntfVoltage(0,0), mNumFreqs);
 	SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-		Logger::complexToString(mIntfVoltage(0,0)), mVirtualNodes[0]->matrixNodeIndex());
+		Logger::complexToString(**mIntfVoltage(0,0)), mVirtualNodes[0]->matrixNodeIndex());
 }
 
 void SP::Ph1::VoltageSource::updateVoltage(Real time) {
 	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
-		mIntfVoltage(0,0) = mSrcSig->getSignal();
+		**mIntfVoltage(0,0) = mSrcSig->getSignal();
 	} else {
-		mIntfVoltage(0,0) = attribute<Complex>("V_ref")->get();
+		**mIntfVoltage(0,0) = attribute<Complex>("V_ref")->get();
 	}
 
-	mSLog->debug("Update Voltage {:s}", Logger::phasorToString(mIntfVoltage(0,0)));
+	mSLog->debug("Update Voltage {:s}", Logger::phasorToString(**mIntfVoltage(0,0)));
 }
 
 void SP::Ph1::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
@@ -204,6 +204,6 @@ void SP::Ph1::VoltageSource::daeResidual(double ttime, const double state[], con
 }
 
 Complex SP::Ph1::VoltageSource::daeInitialize() {
-	mIntfVoltage(0, 0) = mSrcSig->getSignal();
+	**mIntfVoltage(0, 0) = mSrcSig->getSignal();
 	return mSrcSig->getSignal();
 }

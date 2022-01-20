@@ -16,7 +16,7 @@ DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(2);
 
 	mSLog->info("Create {} {}", this->type(), name);
-	mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	addAttribute<Real>("R", &mSeriesRes, Flags::read | Flags::write);
@@ -31,7 +31,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::RxLine::clone(String name) {
 
 void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 
-	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+	**mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	Complex impedance = { mSeriesRes, mSeriesInd * 2.*PI * frequency };
 	mIntfCurrent(0, 0) = mVoltage / impedance;
 	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(0) + mIntfCurrent(0, 0) * mSeriesRes );
@@ -62,7 +62,7 @@ void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
+		Logger::phasorToString(**mIntfVoltage(0,0)),
 		Logger::phasorToString(mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
@@ -110,11 +110,11 @@ void DP::Ph1::RxLine::MnaPostStep::execute(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0, 0) = 0;
+	**mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+		**mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+		**mIntfVoltage(0,0) = **mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::RxLine::mnaUpdateCurrent(const Matrix& leftVector) {

@@ -13,7 +13,7 @@ using namespace CPS;
 DP::Ph1::CurrentSource::CurrentSource(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
-	mIntfVoltage = MatrixComp::Zero(1,1);
+	**mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Complex>("I_ref", Flags::read | Flags::write);
@@ -37,7 +37,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::CurrentSource::clone(String name) {
 
 void DP::Ph1::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 
-	mIntfVoltage(0,0) = initialSingleVoltage(0) - initialSingleVoltage(1);
+	**mIntfVoltage(0,0) = initialSingleVoltage(0) - initialSingleVoltage(1);
 	mCurrentRef = attribute<Complex>("I_ref");
 	mIntfCurrent(0,0) = mCurrentRef->get();
 
@@ -48,7 +48,7 @@ void DP::Ph1::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
+		Logger::phasorToString(**mIntfVoltage(0,0)),
 		Logger::phasorToString(mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
@@ -83,9 +83,9 @@ void DP::Ph1::CurrentSource::MnaPostStep::execute(Real time, Int timeStepCount) 
 }
 
 void DP::Ph1::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0,0) = 0;
+	**mIntfVoltage(0,0) = 0;
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+		**mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+		**mIntfVoltage(0,0) = **mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 }

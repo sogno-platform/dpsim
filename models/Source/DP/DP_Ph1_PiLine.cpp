@@ -16,7 +16,7 @@ DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(2);
 
 	mSLog->info("Create {} {}", this->type(), name);
-	mIntfVoltage = MatrixComp::Zero(1,1);
+	**mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Real>("R_series", &mSeriesRes, Flags::read | Flags::write);
@@ -36,8 +36,8 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	// Static calculation
 	Real omega = 2.*PI * frequency;
 	Complex impedance = { mSeriesRes, omega * mSeriesInd };
-	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent(0,0) = mIntfVoltage(0,0) / impedance;
+	**mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+	mIntfCurrent(0,0) = **mIntfVoltage(0,0) / impedance;
 
 	// Initialization of virtual node
 	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(0) + mIntfCurrent(0,0) * mSeriesRes );
@@ -96,7 +96,7 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage: {:s}"
 		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
+		Logger::phasorToString(**mIntfVoltage(0,0)),
 		Logger::phasorToString(mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)),
@@ -209,11 +209,11 @@ void DP::Ph1::PiLine::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix
 }
 
 void DP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0, 0) = 0;
+	**mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+		**mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+		**mIntfVoltage(0,0) = **mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::PiLine::mnaUpdateCurrent(const Matrix& leftVector) {

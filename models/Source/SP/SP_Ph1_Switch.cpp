@@ -13,7 +13,7 @@ using namespace CPS;
 SP::Ph1::Switch::Switch(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
-	mIntfVoltage = MatrixComp::Zero(1,1);
+	**mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Real>("R_open", &mOpenResistance, Flags::read | Flags::write);
@@ -30,8 +30,8 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Switch::clone(String name) {
 void SP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
-	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent(0,0) = mIntfVoltage(0,0) / impedance;
+	**mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+	mIntfCurrent(0,0) = **mIntfVoltage(0,0) / impedance;
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -40,7 +40,7 @@ void SP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
+		Logger::phasorToString(**mIntfVoltage(0,0)),
 		Logger::phasorToString(mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
@@ -111,15 +111,15 @@ void SP::Ph1::Switch::mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
 
 void SP::Ph1::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
-	mIntfVoltage(0, 0) = 0;
-	if (terminalNotGrounded(1)) mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,0));
-	if (terminalNotGrounded(0)) mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	**mIntfVoltage(0, 0) = 0;
+	if (terminalNotGrounded(1)) **mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,0));
+	if (terminalNotGrounded(0)) **mIntfVoltage(0,0) = **mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void SP::Ph1::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
 	mIntfCurrent(0,0) = (mIsClosed) ?
-		mIntfVoltage(0,0) / mClosedResistance :
-		mIntfVoltage(0,0) / mOpenResistance;
+		**mIntfVoltage(0,0) / mClosedResistance :
+		**mIntfVoltage(0,0) / mOpenResistance;
 }
 
 void SP::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,

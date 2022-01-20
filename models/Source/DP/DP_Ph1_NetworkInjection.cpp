@@ -16,7 +16,7 @@ DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name, Logger::Lev
 	setTerminalNumber(1);
 
 	mSLog->info("Create {} {}", this->type(), name);
-	mIntfVoltage = MatrixComp::Zero(1,1);
+	**mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
 	// Create electrical sub components
@@ -167,7 +167,7 @@ void DP::Ph1::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attrib
 }
 
 void DP::Ph1::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage = mSubVoltageSource->attribute<MatrixComp>("v_intf")->get();
+	**mIntfVoltage = mSubVoltageSource->attribute<MatrixComp>("v_intf")->get();
 }
 
 void DP::Ph1::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
@@ -200,6 +200,6 @@ void DP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[], 
 }
 
 Complex DP::Ph1::NetworkInjection::daeInitialize() {
-	mIntfVoltage(0,0) = mSubVoltageSource->attribute<Complex>("v_intf")->get();
+	**mIntfVoltage(0,0) = mSubVoltageSource->attribute<Complex>("v_intf")->get();
 	return mSubVoltageSource->attribute<Complex>("v_intf")->get();
 }

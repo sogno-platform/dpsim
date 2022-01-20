@@ -15,7 +15,7 @@ DP::Ph1::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(1);
 
 	mSLog->info("Create {} {}", this->type(), name);
-	mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	addAttribute<Real>("P", &mActivePower, Flags::read | Flags::write);
@@ -77,8 +77,8 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
 	}
 
-	mIntfVoltage(0, 0) = mTerminals[0]->initialSingleVoltage();
-	mIntfCurrent(0, 0) = std::conj(Complex(mActivePower, mReactivePower) / mIntfVoltage(0, 0));
+	**mIntfVoltage(0, 0) = mTerminals[0]->initialSingleVoltage();
+	mIntfCurrent(0, 0) = std::conj(Complex(mActivePower, mReactivePower) / **mIntfVoltage(0, 0));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -88,7 +88,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		"\nResistance: {:f}"
 		"\nReactance: {:f}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
+		Logger::phasorToString(**mIntfVoltage(0,0)),
 		Logger::phasorToString(mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		mResistance,
@@ -146,7 +146,7 @@ void DP::Ph1::RXLoad::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void DP::Ph1::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	**mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {

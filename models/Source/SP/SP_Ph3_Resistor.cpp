@@ -16,7 +16,7 @@ SP::Ph3::Resistor::Resistor(String uid, String name,
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
-	mIntfVoltage = MatrixComp::Zero(3, 1);
+	**mIntfVoltage = MatrixComp::Zero(3, 1);
 	mIntfCurrent = MatrixComp::Zero(3, 1);
 	addAttribute<Matrix>("R", &mResistance, Flags::read | Flags::write);
 }
@@ -29,22 +29,22 @@ SimPowerComp<Complex>::Ptr SP::Ph3::Resistor::clone(String name) {
 
 void SP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
-	Real voltMag = Math::abs(mIntfVoltage(0, 0));
-	Real voltPhase = Math::phase(mIntfVoltage(0, 0));
-	mIntfVoltage(1, 0) = Complex(
+	Real voltMag = Math::abs(**mIntfVoltage(0, 0));
+	Real voltPhase = Math::phase(**mIntfVoltage(0, 0));
+	**mIntfVoltage(1, 0) = Complex(
 		voltMag * cos(voltPhase - 2. / 3. * M_PI),
 		voltMag * sin(voltPhase - 2. / 3. * M_PI));
-	mIntfVoltage(2, 0) = Complex(
+	**mIntfVoltage(2, 0) = Complex(
 		voltMag * cos(voltPhase + 2. / 3. * M_PI),
 		voltMag * sin(voltPhase + 2. / 3. * M_PI));
 	mConductance = mResistance.inverse();
-	mIntfCurrent = mConductance * mIntfVoltage;
+	mIntfCurrent = mConductance * **mIntfVoltage;
 
 	mSLog->info("Node 1 : {}", Logger::phasorToString(initialVoltage(0)(0, 0)));
 	mSLog->info("Node 2 : {}", Logger::phasorToString(initialVoltage(1)(0, 0)));
 	mSLog->info("initialize {} {} voltage to {} and current to {}",
 		this->type(), this->name(),
-		Logger::phasorToString(mIntfVoltage(0, 0)),
+		Logger::phasorToString(**mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)));
 }
 
@@ -120,24 +120,24 @@ void SP::Ph3::Resistor::MnaPostStep::execute(Real time, Int timeStepCount) {
 
 void SP::Ph3::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
-	mIntfVoltage = MatrixComp::Zero(3, 1);
+	**mIntfVoltage = MatrixComp::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-		mIntfVoltage(1, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-		mIntfVoltage(2, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 2));
+		**mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		**mIntfVoltage(1, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		**mIntfVoltage(2, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+		**mIntfVoltage(0, 0) = **mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		**mIntfVoltage(1, 0) = **mIntfVoltage(1, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		**mIntfVoltage(2, 0) = **mIntfVoltage(2, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 
-	//mLog.debug() << "Voltage A: " << std::abs(mIntfVoltage(0, 0))
-	//	<< "<" << std::arg(mIntfVoltage(0, 0)) << std::endl;
+	//mLog.debug() << "Voltage A: " << std::abs(**mIntfVoltage(0, 0))
+	//	<< "<" << std::arg(**mIntfVoltage(0, 0)) << std::endl;
 }
 
 void SP::Ph3::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mConductance * mIntfVoltage;
+	mIntfCurrent = mConductance * **mIntfVoltage;
 	//mLog.debug() << "Current A: " << std::abs(mIntfCurrent(0, 0))
 	//	<< "<" << std::arg(mIntfCurrent(0, 0)) << std::endl;
 }

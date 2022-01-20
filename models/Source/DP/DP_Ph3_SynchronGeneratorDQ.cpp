@@ -19,7 +19,7 @@ DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logge
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
-	mIntfVoltage = MatrixComp::Zero(3,1);
+	**mIntfVoltage = MatrixComp::Zero(3,1);
 	mIntfCurrent = MatrixComp::Zero(3,1);
 
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
@@ -73,7 +73,7 @@ void DP::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
 		mIdq0 << mIsr(0,0), mIsr(3,0), mIsr(5,0);
 	}
 
-	mIntfVoltage = mBase_V * dq0ToAbcTransform(mThetaMech, mVdq0);
+	**mIntfVoltage = mBase_V * dq0ToAbcTransform(mThetaMech, mVdq0);
 	mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 }
 
@@ -95,7 +95,7 @@ void DP::Ph3::SynchronGeneratorDQ::mnaApplySystemMatrixStamp(Matrix& systemMatri
 
 void DP::Ph3::SynchronGeneratorDQ::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (mCompensationOn)
-		mCompensationCurrent = mIntfVoltage / mRcomp;
+		mCompensationCurrent = **mIntfVoltage / mRcomp;
 
 	// If the interface current is positive, it is flowing out of the connected node and into ground.
 	// Therefore, the generator is interfaced as a consumer but since the currents are reversed the equations
@@ -108,9 +108,9 @@ void DP::Ph3::SynchronGeneratorDQ::mnaApplyRightSideVectorStamp(Matrix& rightVec
 }
 
 void DP::Ph3::SynchronGeneratorDQ::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,0));
-	mIntfVoltage(1,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,1));
-	mIntfVoltage(2,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,2));
+	**mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,0));
+	**mIntfVoltage(1,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,1));
+	**mIntfVoltage(2,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,2));
 }
 
 void DP::Ph3::SynchronGeneratorDQ::MnaPostStep::execute(Real time, Int timeStepCount) {

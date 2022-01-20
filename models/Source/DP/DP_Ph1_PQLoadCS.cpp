@@ -14,7 +14,7 @@ DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name,
 	Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
-	mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	addAttribute<Real>("P", Flags::read | Flags::write);
@@ -90,7 +90,7 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nCurrent set point: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
+		Logger::phasorToString(**mIntfVoltage(0,0)),
 		Logger::phasorToString(mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(current));
@@ -119,7 +119,7 @@ void DP::Ph1::PQLoadCS::updateSetPoint() {
 	// Calculate new current set point.
 	Complex power = { mActivePower->get(), mReactivePower->get()};
 	Complex current = power / mNomVoltage->get();
-	//Complex current = power / mIntfVoltage(0,0);
+	//Complex current = power / **mIntfVoltage(0,0);
 
 	mCurrentSourceRef->set(std::conj(current));
 	mSLog->debug(
@@ -136,7 +136,7 @@ void DP::Ph1::PQLoadCS::MnaPreStep::execute(Real time, Int timeStepCount) {
 
 void DP::Ph1::PQLoadCS::updateIntfValues() {
 	mIntfCurrent = mSubCurrentSource->intfCurrent();
-	mIntfVoltage = mSubCurrentSource->intfVoltage();
+	**mIntfVoltage = mSubCurrentSource->intfVoltage();
 }
 
 void DP::Ph1::PQLoadCS::MnaPostStep::execute(Real time, Int timeStepCount) {

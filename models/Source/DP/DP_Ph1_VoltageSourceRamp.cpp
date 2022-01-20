@@ -15,7 +15,7 @@ DP::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
-	mIntfVoltage = MatrixComp::Zero(1,1);
+	**mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Complex>("V_ref", &mVoltageRef, Flags::read | Flags::write);
@@ -79,22 +79,22 @@ void DP::Ph1::VoltageSourceRamp::mnaApplyRightSideVectorStamp(Matrix& rightVecto
 }
 
 void DP::Ph1::VoltageSourceRamp::updateState(Real time) {
-	mIntfVoltage(0,0) = mVoltageRef;
+	**mIntfVoltage(0,0) = mVoltageRef;
 
 	if (time >= mSwitchTime && time < mSwitchTime + mRampTime) {
 		Real voltageAbs = Math::abs(mVoltageRef + (time - mSwitchTime) / mRampTime * mAddVoltage);
 		Real voltagePhase = Math::phase(mVoltageRef + (time - mSwitchTime) / mRampTime * mAddVoltage);
 		Real fadeInOut = 0.5 + 0.5 * sin((time - mSwitchTime) / mRampTime * PI + -PI / 2);
-		mIntfVoltage(0,0) = Math::polar(voltageAbs, voltagePhase + fadeInOut * mAddSrcFreq * time);
+		**mIntfVoltage(0,0) = Math::polar(voltageAbs, voltagePhase + fadeInOut * mAddSrcFreq * time);
 	}
 	else if (time >= mSwitchTime + mRampTime) {
 		Real voltageAbs = Math::abs(mVoltageRef + mAddVoltage);
 		Real voltagePhase = Math::phase(mVoltageRef + mAddVoltage);
-		mIntfVoltage(0,0) = Math::polar(voltageAbs, voltagePhase + mAddSrcFreq * time);
+		**mIntfVoltage(0,0) = Math::polar(voltageAbs, voltagePhase + mAddSrcFreq * time);
 	}
 }
 
 void DP::Ph1::VoltageSourceRamp::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mVoltageSource.updateState(time);
-	mVoltageSource.mSubVoltageSource->attribute<Complex>("V_ref")->set(mVoltageSource.mIntfVoltage(0, 0));
+	mVoltageSource.mSubVoltageSource->attribute<Complex>("V_ref")->set(mVoltageSource.**mIntfVoltage(0, 0));
 }

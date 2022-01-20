@@ -14,7 +14,7 @@ DP::Ph1::RXLoadSwitch::RXLoadSwitch(String uid, String name, Logger::Level logLe
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
 	setVirtualNodeNumber(1);
-	mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Create sub components
@@ -47,7 +47,7 @@ void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSwitch->initialize(mFrequencies);
 	mSubSwitch->initializeFromNodesAndTerminals(frequency);
 
-	mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
+	**mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
 	mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
 
 	mSLog->info(
@@ -56,7 +56,7 @@ void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
+		Logger::phasorToString(**mIntfVoltage(0,0)),
 		Logger::phasorToString(mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
@@ -138,7 +138,7 @@ void DP::Ph1::RXLoadSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<
 	this->mSubRXLoad->mnaPostStep(time, timeStepCount, leftVector);
 	this->mSubSwitch->mnaPostStep(time, timeStepCount, leftVector);
 
-	mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
+	**mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
 	mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
 }
 
@@ -146,7 +146,7 @@ void DP::Ph1::RXLoadSwitch::updateSwitchState(Real time) {
 
 	if (time > mSwitchTimeOffset && mSubSwitch->isClosed()) {
 		Real VRef = Math::abs(mSubRXLoad->attributeComplex("V_nom")->get());
-		Real V = Math::abs(mIntfVoltage(0, 0));
+		Real V = Math::abs(**mIntfVoltage(0, 0));
 
 		Real deltaV = Math::abs((V - VRef) / VRef);
 

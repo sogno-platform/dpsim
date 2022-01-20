@@ -17,7 +17,7 @@ EMT::Ph3::RXLoad::RXLoad(String uid, String name,
 	setTerminalNumber(1);
 
 	mSLog->info("Create {} {}", this->type(), name);
-	mIntfVoltage = Matrix::Zero(3, 1);
+	**mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("P", &mActivePower, Flags::read | Flags::write);
@@ -139,7 +139,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * mTerminals[0]->initialSingleVoltage();
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
-	mIntfVoltage = vInitABC.real();
+	**mIntfVoltage = vInitABC.real();
 
 	MatrixComp iInitABC = MatrixComp::Zero(3, 1);
 	// v i^T* = S
@@ -161,7 +161,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		"\nResistance: {:s}"
 		"\nReactance: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::matrixToString(mIntfVoltage),
+		Logger::matrixToString(**mIntfVoltage),
 		Logger::matrixToString(mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::matrixToString(mActivePower),
@@ -226,10 +226,10 @@ void EMT::Ph3::RXLoad::MnaPostStep::execute(Real time, Int timeStepCount) {
 }
 
 void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-	mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-	mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+	**mIntfVoltage = Matrix::Zero(3, 1);
+	**mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+	**mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+	**mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 }
 
 void EMT::Ph3::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {

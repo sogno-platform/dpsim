@@ -14,7 +14,7 @@ SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, L
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
-	mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
     setTerminalNumber(2);
 

@@ -14,7 +14,7 @@ EMT::Ph1::VoltageSource::VoltageSource(String uid, String name,	Logger::Level lo
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
-	mIntfVoltage = Matrix::Zero(1,1);
+	**mIntfVoltage = Matrix::Zero(1,1);
 	mIntfCurrent = Matrix::Zero(1,1);
 
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
@@ -40,7 +40,7 @@ void EMT::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute
 
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
-	mIntfVoltage(0,0) = Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()));
+	**mIntfVoltage(0,0) = Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()));
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -67,16 +67,16 @@ void EMT::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void EMT::Ph1::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0,0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), **mIntfVoltage(0,0));
 }
 
 void EMT::Ph1::VoltageSource::updateVoltage(Real time) {
 	Complex voltageRef = mVoltageRef->get();
 	Real srcFreq = mSrcFreq->get();
 	if (srcFreq > 0)
-		mIntfVoltage(0,0) = Math::abs(voltageRef) * cos(time * 2.*PI*srcFreq + Math::phase(voltageRef));
+		**mIntfVoltage(0,0) = Math::abs(voltageRef) * cos(time * 2.*PI*srcFreq + Math::phase(voltageRef));
 	else
-		mIntfVoltage(0,0) = voltageRef.real();
+		**mIntfVoltage(0,0) = voltageRef.real();
 }
 
 void EMT::Ph1::VoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {

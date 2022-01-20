@@ -13,7 +13,7 @@ using namespace CPS;
 DP::Ph1::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
-	mIntfVoltage = MatrixComp::Zero(1,1);
+	**mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Complex>("V_ref", &mVoltageRef, Flags::read | Flags::write);
@@ -40,7 +40,7 @@ void DP::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attr
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mIntfVoltage(0, 0) = attributeComplex("V_ref")->get();
+	**mIntfVoltage(0, 0) = attributeComplex("V_ref")->get();
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -72,7 +72,7 @@ void DP::Ph1::VoltageSourceNorton::mnaApplySystemMatrixStamp(Matrix& systemMatri
 }
 
 void DP::Ph1::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mEquivCurrent = mIntfVoltage(0, 0) / mResistance;
+	mEquivCurrent = **mIntfVoltage(0, 0) / mResistance;
 
 	// Apply matrix stamp for equivalent current source
 	if (terminalNotGrounded(0))
@@ -83,13 +83,13 @@ void DP::Ph1::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVec
 
 void DP::Ph1::VoltageSourceNorton::updateState(Real time) {
 	if (mSrcFreq >= 0) {
-		mIntfVoltage(0,0) = Complex(
+		**mIntfVoltage(0,0) = Complex(
 			Math::abs(mVoltageRef) * cos(time * 2.*PI*mSrcFreq + Math::phase(mVoltageRef)),
 			Math::abs(mVoltageRef) * sin(time * 2.*PI*mSrcFreq + Math::phase(mVoltageRef)));
 	}
 	else {
 		// If source frequency -1, use system frequency.
-		mIntfVoltage(0,0) = mVoltageRef;
+		**mIntfVoltage(0,0) = mVoltageRef;
 	}
 }
 
@@ -105,15 +105,15 @@ void DP::Ph1::VoltageSourceNorton::MnaPostStep::execute(Real time, Int timeStepC
 
 void DP::Ph1::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Calculate v1 - v0
-	mIntfVoltage(0, 0) = 0;
+	**mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+		**mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+		**mIntfVoltage(0,0) = **mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::VoltageSourceNorton::mnaUpdateCurrent(const Matrix& leftVector) {
 	// TODO: verify signs
-	mIntfCurrent(0,0) = mEquivCurrent - mIntfVoltage(0,0) / mResistance;
+	mIntfCurrent(0,0) = mEquivCurrent - **mIntfVoltage(0,0) / mResistance;
 }
 

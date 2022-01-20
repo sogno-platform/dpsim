@@ -17,7 +17,7 @@ EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String uid, String name, Lo
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
-	mIntfVoltage = Matrix::Zero(3,1);
+	**mIntfVoltage = Matrix::Zero(3,1);
 	mIntfCurrent = Matrix::Zero(3,1);
 
 	addAttribute<Real>("Rs", &mRs, Flags::read | Flags::write);
@@ -426,7 +426,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaPostStep(Real time, Int timeStepCount, A
 		mDVb,
 		mDVc;
 
-	mIntfVoltage = mVabc*mBase_V;
+	**mIntfVoltage = mVabc*mBase_V;
 	mIntfCurrent = mIabc*mBase_I;
 }
 

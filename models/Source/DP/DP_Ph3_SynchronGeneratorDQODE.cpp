@@ -46,7 +46,7 @@ void DP::Ph3::SynchronGeneratorDQODE::odePreStep() {
 	mOdePreState(mDim-1)=mOmMech;
 
 	//copied from stepInPerUnit
-	mVdq0 = abcToDq0Transform(mThetaMech, mIntfVoltage);
+	mVdq0 = abcToDq0Transform(mThetaMech, **mIntfVoltage);
 	mVdq0 = mVdq0 / mBase_V;
 }
 

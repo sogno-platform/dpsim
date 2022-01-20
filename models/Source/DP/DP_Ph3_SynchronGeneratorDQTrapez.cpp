@@ -47,7 +47,7 @@ void DP::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 	for (Int i = 0; i < mMultisamplingRate; i++) {
 	// Calculate per unit values and
 	// transform per unit voltages from abc to dq0
-	mVdq0 = abcToDq0Transform(mThetaMech, mIntfVoltage);
+	mVdq0 = abcToDq0Transform(mThetaMech, **mIntfVoltage);
 	mVdq0 = mVdq0 / mBase_V;
 	mVsr(0,0) = mVdq0(0,0);
 	mVsr(3,0) = mVdq0(1,0);

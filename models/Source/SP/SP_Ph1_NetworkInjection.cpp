@@ -16,7 +16,7 @@ SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
 
 	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
-	mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
@@ -208,7 +208,7 @@ void SP::Ph1::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attrib
 }
 
 void SP::Ph1::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage = mSubVoltageSource->attribute<MatrixComp>("v_intf")->get();
+	**mIntfVoltage = mSubVoltageSource->attribute<MatrixComp>("v_intf")->get();
 }
 
 void SP::Ph1::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
@@ -241,6 +241,6 @@ void SP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[], 
 }
 
 Complex SP::Ph1::NetworkInjection::daeInitialize() {
-	mIntfVoltage(0,0) = mSubVoltageSource->attribute<Complex>("v_intf")->get();
+	**mIntfVoltage(0,0) = mSubVoltageSource->attribute<Complex>("v_intf")->get();
 	return mSubVoltageSource->attribute<Complex>("v_intf")->get();
 }

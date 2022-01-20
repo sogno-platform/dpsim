@@ -13,7 +13,7 @@ using namespace CPS;
 SP::Ph1::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
-    mIntfVoltage = MatrixComp::Zero(1,1);
+    **mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
 	addAttribute<Real>("R_open", &mOpenResistance, Flags::read | Flags::write);
@@ -34,8 +34,8 @@ void SP::Ph1::varResSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	//Switch Resistance
 	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
 
-	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent(0,0)  = mIntfVoltage(0,0) / impedance;
+	**mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+	mIntfCurrent(0,0)  = **mIntfVoltage(0,0) / impedance;
 }
 
 // #### MNA functions ####
@@ -109,15 +109,15 @@ void SP::Ph1::varResSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<
 
 void SP::Ph1::varResSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
-	mIntfVoltage(0, 0) = 0;
-	if (terminalNotGrounded(1)) mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
-	if (terminalNotGrounded(0)) mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	**mIntfVoltage(0, 0) = 0;
+	if (terminalNotGrounded(1)) **mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+	if (terminalNotGrounded(0)) **mIntfVoltage(0,0) = **mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void SP::Ph1::varResSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
 	mIntfCurrent(0,0) = (mIsClosed) ?
-		mIntfVoltage(0,0) / mClosedResistance :
-		mIntfVoltage(0,0) / mOpenResistance;
+		**mIntfVoltage(0,0) / mClosedResistance :
+		**mIntfVoltage(0,0) / mOpenResistance;
 }
 
 Bool SP::Ph1::varResSwitch::hasParameterChanged() {

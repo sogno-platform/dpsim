@@ -24,7 +24,7 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	setTerminalNumber(1);
 
 	mSLog->info("Create {} {}", type(), name);
-	mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Create electrical sub components
@@ -152,15 +152,15 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(Real pInit, Real 
 void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real frequency) {
 
 	// set initial interface quantities
-	mIntfVoltage(0, 0) = initialSingleVoltage(0);
-	mIntfCurrent(0, 0) = - std::conj(Complex(mPref, mQref) / mIntfVoltage(0,0));
+	**mIntfVoltage(0, 0) = initialSingleVoltage(0);
+	mIntfCurrent(0, 0) = - std::conj(Complex(mPref, mQref) / **mIntfVoltage(0,0));
 
 	Complex filterInterfaceInitialVoltage;
 	Complex filterInterfaceInitialCurrent;
 
 	if (mWithConnectionTransformer) {
 		// calculate quantities of low voltage side of transformer (being the interface quantities of the filter)
-		filterInterfaceInitialVoltage = (mIntfVoltage(0, 0) - Complex(mTransformerResistance, mTransformerInductance*mOmegaN)*mIntfCurrent(0, 0)) / Complex(mTransformerRatioAbs, mTransformerRatioPhase);
+		filterInterfaceInitialVoltage = (**mIntfVoltage(0, 0) - Complex(mTransformerResistance, mTransformerInductance*mOmegaN)*mIntfCurrent(0, 0)) / Complex(mTransformerRatioAbs, mTransformerRatioPhase);
 		filterInterfaceInitialCurrent = mIntfCurrent(0, 0) * Complex(mTransformerRatioAbs, mTransformerRatioPhase);
 
 		// connect transformer
@@ -168,7 +168,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real fr
 		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[3] });
 	} else {
 		// if no transformer used, filter interface equal to inverter interface
-		filterInterfaceInitialVoltage = mIntfVoltage(0, 0);
+		filterInterfaceInitialVoltage = **mIntfVoltage(0, 0);
 		filterInterfaceInitialCurrent = mIntfCurrent(0, 0);
 	}
 
@@ -224,7 +224,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real fr
 		"\nVirtual node 0 initial voltage: {:s}"
 		"\nVirtual node 1 initial voltage: {:s}"
 		"\nVirtual node 2 initial voltage: {:s}",
-		Logger::phasorToString(mIntfVoltage(0, 0)),
+		Logger::phasorToString(**mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
@@ -381,5 +381,5 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvect
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {
 	for (auto virtualNode : mVirtualNodes)
 		virtualNode->mnaUpdateVoltage(leftVector);
-	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	**mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }

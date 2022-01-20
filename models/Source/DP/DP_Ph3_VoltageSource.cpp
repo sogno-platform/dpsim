@@ -16,7 +16,7 @@ DP::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
-	mIntfVoltage = MatrixComp::Zero(3, 1);
+	**mIntfVoltage = MatrixComp::Zero(3, 1);
 	mIntfCurrent = MatrixComp::Zero(3, 1);
 
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
@@ -50,10 +50,10 @@ void DP::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 
 void DP::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
-	mIntfVoltage(0, 0) = mVoltageRef->get();
-	mIntfVoltage(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
+	**mIntfVoltage(0, 0) = mVoltageRef->get();
+	**mIntfVoltage(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
 								 Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI));
-	mIntfVoltage(2, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI),
+	**mIntfVoltage(2, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI),
 								 Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI));
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -97,19 +97,19 @@ void DP::Ph3::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void DP::Ph3::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mIntfVoltage(0, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), mIntfVoltage(1, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mIntfVoltage(2, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), **mIntfVoltage(0, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), **mIntfVoltage(1, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), **mIntfVoltage(2, 0));
 
-	//mLog.debug() << "Add " << mIntfVoltage(0,0) << " to source vector " << mVirtualNodes[0]->matrixNodeIndex(PhaseType::A) << std::endl;
+	//mLog.debug() << "Add " << **mIntfVoltage(0,0) << " to source vector " << mVirtualNodes[0]->matrixNodeIndex(PhaseType::A) << std::endl;
 }
 
 void DP::Ph3::VoltageSource::updateVoltage(Real time) {
 	// can't we just do nothing??
-	mIntfVoltage(0, 0) = mVoltageRef->get();
-	mIntfVoltage(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
+	**mIntfVoltage(0, 0) = mVoltageRef->get();
+	**mIntfVoltage(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
 		Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI));
-	mIntfVoltage(2, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI),
+	**mIntfVoltage(2, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI),
 		Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI));
 }
 
@@ -154,6 +154,6 @@ void DP::Ph3::VoltageSource::daeResidual(double ttime, const double state[], con
 }
 
 Complex DP::Ph3::VoltageSource::daeInitialize() {
-	mIntfVoltage(0, 0) = mVoltageRef->get();
+	**mIntfVoltage(0, 0) = mVoltageRef->get();
 	return mVoltageRef->get();
 }

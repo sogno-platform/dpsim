@@ -13,7 +13,7 @@ using namespace CPS;
 EMT::Ph1::CurrentSource::CurrentSource(String uid, String name,	Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
-	mIntfVoltage = Matrix::Zero(1,1);
+	**mIntfVoltage = Matrix::Zero(1,1);
 	mIntfCurrent = Matrix::Zero(1,1);
 
 	addAttribute<Complex>("I_ref", Flags::read | Flags::write);
@@ -72,9 +72,9 @@ void EMT::Ph1::CurrentSource::MnaPostStep::execute(Real time, Int timeStepCount)
 }
 
 void EMT::Ph1::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0,0) = 0;
+	**mIntfVoltage(0,0) = 0;
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
+		**mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
+		**mIntfVoltage(0,0) = **mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 }

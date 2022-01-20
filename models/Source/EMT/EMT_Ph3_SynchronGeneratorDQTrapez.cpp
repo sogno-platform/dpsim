@@ -46,7 +46,7 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 
 	// Calculate per unit values and
 	// transform per unit voltages from abc to dq0
-	mVdq0 = abcToDq0Transform(mThetaMech, mIntfVoltage) / mBase_V;
+	mVdq0 = abcToDq0Transform(mThetaMech, **mIntfVoltage) / mBase_V;
 	mVsr(0,0) = mVdq0(0,0);
 	mVsr(3,0) = mVdq0(1,0);
 	mVsr(6,0) = mVdq0(2,0);
