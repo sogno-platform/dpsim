@@ -31,7 +31,7 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	mSusceptance = Complex(0, omega * mCapacitance);
 	mImpedance = Complex(1, 0) / mSusceptance;
 	mAdmittance = Complex(1, 0) / mImpedance;
-	**mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 
 	mSLog->info("\nCapacitance [F]: {:s}"
@@ -47,8 +47,8 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(**mIntfCurrent(0, 0)),
+		Logger::phasorToString((**mIntfVoltage)(0, 0)),
+		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -66,8 +66,8 @@ void SP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"
 		"\n--- MNA initialization finished ---",
-		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(**mIntfCurrent(0, 0)));
+		Logger::phasorToString((**mIntfVoltage)(0, 0)),
+		Logger::phasorToString((**mIntfCurrent)(0, 0)));
 }
 
 void SP::Ph1::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -113,10 +113,10 @@ void SP::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		**mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+		(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	}
 	if (terminalNotGrounded(0)) {
-		**mIntfVoltage(0, 0) = **mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+		(**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	}
 }
 

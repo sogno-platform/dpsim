@@ -78,22 +78,22 @@ void EMT::Ph1::VoltageSourceRamp::mnaApplyRightSideVectorStamp(Matrix& rightVect
 void EMT::Ph1::VoltageSourceRamp::updateState(Real time) {
 	Real voltageAbs = Math::abs(mVoltageRef);
 	Real voltagePhase = Math::phase(mVoltageRef);
-	**mIntfVoltage(0,0) = voltageAbs * cos(voltagePhase + mSrcFreq * time);
+	(**mIntfVoltage)(0,0) = voltageAbs * cos(voltagePhase + mSrcFreq * time);
 
 	if (time >= mSwitchTime && time < mSwitchTime + mRampTime) {
 		voltageAbs = Math::abs(mVoltageRef + (time - mSwitchTime) / mRampTime * mAddVoltage);
 		voltagePhase = Math::phase(mVoltageRef + (time - mSwitchTime) / mRampTime * mAddVoltage);
 		Real fadeInOut = 0.5 + 0.5 * sin((time - mSwitchTime) / mRampTime * PI + -PI / 2);
-		**mIntfVoltage(0,0) = voltageAbs * cos(voltagePhase + (mSrcFreq + fadeInOut * mAddSrcFreq) * time);
+		(**mIntfVoltage)(0,0) = voltageAbs * cos(voltagePhase + (mSrcFreq + fadeInOut * mAddSrcFreq) * time);
 	}
 	else if (time >= mSwitchTime + mRampTime) {
 		voltageAbs = Math::abs(mVoltageRef + mAddVoltage);
 		voltagePhase = Math::phase(mVoltageRef + mAddVoltage);
-		**mIntfVoltage(0,0) = voltageAbs * cos(voltagePhase + (mSrcFreq + mAddSrcFreq) * time);
+		(**mIntfVoltage)(0,0) = voltageAbs * cos(voltagePhase + (mSrcFreq + mAddSrcFreq) * time);
 	}
 }
 
 void EMT::Ph1::VoltageSourceRamp::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mVoltageSource.updateState(time);
-	mVoltageSource.mSubVoltageSource->attribute<Complex>("V_ref")->set(mVoltageSource.**mIntfVoltage(0, 0));
+	mVoltageSource.mSubVoltageSource->attribute<Complex>("V_ref")->set(mVoltageSource.(**mIntfVoltage)(0, 0));
 }

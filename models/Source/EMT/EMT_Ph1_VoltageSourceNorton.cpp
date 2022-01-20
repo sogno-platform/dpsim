@@ -39,7 +39,7 @@ void EMT::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Att
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	**mIntfVoltage(0, 0) = attributeComplex("V_ref")->get().real();
+	(**mIntfVoltage)(0, 0) = attributeComplex("V_ref")->get().real();
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -68,9 +68,9 @@ void EMT::Ph1::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVe
 void EMT::Ph1::VoltageSourceNorton::updateState(Real time) {
 	// Check if set source was called
 	if (Math::abs(mVoltageRef)  > 0)
-		**mIntfVoltage(0,0) = Math::abs(mVoltageRef) * cos(2.*PI*mSrcFreq*time + Math::phase(mVoltageRef));
+		(**mIntfVoltage)(0,0) = Math::abs(mVoltageRef) * cos(2.*PI*mSrcFreq*time + Math::phase(mVoltageRef));
 
-	mEquivCurrent = **mIntfVoltage(0,0) / mResistance;
+	mEquivCurrent = (**mIntfVoltage)(0,0) / mResistance;
 }
 
 void EMT::Ph1::VoltageSourceNorton::MnaPreStep::execute(Real time, Int timeStepCount) {
@@ -86,12 +86,12 @@ void EMT::Ph1::VoltageSourceNorton::MnaPostStep::execute(Real time, Int timeStep
 void EMT::Ph1::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Calculate v1 - v0
 	if (terminalNotGrounded(1))
-		**mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
+		(**mIntfVoltage)(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		**mIntfVoltage(0,0) = **mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
+		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void EMT::Ph1::VoltageSourceNorton::mnaUpdateCurrent(const Matrix& leftVector) {
 	// TODO: verify signs
-	**mIntfCurrent(0,0) = mEquivCurrent - **mIntfVoltage(0,0) / mResistance;
+	(**mIntfCurrent)(0,0) = mEquivCurrent - (**mIntfVoltage)(0,0) / mResistance;
 }

@@ -439,7 +439,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvec
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {
 	for (auto virtualNode : mVirtualNodes)
 		virtualNode->mnaUpdateVoltage(leftVector);
-	**mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,0));
-	**mIntfVoltage(1,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,1));
-	**mIntfVoltage(2,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,2));
+	(**mIntfVoltage)(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,0));
+	(**mIntfVoltage)(1,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,1));
+	(**mIntfVoltage)(2,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,2));
 }

@@ -46,8 +46,8 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequ
 		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(**mIntfCurrent(0,0)),
+		Logger::phasorToString((**mIntfVoltage)(0,0)),
+		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
 

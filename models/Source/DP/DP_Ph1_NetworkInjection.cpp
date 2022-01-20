@@ -194,12 +194,12 @@ void DP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[], 
 	int n_offset_2 = c_offset + Pos2 +1;// current offset for second nodal equation
 	resid[c_offset] = (state[Pos2]-state[Pos1]) - state[c_offset]; // Voltage equation for Resistor
 	//resid[++c_offset] = ; //TODO : add inductance equation
-	resid[n_offset_1] += **mIntfCurrent(0, 0).real();
-	resid[n_offset_2] += **mIntfCurrent(0, 0).real();
+	resid[n_offset_1] += (**mIntfCurrent)(0, 0).real();
+	resid[n_offset_2] += (**mIntfCurrent)(0, 0).real();
 	off[1] += 1;
 }
 
 Complex DP::Ph1::NetworkInjection::daeInitialize() {
-	**mIntfVoltage(0,0) = mSubVoltageSource->attribute<Complex>("v_intf")->get();
+	(**mIntfVoltage)(0,0) = mSubVoltageSource->attribute<Complex>("v_intf")->get();
 	return mSubVoltageSource->attribute<Complex>("v_intf")->get();
 }

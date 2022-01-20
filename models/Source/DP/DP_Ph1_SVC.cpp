@@ -39,11 +39,11 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 	Complex CImpedance = { mSwitchROpen, -1/(omega * CInit) };
 	Complex impedance = LImpedance * CImpedance / (LImpedance + CImpedance);
 
-	**mIntfVoltage(0, 0) = initialSingleVoltage(0);
-	**mIntfCurrent(0,0)  = **mIntfVoltage(0,0) / impedance;
+	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0);
+	(**mIntfCurrent)(0,0)  = (**mIntfVoltage)(0,0) / impedance;
 
 	mBPrev = 0;
-	mPrevVoltage = **mIntfVoltage(0, 0).real();
+	mPrevVoltage = (**mIntfVoltage)(0, 0).real();
 	mVmeasPrev = mPrevVoltage;
 
 	if (mMechMode) {
@@ -60,9 +60,9 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 		mTr, mKr, mRefVolt, mQN, mBN, mBMax, mBMin, mBPrev);
 
 	// set voltages at virtual nodes
-	Complex VLSwitch = **mIntfVoltage(0, 0) - LImpedance * **mIntfCurrent(0, 0);
+	Complex VLSwitch = (**mIntfVoltage)(0, 0) - LImpedance * (**mIntfCurrent)(0, 0);
 	mVirtualNodes[0]->setInitialVoltage(VLSwitch);
-	Complex VCSwitch = **mIntfVoltage(0, 0) - CImpedance * **mIntfCurrent(0, 0);
+	Complex VCSwitch = (**mIntfVoltage)(0, 0) - CImpedance * (**mIntfCurrent)(0, 0);
 	mVirtualNodes[1]->setInitialVoltage(VCSwitch);
 
 	// create elements
@@ -100,8 +100,8 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		impedance,
-		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(**mIntfCurrent(0,0)),
+		Logger::phasorToString((**mIntfVoltage)(0,0)),
+		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
 
@@ -205,13 +205,13 @@ void DP::Ph1::SVC::mnaPostStep(Real time, Int timeStepCount) {
 
 void DP::Ph1::SVC::mnaUpdateVoltage(const Matrix& leftVector) {
 	mVpcc = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, 0).real();
-	**mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::SVC::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent(0, 0) = 0;
-	**mIntfCurrent(0, 0) += mSubInductor->intfCurrent()(0, 0);
-	**mIntfCurrent(0, 0) += mSubCapacitor->intfCurrent()(0, 0);
+	(**mIntfCurrent)(0, 0) = 0;
+	(**mIntfCurrent)(0, 0) += mSubInductor->intfCurrent()(0, 0);
+	(**mIntfCurrent)(0, 0) += mSubCapacitor->intfCurrent()(0, 0);
 }
 
 void DP::Ph1::SVC::checkProtection(Real time) {
@@ -261,8 +261,8 @@ void DP::Ph1::SVC::updateSusceptance() {
 	Real Fac1 = mDeltaT / (2 * mTr);
 	Real Fac2 = mDeltaT * mKr / (2 * mTr);
 
-	Complex vintf = **mIntfVoltage(0, 0);
-	Real V = Math::abs(**mIntfVoltage(0, 0).real());
+	Complex vintf = (**mIntfVoltage)(0, 0);
+	Real V = Math::abs((**mIntfVoltage)(0, 0).real());
 
 	// Pt1 with trapez rule for voltage measurement
 	Real Fac3 = mDeltaT / (2 * mTm);
@@ -338,7 +338,7 @@ void DP::Ph1::SVC::updateSusceptance() {
 // model SVC with a mechanical component and discrete
 void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
 	// current voltage
-	Real V = Math::abs(**mIntfVoltage(0, 0).real());
+	Real V = Math::abs((**mIntfVoltage)(0, 0).real());
 	Real omega = 2 * M_PI*mFrequencies(0, 0);
 
 	// Pt1 with trapez rule for voltage measurement

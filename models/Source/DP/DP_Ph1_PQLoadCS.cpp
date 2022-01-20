@@ -90,8 +90,8 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nCurrent set point: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(**mIntfCurrent(0,0)),
+		Logger::phasorToString((**mIntfVoltage)(0,0)),
+		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(current));
 }
@@ -119,7 +119,7 @@ void DP::Ph1::PQLoadCS::updateSetPoint() {
 	// Calculate new current set point.
 	Complex power = { mActivePower->get(), mReactivePower->get()};
 	Complex current = power / mNomVoltage->get();
-	//Complex current = power / **mIntfVoltage(0,0);
+	//Complex current = power / (**mIntfVoltage)(0,0);
 
 	mCurrentSourceRef->set(std::conj(current));
 	mSLog->debug(

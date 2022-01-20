@@ -146,16 +146,16 @@ void EMT::Ph3::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void EMT::Ph3::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), **mIntfVoltage(0, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), **mIntfVoltage(1, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), **mIntfVoltage(2, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), (**mIntfVoltage)(0, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), (**mIntfVoltage)(1, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), (**mIntfVoltage)(2, 0));
 }
 
 void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
 	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
 		for(int i = 0; i < 3; i++) {
-			**mIntfVoltage(i, 0) = RMS3PH_TO_PEAK1PH * Math::abs(attribute<MatrixComp>("V_ref")->get()(i, 0))
+			(**mIntfVoltage)(i, 0) = RMS3PH_TO_PEAK1PH * Math::abs(attribute<MatrixComp>("V_ref")->get()(i, 0))
 				* cos(Math::phase(mSrcSig->getSignal()) + Math::phase(attribute<MatrixComp>("V_ref")->get()(i, 0)));
 		}
 	} else {
@@ -188,7 +188,7 @@ void EMT::Ph3::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribut
 }
 
 void EMT::Ph3::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent(0, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
-	**mIntfCurrent(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
-	**mIntfCurrent(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
+	(**mIntfCurrent)(0, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
+	(**mIntfCurrent)(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
+	(**mIntfCurrent)(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
 }

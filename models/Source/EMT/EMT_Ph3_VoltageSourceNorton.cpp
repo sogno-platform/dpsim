@@ -41,9 +41,9 @@ SimPowerComp<Real>::Ptr EMT::Ph3::VoltageSourceNorton::clone(String name) {
 void EMT::Ph3::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
 	Complex voltageRef = attribute<Complex>("V_ref")->get();
-	**mIntfVoltage(0, 0) = voltageRef.real() * cos(Math::phase(voltageRef));
-	**mIntfVoltage(1, 0) = voltageRef.real() * cos(Math::phase(voltageRef) - 2. / 3. * M_PI);
-	**mIntfVoltage(2, 0) = voltageRef.real() * cos(Math::phase(voltageRef) + 2. / 3. * M_PI);
+	(**mIntfVoltage)(0, 0) = voltageRef.real() * cos(Math::phase(voltageRef));
+	(**mIntfVoltage)(1, 0) = voltageRef.real() * cos(Math::phase(voltageRef) - 2. / 3. * M_PI);
+	(**mIntfVoltage)(2, 0) = voltageRef.real() * cos(Math::phase(voltageRef) + 2. / 3. * M_PI);
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -91,9 +91,9 @@ void EMT::Ph3::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVe
 void EMT::Ph3::VoltageSourceNorton::updateState(Real time) {
 	// Check if set source was called
 	if (Math::abs(mVoltageRef) > 0) {
-		**mIntfVoltage(0, 0) = Math::abs(mVoltageRef) * cos(2. * PI * mSrcFreq * time + Math::phase(mVoltageRef));
-		**mIntfVoltage(1, 0) = Math::abs(mVoltageRef) * cos(2. * PI * mSrcFreq * time + Math::phase(mVoltageRef) - 2. / 3. * M_PI);
-		**mIntfVoltage(2, 0) = Math::abs(mVoltageRef) * cos(2. * PI * mSrcFreq * time + Math::phase(mVoltageRef) + 2. / 3. * M_PI);
+		(**mIntfVoltage)(0, 0) = Math::abs(mVoltageRef) * cos(2. * PI * mSrcFreq * time + Math::phase(mVoltageRef));
+		(**mIntfVoltage)(1, 0) = Math::abs(mVoltageRef) * cos(2. * PI * mSrcFreq * time + Math::phase(mVoltageRef) - 2. / 3. * M_PI);
+		(**mIntfVoltage)(2, 0) = Math::abs(mVoltageRef) * cos(2. * PI * mSrcFreq * time + Math::phase(mVoltageRef) + 2. / 3. * M_PI);
 	}
 
 	mEquivCurrent = **mIntfVoltage / mResistance;
@@ -103,14 +103,14 @@ void EMT::Ph3::VoltageSourceNorton::updateState(Real time) {
 void EMT::Ph3::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Calculate v1 - v0
 	if (terminalNotGrounded(1)) {
-		**mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-		**mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-		**mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
+		(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		**mIntfVoltage(0, 0) = **mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-		**mIntfVoltage(1, 0) = **mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-		**mIntfVoltage(2, 0) = **mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+		(**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		(**mIntfVoltage)(1, 0) = (**mIntfVoltage)(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 
@@ -126,7 +126,7 @@ void EMT::Ph3::VoltageSourceNorton::MnaPostStep::execute(Real time, Int timeStep
 
 void EMT::Ph3::VoltageSourceNorton::mnaUpdateCurrent(const Matrix& leftVector) {
 	// signs are not verified
-	**mIntfCurrent(0, 0) = mEquivCurrent(0, 0) - **mIntfVoltage(0, 0) / mResistance;
-	**mIntfCurrent(1, 0) = mEquivCurrent(1, 0) - **mIntfVoltage(1, 0) / mResistance;
-	**mIntfCurrent(2, 0) = mEquivCurrent(2, 0) - **mIntfVoltage(2, 0) / mResistance;
+	(**mIntfCurrent)(0, 0) = mEquivCurrent(0, 0) - (**mIntfVoltage)(0, 0) / mResistance;
+	(**mIntfCurrent)(1, 0) = mEquivCurrent(1, 0) - (**mIntfVoltage)(1, 0) / mResistance;
+	(**mIntfCurrent)(2, 0) = mEquivCurrent(2, 0) - (**mIntfVoltage)(2, 0) / mResistance;
 }

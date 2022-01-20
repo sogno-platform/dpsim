@@ -169,9 +169,9 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 
 	// // Update active electrical power that is compared with the mechanical power
 	mElecActivePower = ( 3./2. * intfVoltageComplex(0,0) *  std::conj( - intfCurrentComplex(0,0)) ).real();
-	// mElecActivePower = ( (mEp - **mIntfVoltage(0,0)) / mImpedance *  **mIntfVoltage(0,0) ).real();
+	// mElecActivePower = ( (mEp - (**mIntfVoltage)(0,0)) / mImpedance *  (**mIntfVoltage)(0,0) ).real();
 	// For infinite power bus
-	// mElecActivePower = (Math::abs(mEp) * Math::abs(**mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
+	// mElecActivePower = (Math::abs(mEp) * Math::abs((**mIntfVoltage)(0,0)) / mXpd) * sin(mDelta_p);
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
@@ -205,7 +205,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 				"\nactive electrical power: {:e}"
 				"\nmechanical power: {:e}"
 				"\n--- End of powerflow initialization ---",
-				Math::abs(**mIntfVoltage(0,0)), Math::phaseDeg(**mIntfVoltage(0,0)),
+				Math::abs((**mIntfVoltage)(0,0)), Math::phaseDeg((**mIntfVoltage)(0,0)),
 				Math::abs(mEp), Math::phaseDeg(mEp),
 				mInitElecPower.real(), mInitElecPower.imag(),
 				mElecActivePower, mMechPower);
@@ -220,7 +220,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 	mElecActivePower = - 1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
 
 	// The damping factor Kd is adjusted to obtain a damping ratio of 0.3
-	// Real MaxElecActivePower= Math::abs(mEp) * Math::abs(**mIntfVoltage(0,0)) / mXpd;
+	// Real MaxElecActivePower= Math::abs(mEp) * Math::abs((**mIntfVoltage)(0,0)) / mXpd;
 	// mKd=4*0.3*sqrt(mNomOmega*mInertia*MaxElecActivePower*0.5);
 	mKd=1*mNomPower;
 
@@ -240,7 +240,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 	mThetaN = mThetaN + mTimeStep * mNomOmega;
 
 	// mStates << Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,
-	// 	mDelta_p, mOmMech, dOmMech, dDelta_p, **mIntfVoltage(0,0).real(), **mIntfVoltage(0,0).imag();
+	// 	mDelta_p, mOmMech, dOmMech, dDelta_p, (**mIntfVoltage)(0,0).real(), (**mIntfVoltage)(0,0).imag();
 	// SPDLOG_LOGGER_DEBUG(mSLog, "\nStates, time {:f}: \n{:s}", time, Logger::matrixToString(mStates));
 }
 
@@ -294,9 +294,9 @@ void EMT::Ph3::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int time
 
 void EMT::Ph3::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
-	**mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-	**mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-	**mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+	(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector) {

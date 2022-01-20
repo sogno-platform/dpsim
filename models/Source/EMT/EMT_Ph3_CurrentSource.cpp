@@ -87,14 +87,14 @@ void EMT::Ph3::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute
 
 void EMT::Ph3::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (terminalNotGrounded(1)) {
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), - **mIntfCurrent(0, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), - **mIntfCurrent(1, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), - **mIntfCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), - (**mIntfCurrent)(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), - (**mIntfCurrent)(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), - (**mIntfCurrent)(2, 0));
 	}
 	if (terminalNotGrounded(0)) {
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), **mIntfCurrent(0, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), **mIntfCurrent(1, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 2), **mIntfCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), (**mIntfCurrent)(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), (**mIntfCurrent)(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 2), (**mIntfCurrent)(2, 0));
 	}
 }
 
@@ -102,7 +102,7 @@ void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
 	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
 		for(int i = 0; i < 3; i++) {
-			**mIntfCurrent(i, 0) = RMS_TO_PEAK * Math::abs(attribute<MatrixComp>("I_ref")->get()(i, 0)) 
+			(**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs(attribute<MatrixComp>("I_ref")->get()(i, 0)) 
 				* cos(Math::phase(mSrcSig->getSignal()) + Math::phase(attribute<MatrixComp>("I_ref")->get()(i, 0)));
 		}
 	} else {
@@ -138,13 +138,13 @@ void EMT::Ph3::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3,1);
 	if (terminalNotGrounded(1)) {
-		**mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-		**mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-		**mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
+		(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		**mIntfVoltage(0, 0) = **mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-		**mIntfVoltage(1, 0) = **mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-		**mIntfVoltage(2, 0) = **mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+		(**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		(**mIntfVoltage)(1, 0) = (**mIntfVoltage)(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }

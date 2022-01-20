@@ -30,7 +30,7 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Resistor::clone(String name) {
 void SP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	mConductance = 1 / mResistance;
-	**mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	**mIntfCurrent = mConductance*mIntfVoltage;
 
 	mSLog->info("\nResistance [Ohm]: {:s}",
@@ -42,8 +42,8 @@ void SP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(**mIntfCurrent(0, 0)),
+		Logger::phasorToString((**mIntfVoltage)(0, 0)),
+		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -97,8 +97,8 @@ void SP::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"
 		"\n--- MNA initialization finished ---",
-		Logger::phasorToString(**mIntfVoltage(0, 0)),
-		Logger::phasorToString(**mIntfCurrent(0, 0)));
+		Logger::phasorToString((**mIntfVoltage)(0, 0)),
+		Logger::phasorToString((**mIntfCurrent)(0, 0)));
 }
 
 void SP::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -142,20 +142,20 @@ void SP::Ph1::Resistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matr
 void SP::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		**mIntfVoltage(0,freq) = 0;
+		(**mIntfVoltage)(0,freq) = 0;
 		if (terminalNotGrounded(1))
-			**mIntfVoltage(0,freq) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1), mNumFreqs, freq);
+			(**mIntfVoltage)(0,freq) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1), mNumFreqs, freq);
 		if (terminalNotGrounded(0))
-			**mIntfVoltage(0,freq) = **mIntfVoltage(0,freq) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq);
+			(**mIntfVoltage)(0,freq) = (**mIntfVoltage)(0,freq) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq);
 
-		SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString(**mIntfVoltage(0,freq)));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,freq)));
 	}
 }
 
 void SP::Ph1::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		**mIntfCurrent(0,freq) = **mIntfVoltage(0,freq) / mResistance;
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(**mIntfCurrent(0,freq)));
+		(**mIntfCurrent)(0,freq) = (**mIntfVoltage)(0,freq) / mResistance;
+		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }
 

@@ -227,9 +227,9 @@ void EMT::Ph3::RXLoad::MnaPostStep::execute(Real time, Int timeStepCount) {
 
 void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
 	**mIntfVoltage = Matrix::Zero(3, 1);
-	**mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-	**mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-	**mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+	(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 }
 
 void EMT::Ph3::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {

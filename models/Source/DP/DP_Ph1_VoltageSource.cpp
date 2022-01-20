@@ -108,7 +108,7 @@ void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	**mIntfVoltage(0,0) = mSrcSig->getSignal();
+	(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -118,15 +118,15 @@ void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"
 		"\n--- MNA initialization finished ---",
-		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(**mIntfCurrent(0,0)));
+		Logger::phasorToString((**mIntfVoltage)(0,0)),
+		Logger::phasorToString((**mIntfCurrent)(0,0)));
 }
 
 void DP::Ph1::VoltageSource::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	**mIntfVoltage(0,0) = mSrcSig->getSignal();
+	(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
@@ -179,29 +179,29 @@ void DP::Ph1::VoltageSource::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix,
 
 void DP::Ph1::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// TODO: Is this correct with two nodes not gnd?
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), **mIntfVoltage(0,0), mNumFreqs);
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mIntfVoltage)(0,0), mNumFreqs);
 	SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-		Logger::complexToString(**mIntfVoltage(0,0)), mVirtualNodes[0]->matrixNodeIndex());
+		Logger::complexToString((**mIntfVoltage)(0,0)), mVirtualNodes[0]->matrixNodeIndex());
 }
 
 void DP::Ph1::VoltageSource::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		// TODO: Is this correct with two nodes not gnd?
-		Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), **mIntfVoltage(0,freq), 1, 0, freq);
+		Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mIntfVoltage)(0,freq), 1, 0, freq);
 		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-			Logger::complexToString(**mIntfVoltage(0,freq)), mVirtualNodes[0]->matrixNodeIndex());
+			Logger::complexToString((**mIntfVoltage)(0,freq)), mVirtualNodes[0]->matrixNodeIndex());
 	}
 }
 
 void DP::Ph1::VoltageSource::updateVoltage(Real time) {
 	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
-		**mIntfVoltage(0,0) = mSrcSig->getSignal();
+		(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
 	} else {
-		**mIntfVoltage(0,0) = attribute<Complex>("V_ref")->get();
+		(**mIntfVoltage)(0,0) = attribute<Complex>("V_ref")->get();
 	}
 
-	mSLog->debug("Update Voltage {:s}", Logger::phasorToString(**mIntfVoltage(0,0)));
+	mSLog->debug("Update Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,0)));
 }
 
 void DP::Ph1::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
@@ -224,7 +224,7 @@ void DP::Ph1::VoltageSource::MnaPostStepHarm::execute(Real time, Int timeStepCou
 
 void DP::Ph1::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		**mIntfCurrent(0,freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);
+		(**mIntfCurrent)(0,freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);
 	}
 }
 
@@ -248,12 +248,12 @@ void DP::Ph1::VoltageSource::daeResidual(double ttime, const double state[], con
 	int n_offset_2 = c_offset + Pos2 +1;// current offset for second nodal equation
 	resid[c_offset] = (state[Pos2]-state[Pos1]) - state[c_offset]; // Voltage equation for Resistor
 	//resid[++c_offset] = ; //TODO : add inductance equation
-	resid[n_offset_1] += **mIntfCurrent(0, 0).real();
-	resid[n_offset_2] += **mIntfCurrent(0, 0).real();
+	resid[n_offset_1] += (**mIntfCurrent)(0, 0).real();
+	resid[n_offset_2] += (**mIntfCurrent)(0, 0).real();
 	off[1] += 1;
 }
 
 Complex DP::Ph1::VoltageSource::daeInitialize() {
-	**mIntfVoltage(0,0) = mSrcSig->getSignal();
+	(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
 	return mSrcSig->getSignal();
 }

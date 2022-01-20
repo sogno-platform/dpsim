@@ -52,10 +52,10 @@ void SP::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 
 void SP::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
-	**mIntfVoltage(0, 0) = mVoltageRef->get();
-	**mIntfVoltage(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
+	(**mIntfVoltage)(0, 0) = mVoltageRef->get();
+	(**mIntfVoltage)(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
 		Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI));
-	**mIntfVoltage(2, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI),
+	(**mIntfVoltage)(2, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI),
 		Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI));
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -99,20 +99,20 @@ void SP::Ph3::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void SP::Ph3::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), **mIntfVoltage(0, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), **mIntfVoltage(1, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), **mIntfVoltage(2, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), (**mIntfVoltage)(0, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), (**mIntfVoltage)(1, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), (**mIntfVoltage)(2, 0));
 
-	//mLog.debug() << "Add " << **mIntfVoltage(0,0) << " to source vector " << mVirtualNodes[0]->matrixNodeIndex() << std::endl;
+	//mLog.debug() << "Add " << (**mIntfVoltage)(0,0) << " to source vector " << mVirtualNodes[0]->matrixNodeIndex() << std::endl;
 }
 
 void SP::Ph3::VoltageSource::updateVoltage(Real time) {
 	// can't we just do nothing??
 	// TODO: remove updateVoltage
-	**mIntfVoltage(0, 0) = mVoltageRef->get();
-	**mIntfVoltage(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
+	(**mIntfVoltage)(0, 0) = mVoltageRef->get();
+	(**mIntfVoltage)(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
 		Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI));
-	**mIntfVoltage(2, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI),
+	(**mIntfVoltage)(2, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI),
 		Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI));
 }
 
@@ -126,9 +126,9 @@ void SP::Ph3::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) 
 }
 
 void SP::Ph3::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
-	**mIntfCurrent(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
-	**mIntfCurrent(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
+	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
+	(**mIntfCurrent)(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
+	(**mIntfCurrent)(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
 }
 
 void SP::Ph3::VoltageSource::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
@@ -157,6 +157,6 @@ void SP::Ph3::VoltageSource::daeResidual(double ttime, const double state[], con
 }
 
 Complex SP::Ph3::VoltageSource::daeInitialize() {
-	**mIntfVoltage(0, 0) = mVoltageRef->get();
+	(**mIntfVoltage)(0, 0) = mVoltageRef->get();
 	return mVoltageRef->get();
 }

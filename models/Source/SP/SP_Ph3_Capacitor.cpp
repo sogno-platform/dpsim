@@ -35,19 +35,19 @@ void SP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		Complex(0, omega * mCapacitance(2, 0)), Complex(0, omega * mCapacitance(2, 1)), Complex(0, omega * mCapacitance(2, 2));
 
 	// IntfVoltage initialization for each phase
-	**mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	**mIntfVoltage(1, 0) = **mIntfVoltage(0, 0) * Complex(cos(-2. / 3. * M_PI), sin(-2. / 3. * M_PI));
-	**mIntfVoltage(2, 0) = **mIntfVoltage(0, 0) * Complex(cos(2. / 3. * M_PI), sin(2. / 3. * M_PI));
+	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+	(**mIntfVoltage)(1, 0) = (**mIntfVoltage)(0, 0) * Complex(cos(-2. / 3. * M_PI), sin(-2. / 3. * M_PI));
+	(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(0, 0) * Complex(cos(2. / 3. * M_PI), sin(2. / 3. * M_PI));
 
 	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 	// TODO: add updated logger
 	/*
 	mLog.info() << "\n--- Initialize from power flow ---" << std::endl
 		<< "Impedance: " << impedance << std::endl
-		<< "Voltage across: " << std::abs(**mIntfVoltage(0, 0))
-		<< "<" << Math::phaseDeg(**mIntfVoltage(0, 0)) << std::endl
-		<< "Current: " << std::abs(**mIntfCurrent(0, 0))
-		<< "<" << Math::phaseDeg(**mIntfCurrent(0, 0)) << std::endl
+		<< "Voltage across: " << std::abs((**mIntfVoltage)(0, 0))
+		<< "<" << Math::phaseDeg((**mIntfVoltage)(0, 0)) << std::endl
+		<< "Current: " << std::abs((**mIntfCurrent)(0, 0))
+		<< "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl
 		<< "Terminal 0 voltage: " << std::abs(initialSingleVoltage(0))
 		<< "<" << Math::phaseDeg(initialSingleVoltage(0)) << std::endl
 		<< "Terminal 1 voltage: " << std::abs(initialSingleVoltage(1))
@@ -60,10 +60,10 @@ void SP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	updateMatrixNodeIndices();
 	// TODO add updated logger
 	/*mLog.info() << "\n--- MNA Initialization ---" << std::endl
-		<< "Initial voltage " << Math::abs(**mIntfVoltage(0, 0))
-		<< "<" << Math::phaseDeg(**mIntfVoltage(0, 0)) << std::endl
-		<< "Initial current " << Math::abs(**mIntfCurrent(0, 0))
-		<< "<" << Math::phaseDeg(**mIntfCurrent(0, 0)) << std::endl
+		<< "Initial voltage " << Math::abs((**mIntfVoltage)(0, 0))
+		<< "<" << Math::phaseDeg((**mIntfVoltage)(0, 0)) << std::endl
+		<< "Initial current " << Math::abs((**mIntfCurrent)(0, 0))
+		<< "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl
 		<< "--- MNA initialization finished ---" << std::endl;*/
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -148,14 +148,14 @@ void SP::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		**mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-		**mIntfVoltage(1, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-		**mIntfVoltage(2, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 2));
+		(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		(**mIntfVoltage)(1, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		(**mIntfVoltage)(2, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		**mIntfVoltage(0, 0) = **mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-		**mIntfVoltage(1, 0) = **mIntfVoltage(1, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-		**mIntfVoltage(2, 0) = **mIntfVoltage(2, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+		(**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		(**mIntfVoltage)(1, 0) = (**mIntfVoltage)(1, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(2, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 

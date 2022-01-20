@@ -34,8 +34,8 @@ void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 1 voltage phasor: \n{}",
 		Logger::phasorToString(initialVoltage(0)(0,0)),
 		Logger::phasorToString(initialVoltage(1)(0,0)),
-		Logger::phasorToString(**mIntfVoltage(0,0)),
-		Logger::phasorToString(**mIntfCurrent(0,0)));
+		Logger::phasorToString((**mIntfVoltage)(0,0)),
+		Logger::phasorToString((**mIntfCurrent)(0,0)));
 }
 
 void DP::Ph3::SeriesSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -106,22 +106,22 @@ void DP::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	if (terminalNotGrounded(1)) {
-		**mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,0));
-		**mIntfVoltage(1,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,1));
-		**mIntfVoltage(2,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,2));
+		(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,0));
+		(**mIntfVoltage)(1,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,1));
+		(**mIntfVoltage)(2,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,2));
 	}
 	if (terminalNotGrounded(0)) {
-		**mIntfVoltage(0,0) = **mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,0));
-		**mIntfVoltage(1,0) = **mIntfVoltage(1,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,1));
-		**mIntfVoltage(2,0) = **mIntfVoltage(2,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,2));
+		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,0));
+		(**mIntfVoltage)(1,0) = (**mIntfVoltage)(1,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,1));
+		(**mIntfVoltage)(2,0) = (**mIntfVoltage)(2,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,2));
 	}
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage A: {} < {}", std::abs(**mIntfVoltage(0,0)), std::arg(**mIntfVoltage(0,0)));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage A: {} < {}", std::abs((**mIntfVoltage)(0,0)), std::arg((**mIntfVoltage)(0,0)));
 }
 
 void DP::Ph3::SeriesSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
 	Real impedance = (mIsClosed)? mClosedResistance : mOpenResistance;
 	**mIntfCurrent = **mIntfVoltage / impedance;
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs(**mIntfCurrent(0,0)), std::arg(**mIntfCurrent(0,0)));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs((**mIntfCurrent)(0,0)), std::arg((**mIntfCurrent)(0,0)));
 }
