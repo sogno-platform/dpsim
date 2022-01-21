@@ -42,13 +42,13 @@ namespace DPsim {
 
 	protected:
 		/// Simulation name
-		String mName;
+		const Attribute<String>::Ptr mName;
 		/// Final time of the simulation
-		Real mFinalTime = 0.001;
+		const Attribute<Real>::Ptr mFinalTime;
 		/// Time variable that is incremented at every step
 		Real mTime = 0;
 		/// Simulation timestep
-		Real mTimeStep = 0.001;
+		const Attribute<Real>::Ptr mTimeStep;
 		/// Number of step which have been executed for this simulation.
 		Int mTimeStepCount = 0;
 		/// The simulation event queue
@@ -89,7 +89,7 @@ namespace DPsim {
 		/// into subnetworks at decoupling lines.
 		/// If the system is split, each subsystem is
 		/// solved by a dedicated MNA solver.
-		Bool mSplitSubnets = true;
+		const Attribute<Bool>::Ptr mSplitSubnets = true;
 		/// If tearing components exist, the Diakoptics
 		/// solver is selected automatically.
 		CPS::IdentifiedObject::List mTearComponents = CPS::IdentifiedObject::List();
@@ -110,7 +110,7 @@ namespace DPsim {
 		/// Determines if steady-state initialization
 		/// should be executed prior to the simulation.
 		/// By default the initialization is disabled.
-		Bool mSteadyStateInit = false;
+		const Attribute<Bool>::Ptr mSteadyStateInit;
 
 		// #### Task dependencies und scheduling ####
 		/// Scheduler used for task scheduling

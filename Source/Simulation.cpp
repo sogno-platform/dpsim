@@ -36,31 +36,30 @@ using namespace DPsim;
 
 Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mName(name),
-	mLogLevel(logLevel) {
+	mFinalTime(Attribute<Real>::create("final_time", mAttributes, 0.001)),
+	mTimeStep(Attribute<Real>::create("time_step", mAttributes, 0.001)),
+	mLogLevel(logLevel),
+	mSteadyStateInit(Attribute<Bool>::create("steady_state_init", mAttributes, false)),
+	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true))  {
 	create();
 }
 
 Simulation::Simulation(String name, CommandLineArgs& args) :
-	mName(name),
-	mFinalTime(args.duration),
-	mTimeStep(args.timeStep),
+	mName(Attribute<String>::create("name", mAttributes, name)),
+	mFinalTime(Attribute<Real>::create("final_time", mAttributes, args.duration)),
+	mTimeStep(Attribute<Real>::create("time_step", mAttributes, args.timeStep),
 	mLogLevel(args.logLevel),
 	mDomain(args.solver.domain),
 	mSolverType(args.solver.type),
-	mMnaImpl(args.mnaImpl) {
+	mMnaImpl(args.mnaImpl),
+	mSteadyStateInit(Attribute<Bool>::create("steady_state_init", mAttributes, false)),
+	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true)) {
 	create();
 }
 
 void Simulation::create() {
 	// Logging
 	mLog = Logger::get(mName, mLogLevel, std::max(Logger::Level::info, mLogLevel));
-
-	// Attributes
-	addAttribute<String>("name", &mName, Flags::read);
-	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
-	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
-	addAttribute<Bool>("steady_state_init", &mSteadyStateInit, Flags::read|Flags::write);
-	addAttribute<Bool>("split_subnets", &mSplitSubnets, Flags::read|Flags::write);
 
 	Eigen::setNbThreads(1);
 
