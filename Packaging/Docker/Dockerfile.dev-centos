@@ -59,7 +59,9 @@ RUN dnf -y install \
     libnl3-devel \
     libcurl-devel \
     jansson-devel \
-    mosquitto-devel
+    mosquitto-devel \
+    libjpeg-devel \
+    zlib-devel
 
 # CUDARPC and dependencies
 RUN dnf install -y make bash git gcc autoconf libtool automake \
