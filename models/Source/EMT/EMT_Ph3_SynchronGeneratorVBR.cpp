@@ -137,12 +137,6 @@ void EMT::Ph3::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real 
 	WithExciter = true;
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef) {
-	// mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
-	// mTurbineGovernor.initialize(PmRef, Tm_init);
-	WithTurbineGovernor = true;
-}
-
 void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
@@ -305,10 +299,9 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightV
 
 void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {	
 
-	// TODO: fix hard-coded numerical values, for this reason commented out
-	/* if (WithTurbineGovernor == true) {
-		mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 300e6 / 555e6, mTimeStep);
-	}*/
+	// Update of mechanical torque from turbine governor
+	if (mHasTurbineGovernor)
+		mMechTorque = -mTurbineGovernor->step(mOmMech, 1,  mInitElecPower.real() / mNomPower, mTimeStep);
 
 	// Estimate mechanical variables with euler
 	mElecTorque = (mPsimd*mIq - mPsimq*mId);

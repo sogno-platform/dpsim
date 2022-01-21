@@ -225,8 +225,6 @@ namespace Ph3 {
 
 		/// Function to initialize Exciter
 		void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
-		/// Function to initialize Governor and Turbine
-		void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
 
 		/// Initialize components with correct network frequencies
 		void initialize(Matrix frequencies) override {
