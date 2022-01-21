@@ -252,7 +252,7 @@ namespace DPsim {
 #endif
 
 		// #### Getter ####
-		String name() const { return mName; }
+		String name() const { return **mName; }
 		Real time() const { return mTime; }
 		Real finalTime() const { return mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }

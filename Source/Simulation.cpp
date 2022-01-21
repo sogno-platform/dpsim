@@ -59,7 +59,7 @@ Simulation::Simulation(String name, CommandLineArgs& args) :
 
 void Simulation::create() {
 	// Logging
-	mLog = Logger::get(mName, mLogLevel, std::max(Logger::Level::info, mLogLevel));
+	mLog = Logger::get(**mName, mLogLevel, std::max(Logger::Level::info, mLogLevel));
 
 	Eigen::setNbThreads(1);
 
@@ -100,12 +100,12 @@ void Simulation::createSolvers() {
 			break;
 #ifdef WITH_SUNDIALS
 		case Solver::Type::DAE:
-			solver = std::make_shared<DAESolver>(mName, mSystem, mTimeStep, 0.0);
+			solver = std::make_shared<DAESolver>(**mName, mSystem, mTimeStep, 0.0);
 			mSolvers.push_back(solver);
 			break;
 #endif /* WITH_SUNDIALS */
 		case Solver::Type::NRP:
-			solver = std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel);
+			solver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem, mTimeStep, mLogLevel);
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
 			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->initialize();
@@ -150,11 +150,11 @@ void Simulation::createMNASolver() {
 		// solvers for different subnets if deemed useful
 		if (mTearComponents.size() > 0) {
 			// Tear components available, use diakoptics
-			solver = std::make_shared<DiakopticsSolver<VarType>>(mName,
+			solver = std::make_shared<DiakopticsSolver<VarType>>(**mName,
 				subnets[net], mTearComponents, mTimeStep, mLogLevel);
 		} else {
 			// Default case with lu decomposition from mna factory
-			solver = MnaSolverFactory::factory<VarType>(mName + copySuffix, mDomain,
+			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
 												 mLogLevel, mMnaImpl);
 			solver->setTimeStep(mTimeStep);
 			solver->doSteadyStateInit(mSteadyStateInit);
@@ -342,7 +342,7 @@ Graph::Graph Simulation::dependencyGraph() {
 #endif
 
 void Simulation::start() {
-	mLog->info("Initialize simulation: {}", mName);
+	mLog->info("Initialize simulation: {}", **mName);
 	if (!mInitialized)
 		initialize();
 
@@ -353,7 +353,7 @@ void Simulation::start() {
 
 	sync();
 
-	mLog->info("Start simulation: {}", mName);
+	mLog->info("Start simulation: {}", **mName);
 	mLog->info("Time step: {:e}", mTimeStep);
 	mLog->info("Final time: {:e}", mFinalTime);
 
