@@ -111,7 +111,7 @@ void SP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"
@@ -165,7 +165,7 @@ void SP::Ph1::VoltageSource::updateVoltage(Real time) {
 
 void SP::Ph1::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
 	updateVoltage(time);
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void SP::Ph1::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {

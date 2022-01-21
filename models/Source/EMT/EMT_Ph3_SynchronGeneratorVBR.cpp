@@ -247,7 +247,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, At
 	CalculateL();
 
 	mSLog->info("Initialize right side vector of size {}", leftVector->get().rows());
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mSLog->info("Component affects right side vector entries {}, {} and {}", matrixNodeIndex(0,0), matrixNodeIndex(0,1), matrixNodeIndex(0,2));
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -256,7 +256,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, At
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaPreStep(Real time, Int timeStepCount) {
 	stepInPerUnit();
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {

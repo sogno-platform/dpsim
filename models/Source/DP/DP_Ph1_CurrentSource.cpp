@@ -62,11 +62,11 @@ void DP::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	(**mIntfCurrent)(0,0) = mCurrentRef->get();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void DP::Ph1::CurrentSource::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mCurrentSource.mnaApplyRightSideVectorStamp(mCurrentSource.mRightVector);
+	mCurrentSource.mnaApplyRightSideVectorStamp(**mCurrentSource.mRightVector);
 }
 
 void DP::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {

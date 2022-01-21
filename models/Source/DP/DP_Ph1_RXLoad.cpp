@@ -124,7 +124,7 @@ void DP::Ph1::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void DP::Ph1::RXLoad::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
@@ -178,7 +178,7 @@ void DP::Ph1::RXLoad::mnaPreStep(Real time, Int timeStepCount) {
 		mSubCapacitor->mnaPreStep(time, timeStepCount);
 
 	// pre-step of component itself
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::RXLoad::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

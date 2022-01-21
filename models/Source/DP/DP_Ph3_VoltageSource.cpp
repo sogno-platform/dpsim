@@ -58,7 +58,7 @@ void DP::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void DP::Ph3::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -115,7 +115,7 @@ void DP::Ph3::VoltageSource::updateVoltage(Real time) {
 
 void DP::Ph3::VoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mVoltageSource.updateVoltage(time);
-	mVoltageSource.mnaApplyRightSideVectorStamp(mVoltageSource.mRightVector);
+	mVoltageSource.mnaApplyRightSideVectorStamp(**mVoltageSource.mRightVector);
 }
 
 void DP::Ph3::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) {

@@ -175,7 +175,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 void EMT::Ph3::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	if (mSubResistor) {
 		mSubResistor->mnaInitialize(omega, timeStep, leftVector);
 		for (auto task : mSubResistor->mnaTasks()) {
@@ -217,7 +217,7 @@ void EMT::Ph3::RXLoad::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void EMT::Ph3::RXLoad::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mLoad.mnaApplyRightSideVectorStamp(mLoad.mRightVector);
+	mLoad.mnaApplyRightSideVectorStamp(**mLoad.mRightVector);
 }
 
 void EMT::Ph3::RXLoad::MnaPostStep::execute(Real time, Int timeStepCount) {

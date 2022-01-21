@@ -23,7 +23,7 @@ void DP::Ph3::SynchronGeneratorDQTrapez::mnaInitialize(Real omega, Real timeStep
 	updateMatrixNodeIndices();
 	mTimeStep = timeStep;
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
@@ -38,7 +38,7 @@ void DP::Ph3::SynchronGeneratorDQTrapez::mnaInitialize(Real omega, Real timeStep
 
 void DP::Ph3::SynchronGeneratorDQTrapez::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mSynGen.stepInPerUnit(time); //former system solve (trapezoidal)
-	mSynGen.mnaApplyRightSideVectorStamp(mSynGen.mRightVector);
+	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
 }
 
 void DP::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {

@@ -81,7 +81,7 @@ void DP::Ph1::RXLoadSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 	// get sub component right vector
 	mRightVectorStamps.push_back(&mSubRXLoad->attribute<Matrix>("right_vector")->get());
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
@@ -118,7 +118,7 @@ void DP::Ph1::RXLoadSwitch::mnaPreStep(Real time, Int timeStepCount) {
 
 	// pre-step of component itself
 	updateSwitchState(time);
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::RXLoadSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,

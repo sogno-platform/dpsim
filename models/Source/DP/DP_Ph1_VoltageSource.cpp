@@ -111,7 +111,7 @@ void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"
@@ -130,7 +130,7 @@ void DP::Ph1::VoltageSource::mnaInitializeHarm(Real omega, Real timeStep, std::v
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-	mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+	**mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -206,12 +206,12 @@ void DP::Ph1::VoltageSource::updateVoltage(Real time) {
 
 void DP::Ph1::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
 	updateVoltage(time);
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::VoltageSource::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 	mVoltageSource.updateVoltage(time);
-	mVoltageSource.mnaApplyRightSideVectorStampHarm(mVoltageSource.mRightVector);
+	mVoltageSource.mnaApplyRightSideVectorStampHarm(**mVoltageSource.mRightVector);
 }
 
 void DP::Ph1::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {

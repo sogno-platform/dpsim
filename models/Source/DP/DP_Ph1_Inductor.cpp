@@ -86,7 +86,7 @@ void DP::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"
@@ -107,7 +107,7 @@ void DP::Ph1::Inductor::mnaInitializeHarm(Real omega, Real timeStep, std::vector
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-	mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+	**mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -221,7 +221,7 @@ void DP::Ph1::Inductor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matr
 }
 
 void DP::Ph1::Inductor::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
-	mInductor.mnaApplyRightSideVectorStampHarm(mInductor.mRightVector);
+	mInductor.mnaApplyRightSideVectorStampHarm(**mInductor.mRightVector);
 }
 
 void DP::Ph1::Inductor::MnaPostStepHarm::execute(Real time, Int timeStepCount) {

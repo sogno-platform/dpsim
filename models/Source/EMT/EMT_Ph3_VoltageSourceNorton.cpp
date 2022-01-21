@@ -47,7 +47,7 @@ void EMT::Ph3::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Att
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph3::VoltageSourceNorton::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -116,7 +116,7 @@ void EMT::Ph3::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void EMT::Ph3::VoltageSourceNorton::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mVoltageSourceNorton.updateState(time);
-	mVoltageSourceNorton.mnaApplyRightSideVectorStamp(mVoltageSourceNorton.mRightVector);
+	mVoltageSourceNorton.mnaApplyRightSideVectorStamp(**mVoltageSourceNorton.mRightVector);
 }
 
 void EMT::Ph3::VoltageSourceNorton::MnaPostStep::execute(Real time, Int timeStepCount) {

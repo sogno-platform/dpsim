@@ -81,7 +81,7 @@ void EMT::Ph3::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 }
 
@@ -122,7 +122,7 @@ void EMT::Ph3::CurrentSource::mnaAddPreStepDependencies(AttributeBase::List &pre
 
 void EMT::Ph3::CurrentSource::mnaPreStep(Real time, Int timeStepCount) {
 	updateCurrent(time);
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::CurrentSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

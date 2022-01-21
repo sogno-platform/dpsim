@@ -20,6 +20,10 @@ namespace CPS {
 		typedef std::shared_ptr<MNAInterface> Ptr;
 		typedef std::vector<Ptr> List;
 
+		/// This component's contribution ("stamp") to the right-side vector.
+		/// TODO performance improvements from a sparse representation, at least during copying / summation?
+		const Attribute<Matrix>::Ptr mRightVector;
+
 		// #### MNA Base Functions ####
 		/// Initializes variables of components
 		virtual void mnaInitialize(Real omega, Real timeStep) {
@@ -67,14 +71,9 @@ namespace CPS {
 		}
 	protected:
 		/// Every MNA component modifies its source vector attribute.
-		MNAInterface() {
-			addAttribute<Matrix>("right_vector", &mRightVector, Flags::read);
-		}
+		MNAInterface() : mRightVector(Attribute<Matrix>::create("right_vector", mAttributes)) { }
 
 		/// List of tasks that relate to using MNA for this component (usually pre-step and/or post-step)
 		Task::List mMnaTasks;
-		/// This component's contribution ("stamp") to the right-side vector.
-		/// TODO performance improvements from a sparse representation, at least during copying / summation?
-		Matrix mRightVector;
 	};
 }

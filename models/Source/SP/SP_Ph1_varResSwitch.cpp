@@ -44,7 +44,7 @@ void SP::Ph1::varResSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 	updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void SP::Ph1::varResSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {

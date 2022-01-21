@@ -58,7 +58,7 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 void SP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	mSLog->info(

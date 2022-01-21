@@ -264,7 +264,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep
 	mMnaTasks.push_back(std::make_shared<ControlPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<ControlStep>(*this));
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 
@@ -346,7 +346,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

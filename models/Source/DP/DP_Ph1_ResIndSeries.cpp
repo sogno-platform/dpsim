@@ -83,7 +83,7 @@ void DP::Ph1::ResIndSeries::mnaInitialize(Real omega, Real timeStep, Attribute<M
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"
@@ -104,7 +104,7 @@ void DP::Ph1::ResIndSeries::mnaInitializeHarm(Real omega, Real timeStep, std::ve
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-	mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+	**mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::ResIndSeries::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -196,11 +196,11 @@ void DP::Ph1::ResIndSeries::mnaApplyRightSideVectorStampHarm(Matrix& rightVector
 }
 
 void DP::Ph1::ResIndSeries::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mResIndSeries.mnaApplyRightSideVectorStamp(mResIndSeries.mRightVector);
+	mResIndSeries.mnaApplyRightSideVectorStamp(**mResIndSeries.mRightVector);
 }
 
 void DP::Ph1::ResIndSeries::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
-	mResIndSeries.mnaApplyRightSideVectorStampHarm(mResIndSeries.mRightVector);
+	mResIndSeries.mnaApplyRightSideVectorStampHarm(**mResIndSeries.mRightVector);
 }
 
 void DP::Ph1::ResIndSeries::MnaPostStep::execute(Real time, Int timeStepCount) {

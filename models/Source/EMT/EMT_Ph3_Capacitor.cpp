@@ -67,7 +67,7 @@ void EMT::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Mat
 	// Update internal state
 	mEquivCurrent = - **mIntfCurrent + - mEquivCond * **mIntfVoltage;
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
@@ -152,7 +152,7 @@ void EMT::Ph3::Capacitor::mnaAddPreStepDependencies(AttributeBase::List &prevSte
 }
 
 void EMT::Ph3::Capacitor::mnaPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

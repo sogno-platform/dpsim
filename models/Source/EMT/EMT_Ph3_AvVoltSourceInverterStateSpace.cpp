@@ -286,7 +286,7 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaInitialize(Real omega, Real ti
 	initializeStates(omega, timeStep, leftVector);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Apply matrix stamp for equivalent resistance
@@ -329,7 +329,7 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaApplyRightSideVectorStamp(Matr
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mAvVoltSourceInverterStateSpace.updateEquivCurrent(time);
-	mAvVoltSourceInverterStateSpace.mnaApplyRightSideVectorStamp(mAvVoltSourceInverterStateSpace.mRightVector);
+	mAvVoltSourceInverterStateSpace.mnaApplyRightSideVectorStamp(**mAvVoltSourceInverterStateSpace.mRightVector);
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::MnaPostStep::execute(Real time, Int timeStepCount) {

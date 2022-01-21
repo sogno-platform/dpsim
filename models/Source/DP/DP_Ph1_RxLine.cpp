@@ -82,7 +82,7 @@ void DP::Ph1::RxLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 	}
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void DP::Ph1::RxLine::mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix) {
@@ -101,7 +101,7 @@ void DP::Ph1::RxLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 }
 
 void DP::Ph1::RxLine::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaApplyRightSideVectorStamp(mLine.mRightVector);
+	mLine.mnaApplyRightSideVectorStamp(**mLine.mRightVector);
 }
 
 void DP::Ph1::RxLine::MnaPostStep::execute(Real time, Int timeStepCount) {

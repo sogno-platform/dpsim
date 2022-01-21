@@ -76,7 +76,7 @@ void DP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 		(**mIntfCurrent)(0, freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 	}
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
@@ -110,7 +110,7 @@ void DP::Ph1::Capacitor::mnaInitializeHarm(Real omega, Real timeStep, std::vecto
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-	mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+	**mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -237,7 +237,7 @@ void DP::Ph1::Capacitor::mnaPostStep(Real time, Int timeStepCount, Attribute<Mat
 }
 
 void DP::Ph1::Capacitor::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaApplyRightSideVectorStampHarm(mCapacitor.mRightVector);
+	mCapacitor.mnaApplyRightSideVectorStampHarm(**mCapacitor.mRightVector);
 }
 
 void DP::Ph1::Capacitor::MnaPostStepHarm::execute(Real time, Int timeStepCount) {

@@ -41,7 +41,7 @@ void DP::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attr
 	updateMatrixNodeIndices();
 
 	(**mIntfVoltage)(0, 0) = attributeComplex("V_ref")->get();
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
@@ -95,7 +95,7 @@ void DP::Ph1::VoltageSourceNorton::updateState(Real time) {
 
 void DP::Ph1::VoltageSourceNorton::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mVoltageSource.updateState(time);
-	mVoltageSource.mnaApplyRightSideVectorStamp(mVoltageSource.mRightVector);
+	mVoltageSource.mnaApplyRightSideVectorStamp(**mVoltageSource.mRightVector);
 }
 
 void DP::Ph1::VoltageSourceNorton::MnaPostStep::execute(Real time, Int timeStepCount) {

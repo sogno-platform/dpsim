@@ -71,7 +71,7 @@ void EMT::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"
@@ -166,7 +166,7 @@ void EMT::Ph3::Inductor::mnaAddPreStepDependencies(AttributeBase::List &prevStep
 }
 
 void EMT::Ph3::Inductor::mnaPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

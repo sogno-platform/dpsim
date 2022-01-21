@@ -99,7 +99,7 @@ void DP::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void DP::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -176,7 +176,7 @@ void DP::Ph3::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 }
 
 void DP::Ph3::Inductor::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaApplyRightSideVectorStamp(mInductor.mRightVector);
+	mInductor.mnaApplyRightSideVectorStamp(**mInductor.mRightVector);
 }
 
 void DP::Ph3::Inductor::MnaPostStep::execute(Real time, Int timeStepCount) {

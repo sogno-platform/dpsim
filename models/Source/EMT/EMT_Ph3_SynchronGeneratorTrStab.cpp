@@ -251,7 +251,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::mnaInitialize(Real omega, Real timeStep,
 	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
 	mSubInductor->mnaInitialize(omega, timeStep, leftVector);
 	mTimeStep = timeStep;
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	for (auto task : mSubVoltageSource->mnaTasks()) {
 		mMnaTasks.push_back(task);
 	}
@@ -282,7 +282,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::MnaPreStep::execute(Real time, Int timeS
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeStepCount) {
-	mGenerator.mRightVector =
+	**mGenerator.mRightVector =
 		mGenerator.mSubInductor->attribute<Matrix>("right_vector")->get()
 		+ mGenerator.mSubVoltageSource->attribute<Matrix>("right_vector")->get();
 }

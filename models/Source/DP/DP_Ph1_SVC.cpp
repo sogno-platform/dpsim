@@ -129,7 +129,7 @@ void DP::Ph1::SVC::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::P
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void DP::Ph1::SVC::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -163,7 +163,7 @@ void DP::Ph1::SVC::mnaPreStep(Real time, Int timeStepCount) {
     mSubCapacitor->mnaPreStep(time, timeStepCount);
     mSubCapacitorSwitch->mnaPreStep(time, timeStepCount);
 
-    mnaApplyRightSideVectorStamp(mRightVector);
+    mnaApplyRightSideVectorStamp(**mRightVector);
 
 	if (time > 0.1 && !mDisconnect) {
 		if (mMechMode) {

@@ -163,7 +163,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 void SP::Ph1::Load::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	if (mSubResistor) {
 		mSubResistor->mnaInitialize(omega, timeStep, leftVector);
 		for (auto task : mSubResistor->mnaTasks()) {

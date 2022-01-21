@@ -302,8 +302,8 @@ void SP::Ph1::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Ma
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
@@ -373,7 +373,7 @@ void SP::Ph1::Transformer::mnaPreStep(Real time, Int timeStepCount) {
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void SP::Ph1::Transformer::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

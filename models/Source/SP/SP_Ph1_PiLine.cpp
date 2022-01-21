@@ -247,7 +247,7 @@ void SP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 	}
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void SP::Ph1::PiLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {

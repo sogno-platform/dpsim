@@ -66,7 +66,7 @@ void SP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 		<< "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl
 		<< "--- MNA initialization finished ---" << std::endl;*/
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 

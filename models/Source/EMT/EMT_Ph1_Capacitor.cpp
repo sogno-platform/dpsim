@@ -54,7 +54,7 @@ void EMT::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Mat
 	// Update internal state
 	mEquivCurrent = -(**mIntfCurrent)(0,0) + -mEquivCond * (**mIntfVoltage)(0,0);
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
@@ -79,7 +79,7 @@ void EMT::Ph1::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 }
 
 void EMT::Ph1::Capacitor::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaApplyRightSideVectorStamp(mCapacitor.mRightVector);
+	mCapacitor.mnaApplyRightSideVectorStamp(**mCapacitor.mRightVector);
 }
 
 void EMT::Ph1::Capacitor::MnaPostStep::execute(Real time, Int timeStepCount) {

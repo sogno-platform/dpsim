@@ -162,7 +162,7 @@ void EMT::Ph3::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix
 	}
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph3::PiLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -209,7 +209,7 @@ void EMT::Ph3::PiLine::mnaPreStep(Real time, Int timeStepCount) {
 		mSubParallelCapacitor1->mnaPreStep(time, timeStepCount);
 	}
 	// pre-step of component itself
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::PiLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

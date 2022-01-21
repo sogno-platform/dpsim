@@ -42,7 +42,7 @@ void EMT::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute
 	(**mIntfCurrent)(0,0) = Math::abs(mCurrentRef->get()) * cos(Math::phase(mCurrentRef->get()));
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
@@ -64,7 +64,7 @@ void EMT::Ph1::CurrentSource::updateState(Real time) {
 
 void EMT::Ph1::CurrentSource::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mCurrentSource.updateState(time);
-	mCurrentSource.mnaApplyRightSideVectorStamp(mCurrentSource.mRightVector);
+	mCurrentSource.mnaApplyRightSideVectorStamp(**mCurrentSource.mRightVector);
 }
 
 void EMT::Ph1::CurrentSource::MnaPostStep::execute(Real time, Int timeStepCount) {

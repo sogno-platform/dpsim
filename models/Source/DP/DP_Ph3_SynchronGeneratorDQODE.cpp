@@ -25,7 +25,7 @@ void DP::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, A
 	mDim = mNumDampingWindings + 7;
 	mOdePreState = Matrix::Zero(mDim, 1);
 	mOdePostState = Matrix::Zero(mDim, 1);
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -35,7 +35,7 @@ void DP::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, A
 void DP::Ph3::SynchronGeneratorDQODE::MnaPreStep::execute(Real time, Int timeStepCount) {
 	// ODEPreStep and ODESolver.Solve guaranteed to be executed by scheduler
 	mSynGen.odePostStep();
-	mSynGen.mnaApplyRightSideVectorStamp(mSynGen.mRightVector);
+	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
 }
 
 void DP::Ph3::SynchronGeneratorDQODE::odePreStep() {

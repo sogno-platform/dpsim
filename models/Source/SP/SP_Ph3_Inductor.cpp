@@ -67,7 +67,7 @@ void SP::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 		<< "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl;
 */
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void SP::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {

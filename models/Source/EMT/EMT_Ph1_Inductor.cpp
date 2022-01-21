@@ -56,7 +56,7 @@ void EMT::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph1::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -80,7 +80,7 @@ void EMT::Ph1::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 }
 
 void EMT::Ph1::Inductor::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaApplyRightSideVectorStamp(mInductor.mRightVector);
+	mInductor.mnaApplyRightSideVectorStamp(**mInductor.mRightVector);
 }
 
 void EMT::Ph1::Inductor::MnaPostStep::execute(Real time, Int timeStepCount) {

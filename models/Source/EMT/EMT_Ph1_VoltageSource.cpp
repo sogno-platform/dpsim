@@ -43,7 +43,7 @@ void EMT::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute
 	(**mIntfVoltage)(0,0) = Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()));
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -81,7 +81,7 @@ void EMT::Ph1::VoltageSource::updateVoltage(Real time) {
 
 void EMT::Ph1::VoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mVoltageSource.updateVoltage(time);
-	mVoltageSource.mnaApplyRightSideVectorStamp(mVoltageSource.mRightVector);
+	mVoltageSource.mnaApplyRightSideVectorStamp(**mVoltageSource.mRightVector);
 }
 
 void EMT::Ph1::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) {

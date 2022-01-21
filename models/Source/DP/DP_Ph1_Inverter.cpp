@@ -114,7 +114,7 @@ void DP::Ph1::Inverter::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	calculatePhasors();
 }
@@ -125,7 +125,7 @@ void DP::Ph1::Inverter::mnaInitializeHarm(Real omega, Real timeStep, std::vector
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-	mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+	**mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
 
 	calculatePhasors();
 }
@@ -189,12 +189,12 @@ void DP::Ph1::Inverter::mnaApplyRightSideVectorStampHarm(Matrix& rightVector, In
 
 void DP::Ph1::Inverter::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mInverter.calculatePhasors();
-	mInverter.mnaApplyRightSideVectorStamp(mInverter.mRightVector);
+	mInverter.mnaApplyRightSideVectorStamp(**mInverter.mRightVector);
 }
 
 void DP::Ph1::Inverter::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 	mInverter.calculatePhasors();
-	mInverter.mnaApplyRightSideVectorStampHarm(mInverter.mRightVector);
+	mInverter.mnaApplyRightSideVectorStampHarm(**mInverter.mRightVector);
 }
 
 void DP::Ph1::Inverter::MnaPostStep::execute(Real time, Int timeStepCount) {
