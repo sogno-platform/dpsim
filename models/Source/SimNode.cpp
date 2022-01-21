@@ -30,7 +30,7 @@ template <typename VarType>
 SimNode<VarType>::SimNode(PhaseType phaseType)
 	: SimNode("gnd", "gnd", { 0, 0, 0 }, phaseType, { 0, 0, 0 }) {
 		mIsGround = true;
-		mInitialVoltage = MatrixComp::Zero(3, 1);
+		**mInitialVoltage = MatrixComp::Zero(3, 1);
 		**mVoltage = MatrixVar<VarType>::Zero(3, 1);
 }
 
