@@ -59,15 +59,19 @@ void SP_SynGenTrStab_KRK_TwoArea_SteadyState(String simName, Real timeStep, Real
     //use Shunt as Load for powerflow
 	auto load7PF = SP::Ph1::Load::make("Load7", Logger::Level::debug);
 	load7PF->setParameters(KRK_TwoArea.activePower_L7, KRK_TwoArea.reactivePower_L7_inductive, KRK_TwoArea.Vnom);
-	auto load7PF_c = SP::Ph1::Shunt::make("Load7_c", Logger::Level::debug);
-	load7PF_c->setParameters(0, KRK_TwoArea.reactivePower_L7_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
-	load7PF_c->setBaseVoltage(KRK_TwoArea.Vnom);
+	auto load7PF_c = SP::Ph1::Load::make("Load7_c", Logger::Level::debug);
+	load7PF_c->setParameters(0, -KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
+	// auto load7PF_c = SP::Ph1::Shunt::make("Load7_c", Logger::Level::debug);
+	// load7PF_c->setParameters(0, KRK_TwoArea.reactivePower_L7_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
+	// load7PF_c->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	auto load9PF = SP::Ph1::Load::make("Load9", Logger::Level::debug);
 	load9PF->setParameters(KRK_TwoArea.activePower_L9, KRK_TwoArea.reactivePower_L9_inductive, KRK_TwoArea.Vnom);
-	auto load9PF_c = SP::Ph1::Shunt::make("Load9_c", Logger::Level::debug);
-	load9PF_c->setParameters(0, KRK_TwoArea.reactivePower_L9_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
-	load9PF_c->setBaseVoltage(KRK_TwoArea.Vnom);
+	auto load9PF_c = SP::Ph1::Load::make("Load9_c", Logger::Level::debug);
+	load9PF_c->setParameters(0, -KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
+	// auto load9PF_c = SP::Ph1::Shunt::make("Load9_c", Logger::Level::debug);
+	// load9PF_c->setParameters(0, KRK_TwoArea.reactivePower_L9_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
+	// load9PF_c->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	//Line56
 	auto line56PF = SP::Ph1::PiLine::make("PiLine56", Logger::Level::debug);
@@ -270,15 +274,19 @@ void SP_SynGenTrStab_KRK_TwoArea_SteadyState(String simName, Real timeStep, Real
 	///Loads
 	auto load7SP = SP::Ph1::Load::make("Load7", Logger::Level::debug);
 	load7SP->setParameters(KRK_TwoArea.activePower_L7, KRK_TwoArea.reactivePower_L7_inductive, KRK_TwoArea.Vnom);
-	auto load7SP_c = SP::Ph1::Shunt::make("Load7_c", Logger::Level::debug);
-	load7SP_c->setParameters(0, KRK_TwoArea.reactivePower_L7_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
-	load7SP_c->setBaseVoltage(KRK_TwoArea.Vnom);
+	auto load7SP_c = SP::Ph1::Load::make("Load7_c", Logger::Level::debug);
+	load7SP_c->setParameters(0, -KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
+	// auto load7SP_c = SP::Ph1::Shunt::make("Load7_c", Logger::Level::debug);
+	// load7SP_c->setParameters(0, KRK_TwoArea.reactivePower_L7_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
+	// load7SP_c->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	auto load9SP = SP::Ph1::Load::make("Load9", Logger::Level::debug);
 	load9SP->setParameters(KRK_TwoArea.activePower_L9, KRK_TwoArea.reactivePower_L9_inductive, KRK_TwoArea.Vnom);
-	auto load9SP_c = SP::Ph1::Shunt::make("Load9_c", Logger::Level::debug);
-	load9SP_c->setParameters(0, KRK_TwoArea.reactivePower_L9_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
-	load9SP_c->setBaseVoltage(KRK_TwoArea.Vnom);
+	auto load9SP_c = SP::Ph1::Load::make("Load9_c", Logger::Level::debug);
+	load9SP_c->setParameters(0, -KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
+	// auto load9SP_c = SP::Ph1::Shunt::make("Load9_c", Logger::Level::debug);
+	// load9SP_c->setParameters(0, KRK_TwoArea.reactivePower_L9_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
+	// load9SP_c->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	//Line45
 	auto line45SP = SP::Ph1::PiLine::make("PiLine45", Logger::Level::debug);
@@ -344,7 +352,7 @@ void SP_SynGenTrStab_KRK_TwoArea_SteadyState(String simName, Real timeStep, Real
 
 	auto systemSP = SystemTopology(60,
 			SystemNodeList{n5SP, n6SP, n7SP, n8SP, n9SP, n10SP, n11SP},
-			SystemComponentList{gen1SP, gen2SP, gen3SP, gen4SP, load7SP, load9SP, line56SP, line67SP, line78_1SP, line78_2SP, line89_1SP, line89_2SP, line910SP, line1011SP});
+			SystemComponentList{gen1SP, gen2SP, gen3SP, gen4SP, load7SP, load9SP, load7SP_c, load9SP_c, line56SP, line67SP, line78_1SP, line78_2SP, line89_1SP, line89_2SP, line910SP, line1011SP});
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simNameSP, Logger::Level::debug);

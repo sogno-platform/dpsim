@@ -39,25 +39,25 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	//Synchronous generator 1
 	auto gen1PF = SP::Ph1::SynchronGenerator::make("Generator1", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	gen1PF->setParameters(KRK_TwoArea.nomPower_G1, KRK_TwoArea.nomPhPhVoltRMS_G1, KRK_TwoArea.initActivePower_G1, KRK_TwoArea.setPointVoltage_G1, PowerflowBusType::PV);
+	gen1PF->setParameters(KRK_TwoArea.nomPower_G1, KRK_TwoArea.nomPhPhVoltRMS_G1, KRK_TwoArea.initActivePower_G1, KRK_TwoArea.setPointVoltage_G1, PowerflowBusType::PV, KRK_TwoArea.initReactivePower_G1);
 	gen1PF->setBaseVoltage(KRK_TwoArea.nomPhPhVoltRMS_G1);
 
 	//Synchronous generator 2
 	auto gen2PF = SP::Ph1::SynchronGenerator::make("Generator2", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	gen2PF->setParameters(KRK_TwoArea.nomPower_G2, KRK_TwoArea.nomPhPhVoltRMS_G2, KRK_TwoArea.initActivePower_G2, KRK_TwoArea.setPointVoltage_G2, PowerflowBusType::PV);
+	gen2PF->setParameters(KRK_TwoArea.nomPower_G2, KRK_TwoArea.nomPhPhVoltRMS_G2, KRK_TwoArea.initActivePower_G2, KRK_TwoArea.setPointVoltage_G2, PowerflowBusType::PV, KRK_TwoArea.initReactivePower_G2);
 	gen2PF->setBaseVoltage(KRK_TwoArea.nomPhPhVoltRMS_G2);
 
     //Synchronous generator 3
 	auto gen3PF = SP::Ph1::SynchronGenerator::make("Generator3", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	gen3PF->setParameters(KRK_TwoArea.nomPower_G3, KRK_TwoArea.nomPhPhVoltRMS_G3, KRK_TwoArea.initActivePower_G3, KRK_TwoArea.setPointVoltage_G3, PowerflowBusType::VD);
+	gen3PF->setParameters(KRK_TwoArea.nomPower_G3, KRK_TwoArea.nomPhPhVoltRMS_G3, KRK_TwoArea.initActivePower_G3, KRK_TwoArea.setPointVoltage_G3, PowerflowBusType::VD, KRK_TwoArea.initReactivePower_G3);
 	gen3PF->setBaseVoltage(KRK_TwoArea.nomPhPhVoltRMS_G3);
 
     //Synchronous generator 4
 	auto gen4PF = SP::Ph1::SynchronGenerator::make("Generator4", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	gen4PF->setParameters(KRK_TwoArea.nomPower_G4, KRK_TwoArea.nomPhPhVoltRMS_G4, KRK_TwoArea.initActivePower_G4, KRK_TwoArea.setPointVoltage_G4, PowerflowBusType::PV);
+	gen4PF->setParameters(KRK_TwoArea.nomPower_G4, KRK_TwoArea.nomPhPhVoltRMS_G4, KRK_TwoArea.initActivePower_G4, KRK_TwoArea.setPointVoltage_G4, PowerflowBusType::PV, KRK_TwoArea.initReactivePower_G4);
 	gen4PF->setBaseVoltage(KRK_TwoArea.nomPhPhVoltRMS_G4);
 
 	auto trafo15PF= SP::Ph1::Transformer::make("Transformer15", Logger::Level::debug);
@@ -88,16 +88,20 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 
     //use Shunt as Load for powerflow
 	auto load7PF = SP::Ph1::Load::make("Load7", Logger::Level::debug);
-	load7PF->setParameters(KRK_TwoArea.activePower_L7, KRK_TwoArea.reactivePower_L7_inductive, KRK_TwoArea.Vnom);
-	auto load7PF_c = SP::Ph1::Shunt::make("Load7_c", Logger::Level::debug);
-	load7PF_c->setParameters(0, KRK_TwoArea.reactivePower_L7_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
-	load7PF_c->setBaseVoltage(KRK_TwoArea.Vnom);
+	load7PF->setParameters(KRK_TwoArea.activePower_L7, KRK_TwoArea.reactivePower_L7_inductive-KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
+	// auto load7PF_c = SP::Ph1::Load::make("Load7_c", Logger::Level::debug);
+	// load7PF_c->setParameters(0, -KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
+	// auto load7PF_c = SP::Ph1::Shunt::make("Load7_c", Logger::Level::debug);
+	// load7PF_c->setParameters(0, KRK_TwoArea.reactivePower_L7_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
+	// load7PF_c->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	auto load9PF = SP::Ph1::Load::make("Load9", Logger::Level::debug);
-	load9PF->setParameters(KRK_TwoArea.activePower_L9, KRK_TwoArea.reactivePower_L9_inductive, KRK_TwoArea.Vnom);
-	auto load9PF_c = SP::Ph1::Shunt::make("Load9_c", Logger::Level::debug);
-	load9PF_c->setParameters(0, KRK_TwoArea.reactivePower_L9_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
-	load9PF_c->setBaseVoltage(KRK_TwoArea.Vnom);
+	load9PF->setParameters(KRK_TwoArea.activePower_L9, KRK_TwoArea.reactivePower_L9_inductive-KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
+	// auto load9PF_c = SP::Ph1::Load::make("Load9_c", Logger::Level::debug);
+	// load9PF_c->setParameters(0, -KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
+	// auto load9PF_c = SP::Ph1::Shunt::make("Load9_c", Logger::Level::debug);
+	// load9PF_c->setParameters(0, KRK_TwoArea.reactivePower_L9_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
+	// load9PF_c->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	//Line56
 	auto line56PF = SP::Ph1::PiLine::make("PiLine56", Logger::Level::debug);
@@ -145,8 +149,8 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 
 	load7PF->connect({ n7PF });
     load9PF->connect({ n9PF });
-	load7PF_c->connect({ n7PF });
-    load9PF_c->connect({ n9PF });
+	// load7PF_c->connect({ n7PF });
+    // load9PF_c->connect({ n9PF });
 
 	line56PF->connect({ n5PF, n6PF });
 	line67PF->connect({ n6PF, n7PF });
@@ -158,7 +162,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
     line1011PF->connect({ n10PF, n11PF });
 	auto systemPF = SystemTopology(60,
 			SystemNodeList{ n1PF, n2PF, n3PF, n4PF, n5PF, n6PF, n7PF, n8PF, n9PF, n10PF, n11PF},
-			SystemComponentList{gen1PF, gen2PF, gen3PF, gen4PF, trafo15PF, trafo26PF, trafo311PF, trafo410PF, load7PF, load9PF, load7PF_c, load9PF_c, line56PF, line67PF, line78_1PF, line78_2PF, line89_1PF, line89_2PF, line910PF, line1011PF});
+			SystemComponentList{gen1PF, gen2PF, gen3PF, gen4PF, trafo15PF, trafo26PF, trafo311PF, trafo410PF, load7PF, load9PF, line56PF, line67PF, line78_1PF, line78_2PF, line89_1PF, line89_2PF, line910PF, line1011PF});
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
@@ -206,7 +210,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	Real Rs = 0.0025;
 	// Real Ld = 1.8;
 	// Real Lq = 1.7;
-	Real Ld_t = 0.2999;
+	Real Xpd = 0.3;
 	// Real Lq_t = 0.5500;
 	// Real Ld_s = 0.2500;
 	// Real Lq_s = 0.2500;
@@ -258,7 +262,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	auto gen1SP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen1", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	// gen1DP->setOperationalPerUnitParameters(2, KRK_TwoArea.H_G1, Rs, Ld, Lq, Ll, Ld_t, Lq_t, Ld_s, Lq_s, Td0_t, Tq0_t, Td0_s, Tq0_s);
-	gen1SP->setStandardParametersPU(KRK_TwoArea.nomPower_G1, KRK_TwoArea.nomPhPhVoltRMS_G1, KRK_TwoArea.nomFreq_G1, Ld_t, KRK_TwoArea.H_G1, Rs, 10.0);
+	gen1SP->setStandardParametersPU(KRK_TwoArea.nomPower_G1, KRK_TwoArea.nomPhPhVoltRMS_G1, KRK_TwoArea.nomFreq_G1, Xpd, KRK_TwoArea.H_G1, Rs, 10.0);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G1 = gen1PF->getApparentPower();
 	Real initMechPower_G1 = initApparentPower_G1.real();
@@ -271,7 +275,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	//Synchronous generator 2
 	auto gen2SP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen2", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	gen2SP->setStandardParametersPU(KRK_TwoArea.nomPower_G2, KRK_TwoArea.nomPhPhVoltRMS_G2, KRK_TwoArea.nomFreq_G2, Ld_t * std::pow(KRK_TwoArea.t2_ratio, 2), KRK_TwoArea.H_G2, Rs, 10.0);
+	gen2SP->setStandardParametersPU(KRK_TwoArea.nomPower_G2, KRK_TwoArea.nomPhPhVoltRMS_G2, KRK_TwoArea.nomFreq_G2, Xpd, KRK_TwoArea.H_G2, Rs, 10.0);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G2 = gen2PF->getApparentPower();
 	Real initMechPower_G2 = initApparentPower_G2.real();
@@ -284,7 +288,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	//Synchronous generator 3
 	auto gen3SP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen3", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	gen3SP->setStandardParametersPU(KRK_TwoArea.nomPower_G3, KRK_TwoArea.nomPhPhVoltRMS_G3, KRK_TwoArea.nomFreq_G3, Ld_t * std::pow(KRK_TwoArea.t3_ratio, 2), KRK_TwoArea.H_G3, Rs, 10.0);
+	gen3SP->setStandardParametersPU(KRK_TwoArea.nomPower_G3, KRK_TwoArea.nomPhPhVoltRMS_G3, KRK_TwoArea.nomFreq_G3, Xpd, KRK_TwoArea.H_G3, Rs, 10.0);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G3 = gen3PF->getApparentPower();
 	Real initMechPower_G3 = initApparentPower_G3.real();
@@ -297,7 +301,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	//Synchronous generator 4
 	auto gen4SP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen4", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	gen4SP->setStandardParametersPU(KRK_TwoArea.nomPower_G4, KRK_TwoArea.nomPhPhVoltRMS_G4, KRK_TwoArea.nomFreq_G4, Ld_t * std::pow(KRK_TwoArea.t4_ratio, 2), KRK_TwoArea.H_G4, Rs, 10.0);
+	gen4SP->setStandardParametersPU(KRK_TwoArea.nomPower_G4, KRK_TwoArea.nomPhPhVoltRMS_G4, KRK_TwoArea.nomFreq_G4, Xpd, KRK_TwoArea.H_G4, Rs, 10.0);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G4 = gen4PF->getApparentPower();
 	Real initMechPower_G4 = initApparentPower_G4.real();
@@ -307,8 +311,14 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	// Complex initApparentPower_G4 = {700e6, 202e6};
 	// gen4SP->setInitialValues(initApparentPower_G4, KRK_TwoArea.initMechPower_G4);
 
-	// gen2DP->setModelFlags(true, true);
-	// gen2DP->setReferenceOmega(gen1DP->attribute<Real>("w_r"), gen1DP->attribute<Real>("delta_r"));
+	gen1SP->setModelFlags(true, true);
+	gen1SP->setReferenceOmega(gen3SP->attribute<Real>("w_r"), gen3SP->attribute<Real>("delta_r"));
+
+	gen2SP->setModelFlags(true, true);
+	gen2SP->setReferenceOmega(gen3SP->attribute<Real>("w_r"), gen3SP->attribute<Real>("delta_r"));
+
+	gen4SP->setModelFlags(true, true);
+	gen4SP->setReferenceOmega(gen3SP->attribute<Real>("w_r"), gen3SP->attribute<Real>("delta_r"));
 
 	auto trafo15SP = SP::Ph1::Transformer::make("trafo15", Logger::Level::debug);
 	trafo15SP->setParameters(voltageMVSide, voltageHVSide, trafoPower, std::abs(ratio), std::arg(ratio), trafoResistance, trafoInductance);
@@ -324,16 +334,20 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 
 	///Loads
 	auto load7SP = SP::Ph1::Load::make("Load7", Logger::Level::debug);
-	load7SP->setParameters(KRK_TwoArea.activePower_L7, KRK_TwoArea.reactivePower_L7_inductive, KRK_TwoArea.Vnom);
-	auto load7SP_c = SP::Ph1::Shunt::make("Load7_c", Logger::Level::debug);
-	load7SP_c->setParameters(0, KRK_TwoArea.reactivePower_L7_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
-	load7SP_c->setBaseVoltage(KRK_TwoArea.Vnom);
+	load7SP->setParameters(KRK_TwoArea.activePower_L7, KRK_TwoArea.reactivePower_L7_inductive-KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
+	// auto load7SP_c = SP::Ph1::Load::make("Load7_c", Logger::Level::debug);
+	// load7SP_c->setParameters(0, -KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
+	// auto load7SP_c = SP::Ph1::Shunt::make("Load7_c", Logger::Level::debug);
+	// load7SP_c->setParameters(0, KRK_TwoArea.reactivePower_L7_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
+	// load7SP_c->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	auto load9SP = SP::Ph1::Load::make("Load9", Logger::Level::debug);
-	load9SP->setParameters(KRK_TwoArea.activePower_L9, KRK_TwoArea.reactivePower_L9_inductive, KRK_TwoArea.Vnom);
-	auto load9SP_c = SP::Ph1::Shunt::make("Load9_c", Logger::Level::debug);
-	load9SP_c->setParameters(0, KRK_TwoArea.reactivePower_L9_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
-	load9SP_c->setBaseVoltage(KRK_TwoArea.Vnom);
+	load9SP->setParameters(KRK_TwoArea.activePower_L9, KRK_TwoArea.reactivePower_L9_inductive-KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
+	// auto load9SP_c = SP::Ph1::Load::make("Load9_c", Logger::Level::debug);
+	// load9SP_c->setParameters(0, -KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
+	// auto load9SP_c = SP::Ph1::Shunt::make("Load9_c", Logger::Level::debug);
+	// load9SP_c->setParameters(0, KRK_TwoArea.reactivePower_L9_capacitive / std::pow(KRK_TwoArea.Vnom, 2));
+	// load9SP_c->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	//Line45
 	auto line45SP = SP::Ph1::PiLine::make("PiLine45", Logger::Level::debug);
@@ -387,8 +401,8 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 
 	load7SP->connect({ n7SP });
 	load9SP->connect({ n9SP });
-	load7SP_c->connect({ n7SP });
-	load9SP_c->connect({ n9SP });
+	// load7SP_c->connect({ n7SP });
+	// load9SP_c->connect({ n9SP });
 
 	line56SP->connect({ n5SP, n6SP });
 	line67SP->connect({ n6SP, n7SP });
@@ -448,7 +462,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	loggerSP->addAttribute("v_gen2", gen2SP->attribute("v_intf"));
 	loggerSP->addAttribute("i_gen2", gen2SP->attribute("i_intf"));
 	loggerSP->addAttribute("wr_gen2", gen2SP->attribute("w_r"));
-	// loggerDP->addAttribute("wref_gen2", gen2DP->attribute("w_ref"));
+	loggerSP->addAttribute("wref_gen2", gen2SP->attribute("w_ref"));
 	loggerSP->addAttribute("delta_gen2", gen2SP->attribute("delta_r"));
 	loggerSP->addAttribute("Ep_gen3", gen3SP->attribute("Ep_mag"));
 	loggerSP->addAttribute("v_gen3", gen3SP->attribute("v_intf"));
