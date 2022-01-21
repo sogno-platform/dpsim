@@ -33,16 +33,6 @@ namespace Ph3 {
 		public Base::SynchronGenerator,
 		public SharedFactory<SynchronGeneratorVBR> {
 	protected:
-		/// Exciter Model
-		//Signal::Exciter mExciter;
-		/// Determine if Exciter is activated
-		bool WithExciter = false;
-
-		/// Governor Model
-		//Signal::TurbineGovernor mTurbineGovernor;
-		/// Determine if Turbine and Governor are activated
-		bool WithTurbineGovernor = false;
-
 		/// d dynamic inductance
 		Real mDLmd;
 		/// q dynamic inductance
@@ -222,9 +212,6 @@ namespace Ph3 {
 
 		/// Initialize states according to desired initial electrical powerflow and mechanical input power
 		void setInitialValues(Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower);
-
-		/// Function to initialize Exciter
-		void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
 
 		/// Initialize components with correct network frequencies
 		void initialize(Matrix frequencies) override {

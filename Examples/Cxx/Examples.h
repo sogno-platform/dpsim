@@ -70,6 +70,15 @@ namespace SynchronousGeneratorKundur {
         Real Tsr = 0.1;
         Real Tsm = 0.3;
 
+        // Exciter parameters (IEEE Type DC1A)
+        // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p. 125
+        Real Ka = 46;
+        Real Ta = 0.06;
+        Real Ke = -0.0435;
+        Real Te = 0.46;
+        Real Kf = 0.1;
+        Real Tf = 1;
+        Real Tr = 0.02;
     };
 }
 }

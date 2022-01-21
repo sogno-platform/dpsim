@@ -34,6 +34,10 @@ namespace Base {
 		/// Add governor and turbine
 		void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
 			Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
+		/// Add voltage regulator and exciter
+		void addExciter(Real Ta, Real Ka, Real Te, Real Ke,
+			Real Tf, Real Kf, Real Tr);
+
 	protected:
 		///
 		NumericalMethod mNumericalMethod; //not needed if sundials used; could instead determine implicit / explicit solve
@@ -246,13 +250,16 @@ namespace Base {
 		/// Function parameters have to be given in real units.
 		void initPerUnitStates();
 
-		// #### Controllers - to be removed ####
-		/// Determines if Exciter is activated
-		Bool mHasExciter = false;
+		// #### Controllers ####
 		/// Determines if Turbine and Governor are activated
 		Bool mHasTurbineGovernor = false;
+		/// Determines if Exciter is activated
+		Bool mHasExciter = false;
 		/// Signal component modelling governor control and steam turbine
 		std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
+		/// Signal component modelling voltage regulator and exciter
+		std::shared_ptr<Signal::Exciter> mExciter;
+
 		// Deprecated
 		Real mInitTerminalVoltage = 0;
 		Real mInitVoltAngle = 0;
@@ -263,11 +270,6 @@ namespace Base {
 		void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
 		///
 		void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq, Real nomFieldCur);
-
-		// ### Deprecated ####
-		///
-		void addExciter(Real Ta, Real Ka, Real Te, Real Ke,
-			Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
 
 		///
 		void calcStateSpaceMatrixDQ();

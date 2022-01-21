@@ -131,12 +131,6 @@ void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real freque
 	}
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
-	// mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
-	// mExciter.initialize(1, 1);
-	WithExciter = true;
-}
-
 void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
@@ -360,10 +354,8 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaPostStep(Real time, Int timeStepCount, A
 	mVd = parkTransform(mThetaMech, mVa, mVb, mVc)(1);
 	mV0 = parkTransform(mThetaMech, mVa, mVb, mVc)(2);
 
-	/*
-	if (WithExciter == true) {
-		mVfd = mExciter.step(mVd, mVq, 1, mTimeStep);
-	}*/
+	if (mHasExciter)
+		mVfd = (mRfd / mLmd)*mExciter->step(mVd, mVq, 1.0, mTimeStep);
 
 	mIabc = R_eq_vbr.inverse()*(mVabc - E_eq_vbr);
 

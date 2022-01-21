@@ -12,7 +12,7 @@
 using namespace CPS;
 
 void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
-	Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
+	Real Tf, Real Kf, Real Tr) {
 	mTa = Ta;
 	mKa = Ka;
 	mTe = Te;
@@ -20,8 +20,16 @@ void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
 	mTf = Tf;
 	mKf = Kf;
 	mTr = Tr;
-	mLad = Lad;
-	mRfd = Rfd;
+
+	mSLog->info("Exciter parameters: \n"
+				"Ta: {:e}\nKa: {:e}\n"
+				"Te: {:e}\nKe: {:e}\n"
+				"Tf: {:e}\nKf: {:e}\n"
+				"Tr: {:e}\n",
+				mTa, mKa, 
+				mTe, mKe,
+				mTf, mKf,
+				mTr);
 }
 
 void Signal::Exciter::initialize(Real Vh_init, Real Vf_init) {
@@ -56,5 +64,5 @@ Real Signal::Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
 	mVse = mVse*mVf;
 	mVf = Math::StateSpaceEuler(mVf, -mKe, 1, dt / mTe, mVr - mVse);
 
-	return (mRfd / mLad)*mVf;
+	return mVf;
 }
