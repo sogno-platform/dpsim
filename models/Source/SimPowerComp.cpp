@@ -32,14 +32,14 @@ Bool SimPowerComp<VarType>::hasUnconnectedTerminals() {
 template <typename VarType>
 void SimPowerComp<VarType>::checkForUnconnectedTerminals() {
 	if ( hasUnconnectedTerminals() ) {
-		throw SystemError("Found unconnected Terminals for " + **mUid);
+		throw SystemError("Found unconnected Terminals for " + **mUID);
 	}
 }
 
 template <typename VarType>
 typename SimTerminal<VarType>::Ptr SimPowerComp<VarType>::terminal(UInt index) {
 	if (index >= mTerminals.size()) {
-		throw SystemError("Terminal not available for " + **mUid);
+		throw SystemError("Terminal not available for " + **mUID);
 	}
 	return mTerminals[index];
 }
@@ -130,7 +130,7 @@ void SimPowerComp<VarType>::setVirtualNodeAt(typename SimNode<VarType>::Ptr virt
 template <typename VarType>
 typename SimNode<VarType>::Ptr SimPowerComp<VarType>::virtualNode(UInt index) {
 	if (index >= mVirtualNodes.size()) {
-		throw SystemError("Node not available for " + **mUid);
+		throw SystemError("Node not available for " + **mUID);
 	}
 	return mVirtualNodes[index];
 }

@@ -28,7 +28,7 @@ SP::Ph1::VoltageSourceInverter::VoltageSourceInverter(String uid, String name, R
 	switch (powerflowBusType)
 	{
 	case CPS::PowerflowBusType::PQ:
-		mPQ = std::make_shared<PQNode>(**mUid, **mName, power,
+		mPQ = std::make_shared<PQNode>(**mUID, **mName, power,
 			reactivePower, mLogLevel);
 		break;
 	default:
@@ -47,7 +47,7 @@ void SP::Ph1::VoltageSourceInverter::modifyPowerFlowBusType(PowerflowBusType pow
 		throw std::invalid_argument(" inverters currently cannot be set as PV bus.");
 		break;
 	case CPS::PowerflowBusType::PQ:
-		mPQ = std::make_shared<CPS::SP::Ph1::PQNode>(**mUid, **mName, mLogLevel);
+		mPQ = std::make_shared<CPS::SP::Ph1::PQNode>(**mUID, **mName, mLogLevel);
 		break;
 	case CPS::PowerflowBusType::VD:
 		throw std::invalid_argument(" inverters currently cannot be set as VD bus. ");

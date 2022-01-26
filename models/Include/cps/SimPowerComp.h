@@ -89,7 +89,7 @@ namespace CPS {
 		/// Get pointer to node
 		typename SimNode<VarType>::Ptr node(UInt index) {
 			if (index >= mTerminals.size()) {
-				throw SystemError("Node not available for " + **mUid);
+				throw SystemError("Node not available for " + **mUID);
 			}
 			return mTerminals[index]->node();
 		};
