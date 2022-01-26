@@ -64,8 +64,6 @@ namespace DPsim {
 		Matrix mSystemMatrix;
 		/// Inverse of the complete system matrix (only used for initialization)
 		Matrix mSystemInverse;
-		/// Solutions of the split systems
-		Matrix mOrigLeftSideVector;
 		/// Topology of the network removal
 		Matrix mTearTopology;
 		/// Impedance of the removed network
@@ -75,8 +73,6 @@ namespace DPsim {
 		CPS::LUFactorized mTotalTearImpedance;
 		/// Currents through the removed network
 		Matrix mTearCurrents;
-		/// Currents through the removed network (as "seen" from the other subnets)
-		Matrix mMappedTearCurrents;
 		/// Voltages across the removed network
 		Matrix mTearVoltages;
 
@@ -100,6 +96,13 @@ namespace DPsim {
 		void log(Real time);
 
 	public:
+
+		/// Currents through the removed network (as "seen" from the other subnets)
+		const CPS::Attribute<Matrix>::Ptr mMappedTearCurrents;
+
+		/// Solutions of the split systems
+		const CPS::Attribute<Matrix>::Ptr mOrigLeftSideVector;
+
 		DiakopticsSolver(String name, CPS::SystemTopology system, CPS::IdentifiedObject::List tearComponents, Real timeStep, CPS::Logger::Level logLevel);
 
 		CPS::Task::List getTasks();
