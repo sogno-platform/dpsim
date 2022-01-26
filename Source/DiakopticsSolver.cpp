@@ -24,8 +24,8 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	SystemTopology system, IdentifiedObject::List tearComponents,
 	Real timeStep, Logger::Level logLevel) :
 	Solver(name, logLevel),
-	mOrigLeftSideVector(Attribute<Matrix>::create("old_left_vector")),
-	mMappedTearCurrents(Attribute<Matrix>::create("mapped_tear_currents")) {
+	mOrigLeftSideVector(Attribute<Matrix>::create("old_left_vector", mAttributes)),
+	mMappedTearCurrents(Attribute<Matrix>::create("mapped_tear_currents", mAttributes)) {
 	mTimeStep = timeStep;
 
 	// Raw source and solution vector logging
