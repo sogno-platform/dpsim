@@ -47,7 +47,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 Simulation::Simulation(String name, CommandLineArgs& args) :
 	mName(Attribute<String>::create("name", mAttributes, name)),
 	mFinalTime(Attribute<Real>::create("final_time", mAttributes, args.duration)),
-	mTimeStep(Attribute<Real>::create("time_step", mAttributes, args.timeStep),
+	mTimeStep(Attribute<Real>::create("time_step", mAttributes, args.timeStep)),
 	mLogLevel(args.logLevel),
 	mDomain(args.solver.domain),
 	mSolverType(args.solver.type),
@@ -136,7 +136,7 @@ void Simulation::createMNASolver() {
 	std::vector<SystemTopology> subnets;
 	// The Diakoptics solver splits the system at a later point.
 	// That is why the system is not split here if tear components exist.
-	if (mSplitSubnets && mTearComponents.size() == 0)
+	if (**mSplitSubnets && mTearComponents.size() == 0)
 		mSystem.splitSubnets<VarType>(subnets);
 	else
 		subnets.push_back(mSystem);
