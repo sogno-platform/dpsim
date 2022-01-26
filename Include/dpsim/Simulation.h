@@ -171,7 +171,7 @@ namespace DPsim {
 		///
 		void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
 		///
-		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
+		void setTimeStep(Real timeStep) { **mTimeStep = timeStep; }
 		///
 		void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
 		///
@@ -259,7 +259,7 @@ namespace DPsim {
 		Real time() const { return mTime; }
 		Real finalTime() const { return **mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
-		Real timeStep() const { return mTimeStep; }
+		Real timeStep() const { return **mTimeStep; }
 		DataLogger::List& loggers() { return mLoggers; }
 		std::shared_ptr<Scheduler> scheduler() { return mScheduler; }
 		std::vector<Real>& stepTimes() { return mStepTimes; }

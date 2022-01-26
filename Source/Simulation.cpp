@@ -100,12 +100,12 @@ void Simulation::createSolvers() {
 			break;
 #ifdef WITH_SUNDIALS
 		case Solver::Type::DAE:
-			solver = std::make_shared<DAESolver>(**mName, mSystem, mTimeStep, 0.0);
+			solver = std::make_shared<DAESolver>(**mName, mSystem, **mTimeStep, 0.0);
 			mSolvers.push_back(solver);
 			break;
 #endif /* WITH_SUNDIALS */
 		case Solver::Type::NRP:
-			solver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem, mTimeStep, mLogLevel);
+			solver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem, **mTimeStep, mLogLevel);
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
 			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->initialize();
@@ -123,7 +123,7 @@ void Simulation::createSolvers() {
 		if (odeComp) {
 			// TODO explicit / implicit integration
 			auto odeSolver = std::make_shared<ODESolver>(
-				odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, mTimeStep);
+				odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, **mTimeStep);
 			mSolvers.push_back(odeSolver);
 		}
 	}
@@ -151,12 +151,12 @@ void Simulation::createMNASolver() {
 		if (mTearComponents.size() > 0) {
 			// Tear components available, use diakoptics
 			solver = std::make_shared<DiakopticsSolver<VarType>>(**mName,
-				subnets[net], mTearComponents, mTimeStep, mLogLevel);
+				subnets[net], mTearComponents, **mTimeStep, mLogLevel);
 		} else {
 			// Default case with lu decomposition from mna factory
 			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
 												 mLogLevel, mMnaImpl);
-			solver->setTimeStep(mTimeStep);
+			solver->setTimeStep(**mTimeStep);
 			solver->doSteadyStateInit(mSteadyStateInit);
 			solver->doFrequencyParallelization(mFreqParallel);
 			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
@@ -354,7 +354,7 @@ void Simulation::start() {
 	sync();
 
 	mLog->info("Start simulation: {}", **mName);
-	mLog->info("Time step: {:e}", mTimeStep);
+	mLog->info("Time step: {:e}", **mTimeStep);
 	mLog->info("Final time: {:e}", **mFinalTime);
 
 	mSimulationStartTimePoint = std::chrono::steady_clock::now();
@@ -404,7 +404,7 @@ Real Simulation::step() {
 
 	mScheduler->step(mTime, mTimeStepCount);
 
-	mTime += mTimeStep;
+	mTime += **mTimeStep;
 	++mTimeStepCount;
 
 	auto end = std::chrono::steady_clock::now();
