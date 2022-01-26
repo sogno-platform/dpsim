@@ -56,15 +56,18 @@ void MnaSolver<VarType>::initialize() {
 	createEmptySystemMatrix();
 
 	// Register attribute for solution vector
+	// TODO: This is kinda ugly... At least we should somehow unify mLeftSideVector and mLeftSideVectorHarm.
+	// Best case we have some kind of sub-attributes for attribute vectors / tensor attributes...
 	if (mFrequencyParallel) {
 		mSLog->info("Computing network harmonics in parallel.");
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
-			addAttribute<Matrix>("left_vector_"+std::to_string(freq), mLeftSideVectorHarm.data()+freq, Flags::read);
-			mLeftVectorHarmAttributes.push_back(attribute<Matrix>("left_vector_"+std::to_string(freq)));
+			mLeftSideVectorHarm.push_back(
+				CPS::Attribute<Matrix>::create("left_vector_"+std::to_string(freq), mAttributes);
+			);
 		}
 	}
 	else {
-		addAttribute<Matrix>("left_vector", &mLeftSideVector, Flags::read);
+		mLeftSideVector = CPS::Attribute::create("left_vector", mAttributes);
 	}
 
 	// Initialize components from powerflow solution and
@@ -367,7 +370,7 @@ void MnaSolver<VarType>::assignMatrixNodeIndices() {
 template<>
 void MnaSolver<Real>::createEmptyVectors() {
 	mRightSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
-	mLeftSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
+	**mLeftSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
 }
 
 template<>
@@ -375,12 +378,12 @@ void MnaSolver<Complex>::createEmptyVectors() {
 	if (mFrequencyParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
-			mLeftSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
+			**mLeftSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
 		}
 	}
 	else {
 		mRightSideVector = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 1);
-		mLeftSideVector = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 1);
+		**mLeftSideVector = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 1);
 	}
 }
 
@@ -515,10 +518,10 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 		++timeStepCount;
 
 		// Calculate difference
-		diff = prevLeftSideVector - mLeftSideVector;
-		prevLeftSideVector = mLeftSideVector;
+		diff = prevLeftSideVector - **mLeftSideVector;
+		prevLeftSideVector = **mLeftSideVector;
 		maxDiff = diff.lpNorm<Eigen::Infinity>();
-		max = mLeftSideVector.lpNorm<Eigen::Infinity>();
+		max = (**mLeftSideVector).lpNorm<Eigen::Infinity>();
 		// If difference is smaller than some epsilon, break
 		if ((maxDiff / max) < mSteadStIniAccLimit)
 			break;

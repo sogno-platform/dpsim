@@ -80,16 +80,10 @@ namespace DPsim {
 		Matrix mRightSideVector;
 		/// List of all right side vector contributions
 		std::vector<const Matrix*> mRightVectorStamps;
-		/// Solution vector of unknown quantities
-		Matrix mLeftSideVector;
 
 		// #### MNA specific attributes related to harmonics / additional frequencies ####
 		/// Source vector of known quantities
 		std::vector<Matrix> mRightSideVectorHarm;
-		/// Solution vector of unknown quantities
-		std::vector<Matrix> mLeftSideVectorHarm;
-		///
-		std::vector< CPS::Attribute<Matrix>::Ptr > mLeftVectorHarmAttributes;
 
 		// #### MNA specific attributes related to system recomputation
 		/// Number of system matrix recomputations
@@ -184,6 +178,12 @@ namespace DPsim {
 
 	public:
 
+		/// Solution vector of unknown quantities
+		CPS::Attribute<Matrix>::Ptr mLeftSideVector;
+
+		/// Solution vector of unknown quantities (parallel frequencies)
+		std::vector<const CPS::Attribute<Matrix>::Ptr> mLeftSideVectorHarm;
+
 		/// Destructor
 		virtual ~MnaSolver() { 
 			if (mSystemMatrixRecomputation)
@@ -197,7 +197,7 @@ namespace DPsim {
 		///
 		virtual void setSystem(const CPS::SystemTopology &system) override;
 		///
-		Matrix& leftSideVector() { return mLeftSideVector; }
+		Matrix& leftSideVector() { return **mLeftSideVector; }
 		///
 		Matrix& rightSideVector() { return mRightSideVector; }
 		///
