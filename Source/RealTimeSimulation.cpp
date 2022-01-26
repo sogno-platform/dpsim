@@ -17,7 +17,7 @@ using namespace DPsim;
 RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel)
 	: Simulation(name, logLevel), mTimer() {
 
-	addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
+	//addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
 	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
 }
 
