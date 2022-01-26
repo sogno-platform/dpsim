@@ -173,7 +173,7 @@ namespace DPsim {
 		///
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		///
-		void setFinalTime(Real finalTime) { mFinalTime = finalTime; }
+		void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
 		///
 		void setDomain(CPS::Domain domain = CPS::Domain::DP) { mDomain = domain; }
 		///
@@ -257,7 +257,7 @@ namespace DPsim {
 		// #### Getter ####
 		String name() const { return **mName; }
 		Real time() const { return mTime; }
-		Real finalTime() const { return mFinalTime; }
+		Real finalTime() const { return **mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return mTimeStep; }
 		DataLogger::List& loggers() { return mLoggers; }

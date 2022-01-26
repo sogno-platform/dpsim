@@ -355,7 +355,7 @@ void Simulation::start() {
 
 	mLog->info("Start simulation: {}", **mName);
 	mLog->info("Time step: {:e}", mTimeStep);
-	mLog->info("Final time: {:e}", mFinalTime);
+	mLog->info("Final time: {:e}", **mFinalTime);
 
 	mSimulationStartTimePoint = std::chrono::steady_clock::now();
 }
@@ -379,7 +379,7 @@ void Simulation::stop() {
 }
 
 Real Simulation::next() {
-	if (mTime < mFinalTime)
+	if (mTime < **mFinalTime)
 		step();
 	else
 		stop();
@@ -391,7 +391,7 @@ Real Simulation::next() {
 void Simulation::run() {
 	start();
 
-	while (mTime < mFinalTime) {
+	while (mTime < **mFinalTime) {
 		step();
 	}
 

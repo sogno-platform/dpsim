@@ -54,7 +54,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 
 		if (mTimer.ticks() == 1)
 			mLog->info("Simulation started.");
-	} while (mTime < mFinalTime);
+	} while (mTime < **mFinalTime);
 
 	mLog->info("Simulation finished.");
 
