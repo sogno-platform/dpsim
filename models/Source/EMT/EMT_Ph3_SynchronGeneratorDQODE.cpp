@@ -28,8 +28,8 @@ void EMT::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, 
 	SynchronGeneratorDQ::initializeMatrixAndStates();
 
 	mDim = mNumDampingWindings + 7;
-	mOdePreState = Matrix::Zero(mDim, 1);
-	mOdePostState = Matrix::Zero(mDim, 1);
+	**mOdePreState = Matrix::Zero(mDim, 1);
+	**mOdePostState = Matrix::Zero(mDim, 1);
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -45,10 +45,10 @@ void EMT::Ph3::SynchronGeneratorDQODE::MnaPreStep::execute(Real time, Int timeSt
 
 void EMT::Ph3::SynchronGeneratorDQODE::odePreStep() {
 	for(int i=0; i<mDim-2;i++)
-		mOdePreState(i)=mPsisr(i, 0);
+		(**mOdePreState)(i)=mPsisr(i, 0);
 
-	mOdePreState(mDim-2)=mThetaMech;
-	mOdePreState(mDim-1)=mOmMech;
+	(**mOdePreState)(mDim-2)=mThetaMech;
+	(**mOdePreState)(mDim-1)=mOmMech;
 
 	//copied from stepInPerUnit
 	mVdq0 = abcToDq0Transform(mThetaMech, **mIntfVoltage);
@@ -61,10 +61,10 @@ void EMT::Ph3::SynchronGeneratorDQODE::ODEPreStep::execute(Real time, Int timeSt
 
 void EMT::Ph3::SynchronGeneratorDQODE::odePostStep() {
 	for(int i=0; i<mDim-2;i++)
-		mPsisr(i,0)=mOdePostState(i);
+		mPsisr(i,0)=(**mOdePostState)(i);
 
-	mThetaMech=mOdePostState(mDim-2);
-	mOmMech=mOdePostState(mDim-1);
+	mThetaMech=(**mOdePostState)(mDim-2);
+	mOmMech=(**mOdePostState)(mDim-1);
 
 	//copied from stepInPerUnit ; makes only sense to call this after write back
 	mIsr = mFluxToCurrentMat * mPsisr;
