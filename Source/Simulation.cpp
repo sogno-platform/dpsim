@@ -157,7 +157,7 @@ void Simulation::createMNASolver() {
 			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
 												 mLogLevel, mMnaImpl);
 			solver->setTimeStep(**mTimeStep);
-			solver->doSteadyStateInit(mSteadyStateInit);
+			solver->doSteadyStateInit(**mSteadyStateInit);
 			solver->doFrequencyParallelization(mFreqParallel);
 			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
 			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
