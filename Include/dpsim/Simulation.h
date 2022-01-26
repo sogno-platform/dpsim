@@ -40,15 +40,27 @@ namespace DPsim {
 	public:
 		typedef std::shared_ptr<Simulation> Ptr;
 
-	protected:
 		/// Simulation name
 		const Attribute<String>::Ptr mName;
 		/// Final time of the simulation
 		const Attribute<Real>::Ptr mFinalTime;
-		/// Time variable that is incremented at every step
-		Real mTime = 0;
 		/// Simulation timestep
 		const Attribute<Real>::Ptr mTimeStep;
+
+		/// Determines if the network should be split
+		/// into subnetworks at decoupling lines.
+		/// If the system is split, each subsystem is
+		/// solved by a dedicated MNA solver.
+		const Attribute<Bool>::Ptr mSplitSubnets = true;
+
+		/// Determines if steady-state initialization
+		/// should be executed prior to the simulation.
+		/// By default the initialization is disabled.
+		const Attribute<Bool>::Ptr mSteadyStateInit;
+
+	protected:
+		/// Time variable that is incremented at every step
+		Real mTime = 0;
 		/// Number of step which have been executed for this simulation.
 		Int mTimeStepCount = 0;
 		/// The simulation event queue
@@ -85,11 +97,6 @@ namespace DPsim {
 		/// Enable recomputation of system matrix during simulation
 		Bool mSystemMatrixRecomputation = false;
 
-		/// Determines if the network should be split
-		/// into subnetworks at decoupling lines.
-		/// If the system is split, each subsystem is
-		/// solved by a dedicated MNA solver.
-		const Attribute<Bool>::Ptr mSplitSubnets = true;
 		/// If tearing components exist, the Diakoptics
 		/// solver is selected automatically.
 		CPS::IdentifiedObject::List mTearComponents = CPS::IdentifiedObject::List();
@@ -107,10 +114,6 @@ namespace DPsim {
 		Real mSteadStIniTimeLimit = 10;
 		/// steady state initialization accuracy limit
 		Real mSteadStIniAccLimit = 0.0001;
-		/// Determines if steady-state initialization
-		/// should be executed prior to the simulation.
-		/// By default the initialization is disabled.
-		const Attribute<Bool>::Ptr mSteadyStateInit;
 
 		// #### Task dependencies und scheduling ####
 		/// Scheduler used for task scheduling
