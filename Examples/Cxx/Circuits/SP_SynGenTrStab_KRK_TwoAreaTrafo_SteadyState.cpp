@@ -70,12 +70,10 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	Real ratio = voltageMVSide / voltageHVSide;
 	Real trafoResistance = 0;
 	Real trafoInductance = 23.4e-3; //set base to V_end2
-	// Real trafo_inductance = 1.0323e-4; //set base to V_end1
 	Real trafoPower = 900e6;
 	// Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
 	trafo15PF->setParameters(voltageMVSide, voltageHVSide, trafoPower, std::abs(ratio), std::arg(ratio), trafoResistance, trafoInductance);
 	trafo15PF->setBaseVoltage(KRK_TwoArea.Vnom);
-	// trafoPF->setBaseVoltage(smib.nomPhPhVoltRMS);
 
 	trafo26PF->setParameters(voltageMVSide, voltageHVSide, trafoPower, std::abs(ratio), std::arg(ratio), trafoResistance, trafoInductance);
 	trafo26PF->setBaseVoltage(KRK_TwoArea.Vnom);
@@ -206,63 +204,11 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	auto n10SP = SimNode<Complex>::make("n10", PhaseType::Single);
 	auto n11SP = SimNode<Complex>::make("n11", PhaseType::Single);
 
-	// Dynamic simulation, operational parameters for all the generators
-	Real Rs = 0.0025;
-	// Real Ld = 1.8;
-	// Real Lq = 1.7;
-	Real Xpd = 0.3;
-	// Real Lq_t = 0.5500;
-	// Real Ld_s = 0.2500;
-	// Real Lq_s = 0.2500;
-	// Real Ll = 0.2;
-	// Real Td0_t = 8.0;
-	// Real Tq0_t = 0.45;
-	// Real Td0_s = 0.0300;
-	// Real Tq0_s = 0.05;
-
-	// Dynamic simulation, fundamental parameters for all the generators
-	// Real L_ad = 1.6;
-	// Real L_aq = 1.5;
-	// Real L_fd = 0.10655;
-	// Real R_fd = 0.00056;
-	// Real L_1d = 0.10010;
-	// Real R_1d = 0.01768;
-	// Real L_1q = 0.45652;
-	// Real R_1q = 0.01153;
-	// Real L_2q = 0.05833;
-	// Real R_2q = 0.02166;
-
-	// Initial information from Kundur's description
-	// Real init_terminal_volt_G1 = KRK_TwoArea.setPointVoltage_G1*KRK_TwoArea.t1_ratio;
-	// Real init_volt_angle_G1 = np.deg2rad(20.2);
-	// Real initActivePower_G1 = 700e6;
-	// Real initReactivePower_G1 = 185e6;
-	// Complex initApparentPower_G1 = 700e6 + 185e6i;
-
-	// Real init_terminal_volt_G2 = KRK_TwoArea.setPointVoltage_G2*KRK_TwoArea.t2_ratio;
-	// Real init_volt_angle_G2 = np.deg2rad(10.5);
-	// Real initActivePower_G2 = 700e6;
-	// Real initReactivePower_G2 = 235e6;
-	// Complex initApparentPower_G2 = 700e6 + 235e6i;
-
-	// Real init_terminal_volt_G3 = KRK_TwoArea.setPointVoltage_G3*KRK_TwoArea.t3_ratio;
-	// Real init_volt_angle_G3 = np.deg2rad(-6.8);
-	// Real initActivePower_G3 = 719e6;
-	// Real initReactivePower_G3 = 176e6;
-	// Complex initApparentPower_G3 = 719e6 + 176e6i;
-
-	// Real init_terminal_volt_G4 = KRK_TwoArea.setPointVoltage_G4*KRK_TwoArea.t4_ratio;
-	// Real init_volt_angle_G4 = np.deg2rad(-17.0);
-	// Real initActivePower_G4 = 700e6;
-	// Real initReactivePower_G4 = 202e6;
-	// Complex initApparentPower_G4 = 700e6 + 202e6i;
-
 	// Components
 	//Synchronous generator 1
 	auto gen1SP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen1", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	// gen1DP->setOperationalPerUnitParameters(2, KRK_TwoArea.H_G1, Rs, Ld, Lq, Ll, Ld_t, Lq_t, Ld_s, Lq_s, Td0_t, Tq0_t, Td0_s, Tq0_s);
-	gen1SP->setStandardParametersPU(KRK_TwoArea.nomPower_G1, KRK_TwoArea.nomPhPhVoltRMS_G1, KRK_TwoArea.nomFreq_G1, Xpd, KRK_TwoArea.H_G1, Rs, 10.0);
+	gen1SP->setStandardParametersPU(KRK_TwoArea.nomPower_G1, KRK_TwoArea.nomPhPhVoltRMS_G1, KRK_TwoArea.nomFreq_G1, KRK_TwoArea.Xpd, KRK_TwoArea.H_G1, KRK_TwoArea.Rs, 10.0);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G1 = gen1PF->getApparentPower();
 	Real initMechPower_G1 = initApparentPower_G1.real();
@@ -275,7 +221,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	//Synchronous generator 2
 	auto gen2SP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen2", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	gen2SP->setStandardParametersPU(KRK_TwoArea.nomPower_G2, KRK_TwoArea.nomPhPhVoltRMS_G2, KRK_TwoArea.nomFreq_G2, Xpd, KRK_TwoArea.H_G2, Rs, 10.0);
+	gen2SP->setStandardParametersPU(KRK_TwoArea.nomPower_G2, KRK_TwoArea.nomPhPhVoltRMS_G2, KRK_TwoArea.nomFreq_G2, KRK_TwoArea.Xpd, KRK_TwoArea.H_G2, KRK_TwoArea.Rs, 10.0);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G2 = gen2PF->getApparentPower();
 	Real initMechPower_G2 = initApparentPower_G2.real();
@@ -288,7 +234,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	//Synchronous generator 3
 	auto gen3SP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen3", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	gen3SP->setStandardParametersPU(KRK_TwoArea.nomPower_G3, KRK_TwoArea.nomPhPhVoltRMS_G3, KRK_TwoArea.nomFreq_G3, Xpd, KRK_TwoArea.H_G3, Rs, 10.0);
+	gen3SP->setStandardParametersPU(KRK_TwoArea.nomPower_G3, KRK_TwoArea.nomPhPhVoltRMS_G3, KRK_TwoArea.nomFreq_G3, KRK_TwoArea.Xpd, KRK_TwoArea.H_G3, KRK_TwoArea.Rs, 10.0);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G3 = gen3PF->getApparentPower();
 	Real initMechPower_G3 = initApparentPower_G3.real();
@@ -301,7 +247,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	//Synchronous generator 4
 	auto gen4SP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen4", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	gen4SP->setStandardParametersPU(KRK_TwoArea.nomPower_G4, KRK_TwoArea.nomPhPhVoltRMS_G4, KRK_TwoArea.nomFreq_G4, Xpd, KRK_TwoArea.H_G4, Rs, 10.0);
+	gen4SP->setStandardParametersPU(KRK_TwoArea.nomPower_G4, KRK_TwoArea.nomPhPhVoltRMS_G4, KRK_TwoArea.nomFreq_G4, KRK_TwoArea.Xpd, KRK_TwoArea.H_G4, KRK_TwoArea.Rs, 10.0);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G4 = gen4PF->getApparentPower();
 	Real initMechPower_G4 = initApparentPower_G4.real();
@@ -377,17 +323,6 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	auto line1011SP = SP::Ph1::PiLine::make("PiLine1011", Logger::Level::debug);
 	line1011SP->setParameters(KRK_TwoArea.lineResistance1011, KRK_TwoArea.lineInductance1011, KRK_TwoArea.lineCapacitance1011, KRK_TwoArea.lineConductance1011);
 
-	// // //Switch
-	// // auto faultDP = DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
-	// // faultDP->setParameters(SwitchOpen, SwitchClosed);
-	// // faultDP->open();
-
-	// //Variable resistance Switch
-	// auto faultDP = DP::Ph1::varResSwitch::make("Br_fault", Logger::Level::debug);
-	// faultDP->setParameters(SwitchOpen, SwitchClosed);
-	// faultDP->setInitParameters(timeStep);
-	// faultDP->open();
-
 	// Topology
 	gen1SP->connect({ n1SP });
 	gen2SP->connect({ n2SP });
@@ -457,13 +392,16 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	loggerSP->addAttribute("v_gen1", gen1SP->attribute("v_intf"));
 	loggerSP->addAttribute("i_gen1", gen1SP->attribute("i_intf"));
 	loggerSP->addAttribute("wr_gen1", gen1SP->attribute("w_r"));
+	loggerSP->addAttribute("wref_gen1", gen1SP->attribute("w_ref"));
 	loggerSP->addAttribute("delta_gen1", gen1SP->attribute("delta_r"));
+	loggerSP->addAttribute("deltaref_gen1", gen1SP->attribute("delta_ref"));
 	loggerSP->addAttribute("Ep_gen2", gen2SP->attribute("Ep_mag"));
 	loggerSP->addAttribute("v_gen2", gen2SP->attribute("v_intf"));
 	loggerSP->addAttribute("i_gen2", gen2SP->attribute("i_intf"));
 	loggerSP->addAttribute("wr_gen2", gen2SP->attribute("w_r"));
 	loggerSP->addAttribute("wref_gen2", gen2SP->attribute("w_ref"));
 	loggerSP->addAttribute("delta_gen2", gen2SP->attribute("delta_r"));
+	loggerSP->addAttribute("deltaref_gen2", gen2SP->attribute("delta_ref"));
 	loggerSP->addAttribute("Ep_gen3", gen3SP->attribute("Ep_mag"));
 	loggerSP->addAttribute("v_gen3", gen3SP->attribute("v_intf"));
 	loggerSP->addAttribute("i_gen3", gen3SP->attribute("i_intf"));
@@ -473,8 +411,9 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	loggerSP->addAttribute("v_gen4", gen4SP->attribute("v_intf"));
 	loggerSP->addAttribute("i_gen4", gen4SP->attribute("i_intf"));
 	loggerSP->addAttribute("wr_gen4", gen4SP->attribute("w_r"));
+	loggerSP->addAttribute("wref_gen4", gen4SP->attribute("w_ref"));
 	loggerSP->addAttribute("delta_gen4", gen4SP->attribute("delta_r"));
-	// loggerDP->addAttribute("i_fault", faultDP->attribute("i_intf"));
+	loggerSP->addAttribute("deltaref_gen4", gen4SP->attribute("delta_ref"));
 	loggerSP->addAttribute("v_load7", load7SP->attribute("v_intf"));
 	loggerSP->addAttribute("i_load7", load7SP->attribute("i_intf"));
 	loggerSP->addAttribute("v_load9", load9SP->attribute("v_intf"));
@@ -504,21 +443,6 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	simSP.setFinalTime(finalTime);
 	simSP.setDomain(Domain::SP);
 	simSP.addLogger(loggerSP);
-	// simSP.doSystemMatrixRecomputation(true);
-
-	// // Events
-	// if (startFaultEvent){
-	// 	auto sw1 = SwitchEvent::make(startTimeFault, faultDP, true);
-
-	// 	simDP.addEvent(sw1);
-	// }
-
-	// if(endFaultEvent){
-
-	// 	auto sw2 = SwitchEvent::make(endTimeFault, faultDP, false);
-	// 	simDP.addEvent(sw2);
-
-	// }
 
 	simSP.run();
 }
