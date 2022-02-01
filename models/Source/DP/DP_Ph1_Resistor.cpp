@@ -11,29 +11,30 @@
 using namespace CPS;
 
 DP::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
-		mResistance(Attribute<Real>::create("R", mAttributes)) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
 
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mResistance = CPS::Attribute<Real>::create("R", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
-	copy->setParameters(mResistance);
+	copy->setParameters(**mResistance);
 	return copy;
 }
 
 void DP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
-	Complex impedance = { mResistance, 0 };
+	Complex impedance = { **mResistance, 0 };
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
 	mSLog->info("\nResistance [Ohm]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
-				Logger::realToString(mResistance),
+				Logger::realToString(**mResistance),
 				Logger::complexToString(impedance));
 	mSLog->info("\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
@@ -70,7 +71,7 @@ void DP::Ph1::Resistor::mnaInitializeHarm(Real omega, Real timeStep, std::vector
 }
 
 void DP::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = Complex(1. / mResistance, 0);
+	Complex conductance = Complex(1. / **mResistance, 0);
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		// Set diagonal entries
@@ -97,7 +98,7 @@ void DP::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void DP::Ph1::Resistor::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
-	Complex conductance = Complex(1. / mResistance, 0);
+	Complex conductance = Complex(1. / **mResistance, 0);
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), conductance);
@@ -152,7 +153,7 @@ void DP::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void DP::Ph1::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		(**mIntfCurrent)(0,freq) = (**mIntfVoltage)(0,freq) / mResistance;
+		(**mIntfCurrent)(0,freq) = (**mIntfVoltage)(0,freq) / **mResistance;
 		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }
@@ -170,13 +171,13 @@ void DP::Ph1::Resistor::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqI
 
 void DP::Ph1::Resistor::mnaUpdateCurrentHarm() {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		(**mIntfCurrent)(0,freq) = (**mIntfVoltage)(0,freq) / mResistance;
+		(**mIntfCurrent)(0,freq) = (**mIntfVoltage)(0,freq) / **mResistance;
 		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }
 
 void DP::Ph1::Resistor::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
-	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex(mResistance, 0));
+	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex(**mResistance, 0));
 }
 
 // #### DAE functions ####
@@ -204,8 +205,8 @@ void DP::Ph1::Resistor::daeResidual(double ttime, const double state[], const do
 	int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation
 	resid[c_offset] = (state[Pos2]-state[Pos1]) - state[c_offset]; // Voltage equation for Resistor
 	//resid[c_offset+1] = ; //TODO : add inductance equation
-    resid[n_offset_1] += 1.0/ mResistance * state[c_offset];
-    resid[n_offset_2] += 1.0/ mResistance * state[c_offset];
+    resid[n_offset_1] += 1.0/ **mResistance * state[c_offset];
+    resid[n_offset_2] += 1.0/ **mResistance * state[c_offset];
 	off[1] += 1;
 }
 

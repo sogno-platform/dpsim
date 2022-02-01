@@ -15,14 +15,14 @@ namespace Base {
 namespace Ph1 {
 	class Resistor {
 	protected:
-		///Resistance [ohm]
-		Real mResistance;
 		///Conductance [S]
 		Real mConductance;
 	public:
+		///Resistance [ohm]
+		CPS::Attribute<Real>::Ptr mResistance;
 		///
 		void setParameters(Real resistance) {
-			mResistance = resistance;
+			**mResistance = resistance;
 		}
 	};
 }

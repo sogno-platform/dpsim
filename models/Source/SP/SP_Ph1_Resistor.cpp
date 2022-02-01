@@ -18,23 +18,24 @@ SP::Ph1::Resistor::Resistor(String uid, String name,
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
-	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mResistance = CPS::Attribute<Real>::create("R", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr SP::Ph1::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
-	copy->setParameters(mResistance);
+	copy->setParameters(**mResistance);
 	return copy;
 }
 
 void SP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
-	mConductance = 1 / mResistance;
+	mConductance = 1 / **mResistance;
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	**mIntfCurrent = mConductance*mIntfVoltage;
+	**mIntfCurrent = mConductance * **mIntfVoltage;
 
 	mSLog->info("\nResistance [Ohm]: {:s}",
-				Logger::realToString(mResistance));
+				Logger::realToString(**mResistance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
@@ -64,7 +65,7 @@ void SP::Ph1::Resistor::calculatePerUnitParameters(Real baseApparentPower){
 	mBaseCurrent = baseApparentPower / (mBaseVoltage*sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
 	mSLog->info("Base Voltage={} [V]  Base Impedance={} [Ohm]", mBaseVoltage, mBaseImpedance);
 
-	mResistancePerUnit = mResistance / mBaseImpedance;
+	mResistancePerUnit = **mResistance / mBaseImpedance;
 	mConductancePerUnit = 1. / mResistancePerUnit;
     mSLog->info("Resistance={} [pu]  Conductance={} [pu]", mResistancePerUnit, mConductancePerUnit);
 }
@@ -102,7 +103,7 @@ void SP::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 }
 
 void SP::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = Complex(1. / mResistance, 0);
+	Complex conductance = Complex(1. / **mResistance, 0);
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		// Set diagonal entries
@@ -154,12 +155,12 @@ void SP::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void SP::Ph1::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		(**mIntfCurrent)(0,freq) = (**mIntfVoltage)(0,freq) / mResistance;
+		(**mIntfCurrent)(0,freq) = (**mIntfVoltage)(0,freq) / **mResistance;
 		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }
 
 
 void SP::Ph1::Resistor::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
-	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex(mResistance, 0));
+	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex(**mResistance, 0));
 }
