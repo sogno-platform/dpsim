@@ -17,12 +17,13 @@ DP::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
 
-	addAttribute<Real>("L", &mInductance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mInductance = CPS::Attribute<Real>::create("L", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
-	copy->setParameters(mInductance);
+	copy->setParameters(**mInductance);
 	return copy;
 }
 
@@ -37,13 +38,13 @@ void DP::Ph1::Inductor::initialize(Matrix frequencies) {
 void DP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2. * PI * frequency;
-	Complex impedance = { 0, omega * mInductance };
+	Complex impedance = { 0, omega * **mInductance };
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
 	mSLog->info("\nInductance [H]: {:s}"
 			 	"\nImpedance [Ohm]: {:s}",
-				 Logger::realToString(mInductance),
+				 Logger::realToString(**mInductance),
 				 Logger::complexToString(impedance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -62,7 +63,7 @@ void DP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 void DP::Ph1::Inductor::initVars(Real timeStep) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		Real a = timeStep / (2. * mInductance);
+		Real a = timeStep / (2. * **mInductance);
 		Real b = timeStep * 2.*PI * mFrequencies(freq,0) / 2.;
 
 		Real equivCondReal = a / (1. + b * b);
@@ -206,7 +207,7 @@ void DP::Ph1::Inductor::mnaAddPreStepDependencies(AttributeBase::List &prevStepD
 }
 
 void DP::Ph1::Inductor::mnaPreStep(Real time, Int timeStepCount) {
-	this->mnaApplyRightSideVectorStamp(this->mRightVector);
+	this->mnaApplyRightSideVectorStamp(**this->mRightVector);
 }
 
 void DP::Ph1::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

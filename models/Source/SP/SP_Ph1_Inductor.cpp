@@ -16,25 +16,26 @@ SP::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
 
-	addAttribute<Real>("L", &mInductance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mInductance = CPS::Attribute<Real>::create("L", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr SP::Ph1::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
-	copy->setParameters(mInductance);
+	copy->setParameters(**mInductance);
 	return copy;
 }
 
 void SP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
-	mSusceptance = Complex(0, -1 / omega / mInductance);
+	mSusceptance = Complex(0, -1 / omega / **mInductance);
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 
 	mSLog->info("\nInductance [H]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
-				Logger::realToString(mInductance),
+				Logger::realToString(**mInductance),
 				Logger::complexToString(1./mSusceptance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -116,7 +117,7 @@ void SP::Ph1::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph1::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = mSusceptance*mIntfVoltage;
+	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 }
 
 

@@ -17,19 +17,20 @@ EMT::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	**mIntfCurrent = Matrix::Zero(1,1);
 	setTerminalNumber(2);
 
-	addAttribute<Real>("L", &mInductance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mInductance = CPS::Attribute<Real>::create("L", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph1::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
-	copy->setParameters(mInductance);
+	copy->setParameters(**mInductance);
 	return copy;
 }
 
 void EMT::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
-	Complex impedance = { 0, omega * mInductance };
+	Complex impedance = { 0, omega * **mInductance };
 	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
 	(**mIntfCurrent)(0,0) = ((**mIntfVoltage)(0,0) / impedance).real();
 
@@ -50,7 +51,7 @@ void EMT::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mEquivCond = timeStep / (2.0 * mInductance);
+	mEquivCond = timeStep / (2.0 * **mInductance);
 	// Update internal state
 	mEquivCurrent = mEquivCond * (**mIntfVoltage)(0,0) + (**mIntfCurrent)(0,0);
 

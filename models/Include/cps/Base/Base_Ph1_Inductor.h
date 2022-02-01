@@ -16,11 +16,11 @@ namespace Ph1 {
 	class Inductor {
 	protected:
 		/// Inductance [H]
-		Real mInductance;
+		CPS::Attribute<Real>::Ptr mInductance;
 	public:
 		/// Sets model specific parameters
 		void setParameters(Real inductance) {
-			mInductance = inductance;
+			**mInductance = inductance;
 		}
 	};
 }
