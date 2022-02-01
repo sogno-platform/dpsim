@@ -15,14 +15,14 @@ namespace Base {
 namespace Ph3 {
 	class Resistor {
 	protected:
-		///Resistance [ohm]
-		Matrix mResistance;
 		///Conductance [S]
 		Matrix mConductance;
 	public:
+		///Resistance [ohm]
+		CPS::Attribute<Matrix>::Ptr mResistance;
 		/// Sets model specific parameters
 		void setParameters(Matrix resistance) {
-			mResistance = resistance;
+			**mResistance = resistance;
 		}
 	};
 }

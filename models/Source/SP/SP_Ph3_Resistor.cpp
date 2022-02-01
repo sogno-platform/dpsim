@@ -18,12 +18,14 @@ SP::Ph3::Resistor::Resistor(String uid, String name,
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);
 	**mIntfCurrent = MatrixComp::Zero(3, 1);
-	addAttribute<Matrix>("R", &mResistance, Flags::read | Flags::write);
+	
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mResistance = CPS::Attribute<Matrix>::create("R", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr SP::Ph3::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
-	copy->setParameters(mResistance);
+	copy->setParameters(**mResistance);
 	return copy;
 }
 
@@ -37,7 +39,7 @@ void SP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(2, 0) = Complex(
 		voltMag * cos(voltPhase + 2. / 3. * M_PI),
 		voltMag * sin(voltPhase + 2. / 3. * M_PI));
-	mConductance = mResistance.inverse();
+	mConductance = (**mResistance).inverse();
 	**mIntfCurrent = mConductance * **mIntfVoltage;
 
 	mSLog->info("Node 1 : {}", Logger::phasorToString(initialVoltage(0)(0, 0)));
@@ -145,7 +147,7 @@ void SP::Ph3::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
 
 void SP::Ph3::Resistor::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
 	// TODO
-	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex(mResistance(0, 0), 0));
-	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex(mResistance(1, 1), 0));
-	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex(mResistance(2, 2), 0));
+	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex((**mResistance)(0, 0), 0));
+	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex((**mResistance)(1, 1), 0));
+	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex((**mResistance)(2, 2), 0));
 }

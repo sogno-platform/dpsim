@@ -18,12 +18,13 @@ DP::Ph3::Resistor::Resistor(String uid, String name,
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	**mIntfCurrent = MatrixComp::Zero(3,1);
 
-	addAttribute<Matrix>("R", &mResistance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mResistance = CPS::Attribute<Matrix>::create("R", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph3::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
-	copy->setParameters(mResistance);
+	copy->setParameters(**mResistance);
 	return copy;
 }
 
@@ -37,7 +38,7 @@ void DP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(2, 0) = Complex(
 		voltMag * cos(voltPhase + 2. / 3. * M_PI),
 		voltMag * sin(voltPhase + 2. / 3. * M_PI));
-	mConductance = mResistance.inverse();
+	mConductance = (**mResistance).inverse();
 	**mIntfCurrent = mConductance * **mIntfVoltage;
 
 	mSLog->info("\n--- Initialization from powerflow ---"

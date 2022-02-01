@@ -17,12 +17,13 @@ EMT::Ph3::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	addAttribute<Matrix>("R", &mResistance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mResistance = CPS::Attribute<Matrix>::create("R", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
-	copy->setParameters(mResistance);
+	copy->setParameters(**mResistance);
 	return copy;
 }
 
@@ -34,12 +35,12 @@ void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	**mIntfVoltage = vInitABC.real();
-	mConductance = mResistance.inverse();
+	mConductance = (**mResistance).inverse();
 	**mIntfCurrent = (mConductance * vInitABC).real();
 
 	mSLog->info("\nResistance [Ohm]: {:s}"
 				"\nConductance [S]: {:s}",
-				Logger::matrixToString(mResistance),
+				Logger::matrixToString(**mResistance),
 				Logger::matrixToString(mConductance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
