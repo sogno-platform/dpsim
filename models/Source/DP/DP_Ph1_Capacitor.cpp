@@ -17,13 +17,13 @@ DP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
-
-	addAttribute<Real>("C", &mCapacitance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mCapacitance = CPS::Attribute<Real>::create("C", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
-	copy->setParameters(mCapacitance);
+	copy->setParameters(**mCapacitance);
 	return copy;
 }
 
@@ -38,13 +38,13 @@ void DP::Ph1::Capacitor::initialize(Matrix frequencies) {
 void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
-	Complex impedance = { 0, - 1. / (omega * mCapacitance) };
+	Complex impedance = { 0, - 1. / (omega * **mCapacitance) };
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
 	mSLog->info("\nCapacitance [F]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
-				Logger::realToString(mCapacitance),
+				Logger::realToString(**mCapacitance),
 				Logger::complexToString(impedance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -63,13 +63,13 @@ void DP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	Real equivCondReal = 2.0 * mCapacitance / timeStep;
-	Real prevVoltCoeffReal = 2.0 * mCapacitance / timeStep;
+	Real equivCondReal = 2.0 * **mCapacitance / timeStep;
+	Real prevVoltCoeffReal = 2.0 * **mCapacitance / timeStep;
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		Real equivCondImag = 2.*PI * mFrequencies(freq,0) * mCapacitance;
+		Real equivCondImag = 2.*PI * mFrequencies(freq,0) * **mCapacitance;
 		mEquivCond(freq,0) = { equivCondReal, equivCondImag };
-		Real prevVoltCoeffImag = - 2.*PI * mFrequencies(freq,0) * mCapacitance;
+		Real prevVoltCoeffImag = - 2.*PI * mFrequencies(freq,0) * **mCapacitance;
 		mPrevVoltCoeff(freq,0) = { prevVoltCoeffReal, prevVoltCoeffImag };
 
 		mEquivCurrent(freq,0) = -(**mIntfCurrent)(0,freq) + -mPrevVoltCoeff(freq,0) * (**mIntfVoltage)(0,freq);
@@ -95,13 +95,13 @@ void DP::Ph1::Capacitor::mnaInitializeHarm(Real omega, Real timeStep, std::vecto
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	Real equivCondReal = 2.0 * mCapacitance / timeStep;
-	Real prevVoltCoeffReal = 2.0 * mCapacitance / timeStep;
+	Real equivCondReal = 2.0 * **mCapacitance / timeStep;
+	Real prevVoltCoeffReal = 2.0 * **mCapacitance / timeStep;
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		Real equivCondImag = 2.*PI * mFrequencies(freq,0) * mCapacitance;
+		Real equivCondImag = 2.*PI * mFrequencies(freq,0) * **mCapacitance;
 		mEquivCond(freq,0) = { equivCondReal, equivCondImag };
-		Real prevVoltCoeffImag = - 2.*PI * mFrequencies(freq,0) * mCapacitance;
+		Real prevVoltCoeffImag = - 2.*PI * mFrequencies(freq,0) * **mCapacitance;
 		mPrevVoltCoeff(freq,0) = { prevVoltCoeffReal, prevVoltCoeffImag };
 
 		mEquivCurrent(freq,0) = -(**mIntfCurrent)(0,freq) + -mPrevVoltCoeff(freq,0) * (**mIntfVoltage)(0,freq);
@@ -222,7 +222,7 @@ void DP::Ph1::Capacitor::mnaAddPreStepDependencies(AttributeBase::List &prevStep
 }
 
 void DP::Ph1::Capacitor::mnaPreStep(Real time, Int timeStepCount) {
-	this->mnaApplyRightSideVectorStamp(this->mRightVector);
+	this->mnaApplyRightSideVectorStamp(**this->mRightVector);
 }
 
 void DP::Ph1::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

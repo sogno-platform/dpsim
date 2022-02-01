@@ -16,19 +16,20 @@ SP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
 
-	addAttribute<Real>("C", &mCapacitance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mCapacitance = CPS::Attribute<Real>::create("C", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr SP::Ph1::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
-	copy->setParameters(mCapacitance);
+	copy->setParameters(**mCapacitance);
 	return copy;
 }
 
 void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
-	mSusceptance = Complex(0, omega * mCapacitance);
+	mSusceptance = Complex(0, omega * **mCapacitance);
 	mImpedance = Complex(1, 0) / mSusceptance;
 	mAdmittance = Complex(1, 0) / mImpedance;
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
@@ -37,7 +38,7 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	mSLog->info("\nCapacitance [F]: {:s}"
 				"\nImpedance [Ohm]: {:s}"
 				"\nAdmittance [S]: {:s}",
-				Logger::realToString(mCapacitance),
+				Logger::realToString(**mCapacitance),
 				Logger::complexToString(mImpedance),
 				Logger::complexToString(mAdmittance));
 	mSLog->info(

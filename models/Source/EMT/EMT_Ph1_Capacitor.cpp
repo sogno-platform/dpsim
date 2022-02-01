@@ -17,19 +17,20 @@ EMT::Ph1::Capacitor::Capacitor(String uid, String name,	Logger::Level logLevel)
 	**mIntfCurrent = Matrix::Zero(1,1);
 	setTerminalNumber(2);
 
-	addAttribute<Real>("C", &mCapacitance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mCapacitance = CPS::Attribute<Real>::create("C", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph1::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
-	copy->setParameters(mCapacitance);
+	copy->setParameters(**mCapacitance);
 	return copy;
 }
 
 void EMT::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
-	Complex impedance = { 0, - 1. / (omega * mCapacitance) };
+	Complex impedance = { 0, - 1. / (omega * **mCapacitance) };
 	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
 	(**mIntfCurrent)(0,0) = ((initialSingleVoltage(1) - initialSingleVoltage(0)) / impedance).real();
 
@@ -50,7 +51,7 @@ void EMT::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Mat
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mEquivCond = (2.0 * mCapacitance) / timeStep;
+	mEquivCond = (2.0 * **mCapacitance) / timeStep;
 	// Update internal state
 	mEquivCurrent = -(**mIntfCurrent)(0,0) + -mEquivCond * (**mIntfVoltage)(0,0);
 
