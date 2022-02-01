@@ -14,10 +14,9 @@ namespace CPS {
 namespace Base {
 namespace Ph1 {
 	class Inductor {
-	protected:
+	public:
 		/// Inductance [H]
 		CPS::Attribute<Real>::Ptr mInductance;
-	public:
 		/// Sets model specific parameters
 		void setParameters(Real inductance) {
 			**mInductance = inductance;
