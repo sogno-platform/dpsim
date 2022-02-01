@@ -11,20 +11,19 @@
 using namespace CPS;
 
 DP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)),
+	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
-
-	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
-	addAttribute<Real>("f_src", Flags::read | Flags::write);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
 	if(mSrcSig == nullptr)
-		copy->setParameters(attribute<Complex>("V_ref")->get());
+		copy->setParameters(**mVoltageRef);
 	else
 		copy->setParameters(mSrcSig->getSignal());
 	return copy;
@@ -35,8 +34,8 @@ void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	srcSigSine->setParameters(voltageRef, srcFreq);
 	mSrcSig = srcSigSine;
 
-	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
-	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+	mVoltageRef->setReference(mSrcSig->attribute<Complex>("sigOut"));
+	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
 
 	mParametersSet = true;
 }
@@ -46,8 +45,8 @@ void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart
 	srcSigFreqRamp->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 	mSrcSig = srcSigFreqRamp;
 
-	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
-	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+	mVoltageRef->setReference(mSrcSig->attribute<Complex>("sigOut"));
+	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
 
 	mParametersSet = true;
 }
@@ -57,14 +56,14 @@ void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulatio
 	srcSigFm->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 	mSrcSig = srcSigFm;
 
-	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
-	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+	mVoltageRef->setReference(mSrcSig->attribute<Complex>("sigOut"));
+	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
 
 	mParametersSet = true;
 }
 
 void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-	Complex voltageRef = attribute<Complex>("V_ref")->get();
+	Complex voltageRef = **mVoltageRef;
 
 	if (voltageRef == Complex(0, 0))
 		voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
@@ -74,10 +73,10 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		srcSigSine.setParameters(voltageRef);
 		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
 
-		setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
-		setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+		mVoltageRef->setReference(mSrcSig->attribute<Complex>("sigOut"));
+		mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
 	} else {
-		attribute<Complex>("V_ref")->set(voltageRef);
+		**mVoltageRef = voltageRef;
 	}
 
 	mSLog->info(
@@ -94,14 +93,14 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 // #### MNA functions ####
 
 void DP::Ph1::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(attribute("V_ref"));
-	modifiedAttributes.push_back(attribute("right_vector"));
-	modifiedAttributes.push_back(attribute("v_intf"));
+	attributeDependencies.push_back(mVoltageRef);
+	modifiedAttributes.push_back(mRightVector);
+	modifiedAttributes.push_back(mIntfVoltage);
 }
 
 void DP::Ph1::VoltageSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfCurrent);
 };
 
 void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -198,7 +197,7 @@ void DP::Ph1::VoltageSource::updateVoltage(Real time) {
 		mSrcSig->step(time);
 		(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
 	} else {
-		(**mIntfVoltage)(0,0) = attribute<Complex>("V_ref")->get();
+		(**mIntfVoltage)(0,0) = **mVoltageRef;
 	}
 
 	mSLog->debug("Update Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,0)));
