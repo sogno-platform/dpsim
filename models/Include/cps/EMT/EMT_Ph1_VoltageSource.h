@@ -28,10 +28,9 @@ namespace Ph1 {
 		public SharedFactory<VoltageSource> {
 	protected:
 		void updateVoltage(Real time);
-
-		Attribute<Complex>::Ptr mVoltageRef;
-		Attribute<Real>::Ptr mSrcFreq;
 	public:
+		const Attribute<Complex>::Ptr mVoltageRef;
+		const Attribute<Real>::Ptr mSrcFreq;
 		/// Defines UID, name and logging level
 		VoltageSource(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		///
