@@ -11,12 +11,11 @@
 using namespace CPS;
 
 DP::Ph1::CurrentSource::CurrentSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mCurrentRef(CPS::Attribute<Complex>::create("I_ref", mAttributes)) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
-
-	addAttribute<Complex>("I_ref", Flags::read | Flags::write);
 }
 
 DP::Ph1::CurrentSource::CurrentSource(String name, Complex current, Logger::Level logLevel)
@@ -25,21 +24,20 @@ DP::Ph1::CurrentSource::CurrentSource(String name, Complex current, Logger::Leve
 }
 
 void DP::Ph1::CurrentSource::setParameters(Complex current) {
-	attribute<Complex>("I_ref")->set(current);
+	**mCurrentRef = current;
 	mParametersSet = true;
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::CurrentSource::clone(String name) {
 	auto copy = CurrentSource::make(name, mLogLevel);
-	copy->setParameters(attribute<Complex>("I_ref")->get());
+	copy->setParameters(**mCurrentRef);
 	return copy;
 }
 
 void DP::Ph1::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(0) - initialSingleVoltage(1);
-	mCurrentRef = attribute<Complex>("I_ref");
-	(**mIntfCurrent)(0,0) = mCurrentRef->get();
+	(**mIntfCurrent)(0,0) = **mCurrentRef;
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -58,8 +56,7 @@ void DP::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mCurrentRef = attribute<Complex>("I_ref");
-	(**mIntfCurrent)(0,0) = mCurrentRef->get();
+	(**mIntfCurrent)(0,0) = **mCurrentRef;
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -70,7 +67,7 @@ void DP::Ph1::CurrentSource::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	(**mIntfCurrent)(0,0) = mCurrentRef->get();
+	(**mIntfCurrent)(0,0) = **mCurrentRef;
 
 	if (terminalNotGrounded(0))
 		Math::setVectorElement(rightVector, matrixNodeIndex(0), -(**mIntfCurrent)(0,0));

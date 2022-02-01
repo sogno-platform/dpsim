@@ -23,10 +23,10 @@ namespace Ph1 {
 		public MNAInterface,
 		public SimPowerComp<Real>,
 		public SharedFactory<CurrentSource> {
-	private:
-		Attribute<Complex>::Ptr mCurrentRef;
-		Attribute<Real>::Ptr mSrcFreq;
 	public:
+		const Attribute<Complex>::Ptr mCurrentRef;
+		const Attribute<Real>::Ptr mSrcFreq;
+		
 		/// Defines UID, name and logging level
 		CurrentSource(String uid, String name,
 			Logger::Level logLevel = Logger::Level::off);

@@ -25,9 +25,8 @@ namespace Ph1 {
 		public MNAInterface,
 		public SimPowerComp<Complex>,
 		public SharedFactory<CurrentSource> {
-	protected:
-		Attribute<Complex>::Ptr mCurrentRef;
 	public:
+		const Attribute<Complex>::Ptr mCurrentRef;
 		/// Defines UID, name and logging level
 		CurrentSource(String uid, String name, Logger::Level loglevel = Logger::Level::off);
 		/// Defines name and logging level
