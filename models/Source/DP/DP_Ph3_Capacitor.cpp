@@ -21,12 +21,13 @@ DP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	**mIntfCurrent = MatrixComp::Zero(3,1);
 
-	addAttribute<Matrix>("C", &mCapacitance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mCapacitance = CPS::Attribute<Matrix>::create("C", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph3::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
-	copy->setParameters(mCapacitance);
+	copy->setParameters(**mCapacitance);
 	return copy;
 }
 
@@ -36,9 +37,9 @@ void DP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	MatrixComp susceptance = Matrix::Zero(3, 3);
 
 	susceptance <<
-		Complex(0, omega * mCapacitance(0, 0)), Complex(0, omega * mCapacitance(0, 1)), Complex(0, omega * mCapacitance(0, 2)),
-		Complex(0, omega * mCapacitance(1, 0)), Complex(0, omega * mCapacitance(1, 1)), Complex(0, omega * mCapacitance(1, 2)),
-		Complex(0, omega * mCapacitance(2, 0)), Complex(0, omega * mCapacitance(2, 1)), Complex(0, omega * mCapacitance(2, 2));
+		Complex(0, omega * (**mCapacitance)(0, 0)), Complex(0, omega * (**mCapacitance)(0, 1)), Complex(0, omega * (**mCapacitance)(0, 2)),
+		Complex(0, omega * (**mCapacitance)(1, 0)), Complex(0, omega * (**mCapacitance)(1, 1)), Complex(0, omega * (**mCapacitance)(1, 2)),
+		Complex(0, omega * (**mCapacitance)(2, 0)), Complex(0, omega * (**mCapacitance)(2, 1)), Complex(0, omega * (**mCapacitance)(2, 2));
 
 
 	// IntfVoltage initialization for each phase
@@ -69,7 +70,7 @@ void DP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 
 void DP::Ph3::Capacitor::initVars(Real omega, Real timeStep) {
-	Matrix a = timeStep / 2 * mCapacitance.inverse();
+	Matrix a = timeStep / 2 * (**mCapacitance).inverse();
 	Real b = timeStep * omega / 2.;
 
 	Matrix equivCondReal = a.inverse();

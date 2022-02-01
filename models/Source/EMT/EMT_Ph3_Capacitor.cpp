@@ -18,13 +18,14 @@ EMT::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	addAttribute<Matrix>("C", &mCapacitance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mCapacitance = CPS::Attribute<Matrix>::create("C", mAttributes);
 }
 
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
-	copy->setParameters(mCapacitance);
+	copy->setParameters(**mCapacitance);
 	return copy;
 }
 void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
@@ -32,9 +33,9 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2 * PI * frequency;
 	MatrixComp admittance = MatrixComp::Zero(3, 3);
 	admittance <<
-		Complex(0, omega * mCapacitance(0, 0)), Complex(0, omega * mCapacitance(0, 1)), Complex(0, omega * mCapacitance(0, 2)),
-		Complex(0, omega * mCapacitance(1, 0)), Complex(0, omega * mCapacitance(1, 1)), Complex(0, omega * mCapacitance(1, 2)),
-		Complex(0, omega * mCapacitance(2, 0)), Complex(0, omega * mCapacitance(2, 1)), Complex(0, omega * mCapacitance(2, 2));
+		Complex(0, omega * (**mCapacitance)(0, 0)), Complex(0, omega * (**mCapacitance)(0, 1)), Complex(0, omega * (**mCapacitance)(0, 2)),
+		Complex(0, omega * (**mCapacitance)(1, 0)), Complex(0, omega * (**mCapacitance)(1, 1)), Complex(0, omega * (**mCapacitance)(1, 2)),
+		Complex(0, omega * (**mCapacitance)(2, 0)), Complex(0, omega * (**mCapacitance)(2, 1)), Complex(0, omega * (**mCapacitance)(2, 2));
 
 	MatrixComp vInitABC = Matrix::Zero(3, 1);
 	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(1) - RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
@@ -45,7 +46,7 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	mSLog->info("\nCapacitance [F]: {:s}"
 				"\nAdmittance [S]: {:s}",
-				Logger::matrixToString(mCapacitance),
+				Logger::matrixToString(**mCapacitance),
 				Logger::matrixCompToString(admittance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -63,7 +64,7 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 void EMT::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-	mEquivCond = (2.0 * mCapacitance) / timeStep;
+	mEquivCond = (2.0 * **mCapacitance) / timeStep;
 	// Update internal state
 	mEquivCurrent = - **mIntfCurrent + - mEquivCond * **mIntfVoltage;
 

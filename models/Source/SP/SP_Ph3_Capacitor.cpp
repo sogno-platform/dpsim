@@ -16,12 +16,14 @@ SP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);
 	**mIntfCurrent = MatrixComp::Zero(3, 1);
-	addAttribute<Matrix>("C", &mCapacitance, Flags::read | Flags::write);
+	
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mCapacitance = CPS::Attribute<Matrix>::create("C", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr SP::Ph3::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
-	copy->setParameters(mCapacitance);
+	copy->setParameters(**mCapacitance);
 	return copy;
 }
 
@@ -30,9 +32,9 @@ void SP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2 * PI * frequency;
 	mSusceptance = Matrix::Zero(3, 3);
 	mSusceptance <<
-		Complex(0, omega * mCapacitance(0, 0)), Complex(0, omega * mCapacitance(0, 1)), Complex(0, omega * mCapacitance(0, 2)),
-		Complex(0, omega * mCapacitance(1, 0)), Complex(0, omega * mCapacitance(1, 1)), Complex(0, omega * mCapacitance(1, 2)),
-		Complex(0, omega * mCapacitance(2, 0)), Complex(0, omega * mCapacitance(2, 1)), Complex(0, omega * mCapacitance(2, 2));
+		Complex(0, omega * (**mCapacitance)(0, 0)), Complex(0, omega * (**mCapacitance)(0, 1)), Complex(0, omega * (**mCapacitance)(0, 2)),
+		Complex(0, omega * (**mCapacitance)(1, 0)), Complex(0, omega * (**mCapacitance)(1, 1)), Complex(0, omega * (**mCapacitance)(1, 2)),
+		Complex(0, omega * (**mCapacitance)(2, 0)), Complex(0, omega * (**mCapacitance)(2, 1)), Complex(0, omega * (**mCapacitance)(2, 2));
 
 	// IntfVoltage initialization for each phase
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
