@@ -16,12 +16,13 @@ SP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);
 	**mIntfCurrent = MatrixComp::Zero(3, 1);
-	addAttribute<Matrix>("L", &mInductance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mInductance = CPS::Attribute<Matrix>::create("L", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr SP::Ph3::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
-	copy->setParameters(mInductance);
+	copy->setParameters(**mInductance);
 	return copy;
 }
 
@@ -30,9 +31,9 @@ void SP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2 * PI * frequency;
 	MatrixComp reactance = MatrixComp::Zero(3, 3);
 	reactance <<
-		Complex(0, omega * mInductance(0, 0)), Complex(0, omega * mInductance(0, 1)), Complex(0, omega * mInductance(0, 2)),
-		Complex(0, omega * mInductance(1, 0)), Complex(0, omega * mInductance(1, 1)), Complex(0, omega * mInductance(1, 2)),
-		Complex(0, omega * mInductance(2, 0)), Complex(0, omega * mInductance(2, 1)), Complex(0, omega * mInductance(2, 2));
+		Complex(0, omega * (**mInductance)(0, 0)), Complex(0, omega * (**mInductance)(0, 1)), Complex(0, omega * (**mInductance)(0, 2)),
+		Complex(0, omega * (**mInductance)(1, 0)), Complex(0, omega * (**mInductance)(1, 1)), Complex(0, omega * (**mInductance)(1, 2)),
+		Complex(0, omega * (**mInductance)(2, 0)), Complex(0, omega * (**mInductance)(2, 1)), Complex(0, omega * (**mInductance)(2, 2));
 	mSusceptance = reactance.inverse();
 
 	// IntfVoltage initialization for each phase

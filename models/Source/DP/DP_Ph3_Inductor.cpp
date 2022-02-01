@@ -19,12 +19,13 @@ DP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	**mIntfCurrent = MatrixComp::Zero(3,1);
 
-	addAttribute<Matrix>("L", &mInductance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mInductance = CPS::Attribute<Matrix>::create("L", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph3::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
-	copy->setParameters(mInductance);
+	copy->setParameters(**mInductance);
 	return copy;
 }
 
@@ -34,9 +35,9 @@ void DP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 	 MatrixComp reactance = MatrixComp::Zero(3, 3);
 	 reactance <<
-		 Complex(0, omega * mInductance(0, 0)), Complex(0, omega * mInductance(0, 1)), Complex(0, omega * mInductance(0, 2)),
-		 Complex(0, omega * mInductance(1, 0)), Complex(0, omega * mInductance(1, 1)), Complex(0, omega * mInductance(1, 2)),
-		 Complex(0, omega * mInductance(2, 0)), Complex(0, omega * mInductance(2, 1)), Complex(0, omega * mInductance(2, 2));
+		 Complex(0, omega * (**mInductance)(0, 0)), Complex(0, omega * (**mInductance)(0, 1)), Complex(0, omega * (**mInductance)(0, 2)),
+		 Complex(0, omega * (**mInductance)(1, 0)), Complex(0, omega * (**mInductance)(1, 1)), Complex(0, omega * (**mInductance)(1, 2)),
+		 Complex(0, omega * (**mInductance)(2, 0)), Complex(0, omega * (**mInductance)(2, 1)), Complex(0, omega * (**mInductance)(2, 2));
 	 MatrixComp susceptance = reactance.inverse();
 	 // IntfVoltage initialization for each phase
 	 (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
@@ -66,7 +67,7 @@ void DP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void DP::Ph3::Inductor::initVars(Real omega, Real timeStep) {
-	Matrix a = timeStep / 2. * mInductance.inverse();
+	Matrix a = timeStep / 2. * (**mInductance).inverse();
 	Real b = timeStep * omega / 2.;
 
 	Matrix equivCondReal = a / (1. + b * b);

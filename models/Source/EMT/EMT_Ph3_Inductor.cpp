@@ -18,12 +18,13 @@ EMT::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	addAttribute<Matrix>("L", &mInductance, Flags::read | Flags::write);
+	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mInductance = CPS::Attribute<Matrix>::create("L", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
-	copy->setParameters(mInductance);
+	copy->setParameters(**mInductance);
 	return copy;
 }
 
@@ -32,9 +33,9 @@ void EMT::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2 * PI * frequency;
 	MatrixComp impedance = MatrixComp::Zero(3, 3);
 	impedance <<
-		Complex(0, omega * mInductance(0, 0)), Complex(0, omega * mInductance(0, 1)), Complex(0, omega * mInductance(0, 2)),
-		Complex(0, omega * mInductance(1, 0)), Complex(0, omega * mInductance(1, 1)), Complex(0, omega * mInductance(1, 2)),
-		Complex(0, omega * mInductance(2, 0)), Complex(0, omega * mInductance(2, 1)), Complex(0, omega * mInductance(2, 2));
+		Complex(0, omega * (**mInductance)(0, 0)), Complex(0, omega * (**mInductance)(0, 1)), Complex(0, omega * (**mInductance)(0, 2)),
+		Complex(0, omega * (**mInductance)(1, 0)), Complex(0, omega * (**mInductance)(1, 1)), Complex(0, omega * (**mInductance)(1, 2)),
+		Complex(0, omega * (**mInductance)(2, 0)), Complex(0, omega * (**mInductance)(2, 1)), Complex(0, omega * (**mInductance)(2, 2));
 
 	MatrixComp vInitABC = Matrix::Zero(3, 1);
 	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(1) - RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
@@ -46,7 +47,7 @@ void EMT::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 	mSLog->info("\nInductance [H]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
-				Logger::matrixToString(mInductance),
+				Logger::matrixToString(**mInductance),
 				Logger::matrixCompToString(impedance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -65,7 +66,7 @@ void EMT::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	MNAInterface::mnaInitialize(omega, timeStep);
 
 	updateMatrixNodeIndices();
-	mEquivCond = timeStep / 2. * mInductance.inverse();
+	mEquivCond = timeStep / 2. * (**mInductance).inverse();
 	// Update internal state
 	mEquivCurrent = mEquivCond * **mIntfVoltage + **mIntfCurrent;
 
