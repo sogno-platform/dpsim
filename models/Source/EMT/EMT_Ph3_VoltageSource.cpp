@@ -12,16 +12,15 @@
 using namespace CPS;
 
 EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel),
+	mVoltageRef(Attribute<MatrixComp>::create("V_ref", mAttributes)), // rms-value, phase-to-phase
+	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
+	mSigOut(Attribute<Complex>::createDynamic("sigOut", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
-
-	addAttribute<MatrixComp>("V_ref", Flags::read | Flags::write);  // rms-value, phase-to-phase
-	addAttribute<Real>("f_src", Flags::read | Flags::write);
-	addAttribute<Complex>("sigOut", Flags::read | Flags::write);
 }
 
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq) {
@@ -30,8 +29,8 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq)
 	srcSigSine->setParameters(Complex(1,0), srcFreq);
 	mSrcSig = srcSigSine;
 
-	attribute<MatrixComp>("V_ref")->set(voltageRef);
-	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+	**mVoltageRef = voltageRef;
+	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
 
 	mSLog->info("\nVoltage reference phasor [V]: {:s}"
 				"\nFrequency [Hz]: {:s}",
@@ -47,9 +46,9 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStar
 	srcSigFreqRamp->setParameters(Complex(1,0), freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 	mSrcSig = srcSigFreqRamp;
 
-	attribute<MatrixComp>("V_ref")->set(voltageRef);
-	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
-	setAttributeRef("sigOut", mSrcSig->attribute<Complex>("sigOut"));
+	**mVoltageRef = voltageRef;
+	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
+	mSigOut->setReference(mSrcSig->attribute<Complex>("sigOut"));
 
 	mParametersSet = true;
 }
@@ -60,8 +59,8 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real modulati
 	srcSigFm->setParameters(Complex(1,0), modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 	mSrcSig = srcSigFm;
 
-	attribute<MatrixComp>("V_ref")->set(voltageRef);
-	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+	**mVoltageRef = voltageRef;
+	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
 
 	mParametersSet = true;
 }
@@ -75,19 +74,19 @@ void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		srcSigSine->setParameters(Complex(1,0), frequency);
 		mSrcSig = srcSigSine;
 
-		attribute<MatrixComp>("V_ref")->set(CPS::Math::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0)));
-		setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+		**mVoltageRef = CPS::Math::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0));
+		mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
 
 		mSLog->info("\nReference voltage: {:s}"
 					"\nTerminal 0 voltage: {:s}"
 					"\nTerminal 1 voltage: {:s}",
-					Logger::matrixCompToString(attribute<MatrixComp>("V_ref")->get()),
+					Logger::matrixCompToString(**mVoltageRef),
 					Logger::phasorToString(initialSingleVoltage(0)),
 					Logger::phasorToString(initialSingleVoltage(1)));
 	} else {
 		mSLog->info("\nInitialization from node voltages omitted (parameter already set)."
 					"\nReference voltage: {:s}",
-					Logger::matrixCompToString(attribute<MatrixComp>("V_ref")->get()));
+					Logger::matrixCompToString(**mVoltageRef));
 	}
 	mSLog->info("\n--- Initialization from node voltages ---");
 	mSLog->flush();
@@ -95,7 +94,7 @@ void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 
 SimPowerComp<Real>::Ptr EMT::Ph3::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
-	copy->setParameters(attribute<MatrixComp>("V_ref")->get(), attribute<Real>("f_src")->get());
+	copy->setParameters(**mVoltageRef, **mSrcFreq);
 	return copy;
 }
 
@@ -155,11 +154,11 @@ void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
 	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
 		for(int i = 0; i < 3; i++) {
-			(**mIntfVoltage)(i, 0) = RMS3PH_TO_PEAK1PH * Math::abs(attribute<MatrixComp>("V_ref")->get()(i, 0))
-				* cos(Math::phase(mSrcSig->getSignal()) + Math::phase(attribute<MatrixComp>("V_ref")->get()(i, 0)));
+			(**mIntfVoltage)(i, 0) = RMS3PH_TO_PEAK1PH * Math::abs((**mVoltageRef)(i, 0))
+				* cos(Math::phase(mSrcSig->getSignal()) + Math::phase((**mVoltageRef)(i, 0)));
 		}
 	} else {
-		**mIntfVoltage = RMS3PH_TO_PEAK1PH * attribute<MatrixComp>("V_ref")->get().real();
+		**mIntfVoltage = RMS3PH_TO_PEAK1PH * (**mVoltageRef).real();
 	}
 	mSLog->debug(
 		"\nUpdate Voltage: {:s}",
@@ -168,9 +167,9 @@ void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
 }
 
 void EMT::Ph3::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(attribute("V_ref"));
-	modifiedAttributes.push_back(attribute("right_vector"));
-	modifiedAttributes.push_back(attribute("v_intf"));
+	attributeDependencies.push_back(mVoltageRef);
+	modifiedAttributes.push_back(mRightVector);
+	modifiedAttributes.push_back(mIntfVoltage);
 }
 
 void EMT::Ph3::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
@@ -180,7 +179,7 @@ void EMT::Ph3::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
 
 void EMT::Ph3::VoltageSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfCurrent);
 };
 
 void EMT::Ph3::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
