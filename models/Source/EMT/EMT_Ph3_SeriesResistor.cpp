@@ -20,12 +20,12 @@ EMT::Ph3::SeriesResistor::SeriesResistor(String uid, String name,
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 
-	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
+	mResistance = Attribute<Real>::create("R", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::SeriesResistor::clone(String name) {
 	auto copy = SeriesResistor::make(name, mLogLevel);
-	copy->setParameters(mResistance);
+	copy->setParameters(**mResistance);
 	return copy;
 }
 
@@ -37,7 +37,7 @@ void EMT::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(1, 0) = Complex(phasorA * pow(alpha,2)).real();
 	(**mIntfVoltage)(2, 0) = Complex(phasorA * alpha).real();
 
-	**mIntfCurrent = **mIntfVoltage / mResistance;
+	**mIntfCurrent = **mIntfVoltage / **mResistance;
 
 	mSLog->info("\n--- Initialization from powerflow ---"
 		"\nVoltage across amplitude and phase: \n{}"
@@ -59,7 +59,7 @@ void EMT::Ph3::SeriesResistor::mnaInitialize(Real omega, Real timeStep, Attribut
 }
 
 void EMT::Ph3::SeriesResistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Real conductance = 1./mResistance;
+	Real conductance = 1. / **mResistance;
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -83,8 +83,8 @@ void EMT::Ph3::SeriesResistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void EMT::Ph3::SeriesResistor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResistor.mnaUpdateVoltage(*mLeftVector);
-	mResistor.mnaUpdateCurrent(*mLeftVector);
+	mResistor.mnaUpdateVoltage(**mLeftVector);
+	mResistor.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph3::SeriesResistor::mnaUpdateVoltage(const Matrix& leftVector) {
@@ -105,7 +105,7 @@ void EMT::Ph3::SeriesResistor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::SeriesResistor::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = **mIntfVoltage / mResistance;
+	**mIntfCurrent = **mIntfVoltage / **mResistance;
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", (**mIntfCurrent)(0,0));
 }

@@ -17,12 +17,12 @@ DP::Ph3::SeriesResistor::SeriesResistor(String uid, String name,
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	**mIntfCurrent = MatrixComp::Zero(3,1);
 
-	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
+	mResistance = Attribute<Real>::create("R", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph3::SeriesResistor::clone(String name) {
 	auto copy = SeriesResistor::make(name, mLogLevel);
-	copy->setParameters(mResistance);
+	copy->setParameters(**mResistance);
 	return copy;
 }
 
@@ -33,9 +33,9 @@ void DP::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Matrix impedance = Matrix::Zero(3, 1);
 	impedance <<
-		mResistance,
-		mResistance,
-		mResistance;
+		**mResistance,
+		**mResistance,
+		**mResistance;
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 
 	Real voltMag = Math::abs((**mIntfVoltage)(0, 0));
@@ -69,7 +69,7 @@ void DP::Ph3::SeriesResistor::mnaInitialize(Real omega, Real timeStep, Attribute
 }
 
 void DP::Ph3::SeriesResistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = { (1./mResistance), 0 };
+	Complex conductance = { (1./ **mResistance), 0 };
 
 	//// Set diagonal entries
 	//if (terminalNotGrounded(0))
@@ -107,8 +107,8 @@ void DP::Ph3::SeriesResistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void DP::Ph3::SeriesResistor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResistor.mnaUpdateVoltage(*mLeftVector);
-	mResistor.mnaUpdateCurrent(*mLeftVector);
+	mResistor.mnaUpdateVoltage(**mLeftVector);
+	mResistor.mnaUpdateCurrent(**mLeftVector);
 }
 
 void DP::Ph3::SeriesResistor::mnaUpdateVoltage(const Matrix& leftVector) {
@@ -129,7 +129,7 @@ void DP::Ph3::SeriesResistor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph3::SeriesResistor::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = **mIntfVoltage / mResistance;
+	**mIntfCurrent = **mIntfVoltage / **mResistance;
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs((**mIntfCurrent)(0,0)), std::arg((**mIntfCurrent)(0,0)));
 }
