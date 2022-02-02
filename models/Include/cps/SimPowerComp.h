@@ -22,10 +22,6 @@ namespace CPS {
 		typename SimTerminal<VarType>::List mTerminals;
 		/// List of virtual nodes
 		typename SimNode<VarType>::List mVirtualNodes;
-		/// Voltage between terminals
-		const Attribute<MatrixVar<VarType>>::Ptr mIntfVoltage;
-		/// Current through component
-		const Attribute<MatrixVar<VarType>>::Ptr mIntfCurrent;
 		/// List of considered network frequencies
 		Matrix mFrequencies;
 		/// Number of network frequencies
@@ -43,6 +39,11 @@ namespace CPS {
 		typedef VarType Type;
 		typedef std::shared_ptr<SimPowerComp<VarType>> Ptr;
 		typedef std::vector<Ptr> List;
+
+		/// Voltage between terminals
+		const Attribute<MatrixVar<VarType>>::Ptr mIntfVoltage;
+		/// Current through component
+		const Attribute<MatrixVar<VarType>>::Ptr mIntfCurrent;
 
 		/// Basic constructor that takes UID, name and log level
 		SimPowerComp(String uid, String name, Logger::Level logLevel = Logger::Level::off);
