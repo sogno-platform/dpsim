@@ -19,6 +19,9 @@ namespace Signal {
 		typedef std::shared_ptr<SignalGenerator> Ptr;
 		typedef std::vector<Ptr> List;
 
+		const CPS::Attribute<Complex>::Ptr mSigOut;
+		const CPS::Attribute<Real>::Ptr mFreq;
+
 		SignalGenerator(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 
 		SignalGenerator(String name, Logger::Level logLevel = Logger::Level::off)

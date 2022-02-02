@@ -34,8 +34,8 @@ void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	srcSigSine->setParameters(voltageRef, srcFreq);
 	mSrcSig = srcSigSine;
 
-	mVoltageRef->setReference(mSrcSig->attribute<Complex>("sigOut"));
-	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
+	mVoltageRef->setReference(mSrcSig->mSigOut);
+	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mParametersSet = true;
 }
@@ -45,8 +45,8 @@ void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart
 	srcSigFreqRamp->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 	mSrcSig = srcSigFreqRamp;
 
-	mVoltageRef->setReference(mSrcSig->attribute<Complex>("sigOut"));
-	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
+	mVoltageRef->setReference(mSrcSig->mSigOut);
+	mSrcFreq->setReference(mSrcSig->mFreq;
 
 	mParametersSet = true;
 }
@@ -56,8 +56,8 @@ void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulatio
 	srcSigFm->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 	mSrcSig = srcSigFm;
 
-	mVoltageRef->setReference(mSrcSig->attribute<Complex>("sigOut"));
-	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
+	mVoltageRef->setReference(mSrcSig->mSigOut);
+	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mParametersSet = true;
 }
@@ -73,8 +73,8 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		srcSigSine.setParameters(voltageRef);
 		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
 
-		mVoltageRef->setReference(mSrcSig->attribute<Complex>("sigOut"));
-		mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
+		mVoltageRef->setReference(mSrcSig->mSigOut);
+		mSrcFreq->setReference(mSrcSig->mFreq);
 	} else {
 		**mVoltageRef = voltageRef;
 	}
