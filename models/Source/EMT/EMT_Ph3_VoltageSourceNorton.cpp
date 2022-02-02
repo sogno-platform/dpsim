@@ -14,27 +14,28 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel),
+	mResistance(Attribute<Real>::create("R", mAttributes)) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	addAttribute<Complex>("V_ref", &mVoltageRef, Flags::read | Flags::write);
-	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
+	mVoltageRef = Attribute<Complex>::create("V_ref", mAttributes);
+	mSrcFreq = Attribute<Real>::create("f_src", mAttributes, -1);
 }
 
 void EMT::Ph3::VoltageSourceNorton::setParameters(Complex voltageRef, Real srcFreq,  Real resistance) {
 
 	Base::Ph1::VoltageSource::setParameters(voltageRef, srcFreq);
-	mResistance = resistance;
-	mConductance = 1. / mResistance;
+	**mResistance = resistance;
+	mConductance = 1. / **mResistance;
 
 	mParametersSet = true;
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::VoltageSourceNorton::clone(String name) {
 	auto copy = VoltageSourceNorton::make(name, mLogLevel);
-	copy->setParameters(mVoltageRef, mSrcFreq, mResistance);
+	copy->setParameters(**mVoltageRef, **mSrcFreq, **mResistance);
 	return copy;
 }
 
@@ -90,13 +91,13 @@ void EMT::Ph3::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVe
 
 void EMT::Ph3::VoltageSourceNorton::updateState(Real time) {
 	// Check if set source was called
-	if (Math::abs(mVoltageRef) > 0) {
-		(**mIntfVoltage)(0, 0) = Math::abs(mVoltageRef) * cos(2. * PI * mSrcFreq * time + Math::phase(mVoltageRef));
-		(**mIntfVoltage)(1, 0) = Math::abs(mVoltageRef) * cos(2. * PI * mSrcFreq * time + Math::phase(mVoltageRef) - 2. / 3. * M_PI);
-		(**mIntfVoltage)(2, 0) = Math::abs(mVoltageRef) * cos(2. * PI * mSrcFreq * time + Math::phase(mVoltageRef) + 2. / 3. * M_PI);
+	if (Math::abs(**mVoltageRef) > 0) {
+		(**mIntfVoltage)(0, 0) = Math::abs(**mVoltageRef) * cos(2. * PI * **mSrcFreq * time + Math::phase(**mVoltageRef));
+		(**mIntfVoltage)(1, 0) = Math::abs(**mVoltageRef) * cos(2. * PI * **mSrcFreq * time + Math::phase(**mVoltageRef) - 2. / 3. * M_PI);
+		(**mIntfVoltage)(2, 0) = Math::abs(**mVoltageRef) * cos(2. * PI * **mSrcFreq * time + Math::phase(**mVoltageRef) + 2. / 3. * M_PI);
 	}
 
-	mEquivCurrent = **mIntfVoltage / mResistance;
+	mEquivCurrent = **mIntfVoltage / **mResistance;
 }
 
 
@@ -120,13 +121,13 @@ void EMT::Ph3::VoltageSourceNorton::MnaPreStep::execute(Real time, Int timeStepC
 }
 
 void EMT::Ph3::VoltageSourceNorton::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mVoltageSourceNorton.mnaUpdateVoltage(*mLeftVector);
-	mVoltageSourceNorton.mnaUpdateCurrent(*mLeftVector);
+	mVoltageSourceNorton.mnaUpdateVoltage(**mLeftVector);
+	mVoltageSourceNorton.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph3::VoltageSourceNorton::mnaUpdateCurrent(const Matrix& leftVector) {
 	// signs are not verified
-	(**mIntfCurrent)(0, 0) = mEquivCurrent(0, 0) - (**mIntfVoltage)(0, 0) / mResistance;
-	(**mIntfCurrent)(1, 0) = mEquivCurrent(1, 0) - (**mIntfVoltage)(1, 0) / mResistance;
-	(**mIntfCurrent)(2, 0) = mEquivCurrent(2, 0) - (**mIntfVoltage)(2, 0) / mResistance;
+	(**mIntfCurrent)(0, 0) = mEquivCurrent(0, 0) - (**mIntfVoltage)(0, 0) / **mResistance;
+	(**mIntfCurrent)(1, 0) = mEquivCurrent(1, 0) - (**mIntfVoltage)(1, 0) / **mResistance;
+	(**mIntfCurrent)(2, 0) = mEquivCurrent(2, 0) - (**mIntfVoltage)(2, 0) / **mResistance;
 }

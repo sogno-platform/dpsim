@@ -28,11 +28,11 @@ namespace Ph1 {
 		Real mEquivCurrent;
 
 		//  ### Real Voltage source parameters ###
-		/// Resistance [ohm]
-		Real mResistance;
 		/// conductance [S]
 		Real mConductance;
 	public:
+		/// Resistance [ohm]
+		const Attribute<Real>::Ptr mResistance;
 		/// Defines UID, name and logging level
 		VoltageSourceNorton(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level
@@ -47,7 +47,7 @@ namespace Ph1 {
 		///
 		void setParameters(Complex voltage, Real srcFreq, Real resistance);
 		///
-		void setVoltageRef(Complex voltage) { mVoltageRef = voltage; }
+		void setVoltageRef(Complex voltage) { **mVoltageRef = voltage; }
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component

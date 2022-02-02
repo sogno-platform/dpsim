@@ -15,15 +15,17 @@ namespace Base {
 namespace Ph1 {
 	class VoltageSource {
 	protected:
-		/// Voltage set point [V]
-		Complex mVoltageRef;
-		/// Source frequency [Hz]
-		Real mSrcFreq = -1;
+		
 	public:
+
+		/// Voltage set point [V]
+		CPS::Attribute<Complex>::Ptr mVoltageRef;
+		/// Source frequency [Hz]
+		CPS::Attribute<Real>::Ptr mSrcFreq;
 		/// Sets model specific parameters
 		void setParameters(Complex voltageRef, Real srcFreq = -1) {
-			mVoltageRef = voltageRef;
-			mSrcFreq = srcFreq;
+			**mVoltageRef = voltageRef;
+			**mSrcFreq = srcFreq;
 		}
 	};
 }

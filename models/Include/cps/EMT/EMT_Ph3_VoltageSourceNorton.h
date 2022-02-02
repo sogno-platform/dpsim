@@ -27,11 +27,11 @@ namespace CPS {
 				Matrix mEquivCurrent = Matrix::Zero(3, 1);
 
 				//  ### Real Voltage source parameters ###
-				/// Resistance [ohm]
-				Real mResistance;
 				/// conductance [S]
 				Real mConductance;
 			public:
+				/// Resistance [ohm]
+				const Attribute<Real>::Ptr mResistance;
 				/// Defines UID, name and logging level
 				VoltageSourceNorton(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 				///

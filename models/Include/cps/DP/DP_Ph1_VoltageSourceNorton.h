@@ -30,14 +30,15 @@ namespace Ph1 {
 		Complex mEquivCurrent;
 
 		//  ### Real Voltage source parameters ###
-		/// Resistance [ohm]
-		Real mResistance;
 		/// conductance [S]
 		Real mConductance;
 
 		/// Helper function for PreStep
 		void updateState(Real time);
 	public:
+		//  ### Real Voltage source parameters ###
+		/// Resistance [ohm]
+		const Attribute<Real>::Ptr mResistance;
 		/// Defines UID, name and logging level
 		VoltageSourceNorton(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level
@@ -50,7 +51,7 @@ namespace Ph1 {
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency) { }
 		///
-		void setVoltageRef(Complex voltage) { mVoltageRef = voltage; }
+		void setVoltageRef(Complex voltage) { **mVoltageRef = voltage; }
 		///
 		using Base::Ph1::VoltageSource::setParameters;
 		///

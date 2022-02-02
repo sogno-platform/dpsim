@@ -11,27 +11,28 @@
 using namespace CPS;
 
 DP::Ph1::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mResistance(Attribute<Real>::create("R", mAttributes)) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 
-	addAttribute<Complex>("V_ref", &mVoltageRef, Flags::read | Flags::write);
-	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
+	mVoltageRef = Attribute<Complex>::create("V_ref", mAttributes);
+	mSrcFreq = Attribute<Real>::create("f_src", mAttributes, -1);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSourceNorton::clone(String name) {
 	auto copy = VoltageSourceNorton::make(name, mLogLevel);
-	copy->setParameters(mVoltageRef, mSrcFreq, mResistance);
+	copy->setParameters(**mVoltageRef, **mSrcFreq, **mResistance);
 	return copy;
 }
 
 void DP::Ph1::VoltageSourceNorton::setParameters(Complex voltage, Real srcFreq, Real resistance) {
 	Base::Ph1::VoltageSource::setParameters(voltage, srcFreq);
 
-	mResistance = resistance;
-	mConductance = 1. / mResistance;
-	mEquivCurrent = mVoltageRef / mResistance;
+	**mResistance = resistance;
+	mConductance = 1. / **mResistance;
+	mEquivCurrent = **mVoltageRef / **mResistance;
 
 	mParametersSet = true;
 }
@@ -40,7 +41,7 @@ void DP::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attr
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	(**mIntfVoltage)(0, 0) = attributeComplex("V_ref")->get();
+	(**mIntfVoltage)(0, 0) = **mVoltageRef
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -72,7 +73,7 @@ void DP::Ph1::VoltageSourceNorton::mnaApplySystemMatrixStamp(Matrix& systemMatri
 }
 
 void DP::Ph1::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mEquivCurrent = (**mIntfVoltage)(0, 0) / mResistance;
+	mEquivCurrent = (**mIntfVoltage)(0, 0) / **mResistance;
 
 	// Apply matrix stamp for equivalent current source
 	if (terminalNotGrounded(0))
@@ -84,12 +85,12 @@ void DP::Ph1::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVec
 void DP::Ph1::VoltageSourceNorton::updateState(Real time) {
 	if (mSrcFreq >= 0) {
 		(**mIntfVoltage)(0,0) = Complex(
-			Math::abs(mVoltageRef) * cos(time * 2.*PI*mSrcFreq + Math::phase(mVoltageRef)),
-			Math::abs(mVoltageRef) * sin(time * 2.*PI*mSrcFreq + Math::phase(mVoltageRef)));
+			Math::abs(**mVoltageRef) * cos(time * 2.*PI* **mSrcFreq + Math::phase(**mVoltageRef)),
+			Math::abs(**mVoltageRef) * sin(time * 2.*PI* **mSrcFreq + Math::phase(**mVoltageRef)));
 	}
 	else {
 		// If source frequency -1, use system frequency.
-		(**mIntfVoltage)(0,0) = mVoltageRef;
+		(**mIntfVoltage)(0,0) = **mVoltageRef;
 	}
 }
 
@@ -114,6 +115,6 @@ void DP::Ph1::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void DP::Ph1::VoltageSourceNorton::mnaUpdateCurrent(const Matrix& leftVector) {
 	// TODO: verify signs
-	(**mIntfCurrent)(0,0) = mEquivCurrent - (**mIntfVoltage)(0,0) / mResistance;
+	(**mIntfCurrent)(0,0) = mEquivCurrent - (**mIntfVoltage)(0,0) / **mResistance;
 }
 
