@@ -12,33 +12,29 @@ using namespace CPS;
 
 
 DP::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mVoltageRef(Attribute<Complex>::create("V_ref", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);
 	**mIntfCurrent = MatrixComp::Zero(3, 1);
-
-	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph3::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
-	copy->setParameters(attribute<Complex>("V_ref")->get());
+	copy->setParameters(**mVoltageRef);
 	return copy;
 }
 
 void DP::Ph3::VoltageSource::setParameters(Complex voltageRef) {
-	attribute<Complex>("V_ref")->set(voltageRef);
+	**mVoltageRef = voltageRef;
 	mParametersSet = true;
 }
 
 void DP::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-
-	mVoltageRef = attribute<Complex>("V_ref");
-
-	if (mVoltageRef->get() == Complex(0, 0))
-		mVoltageRef->set(initialSingleVoltage(1) - initialSingleVoltage(0));
+	if (**mVoltageRef == Complex(0, 0))
+		**mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
 	// mLog.info() << "--- Initialize according to power flow ---" << std::endl;
 	// mLog.info() << "Terminal 0 voltage: " << std::abs(initialSingleVoltage(0))
@@ -50,11 +46,11 @@ void DP::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 
 void DP::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
-	(**mIntfVoltage)(0, 0) = mVoltageRef->get();
-	(**mIntfVoltage)(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
-								 Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI));
-	(**mIntfVoltage)(2, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI),
-								 Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI));
+	(**mIntfVoltage)(0, 0) = **mVoltageRef;
+	(**mIntfVoltage)(1, 0) = Complex(Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef) - 2. / 3. * M_PI),
+								 Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));
+	(**mIntfVoltage)(2, 0) = Complex(Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),
+								 Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -106,11 +102,11 @@ void DP::Ph3::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 
 void DP::Ph3::VoltageSource::updateVoltage(Real time) {
 	// can't we just do nothing??
-	(**mIntfVoltage)(0, 0) = mVoltageRef->get();
-	(**mIntfVoltage)(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
-		Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI));
-	(**mIntfVoltage)(2, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI),
-		Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI));
+	(**mIntfVoltage)(0, 0) = **mVoltageRef;
+	(**mIntfVoltage)(1, 0) = Complex(Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef) - 2. / 3. * M_PI),
+		Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));
+	(**mIntfVoltage)(2, 0) = Complex(Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),
+		Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));
 }
 
 void DP::Ph3::VoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
@@ -154,6 +150,6 @@ void DP::Ph3::VoltageSource::daeResidual(double ttime, const double state[], con
 }
 
 Complex DP::Ph3::VoltageSource::daeInitialize() {
-	(**mIntfVoltage)(0, 0) = mVoltageRef->get();
-	return mVoltageRef->get();
+	(**mIntfVoltage)(0, 0) = **mVoltageRef;
+	return **mVoltageRef;
 }
