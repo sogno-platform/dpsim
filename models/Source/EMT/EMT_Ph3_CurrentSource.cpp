@@ -12,16 +12,15 @@
 using namespace CPS;
 
 EMT::Ph3::CurrentSource::CurrentSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel),
+	mCurrentRef(Attribute<MatrixComp>::create("I_ref", mAttributes)), // rms-value
+	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
+	mSigOut(Attribute<Complex>::createDynamic("sigOut", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(0);
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
-
-	addAttribute<MatrixComp>("I_ref", Flags::read | Flags::write);  // rms-value
-	addAttribute<Real>("f_src", Flags::read | Flags::write);
-	addAttribute<Complex>("sigOut", Flags::read | Flags::write);
 }
 
 
@@ -39,8 +38,8 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 		// Current flowing from T1 to T0 (rms value)
 		Complex i_ref = std::conj(s_ref/v_ref/sqrt(3.));
 
-		attribute<MatrixComp>("I_ref")->set(CPS::Math::singlePhaseVariableToThreePhase(i_ref));
-		setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+		**mCurrentRef = CPS::Math::singlePhaseVariableToThreePhase(i_ref);
+		mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
 
 		mSLog->info("\nReference current: {:s}"
 					"\nReference voltage: {:s}"
@@ -102,11 +101,11 @@ void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
 	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
 		for(int i = 0; i < 3; i++) {
-			(**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs(attribute<MatrixComp>("I_ref")->get()(i, 0)) 
-				* cos(Math::phase(mSrcSig->getSignal()) + Math::phase(attribute<MatrixComp>("I_ref")->get()(i, 0)));
+			(**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs((**mCurrentRef)(i, 0)) 
+				* cos(Math::phase(mSrcSig->getSignal()) + Math::phase((**mCurrentRef)(i, 0)));
 		}
 	} else {
-		**mIntfCurrent = RMS_TO_PEAK * attribute<MatrixComp>("I_ref")->get().real();
+		**mIntfCurrent = RMS_TO_PEAK * (**mCurrentRef).real();
 	}
 	mSLog->debug(
 		"\nUpdate current: {:s}",
@@ -115,9 +114,9 @@ void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
 }
 
 void EMT::Ph3::CurrentSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(attribute("I_ref"));
-	modifiedAttributes.push_back(attribute("right_vector"));
-	modifiedAttributes.push_back(attribute("v_intf"));
+	attributeDependencies.push_back(mCurrentRef);
+	modifiedAttributes.push_back(mRightVector);
+	modifiedAttributes.push_back(mIntfVoltage);
 }
 
 void EMT::Ph3::CurrentSource::mnaPreStep(Real time, Int timeStepCount) {
@@ -127,7 +126,7 @@ void EMT::Ph3::CurrentSource::mnaPreStep(Real time, Int timeStepCount) {
 
 void EMT::Ph3::CurrentSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
 };
 
 void EMT::Ph3::CurrentSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {

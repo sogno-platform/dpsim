@@ -32,6 +32,10 @@ namespace CPS {
 				// Updates current according to reference phasor and frequency
 				void updateCurrent(Real time);
 			public:
+				const Attribute<MatrixComp>::Ptr mCurrentRef;
+				const Attribute<Real>::Ptr mSrcFreq;
+				const Attribute<Complex>::Ptr mSigOut;
+
 				/// Defines UID, name and logging level
 				CurrentSource(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 				///
