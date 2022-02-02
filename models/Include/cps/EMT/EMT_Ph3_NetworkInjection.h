@@ -31,6 +31,10 @@ namespace CPS {
 				/// Vector to collect subcomponent right vector stamps
 				std::vector<const Matrix*> mRightVectorStamps;
 			public:
+				const CPS::Attribute<MatrixComp>::Ptr mVoltageRef;
+				const CPS::Attribute<Real>::Ptr mSrcFreq;
+				const CPS::Attribute<Complex>::Ptr mSigOut;
+
 				/// Defines UID, name, component parameters and logging level
 				NetworkInjection(String uid, String name, Logger::Level loglevel = Logger::Level::off);
 				/// Defines UID, name, component parameters and logging level

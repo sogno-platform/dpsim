@@ -11,7 +11,10 @@
 using namespace CPS;
 
 EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel),
+	mVoltageRef(Attribute<MatrixComp>::create("V_ref", mAttributes)),
+	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
+	mSigOut(Attribute<Complex>::createDynamic("sigOut", mAttributes))  {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
@@ -27,14 +30,14 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 	for (auto subcomp: mSubComponents)
 		mSLog->info("- {}", subcomp->name());
 
-	addAttributeRef<MatrixComp>("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"), Flags::read | Flags::write);
-	addAttributeRef<Real>("f_src", mSubVoltageSource->attribute<Real>("f_src"), Flags::read | Flags::write);
-	addAttributeRef<Complex>("sigOut", mSubVoltageSource->attribute<Complex>("sigOut"), Flags::read | Flags::write);
+	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
+	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
+	mSigOut->setReference(mSubVoltageSource->mSigOut);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
 	auto copy = NetworkInjection::make(name, mLogLevel);
-	copy->setParameters(attribute<MatrixComp>("V_ref")->get());
+	copy->setParameters(**mVoltageRef);
 	return copy;
 }
 
@@ -43,8 +46,9 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real srcFr
 
 	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
-	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
-	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+	//TODO: This should not be necessary, because the reference is already set in the constructor
+	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
+	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
@@ -57,9 +61,10 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real freqS
 
 	mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 
-	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
-	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
-	setAttributeRef("sigOut", mSubVoltageSource->attribute<Complex>("sigOut"));
+	//TODO: This should not be necessary, because the reference is already set in the constructor
+	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
+	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
+	mSigOut->setReference(mSubVoltageSource->mSigOut);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
@@ -72,8 +77,9 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real modul
 
 	mSubVoltageSource->setParameters(voltageRef, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 
-	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
-	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+	//TODO: This should not be necessary, because the reference is already set in the constructor
+	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
+	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
@@ -91,8 +97,9 @@ void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency)
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
 
-	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
-	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+	//TODO: This should not be necessary, because the reference is already set in the constructor
+	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
+	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 }
 
 // #### MNA functions ####
@@ -107,7 +114,7 @@ void EMT::Ph3::NetworkInjection::mnaInitialize(Real omega, Real timeStep, Attrib
 			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
 
 	// collect right side vectors of subcomponents
-	mRightVectorStamps.push_back(&mSubVoltageSource->attribute<Matrix>("right_vector")->get());
+	mRightVectorStamps.push_back(&**mSubVoltageSource->mRightVector);
 
 	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -138,9 +145,9 @@ void EMT::Ph3::NetworkInjection::mnaAddPreStepDependencies(AttributeBase::List &
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	// add pre-step dependencies of component itself
-	prevStepDependencies.push_back(attribute("i_intf"));
-	prevStepDependencies.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(mIntfCurrent);
+	prevStepDependencies.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mRightVector);
 }
 
 void EMT::Ph3::NetworkInjection::mnaPreStep(Real time, Int timeStepCount) {
@@ -159,8 +166,8 @@ void EMT::Ph3::NetworkInjection::mnaAddPostStepDependencies(AttributeBase::List 
 			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void EMT::Ph3::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
@@ -174,9 +181,9 @@ void EMT::Ph3::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attri
 }
 
 void EMT::Ph3::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
-	**mIntfVoltage = mSubVoltageSource->attribute<Matrix>("v_intf")->get();
+	**mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
 }
 
 void EMT::Ph3::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = mSubVoltageSource->attribute<Matrix>("i_intf")->get();
+	**mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
 }
