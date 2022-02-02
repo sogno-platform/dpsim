@@ -18,20 +18,20 @@ EMT::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logL
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 
-	addAttribute<Real>("R_open", &mOpenResistance, Flags::read | Flags::write);
-	addAttribute<Real>("R_closed", &mClosedResistance, Flags::read | Flags::write);
-	addAttribute<Bool>("is_closed", &mIsClosed, Flags::read | Flags::write);
+	mOpenResistance = Attribute<Real>::create("R_open", mAttributes);
+	mClosedResistance = Attribute<Real>::create("R_closed", mAttributes);
+	mIsClosed = Attribute<Bool>::create("is_closed", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::SeriesSwitch::clone(String name) {
 	auto copy = SeriesSwitch::make(name, mLogLevel);
-	copy->setParameters(mOpenResistance, mClosedResistance);
+	copy->setParameters(**mOpenResistance, **mClosedResistance);
 	return copy;
 }
 
 void EMT::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
-	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
+	Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
 
 	Complex phasorA = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfVoltage)(0,0) = phasorA.real();
@@ -61,9 +61,9 @@ void EMT::Ph3::SeriesSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<
 }
 
 void EMT::Ph3::SeriesSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Real conductance = (mIsClosed)
-		? 1./mClosedResistance
-		: 1./mOpenResistance;
+	Real conductance = (**mIsClosed)
+		? 1. / **mClosedResistance
+		: 1. / **mOpenResistance;
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -88,8 +88,8 @@ void EMT::Ph3::SeriesSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 void EMT::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
 	Real conductance = (closed)
-		? 1./mClosedResistance
-		: 1./mOpenResistance;
+		? 1. / **mClosedResistance
+		: 1. / **mOpenResistance;
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -113,8 +113,8 @@ void EMT::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix
 }
 
 void EMT::Ph3::SeriesSwitch::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mSwitch.mnaUpdateVoltage(*mLeftVector);
-	mSwitch.mnaUpdateCurrent(*mLeftVector);
+	mSwitch.mnaUpdateVoltage(**mLeftVector);
+	mSwitch.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
@@ -135,7 +135,7 @@ void EMT::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::SeriesSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
-	Real impedance = (mIsClosed)? mClosedResistance : mOpenResistance;
+	Real impedance = (**mIsClosed)? **mClosedResistance : **mOpenResistance;
 	**mIntfCurrent = **mIntfVoltage / impedance;
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {}", (**mIntfCurrent)(0,0));

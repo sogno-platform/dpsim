@@ -52,7 +52,7 @@ namespace Ph3 {
 
 		// #### Switch specific MNA section ####
 		/// Check if switch is closed
-		Bool mnaIsClosed() { return mIsClosed; }
+		Bool mnaIsClosed() { return **mIsClosed; }
 		/// Stamps system matrix considering the defined switch position
 		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 
@@ -63,8 +63,8 @@ namespace Ph3 {
 				mSwitch(sSwitch), mLeftVector(leftSideVector) {
 
 				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mSwitch.attribute("v_intf"));
-				mModifiedAttributes.push_back(mSwitch.attribute("i_intf"));
+				mModifiedAttributes.push_back(mSwitch.mIntfVoltage);
+				mModifiedAttributes.push_back(mSwitch.mIntfCurrent);
 			}
 
 			void execute(Real time, Int timeStepCount);

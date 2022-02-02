@@ -16,14 +16,14 @@ DP::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLe
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	**mIntfCurrent = MatrixComp::Zero(3,1);
 
-	addAttribute<Real>("R_open", &mOpenResistance, Flags::read | Flags::write);
-	addAttribute<Real>("R_closed", &mClosedResistance, Flags::read | Flags::write);
-	addAttribute<Bool>("is_closed", &mIsClosed, Flags::read | Flags::write);
+	mOpenResistance = Attribute<Real>::create("R_open", mAttributes);
+	mClosedResistance = Attribute<Real>::create("R_closed", mAttributes);
+	mIsClosed = Attribute<Bool>::create("is_closed", mAttributes);
 }
 
 void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
-	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
+	Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
 	**mIntfVoltage = initialVoltage(1) - initialVoltage(0);
 	**mIntfCurrent = **mIntfVoltage / impedance;
 
@@ -47,8 +47,8 @@ void DP::Ph3::SeriesSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 
 void DP::Ph3::SeriesSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Complex conductance = (mIsClosed)
-		? Complex( 1./mClosedResistance, 0 )
-		: Complex( 1./mOpenResistance, 0 );
+		? Complex( 1. / **mClosedResistance, 0 )
+		: Complex( 1. / **mOpenResistance, 0 );
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -73,8 +73,8 @@ void DP::Ph3::SeriesSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 void DP::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
 	Complex conductance = (closed)
-		? Complex( 1./mClosedResistance, 0 )
-		: Complex( 1./mOpenResistance, 0 );
+		? Complex( 1. / **mClosedResistance, 0 )
+		: Complex( 1. / **mOpenResistance, 0 );
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -98,8 +98,8 @@ void DP::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix&
 }
 
 void DP::Ph3::SeriesSwitch::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mSwitch.mnaUpdateVoltage(*mLeftVector);
-	mSwitch.mnaUpdateCurrent(*mLeftVector);
+	mSwitch.mnaUpdateVoltage(**mLeftVector);
+	mSwitch.mnaUpdateCurrent(**mLeftVector);
 }
 
 void DP::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
@@ -120,7 +120,7 @@ void DP::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph3::SeriesSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
-	Real impedance = (mIsClosed)? mClosedResistance : mOpenResistance;
+	Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
 	**mIntfCurrent = **mIntfVoltage / impedance;
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs((**mIntfCurrent)(0,0)), std::arg((**mIntfCurrent)(0,0)));

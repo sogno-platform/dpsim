@@ -16,14 +16,14 @@ SP::Ph1::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLe
     **mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 
-	addAttribute<Real>("R_open", &mOpenResistance, Flags::read | Flags::write);
-	addAttribute<Real>("R_closed", &mClosedResistance, Flags::read | Flags::write);
-	addAttribute<Bool>("is_closed", &mIsClosed, Flags::read | Flags::write);
+	mOpenResistance = Attribute<Real>::create("R_open", mAttributes);
+	mClosedResistance = Attribute<Real>::create("R_closed", mAttributes);
+	mIsClosed = Attribute<Bool>::create("is_closed", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr SP::Ph1::varResSwitch::clone(String name) {
 	auto copy = varResSwitch::make(name, mLogLevel);
-	copy->setParameters(mOpenResistance, mClosedResistance, mIsClosed);
+	copy->setParameters(**mOpenResistance, **mClosedResistance, **mIsClosed);
 	return copy;
 }
 
@@ -32,7 +32,7 @@ void SP::Ph1::varResSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	// // This function is not used!!!!!!
 
 	//Switch Resistance
-	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
+	Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
 
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0)  = (**mIntfVoltage)(0,0) / impedance;
@@ -48,8 +48,8 @@ void SP::Ph1::varResSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 }
 
 void SP::Ph1::varResSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = (mIsClosed) ?
-		Complex( 1./mClosedResistance, 0 ) : Complex( 1./mOpenResistance, 0 );
+	Complex conductance = (**mIsClosed) ?
+		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -65,8 +65,8 @@ void SP::Ph1::varResSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 void SP::Ph1::varResSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
 	Complex conductance = (closed) ?
-		Complex( 1./mClosedResistance, 0 ) :
-		Complex( 1./mOpenResistance, 0 );
+		Complex( 1. / **mClosedResistance, 0 ) :
+		Complex( 1. / **mOpenResistance, 0 );
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -98,8 +98,8 @@ void SP::Ph1::varResSwitch::mnaAddPostStepDependencies(AttributeBase::List &prev
 	Attribute<Matrix>::Ptr &leftVector) {
 
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void SP::Ph1::varResSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
@@ -115,9 +115,9 @@ void SP::Ph1::varResSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph1::varResSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
-	(**mIntfCurrent)(0,0) = (mIsClosed) ?
-		(**mIntfVoltage)(0,0) / mClosedResistance :
-		(**mIntfVoltage)(0,0) / mOpenResistance;
+	(**mIntfCurrent)(0,0) = (**mIsClosed) ?
+		(**mIntfVoltage)(0,0) / **mClosedResistance :
+		(**mIntfVoltage)(0,0) / **mOpenResistance;
 }
 
 Bool SP::Ph1::varResSwitch::hasParameterChanged() {
@@ -129,23 +129,23 @@ if (!(mPrevState == presentState)) {
 	// Switch is closed : change with 1/mDeltaRes
 	if (this->mnaIsClosed()==true) {
 		// mClosedResistance= 1./mDeltaRes*mPrevRes;
-		mClosedResistance= mDeltaResClosed*mPrevRes;
-		mPrevRes= mClosedResistance;
+		**mClosedResistance= mDeltaResClosed*mPrevRes;
+		mPrevRes= **mClosedResistance;
 		// check if target value is reached
-		if (mClosedResistance < mInitClosedRes) {
-			mClosedResistance= mInitClosedRes;
-			mPrevRes= mClosedResistance;
+		if (**mClosedResistance < mInitClosedRes) {
+			**mClosedResistance= mInitClosedRes;
+			mPrevRes= **mClosedResistance;
 			mPrevState= this->mnaIsClosed();
 		}
 	}
 	// Switch is opened : change with mDeltaRes
 	else if (this->mnaIsClosed()==false) {
-		mOpenResistance= mDeltaResOpen*mPrevRes;
-		mPrevRes= mOpenResistance;
+		**mOpenResistance= mDeltaResOpen*mPrevRes;
+		mPrevRes= **mOpenResistance;
 		// check if target value is reached
-		if ( mOpenResistance > mInitOpenRes) {
-			mOpenResistance= mInitOpenRes;
-			mPrevRes= mOpenResistance;
+		if ( **mOpenResistance > mInitOpenRes) {
+			**mOpenResistance= mInitOpenRes;
+			mPrevRes= **mOpenResistance;
 			mPrevState= this->mnaIsClosed();
 		}
 	}
@@ -161,8 +161,8 @@ void SP::Ph1::varResSwitch::setInitParameters(Real timestep) {
 	mDeltaResClosed= 0;
 	// mDeltaResOpen = 1.5; // assumption for 1ms step size
 	mDeltaResOpen= 0.5*timestep/0.001 + 1;
-	mPrevState= mIsClosed;
-	mPrevRes= (mIsClosed) ? mClosedResistance : mOpenResistance;
-	mInitClosedRes=mClosedResistance;
-	mInitOpenRes=mOpenResistance;
+	mPrevState= **mIsClosed;
+	mPrevRes= (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
+	mInitClosedRes= **mClosedResistance;
+	mInitOpenRes= **mOpenResistance;
 }

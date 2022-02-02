@@ -19,20 +19,20 @@ EMT::Ph3::Switch::Switch(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);
 
-	addAttribute<Matrix>("R_open", &mOpenResistance, Flags::read | Flags::write);
-	addAttribute<Matrix>("R_closed", &mClosedResistance, Flags::read | Flags::write);
-	addAttribute<Bool>("is_closed", &mSwitchClosed, Flags::read | Flags::write);
+	mOpenResistance = Attribute<Matrix>::create("R_open", mAttributes);
+	mClosedResistance = Attribute<Matrix>::create("R_closed", mAttributes);
+	mSwitchClosed = Attribute<Bool>::create("is_closed", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Switch::clone(String name) {
 	auto copy = Switch::make(name, mLogLevel);
-	copy->setParameters(mOpenResistance, mClosedResistance, mSwitchClosed);
+	copy->setParameters(**mOpenResistance, **mClosedResistance, **mSwitchClosed);
 	return copy;
 }
 
 void EMT::Ph3::Switch::initializeFromNodesAndTerminals(Real frequency) {
 
-	Matrix impedance = (mSwitchClosed) ? mClosedResistance : mOpenResistance;
+	Matrix impedance = (**mSwitchClosed) ? **mClosedResistance : **mOpenResistance;
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
 	vInitABC(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
@@ -61,8 +61,8 @@ void EMT::Ph3::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix
 }
 
 void EMT::Ph3::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Matrix conductance = (mSwitchClosed) ?
-		mClosedResistance.inverse() : mOpenResistance.inverse();
+	Matrix conductance = (**mSwitchClosed) ?
+		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0)) {
@@ -119,7 +119,7 @@ void EMT::Ph3::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 void EMT::Ph3::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
 	Matrix conductance = (closed) ?
-		mClosedResistance.inverse() : mOpenResistance.inverse();
+		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0)) {
@@ -198,7 +198,7 @@ void EMT::Ph3::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = (mSwitchClosed) ?
-		mClosedResistance.inverse() * **mIntfVoltage:
-		mOpenResistance.inverse() *mIntfVoltage;
+	**mIntfCurrent = (**mSwitchClosed) ?
+		(**mClosedResistance).inverse() * **mIntfVoltage:
+		(**mOpenResistance).inverse() * **mIntfVoltage;
 }

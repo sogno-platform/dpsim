@@ -47,8 +47,8 @@ void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSwitch->initialize(mFrequencies);
 	mSubSwitch->initializeFromNodesAndTerminals(frequency);
 
-	**mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
-	**mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
+	**mIntfVoltage = **mSubRXLoad->mIntfVoltage;
+	**mIntfCurrent = **mSubRXLoad->mIntfCurrent;
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -79,7 +79,7 @@ void DP::Ph1::RXLoadSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 	mSubRXLoad->mnaInitialize(omega, timeStep, leftVector);
 	mSubSwitch->mnaInitialize(omega, timeStep, leftVector);
 	// get sub component right vector
-	mRightVectorStamps.push_back(&mSubRXLoad->attribute<Matrix>("right_vector")->get());
+	mRightVectorStamps.push_back(&**mSubRXLoad->mRightVector);
 
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -108,9 +108,9 @@ void DP::Ph1::RXLoadSwitch::mnaAddPreStepDependencies(AttributeBase::List &prevS
 	this->mSubRXLoad->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 
 	// add pre-step dependencies of component
-	prevStepDependencies.push_back(attribute("i_intf"));
-	prevStepDependencies.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(mIntfCurrent);
+	prevStepDependencies.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mRightVector);
 }
 
 void DP::Ph1::RXLoadSwitch::mnaPreStep(Real time, Int timeStepCount) {
