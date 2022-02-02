@@ -30,9 +30,8 @@ namespace CPS {
 				public SharedFactory<VoltageSource> {
 			private:
 				void updateVoltage(Real time);
-
-				Attribute<Complex>::Ptr mVoltageRef;
 			public:
+				const Attribute<Complex>::Ptr mVoltageRef;
 				/// Defines UID, name, component parameters and logging level
 				VoltageSource(String uid, String name, Logger::Level loglevel = Logger::Level::off);
 				/// Defines UID, name, component parameters and logging level
