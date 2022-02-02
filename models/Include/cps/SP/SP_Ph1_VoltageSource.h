@@ -38,6 +38,9 @@ namespace Ph1 {
 	///
 	CPS::Signal::SignalGenerator::Ptr mSrcSig;
 	public:
+		const Attribute<Complex>::Ptr mVoltageRef;
+		const Attribute<Real>::Ptr mSrcFreq;
+
 		/// Defines UID, name, component parameters and logging level
 		VoltageSource(String uid, String name, Logger::Level loglevel = Logger::Level::off);
 		/// Defines UID, name, component parameters and logging level
