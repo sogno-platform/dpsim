@@ -34,6 +34,9 @@ namespace Ph1 {
 		std::vector<const Matrix*> mRightVectorStamps;
 
 	public:
+		const Attribute<Complex>::Ptr mVoltageRef;
+		const Attribute<Real>::Ptr mSrcFreq; 
+
 		/// Defines UID, name and logging level
 		NetworkInjection(String uid, String name, Logger::Level loglevel = Logger::Level::off);
 		/// Defines name and logging level

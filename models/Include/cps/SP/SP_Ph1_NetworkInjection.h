@@ -53,6 +53,9 @@ namespace Ph1 {
 		Real mVoltageSetPointPerUnit=1.0;
 
     public:
+		const Attribute<Complex>::Ptr mVoltageRef;
+		const Attribute<Real>::Ptr mSrcFreq; 
+
 		/// Defines UID, name and logging level
 		NetworkInjection(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level

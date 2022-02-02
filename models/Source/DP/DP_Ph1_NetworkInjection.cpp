@@ -11,7 +11,9 @@
 using namespace CPS;
 
 DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mVoltageRef(Attribute<Complex>::create("V_ref", mAttributes)),
+	mSrcFreq(Attribute<Real>::create("f_src", mAttributes)) {
 	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
 
@@ -26,13 +28,13 @@ DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name, Logger::Lev
 	for (auto subcomp: mSubComponents)
 		mSLog->info("- {}", subcomp->name());
 
-	addAttributeRef<Complex>("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"), Flags::read | Flags::write);
-	addAttributeRef<Real>("f_src", mSubVoltageSource->attribute<Real>("f_src"), Flags::read | Flags::write);
+	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
+	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::NetworkInjection::clone(String name) {
 	auto copy = NetworkInjection::make(name, mLogLevel);
-	copy->setParameters(attribute<Complex>("V_ref")->get());
+	copy->setParameters(**mVoltageRef);
 	return copy;
 }
 
@@ -41,8 +43,9 @@ void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) 
 
 	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
-	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
-	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+	//TODO: This should not be necessary, because the reference is already set in the constructor
+	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
+	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
@@ -55,8 +58,9 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqSt
 
 	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 
-	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
-	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+	//TODO: This should not be necessary, because the reference is already set in the constructor
+	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
+	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
@@ -69,8 +73,9 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modula
 
 	mSubVoltageSource->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 
-	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
-	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+	//TODO: This should not be necessary, because the reference is already set in the constructor
+	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
+	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
@@ -101,7 +106,8 @@ void DP::Ph1::NetworkInjection::mnaInitialize(Real omega, Real timeStep, Attribu
 			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
 
 	// collect right side vectors of subcomponents
-	mRightVectorStamps.push_back(&mSubVoltageSource->attribute<Matrix>("right_vector")->get());
+	//TODO: This might be incorrect, depending on if the ** actually returns the reference or copies the object
+	mRightVectorStamps.push_back(&**(mSubVoltageSource->mRightVector));
 
 	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -131,9 +137,9 @@ void DP::Ph1::NetworkInjection::mnaAddPreStepDependencies(AttributeBase::List &p
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	// add pre-step dependencies of component itself
-	prevStepDependencies.push_back(attribute("i_intf"));
-	prevStepDependencies.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(mIntfCurrent);
+	prevStepDependencies.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mRightVector);
 }
 
 void DP::Ph1::NetworkInjection::mnaPreStep(Real time, Int timeStepCount) {
@@ -152,8 +158,8 @@ void DP::Ph1::NetworkInjection::mnaAddPostStepDependencies(AttributeBase::List &
 			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void DP::Ph1::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
@@ -167,11 +173,11 @@ void DP::Ph1::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attrib
 }
 
 void DP::Ph1::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
-	**mIntfVoltage = mSubVoltageSource->attribute<MatrixComp>("v_intf")->get();
+	**mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
 }
 
 void DP::Ph1::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = mSubVoltageSource->attribute<MatrixComp>("i_intf")->get();
+	**mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
 }
 
 void DP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off){
@@ -200,6 +206,6 @@ void DP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[], 
 }
 
 Complex DP::Ph1::NetworkInjection::daeInitialize() {
-	(**mIntfVoltage)(0,0) = mSubVoltageSource->attribute<Complex>("v_intf")->get();
-	return mSubVoltageSource->attribute<Complex>("v_intf")->get();
+	(**mIntfVoltage)(0,0) = (**mSubVoltageSource->mIntfVoltage)(0,0);
+	return (**mSubVoltageSource->mIntfVoltage)(0,0);
 }
