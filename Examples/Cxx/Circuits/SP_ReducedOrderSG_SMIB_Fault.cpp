@@ -217,7 +217,7 @@ int main(int argc, char* argv[]) {
 				SGModel_str = "4Order";
 			else if (SGModel==6)
 				SGModel_str = "6Order";
-	}
+		}
 		if (args.options.find("Inertia") != args.options.end())  {
 			H = args.options["Inertia"];
 			inertia_str = "_Inertia_" + std::to_string(H);

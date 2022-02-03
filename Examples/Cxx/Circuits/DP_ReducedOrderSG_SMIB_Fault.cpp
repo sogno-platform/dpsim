@@ -28,9 +28,9 @@ Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength / std::pow(
 //Real lineConductance = 1e-15;
 Real lineConductance = 8e-2;
 
-void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Real H,
-	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchClosed,
-	Logger::Level logLevel) {
+void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
+	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
+	Real switchClosed, int SGModel, Logger::Level logLevel) {
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
@@ -98,18 +98,25 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	auto n1DP = SimNode<Complex>::make("n1DP", PhaseType::Single, initialVoltage_n1);
 	auto n2DP = SimNode<Complex>::make("n2DP", PhaseType::Single, initialVoltage_n2);
 
-	// Components
-	auto genDP = DP::Ph1::SynchronGenerator4OrderVBR::make("SynGen", Logger::Level::debug);
+	// Synchronous generator
+	std::shared_ptr<DP::Ph1::SynchronGeneratorVBR> genDP = nullptr;
+	if (SGModel==3)
+		genDP = DP::Ph1::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
+	else if (SGModel==4)
+		genDP = DP::Ph1::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
+	else if (SGModel==6)
+		genDP = DP::Ph1::SynchronGenerator6aOrderVBR::make("SynGen", logLevel);
 	genDP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
 	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
-			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t,
-			syngenKundur.Tq0_t); 
+			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 
 	//Grid bus as Slack
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
+	//extnetDP->setParameters(VnomMV * RMS3PH_TO_PEAK1PH);
 	extnetDP->setParameters(VnomMV);
 
     // Line
@@ -118,7 +125,6 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	
 	//Breaker
 	auto fault = CPS::DP::Ph1::Switch::make("Br_fault", logLevel);
-	Real switchOpen = 1e12;
 	fault->setParameters(switchOpen, switchClosed);
 	fault->open();
 
@@ -127,21 +133,32 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	lineDP->connect({ n1DP, n2DP });
 	extnetDP->connect({ n2DP });
 	fault->connect({SP::SimNode::GND, n1DP});
-	auto systemDP = SystemTopology(60,
+	SystemTopology systemDP;
+	if (SGModel==3)
+		systemDP = SystemTopology(60,
 			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{genDP, lineDP, extnetDP, fault});
-
+			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator3OrderVBR>(genDP), lineDP, extnetDP, fault});
+	else if (SGModel==4)
+		systemDP = SystemTopology(60,
+			SystemNodeList{n1DP, n2DP},
+			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator4OrderVBR>(genDP), lineDP, extnetDP, fault});
+	else if (SGModel==6)
+		systemDP = SystemTopology(60,
+			SystemNodeList{n1DP, n2DP},
+			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6aOrderVBR>(genDP), lineDP, extnetDP, fault});
+	
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP, true, logDownSampling);
-	loggerDP->addAttribute("v2",		 n2DP->attribute("v"));
-	loggerDP->addAttribute("v_gen", 	 genDP->attribute("v_intf"));
+	//loggerDP->addAttribute("v_slack", 	 extnetDP->attribute("v_intf"));
+	//loggerDP->addAttribute("i_slack", 	 extnetDP->attribute("i_intf"));
     loggerDP->addAttribute("i_gen", 	 genDP->attribute("i_intf"));
+	loggerDP->addAttribute("v_gen", 	 genDP->attribute("v_intf"));
     loggerDP->addAttribute("Etorque", 	 genDP->attribute("Etorque"));
-    loggerDP->addAttribute("delta", 	 genDP->attribute("delta"));
-    loggerDP->addAttribute("w_r", 		 genDP->attribute("w_r"));
-	loggerDP->addAttribute("Edq0",		 genDP->attribute("Edq0_t"));
-	loggerDP->addAttribute("Vdq0", 		 genDP->attribute("Vdq0"));
-	loggerDP->addAttribute("Idq0", 		 genDP->attribute("Idq0"));
+    //loggerDP->addAttribute("delta", 	 genDP->attribute("delta"));
+    //loggerDP->addAttribute("w_r", 		 genDP->attribute("w_r"));
+	//loggerDP->addAttribute("Edq0",		 genDP->attribute("Edq0_t"));
+	//loggerDP->addAttribute("Vdq0", 		 genDP->attribute("Vdq0"));
+	//loggerDP->addAttribute("Idq0", 		 genDP->attribute("Idq0"));
 	//loggerDP->addAttribute("Eabc", 		 genDP->attribute("Eabc"));
 
 	Simulation simDP(simNameDP, logLevel);
@@ -166,46 +183,48 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 
 int main(int argc, char* argv[]) {	
 
-	// Command line args processing
-	CommandLineArgs args(argc, argv);
-	Real SwitchClosed = 1e-3 * (24*24/555);
+	//Simultion parameters
+	Real SwitchClosed = 0.1;
+	Real SwitchOpen = 1e6;
 	Real startTimeFault = 30.0;
 	Real endTimeFault   = 30.1;
+	Real finalTime = 40;
 	Real timeStep = 100e-6;
+	int SGModel = 4;
 	Real H = 3.7;
-	std::string rfault_str = "";
-	std::string faultLength_str = "";
+	std::string SGModel_str = "4Order";
 	std::string stepSize_str = "";
 	std::string inertia_str = "";
+
+	// Command line args processing
+	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-		if (args.options.find("StepSize") != args.options.end()){
+		if (args.options.find("StepSize") != args.options.end()) {
 			timeStep = args.options["StepSize"];
 			stepSize_str = "_StepSize_" + std::to_string(timeStep);
 		}
-		if (args.options.find("RSwitchClosed") != args.options.end()){
-			SwitchClosed = args.options["RSwitchClosed"];
-			rfault_str = "_RFault_" + std::to_string(SwitchClosed);
+		if (args.options.find("SGOrder") != args.options.end()) {
+			SGModel = args.options["SGOrder"];
+			if (SGModel==3)
+				SGModel_str = "3Order";
+			else if (SGModel==4)
+				SGModel_str = "4Order";
+			else if (SGModel==6)
+				SGModel_str = "6Order";
 		}
-		if (args.options.find("FaultLength") != args.options.end()){
-			Real faultLength = args.options["FaultLength"];
-			endTimeFault = startTimeFault + faultLength * 1e-3;
-			faultLength_str = "_FaultLength_" + std::to_string(faultLength);
-		}
-		if (args.options.find("Inertia") != args.options.end()){
+		if (args.options.find("Inertia") != args.options.end())  {
 			H = args.options["Inertia"];
 			inertia_str = "_Inertia_" + std::to_string(H);
 		}
 	}
 
-	//Simultion parameters
 	Real logDownSampling;
 	if (timeStep<100e-6)
 		logDownSampling = floor((100e-6) / timeStep);
 	else
 		logDownSampling = 1.0;
-	Real finalTime = 40;
 	Logger::Level logLevel = Logger::Level::off;
-	std::string simName = "DP_SynGen4OrderVBR_SMIB_Fault" + rfault_str + stepSize_str + faultLength_str + inertia_str;
-	DP_1ph_SynGenTrStab_Fault(simName, timeStep, finalTime, H,
-		startTimeFault, endTimeFault, logDownSampling, SwitchClosed, logLevel);
+	std::string simName = "DP_SynGen" + SGModel_str + "VBR_SMIB_Fault" + stepSize_str + inertia_str;
+	DP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
+						logDownSampling, SwitchOpen, SwitchClosed, SGModel, logLevel);
 }
