@@ -39,25 +39,25 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	//Synchronous generator 1
 	auto gen1PF = SP::Ph1::SynchronGenerator::make("Generator1", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	gen1PF->setParameters(KRK_TwoArea.nomPower_G1, KRK_TwoArea.nomPhPhVoltRMS_G1, KRK_TwoArea.initActivePower_G1, KRK_TwoArea.setPointVoltage_G1, PowerflowBusType::PV, KRK_TwoArea.initReactivePower_G1);
+	gen1PF->setParameters(KRK_TwoArea.nomPower_G1, KRK_TwoArea.nomPhPhVoltRMS_G1, KRK_TwoArea.initActivePower_G1, KRK_TwoArea.setPointVoltage_G1, PowerflowBusType::PV);
 	gen1PF->setBaseVoltage(KRK_TwoArea.nomPhPhVoltRMS_G1);
 
 	//Synchronous generator 2
 	auto gen2PF = SP::Ph1::SynchronGenerator::make("Generator2", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	gen2PF->setParameters(KRK_TwoArea.nomPower_G2, KRK_TwoArea.nomPhPhVoltRMS_G2, KRK_TwoArea.initActivePower_G2, KRK_TwoArea.setPointVoltage_G2, PowerflowBusType::PV, KRK_TwoArea.initReactivePower_G2);
+	gen2PF->setParameters(KRK_TwoArea.nomPower_G2, KRK_TwoArea.nomPhPhVoltRMS_G2, KRK_TwoArea.initActivePower_G2, KRK_TwoArea.setPointVoltage_G2, PowerflowBusType::PV);
 	gen2PF->setBaseVoltage(KRK_TwoArea.nomPhPhVoltRMS_G2);
 
     //Synchronous generator 3
 	auto gen3PF = SP::Ph1::SynchronGenerator::make("Generator3", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	gen3PF->setParameters(KRK_TwoArea.nomPower_G3, KRK_TwoArea.nomPhPhVoltRMS_G3, KRK_TwoArea.initActivePower_G3, KRK_TwoArea.setPointVoltage_G3, PowerflowBusType::VD, KRK_TwoArea.initReactivePower_G3);
+	gen3PF->setParameters(KRK_TwoArea.nomPower_G3, KRK_TwoArea.nomPhPhVoltRMS_G3, KRK_TwoArea.initActivePower_G3, KRK_TwoArea.setPointVoltage_G3, PowerflowBusType::VD);
 	gen3PF->setBaseVoltage(KRK_TwoArea.nomPhPhVoltRMS_G3);
 
     //Synchronous generator 4
 	auto gen4PF = SP::Ph1::SynchronGenerator::make("Generator4", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	gen4PF->setParameters(KRK_TwoArea.nomPower_G4, KRK_TwoArea.nomPhPhVoltRMS_G4, KRK_TwoArea.initActivePower_G4, KRK_TwoArea.setPointVoltage_G4, PowerflowBusType::PV, KRK_TwoArea.initReactivePower_G4);
+	gen4PF->setParameters(KRK_TwoArea.nomPower_G4, KRK_TwoArea.nomPhPhVoltRMS_G4, KRK_TwoArea.initActivePower_G4, KRK_TwoArea.setPointVoltage_G4, PowerflowBusType::PV);
 	gen4PF->setBaseVoltage(KRK_TwoArea.nomPhPhVoltRMS_G4);
 
 	auto trafo15PF= SP::Ph1::Transformer::make("Transformer15", Logger::Level::debug);
@@ -86,7 +86,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 
     //use Shunt as Load for powerflow
 	auto load7PF = SP::Ph1::Load::make("Load7", Logger::Level::debug);
-	load7PF->setParameters(KRK_TwoArea.activePower_L7, KRK_TwoArea.reactivePower_L7_inductive-KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
+	load7PF->setParameters(KRK_TwoArea.activePower_L7, KRK_TwoArea.reactivePower_L7_inductive - KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
 	// auto load7PF_c = SP::Ph1::Load::make("Load7_c", Logger::Level::debug);
 	// load7PF_c->setParameters(0, -KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
 	// auto load7PF_c = SP::Ph1::Shunt::make("Load7_c", Logger::Level::debug);
@@ -94,7 +94,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	// load7PF_c->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	auto load9PF = SP::Ph1::Load::make("Load9", Logger::Level::debug);
-	load9PF->setParameters(KRK_TwoArea.activePower_L9, KRK_TwoArea.reactivePower_L9_inductive-KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
+	load9PF->setParameters(KRK_TwoArea.activePower_L9, KRK_TwoArea.reactivePower_L9_inductive - KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
 	// auto load9PF_c = SP::Ph1::Load::make("Load9_c", Logger::Level::debug);
 	// load9PF_c->setParameters(0, -KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
 	// auto load9PF_c = SP::Ph1::Shunt::make("Load9_c", Logger::Level::debug);
@@ -165,16 +165,27 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
 	loggerPF->addAttribute("v_bus1", n1PF->attribute("v"));
+	loggerPF->addAttribute("s_bus1", n1PF->attribute("s"));
 	loggerPF->addAttribute("v_bus2", n2PF->attribute("v"));
+	loggerPF->addAttribute("s_bus2", n2PF->attribute("s"));
 	loggerPF->addAttribute("v_bus3", n3PF->attribute("v"));
+	loggerPF->addAttribute("s_bus3", n3PF->attribute("s"));
     loggerPF->addAttribute("v_bus4", n4PF->attribute("v"));
+	loggerPF->addAttribute("s_bus4", n4PF->attribute("s"));
 	loggerPF->addAttribute("v_bus5", n5PF->attribute("v"));
+	loggerPF->addAttribute("s_bus5", n5PF->attribute("s"));
 	loggerPF->addAttribute("v_bus6", n6PF->attribute("v"));
+	loggerPF->addAttribute("s_bus6", n6PF->attribute("s"));
     loggerPF->addAttribute("v_bus7", n7PF->attribute("v"));
+	loggerPF->addAttribute("s_bus7", n7PF->attribute("s"));
 	loggerPF->addAttribute("v_bus8", n8PF->attribute("v"));
+	loggerPF->addAttribute("s_bus8", n8PF->attribute("s"));
 	loggerPF->addAttribute("v_bus9", n9PF->attribute("v"));
+	loggerPF->addAttribute("s_bus9", n9PF->attribute("s"));
     loggerPF->addAttribute("v_bus10", n10PF->attribute("v"));
+	loggerPF->addAttribute("s_bus10", n10PF->attribute("s"));
 	loggerPF->addAttribute("v_bus11", n11PF->attribute("v"));
+	loggerPF->addAttribute("s_bus11", n11PF->attribute("s"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -280,7 +291,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 
 	///Loads
 	auto load7SP = SP::Ph1::Load::make("Load7", Logger::Level::debug);
-	load7SP->setParameters(KRK_TwoArea.activePower_L7, KRK_TwoArea.reactivePower_L7_inductive-KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
+	load7SP->setParameters(KRK_TwoArea.activePower_L7, KRK_TwoArea.reactivePower_L7_inductive - KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
 	// auto load7SP_c = SP::Ph1::Load::make("Load7_c", Logger::Level::debug);
 	// load7SP_c->setParameters(0, -KRK_TwoArea.reactivePower_L7_capacitive, KRK_TwoArea.Vnom);
 	// auto load7SP_c = SP::Ph1::Shunt::make("Load7_c", Logger::Level::debug);
@@ -288,7 +299,7 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	// load7SP_c->setBaseVoltage(KRK_TwoArea.Vnom);
 
 	auto load9SP = SP::Ph1::Load::make("Load9", Logger::Level::debug);
-	load9SP->setParameters(KRK_TwoArea.activePower_L9, KRK_TwoArea.reactivePower_L9_inductive-KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
+	load9SP->setParameters(KRK_TwoArea.activePower_L9, KRK_TwoArea.reactivePower_L9_inductive - KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
 	// auto load9SP_c = SP::Ph1::Load::make("Load9_c", Logger::Level::debug);
 	// load9SP_c->setParameters(0, -KRK_TwoArea.reactivePower_L9_capacitive, KRK_TwoArea.Vnom);
 	// auto load9SP_c = SP::Ph1::Shunt::make("Load9_c", Logger::Level::debug);
@@ -347,17 +358,13 @@ void SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState(String simName, Real timeStep,
 	line89_2SP->connect({ n8SP, n9SP });
 	line910SP->connect({ n9SP, n10SP });
 	line1011SP->connect({ n10SP, n11SP });
-	// faultDP->connect({DP::SimNode::GND , n1DP }); //terminal of generator 1
-	// faultDP->connect({DP::SimNode::GND , n2DP }); //terminal of generator 2
-	// faultDP->connect({DP::SimNode::GND , n3DP }); //Load bus
 
 	auto systemSP = SystemTopology(60,
 			SystemNodeList{n1SP, n2SP, n3SP, n4SP, n5SP, n6SP, n7SP, n8SP, n9SP, n10SP, n11SP},
 			SystemComponentList{gen1SP, gen2SP, gen3SP, gen4SP, trafo15SP, trafo26SP, trafo311SP, trafo410SP, load7SP, load9SP, line56SP, line67SP, line78_1SP, line78_2SP, line89_1SP, line89_2SP, line910SP, line1011SP});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simNameSP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemSP);
+	systemSP.initWithPowerflow(systemPF);
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
