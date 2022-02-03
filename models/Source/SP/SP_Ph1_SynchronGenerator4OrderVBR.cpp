@@ -19,7 +19,7 @@ SP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
 	mEh_vbr = Matrix::Zero(2,1);
 
     // Register attributes
-	addAttribute<Matrix>("Edq0_t", &mEdq_t, Flags::read);
+	addAttribute<Matrix>("Edq_t", &mEdq_t, Flags::read);
 }
 
 SP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR

@@ -73,9 +73,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_SynGen3OrderVBR_SMIB_Fault.cpp
 	Circuits/EMT_SynGen4OrderVBR_SMIB_Fault.cpp
 	Circuits/EMT_SynGen6OrderVBR_SMIB_Fault.cpp
-	Circuits/SP_SynGen3OrderVBR_SMIB_Fault.cpp
-	Circuits/SP_SynGen4OrderVBR_SMIB_Fault.cpp
-	Circuits/SP_SynGen6OrderVBR_SMIB_Fault.cpp
+	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/SP_SynGen4OrderDQ_SMIB_Fault.cpp
 
 	#3Bus System
