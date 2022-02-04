@@ -37,7 +37,7 @@ namespace CPS {
 	class AttributeUpdateTaskBase {
 
 	public:
-		//FIXME: Why must this not be a pure virtual function, i. e. why can't this class be abstract?
+		///FIXME: Why must this not be a pure virtual function, i. e. why can't this class be abstract?
 		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) {
 			throw TypeException();
 		}; 
@@ -81,7 +81,7 @@ namespace CPS {
 		public std::enable_shared_from_this<Attribute<T>> {
 
 	protected:
-		//FIXME: When the value is actually an external reference (set by the second constructor), destroying this shared ptr will crash the program.
+		///FIXME: When the value is actually an external reference (set by the second constructor), destroying this shared ptr will crash the program.
 		//The goal here should be to eliminate all uses of this second constructor,
 		//storing the attributes themselves as class members instead of references to the underlying data
 		std::shared_ptr<T> mData;
@@ -292,7 +292,7 @@ namespace CPS {
 
 	
 	protected:
-		//FIXME: The UPDATE_ONCE tasks are currently never triggered. Maybe at start of simulation?
+		///FIXME: The UPDATE_ONCE tasks are currently never triggered. Maybe at start of simulation?
 		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnce;
 		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnGet;
 		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnSet;

@@ -46,7 +46,7 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real srcFr
 
 	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
-	//TODO: This should not be necessary, because the reference is already set in the constructor
+	///FIXME: This should not be necessary, because the reference is already set in the constructor
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
@@ -61,7 +61,7 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real freqS
 
 	mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 
-	//TODO: This should not be necessary, because the reference is already set in the constructor
+	///FIXME: This should not be necessary, because the reference is already set in the constructor
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 	mSigOut->setReference(mSubVoltageSource->mSigOut);
@@ -77,7 +77,7 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real modul
 
 	mSubVoltageSource->setParameters(voltageRef, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 
-	//TODO: This should not be necessary, because the reference is already set in the constructor
+	///FIXME: This should not be necessary, because the reference is already set in the constructor
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
@@ -97,7 +97,7 @@ void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency)
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
 
-	//TODO: This should not be necessary, because the reference is already set in the constructor
+	///FIXME: This should not be necessary, because the reference is already set in the constructor
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 }

@@ -43,7 +43,7 @@ void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) 
 
 	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
-	//TODO: This should not be necessary, because the reference is already set in the constructor
+	///FIXME: This should not be necessary, because the reference is already set in the constructor
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
@@ -58,7 +58,7 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqSt
 
 	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 
-	//TODO: This should not be necessary, because the reference is already set in the constructor
+	///FIXME: This should not be necessary, because the reference is already set in the constructor
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
@@ -73,7 +73,7 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modula
 
 	mSubVoltageSource->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 
-	//TODO: This should not be necessary, because the reference is already set in the constructor
+	/// FIXME: This should not be necessary, because the reference is already set in the constructor
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
@@ -106,7 +106,7 @@ void DP::Ph1::NetworkInjection::mnaInitialize(Real omega, Real timeStep, Attribu
 			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
 
 	// collect right side vectors of subcomponents
-	//TODO: This might be incorrect, depending on if the ** actually returns the reference or copies the object
+	/// CHECK: This might be incorrect, depending on if the ** actually returns the reference or copies the object
 	mRightVectorStamps.push_back(&**(mSubVoltageSource->mRightVector));
 
 	// collect tasks

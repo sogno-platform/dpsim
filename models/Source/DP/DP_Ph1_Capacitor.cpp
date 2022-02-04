@@ -17,7 +17,7 @@ DP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
-	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
 	mCapacitance = CPS::Attribute<Real>::create("C", mAttributes);
 }
 

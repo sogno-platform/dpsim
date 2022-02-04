@@ -56,7 +56,7 @@ void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqSt
 
 	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 
-	//TODO: This should not be necessary, because the reference is already set in the constructor
+	///FIXME: This should not be necessary, because the reference is already set in the constructor
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
@@ -71,7 +71,7 @@ void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modula
 
 	mSubVoltageSource->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 
-	//TODO: This should not be necessary, because the reference is already set in the constructor
+	///FIXME: This should not be necessary, because the reference is already set in the constructor
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 

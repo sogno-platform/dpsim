@@ -56,7 +56,7 @@ void MnaSolver<VarType>::initialize() {
 	createEmptySystemMatrix();
 
 	// Register attribute for solution vector
-	// TODO: This is kinda ugly... At least we should somehow unify mLeftSideVector and mLeftSideVectorHarm.
+	///FIXME: This is kinda ugly... At least we should somehow unify mLeftSideVector and mLeftSideVectorHarm.
 	// Best case we have some kind of sub-attributes for attribute vectors / tensor attributes...
 	if (mFrequencyParallel) {
 		mSLog->info("Computing network harmonics in parallel.");

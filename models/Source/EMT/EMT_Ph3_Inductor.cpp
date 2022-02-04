@@ -18,7 +18,7 @@ EMT::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	//FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
 	mInductance = CPS::Attribute<Matrix>::create("L", mAttributes);
 }
 

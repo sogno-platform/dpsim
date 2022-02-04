@@ -55,7 +55,7 @@ namespace CPS {
 
 		/// Returns a modified copy of the component with the given suffix added to the name and without
 		/// connected nodes / terminals
-		/// TODO should be abstract and implemented everywhere
+		/// DEPRECATED: This method should be removed
 		virtual Ptr clone(String name) { return nullptr; }
 
 		// #### Terminals ####
