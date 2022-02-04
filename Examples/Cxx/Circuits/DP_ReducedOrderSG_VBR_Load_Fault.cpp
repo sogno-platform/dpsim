@@ -5,23 +5,12 @@ using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
-// ----- PARAMETRIZATION -----
-// General grid parameters
-Real nomFreq = 60;
-Real nomOmega= nomFreq * 2 * PI;
-Real nomPower = 555e6;
-Real nomPhPhVoltRMS = 24e3;
-Real initVoltAngle = -PI / 2;
+// Grid parameters
+Examples::Grids::SMIB::ScenarioConfig3 GridParams;
 
-//-----------Generator-----------//
+// Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
-Real setPointActivePower=300e6;
-Real mechPower = 300e6;
-Real initActivePower = 300e6;
-Real initReactivePower = 0;
 
-//-----------Load-----------//
-Real Rload = 1.92;
 
 void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
@@ -33,8 +22,8 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	
 	// Nodes
 	std::vector<Complex> initVoltN1 = std::vector<Complex>({
-		Complex(nomPhPhVoltRMS * cos(initVoltAngle), nomPhPhVoltRMS * sin(initVoltAngle)),
-		0.0, 0.0});
+		Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle), 
+				GridParams.VnomMV * sin(GridParams.initVoltAngle))});
 	auto n1DP = SimNode<Complex>::make("n1DP", PhaseType::Single, initVoltN1);
 
 	// Synchronous generator
@@ -54,12 +43,14 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-    Complex initComplexElectricalPower = Complex(initActivePower, initReactivePower);
-    genDP->setInitialValues(initComplexElectricalPower, mechPower, 
-		Complex(nomPhPhVoltRMS * cos(initVoltAngle), nomPhPhVoltRMS * sin(initVoltAngle)));
+    
+    genDP->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower, 
+			Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle), 
+					GridParams.VnomMV * sin(GridParams.initVoltAngle)));
 
 	auto load = CPS::DP::Ph1::RXLoad::make("Load", logLevel);
-	load->setParameters(initActivePower, initReactivePower, nomPhPhVoltRMS);
+	load->setParameters(GridParams.initActivePower, GridParams.initReactivePower, 
+						GridParams.VnomMV);
 
 	//Breaker
 	auto fault = CPS::DP::Ph1::Switch::make("Br_fault", logLevel);
@@ -72,19 +63,19 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	fault->connect({SP::SimNode::GND, n1DP});
 	SystemTopology systemDP;
 	if (SGModel==3)
-		systemDP = SystemTopology(60,
+		systemDP = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1DP},
 			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator3OrderVBR>(genDP), load, fault});
 	else if (SGModel==4)
-		systemDP = SystemTopology(60,
+		systemDP = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1DP},
 			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator4OrderVBR>(genDP), load, fault});
 	else if (SGModel==6)
-		systemDP = SystemTopology(60,
+		systemDP = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1DP},
 			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6aOrderVBR>(genDP), load, fault});
 	else if (SGModel==7)
-		systemDP = SystemTopology(60,
+		systemDP = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1DP},
 			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6bOrderVBR>(genDP), load, fault});
 
@@ -123,14 +114,14 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 int main(int argc, char* argv[]) {	
 
 	//Simultion parameters
-	Real SwitchClosed = 0.1;
-	Real SwitchOpen = 1e6;
+	Real SwitchClosed = GridParams.SwitchClosed;
+	Real SwitchOpen = GridParams.SwitchOpen;
 	Real startTimeFault = 1.0;
 	Real endTimeFault   = 1.1;
 	Real finalTime = 5;
 	Real timeStep = 1e-3;
 	int SGModel = 4;
-	Real H = 3.7;
+	Real H = syngenKundur.H;
 	std::string SGModel_str = "4Order";
 	std::string stepSize_str = "";
 	std::string inertia_str = "";

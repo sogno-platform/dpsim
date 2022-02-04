@@ -16,9 +16,9 @@ namespace Ph1 {
 	/// @brief Synchronous generator model for transient stability analysis
 	///
 	/// This model is based on Eremia section 2.1.6.
-	class SynchronGenerator4OrderDQ :
+	class SynchronGenerator4OrderDCIM :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
-		public SharedFactory<SynchronGenerator4OrderDQ> {
+		public SharedFactory<SynchronGenerator4OrderDCIM> {
 	protected:
 		// ### State variables [p.u.]###
 		/// voltage behing the transient reactance
@@ -57,9 +57,9 @@ namespace Ph1 {
 
 	public:
 		///
-		SynchronGenerator4OrderDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderDCIM(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator4OrderDQ(String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderDCIM(String name, Logger::Level logLevel = Logger::Level::off);
 		///
 		SimPowerComp<Complex>::Ptr clone(String name);
 	};

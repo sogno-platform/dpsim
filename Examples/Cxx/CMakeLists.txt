@@ -73,7 +73,7 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/SP_SynGen4OrderDQ_SMIB_Fault.cpp
+	Circuits/SP_SynGen4OrderDCIM_SMIB_Fault.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp

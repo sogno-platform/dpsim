@@ -180,8 +180,85 @@ namespace SMIB {
         Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLeng;
         Real lineInductance = lineCIGREHV.lineReactancePerKm/nomOmega*lineLeng;
         Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm/nomOmega*lineLeng;
-        Real lineConductance =lineCIGREHV.lineConductancePerKm*lineLeng;;
+        Real lineConductance =lineCIGREHV.lineConductancePerKm*lineLeng;
     };
+
+    struct ScenarioConfig2 {
+        //Scenario used to validate reduced order SG VBR models against PSAT (in SP domain)
+
+        // General grid parameters
+        Real VnomMV = 24e3;
+        Real VnomHV = 230e3;
+        Real nomFreq = 60;
+        Real ratio = VnomMV/VnomHV;
+        Real nomOmega= nomFreq * 2 * PI;
+
+        // Generator parameters
+        Real setPointActivePower = 300e6;
+        Real setPointVoltage = 1.05*VnomMV;
+
+        // CIGREHVAmerican (230 kV)
+        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
+        Real lineLength = 100;
+        Real lineResistance = lineCIGREHV.lineResistancePerKm * lineLength * std::pow(ratio,2);
+        Real lineInductance = lineCIGREHV.lineReactancePerKm * lineLength * std::pow(ratio,2) / nomOmega;
+        Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength / std::pow(ratio,2) / nomOmega;
+        Real lineConductance = 1e-15;
+
+        // In PSAT SwitchClosed is equal to 1e-3 p.u.
+        Real SwitchClosed = 1e-3 * (24*24/555);
+	    Real SwitchOpen = 1e6;
+    };
+
+    struct ScenarioConfig3 {
+        //Scenario used to validate reduced order SG VBR models in the DP and EMT domain against the SP domain
+
+        // General grid parameters
+        Real VnomMV = 24e3;
+        Real nomFreq = 60;
+        Real nomOmega= nomFreq * 2 * PI;
+
+        //-----------Generator-----------//
+        Real setPointActivePower=300e6;
+        Real mechPower = 300e6;
+        Real initActivePower = 300e6;
+        Real initReactivePower = 0;
+        Real initVoltAngle = -PI / 2;
+        Complex initComplexElectricalPower = Complex(initActivePower, initReactivePower);
+        Complex initTerminalVolt = VnomMV * Complex(cos(initVoltAngle), sin(initVoltAngle));
+
+        // 
+        Real SwitchClosed = 0.1;
+	    Real SwitchOpen = 1e6;
+    };
+
+    struct ScenarioConfig4 {
+        //Scenario used to compare DP against SP accuracy in Martin's thesis
+
+        // General grid parameters
+        Real VnomMV = 24e3;
+        Real VnomHV = 230e3;
+        Real nomFreq = 60;
+        Real ratio = VnomMV/VnomHV;
+        Real nomOmega= nomFreq * 2 * PI;
+
+        // Generator parameters
+        Real setPointActivePower = 300e6;
+        Real setPointVoltage = 1.05*VnomMV;
+
+        // CIGREHVAmerican (230 kV)
+        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
+        Real lineLength = 100;
+        Real lineResistance = lineCIGREHV.lineResistancePerKm * lineLength * std::pow(ratio,2);
+        Real lineInductance = lineCIGREHV.lineReactancePerKm * lineLength * std::pow(ratio,2) / nomOmega;
+        Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength / std::pow(ratio,2) / nomOmega;
+        Real lineConductance = 8e-2;
+
+        // In PSAT SwitchClosed is equal to 1e-3 p.u.
+        Real SwitchClosed = 0.1;
+	    Real SwitchOpen = 1e6;
+    };
+  
 }
 
 namespace ThreeBus {

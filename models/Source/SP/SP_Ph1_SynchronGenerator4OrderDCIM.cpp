@@ -6,14 +6,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/SP/SP_Ph1_SynchronGenerator4OrderDQ.h>
+#include <cps/SP/SP_Ph1_SynchronGenerator4OrderDCIM.h>
 
 using namespace CPS;
 
 // !!! TODO: 	Adaptions to use in SP_Ph1 models phase-to-ground peak variables
 // !!! 			with initialization from phase-to-phase RMS variables
 
-SP::Ph1::SynchronGenerator4OrderDQ::SynchronGenerator4OrderDQ
+SP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
     (String uid, String name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel) {
 
@@ -26,18 +26,18 @@ SP::Ph1::SynchronGenerator4OrderDQ::SynchronGenerator4OrderDQ
 	addAttribute<Matrix>("Edq_t",   &mEdq_t, Flags::read);
 }
 
-SP::Ph1::SynchronGenerator4OrderDQ::SynchronGenerator4OrderDQ
+SP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
 	(String name, Logger::Level logLevel)
-	: SynchronGenerator4OrderDQ(name, name, logLevel) {
+	: SynchronGenerator4OrderDCIM(name, name, logLevel) {
 }
 
-SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGenerator4OrderDQ::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGenerator4OrderDCIM::clone(String name) {
 	
-	auto copy = SynchronGenerator4OrderDQ::make(name, mLogLevel);
+	auto copy = SynchronGenerator4OrderDCIM::make(name, mLogLevel);
 	return copy;
 }
 
-void SP::Ph1::SynchronGenerator4OrderDQ::specificInitialization() {
+void SP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
 	mEdq_t(0,0) = mVdq(0,0) - mIdq(1,0) * mLq_t;
@@ -61,7 +61,7 @@ void SP::Ph1::SynchronGenerator4OrderDQ::specificInitialization() {
 	mSLog->flush();
 }
 
-void SP::Ph1::SynchronGenerator4OrderDQ::calculateStateMatrix() {
+void SP::Ph1::SynchronGenerator4OrderDCIM::calculateStateMatrix() {
 	Real Td_t =  mTd0_t * (mLd_t / mLd);
 	Real Tq_t =  mTq0_t * (mLq_t / mLq);
 	mA << -1. / Tq_t,          0,
@@ -72,10 +72,10 @@ void SP::Ph1::SynchronGenerator4OrderDQ::calculateStateMatrix() {
 	   		(1. / Td_t) * mEf * (mLd_t / mLd);
 }
 
-void SP::Ph1::SynchronGenerator4OrderDQ::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::SynchronGenerator4OrderDCIM::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
-void SP::Ph1::SynchronGenerator4OrderDQ::stepInPerUnit() {
+void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	if (mSimTime>0.0) {
 		// calculate mechanical variables at t=k+1 with forward euler
 		mOmMech = mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - mElecTorque));
@@ -100,11 +100,11 @@ void SP::Ph1::SynchronGenerator4OrderDQ::stepInPerUnit() {
 	mIntfCurrent(0,0) = Complex(Ia(0,0), Ia(1,0)) * mBase_I_RMS;
 }
 
-void SP::Ph1::SynchronGenerator4OrderDQ::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void SP::Ph1::SynchronGenerator4OrderDCIM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0), mIntfCurrent(0, 0));
 }
 
-void SP::Ph1::SynchronGenerator4OrderDQ::mnaPostStep(const Matrix& leftVector) {
+void SP::Ph1::SynchronGenerator4OrderDCIM::mnaPostStep(const Matrix& leftVector) {
 	// update armature voltage
 	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	Matrix Vabc = Matrix::Zero(2,1);
@@ -114,7 +114,7 @@ void SP::Ph1::SynchronGenerator4OrderDQ::mnaPostStep(const Matrix& leftVector) {
     mSimTime = mSimTime + mTimeStep;
 }
 
-Matrix SP::Ph1::SynchronGenerator4OrderDQ::get_DqToComplexATransformMatrix() {
+Matrix SP::Ph1::SynchronGenerator4OrderDCIM::get_DqToComplexATransformMatrix() {
 	Matrix dqToComplexA(2, 2);
 	dqToComplexA <<
 		cos(mThetaMech),	-sin(mThetaMech), 

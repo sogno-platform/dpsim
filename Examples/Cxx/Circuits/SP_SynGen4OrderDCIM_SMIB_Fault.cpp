@@ -5,32 +5,15 @@ using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
-// ----- PARAMETRIZATION -----
-// General grid parameters
-Real nomPower = 555e6;
-Real VnomMV = 24e3;
-Real VnomHV = 230e3;
-Real nomFreq = 60;
-Real ratio = VnomMV/VnomHV;
-Real nomOmega= nomFreq * 2 * PI;
+// Grid parameters
+Examples::Grids::SMIB::ScenarioConfig2 GridParams;
 
-//-----------Generator-----------//
+// Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
-Real setPointActivePower=300e6;
-Real setPointVoltage=1.05*VnomMV;
 
-// HV line parameters referred to MV side
-Examples::Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
-Real lineLength = 100;
-Real lineResistance = lineCIGREHV.lineResistancePerKm * lineLength * std::pow(ratio,2);
-Real lineInductance = lineCIGREHV.lineReactancePerKm * lineLength * std::pow(ratio,2) / nomOmega;
-Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength / std::pow(ratio,2) / nomOmega;
-//Real lineConductance = 8e-2;
-Real lineConductance = 1e-15;
-
-void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Real H,
-	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchClosed, 
-	Logger::Level logLevel) {
+void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
+	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
+	Real switchClosed, Logger::Level logLevel) {
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
@@ -42,26 +25,28 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
-	genPF->setParameters(nomPower, VnomMV, setPointActivePower, setPointVoltage, PowerflowBusType::PV);
-    genPF->setBaseVoltage(VnomMV);
+	genPF->setParameters(syngenKundur.nomPower, GridParams.VnomMV, GridParams.setPointActivePower, 
+						 GridParams.setPointVoltage, PowerflowBusType::PV);
+    genPF->setBaseVoltage(GridParams.VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
 
 	//Grid bus as Slack
 	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetPF->setParameters(VnomMV);
-	extnetPF->setBaseVoltage(VnomMV);
+	extnetPF->setParameters(GridParams.VnomMV);
+	extnetPF->setBaseVoltage(GridParams.VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 	
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
-	linePF->setBaseVoltage(VnomMV);
+	linePF->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+						  GridParams.lineCapacitance, GridParams.lineConductance);
+	linePF->setBaseVoltage(GridParams.VnomMV);
 
 	// Topology
 	genPF->connect({ n1PF });
 	linePF->connect({ n1PF, n2PF });
 	extnetPF->connect({ n2PF });
-	auto systemPF = SystemTopology(60,
+	auto systemPF = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1PF, n2PF},
 			SystemComponentList{genPF, linePF, extnetPF});
 
@@ -99,7 +84,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	auto n2SP = SimNode<Complex>::make("n2SP", PhaseType::Single, initialVoltage_n2);
 
 	// Components
-	auto genSP = SP::Ph1::SynchronGenerator4OrderDQ::make("SynGen", Logger::Level::debug);
+	auto genSP = SP::Ph1::SynchronGenerator4OrderDCIM::make("SynGen", Logger::Level::debug);
 	genSP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, syngenKundur.H,
@@ -110,15 +95,15 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 
 	//Grid bus as Slack
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
-	extnetSP->setParameters(VnomMV, nomFreq);
+	extnetSP->setParameters(GridParams.VnomMV, GridParams.nomFreq);
 
     // Line
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", logLevel);
-	lineSP->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
+	lineSP->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+						  GridParams.lineCapacitance, GridParams.lineConductance);
 	
 	//Breaker
 	auto fault = CPS::SP::Ph1::Switch::make("Br_fault", logLevel);
-	Real switchOpen = 1e12;
 	fault->setParameters(switchOpen, switchClosed);
 	fault->open();
 
@@ -127,7 +112,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	lineSP->connect({ n1SP, n2SP });
 	extnetSP->connect({ n2SP });
 	fault->connect({SP::SimNode::GND, n1SP});
-	auto systemSP = SystemTopology(60,
+	auto systemSP = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1SP, n2SP},
 			SystemComponentList{genSP, lineSP, extnetSP, fault});
 
@@ -166,40 +151,37 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 
 int main(int argc, char* argv[]) {	
 
+	// Simulation parameters
+	Real SwitchClosed = GridParams.SwitchClosed;
+	Real SwitchOpen = GridParams.SwitchOpen;
+	Real startTimeFault = 1.0;
+	Real endTimeFault   = 1.1;
+	Real timeStep = 1e-6;
+	Real H = syngenKundur.H;
+	Real finalTime = 20;
+
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
-	//Real SwitchClosed = 1e-3 * (24*24/555);
-	Real SwitchClosed = 1e3;
-	Real startTimeFault = 3.0;
-	Real endTimeFault   = 3.1;
-	Real timeStep = 1e-6;
-	std::string rfault_str = "";
-	std::string faultLength_str = "";
 	std::string stepSize_str = "";
+	std::string inertia_str = "";
 	if (argc > 1) {
-		if (args.options.find("StepSize") != args.options.end()){
+		if (args.options.find("StepSize") != args.options.end()) {
 			timeStep = args.options["StepSize"];
 			stepSize_str = "_StepSize_" + std::to_string(timeStep);
 		}
-		if (args.options.find("RSwitchClosed") != args.options.end()){
-			SwitchClosed = args.options["RSwitchClosed"];
-			rfault_str = "_RFault_" + std::to_string(SwitchClosed);
-		}
-		if (args.options.find("FaultLength") != args.options.end()){
-			Real faultLength = args.options["FaultLength"];
-			endTimeFault = startTimeFault + faultLength * 1e-3;
-			faultLength_str = "_FaultLength_" + std::to_string(faultLength);
+		if (args.options.find("Inertia") != args.options.end())  {
+			H = args.options["Inertia"];
+			inertia_str = "_Inertia_" + std::to_string(H);
 		}
 	}
 
-	//Simultion parameters
-	//Real H = 1.85;
-	Real H = 3.7;
-	//Real logDownSampling = (100e-6) / timeStep;
-	Real logDownSampling = 1.0;
-	Real finalTime = 40;
+	Real logDownSampling;
+	if (timeStep<100e-6)
+		logDownSampling = floor((100e-6) / timeStep);
+	else
+		logDownSampling = 1.0;
 	Logger::Level logLevel = Logger::Level::off;
-	std::string simName = "SP_SynGen4OrderDQ_SMIB_Fault" + rfault_str + stepSize_str + faultLength_str;
-	SP_1ph_SynGenTrStab_Fault(simName, timeStep, finalTime, H,
-		startTimeFault, endTimeFault, logDownSampling, SwitchClosed, logLevel);
+	std::string simName = "SP_SynGen4OrderDCIM_SMIB_Fault" + stepSize_str + inertia_str;
+	SP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
+			logDownSampling, SwitchOpen, SwitchClosed, logLevel);
 }

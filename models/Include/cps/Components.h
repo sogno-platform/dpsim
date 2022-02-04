@@ -31,7 +31,7 @@
 #include <cps/SP/SP_Ph1_SynchronGenerator4OrderVBR.h>
 #include <cps/SP/SP_Ph1_SynchronGenerator6aOrderVBR.h>
 #include <cps/SP/SP_Ph1_SynchronGenerator6bOrderVBR.h>
-#include <cps/SP/SP_Ph1_SynchronGenerator4OrderDQ.h>
+#include <cps/SP/SP_Ph1_SynchronGenerator4OrderDCIM.h>
 #include <cps/SP/SP_Ph1_varResSwitch.h>
 
 #include <cps/SP/SP_Ph3_Capacitor.h>

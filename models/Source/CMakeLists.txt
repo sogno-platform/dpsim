@@ -111,7 +111,7 @@ list(APPEND CPS_SOURCES
 	SP/SP_Ph1_SynchronGenerator4OrderVBR.cpp
 	SP/SP_Ph1_SynchronGenerator6aOrderVBR.cpp
 	SP/SP_Ph1_SynchronGenerator6bOrderVBR.cpp
-	SP/SP_Ph1_SynchronGenerator4OrderDQ.cpp
+	SP/SP_Ph1_SynchronGenerator4OrderDCIM.cpp
 	SP/SP_Ph1_PQNode.cpp
 	SP/SP_Ph1_PVNode.cpp
 	SP/SP_Ph1_VDNode.cpp

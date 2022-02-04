@@ -5,27 +5,11 @@ using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
-// ----- PARAMETRIZATION -----
-// General grid parameters
-Real nomPower = 555e6;
-Real VnomMV = 24e3;
-Real VnomHV = 230e3;
-Real nomFreq = 60;
-Real ratio = VnomMV/VnomHV;
-Real nomOmega= nomFreq * 2 * PI;
+// Grid parameters
+Examples::Grids::SMIB::ScenarioConfig4 GridParams;
 
-// Generator
+// Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
-Real setPointActivePower=300e6;
-Real setPointVoltage=1.05*VnomMV;
-
-// HV line parameters referred to MV side
-Examples::Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
-Real lineLength = 100;
-Real lineResistance = lineCIGREHV.lineResistancePerKm * lineLength*std::pow(ratio,2);
-Real lineInductance = lineCIGREHV.lineReactancePerKm * lineLength*std::pow(ratio,2) / nomOmega;
-Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength/std::pow(ratio,2) / nomOmega;
-Real lineConductance = 8e-2;
 
 void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
@@ -41,26 +25,28 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
-	genPF->setParameters(nomPower, VnomMV, setPointActivePower, setPointVoltage, PowerflowBusType::PV);
-    genPF->setBaseVoltage(VnomMV);
+	genPF->setParameters(syngenKundur.nomPower, GridParams.VnomMV, GridParams.setPointActivePower, 
+						 GridParams.setPointVoltage, PowerflowBusType::PV);
+    genPF->setBaseVoltage(GridParams.VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
 
 	// Grid bus as Slack
 	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetPF->setParameters(VnomMV);
-	extnetPF->setBaseVoltage(VnomMV);
+	extnetPF->setParameters(GridParams.VnomMV);
+	extnetPF->setBaseVoltage(GridParams.VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 	
 	// Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
-	linePF->setBaseVoltage(VnomMV);
+	linePF->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+						  GridParams.lineCapacitance, GridParams.lineConductance);
+	linePF->setBaseVoltage(GridParams.VnomMV);
 
 	// Topology
 	genPF->connect({ n1PF });
 	linePF->connect({ n1PF, n2PF });
 	extnetPF->connect({ n2PF });
-	auto systemPF = SystemTopology(60,
+	auto systemPF = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1PF, n2PF},
 			SystemComponentList{genPF, linePF, extnetPF});
 
@@ -127,10 +113,10 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	
     // Line
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", logLevel);
-	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(lineInductance), 
-					      Math::singlePhaseParameterToThreePhase(lineCapacitance),
-						  Math::singlePhaseParameterToThreePhase(lineConductance));
+	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(GridParams.lineResistance), 
+	                      Math::singlePhaseParameterToThreePhase(GridParams.lineInductance), 
+					      Math::singlePhaseParameterToThreePhase(GridParams.lineCapacitance),
+						  Math::singlePhaseParameterToThreePhase(GridParams.lineConductance));
 
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", logLevel);
@@ -146,19 +132,19 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	SystemTopology systemEMT;
 	if (SGModel==3)
-		systemEMT = SystemTopology(60,
+		systemEMT = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1EMT, n2EMT},
 			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator3OrderVBR>(genEMT), lineEMT, fault, extnetEMT});
 	else if (SGModel==4)
-		systemEMT = SystemTopology(60,
+		systemEMT = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1EMT, n2EMT},
 			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator4OrderVBR>(genEMT), lineEMT, fault, extnetEMT});
 	else if (SGModel==6)
-		systemEMT = SystemTopology(60,
+		systemEMT = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1EMT, n2EMT},
 			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6aOrderVBR>(genEMT), lineEMT, fault, extnetEMT});
 	else if (SGModel==7)
-		systemEMT = SystemTopology(60,
+		systemEMT = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1EMT, n2EMT},
 			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6bOrderVBR>(genEMT), lineEMT, fault, extnetEMT});
 			
@@ -197,14 +183,14 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 int main(int argc, char* argv[]) {	
 
 	//Simultion parameters
-	Real SwitchClosed = 0.1;
-	Real SwitchOpen = 1e6;
+	Real SwitchClosed = GridParams.SwitchClosed;
+	Real SwitchOpen = GridParams.SwitchOpen;
 	Real startTimeFault = 30.0;
 	Real endTimeFault   = 30.1;
 	Real finalTime = 40;
 	Real timeStep = 100e-6;
 	int SGModel = 4;
-	Real H = 3.7;
+	Real H = syngenKundur.H;
 	std::string SGModel_str = "4Order";
 	std::string stepSize_str = "";
 	std::string inertia_str = "";

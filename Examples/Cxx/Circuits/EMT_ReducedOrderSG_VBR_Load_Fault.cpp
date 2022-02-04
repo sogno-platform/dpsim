@@ -5,21 +5,11 @@ using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
-// ----- PARAMETRIZATION -----
-// General grid parameters
-Real nomFreq = 60;
-Real nomOmega= nomFreq * 2 * PI;
-Real nomPower = 555e6;
-Real nomPhPhVoltRMS = 24e3;
-Real initVoltAngle = -PI / 2;
-Complex initTerminalVolt = nomPhPhVoltRMS * Complex(cos(initVoltAngle), sin(initVoltAngle));
+// Grid parameters
+Examples::Grids::SMIB::ScenarioConfig3 GridParams;
 
-//-----------Generator-----------//
+// Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
-Real setPointActivePower=300e6;
-Real mechPower = 300e6;
-Real initActivePower = 300e6;
-Real initReactivePower = 0;
 
 
 void EMT_3ph_SynGen_Load(String simName, Real timeStep, Real finalTime, Real H,
@@ -31,9 +21,9 @@ void EMT_3ph_SynGen_Load(String simName, Real timeStep, Real finalTime, Real H,
 	Logger::setLogDir("logs/"+simNameEMT);
 	
 	// Nodes
-	std::vector<Complex> initialVoltage_n1{ initTerminalVolt, 
-											initTerminalVolt * SHIFT_TO_PHASE_B,
-											initTerminalVolt * SHIFT_TO_PHASE_C
+	std::vector<Complex> initialVoltage_n1{ GridParams.initTerminalVolt, 
+											GridParams.initTerminalVolt * SHIFT_TO_PHASE_B,
+											GridParams.initTerminalVolt * SHIFT_TO_PHASE_C
 										  };
 	auto n1EMT = SimNode<Real>::make("n1EMT", PhaseType::ABC, initialVoltage_n1);
 
@@ -54,13 +44,13 @@ void EMT_3ph_SynGen_Load(String simName, Real timeStep, Real finalTime, Real H,
 	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-    Complex initComplexElectricalPower = Complex(initActivePower, initReactivePower);
-    genEMT->setInitialValues(initComplexElectricalPower, mechPower, initTerminalVolt);
+    genEMT->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower, 
+							 GridParams.initTerminalVolt);
 
 	auto load = CPS::EMT::Ph3::RXLoad::make("Load", logLevel);
-	load->setParameters(Math::singlePhaseParameterToThreePhase(initActivePower/3), 
-						Math::singlePhaseParameterToThreePhase(initReactivePower/3),
-						nomPhPhVoltRMS);
+	load->setParameters(Math::singlePhaseParameterToThreePhase(GridParams.initActivePower/3), 
+						Math::singlePhaseParameterToThreePhase(GridParams.initReactivePower/3),
+						GridParams.VnomMV);
 
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", logLevel);
@@ -75,19 +65,19 @@ void EMT_3ph_SynGen_Load(String simName, Real timeStep, Real finalTime, Real H,
 
 	SystemTopology systemEMT;
 	if (SGModel==3)
-		systemEMT = SystemTopology(60,
+		systemEMT = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1EMT},
 			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator3OrderVBR>(genEMT), load, fault});
 	else if (SGModel==4)
-		systemEMT = SystemTopology(60,
+		systemEMT = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1EMT},
 			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator4OrderVBR>(genEMT), load, fault});
 	else if (SGModel==6)
-		systemEMT = SystemTopology(60,
+		systemEMT = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1EMT},
 			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6aOrderVBR>(genEMT), load, fault});
 	else if (SGModel==7)
-		systemEMT = SystemTopology(60,
+		systemEMT = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1EMT},
 			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6bOrderVBR>(genEMT), load, fault});
 
@@ -126,14 +116,14 @@ void EMT_3ph_SynGen_Load(String simName, Real timeStep, Real finalTime, Real H,
 int main(int argc, char* argv[]) {	
 
 	// Simultion parameters
-	Real SwitchClosed = 0.1;
-	Real SwitchOpen = 1e6;
+	Real SwitchClosed = GridParams.SwitchClosed;
+	Real SwitchOpen = GridParams.SwitchOpen;
 	Real startTimeFault = 1.0;
 	Real endTimeFault   = 1.1;
 	Real finalTime = 5;
 	Real timeStep = 1e-3;
 	int SGModel = 4;
-	Real H = 3.7;
+	Real H = syngenKundur.H;
 	std::string SGModel_str = "4Order";
 	std::string stepSize_str = "";
 	std::string inertia_str = "";
