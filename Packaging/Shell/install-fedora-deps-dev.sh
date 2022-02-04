@@ -1,3 +1,5 @@
+# Note: Make sure to execute the shell script from the root of the dpsim directory
+
 VILLAS_VERSION=0.8.0
 CIM_VERSION=CGMES_2.4.15_16FEB2016
 
@@ -29,11 +31,12 @@ dnf --refresh -y install \
 
 # Sundials
 cd /tmp && \
-git clone --recursive https://github.com/LLNL/sundials.git && \
-mkdir -p sundials/build && cd sundials/build && \
-git checkout v3.2.1 && \
-cmake -DCMAKE_BUILD_TYPE=Release ..  && \
-make -j$(nproc) install
+	git clone --recursive https://github.com/LLNL/sundials.git && \
+	mkdir -p sundials/build && cd sundials/build && \
+	git checkout v3.2.1 && \
+	cmake -DCMAKE_BUILD_TYPE=Release ..  && \
+	make -j$(nproc) install
+	rm -rf /tmp/sundials
 
 # Install some debuginfos
 dnf -y debuginfo-install \
@@ -69,7 +72,7 @@ cd /tmp && \
 cd /tmp && \
 	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
 	mkdir -p villasnode/build && cd villasnode/build && \
-	git -c submodule.fpga.update=none checkout dpsim-villas && git -c submodule.fpga.update=none submodule update --recursive && \
+	git -c submodule.fpga.update=none checkout a98ab9f1726476fdaa8966da63744794b691bf54 && git -c submodule.fpga.update=none submodule update --recursive && \
 	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
 	rm -rf /tmp/villasnode
 
