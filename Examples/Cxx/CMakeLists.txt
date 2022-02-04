@@ -66,6 +66,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
 	Circuits/EMT_SynGenVBR_OperationalParams_SMIB_Fault.cpp
+	Circuits/EMT_SynGenVBR_SMIB_Fault.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
@@ -150,10 +151,6 @@ if(WITH_CIM)
 		CIM/EMT_CIGRE_MV_withoutDG.cpp
 		CIM/EMT_CIGRE_MV_withDG.cpp
 		CIM/EMT_CIGRE_MV_withDG_withLoadStep.cpp
-
-		# SMIB example 
-		# TODO: does not read CIM files, but currently requires CIM reader
-		Circuits/EMT_SynGenVBR_SMIB_Fault.cpp
 	)
 
 	if(WITH_RT)
