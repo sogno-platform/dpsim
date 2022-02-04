@@ -302,6 +302,13 @@ void Base::SynchronGenerator::initPerUnitStates() {
 	}
 
 	mElecTorque = (mPsisr(3,0)*mIsr(0,0) - mPsisr(0,0)*mIsr(3,0));
+
+	// Initialize controllers
+	if (mHasExciter){
+		// Note: field voltage scaled by Lmd/Rfd to transform from synchronous generator pu system
+		// to the exciter pu system
+		mExciter->initialize(init_vt_abs, (mLmd / mRfd)*init_vfd);
+	}
 }
 
 void Base::SynchronGenerator::calcStateSpaceMatrixDQ() {
@@ -384,7 +391,6 @@ void Base::SynchronGenerator::addExciter(Real Ta, Real Ka, Real Te, Real Ke,
 	Real Tf, Real Kf, Real Tr) {
 	mExciter = Signal::Exciter::make("Exciter", CPS::Logger::Level::info);
 	mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
-	mExciter->initialize(1, 1);
 	mHasExciter = true;
 }
 

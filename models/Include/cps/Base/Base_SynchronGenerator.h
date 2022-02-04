@@ -255,10 +255,6 @@ namespace Base {
 		Bool mHasTurbineGovernor = false;
 		/// Determines if Exciter is activated
 		Bool mHasExciter = false;
-		/// Signal component modelling governor control and steam turbine
-		std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
-		/// Signal component modelling voltage regulator and exciter
-		std::shared_ptr<Signal::Exciter> mExciter;
 
 		// Deprecated
 		Real mInitTerminalVoltage = 0;
@@ -328,6 +324,11 @@ namespace Base {
 
 		/// Switch to determine the integration method for the machine model.
 		void setNumericalMethod(NumericalMethod method) { mNumericalMethod = method; }
+
+		/// Signal component modelling governor control and steam turbine
+		std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
+		/// Signal component modelling voltage regulator and exciter
+		std::shared_ptr<Signal::Exciter> mExciter;
 	};
 }
 }

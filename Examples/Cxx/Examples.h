@@ -55,14 +55,14 @@ namespace SynchronousGeneratorKundur {
         Real Ld = 1.8099;
         Real Lq = 1.7600;
 
-        // Turbine model parameters (tandem compound single reheat turbine)
+        // Turbine model parameters (tandem compound single reheat steam turbine, fossil-fuelled)
         // from P. Kundur, "Power System Stability and Control", 1994, p. 427
-        Real Ta_t = 0.3;    // fossil-fuelled or nuclear
-        Real Fa = 0.3;      // fossil-fuelled or nuclear
-        Real Tb = 7.0;      // fossil-fuelled
-        Real Fb = 0.3;      // fossil-fuelled
-        Real Tc = 0.2;      // nuclear
-        Real Fc = 0.4;      // fossil-fuelled
+        Real Ta_t = 0.3;    // T_CH
+        Real Fa = 0.3;      // F_HP
+        Real Tb = 7.0;      // T_RH
+        Real Fb = 0.3;      // F_IP
+        Real Tc = 0.5;      // T_CO
+        Real Fc = 0.4;      // F_LP
 
         // Governor parameters (mechanical-hydraulic control)
         // from P. Kundur, "Power System Stability and Control", 1994, p. 437
@@ -70,14 +70,18 @@ namespace SynchronousGeneratorKundur {
         Real Tsr = 0.1;
         Real Tsm = 0.3;
 
-        // Exciter parameters (IEEE Type DC1A)
-        // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p. 125
+        // Excitation system parameters (IEEE Type DC1A)
+        // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
+        // voltage-regulator
         Real Ka = 46;
         Real Ta = 0.06;
+        // exciter
         Real Ke = -0.0435;
         Real Te = 0.46;
+        // stabilizing feedback
         Real Kf = 0.1;
         Real Tf = 1;
+        // voltage transducer
         Real Tr = 0.02;
     };
 }

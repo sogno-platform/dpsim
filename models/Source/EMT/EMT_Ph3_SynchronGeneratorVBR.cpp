@@ -354,8 +354,12 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaPostStep(Real time, Int timeStepCount, A
 	mVd = parkTransform(mThetaMech, mVa, mVb, mVc)(1);
 	mV0 = parkTransform(mThetaMech, mVa, mVb, mVc)(2);
 
-	if (mHasExciter)
+	if (mHasExciter){
+		// Get exciter output voltage
+		// Note: scaled by Rfd/Lmd to transform from exciter pu system
+		// to the synchronous generator pu system
 		mVfd = (mRfd / mLmd)*mExciter->step(mVd, mVq, 1.0, mTimeStep);
+	}
 
 	mIabc = R_eq_vbr.inverse()*(mVabc - E_eq_vbr);
 
