@@ -6,12 +6,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Base/Base_SimpSynchronousGenerator.h>
+#include <cps/Base/Base_ReducedOrderSynchronGenerator.h>
 
 using namespace CPS;
 
 template <>
-Base::SimpSynchronousGenerator<Real>::SimpSynchronousGenerator(
+Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	
@@ -31,7 +31,7 @@ Base::SimpSynchronousGenerator<Real>::SimpSynchronousGenerator(
 }
 
 template <>
-Base::SimpSynchronousGenerator<Complex>::SimpSynchronousGenerator(
+Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	
@@ -51,7 +51,7 @@ Base::SimpSynchronousGenerator<Complex>::SimpSynchronousGenerator(
 }
 
 template <typename VarType>
-void Base::SimpSynchronousGenerator<VarType>::setBaseParameters(
+void Base::ReducedOrderSynchronGenerator<VarType>::setBaseParameters(
 	Real nomPower, Real nomVolt, Real nomFreq) {
 
 	/// used p.u. system: Lad-Base reciprocal per unit system (Kundur, p. 84-88)
@@ -74,7 +74,7 @@ void Base::SimpSynchronousGenerator<VarType>::setBaseParameters(
 }
 
 template <typename VarType>
-void Base::SimpSynchronousGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower, 
+void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower, 
 	Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 	Real Ld_t, Real Td0_t) {
 
@@ -89,7 +89,7 @@ void Base::SimpSynchronousGenerator<VarType>::setOperationalParametersPerUnit(Re
 }
 
 template <typename VarType>
-void Base::SimpSynchronousGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower, 
+void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower, 
 	Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 	Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t) {
 
@@ -106,7 +106,7 @@ void Base::SimpSynchronousGenerator<VarType>::setOperationalParametersPerUnit(Re
 }
 
 template <typename VarType>
-void Base::SimpSynchronousGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower, 
+void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower, 
 	Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 	Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t,
 	Real Ld_s, Real Lq_s, Real Td0_s, Real Tq0_s,
@@ -130,7 +130,7 @@ void Base::SimpSynchronousGenerator<VarType>::setOperationalParametersPerUnit(Re
 }
 
 template <typename VarType>
-void Base::SimpSynchronousGenerator<VarType>::setInitialValues(
+void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 	Complex initComplexElectricalPower, Real initMechanicalPower, Complex initTerminalVoltage) {
 	
 	mInitElecPower = initComplexElectricalPower;
@@ -149,7 +149,7 @@ void Base::SimpSynchronousGenerator<VarType>::setInitialValues(
 }
 
 template <>
-void Base::SimpSynchronousGenerator<Real>::initializeFromNodesAndTerminals(Real frequency) {
+void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(Real frequency) {
 
 	this->updateMatrixNodeIndices();
 
@@ -212,7 +212,7 @@ void Base::SimpSynchronousGenerator<Real>::initializeFromNodesAndTerminals(Real 
 }
 
 template <>
-void Base::SimpSynchronousGenerator<Complex>::initializeFromNodesAndTerminals(Real frequency) {
+void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTerminals(Real frequency) {
 
 	this->updateMatrixNodeIndices();
 
@@ -275,7 +275,7 @@ void Base::SimpSynchronousGenerator<Complex>::initializeFromNodesAndTerminals(Re
 }
 
 template <typename VarType>
-void Base::SimpSynchronousGenerator<VarType>::mnaInitialize(Real omega, 
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega, 
 		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
 	MNAInterface::mnaInitialize(omega, timeStep);
@@ -289,7 +289,7 @@ void Base::SimpSynchronousGenerator<VarType>::mnaInitialize(Real omega,
 }
 
 template <typename VarType>
-void Base::SimpSynchronousGenerator<VarType>::MnaPreStep::execute(Real time, Int timeStepCount) {
+void Base::ReducedOrderSynchronGenerator<VarType>::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mSynGen.mSimTime = time;
 	mSynGen.stepInPerUnit(); //former system solve (trapezoidal)
 	mSynGen.mRightVector.setZero();
@@ -297,10 +297,10 @@ void Base::SimpSynchronousGenerator<VarType>::MnaPreStep::execute(Real time, Int
 }
 
 template <typename VarType>
-void Base::SimpSynchronousGenerator<VarType>::MnaPostStep::execute(Real time, Int timeStepCount) {
+void Base::ReducedOrderSynchronGenerator<VarType>::MnaPostStep::execute(Real time, Int timeStepCount) {
 	mSynGen.mnaPostStep(*mLeftVector);
 }
 
 // Declare specializations to move definitions to .cpp
-template class CPS::Base::SimpSynchronousGenerator<Real>;
-template class CPS::Base::SimpSynchronousGenerator<Complex>;
+template class CPS::Base::ReducedOrderSynchronGenerator<Real>;
+template class CPS::Base::ReducedOrderSynchronGenerator<Complex>;

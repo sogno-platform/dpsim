@@ -12,7 +12,7 @@ using namespace CPS;
 
 SP::Ph1::SynchronGeneratorVBR::SynchronGeneratorVBR
     (String uid, String name, Logger::Level logLevel)
-	: Base::SimpSynchronousGenerator<Complex>(uid, name, logLevel){
+	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel){
 
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);

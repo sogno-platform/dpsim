@@ -15,7 +15,7 @@ using namespace CPS;
 
 SP::Ph1::SynchronGenerator4OrderDQ::SynchronGenerator4OrderDQ
     (String uid, String name, Logger::Level logLevel)
-	: Base::SimpSynchronousGenerator<Complex>(uid, name, logLevel) {
+	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel) {
 
 	setTerminalNumber(1);
 

@@ -93,8 +93,8 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	Real initMechPower = initActivePower;
 
 	// Nodes
-	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0), 0.0, 0.0};
-	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0), 0.0, 0.0};
+	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0)};
+	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0)};
 	auto n1SP = SimNode<Complex>::make("n1SP", PhaseType::Single, initialVoltage_n1);
 	auto n2SP = SimNode<Complex>::make("n2SP", PhaseType::Single, initialVoltage_n2);
 

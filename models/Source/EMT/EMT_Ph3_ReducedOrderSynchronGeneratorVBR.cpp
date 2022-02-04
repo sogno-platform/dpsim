@@ -6,13 +6,13 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/EMT/EMT_Ph3_SimpSynchronGeneratorVBR.h>
+#include <cps/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
 
 using namespace CPS;
 
-EMT::Ph3::SimpSynchronGeneratorVBR::SimpSynchronGeneratorVBR
+EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
     (String uid, String name, Logger::Level logLevel)
-	: Base::SimpSynchronousGenerator<Real>(uid, name, logLevel){
+	: Base::ReducedOrderSynchronGenerator<Real>(uid, name, logLevel){
 	
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(2);
@@ -27,21 +27,21 @@ EMT::Ph3::SimpSynchronGeneratorVBR::SimpSynchronGeneratorVBR
     addAttribute<Matrix>("Evbr",  &mEvbr, Flags::read);
 }
 
-EMT::Ph3::SimpSynchronGeneratorVBR::SimpSynchronGeneratorVBR
+EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
 	(String name, Logger::Level logLevel)
-	: SimpSynchronGeneratorVBR(name, name, logLevel) {
+	: ReducedOrderSynchronGeneratorVBR(name, name, logLevel) {
 }
 
-EMT::Ph3::SimpSynchronGeneratorVBR::~SimpSynchronGeneratorVBR() {
+EMT::Ph3::ReducedOrderSynchronGeneratorVBR::~ReducedOrderSynchronGeneratorVBR() {
 }
 
-void EMT::Ph3::SimpSynchronGeneratorVBR::calculateResistanceMatrix() {
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
 	Matrix resistanceMatrix =  mDq0ToAbc * mResistanceMatrixDq0 * mAbcToDq0;
 	resistanceMatrix = resistanceMatrix * mBase_Z;
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
-void EMT::Ph3::SimpSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	// Stamp voltage source
 	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), -1);
@@ -97,13 +97,13 @@ void EMT::Ph3::SimpSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& syste
 	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), -mConductanceMatrix(2, 2));
 }
 
-void EMT::Ph3::SimpSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), mEvbr(0, 0));
 	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), mEvbr(1, 0));
 	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), mEvbr(2, 0));
 }
 
-void EMT::Ph3::SimpSynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
 	// update armature voltage
 	mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
@@ -117,7 +117,7 @@ void EMT::Ph3::SimpSynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
 	mIdq0 =  mAbcToDq0 * mIntfCurrent / mBase_I;
 }
 
-Matrix EMT::Ph3::SimpSynchronGeneratorVBR::get_parkTransformMatrix() {
+Matrix EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_parkTransformMatrix() {
 	Matrix abcToDq0(3, 3);
 
 	abcToDq0 <<
@@ -128,7 +128,7 @@ Matrix EMT::Ph3::SimpSynchronGeneratorVBR::get_parkTransformMatrix() {
 	return abcToDq0;
 }
 
-Matrix EMT::Ph3::SimpSynchronGeneratorVBR::get_inverseParkTransformMatrix() {
+Matrix EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_inverseParkTransformMatrix() {
 	Matrix dq0ToAbc(3, 3);
 
 	dq0ToAbc <<

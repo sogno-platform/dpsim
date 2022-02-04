@@ -15,13 +15,13 @@ namespace CPS {
 namespace Base {
 
 	template <typename VarType>
-	class SimpSynchronousGenerator : 
+	class ReducedOrderSynchronGenerator : 
 		public SimPowerComp<VarType>,
 		public MNAInterface {
 
 		protected:
 			///
-			SimpSynchronousGenerator(String uid, String name, Logger::Level logLevel);
+			ReducedOrderSynchronGenerator(String uid, String name, Logger::Level logLevel);
 			///
 			void initializeFromNodesAndTerminals(Real frequency);
 			/// Function to initialize the specific variables of each SG model
@@ -152,7 +152,7 @@ namespace Base {
 
 		public:
 			/// Destructor - does nothing.
-			virtual ~SimpSynchronousGenerator() { }
+			virtual ~ReducedOrderSynchronGenerator() { }
 
 			/// 
 			void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
@@ -180,7 +180,7 @@ namespace Base {
 			/// ### Mna Section ###
 			class MnaPreStep : public Task {
 				public:
-					MnaPreStep(SimpSynchronousGenerator<VarType>& synGen)
+					MnaPreStep(ReducedOrderSynchronGenerator<VarType>& synGen)
 					: Task(synGen.mName + ".MnaPreStep"), mSynGen(synGen) {
 				    	mModifiedAttributes.push_back(synGen.attribute("right_vector"));
 				    	mPrevStepDependencies.push_back(synGen.attribute("v_intf"));
@@ -188,12 +188,12 @@ namespace Base {
 				void execute(Real time, Int timeStepCount);
 
 				private:
-				SimpSynchronousGenerator<VarType>& mSynGen;
+				ReducedOrderSynchronGenerator<VarType>& mSynGen;
 			};
 
 			class MnaPostStep : public Task {
 			public:
-				MnaPostStep(SimpSynchronousGenerator<VarType>& synGen, Attribute<Matrix>::Ptr leftSideVector) :
+				MnaPostStep(ReducedOrderSynchronGenerator<VarType>& synGen, Attribute<Matrix>::Ptr leftSideVector) :
 					Task(synGen.mName + ".MnaPostStep"), 
 					mSynGen(synGen), mLeftVector(leftSideVector) {
 					mAttributeDependencies.push_back(mLeftVector);
@@ -201,7 +201,7 @@ namespace Base {
 				}
 				void execute(Real time, Int timeStepCount);
 			private:
-				SimpSynchronousGenerator<VarType>& mSynGen;
+				ReducedOrderSynchronGenerator<VarType>& mSynGen;
 				Attribute<Matrix>::Ptr mLeftVector;
 			};
 	};

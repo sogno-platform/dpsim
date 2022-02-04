@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <cps/Base/Base_SimpSynchronousGenerator.h>
+#include <cps/Base/Base_ReducedOrderSynchronGenerator.h>
 
 namespace CPS {
 namespace SP {
@@ -17,7 +17,7 @@ namespace Ph1 {
 	///
 	/// This model is based on Eremia section 2.1.6.
 	class SynchronGenerator4OrderDQ :
-		public Base::SimpSynchronousGenerator<Complex>,
+		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public SharedFactory<SynchronGenerator4OrderDQ> {
 	protected:
 		// ### State variables [p.u.]###

@@ -105,7 +105,7 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
 
 	// Synchronous generator
-	std::shared_ptr<EMT::Ph3::SimpSynchronGeneratorVBR> genEMT = nullptr;
+	std::shared_ptr<EMT::Ph3::ReducedOrderSynchronGeneratorVBR> genEMT = nullptr;
 	if (SGModel==3)
 		genEMT = EMT::Ph3::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
 	else if (SGModel==4)

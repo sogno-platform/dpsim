@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <cps/EMT/EMT_Ph3_SimpSynchronGeneratorVBR.h>
+#include <cps/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
 
 namespace CPS {
 namespace EMT {
@@ -17,7 +17,7 @@ namespace Ph3 {
 	///
 	/// Anderson - Fouad's model (Milano, Power System modelling and scripting, chapter 15)
 	class SynchronGenerator6bOrderVBR :
-		public SimpSynchronGeneratorVBR,
+		public ReducedOrderSynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator6bOrderVBR> {
 	protected:
 		// ### Model specific elements ###

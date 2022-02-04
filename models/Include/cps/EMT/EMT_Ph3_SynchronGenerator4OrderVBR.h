@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include <cps/EMT/EMT_Ph3_SimpSynchronGeneratorVBR.h>
+#include <cps/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
 	class SynchronGenerator4OrderVBR :
-		public SimpSynchronGeneratorVBR,
+		public ReducedOrderSynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator4OrderVBR> {
 	protected:
 		// ### Model specific elements ###

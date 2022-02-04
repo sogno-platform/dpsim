@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <cps/Base/Base_SimpSynchronousGenerator.h>
+#include <cps/Base/Base_ReducedOrderSynchronGenerator.h>
 #include <cps/Solver/MNAVariableCompInterface.h>
 
 namespace CPS {
@@ -16,7 +16,7 @@ namespace DP {
 namespace Ph1 {
 	/// @brief Base class for DP VBR synchronous generator model single phase
 	class SynchronGeneratorVBR :
-		public Base::SimpSynchronousGenerator<Complex>,
+		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public MNAVariableCompInterface {
 	protected:
         // Common elements of all VBR models

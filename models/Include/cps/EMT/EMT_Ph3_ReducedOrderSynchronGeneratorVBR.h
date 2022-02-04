@@ -8,15 +8,15 @@
 
 #pragma once
 
-#include <cps/Base/Base_SimpSynchronousGenerator.h>
+#include <cps/Base/Base_ReducedOrderSynchronGenerator.h>
 #include <cps/Solver/MNAVariableCompInterface.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
 	/// @brief Base class for EMT VBR simplefied synchronous generator models
-	class SimpSynchronGeneratorVBR :
-		public Base::SimpSynchronousGenerator<Real>,
+	class ReducedOrderSynchronGeneratorVBR :
+		public Base::ReducedOrderSynchronGenerator<Real>,
 		public MNAVariableCompInterface {
 	protected:
         // Common elements of all VBR models
@@ -32,8 +32,8 @@ namespace Ph3 {
 		Matrix mDq0ToAbc;
 
         /// Constructor 
-        SimpSynchronGeneratorVBR(String uid, String name, Logger::Level logLevel);
-        SimpSynchronGeneratorVBR(String name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(String uid, String name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(String name, Logger::Level logLevel);
       
 	  	// #### General Functions ####
         /// Specific component initialization
@@ -53,7 +53,7 @@ namespace Ph3 {
 		void mnaPostStep(const Matrix& leftVector);
 
     public:
-        virtual ~SimpSynchronGeneratorVBR();
+        virtual ~ReducedOrderSynchronGeneratorVBR();
     
         /// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override { return 1; };

@@ -11,7 +11,7 @@ add_library(cps STATIC
 )
 
 list(APPEND CPS_SOURCES
-	Base/Base_SimpSynchronousGenerator.cpp
+	Base/Base_ReducedOrderSynchronGenerator.cpp
 	Base/Base_SynchronGenerator.cpp
 	Base/Base_AvVoltageSourceInverterDQ.cpp
 	Base/Base_AvVoltageSourceInverterDQWithStateSpace.cpp
@@ -78,7 +78,7 @@ list(APPEND CPS_SOURCES
 	EMT/EMT_Ph3_NetworkInjection.cpp
 	EMT/EMT_Ph3_Transformer.cpp
 	EMT/EMT_Ph3_Switch.cpp
-	EMT/EMT_Ph3_SimpSynchronGeneratorVBR.cpp
+	EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator3OrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator4OrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.cpp

@@ -95,7 +95,7 @@
 #include <cps/EMT/EMT_Ph3_CurrentSource.h>
 #include <cps/EMT/EMT_Ph3_VoltageSource.h>
 #include <cps/EMT/EMT_Ph3_VoltageSourceNorton.h>
-#include <cps/EMT/EMT_Ph3_SimpSynchronGeneratorVBR.h>
+#include <cps/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
 #include <cps/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h>
 #include <cps/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.h>
 #include <cps/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h>

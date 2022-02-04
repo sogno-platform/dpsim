@@ -12,7 +12,7 @@ using namespace CPS;
 
 EMT::Ph3::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
     (String uid, String name, Logger::Level logLevel)
-	: SimpSynchronGeneratorVBR(uid, name, logLevel) {
+	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel) {
 
 	// model specific variables
 	mEdq0_t = Matrix::Zero(3,1);
