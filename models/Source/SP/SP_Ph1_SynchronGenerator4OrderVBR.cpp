@@ -71,6 +71,7 @@ void SP::Ph1::SynchronGenerator4OrderVBR::calculateAuxiliarConstants() {
 }
 
 void SP::Ph1::SynchronGenerator4OrderVBR::stepInPerUnit() {
+	
 	if (mSimTime>0.0) {
 		// calculate Edq_t at t=k
 		mEdq_t(0,0) = -mIdq(1,0) * mLq_t + mVdq(0,0);

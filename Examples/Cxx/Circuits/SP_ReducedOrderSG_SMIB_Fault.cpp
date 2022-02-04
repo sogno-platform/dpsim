@@ -71,7 +71,7 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	loggerPF->addAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
-	Simulation simPF(simNamePF, Logger::Level::debug);
+	Simulation simPF(simNamePF, logLevel);
 	simPF.setSystem(systemPF);
 	simPF.setTimeStep(0.1);
 	simPF.setFinalTime(0.1);
@@ -106,6 +106,8 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 		genSP = SP::Ph1::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
 	else if (SGModel==6)
 		genSP = SP::Ph1::SynchronGenerator6aOrderVBR::make("SynGen", logLevel);
+	else if (SGModel==7)
+		genSP = SP::Ph1::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
 	genSP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
@@ -149,6 +151,11 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 			SystemNodeList{n1SP, n2SP},
 			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator6aOrderVBR>(genSP), 
 								lineSP, extnetSP, fault});
+	else if (SGModel==7)
+		systemSP = SystemTopology(60,
+			SystemNodeList{n1SP, n2SP},
+			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator6bOrderVBR>(genSP), 
+								lineSP, extnetSP, fault});
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
@@ -162,7 +169,7 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	loggerSP->addAttribute("Vdq0", 		 genSP->attribute("Vdq0"));
 	loggerSP->addAttribute("Idq0", 		 genSP->attribute("Idq0"));
 	//loggerSP->addAttribute("Evbr", 		 genSP->attribute("Evbr"));
-	if (SGModel==6) {
+	if (SGModel==6 || SGModel==7) {
 		loggerSP->addAttribute("Edq0_s", 		 genSP->attribute("Edq_s"));
 		loggerSP->addAttribute("Edq0_t", 		 genSP->attribute("Edq_t"));
 	} else {
@@ -191,11 +198,12 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 int main(int argc, char* argv[]) {	
 
-	CommandLineArgs args(argc, argv);
+	// Simulation parameters
 	Real SwitchClosed = 1e-3 * (24*24/555);
 	Real SwitchOpen = 1e6;
 	Real startTimeFault = 1.0;
 	Real endTimeFault   = 1.1;
+	Real finalTime = 20;
 	Real timeStep = 1e-3;
 	Real H = 3.7;
 	int SGModel = 4;
@@ -204,19 +212,24 @@ int main(int argc, char* argv[]) {
 	std::string inertia_str = "";
 
 	// Command line args processing
+	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		if (args.options.find("StepSize") != args.options.end()) {
 			timeStep = args.options["StepSize"];
 			stepSize_str = "_StepSize_" + std::to_string(timeStep);
 		}
-		if (args.options.find("SGOrder") != args.options.end()) {
-			SGModel = args.options["SGOrder"];
+		if (args.options.find("SGModel") != args.options.end()) {
+			SGModel = args.options["SGModel"];
 			if (SGModel==3)
 				SGModel_str = "3Order";
 			else if (SGModel==4)
 				SGModel_str = "4Order";
 			else if (SGModel==6)
-				SGModel_str = "6Order";
+				/// 6th order model (Marconato's model)
+				SGModel_str = "6aOrder";
+			else if (SGModel==7)
+				/// 6th order model (Andorson-Fouad's model)
+				SGModel_str = "6bOrder";
 		}
 		if (args.options.find("Inertia") != args.options.end())  {
 			H = args.options["Inertia"];
@@ -229,8 +242,7 @@ int main(int argc, char* argv[]) {
 		logDownSampling = floor((100e-6) / timeStep);
 	else
 		logDownSampling = 1.0;
-	Real finalTime = 20;
-	Logger::Level logLevel = Logger::Level::info;
+	Logger::Level logLevel = Logger::Level::off;
 
 	std::string simName = "SP_SynGen" + SGModel_str + "VBR_SMIB_Fault" + stepSize_str + inertia_str;
 	SP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 

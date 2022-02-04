@@ -161,7 +161,7 @@ void Base::SimpSynchronousGenerator<Real>::initializeFromNodesAndTerminals(Real 
 		
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
-	
+
 	// Load angle
 	mDelta = Math::phase(Eq0);
 	

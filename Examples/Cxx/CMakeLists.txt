@@ -70,6 +70,9 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp
+	Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp
+	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
+	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/SP_SynGen4OrderDQ_SMIB_Fault.cpp
 
 	#3Bus System

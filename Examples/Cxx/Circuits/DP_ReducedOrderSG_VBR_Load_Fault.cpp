@@ -7,96 +7,35 @@ using namespace CPS::CIM;
 
 // ----- PARAMETRIZATION -----
 // General grid parameters
-Real nomPower = 555e6;
-Real VnomMV = 24e3;
-Real VnomHV = 230e3;
 Real nomFreq = 60;
-Real ratio = VnomMV/VnomHV;
 Real nomOmega= nomFreq * 2 * PI;
+Real nomPower = 555e6;
+Real nomPhPhVoltRMS = 24e3;
+Real initVoltAngle = -PI / 2;
 
 //-----------Generator-----------//
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 Real setPointActivePower=300e6;
-Real setPointVoltage=1.05*VnomMV;
+Real mechPower = 300e6;
+Real initActivePower = 300e6;
+Real initReactivePower = 0;
 
-// HV line parameters referred to MV side
-Examples::Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
-Real lineLength = 100;
-Real lineResistance = lineCIGREHV.lineResistancePerKm * lineLength * std::pow(ratio,2);
-Real lineInductance = lineCIGREHV.lineReactancePerKm * lineLength * std::pow(ratio,2) / nomOmega;
-Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength / std::pow(ratio,2) / nomOmega;
-//Real lineConductance = 1e-15;
-Real lineConductance = 8e-2;
+//-----------Load-----------//
+Real Rload = 1.92;
 
 void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
 	Real switchClosed, int SGModel, Logger::Level logLevel) {
 
-	// ----- POWERFLOW FOR INITIALIZATION -----
-	String simNamePF = simName + "_PF";
-	Logger::setLogDir("logs/" + simNamePF);
-
-	// Components
-	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
-	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
-
-	//Synchronous generator ideal model
-	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
-	genPF->setParameters(nomPower, VnomMV, setPointActivePower, setPointVoltage, PowerflowBusType::PV);
-    genPF->setBaseVoltage(VnomMV);
-	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
-
-	//Grid bus as Slack
-	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetPF->setParameters(VnomMV);
-	extnetPF->setBaseVoltage(VnomMV);
-	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
-	//Line
-	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
-	linePF->setBaseVoltage(VnomMV);
-
-	// Topology
-	genPF->connect({ n1PF });
-	linePF->connect({ n1PF, n2PF });
-	extnetPF->connect({ n2PF });
-	auto systemPF = SystemTopology(60,
-			SystemNodeList{n1PF, n2PF},
-			SystemComponentList{genPF, linePF, extnetPF});
-
-	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
-
-	// Simulation
-	Simulation simPF(simNamePF, Logger::Level::debug);
-	simPF.setSystem(systemPF);
-	simPF.setTimeStep(0.1);
-	simPF.setFinalTime(0.1);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doInitFromNodesAndTerminals(false);
-	simPF.addLogger(loggerPF);
-	simPF.run();
-
-
 	// ----- Dynamic simulation ------
 	String simNameDP = simName;
 	Logger::setLogDir("logs/" + simNameDP);
 	
-	// Extract relevant powerflow results
-	Real initActivePower = genPF->getApparentPower().real();
-	Real initReactivePower = genPF->getApparentPower().imag();
-	Complex initElecPower = Complex(initActivePower, initReactivePower);
-	Real initMechPower = initActivePower;
-
 	// Nodes
-	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0), 0.0, 0.0};
-	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0), 0.0, 0.0};
-	auto n1DP = SimNode<Complex>::make("n1DP", PhaseType::Single, initialVoltage_n1);
-	auto n2DP = SimNode<Complex>::make("n2DP", PhaseType::Single, initialVoltage_n2);
+	std::vector<Complex> initVoltN1 = std::vector<Complex>({
+		Complex(nomPhPhVoltRMS * cos(initVoltAngle), nomPhPhVoltRMS * sin(initVoltAngle)),
+		0.0, 0.0});
+	auto n1DP = SimNode<Complex>::make("n1DP", PhaseType::Single, initVoltN1);
 
 	// Synchronous generator
 	std::shared_ptr<DP::Ph1::SynchronGeneratorVBR> genDP = nullptr;
@@ -108,23 +47,20 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 		genDP = DP::Ph1::SynchronGenerator6aOrderVBR::make("SynGen", logLevel);
 	else if (SGModel==7)
 		genDP = DP::Ph1::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
+
 	genDP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
 	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-    genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+    Complex initComplexElectricalPower = Complex(initActivePower, initReactivePower);
+    genDP->setInitialValues(initComplexElectricalPower, mechPower, 
+		Complex(nomPhPhVoltRMS * cos(initVoltAngle), nomPhPhVoltRMS * sin(initVoltAngle)));
 
-	//Grid bus as Slack
-	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
-	//extnetDP->setParameters(VnomMV * RMS3PH_TO_PEAK1PH);
-	extnetDP->setParameters(VnomMV);
+	auto load = CPS::DP::Ph1::RXLoad::make("Load", logLevel);
+	load->setParameters(initActivePower, initReactivePower, nomPhPhVoltRMS);
 
-    // Line
-	auto lineDP = DP::Ph1::PiLine::make("PiLine", logLevel);
-	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
-	
 	//Breaker
 	auto fault = CPS::DP::Ph1::Switch::make("Br_fault", logLevel);
 	fault->setParameters(switchOpen, switchClosed);
@@ -132,33 +68,30 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Topology
 	genDP->connect({ n1DP });
-	lineDP->connect({ n1DP, n2DP });
-	extnetDP->connect({ n2DP });
+	load->connect({ n1DP });
 	fault->connect({SP::SimNode::GND, n1DP});
 	SystemTopology systemDP;
 	if (SGModel==3)
 		systemDP = SystemTopology(60,
-			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator3OrderVBR>(genDP), lineDP, extnetDP, fault});
+			SystemNodeList{n1DP},
+			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator3OrderVBR>(genDP), load, fault});
 	else if (SGModel==4)
 		systemDP = SystemTopology(60,
-			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator4OrderVBR>(genDP), lineDP, extnetDP, fault});
+			SystemNodeList{n1DP},
+			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator4OrderVBR>(genDP), load, fault});
 	else if (SGModel==6)
 		systemDP = SystemTopology(60,
-			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6aOrderVBR>(genDP), lineDP, extnetDP, fault});
+			SystemNodeList{n1DP},
+			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6aOrderVBR>(genDP), load, fault});
 	else if (SGModel==7)
 		systemDP = SystemTopology(60,
-			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6bOrderVBR>(genDP), lineDP, extnetDP, fault});
+			SystemNodeList{n1DP},
+			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6bOrderVBR>(genDP), load, fault});
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP, true, logDownSampling);
-	//loggerDP->addAttribute("v_slack", 	 extnetDP->attribute("v_intf"));
-	//loggerDP->addAttribute("i_slack", 	 extnetDP->attribute("i_intf"));
-    loggerDP->addAttribute("i_gen", 	 genDP->attribute("i_intf"));
 	loggerDP->addAttribute("v_gen", 	 genDP->attribute("v_intf"));
+    loggerDP->addAttribute("i_gen", 	 genDP->attribute("i_intf"));
     loggerDP->addAttribute("Etorque", 	 genDP->attribute("Etorque"));
     //loggerDP->addAttribute("delta", 	 genDP->attribute("delta"));
     //loggerDP->addAttribute("w_r", 		 genDP->attribute("w_r"));
@@ -192,10 +125,10 @@ int main(int argc, char* argv[]) {
 	//Simultion parameters
 	Real SwitchClosed = 0.1;
 	Real SwitchOpen = 1e6;
-	Real startTimeFault = 30.0;
-	Real endTimeFault   = 30.1;
-	Real finalTime = 40;
-	Real timeStep = 100e-6;
+	Real startTimeFault = 1.0;
+	Real endTimeFault   = 1.1;
+	Real finalTime = 5;
+	Real timeStep = 1e-3;
 	int SGModel = 4;
 	Real H = 3.7;
 	std::string SGModel_str = "4Order";
@@ -216,8 +149,10 @@ int main(int argc, char* argv[]) {
 			else if (SGModel==4)
 				SGModel_str = "4Order";
 			else if (SGModel==6)
+				/// 6th order model (Marconato's model)
 				SGModel_str = "6aOrder";
 			else if (SGModel==7)
+				/// 6th order model (Andorson-Fouad's model)
 				SGModel_str = "6bOrder";
 		}
 		if (args.options.find("Inertia") != args.options.end())  {
@@ -232,8 +167,7 @@ int main(int argc, char* argv[]) {
 	else
 		logDownSampling = 1.0;
 	Logger::Level logLevel = Logger::Level::off;
-
-	std::string simName = "DP_SynGen" + SGModel_str + "VBR_SMIB_Fault" + stepSize_str + inertia_str;
+	std::string simName = "DP_SynGen" + SGModel_str + "VBR_Load_Fault" + stepSize_str + inertia_str;
 	DP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
 						logDownSampling, SwitchOpen, SwitchClosed, SGModel, logLevel);
 }

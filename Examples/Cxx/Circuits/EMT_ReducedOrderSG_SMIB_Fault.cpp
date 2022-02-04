@@ -70,7 +70,7 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	loggerPF->addAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
-	Simulation simPF(simNamePF, Logger::Level::debug);
+	Simulation simPF(simNamePF, Logger::Level::off);
 	simPF.setSystem(systemPF);
 	simPF.setTimeStep(0.1);
 	simPF.setFinalTime(0.1);
@@ -112,6 +112,8 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 		genEMT = EMT::Ph3::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
 	else if (SGModel==6)
 		genEMT = EMT::Ph3::SynchronGenerator6aOrderVBR::make("SynGen", logLevel);
+	else if (SGModel==7)
+		genEMT = EMT::Ph3::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
 	genEMT->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
@@ -155,7 +157,11 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 		systemEMT = SystemTopology(60,
 			SystemNodeList{n1EMT, n2EMT},
 			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6aOrderVBR>(genEMT), lineEMT, fault, extnetEMT});
-
+	else if (SGModel==7)
+		systemEMT = SystemTopology(60,
+			SystemNodeList{n1EMT, n2EMT},
+			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6bOrderVBR>(genEMT), lineEMT, fault, extnetEMT});
+			
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT, true, logDownSampling);
 	//loggerEMT->addAttribute("i_slack", 	extnetEMT->attribute("i_intf"));
@@ -210,14 +216,16 @@ int main(int argc, char* argv[]) {
 			timeStep = args.options["StepSize"];
 			stepSize_str = "_StepSize_" + std::to_string(timeStep);
 		}
-		if (args.options.find("SGOrder") != args.options.end()) {
-			SGModel = args.options["SGOrder"];
+		if (args.options.find("SGModel") != args.options.end()) {
+			SGModel = args.options["SGModel"];
 			if (SGModel==3)
 				SGModel_str = "3Order";
 			else if (SGModel==4)
 				SGModel_str = "4Order";
 			else if (SGModel==6)
-				SGModel_str = "6Order";
+				SGModel_str = "6aOrder";
+			else if (SGModel==7)
+				SGModel_str = "6bOrder";
 		}
 		if (args.options.find("Inertia") != args.options.end())  {
 			H = args.options["Inertia"];
@@ -226,9 +234,13 @@ int main(int argc, char* argv[]) {
 	}
 
 	
-	//Real logDownSampling = 1.0;
-	Real logDownSampling = (100e-6) / timeStep;
+	Real logDownSampling;
+	if (timeStep<100e-6)
+		logDownSampling = floor((100e-6) / timeStep);
+	else
+		logDownSampling = 1.0;
 	Logger::Level logLevel = Logger::Level::off;
+
 	std::string simName ="EMT_SynGen" + SGModel_str + "VBR_SMIB_Fault" + stepSize_str + inertia_str;
 	EMT_3ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
 						 logDownSampling, SwitchOpen, SwitchClosed, SGModel, logLevel);
