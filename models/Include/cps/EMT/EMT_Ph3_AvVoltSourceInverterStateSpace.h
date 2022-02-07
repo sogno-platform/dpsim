@@ -24,9 +24,6 @@ namespace Ph3 {
 		public SharedFactory<AvVoltSourceInverterStateSpace> {
 	protected:
 		Real mTimeStep;
-		// ### parameters ###
-		Real mPref;
-		Real mQref;
 
 		/// filter paramter
 		Real mLf;
@@ -54,26 +51,32 @@ namespace Ph3 {
 		/// connection to grid
 		Real mRc;
 
+	public:
+		// ### parameters ###
+		const Attribute<Real>::Ptr mPref;
+		const Attribute<Real>::Ptr mQref;
+
 		// states
+		const Attribute<Real>::Ptr mThetaPLL;
+		const Attribute<Real>::Ptr mPhiPLL;
 
-		Real mThetaPLL;
-		Real mPhiPLL;
+		const Attribute<Real>::Ptr mP;
+		const Attribute<Real>::Ptr mQ;
 
-		Real mP;
-		Real mQ;
+		const Attribute<Real>::Ptr mPhi_d;
+		const Attribute<Real>::Ptr mPhi_q;
 
-		Real mPhi_d;
-		Real mPhi_q;
+		const Attribute<Real>::Ptr mGamma_d;
+		const Attribute<Real>::Ptr mGamma_q;
 
-		Real mGamma_d;
-		Real mGamma_q;
+		const Attribute<Matrix>::Ptr mVcabc;
 
+	protected:
 		Matrix mIfabc = Matrix::Zero(3, 1);
 		/*Real mIfa;
 		Real mIfb;
 		Real mIfc;*/
-
-		Matrix mVcabc = Matrix::Zero(3, 1);
+		
 		/*Real mVca;
 		Real mVcb;
 		Real mVcc;*/

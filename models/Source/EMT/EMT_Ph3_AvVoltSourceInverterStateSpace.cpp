@@ -14,23 +14,23 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(String uid, String name, Logger::Level logLevel)
-: SimPowerComp<Real>(uid, name, logLevel) {
+: SimPowerComp<Real>(uid, name, logLevel),
+	mVcabc(Attribute<Matrix>::create("V_cabc", mAttributes, Matrix::Zero(3, 1))),
+	mP(Attribute<Real>::create("p", mAttributes)),
+	mQ(Attribute<Real>::create("q", mAttributes)),
+	mPref(Attribute<Real>::create("P_ref", mAttributes)),
+	mQref(Attribute<Real>::create("Q_ref", mAttributes)),
+	mThetaPLL(Attribute<Real>::create("theta", mAttributes)),
+	mPhiPLL(Attribute<Real>::create("phipll", mAttributes)),
+	mPhi_d(Attribute<Real>::create("phid", mAttributes)),
+	mPhi_q(Attribute<Real>::create("phiq", mAttributes)),
+	mGamma_d(Attribute<Real>::create("gammad", mAttributes)),
+	mGamma_q(Attribute<Real>::create("gammaq", mAttributes)) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	addAttribute<Matrix>("V_cabc", &mVcabc, Flags::read | Flags::write);
-	addAttribute<Complex>("V_ref", &mVoltageRef, Flags::read | Flags::write);
-	addAttribute<Real>("p", &mP, Flags::read | Flags::write);
-	addAttribute<Real>("q", &mQ, Flags::read | Flags::write);
-	addAttribute<Real>("P_ref", &mPref, Flags::read | Flags::write);
-	addAttribute<Real>("Q_ref", &mQref, Flags::read | Flags::write);
-	addAttribute<Real>("theta", &mThetaPLL, Flags::read | Flags::write);
-	addAttribute<Real>("phipll", &mPhiPLL, Flags::read | Flags::write);
-	addAttribute<Real>("phid", &mPhi_d, Flags::read | Flags::write);
-	addAttribute<Real>("phiq", &mPhi_q, Flags::read | Flags::write);
-	addAttribute<Real>("gammad", &mGamma_d, Flags::read | Flags::write);
-	addAttribute<Real>("gammaq", &mGamma_q, Flags::read | Flags::write);
+	mVoltageRef = Attribute<Complex>::create("V_ref", mAttributes);
 }
 
 
@@ -43,8 +43,8 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::setParameters(Real sysOmega, Comp
 	mRc = Rc;
 	mYc = 1. / Rc;
 
-	mPref = Pref;
-	mQref = Qref;
+	**mPref = Pref;
+	**mQref = Qref;
 
 	mKpPLL = Kp_pll;
 	mKiPLL = Ki_pll;
@@ -83,10 +83,10 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::initializeStates(Real omega, Real
 	Matrix initVgabc = Matrix::Zero(3, 1);
 
 
-	Matrix Tabc_dq = getParkTransformMatrix(mThetaPLL);
+	Matrix Tabc_dq = getParkTransformMatrix(**mThetaPLL);
 	Matrix Td = Tabc_dq.row(0);
 	Matrix Tq = Tabc_dq.row(1);
-	Matrix Tdq_abc = getInverseParkTransformMatrix(mThetaPLL);
+	Matrix Tdq_abc = getInverseParkTransformMatrix(**mThetaPLL);
 	Matrix Tabc1 = Tdq_abc.col(0);
 	Matrix Tabc2 = Tdq_abc.col(1);
 	mA <<
@@ -126,17 +126,17 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::initializeStates(Real omega, Real
 
 		// #### initialize states ####
 		// initialize interface voltage at inverter terminal
-		initVgabc = mVcabc;
+		initVgabc = **mVcabc;
 
-		mThetaPLL = 0;
-		mPhiPLL = -0.000060;
-		mP = sqrt(3)*(3. / 2. * (Td * **mIntfCurrent * Td *mVcabc + Tq * **mIntfCurrent * Tq * mVcabc)).coeff(0, 0);
-		mQ = sqrt(3)*(3. / 2. * (Tq * **mIntfCurrent * Td *mVcabc - Td * **mIntfCurrent * Tq *mVcabc)).coeff(0, 0);
-		mPhi_d = 113.612992;
-		mPhi_q = 22.045339;
-		mGamma_d = 0.155978;
-		mGamma_q = 0.006339;
-		mVcabc = initVgabc;
+		**mThetaPLL = 0;
+		**mPhiPLL = -0.000060;
+		**mP = sqrt(3)*(3. / 2. * (Td * **mIntfCurrent * Td * **mVcabc + Tq * **mIntfCurrent * Tq * **mVcabc)).coeff(0, 0);
+		**mQ = sqrt(3)*(3. / 2. * (Tq * **mIntfCurrent * Td * **mVcabc - Td * **mIntfCurrent * Tq * **mVcabc)).coeff(0, 0);
+		**mPhi_d = 113.612992;
+		**mPhi_q = 22.045339;
+		**mGamma_d = 0.155978;
+		**mGamma_q = 0.006339;
+		**mVcabc = initVgabc;
 		mIfabc = Matrix::Zero(3, 1);
 		/*mVca = initVcabc(0, 0);
 		mVcb = initVcabc(1, 0);
@@ -146,11 +146,11 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::initializeStates(Real omega, Real
 		mIfc = initIfabc(2, 0);*/
 
 		mStates <<
-			mThetaPLL, mPhiPLL, mP, mQ, mPhi_d, mPhi_q, mGamma_d,
-			mGamma_q, mVcabc, mIfabc;
+			**mThetaPLL, **mPhiPLL, **mP, **mQ, **mPhi_d, **mPhi_q, **mGamma_d,
+			**mGamma_q, **mVcabc, mIfabc;
 
 		mU <<
-			omega, mPref, mQref, initVgabc;
+			omega, **mPref, **mQref, initVgabc;
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::updateStates() {
@@ -159,20 +159,20 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::updateStates() {
 	Matrix newU = Matrix::Zero(6, 1);
 
 	newU <<
-		mOmegaN, mPref, mQref, **mIntfVoltage;
+		mOmegaN, **mPref, **mQref, **mIntfVoltage;
 
 	newStates = Math::StateSpaceTrapezoidal(mStates, mA, mB, mTimeStep, newU, mU);
 
 	// update states
-	mThetaPLL = newStates(0, 0);
-	mPhiPLL = newStates(1, 0);
-	mP = newStates(2, 0);
-	mQ = newStates(3, 0);
-	mPhi_d = newStates(4, 0);
-	mPhi_q = newStates(5, 0);
-	mGamma_d = newStates(6, 0);
-	mGamma_d = newStates(7, 0);
-	mVcabc = newStates.block(8, 0, 3, 1);
+	**mThetaPLL = newStates(0, 0);
+	**mPhiPLL = newStates(1, 0);
+	**mP = newStates(2, 0);
+	**mQ = newStates(3, 0);
+	**mPhi_d = newStates(4, 0);
+	**mPhi_q = newStates(5, 0);
+	**mGamma_d = newStates(6, 0);
+	**mGamma_d = newStates(7, 0);
+	**mVcabc = newStates.block(8, 0, 3, 1);
 	mIfabc = newStates.block(11, 0, 3, 1);
 /*
 	mIfa = newStates(8, 1);
@@ -192,10 +192,10 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::updateStates() {
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::updateLinearizedCoeffs() {
 
-	Matrix Tabc_dq = getParkTransformMatrix(mThetaPLL);
+	Matrix Tabc_dq = getParkTransformMatrix(**mThetaPLL);
 	Matrix Td = Tabc_dq.row(0);
 	Matrix Tq = Tabc_dq.row(1);
-	Matrix Tdq_abc = getInverseParkTransformMatrix(mThetaPLL);
+	Matrix Tdq_abc = getInverseParkTransformMatrix(**mThetaPLL);
 	Matrix Tabc1 = Tdq_abc.col(0);
 	Matrix Tabc2 = Tdq_abc.col(1);
 
@@ -360,5 +360,5 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateCurrent(const Matrix& le
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::updateEquivCurrent(Real time) {
-	mEquivCurrent = mVcabc / mRc;
+	mEquivCurrent = **mVcabc / mRc;
 }
