@@ -21,11 +21,12 @@ namespace Ph1 {
 		public MNAInterface,
 		public SharedFactory<SynchronGeneratorIdeal> {
 	private:
-		/// Voltage set point [V]
-		Complex mVoltageRef;
 		/// Inner voltage source that represents the generator
 		std::shared_ptr<DP::Ph1::VoltageSource> mSubVoltageSource;
 	public:
+		/// Voltage set point [V]
+		/// CHECK: Is this attribute necessary? It is not used in the component itself, only initialized
+		const Attribute<Complex>::Ptr mVoltageRef;
 		/// Defines UID, name, component parameters and logging level
 		SynchronGeneratorIdeal(String uid, String name,
 			Logger::Level logLevel = Logger::Level::off);

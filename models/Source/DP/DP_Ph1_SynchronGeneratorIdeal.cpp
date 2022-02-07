@@ -13,13 +13,12 @@ using namespace CPS;
 
 DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
 	Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
-
-	addAttribute<Complex>("V_ref", &mVoltageRef, Flags::read);
 }
 
 DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String name,
@@ -38,7 +37,7 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequ
 	mSubComponents[0]->initialize(mFrequencies);
 	mSubComponents[0]->initializeFromNodesAndTerminals(frequency);
 
-	setAttributeRef("V_ref", mSubComponents[0]->attribute<Complex>("V_ref"));
+	mVoltageRef->setReference(mSubComponents[0]->attribute<Complex>("V_ref"));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
