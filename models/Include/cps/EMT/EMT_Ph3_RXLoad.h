@@ -25,22 +25,20 @@ namespace CPS {
 				public MNAInterface,
 				public SharedFactory<RXLoad> {
 			protected:
+				/// Conductance [S]
+				/// FIXME: This is never read, only written to
+				Matrix mConductance;
 				/// Power [Watt]
 				MatrixComp mPower;
-				/// Active power [Watt]
-				Matrix mActivePower;
-				/// Reactive power [VAr]
-				Matrix mReactivePower;
-				/// Nominal voltage [V]
-				Real mNomVoltage;
 				/// Actual voltage [V]
+				/// FIXME: This is never used
 				Matrix mVoltage;
 				/// Actual voltage [V]
+				/// FIXME: This is never used
 				Matrix mCurrent;
+
 				/// Resistance [Ohm]
 				Matrix mResistance;
-				/// Conductance [S]
-				Matrix mConductance;
 				/// Reactance [Ohm]
 				Matrix mReactance;
 				/// Inductance [H]
@@ -56,6 +54,12 @@ namespace CPS {
 				/// Internal resistance
 				std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
 			public:
+				/// Active power [Watt]
+				const Attribute<Matrix>::Ptr mActivePower;
+				/// Reactive power [VAr]
+				const Attribute<Matrix>::Ptr mReactivePower;
+				/// Nominal voltage [V]
+				const Attribute<Real>::Ptr mNomVoltage;
 				/// Defines UID, name and logging level
 				RXLoad(String uid, String name,
 					Logger::Level logLevel = Logger::Level::off);
