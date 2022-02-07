@@ -24,14 +24,15 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 
-	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
-	addAttribute<Real>("R", &mResistance, Flags::write | Flags::read);
-	addAttribute<Real>("L", &mInductance, Flags::write | Flags::read);
+	mRatio = Attribute<Complex>::create("ratio", mAttributes);
+	mResistance = Attribute<Real>::create("R", mAttributes);
+	mInductance = Attribute<Real>::create("L", mAttributes);
 }
 
+/// DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
-	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
+	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, std::abs(**mRatio), std::arg(**mRatio), **mResistance, **mInductance);
 	return copy;
 }
 
@@ -42,7 +43,7 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 
 	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
 	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", mResistance, mInductance);
-    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));
+    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(**mRatio), std::arg(**mRatio));
 	mSLog->info("Rated Power ={} [W]", mRatedPower);
 
 	mParametersSet = true;
@@ -62,8 +63,8 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// Component parameters are referred to higher voltage side.
 	// Switch terminals to have terminal 0 at higher voltage side
 	// if transformer is connected the other way around.
-	if (Math::abs(mRatio) < 1.) {
-		mRatio = 1. / mRatio;
+	if (Math::abs(**mRatio) < 1.) {
+		**mRatio = 1. / **mRatio;
 		std::shared_ptr<SimTerminal<Complex>> tmp = mTerminals[0];
 		mTerminals[0] = mTerminals[1];
 		mTerminals[1] = tmp;
@@ -72,28 +73,28 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		mNominalVoltageEnd2 = tmpVolt;
 		mSLog->info("Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
 		mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
-		mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(mRatio), std::arg(mRatio));
+		mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
 	}
 
 	// Set initial voltage of virtual node in between
-	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(1) * mRatio );
+	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(1) * **mRatio );
 
 	// Static calculations from load flow data
 	Real omega = 2.*PI* frequency;
-	Complex impedance = { mResistance, omega * mInductance };
-	mSLog->info("Reactance={} [Ohm] (referred to primary side)", omega * mInductance );
+	Complex impedance = { **mResistance, omega * **mInductance };
+	mSLog->info("Reactance={} [Ohm] (referred to primary side)", omega * **mInductance );
 	(**mIntfVoltage)(0,0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
 	// Create series sub components
 	mSubInductor = std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 	mSubComponents.push_back(mSubInductor);
-	mSubInductor->setParameters(mInductance);
+	mSubInductor->setParameters(**mInductance);
 
 	if (mNumVirtualNodes == 3) {
 		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
 		mSubResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
-		mSubResistor->setParameters(mResistance);
+		mSubResistor->setParameters(**mResistance);
 		mSubResistor->connect({node(0), mVirtualNodes[2]});
 		mSubInductor->connect({mVirtualNodes[2], mVirtualNodes[0]});
 		mSubComponents.push_back(mSubResistor);
@@ -187,8 +188,8 @@ void DP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), Complex(1.0, 0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[1]->matrixNodeIndex(), mRatio);
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1), -mRatio);
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[1]->matrixNodeIndex(), **mRatio);
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1), - **mRatio);
 	}
 
 	// Add subcomps to system matrix
@@ -203,9 +204,9 @@ void DP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 			mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex());
 	}
 	if (terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(mRatio),
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
 			matrixNodeIndex(1), mVirtualNodes[1]->matrixNodeIndex());
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-mRatio),
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1));
 	}
 }
@@ -234,7 +235,7 @@ void DP::Ph1::Transformer::mnaPreStep(Real time, Int timeStepCount) {
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
-	this->mnaApplyRightSideVectorStamp(this->mRightVector);
+	this->mnaApplyRightSideVectorStamp(**this->mRightVector);
 }
 
 void DP::Ph1::Transformer::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -254,8 +255,8 @@ void DP::Ph1::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<M
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
-	this->mnaUpdateVoltage(*leftVector);
-	this->mnaUpdateCurrent(*leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {

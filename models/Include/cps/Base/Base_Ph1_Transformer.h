@@ -21,21 +21,20 @@ namespace Ph1 {
 		Real mNominalVoltageEnd2;
 		/// Rated Apparent Power [VA]
 		Real mRatedPower;
-		/// Complex transformer ratio
-		Complex mRatio;
-		/// Resistance [Ohm]
-		Real mResistance;
-		/// Inductance [H]
-		Real mInductance;
-
 	public:
+		/// Complex transformer ratio
+		Attribute<Complex>::Ptr mRatio;
+		/// Resistance [Ohm]
+		Attribute<Real>::Ptr mResistance;
+		/// Inductance [H]
+		Attribute<Real>::Ptr mInductance;
 		///
 		void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance) {
 			mNominalVoltageEnd1 = nomVoltageEnd1;
 			mNominalVoltageEnd2 = nomVoltageEnd2;
-			mRatio = std::polar<Real>(ratioAbs, ratioPhase);
-			mResistance = resistance;
-			mInductance = inductance;
+			**mRatio = std::polar<Real>(ratioAbs, ratioPhase);
+			**mResistance = resistance;
+			**mInductance = inductance;
 		}
 	};
 }
