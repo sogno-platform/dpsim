@@ -15,28 +15,30 @@ namespace Base {
 namespace Ph3 {
 	class PiLine {
 	protected:
-		/// Resistance along the line [ohms]
-		Matrix mSeriesRes;
 		/// Conductance along the line [S]
+		/// FIXME: This is never used...
 		Matrix mSeriesCond;
-		/// Inductance along the line [H]
-		Matrix mSeriesInd;
 		/// Resistance in parallel to the line [ohms]
+		/// FIXME: This is never used...
 		Matrix mParallelRes;
-		/// Conductance in parallel to the line [S]
-		Matrix mParallelCond;
-		/// Capacitance in parallel to the line [F]
-		Matrix mParallelCap;
 	public:
+		/// Resistance along the line [ohms]
+		Attribute<Matrix>::Ptr mSeriesRes;
+		/// Inductance along the line [H]
+		Attribute<Matrix>::Ptr mSeriesInd;
+		/// Conductance in parallel to the line [S]
+		Attribute<Matrix>::Ptr mParallelCond;
+		/// Capacitance in parallel to the line [F]
+		Attribute<Matrix>::Ptr mParallelCap;
 		///
 		void setParameters(Matrix seriesResistance, Matrix seriesInductance,
 			Matrix parallelCapacitance = Matrix::Zero(3,3), Matrix parallelConductance = Matrix::Zero(3,3)) {
-			mSeriesRes = seriesResistance;
-			mSeriesCond = mSeriesRes.inverse();
-			mSeriesInd = seriesInductance;
-			mParallelCond = parallelConductance;
-			mParallelRes = mParallelCond.inverse();
-			mParallelCap = parallelCapacitance;
+			**mSeriesRes = seriesResistance;
+			mSeriesCond = (**mSeriesRes).inverse();
+			**mSeriesInd = seriesInductance;
+			**mParallelCond = parallelConductance;
+			mParallelRes = (**mParallelCond).inverse();
+			**mParallelCap = parallelCapacitance;
 		}
 	};
 }

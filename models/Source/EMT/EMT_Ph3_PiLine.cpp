@@ -20,16 +20,18 @@ EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	addAttribute<Matrix>("R_series", &mSeriesRes, Flags::read | Flags::write);
-	addAttribute<Matrix>("L_series", &mSeriesInd, Flags::read | Flags::write);
-	addAttribute<Matrix>("C_parallel", &mParallelCap, Flags::read | Flags::write);
-	addAttribute<Matrix>("G_parallel", &mParallelCond, Flags::read | Flags::write);
+	///FIXME: Move initialization into base class
+	mSeriesRes = Attribute<Matrix>::create("R_series", mAttributes);
+	mSeriesInd = Attribute<Matrix>::create("L_series", mAttributes);
+	mParallelCap = Attribute<Matrix>::create("C_parallel", mAttributes);
+	mParallelCond = Attribute<Matrix>::create("G_parallel", mAttributes); 
 	mSLog->flush();
 }
 
+/// DEPRECATED: Delete method
 SimPowerComp<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
 	auto copy = PiLine::make(name, mLogLevel);
-	copy->setParameters(mSeriesRes, mSeriesInd, mParallelCap, mParallelCond);
+	copy->setParameters(**mSeriesRes, **mSeriesInd, **mParallelCap, **mParallelCond);
 	return copy;
 }
 
@@ -42,15 +44,15 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		1e-6, 0, 0,
 		0, 1e-6, 0,
 		0, 0, 1e-6;
-	mParallelCond = (mParallelCond(0, 0) > 0) ? mParallelCond : defaultParallelCond;
+	**mParallelCond = ((**mParallelCond)(0, 0) > 0) ? **mParallelCond : defaultParallelCond;
 
 	// Static calculation
 	Real omega = 2. * PI * frequency;
 	MatrixComp impedance = MatrixComp::Zero(3, 3);
 	impedance <<
-		Complex(mSeriesRes(0, 0), omega * mSeriesInd(0, 0)), Complex(mSeriesRes(0, 1), omega * mSeriesInd(0, 1)), Complex(mSeriesRes(0, 2), omega * mSeriesInd(0, 2)),
-		Complex(mSeriesRes(1, 0), omega * mSeriesInd(1, 0)), Complex(mSeriesRes(1, 1), omega * mSeriesInd(1, 1)), Complex(mSeriesRes(1, 2), omega * mSeriesInd(1, 2)),
-		Complex(mSeriesRes(2, 0), omega * mSeriesInd(2, 0)), Complex(mSeriesRes(2, 1), omega * mSeriesInd(2, 1)), Complex(mSeriesRes(2, 2), omega * mSeriesInd(2, 2));
+		Complex((**mSeriesRes)(0, 0), omega * (**mSeriesInd)(0, 0)), Complex((**mSeriesRes)(0, 1), omega * (**mSeriesInd)(0, 1)), Complex((**mSeriesRes)(0, 2), omega * (**mSeriesInd)(0, 2)),
+		Complex((**mSeriesRes)(1, 0), omega * (**mSeriesInd)(1, 0)), Complex((**mSeriesRes)(1, 1), omega * (**mSeriesInd)(1, 1)), Complex((**mSeriesRes)(1, 2), omega * (**mSeriesInd)(1, 2)),
+		Complex((**mSeriesRes)(2, 0), omega * (**mSeriesInd)(2, 0)), Complex((**mSeriesRes)(2, 1), omega * (**mSeriesInd)(2, 1)), Complex((**mSeriesRes)(2, 2), omega * (**mSeriesInd)(2, 2));
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
 	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(1) - RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
@@ -67,43 +69,43 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	vInitTerm0(1, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_B;
 	vInitTerm0(2, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_C;
 
-	mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH*(vInitTerm0 + mSeriesRes * iInit));
+	mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH*(vInitTerm0 + **mSeriesRes * iInit));
 
 	// Create series sub components
 	mSubSeriesResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
-	mSubSeriesResistor->setParameters(mSeriesRes);
+	mSubSeriesResistor->setParameters(**mSeriesRes);
 	mSubSeriesResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubSeriesResistor->initialize(mFrequencies);
 	mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSubSeriesInductor = std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
-	mSubSeriesInductor->setParameters(mSeriesInd);
+	mSubSeriesInductor->setParameters(**mSeriesInd);
 	mSubSeriesInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubSeriesInductor->initialize(mFrequencies);
 	mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
 
 	// Create parallel sub components
 	mSubParallelResistor0 = std::make_shared<EMT::Ph3::Resistor>(**mName + "_con0", mLogLevel);
-	mSubParallelResistor0->setParameters(2. * mParallelCond.inverse());
+	mSubParallelResistor0->setParameters(2. * (**mParallelCond).inverse());
 	mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 	mSubParallelResistor0->initialize(mFrequencies);
 	mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
 
 	mSubParallelResistor1 = std::make_shared<EMT::Ph3::Resistor>(**mName + "_con1", mLogLevel);
-	mSubParallelResistor1->setParameters(2. * mParallelCond.inverse());
+	mSubParallelResistor1->setParameters(2. * (**mParallelCond).inverse());
 	mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 	mSubParallelResistor1->initialize(mFrequencies);
 	mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
 
-	if (mParallelCap(0,0) > 0) {
+	if ((**mParallelCap)(0,0) > 0) {
 		mSubParallelCapacitor0 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_cap0", mLogLevel);
-		mSubParallelCapacitor0->setParameters(mParallelCap / 2.);
+		mSubParallelCapacitor0->setParameters(**mParallelCap / 2.);
 		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelCapacitor0->initialize(mFrequencies);
 		mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
 
 		mSubParallelCapacitor1 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_cap1", mLogLevel);
-		mSubParallelCapacitor1->setParameters(mParallelCap / 2.);
+		mSubParallelCapacitor1->setParameters(**mParallelCap / 2.);
 		mSubParallelCapacitor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelCapacitor1->initialize(mFrequencies);
 		mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
@@ -116,8 +118,8 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		"\n Impedance: {:s}"
 		"\n vInit: {:s}"
 		"\n iInit: {:s}",
-		Logger::matrixToString(mSeriesRes),
-		Logger::matrixToString(mSeriesInd),
+		Logger::matrixToString(**mSeriesRes),
+		Logger::matrixToString(**mSeriesInd),
 		Logger::matrixCompToString(impedance),
 		Logger::matrixCompToString(vInitABC),
 		Logger::matrixCompToString(iInit));
@@ -152,7 +154,7 @@ void EMT::Ph3::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix
 	subComps.push_back(mSubParallelResistor0);
 	subComps.push_back(mSubParallelResistor1);
 
-	if (mParallelCap(0,0) > 0) {
+	if ((**mParallelCap)(0,0) > 0) {
 		mSubParallelCapacitor0->mnaInitialize(omega, timeStep, leftVector);
 		mSubParallelCapacitor1->mnaInitialize(omega, timeStep, leftVector);
 		mRightVectorStamps.push_back(&mSubParallelCapacitor0->attribute<Matrix>("right_vector")->get());
@@ -172,7 +174,7 @@ void EMT::Ph3::PiLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	mSubParallelResistor0->mnaApplySystemMatrixStamp(systemMatrix);
 	mSubParallelResistor1->mnaApplySystemMatrixStamp(systemMatrix);
 
-	if (mParallelCap(0,0) > 0) {
+	if ((**mParallelCap)(0,0) > 0) {
 		mSubParallelCapacitor0->mnaApplySystemMatrixStamp(systemMatrix);
 		mSubParallelCapacitor1->mnaApplySystemMatrixStamp(systemMatrix);
 	}
@@ -191,7 +193,7 @@ void EMT::Ph3::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDe
 	mSubParallelResistor0->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mSubParallelResistor1->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 
-	if (mParallelCap(0, 0) > 0) {
+	if ((**mParallelCap)(0, 0) > 0) {
 		mSubParallelCapacitor0->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 		mSubParallelCapacitor1->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	}
@@ -204,7 +206,7 @@ void EMT::Ph3::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDe
 void EMT::Ph3::PiLine::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents
 	mSubSeriesInductor->mnaPreStep(time, timeStepCount);
-	if (mParallelCap(0, 0) > 0) {
+	if ((**mParallelCap)(0, 0) > 0) {
 		mSubParallelCapacitor0->mnaPreStep(time, timeStepCount);
 		mSubParallelCapacitor1->mnaPreStep(time, timeStepCount);
 	}
@@ -216,7 +218,7 @@ void EMT::Ph3::PiLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepD
 	// add post-step dependencies of subcomponents
 	mSubSeriesResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	mSubSeriesInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	if (mParallelCap(0, 0) > 0) {
+	if ((**mParallelCap)(0, 0) > 0) {
 		mSubParallelCapacitor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 		mSubParallelCapacitor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	}
@@ -232,7 +234,7 @@ void EMT::Ph3::PiLine::mnaPostStep(Real time, Int timeStepCount, Attribute<Matri
 	// post-step of subcomponents
 	mSubSeriesResistor->mnaPostStep(time, timeStepCount, leftVector);
 	mSubSeriesInductor->mnaPostStep(time, timeStepCount, leftVector);
-	if (mParallelCap(0, 0) > 0) {
+	if ((**mParallelCap)(0, 0) > 0) {
 		mSubParallelCapacitor0->mnaPostStep(time, timeStepCount, leftVector);
 		mSubParallelCapacitor1->mnaPostStep(time, timeStepCount, leftVector);
 	}
