@@ -21,11 +21,7 @@ namespace Ph1 {
 		public SharedFactory<VoltageSourceRamp> {
 	protected:
 		///
-		Complex mVoltageRef;
-		///
 		Complex mAddVoltage;
-		///
-		Real mSrcFreq;
 		///
 		Real mSwitchTime;
 		///
@@ -35,6 +31,10 @@ namespace Ph1 {
 		///
 		std::shared_ptr<VoltageSource> mSubVoltageSource;
 	public:
+		///
+		const Attribute<Complex>::Ptr mVoltageRef;
+		///
+		const Attribute<Real>::Ptr mSrcFreq;
 		/// Defines UID, name and logging level
 		VoltageSourceRamp(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level
