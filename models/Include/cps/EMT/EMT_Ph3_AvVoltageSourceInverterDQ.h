@@ -32,16 +32,11 @@ namespace Ph3 {
 		// ### General Parameters ###
 		/// Nominal system angle
 		Real mThetaN = 0;
-		/// Nominal frequency
-		Real mOmegaN;
 		/// Nominal voltage
 		Real mVnom;
 		/// Simulation step
 		Real mTimeStep;
 		/// Active power reference
-		Real mPref;
-		/// Reactive power reference
-		Real mQref;
 
 		// ### Control Subcomponents ###
 		/// PLL
@@ -63,19 +58,6 @@ namespace Ph3 {
 		/// Optional connection transformer
 		std::shared_ptr<EMT::Ph3::Transformer> mConnectionTransformer;
 
-		// ### Inverter Interfacing Variables ###
-		// Control inputs
-		/// Measured voltage d-axis in local reference frame
-		Real mVcd = 0;
-		/// Measured voltage q-axis in local reference frame
-		Real mVcq = 0;
-		/// Measured current d-axis in local reference frame
-		Real mIrcd = 0;
-		/// Measured current q-axis in local reference frame
-		Real mIrcq = 0;
-		// Control outputs
-		/// Voltage as control output after transformation interface
-		Matrix mVsref = Matrix::Zero(3,1);
 
 		/// Flag for connection transformer usage
 		Bool mWithConnectionTransformer=false;
@@ -87,6 +69,40 @@ namespace Ph3 {
 		std::vector<const Matrix*> mRightVectorStamps;
 
 	public:
+		// ### General Parameters ###
+
+		/// Nominal frequency
+		const Attribute<Real>::Ptr mOmegaN;
+		/// Active power reference
+		const Attribute<Real>::Ptr mPref;
+		/// Reactive power reference
+		const Attribute<Real>::Ptr mQref;
+
+		// ### Inverter Interfacing Variables ###
+		// Control inputs
+		/// Measured voltage d-axis in local reference frame
+		const Attribute<Real>::Ptr mVcd;
+		/// Measured voltage q-axis in local reference frame
+		const Attribute<Real>::Ptr mVcq;
+		/// Measured current d-axis in local reference frame
+		const Attribute<Real>::Ptr mIrcd;
+		/// Measured current q-axis in local reference frame
+		const Attribute<Real>::Ptr mIrcq;
+		// Control outputs
+		/// Voltage as control output after transformation interface
+		const Attribute<Matrix>::Ptr mVsref;
+
+		// Sub voltage source
+		const Attribute<Matrix>::Ptr mVs;
+
+		// PLL
+		const Attribute<Matrix>::Ptr mPllOutput;
+
+		// input, state and output vector for logging
+		const Attribute<Matrix>::Ptr mPowerctrlInputs;
+		const Attribute<Matrix>::Ptr mPowerctrlStates;
+		const Attribute<Matrix>::Ptr mPowerctrlOutputs;
+
 		/// Defines name amd logging level
 		AvVoltageSourceInverterDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: AvVoltageSourceInverterDQ(name, name, logLevel) {}
