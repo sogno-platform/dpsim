@@ -11,26 +11,26 @@
 using namespace CPS;
 
 DP::Ph1::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mActivePower(Attribute<Real>::create("P", mAttributes)),
+	mReactivePower(Attribute<Real>::create("Q", mAttributes)),
+	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
 	setTerminalNumber(1);
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
-
-	addAttribute<Real>("P", &mActivePower, Flags::read | Flags::write);
-	addAttribute<Real>("Q", &mReactivePower, Flags::read | Flags::write);
-	addAttribute<Real>("V_nom", &mNomVoltage, Flags::read | Flags::write);
 }
 
 DP::Ph1::RXLoad::RXLoad(String name, Logger::Level logLevel)
 	: RXLoad(name, name, logLevel) {
 }
 
+/// DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
 	auto copy = RXLoad::make(name, mLogLevel);
 	if (mParametersSet)
-		copy->setParameters(mActivePower, mReactivePower, mNomVoltage);
+		copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage);
 	return copy;
 }
 
@@ -44,7 +44,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	if (mActivePower != 0) {
-		mResistance = std::pow(mNomVoltage, 2) / mActivePower;
+		mResistance = std::pow(**mNomVoltage, 2) / **mActivePower;
 		mSubResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
@@ -56,7 +56,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	if (mReactivePower != 0)
-		mReactance = std::pow(mNomVoltage, 2) / mReactivePower;
+		mReactance = std::pow(**mNomVoltage, 2) / **mReactivePower;
 	else
 		mReactance = 0;
 
@@ -78,7 +78,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
-	(**mIntfCurrent)(0, 0) = std::conj(Complex(mActivePower, mReactivePower) / (**mIntfVoltage)(0, 0));
+	(**mIntfCurrent)(0, 0) = std::conj(Complex(**mActivePower, **mReactivePower) / (**mIntfVoltage)(0, 0));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -97,13 +97,13 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real volt) {
 	mParametersSet = true;
-	mActivePower = activePower;
-	mReactivePower = reactivePower;
-	mPower = { mActivePower, mReactivePower};
-	mNomVoltage = volt;
+	**mActivePower = activePower;
+	**mReactivePower = reactivePower;
+	mPower = { **mActivePower, **mReactivePower};
+	**mNomVoltage = volt;
 
-	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mActivePower, mReactivePower);
-	mSLog->info("Nominal Voltage={} [V]", mNomVoltage);
+	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
+	mSLog->info("Nominal Voltage={} [V]", **mNomVoltage);
 }
 
 void DP::Ph1::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -115,11 +115,11 @@ void DP::Ph1::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 	}
 	if (mSubInductor) {
 		mSubInductor->mnaInitialize(omega, timeStep, leftVector);
-		mRightVectorStamps.push_back(&mSubInductor->attribute<Matrix>("right_vector")->get());
+		mRightVectorStamps.push_back(&**mSubInductor->mRightVector);
 	}
 	if (mSubCapacitor) {
 		mSubCapacitor->mnaInitialize(omega, timeStep, leftVector);
-		mRightVectorStamps.push_back(&mSubInductor->attribute<Matrix>("right_vector")->get());
+		mRightVectorStamps.push_back(&**mSubInductor->mRightVector);
 	}
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -167,7 +167,7 @@ void DP::Ph1::RXLoad::mnaAddPreStepDependencies(AttributeBase::List &prevStepDep
 		mSubCapacitor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 
 	// add pre-step dependencies of component itself
-	modifiedAttributes.push_back(this->attribute("right_vector"));
+	modifiedAttributes.push_back(mRightVector);
 }
 
 void DP::Ph1::RXLoad::mnaPreStep(Real time, Int timeStepCount) {
@@ -206,6 +206,6 @@ void DP::Ph1::RXLoad::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix
 		mSubCapacitor->mnaPostStep(time, timeStepCount, leftVector);
 
 	// post-step of component itself
-	mnaUpdateVoltage(*leftVector);
-	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }

@@ -24,18 +24,16 @@ namespace Ph1 {
 		public SharedFactory<RXLoad> {
 	protected:
 		/// Power [Watt]
+		/// FIXME: This is never read, only written to
 		Complex mPower;
-		/// Active power [Watt]
-		Real mActivePower;
-		/// Reactive power [VAr]
-		Real mReactivePower;
-		/// Nominal voltage [V]
-		Real mNomVoltage;
 		/// Actual voltage [V]
+		/// FIXME: This is never used
 		Complex mVoltage;
 		/// Actual voltage [V]
+		/// FIXME: This is never used
 		Complex mCurrent;
 		/// Resistance [Ohm]
+		/// CHECK: This is only used for logging output
 		Real mResistance;
 		/// Reactance [Ohm]
 		Real mReactance;
@@ -52,6 +50,12 @@ namespace Ph1 {
 		/// Right side vectors of subcomponents
 		std::vector<const Matrix*> mRightVectorStamps;
 	public:
+		/// Active power [Watt]
+		const Attribute<Real>::Ptr mActivePower;
+		/// Reactive power [VAr]
+		const Attribute<Real>::Ptr mReactivePower;
+		/// Nominal voltage [V]
+		const Attribute<Real>::Ptr mNomVoltage;
 		/// Defines UID, name and logging level
 		RXLoad(String uid, String name,
 			Logger::Level logLevel = Logger::Level::off);
