@@ -11,17 +11,17 @@
 using namespace CPS;
 
 DP::Ph1::SVC::SVC(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mVpcc(Attribute<Real>::create("Vpcc", mAttributes, 0)),
+	mVmeasPrev(Attribute<Real>::create("Vmeas", mAttributes, 0)) {
 	setTerminalNumber(1);
 	setVirtualNodeNumber(2);
     **mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 
-	addAttribute<Real>("B", &mBPrev, Flags::read | Flags::write);
-	addAttribute<Real>("DeltaV", &mDeltaV, Flags::read | Flags::write);
-	addAttribute<Real>("Vpcc", &mVpcc, Flags::read | Flags::write);
-	addAttribute<Real>("Vmeas", &mVmeasPrev, Flags::read | Flags::write);
-	addAttribute<Real>("ViolationCounter", &mViolationCounter, Flags::read | Flags::write);
+	mDeltaV = Attribute<Real>::create("DeltaV", mAttributes, 0);
+	mBPrev = Attribute<Real>::create("B", mAttributes);
+	mViolationCounter = Attribute<Real>::create("ViolationCounter", mAttributes, 0);
 }
 
 void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
@@ -42,9 +42,9 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0)  = (**mIntfVoltage)(0,0) / impedance;
 
-	mBPrev = 0;
+	**mBPrev = 0;
 	mPrevVoltage = (**mIntfVoltage)(0, 0).real();
-	mVmeasPrev = mPrevVoltage;
+	**mVmeasPrev = mPrevVoltage;
 
 	if (mMechMode) {
 		mSLog->info("Using Mechanical Model");
@@ -57,7 +57,7 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 		"\n Qmax = {} [var] -> BN = {} [S]"
 		"\n Bmax = {} Bmin = {} [p.u.]"
 		"\n Initial B: {}",
-		mTr, mKr, mRefVolt, mQN, mBN, mBMax, mBMin, mBPrev);
+		mTr, mKr, mRefVolt, mQN, mBN, mBMax, mBMin, **mBPrev);
 
 	// set voltages at virtual nodes
 	Complex VLSwitch = (**mIntfVoltage)(0, 0) - LImpedance * (**mIntfCurrent)(0, 0);
@@ -204,7 +204,7 @@ void DP::Ph1::SVC::mnaPostStep(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::SVC::mnaUpdateVoltage(const Matrix& leftVector) {
-	mVpcc = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, 0).real();
+	**mVpcc = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, 0).real();
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
@@ -218,7 +218,7 @@ void DP::Ph1::SVC::checkProtection(Real time) {
 	// check states for violation of protection values
 	// get inverse protection curve value (time delay value)
 
-	Real Vpu = mVmeasPrev / mNomVolt;
+	Real Vpu = **mVmeasPrev / mNomVolt;
 	if (Vpu > 1.4) {
 		mProtCount1 = mProtCount1 + mDeltaT;
 		if (mProtCount1 > 0.1) {
@@ -266,14 +266,14 @@ void DP::Ph1::SVC::updateSusceptance() {
 
 	// Pt1 with trapez rule for voltage measurement
 	Real Fac3 = mDeltaT / (2 * mTm);
-	Real Vmeas = (1 / (1 + Fac3)) * (V + mPrevVoltage - mVmeasPrev);
+	Real Vmeas = (1 / (1 + Fac3)) * (V + mPrevVoltage - **mVmeasPrev);
 
-	mDeltaV = (Vmeas - mRefVolt) / mNomVolt;
-	Real deltaVPrev = (mVmeasPrev - mRefVolt) / mNomVolt;
+	**mDeltaV = (Vmeas - mRefVolt) / mNomVolt;
+	Real deltaVPrev = (**mVmeasPrev - mRefVolt) / mNomVolt;
 
 	// calc new B with trapezoidal rule
 	//Real B = (1/(1+Fac1)) * (Fac2 * (mDeltaV + deltaVPrev) + (1-Fac1) * mBPrev);
-	Real B = (1 / (1 + Fac1)) * (Fac2 * (mDeltaV + deltaVPrev) + (1 - Fac1) * mBPrev);
+	Real B = (1 / (1 + Fac1)) * (Fac2 * (**mDeltaV + deltaVPrev) + (1 - Fac1) * **mBPrev);
 	//mSLog->info("New B value: percent={}, absolute={}", 100 * B, B * mBN);
 
 	// check bounds
@@ -287,7 +287,7 @@ void DP::Ph1::SVC::updateSusceptance() {
 	}
 
 	// set new B if it has a new value and difference is big enough
-	if (B != mBPrev) {
+	if (B != **mBPrev) {
 	//if (B != mBPrev && mBSetCounter > 0.001){
 		//mValueChange = true;
 		//mBSetCounter = 0;
@@ -330,9 +330,9 @@ void DP::Ph1::SVC::updateSusceptance() {
 	}
 
 	// save values
-	mBPrev = B;
+	**mBPrev = B;
 	mPrevVoltage = V;
-	mVmeasPrev = Vmeas;
+	**mVmeasPrev = Vmeas;
 }
 
 // model SVC with a mechanical component and discrete
@@ -343,20 +343,20 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
 
 	// Pt1 with trapez rule for voltage measurement
 	Real Fac3 = mDeltaT / (2 * mTm);
-	Real Vmeas = (1 / (1 + Fac3)) * (V + mPrevVoltage - mVmeasPrev);
+	Real Vmeas = (1 / (1 + Fac3)) * (V + mPrevVoltage - **mVmeasPrev);
 
 	// V diff in pu
 	Real deltaV = (mRefVolt - Vmeas) / mRefVolt;
 
 	if (Math::abs(deltaV) > mDeadband) {
-		if (mViolationCounter > mMechSwitchDelay) {
+		if (**mViolationCounter > mMechSwitchDelay) {
 			// change suszeptance one step
 			if (deltaV > 0 && (mTapPos > mMinPos)) {
 				// undervoltage
 
 				mTapPos = mTapPos - 1;
 				mTapPos = (mTapPos < mMinPos) ? mMinPos : mTapPos;
-				mViolationCounter = 0;
+				**mViolationCounter = 0;
 				mSLog->info("Time: {}"
 					"\nDecreasing Tap. Reason: Undervoltage"
 					"\nNew Tap Position: {}", time, mTapPos);
@@ -365,13 +365,13 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
 				// overvoltage
 				mTapPos = mTapPos + 1;
 				mTapPos = (mTapPos > mMaxPos) ? mMaxPos : mTapPos;
-				mViolationCounter = 0;
+				**mViolationCounter = 0;
 				mSLog->info("Time: {}"
 					"\nIncreasing Tap. Reason: Overvoltag"
 					"\nNew Tap Position: {}", time, mTapPos);
 			}
 
-			if (mViolationCounter == 0) {
+			if (**mViolationCounter == 0) {
 				// new value for suszeptance
 				if (mTapPos > 0) {
 					// inductor is active
@@ -403,17 +403,17 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
 		}
 		else {
 			// increase counter
-			mViolationCounter = mViolationCounter + mDeltaT;
+			**mViolationCounter = **mViolationCounter + mDeltaT;
 		}
 	}
 	else {
 		// reset counter
-		mViolationCounter = 0;
+		**mViolationCounter = 0;
 	}
 
 	// save states
 	mPrevVoltage = V;
-	mVmeasPrev = Vmeas;
+	**mVmeasPrev = Vmeas;
 }
 
 void DP::Ph1::SVC::setSwitchState() {
