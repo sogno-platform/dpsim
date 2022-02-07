@@ -20,12 +20,9 @@ namespace Ph1 {
 		public MNAInterface,
 		public SharedFactory<VoltageSourceRamp> {
 	protected:
-		///
-		Complex mVoltageRef;
+		
 		///
 		Complex mAddVoltage;
-		///
-		Real mSrcFreq;
 		///
 		Real mSwitchTime;
 		///
@@ -37,6 +34,10 @@ namespace Ph1 {
 
 		void updateState(Real time);
 	public:
+		///
+		const Attribute<Complex>::Ptr mVoltageRef;
+		///
+		const Attribute<Real>::Ptr mSrcFreq;
 		/// Defines UID, name and logging level
 		VoltageSourceRamp(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level
