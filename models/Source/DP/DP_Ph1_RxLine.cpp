@@ -19,32 +19,35 @@ DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
-	addAttribute<Real>("R", &mSeriesRes, Flags::read | Flags::write);
-	addAttribute<Real>("L", &mSeriesInd, Flags::read | Flags::write);
+	mSeriesRes = Attribute<Real>::create("R", mAttributes);
+	mSeriesInd = Attribute<Real>::create("L", mAttributes);
+
 }
 
+///DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::RxLine::clone(String name) {
 	auto copy = RxLine::make(name, mLogLevel);
-	copy->setParameters(mSeriesRes, mSeriesInd);
+	copy->setParameters(**mSeriesRes, **mSeriesInd);
 	return copy;
 }
 
 void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	Complex impedance = { mSeriesRes, mSeriesInd * 2.*PI * frequency };
+	Complex impedance = { **mSeriesRes, **mSeriesInd * 2.*PI * frequency };
+	/// FIXME: This is always zero, as mVoltage is uninitialized
 	(**mIntfCurrent)(0, 0) = mVoltage / impedance;
-	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(0) + (**mIntfCurrent)(0, 0) * mSeriesRes );
+	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(0) + (**mIntfCurrent)(0, 0) * **mSeriesRes );
 
 	// Default model with virtual node in between
 	mSubResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
-	mSubResistor->setParameters(mSeriesRes);
+	mSubResistor->setParameters(**mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubResistor->initialize(mFrequencies);
 	mSubResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSubInductor = std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
-	mSubInductor->setParameters(mSeriesInd);
+	mSubInductor->setParameters(**mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubInductor->initialize(mFrequencies);
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
@@ -105,8 +108,8 @@ void DP::Ph1::RxLine::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::RxLine::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaUpdateVoltage(*mLeftVector);
-	mLine.mnaUpdateCurrent(*mLeftVector);
+	mLine.mnaUpdateVoltage(**mLeftVector);
+	mLine.mnaUpdateCurrent(**mLeftVector);
 }
 
 void DP::Ph1::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {
