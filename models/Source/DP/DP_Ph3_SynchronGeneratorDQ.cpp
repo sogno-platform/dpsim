@@ -22,7 +22,7 @@ DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logge
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	**mIntfCurrent = MatrixComp::Zero(3,1);
 
-	addAttribute<Real>("w_r", &mOmMech, Flags::read);
+	mOmMech = Attribute<Real>::create("w_r", mAttributes);
 }
 
 DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String name, Logger::Level logLevel)

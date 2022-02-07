@@ -64,7 +64,7 @@ namespace Ph3 {
 		///
 		Real electricalTorque() { return mElecTorque * mBase_T; }
 		///
-		Real rotationalSpeed() { return mOmMech * mBase_OmMech; }
+		Real rotationalSpeed() { return **mOmMech * mBase_OmMech; }
 		///
 		Real rotorPosition() { return mThetaMech; }
 		/// Calculates flux and current from the voltage vector.
