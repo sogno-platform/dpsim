@@ -67,9 +67,7 @@ namespace Base {
 		Int mNumDampingWindings = 0;
 		/// mNumber of poles
 		Int mPoleNumber = 0;
-		/// inertia constant H [s] for per unit or moment of inertia J [kg*m^2]
-		Real mInertia = 0;
-
+		
 		/// stator resistance Rs [Ohm]
 		Real mRs = 0;
 		/// leakage inductance Ll [H]
@@ -172,20 +170,24 @@ namespace Base {
 		Matrix mInvInductanceMat;
 
 		// ### State variables ###
-		/// rotor speed omega_r
-		Real mOmMech = 0;
 		/// theta
 		Real mThetaMech = 0;
 		/// rotor angle delta
 		Real mDelta = 0;
-		/// mechanical Power Pm [W]
-		Real mMechPower = 0;
 		/// mechanical torque
 		Real mMechTorque = 0;
-		/// Active part of the electrical power
-		Real mElecActivePower = 0;
 		/// Reactive part of the electrical power
 		Real mElecReactivePower = 0;
+	public:
+		/// inertia constant H [s] for per unit or moment of inertia J [kg*m^2]
+		Attribute<Real>::Ptr mInertia;
+		/// rotor speed omega_r
+		Attribute<Real>::Ptr mOmMech;
+		/// Active part of the electrical power
+		Attribute<Real>::Ptr mElecActivePower;
+		/// mechanical Power Pm [W]
+		Attribute<Real>::Ptr mMechPower;
+	protected:
 		/// electrical torque
 		Real mElecTorque = 0;
 		/// \brief Vector of stator and rotor voltages.

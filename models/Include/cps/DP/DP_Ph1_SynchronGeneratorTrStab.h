@@ -27,14 +27,6 @@ namespace Ph1 {
 		public SharedFactory<SynchronGeneratorTrStab> {
 	protected:
 		// #### Model specific variables ####
-		/// emf behind transient reactance
-		Complex mEp;
-		/// fixed absolute value of emf behind transient reactance
-		Real mEp_abs;
-		/// Angle by which the emf Ep is leading the system reference frame
-		Real mEp_phase;
-		/// Angle by which the emf Ep is leading the terminal voltage
-		Real mDelta_p;
 		/// Absolute d-axis transient reactance X'd
  		Real mXpd;
 		/// Absolute d-axis transient inductance
@@ -54,6 +46,21 @@ namespace Ph1 {
 		/// Flag for usage of actual mechanical speed for torque conversion (otherwise mNomOmega is used)
 		Bool mConvertWithOmegaMech = true;
 	public:
+		// #### Model specific variables ####
+		/// emf behind transient reactance
+		const Attribute<Complex>::Ptr mEp;
+		/// fixed absolute value of emf behind transient reactance
+		/// CHECK: Is this necessary / could this be derived from mEp?
+		const Attribute<Real>::Ptr mEp_abs;
+		/// Angle by which the emf Ep is leading the system reference frame
+		/// CHECK: Is this necessary / could this be derived from mEp?
+		const Attribute<Real>::Ptr mEp_phase;
+		/// Angle by which the emf Ep is leading the terminal voltage
+		const Attribute<Real>::Ptr mDelta_p;
+		/// 
+		const Attribute<Real>::Ptr mRefOmega;
+		/// 
+		const Attribute<Real>::Ptr mRefDelta;
 		///
 		SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		///
