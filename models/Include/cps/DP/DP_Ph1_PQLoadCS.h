@@ -26,13 +26,13 @@ namespace Ph1 {
 	protected:
 		/// Internal current source
 		std::shared_ptr<DP::Ph1::CurrentSource> mSubCurrentSource;
-		///
-		Attribute<Complex>::Ptr mCurrentSourceRef;
-		Attribute<Real>::Ptr mActivePower, mReactivePower, mNomVoltage;
-
 		void updateSetPoint();
 		void updateIntfValues();
 	public:
+		const Attribute<Real>::Ptr mActivePower;
+		const Attribute<Real>::Ptr mReactivePower;
+		const Attribute<Real>::Ptr mNomVoltage;
+
 		/// Defines UID, name and logging level
 		PQLoadCS(String uid, String name,
 			Logger::Level logLevel = Logger::Level::off);

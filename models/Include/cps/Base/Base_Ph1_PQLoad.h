@@ -13,6 +13,8 @@
 namespace CPS {
 namespace Base {
 namespace Ph1 {
+
+	/// FIXME: This class is never used...
 	class PQLoad {
 	protected:
 		/// Active power [Watt]
