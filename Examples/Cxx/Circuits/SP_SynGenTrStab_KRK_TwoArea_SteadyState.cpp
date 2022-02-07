@@ -1,6 +1,6 @@
 /* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University; Grupo de Automática
- *                     de la Universidad Nacional de Colombia
+ *                     EONERC, RWTH Aachen University; Universidad
+ *                     Nacional de Colombia
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
