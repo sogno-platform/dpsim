@@ -20,26 +20,23 @@ EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logg
 	**mIntfVoltage = Matrix::Zero(3,1);
 	**mIntfCurrent = Matrix::Zero(3,1);
 
-	addAttribute<Real>("Rs", &mRs, Flags::read | Flags::write);
-	addAttribute<Real>("Ll", &mLl, Flags::read | Flags::write);
-	addAttribute<Real>("Ld", &mLd, Flags::read | Flags::write);
-	addAttribute<Real>("Lq", &mLq, Flags::read | Flags::write);
-
-	addAttribute<Real>("Ld_t", &mLd_t, Flags::read | Flags::write);
-	addAttribute<Real>("Ld_s", &mLd_s, Flags::read | Flags::write);
-	addAttribute<Real>("Lq_t", &mLq_t, Flags::read | Flags::write);
-	addAttribute<Real>("Lq_s", &mLq_s, Flags::read | Flags::write);
-
-	addAttribute<Real>("Td0_t", &mTd0_t, Flags::read | Flags::write);
-	addAttribute<Real>("Td0_s", &mTd0_s, Flags::read | Flags::write);
-	addAttribute<Real>("Tq0_t", &mTq0_t, Flags::read | Flags::write);
-	addAttribute<Real>("Tq0_s", &mTq0_s, Flags::read | Flags::write);
-
-	addAttribute<Real>("w_r", &mOmMech, Flags::read);
-	addAttribute<Real>("delta_r", &mDelta, Flags::read);
-
-	addAttribute<Real>("T_e", &mElecTorque, Flags::read);
-	addAttribute<Real>("T_m", &mMechTorque, Flags::read);
+	///CHECK: Why do all of these exist? Most of them are never used 
+	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
+	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
+	mLd = Attribute<Real>::create("Ld", mAttributes, 0);
+	mLq = Attribute<Real>::create("Lq", mAttributes, 0);
+	mTd0_t = Attribute<Real>::create("Td0_t", mAttributes, 0);
+	mTd0_s = Attribute<Real>::create("Td0_s", mAttributes, 0);
+	mTq0_t = Attribute<Real>::create("Tq0_t", mAttributes, 0);
+	mTq0_s = Attribute<Real>::create("Tq0_s", mAttributes, 0);
+	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
+	mDelta = Attribute<Real>::create("delta_r", mAttributes, 0);
+	mElecTorque = Attribute<Real>::create("T_e", mAttributes, 0);
+	mMechTorque = Attribute<Real>::create("T_m", mAttributes, 0);
+	mLd_s = Attribute<Real>::create("Ld_s", mAttributes, 0);
+	mLd_t = Attribute<Real>::create("Ld_t", mAttributes, 0);
+	mLq_s = Attribute<Real>::create("Lq_s", mAttributes, 0);
+	mLq_t = Attribute<Real>::create("Lq_t", mAttributes, 0);
 }
 
 EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String name, Logger::Level logLevel)
@@ -133,15 +130,15 @@ void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
 			"Ld_t: {:e}\nLq_t: {:e}\nLd_s: {:e}\nLq_s: {:e}\n"
 			"Td0_t: {:e}\nTq0_t: {:e}\nTd0_s: {:e}\nTq0_s: {:e}\n",
 			mPoleNumber, mInertia,
-			mRs, mLd, mLq, mLl,
-			mLd_t, mLq_t, mLd_s, mLq_s,
-			mTd0_t, mTq0_t, mTd0_s, mTq0_s);
+			**mRs, **mLd, **mLq, **mLl,
+			**mLd_t, **mLq_t, **mLd_s, **mLq_s,
+			**mTd0_t, **mTq0_t, **mTd0_s, **mTq0_s);
 
 	Base::SynchronGenerator::calculateFundamentalFromOperationalParameters();
 	mSLog->info("Updated fundamental parameters in per unit: \n"
 			"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
 			"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\n",
-			mRs, mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
+			**mRs, **mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::initializeFromNodesAndTerminals(Real frequency) {
