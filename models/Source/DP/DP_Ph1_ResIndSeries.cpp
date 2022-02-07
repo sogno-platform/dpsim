@@ -11,19 +11,20 @@
 using namespace CPS;
 
 DP::Ph1::ResIndSeries::ResIndSeries(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mInductance(Attribute<Real>::create("L", mAttributes)),
+	///FIXME: The resistance is never used anywhere...
+	mResistance(Attribute<Real>::create("R", mAttributes)) { 
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
-
-	addAttribute<Real>("L", &mInductance, Flags::read | Flags::write);
-	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
 }
 
+///DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::ResIndSeries::clone(String name) {
 	auto copy = ResIndSeries::make(name, mLogLevel);
-	copy->setParameters(mResistance, mInductance);
+	copy->setParameters(**mResistance, **mInductance);
 	return copy;
 }
 
@@ -38,7 +39,7 @@ void DP::Ph1::ResIndSeries::initialize(Matrix frequencies) {
 void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2. * PI * frequency;
-	Complex impedance = { 0, omega * mInductance };
+	Complex impedance = { 0, omega * **mInductance };
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
@@ -59,7 +60,7 @@ void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 
 void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
-		Real a = timeStep / (2. * mInductance);
+		Real a = timeStep / (2. * **mInductance);
 		Real b = timeStep * 2.*PI * mFrequencies(freq,0) / 2.;
 
 		Real equivCondReal = a / (1. + b * b);
