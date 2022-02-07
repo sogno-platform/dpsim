@@ -20,7 +20,7 @@ EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logg
 	**mIntfVoltage = Matrix::Zero(3,1);
 	**mIntfCurrent = Matrix::Zero(3,1);
 
-	///CHECK: Why do all of these exist? Most of them are never used 
+	///CHECK: Are all of these used in this class or in subclasses?
 	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
 	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
 	mLd = Attribute<Real>::create("Ld", mAttributes, 0);

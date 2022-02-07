@@ -48,7 +48,7 @@ void EMT::Ph3::SynchronGeneratorDQODE::odePreStep() {
 		(**mOdePreState)(i)=mPsisr(i, 0);
 
 	(**mOdePreState)(mDim-2)=mThetaMech;
-	(**mOdePreState)(mDim-1)=mOmMech;
+	(**mOdePreState)(mDim-1)= **mOmMech;
 
 	//copied from stepInPerUnit
 	mVdq0 = abcToDq0Transform(mThetaMech, **mIntfVoltage);
@@ -64,7 +64,7 @@ void EMT::Ph3::SynchronGeneratorDQODE::odePostStep() {
 		mPsisr(i,0)=(**mOdePostState)(i);
 
 	mThetaMech=(**mOdePostState)(mDim-2);
-	mOmMech=(**mOdePostState)(mDim-1);
+	**mOmMech =(**mOdePostState)(mDim-1);
 
 	//copied from stepInPerUnit ; makes only sense to call this after write back
 	mIsr = mFluxToCurrentMat * mPsisr;
@@ -119,7 +119,7 @@ void EMT::Ph3::SynchronGeneratorDQODE::odeStateSpace(double t, const double y[],
 	}
 
 	// Compute Omega (according to stepInPerUnit)
-	ydot[mDim-1]=1/(2*mInertia)*(mMechTorque-(y[3]*i_d-y[0]*i_q));
+	ydot[mDim-1]=1/(2* **mInertia)*(**mMechTorque-(y[3]*i_d-y[0]*i_q));
 }
 
 void EMT::Ph3::SynchronGeneratorDQODE::odeJacobian(double t, const double y[], double fy[], double J[], double tmp1[], double tmp2[], double tmp3[]){
@@ -142,6 +142,6 @@ void EMT::Ph3::SynchronGeneratorDQODE::odeJacobian(double t, const double y[], d
 		i_q+=mFluxToCurrentMat(3,i)*y[i];
 	}
 	//fluxes show up in omega eq. (with mBase_OmMech ?)
-	J[(mDim-1)*(mDim-2)+0]=1/(2*mInertia)*i_q;
-	J[(mDim-1)*(mDim-2)+3]=-1/(2*mInertia)*i_d;
+	J[(mDim-1)*(mDim-2)+0]=1/(2* **mInertia)*i_q;
+	J[(mDim-1)*(mDim-2)+3]=-1/(2* **mInertia)*i_d;
 }
