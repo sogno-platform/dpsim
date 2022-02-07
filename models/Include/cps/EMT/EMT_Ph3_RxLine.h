@@ -25,8 +25,10 @@ namespace Ph3 {
 		public SharedFactory<RxLine> {
 	protected:
 		/// Voltage across the component [V]
+		/// FIXME: This is never used...
 		Matrix mVoltage;
 		/// Current through the component [A]
+		/// FIXME: This is never used...
 		Matrix mCurrent;
 		/// Inductance submodel
 		std::shared_ptr<Inductor> mSubInductor;

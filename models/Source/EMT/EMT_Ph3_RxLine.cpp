@@ -23,14 +23,15 @@ EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	addAttribute<Matrix>("R", &mSeriesRes, Flags::read | Flags::write);
-	addAttribute<Matrix>("L", &mSeriesInd, Flags::read | Flags::write);
+	mSeriesRes = Attribute<Matrix>::create("R", mAttributes);
+	mSeriesInd = Attribute<Matrix>::create("L", mAttributes);
 	mSLog->flush();
 }
 
+/// DEPRECATED: Delete method
 SimPowerComp<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {
 	auto copy = RxLine::make(name, mLogLevel);
-	copy->setParameters(mSeriesRes, mSeriesInd);
+	copy->setParameters(**mSeriesRes, **mSeriesInd);
 	return copy;
 }
 
@@ -40,9 +41,9 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2. * PI * frequency;
 	MatrixComp impedance = MatrixComp::Zero(3, 3);
 	impedance <<
-		Complex(mSeriesRes(0, 0), omega * mSeriesInd(0, 0)), Complex(mSeriesRes(0, 1), omega * mSeriesInd(0, 1)), Complex(mSeriesRes(0, 2), omega * mSeriesInd(0, 2)),
-		Complex(mSeriesRes(1, 0), omega * mSeriesInd(1, 0)), Complex(mSeriesRes(1, 1), omega * mSeriesInd(1, 1)), Complex(mSeriesRes(1, 2), omega * mSeriesInd(1, 2)),
-		Complex(mSeriesRes(2, 0), omega * mSeriesInd(2, 0)), Complex(mSeriesRes(2, 1), omega * mSeriesInd(2, 1)), Complex(mSeriesRes(2, 2), omega * mSeriesInd(2, 2));
+		Complex((**mSeriesRes)(0, 0), omega * (**mSeriesInd)(0, 0)), Complex((**mSeriesRes)(0, 1), omega * (**mSeriesInd)(0, 1)), Complex((**mSeriesRes)(0, 2), omega * (**mSeriesInd)(0, 2)),
+		Complex((**mSeriesRes)(1, 0), omega * (**mSeriesInd)(1, 0)), Complex((**mSeriesRes)(1, 1), omega * (**mSeriesInd)(1, 1)), Complex((**mSeriesRes)(1, 2), omega * (**mSeriesInd)(1, 2)),
+		Complex((**mSeriesRes)(2, 0), omega * (**mSeriesInd)(2, 0)), Complex((**mSeriesRes)(2, 1), omega * (**mSeriesInd)(2, 1)), Complex((**mSeriesRes)(2, 2), omega * (**mSeriesInd)(2, 2));
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
 	vInitABC(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
@@ -58,16 +59,16 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	vInitTerm0(1, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_B;
 	vInitTerm0(2, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_C;
 
-	mVirtualNodes[0]->setInitialVoltage(vInitTerm0 + mSeriesRes * **mIntfCurrent);
+	mVirtualNodes[0]->setInitialVoltage(vInitTerm0 + **mSeriesRes * **mIntfCurrent);
 
 	// Default model with virtual node in between
 	mSubResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
-	mSubResistor->setParameters(mSeriesRes);
+	mSubResistor->setParameters(**mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSubInductor = std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
-	mSubInductor->setParameters(mSeriesInd);
+	mSubInductor->setParameters(**mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
