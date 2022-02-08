@@ -29,6 +29,9 @@ namespace Ph3 {
 		/// Inner voltage source that represents the generator
 		std::shared_ptr<EMT::Ph3::CurrentSource> mSubCurrentSource;
 	public:
+		/// CHECK: Is this actually necessary? It is never read from within the component's code
+		const Attribute<MatrixComp>::Ptr mRefVoltage;
+
 		/// Defines UID, name, component parameters and logging level
 		SynchronGeneratorIdeal(String uid, String name,
 			Logger::Level logLevel = Logger::Level::off, CPS::GeneratorType sourceType = CPS::GeneratorType::IdealVoltageSource);

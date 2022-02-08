@@ -12,7 +12,8 @@ using namespace CPS;
 
 
 EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name, Logger::Level logLevel, CPS::GeneratorType sourceType)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel),
+	mRefVoltage(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	mSourceType = sourceType;
 
@@ -24,8 +25,6 @@ EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
-
-	addAttribute<MatrixComp>("V_ref", Flags::read | Flags::write);
 }
 
 EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String name,
@@ -58,7 +57,7 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real freq
 	mSubComponents[0]->initializeFromNodesAndTerminals(frequency);
 	
 	if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
-		setAttributeRef("V_ref", mSubComponents[0]->attribute<MatrixComp>("V_ref"));
+		mRefVoltage->setReference(mSubComponents[0]->attribute<MatrixComp>("V_ref"));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
