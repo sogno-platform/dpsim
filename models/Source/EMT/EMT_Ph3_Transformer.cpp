@@ -25,12 +25,13 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(1, 1);
 
-	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
+	mRatio = Attribute<Complex>::create("ratio", mAttributes);
 }
 
+/// DEPRECATED: Delete method
 SimPowerComp<Real>::Ptr EMT::Ph3::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
-	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, mRatedPower, std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
+	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, mRatedPower, std::abs(**mRatio), std::arg(**mRatio), mResistance, mInductance);
 	return copy;
 }
 
@@ -41,7 +42,7 @@ void EMT::Ph3::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEn
 
 	mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
 	mSLog->info("Rated Apparent Power  = {} [VA]", mRatedPower);
-    mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(mRatio), std::arg(mRatio));
+    mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
 
 	mParametersSet = true;
 }
@@ -51,8 +52,8 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// Component parameters are referred to higher voltage side.
 	// Switch terminals to have terminal 0 at higher voltage side
 	// if transformer is connected the other way around.
-	if (Math::abs(mRatio) < 1.) {
-		mRatio = 1. / mRatio;
+	if (Math::abs(**mRatio) < 1.) {
+		**mRatio = 1. / **mRatio;
 		std::shared_ptr<SimTerminal<Real>> tmp = mTerminals[0];
 		mTerminals[0] = mTerminals[1];
 		mTerminals[1] = tmp;
@@ -61,11 +62,11 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		mNominalVoltageEnd2 = tmpVolt;
 		mSLog->info("Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
 		mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
-		mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(mRatio), std::arg(mRatio));
+		mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
 	}
 
 	// Set initial voltage of virtual node in between
-	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * mRatio);
+	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
 
 	// Static calculations from load flow data
 	Real omega = 2. * PI * frequency;
@@ -201,12 +202,12 @@ void EMT::Ph3::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	}
 	if (terminalNotGrounded(1)) {
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 0), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), mRatio.real());
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 1), mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), mRatio.real());
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 2), mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), mRatio.real());
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(1, 0), -mRatio.real());
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), matrixNodeIndex(1, 1), -mRatio.real());
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(1, 2), -mRatio.real());
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 0), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), (**mRatio).real());
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 1), mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), (**mRatio).real());
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 2), mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), (**mRatio).real());
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(1, 0), -(**mRatio).real());
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), matrixNodeIndex(1, 1), -(**mRatio).real());
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(1, 2), -(**mRatio).real());
 	}
 
 	// Add subcomps to system matrix
@@ -230,18 +231,18 @@ void EMT::Ph3::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 			mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
 	}
 	if (terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(mRatio),
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
 			matrixNodeIndex(1, 0), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(mRatio),
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
 			matrixNodeIndex(1, 1), mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(mRatio),
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
 			matrixNodeIndex(1, 2), mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));
 
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-mRatio),
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(1, 0));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-mRatio),
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), matrixNodeIndex(1, 1));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-mRatio),
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(1, 2));
 	}
 }
@@ -290,8 +291,8 @@ void EMT::Ph3::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
-	mnaUpdateVoltage(*leftVector);
-	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
