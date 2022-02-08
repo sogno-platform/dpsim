@@ -34,7 +34,7 @@ DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorTrStab::clone(String name) {
 	auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
-	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, **mInertia, mRs, mKd);
+	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, **mInertia, **mRs, mKd);
 	return copy;
 }
 
@@ -50,16 +50,16 @@ void DP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower,
 	mParameterType = ParameterType::statorReferred;
 	mStateType = StateType::statorReferred;
 
-	mLl = Ll;
+	**mLl = Ll;
 	mLmd = Lmd;
-	mLd = mLl + mLmd;
+	**mLd = **mLl + mLmd;
 	mLlfd = Llfd;
 	mLfd = mLlfd + mLmd;
 	// M = 2*H where H = inertia
 	**mInertia = inertia;
 	// X'd in absolute values
-	mXpd = mNomOmega * (mLd - mLmd*mLmd / mLfd) * mBase_L;
-	mLpd = (mLd - mLmd*mLmd / mLfd) * mBase_L;
+	mXpd = mNomOmega * (**mLd - mLmd*mLmd / mLfd) * mBase_L;
+	mLpd = (**mLd - mLmd*mLmd / mLfd) * mBase_L;
 
 	//The units of D are per unit power divided by per unit speed deviation.
 	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
@@ -115,7 +115,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 	mXpd = Xpd * mBase_Z;
 	mLpd = Xpd * mBase_L;
 
-	mRs= Rs;
+	**mRs= Rs;
 	//The units of D are per unit power divided by per unit speed deviation.
 	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
 	mKd= D*mNomPower/mNomOmega;
@@ -158,7 +158,7 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	//I_intf is the current which is flowing into the Component, while mInitElecPower is flowing out of it
 	(**mIntfCurrent)(0,0) = std::conj( - mInitElecPower / (**mIntfVoltage)(0,0) );
 
-	mImpedance = Complex(mRs, mXpd);
+	mImpedance = Complex(**mRs, mXpd);
 
 	// Calculate initial emf behind reactance from power flow results
 	**mEp = (**mIntfVoltage)(0,0) - mImpedance * (**mIntfCurrent)(0,0);
