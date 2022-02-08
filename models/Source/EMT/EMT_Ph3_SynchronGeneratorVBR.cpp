@@ -20,26 +20,23 @@ EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String uid, String name, Lo
 	**mIntfVoltage = Matrix::Zero(3,1);
 	**mIntfCurrent = Matrix::Zero(3,1);
 
-	addAttribute<Real>("Rs", &mRs, Flags::read | Flags::write);
-	addAttribute<Real>("Ll", &mLl, Flags::read | Flags::write);
-	addAttribute<Real>("Ld", &mLd, Flags::read | Flags::write);
-	addAttribute<Real>("Lq", &mLq, Flags::read | Flags::write);
-
-	addAttribute<Real>("Ld_t", &mLd_t, Flags::read | Flags::write);
-	addAttribute<Real>("Ld_s", &mLd_s, Flags::read | Flags::write);
-	addAttribute<Real>("Lq_t", &mLq_t, Flags::read | Flags::write);
-	addAttribute<Real>("Lq_s", &mLq_s, Flags::read | Flags::write);
-
-	addAttribute<Real>("Td0_t", &mTd0_t, Flags::read | Flags::write);
-	addAttribute<Real>("Td0_s", &mTd0_s, Flags::read | Flags::write);
-	addAttribute<Real>("Tq0_t", &mTq0_t, Flags::read | Flags::write);
-	addAttribute<Real>("Tq0_s", &mTq0_s, Flags::read | Flags::write);
-
-	addAttribute<Real>("w_r", &mOmMech, Flags::read);
-	addAttribute<Real>("delta_r", &mDelta, Flags::read);
-
-	addAttribute<Real>("T_e", &mElecTorque, Flags::read);
-	addAttribute<Real>("T_m", &mMechTorque, Flags::read);
+	///CHECK: Are all of these used in this class or in subclasses?
+	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
+	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
+	mLd = Attribute<Real>::create("Ld", mAttributes, 0);
+	mLq = Attribute<Real>::create("Lq", mAttributes, 0);
+	mTd0_t = Attribute<Real>::create("Td0_t", mAttributes, 0);
+	mTd0_s = Attribute<Real>::create("Td0_s", mAttributes, 0);
+	mTq0_t = Attribute<Real>::create("Tq0_t", mAttributes, 0);
+	mTq0_s = Attribute<Real>::create("Tq0_s", mAttributes, 0);
+	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
+	mDelta = Attribute<Real>::create("delta_r", mAttributes, 0);
+	mElecTorque = Attribute<Real>::create("T_e", mAttributes, 0);
+	mMechTorque = Attribute<Real>::create("T_m", mAttributes, 0);
+	mLd_s = Attribute<Real>::create("Ld_s", mAttributes, 0);
+	mLd_t = Attribute<Real>::create("Ld_t", mAttributes, 0);
+	mLq_s = Attribute<Real>::create("Lq_s", mAttributes, 0);
+	mLq_t = Attribute<Real>::create("Lq_t", mAttributes, 0);
 	
 }
 
@@ -73,7 +70,7 @@ void EMT::Ph3::SynchronGeneratorVBR::setBaseAndOperationalPerUnitParameters(
 	mSLog->info("Set fundamental parameters in per unit: \n"
 			"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
 			"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\n",
-			mRs, mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
+			**mRs, **mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::setBaseAndFundamentalPerUnitParameters(
@@ -149,9 +146,9 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, At
 
 	mResistanceMat = Matrix::Zero(3, 3);
 	mResistanceMat <<
-		mRs, 0, 0,
-		0, mRs, 0,
-		0, 0, mRs;
+		**mRs, 0, 0,
+		0, **mRs, 0,
+		0, 0, **mRs;
 
 	//Dynamic mutual inductances
 	mDLmd = 1. / (1. / mLmd + 1. / mLlfd + 1. / mLlkd);
@@ -174,7 +171,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, At
 
 	// Correcting variables
 	mThetaMech = mThetaMech + PI / 2;
-	mMechTorque = -mMechTorque;
+	**mMechTorque = - **mMechTorque;
 	mIq = -mIq;
 	mId = -mId;
 
@@ -298,9 +295,9 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 		mMechTorque = -mTurbineGovernor->step(mOmMech, 1,  mInitElecPower.real() / mNomPower, mTimeStep);
 
 	// Estimate mechanical variables with euler
-	mElecTorque = (mPsimd*mIq - mPsimq*mId);
-	mOmMech = mOmMech + mTimeStep * (1. / (2. * mInertia) * (mElecTorque - mMechTorque));
-	mThetaMech = mThetaMech + mTimeStep * (mOmMech* mBase_OmMech);
+	**mElecTorque = (mPsimd*mIq - mPsimq*mId);
+	**mOmMech = **mOmMech + mTimeStep * (1. / (2. * **mInertia) * (**mElecTorque - **mMechTorque));
+	mThetaMech = mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 
 	// Calculate equivalent Resistance and current source
 	mVabc <<
@@ -439,9 +436,9 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaAddPostStepDependencies(AttributeBase::L
 
 void EMT::Ph3::SynchronGeneratorVBR::CalculateL() {
 	mDInductanceMat <<
-		mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
-		-mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), mLl + mLa - mLb*cos(2 * mThetaMech - 4 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech),
-		-mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech), mLl + mLa - mLb*cos(2 * mThetaMech + 4 * PI / 3);
+		**mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
+		-mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), **mLl + mLa - mLb*cos(2 * mThetaMech - 4 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech),
+		-mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech), **mLl + mLa - mLb*cos(2 * mThetaMech + 4 * PI / 3);
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarConstants(Real dt) {
@@ -517,10 +514,10 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarConstants(Real dt) {
 void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarVariables() {
 
 	if (mNumDampingWindings == 2) {
-		c21_omega = -mOmMech*mDLmq / mLlkq1;
-		c22_omega = -mOmMech*mDLmq / mLlkq2;
-		c13_omega = mOmMech*mDLmd / mLlfd;
-		c14_omega = mOmMech*mDLmd / mLlkd;
+		c21_omega = - **mOmMech * mDLmq / mLlkq1;
+		c22_omega = - **mOmMech * mDLmq / mLlkq2;
+		c13_omega = **mOmMech * mDLmd / mLlfd;
+		c14_omega = **mOmMech * mDLmd / mLlkd;
 
 		K1a <<
 			c11, c12,
@@ -531,9 +528,9 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarVariables() {
 		K1 = K1a*E1 + K1b;
 	}
 	else {
-		c21_omega = -mOmMech*mDLmq / mLlkq1;
-		c13_omega = mOmMech*mDLmd / mLlfd;
-		c14_omega = mOmMech*mDLmd / mLlkd;
+		c21_omega = - **mOmMech * mDLmq / mLlkq1;
+		c13_omega = **mOmMech * mDLmd / mLlfd;
+		c14_omega = **mOmMech * mDLmd / mLlkd;
 
 		K1a <<
 			c11,
