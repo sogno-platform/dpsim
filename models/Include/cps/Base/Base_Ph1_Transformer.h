@@ -16,10 +16,13 @@ namespace Ph1 {
 	class Transformer {
 	protected:
 		/// Nominal voltage of primary side
+		/// FIXME: SP wants this to be an attribute, DP not
 		Real mNominalVoltageEnd1;
 		/// Nominal voltage of secondary side
+		/// FIXME: SP wants this to be an attribute, DP not
 		Real mNominalVoltageEnd2;
 		/// Rated Apparent Power [VA]
+		/// FIXME: SP wants this to be an attribute, DP not
 		Real mRatedPower;
 	public:
 		/// Complex transformer ratio

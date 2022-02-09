@@ -59,8 +59,10 @@ namespace Ph1 {
 		Real mNominalOmega;
 
 		/// Voltage [V]
+		/// FIXME: Not used
 		Real mSvVoltage;
 		/// Conductance [S]
+		/// FIXME: Only set, never read
 		Real mConductance;
 		/// Reactance [Ohm]
 		Real mReactance;
@@ -82,8 +84,7 @@ namespace Ph1 {
 		Real mBaseAdmittance;
 		///base omega [1/s]
 		Real mBaseOmega;
-		/// base voltage [V]
-		Real mBaseVoltage;
+		
 		///base current [A]
 		Real mBaseCurrent;
 
@@ -103,23 +104,38 @@ namespace Ph1 {
 		// #### Admittance matrix stamp ####
 		MatrixComp mY_element;
 
-		// #### Power flow results ####
-		/// branch Current flow [A]
-		Eigen::Matrix<CPS::Complex, 2, 1, Eigen::DontAlign> mCurrent;
-		/// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
-		Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign> mActivePowerBranch;
-		/// branch reactive powerflow [Var]
-		Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign> mReactivePowerBranch;
-		/// whether the total power injection of its from node is stored in this line
-		Bool mStoreNodalPowerInjection = false;
-		/// nodal active power injection
-		Real mActivePowerInjection;
-		/// nodal reactive power injection
-		Real mReactivePowerInjection;
-
 		/// Boolean for considering resistive losses with sub resistor
 		Bool mWithResistiveLosses;
 	public:
+		/// base voltage [V]
+		const Attribute<Real>::Ptr mBaseVoltage;
+
+		// #### Power flow results ####
+		/// branch Current flow [A]
+		const Attribute<Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign>>::Ptr mCurrent;
+		/// CHECK: Are these derived attributes necessary?
+		Attribute<CPS::Complex>::Ptr mCurrent_0;
+		Attribute<CPS::Complex>::Ptr mCurrent_1;
+		
+		/// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
+		const Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::Ptr mActivePowerBranch;
+		/// CHECK: Are these derived attributes necessary?
+		Attribute<CPS::Real>::Ptr mActivePowerBranch_0;
+		Attribute<CPS::Real>::Ptr mActivePowerBranch_1;
+
+		/// branch reactive powerflow [Var]
+		const Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::Ptr mReactivePowerBranch;
+		/// CHECK: Are these derived attributes necessary?
+		Attribute<CPS::Real>::Ptr mReactivePowerBranch_0;
+		Attribute<CPS::Real>::Ptr mReactivePowerBranch_1;
+		/// nodal active power injection
+		const Attribute<Real>::Ptr mActivePowerInjection;
+		/// nodal reactive power injection
+		const Attribute<Real>::Ptr mReactivePowerInjection;
+		/// whether the total power injection of its from node is stored in this line
+		/// FIXME: This is only written to, but never read
+		const Attribute<Bool>::Ptr mStoreNodalPowerInjection;
+
 		/// Defines UID, name and logging level
 		Transformer(String uid, String name,
 			Logger::Level logLevel = Logger::Level::off, Bool withResistiveLosses = false);

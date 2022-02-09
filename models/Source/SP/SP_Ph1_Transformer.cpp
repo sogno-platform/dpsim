@@ -12,7 +12,14 @@ using namespace CPS;
 
 // #### General ####
 SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel, Bool withResistiveLosses)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mBaseVoltage(Attribute<Real>::create("base_voltage", mAttributes)),
+	mCurrent(Attribute<Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign>>::create("current_vector", mAttributes)),
+	mActivePowerBranch(Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::create("p_branch_vector", mAttributes)),
+	mReactivePowerBranch(Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::create("q_branch_vector", mAttributes)),
+	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
+	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
+	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)) {
 	if (withResistiveLosses)
 		setVirtualNodeNumber(3);
 	else
@@ -23,23 +30,49 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
 
-	addAttribute<Real>("nominal_voltage_end1", &mNominalVoltageEnd1, Flags::read | Flags::write);
-	addAttribute<Real>("nominal_voltage_end2", &mNominalVoltageEnd2, Flags::read | Flags::write);
-	addAttribute<Real>("base_voltage", &mBaseVoltage, Flags::read | Flags::write);
-	addAttribute<Real>("S", &mRatedPower, Flags::write | Flags::read);
-	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
-	addAttribute<Real>("R", &mResistance, Flags::write | Flags::read);
-	addAttribute<Real>("L", &mInductance, Flags::write | Flags::read);
-	addAttribute<Bool>("nodal_injection_stored", &mStoreNodalPowerInjection, Flags::read | Flags::write);
-	addAttribute<Real>("p_inj", &mActivePowerInjection, Flags::read | Flags::write);
-	addAttribute<Real>("q_inj", &mReactivePowerInjection, Flags::read | Flags::write);
+	/// FIXME: These are not attributes in the base class because DP transformer uses it as normal member variables
+	/// They are used in the PowerFlow solver, so not having them as attributes is not a valid solution
+	// addAttribute<Real>("nominal_voltage_end1", &mNominalVoltageEnd1, Flags::read | Flags::write);
+	// addAttribute<Real>("nominal_voltage_end2", &mNominalVoltageEnd2, Flags::read | Flags::write);
+	// addAttribute<Real>("S", &mRatedPower, Flags::write | Flags::read);
 
-	addAttribute<Complex>("current", &mCurrent(0), Flags::read | Flags::write);
-	addAttribute<Complex>("current_1", &mCurrent(1), Flags::read | Flags::write);
-	addAttribute<Real>("p_branch", &mActivePowerBranch(0), Flags::read | Flags::write);
-	addAttribute<Real>("q_branch", &mReactivePowerBranch(0), Flags::read | Flags::write);
-	addAttribute<Real>("p_branch_1", &mActivePowerBranch(1), Flags::read | Flags::write);
-	addAttribute<Real>("q_branch_1", &mReactivePowerBranch(1), Flags::read | Flags::write);
+	mRatio = Attribute<Complex>::create("ratio", mAttributes);
+	mResistance = Attribute<Real>::create("R", mAttributes);
+	mInductance = Attribute<Real>::create("L", mAttributes);
+
+	/// CHECK: This is a nice test of the dynamic attribute system, but seems very overkill for this use case.
+	mCurrent_0 = mCurrent->derive<Complex>(
+			[](std::shared_ptr<Complex> &dependent, Attribute<Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
+				*dependent = (**dependency)(0);
+			});
+	mCurrent_1 = mCurrent->derive<Complex>(
+			[](std::shared_ptr<Complex> &dependent, Attribute<Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
+				*dependent = (**dependency)(1);
+			});
+	mAttributes["current"] = mCurrent_0;
+	mAttributes["current_1"] = mCurrent_1;
+
+	mActivePowerBranch_0 = mActivePowerBranch->derive<Real>(
+			[](std::shared_ptr<Real> &dependent, Attribute<Eigen::Matrix<CPS::Real, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
+				*dependent = (**dependency)(0);
+			});
+	mActivePowerBranch_1 = mActivePowerBranch->derive<Real>(
+			[](std::shared_ptr<Real> &dependent, Attribute<Eigen::Matrix<CPS::Real, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
+				*dependent = (**dependency)(1);
+			});
+	mAttributes["p_branch"] = mActivePowerBranch_0;
+	mAttributes["p_branch_1"] = mActivePowerBranch_1;
+
+	mReactivePowerBranch_0 = mReactivePowerBranch->derive<Real>(
+			[](std::shared_ptr<Real> &dependent, Attribute<Eigen::Matrix<CPS::Real, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
+				*dependent = (**dependency)(0);
+			});
+	mReactivePowerBranch_1 = mReactivePowerBranch->derive<Real>(
+			[](std::shared_ptr<Real> &dependent, Attribute<Eigen::Matrix<CPS::Real, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
+				*dependent = (**dependency)(1);
+			});
+	mAttributes["q_branch"] = mReactivePowerBranch_0;
+	mAttributes["q_branch_1"] = mReactivePowerBranch_1;
 }
 
 
@@ -51,12 +84,12 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 
 	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
 	mSLog->info("Resistance={} [Ohm] Inductance={} [H] (referred to primary side)", mResistance, mInductance);
-    mSLog->info("Tap Ratio={} [/] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));
+    mSLog->info("Tap Ratio={} [/] Phase Shift={} [deg]", std::abs(**mRatio), std::arg(**mRatio));
 	mSLog->info("Rated Power ={} [W]", mRatedPower);
 
-	mRatioAbs = std::abs(mRatio);
-	mRatioPhase = std::arg(mRatio);
-	mConductance = 1 / mResistance;
+	mRatioAbs = std::abs(**mRatio);
+	mRatioPhase = std::arg(**mRatio);
+	mConductance = 1 / **mResistance;
 
 	mParametersSet = true;
 }
@@ -71,25 +104,26 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 }
 
 
+/// DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
 	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, mRatedPower,
-		std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
+		std::abs(**mRatio), std::arg(**mRatio), **mResistance, **mInductance);
 	return copy;
 }
 
 void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mNominalOmega = 2. * PI * frequency;
-	mReactance = mNominalOmega * mInductance;
+	mReactance = mNominalOmega * **mInductance;
 	mSLog->info("Reactance={} [Ohm] (referred to primary side)", mReactance);
 	
 	// Component parameters are referred to higher voltage side.
 	// Switch terminals to have terminal 0 at higher voltage side
 	// if transformer is connected the other way around.
-	if (Math::abs(mRatio) < 1.) {
-		mRatio = 1. / mRatio;
-		mRatioAbs = std::abs(mRatio);
-		mRatioPhase = std::arg(mRatio);
+	if (Math::abs(**mRatio) < 1.) {
+		**mRatio = 1. / **mRatio;
+		mRatioAbs = std::abs(**mRatio);
+		mRatioPhase = std::arg(**mRatio);
 		std::shared_ptr<SimTerminal<Complex>> tmp = mTerminals[0];
 		mTerminals[0] = mTerminals[1];
 		mTerminals[1] = tmp;
@@ -102,22 +136,22 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	// Set initial voltage of virtual node in between
-	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * mRatio);
+	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
 
 	// Static calculations from load flow data
-	Complex impedance = { mResistance, mReactance };
+	Complex impedance = { **mResistance, mReactance };
 	(**mIntfVoltage)(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
 	(**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
 
 	// Create series sub components
 	mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mUID + "_ind", **mName + "_ind", Logger::Level::off);
-	mSubInductor->setParameters(mInductance);
+	mSubInductor->setParameters(**mInductance);
 	mSubComponents.push_back(mSubInductor);
 
 	if (mNumVirtualNodes == 3) {
 		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
 		mSubResistor = std::make_shared<SP::Ph1::Resistor>(**mUID + "_res", **mName + "_res", Logger::Level::off);
-		mSubResistor->setParameters(mResistance);
+		mSubResistor->setParameters(**mResistance);
 		mSubResistor->connect({ node(0), mVirtualNodes[2] });
 		mSubInductor->connect({ mVirtualNodes[2], mVirtualNodes[0] });
 		mSubComponents.push_back(mSubResistor);
@@ -197,7 +231,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 void SP::Ph1::Transformer::setBaseVoltage(Real baseVoltage) {
 	// Note: to be consistent set base voltage to higher voltage (and impedance values must be referred to high voltage side)
 	// TODO: use attribute setter for setting base voltage
-    mBaseVoltage = baseVoltage;
+    **mBaseVoltage = baseVoltage;
 }
 
 void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
@@ -206,17 +240,17 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
 
-	mBaseImpedance = mBaseVoltage * mBaseVoltage / mBaseApparentPower;
+	mBaseImpedance = **mBaseVoltage * **mBaseVoltage / mBaseApparentPower;
 	mBaseAdmittance = 1.0 / mBaseImpedance;
-	mBaseCurrent = baseApparentPower / (mBaseVoltage*sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
+	mBaseCurrent = baseApparentPower / (**mBaseVoltage * sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
 	mSLog->info("Base Voltage={} [V]  Base Impedance={} [Ohm]", mBaseVoltage, mBaseImpedance);
 
-	mResistancePerUnit = mResistance / mBaseImpedance;
+	mResistancePerUnit = **mResistance / mBaseImpedance;
 	mReactancePerUnit = mReactance / mBaseImpedance;
     mSLog->info("Resistance={} [pu]  Reactance={} [pu]", mResistancePerUnit, mReactancePerUnit);
 
 	mBaseInductance = mBaseImpedance / mBaseOmega;
-	mInductancePerUnit = mInductance / mBaseInductance;
+	mInductancePerUnit = **mInductance / mBaseInductance;
 	mMagnetizing = mMagnetizingReactance / mBaseImpedance;
 	// omega per unit=1, hence 1.0*mInductancePerUnit.
 	mLeakagePerUnit = Complex(mResistancePerUnit,1.*mInductancePerUnit);
@@ -280,16 +314,16 @@ void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y)
 
 
 void SP::Ph1::Transformer::updateBranchFlow(VectorComp& current, VectorComp& powerflow) {
-	mCurrent = current * mBaseCurrent;
-	mActivePowerBranch = powerflow.real()*mBaseApparentPower;
-	mReactivePowerBranch = powerflow.imag()*mBaseApparentPower;
+	**mCurrent = current * mBaseCurrent;
+	**mActivePowerBranch = powerflow.real()*mBaseApparentPower;
+	**mReactivePowerBranch = powerflow.imag()*mBaseApparentPower;
 }
 
 
 void SP::Ph1::Transformer::storeNodalInjection(Complex powerInjection) {
-	mActivePowerInjection = std::real(powerInjection)*mBaseApparentPower;
-	mReactivePowerInjection = std::imag(powerInjection)*mBaseApparentPower;
-	mStoreNodalPowerInjection = true;
+	**mActivePowerInjection = std::real(powerInjection)*mBaseApparentPower;
+	**mReactivePowerInjection = std::imag(powerInjection)*mBaseApparentPower;
+	**mStoreNodalPowerInjection = true;
 }
 
 MatrixComp SP::Ph1::Transformer::Y_element() {
@@ -326,8 +360,8 @@ void SP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), Complex(1.0, 0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[1]->matrixNodeIndex(), mRatio);
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1), -mRatio);
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[1]->matrixNodeIndex(), **mRatio);
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1), - **mRatio);
 	}
 
 	// Add subcomps to system matrix
@@ -342,9 +376,9 @@ void SP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 			mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex());
 	}
 	if (terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(mRatio),
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
 			matrixNodeIndex(1), mVirtualNodes[1]->matrixNodeIndex());
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-mRatio),
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1));
 	}
 }
