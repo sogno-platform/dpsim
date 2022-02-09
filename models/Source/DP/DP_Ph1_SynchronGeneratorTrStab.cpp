@@ -22,8 +22,9 @@ DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
-	// Register attributes
+	/// FIXME: Attributes from Base_SynchronGenerator are not initialized
 
+	// Register attributes
 	mElecActivePower = Attribute<Real>::create("P_elec", mAttributes, 0);
 	mMechPower = Attribute<Real>::create("P_mech", mAttributes, 0);
 	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
