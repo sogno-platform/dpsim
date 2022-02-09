@@ -39,10 +39,8 @@ namespace Ph1 {
 		/// Reactive power [VAr]
 		const Attribute<Real>::Ptr mReactivePower;
 		/// Active power [pu]
-		/// CHECK: Necessary? Only written to once and used for logging output
 		const Attribute<Real>::Ptr mActivePowerPerUnit;
 		/// Reactive power [pu]
-		/// CHECK: Necessary? Only written to once and used for logging output
 		const Attribute<Real>::Ptr mReactivePowerPerUnit;
 
 	private:
