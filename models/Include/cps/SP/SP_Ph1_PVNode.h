@@ -14,14 +14,16 @@ namespace SP {
 namespace Ph1 {
 
     class PVNode: public SimPowerComp<Complex>, public SharedFactory<PVNode> {
-    private:
-		Real mVoltageSetPoint;
-		Real mPowerSetPoint;
+	private:
+		/// FIXME: Only used once as local variable
 		Real mRatedU;
-		Real mVoltagePerUnit;
-
+		/// FIXME: Only written to, never read
 		Real mQLimit;
     public:
+		const Attribute<Real>::Ptr mVoltageSetPoint;
+		const Attribute<Real>::Ptr mPowerSetPoint;
+		const Attribute<Real>::Ptr mVoltagePerUnit;
+
 		PVNode(String uid, String name,
 			Logger::Level logLevel = Logger::Level::off);
 
