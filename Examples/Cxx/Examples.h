@@ -1,5 +1,6 @@
 /* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
+ *                     EONERC, RWTH Aachen University; Grupo de Automática
+ *                     de la Universidad Nacional de Colombia
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -253,6 +254,8 @@ namespace KRK_TwoArea {
         Real Vnom = 230e3;
         Real nomFreq = 60;
         Real nomOmega= nomFreq* 2*PI;
+        Real nomFieldCurr = 1300;
+        Int poleNum = 2;
 
         // Dynamic simulation, operational parameters for all the generators
         Real Rs = 0.0025;
