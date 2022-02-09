@@ -54,7 +54,7 @@ VarType SimNode<VarType>::singleVoltage(PhaseType phaseType) {
 
 template<>
 void SimNode<Complex>::setVoltage(Complex newVoltage) {
-	**mVoltage(0, 0) = newVoltage;
+	(**mVoltage)(0, 0) = newVoltage;
 }
 
 template<>
