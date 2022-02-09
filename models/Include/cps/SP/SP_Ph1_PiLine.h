@@ -55,6 +55,7 @@ namespace Ph1 {
 
 
 	protected:
+		/// CHECK: Which of these really need to be member variables?
 		///base current [A]
 		Real mBaseCurrent;
 		///base apparent power [VA]
