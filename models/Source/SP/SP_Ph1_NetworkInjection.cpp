@@ -13,8 +13,12 @@ using namespace CPS;
 
 SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
     Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel),
-	mVoltageRef(Attribute<Complex>::create("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::create("f_src", mAttributes)) {
+	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)),
+	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
+	mVoltageSetPoint(Attribute<Real>::create("V_set", mAttributes)),
+	mVoltageSetPointPerUnit(Attribute<Real>::create("V_set_pu", mAttributes, 1.0)),
+	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
+	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)) {
 
 	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
@@ -30,11 +34,6 @@ SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
 	for (auto subcomp: mSubComponents)
 		mSLog->info("- {}", subcomp->name());
 
-    addAttribute<Real>("V_set", &mVoltageSetPoint, Flags::read | Flags::write);
-    addAttribute<Real>("V_set_pu", &mVoltageSetPointPerUnit, Flags::read | Flags::write);
-	addAttribute<Real>("p_inj", &mActivePowerInjection, Flags::read | Flags::write);
-	addAttribute<Real>("q_inj", &mReactivePowerInjection, Flags::read | Flags::write);
-
 	// MNA attributes
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
@@ -43,9 +42,9 @@ SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
 // #### Powerflow section ####
 
 void SP::Ph1::NetworkInjection::setParameters(Real voltageSetPoint) {
-	mVoltageSetPoint = voltageSetPoint;
+	**mVoltageSetPoint = voltageSetPoint;
 
-	mSLog->info("Voltage Set-Point ={} [V]", mVoltageSetPoint);
+	mSLog->info("Voltage Set-Point ={} [V]", **mVoltageSetPoint);
 	mSLog->flush();
 
 	mParametersSet = true;
@@ -89,9 +88,9 @@ void SP::Ph1::NetworkInjection::calculatePerUnitParameters(Real baseApparentPowe
     mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
 	mSLog->info("Base Voltage={} [V]", mBaseVoltage);
 
-    mVoltageSetPointPerUnit = mVoltageSetPoint / mBaseVoltage;
+    **mVoltageSetPointPerUnit = **mVoltageSetPoint / mBaseVoltage;
 
-	mSLog->info("Voltage Set-Point ={} [pu]", mVoltageSetPointPerUnit);
+	mSLog->info("Voltage Set-Point ={} [pu]", **mVoltageSetPointPerUnit);
 	mSLog->flush();
 }
 
@@ -100,8 +99,8 @@ void SP::Ph1::NetworkInjection::modifyPowerFlowBusType(PowerflowBusType powerflo
 }
 
 void SP::Ph1::NetworkInjection::updatePowerInjection(Complex powerInj) {
-	mActivePowerInjection = powerInj.real();
-	mReactivePowerInjection = powerInj.imag();
+	**mActivePowerInjection = powerInj.real();
+	**mReactivePowerInjection = powerInj.imag();
 }
 
 // #### MNA Section ####
