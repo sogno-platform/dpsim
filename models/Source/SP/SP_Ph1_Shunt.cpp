@@ -11,19 +11,18 @@
 using namespace CPS;
 
 SP::Ph1::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mConductance(Attribute<Real>::create("G", mAttributes)),
+	mSusceptance(Attribute<Real>::create("B", mAttributes)) {
 
 	mSLog->info("Create {} of type {}", this->type(), name);
 	setTerminalNumber(1);
-
-	addAttribute<Real>("G", &mConductance, Flags::write | Flags::read);
-	addAttribute<Real>("B", &mSusceptance, Flags::write | Flags::read);
 }
 
 
 void SP::Ph1::Shunt::setParameters(Real conductance, Real susceptance){
-	mConductance = conductance;
-	mSusceptance = susceptance;
+	**mConductance = conductance;
+	**mSusceptance = susceptance;
 	mSLog->info("Conductance={} [S] Susceptance={} [Ohm] ", conductance, susceptance);
 	mParametersSet = true;
 }
@@ -45,8 +44,8 @@ void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower, Real bas
 	mBaseAdmittance = 1.0 / mBaseImpedance;
 	mSLog->info("Base Voltage={} [V]  Base Admittance={} [S]", mBaseVoltage, mBaseAdmittance);
 
-	mConductancePerUnit = mConductance / mBaseAdmittance;
-	mSusceptancePerUnit = mSusceptance / mBaseAdmittance;
+	mConductancePerUnit = **mConductance / mBaseAdmittance;
+	mSusceptancePerUnit = **mSusceptance / mBaseAdmittance;
 	mSLog->info("Susceptance={} [pu] Conductance={} [pu]", mSusceptancePerUnit, mConductancePerUnit);
 };
 
