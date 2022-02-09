@@ -26,38 +26,42 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 	mIntfCurrent = Matrix::Zero(1, 1);
 
 	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
-	addAttribute<Matrix>("R", &mResistance, Flags::write | Flags::read);
-	addAttribute<Matrix>("L", &mInductance, Flags::write | Flags::read);
-	addAttribute<Matrix>("Rsnubber", &mSnubberResistance, Flags::write | Flags::read);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
-	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
+	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, mRatedPower, std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
 	return copy;
 }
 
-void EMT::Ph3::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase,
+void EMT::Ph3::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, Real ratioPhase,
 	Matrix resistance, Matrix inductance) {
 
-	Base::Ph3::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
+	Base::Ph3::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower, ratioAbs, ratioPhase, resistance, inductance);
 
-	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
-	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", mResistance, mInductance);
-    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));
+	mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
+	mSLog->info("Rated Apparent Power  = {} [VA]", mRatedPower);
+    mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(mRatio), std::arg(mRatio));
 
 	mParametersSet = true;
 }
 
 void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
-	// Component parameters are referred to high voltage side.
-	// Switch terminals if transformer is connected the other way around.
+	// Component parameters are referred to higher voltage side.
+	// Switch terminals to have terminal 0 at higher voltage side
+	// if transformer is connected the other way around.
 	if (Math::abs(mRatio) < 1.) {
 		mRatio = 1. / mRatio;
 		std::shared_ptr<SimTerminal<Real>> tmp = mTerminals[0];
 		mTerminals[0] = mTerminals[1];
 		mTerminals[1] = tmp;
+		Real tmpVolt = mNominalVoltageEnd1;
+		mNominalVoltageEnd1 = mNominalVoltageEnd2;
+		mNominalVoltageEnd2 = tmpVolt;
+		mSLog->info("Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
+		mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
+		mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(mRatio), std::arg(mRatio));
 	}
 
 	// Set initial voltage of virtual node in between
@@ -70,7 +74,10 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		Complex(mResistance(0, 0), omega * mInductance(0, 0)), Complex(mResistance(0, 1), omega * mInductance(0, 1)), Complex(mResistance(0, 2), omega * mInductance(0, 2)),
 		Complex(mResistance(1, 0), omega * mInductance(1, 0)), Complex(mResistance(1, 1), omega * mInductance(1, 1)), Complex(mResistance(1, 2), omega * mInductance(1, 2)),
 		Complex(mResistance(2, 0), omega * mInductance(2, 0)), Complex(mResistance(2, 1), omega * mInductance(2, 1)), Complex(mResistance(2, 2), omega * mInductance(2, 2));
-	mSLog->info("Reactance={} [Ohm] (referred to primary side)", Logger::matrixToString(omega * mInductance));
+
+	mSLog->info("Resistance (referred to higher voltage side) = {} [Ohm]", Logger::matrixToString(mResistance));
+	mSLog->info("Inductance (referred to higher voltage side) = {} [H]", Logger::matrixToString(mInductance));
+	mSLog->info("Reactance (referred to higher voltage side) = {} [Ohm]", Logger::matrixToString(omega * mInductance));
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
 	vInitABC(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
@@ -83,33 +90,68 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 	// Create series sub components
 	mSubInductor = std::make_shared<EMT::Ph3::Inductor>(mName + "_ind", mLogLevel);
+	mSubComponents.push_back(mSubInductor);
 	mSubInductor->setParameters(mInductance);
 
 	if (mNumVirtualNodes == 3) {
 		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
 		mSubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_res", mLogLevel);
+		mSubComponents.push_back(mSubResistor);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ node(0), mVirtualNodes[2] });
-		mSubResistor->initialize(mFrequencies);
-		mSubResistor->initializeFromNodesAndTerminals(frequency);
 		mSubInductor->connect({ mVirtualNodes[2], mVirtualNodes[0] });
 	}
 	else {
 		mSubInductor->connect({ node(0), mVirtualNodes[0] });
 	}
-	mSubInductor->initialize(mFrequencies);
-	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
-	// Create parallel sub components
-	// A snubber conductance is added on the low voltage side (resistance approximately scaled with LV side voltage)
-	Real snubberResistance = mNominalVoltageEnd1 > mNominalVoltageEnd2 ? std::abs(mNominalVoltageEnd2)*1e6 : std::abs(mNominalVoltageEnd1)*1e6;
-	mSnubberResistance = Matrix::Identity(3,3)*(snubberResistance);
-	mSubSnubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_snub_res", mLogLevel);
-	mSubSnubResistor->setParameters(mSnubberResistance);
-	mSubSnubResistor->connect({ node(1), EMT::SimNode::GND });
-	mSubSnubResistor->initialize(mFrequencies);
-	mSubSnubResistor->initializeFromNodesAndTerminals(frequency);
-	mSLog->info("Snubber Resistance={} [Ohm] (connected to LV side)", Logger::matrixToString(mSnubberResistance));
+	// Create parallel sub components (three-phase power)
+	Real pSnub = P_SNUB_TRANSFORMER*mRatedPower;
+	Real qSnub = Q_SNUB_TRANSFORMER*mRatedPower;
+
+	// A snubber conductance is added on the higher voltage side
+	Real snubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1),2) / pSnub;
+	mSnubberResistance1 = Math::singlePhaseParameterToThreePhase(snubberResistance1);
+	mSubSnubResistor1 = std::make_shared<EMT::Ph3::Resistor>(mName + "_snub_res1", mLogLevel);
+	mSubSnubResistor1->setParameters(mSnubberResistance1);
+	mSubSnubResistor1->connect({ node(0), EMT::SimNode::GND });
+	mSLog->info("Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]", node(0)->name(), Logger::matrixToString(mSnubberResistance1));
+	mSubComponents.push_back(mSubSnubResistor1);
+
+	// A snubber conductance is added on the lower voltage side
+	Real snubberResistance2 = std::pow(std::abs(mNominalVoltageEnd2),2) / pSnub;
+	mSnubberResistance2 = Math::singlePhaseParameterToThreePhase(snubberResistance2);
+	mSubSnubResistor2 = std::make_shared<EMT::Ph3::Resistor>(mName + "_snub_res2", mLogLevel);
+	mSubSnubResistor2->setParameters(mSnubberResistance2);
+	mSubSnubResistor2->connect({ node(1), EMT::SimNode::GND });
+	mSLog->info("Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]", node(1)->name(), Logger::matrixToString(mSnubberResistance2));
+	mSubComponents.push_back(mSubSnubResistor2);
+
+	// // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
+	// Real snubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltageEnd1),2) / omega;
+	// mSnubberCapacitance1 = Math::singlePhaseParameterToThreePhase*(snubberCapacitance1);
+	// mSubSnubCapacitor1 = std::make_shared<EMT::Ph3::Capacitor>(mName + "_snub_cap1", mLogLevel);
+	// mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);
+	// mSubSnubCapacitor1->connect({ node(0), EMT::SimNode::GND });
+	// mSLog->info("Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::matrixToString(mSnubberCapacitance1));
+	// mSubComponents.push_back(mSubSnubCapacitor1);
+
+	// A snubber capacitance is added to lower voltage side
+	Real snubberCapacitance2 = qSnub / std::pow(std::abs(mNominalVoltageEnd2),2) / omega;
+	mSnubberCapacitance2 = Math::singlePhaseParameterToThreePhase(snubberCapacitance2);
+	mSubSnubCapacitor2 = std::make_shared<EMT::Ph3::Capacitor>(mName + "_snub_cap2", mLogLevel);
+	mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
+	mSubSnubCapacitor2->connect({ node(1), EMT::SimNode::GND });
+	mSLog->info("Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]", node(1)->name(), Logger::matrixToString(mSnubberCapacitance2));
+	mSubComponents.push_back(mSubSnubCapacitor2);
+
+	// Initialize electrical subcomponents
+	mSLog->info("Electrical subcomponents: ");
+	for (auto subcomp: mSubComponents) {
+		mSLog->info("- {}", subcomp->name());
+		subcomp->initialize(mFrequencies);
+		subcomp->initializeFromNodesAndTerminals(frequency);
+	}
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -131,15 +173,11 @@ void EMT::Ph3::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<M
 	updateMatrixNodeIndices();
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	auto subComponents = MNAInterface::List({ mSubInductor, mSubSnubResistor });
-	if (mSubResistor)
-		subComponents.push_back(mSubResistor);
-	for (auto comp : subComponents) {
-		comp->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : comp->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
+
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
+
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
@@ -171,13 +209,10 @@ void EMT::Ph3::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(1, 2), -mRatio.real());
 	}
 
-	// Add inductive part to system matrix
-	mSubInductor->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubSnubResistor->mnaApplySystemMatrixStamp(systemMatrix);
-
-	if (mNumVirtualNodes == 3) {
-		mSubResistor->mnaApplySystemMatrixStamp(systemMatrix);
-	}
+	// Add subcomps to system matrix
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 
 	if (terminalNotGrounded(0)) {
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
@@ -212,12 +247,17 @@ void EMT::Ph3::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void EMT::Ph3::Transformer::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
+	// Add subcomps to right side vector
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaApplyRightSideVectorStamp(rightVector);
 }
 
 void EMT::Ph3::Transformer::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
-	mSubInductor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	// add pre-step dependencies of component itself
 	prevStepDependencies.push_back(attribute("i_intf"));
 	prevStepDependencies.push_back(attribute("v_intf"));
@@ -226,17 +266,18 @@ void EMT::Ph3::Transformer::mnaAddPreStepDependencies(AttributeBase::List &prevS
 
 void EMT::Ph3::Transformer::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents
-	mSubInductor->mnaPreStep(time, timeStepCount);
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
 	mnaApplyRightSideVectorStamp(mRightVector);
 }
 
 void EMT::Ph3::Transformer::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	// add post-step dependencies of subcomponents
-	if (mSubResistor)
-		mSubResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	mSubInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	mSubSnubResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(attribute("v_intf"));
@@ -245,10 +286,9 @@ void EMT::Ph3::Transformer::mnaAddPostStepDependencies(AttributeBase::List &prev
 
 void EMT::Ph3::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of subcomponents
-	if (mSubResistor)
-		mSubResistor->mnaPostStep(time, timeStepCount, leftVector);
-	mSubInductor->mnaPostStep(time, timeStepCount, leftVector);
-	mSubSnubResistor->mnaPostStep(time, timeStepCount, leftVector);
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
 	mnaUpdateVoltage(*leftVector);
 	mnaUpdateCurrent(*leftVector);

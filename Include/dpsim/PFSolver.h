@@ -71,6 +71,8 @@ namespace DPsim {
         std::vector<std::shared_ptr<CPS::SP::Ph1::NetworkInjection>> mExternalGrids;
         /// Vector of average voltage source inverters
         std::vector<std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>> mAverageVoltageSourceInverters;
+        /// Map providing determined base voltages for each node
+        std::map<CPS::TopologicalNode::Ptr, CPS::Real> mBaseVoltageAtNode;
 
         /// Solver tolerance
 		Real mTolerance = 1e-8;
@@ -108,6 +110,9 @@ namespace DPsim {
         void setBaseApparentPower();
         /// Determine bus type for all buses
         void determinePFBusType();
+        /// Determine base voltages for each node
+        void determineNodeBaseVoltages();
+
         /// Compose admittance matrix
 		void composeAdmittanceMatrix();
         /// Gets the real part of admittance matrix element
@@ -140,6 +145,8 @@ namespace DPsim {
         void setVDNode(CPS::String name);
         /// Allows to modify the powerflow bus type of a specific component
         void modifyPowerFlowBusComponent(CPS::String name, CPS::PowerflowBusType powerFlowBusType);
+        /// set solver and component to initialization or simulation behaviour
+		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) override;
 
         class SolveTask : public CPS::Task {
 		public:

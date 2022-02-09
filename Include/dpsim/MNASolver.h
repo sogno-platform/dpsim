@@ -55,6 +55,9 @@ namespace DPsim {
 		UInt mNumHarmMatrixNodeIndices = 0;
 		/// Total number of network and virtual nodes, considering individual phases and additional frequencies
 		UInt mNumTotalMatrixNodeIndices = 0;
+		/// List of index pairs of varying matrix entries
+		std::vector<std::pair<UInt, UInt>> mListVariableSystemMatrixEntries;
+
 		/// System topology
 		CPS::SystemTopology mSystem;
 		/// List of simulation nodes
@@ -68,11 +71,6 @@ namespace DPsim {
 		CPS::MNASwitchInterface::List mSwitches;
 		/// List of switches if they must be accessed as MNAInterface objects
 		CPS::MNAInterface::List mMNAIntfSwitches;
-		/// List of components that indicate the solver to recompute the system matrix
-		/// depending on their state
-		CPS::MNAVariableCompInterface::List mVariableComps;
-		/// List of variable components if they must be accessed as MNAInterface objects
-		CPS::MNAInterface::List mMNAIntfVariableComps;
 		/// List of signal type components that do not directly interact with the MNA solver
 		CPS::SimSignalComp::List mSimSignalComps;
 		/// Current status of all switches encoded as bitset
@@ -92,6 +90,15 @@ namespace DPsim {
 		std::vector<Matrix> mLeftSideVectorHarm;
 		///
 		std::vector< CPS::Attribute<Matrix>::Ptr > mLeftVectorHarmAttributes;
+
+		// #### MNA specific attributes related to system recomputation
+		/// Number of system matrix recomputations
+		Int mNumRecomputations;
+		/// List of components that indicate the solver to recompute the system matrix
+		/// depending on their state
+		CPS::MNAVariableCompInterface::List mVariableComps;
+		/// List of variable components if they must be accessed as MNAInterface objects
+		CPS::MNAInterface::List mMNAIntfVariableComps;
 
 		// #### Attributes related to switching ####
 		/// Index of the next switching event
@@ -122,6 +129,8 @@ namespace DPsim {
 		void initializeSystemWithParallelFrequencies();
 		/// Initialization of system matrices and source vector
 		void initializeSystemWithPrecomputedMatrices();
+		/// Initialization of system matrices and source vector
+		void initializeSystemWithVariableMatrix();
 		/// Identify Nodes and SimPowerComps and SimSignalComps
 		void identifyTopologyObjects();
 		/// Assign simulation node index according to index in the vector.
@@ -144,6 +153,16 @@ namespace DPsim {
 		virtual void switchedMatrixStamp(std::size_t index, std::vector<std::shared_ptr<CPS::MNAInterface>>& comp) = 0;
 		/// Applies a component and switch stamp to the matrix with the given switch index
 		virtual void switchedMatrixStamp(std::size_t swIdx, Int freqIdx, CPS::MNAInterface::List& components, CPS::MNASwitchInterface::List& switches) { }
+		/// Checks whether the status of variable MNA elements have changed
+		Bool hasVariableComponentChanged();
+
+		// #### Methods to implement for system recomputation over time ####
+		/// Stamps components into the variable system matrix
+		virtual void stampVariableSystemMatrix() = 0;
+		/// Solves the system with variable system matrix
+		virtual void solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) = 0;
+		/// Create a solve task for recomputation solver
+		virtual std::shared_ptr<CPS::Task> createSolveTaskRecomp() = 0;
 
 		/// Logging of system matrices and source vector
 		virtual void logSystemMatrices() = 0;
@@ -166,7 +185,10 @@ namespace DPsim {
 	public:
 
 		/// Destructor
-		virtual ~MnaSolver() { };
+		virtual ~MnaSolver() { 
+			if (mSystemMatrixRecomputation)
+				mSLog->info("Number of system matrix recomputations: {:}", mNumRecomputations);
+		};
 
 		/// Calls subroutines to set up everything that is required before simulation
 		virtual void initialize() override;

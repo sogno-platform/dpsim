@@ -31,8 +31,6 @@ namespace DPsim {
 	template <typename VarType>
 	class MnaSolverEigenDense : public MnaSolver<VarType> {
 	protected:
-		/// Base matrix that includes all static MNA elements to speed up recomputation
-		Matrix mBaseSystemMatrix;
 		/// Map of system matrices where the key is the bitset describing the switch states
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<Matrix> > mSwitchedMatrices;
 		/// Map of LU factorizations related to the system matrices
@@ -70,6 +68,15 @@ namespace DPsim {
 		virtual std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
 		/// Logging of system matrices and source vector
 		virtual void logSystemMatrices() override;
+
+		// #### Methods for system recomputation over time ####
+		// -------- TODO: Implement methods for EigenDense ----
+		/// Stamps components into the variable system matrix
+		void stampVariableSystemMatrix() override { throw CPS::SystemError("SysRecomp not supported yet by EigenDense."); };
+		/// Solves the system with variable system matrix
+		void solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) override { throw CPS::SystemError("SysRecomp not supported yet by EigenDense."); };
+		/// Create a solve task for recomputation solver
+		virtual std::shared_ptr<CPS::Task> createSolveTaskRecomp() override { throw CPS::SystemError("SysRecomp not supported yet by EigenDense."); };
 
 		// #### Scheduler Task Methods ####
 		/// Solves system for single frequency

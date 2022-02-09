@@ -33,7 +33,7 @@ EMT::Ph3::SynchronGeneratorDQSmplCompSource::SynchronGeneratorDQSmplCompSource(S
 
 void EMT::Ph3::SynchronGeneratorDQSmplCompSource::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
+	Real initVoltAngle, Real initMechPower) {
 
 	mSystemOmega = om;
 	mSystemTimeStep = dt;
@@ -65,7 +65,7 @@ void EMT::Ph3::SynchronGeneratorDQSmplCompSource::initialize(Real om, Real dt,
 	mReactanceMat = mInductanceMat.inverse();
 
 	// steady state per unit initial value
-	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 	//mMechTorque = -mMechTorque;
 
 	// Calculation of operational parameters

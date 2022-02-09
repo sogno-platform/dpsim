@@ -3,7 +3,6 @@ set(DPSIM_SOURCES
 	RealTimeSimulation.cpp
 	MNASolver.cpp
 	MNASolverEigenDense.cpp
-	MNASolverSysRecomp.cpp
 	PFSolver.cpp
 	PFSolverPowerPolar.cpp
 	Utils.cpp

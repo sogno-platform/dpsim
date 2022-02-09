@@ -65,6 +65,8 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_SynGenDQ7odTrapez_DP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/EMT_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
+	Circuits/EMT_SynGenVBR_SMIB_Fault.cpp
+	Circuits/EMT_SynGenVBR_OperationalParams_SMIB_Fault.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
@@ -123,6 +125,11 @@ if(WITH_CIM)
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
 		CIM/SP_WSCC-9bus_CIM_Dyn_Switch.cpp
+		CIM/EMT_WSCC-9bus_IdealVS.cpp
+		CIM/EMT_WSCC-9bus_IdealCS.cpp
+		CIM/EMT_WSCC-9bus_FullOrderSG.cpp
+		CIM/EMT_WSCC-9bus_VBR.cpp
+		CIM/DP_WSCC-9bus_IdealVS.cpp
 
 		# PF(Power Flow) example
 		CIM/Slack_Trafo_Load.cpp

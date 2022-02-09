@@ -37,6 +37,9 @@ EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logg
 
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
 	addAttribute<Real>("delta_r", &mDelta, Flags::read);
+
+	addAttribute<Real>("T_e", &mElecTorque, Flags::read);
+	addAttribute<Real>("T_m", &mMechTorque, Flags::read);
 }
 
 EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String name, Logger::Level logLevel)
@@ -50,8 +53,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia,
-	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle,
-	Real initFieldVoltage, Real initMechPower) {
+	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower) {
 
 	Base::SynchronGenerator::setBaseAndFundamentalPerUnitParameters(
 		nomPower, nomVolt, nomFreq, nomFieldCur,
@@ -65,21 +67,22 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 				Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 
 	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
-		initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+		initTerminalVolt, initVoltAngle, initMechPower);
 
 	mSLog->info("Set initial values: \n"
-				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
-				"initVoltAngle: {:e}\ninitFieldVoltage: {:e}\ninitMechPower: {:e}",
-				initActivePower, initReactivePower, initTerminalVolt,
-				initVoltAngle, initFieldVoltage, initMechPower);
+					"initActivePower: {:e} [W]\n"
+					"initReactivePower: {:e} [VAr]\n"
+					"initTerminalVolt: {:e} [V] (initTerminalVolt: {:e} [pu])\n"
+					"initVoltAngle: {:e} [deg] \n"
+					"initMechPower: {:e} [W]",
+					mInitElecPower.real(), mInitElecPower.imag(), mInitTerminalVoltage, mInitTerminalVoltage/mBase_V,
+					CPS::Math::radtoDeg(mInitVoltAngle), mInitMechPower);
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ld, Real Lq, Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
-	Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s,
-	Real inertia, Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle,
-	Real initFieldVoltage, Real initMechPower) {
+	Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s, Real inertia) {
 
 	setBaseParameters(nomPower, nomVolt, nomFreq, nomFieldCur);
 	mSLog->info("Set base parameters: \n"
@@ -105,14 +108,21 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
 			"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
 			"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\n",
 			mRs, mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
+}
+
+void EMT::Ph3::SynchronGeneratorDQ::setInitialValues(Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower) {
 
 	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
-	initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+	initTerminalVolt, initVoltAngle, initMechPower);
+
 	mSLog->info("Set initial values: \n"
-				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
-				"initVoltAngle: {:e}\ninitFieldVoltage: {:e}\ninitMechPower: {:e}",
-				initActivePower, initReactivePower, initTerminalVolt,
-				initVoltAngle, initFieldVoltage, initMechPower);
+				"initActivePower: {:e} [W]\n"
+				"initReactivePower: {:e} [VAr]\n"
+				"initTerminalVolt: {:e} [V] (initTerminalVolt: {:e} [pu])\n"
+				"initVoltAngle: {:e} [deg] \n"
+				"initMechPower: {:e} [W]",
+				mInitElecPower.real(), mInitElecPower.imag(), mInitTerminalVoltage, mInitTerminalVoltage/mBase_V,
+				CPS::Math::radtoDeg(mInitVoltAngle), mInitMechPower);
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
@@ -134,10 +144,36 @@ void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
 			mRs, mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
 }
 
+void EMT::Ph3::SynchronGeneratorDQ::initializeFromNodesAndTerminals(Real frequency) {
+	if(!mInitialValuesSet) {
+		mSLog->info("--- Initialization from powerflow ---");
+		
+		// terminal powers in consumer system -> convert to generator system
+		Real activePower = -terminal(0)->singlePower().real();
+		Real reactivePower = -terminal(0)->singlePower().imag();
+
+		// 	voltage magnitude in phase-to-phase RMS -> convert to phase-to-ground peak expected by setInitialValues
+		Real voltMagnitude = RMS3PH_TO_PEAK1PH*Math::abs(initialSingleVoltage(0));
+
+		this->setInitialValues(activePower, reactivePower, voltMagnitude, Math::phase(initialSingleVoltage(0)), activePower);
+
+		mSLog->info("\nTerminal 0 voltage: {:s}"
+					"\nTerminal 0 power: {:s}"
+					"\n--- Initialization from powerflow finished ---",
+					Logger::phasorToString(initialSingleVoltage(0)),
+					Logger::complexToString(terminal(0)->singlePower()));
+		mSLog->flush();
+	} else {
+		mSLog->info("Initial values already set, skipping initializeFromNodesAndTerminals.");
+		mSLog->flush();
+	}
+}
 
 void EMT::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
 	SimPowerComp<Real>::initialize(frequencies);
+}
 
+void EMT::Ph3::SynchronGeneratorDQ::initializeMatrixAndStates(){
 	// #### Compensation ####
 	mCompensationOn = false;
 	mCompensationCurrent = Matrix::Zero(3,1);

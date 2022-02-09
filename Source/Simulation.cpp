@@ -16,9 +16,6 @@
 #include <dpsim/Utils.h>
 #include <cps/Utils.h>
 #include <dpsim/MNASolverFactory.h>
-#ifdef WITH_SPARSE
-#include <dpsim/MNASolverSysRecomp.h>
-#endif
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/DiakopticsSolver.h>
 
@@ -112,6 +109,7 @@ void Simulation::createSolvers() {
 		case Solver::Type::NRP:
 			solver = std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel);
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
+			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->initialize();
 			mSolvers.push_back(solver);
 			break;
@@ -156,24 +154,8 @@ void Simulation::createMNASolver() {
 			// Tear components available, use diakoptics
 			solver = std::make_shared<DiakopticsSolver<VarType>>(mName,
 				subnets[net], mTearComponents, mTimeStep, mLogLevel);
-		}
-		else if (mSystemMatrixRecomputation) {
-#ifdef WITH_SPARSE
-			// Recompute system matrix if switches or other components change
-			solver = std::make_shared<MnaSolverSysRecomp<VarType>>(
-				mName + copySuffix, mDomain, mLogLevel);
-			solver->setTimeStep(mTimeStep);
-			solver->doSteadyStateInit(mSteadyStateInit);
-			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
-			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
-			solver->setSystem(subnets[net]);
-			solver->initialize();
-#else
-			throw SystemError("Recomputation Solver requires WITH_SPARSE to be set.");
-#endif
-		}
-		else {
-			// Default case with precomputed system matrices for different configurations
+		} else {
+			// Default case with lu decomposition from mna factory
 			solver = MnaSolverFactory::factory<VarType>(mName + copySuffix, mDomain,
 												 mLogLevel, mMnaImpl);
 			solver->setTimeStep(mTimeStep);
@@ -182,6 +164,9 @@ void Simulation::createMNASolver() {
 			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
 			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
 			solver->setSystem(subnets[net]);
+			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
+			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
+			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
 			solver->initialize();
 		}
 		mSolvers.push_back(solver);
@@ -373,9 +358,16 @@ void Simulation::start() {
 	mLog->info("Start simulation: {}", mName);
 	mLog->info("Time step: {:e}", mTimeStep);
 	mLog->info("Final time: {:e}", mFinalTime);
+
+	mSimulationStartTimePoint = std::chrono::steady_clock::now();
 }
 
 void Simulation::stop() {
+
+	mSimulationEndTimePoint = std::chrono::steady_clock::now();
+	mSimulationCalculationTime = mSimulationEndTimePoint-mSimulationStartTimePoint;
+	mLog->info("Simulation calculation time: {:.6f}", mSimulationCalculationTime.count());
+
 	mScheduler->stop();
 
 	for (auto ifm : mInterfaces)
@@ -522,7 +514,7 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 	if (intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
-	
+
 	Bool found = false;
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
@@ -571,7 +563,7 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 	if(intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
-	
+
 	Bool found = false;
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);

@@ -227,13 +227,13 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
 	Real dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower-mKd*(mOmMech - mNomOmega));
-	if (mBehaviour == Behaviour::Simulation)
+	if (mBehaviour == Behaviour::MNASimulation)
 		mOmMech = mOmMech + mTimeStep * dOmMech;
 	Real dDelta_p = mOmMech - mNomOmega;
-	if (mBehaviour == Behaviour::Simulation)
+	if (mBehaviour == Behaviour::MNASimulation)
 		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
 	// Update emf - only phase changes
-	if (mBehaviour == Behaviour::Simulation)
+	if (mBehaviour == Behaviour::MNASimulation)
 		mEp = Complex(mEp_abs * cos(mDelta_p), mEp_abs * sin(mDelta_p));
 
 	// Update nominal system angle
