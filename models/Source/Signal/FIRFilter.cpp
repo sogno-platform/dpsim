@@ -14,10 +14,8 @@ using namespace CPS::Signal;
 FIRFilter::FIRFilter(String uid, String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
 	mCurrentIdx(0),
-	mInitSample(0.0) {
-
-	addAttribute<Real>("output", &mOutput, Flags::read);
-	addAttribute<Real>("init_sample", &mInitSample, Flags::write | Flags::read);
+	mOutput(Attribute<Real>::create("output", mAttributes)),
+	mInitSample(Attribute<Real>::create("init_sample", mAttributes, 0.0)) {
 }
 
 FIRFilter::FIRFilter(String name, std::vector<Real> filterCoefficients, Real initSample, Logger::Level logLevel)
@@ -28,19 +26,20 @@ FIRFilter::FIRFilter(String name, std::vector<Real> filterCoefficients, Real ini
 }
 
 void FIRFilter::initialize(Real timeStep) {
-	mSignal.assign(mFilterLength, mInitSample);
+	mSignal.assign(mFilterLength, **mInitSample);
 	mSLog->info("Initialize filter with {}", mInitSample);
 }
 
 void FIRFilter::step(Real time) {
 	Real output = 0;
-	mSignal[mCurrentIdx] = mInput->getByValue();
+	///CHECK: Does this copy the value or the reference of the data behind mInput? It should only copy the value.
+	mSignal[mCurrentIdx] = **mInput;
 	for (int i = 0; i < mFilterLength; i++) {
 		output += mFilter[i] * mSignal[getIndex(i)];
 	}
 
 	incrementIndex();
-	mOutput = output;
+	**mOutput = output;
 	SPDLOG_LOGGER_DEBUG(mSLog, "Set output to {}", output);
 }
 
