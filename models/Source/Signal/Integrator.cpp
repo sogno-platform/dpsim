@@ -12,18 +12,15 @@ using namespace CPS;
 using namespace CPS::Signal;
 
 Integrator::Integrator(String name, Logger::Level logLevel) :
-	SimSignalComp(name, name, logLevel) {
-
-    addAttribute<Real>("input_ref", Flags::read | Flags::write);
-
-    addAttribute<Real>("input_prev", &mInputPrev, Flags::read | Flags::write);
-    addAttribute<Real>("state_prev", &mStatePrev, Flags::read | Flags::write);
-    addAttribute<Real>("output_prev", &mOutputPrev, Flags::read | Flags::write);
-
-    addAttribute<Real>("input_curr", &mInputCurr, Flags::read | Flags::write);
-    addAttribute<Real>("state_curr", &mStateCurr, Flags::read | Flags::write);
-    addAttribute<Real>("output_curr", &mOutputCurr, Flags::read | Flags::write);
-}
+	SimSignalComp(name, name, logLevel),
+    mInputRef(Attribute<Real>::createDynamic("input_ref", mAttributes)),
+    /// CHECK: Which of these really need to be attributes?
+    mInputPrev(Attribute<Real>::create("input_prev", mAttributes)),
+    mStatePrev(Attribute<Real>::create("state_prev", mAttributes)),
+    mOutputPrev(Attribute<Real>::create("output_prev", mAttributes)),
+    mInputCurr(Attribute<Real>::create("input_curr", mAttributes)),
+    mStateCurr(Attribute<Real>::create("state_curr", mAttributes)),
+    mOutputCurr(Attribute<Real>::create("output_curr", mAttributes)) { }
 
 void Integrator::setParameters(Real timestep) {
     mTimeStep = timestep;
@@ -32,44 +29,45 @@ void Integrator::setParameters(Real timestep) {
 }
 
 void Integrator::setInitialValues(Real input_init, Real state_init, Real output_init) {
-	mInputCurr = input_init;
-    mStateCurr = state_init;
-    mOutputCurr = output_init;
+	**mInputCurr = input_init;
+    **mStateCurr = state_init;
+    **mOutputCurr = output_init;
 
     mSLog->info("Initial values:");
     mSLog->info("inputCurrInit = {}, stateCurrInit = {}, outputCurrInit = {}", mInputCurr, mStateCurr, mOutputCurr);
 }
 
 void Integrator::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-    prevStepDependencies.push_back(attribute("input_curr"));
-	prevStepDependencies.push_back(attribute("output_curr"));
-	modifiedAttributes.push_back(attribute("input_prev"));
-    modifiedAttributes.push_back(attribute("output_prev"));
+    prevStepDependencies.push_back(mInputCurr);
+	prevStepDependencies.push_back(mOutputCurr);
+	modifiedAttributes.push_back(mInputPrev);
+    modifiedAttributes.push_back(mOutputPrev);
 };
 
 void Integrator::signalPreStep(Real time, Int timeStepCount) {
-    mInputPrev = mInputCurr;
-    mStatePrev = mStateCurr;
-    mOutputPrev = mOutputCurr;
+    **mInputPrev = **mInputCurr;
+    **mStatePrev = **mStateCurr;
+    **mOutputPrev = **mOutputCurr;
 }
 
 void Integrator::signalAddStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(attribute("input_ref"));
-	modifiedAttributes.push_back(attribute("input_curr"));
-    modifiedAttributes.push_back(attribute("output_curr"));
+	attributeDependencies.push_back(mInputRef);
+	modifiedAttributes.push_back(mInputCurr);
+    modifiedAttributes.push_back(mOutputCurr);
 };
 
 void Integrator::signalStep(Real time, Int timeStepCount) {
-    mInputCurr = attribute<Real>("input_ref")->get();
+    ///FIXME: There is no guarantee that mInputRef has been set to reference anything. Otherwise its just constantly 0.
+    **mInputCurr = **mInputRef;
 
     mSLog->info("Time {}:", time);
-    mSLog->info("Input values: inputCurr = {}, inputPrev = {}, statePrev = {}", mInputCurr, mInputPrev, mStatePrev);
+    mSLog->info("Input values: inputCurr = {}, inputPrev = {}, statePrev = {}", **mInputCurr, **mInputPrev, **mStatePrev);
 
-    mStateCurr = mStatePrev + mTimeStep/2.0*mInputCurr + mTimeStep/2.0*mInputPrev;
-    mOutputCurr = mStateCurr;
+    **mStateCurr =**mStatePrev + mTimeStep/2.0* **mInputCurr + mTimeStep/2.0* **mInputPrev;
+    **mOutputCurr = **mStateCurr;
 
-    mSLog->info("State values: stateCurr = {}", mStateCurr);
-    mSLog->info("Output values: outputCurr = {}:", mOutputCurr);
+    mSLog->info("State values: stateCurr = {}", **mStateCurr);
+    mSLog->info("Output values: outputCurr = {}:", **mOutputCurr);
 }
 
 Task::List Integrator::getTasks() {
