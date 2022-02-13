@@ -71,7 +71,7 @@ namespace CPS {
 		}
 	protected:
 		/// Every MNA component modifies its source vector attribute.
-		MNAInterface() : mRightVector(Attribute<Matrix>::create("right_vector", mAttributes)) { }
+		MNAInterface() : mRightVector(Attribute<Matrix>::createDynamic("right_vector", mAttributes)) { }
 
 		/// List of tasks that relate to using MNA for this component (usually pre-step and/or post-step)
 		Task::List mMnaTasks;

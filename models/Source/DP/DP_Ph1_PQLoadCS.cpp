@@ -94,7 +94,7 @@ void DP::Ph1::PQLoadCS::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 	updateMatrixNodeIndices();
 	mSubCurrentSource->mnaInitialize(omega, timeStep, leftVector);
 	///FIXME: Can we avoid setting the right_vector attribute to dynamic? Maybe just copy the current source's right_vector somewhere? Or make a new attribute?
-	setAttributeRef("right_vector", mSubCurrentSource->attribute("right_vector"));
+	mRightVector->setReference(mSubCurrentSource->mRightVector);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this));
 	for (auto task : mSubCurrentSource->mnaTasks())

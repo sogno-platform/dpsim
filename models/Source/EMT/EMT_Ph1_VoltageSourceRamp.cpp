@@ -61,7 +61,7 @@ void EMT::Ph1::VoltageSourceRamp::mnaInitialize(Real omega, Real timeStep, Attri
 	// only need a new MnaPreStep that updates the reference voltage of mSubVoltageSource;
 	// its own tasks then do the rest
 	/// FIXME: Can we avoid setting right_vector to dynamic?
-	setAttributeRef("right_vector", mSubVoltageSource->attribute("right_vector"));
+	mRightVector->setReference(mSubVoltageSource->mRightVector);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	for (auto task : mSubVoltageSource->mnaTasks()) {
 		mMnaTasks.push_back(task);
