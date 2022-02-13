@@ -9,19 +9,17 @@
 #pragma once
 
 #include <cps/Definitions.h>
+#include <cps/AttributeList.h>
 
 namespace CPS {
 namespace Base {
 namespace Ph1 {
 	class VoltageSource {
-	protected:
-		
 	public:
-
 		/// Voltage set point [V]
-		CPS::Attribute<Complex>::Ptr mVoltageRef;
+		Attribute<Complex>::Ptr mVoltageRef;
 		/// Source frequency [Hz]
-		CPS::Attribute<Real>::Ptr mSrcFreq;
+		Attribute<Real>::Ptr mSrcFreq;
 		/// Sets model specific parameters
 		void setParameters(Complex voltageRef, Real srcFreq = -1) {
 			**mVoltageRef = voltageRef;

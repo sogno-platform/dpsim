@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cps/Definitions.h>
+#include <cps/AttributeList.h>
 #include <cps/Signal/Exciter.h>
 #include <cps/Signal/TurbineGovernor.h>
 
