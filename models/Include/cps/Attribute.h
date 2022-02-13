@@ -81,9 +81,6 @@ namespace CPS {
 		public std::enable_shared_from_this<Attribute<T>> {
 
 	protected:
-		///FIXME: When the value is actually an external reference (set by the second constructor), destroying this shared ptr will crash the program.
-		//The goal here should be to eliminate all uses of this second constructor,
-		//storing the attributes themselves as class members instead of references to the underlying data
 		std::shared_ptr<T> mData;
 
 	public:
@@ -129,7 +126,11 @@ namespace CPS {
 		// }
 
 		virtual String toString() override {
-			return std::to_string(get());
+			/// CHECK: How does this impact performance?
+			std::stringstream ss;
+			ss.precision(2);
+			ss << this->get();
+			return ss.str();
 		}
 
 		/// @brief User-defined cast operator
@@ -160,8 +161,8 @@ namespace CPS {
 
 		template <class U>
 		typename Attribute<U>::Ptr derive(
-			typename AttributeUpdateTask<U, T>::Actor getter = AttributeUpdateTask<U, T>::Actor(),
-			typename AttributeUpdateTask<U, T>::Actor setter = AttributeUpdateTask<U, T>::Actor()
+			typename AttributeUpdateTask<U, T>::Actor getter = typename AttributeUpdateTask<U, T>::Actor(),
+			typename AttributeUpdateTask<U, T>::Actor setter = typename AttributeUpdateTask<U, T>::Actor()
 		)
 		{
 			auto derivedAttribute = std::make_shared<AttributeDynamic<U>>();

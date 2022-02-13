@@ -19,22 +19,6 @@ std::ostream &operator<<(std::ostream &output, AttributeBase &attr) {
 }
 
 template<>
-String Attribute<MatrixComp>::toString() {
-	std::stringstream ss;
-	ss.precision(2);
-	ss << this->get();
-	return ss.str();
-}
-
-template<>
-String Attribute<Matrix>::toString() {
-	std::stringstream ss;
-	ss.precision(2);
-	ss << this->get();
-	return ss.str();
-}
-
-template<>
 String Attribute<Complex>::toString() {
 	std::stringstream ss;
 	ss.precision(2);
@@ -47,9 +31,5 @@ String Attribute<String>::toString() {
 	return String(this->get());
 }
 
-template class CPS::Attribute<MatrixComp>;
-template class CPS::Attribute<Matrix>;
 template class CPS::Attribute<Complex>;
 template class CPS::Attribute<String>;
-template class CPS::Attribute<Int>;
-template class CPS::Attribute<Real>;
