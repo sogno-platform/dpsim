@@ -41,22 +41,22 @@ namespace DPsim {
 		typedef std::shared_ptr<Simulation> Ptr;
 
 		/// Simulation name
-		const Attribute<String>::Ptr mName;
+		const CPS::Attribute<String>::Ptr mName;
 		/// Final time of the simulation
-		const Attribute<Real>::Ptr mFinalTime;
+		const CPS::Attribute<Real>::Ptr mFinalTime;
 		/// Simulation timestep
-		const Attribute<Real>::Ptr mTimeStep;
+		const CPS::Attribute<Real>::Ptr mTimeStep;
 
 		/// Determines if the network should be split
 		/// into subnetworks at decoupling lines.
 		/// If the system is split, each subsystem is
 		/// solved by a dedicated MNA solver.
-		const Attribute<Bool>::Ptr mSplitSubnets;
+		const CPS::Attribute<Bool>::Ptr mSplitSubnets;
 
 		/// Determines if steady-state initialization
 		/// should be executed prior to the simulation.
 		/// By default the initialization is disabled.
-		const Attribute<Bool>::Ptr mSteadyStateInit;
+		const CPS::Attribute<Bool>::Ptr mSteadyStateInit;
 
 	protected:
 		/// Time variable that is incremented at every step

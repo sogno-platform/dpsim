@@ -182,7 +182,7 @@ namespace DPsim {
 		CPS::Attribute<Matrix>::Ptr mLeftSideVector;
 
 		/// Solution vector of unknown quantities (parallel frequencies)
-		std::vector<const CPS::Attribute<Matrix>::Ptr> mLeftSideVectorHarm;
+		std::vector<CPS::Attribute<Matrix>::Ptr> mLeftSideVectorHarm;
 
 		/// Destructor
 		virtual ~MnaSolver() { 

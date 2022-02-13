@@ -62,12 +62,12 @@ void MnaSolver<VarType>::initialize() {
 		mSLog->info("Computing network harmonics in parallel.");
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mLeftSideVectorHarm.push_back(
-				CPS::Attribute<Matrix>::create("left_vector_"+std::to_string(freq), mAttributes);
+				CPS::Attribute<Matrix>::create("left_vector_"+std::to_string(freq), mAttributes)
 			);
 		}
 	}
 	else {
-		mLeftSideVector = CPS::Attribute::create("left_vector", mAttributes);
+		mLeftSideVector = CPS::Attribute<Matrix>::create("left_vector", mAttributes);
 	}
 
 	// Initialize components from powerflow solution and
@@ -158,13 +158,13 @@ void MnaSolver<Complex>::initializeComponents() {
 		// Initialize MNA specific parts of components.
 		for (auto comp : mMNAComponents) {
 			// Initialize MNA specific parts of components.
-			comp->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep, mLeftVectorHarmAttributes);
+			comp->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep, mLeftSideVectorHarm);
 			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) mRightVectorStamps.push_back(&stamp);
 		}
 		// Initialize nodes
 		for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); ++nodeIdx) {
-			mNodes[nodeIdx]->mnaInitializeHarm(mLeftVectorHarmAttributes);
+			mNodes[nodeIdx]->mnaInitializeHarm(mLeftSideVectorHarm);
 		}
 	}
 	else {
@@ -378,7 +378,7 @@ void MnaSolver<Complex>::createEmptyVectors() {
 	if (mFrequencyParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
-			**mLeftSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
+			mLeftSideVectorHarm.push_back(Attribute<Matrix>::create("left_vector_harm_" + freq, mAttributes, Matrix::Zero(2*(mNumMatrixNodeIndices), 1)));
 		}
 	}
 	else {
