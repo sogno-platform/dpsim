@@ -24,8 +24,8 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	SystemTopology system, IdentifiedObject::List tearComponents,
 	Real timeStep, Logger::Level logLevel) :
 	Solver(name, logLevel),
-	mOrigLeftSideVector(Attribute<Matrix>::create("old_left_vector", mAttributes)),
-	mMappedTearCurrents(Attribute<Matrix>::create("mapped_tear_currents", mAttributes)) {
+	mMappedTearCurrents(Attribute<Matrix>::create("mapped_tear_currents", mAttributes)),
+	mOrigLeftSideVector(Attribute<Matrix>::create("old_left_vector", mAttributes)) {
 	mTimeStep = timeStep;
 
 	// Raw source and solution vector logging
@@ -219,7 +219,7 @@ void DiakopticsSolver<VarType>::createMatrices() {
 		// The subnets' components expect to be passed a left-side vector matching
 		// the size of the subnet, so we have to create separate vectors here and
 		// copy the solution there
-		net.leftVector = Attribute<Matrix>::make(Flags::read | Flags::write);
+		net.leftVector = AttributeStatic<Matrix>::make();
 		net.leftVector->set(Matrix::Zero(net.sysSize, 1));
 	}
 
@@ -401,7 +401,7 @@ void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount)
 	// Solve Y' * x = C * i
 	// v = v' + x
 	lBlock += mSubnet.luFactorization.solve(rBlock);
-	*mSubnet.leftVector = lBlock;
+	**mSubnet.leftVector = lBlock;
 }
 
 template <typename VarType>
