@@ -413,6 +413,7 @@ Real Simulation::step() {
 	return mTime;
 }
 
+/// DEPRECATED: Unused
 void Simulation::reset() {
 
 	// Resets component states
