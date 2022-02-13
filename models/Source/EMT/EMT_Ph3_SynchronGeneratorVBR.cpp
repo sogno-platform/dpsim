@@ -21,6 +21,7 @@ EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String uid, String name, Lo
 	**mIntfCurrent = Matrix::Zero(3,1);
 
 	///CHECK: Are all of these used in this class or in subclasses?
+	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
 	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
 	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
 	mLd = Attribute<Real>::create("Ld", mAttributes, 0);

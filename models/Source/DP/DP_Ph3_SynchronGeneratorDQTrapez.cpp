@@ -65,23 +65,23 @@ void DP::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 	}
 
 	// Calculation of electrical torque
-	mElecTorque = (mPsisr(3,0)*mIsr(0,0) - mPsisr(0,0)*mIsr(3,0));
+	**mElecTorque = (mPsisr(3,0)*mIsr(0,0) - mPsisr(0,0)*mIsr(3,0));
 
 	// Update mechanical rotor angle with respect to electrical angle
 	// using Euler and previous states
-	mThetaMech = mThetaMech + mTimeStep * ((mOmMech - 1) * mBase_OmMech);
+	mThetaMech = mThetaMech + mTimeStep * ((**mOmMech - 1) * mBase_OmMech);
 
 	// Update of omega using Euler
-	mOmMech = mOmMech + mTimeStep * (1./(2.*mInertia) * (mMechTorque - mElecTorque));
+	**mOmMech = **mOmMech + mTimeStep * (1./(2.* **mInertia) * (**mMechTorque - **mElecTorque));
 
 	// Update of fluxes
 	if (mNumericalMethod == NumericalMethod::Euler) {
 		mPsisr = Math::StateSpaceEuler(mPsisr,
-			mBase_OmElec*(mFluxStateSpaceMat + mOmegaFluxMat*mOmMech),
+			mBase_OmElec*(mFluxStateSpaceMat + mOmegaFluxMat* **mOmMech),
 			mBase_OmElec*mVsr, mTimeStep / mMultisamplingRate);
 	} else {
 		mPsisr = Math::StateSpaceTrapezoidal(mPsisr,
-			mBase_OmElec*(mFluxStateSpaceMat + mOmegaFluxMat*mOmMech),
+			mBase_OmElec*(mFluxStateSpaceMat + mOmegaFluxMat* **mOmMech),
 			mBase_OmElec*mVsr, mTimeStep / mMultisamplingRate);
 	}
 

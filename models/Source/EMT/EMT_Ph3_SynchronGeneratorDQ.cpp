@@ -21,6 +21,7 @@ EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logg
 	**mIntfCurrent = Matrix::Zero(3,1);
 
 	///CHECK: Are all of these used in this class or in subclasses?
+	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
 	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
 	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
 	mLd = Attribute<Real>::create("Ld", mAttributes, 0);
@@ -129,7 +130,7 @@ void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
 			"Rs: {:e}\nLd: {:e}\nLq: {:e}\nLl: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\nLd_s: {:e}\nLq_s: {:e}\n"
 			"Td0_t: {:e}\nTq0_t: {:e}\nTd0_s: {:e}\nTq0_s: {:e}\n",
-			mPoleNumber, mInertia,
+			mPoleNumber, **mInertia,
 			**mRs, **mLd, **mLq, **mLl,
 			**mLd_t, **mLq_t, **mLd_s, **mLq_s,
 			**mTd0_t, **mTq0_t, **mTd0_s, **mTq0_s);

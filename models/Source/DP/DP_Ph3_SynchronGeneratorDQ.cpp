@@ -22,6 +22,9 @@ DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logge
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	**mIntfCurrent = MatrixComp::Zero(3,1);
 
+	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
+	mElecTorque = Attribute<Real>::create("T_e", mAttributes, 0);
+	mMechTorque = Attribute<Real>::create("T_m", mAttributes, 0);
 	mOmMech = Attribute<Real>::create("w_r", mAttributes);
 }
 
