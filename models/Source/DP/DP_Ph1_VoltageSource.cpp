@@ -46,7 +46,7 @@ void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart
 	mSrcSig = srcSigFreqRamp;
 
 	mVoltageRef->setReference(mSrcSig->mSigOut);
-	mSrcFreq->setReference(mSrcSig->mFreq;
+	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mParametersSet = true;
 }

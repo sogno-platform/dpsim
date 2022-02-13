@@ -138,14 +138,14 @@ void DP::Ph1::RXLoadSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<
 	this->mSubRXLoad->mnaPostStep(time, timeStepCount, leftVector);
 	this->mSubSwitch->mnaPostStep(time, timeStepCount, leftVector);
 
-	**mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
-	**mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
+	**mIntfVoltage = **mSubRXLoad->mIntfVoltage;
+	**mIntfCurrent = **mSubRXLoad->mIntfCurrent;
 }
 
 void DP::Ph1::RXLoadSwitch::updateSwitchState(Real time) {
 
 	if (time > mSwitchTimeOffset && mSubSwitch->isClosed()) {
-		Real VRef = Math::abs(mSubRXLoad->attributeComplex("V_nom")->get());
+		Real VRef = Math::abs(**mSubRXLoad->mNomVoltage);
 		Real V = Math::abs((**mIntfVoltage)(0, 0));
 
 		Real deltaV = Math::abs((V - VRef) / VRef);

@@ -42,7 +42,7 @@ void DP::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attr
 	updateMatrixNodeIndices();
 
 	(**mIntfVoltage)(0, 0) = **mVoltageRef
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero((**leftVector).rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
