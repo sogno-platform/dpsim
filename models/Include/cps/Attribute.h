@@ -342,10 +342,10 @@ namespace CPS {
 				dependent = dependency->asRawPointer();
 			};
 			this->clearAllTasks();
-			if(reference.isStatic()) {
-				this->addTask(UpdateTaskKind::UPDATE_ONCE, getter);
+			if(reference->isStatic()) {
+				this->addTask(UpdateTaskKind::UPDATE_ONCE, AttributeUpdateTask<T, T>(UpdateTaskKind::UPDATE_ONCE, getter, this->shared_from_this()));
 			} else {
-				this->addTask(UpdateTaskKind::UPDATE_ON_GET, getter);
+				this->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<T, T>(UpdateTaskKind::UPDATE_ON_GET, getter, this->shared_from_this()));
 			}
 		}
 
