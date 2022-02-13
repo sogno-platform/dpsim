@@ -24,8 +24,6 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 
 	// Register attributes
 
-	/// FIXME: Attributes from Base_SynchronGenerator are not initialized
-
 	///CHECK: Are all of these used in this class or in subclasses?
 	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
 	mLl = Attribute<Real>::create("Ll", mAttributes, 0);

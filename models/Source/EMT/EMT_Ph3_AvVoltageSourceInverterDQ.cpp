@@ -65,23 +65,19 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 	mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
 
 	// PLL
-	///FIXME: Use attribute member variable
-	mPLL->attribute<Real>("input_ref")->setReference(mVcq);
-	///FIXME: Use attribute member variable
-	mPllOutput->setReference(mPLL->attribute<Matrix>("output_curr"));
+	mPLL->mInputRef->setReference(mVcq);
+	mPllOutput->setReference(mPLL->mOutputCurr);
 
 	// Power controller
 	// input references
-	///FIXME: Use attribute member variables
-	mPowerControllerVSI->attribute<Real>("Vc_d")->setReference(mVcd);
-	mPowerControllerVSI->attribute<Real>("Vc_q")->setReference(mVcq);
-	mPowerControllerVSI->attribute<Real>("Irc_d")->setReference(mIrcd);
-	mPowerControllerVSI->attribute<Real>("Irc_q")->setReference(mIrcq);
+	mPowerControllerVSI->mVc_d->setReference(mVcd);
+	mPowerControllerVSI->mVc_q->setReference(mVcq);
+	mPowerControllerVSI->mIrc_d->setReference(mIrcd);
+	mPowerControllerVSI->mIrc_q->setReference(mIrcq);
 	// input, state and output vector for logging
-	///FIXME: Use attribute member variables
-	mPowerctrlInputs->setReference(mPowerControllerVSI->attribute<Matrix>("input_curr"));
-	mPowerctrlStates->setReference(mPowerControllerVSI->attribute<Matrix>("state_curr"));
-	mPowerctrlOutputs->setReference(mPowerControllerVSI->attribute<Matrix>("output_curr"));
+	mPowerctrlInputs->setReference(mPowerControllerVSI->mInputCurr);
+	mPowerctrlStates->setReference(mPowerControllerVSI->mStateCurr);
+	mPowerctrlOutputs->setReference(mPowerControllerVSI->mOutputCurr);
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {
