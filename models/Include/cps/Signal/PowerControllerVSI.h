@@ -49,20 +49,6 @@ namespace Signal {
 		Real mGamma_dInit = 0;
 		Real mGamma_qInit = 0;
 
-		// input, state and output vectors
-		/// Previous Input
-        Matrix mInputPrev = Matrix::Zero(6,1);
-        /// Current Input
-        Matrix mInputCurr = Matrix::Zero(6,1);
-        /// Previous State
-        Matrix mStatePrev = Matrix::Zero(6,1);
-        /// Current State
-        Matrix mStateCurr = Matrix::Zero(6,1);
-        /// Previous Output
-        Matrix mOutputPrev = Matrix::Zero(2,1);
-        /// Current Output
-        Matrix mOutputCurr = Matrix::Zero(2,1);
-
 		// state space matrices
 		/// matrix A of state space model
 		Matrix mA = Matrix::Zero(6, 6);
@@ -74,6 +60,28 @@ namespace Signal {
 		Matrix mD = Matrix::Zero(2, 6);
 
 	public:
+
+		// attributes of input references
+		///FIXME: These are never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
+		const Attribute<Real>::Ptr mVc_d;
+		const Attribute<Real>::Ptr mVc_q;
+		const Attribute<Real>::Ptr mIrc_d;
+		const Attribute<Real>::Ptr mIrc_q;
+
+		// input, state and output vectors
+		/// Previous Input
+        const Attribute<Matrix>::Ptr mInputPrev;
+        /// Current Input
+        const Attribute<Matrix>::Ptr mInputCurr;
+        /// Previous State
+        const Attribute<Matrix>::Ptr mStatePrev;
+        /// Current State
+        const Attribute<Matrix>::Ptr mStateCurr;
+        /// Previous Output
+        const Attribute<Matrix>::Ptr mOutputPrev;
+        /// Current Output
+        const Attribute<Matrix>::Ptr mOutputCurr;
+
 		PowerControllerVSI(String name, Logger::Level logLevel = Logger::Level::off);
 
 		/// Setter for general parameters
