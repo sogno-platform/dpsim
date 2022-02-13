@@ -13,19 +13,18 @@ using namespace CPS::EMT::Ph1;
 using namespace CPS::Signal;
 
 DecouplingLineEMT::DecouplingLineEMT(String name, Logger::Level logLevel) :
-	SimSignalComp(name, name, logLevel) {
-
-	addAttribute<Matrix>("states", &mStates);
-	addAttribute<Real>("i_src1", &mSrcCur1Ref, Flags::read);
-	addAttribute<Real>("i_src2", &mSrcCur2Ref, Flags::read);
+	SimSignalComp(name, name, logLevel),
+	mStates(Attribute<Matrix>::create("states", mAttributes)),
+	mSrcCur1Ref(Attribute<Real>::create("i_src1", mAttributes)),
+	mSrcCur2Ref(Attribute<Real>::create("i_src2", mAttributes))  {
 
 	mRes1 = Resistor::make(name + "_r1", logLevel);
 	mRes2 = Resistor::make(name + "_r2", logLevel);
 	mSrc1 = CurrentSource::make(name + "_i1", logLevel);
 	mSrc2 = CurrentSource::make(name + "_i2", logLevel);
 
-	mSrcCur1 = mSrc1->attributeComplex("I_ref");
-	mSrcCur2 = mSrc2->attributeComplex("I_ref");
+	mSrcCur1 = mSrc1->mCurrentRef;
+	mSrcCur2 = mSrc2->mCurrentRef;
 }
 
 void DecouplingLineEMT::setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2,
@@ -92,17 +91,17 @@ void DecouplingLineEMT::step(Real time, Int timeStepCount) {
 
 	if (timeStepCount == 0) {
 		// initialization
-		mSrcCur1Ref = cur1 - volt1 / (mSurgeImpedance + mResistance / 4);
-		mSrcCur2Ref = cur2 - volt2 / (mSurgeImpedance + mResistance / 4);
+		**mSrcCur1Ref = cur1 - volt1 / (mSurgeImpedance + mResistance / 4);
+		**mSrcCur2Ref = cur2 - volt2 / (mSurgeImpedance + mResistance / 4);
 	} else {
 		// Update currents
-		mSrcCur1Ref = -mSurgeImpedance / denom * (volt2 + (mSurgeImpedance - mResistance/4) * cur2)
+		**mSrcCur1Ref = -mSurgeImpedance / denom * (volt2 + (mSurgeImpedance - mResistance/4) * cur2)
 			-mResistance/4 / denom * (volt1 + (mSurgeImpedance - mResistance/4) * cur1);
-		mSrcCur2Ref = -mSurgeImpedance / denom * (volt1 + (mSurgeImpedance - mResistance/4) * cur1)
+		**mSrcCur2Ref = -mSurgeImpedance / denom * (volt1 + (mSurgeImpedance - mResistance/4) * cur1)
 			-mResistance/4 / denom * (volt2 + (mSurgeImpedance - mResistance/4) * cur2);
 	}
-	mSrcCur1->set(mSrcCur1Ref);
-	mSrcCur2->set(mSrcCur2Ref);
+	mSrcCur1->set(**mSrcCur1Ref);
+	mSrcCur2->set(**mSrcCur2Ref);
 }
 
 void DecouplingLineEMT::PreStep::execute(Real time, Int timeStepCount) {

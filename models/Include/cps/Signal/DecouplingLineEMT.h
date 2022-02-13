@@ -26,8 +26,6 @@ namespace Signal {
 		Real mInductance;
 		Real mCapacitance;
 		Real mSurgeImpedance;
-		Real mSrcCur1Ref;
-		Real mSrcCur2Ref;
 
 		std::shared_ptr<EMT::SimNode> mNode1, mNode2;
 		std::shared_ptr<EMT::Ph1::Resistor> mRes1, mRes2;
@@ -37,8 +35,6 @@ namespace Signal {
 		// Ringbuffers for the values of previous timesteps
 		// TODO make these matrix attributes
 		std::vector<Real> mVolt1, mVolt2, mCur1, mCur2;
-		// workaround for dependency analysis as long as the states aren't attributes
-		Matrix mStates;
 		UInt mBufIdx = 0;
 		UInt mBufSize;
 		Real mAlpha;
@@ -46,6 +42,12 @@ namespace Signal {
 		Real interpolate(std::vector<Real>& data);
 	public:
 		typedef std::shared_ptr<DecouplingLineEMT> Ptr;
+
+		const Attribute<Real>::Ptr mSrcCur1Ref;
+		const Attribute<Real>::Ptr mSrcCur2Ref;
+
+		///FIXME: workaround for dependency analysis as long as the states aren't attributes
+		const Attribute<Matrix>::Ptr mStates;
 
 		DecouplingLineEMT(String name, Logger::Level logLevel = Logger::Level::info);
 
@@ -61,9 +63,9 @@ namespace Signal {
 		public:
 			PreStep(DecouplingLineEMT& line) :
 				Task(**line.mName + ".MnaPreStep"), mLine(line) {
-				mPrevStepDependencies.push_back(mLine.attribute("states"));
-				mModifiedAttributes.push_back(mLine.mSrc1->attribute("I_ref"));
-				mModifiedAttributes.push_back(mLine.mSrc2->attribute("I_ref"));
+				mPrevStepDependencies.push_back(mLine.mStates);
+				mModifiedAttributes.push_back(mLine.mSrc1->mCurrentRef);
+				mModifiedAttributes.push_back(mLine.mSrc2->mCurrentRef);
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -76,11 +78,11 @@ namespace Signal {
 		public:
 			PostStep(DecouplingLineEMT& line) :
 				Task(**line.mName + ".PostStep"), mLine(line) {
-				mAttributeDependencies.push_back(mLine.mRes1->attribute("v_intf"));
-				mAttributeDependencies.push_back(mLine.mRes1->attribute("i_intf"));
-				mAttributeDependencies.push_back(mLine.mRes2->attribute("v_intf"));
-				mAttributeDependencies.push_back(mLine.mRes2->attribute("i_intf"));
-				mModifiedAttributes.push_back(mLine.attribute("states"));
+				mAttributeDependencies.push_back(mLine.mRes1->mIntfVoltage);
+				mAttributeDependencies.push_back(mLine.mRes1->mIntfCurrent);
+				mAttributeDependencies.push_back(mLine.mRes2->mIntfVoltage);
+				mAttributeDependencies.push_back(mLine.mRes2->mIntfCurrent);
+				mModifiedAttributes.push_back(mLine.mStates);
 			}
 
 			void execute(Real time, Int timeStepCount);
