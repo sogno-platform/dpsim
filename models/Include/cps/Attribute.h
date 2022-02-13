@@ -58,7 +58,7 @@ namespace CPS {
 
 	public:
 		AttributeUpdateTask(UpdateTaskKind kind, Actor &actorFunction, std::shared_ptr<Attribute<DependencyTypes>>... dependencies)
-			: mKind(kind), mActorFunction(actorFunction), mDependencies(std::forward<std::shared_ptr<Attribute<DependencyTypes>>>(dependencies)...) {}
+			: mDependencies(std::forward<std::shared_ptr<Attribute<DependencyTypes>>>(dependencies)...), mActorFunction(actorFunction), mKind(kind) {}
 
 		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) override {
 			mActorFunction(dependent, std::get<std::shared_ptr<Attribute<DependencyTypes>>...>(mDependencies));
