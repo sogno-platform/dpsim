@@ -62,7 +62,7 @@ namespace Ph3 {
 		///
 		void initialize(Matrix frequencies);
 		///
-		Real electricalTorque() { return mElecTorque * mBase_T; }
+		Real electricalTorque() { return **mElecTorque * mBase_T; }
 		///
 		Real rotationalSpeed() { return **mOmMech * mBase_OmMech; }
 		///

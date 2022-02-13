@@ -43,9 +43,14 @@ EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String na
 	**mIntfVoltage = Matrix::Zero(3,1);
 	**mIntfCurrent = Matrix::Zero(3,1);
 
-	/// FIXME: Attributes from Base_SynchronGenerator are not initialized
+	
 
 	// Register attributes
+	///CHECK: Are all of these used in this class or in subclasses?
+	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
+	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
+	mLd = Attribute<Real>::create("Ld", mAttributes, 0);
+	mLq = Attribute<Real>::create("Lq", mAttributes, 0);
 	mElecActivePower = Attribute<Real>::create("P_elec", mAttributes, 0);
 	mMechPower = Attribute<Real>::create("P_mech", mAttributes, 0);
 	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
