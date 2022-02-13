@@ -38,7 +38,7 @@ namespace CPS {
 	protected:
 		ODEInterface() :
 		mOdePreState(CPS::Attribute<Matrix>::create("ode_pre_state", mAttributes)),
-		mOdePostState(CPS::Attribute<Matrix>::create("ode_post_state", mAttributes)),
+		mOdePostState(CPS::Attribute<Matrix>::create("ode_post_state", mAttributes))
 		{ }
 	};
 }
