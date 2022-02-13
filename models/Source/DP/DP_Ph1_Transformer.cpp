@@ -24,6 +24,10 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 
+	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mNominalVoltageEnd1 = Attribute<Real>::create("nominal_voltage_end1", mAttributes);
+	mNominalVoltageEnd2 = Attribute<Real>::create("nominal_voltage_end2", mAttributes);
+	mRatedPower = Attribute<Real>::create("S", mAttributes);
 	mRatio = Attribute<Complex>::create("ratio", mAttributes);
 	mResistance = Attribute<Real>::create("R", mAttributes);
 	mInductance = Attribute<Real>::create("L", mAttributes);
@@ -32,7 +36,7 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 /// DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
-	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, std::abs(**mRatio), std::arg(**mRatio), **mResistance, **mInductance);
+	copy->setParameters(**mNominalVoltageEnd1, **mNominalVoltageEnd2, std::abs(**mRatio), std::arg(**mRatio), **mResistance, **mInductance);
 	return copy;
 }
 
@@ -41,10 +45,10 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 
 	Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
 
-	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
-	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", mResistance, mInductance);
+	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", **mResistance, **mInductance);
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(**mRatio), std::arg(**mRatio));
-	mSLog->info("Rated Power ={} [W]", mRatedPower);
+	mSLog->info("Rated Power ={} [W]", **mRatedPower);
 
 	mParametersSet = true;
 }
@@ -52,8 +56,8 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
 	Real ratioPhase, Real resistance, Real inductance) {
 
-	mRatedPower = ratedPower;
-	mSLog->info("Rated Power ={} [W]", mRatedPower);
+	**mRatedPower = ratedPower;
+	mSLog->info("Rated Power ={} [W]", **mRatedPower);
 
 	DP::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
 }
@@ -68,11 +72,11 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		std::shared_ptr<SimTerminal<Complex>> tmp = mTerminals[0];
 		mTerminals[0] = mTerminals[1];
 		mTerminals[1] = tmp;
-		Real tmpVolt = mNominalVoltageEnd1;
-		mNominalVoltageEnd1 = mNominalVoltageEnd2;
-		mNominalVoltageEnd2 = tmpVolt;
+		Real tmpVolt = **mNominalVoltageEnd1;
+		**mNominalVoltageEnd1 = **mNominalVoltageEnd2;
+		**mNominalVoltageEnd2 = tmpVolt;
 		mSLog->info("Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
-		mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
+		mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
 		mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
 	}
 
@@ -103,11 +107,11 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	}
 	
 	// Create parallel sub components 
-	Real pSnub = P_SNUB_TRANSFORMER*mRatedPower;
-	Real qSnub = Q_SNUB_TRANSFORMER*mRatedPower;
+	Real pSnub = P_SNUB_TRANSFORMER * **mRatedPower;
+	Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
 
 	// A snubber conductance is added on the higher voltage side
-	mSnubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1),2) / pSnub;
+	mSnubberResistance1 = std::pow(std::abs(**mNominalVoltageEnd1),2) / pSnub;
 	mSubSnubResistor1 = std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
 	mSubSnubResistor1->setParameters(mSnubberResistance1);
 	mSubSnubResistor1->connect({ node(0), DP::SimNode::GND });
@@ -115,7 +119,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mSubComponents.push_back(mSubSnubResistor1);
 
 	// A snubber conductance is added on the lower voltage side
-	mSnubberResistance2 = std::pow(std::abs(mNominalVoltageEnd2),2) / pSnub;
+	mSnubberResistance2 = std::pow(std::abs(**mNominalVoltageEnd2),2) / pSnub;
 	mSubSnubResistor2 = std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
 	mSubSnubResistor2->setParameters(mSnubberResistance2);
 	mSubSnubResistor2->connect({ node(1), DP::SimNode::GND });
@@ -131,7 +135,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// mSubComponents.push_back(mSubSnubCapacitor1);
 
 	// A snubber capacitance is added to lower voltage side 
-	mSnubberCapacitance2 = qSnub / std::pow(std::abs(mNominalVoltageEnd2),2) / omega;
+	mSnubberCapacitance2 = qSnub / std::pow(std::abs(**mNominalVoltageEnd2),2) / omega;
 	mSubSnubCapacitor2 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
 	mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
 	mSubSnubCapacitor2->connect({ node(1), DP::SimNode::GND });
