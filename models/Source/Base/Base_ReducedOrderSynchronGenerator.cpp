@@ -291,7 +291,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mSynGen.mSimTime = time;
-	mSynGen.stepInPerUnit(); //former system solve (trapezoidal)
+	mSynGen.stepInPerUnit();
 	mSynGen.mRightVector.setZero();
 	mSynGen.mnaApplyRightSideVectorStamp(mSynGen.mRightVector);
 }

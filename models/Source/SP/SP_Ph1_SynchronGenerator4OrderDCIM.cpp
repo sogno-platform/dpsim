@@ -10,9 +10,6 @@
 
 using namespace CPS;
 
-// !!! TODO: 	Adaptions to use in SP_Ph1 models phase-to-ground peak variables
-// !!! 			with initialization from phase-to-phase RMS variables
-
 SP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
     (String uid, String name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel) {
