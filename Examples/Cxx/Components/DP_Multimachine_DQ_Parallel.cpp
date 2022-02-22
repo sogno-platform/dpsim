@@ -124,8 +124,8 @@ void doSim(int threads, int generators, int repNumber) {
 int main(int argc, char* argv[]) {
 	CommandLineArgs args(argc, argv);
 
-	std::cout << "Simulate with " << Int(args.options["gen"]) << " generators, "
-		<< Int(args.options["threads"]) << " threads, sequence number "
-		<< Int(args.options["seq"]) << std::endl;
-	doSim(Int(args.options["threads"]), Int(args.options["gen"]), Int(args.options["seq"]));
+	std::cout << "Simulate with " << args.getOptionInt("gen") << " generators, "
+		<< args.getOptionInt("threads") << " threads, sequence number "
+		<< args.getOptionInt("seq") << std::endl;
+	doSim(args.getOptionInt("threads"), args.getOptionInt("gen"), args.getOptionInt("seq"));
 }

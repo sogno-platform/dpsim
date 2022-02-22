@@ -198,13 +198,13 @@ int main(int argc, char* argv[]) {
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA_G1") != args.options.end())
-			cmdInertia_G1 = args.options["SCALEINERTIA_G1"];
+			cmdInertia_G1 = args.getOptionReal("SCALEINERTIA_G1");
 		if (args.options.find("SCALEINERTIA_G2") != args.options.end())
-			cmdInertia_G2 = args.options["SCALEINERTIA_G2"];
+			cmdInertia_G2 = args.getOptionReal("SCALEINERTIA_G2");
 		if (args.options.find("SCALEDAMPING_G1") != args.options.end())
-			cmdDamping_G1 = args.options["SCALEDAMPING_G1"];
+			cmdDamping_G1 = args.getOptionReal("SCALEDAMPING_G1");
 		if (args.options.find("SCALEDAMPING_G2") != args.options.end())
-			cmdDamping_G2 = args.options["SCALEDAMPING_G2"];
+			cmdDamping_G2 = args.getOptionReal("SCALEDAMPING_G2");
 	}
 
 	SP_SynGenTrStab_3Bus_SteadyState(simName, timeStep, finalTime, cmdInertia_G1, cmdInertia_G2, cmdDamping_G1, cmdDamping_G2);

@@ -103,9 +103,20 @@ int main(int argc, char *argv[]) {
 	//		simulateDecoupled(filenames, copies, threads);
 	//}
 	//simulateDecoupled(filenames, 19, 8);
-	std::cout << "Simulate with " << Int(args.options["copies"]) << " copies, "
-		<< Int(args.options["threads"]) << " threads, sequence number "
-		<< Int(args.options["seq"]) << std::endl;
-	simulateDecoupled(filenames, Int(args.options["copies"]),
-		Int(args.options["threads"]), Int(args.options["seq"]));
+
+	Int numCopies = 0;
+	Int numThreads = 0;
+	Int numSeq = 0;
+
+	if (args.options.find("copies") != args.options.end())
+		numCopies = args.getOptionInt("copies");
+	if (args.options.find("threads") != args.options.end())
+		numThreads = args.getOptionInt("threads");
+	if (args.options.find("seq") != args.options.end())
+		numSeq = args.getOptionInt("seq");
+
+	std::cout << "Simulate with " << numCopies << " copies, "
+		<< numThreads << " threads, sequence number "
+		<< numSeq << std::endl;
+	simulateDecoupled(filenames, numCopies,	numThreads, numSeq);
 }

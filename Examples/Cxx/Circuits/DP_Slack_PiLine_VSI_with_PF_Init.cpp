@@ -30,12 +30,12 @@ int main(int argc, char* argv[]) {
 
 		if (args.name != "dpsim")
 			simName = args.name;
-		if (args.options_bool.find("control") != args.options_bool.end())
-			pvWithControl = args.options_bool["control"];
+		if (args.options.find("control") != args.options.end())
+			pvWithControl = args.getOptionBool("control");
 		if (args.options.find("scale_kp") != args.options.end())
-			cmdScaleI = args.options["scale_kp"];
+			cmdScaleI = args.getOptionReal("scale_kp");
 		if (args.options.find("scale_ki") != args.options.end())
-			cmdScaleI = args.options["scale_ki"];
+			cmdScaleI = args.getOptionReal("scale_ki");
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----

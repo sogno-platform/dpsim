@@ -179,27 +179,10 @@ void CommandLineArgs::parseArguments(int argc, char *argv[])
 				auto p = arg.find("=");
 				auto key = arg.substr(0, p);
 				auto value = arg.substr(p + 1);
-
-				if (p != String::npos) {
-
-					// try to convert to real number
-					try {
-						options[key] = std::stod(value);
-					}
-					catch (...) {}
-
-					// try to convert to boolean
-					if (value == "true")
-						options_bool[key] = true;
-					else if (value == "false")
-					 	options_bool[key] = false;
-
-					// check if at least one conversion was successful
-					if ((options.find(key) == options.end()) && (options_bool.find(key) == options_bool.end()))
-						std::cerr << "Value " << value << " of option with key " << key << " could not be converted.";
+				if (p != String::npos)
+					options[key] = value;
 
 				break;
-				}
 			}
 
 			case 'l': {
