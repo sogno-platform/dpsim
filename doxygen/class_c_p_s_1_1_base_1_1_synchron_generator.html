@@ -68,6 +68,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_c_p_s_1_1_base_1_1_synchron_generator-members.html">List of all members</a>  </div>
@@ -104,6 +105,14 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a763d03947fbed7314c1fc97d88293e9d"><td class="memItemLeft" align="right" valign="top"><a id="a763d03947fbed7314c1fc97d88293e9d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a763d03947fbed7314c1fc97d88293e9d">addGovernor</a> (Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)</td></tr>
+<tr class="memdesc:a763d03947fbed7314c1fc97d88293e9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add governor and turbine. <br /></td></tr>
+<tr class="separator:a763d03947fbed7314c1fc97d88293e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d9cbee28b83779be05f62ed9c70f390"><td class="memItemLeft" align="right" valign="top"><a id="a6d9cbee28b83779be05f62ed9c70f390"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a6d9cbee28b83779be05f62ed9c70f390">addExciter</a> (Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr)</td></tr>
+<tr class="memdesc:a6d9cbee28b83779be05f62ed9c70f390"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add voltage regulator and exciter. <br /></td></tr>
+<tr class="separator:a6d9cbee28b83779be05f62ed9c70f390"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6e1cdc082a49b5d09a9f81e4e1276a0"><td class="memItemLeft" align="right" valign="top"><a id="ac6e1cdc082a49b5d09a9f81e4e1276a0"></a>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#ac6e1cdc082a49b5d09a9f81e4e1276a0">~SynchronGenerator</a> ()</td></tr>
 <tr class="memdesc:ac6e1cdc082a49b5d09a9f81e4e1276a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does nothing. <br /></td></tr>
@@ -137,6 +146,17 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a511df0f11d78e4b9448be8b9ed3b4673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switch to determine the integration method for the machine model. <br /></td></tr>
 <tr class="separator:a511df0f11d78e4b9448be8b9ed3b4673"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a7dfc2903c3a1760be272b39a999c2d3b"><td class="memItemLeft" align="right" valign="top"><a id="a7dfc2903c3a1760be272b39a999c2d3b"></a>
+std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_signal_1_1_turbine_governor.html">Signal::TurbineGovernor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a7dfc2903c3a1760be272b39a999c2d3b">mTurbineGovernor</a></td></tr>
+<tr class="memdesc:a7dfc2903c3a1760be272b39a999c2d3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signal component modelling governor control and steam turbine. <br /></td></tr>
+<tr class="separator:a7dfc2903c3a1760be272b39a999c2d3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a337b841aa6c0f367ded9c2abe22a10f4"><td class="memItemLeft" align="right" valign="top"><a id="a337b841aa6c0f367ded9c2abe22a10f4"></a>
+std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter.html">Signal::Exciter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a337b841aa6c0f367ded9c2abe22a10f4">mExciter</a></td></tr>
+<tr class="memdesc:a337b841aa6c0f367ded9c2abe22a10f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signal component modelling voltage regulator and exciter. <br /></td></tr>
+<tr class="separator:a337b841aa6c0f367ded9c2abe22a10f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:abe2b767d31048ccca010e6568c4a1474"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#abe2b767d31048ccca010e6568c4a1474">initPerUnitStates</a> ()</td></tr>
@@ -151,12 +171,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setBaseParameters</b>
 <tr class="memitem:a01c5bf7cea78f18c29177aef70e4ff96"><td class="memItemLeft" align="right" valign="top"><a id="a01c5bf7cea78f18c29177aef70e4ff96"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setBaseParameters</b> (Real nomPower, Real nomVolt, Real nomFreq, Real nomFieldCur)</td></tr>
 <tr class="separator:a01c5bf7cea78f18c29177aef70e4ff96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaab5da72cbf639f3a70cb7b7562b56db"><td class="memItemLeft" align="right" valign="top"><a id="aaab5da72cbf639f3a70cb7b7562b56db"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addExciter</b> (Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)</td></tr>
-<tr class="separator:aaab5da72cbf639f3a70cb7b7562b56db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a763d03947fbed7314c1fc97d88293e9d"><td class="memItemLeft" align="right" valign="top"><a id="a763d03947fbed7314c1fc97d88293e9d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addGovernor</b> (Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)</td></tr>
-<tr class="separator:a763d03947fbed7314c1fc97d88293e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a843e97b2d0e3e6847e420047a5931966"><td class="memItemLeft" align="right" valign="top"><a id="a843e97b2d0e3e6847e420047a5931966"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>calcStateSpaceMatrixDQ</b> ()</td></tr>
 <tr class="separator:a843e97b2d0e3e6847e420047a5931966"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -489,14 +503,14 @@ Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a1a288163be45fdc1a235bbc943ff7c62">mRcomp</a></td></tr>
 <tr class="memdesc:a1a288163be45fdc1a235bbc943ff7c62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compensation Resistance. <br /></td></tr>
 <tr class="separator:a1a288163be45fdc1a235bbc943ff7c62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bb894751b16a6742c20a5fb1a1bbe85"><td class="memItemLeft" align="right" valign="top"><a id="a2bb894751b16a6742c20a5fb1a1bbe85"></a>
-Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a2bb894751b16a6742c20a5fb1a1bbe85">mHasExciter</a> = false</td></tr>
-<tr class="memdesc:a2bb894751b16a6742c20a5fb1a1bbe85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if Exciter is activated. <br /></td></tr>
-<tr class="separator:a2bb894751b16a6742c20a5fb1a1bbe85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae418b7ecf3bb81caacd604ca05c45192"><td class="memItemLeft" align="right" valign="top"><a id="ae418b7ecf3bb81caacd604ca05c45192"></a>
 Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#ae418b7ecf3bb81caacd604ca05c45192">mHasTurbineGovernor</a> = false</td></tr>
 <tr class="memdesc:ae418b7ecf3bb81caacd604ca05c45192"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if Turbine and Governor are activated. <br /></td></tr>
 <tr class="separator:ae418b7ecf3bb81caacd604ca05c45192"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bb894751b16a6742c20a5fb1a1bbe85"><td class="memItemLeft" align="right" valign="top"><a id="a2bb894751b16a6742c20a5fb1a1bbe85"></a>
+Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a2bb894751b16a6742c20a5fb1a1bbe85">mHasExciter</a> = false</td></tr>
+<tr class="memdesc:a2bb894751b16a6742c20a5fb1a1bbe85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if Exciter is activated. <br /></td></tr>
+<tr class="separator:a2bb894751b16a6742c20a5fb1a1bbe85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace7cf0eda9cb2ff0984b3ac505b06fd4"><td class="memItemLeft" align="right" valign="top"><a id="ace7cf0eda9cb2ff0984b3ac505b06fd4"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>mInitTerminalVoltage</b> = 0</td></tr>
 <tr class="separator:ace7cf0eda9cb2ff0984b3ac505b06fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -717,7 +731,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>mInitVoltAngle</b> = 
 <p>Vector of stator and rotor currents. </p>
 <p>i_d - stator current in d axis i_fd - Rotor current field winding i_kd - Rotor current damping winding in d axis i_q - stator current in q axis i_kq1 - Rotor current damping winding 1 in q axis i_kq2 - Rotor current damping winding 2 in q axis i_0 - stator current 0 component </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00202">202</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00210">210</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -744,7 +758,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>mInitVoltAngle</b> = 
 <p>Vector of stator and rotor fluxes. </p>
 <p>psi_d - stator flux linkage in d axis psi_fd - rotor flux linkage in field winding psi_kd - rotor flux linkage in damping winding from d axis psi_q - stator flux linkage in q axis psi_kq1 - rotor flux linkage in damping winding 1 from q axis psi_kq2 - rotor flux linkage in damping winding 2 from q axis psi_0 - stator flux linkage 0 component </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00212">212</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00220">220</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -771,7 +785,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>mInitVoltAngle</b> = 
 <p>dq0 voltage calculated from terminal voltage </p>
 <p>Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit. The initialization mode depends on the setting of state type. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00218">218</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00226">226</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -805,7 +819,7 @@ v_kq2 - Rotor voltage damping winding 2 in q axis <br  />
 v_0 - Stator voltage 0 component <br  />
  </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00192">192</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00200">200</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
