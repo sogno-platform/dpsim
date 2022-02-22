@@ -144,7 +144,6 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{gen, line, fault, extnet});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simName, Logger::Level::debug);
 	system.initWithPowerflow(systemPF);
 	gen->terminal(0)->setPower(-genPF->getApparentPower());
 

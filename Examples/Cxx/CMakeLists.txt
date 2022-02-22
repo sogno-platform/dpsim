@@ -65,8 +65,8 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_SynGenDQ7odTrapez_DP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/EMT_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
-	Circuits/EMT_SynGenVBR_SMIB_Fault.cpp
 	Circuits/EMT_SynGenVBR_OperationalParams_SMIB_Fault.cpp
+	Circuits/EMT_SynGenVBR_SMIB_Fault.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
@@ -86,6 +86,8 @@ set(SYNCGEN_SOURCES
 	Components/DP_EMT_SynGenDq7odTrapez_LoadStep.cpp
 	Components/DP_SP_SynGenTrStab_testModels.cpp
 	Components/DP_SP_SynGenTrStab_testModels_doubleLine.cpp
+	Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
+	Components/EMT_SynchronGenerator9OrderVBR_LoadStep_TurbineGovernor_Exciter.cpp
 )
 
 set(INVERTER_SOURCES

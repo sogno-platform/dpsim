@@ -8,14 +8,16 @@
 
 #pragma once
 
-#include <cps/IdentifiedObject.h>
+#include <cps/SimSignalComp.h>
 #include <cps/Logger.h>
 
 namespace CPS {
 namespace Signal {
 
 	/// Turbine governor model to be used with synchronous generator
-	class TurbineGovernor : public IdentifiedObject {
+	class TurbineGovernor :
+		public SimSignalComp,
+		public SharedFactory<TurbineGovernor> {
 	protected:
 		// ### Steam Turbine Parameters ####
 		/// Time constant of main inlet volume and steam chest
@@ -71,8 +73,11 @@ namespace Signal {
 		Real T2;
 
 	public:
-		///
-		TurbineGovernor(String name) : IdentifiedObject(name) { }
+		/// 
+		TurbineGovernor(String name) : SimSignalComp(name, name) { }
+
+		/// Constructor with log level
+		TurbineGovernor(String name, CPS::Logger::Level logLevel) : SimSignalComp(name, name, logLevel) { }
 
 		/// Initializes exciter parameters
 		void setParameters(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm);
