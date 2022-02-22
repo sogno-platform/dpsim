@@ -54,7 +54,11 @@ namespace SynchronousGeneratorKundur {
         Real Lq_s = 0.2500;
         Real Ld = 1.8099;
         Real Lq = 1.7600;
+    };
+}
 
+namespace GovernorKundur {
+    struct Parameters {
         // Turbine model parameters (tandem compound single reheat steam turbine, fossil-fuelled)
         // from P. Kundur, "Power System Stability and Control", 1994, p. 427
         Real Ta_t = 0.3;    // T_CH
@@ -69,7 +73,11 @@ namespace SynchronousGeneratorKundur {
         Real Kg = 20;       // 5% droop
         Real Tsr = 0.1;
         Real Tsm = 0.3;
+    };
+}
 
+namespace ExcitationSystemEremia {
+    struct Parameters {
         // Excitation system parameters (IEEE Type DC1A)
         // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
         // voltage-regulator
@@ -84,7 +92,9 @@ namespace SynchronousGeneratorKundur {
         // voltage transducer
         Real Tr = 0.02;
     };
+
 }
+
 }
 
 namespace Grids {

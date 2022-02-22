@@ -13,8 +13,10 @@ using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
-// Machine parameters synchronous generator
+// Parameters synchronous generator
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
+const Examples::Components::GovernorKundur::Parameters govKundur;
+const Examples::Components::ExcitationSystemEremia::Parameters excEremia;
 
 // Initialization parameters
 Real nominalVoltage = 24e3;
@@ -78,10 +80,10 @@ int main(int argc, char* argv[]) {
 		initTerminalVoltageAngle, initMechPower);
 
 	if (withGovernor) 
-		gen->addGovernor(syngenKundur.Ta_t, syngenKundur.Tb, syngenKundur.Tc, syngenKundur.Fa, syngenKundur.Fb, syngenKundur.Fc, syngenKundur.Kg, syngenKundur.Tsr, syngenKundur.Tsm, initActivePower / syngenKundur.nomPower, initMechPower / syngenKundur.nomPower);
+		gen->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa, govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr, govKundur.Tsm, initActivePower / syngenKundur.nomPower, initMechPower / syngenKundur.nomPower);
 
 	if (withExciter)
-		gen->addExciter(syngenKundur.Ta, syngenKundur.Ka, syngenKundur.Te, syngenKundur.Ke, syngenKundur.Tf, syngenKundur.Kf, syngenKundur.Tr);
+		gen->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke, excEremia.Tf, excEremia.Kf, excEremia.Tr);
 
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", CPS::Logger::Level::info);
 	fault->setParameters(Math::singlePhaseParameterToThreePhase(RloadOriginal), 
