@@ -78,8 +78,8 @@ void SP::Ph1::SynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
 Matrix SP::Ph1::SynchronGeneratorVBR::get_DqToComplexATransformMatrix() {
 	Matrix dqToComplexA(2, 2);
 	dqToComplexA <<
-		cos(mThetaMech),	-sin(mThetaMech), 
-		sin(mThetaMech),	cos(mThetaMech);
+		cos(mThetaMech - mBase_OmMech * mSimTime),	-sin(mThetaMech - mBase_OmMech * mSimTime), 
+		sin(mThetaMech - mBase_OmMech * mSimTime),	cos(mThetaMech - mBase_OmMech * mSimTime);
 
 	return dqToComplexA;
 }

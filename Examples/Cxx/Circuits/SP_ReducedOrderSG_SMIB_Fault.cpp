@@ -104,7 +104,7 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	//Grid bus as Slack
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
-	extnetSP->setParameters(GridParams.VnomMV, GridParams.nomFreq);
+	extnetSP->setParameters(GridParams.VnomMV);
 
     // Line
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", logLevel);
@@ -162,6 +162,8 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	} else {
 		loggerSP->addAttribute("Edq0", 		 genSP->attribute("Edq_t"));
 	}
+	loggerSP->addAttribute("v1", n1SP->attribute("v"));
+	loggerSP->addAttribute("v2", n2SP->attribute("v"));
 
 	Simulation simSP(simNameSP, logLevel);
 	simSP.doInitFromNodesAndTerminals(true);

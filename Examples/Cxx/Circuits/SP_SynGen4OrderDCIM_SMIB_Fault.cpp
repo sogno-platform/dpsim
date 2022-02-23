@@ -95,7 +95,7 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	//Grid bus as Slack
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
-	extnetSP->setParameters(GridParams.VnomMV, GridParams.nomFreq);
+	extnetSP->setParameters(GridParams.VnomMV);
 
     // Line
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", logLevel);
