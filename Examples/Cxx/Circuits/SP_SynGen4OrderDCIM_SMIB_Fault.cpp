@@ -166,11 +166,11 @@ int main(int argc, char* argv[]) {
 	std::string inertia_str = "";
 	if (argc > 1) {
 		if (args.options.find("StepSize") != args.options.end()) {
-			timeStep = args.options["StepSize"];
+			timeStep = args.getOptionReal("StepSize");
 			stepSize_str = "_StepSize_" + std::to_string(timeStep);
 		}
 		if (args.options.find("Inertia") != args.options.end())  {
-			H = args.options["Inertia"];
+			H = args.getOptionReal("Inertia");
 			inertia_str = "_Inertia_" + std::to_string(H);
 		}
 	}

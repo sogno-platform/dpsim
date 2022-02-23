@@ -191,11 +191,11 @@ int main(int argc, char* argv[]) {
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		if (args.options.find("StepSize") != args.options.end()) {
-			timeStep = args.options["StepSize"];
+			timeStep = args.getOptionReal("StepSize");
 			stepSize_str = "_StepSize_" + std::to_string(timeStep);
 		}
 		if (args.options.find("SGModel") != args.options.end()) {
-			SGModel = args.options["SGModel"];
+			SGModel = args.getOptionReal("SGModel");
 			if (SGModel==3)
 				SGModel_str = "3Order";
 			else if (SGModel==4)
@@ -206,7 +206,7 @@ int main(int argc, char* argv[]) {
 				SGModel_str = "6bOrder";
 		}
 		if (args.options.find("Inertia") != args.options.end())  {
-			H = args.options["Inertia"];
+			H = args.getOptionReal("Inertia");
 			inertia_str = "_Inertia_" + std::to_string(H);
 		}
 	}
