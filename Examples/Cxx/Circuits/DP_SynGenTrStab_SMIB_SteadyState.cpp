@@ -152,9 +152,9 @@ int main(int argc, char* argv[]) {
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA") != args.options.end())
-			cmdInertia = args.options["SCALEINERTIA"];
+			cmdInertia = args.getOptionReal("SCALEINERTIA");
 		if (args.options.find("SCALEDAMPING") != args.options.end())
-			cmdDamping = args.options["SCALEDAMPING"];
+			cmdDamping = args.getOptionReal("SCALEDAMPING");
 	}
 
 	DP_1ph_SynGenTrStab_SteadyState(simName, timeStep, finalTime, cmdInertia, cmdDamping);

@@ -113,8 +113,40 @@ public:
 	std::list<String> positional;
 	std::list<fs::path> positionalPaths() const;
 
-	std::map<String, Real> options;
-	std::map<String, Bool> options_bool;
+	std::map<String, String> options;
+
+	Int getOptionInt(String optionName) {
+		// try to convert to integer number
+		try{
+			return std::stoi(options[optionName]);
+		} catch(...) {
+			throw CPS::TypeException();
+		} 
+	}
+
+	Real getOptionReal(String optionName) {
+		// try to convert to real number
+		try{
+			return std::stod(options[optionName]);
+		} catch(...) {
+			throw CPS::TypeException();
+		} 
+	}
+
+	Bool getOptionBool(String optionName) {
+		// try to convert to boolean
+		if (options[optionName] == "true")
+			return true;
+		else if (options[optionName] == "false")
+			return false;
+		else 
+			throw CPS::TypeException();
+	}
+
+	String getOptionString(String optionName){
+		return options[optionName];
+	}
+
 };
 
 namespace Utils {

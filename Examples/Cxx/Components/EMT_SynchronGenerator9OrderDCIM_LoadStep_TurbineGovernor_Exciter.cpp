@@ -50,15 +50,15 @@ int main(int argc, char* argv[]) {
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA") != args.options.end())
-			cmdInertiaFactor = args.options["SCALEINERTIA"];
-		if (args.options_bool.find("WITHGOVERNOR") != args.options_bool.end())
-			withGovernor = args.options_bool["WITHGOVERNOR"];
-		if (args.options_bool.find("WITHEXCITER") != args.options_bool.end())
-			withExciter = args.options_bool["WITHEXCITER"];
+			cmdInertiaFactor = args.getOptionReal("SCALEINERTIA");
+		if (args.options.find("WITHGOVERNOR") != args.options.end())
+			withGovernor = args.getOptionBool("WITHGOVERNOR");
+		if (args.options.find("WITHEXCITER") != args.options.end())
+			withExciter = args.getOptionBool("WITHEXCITER");
 		if (args.options.find("TIMESTEPEVENT") != args.options.end())
-			timeStepEvent = args.options["TIMESTEPEVENT"];
+			timeStepEvent = args.getOptionReal("TIMESTEPEVENT");
 		if (args.options.find("LOADFACTOR") != args.options.end())
-			cmdLoadFactor = args.options["LOADFACTOR"];
+			cmdLoadFactor = args.getOptionReal("LOADFACTOR");
 	}
 
 	// Calculate grid parameters
