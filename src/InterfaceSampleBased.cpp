@@ -50,7 +50,7 @@ Attribute<Int>::Ptr InterfaceSampleBased::importInt(UInt idx) {
 		return nullptr;
 	}
 	
-	Attribute<Int>::Ptr attr = Attribute<Int>::make(Flags::read | Flags::write);
+	AttributeStatic<Int>::Ptr attr = AttributeStatic<Int>::make();
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
@@ -70,7 +70,7 @@ Attribute<Real>::Ptr InterfaceSampleBased::importReal(UInt idx) {
 		return nullptr;
 	}
 
-	Attribute<Real>::Ptr attr = Attribute<Real>::make(Flags::read | Flags::write);
+	AttributeStatic<Real>::Ptr attr = AttributeStatic<Real>::make();
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
@@ -90,7 +90,7 @@ Attribute<Bool>::Ptr InterfaceSampleBased::importBool(UInt idx) {
 		return nullptr;
 	}
 
-	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(Flags::read | Flags::write);
+	AttributeStatic<Bool>::Ptr attr = AttributeStatic<Bool>::make();
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
@@ -110,7 +110,7 @@ Attribute<Complex>::Ptr InterfaceSampleBased::importComplex(UInt idx) {
 		return nullptr;
 	}
 
-	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
+	AttributeStatic<Complex>::Ptr attr = AttributeStatic<Complex>::make();
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
@@ -132,7 +132,7 @@ Attribute<Complex>::Ptr InterfaceSampleBased::importComplexMagPhase(UInt idx) {
 		return nullptr;
 	}
 
-	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
+	AttributeStatic<Complex>::Ptr attr = AttributeStatic<Complex>::make();
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
@@ -161,7 +161,7 @@ void InterfaceSampleBased::exportInt(Attribute<Int>::Ptr attr, UInt idx, const s
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		smp->data[idx].i = attr->getByValue();
+		smp->data[idx].i = **attr;
 	});
 	mExportAttrs.push_back(attr);
 	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::INTEGER);
@@ -174,7 +174,7 @@ void InterfaceSampleBased::exportReal(Attribute<Real>::Ptr attr, UInt idx, const
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		smp->data[idx].f = attr->getByValue();
+		smp->data[idx].f = **attr;
 	});
 	mExportAttrs.push_back(attr);
 	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::FLOAT);
@@ -192,7 +192,7 @@ void InterfaceSampleBased::exportBool(Attribute<Bool>::Ptr attr, UInt idx, const
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		smp->data[idx].b = attr->getByValue();
+		smp->data[idx].b = **attr;
 	});
 	mExportAttrs.push_back(attr);
 	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::BOOLEAN);
@@ -210,7 +210,7 @@ void InterfaceSampleBased::exportComplex(Attribute<Complex>::Ptr attr, UInt idx,
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		auto  y = attr->getByValue();
+		auto y = **attr;
 
 		smp->data[idx].z = std::complex<float>(y.real(), y.imag());
 	});
