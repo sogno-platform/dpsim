@@ -38,9 +38,9 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mName(Attribute<String>::create("name", mAttributes, name)),
 	mFinalTime(Attribute<Real>::create("final_time", mAttributes, 0.001)),
 	mTimeStep(Attribute<Real>::create("time_step", mAttributes, 0.001)),
-	mLogLevel(logLevel),
+	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true)),
 	mSteadyStateInit(Attribute<Bool>::create("steady_state_init", mAttributes, false)),
-	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true))  {
+	mLogLevel(logLevel)  {
 	create();
 }
 
@@ -48,12 +48,12 @@ Simulation::Simulation(String name, CommandLineArgs& args) :
 	mName(Attribute<String>::create("name", mAttributes, name)),
 	mFinalTime(Attribute<Real>::create("final_time", mAttributes, args.duration)),
 	mTimeStep(Attribute<Real>::create("time_step", mAttributes, args.timeStep)),
+	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true)),
+	mSteadyStateInit(Attribute<Bool>::create("steady_state_init", mAttributes, false)),
 	mLogLevel(args.logLevel),
 	mDomain(args.solver.domain),
 	mSolverType(args.solver.type),
-	mMnaImpl(args.mnaImpl),
-	mSteadyStateInit(Attribute<Bool>::create("steady_state_init", mAttributes, false)),
-	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true)) {
+	mMnaImpl(args.mnaImpl) {
 	create();
 }
 
@@ -502,7 +502,7 @@ CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const 
 
 void Simulation::logIdObjAttribute(const String &comp, const String &attr) {
 	CPS::AttributeBase::Ptr attrPtr = getIdObjAttribute(comp, attr);
-	String name = nodeObj->name() + "." + attr;
+	String name = comp + "." + attr;
 	logAttribute(name, attrPtr);
 }
 
