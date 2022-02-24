@@ -23,6 +23,17 @@ namespace CPS {
 		UPDATE_ON_SET,
 		UPDATE_ON_SIMULATION_STEP,
 	};
+	
+	class AttributeBase {
+	public:
+		typedef std::shared_ptr<AttributeBase> Ptr;
+		typedef std::vector<Ptr> List;
+		typedef std::map<String, Ptr> Map;
+
+		virtual String toString() = 0;
+		virtual bool isStatic() const = 0;
+		virtual AttributeBase::List getDependencies() = 0;
+	};
 
 	template<class T>
 	class Attribute;
@@ -34,13 +45,16 @@ namespace CPS {
 	class AttributeDynamic;
 
 	template<class DependentType>
+	/// FIXME: Why cant this class be abstract?
 	class AttributeUpdateTaskBase {
 
 	public:
-		///FIXME: Why must this not be a pure virtual function, i. e. why can't this class be abstract?
 		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) {
 			throw TypeException();
-		}; 
+		};
+		virtual AttributeBase::List getDependencies() {
+			throw TypeException();
+		};
 	};
 
 	template<class DependentType, class... DependencyTypes>
@@ -63,17 +77,12 @@ namespace CPS {
 		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) override {
 			mActorFunction(dependent, std::get<std::shared_ptr<Attribute<DependencyTypes>>...>(mDependencies));
 		}
-	};
 
-
-	class AttributeBase {
-	public:
-		typedef std::shared_ptr<AttributeBase> Ptr;
-		typedef std::vector<Ptr> List;
-		typedef std::map<String, Ptr> Map;
-
-		virtual String toString() = 0;
-		virtual bool isStatic() const = 0;
+		virtual AttributeBase::List getDependencies() {
+			return std::apply([](auto&&... elems){
+				return std::vector<AttributeBase::Ptr>{std::forward<decltype(elems)>(elems)...};
+			}, mDependencies);
+		};
 	};
 
 	template<class T>
@@ -279,6 +288,10 @@ namespace CPS {
 			return true;
 		}
 
+		virtual AttributeBase::List getDependencies() {
+			return AttributeBase::List();
+		}
+
 		virtual void setReference(Attribute<T>::Ptr reference) {
 			throw TypeException();
 		}
@@ -290,7 +303,6 @@ namespace CPS {
 		public SharedFactory<AttributeDynamic<T>> { 
 		friend class SharedFactory<AttributeDynamic<T>>;
 
-	
 	protected:
 		///FIXME: The UPDATE_ONCE tasks are currently never triggered. Maybe at start of simulation?
 		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnce;
@@ -365,6 +377,15 @@ namespace CPS {
 
 		virtual bool isStatic() const override {
 			return false;
+		}
+
+		virtual AttributeBase::List getDependencies() {
+			AttributeBase::List deps = AttributeBase::List();
+			for (auto task : updateTasksOnce) {
+				AttributeBase::List taskDeps = task.getDependencies();
+				deps.insert(deps.end(), taskDeps.begin(), taskDeps.end());
+			}
+			return deps;
 		}
 	};
 
