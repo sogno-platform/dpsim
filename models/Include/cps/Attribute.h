@@ -399,10 +399,4 @@ namespace CPS {
 
 	template<>
 	String Attribute<String>::toString();
-
-	template<>
-	String Attribute<MatrixComp>::toString();
-
-	template<>
-	String Attribute<Matrix>::toString();
 }
