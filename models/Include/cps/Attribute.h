@@ -385,6 +385,11 @@ namespace CPS {
 				AttributeBase::List taskDeps = task.getDependencies();
 				deps.insert(deps.end(), taskDeps.begin(), taskDeps.end());
 			}
+
+			for (auto task : updateTasksOnGet) {
+				AttributeBase::List taskDeps = task.getDependencies();
+				deps.insert(deps.end(), taskDeps.begin(), taskDeps.end());
+			}
 			return deps;
 		}
 	};
