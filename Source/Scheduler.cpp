@@ -82,7 +82,12 @@ void Scheduler::resolveDeps(Task::List& tasks, Edges& inEdges, Edges& outEdges) 
 	std::unordered_set<AttributeBase::Ptr> prevStepDependencies;
 	for (auto task : tasks) {
 		for (auto attr : task->getAttributeDependencies()) {
-			dependencies[AttributeBase::getRefAttribute(attr)].push_back(task);
+			AttributeBase::List attrDependencies = attr->getDependencies();
+			/// CHECK: Is it always necessary to add the (potentially referencing) attribute to the dependencies?
+			dependencies[attr].push_back(task);
+			for (auto dep : attrDependencies) {
+				dependencies[dep].push_back(task);
+			}
 		}
 		for (auto attr : task->getPrevStepDependencies()) {
 			prevStepDependencies.insert(attr);
