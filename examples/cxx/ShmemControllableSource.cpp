@@ -40,8 +40,8 @@ int main(int argc, char *argv[]) {
 	ecs->connect({ SimNode::GND, n1 });
 	r1->connect({ SimNode::GND, n1 });
 
-	ecs->setAttributeRef("I_ref", intf.importComplex(0));
-	intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
+	ecs->mCurrentRef->setReference(intf.importComplex(0));
+	intf.exportComplex(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
 	

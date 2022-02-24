@@ -55,8 +55,8 @@ int main(int argc, char *argv[]) {
 	r1->connect({ SimNode::GND, n1 });
 	load->connect({ n1 });
 
-	load->setAttributeRef("power_active", filtP->attribute<Real>("output"));
-	load->setAttributeRef("power_reactive", filtQ->attribute<Real>("output"));
+	load->mActivePower->setReference(filtP->mOutput);
+	load->mReactivePower->setReference(filtQ->mOutput);
 
 	filtP->setInput(intf.importReal(0));
 	filtQ->setInput(intf.importReal(1));

@@ -65,12 +65,12 @@ int main(int argc, char *argv[]) {
 	std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 
 	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, CPS::Logger::Level::off);
-	load_profile->setAttributeRef("P", filtP_profile->attribute<Real>("output"));
+	load_profile->mActivePower->setReference(filtP_profile->mOutput);
 
 	sys.mComponents.push_back(filtP_profile);
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, 0, CPS::Logger::Level::off);
-	load->setAttributeRef("P", filtP->attribute<Real>("output"));
+	load->mActivePower->setReference(filtP->mOutput);
 	sys.mComponents.push_back(filtP);
 
 	RealTimeSimulation sim(simName, CPS::Logger::Level::off);
@@ -97,19 +97,19 @@ int main(int argc, char *argv[]) {
 		i--;
 
 		auto n_dp = std::dynamic_pointer_cast<CPS::DP::SimNode>(n);
-		auto v = n_dp->attributeMatrixComp("v")->coeff(0, 0);
+		auto v = n_dp->mVoltage->deriveCoeff<Complex>(0, 0);
 
 		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
 		std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		intf.exportReal(v->mag(),   (i*2)+0); o++;
-		intf.exportReal(v->phase(), (i*2)+1); o++;
+		intf.exportReal(v->deriveMag(),   (i*2)+0); o++;
+		intf.exportReal(v->derivePhase(), (i*2)+1); o++;
 
-		logger->addAttribute(fmt::format("mag_{}", i), v->mag());
-		logger->addAttribute(fmt::format("phase_{}", i), v->phase());
+		logger->logAttribute(fmt::format("mag_{}", i), v->deriveMag());
+		logger->logAttribute(fmt::format("phase_{}", i), v->derivePhase());
 	}
 
-	logger->addAttribute("v3", sys.node<CPS::DP::SimNode>("BUS3")->attribute("v"));
+	logger->logAttribute("v3", sys.node<CPS::DP::SimNode>("BUS3")->mVoltage);
 
 	// TODO gain by 20e8
 	filtP->setInput(intf.importReal(0));

@@ -79,20 +79,20 @@ int main(int argc, char* argv[]) {
     InterfaceVillas intf("dpsim-mqtt", mqttConfig);
 
 	// Interface
-	evs->setAttributeRef("V_ref", intf.importComplex(0));
-	intf.exportComplex(evs->attributeMatrixComp("v_intf")->coeff(0, 0), 0, "v_src");
-	intf.exportComplex(rL->attributeMatrixComp("v_intf")->coeff(0, 0), 1, "v_load");
+	evs->mVoltageRef->setReference(intf.importComplex(0));
+	intf.exportComplex(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, "v_src");
+	intf.exportComplex(rL->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1, "v_load");
 	sim.addInterface(&intf, true);
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v3", n3->attribute("v"));
-	logger->addAttribute("v4", n4->attribute("v"));
-	logger->addAttribute("v_src", evs->attribute("V_ref"));
-	logger->addAttribute("i_evs", evs->attributeMatrixComp("i_intf"), 1, 1);
-	logger->addAttribute("v_evs", evs->attributeMatrixComp("v_intf"), 1, 1);
+	logger->logAttribute("v1", n1->mVoltage);
+	logger->logAttribute("v2", n2->mVoltage);
+	logger->logAttribute("v3", n3->mVoltage);
+	logger->logAttribute("v4", n4->mVoltage);
+	logger->logAttribute("v_src", evs->mVoltageRef);
+	logger->logAttribute("i_evs", evs->mIntfCurrent, 1, 1);
+	logger->logAttribute("v_evs", evs->mIntfVoltage, 1, 1);
 	sim.addLogger(logger);
 
 	sim.run(1);

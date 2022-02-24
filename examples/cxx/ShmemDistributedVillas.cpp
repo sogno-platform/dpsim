@@ -70,8 +70,8 @@ int main(int argc, char *argv[]) {
 		comps = SystemComponentList{evs, vs, l1, r1};
 		nodes = SystemNodeList{SimNode::GND, n1, n2, n3};
 
-		evs->setAttributeRef("V_ref", intf.importComplex(0));
-		intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
+		evs->mVoltageRef->setReference(intf.importComplex(0));
+		intf.exportComplex(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
 
 	}
 	else if (String(argv[1]) == "1") {
@@ -100,8 +100,8 @@ int main(int argc, char *argv[]) {
 		comps = SystemComponentList{ecs, sw, r2A, r2B};
 		nodes = SystemNodeList{SimNode::GND, n4, n5};
 
-		ecs->setAttributeRef("I_ref", intf.importComplex(0));
-		intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
+		ecs->mCurrentRef->setReference(intf.importComplex(0));
+		intf.exportComplex(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;

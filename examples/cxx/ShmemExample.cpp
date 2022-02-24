@@ -74,18 +74,18 @@ int main(int argc, char* argv[]) {
 #endif
 
 	// Interface
-	evs->setAttributeRef("V_ref", intf.importComplex(0));
-	intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
+	evs->mVoltageRef->setReference(intf.importComplex(0));
+	intf.exportComplex(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
 	sim.addInterface(&intf);
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v3", n3->attribute("v"));
-	logger->addAttribute("v4", n4->attribute("v"));
-	logger->addAttribute("V_ref", evs->attribute("V_ref"));
-	logger->addAttribute("i_evs", evs->attributeMatrixComp("i_intf"), 1, 1);
+	logger->logAttribute("v1", n1->mVoltage);
+	logger->logAttribute("v2", n2->mVoltage);
+	logger->logAttribute("v3", n3->mVoltage);
+	logger->logAttribute("v4", n4->mVoltage);
+	logger->logAttribute("V_ref", evs->mVoltageRef);
+	logger->logAttribute("i_evs", evs->mIntfCurrent, 1, 1);
 	sim.addLogger(logger);
 
 	sim.run();

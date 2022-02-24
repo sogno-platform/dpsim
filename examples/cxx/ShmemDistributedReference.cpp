@@ -49,10 +49,10 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("r12", r12->attribute("i_intf"));
-	logger->addAttribute("r02", r02->attribute("i_intf"));
+	logger->logAttribute("v1", n1->mVoltage);
+	logger->logAttribute("v2", n2->mVoltage);
+	logger->logAttribute("r12", r12->mIntfCurrent);
+	logger->logAttribute("r02", r02->mIntfCurrent);
 
 	Simulation sim(simName);
 	sim.setSystem(sys);

@@ -75,12 +75,12 @@ int main(int argc, char *argv[]) {
 		std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
 
 		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, CPS::Logger::Level::info);
-		load_profile->setAttributeRef("power_active", filtP_profile->attribute<Real>("output"));
+		load_profile->mActivePower->setReference(filtP_profile->mOutput);
 		sys.mComponents.push_back(filtP_profile);
 
 		// Register interface current source and voltage drop
-		ecs->setAttributeRef("I_ref", intf1.importComplex(0));
-		intf1.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
+		ecs->mCurrentRef->setReference(intf1.importComplex(0));
+		intf1.exportComplex(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
 
 		// TODO: gain by 20e8
 		filtP_profile->setInput(intf2.importReal(0));
@@ -95,13 +95,13 @@ int main(int argc, char *argv[]) {
 
 			i--;
 
-			auto v = n->attributeComplex("v");
+			auto v = n->attribute<Complex>("v");
 
 			std::cout << "Signal " << (i*2)+0 << ": Mag " << n->name() << std::endl;
 			std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-			intf2.exportReal(v->mag(),   (i*2)+0);
-			intf2.exportReal(v->phase(), (i*2)+1);
+			intf2.exportReal(v->deriveMag(),   (i*2)+0);
+			intf2.exportReal(v->derivePhase(), (i*2)+1);
 		}
 
 		sim.run(args.startTime);
@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
 		// Controllers and filter
 		std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 		auto filtP = FIRFilter::make("filter_p", coefficients, 0, CPS::Logger::Level::info);
-		load->setAttributeRef("active_power", filtP->attribute<Real>("output"));
+		load->mActivePower->setReference(filtP->mOutput);
 
 		auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1}, SystemComponentList{evs, load, filtP});
 		RealTimeSimulation sim(args.name + "_2");
@@ -139,15 +139,15 @@ int main(int argc, char *argv[]) {
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
-		evs->setAttributeRef("V_ref", intf1.importComplex(0));
+		evs->mVoltageRef->setReference(intf1.importComplex(0));
 		// TODO: invalid sign
-		intf1.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
+		intf1.exportComplex(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
 
 		// Register controllable load
 		filtP->setInput(intf2.importReal(0));
-		intf2.exportReal(load->attribute<Real>("power_active"), 0);
-		intf2.exportComplex(load->attributeMatrixComp("v_intf")->coeff(0, 0), 1);
-		intf2.exportComplex(load->attributeMatrixComp("i_intf")->coeff(0, 0), 2);
+		intf2.exportReal(load->mActivePower, 0);
+		intf2.exportComplex(load->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1);
+		intf2.exportComplex(load->mIntfCurrent->deriveCoeff<Complex>(0, 0), 2);
 
 		sim.run(args.startTime);
 	}

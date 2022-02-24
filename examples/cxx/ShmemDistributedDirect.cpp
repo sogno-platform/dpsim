@@ -84,17 +84,17 @@ int main(int argc, char *argv[]) {
 
 		// Logging
 		auto logger = DataLogger::make(simName);
-		logger->addAttribute("v1", n1->attribute("v"));
-		logger->addAttribute("v2", n2->attribute("v"));
-		logger->addAttribute("r12", r12->attribute("i_intf"));
-		logger->addAttribute("ievs", evs->attribute("i_intf"));
-		logger->addAttribute("vevs", evs->attribute("v_intf"));
+		logger->logAttribute("v1", n1->mVoltage);
+		logger->logAttribute("v2", n2->mVoltage);
+		logger->logAttribute("r12", r12->mIntfCurrent);
+		logger->logAttribute("ievs", evs->mIntfCurrent);
+		logger->logAttribute("vevs", evs->mIntfVoltage);
 		sim.addLogger(logger);
 
 		// Map attributes to interface entries
 		InterfaceShmem intf(in, out);
-		evs->setAttributeRef("V_ref", intf.importComplex(0));
-		auto evsAttrMinus = evs->attributeMatrixComp("i_intf")->coeff(0,0);
+		evs->mVoltageRef->setReference(intf.importComplex(0));
+		auto evsAttrMinus = evs->mIntfCurrent->deriveCoeff<Complex>(0,0);
 		intf.exportComplex(evsAttrMinus, 0);
 		sim.addInterface(&intf);
 
@@ -132,17 +132,17 @@ int main(int argc, char *argv[]) {
 
 		// Logging
 		auto logger = DataLogger::make(simName);
-		logger->addAttribute("v2", n2->attribute("v"));
-		logger->addAttribute("r02", r02->attribute("i_intf"));
-		logger->addAttribute("vecs", ecs->attribute("v_intf"));
-		logger->addAttribute("iecs", ecs->attribute("i_intf"));
+		logger->logAttribute("v2", n2->mVoltage);
+		logger->logAttribute("r02", r02->mIntfCurrent);
+		logger->logAttribute("vecs", ecs->mIntfVoltage);
+		logger->logAttribute("iecs", ecs->mIntfCurrent);
 		sim.addLogger(logger);
 
 		// Map attributes to interface entries
 		InterfaceShmem intf(in, out);
-		ecs->setAttributeRef("I_ref", intf.importComplex(0));
-		//intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
-		intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0)->scale(Complex(-1.,0)), 0);
+		ecs->mCurrentRef->setReference(intf.importComplex(0));
+		//intf.exportComplex(ecs->mIntfVoltage->coeff(0, 0), 0);
+		intf.exportComplex(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0)->deriveScaled(Complex(-1.,0)), 0);
 		sim.addInterface(&intf);
 
 		sim.run();

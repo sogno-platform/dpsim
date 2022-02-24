@@ -51,10 +51,10 @@ int main(int argc, char *argv[]) {
 	// Register exportable node voltages
 	UInt o = 0;
 	for (auto n : sys.mNodes) {
-		auto v = n->attributeComplex("v");
+		auto v = n->attribute<Complex>("v");
 
-		intf.exportReal(v->mag(),   o+0);
-		intf.exportReal(v->phase(), o+1);
+		intf.exportReal(v->deriveMag(),   o+0);
+		intf.exportReal(v->derivePhase(), o+1);
 
 		o += 2;
 	}
