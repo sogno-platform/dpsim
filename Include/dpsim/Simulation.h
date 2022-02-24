@@ -271,12 +271,12 @@ namespace DPsim {
 		// void setIdObjAttr(const String &comp, const String &attr, Complex value);
 
 		// #### Get component attributes during simulation ####
-		AttributeBase::Ptr getIdObjAttribute(const String &comp, const String &attr);
+		CPS::AttributeBase::Ptr getIdObjAttribute(const String &comp, const String &attr);
 
-		void exportAttribute(AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
-		void importAttribute(AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
+		void exportAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
+		void importAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
 		void logIdObjAttribute(const String &comp, const String &attr);
 		/// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
-		void logAttribute(String name, AttributeBase::Ptr attr);
+		void logAttribute(String name, CPS::AttributeBase::Ptr attr);
 	};
 }

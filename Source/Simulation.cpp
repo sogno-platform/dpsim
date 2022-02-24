@@ -439,7 +439,7 @@ void Simulation::logStepTimes(String logName) {
 	mLog->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
 }
 
-void Simulation::exportAttribute(AttributeBase::Ptr attr, Int idx, Interface* intf) {
+void Simulation::exportAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf) {
 	if (intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
@@ -457,7 +457,7 @@ void Simulation::exportAttribute(AttributeBase::Ptr attr, Int idx, Interface* in
 }
 
 
-void Simulation::importAttribute(AttributeBase::Ptr attr, Int idx, Interface* intf) {
+void Simulation::importAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf) {
 	if (attr->isStatic()) {
 		mLog->error("Cannot import to a static attribute. Please provide a dynamic attribute!");
 		throw InvalidAttributeException();
@@ -480,7 +480,7 @@ void Simulation::importAttribute(AttributeBase::Ptr attr, Int idx, Interface* in
 	}
 }
 
-AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const String &attr) {
+CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const String &attr) {
 	IdentifiedObject::Ptr idObj = mSystem.component<IdentifiedObject>(comp);
 	if (!idObj) {
 		idObj = mSystem.node<TopologicalNode>(comp);
@@ -488,7 +488,7 @@ AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const Strin
 
 	if (idObj) {
 		try {
-			AttributeBase::Ptr attrPtr = idObj->attribute(attr);
+			CPS::AttributeBase::Ptr attrPtr = idObj->attribute(attr);
 			return attrPtr;
 		} catch (InvalidAttributeException &e) {
 			mLog->error("Attribute with name {} not found on component {}", attr, comp);
@@ -501,11 +501,11 @@ AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const Strin
 }
 
 void Simulation::logIdObjAttribute(const String &comp, const String &attr) {
-	AttributeBase::Ptr attrPtr = getIdObjAttribute(comp, attr);
+	CPS::AttributeBase::Ptr attrPtr = getIdObjAttribute(comp, attr);
 	String name = nodeObj->name() + "." + attr;
 	logAttribute(name, attrPtr);
 }
 
-void Simulation::logAttribute(String name, AttributeBase::Ptr attr) {
+void Simulation::logAttribute(String name, CPS::AttributeBase::Ptr attr) {
 	mLoggers[0]->logAttribute(name, attr);
 }
