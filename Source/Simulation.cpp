@@ -35,7 +35,7 @@ using namespace CPS;
 using namespace DPsim;
 
 Simulation::Simulation(String name,	Logger::Level logLevel) :
-	mName(name),
+	mName(Attribute<String>::create("name", mAttributes, name)),
 	mFinalTime(Attribute<Real>::create("final_time", mAttributes, 0.001)),
 	mTimeStep(Attribute<Real>::create("time_step", mAttributes, 0.001)),
 	mLogLevel(logLevel),
@@ -439,253 +439,73 @@ void Simulation::logStepTimes(String logName) {
 	mLog->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
 }
 
-void Simulation::setIdObjAttr(const String &comp, const String &attr, Real value) {
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (compObj) {
-		try {
-			compObj->attribute<Real>(attr)->set(value);
-		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute not found");
-		}
-	}
-	else
-		mLog->error("Component not found");
-}
-
-void Simulation::setIdObjAttr(const String &comp, const String &attr, Complex value){
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (compObj) {
-		try {
-			compObj->attributeComplex(attr)->set(value);
-		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute not found");
-		}
-	}
-	else
-		mLog->error("Component not found");
-}
-
-Real Simulation::getRealIdObjAttr(const String &comp, const String &attr, UInt row, UInt col) {
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (!compObj) compObj = mSystem.node<IdentifiedObject>(comp);
-
-	if (compObj) {
-		try {
-			return compObj->attribute<Real>(attr)->getByValue();
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			return compObj->attributeMatrixReal(attr)->coeff(row, col)->getByValue();
-		} catch (InvalidAttributeException &e) { }
-
-		mLog->error("Attribute not found");
-	}
-	else {
-		mLog->error("Component not found");
-	}
-
-	return 0;
-}
-
-Complex Simulation::getComplexIdObjAttr(const String &comp, const String &attr, UInt row, UInt col) {
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (!compObj) compObj = mSystem.node<IdentifiedObject>(comp);
-
-	if (compObj) {
-		try {
-			return compObj->attributeComplex(attr)->getByValue();
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			return compObj->attributeMatrixComp(attr)->coeff(row, col)->getByValue();
-		} catch (InvalidAttributeException &e) { }
-
-		mLog->error("Attribute not found");
-	}
-	else {
-		mLog->error("Component not found");
-	}
-
-	return 0;
-}
-
-void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row, UInt col, Complex scale, Interface* intf) {
+void Simulation::exportAttribute(AttributeBase::Ptr attr, Int idx, Interface* intf) {
 	if (intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
-
-	Bool found = false;
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
-
-	if (compObj) {
-		try {
-			auto v = compObj->attribute<Real>(attr);
-
-			if (scale != Complex(1, 0)) {
-				throw TypeException();
-			}
-
-			intf->exportReal(v, idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeComplex(attr)->scale(scale);
-			intf->exportComplex(v, idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeMatrixReal(attr)->coeff(row, col);
-			if (scale != Complex(1, 0)) {
-				throw TypeException();
-			}
-			intf->exportReal(v, idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeMatrixComp(attr);
-			intf->exportComplex(v->coeff(row, col)->scale(scale), idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		if (!found) mLog->error("Attribute not found");
-	}
-	else {
-		mLog->error("Component not found");
+	if (auto attrReal = std::static_pointer_cast<CPS::Attribute<Real>>(attr)) {
+		intf->exportReal(attrReal, idx);
+	} else if (auto attrComp = std::static_pointer_cast<CPS::Attribute<Complex>>(attr)) {
+		intf->exportComplex(attrComp, idx);
+	} else if (auto attrInt = std::static_pointer_cast<CPS::Attribute<Int>>(attr)) {
+		intf->exportInt(attrInt, idx);
+	} else if (auto attrBool = std::static_pointer_cast<CPS::Attribute<Bool>>(attr)) {
+		intf->exportBool(attrBool, idx);
+	} else {
+		mLog->error("Only scalar attributes of type Int, Bool, Real or Complex can be exported. Use the Attribute::derive methods to export individual Matrix coefficients!");
 	}
 }
 
-void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt idx, AttributeBase::Modifier mod, UInt row, UInt col, Interface* intf) {
-	if(intf == nullptr) {
-		intf = mInterfaces[0].interface;
+
+void Simulation::importAttribute(AttributeBase::Ptr attr, Int idx, Interface* intf) {
+	if (attr->isStatic()) {
+		mLog->error("Cannot import to a static attribute. Please provide a dynamic attribute!");
+		throw InvalidAttributeException();
 	}
 
-	Bool found = false;
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
-
-	auto name = fmt::format("{}.{}", comp, attr);
-
-	if (compObj) {
-		try {
-			auto v = compObj->attribute<Real>(attr);
-			intf->exportReal(v, idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeComplex(attr);
-			switch(mod) {
-				case AttributeBase::Modifier::real :
-					intf->exportReal(v->real(), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::imag :
-					intf->exportReal(v->imag(), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::mag :
-					intf->exportReal(v->mag(), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::phase :
-					intf->exportReal(v->phase(), idx, name);
-					found = true;
-					break;
-			}
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeMatrixReal(attr)->coeff(row, col);
-			intf->exportReal(v, idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeMatrixComp(attr);
-			switch(mod) {
-				case AttributeBase::Modifier::real :
-					intf->exportReal(v->coeffReal(row, col), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::imag :
-					intf->exportReal(v->coeffImag(row, col), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::mag :
-					intf->exportReal(v->coeffMag(row, col), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::phase :
-					intf->exportReal(v->coeffPhase(row, col), idx, name);
-					found = true;
-					break;
-			}
-		} catch (InvalidAttributeException &e) { }
-
-		if (!found) mLog->error("Attribute not found");
-	}
-	else {
-		mLog->error("Component not found");
-	}
-}
-
-void Simulation::importIdObjAttr(const String &comp, const String &attr, UInt idx, Interface* intf) {
 	if (intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
-	Bool found = false;
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
-
-	if (compObj) {
-		try {
-			auto v = compObj->attribute<Real>(attr);
-			compObj->setAttributeRef(attr, intf->importReal(idx));
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeComplex(attr);
-			compObj->setAttributeRef(attr, intf->importComplex(idx));
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		if (!found) mLog->error("Attribute not found");
-	}
-	else {
-		mLog->error("Component not found");
+	if (auto attrReal = std::static_pointer_cast<CPS::Attribute<Real>>(attr)) {
+		attrReal->setReference(intf->importReal(idx));
+	} else if (auto attrComp = std::static_pointer_cast<CPS::Attribute<Complex>>(attr)) {
+		attrComp->setReference(intf->importComplex(idx));
+	} else if (auto attrInt = std::static_pointer_cast<CPS::Attribute<Int>>(attr)) {
+		attrInt->setReference(intf->importInt(idx));
+	} else if (auto attrBool = std::static_pointer_cast<CPS::Attribute<Bool>>(attr)) {
+		attrBool->setReference(intf->importBool(idx));
+	} else {
+		mLog->error("Only scalar attributes of type Int, Bool, Real or Complex can be imported.");
+		throw InvalidAttributeException();
 	}
 }
 
-
-void Simulation::logIdObjAttr(const String &comp, const String &attr) {
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	IdentifiedObject::Ptr nodeObj = mSystem.node<TopologicalNode>(comp);
-
-	if (compObj) {
-		try {
-			auto name = compObj->name() + "." + attr;
-			auto v = compObj->attribute(attr);
-			mLoggers[0]->logAttribute(name, v);
-
-		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute not found");
-		}
-	} else if (nodeObj) {
-		try {
-			auto name = nodeObj->name() + "." + attr;
-			auto v = nodeObj->attribute(attr);
-			mLoggers[0]->logAttribute(name, v);
-
-		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute not found");
-		}
+AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const String &attr) {
+	IdentifiedObject::Ptr idObj = mSystem.component<IdentifiedObject>(comp);
+	if (!idObj) {
+		idObj = mSystem.node<TopologicalNode>(comp);
 	}
-	else {
-		mLog->error("Component not found");
+
+	if (idObj) {
+		try {
+			AttributeBase::Ptr attrPtr = idObj->attribute(attr);
+			return attrPtr;
+		} catch (InvalidAttributeException &e) {
+			mLog->error("Attribute with name {} not found on component {}", attr, comp);
+			throw InvalidAttributeException();
+		}
+	} else {
+		mLog->error("Component or node with name {} not found", comp);
+		throw InvalidArgumentException();
 	}
+}
+
+void Simulation::logIdObjAttribute(const String &comp, const String &attr) {
+	AttributeBase::Ptr attrPtr = getIdObjAttribute(comp, attr);
+	String name = nodeObj->name() + "." + attr;
+	logAttribute(name, attrPtr);
+}
+
+void Simulation::logAttribute(String name, AttributeBase::Ptr attr) {
+	mLoggers[0]->logAttribute(name, attr);
 }

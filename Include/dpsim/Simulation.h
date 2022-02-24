@@ -20,6 +20,7 @@
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
 #include <cps/SimNode.h>
+#include <cps/Attribute.h>
 #include <dpsim/Interface.h>
 #include <nlohmann/json.hpp>
 
@@ -265,16 +266,17 @@ namespace DPsim {
 		std::vector<Real>& stepTimes() { return mStepTimes; }
 
 		// #### Set component attributes during simulation ####
-		void setIdObjAttr(const String &comp, const String &attr, Real value);
-		void setIdObjAttr(const String &comp, const String &attr, Complex value);
+		/// CHECK: Can these be deleted? getIdObjAttribute + "**attr =" should suffice
+		// void setIdObjAttr(const String &comp, const String &attr, Real value);
+		// void setIdObjAttr(const String &comp, const String &attr, Complex value);
 
 		// #### Get component attributes during simulation ####
-		Real getRealIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
-		Complex getComplexIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
+		AttributeBase::Ptr getIdObjAttribute(const String &comp, const String &attr);
 
-		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, CPS::AttributeBase::Modifier mod, UInt row = 0, UInt col = 0, Interface* intf = nullptr);
-		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row = 0, UInt col = 0, Complex scale = Complex(1, 0), Interface* intf = nullptr);
-		void importIdObjAttr(const String &comp, const String &attr, UInt idx, Interface* intf = nullptr);
-		void logIdObjAttr(const String &comp, const String &attr);
+		void exportAttribute(AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
+		void importAttribute(AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
+		void logIdObjAttribute(const String &comp, const String &attr);
+		/// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
+		void logAttribute(String name, AttributeBase::Ptr attr);
 	};
 }
