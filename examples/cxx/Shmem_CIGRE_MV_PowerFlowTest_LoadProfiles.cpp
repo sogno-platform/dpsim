@@ -100,13 +100,13 @@ int main(int argc, char** argv){
 		}
 
 		auto n_stat = std::dynamic_pointer_cast<CPS::SP::SimNode>(n);
-		auto v = n_stat->attributeMatrixComp("v")->coeff(0, 0);
+		auto v = n_stat->mVoltage->deriveCoeff<Complex>(0, 0);
 
         std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
 		std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		intf.exportReal(v->mag(),   (i*2)+0); o++;
-		intf.exportReal(v->phase(), (i*2)+1); o++;
+		intf.exportReal(v->deriveMag(),   (i*2)+0); o++;
+		intf.exportReal(v->derivePhase(), (i*2)+1); o++;
 
 		list_varnames[(i*2)+0] = n->name() + ".V.mag";
 		list_varnames[(i*2)+1] = n->name() + ".V.phase";
