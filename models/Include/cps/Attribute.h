@@ -73,6 +73,7 @@ namespace CPS {
 		typedef std::map<String, Ptr> Map;
 
 		virtual String toString() = 0;
+		virtual bool isStatic() const = 0;
 	};
 
 	template<class T>
@@ -107,8 +108,6 @@ namespace CPS {
 		virtual void set(T value) = 0;
 
 		virtual T& get() = 0;
-
-		virtual bool isStatic() const = 0;
 
 		virtual void setReference(Attribute<T>::Ptr reference) = 0;
 
