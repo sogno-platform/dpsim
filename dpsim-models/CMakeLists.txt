@@ -6,6 +6,7 @@ configure_file(
 set(MODELS_INCLUDE_DIRS
 	${EIGEN3_INCLUDE_DIR}
 	${SPDLOG_INCLUDE_DIR}
+	${KLU_INCLUDE_DIR}
 )
 
 set(MODELS_LIBRARIES
@@ -16,6 +17,10 @@ if (WITH_SPDLOG_SUBMODULE OR WIN32)
 	list(APPEND MODELS_LIBRARIES spdlog::spdlog)
 else()
 	list(APPEND MODELS_LIBRARIES spdlog::spdlog fmt::fmt)
+endif()
+
+if (WITH_KLU)
+	list(APPEND MODELS_LIBRARIES klu)
 endif()
 
 if (WITH_EIGEN_SUBMODULE OR WIN32)

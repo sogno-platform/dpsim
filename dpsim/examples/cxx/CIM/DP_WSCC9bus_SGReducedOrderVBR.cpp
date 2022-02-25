@@ -161,7 +161,8 @@ int main(int argc, char *argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.doSystemMatrixRecomputation(true);
-	sim.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
+	sim.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenPartialKLU);
+	//sim.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
 	sim.addLogger(logger);
 
 		// Optionally add switch event

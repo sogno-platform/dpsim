@@ -115,6 +115,12 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
+		/// LU measurements
+		std::vector<Real> mLUTimes;
+		/// Solve times measurements
+		std::vector<Real> mSolveTimes;
+		/// LU refactorization measurements
+		std::vector<Real> mRecomputationTimes;
 		/// Initialization of individual components
 		void initializeComponents();
 		/// Initialization of system matrices and source vector
@@ -160,6 +166,12 @@ namespace DPsim {
 
 		/// Logging of system matrices and source vector
 		virtual void logSystemMatrices() = 0;
+		/// Logging of LU computation time
+		virtual void logLUTime() = 0;
+		/// Logging of LU solve time
+		virtual void logSolveTime() = 0;
+		/// Logging of LU refactorization time
+		virtual void logRecomputationTime() = 0;
 
 		/// Create a solve task for this solver implementation
 		virtual std::shared_ptr<CPS::Task> createSolveTask() = 0;

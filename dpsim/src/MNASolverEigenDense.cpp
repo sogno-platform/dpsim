@@ -185,3 +185,45 @@ void MnaSolverEigenDense<VarType>::logSystemMatrices() {
 
 template class DPsim::MnaSolverEigenDense<Real>;
 template class DPsim::MnaSolverEigenDense<Complex>;
+
+template <typename VarType>
+void MnaSolverEigenDense<VarType>::logLUTime()
+{
+	for (auto meas : mLUTimes) {
+		mSLog->info("LU factorization time: {:.6f}", meas);
+	}
+}
+
+template <typename VarType>
+void MnaSolverEigenDense<VarType>::logSolveTime(){
+	Real solveSum = 0.0;
+	Real solveMax = 0.0;
+	for (auto meas : mSolveTimes){
+		//mSLog->info("Solve time: {:.6f}", meas);
+		solveSum += meas;
+		if(meas > solveMax)
+			solveMax = meas;
+	}
+    mSLog->info("Cumulative solve times: {:.12f}",solveSum);
+	mSLog->info("Average solve time: {:.12f}", solveSum/mSolveTimes.size());
+	mSLog->info("Maximum solve time: {:.12f}", solveMax);
+	mSLog->info("Number of solves: {:d}", mSolveTimes.size());
+}
+
+template <typename VarType>
+void MnaSolverEigenDense<VarType>::logRecomputationTime(){
+       Real recompSum = 0.0;
+	   Real recompMax = 0.0;
+       for (auto meas : mRecomputationTimes){
+               recompSum += meas;
+			   if(meas > recompMax)
+					recompMax = meas;
+       }
+	   // Sometimes, refactorization is not used
+	   if(mRecomputationTimes.size() != 0){
+		    mSLog->info("Cumulative refactorization times: {:.12f}",recompSum);
+       		mSLog->info("Average refactorization time: {:.12f}", recompSum/mRecomputationTimes.size());
+			mSLog->info("Maximum refactorization time: {:.12f}", recompMax);
+       		mSLog->info("Number of refactorizations: {:d}", mRecomputationTimes.size());
+	   }
+}

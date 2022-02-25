@@ -85,6 +85,12 @@ else()
 	find_package(Eigen3 3.0 REQUIRED)
 endif()
 
+if (WITH_KLU_MODULE OR WIN32)
+	include(cmake/GetKLUModule.cmake)
+else()
+	#find_package(KLU REQUIRED)
+endif()
+
 if (WITH_SPDLOG_SUBMODULE OR WIN32)
 	include(cmake/GetSpdlogModule.cmake)
 else()
@@ -152,6 +158,7 @@ endif()
 
 # WITH_SPARSE and WITH_CUDA can be combined
 option(WITH_SPARSE       	"Use sparse matrices in MNA-Solver"	ON )
+option(WITH_KLU 			"Build with KLU" 				ON )
 
 include(CMakeDependentOption)
 cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"       	ON 	"Sundials_FOUND"  	OFF)
@@ -219,6 +226,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	add_feature_info(Graphviz  	WITH_GRAPHVIZ  		"Graphviz Graphs")
 	add_feature_info(Sundials  	WITH_SUNDIALS  		"Sundials solvers")
 	add_feature_info(PYBIND 	WITH_PYBIND 		"Use DPsim as a PYBIND module")
+	add_feature_info(KLU		WITH_KLU			"A sparse LU solver")
 	feature_summary(WHAT ALL VAR enabledFeaturesText)
 
 	if (FOUND_GIT_VERSION)

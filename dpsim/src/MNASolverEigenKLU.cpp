@@ -1,4 +1,4 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -6,7 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim/MNASolverEigenSparse.h>
+
+#include <dpsim/MNASolverEigenKLU.h>
 #include <dpsim/SequentialScheduler.h>
 
 using namespace DPsim;
@@ -16,22 +17,22 @@ namespace DPsim {
 
 
 template <typename VarType>
-MnaSolverEigenSparse<VarType>::MnaSolverEigenSparse(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :	MnaSolver<VarType>(name, domain, logLevel) {
+MnaSolverEigenKLU<VarType>::MnaSolverEigenKLU(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :	MnaSolver<VarType>(name, domain, logLevel) {
 }
 
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::switchedMatrixEmpty(std::size_t index) {
+void MnaSolverEigenKLU<VarType>::switchedMatrixEmpty(std::size_t index) {
 	mSwitchedMatrices[std::bitset<SWITCH_NUM>(index)][0].setZero();
 }
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::switchedMatrixEmpty(std::size_t swIdx, Int freqIdx) {
+void MnaSolverEigenKLU<VarType>::switchedMatrixEmpty(std::size_t swIdx, Int freqIdx) {
 	mSwitchedMatrices[std::bitset<SWITCH_NUM>(swIdx)][freqIdx].setZero();
 }
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::switchedMatrixStamp(std::size_t index, std::vector<std::shared_ptr<CPS::MNAInterface>>& comp)
+void MnaSolverEigenKLU<VarType>::switchedMatrixStamp(std::size_t index, std::vector<std::shared_ptr<CPS::MNAInterface>>& comp)
 {
 	auto bit = std::bitset<SWITCH_NUM>(index);
 	auto& sys = mSwitchedMatrices[bit][0];
@@ -40,9 +41,9 @@ void MnaSolverEigenSparse<VarType>::switchedMatrixStamp(std::size_t index, std::
 	}
 	for (UInt i = 0; i < mSwitches.size(); ++i)
 		mSwitches[i]->mnaApplySwitchSystemMatrixStamp(bit[i], sys, 0);
-
 	// Compute LU-factorization for system matrix
 	mLuFactorizations[bit][0]->analyzePattern(sys);
+	// First LU Factorization?
 	auto start = std::chrono::steady_clock::now();
 	mLuFactorizations[bit][0]->factorize(sys);
 	auto end = std::chrono::steady_clock::now();
@@ -51,7 +52,7 @@ void MnaSolverEigenSparse<VarType>::switchedMatrixStamp(std::size_t index, std::
 }
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::stampVariableSystemMatrix() {
+void MnaSolverEigenKLU<VarType>::stampVariableSystemMatrix() {
 
 	mSLog->info("Number of variable Elements: {}"
 				"\nNumber of MNA components: {}",
@@ -91,7 +92,8 @@ void MnaSolverEigenSparse<VarType>::stampVariableSystemMatrix() {
 }
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) {
+void MnaSolverEigenKLU<VarType>::solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) {
+	//log(time, timeStepCount);
 	// Reset source vector
 	mRightSideVector.setZero();
 	
@@ -120,7 +122,7 @@ void MnaSolverEigenSparse<VarType>::solveWithSystemMatrixRecomputation(Real time
 }
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::recomputeSystemMatrix(Real time) {
+void MnaSolverEigenKLU<VarType>::recomputeSystemMatrix(Real time) {
 	// Start from base matrix
 	mVariableSystemMatrix = mBaseSystemMatrix;
 
@@ -137,7 +139,7 @@ void MnaSolverEigenSparse<VarType>::recomputeSystemMatrix(Real time) {
 	
 	auto start = std::chrono::steady_clock::now();
 	// Compute LU-factorization for system matrix
-	mLuFactorizationVariableSystemMatrix.factorize(mVariableSystemMatrix);
+	mLuFactorizationVariableSystemMatrix.refactorize(mVariableSystemMatrix);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
 	mRecomputationTimes.push_back(diff.count());
@@ -145,7 +147,7 @@ void MnaSolverEigenSparse<VarType>::recomputeSystemMatrix(Real time) {
 }
 
 template <>
-void MnaSolverEigenSparse<Real>::createEmptySystemMatrix() {
+void MnaSolverEigenKLU<Real>::createEmptySystemMatrix() {
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
@@ -156,13 +158,13 @@ void MnaSolverEigenSparse<Real>::createEmptySystemMatrix() {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++){
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
-			mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedSparse>());
+			mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedKLU>());
 		}
 	}
 }
 
 template <>
-void MnaSolverEigenSparse<Complex>::createEmptySystemMatrix() {
+void MnaSolverEigenKLU<Complex>::createEmptySystemMatrix() {
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
@@ -171,7 +173,7 @@ void MnaSolverEigenSparse<Complex>::createEmptySystemMatrix() {
 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 				auto bit = std::bitset<SWITCH_NUM>(i);
 				mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
-				mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedSparse>());
+				mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedKLU>());
 			}
 		}
 	} else if (mSystemMatrixRecomputation) {
@@ -181,37 +183,38 @@ void MnaSolverEigenSparse<Complex>::createEmptySystemMatrix() {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
-			mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedSparse>());
+			mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedKLU>());
 		}
+		//mBaseSystemMatrix.resize(2 * (mNumTotalMatrixNodeIndices), 2 * (mNumTotalMatrixNodeIndices));
 	}
 }
 
 template <typename VarType>
-std::shared_ptr<CPS::Task> MnaSolverEigenSparse<VarType>::createSolveTask()
+std::shared_ptr<CPS::Task> MnaSolverEigenKLU<VarType>::createSolveTask()
 {
-	return std::make_shared<MnaSolverEigenSparse<VarType>::SolveTask>(*this);
+	return std::make_shared<MnaSolverEigenKLU<VarType>::SolveTask>(*this);
 }
 
 template <typename VarType>
-std::shared_ptr<CPS::Task> MnaSolverEigenSparse<VarType>::createSolveTaskRecomp()
+std::shared_ptr<CPS::Task> MnaSolverEigenKLU<VarType>::createSolveTaskRecomp()
 {
-	return std::make_shared<MnaSolverEigenSparse<VarType>::SolveTaskRecomp>(*this);
+	return std::make_shared<MnaSolverEigenKLU<VarType>::SolveTaskRecomp>(*this);
 }
 
 template <typename VarType>
-std::shared_ptr<CPS::Task> MnaSolverEigenSparse<VarType>::createSolveTaskHarm(UInt freqIdx)
+std::shared_ptr<CPS::Task> MnaSolverEigenKLU<VarType>::createSolveTaskHarm(UInt freqIdx)
 {
-	return std::make_shared<MnaSolverEigenSparse<VarType>::SolveTaskHarm>(*this, freqIdx);
+	return std::make_shared<MnaSolverEigenKLU<VarType>::SolveTaskHarm>(*this, freqIdx);
 }
 
 template <typename VarType>
-std::shared_ptr<CPS::Task> MnaSolverEigenSparse<VarType>::createLogTask()
+std::shared_ptr<CPS::Task> MnaSolverEigenKLU<VarType>::createLogTask()
 {
-	return std::make_shared<MnaSolverEigenSparse<VarType>::LogTask>(*this);
+	return std::make_shared<MnaSolverEigenKLU<VarType>::LogTask>(*this);
 }
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::solve(Real time, Int timeStepCount) {
+void MnaSolverEigenKLU<VarType>::solve(Real time, Int timeStepCount) {
 	// Reset source vector
 	mRightSideVector.setZero();
 
@@ -223,10 +226,10 @@ void MnaSolverEigenSparse<VarType>::solve(Real time, Int timeStepCount) {
 	if (!mIsInInitialization)
 		MnaSolver<VarType>::updateSwitchStatus();
 
-	auto start = std::chrono::steady_clock::now();
-	if (mSwitchedMatrices.size() > 0)
-		**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0]->solve(mRightSideVector);
 
+	auto start = std::chrono::steady_clock::now();
+   	if (mSwitchedMatrices.size() > 0)
+		**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0]->solve(mRightSideVector);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
 	mSolveTimes.push_back(diff.count());
@@ -239,7 +242,7 @@ void MnaSolverEigenSparse<VarType>::solve(Real time, Int timeStepCount) {
 }
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) {
+void MnaSolverEigenKLU<VarType>::solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) {
 	mRightSideVectorHarm[freqIdx].setZero();
 
 	// Sum of right side vectors (computed by the components' pre-step tasks)
@@ -250,7 +253,7 @@ void MnaSolverEigenSparse<VarType>::solveWithHarmonics(Real time, Int timeStepCo
 }
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::logSystemMatrices() {
+void MnaSolverEigenKLU<VarType>::logSystemMatrices() {
 	if (mFrequencyParallel) {
 		for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
 			mSLog->info("System matrix for frequency: {:d} \n{:s}", i,
@@ -287,13 +290,9 @@ void MnaSolverEigenSparse<VarType>::logSystemMatrices() {
 		mSLog->info("Right side vector: \n{}", mRightSideVector);
 	}
 }
-}
-
-template class DPsim::MnaSolverEigenSparse<Real>;
-template class DPsim::MnaSolverEigenSparse<Complex>;
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::logLUTime()
+void MnaSolverEigenKLU<VarType>::logLUTime()
 {
 	for (auto meas : mLUTimes) {
 		mSLog->info("LU factorization time: {:.12f}", meas);
@@ -301,7 +300,7 @@ void MnaSolverEigenSparse<VarType>::logLUTime()
 }
 
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::logSolveTime(){
+void MnaSolverEigenKLU<VarType>::logSolveTime(){
 	Real solveSum = 0.0;
 	Real solveMax = 0.0;
 	for (auto meas : mSolveTimes){
@@ -316,7 +315,7 @@ void MnaSolverEigenSparse<VarType>::logSolveTime(){
 	mSLog->info("Number of solves: {:d}", mSolveTimes.size());
 }
 template <typename VarType>
-void MnaSolverEigenSparse<VarType>::logRecomputationTime(){
+void MnaSolverEigenKLU<VarType>::logRecomputationTime(){
        Real recompSum = 0.0;
 	   Real recompMax = 0.0;
        for (auto meas : mRecomputationTimes){
@@ -332,3 +331,7 @@ void MnaSolverEigenSparse<VarType>::logRecomputationTime(){
        		mSLog->info("Number of refactorizations: {:d}", mRecomputationTimes.size());
 	   }
 }
+}
+
+template class DPsim::MnaSolverEigenKLU<Real>;
+template class DPsim::MnaSolverEigenKLU<Complex>;

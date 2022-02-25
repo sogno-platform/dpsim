@@ -13,6 +13,10 @@
 #include <dpsim/MNASolverEigenDense.h>
 #ifdef WITH_SPARSE
 #include <dpsim/MNASolverEigenSparse.h>
+#ifdef WITH_KLU
+#include <dpsim/MNASolverEigenKLU.h>
+#include <dpsim/MNASolverEigenPartialKLU.h>
+#endif
 #endif
 #ifdef WITH_CUDA
 	#include <dpsim/MNASolverGpuDense.h>
@@ -37,6 +41,8 @@ class MnaSolverFactory {
 		Undef = 0,
 		EigenDense,
 		EigenSparse,
+		EigenKLU,
+		EigenPartialKLU,
 		CUDADense,
 		CUDASparse,
 		CUDAMagma,
@@ -52,6 +58,10 @@ class MnaSolverFactory {
 			EigenDense,
 #ifdef WITH_SPARSE
 			EigenSparse,
+#ifdef WITH_KLU
+			EigenKLU,
+			EigenPartialKLU,
+#endif //WITH_KLU
 #endif //WITH_SPARSE
 #ifdef WITH_CUDA
 			CUDADense,
@@ -89,6 +99,14 @@ class MnaSolverFactory {
 		case MnaSolverImpl::EigenSparse:
 			log->info("creating EigenSparse solver implementation");
 			return std::make_shared<MnaSolverEigenSparse<VarType>>(name, domain, logLevel);
+#ifdef WITH_KLU
+		case MnaSolverImpl::EigenKLU:
+			log->info("creating EigenKLU solver implementation");
+			return std::make_shared<MnaSolverEigenKLU<VarType>>(name, domain, logLevel);
+		case MnaSolverImpl::EigenPartialKLU:
+			log->info("creating EigenPartialKLU solver implementation");
+			return std::make_shared<MnaSolverEigenPartialKLU<VarType>>(name, domain, logLevel);
+#endif
 #endif
 #ifdef WITH_CUDA
 		case MnaSolverImpl::CUDADense:

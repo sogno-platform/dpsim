@@ -64,6 +64,9 @@ namespace DPsim {
 		using MnaSolver<VarType>::mSystemMatrixRecomputation;
 		using MnaSolver<VarType>::hasVariableComponentChanged;
 		using MnaSolver<VarType>::mNumRecomputations;
+		using MnaSolver<VarType>::mLUTimes;
+		using MnaSolver<VarType>::mSolveTimes;
+		using MnaSolver<VarType>::mRecomputationTimes;
 
 		// #### General
 		/// Create system matrix
@@ -96,6 +99,16 @@ namespace DPsim {
 		virtual std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
 		/// Logging of system matrices and source vector
 		virtual void logSystemMatrices() override;
+
+		/// logging LU decomposition times
+		virtual void logLUTime() override;
+
+		/// logging solve for rhs times
+		virtual void logSolveTime() override;
+
+		/// logging recomputations times
+		virtual void logRecomputationTime() override;
+
 		/// Solves system for single frequency
 		virtual void solve(Real time, Int timeStepCount) override;
 		/// Solves system for multiple frequencies
@@ -115,6 +128,11 @@ namespace DPsim {
 		///
 		class SolveTask : public CPS::Task {
 		public:
+			~SolveTask(){
+				mSolver.logSolveTime();
+				mSolver.logLUTime();
+				mSolver.logRecomputationTime();
+			}
 			SolveTask(MnaSolverEigenSparse<VarType>& solver) :
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
@@ -162,6 +180,11 @@ namespace DPsim {
 		///
 		class SolveTaskRecomp : public CPS::Task {
 		public:
+			~SolveTaskRecomp(){
+				mSolver.logSolveTime();
+				mSolver.logLUTime();
+				mSolver.logRecomputationTime();
+			}
 			SolveTaskRecomp(MnaSolverEigenSparse<VarType>& solver) :
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
@@ -179,7 +202,10 @@ namespace DPsim {
 				mModifiedAttributes.push_back(solver.attribute("left_vector"));
 			}
 
-			void execute(Real time, Int timeStepCount) { mSolver.solveWithSystemMatrixRecomputation(time, timeStepCount); }
+			void execute(Real time, Int timeStepCount) { 
+				mSolver.solveWithSystemMatrixRecomputation(time, timeStepCount); 
+				mSolver.log(time, timeStepCount);
+				}
 
 		private:
 			MnaSolverEigenSparse<VarType>& mSolver;

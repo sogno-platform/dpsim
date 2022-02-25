@@ -3,8 +3,8 @@
 include(FetchContent)
 FetchContent_Declare(
   eigen-module
-  GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-  GIT_TAG        3.3.7
+  GIT_REPOSITORY https://github.com/LennartSchu/eigen-klu
+  GIT_TAG        main
 )
 
 FetchContent_GetProperties(eigen-module)

@@ -68,17 +68,34 @@ void DP::Ph1::SynchronGeneratorVBR::calculateAuxiliarVariables() {
 void DP::Ph1::SynchronGeneratorVBR::mnaInitialize(Real omega, 
 		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
+	// get matrix dimension to properly set variable entries
+	Int n = leftVector->asRawPointer()->rows();
+	UInt complexOffset = n / 2;
+
 	Base::ReducedOrderSynchronGenerator<Complex>::mnaInitialize(omega, timeStep, leftVector);
 
 	// upper left
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex()));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex() + complexOffset, mVirtualNodes[0]->matrixNodeIndex()));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex() + complexOffset));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex() + complexOffset, mVirtualNodes[0]->matrixNodeIndex() + complexOffset));
 
-	// buttom right
+	// bottom right
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0) + complexOffset, matrixNodeIndex(0, 0)));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0) + complexOffset));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0) + complexOffset, matrixNodeIndex(0, 0) + complexOffset));
 
 	// off diagonal
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0)));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex() + complexOffset, matrixNodeIndex(0, 0)));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0) + complexOffset));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex() + complexOffset, matrixNodeIndex(0, 0) + complexOffset));
+	
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex()));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0) + complexOffset, mVirtualNodes[0]->matrixNodeIndex()));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex() + complexOffset));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0) + complexOffset, mVirtualNodes[0]->matrixNodeIndex() + complexOffset));
 	
 	mSLog->info("List of index pairs of varying matrix entries: ");
 	for (auto indexPair : mVariableSystemMatrixEntries)
@@ -96,7 +113,7 @@ void DP::Ph1::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatr
 	// set upper left block
 	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), mConductanceMatrix);
 
-	// set buttom right block
+	// set bottom right block
 	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrix);
 
 	// Set off diagonal blocks
