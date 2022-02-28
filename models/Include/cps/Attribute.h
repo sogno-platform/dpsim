@@ -78,7 +78,7 @@ namespace CPS {
 			mActorFunction(dependent, std::get<std::shared_ptr<Attribute<DependencyTypes>>...>(mDependencies));
 		}
 
-		virtual AttributeBase::List getDependencies() {
+		virtual AttributeBase::List getDependencies() override {
 			return std::apply([](auto&&... elems){
 				return std::vector<AttributeBase::Ptr>{std::forward<decltype(elems)>(elems)...};
 			}, mDependencies);
@@ -250,7 +250,7 @@ namespace CPS {
 		}
 
 		template<class U>
-		std::shared_ptr<Attribute<U>> deriveCoeff(CPS::MatrixVar<U>::Index row, CPS::MatrixVar<U>::Index column)
+		std::shared_ptr<Attribute<U>> deriveCoeff(typename CPS::MatrixVar<U>::Index row, typename CPS::MatrixVar<U>::Index column)
 			requires std::same_as<T, CPS::MatrixVar<U>>
 		{
 			typename AttributeUpdateTask<U, T>::Actor getter = [row, column](std::shared_ptr<U> &dependent, Attribute<T>::Ptr dependency) {
@@ -288,11 +288,11 @@ namespace CPS {
 			return true;
 		}
 
-		virtual AttributeBase::List getDependencies() {
+		virtual AttributeBase::List getDependencies() override {
 			return AttributeBase::List();
 		}
 
-		virtual void setReference(Attribute<T>::Ptr reference) {
+		virtual void setReference(typename Attribute<T>::Ptr reference) override {
 			throw TypeException();
 		}
 	};
@@ -349,8 +349,8 @@ namespace CPS {
 			updateTasksOnSet.clear();
 		}
 
-		virtual void setReference(Attribute<T>::Ptr reference) override {
-			typename AttributeUpdateTask<T, T>::Actor getter = [](std::shared_ptr<T> &dependent, Attribute<T>::Ptr dependency) {
+		virtual void setReference(typename Attribute<T>::Ptr reference) override {
+			typename AttributeUpdateTask<T, T>::Actor getter = [](std::shared_ptr<T> &dependent, typename Attribute<T>::Ptr dependency) {
 				dependent = dependency->asRawPointer();
 			};
 			this->clearAllTasks();

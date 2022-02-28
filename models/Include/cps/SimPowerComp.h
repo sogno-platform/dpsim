@@ -41,9 +41,9 @@ namespace CPS {
 		typedef std::vector<Ptr> List;
 
 		/// Voltage between terminals
-		const Attribute<MatrixVar<VarType>>::Ptr mIntfVoltage;
+		const typename Attribute<MatrixVar<VarType>>::Ptr mIntfVoltage;
 		/// Current through component
-		const Attribute<MatrixVar<VarType>>::Ptr mIntfCurrent;
+		const typename Attribute<MatrixVar<VarType>>::Ptr mIntfCurrent;
 
 		/// Basic constructor that takes UID, name and log level
 		SimPowerComp(String uid, String name, Logger::Level logLevel = Logger::Level::off);

@@ -34,7 +34,7 @@ namespace CPS {
 		static Ptr GND;
 
 		///
-		const Attribute<MatrixVar<VarType>>::Ptr mVoltage;
+		const typename Attribute<MatrixVar<VarType>>::Ptr mVoltage;
 
 		/// This very general constructor is used by other constructors.
 		SimNode(String uid, String name, std::vector<UInt> matrixNodeIndex,
