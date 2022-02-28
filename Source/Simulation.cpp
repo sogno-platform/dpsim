@@ -443,13 +443,13 @@ void Simulation::exportAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interfac
 	if (intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
-	if (auto attrReal = std::static_pointer_cast<CPS::Attribute<Real>>(attr)) {
+	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr)) {
 		intf->exportReal(attrReal, idx);
-	} else if (auto attrComp = std::static_pointer_cast<CPS::Attribute<Complex>>(attr)) {
+	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr)) {
 		intf->exportComplex(attrComp, idx);
-	} else if (auto attrInt = std::static_pointer_cast<CPS::Attribute<Int>>(attr)) {
+	} else if (auto attrInt = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr)) {
 		intf->exportInt(attrInt, idx);
-	} else if (auto attrBool = std::static_pointer_cast<CPS::Attribute<Bool>>(attr)) {
+	} else if (auto attrBool = std::dynamic_pointer_cast<CPS::Attribute<Bool>>(attr)) {
 		intf->exportBool(attrBool, idx);
 	} else {
 		mLog->error("Only scalar attributes of type Int, Bool, Real or Complex can be exported. Use the Attribute::derive methods to export individual Matrix coefficients!");
@@ -466,13 +466,13 @@ void Simulation::importAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interfac
 	if (intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
-	if (auto attrReal = std::static_pointer_cast<CPS::Attribute<Real>>(attr)) {
+	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr)) {
 		attrReal->setReference(intf->importReal(idx));
-	} else if (auto attrComp = std::static_pointer_cast<CPS::Attribute<Complex>>(attr)) {
+	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr)) {
 		attrComp->setReference(intf->importComplex(idx));
-	} else if (auto attrInt = std::static_pointer_cast<CPS::Attribute<Int>>(attr)) {
+	} else if (auto attrInt = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr)) {
 		attrInt->setReference(intf->importInt(idx));
-	} else if (auto attrBool = std::static_pointer_cast<CPS::Attribute<Bool>>(attr)) {
+	} else if (auto attrBool = std::dynamic_pointer_cast<CPS::Attribute<Bool>>(attr)) {
 		attrBool->setReference(intf->importBool(idx));
 	} else {
 		mLog->error("Only scalar attributes of type Int, Bool, Real or Complex can be imported.");
