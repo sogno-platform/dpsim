@@ -153,12 +153,12 @@ CPS::Task::Ptr DataLogger::getTask() {
 }
 
 void DataLogger::logAttribute(const String &name, CPS::AttributeBase::Ptr attr, UInt rowsMax, UInt colsMax) {
-	if (auto attrReal = std::static_pointer_cast<CPS::Attribute<Real>>(attr)) {
+	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr)) {
 		mAttributes[name] = attrReal;
-	} else if (auto attrComp = std::static_pointer_cast<CPS::Attribute<Complex>>(attr)) {
+	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr)) {
 		mAttributes[name + ".re"] = attrComp->deriveReal();
 		mAttributes[name + ".im"] = attrComp->deriveImag();
-	} else if (auto attrMatrix = std::static_pointer_cast<CPS::Attribute<Matrix>>(attr)) {
+	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(attr)) {
 		UInt rows = static_cast<UInt>((**attrMatrix).rows());
 		UInt cols = static_cast<UInt>((**attrMatrix).cols());
 		if (rowsMax == 0 || rowsMax > rows) rowsMax = rows;
@@ -176,7 +176,7 @@ void DataLogger::logAttribute(const String &name, CPS::AttributeBase::Ptr attr, 
 				}
 			}
 		}
-	} else if (auto attrMatrix = std::static_pointer_cast<CPS::Attribute<MatrixComp>>(attr)) {
+	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<MatrixComp>>(attr)) {
 		UInt rows = static_cast<UInt>((**attrMatrix).rows());
 		UInt cols = static_cast<UInt>((**attrMatrix).cols());
 		if (rowsMax == 0 || rowsMax > rows) rowsMax = rows;

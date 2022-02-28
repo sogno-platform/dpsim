@@ -38,6 +38,11 @@ namespace CPS {
 
 		virtual ~IdentifiedObject() { }
 
+		/// FIXME: Workaround for pybind. The methods that return attributes with and without the full (template) type should not have the same name!
+		AttributeBase::Ptr attributeBase(const String &name) {
+			return attribute(name);
+		}
+
 		/// Returns component name
 		String name() { return **mName; }
 		/// Returns unique id
