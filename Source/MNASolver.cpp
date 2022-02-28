@@ -36,6 +36,21 @@ void MnaSolver<VarType>::initialize() {
 	// TODO: check that every system matrix has the same dimensions
 	mSLog->info("---- Start initialization ----");
 
+	// Register attribute for solution vector
+	///FIXME: This is kinda ugly... At least we should somehow unify mLeftSideVector and mLeftSideVectorHarm.
+	// Best case we have some kind of sub-attributes for attribute vectors / tensor attributes...
+	if (mFrequencyParallel) {
+		mSLog->info("Computing network harmonics in parallel.");
+		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
+			mLeftSideVectorHarm.push_back(
+				CPS::Attribute<Matrix>::create("left_vector_"+std::to_string(freq), mAttributes)
+			);
+		}
+	}
+	else {
+		mLeftSideVector = CPS::Attribute<Matrix>::create("left_vector", mAttributes);
+	}
+
 	mSLog->info("-- Process topology");
 	for (auto comp : mSystem.mComponents)
 		mSLog->info("Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
@@ -54,21 +69,6 @@ void MnaSolver<VarType>::initialize() {
 	mSLog->info("-- Create empty MNA system matrices and vectors");
 	createEmptyVectors();
 	createEmptySystemMatrix();
-
-	// Register attribute for solution vector
-	///FIXME: This is kinda ugly... At least we should somehow unify mLeftSideVector and mLeftSideVectorHarm.
-	// Best case we have some kind of sub-attributes for attribute vectors / tensor attributes...
-	if (mFrequencyParallel) {
-		mSLog->info("Computing network harmonics in parallel.");
-		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
-			mLeftSideVectorHarm.push_back(
-				CPS::Attribute<Matrix>::create("left_vector_"+std::to_string(freq), mAttributes)
-			);
-		}
-	}
-	else {
-		mLeftSideVector = CPS::Attribute<Matrix>::create("left_vector", mAttributes);
-	}
 
 	// Initialize components from powerflow solution and
 	// calculate MNA specific initialization values.
