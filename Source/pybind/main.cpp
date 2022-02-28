@@ -129,9 +129,11 @@ PYBIND11_MODULE(dpsimpy, m) {
         .def(py::init<std::string>())
 		.def_static("set_log_dir", &CPS::Logger::setLogDir)
 		.def_static("get_log_dir", &CPS::Logger::logDir)
-		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::logAttribute)
-		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr, CPS::UInt, CPS::UInt)) &DPsim::DataLogger::logAttribute)
-		.def("log_attribute", (void (DPsim::DataLogger::*)(const std::vector<CPS::String> &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::logAttribute);
+		.def("log_attribute", &DPsim::DataLogger::logAttribute, "name"_a, "attr"_a, "max_cols"_a = 0, "max_rows"_a = 0)
+		/// Compatibility method. Might be removed later when the python examples have been fully adapted.
+		.def("log_attribute", [](DPsim::DataLogger &logger, const CPS::String &name, const CPS::String &attr, CPS::IdentifiedObject &comp) {
+			logger.logAttribute(name, comp.attribute(attr));
+		});
 
 	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
 		.def("name", &CPS::IdentifiedObject::name)
