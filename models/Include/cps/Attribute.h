@@ -45,16 +45,13 @@ namespace CPS {
 	class AttributeDynamic;
 
 	template<class DependentType>
-	/// FIXME: Why cant this class be abstract?
 	class AttributeUpdateTaskBase {
-
+		
 	public:
-		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) {
-			throw TypeException();
-		};
-		virtual AttributeBase::List getDependencies() {
-			throw TypeException();
-		};
+		typedef std::shared_ptr<AttributeUpdateTaskBase<DependentType>> Ptr;
+
+		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) = 0;
+		virtual AttributeBase::List getDependencies() = 0;
 	};
 
 	template<class DependentType, class... DependencyTypes>
@@ -175,10 +172,10 @@ namespace CPS {
 		{
 			auto derivedAttribute = std::make_shared<AttributeDynamic<U>>();
 			if (setter) {
-				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_SET, AttributeUpdateTask<U, T>(UpdateTaskKind::UPDATE_ON_SET, setter, this->shared_from_this()));
+				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_SET, AttributeUpdateTask<U, T>::make(UpdateTaskKind::UPDATE_ON_SET, setter, this->shared_from_this()));
 			}
 			if (getter) {
-				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<U, T>(UpdateTaskKind::UPDATE_ON_GET, getter, this->shared_from_this()));
+				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<U, T>::make(UpdateTaskKind::UPDATE_ON_GET, getter, this->shared_from_this()));
 			}
 			return derivedAttribute;
 		}
@@ -305,15 +302,15 @@ namespace CPS {
 
 	protected:
 		///FIXME: The UPDATE_ONCE tasks are currently never triggered. Maybe at start of simulation?
-		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnce;
-		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnGet;
-		std::vector<AttributeUpdateTaskBase<T>> updateTasksOnSet;
+		std::vector<typename AttributeUpdateTaskBase<T>::Ptr> updateTasksOnce;
+		std::vector<typename AttributeUpdateTaskBase<T>::Ptr> updateTasksOnGet;
+		std::vector<typename AttributeUpdateTaskBase<T>::Ptr> updateTasksOnSet;
 
 	public:
 		AttributeDynamic(T initialValue = T()) :
 			Attribute<T>(initialValue) { }
 
-		void addTask(UpdateTaskKind kind, AttributeUpdateTaskBase<T> task) {
+		void addTask(UpdateTaskKind kind, typename AttributeUpdateTaskBase<T>::Ptr task) {
 			switch (kind) {
 				case UpdateTaskKind::UPDATE_ONCE:
 					updateTasksOnce.push_back(task);
@@ -355,22 +352,22 @@ namespace CPS {
 			};
 			this->clearAllTasks();
 			if(reference->isStatic()) {
-				this->addTask(UpdateTaskKind::UPDATE_ONCE, AttributeUpdateTask<T, T>(UpdateTaskKind::UPDATE_ONCE, getter, this->shared_from_this()));
+				this->addTask(UpdateTaskKind::UPDATE_ONCE, AttributeUpdateTask<T, T>::make(UpdateTaskKind::UPDATE_ONCE, getter, this->shared_from_this()));
 			} else {
-				this->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<T, T>(UpdateTaskKind::UPDATE_ON_GET, getter, this->shared_from_this()));
+				this->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<T, T>::make(UpdateTaskKind::UPDATE_ON_GET, getter, this->shared_from_this()));
 			}
 		}
 
 		virtual void set(T value) override {
 			*this->mData = value;
-			for(auto task : updateTasksOnSet) {
-				task.executeUpdate(this->mData);
+			for(typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnSet) {
+				task->executeUpdate(this->mData);
 			}
 		};
 
 		virtual T& get() override {
-			for(auto task : updateTasksOnGet) {
-				task.executeUpdate(this->mData);
+			for(typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnGet) {
+				task->executeUpdate(this->mData);
 			}
 			return *this->mData;
 		};
@@ -381,13 +378,13 @@ namespace CPS {
 
 		virtual AttributeBase::List getDependencies() {
 			AttributeBase::List deps = AttributeBase::List();
-			for (auto task : updateTasksOnce) {
-				AttributeBase::List taskDeps = task.getDependencies();
+			for (typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnce) {
+				AttributeBase::List taskDeps = task->getDependencies();
 				deps.insert(deps.end(), taskDeps.begin(), taskDeps.end());
 			}
 
-			for (auto task : updateTasksOnGet) {
-				AttributeBase::List taskDeps = task.getDependencies();
+			for (typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnGet) {
+				AttributeBase::List taskDeps = task->getDependencies();
 				deps.insert(deps.end(), taskDeps.begin(), taskDeps.end());
 			}
 			return deps;
