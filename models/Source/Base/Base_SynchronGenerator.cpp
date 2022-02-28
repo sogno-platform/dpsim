@@ -295,7 +295,7 @@ void Base::SynchronGenerator::initPerUnitStates() {
 		mPsisr << init_psid, init_psifd, init_psikd, init_psiq, init_psiq1, 0;
 	}
 
-	mElecTorque = (mPsisr(3,0)*mIsr(0,0) - mPsisr(0,0)*mIsr(3,0));
+	**mElecTorque = (mPsisr(3,0)*mIsr(0,0) - mPsisr(0,0)*mIsr(3,0));
 
 	// Initialize controllers
 	if (mHasExciter){

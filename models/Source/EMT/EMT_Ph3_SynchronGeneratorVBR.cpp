@@ -293,7 +293,7 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 
 	// Update of mechanical torque from turbine governor
 	if (mHasTurbineGovernor)
-		mMechTorque = -mTurbineGovernor->step(mOmMech, 1,  mInitElecPower.real() / mNomPower, mTimeStep);
+		**mMechTorque = -mTurbineGovernor->step(**mOmMech, 1,  mInitElecPower.real() / mNomPower, mTimeStep);
 
 	// Estimate mechanical variables with euler
 	**mElecTorque = (mPsimd*mIq - mPsimq*mId);

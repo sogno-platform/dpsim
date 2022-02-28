@@ -34,15 +34,15 @@ namespace Signal {
 		/// Output of voltage transducer
 		Real mVm = 0;
 		/// Input of voltage transducer
-		Real mVh = 0;
+		const Attribute<Real>::Ptr mVh = 0;
 		/// Output of stablizing feedback
 		Real mVis = 0;
 		/// Output of se function
 		Real mVse = 0;
 		/// Regulator output
-		Real mVr = 0;
+		const Attribute<Real>::Ptr mVr = 0;
 		/// Exciter output
-		Real mVf = 0;
+		const Attribute<Real>::Ptr mVf = 0;
 		/// Auxiliar variable
 		Real mVfl = 0;
 		/// Initial field votlage

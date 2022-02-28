@@ -62,7 +62,7 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 
 	// Update of mechanical torque from turbine governor
 	if (mHasTurbineGovernor)
-		mMechTorque = mTurbineGovernor->step(mOmMech, 1,  mInitElecPower.real() / mNomPower, mTimeStep);
+		**mMechTorque = mTurbineGovernor->step(**mOmMech, 1,  mInitElecPower.real() / mNomPower, mTimeStep);
 
 	// Calculation of electrical torque
 	**mElecTorque = (mPsisr(3,0)*mIsr(0,0) - mPsisr(0,0)*mIsr(3,0));

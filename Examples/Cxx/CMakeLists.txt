@@ -84,17 +84,17 @@ set(CIRCUIT_SOURCES
 )
 
 set(SYNCGEN_SOURCES
-	Components/DP_SynGenDq7odTrapez_SteadyState.cpp
-	Components/DP_SynGenDq7odTrapez_ThreePhFault.cpp
-	Components/DP_SynGenTrStab_SteadyState.cpp
-	Components/DP_SynGenTrStab_LoadStep.cpp
-	Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp
-	Components/DP_EMT_SynGenDq7odTrapez_ThreePhFault.cpp
-	Components/DP_EMT_SynGenDq7odTrapez_LoadStep.cpp
-	Components/DP_SP_SynGenTrStab_testModels.cpp
-	Components/DP_SP_SynGenTrStab_testModels_doubleLine.cpp
-	Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
-	Components/EMT_SynchronGenerator9OrderVBR_LoadStep_TurbineGovernor_Exciter.cpp
+	# Components/DP_SynGenDq7odTrapez_SteadyState.cpp
+	# Components/DP_SynGenDq7odTrapez_ThreePhFault.cpp
+	# Components/DP_SynGenTrStab_SteadyState.cpp
+	# Components/DP_SynGenTrStab_LoadStep.cpp
+	# Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp
+	# Components/DP_EMT_SynGenDq7odTrapez_ThreePhFault.cpp
+	# Components/DP_EMT_SynGenDq7odTrapez_LoadStep.cpp
+	# Components/DP_SP_SynGenTrStab_testModels.cpp
+	# Components/DP_SP_SynGenTrStab_testModels_doubleLine.cpp
+	# Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
+	# Components/EMT_SynchronGenerator9OrderVBR_LoadStep_TurbineGovernor_Exciter.cpp
 )
 
 set(INVERTER_SOURCES
