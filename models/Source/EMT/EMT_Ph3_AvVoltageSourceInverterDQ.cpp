@@ -426,8 +426,8 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCou
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
-	mnaUpdateCurrent(*leftVector);
-	mnaUpdateVoltage(*leftVector);
+	mnaUpdateCurrent(**leftVector);
+	mnaUpdateVoltage(**leftVector);
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {

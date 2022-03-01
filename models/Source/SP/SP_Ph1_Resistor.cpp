@@ -136,8 +136,8 @@ void SP::Ph1::Resistor::mnaAddPostStepDependencies(AttributeBase::List &prevStep
 }
 
 void SP::Ph1::Resistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaUpdateVoltage(*leftVector);
-	this->mnaUpdateCurrent(*leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {

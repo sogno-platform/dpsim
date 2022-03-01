@@ -290,8 +290,8 @@ void EMT::Ph3::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
-	mnaUpdateVoltage(*leftVector);
-	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {

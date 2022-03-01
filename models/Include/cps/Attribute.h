@@ -301,7 +301,6 @@ namespace CPS {
 		friend class SharedFactory<AttributeDynamic<T>>;
 
 	protected:
-		///FIXME: The UPDATE_ONCE tasks are currently never triggered. Maybe at start of simulation?
 		std::vector<typename AttributeUpdateTaskBase<T>::Ptr> updateTasksOnce;
 		std::vector<typename AttributeUpdateTaskBase<T>::Ptr> updateTasksOnGet;
 		std::vector<typename AttributeUpdateTaskBase<T>::Ptr> updateTasksOnSet;
@@ -314,6 +313,8 @@ namespace CPS {
 			switch (kind) {
 				case UpdateTaskKind::UPDATE_ONCE:
 					updateTasksOnce.push_back(task);
+					///FIXME: This is probably not the right time to run this kind of task
+					task->executeUpdate(this->mData);
 				case UpdateTaskKind::UPDATE_ON_GET:
 					updateTasksOnGet.push_back(task);
 					break;

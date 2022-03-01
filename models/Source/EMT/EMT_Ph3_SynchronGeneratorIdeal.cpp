@@ -111,8 +111,8 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaPostStep(Real time, Int timeStepCount,
 	// post-step of subcomponents
 	std::dynamic_pointer_cast<MNAInterface>(mSubComponents[0])->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
-	mnaUpdateCurrent(*leftVector);
-	mnaUpdateVoltage(*leftVector);
+	mnaUpdateCurrent(**leftVector);
+	mnaUpdateVoltage(**leftVector);
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateCurrent(const Matrix& leftvector) {

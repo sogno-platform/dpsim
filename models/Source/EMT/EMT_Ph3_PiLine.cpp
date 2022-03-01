@@ -241,8 +241,8 @@ void EMT::Ph3::PiLine::mnaPostStep(Real time, Int timeStepCount, Attribute<Matri
 	mSubParallelResistor0->mnaPostStep(time, timeStepCount, leftVector);
 	mSubParallelResistor1->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
-	mnaUpdateVoltage(*leftVector);
-	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {

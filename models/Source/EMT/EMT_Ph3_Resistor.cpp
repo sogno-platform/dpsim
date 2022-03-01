@@ -124,8 +124,8 @@ void EMT::Ph3::Resistor::mnaAddPostStepDependencies(AttributeBase::List &prevSte
 }
 
 void EMT::Ph3::Resistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(*leftVector);
-	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 

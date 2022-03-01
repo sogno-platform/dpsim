@@ -168,7 +168,7 @@ void SP::Ph1::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
 }
 
 void SP::Ph1::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateCurrent(*leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {

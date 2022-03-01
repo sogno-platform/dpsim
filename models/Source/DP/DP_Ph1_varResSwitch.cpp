@@ -103,8 +103,8 @@ void DP::Ph1::varResSwitch::mnaAddPostStepDependencies(AttributeBase::List &prev
 }
 
 void DP::Ph1::varResSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(*leftVector);
-	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph1::varResSwitch::mnaUpdateVoltage(const Matrix& leftVector) {

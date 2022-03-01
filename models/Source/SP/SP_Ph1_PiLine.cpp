@@ -332,8 +332,8 @@ void SP::Ph1::PiLine::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix
 	this->mSubParallelResistor1->mnaPostStep(time, timeStepCount, leftVector);
 
 	// post-step of component itself
-	this->mnaUpdateVoltage(*leftVector);
-	this->mnaUpdateCurrent(*leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {

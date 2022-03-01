@@ -130,7 +130,7 @@ void EMT::Ph3::CurrentSource::mnaAddPostStepDependencies(AttributeBase::List &pr
 };
 
 void EMT::Ph3::CurrentSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(*leftVector);
+	mnaUpdateVoltage(**leftVector);
 }
 
 void EMT::Ph3::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {

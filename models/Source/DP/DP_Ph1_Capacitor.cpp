@@ -232,8 +232,8 @@ void DP::Ph1::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevSte
 }
 
 void DP::Ph1::Capacitor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaUpdateVoltage(*leftVector);
-	this->mnaUpdateCurrent(*leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph1::Capacitor::MnaPreStepHarm::execute(Real time, Int timeStepCount) {

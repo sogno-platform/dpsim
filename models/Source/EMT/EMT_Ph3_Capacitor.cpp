@@ -163,8 +163,8 @@ void EMT::Ph3::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevSt
 }
 
 void EMT::Ph3::Capacitor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(*leftVector);
-	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {

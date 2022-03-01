@@ -168,8 +168,8 @@ void DP::Ph1::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attrib
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
-	mnaUpdateCurrent(*leftVector);
-	mnaUpdateVoltage(*leftVector);
+	mnaUpdateCurrent(**leftVector);
+	mnaUpdateVoltage(**leftVector);
 }
 
 void DP::Ph1::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {

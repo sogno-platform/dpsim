@@ -132,6 +132,6 @@ void DP::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDe
 }
 
 void DP::Ph1::Switch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(*leftVector);
-	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }

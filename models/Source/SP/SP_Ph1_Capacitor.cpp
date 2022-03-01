@@ -106,8 +106,8 @@ void SP::Ph1::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevSte
 }
 
 void SP::Ph1::Capacitor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaUpdateVoltage(*leftVector);
-	this->mnaUpdateCurrent(*leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {

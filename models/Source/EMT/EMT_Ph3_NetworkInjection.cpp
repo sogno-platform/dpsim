@@ -176,8 +176,8 @@ void EMT::Ph3::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attri
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
-	mnaUpdateCurrent(*leftVector);
-	mnaUpdateVoltage(*leftVector);
+	mnaUpdateCurrent(**leftVector);
+	mnaUpdateVoltage(**leftVector);
 }
 
 void EMT::Ph3::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {

@@ -217,8 +217,8 @@ void DP::Ph1::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStep
 }
 
 void DP::Ph1::Inductor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaUpdateVoltage(*leftVector);
-	this->mnaUpdateCurrent(*leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph1::Inductor::MnaPreStepHarm::execute(Real time, Int timeStepCount) {

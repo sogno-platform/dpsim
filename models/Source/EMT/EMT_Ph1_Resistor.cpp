@@ -75,8 +75,8 @@ void EMT::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void EMT::Ph1::Resistor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResistor.mnaUpdateVoltage(*mLeftVector);
-	mResistor.mnaUpdateCurrent(*mLeftVector);
+	mResistor.mnaUpdateVoltage(**mLeftVector);
+	mResistor.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {

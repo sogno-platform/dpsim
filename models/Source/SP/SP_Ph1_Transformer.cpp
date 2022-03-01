@@ -425,8 +425,8 @@ void SP::Ph1::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<M
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
-	this->mnaUpdateVoltage(*leftVector);
-	this->mnaUpdateCurrent(*leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
