@@ -81,26 +81,24 @@ void Scheduler::resolveDeps(Task::List& tasks, Edges& inEdges, Edges& outEdges) 
 	std::unordered_map<AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;
 	std::unordered_set<AttributeBase::Ptr> prevStepDependencies;
 	for (auto task : tasks) {
-		for (auto attr : task->getAttributeDependencies()) {
-			
-			/// CHECK: Is it always necessary to add the (potentially referencing) attribute to the dependencies?
-			dependencies[attr].push_back(task);
-			
+		for (AttributeBase::Ptr attr : task->getAttributeDependencies()) {
 			/// CHECK: Having external be the nullptr can lead to segfaults rather quickly. Maybe make it a special kind of attribute
 			if (attr != Scheduler::external) {
 				AttributeBase::List attrDependencies = attr->getDependencies();
-				for (auto dep : attrDependencies) {
+				for (AttributeBase::Ptr dep : attrDependencies) {
 					dependencies[dep].push_back(task);
 				}
+			} else {
+				dependencies[attr].push_back(task);
 			}
 		}
-		for (auto attr : task->getPrevStepDependencies()) {
+		for (AttributeBase::Ptr attr : task->getPrevStepDependencies()) {
 			prevStepDependencies.insert(attr);
 		}
 	}
 
 	for (auto from : tasks) {
-		for (auto attr : from->getModifiedAttributes()) {
+		for (AttributeBase::Ptr attr : from->getModifiedAttributes()) {
 			for (auto to : dependencies[attr]) {
 				outEdges[from].push_back(to);
 				inEdges[to].push_back(from);

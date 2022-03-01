@@ -286,7 +286,7 @@ namespace CPS {
 		}
 
 		virtual AttributeBase::List getDependencies() override {
-			return AttributeBase::List();
+			return AttributeBase::List {this->shared_from_this()};
 		}
 
 		virtual void setReference(typename Attribute<T>::Ptr reference) override {
@@ -313,8 +313,9 @@ namespace CPS {
 			switch (kind) {
 				case UpdateTaskKind::UPDATE_ONCE:
 					updateTasksOnce.push_back(task);
-					///FIXME: This is probably not the right time to run this kind of task
+					///THISISBAD: This is probably not the right time to run this kind of task
 					task->executeUpdate(this->mData);
+					break;
 				case UpdateTaskKind::UPDATE_ON_GET:
 					updateTasksOnGet.push_back(task);
 					break;
@@ -330,6 +331,7 @@ namespace CPS {
 			switch (kind) {
 				case UpdateTaskKind::UPDATE_ONCE:
 					updateTasksOnce.clear();
+					break;
 				case UpdateTaskKind::UPDATE_ON_GET:
 					updateTasksOnGet.clear();
 					break;
@@ -353,9 +355,9 @@ namespace CPS {
 			};
 			this->clearAllTasks();
 			if(reference->isStatic()) {
-				this->addTask(UpdateTaskKind::UPDATE_ONCE, AttributeUpdateTask<T, T>::make(UpdateTaskKind::UPDATE_ONCE, getter, this->shared_from_this()));
+				this->addTask(UpdateTaskKind::UPDATE_ONCE, AttributeUpdateTask<T, T>::make(UpdateTaskKind::UPDATE_ONCE, getter, reference));
 			} else {
-				this->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<T, T>::make(UpdateTaskKind::UPDATE_ON_GET, getter, this->shared_from_this()));
+				this->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<T, T>::make(UpdateTaskKind::UPDATE_ON_GET, getter, reference));
 			}
 		}
 
@@ -377,6 +379,10 @@ namespace CPS {
 			return false;
 		}
 
+		/// This will recursively collect all attributes this attribute depends on, either in the UPDATE_ONCE or the UPDATE_ON_GET tasks.
+		/// Currently, there is no uniqueness test, so the final list will always contain duplicates
+		/// Every attribute also appears in the list of its own dependencies
+		/// THISISBAD: If there is a dependency cycle, this function WILL CAUSE A STACK OVERFLOW!
 		virtual AttributeBase::List getDependencies() {
 			AttributeBase::List deps = AttributeBase::List();
 			for (typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnce) {
@@ -388,6 +394,19 @@ namespace CPS {
 				AttributeBase::List taskDeps = task->getDependencies();
 				deps.insert(deps.end(), taskDeps.begin(), taskDeps.end());
 			}
+
+			auto currentEnd = deps.end();
+
+			/// CHECK: This is modifying a vector while iterating over it (in a safe way though, since elements only ever get added). Is this bad code design?
+			for (auto it = deps.begin(); it < currentEnd; it++) {
+				AttributeBase::List recursiveDeps = (*it)->getDependencies();
+				deps.insert(deps.end(), recursiveDeps.begin(), recursiveDeps.end());
+			}
+			/// CHECK: Is it always necessary to insert the attribute itself as an intermediate dependency?
+			deps.push_back(this->shared_from_this());
+
+			/// FIXME: deps might contain duplicates at this point, these should be deleted!
+
 			return deps;
 		}
 	};
