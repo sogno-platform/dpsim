@@ -89,7 +89,7 @@ void SP::Ph1::Load::updatePQ(Real time) {
 		**mReactivePower = mLoadProfile.pqData.find(time)->second.q;
 	} else {
 		Real wf = mLoadProfile.weightingFactors.find(time)->second;
-		///FIXME: P_nom and Q_nom do not exist as attributes
+		///THISISBAD: P_nom and Q_nom do not exist as attributes
 		Real P_new = this->attribute<Real>("P_nom")->get()*wf;
 		Real Q_new = this->attribute<Real>("Q_nom")->get()*wf;
 		**mActivePower = P_new;
