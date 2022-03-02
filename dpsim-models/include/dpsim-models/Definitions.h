@@ -91,8 +91,7 @@ namespace CPS {
 	typedef Eigen::Matrix<Real, Eigen::Dynamic, 1> Vector;
 	///
 	typedef Eigen::KLU<SparseMatrix> LUFactorizedKLU;
-	///
-
+	
 	template<typename VarType>
 	using MatrixVar = Eigen::Matrix<VarType, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>;
 
