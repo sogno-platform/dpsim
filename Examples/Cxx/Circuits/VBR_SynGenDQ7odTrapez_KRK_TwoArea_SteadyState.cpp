@@ -415,7 +415,8 @@ void VBR_SynGenDQ7odTrapez_KRK_TwoArea_SteadyState(String simName, Real timeStep
 	simEMT.setFinalTime(finalTime);
 	simEMT.setDomain(Domain::EMT);
 	simEMT.addLogger(loggerEMT);
-
+	simEMT.doSystemMatrixRecomputation(true);
+	simEMT.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
 	simEMT.run();
 }
 
@@ -424,7 +425,7 @@ int main(int argc, char* argv[]) {
 
 	//Simulation parameters
 	String simName="VBR_SynGenDQ7odTrapez_KRK_TwoArea_SteadyState";
-	Real finalTime = 30;
+	Real finalTime = 2;
 	Real timeStep = 50e-6;
 	Bool startFaultEvent=true;
 	Bool endFaultEvent=true;
