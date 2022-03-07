@@ -240,6 +240,8 @@ void CommandLineArgs::parseArguments(int argc, char *argv[])
 					mnaImpl = MnaSolverFactory::CUDASparse;
 				} else if (arg == "CUDAMagma") {
 					mnaImpl = MnaSolverFactory::CUDAMagma;
+				} else if (arg == "Plugin") {
+					mnaImpl = MnaSolverFactory::Plugin;
 				} else {
 					throw std::invalid_argument("Invalid value for --solver-mna-impl");
 				}

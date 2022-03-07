@@ -23,6 +23,7 @@
 #endif
 #endif
 #endif
+#include <dpsim/MNASolverPlugin.h>
 
 namespace DPsim {
 
@@ -37,6 +38,7 @@ class MnaSolverFactory {
 		CUDADense,
 		CUDASparse,
 		CUDAMagma,
+		Plugin,
 	};
 
 	/// MNA implementations supported by this compilation
@@ -56,6 +58,7 @@ class MnaSolverFactory {
 #endif //WITH_MAGMA
 #endif //WITH_SPARSE
 #endif //WITH_CUDA
+			Plugin,
 		};
 		return ret;
 	}
@@ -97,6 +100,9 @@ class MnaSolverFactory {
 #endif
 #endif
 #endif
+		case MnaSolverImpl::Plugin:
+			log->info("creating Plugin solver implementation");
+			return std::make_shared<MnaSolverPlugin<VarType>>("", name, domain, logLevel);
 		default:
 			throw CPS::SystemError("unsupported MNA implementation.");
 
