@@ -391,7 +391,7 @@ namespace CPS {
 				deps.insert(deps.end(), taskDeps.begin(), taskDeps.end());
 			}
 
-			int endIndex = deps.size() - 1;
+			int endIndex = deps.size();
 
 			/// FIXME: This is modifying a vector while iterating over it (in a safe way though, since elements only ever get added). Is this bad code design?
 			for (int i = 0; i < endIndex; i++) {
