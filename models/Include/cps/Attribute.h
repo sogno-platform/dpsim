@@ -14,8 +14,6 @@
 #include <cps/MathUtils.h>
 #include <cps/Config.h>
 namespace CPS {
-	template<class U>
-	concept Arithmetic = std::is_arithmetic<U>::value;
 
 	enum UpdateTaskKind {
 		UPDATE_ONCE,
@@ -121,15 +119,6 @@ namespace CPS {
 			return this->mData;
 		}
 
-		// virtual void reset() {
-		// 	// TODO: we might want to provide a default value via the constructor
-		// 	T resetValue = T();
-
-		// 	// Only states are resetted!
-		// 	if (mFlags & Flags::state)
-		// 		set(resetValue);
-		// }
-
 		virtual String toString() override {
 			/// CHECK: How does this impact performance?
 			std::stringstream ss;
@@ -180,8 +169,9 @@ namespace CPS {
 			return derivedAttribute;
 		}
 
+		template <typename U = T, std::enable_if_t<std::is_same_v<Complex, U>, bool> = true>
 		std::shared_ptr<Attribute<Real>> deriveReal()
-			requires std::same_as<T, CPS::Complex>
+			// requires std::same_as<T, CPS::Complex> //CPP20
 		{
 			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, std::shared_ptr<Attribute<Complex>> dependency) {
 				*dependent = (**dependency).real();
@@ -194,8 +184,9 @@ namespace CPS {
 			return derive<CPS::Real>(getter, setter);
 		}
 
+		template <typename U = T, std::enable_if_t<std::is_same_v<Complex, U>, bool> = true>
 		std::shared_ptr<Attribute<Real>> deriveImag()
-			requires std::same_as<T, CPS::Complex>
+			// requires std::same_as<T, CPS::Complex> //CPP20
 		{
 			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
 				*dependent = (**dependency).imag();
@@ -208,8 +199,9 @@ namespace CPS {
 			return derive<CPS::Real>(getter, setter);
 		}
 
+		template <typename U = T, std::enable_if_t<std::is_same_v<Complex, U>, bool> = true>
 		std::shared_ptr<Attribute<Real>> deriveMag()
-			requires std::same_as<T, CPS::Complex>
+			// requires std::same_as<T, CPS::Complex> //CPP20
 		{
 			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
 				*dependent = Math::abs(**dependency);
@@ -221,8 +213,9 @@ namespace CPS {
 			return derive<CPS::Real>(getter, setter);
 		}
 
+		template <typename U = T, std::enable_if_t<std::is_same_v<Complex, U>, bool> = true>
 		std::shared_ptr<Attribute<Real>> derivePhase()
-			requires std::same_as<T, CPS::Complex>
+			// requires std::same_as<T, CPS::Complex> //CPP20
 		{
 			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
 				*dependent = Math::phase(**dependency);
@@ -234,8 +227,9 @@ namespace CPS {
 			return derive<CPS::Real>(getter, setter);
 		}
 
+		template <typename U = T, std::enable_if_t<std::is_same_v<Real, U> || std::is_same_v<Complex, U>, bool> = true>
 		std::shared_ptr<Attribute<T>> deriveScaled(T scale)
-			requires std::same_as<T, CPS::Complex> || std::same_as<T, CPS::Real>
+			// requires std::same_as<T, CPS::Complex> || std::same_as<T, CPS::Real> //CPP20
 		{
 			typename AttributeUpdateTask<T, T>::Actor getter = [scale](std::shared_ptr<T> &dependent, Attribute<T>::Ptr dependency) {
 				*dependent = scale * (**dependency);
@@ -246,9 +240,9 @@ namespace CPS {
 			return derive<T>(getter, setter);
 		}
 
-		template<class U>
+		template <class U, class V = T, std::enable_if_t<std::is_same_v<CPS::MatrixVar<U>, V>, bool> = true>
 		std::shared_ptr<Attribute<U>> deriveCoeff(typename CPS::MatrixVar<U>::Index row, typename CPS::MatrixVar<U>::Index column)
-			requires std::same_as<T, CPS::MatrixVar<U>>
+			// requires std::same_as<T, CPS::MatrixVar<U>> //CPP20
 		{
 			typename AttributeUpdateTask<U, T>::Actor getter = [row, column](std::shared_ptr<U> &dependent, Attribute<T>::Ptr dependency) {
 				*dependent = (**dependency)(row, column);
