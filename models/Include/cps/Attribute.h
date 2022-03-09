@@ -31,6 +31,7 @@ namespace CPS {
 		virtual String toString() = 0;
 		virtual bool isStatic() const = 0;
 		virtual AttributeBase::List getDependencies() = 0;
+		virtual ~AttributeBase() = default;
 	};
 
 	template<class T>
@@ -50,6 +51,7 @@ namespace CPS {
 
 		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) = 0;
 		virtual AttributeBase::List getDependencies() = 0;
+		virtual ~AttributeUpdateTaskBase() = default;
 	};
 
 	template<class DependentType, class... DependencyTypes>
@@ -377,7 +379,7 @@ namespace CPS {
 		/// Currently, there is no uniqueness test, so the final list will always contain duplicates
 		/// Every attribute also appears in the list of its own dependencies
 		/// THISISBAD: If there is a dependency cycle, this function WILL CAUSE A STACK OVERFLOW!
-		virtual AttributeBase::List getDependencies() {
+		virtual AttributeBase::List getDependencies() override {
 			AttributeBase::List deps = AttributeBase::List();
 			for (typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnce) {
 				AttributeBase::List taskDeps = task->getDependencies();
@@ -389,11 +391,11 @@ namespace CPS {
 				deps.insert(deps.end(), taskDeps.begin(), taskDeps.end());
 			}
 
-			auto currentEnd = deps.end();
+			int endIndex = deps.size() - 1;
 
-			/// CHECK: This is modifying a vector while iterating over it (in a safe way though, since elements only ever get added). Is this bad code design?
-			for (auto it = deps.begin(); it < currentEnd; it++) {
-				AttributeBase::List recursiveDeps = (*it)->getDependencies();
+			/// FIXME: This is modifying a vector while iterating over it (in a safe way though, since elements only ever get added). Is this bad code design?
+			for (int i = 0; i < endIndex; i++) {
+				AttributeBase::List recursiveDeps = deps[i]->getDependencies();
 				deps.insert(deps.end(), recursiveDeps.begin(), recursiveDeps.end());
 			}
 			/// CHECK: Is it always necessary to insert the attribute itself as an intermediate dependency?

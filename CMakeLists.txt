@@ -56,7 +56,7 @@ if(MSVC)
 else()
 	check_cxx_compiler_flag("-Wall -Werror" CXX_SUPPORTS_WERROR)
 	if(CXX_SUPPORTS_WERROR)
-		set(DPSIM_CXX_FLAGS -Wall -Werror)
+		set(DPSIM_CXX_FLAGS -Wall)
 	endif()
 endif()
 

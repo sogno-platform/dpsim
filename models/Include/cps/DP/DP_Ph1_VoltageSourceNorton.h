@@ -55,6 +55,7 @@ namespace Ph1 {
 		///
 		using Base::Ph1::VoltageSource::setParameters;
 		///
+		/// THISISBAD: This declaration and Base::Ph1::VoltageSource::setParameters(Complex, Real) are ambiguous to each other. Clang does not like this.
 		void setParameters(Complex voltage, Real srcFreq = -1, Real resistance = 1e9);
 
 		// #### MNA section ####
