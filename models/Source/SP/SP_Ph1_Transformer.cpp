@@ -13,7 +13,7 @@ using namespace CPS;
 // #### General ####
 SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel, Bool withResistiveLosses)
 	: SimPowerComp<Complex>(uid, name, logLevel),
-	mBaseVoltage(Attribute<Real>::create("base_voltage", mAttributes)),
+	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 	mCurrent(Attribute<Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign>>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::create("p_branch_vector", mAttributes)),
 	mReactivePowerBranch(Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::create("q_branch_vector", mAttributes)),

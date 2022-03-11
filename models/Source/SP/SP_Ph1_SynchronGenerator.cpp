@@ -12,7 +12,7 @@ using namespace CPS;
 
 SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::Level logLevel)
  : SimPowerComp<Complex>(uid, name, logLevel),
-    mBaseVoltage(Attribute<Real>::create("base_voltage", mAttributes)),
+    mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
     mSetPointActivePower(Attribute<Real>::create("P_set", mAttributes)),
     mSetPointReactivePower(Attribute<Real>::create("Q_set", mAttributes)),
     mSetPointVoltage(Attribute<Real>::create("V_set", mAttributes)),
