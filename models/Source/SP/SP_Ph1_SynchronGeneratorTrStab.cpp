@@ -260,7 +260,7 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	}
 
 	mStates << Math::abs(**mEp), Math::phaseDeg(**mEp), **mElecActivePower, **mMechPower,
-		mDelta_p, mOmMech, dOmMech, dDelta_p, (**mIntfVoltage)(0,0).real(), (**mIntfVoltage)(0,0).imag();
+		**mDelta_p, **mOmMech, dOmMech, dDelta_p, (**mIntfVoltage)(0,0).real(), (**mIntfVoltage)(0,0).imag();
 	SPDLOG_LOGGER_DEBUG(mSLog, "\nStates, time {:f}: \n{:s}", time, Logger::matrixToString(mStates));
 }
 
