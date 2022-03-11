@@ -13,6 +13,8 @@
 namespace CPS {
 namespace DP {
 namespace Ph1 {
+	/// @brief Voltage-Behind-Reactance (VBR) implementation
+	/// of 3rd order synchronous generator model
 	class SynchronGenerator3OrderVBR :
 		public SynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator3OrderVBR> {

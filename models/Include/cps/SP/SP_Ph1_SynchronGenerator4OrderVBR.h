@@ -13,9 +13,8 @@
 namespace CPS {
 namespace SP {
 namespace Ph1 {
-	/// @brief Synchronous generator model for transient stability analysis
-	///
-	/// This model is based on Eremia section 2.1.6.
+	/// @brief Voltage-Behind-Reactance (VBR) implementation
+	/// of 4th order synchronous generator model
 	class SynchronGenerator4OrderVBR :
 		public SynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator4OrderVBR> {

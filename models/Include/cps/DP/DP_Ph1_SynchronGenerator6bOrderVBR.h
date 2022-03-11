@@ -13,8 +13,8 @@
 namespace CPS {
 namespace DP {
 namespace Ph1 {
-	/// @brief 6 Order Synchronous generator model
-	///
+	/// @brief Voltage-Behind-Reactance (VBR) implementation
+	/// of 6th order synchronous generator model
 	/// Anderson - Fouad's model (Milano, Power System modelling and scripting, chapter 15)
 	class SynchronGenerator6bOrderVBR :
 		public SynchronGeneratorVBR,

@@ -13,8 +13,8 @@
 namespace CPS {
 namespace SP {
 namespace Ph1 {
-	/// @brief Synchronous generator model for transient stability analysis
-	///
+	/// @brief Voltage-Behind-Reactance (VBR) implementation
+	/// of 6th order synchronous generator model
 	/// Anderson-Fouad's model (Milano, Power System modelling and scripting, chapter 15)
 	class SynchronGenerator6bOrderVBR :
 		public SynchronGeneratorVBR,

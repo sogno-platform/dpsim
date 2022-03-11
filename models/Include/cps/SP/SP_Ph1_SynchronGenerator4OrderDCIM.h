@@ -13,9 +13,8 @@
 namespace CPS {
 namespace SP {
 namespace Ph1 {
-	/// @brief Synchronous generator model for transient stability analysis
-	///
-	/// This model is based on Eremia section 2.1.6.
+	/// @brief Delayed-Current-Injection (DCIM) implementation
+	/// of 4th order synchronous generator model
 	class SynchronGenerator4OrderDCIM :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public SharedFactory<SynchronGenerator4OrderDCIM> {

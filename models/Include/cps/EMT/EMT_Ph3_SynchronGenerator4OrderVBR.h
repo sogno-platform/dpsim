@@ -13,6 +13,8 @@
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
+	/// @brief Voltage-Behind-Reactance (VBR) implementation
+	/// of 4th order synchronous generator model
 	class SynchronGenerator4OrderVBR :
 		public ReducedOrderSynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator4OrderVBR> {
