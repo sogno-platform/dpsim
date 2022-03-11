@@ -215,7 +215,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 				Math::abs((**mIntfVoltage)(0,0)), Math::phaseDeg((**mIntfVoltage)(0,0)),
 				Math::abs(**mEp), Math::phaseDeg(**mEp),
 				mInitElecPower.real(), mInitElecPower.imag(),
-				mElecActivePower, mMechPower);
+				**mElecActivePower, **mMechPower);
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {

@@ -74,7 +74,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower,
 				"\nimpedance: {:f}"
 				"\ninductance: {:f}"
 				"\ninertia: {:f}"
-				"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+				"\ndamping: {:f}", mXpd, mLpd, **mInertia, mKd);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
@@ -99,7 +99,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Re
 			"\nimpedance: {:f}"
 			"\ninductance: {:f}"
 			"\ninertia: {:f}"
-			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+			"\ndamping: {:f}", mXpd, mLpd, **mInertia, mKd);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
@@ -129,7 +129,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 			"\nimpedance: {:f}"
 			"\ninductance: {:f}"
 			"\ninertia: {:f}"
-			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+			"\ndamping: {:f}", mXpd, mLpd, **mInertia, mKd);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech) {
@@ -178,7 +178,7 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
-	mMechPower = mElecActivePower;
+	**mMechPower = **mElecActivePower;
 
 	// Initialize node between X'd and Ep
 	mVirtualNodes[0]->setInitialVoltage(**mEp);
@@ -208,7 +208,7 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 				Math::abs((**mIntfVoltage)(0,0)), Math::phaseDeg((**mIntfVoltage)(0,0)),
 				Math::abs(**mEp), Math::phaseDeg(**mEp),
 				mInitElecPower.real(), mInitElecPower.imag(),
-				mElecActivePower, mMechPower);
+				**mElecActivePower, **mMechPower);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {

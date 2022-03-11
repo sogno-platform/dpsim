@@ -99,7 +99,7 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Re
 				"\nimpedance: {:f}"
 			"\ninductance: {:f}"
 			"\ninertia: {:f}"
-			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+			"\ndamping: {:f}", mXpd, mLpd, **mInertia, mKd);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
@@ -132,7 +132,7 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 				"\nXpd: {:f} [Ohm]"
 				"\nLpd: {:f} [H]"
 				"\nInertia: {:f} [s]"
-				"\nDamping: {:f}", mXpd, mLpd, mInertia, mKd);
+				"\nDamping: {:f}", mXpd, mLpd, **mInertia, mKd);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech) {
@@ -184,7 +184,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
 	// TODO: review for Rs != 0
-	mMechPower = mElecActivePower;
+	**mMechPower = **mElecActivePower;
 
 	// Initialize node between X'd and Ep
 	mVirtualNodes[0]->setInitialVoltage(**mEp);
@@ -215,7 +215,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 				Math::abs((**mIntfVoltage)(0,0)), Math::phaseDeg((**mIntfVoltage)(0,0)),
 				Math::abs(**mEp), Math::phaseDeg(**mEp),
 				mInitElecPower.real(), mInitElecPower.imag(),
-				mElecActivePower, mElecReactivePower, mMechPower);
+				**mElecActivePower, mElecReactivePower, **mMechPower);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
@@ -259,7 +259,7 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 		**mEp = Complex(**mEp_abs * cos(**mDelta_p), **mEp_abs * sin(**mDelta_p));
 	}
 
-	mStates << Math::abs(**mEp), Math::phaseDeg(**mEp), mElecActivePower, mMechPower,
+	mStates << Math::abs(**mEp), Math::phaseDeg(**mEp), **mElecActivePower, **mMechPower,
 		mDelta_p, mOmMech, dOmMech, dDelta_p, (**mIntfVoltage)(0,0).real(), (**mIntfVoltage)(0,0).imag();
 	SPDLOG_LOGGER_DEBUG(mSLog, "\nStates, time {:f}: \n{:s}", time, Logger::matrixToString(mStates));
 }
