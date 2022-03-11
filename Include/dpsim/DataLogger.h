@@ -60,6 +60,9 @@ namespace DPsim {
 
 		void logAttribute(const String &name, CPS::AttributeBase::Ptr attr, UInt rowsMax = 0, UInt colsMax = 0);
 
+		///DEPRECATED: Only use for compatiblity, otherwise this just adds extra overhead to the logger. Instead just call logAttribute multiple times for every coefficient.
+		void logAttribute(const std::vector<String> &name, CPS::AttributeBase::Ptr attr);
+
 		void log(Real time, Int timeStepCount);
 
 		CPS::Task::Ptr getTask();

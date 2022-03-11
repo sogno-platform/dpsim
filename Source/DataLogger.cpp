@@ -152,6 +152,46 @@ CPS::Task::Ptr DataLogger::getTask() {
 	return std::make_shared<DataLogger::Step>(*this);
 }
 
+void DataLogger::logAttribute(const std::vector<String> &name, CPS::AttributeBase::Ptr attr) {
+	if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(attr)) {
+		if ((**attrMatrix).rows() == 1 && (**attrMatrix).cols() == 1) {
+			logAttribute(name[0], attrMatrix->deriveCoeff<CPS::Real>(0, 0));
+		}
+		else if ((**attrMatrix).cols() == 1) {
+			for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
+				logAttribute(name[k],
+					attrMatrix->deriveCoeff<CPS::Real>(k, 0));
+			}
+		}
+		else {
+			for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
+				for (UInt l = 0; l < (**attrMatrix).cols(); ++l) {
+					logAttribute(name[k*(**attrMatrix).cols()+l],
+						attrMatrix->deriveCoeff<CPS::Real>(k, l));
+				}
+			}
+		}
+	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<MatrixComp>>(attr)) {
+		if ((**attrMatrix).rows() == 1 && (**attrMatrix).cols() == 1) {
+			logAttribute(name[0], attrMatrix->deriveCoeff<CPS::Complex>(0, 0));
+		}
+		else if ((**attrMatrix).cols() == 1) {
+			for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
+				logAttribute(name[k],
+					attrMatrix->deriveCoeff<CPS::Complex>(k, 0));
+			}
+		}
+		else {
+			for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
+				for (UInt l = 0; l < (**attrMatrix).cols(); ++l) {
+					logAttribute(name[k*(**attrMatrix).cols()+l],
+						attrMatrix->deriveCoeff<CPS::Complex>(k, l));
+				}
+			}
+		}
+	}	
+}
+
 void DataLogger::logAttribute(const String &name, CPS::AttributeBase::Ptr attr, UInt rowsMax, UInt colsMax) {
 	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr)) {
 		mAttributes[name] = attrReal;
