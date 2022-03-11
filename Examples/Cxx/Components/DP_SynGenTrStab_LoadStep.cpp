@@ -56,9 +56,9 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->logAttribute("v1", n1->attributeMatrixComp("v"));
-	logger->logAttribute("i_gen", gen->attributeMatrixComp("i_intf"));
-	logger->logAttribute("i_load", load->attributeMatrixComp("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("i_gen", gen->attribute("i_intf"));
+	logger->logAttribute("i_load", load->attribute("i_intf"));
 	logger->logAttribute("wr_gen", gen->attribute("w_r"));
 
 	Simulation sim(simName, Logger::Level::info);
