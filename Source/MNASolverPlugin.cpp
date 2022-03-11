@@ -37,10 +37,41 @@ MnaSolverPlugin<VarType>::~MnaSolverPlugin() {
 	}
 }
 
-void pluginLogger(const char * str)
+extern "C" void pluginLogger(const char * str)
 {
 	CPS::Logger::Log log = CPS::Logger::get("Plugin", CPS::Logger::Level::debug, CPS::Logger::Level::debug);
 	log->info(str);
+}
+
+template <typename VarType>
+void MnaSolverPlugin<VarType>::recomputeSystemMatrix(Real time) {
+	// Start from base matrix
+	this->mVariableSystemMatrix = this->mBaseSystemMatrix;
+
+	// Now stamp switches into matrix
+	for (auto sw : this->mSwitches)
+		sw->mnaApplySystemMatrixStamp(this->mVariableSystemMatrix);
+
+	// Now stamp variable elements into matrix
+	for (auto comp : this->mMNAIntfVariableComps)
+		comp->mnaApplySystemMatrixStamp(this->mVariableSystemMatrix);
+
+    int size = this->mRightSideVector.rows();
+	int nnz = this->mVariableSystemMatrix.nonZeros();
+	struct dpsim_csr_matrix matrix = {
+		.values = this->mVariableSystemMatrix.valuePtr(),
+		.rowIndex = this->mVariableSystemMatrix.outerIndexPtr(),
+		.colIndex = this->mVariableSystemMatrix.innerIndexPtr(),
+		.row_number = size,
+		.nnz = nnz,
+	};
+	// Refactorization of matrix assuming that structure remained
+	// constant by omitting analyzePattern
+	if (mPlugin->lu_decomp(&matrix) != 0) {
+		mSLog->error("error recomputing decomposition");
+		return;
+	}
+	++this->mNumRecomputations;
 }
 
 template <typename VarType>
@@ -48,9 +79,9 @@ void MnaSolverPlugin<VarType>::initialize() {
     MnaSolver<VarType>::initialize();
     int size = this->mRightSideVector.rows();
 	auto hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
-	size_t nnz = hMat[0].nonZeros();
+	int nnz = hMat[0].nonZeros();
 
-	DPsimPlugin::MnaSolverDynInterface* (*getMNASolverPlugin)(const char *);
+	struct dpsim_mna_plugin* (*get_mna_plugin)(const char *);
 
 
 	if ((mDlHandle = dlopen(mPluginName.c_str(), RTLD_NOW)) == nullptr) {
@@ -58,23 +89,28 @@ void MnaSolverPlugin<VarType>::initialize() {
 		return;
 	}
 
-	getMNASolverPlugin = (DPsimPlugin::MnaSolverDynInterface* (*)(const char *)) dlsym(mDlHandle, "getMNASolverPlugin");
-	if (getMNASolverPlugin == nullptr) {
+	get_mna_plugin = (struct dpsim_mna_plugin* (*)(const char *)) dlsym(mDlHandle, "get_mna_plugin");
+	if (get_mna_plugin == NULL) {
 		mSLog->error("error reading symbol from library {}: {}", mPluginName, dlerror());
 		return;
 	}
 
-	if ((mPlugin = getMNASolverPlugin(mPluginName.c_str())) == nullptr) {
+	if ((mPlugin = get_mna_plugin(mPluginName.c_str())) == nullptr) {
 		mSLog->error("error getting plugin class");
 		return;
 	}
 
-	mPlugin->set_logger(pluginLogger);
+	mPlugin->log = pluginLogger;
 
-	if (mPlugin->initialize(size, nnz,
-		hMat[0].valuePtr(),
-		hMat[0].outerIndexPtr(),
-		hMat[0].innerIndexPtr()) != 0) {
+	struct dpsim_csr_matrix matrix = {
+		.values = hMat[0].valuePtr(),
+		.rowIndex = hMat[0].outerIndexPtr(),
+		.colIndex = hMat[0].innerIndexPtr(),
+		.row_number = size,
+		.nnz = nnz,
+	};
+
+	if (mPlugin->init(&matrix) != 0) {
 		mSLog->error("error initializing plugin");
 		return;
 	}

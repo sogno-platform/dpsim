@@ -6,27 +6,26 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#pragma once
+#ifndef _MNA_SOLVER_DYN_INTERFACE_H_
+#define _MNA_SOLVER_DYN_INTERFACE_H_
 
 
-namespace DPsimPlugin {
+struct dpsim_csr_matrix {
+	double *values;		//size: nnz
+	int *rowIndex;		//size: nnz
+	int *colIndex;		//size: row_numer+1
+	int row_number;		//number of rows of the matrix
+	int nnz;			//number of non-zero elements in matrix
+};
 
-    class MnaSolverDynInterface {
-	private:
-		void (*log)(const char *);
-	public:
-		virtual void set_logger(void (*logger)(const char *)) = 0;
-		virtual int initialize(
-			int row_number,
-			int nnz,
-			double *csrValues,
-			int *csrRowPtr,
-			int *csrColInd) = 0;
-		virtual int solve(
-			double *rhs_values,
-			double *lhs_values) = 0;
-		virtual void cleanup() = 0;
-	};
-}
+struct dpsim_mna_plugin {
+	void (*log)(const char *);
+	int (*init)(struct dpsim_csr_matrix*);
+	int (*lu_decomp)(struct dpsim_csr_matrix*);
+	int (*solve)(double *, double*);
+	void (*cleanup)(void);
+};
 
-extern "C" DPsimPlugin::MnaSolverDynInterface* getMNASolverPlugin(const char *name);
+extern struct dpsim_mna_plugin* get_mna_plugin(const char *name);
+
+#endif

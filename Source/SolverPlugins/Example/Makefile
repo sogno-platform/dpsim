@@ -1,12 +1,12 @@
 
-CC = g++
+CC = gcc
 
 .PHONY: all
 
 all: plugin.so
 
-%.o : %.cpp
-	$(CC) $(CC_FLAGS) -I../dpsim/Include -c -fpic -o $@ $<
+%.o : %.c
+	$(CC) $(CC_FLAGS) -I../../../Include -c -fpic -o $@ $<
 
 plugin.so: example.o
 	$(CC) $(LD_FLAGS) -shared -o $@ $<

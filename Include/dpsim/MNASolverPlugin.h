@@ -18,11 +18,12 @@ namespace DPsim {
 	protected:
 		using Solver::mSLog;
 		String mPluginName;
-		DPsimPlugin::MnaSolverDynInterface *mPlugin;
+		struct dpsim_mna_plugin *mPlugin;
 		void *mDlHandle;
 
 		/// Initialize cuSparse-library
         void initialize() override;
+		void recomputeSystemMatrix(Real time) override;
 		void solve(Real time, Int timeStepCount) override;
 
 	public:
