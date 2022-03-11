@@ -84,17 +84,17 @@ set(CIRCUIT_SOURCES
 )
 
 set(SYNCGEN_SOURCES
-	# Components/DP_SynGenDq7odTrapez_SteadyState.cpp
-	# Components/DP_SynGenDq7odTrapez_ThreePhFault.cpp
-	# Components/DP_SynGenTrStab_SteadyState.cpp
-	# Components/DP_SynGenTrStab_LoadStep.cpp
-	# Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp
-	# Components/DP_EMT_SynGenDq7odTrapez_ThreePhFault.cpp
-	# Components/DP_EMT_SynGenDq7odTrapez_LoadStep.cpp
-	# Components/DP_SP_SynGenTrStab_testModels.cpp
-	# Components/DP_SP_SynGenTrStab_testModels_doubleLine.cpp
-	# Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
-	# Components/EMT_SynchronGenerator9OrderVBR_LoadStep_TurbineGovernor_Exciter.cpp
+	Components/DP_SynGenDq7odTrapez_SteadyState.cpp
+	Components/DP_SynGenDq7odTrapez_ThreePhFault.cpp
+	Components/DP_SynGenTrStab_SteadyState.cpp
+	Components/DP_SynGenTrStab_LoadStep.cpp
+	Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp
+	Components/DP_EMT_SynGenDq7odTrapez_ThreePhFault.cpp
+	Components/DP_EMT_SynGenDq7odTrapez_LoadStep.cpp
+	Components/DP_SP_SynGenTrStab_testModels.cpp
+	Components/DP_SP_SynGenTrStab_testModels_doubleLine.cpp
+	Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
+	Components/EMT_SynchronGenerator9OrderVBR_LoadStep_TurbineGovernor_Exciter.cpp
 )
 
 set(INVERTER_SOURCES
@@ -140,8 +140,8 @@ endif()
 
 if(WITH_RT)
 	set(RT_SOURCES
-		# RealTime/RT_DP_CS_R1.cpp
-		# RealTime/RT_DP_VS_RL2.cpp
+		RealTime/RT_DP_CS_R1.cpp
+		RealTime/RT_DP_VS_RL2.cpp
 	)
 endif()
 
@@ -195,6 +195,11 @@ if(WITH_CIM)
 			# RealTime/RT_CIGRE_MV_PowerFlowTest.cpp
 		)
 	endif()
+endif()
+
+if(WITH_PYTHON)
+	#list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
+	list(APPEND INCLUDE_DIRS ${Python_INCLUDE_DIRS})
 endif()
 
 if(WITH_OPENMP)
