@@ -12,7 +12,7 @@ using namespace CPS;
 
 EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
-	mVoltageRef(Attribute<MatrixComp>::create("V_ref", mAttributes)),
+	mVoltageRef(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)),
 	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
 	mSigOut(Attribute<Complex>::createDynamic("sigOut", mAttributes))  {
 	mPhaseType = PhaseType::ABC;
