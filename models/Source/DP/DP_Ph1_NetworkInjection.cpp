@@ -13,7 +13,7 @@ using namespace CPS;
 DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
 	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::create("f_src", mAttributes)) {
+	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
 	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
 
