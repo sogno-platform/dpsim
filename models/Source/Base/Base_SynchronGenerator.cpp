@@ -156,8 +156,8 @@ void Base::SynchronGenerator::applyFundamentalPerUnitParameters() {
     // mLmd*mLmd*(mLlfd + mLlkd);
 
     mInductanceMat << **mLd, mLmd, mLmd, 0, 0, 0, mLmd, mLfd, mLmd, 0, 0, 0,
-        mLmd, mLmd, mLkd, 0, 0, 0, 0, 0, 0, mLq, mLmq, 0, 0, 0, 0, mLmq, mLkq1,
-        0, 0, 0, 0, 0, 0, mLl;
+        mLmd, mLmd, mLkd, 0, 0, 0, 0, 0, 0, **mLq, mLmq, 0, 0, 0, 0, mLmq, mLkq1,
+        0, 0, 0, 0, 0, 0, **mLl;
 
     mResistanceMat << **mRs, 0, 0, 0, 0, 0, 0, mRfd, 0, 0, 0, 0, 0, 0, mRkd, 0,
         0, 0, 0, 0, 0, **mRs, 0, 0, 0, 0, 0, 0, mRkq1, 0, 0, 0, 0, 0, 0, **mRs;
@@ -178,9 +178,9 @@ void Base::SynchronGenerator::applyFundamentalPerUnitParameters() {
     // mLmd*mLmd*(mLlfd + mLlkd);
 
     mInductanceMat << **mLd, mLmd, mLmd, 0, 0, 0, 0, mLmd, mLfd, mLmd, 0, 0, 0,
-        0, mLmd, mLmd, mLkd, 0, 0, 0, 0, 0, 0, 0, mLq, mLmq, mLmq, 0, 0, 0, 0,
+        0, mLmd, mLmd, mLkd, 0, 0, 0, 0, 0, 0, 0, **mLq, mLmq, mLmq, 0, 0, 0, 0,
         mLmq, mLkq1, mLmq, 0, 0, 0, 0, mLmq, mLmq, mLkq2, 0, 0, 0, 0, 0, 0, 0,
-        mLl;
+        **mLl;
 
     mResistanceMat << **mRs, 0, 0, 0, 0, 0, 0, 0, mRfd, 0, 0, 0, 0, 0, 0, 0,
         mRkd, 0, 0, 0, 0, 0, 0, 0, **mRs, 0, 0, 0, 0, 0, 0, 0, mRkq1, 0, 0, 0,

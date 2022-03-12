@@ -181,7 +181,7 @@ namespace Base {
 		Real mElecReactivePower = 0;
 	public:
 		/// rotor angle delta
-		Attribute<Real>::Ptr  mDelta;
+		Attribute<Real>::Ptr mDelta;
 		/// mechanical torque
 		Attribute<Real>::Ptr mMechTorque;
 		/// inertia constant H [s] for per unit or moment of inertia J [kg*m^2]

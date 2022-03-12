@@ -34,6 +34,7 @@ EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String uid, String name, Lo
 	mDelta = Attribute<Real>::create("delta_r", mAttributes, 0);
 	mElecTorque = Attribute<Real>::create("T_e", mAttributes, 0);
 	mMechTorque = Attribute<Real>::create("T_m", mAttributes, 0);
+	mMechPower = Attribute<Real>::create("P_m", mAttributes, 0);
 	mLd_s = Attribute<Real>::create("Ld_s", mAttributes, 0);
 	mLd_t = Attribute<Real>::create("Ld_t", mAttributes, 0);
 	mLq_s = Attribute<Real>::create("Lq_s", mAttributes, 0);

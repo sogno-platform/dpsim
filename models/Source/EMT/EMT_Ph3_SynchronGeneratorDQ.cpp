@@ -34,6 +34,7 @@ EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logg
 	mDelta = Attribute<Real>::create("delta_r", mAttributes, 0);
 	mElecTorque = Attribute<Real>::create("T_e", mAttributes, 0);
 	mMechTorque = Attribute<Real>::create("T_m", mAttributes, 0);
+	mMechPower = Attribute<Real>::create("P_m", mAttributes, 0);
 	mLd_s = Attribute<Real>::create("Ld_s", mAttributes, 0);
 	mLd_t = Attribute<Real>::create("Ld_t", mAttributes, 0);
 	mLq_s = Attribute<Real>::create("Lq_s", mAttributes, 0);
@@ -105,7 +106,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
 	mSLog->info("Set fundamental parameters in per unit: \n"
 			"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
 			"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\n",
-			mRs, mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
+			**mRs, **mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::setInitialValues(Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower) {
