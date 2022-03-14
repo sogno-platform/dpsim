@@ -220,75 +220,88 @@ $(function() {
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            mat(harmRow + complexOffset, harmCol) = mat(harmRow + complexOffset, harmCol) + value.imag();</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        }</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> setMatrixElement(Matrix&amp; mat, Matrix::Index row, Matrix::Index column, Real value) {</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            mat(row, column) =  value;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        }</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> addToMatrixElement(Matrix&amp; mat, std::vector&lt;UInt&gt; rows, std::vector&lt;UInt&gt; columns, Complex value) {</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            <span class="keywordflow">for</span> (UInt phase = 0; phase &lt; rows.size(); phase++)</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;                    addToMatrixElement(mat, rows[phase], columns[phase], value);</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        }</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> addToMatrixElement(Matrix&amp; mat, Matrix::Index row, Matrix::Index column, Real value) {</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            mat(row, column) = mat(row, column) + value;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> addToMatrixElement(Matrix&amp; mat, Matrix::Index row, Matrix::Index column, Matrix value, Int maxFreq = 1, Int freqIdx = 0) {</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            <span class="comment">// Assume square matrix</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            Eigen::Index harmonicOffset = mat.rows() / maxFreq;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            Eigen::Index complexOffset = harmonicOffset / 2;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            Eigen::Index harmRow = row + harmonicOffset * freqIdx;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            Eigen::Index harmCol = column + harmonicOffset * freqIdx;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            mat(harmRow, harmCol) = mat(harmRow, harmCol) + value(0,0);</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;            mat(harmRow + complexOffset, harmCol + complexOffset) = mat(harmRow + complexOffset, harmCol + complexOffset) + value(1,1);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;            mat(harmRow, harmCol + complexOffset) = mat(harmRow, harmCol + complexOffset) + value(0,1);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            mat(harmRow + complexOffset, harmCol) = mat(harmRow + complexOffset, harmCol) + value(1,0);</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        }</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> addToMatrixElement(Matrix&amp; mat, std::vector&lt;UInt&gt; rows, std::vector&lt;UInt&gt; columns, Real value) {</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            <span class="keywordflow">for</span> (UInt phase = 0; phase &lt; rows.size(); phase++)</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                    addToMatrixElement(mat, rows[phase], columns[phase], value);</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        }</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <span class="comment">// #### Integration Methods ####</span></div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_new, Matrix u_old);</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u_new, Matrix u_old);</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u);</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix input, Real dt);</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        <span class="keyword">static</span> Real StateSpaceTrapezoidal(Real states, Real A, Real B, Real C, Real dt, Real u);</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        <span class="keyword">static</span> Real StateSpaceTrapezoidal(Real states, Real A, Real B, Real dt, Real u);</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; </div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceEuler(Matrix states, Matrix A, Matrix B, Real dt, Matrix u);</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceEuler(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u);</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceEuler(Matrix states, Matrix A, Matrix input, Real dt);</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="keyword">static</span> Real StateSpaceEuler(Real states, Real A, Real B, Real dt, Real u);</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="keyword">static</span> Real StateSpaceEuler(Real states, Real A, Real B, Real C, Real dt, Real u);</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> FFT(std::vector&lt;Complex&gt;&amp; samples);</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160; </div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        <span class="keyword">static</span> Complex rotatingFrame2to1(Complex f2, Real theta1, Real theta2);</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
-<div class="line"><a name="l00190"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_math.html#a0c05dd9f5506109a5955e50067243fe7">  190</a></span>&#160;        <span class="keyword">static</span> MatrixComp <a class="code" href="class_c_p_s_1_1_math.html#a0c05dd9f5506109a5955e50067243fe7">singlePhaseVariableToThreePhase</a>(Complex var_1ph) {</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;            MatrixComp var_3ph = MatrixComp::Zero(3, 1);</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;            var_3ph &lt;&lt;</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                var_1ph,</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;                var_1ph * SHIFT_TO_PHASE_B,</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                var_1ph * SHIFT_TO_PHASE_C;</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            <span class="keywordflow">return</span> var_3ph;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        }</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
-<div class="line"><a name="l00200"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_math.html#a7a01a505f4ab8be599838adbbef4edc0">  200</a></span>&#160;        <span class="keyword">static</span> Matrix <a class="code" href="class_c_p_s_1_1_math.html#a7a01a505f4ab8be599838adbbef4edc0">singlePhaseParameterToThreePhase</a>(Real parameter) {</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            Matrix param_3ph = Matrix::Zero(3, 3);</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            param_3ph &lt;&lt;</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;                parameter, 0., 0.,</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;                0., parameter, 0.,</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;                0, 0., parameter;</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;            <span class="keywordflow">return</span> param_3ph;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        }</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160; </div>
-<div class="line"><a name="l00210"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_math.html#a2090b0f246cbcde79ad249de1efecb62">  210</a></span>&#160;        <span class="keyword">static</span> Matrix <a class="code" href="class_c_p_s_1_1_math.html#a2090b0f246cbcde79ad249de1efecb62">singlePhasePowerToThreePhase</a>(Real power) {</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            Matrix power_3ph = Matrix::Zero(3, 3);</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            power_3ph &lt;&lt;</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;                power/3., 0., 0.,</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;                0., power/3., 0.,</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;                0, 0., power/3.;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            <span class="keywordflow">return</span> power_3ph;</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        }</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    };</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;}</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> setMatrixElement(Matrix&amp; mat, Matrix::Index row, Matrix::Index column, Real value) {</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            mat(row, column) =  value;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        }</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> addToMatrixElement(Matrix&amp; mat, std::vector&lt;UInt&gt; rows, std::vector&lt;UInt&gt; columns, Complex value) {</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            <span class="keywordflow">for</span> (UInt phase = 0; phase &lt; rows.size(); phase++)</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                    addToMatrixElement(mat, rows[phase], columns[phase], value);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        }</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> addToMatrixElement(Matrix&amp; mat, Matrix::Index row, Matrix::Index column, Real value) {</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;            mat(row, column) = mat(row, column) + value;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        }</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> addToMatrixElement(Matrix&amp; mat, std::vector&lt;UInt&gt; rows, std::vector&lt;UInt&gt; columns, Real value) {</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            <span class="keywordflow">for</span> (UInt phase = 0; phase &lt; rows.size(); phase++)</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;                    addToMatrixElement(mat, rows[phase], columns[phase], value);</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        }</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="comment">// #### Integration Methods ####</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_new, Matrix u_old);</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u_new, Matrix u_old);</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u);</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix input, Real dt);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        <span class="keyword">static</span> Real StateSpaceTrapezoidal(Real states, Real A, Real B, Real C, Real dt, Real u);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="keyword">static</span> Real StateSpaceTrapezoidal(Real states, Real A, Real B, Real dt, Real u);</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceEuler(Matrix states, Matrix A, Matrix B, Real dt, Matrix u);</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceEuler(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u);</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <span class="keyword">static</span> Matrix StateSpaceEuler(Matrix states, Matrix A, Matrix input, Real dt);</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <span class="keyword">static</span> Real StateSpaceEuler(Real states, Real A, Real B, Real dt, Real u);</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        <span class="keyword">static</span> Real StateSpaceEuler(Real states, Real A, Real B, Real C, Real dt, Real u);</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> FFT(std::vector&lt;Complex&gt;&amp; samples);</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160; </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <span class="keyword">static</span> Complex rotatingFrame2to1(Complex f2, Real theta1, Real theta2);</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
+<div class="line"><a name="l00203"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_math.html#a0c05dd9f5506109a5955e50067243fe7">  203</a></span>&#160;        <span class="keyword">static</span> MatrixComp <a class="code" href="class_c_p_s_1_1_math.html#a0c05dd9f5506109a5955e50067243fe7">singlePhaseVariableToThreePhase</a>(Complex var_1ph) {</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            MatrixComp var_3ph = MatrixComp::Zero(3, 1);</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;            var_3ph &lt;&lt;</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;                var_1ph,</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;                var_1ph * SHIFT_TO_PHASE_B,</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;                var_1ph * SHIFT_TO_PHASE_C;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;            <span class="keywordflow">return</span> var_3ph;</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        }</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
+<div class="line"><a name="l00213"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_math.html#a7a01a505f4ab8be599838adbbef4edc0">  213</a></span>&#160;        <span class="keyword">static</span> Matrix <a class="code" href="class_c_p_s_1_1_math.html#a7a01a505f4ab8be599838adbbef4edc0">singlePhaseParameterToThreePhase</a>(Real parameter) {</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            Matrix param_3ph = Matrix::Zero(3, 3);</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            param_3ph &lt;&lt;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;                parameter, 0., 0.,</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;                0., parameter, 0.,</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;                0, 0., parameter;</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            <span class="keywordflow">return</span> param_3ph;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        }</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
+<div class="line"><a name="l00223"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_math.html#a2090b0f246cbcde79ad249de1efecb62">  223</a></span>&#160;        <span class="keyword">static</span> Matrix <a class="code" href="class_c_p_s_1_1_math.html#a2090b0f246cbcde79ad249de1efecb62">singlePhasePowerToThreePhase</a>(Real power) {</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            Matrix power_3ph = Matrix::Zero(3, 3);</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            power_3ph &lt;&lt;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;                power/3., 0., 0.,</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;                0., power/3., 0.,</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;                0, 0., power/3.;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            <span class="keywordflow">return</span> power_3ph;</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;        }</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    };</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;}</div>
 <div class="ttc" id="aclass_c_p_s_1_1_math_html"><div class="ttname"><a href="class_c_p_s_1_1_math.html">CPS::Math</a></div><div class="ttdef"><b>Definition:</b> <a href="_math_utils_8h_source.html#l00015">MathUtils.h:15</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_math_html_a0c05dd9f5506109a5955e50067243fe7"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a0c05dd9f5506109a5955e50067243fe7">CPS::Math::singlePhaseVariableToThreePhase</a></div><div class="ttdeci">static MatrixComp singlePhaseVariableToThreePhase(Complex var_1ph)</div><div class="ttdoc">To convert single phase complex variables (voltages, currents) to symmetrical three phase ones.</div><div class="ttdef"><b>Definition:</b> <a href="_math_utils_8h_source.html#l00190">MathUtils.h:190</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_math_html_a2090b0f246cbcde79ad249de1efecb62"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a2090b0f246cbcde79ad249de1efecb62">CPS::Math::singlePhasePowerToThreePhase</a></div><div class="ttdeci">static Matrix singlePhasePowerToThreePhase(Real power)</div><div class="ttdoc">To convert single phase power to symmetrical three phase.</div><div class="ttdef"><b>Definition:</b> <a href="_math_utils_8h_source.html#l00210">MathUtils.h:210</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_math_html_a7a01a505f4ab8be599838adbbef4edc0"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a7a01a505f4ab8be599838adbbef4edc0">CPS::Math::singlePhaseParameterToThreePhase</a></div><div class="ttdeci">static Matrix singlePhaseParameterToThreePhase(Real parameter)</div><div class="ttdoc">To convert single phase parameters to symmetrical three phase ones.</div><div class="ttdef"><b>Definition:</b> <a href="_math_utils_8h_source.html#l00200">MathUtils.h:200</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_math_html_a0c05dd9f5506109a5955e50067243fe7"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a0c05dd9f5506109a5955e50067243fe7">CPS::Math::singlePhaseVariableToThreePhase</a></div><div class="ttdeci">static MatrixComp singlePhaseVariableToThreePhase(Complex var_1ph)</div><div class="ttdoc">To convert single phase complex variables (voltages, currents) to symmetrical three phase ones.</div><div class="ttdef"><b>Definition:</b> <a href="_math_utils_8h_source.html#l00203">MathUtils.h:203</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_math_html_a2090b0f246cbcde79ad249de1efecb62"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a2090b0f246cbcde79ad249de1efecb62">CPS::Math::singlePhasePowerToThreePhase</a></div><div class="ttdeci">static Matrix singlePhasePowerToThreePhase(Real power)</div><div class="ttdoc">To convert single phase power to symmetrical three phase.</div><div class="ttdef"><b>Definition:</b> <a href="_math_utils_8h_source.html#l00223">MathUtils.h:223</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_math_html_a7a01a505f4ab8be599838adbbef4edc0"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a7a01a505f4ab8be599838adbbef4edc0">CPS::Math::singlePhaseParameterToThreePhase</a></div><div class="ttdeci">static Matrix singlePhaseParameterToThreePhase(Real parameter)</div><div class="ttdoc">To convert single phase parameters to symmetrical three phase ones.</div><div class="ttdef"><b>Definition:</b> <a href="_math_utils_8h_source.html#l00213">MathUtils.h:213</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

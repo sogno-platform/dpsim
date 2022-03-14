@@ -89,6 +89,9 @@ $(function() {
 <li>setBaseApparentPower()
 : <a class="el" href="class_d_psim_1_1_p_f_solver.html#a906122434a37abfec0a81d17c529b46c">DPsim::PFSolver</a>
 </li>
+<li>setBaseParameters()
+: <a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a279927e0ffd7b92611cf5fcc6f24dd6c">CPS::Base::ReducedOrderSynchronGenerator&lt; VarType &gt;</a>
+</li>
 <li>setBaseVoltage()
 : <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_capacitor.html#a478f35de055f1c9283b16f36ca6a89c5">CPS::SP::Ph1::Capacitor</a>
 , <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_network_injection.html#ab1fea06df155d64884f67ee8c1596ab8">CPS::SP::Ph1::NetworkInjection</a>
@@ -143,6 +146,9 @@ $(function() {
 </li>
 <li>setNumericalMethod()
 : <a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a511df0f11d78e4b9448be8b9ed3b4673">CPS::Base::SynchronGenerator</a>
+</li>
+<li>setOperationalParametersPerUnit()
+: <a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a55cd5e81b279d73e7810824d0ec461f6">CPS::Base::ReducedOrderSynchronGenerator&lt; VarType &gt;</a>
 </li>
 <li>setParameters()
 : <a class="el" href="class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q_with_state_space.html#ae6a1c4561438292f7c241590db008ff9">CPS::Base::AvVoltageSourceInverterDQWithStateSpace</a>
@@ -252,7 +258,7 @@ $(function() {
 : <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a0b76ff25f927728db70387b36463b195">CPS::SimPowerComp&lt; VarType &gt;</a>
 </li>
 <li>Shunt()
-: <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_shunt.html#aab29b03ed79f21f80419000d6c61259b">CPS::SP::Ph1::Shunt</a>
+: <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_shunt.html#a4253a50217a6cda75f80173b8b0318b6">CPS::SP::Ph1::Shunt</a>
 </li>
 <li>signal()
 : <a class="el" href="class_d_psim_1_1_barrier.html#acadad5fd725801492bd8270a92eeca6a">DPsim::Barrier</a>
@@ -278,7 +284,7 @@ $(function() {
 , <a class="el" href="class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a82fa1f75cec949844e58a7c8621f7eb3">CPS::Signal::PowerControllerVSI</a>
 </li>
 <li>SimNode()
-: <a class="el" href="class_c_p_s_1_1_sim_node.html#a14ca16d68944ce1629164cef973aca92">CPS::SimNode&lt; VarType &gt;</a>
+: <a class="el" href="class_c_p_s_1_1_sim_node.html#acd09e958259e152282dee460e155b958">CPS::SimNode&lt; VarType &gt;</a>
 </li>
 <li>SimPowerComp()
 : <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a35001c5c131c1cab0e02628e110436ba">CPS::SimPowerComp&lt; VarType &gt;</a>
@@ -333,6 +339,25 @@ $(function() {
 : <a class="el" href="class_d_psim_1_1_mna_solver.html#ae66776ddb5f71108004e72bb04c16ef3">DPsim::MnaSolver&lt; VarType &gt;</a>
 , <a class="el" href="class_d_psim_1_1_mna_solver_eigen_dense.html#adb4bcec07c7d97230a700721c89de13b">DPsim::MnaSolverEigenDense&lt; VarType &gt;</a>
 , <a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#aa73b7001a17bc36f7ca013c19eae5be9">DPsim::MnaSolverEigenSparse&lt; VarType &gt;</a>
+</li>
+<li>specificInitialization()
+: <a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a31a36f0f60185b0e326aec732c4b2aaa">CPS::Base::ReducedOrderSynchronGenerator&lt; VarType &gt;</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator3_order_v_b_r.html#aaa58b8a8388e897e27665d22761c5ff1">CPS::DP::Ph1::SynchronGenerator3OrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_v_b_r.html#a4241b191f0f2e26cd1d91824f85a2fb9">CPS::DP::Ph1::SynchronGenerator4OrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html#a48f404ee1b923731f1d96c799f341f78">CPS::DP::Ph1::SynchronGenerator6aOrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html#a3edd9aeaf37747cc48995872c3b682c3">CPS::DP::Ph1::SynchronGenerator6bOrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_v_b_r.html#a03bb8752eb09ba1b7662608d9b13dffc">CPS::DP::Ph1::SynchronGeneratorVBR</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#a486b033c5335e7c5a0b6a1775b8700d8">CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator3_order_v_b_r.html#a1bab1c17403ab73bf8c131468e12c774">CPS::EMT::Ph3::SynchronGenerator3OrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r.html#ace5624027688dca93789a2b2ac9841dc">CPS::EMT::Ph3::SynchronGenerator4OrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator6a_order_v_b_r.html#a042d0f983308b3d40badc36c59e34adc">CPS::EMT::Ph3::SynchronGenerator6aOrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator6b_order_v_b_r.html#abd340b1c50b2469b8af2ddfd0a04b45d">CPS::EMT::Ph3::SynchronGenerator6bOrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator3_order_v_b_r.html#a8a7ebb36ee61e9ec565abd46ad5a7a06">CPS::SP::Ph1::SynchronGenerator3OrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator4_order_d_c_i_m.html#a4a5b05d3f2759ea88f3d92a21b707d5d">CPS::SP::Ph1::SynchronGenerator4OrderDCIM</a>
+, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator4_order_v_b_r.html#a6d4e2654c41a17c4a101ed2ef1082b0e">CPS::SP::Ph1::SynchronGenerator4OrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html#a583aca810ad690f585ecbed4332c8c19">CPS::SP::Ph1::SynchronGenerator6aOrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html#a4ffa397e88dbe7251877fdcfa9b089fa">CPS::SP::Ph1::SynchronGenerator6bOrderVBR</a>
+, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_v_b_r.html#ad6367a8ab5ddbdfb4d23e84716680eb8">CPS::SP::Ph1::SynchronGeneratorVBR</a>
 </li>
 <li>stampVariableSystemMatrix()
 : <a class="el" href="class_d_psim_1_1_mna_solver.html#a9d08d354dcd93ca6ebdc63c0848ca30e">DPsim::MnaSolver&lt; VarType &gt;</a>
@@ -403,7 +428,7 @@ $(function() {
 </li>
 <li>Switch()
 : <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#a82cebded8c5f79c86ae6ca06e8db71dd">CPS::DP::Ph1::Switch</a>
-, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#ad8da7977cd9fdd07c65eed4f70248f5d">CPS::EMT::Ph3::Switch</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#a6f4d3d025273d4904d0c2efd69071d12">CPS::EMT::Ph3::Switch</a>
 , <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html#a62f31317201b73daac155a573eb8c839">CPS::SP::Ph1::Switch</a>
 </li>
 <li>switchedMatrixEmpty()
@@ -412,7 +437,7 @@ $(function() {
 , <a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a3e05eaa2ef377be668441b858a63e73e">DPsim::MnaSolverEigenSparse&lt; VarType &gt;</a>
 </li>
 <li>switchedMatrixStamp()
-: <a class="el" href="class_d_psim_1_1_mna_solver.html#a712caed0fbf4c18dd53dc6fc069fe4c9">DPsim::MnaSolver&lt; VarType &gt;</a>
+: <a class="el" href="class_d_psim_1_1_mna_solver.html#acb42bb6ff7a491e1f9ae3cf22a6cc085">DPsim::MnaSolver&lt; VarType &gt;</a>
 , <a class="el" href="class_d_psim_1_1_mna_solver_eigen_dense.html#acab3df8221e9cfcb70665bcfdd757b6d">DPsim::MnaSolverEigenDense&lt; VarType &gt;</a>
 , <a class="el" href="class_d_psim_1_1_mna_solver_eigen_sparse.html#a8ef6fd1fb41a9a0cccef6b702054b815">DPsim::MnaSolverEigenSparse&lt; VarType &gt;</a>
 </li>
@@ -428,12 +453,14 @@ $(function() {
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q.html#af991b028becf94ff52e726e8d998df2d">CPS::EMT::Ph3::SynchronGeneratorDQ</a>
 </li>
 <li>SynchronGeneratorIdeal()
-: <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a3ab9e4ce0fd9754379ee83e9d38fdb40">CPS::DP::Ph1::SynchronGeneratorIdeal</a>
+: <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a286d8fdf955e014f900b9788138b47fe">CPS::DP::Ph1::SynchronGeneratorIdeal</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_ideal.html#ab5797c0ac6efd50498c2deaab17f690d">CPS::EMT::Ph3::SynchronGeneratorIdeal</a>
 </li>
 <li>SynchronGeneratorVBR()
-: <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ae58d6774c77e396368ac833183ade55b">CPS::DP::Ph3::SynchronGeneratorVBR</a>
-, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#accbda932610e68408e839b513ad313ba">CPS::EMT::Ph3::SynchronGeneratorVBR</a>
+: <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_v_b_r.html#a42066bbe91107b7e7b25762768807503">CPS::DP::Ph1::SynchronGeneratorVBR</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ae58d6774c77e396368ac833183ade55b">CPS::DP::Ph3::SynchronGeneratorVBR</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a1416089cf28f20454f387b89cb7c3327">CPS::EMT::Ph3::SynchronGeneratorVBR</a>
+, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_v_b_r.html#a394bdd3a17c03e8ead0bc7b0e0ba2d4d">CPS::SP::Ph1::SynchronGeneratorVBR</a>
 </li>
 <li>SynchronGeneratorVBRSmpl()
 : <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r_smpl.html#a0dab72d21034e6a7471000577d3c93e4">CPS::EMT::Ph3::SynchronGeneratorVBRSmpl</a>

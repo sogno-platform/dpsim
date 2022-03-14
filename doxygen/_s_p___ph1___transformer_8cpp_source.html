@@ -153,7 +153,7 @@ $(function() {
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    mNominalOmega = 2. * PI * frequency;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    mReactance = mNominalOmega * mInductance;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;Reactance={} [Ohm] (referred to primary side)&quot;</span>, mReactance);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    </div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// Component parameters are referred to higher voltage side.</span></div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">// Switch terminals to have terminal 0 at higher voltage side</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// if transformer is connected the other way around.</span></div>
@@ -374,7 +374,7 @@ $(function() {
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    updateMatrixNodeIndices();</div>
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    mRightVector = Matrix::Zero(leftVector-&gt;get().rows(), 1);</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160; </div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    </div>
 <div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> subcomp: mSubComponents)</div>
 <div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        <span class="keywordflow">if</span> (<span class="keyword">auto</span> mnasubcomp = std::dynamic_pointer_cast&lt;MNAInterface&gt;(subcomp))</div>
 <div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;            mnasubcomp-&gt;mnaInitialize(omega, timeStep, leftVector);</div>
@@ -438,7 +438,7 @@ $(function() {
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    modifiedAttributes.push_back(attribute(<span class="stringliteral">&quot;right_vector&quot;</span>));</div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;}</div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160; </div>
-<div class="line"><a name="l00370"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a2fed4543d9853eb9b09c40156a87516b">  370</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a2fed4543d9853eb9b09c40156a87516b">SP::Ph1::Transformer::mnaPreStep</a>(Real time, Int timeStepCount) {</div>
+<div class="line"><a name="l00370"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a2fed4543d9853eb9b09c40156a87516b">  370</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a2fed4543d9853eb9b09c40156a87516b">SP::Ph1::Transformer::mnaPreStep</a>(Real time, Int timeStepCount) {   </div>
 <div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    <span class="comment">// pre-step of subcomponents</span></div>
 <div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> subcomp: mSubComponents)</div>
 <div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;        <span class="keywordflow">if</span> (<span class="keyword">auto</span> mnasubcomp = std::dynamic_pointer_cast&lt;MNAInterface&gt;(subcomp))</div>
