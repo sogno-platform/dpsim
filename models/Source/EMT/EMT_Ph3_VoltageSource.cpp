@@ -30,7 +30,7 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq)
 	mSrcSig = srcSigSine;
 
 	**mVoltageRef = voltageRef;
-	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
+	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mSLog->info("\nVoltage reference phasor [V]: {:s}"
 				"\nFrequency [Hz]: {:s}",
@@ -47,8 +47,8 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStar
 	mSrcSig = srcSigFreqRamp;
 
 	**mVoltageRef = voltageRef;
-	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
-	mSigOut->setReference(mSrcSig->attribute<Complex>("sigOut"));
+	mSrcFreq->setReference(mSrcSig->mFreq);
+	mSigOut->setReference(mSrcSig->mSigOut);
 
 	mParametersSet = true;
 }
@@ -60,7 +60,7 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real modulati
 	mSrcSig = srcSigFm;
 
 	**mVoltageRef = voltageRef;
-	mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
+	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mParametersSet = true;
 }
@@ -75,7 +75,7 @@ void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		mSrcSig = srcSigSine;
 
 		**mVoltageRef = CPS::Math::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0));
-		mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
+		mSrcFreq->setReference(mSrcSig->mFreq);
 
 		mSLog->info("\nReference voltage: {:s}"
 					"\nTerminal 0 voltage: {:s}"

@@ -13,22 +13,20 @@ using namespace CPS;
 void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real frequency /*= -1*/) {
     mMagnitude = Math::abs(initialPhasor);
     mInitialPhase = Math::phase(initialPhasor);
-	mFrequency = frequency;
+	**mFreq = frequency;
+	**mSigOut = initialPhasor;
 
 	mSLog->info(	"Parameters: \n"
 					 "Sine wave magnitude: {} [V] \n"
 					 "Sine wave initial phase: {} [rad] \n"
 					 "Sine wave frequency: {} [Hz] \n",
-					mMagnitude, mInitialPhase, mFrequency);				 
-
-	attribute<Complex>("sigOut")->set(initialPhasor);
-	attribute<Real>("freq")->set(frequency);
+					mMagnitude, mInitialPhase, **mFreq);				 
 }
 
 void Signal::SineWaveGenerator::step(Real time) {
 	if (mFrequency != 0.0) {
-		attribute<Complex>("sigOut")->set(Complex(
+		**mSigOut = Complex(
 			mMagnitude * cos(time * 2.*PI*mFrequency + mInitialPhase),
-			mMagnitude * sin(time * 2.*PI*mFrequency + mInitialPhase)));
+			mMagnitude * sin(time * 2.*PI*mFrequency + mInitialPhase));
 	}
 }
