@@ -140,8 +140,7 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 			SystemComponentList{gen1EMT, gen2EMT, loadEMT, line12EMT, line13EMT, line23EMT});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simNameEMT, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);
+	systemEMT.initWithPowerflow(systemPF);
 
 
 	// Logging
@@ -195,21 +194,22 @@ int main(int argc, char* argv[]) {
 	Real cmdDamping_G1=1.0;
 	Real cmdDamping_G2=1.0;
 
-		CommandLineArgs args(argc, argv);
+	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA_G1") != args.options.end())
-			cmdInertia_G1 = args.options["SCALEINERTIA_G1"];
+			cmdInertia_G1 = args.getOptionReal("SCALEINERTIA_G1");
 		if (args.options.find("SCALEINERTIA_G2") != args.options.end())
-			cmdInertia_G2 = args.options["SCALEINERTIA_G2"];
+			cmdInertia_G2 = args.getOptionReal("SCALEINERTIA_G2");
 		if (args.options.find("SCALEDAMPING_G1") != args.options.end())
-			cmdDamping_G1 = args.options["SCALEDAMPING_G1"];
+			cmdDamping_G1 = args.getOptionReal("SCALEDAMPING_G1");
 		if (args.options.find("SCALEDAMPING_G2") != args.options.end())
-			cmdDamping_G2 = args.options["SCALEDAMPING_G2"];
+			cmdDamping_G2 = args.getOptionReal("SCALEDAMPING_G2");
 	}
+
 
 	EMT_SynGenTrStab_3Bus_SteadyState(simName, timeStep, finalTime, cmdInertia_G1, cmdInertia_G2, cmdDamping_G1, cmdDamping_G2);
 }

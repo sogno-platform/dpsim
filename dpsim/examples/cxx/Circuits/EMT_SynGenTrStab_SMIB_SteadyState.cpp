@@ -140,16 +140,16 @@ int main(int argc, char* argv[]) {
 	Real cmdInertia= 1.0;
 	Real cmdDamping=1.0;
 
-		CommandLineArgs args(argc, argv);
+	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA") != args.options.end())
-			cmdInertia = args.options["SCALEINERTIA"];
+			cmdInertia = args.getOptionReal("SCALEINERTIA");
 		if (args.options.find("SCALEDAMPING") != args.options.end())
-			cmdDamping = args.options["SCALEDAMPING"];
+			cmdDamping = args.getOptionReal("SCALEDAMPING");
 	}
 
 	EMT_1ph_SynGenTrStab_SteadyState(simName, timeStep, finalTime, cmdInertia, cmdDamping);
