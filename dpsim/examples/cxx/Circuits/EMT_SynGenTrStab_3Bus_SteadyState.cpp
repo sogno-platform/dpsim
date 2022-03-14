@@ -20,13 +20,13 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 	auto n3PF = SimNode<Complex>::make("n3", PhaseType::Single);
 
 	//Synchronous generator 1
-	auto gen1PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen1PF = SP::Ph1::SynchronGenerator::make("SynGen1", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen1PF->setParameters(ThreeBus.nomPower_G1, ThreeBus.nomPhPhVoltRMS_G1, ThreeBus.initActivePower_G1, ThreeBus.setPointVoltage_G1*ThreeBus.t1_ratio, PowerflowBusType::VD);
 	gen1PF->setBaseVoltage(ThreeBus.Vnom);
 
 	//Synchronous generator 2
-	auto gen2PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen2PF = SP::Ph1::SynchronGenerator::make("SynGen2", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen2PF->setParameters(ThreeBus.nomPower_G2, ThreeBus.nomPhPhVoltRMS_G2, ThreeBus.initActivePower_G2, ThreeBus.setPointVoltage_G2*ThreeBus.t2_ratio, PowerflowBusType::PV);
 	gen2PF->setBaseVoltage(ThreeBus.Vnom);
@@ -88,7 +88,7 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 
 	// Components
 	//Synchronous generator 1
-	auto gen1EMT = EMT::Ph3::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
+	auto gen1EMT = EMT::Ph3::SynchronGeneratorTrStab::make("SynGen1", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	gen1EMT->setStandardParametersPU(ThreeBus.nomPower_G1, ThreeBus.nomPhPhVoltRMS_G1, ThreeBus.nomFreq_G1, ThreeBus.Xpd_G1*std::pow(ThreeBus.t1_ratio,2), cmdInertia_G1*ThreeBus.H_G1, ThreeBus.Rs_G1, cmdDamping_G1*ThreeBus.D_G1);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
@@ -96,7 +96,7 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 	gen1EMT->setInitialValues(initApparentPower_G1, ThreeBus.initMechPower_G1);
 
 		//Synchronous generator 1
-	auto gen2EMT = EMT::Ph3::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
+	auto gen2EMT = EMT::Ph3::SynchronGeneratorTrStab::make("SynGen2", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	gen2EMT->setStandardParametersPU(ThreeBus.nomPower_G2, ThreeBus.nomPhPhVoltRMS_G2, ThreeBus.nomFreq_G2, ThreeBus.Xpd_G2*std::pow(ThreeBus.t2_ratio,2), cmdInertia_G2*ThreeBus.H_G2, ThreeBus.Rs_G2, cmdDamping_G2*ThreeBus.D_G2);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
@@ -108,21 +108,21 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 	loadEMT->setParameters(CPS::Math::singlePhasePowerToThreePhase(ThreeBus.activePower_L), CPS::Math::singlePhasePowerToThreePhase(ThreeBus.reactivePower_L), ThreeBus.Vnom);
 
 	// Line12
-	auto line12EMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
+	auto line12EMT = EMT::Ph3::PiLine::make("PiLine12", Logger::Level::debug);
 	line12EMT->setParameters(Math::singlePhaseParameterToThreePhase(ThreeBus.lineResistance12), 
 	                      Math::singlePhaseParameterToThreePhase(ThreeBus.lineInductance12), 
 					      Math::singlePhaseParameterToThreePhase(ThreeBus.lineCapacitance12),
 						  Math::singlePhaseParameterToThreePhase(ThreeBus.lineConductance12));
 
 	// Line13
-	auto line13EMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
+	auto line13EMT = EMT::Ph3::PiLine::make("PiLine13", Logger::Level::debug);
 	line13EMT->setParameters(Math::singlePhaseParameterToThreePhase(ThreeBus.lineResistance13), 
 	                      Math::singlePhaseParameterToThreePhase(ThreeBus.lineInductance13), 
 					      Math::singlePhaseParameterToThreePhase(ThreeBus.lineCapacitance13),
 						  Math::singlePhaseParameterToThreePhase(ThreeBus.lineConductance13));
 
 	// Line23
-	auto line23EMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
+	auto line23EMT = EMT::Ph3::PiLine::make("PiLine23", Logger::Level::debug);
 	line23EMT->setParameters(Math::singlePhaseParameterToThreePhase(ThreeBus.lineResistance23), 
 	                      Math::singlePhaseParameterToThreePhase(ThreeBus.lineInductance23), 
 					      Math::singlePhaseParameterToThreePhase(ThreeBus.lineCapacitance23),
@@ -164,7 +164,7 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 	loggerEMT->addAttribute("v_gen2", gen2EMT->attribute("v_intf"));
 	loggerEMT->addAttribute("i_gen2", gen2EMT->attribute("i_intf"));
 	loggerEMT->addAttribute("wr_gen2", gen2EMT->attribute("w_r"));	
-	// loggerEMT->addAttribute("wref_gen2", gen2EMT->attribute("w_ref"));
+	loggerEMT->addAttribute("wref_gen2", gen2EMT->attribute("w_ref"));
 	loggerEMT->addAttribute("delta_gen2", gen2EMT->attribute("delta_r"));	
 	loggerEMT->addAttribute("v_load", loadEMT->attribute("v_intf"));
 	loggerEMT->addAttribute("i_load", loadEMT->attribute("i_intf"));
@@ -189,7 +189,7 @@ int main(int argc, char* argv[]) {
 	//Simultion parameters
 	String simName="EMT_SynGenTrStab_3Bus_SteadyState";
 	Real finalTime = 30;
-	Real timeStep = 0.00005;
+	Real timeStep = 0.001;
 	Real cmdInertia_G1= 1.0;
 	Real cmdInertia_G2= 1.0;
 	Real cmdDamping_G1=1.0;

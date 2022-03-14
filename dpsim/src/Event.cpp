@@ -20,8 +20,13 @@ void EventQueue::handleEvents(Real currentTime) {
 
 	while (!mEvents.empty()) {
 		e = mEvents.top();
-		// if current time larger or equal to event time, execute event
-		if ( currentTime > e->mTime || (e->mTime - currentTime) < 100e-9) {
+		// // if current time larger or equal to event time, execute event
+		// if ( currentTime > e->mTime || (e->mTime - currentTime) < 1e-12) {
+
+		int currentTime_us = (int)((currentTime + 1e-7)*1e6); //current time in microseconds as integer
+		int eTime_us = (int)((e->mTime+ 1e-7)*1e6); //event time in microseconds as integer
+		// if current time in us equal to event time in us
+		if ( (currentTime_us == eTime_us)) {
 			e->execute();
 			std::cout << std::scientific << currentTime << ": Handle event time" << std::endl;
 			//std::cout << std::scientific << e->mTime << ": Original event time" << std::endl;
