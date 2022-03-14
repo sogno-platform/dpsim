@@ -30,6 +30,7 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	mLd = Attribute<Real>::create("Ld", mAttributes, 0);
 	mLq = Attribute<Real>::create("Lq", mAttributes, 0);
 	mElecActivePower = Attribute<Real>::create("P_elec", mAttributes, 0);
+	mElecReactivePower = Attribute<Real>::create("Q_elec", mAttributes, 0);
 	mMechPower = Attribute<Real>::create("P_mech", mAttributes, 0);
 	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
 	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
@@ -179,7 +180,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	// Update electrical power
 	// TODO: review for Rs != 0
 	**mElecActivePower = ( (**mIntfVoltage)(0,0) *  std::conj( -(**mIntfCurrent)(0,0)) ).real();
-	mElecReactivePower = ( (**mIntfVoltage)(0,0) *  std::conj( -(**mIntfCurrent)(0,0)) ).imag();
+	**mElecReactivePower = ( (**mIntfVoltage)(0,0) *  std::conj( -(**mIntfCurrent)(0,0)) ).imag();
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
@@ -215,7 +216,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 				Math::abs((**mIntfVoltage)(0,0)), Math::phaseDeg((**mIntfVoltage)(0,0)),
 				Math::abs(**mEp), Math::phaseDeg(**mEp),
 				mInitElecPower.real(), mInitElecPower.imag(),
-				**mElecActivePower, mElecReactivePower, **mMechPower);
+				**mElecActivePower, **mElecReactivePower, **mMechPower);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
@@ -224,7 +225,7 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	// Electrical power at time step k
 	// TODO: review for Rs != 0
 	**mElecActivePower = ((**mIntfVoltage)(0,0) *  std::conj( -(**mIntfCurrent)(0,0)) ).real();
-	mElecReactivePower = ((**mIntfVoltage)(0,0) *  std::conj( -(**mIntfCurrent)(0,0)) ).imag();
+	**mElecReactivePower = ((**mIntfVoltage)(0,0) *  std::conj( -(**mIntfCurrent)(0,0)) ).imag();
 
 	// Mechanical speed derivative at time step k
 	// convert torque to power with actual rotor angular velocity or nominal omega

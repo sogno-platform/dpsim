@@ -177,8 +177,6 @@ namespace Base {
 		// ### State variables ###
 		/// theta
 		Real mThetaMech = 0;
-		/// Reactive part of the electrical power
-		Real mElecReactivePower = 0;
 	public:
 		/// rotor angle delta
 		Attribute<Real>::Ptr mDelta;
@@ -190,6 +188,8 @@ namespace Base {
 		Attribute<Real>::Ptr mOmMech;
 		/// Active part of the electrical power
 		Attribute<Real>::Ptr mElecActivePower;
+		/// Reactive part of the electrical power
+		Attribute<Real>::Ptr mElecReactivePower;
 		/// mechanical Power Pm [W]
 		Attribute<Real>::Ptr mMechPower;
 		/// electrical torque
