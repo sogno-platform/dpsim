@@ -24,9 +24,9 @@ void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real freque
 }
 
 void Signal::SineWaveGenerator::step(Real time) {
-	if (mFrequency != 0.0) {
+	if (**mFreq != 0.0) {
 		**mSigOut = Complex(
-			mMagnitude * cos(time * 2.*PI*mFrequency + mInitialPhase),
-			mMagnitude * sin(time * 2.*PI*mFrequency + mInitialPhase));
+			mMagnitude * cos(time * 2.*PI* **mFreq + mInitialPhase),
+			mMagnitude * sin(time * 2.*PI* **mFreq + mInitialPhase));
 	}
 }

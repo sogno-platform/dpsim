@@ -218,7 +218,7 @@ void DP::Ph1::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute
 }
 
 void DP::Ph1::VoltageSource::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
-	mVoltageSource.mnaUpdateCurrent(*mLeftVectors[0]);
+	mVoltageSource.mnaUpdateCurrent(**mLeftVectors[0]);
 }
 
 void DP::Ph1::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
