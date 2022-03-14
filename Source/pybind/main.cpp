@@ -133,9 +133,9 @@ PYBIND11_MODULE(dpsimpy, m) {
 		/// Compatibility method. Might be removed later when the python examples have been fully adapted.
 		.def("log_attribute", py::overload_cast<const std::vector<CPS::String>&, CPS::AttributeBase::Ptr>(&DPsim::DataLogger::logAttribute), "names"_a, "attr"_a)
 		/// Compatibility method. Might be removed later when the python examples have been fully adapted.
-		.def("log_attribute", [](DPsim::DataLogger &logger, const CPS::String &name, const CPS::String &attr, CPS::IdentifiedObject &comp) {
-			logger.logAttribute(name, comp.attribute(attr));
-		})
+		.def("log_attribute", [](DPsim::DataLogger &logger, const CPS::String &name, const CPS::String &attr, CPS::IdentifiedObject &comp, CPS::UInt rowsMax, CPS::UInt colsMax) {
+			logger.logAttribute(name, comp.attribute(attr), rowsMax, colsMax);
+		}, "name"_a, "attr"_a, "comp"_a, "rows_max"_a = 0, "cols_max"_a = 0)
 		/// Compatibility method. Might be removed later when the python examples have been fully adapted.;
 		.def("log_attribute", [](DPsim::DataLogger &logger, const std::vector<CPS::String> &names, const CPS::String &attr, CPS::IdentifiedObject &comp) {
 			logger.logAttribute(names, comp.attribute(attr));
