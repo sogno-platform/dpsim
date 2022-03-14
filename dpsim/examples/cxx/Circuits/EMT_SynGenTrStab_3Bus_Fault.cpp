@@ -171,8 +171,7 @@ void EMT_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, 
 			SystemComponentList{gen1EMT, gen2EMT, loadEMT, line12EMT, line13EMT, line23EMT, faultEMT});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simNameEMT, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);
+	systemEMT.initWithPowerflow(systemPF);
 
 
 	// Logging
@@ -256,17 +255,17 @@ int main(int argc, char* argv[]) {
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA_G1") != args.options.end())
-			cmdInertia_G1 = args.options["SCALEINERTIA_G1"];
+			cmdInertia_G1 = args.getOptionReal("SCALEINERTIA_G1");
 		if (args.options.find("SCALEINERTIA_G2") != args.options.end())
-			cmdInertia_G2 = args.options["SCALEINERTIA_G2"];
+			cmdInertia_G2 = args.getOptionReal("SCALEINERTIA_G2");
 		if (args.options.find("SCALEDAMPING_G1") != args.options.end())
-			cmdDamping_G1 = args.options["SCALEDAMPING_G1"];
+			cmdDamping_G1 = args.getOptionReal("SCALEDAMPING_G1");
 		if (args.options.find("SCALEDAMPING_G2") != args.options.end())
-			cmdDamping_G2 = args.options["SCALEDAMPING_G2"];	
+			cmdDamping_G2 = args.getOptionReal("SCALEDAMPING_G2");
 		if (args.options.find("STARTTIMEFAULT") != args.options.end())
-			startTimeFault = args.options["STARTTIMEFAULT"];
+			startTimeFault = args.getOptionReal("STARTTIMEFAULT");
 		if (args.options.find("ENDTIMEFAULT") != args.options.end())
-			endTimeFault = args.options["ENDTIMEFAULT"];
+			endTimeFault = args.getOptionReal("ENDTIMEFAULT");
 		// if (args.options.find("USEVARRESSWITCH") != args.options.end())
 		// 	useVarResSwitch = args.options["USEVARRESSWITCH"];	
 		// if (args.options.find("FAULTRESISTANCE") != args.options.end())

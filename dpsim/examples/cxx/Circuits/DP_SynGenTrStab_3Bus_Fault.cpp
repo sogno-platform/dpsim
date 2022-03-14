@@ -260,7 +260,7 @@ int main(int argc, char* argv[]) {
 		if (args.options.find("STARTTIMEFAULT") != args.options.end())
 			startTimeFault = args.getOptionReal("STARTTIMEFAULT");
 		if (args.options.find("ENDTIMEFAULT") != args.options.end())
-			endTimeFault = args.options["ENDTIMEFAULT"];
+			endTimeFault = args.getOptionReal("ENDTIMEFAULT");
 		// if (args.options.find("USEVARRESSWITCH") != args.options.end())
 		// 	useVarResSwitch = args.options["USEVARRESSWITCH"];	
 		// if (args.options.find("FAULTRESISTANCE") != args.options.end())

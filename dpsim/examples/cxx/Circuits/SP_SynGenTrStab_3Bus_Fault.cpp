@@ -260,11 +260,11 @@ int main(int argc, char* argv[]) {
 		if (args.options.find("STARTTIMEFAULT") != args.options.end())
 			startTimeFault = args.getOptionReal("STARTTIMEFAULT");
 		if (args.options.find("ENDTIMEFAULT") != args.options.end())
-			endTimeFault = args.options["ENDTIMEFAULT"];
+			endTimeFault = args.getOptionReal("ENDTIMEFAULT");
 		// if (args.options.find("USEVARRESSWITCH") != args.options.end())
 		// 	useVarResSwitch = args.options["USEVARRESSWITCH"];	
 		// if (args.options.find("FAULTRESISTANCE") != args.options.end())
-		// 	SwitchClosed = args.options["FAULTRESISTANCE"];		
+		// 	SwitchClosed = args.options["FAULTRESISTANCE"];	
 	}
 
 	SP_SynGenTrStab_3Bus_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, useVarResSwitch, cmdInertia_G1, cmdInertia_G2, cmdDamping_G1, cmdDamping_G2);

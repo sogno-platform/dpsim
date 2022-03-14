@@ -193,13 +193,13 @@ int main(int argc, char* argv[]) {
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA") != args.options.end())
-			cmdInertia = args.options["SCALEINERTIA"];
+			cmdInertia = args.getOptionReal("SCALEINERTIA");
 		if (args.options.find("SCALEDAMPING") != args.options.end())
-			cmdDamping = args.options["SCALEDAMPING"];	
+			cmdDamping = args.getOptionReal("SCALEDAMPING");
 		if (args.options.find("STARTTIMEFAULT") != args.options.end())
-			startTimeFault = args.options["STARTTIMEFAULT"];
+			startTimeFault = args.getOptionReal("STARTTIMEFAULT");
 		if (args.options.find("ENDTIMEFAULT") != args.options.end())
-			endTimeFault = args.options["ENDTIMEFAULT"];
+			endTimeFault = args.getOptionReal("ENDTIMEFAULT");
 	}
 
 	EMT_1ph_SynGenTrStab_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia, cmdDamping);
