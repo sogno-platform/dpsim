@@ -242,7 +242,7 @@ void DP::Ph1::Capacitor::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 
 void DP::Ph1::Capacitor::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 	for (UInt freq = 0; freq < mCapacitor.mNumFreqs; freq++)
-		mCapacitor.mnaUpdateVoltageHarm(*mLeftVectors[freq], freq);
+		mCapacitor.mnaUpdateVoltageHarm(**mLeftVectors[freq], freq);
 	mCapacitor.mnaUpdateCurrentHarm();
 }
 

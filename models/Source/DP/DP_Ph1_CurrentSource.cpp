@@ -76,7 +76,7 @@ void DP::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 }
 
 void DP::Ph1::CurrentSource::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mCurrentSource.mnaUpdateVoltage(*mLeftVector);
+	mCurrentSource.mnaUpdateVoltage(**mLeftVector);
 }
 
 void DP::Ph1::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {

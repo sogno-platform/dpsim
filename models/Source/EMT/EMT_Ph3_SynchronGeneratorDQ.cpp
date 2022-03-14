@@ -238,7 +238,7 @@ void EMT::Ph3::SynchronGeneratorDQ::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mSynGen.mnaUpdateVoltage(*mLeftVector);
+	mSynGen.mnaUpdateVoltage(**mLeftVector);
 }
 
 Matrix EMT::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta, Matrix& abcVector) {

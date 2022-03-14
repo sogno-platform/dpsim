@@ -142,8 +142,8 @@ void SP::Ph3::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void SP::Ph3::Capacitor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaUpdateVoltage(*mLeftVector);
-	mCapacitor.mnaUpdateCurrent(*mLeftVector);
+	mCapacitor.mnaUpdateVoltage(**mLeftVector);
+	mCapacitor.mnaUpdateCurrent(**mLeftVector);
 }
 
 void SP::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {

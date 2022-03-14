@@ -134,7 +134,7 @@ void DP::Ph1::Resistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matr
 
 void DP::Ph1::Resistor::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 	for (UInt freq = 0; freq < mResistor.mNumFreqs; freq++)
-		mResistor.mnaUpdateVoltageHarm(*mLeftVectors[freq], freq);
+		mResistor.mnaUpdateVoltageHarm(**mLeftVectors[freq], freq);
 	mResistor.mnaUpdateCurrentHarm();
 }
 

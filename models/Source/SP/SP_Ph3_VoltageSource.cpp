@@ -119,7 +119,7 @@ void SP::Ph3::VoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void SP::Ph3::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.mnaUpdateCurrent(*mLeftVector);
+	mVoltageSource.mnaUpdateCurrent(**mLeftVector);
 }
 
 void SP::Ph3::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {

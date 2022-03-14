@@ -85,8 +85,8 @@ void EMT::Ph1::Inductor::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void EMT::Ph1::Inductor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaUpdateVoltage(*mLeftVector);
-	mInductor.mnaUpdateCurrent(*mLeftVector);
+	mInductor.mnaUpdateVoltage(**mLeftVector);
+	mInductor.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph1::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {

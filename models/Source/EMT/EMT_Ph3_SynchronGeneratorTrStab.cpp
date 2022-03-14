@@ -295,8 +295,8 @@ void EMT::Ph3::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeSte
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mGenerator.mnaUpdateVoltage(*mLeftVector);
-	mGenerator.mnaUpdateCurrent(*mLeftVector);
+	mGenerator.mnaUpdateVoltage(**mLeftVector);
+	mGenerator.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {

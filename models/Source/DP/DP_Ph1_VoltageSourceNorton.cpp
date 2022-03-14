@@ -100,8 +100,8 @@ void DP::Ph1::VoltageSourceNorton::MnaPreStep::execute(Real time, Int timeStepCo
 }
 
 void DP::Ph1::VoltageSourceNorton::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.mnaUpdateVoltage(*mLeftVector);
-	mVoltageSource.mnaUpdateCurrent(*mLeftVector);
+	mVoltageSource.mnaUpdateVoltage(**mLeftVector);
+	mVoltageSource.mnaUpdateCurrent(**mLeftVector);
 }
 
 void DP::Ph1::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {

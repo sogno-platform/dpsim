@@ -84,8 +84,8 @@ void EMT::Ph1::Capacitor::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void EMT::Ph1::Capacitor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaUpdateVoltage(*mLeftVector);
-	mCapacitor.mnaUpdateCurrent(*mLeftVector);
+	mCapacitor.mnaUpdateVoltage(**mLeftVector);
+	mCapacitor.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {

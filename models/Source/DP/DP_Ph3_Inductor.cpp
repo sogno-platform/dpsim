@@ -181,8 +181,8 @@ void DP::Ph3::Inductor::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void DP::Ph3::Inductor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaUpdateVoltage(*mLeftVector);
-	mInductor.mnaUpdateCurrent(*mLeftVector);
+	mInductor.mnaUpdateVoltage(**mLeftVector);
+	mInductor.mnaUpdateCurrent(**mLeftVector);
 }
 
 void DP::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {

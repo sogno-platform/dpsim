@@ -306,8 +306,8 @@ void SP::Ph1::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeStep
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mGenerator.mnaUpdateVoltage(*mLeftVector);
-	mGenerator.mnaUpdateCurrent(*mLeftVector);
+	mGenerator.mnaUpdateVoltage(**mLeftVector);
+	mGenerator.mnaUpdateCurrent(**mLeftVector);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {

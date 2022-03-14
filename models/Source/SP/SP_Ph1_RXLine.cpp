@@ -256,8 +256,8 @@ void SP::Ph1::RXLine::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void SP::Ph1::RXLine::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaUpdateVoltage(*mLeftVector);
-	mLine.mnaUpdateCurrent(*mLeftVector);
+	mLine.mnaUpdateVoltage(**mLeftVector);
+	mLine.mnaUpdateCurrent(**mLeftVector);
 }
 
 void SP::Ph1::RXLine::mnaUpdateVoltage(const Matrix& leftVector) {

@@ -102,7 +102,7 @@ void SimNode<Complex>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> lef
 template <>
 void SimNode<Complex>::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 	for (UInt freq = 0; freq < mNode.mNumFreqs; freq++)
-		mNode.mnaUpdateVoltageHarm(*mLeftVectors[freq], freq);
+		mNode.mnaUpdateVoltageHarm(**mLeftVectors[freq], freq);
 }
 
 template <>

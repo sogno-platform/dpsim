@@ -118,7 +118,7 @@ void DP::Ph3::SynchronGeneratorDQ::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph3::SynchronGeneratorDQ::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mSynGen.mnaUpdateVoltage(*mLeftVector);
+	mSynGen.mnaUpdateVoltage(**mLeftVector);
 }
 
 Matrix DP::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta, MatrixComp& abcVector) {

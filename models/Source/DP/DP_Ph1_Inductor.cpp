@@ -227,7 +227,7 @@ void DP::Ph1::Inductor::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 
 void DP::Ph1::Inductor::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 	for (UInt freq = 0; freq < mInductor.mNumFreqs; freq++)
-		mInductor.mnaUpdateVoltageHarm(*mLeftVectors[freq], freq);
+		mInductor.mnaUpdateVoltageHarm(**mLeftVectors[freq], freq);
 	mInductor.mnaUpdateCurrentHarm();
 }
 

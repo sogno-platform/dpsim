@@ -130,8 +130,8 @@ void SP::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void SP::Ph3::Inductor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaUpdateVoltage(*mLeftVector);
-	mInductor.mnaUpdateCurrent(*mLeftVector);
+	mInductor.mnaUpdateVoltage(**mLeftVector);
+	mInductor.mnaUpdateCurrent(**mLeftVector);
 }
 
 void SP::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {

@@ -205,13 +205,13 @@ void DP::Ph1::ResIndSeries::MnaPreStepHarm::execute(Real time, Int timeStepCount
 }
 
 void DP::Ph1::ResIndSeries::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResIndSeries.mnaUpdateVoltage(*mLeftVector);
-	mResIndSeries.mnaUpdateCurrent(*mLeftVector);
+	mResIndSeries.mnaUpdateVoltage(**mLeftVector);
+	mResIndSeries.mnaUpdateCurrent(**mLeftVector);
 }
 
 void DP::Ph1::ResIndSeries::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 	for (Int freq = 0; freq < mResIndSeries.mNumFreqs; freq++)
-		mResIndSeries.mnaUpdateVoltageHarm(*mLeftVectors[freq], freq);
+		mResIndSeries.mnaUpdateVoltageHarm(**mLeftVectors[freq], freq);
 	mResIndSeries.mnaUpdateCurrentHarm();
 }
 

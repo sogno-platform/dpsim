@@ -132,8 +132,8 @@ void EMT::Ph3::RxLine::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void EMT::Ph3::RxLine::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaUpdateVoltage(*mLeftVector);
-	mLine.mnaUpdateCurrent(*mLeftVector);
+	mLine.mnaUpdateVoltage(**mLeftVector);
+	mLine.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph3::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {

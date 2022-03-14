@@ -195,8 +195,8 @@ void DP::Ph1::SVC::mnaPostStep(Real time, Int timeStepCount) {
     mSubCapacitor->mnaPostStep(time, timeStepCount, leftVector);
     mSubCapacitorSwitch->mnaPostStep(time, timeStepCount, leftVector);
 
-	mnaUpdateVoltage(*mLeftVector);
-	mnaUpdateCurrent(*mLeftVector);
+	mnaUpdateVoltage(**mLeftVector);
+	mnaUpdateCurrent(**mLeftVector);
 
 	mDeltaT = time - mPrevTimeStep;
 	mPrevTimeStep = time;

@@ -219,8 +219,8 @@ void EMT::Ph3::RXLoad::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void EMT::Ph3::RXLoad::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLoad.mnaUpdateVoltage(*mLeftVector);
-	mLoad.mnaUpdateCurrent(*mLeftVector);
+	mLoad.mnaUpdateVoltage(**mLeftVector);
+	mLoad.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {

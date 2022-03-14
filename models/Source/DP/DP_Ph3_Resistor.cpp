@@ -132,8 +132,8 @@ void DP::Ph3::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void DP::Ph3::Resistor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResistor.mnaUpdateVoltage(*mLeftVector);
-	mResistor.mnaUpdateCurrent(*mLeftVector);
+	mResistor.mnaUpdateVoltage(**mLeftVector);
+	mResistor.mnaUpdateCurrent(**mLeftVector);
 }
 
 void DP::Ph3::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {

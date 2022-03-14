@@ -333,9 +333,9 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::MnaPreStep::execute(Real time, In
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mAvVoltSourceInverterStateSpace.mnaUpdateVoltage(*mLeftVector);
+	mAvVoltSourceInverterStateSpace.mnaUpdateVoltage(**mLeftVector);
 	mAvVoltSourceInverterStateSpace.updateStates();
-	mAvVoltSourceInverterStateSpace.mnaUpdateCurrent(*mLeftVector);
+	mAvVoltSourceInverterStateSpace.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateVoltage(const Matrix& leftVector) {
