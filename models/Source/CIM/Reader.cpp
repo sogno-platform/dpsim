@@ -496,31 +496,80 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 
 	if (mDomain == Domain::DP) {
 		mSLog->info("    Create generator in DP domain.");
-		if (mGeneratorType == GeneratorType::TransientStability) {
-			mSLog->info("    GeneratorType is TransientStability.");
-			Real directTransientReactance;
-			Real inertiaCoefficient;
-			Real ratedPower;
-			Real ratedVoltage;
+		if (mGeneratorType == GeneratorType::TransientStability || mGeneratorType == GeneratorType::SG4OrderVBR) {
+
+			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
+
 			for (auto obj : mModel->Objects) {
 				// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
 				if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
 					dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
 					if (genDyn->SynchronousMachine->mRID == machine->mRID) {
-						directTransientReactance = genDyn->xDirectTrans.value;
-						inertiaCoefficient = genDyn->inertia.value;
+						// stator
+						Real Rs = genDyn->statorResistance.value;
+						Real Ll = genDyn->statorLeakageReactance.value;
+						
+						// reactances
+						Real Ld = genDyn->xDirectSync.value;
+						Real Lq = genDyn->xQuadSync.value;
+						Real Ld_t = genDyn->xDirectTrans.value;
+						Real Lq_t = genDyn->xQuadTrans.value;
+						Real Ld_s = genDyn->xDirectSubtrans.value;
+						Real Lq_s = genDyn->xQuadSubtrans.value;
+						
+						// time constants
+						Real Td0_t = genDyn->tpdo.value;
+						Real Tq0_t = genDyn->tpqo.value;
+						Real Td0_s = genDyn->tppdo.value;
+						Real Tq0_s = genDyn->tppqo.value;
 
-						ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+						// inertia
+						Real H = genDyn->inertia.value;
 
-						ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
-						auto gen = DP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
-						gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency,
-						directTransientReactance, inertiaCoefficient);
-						return gen;
+						// not available in CIM -> set to 0, as actually no impact on machine equations
+						Int poleNum = 0;
+						Real nomFieldCurr = 0;
+
+						if (mGeneratorType == GeneratorType::TransientStability) {
+							mSLog->info("    GeneratorType is TransientStability.");
+							auto gen = DP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency, Ld_t, H);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator6aOrderVBR.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator6aOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s);  
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator6bOrderVBR.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator6bOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s); 
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator4OrderVBR.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderVBR>(
+								machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t); 
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator3OrderVBR.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator3OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Td0_t); 
+							return gen;
+						}
 					}
 				}
 			}
-			mSLog->warn("    Dynamic parameters for {} not found. Not able to instantiate SynchronGeneratorTrStab.", machine->name);
 		} else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
 			mSLog->info("    GeneratorType is IdealVoltageSource.");
 			return std::make_shared<DP::Ph1::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
@@ -531,28 +580,77 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 		}
 	} else if (mDomain == Domain::SP) {
 		mSLog->info("    Create generator in SP domain.");
-		if (mGeneratorType == GeneratorType::TransientStability) {
-			mSLog->info("    GeneratorType is TransientStability.");
-			Real directTransientReactance;
-			Real inertiaCoefficient;
-			Real ratedPower;
-			Real ratedVoltage;
+		if (mGeneratorType == GeneratorType::TransientStability || mGeneratorType == GeneratorType::SG4OrderVBR) {
+
+			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
 
 			for (auto obj : mModel->Objects) {
 				// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
 				if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
 					dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
 					if (genDyn->SynchronousMachine->mRID == machine->mRID) {
-						directTransientReactance = genDyn->xDirectTrans.value;
-						inertiaCoefficient = genDyn->inertia.value;
+						// stator
+						Real Rs = genDyn->statorResistance.value;
+						Real Ll = genDyn->statorLeakageReactance.value;
+						
+						// reactances
+						Real Ld = genDyn->xDirectSync.value;
+						Real Lq = genDyn->xQuadSync.value;
+						Real Ld_t = genDyn->xDirectTrans.value;
+						Real Lq_t = genDyn->xQuadTrans.value;
+						Real Ld_s = genDyn->xDirectSubtrans.value;
+						Real Lq_s = genDyn->xQuadSubtrans.value;
+						
+						// time constants
+						Real Td0_t = genDyn->tpdo.value;
+						Real Tq0_t = genDyn->tpqo.value;
+						Real Td0_s = genDyn->tppdo.value;
+						Real Tq0_s = genDyn->tppqo.value;
 
-						ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+						// inertia
+						Real H = genDyn->inertia.value;
 
-						ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
-						auto gen = SP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
-						gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency,
-						directTransientReactance, inertiaCoefficient);
-						return gen;
+						// not available in CIM -> set to 0, as actually no impact on machine equations
+						Int poleNum = 0;
+						Real nomFieldCurr = 0;
+
+						if (mGeneratorType == GeneratorType::TransientStability) {
+							mSLog->info("    GeneratorType is TransientStability.");
+							auto gen = SP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency, Ld_t, H);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator6aOrderVBR.");
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator6aOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s);  
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator6bOrderVBR.");
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator6bOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s); 
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator4OrderVBR.");
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator4OrderVBR>(
+								machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t); 
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator3OrderVBR.");
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator3OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Td0_t); 
+							return gen;
+						}
 					}
 				}
 			}
@@ -606,7 +704,8 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 		}
 	} else {
 		mSLog->info("    Create generator in EMT domain.");
-		if (mGeneratorType == GeneratorType::FullOrder || mGeneratorType == GeneratorType::FullOrderVBR) {
+		if (mGeneratorType == GeneratorType::FullOrder || mGeneratorType == GeneratorType::FullOrderVBR
+			|| mGeneratorType == GeneratorType::SG4OrderVBR) {
 			
 			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
 			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
@@ -658,9 +757,37 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 							Rs, Ld, Lq, Ld_t, Lq_t, Ld_s,
 							Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H); 
 							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator6aOrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator6aOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s);  
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator6bOrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator6bOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s); 
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator4OrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator4OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t); 
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator3OrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator3OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Td0_t); 
+							return gen;
 						}
-						
-						
 					}
 				}
 			}

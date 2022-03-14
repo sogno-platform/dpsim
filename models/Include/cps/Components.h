@@ -26,6 +26,12 @@
 #include <cps/SP/SP_Ph1_NetworkInjection.h>
 #include <cps/SP/SP_Ph1_VoltageSource.h>
 #include <cps/SP/SP_Ph1_SynchronGeneratorTrStab.h>
+#include <cps/SP/SP_Ph1_SynchronGeneratorVBR.h>
+#include <cps/SP/SP_Ph1_SynchronGenerator3OrderVBR.h>
+#include <cps/SP/SP_Ph1_SynchronGenerator4OrderVBR.h>
+#include <cps/SP/SP_Ph1_SynchronGenerator6aOrderVBR.h>
+#include <cps/SP/SP_Ph1_SynchronGenerator6bOrderVBR.h>
+#include <cps/SP/SP_Ph1_SynchronGenerator4OrderDCIM.h>
 #include <cps/SP/SP_Ph1_varResSwitch.h>
 
 #include <cps/SP/SP_Ph3_Capacitor.h>
@@ -49,6 +55,11 @@
 #include <cps/DP/DP_Ph1_Switch.h>
 #include <cps/DP/DP_Ph1_SynchronGeneratorIdeal.h>
 #include <cps/DP/DP_Ph1_SynchronGeneratorTrStab.h>
+#include <cps/DP/DP_Ph1_SynchronGeneratorVBR.h>
+#include <cps/DP/DP_Ph1_SynchronGenerator3OrderVBR.h>
+#include <cps/DP/DP_Ph1_SynchronGenerator4OrderVBR.h>
+#include <cps/DP/DP_Ph1_SynchronGenerator6aOrderVBR.h>
+#include <cps/DP/DP_Ph1_SynchronGenerator6bOrderVBR.h>
 #include <cps/DP/DP_Ph1_Inverter.h>
 #include <cps/DP/DP_Ph1_NetworkInjection.h>
 #include <cps/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
@@ -84,6 +95,11 @@
 #include <cps/EMT/EMT_Ph3_CurrentSource.h>
 #include <cps/EMT/EMT_Ph3_VoltageSource.h>
 #include <cps/EMT/EMT_Ph3_VoltageSourceNorton.h>
+#include <cps/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
+#include <cps/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h>
+#include <cps/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.h>
+#include <cps/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h>
+#include <cps/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.h>
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorDQ.h>
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorDQTrapez.h>
 #ifdef WITH_SUNDIALS

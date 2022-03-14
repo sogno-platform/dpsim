@@ -11,6 +11,7 @@ add_library(cps STATIC
 )
 
 list(APPEND CPS_SOURCES
+	Base/Base_ReducedOrderSynchronGenerator.cpp
 	Base/Base_SynchronGenerator.cpp
 	Base/Base_AvVoltageSourceInverterDQ.cpp
 	Base/Base_AvVoltageSourceInverterDQWithStateSpace.cpp
@@ -31,6 +32,11 @@ list(APPEND CPS_SOURCES
 	DP/DP_Ph1_Switch.cpp
 	DP/DP_Ph1_SynchronGeneratorIdeal.cpp
 	DP/DP_Ph1_SynchronGeneratorTrStab.cpp
+	DP/DP_Ph1_SynchronGeneratorVBR.cpp
+	DP/DP_Ph1_SynchronGenerator3OrderVBR.cpp
+	DP/DP_Ph1_SynchronGenerator4OrderVBR.cpp
+	DP/DP_Ph1_SynchronGenerator6aOrderVBR.cpp
+	DP/DP_Ph1_SynchronGenerator6bOrderVBR.cpp
 	DP/DP_Ph1_Inverter.cpp
 	DP/DP_Ph1_AvVoltageSourceInverterDQ.cpp
 	DP/DP_Ph1_NetworkInjection.cpp
@@ -72,6 +78,11 @@ list(APPEND CPS_SOURCES
 	EMT/EMT_Ph3_NetworkInjection.cpp
 	EMT/EMT_Ph3_Transformer.cpp
 	EMT/EMT_Ph3_Switch.cpp
+	EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.cpp
+	EMT/EMT_Ph3_SynchronGenerator3OrderVBR.cpp
+	EMT/EMT_Ph3_SynchronGenerator4OrderVBR.cpp
+	EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.cpp
+	EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGeneratorDQ.cpp
 	EMT/EMT_Ph3_SynchronGeneratorDQTrapez.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorDQSmpl.cpp
@@ -95,6 +106,12 @@ list(APPEND CPS_SOURCES
 	SP/SP_Ph1_SolidStateTransformer.cpp
 	SP/SP_Ph1_Shunt.cpp
 	SP/SP_Ph1_SynchronGenerator.cpp
+	SP/SP_Ph1_SynchronGeneratorVBR.cpp
+	SP/SP_Ph1_SynchronGenerator3OrderVBR.cpp
+	SP/SP_Ph1_SynchronGenerator4OrderVBR.cpp
+	SP/SP_Ph1_SynchronGenerator6aOrderVBR.cpp
+	SP/SP_Ph1_SynchronGenerator6bOrderVBR.cpp
+	SP/SP_Ph1_SynchronGenerator4OrderDCIM.cpp
 	SP/SP_Ph1_PQNode.cpp
 	SP/SP_Ph1_PVNode.cpp
 	SP/SP_Ph1_VDNode.cpp

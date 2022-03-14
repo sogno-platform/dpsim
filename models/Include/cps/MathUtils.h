@@ -149,6 +149,19 @@ namespace CPS {
 			mat(harmRow + complexOffset, harmCol) = mat(harmRow + complexOffset, harmCol) + value.imag();
 		}
 
+		static void addToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Matrix value, Int maxFreq = 1, Int freqIdx = 0) {
+			// Assume square matrix
+			Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+			Eigen::Index complexOffset = harmonicOffset / 2;
+			Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+			Eigen::Index harmCol = column + harmonicOffset * freqIdx;
+
+			mat(harmRow, harmCol) = mat(harmRow, harmCol) + value(0,0);
+			mat(harmRow + complexOffset, harmCol + complexOffset) = mat(harmRow + complexOffset, harmCol + complexOffset) + value(1,1);
+			mat(harmRow, harmCol + complexOffset) = mat(harmRow, harmCol + complexOffset) + value(0,1);
+			mat(harmRow + complexOffset, harmCol) = mat(harmRow + complexOffset, harmCol) + value(1,0);
+		}
+
 		static void setMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Real value) {
 			mat(row, column) =  value;
 		}
