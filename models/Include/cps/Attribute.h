@@ -121,10 +121,9 @@ namespace CPS {
 			return this->mData;
 		}
 
+		/// Fallback method for all attribute types not covered by the specifications in Attribute.cpp
 		virtual String toString() override {
-			/// CHECK: How does this impact performance?
 			std::stringstream ss;
-			ss.precision(2);
 			ss << this->get();
 			return ss.str();
 		}
@@ -408,8 +407,14 @@ namespace CPS {
 	};
 
 	template<>
+	String Attribute<Real>::toString();
+
+	template<>
 	String Attribute<Complex>::toString();
 
 	template<>
 	String Attribute<String>::toString();
+
 }
+
+
