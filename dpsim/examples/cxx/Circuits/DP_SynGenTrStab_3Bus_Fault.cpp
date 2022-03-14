@@ -16,10 +16,10 @@ using namespace CIM::Examples::Grids::ThreeBus;
 ScenarioConfig ThreeBus;
 
 //Switch to trigger fault at generator terminal
-Real SwitchOpen = 1e12;
-Real SwitchClosed = 0.1;
+Real SwitchOpen = 1e6;
+Real SwitchClosed = 1;
 
-void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia_G1, Real cmdInertia_G2, Real cmdDamping_G1, Real cmdDamping_G2) {
+void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, Bool startFaultEvent, Bool endFaultEvent, Real startTimeFault, Real endTimeFault, Bool useVarResSwitch, Real cmdInertia_G1, Real cmdInertia_G2, Real cmdDamping_G1, Real cmdDamping_G2) {
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
@@ -32,13 +32,13 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	auto n3PF = SimNode<Complex>::make("n3", PhaseType::Single);
 
 	//Synchronous generator 1
-	auto gen1PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen1PF = SP::Ph1::SynchronGenerator::make("SynGen1", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen1PF->setParameters(ThreeBus.nomPower_G1, ThreeBus.nomPhPhVoltRMS_G1, ThreeBus.initActivePower_G1, ThreeBus.setPointVoltage_G1*ThreeBus.t1_ratio, PowerflowBusType::VD);
 	gen1PF->setBaseVoltage(ThreeBus.Vnom);
 
 	//Synchronous generator 2
-	auto gen2PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen2PF = SP::Ph1::SynchronGenerator::make("SynGen2", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen2PF->setParameters(ThreeBus.nomPower_G2, ThreeBus.nomPhPhVoltRMS_G2, ThreeBus.initActivePower_G2, ThreeBus.setPointVoltage_G2*ThreeBus.t2_ratio, PowerflowBusType::PV);
 	gen2PF->setBaseVoltage(ThreeBus.Vnom);
@@ -139,17 +139,17 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	//Line23
 	auto line23DP = DP::Ph1::PiLine::make("PiLine23", Logger::Level::debug);
 	line23DP->setParameters(ThreeBus.lineResistance23, ThreeBus.lineInductance23, ThreeBus.lineCapacitance23, ThreeBus.lineConductance23);
-
-	// //Switch
-	// auto faultDP = DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
-	// faultDP->setParameters(SwitchOpen, SwitchClosed);
-	// faultDP->open();
-
-	//Variable resistance Switch
-	auto faultDP = DP::Ph1::varResSwitch::make("Br_fault", Logger::Level::debug);
+	
+	//two state Switch
+	auto faultDP = DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	faultDP->setParameters(SwitchOpen, SwitchClosed);
-	faultDP->setInitParameters(timeStep);
 	faultDP->open();
+
+	// //Variable resistance Switch
+	// auto faultDP = DP::Ph1::varResSwitch::make("Br_fault", Logger::Level::debug);
+	// faultDP->setParameters(SwitchOpen, SwitchClosed);
+	// faultDP->setInitParameters(timeStep);
+	// faultDP->open();
 
 	// Topology
 	gen1DP->connect({ n1DP });
@@ -204,9 +204,11 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	simDP.setFinalTime(finalTime);
 	simDP.setDomain(Domain::DP);
 	simDP.addLogger(loggerDP);
-	simDP.doSystemMatrixRecomputation(true);
 	simDP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
+	if (useVarResSwitch == true) {
+		simDP.doSystemMatrixRecomputation(true);
+	}
 	// Events
 	if (startFaultEvent){
 		auto sw1 = SwitchEvent::make(startTimeFault, faultDP, true);
@@ -233,6 +235,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.001;
 	Bool startFaultEvent=true;
 	Bool endFaultEvent=true;
+	Bool useVarResSwitch=false;
 	Real startTimeFault=10;
 	Real endTimeFault=10.2;
 	Real cmdInertia_G1= 1.0;
@@ -257,8 +260,12 @@ int main(int argc, char* argv[]) {
 		if (args.options.find("STARTTIMEFAULT") != args.options.end())
 			startTimeFault = args.getOptionReal("STARTTIMEFAULT");
 		if (args.options.find("ENDTIMEFAULT") != args.options.end())
-			endTimeFault = args.getOptionReal("ENDTIMEFAULT");
+			endTimeFault = args.options["ENDTIMEFAULT"];
+		// if (args.options.find("USEVARRESSWITCH") != args.options.end())
+		// 	useVarResSwitch = args.options["USEVARRESSWITCH"];	
+		// if (args.options.find("FAULTRESISTANCE") != args.options.end())
+		// 	SwitchClosed = args.options["FAULTRESISTANCE"];	
 	}
-
-	DP_SynGenTrStab_3Bus_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia_G1, cmdInertia_G2, cmdDamping_G1, cmdDamping_G2);
+	
+	DP_SynGenTrStab_3Bus_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, useVarResSwitch, cmdInertia_G1, cmdInertia_G2, cmdDamping_G1, cmdDamping_G2);
 }
