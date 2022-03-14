@@ -413,7 +413,7 @@ namespace ThreeBus {
     struct ScenarioConfig {
 
         //-----------Network-----------//
-        Real Vnom = 230e3;
+        Real Vnom = 250e3;
         Real nomFreq = 60;
         Real nomOmega= nomFreq* 2*PI;
 
@@ -422,23 +422,23 @@ namespace ThreeBus {
         Real nomPhPhVoltRMS_G1 = 25e3;
         Real nomFreq_G1 = 60;
         Real H_G1 = 6;
-        Real Xpd_G1=0.3; //in p.u
-        Real Rs_G1 = 0.003*0; //in p.u
-        Real D_G1 = 1.5; //in p.u
-        // Initialization parameters
+        Real Xpd_G1=0.3 +0.15; //in p.u of generator base + transformer 1 reactance in p.u of Tr bases !!!check value!!!
+        Real Rs_G1 = 0.003*0; //in p.u of generator base
+        Real D_G1 = 1.5; //in p.u 
+        // Initialization parameters 
         Real initActivePower_G1 = 270e6;
         Real initMechPower_G1 = 270e6;
-        Real setPointVoltage_G1=nomPhPhVoltRMS_G1+0.05*nomPhPhVoltRMS_G1;
-
+        Real setPointVoltage_G1=nomPhPhVoltRMS_G1;
+        
         //-----------Generator 2 (bus2)-----------//
         Real nomPower_G2 = 50e6;
         Real nomPhPhVoltRMS_G2 = 13.8e3;
         Real nomFreq_G2 = 60;
         Real H_G2 = 2;
-        Real Xpd_G2=0.1; //in p.u
-        Real Rs_G2 = 0.003*0; //in p.u
-        Real D_G2 =1.5; //in p.u
-        // Initialization parameters
+        Real Xpd_G2=0.3 + 0.12; //in p.u of generator base + transformer 2 reactance in p.u of Tr bases
+        Real Rs_G2 = 0.003*0; //in p.u of generator base
+        Real D_G2 =1; //in p.u
+        // Initialization parameters 
         Real initActivePower_G2 = 45e6;
         Real initMechPower_G2 = 45e6;
         Real setPointVoltage_G2=nomPhPhVoltRMS_G2-0.05*nomPhPhVoltRMS_G2;
@@ -452,23 +452,21 @@ namespace ThreeBus {
         Real reactivePower_L= 150e6;
 
         // -----------Transmission Lines-----------//
-        // CIGREHVAmerican (230 kV)
-        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
         //line 1-2 (180km)
-        Real lineResistance12 = lineCIGREHV.lineResistancePerKm*180;
-        Real lineInductance12 = lineCIGREHV.lineReactancePerKm/nomOmega*180;
-        Real lineCapacitance12 = lineCIGREHV.lineSusceptancePerKm/nomOmega*180;
-        Real lineConductance12 = lineCIGREHV.lineConductancePerKm*180;
+        Real lineResistance12 = 7.2;
+        Real lineInductance12 = 72./nomOmega;
+        Real lineCapacitance12 = 774*1e-6/nomOmega;
+        Real lineConductance12 = 0;
         //line 1-3 (150km)
-        Real lineResistance13 = lineCIGREHV.lineResistancePerKm*150;
-        Real lineInductance13 = lineCIGREHV.lineReactancePerKm/nomOmega*150;
-        Real lineCapacitance13 = lineCIGREHV.lineSusceptancePerKm/nomOmega*150;
-        Real lineConductance13 = lineCIGREHV.lineConductancePerKm*150;
+        Real lineResistance13 = 4;
+        Real lineInductance13 = 40./nomOmega;
+        Real lineCapacitance13 = 645*1e-6/nomOmega;;
+        Real lineConductance13 = 0;
         //line 2-3 (80km)
-        Real lineResistance23 = lineCIGREHV.lineResistancePerKm*80;
-        Real lineInductance23 = lineCIGREHV.lineReactancePerKm/nomOmega*80;
-        Real lineCapacitance23 = lineCIGREHV.lineSusceptancePerKm/nomOmega*80;
-        Real lineConductance23 = lineCIGREHV.lineConductancePerKm*80;
+        Real lineResistance23 = 3.2;
+        Real lineInductance23 = 32./nomOmega;
+        Real lineCapacitance23 = 344*1e-6/nomOmega;;
+        Real lineConductance23 = 0;
     };
 }
 
