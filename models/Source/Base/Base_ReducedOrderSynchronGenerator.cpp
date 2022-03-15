@@ -154,7 +154,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	this->updateMatrixNodeIndices();
 
 	if(!mInitialValuesSet)
-		this->setInitialValues(-this->terminal(0)->singlePower(), mInitMechPower, this->initialSingleVoltage(0));
+		this->setInitialValues(-this->terminal(0)->singlePower(), -this->terminal(0)->singlePower().real(), this->initialSingleVoltage(0));
 
 	// Initialize mechanical torque
 	mMechTorque = mInitMechPower / mNomPower;
@@ -217,7 +217,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	this->updateMatrixNodeIndices();
 
 	if(!mInitialValuesSet)
-		this->setInitialValues(-this->terminal(0)->singlePower(), mInitMechPower, this->initialSingleVoltage(0));
+		this->setInitialValues(-this->terminal(0)->singlePower(), -this->terminal(0)->singlePower().real(), this->initialSingleVoltage(0));
 
 	// Initialize mechanical torque
 	mMechTorque = mInitMechPower / mNomPower;
