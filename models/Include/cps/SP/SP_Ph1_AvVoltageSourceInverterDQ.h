@@ -33,8 +33,6 @@ namespace Ph1 {
 		// ### General Parameters ###
 		/// Nominal system angle
 		Real mThetaN = 0;
-		/// Nominal voltage
-		Real mVnom;
 		/// Simulation step
 		Real mTimeStep;
 
@@ -71,6 +69,8 @@ namespace Ph1 {
 		// ### General Parameters ###
 		/// Nominal frequency
 		const Attribute<Real>::Ptr mOmegaN;
+		/// Nominal voltage
+		const Attribute<Real>::Ptr mVnom;
 		/// Active power reference
 		const Attribute<Real>::Ptr mPref;
 		/// Reactive power reference

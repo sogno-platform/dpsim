@@ -13,6 +13,7 @@ using namespace CPS;
 SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
 	SimPowerComp<Complex>(uid, name, logLevel),
 	mOmegaN(Attribute<Real>::create("Omega_nom", mAttributes)),
+	mVnom(Attribute<Real>::create("vnom", mAttributes)),
 	mPref(Attribute<Real>::create("P_ref", mAttributes)),
 	mQref(Attribute<Real>::create("Q_ref", mAttributes)),
 	mVcd(Attribute<Real>::create("Vc_d", mAttributes, 0)),
@@ -92,7 +93,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVo
 	mPowerControllerVSI->setParameters(Pref, Qref);
 
 	**mOmegaN = sysOmega;
-	mVnom = sysVoltNom;
+	**mVnom = sysVoltNom;
 	**mPref = Pref;
 	**mQref = Qref;
 }
