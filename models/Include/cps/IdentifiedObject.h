@@ -29,8 +29,8 @@ namespace CPS {
 		IdentifiedObject() { }
 
 		IdentifiedObject(String uid, String name)
-			: 	mName(Attribute<String>::create("name", mAttributes, uid)),
-				mUID(Attribute<String>::create("uid", mAttributes, name))
+			: 	mName(Attribute<String>::create("name", mAttributes, name)),
+				mUID(Attribute<String>::create("uid", mAttributes, uid))
 			{ }
 
 		IdentifiedObject(String name) :
