@@ -78,7 +78,7 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capac
         **mParallelCap = capacitance;
     }else{
         **mParallelCap = 1e-12;
-        mSLog->warn("Zero value for Capacitance, setting default value of C={} [F]", mParallelCap);
+        mSLog->warn("Zero value for Capacitance, setting default value of C={} [F]", **mParallelCap);
     }
     if(conductance > 0){
         **mParallelCond = conductance;
@@ -87,9 +87,9 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capac
 			**mParallelCond = (conductance >= 0) ? conductance : 1e-6; // init mode for initFromPowerFlow of mna system components
 		else
 			**mParallelCond = (conductance > 0) ? conductance : 1e-6;
-        mSLog->warn("Zero value for Conductance, setting default value of G={} [S]", mParallelCond);
+        mSLog->warn("Zero value for Conductance, setting default value of G={} [S]", **mParallelCond);
     }
-    mSLog->info("Capacitance={} [F] Conductance={} [S]", mParallelCap, mParallelCond);
+    mSLog->info("Capacitance={} [F] Conductance={} [S]", **mParallelCap, **mParallelCond);
 	mSLog->flush();
 	mParametersSet = true;
 
@@ -118,7 +118,7 @@ void SP::Ph1::PiLine::calculatePerUnitParameters(Real baseApparentPower, Real ba
 	mBaseInductance = mBaseImpedance / mBaseOmega;
 	mBaseCapacitance = 1.0 / mBaseOmega / mBaseImpedance;
 	mBaseCurrent = baseApparentPower / (**mBaseVoltage * sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
-	mSLog->info("Base Voltage={} [V]  Base Impedance={} [Ohm]", mBaseVoltage, mBaseImpedance);
+	mSLog->info("Base Voltage={} [V]  Base Impedance={} [Ohm]", **mBaseVoltage, mBaseImpedance);
 
     mSeriesResPerUnit = **mSeriesRes / mBaseImpedance;
 	mSeriesIndPerUnit = **mSeriesInd / mBaseInductance;
@@ -262,7 +262,7 @@ void SP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 
 	mSubSeriesResistor->mnaInitialize(omega, timeStep, leftVector);
 	mSubSeriesInductor->mnaInitialize(omega, timeStep, leftVector);
-	mRightVectorStamps.push_back(&mSubSeriesInductor->attribute<Matrix>("right_vector")->get());
+	mRightVectorStamps.push_back(&**mSubSeriesInductor->mRightVector);
 
 	mSubParallelResistor0->mnaInitialize(omega, timeStep, leftVector);
 	mSubParallelResistor1->mnaInitialize(omega, timeStep, leftVector);
@@ -272,8 +272,8 @@ void SP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 	if (mParallelCap >= 0) {
 		mSubParallelCapacitor0->mnaInitialize(omega, timeStep, leftVector);
 		mSubParallelCapacitor1->mnaInitialize(omega, timeStep, leftVector);
-		mRightVectorStamps.push_back(&mSubParallelCapacitor0->attribute<Matrix>("right_vector")->get());
-		mRightVectorStamps.push_back(&mSubParallelCapacitor1->attribute<Matrix>("right_vector")->get());
+		mRightVectorStamps.push_back(&**mSubParallelCapacitor0->mRightVector);
+		mRightVectorStamps.push_back(&**mSubParallelCapacitor1->mRightVector);
 		subComps.push_back(mSubParallelCapacitor0);
 		subComps.push_back(mSubParallelCapacitor1);
 	}
