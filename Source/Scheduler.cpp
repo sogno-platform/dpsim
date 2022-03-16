@@ -84,7 +84,7 @@ void Scheduler::resolveDeps(Task::List& tasks, Edges& inEdges, Edges& outEdges) 
 		for (AttributeBase::Ptr attr : task->getAttributeDependencies()) {
 			/// CHECK: Having external be the nullptr can lead to segfaults rather quickly. Maybe make it a special kind of attribute
 			if (attr != Scheduler::external) {
-				AttributeBase::List attrDependencies = attr->getDependencies();
+				AttributeBase::Set attrDependencies = attr->getDependencies();
 				for (AttributeBase::Ptr dep : attrDependencies) {
 					dependencies[dep].push_back(task);
 				}

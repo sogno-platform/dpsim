@@ -8,6 +8,7 @@
 
 #pragma once
 #include <iostream>
+#include <set>
 
 #include <cps/Definitions.h>
 #include <cps/PtrFactory.h>
@@ -26,12 +27,19 @@ namespace CPS {
 	public:
 		typedef std::shared_ptr<AttributeBase> Ptr;
 		typedef std::vector<Ptr> List;
+		typedef std::set<Ptr> Set;
 		typedef std::map<String, Ptr> Map;
 
 		virtual String toString() = 0;
 		virtual bool isStatic() const = 0;
-		virtual AttributeBase::List getDependencies() = 0;
 		virtual ~AttributeBase() = default;
+		virtual void appendDependencies(AttributeBase::Set *deps) = 0;
+
+		virtual AttributeBase::Set getDependencies() final {
+			AttributeBase::Set deps = AttributeBase::Set();
+			this->appendDependencies(&deps);
+			return deps;
+		}
 	};
 
 	template<class T>
@@ -280,12 +288,12 @@ namespace CPS {
 			return true;
 		}
 
-		virtual AttributeBase::List getDependencies() override {
-			return AttributeBase::List {this->shared_from_this()};
-		}
-
 		virtual void setReference(typename Attribute<T>::Ptr reference) override {
 			throw TypeException();
+		}
+
+		virtual void appendDependencies(AttributeBase::Set *deps) override {
+			deps->insert(this->shared_from_this());
 		}
 	};
 
@@ -375,34 +383,25 @@ namespace CPS {
 		}
 
 		/// This will recursively collect all attributes this attribute depends on, either in the UPDATE_ONCE or the UPDATE_ON_GET tasks.
-		/// Currently, there is no uniqueness test, so the final list will always contain duplicates
-		/// Every attribute also appears in the list of its own dependencies
-		/// THISISBAD: If there is a dependency cycle, this function WILL CAUSE A STACK OVERFLOW!
-		virtual AttributeBase::List getDependencies() override {
-			AttributeBase::List deps = AttributeBase::List();
+		/// This is done by performing a Depth-First-Search on the dependency graph where the task dependencies of each attribute are the outgoing edges.
+		/// The `deps` set contains all the nodes that have already been visited in the graph
+		virtual void appendDependencies(AttributeBase::Set *deps) override {
+			deps->insert(this->shared_from_this());
+			
+			AttributeBase::Set newDeps = AttributeBase::Set();
 			for (typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnce) {
 				AttributeBase::List taskDeps = task->getDependencies();
-				deps.insert(deps.end(), taskDeps.begin(), taskDeps.end());
+				newDeps.insert(taskDeps.begin(), taskDeps.end());
 			}
 
 			for (typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnGet) {
 				AttributeBase::List taskDeps = task->getDependencies();
-				deps.insert(deps.end(), taskDeps.begin(), taskDeps.end());
+				newDeps.insert(taskDeps.begin(), taskDeps.end());
 			}
 
-			int endIndex = deps.size();
-
-			/// FIXME: This is modifying a vector while iterating over it (in a safe way though, since elements only ever get added). Is this bad code design?
-			for (int i = 0; i < endIndex; i++) {
-				AttributeBase::List recursiveDeps = deps[i]->getDependencies();
-				deps.insert(deps.end(), recursiveDeps.begin(), recursiveDeps.end());
+			for (auto dependency : newDeps) {
+				dependency->appendDependencies(deps);
 			}
-			/// CHECK: Is it always necessary to insert the attribute itself as an intermediate dependency?
-			deps.push_back(this->shared_from_this());
-
-			/// FIXME: deps might contain duplicates at this point, these should be deleted!
-
-			return deps;
 		}
 	};
 
