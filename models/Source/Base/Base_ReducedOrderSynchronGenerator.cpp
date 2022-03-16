@@ -22,7 +22,8 @@ Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	mIdq0 = Matrix::Zero(3,1);
 
     // Register attributes
-	addAttribute<Real>("Etorque", &mElecTorque, Flags::read);
+	addAttribute<Real>("Tm", &mMechTorque, Flags::read);
+	addAttribute<Real>("Te", &mElecTorque, Flags::read);
 	addAttribute<Real>("delta", &mDelta, Flags::read);
 	addAttribute<Real>("Theta", &mThetaMech, Flags::read);
     addAttribute<Real>("w_r", &mOmMech, Flags::read);
@@ -42,7 +43,8 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	mIdq = Matrix::Zero(2,1);
 
     // Register attributes
-	addAttribute<Real>("Etorque", &mElecTorque, Flags::read);
+	addAttribute<Real>("Tm", &mMechTorque, Flags::read);
+	addAttribute<Real>("Te", &mElecTorque, Flags::read);
 	addAttribute<Real>("delta", &mDelta, Flags::read);
 	addAttribute<Real>("Theta", &mThetaMech, Flags::read);
     addAttribute<Real>("w_r", &mOmMech, Flags::read);

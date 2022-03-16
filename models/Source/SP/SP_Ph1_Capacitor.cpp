@@ -151,7 +151,7 @@ void SP::Ph1::Capacitor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 	if (std::isinf(mAdmittancePerUnit.real()) || std::isinf(mAdmittancePerUnit.imag())) {
 		std::cout << "Y:" << mAdmittancePerUnit << std::endl;
 		std::stringstream ss;
-		ss << "Resistor >>" << this->name() << ": infinite or nan values at node: " << bus1;
+		ss << "Capacitor >>" << this->name() << ": infinite or nan values at node: " << bus1;
 		throw std::invalid_argument(ss.str());
 	}
 
