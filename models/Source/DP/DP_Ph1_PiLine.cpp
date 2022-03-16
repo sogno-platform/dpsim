@@ -76,7 +76,7 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
 
 
-	if (mParallelCap >= 0) {
+	if (**mParallelCap >= 0) {
 		mSubParallelCapacitor0 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap0", mLogLevel);
 		mSubParallelCapacitor0->setParameters(**mParallelCap / 2.);
 		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
@@ -119,7 +119,7 @@ void DP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 	subComps.push_back(mSubParallelResistor0);
 	subComps.push_back(mSubParallelResistor1);
 
-	if (mParallelCap >= 0) {
+	if (**mParallelCap >= 0) {
 		mSubParallelCapacitor0->mnaInitialize(omega, timeStep, leftVector);
 		mSubParallelCapacitor1->mnaInitialize(omega, timeStep, leftVector);
 		mRightVectorStamps.push_back(&**mSubParallelCapacitor0->mRightVector);
@@ -139,7 +139,7 @@ void DP::Ph1::PiLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	mSubParallelResistor0->mnaApplySystemMatrixStamp(systemMatrix);
 	mSubParallelResistor1->mnaApplySystemMatrixStamp(systemMatrix);
 
-	if (mParallelCap >= 0) {
+	if (**mParallelCap >= 0) {
 		mSubParallelCapacitor0->mnaApplySystemMatrixStamp(systemMatrix);
 		mSubParallelCapacitor1->mnaApplySystemMatrixStamp(systemMatrix);
 	}
@@ -154,7 +154,7 @@ void DP::Ph1::PiLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 void DP::Ph1::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
 	this->mSubSeriesInductor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	if (this->mParallelCap >= 0) {
+	if (**this->mParallelCap >= 0) {
 		this->mSubParallelCapacitor0->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 		this->mSubParallelCapacitor1->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	}
@@ -167,7 +167,7 @@ void DP::Ph1::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDep
 void DP::Ph1::PiLine::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents
 	this->mSubSeriesInductor->mnaPreStep(time, timeStepCount);
-	if (this->mParallelCap >= 0) {
+	if (**this->mParallelCap >= 0) {
 		this->mSubParallelCapacitor0->mnaPreStep(time, timeStepCount);
 		this->mSubParallelCapacitor1->mnaPreStep(time, timeStepCount);
 	}
@@ -179,7 +179,7 @@ void DP::Ph1::PiLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepDe
 	// add post-step dependencies of subcomponents
 	this->mSubSeriesResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	this->mSubSeriesInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	if (this->mParallelCap >= 0) {
+	if (**this->mParallelCap >= 0) {
 		this->mSubParallelCapacitor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 		this->mSubParallelCapacitor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	}
@@ -197,7 +197,7 @@ void DP::Ph1::PiLine::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix
 	// post-step of subcomponents
 	this->mSubSeriesResistor->mnaPostStep(time, timeStepCount, leftVector);
 	this->mSubSeriesInductor->mnaPostStep(time, timeStepCount, leftVector);
-	if (this->mParallelCap >= 0) {
+	if (**this->mParallelCap >= 0) {
 		this->mSubParallelCapacitor0->mnaPostStep(time, timeStepCount, leftVector);
 		this->mSubParallelCapacitor1->mnaPostStep(time, timeStepCount, leftVector);
 	}
@@ -228,7 +228,7 @@ MNAInterface::List DP::Ph1::PiLine::mnaTearGroundComponents() {
 	gndComponents.push_back(mSubParallelResistor0);
 	gndComponents.push_back(mSubParallelResistor1);
 
-	if (mParallelCap >= 0) {
+	if (**mParallelCap >= 0) {
 		gndComponents.push_back(mSubParallelCapacitor0);
 		gndComponents.push_back(mSubParallelCapacitor1);
 	}
