@@ -44,6 +44,7 @@ class MnaSolverFactory {
 	/// MNA implementations supported by this compilation
 	static const std::vector<MnaSolverImpl> mSupportedSolverImpls(void) {
 		static std::vector<MnaSolverImpl> ret = {
+			Plugin,
 			EigenDense,
 #ifdef WITH_SPARSE
 			EigenSparse,
@@ -58,7 +59,6 @@ class MnaSolverFactory {
 #endif //WITH_MAGMA
 #endif //WITH_SPARSE
 #endif //WITH_CUDA
-			Plugin,
 		};
 		return ret;
 	}
@@ -68,7 +68,8 @@ class MnaSolverFactory {
 	static std::shared_ptr<MnaSolver<VarType>> factory(String name,
 		CPS::Domain domain = CPS::Domain::DP,
 		CPS::Logger::Level logLevel = CPS::Logger::Level::info,
-		MnaSolverImpl implementation = mSupportedSolverImpls().back())
+		MnaSolverImpl implementation = mSupportedSolverImpls().back(),
+		String pluginName = "plugin.so")
 	{
 		//To avoid regression we use EigenDense in case of undefined implementation
 		if (implementation == MnaSolverImpl::Undef) {
@@ -102,7 +103,7 @@ class MnaSolverFactory {
 #endif
 		case MnaSolverImpl::Plugin:
 			log->info("creating Plugin solver implementation");
-			return std::make_shared<MnaSolverPlugin<VarType>>("", name, domain, logLevel);
+			return std::make_shared<MnaSolverPlugin<VarType>>(pluginName, name, domain, logLevel);
 		default:
 			throw CPS::SystemError("unsupported MNA implementation.");
 

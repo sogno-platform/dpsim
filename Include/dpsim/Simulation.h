@@ -43,6 +43,8 @@ namespace DPsim {
 
 		/// Simulation name
 		const CPS::Attribute<String>::Ptr mName;
+		/// If there we use a solver plugin, this specifies its name (excluding .so)
+		String mSolverPluginName;
 		/// Final time of the simulation
 		const CPS::Attribute<Real>::Ptr mFinalTime;
 		/// Simulation timestep

@@ -36,6 +36,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		CPS::Domain sd,
 		Solver::Type st,
 		MnaSolverFactory::MnaSolverImpl mi,
+		String solverPluginName,
 		String ps
 	) :
 	mProgramName(argv[0]),
@@ -71,7 +72,8 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 	blocking(b),
 	steadyInit(si),
 	solver{sd, st},
-	mnaImpl(mi)
+	mnaImpl(mi),
+	solverPluginName(solverPluginName)
 {
 	parseArguments(argc, argv);
 }
@@ -89,7 +91,8 @@ CommandLineArgs::CommandLineArgs(
 		Bool si,
 		CPS::Domain sd,
 		Solver::Type st,
-		MnaSolverFactory::MnaSolverImpl mi
+		MnaSolverFactory::MnaSolverImpl mi,
+		String solverPluginName
 		) :
 	mProgramName("dpsim"),
 	mArguments {
@@ -122,7 +125,8 @@ CommandLineArgs::CommandLineArgs(
 	blocking(b),
 	steadyInit(si),
 	solver{sd, st},
-	mnaImpl(mi)
+	mnaImpl(mi),
+	solverPluginName(solverPluginName)
 {
 }
 
@@ -138,7 +142,7 @@ void CommandLineArgs::parseArguments(int argc, char *argv[])
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 
-		c = getopt_long(argc, argv, "ht:d:s:l:a:i:f:D:T:U:o:Sbn:", long_options.data(), &option_index);
+		c = getopt_long(argc, argv, "ht:d:s:l:a:i:f:D:P:T:U:o:Sbn:", long_options.data(), &option_index);
 
 		/* Detect the end of the options. */
 		if (c == -1)
@@ -245,6 +249,10 @@ void CommandLineArgs::parseArguments(int argc, char *argv[])
 				} else {
 					throw std::invalid_argument("Invalid value for --solver-mna-impl");
 				}
+				break;
+			}
+			case 'P': {
+				solverPluginName = optarg;
 				break;
 			}
 

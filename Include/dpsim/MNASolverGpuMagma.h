@@ -12,6 +12,7 @@
 
 #include <magma_v2.h>
 #include <magmasparse.h>
+#include <cusolverSp.h>
 
 
 namespace DPsim {

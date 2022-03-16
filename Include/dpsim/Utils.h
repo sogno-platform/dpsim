@@ -65,6 +65,7 @@ public:
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA,
 		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back(),
+		String solverPluginName = "plugin.so",
 		String params = "default.json"
 	);
 	CommandLineArgs(
@@ -81,7 +82,8 @@ public:
 		Bool si = false,
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA,
-		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back()
+		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back(),
+		String solverPluginName = "plugin.so"
 	);
 
 	void parseArguments(int argc, char *argv[]);
@@ -107,6 +109,7 @@ public:
 		Solver::Type type;
 	} solver;
 	DPsim::MnaSolverFactory::MnaSolverImpl mnaImpl;
+	String solverPluginName;
 
 	DPsim::Timer::StartClock::time_point startTime;
 
@@ -121,7 +124,7 @@ public:
 			return std::stoi(options[optionName]);
 		} catch(...) {
 			throw CPS::TypeException();
-		} 
+		}
 	}
 
 	Real getOptionReal(String optionName) {
@@ -130,7 +133,7 @@ public:
 			return std::stod(options[optionName]);
 		} catch(...) {
 			throw CPS::TypeException();
-		} 
+		}
 	}
 
 	Bool getOptionBool(String optionName) {
@@ -139,7 +142,7 @@ public:
 			return true;
 		else if (options[optionName] == "false")
 			return false;
-		else 
+		else
 			throw CPS::TypeException();
 	}
 

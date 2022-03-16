@@ -21,7 +21,7 @@ MnaSolverPlugin<VarType>::MnaSolverPlugin(String pluginName,
 	String name,
 	CPS::Domain domain, CPS::Logger::Level logLevel) :
     MnaSolverEigenSparse<VarType>(name, domain, logLevel),
-	mPluginName("plugin.so"),
+	mPluginName(pluginName),
 	mPlugin(nullptr),
 	mDlHandle(nullptr)
 {
@@ -83,21 +83,22 @@ void MnaSolverPlugin<VarType>::initialize() {
 
 	struct dpsim_mna_plugin* (*get_mna_plugin)(const char *);
 
+	String pluginFileName = mPluginName + ".so";
 
-	if ((mDlHandle = dlopen(mPluginName.c_str(), RTLD_NOW)) == nullptr) {
+	if ((mDlHandle = dlopen(pluginFileName.c_str(), RTLD_NOW)) == nullptr) {
 		mSLog->error("error opening dynamic library {}: {}", mPluginName, dlerror());
-		return;
+		throw CPS::SystemError("error opening dynamic library.");
 	}
 
 	get_mna_plugin = (struct dpsim_mna_plugin* (*)(const char *)) dlsym(mDlHandle, "get_mna_plugin");
 	if (get_mna_plugin == NULL) {
 		mSLog->error("error reading symbol from library {}: {}", mPluginName, dlerror());
-		return;
+		throw CPS::SystemError("error reading symbol from library.");
 	}
 
 	if ((mPlugin = get_mna_plugin(mPluginName.c_str())) == nullptr) {
 		mSLog->error("error getting plugin class");
-		return;
+		throw CPS::SystemError("error getting plugin class.");
 	}
 
 	mPlugin->log = pluginLogger;

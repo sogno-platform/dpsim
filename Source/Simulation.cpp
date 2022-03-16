@@ -46,6 +46,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 
 Simulation::Simulation(String name, CommandLineArgs& args) :
 	mName(Attribute<String>::create("name", mAttributes, name)),
+	mSolverPluginName(args.solverPluginName),
 	mFinalTime(Attribute<Real>::create("final_time", mAttributes, args.duration)),
 	mTimeStep(Attribute<Real>::create("time_step", mAttributes, args.timeStep)),
 	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true)),
@@ -155,7 +156,7 @@ void Simulation::createMNASolver() {
 		} else {
 			// Default case with lu decomposition from mna factory
 			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
-												 mLogLevel, mMnaImpl);
+												 mLogLevel, mMnaImpl, mSolverPluginName);
 			solver->setTimeStep(**mTimeStep);
 			solver->doSteadyStateInit(**mSteadyStateInit);
 			solver->doFrequencyParallelization(mFreqParallel);
