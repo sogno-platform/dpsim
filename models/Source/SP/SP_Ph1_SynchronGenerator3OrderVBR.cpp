@@ -70,6 +70,10 @@ void SP::Ph1::SynchronGenerator3OrderVBR::calculateAuxiliarConstants() {
 
 void SP::Ph1::SynchronGenerator3OrderVBR::stepInPerUnit() {
 	if (mSimTime>0.0) {
+		// Update of mechanical torque from turbine governor
+		if (mHasTurbineGovernor)
+			mMechTorque = mTurbineGovernor->step(mOmMech, 1,  mInitElecPower.real() / mNomPower, mTimeStep);
+
 		// calculate Eq_t at t=k
 		mEdq_t(1,0) = mIdq(0,0) * mLd_t + mVdq(1,0);
 

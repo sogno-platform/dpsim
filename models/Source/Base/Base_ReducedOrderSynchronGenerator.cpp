@@ -148,6 +148,15 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 	mInitialValuesSet = true;
 }
 
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
+	Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef) {
+	mTurbineGovernor = Signal::TurbineGovernor::make("TurbineGovernor", CPS::Logger::Level::info);
+	mTurbineGovernor->setParameters(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
+	mTurbineGovernor->initialize(PmRef/mNomPower, Tm_init/mNomPower);
+	mHasTurbineGovernor = true;
+}
+
 template <>
 void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(Real frequency) {
 

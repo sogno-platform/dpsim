@@ -10,6 +10,7 @@
 
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
+#include <cps/Signal/TurbineGovernor.h>
 
 namespace CPS {
 namespace Base {
@@ -150,6 +151,12 @@ namespace Base {
 			/// Flag to remember when initial values are set
 			Bool mInitialValuesSet = false;
 
+			// #### Controllers ####
+			/// Determines if Turbine and Governor are activated
+			Bool mHasTurbineGovernor = false;
+			/// Signal component modelling governor control and steam turbine
+			std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
+
 		public:
 			/// Destructor - does nothing.
 			virtual ~ReducedOrderSynchronGenerator() { }
@@ -173,6 +180,9 @@ namespace Base {
 			///
 			void setInitialValues(Complex initComplexElectricalPower, 
 				Real initMechanicalPower, Complex initTerminalVoltage);
+			/// Add governor and turbine
+			void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
+				Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
 
 			/// ### Setters ###
 			void reduceInertiaConstant(Real porcent) {mH = mH * (1.-porcent);}
