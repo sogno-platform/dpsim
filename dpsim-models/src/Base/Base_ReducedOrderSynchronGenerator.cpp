@@ -14,7 +14,8 @@ template <>
 Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
-	mElecTorque(Attribute<Real>::create("Etorque", mAttributes)),
+	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
+	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
@@ -32,7 +33,8 @@ template <>
 Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
-	mElecTorque(Attribute<Real>::create("Etorque", mAttributes)),
+	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
+	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
