@@ -65,6 +65,51 @@ jobs:
         name: pytest-output
         path: outputs/Examples/Notebooks/
 
+    - name: Cache notebook outputs for comparison 1/2
+      uses: actions/cache@v2
+      with:
+        path: outputs/Examples/Notebooks/
+        key: notebook-output-cache-commit-${{ github.ref }}
+
+    - name: Cache notebook outputs for comparison 2/2
+      if: github.ref_name == 'master'
+      uses: actions/cache@v2
+      with:
+        path: outputs/Examples/Notebooks/
+        key: notebook-output-cache-master
+
+  compare-notebook-results:
+    name: Compare Notebook results
+    runs-on: ubuntu-latest
+    needs: [test-jupyter-notebooks]
+    steps:
+    - name: Download new notebook results
+      uses: actions/download-artifact@v3
+      with:
+       name: pytest-output
+       path: ${{ github.workspace }}/notebooks-new
+    - name: Download master notebook results
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/notebooks-master
+        key: notebook-output-cache-master
+    - name: Download previous commit notebook results
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/notebooks-previous
+        key: notebook-output-cache-commit-${{ github.ref }}
+    - name: Compare current results with master
+      shell: bash
+      run: diff --color -r ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-master
+    - name: Compare current results with previous commit
+      shell: bash
+      run: diff --color -r ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-previous
+    - name: Cache new notebook results
+      shell: bash
+      run: |
+        rm -rf ${{ github.workspace }}/notebooks-previous
+        mv ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-previous
+
   test-binaries:
     name: Execute Example
     runs-on: ubuntu-latest
