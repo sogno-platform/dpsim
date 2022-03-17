@@ -105,16 +105,22 @@ class JupyterNotebookExport(pytest.Item):
 
     def runtest(self):
         from traitlets.config import Config
-        from nbconvert import HTMLExporter
+        #from nbconvert import HTMLExporter
+        from nbconvert import MarkdownExporter
         from nbconvert.writers import FilesWriter
 
         c = Config()
         c.FilesWriter.build_directory = 'outputs/' + self.builddir
-        c.HTMLExporter.preprocessors = [
+        # c.HTMLExporter.preprocessors = [
+        #     'nbconvert.preprocessors.ExecutePreprocessor',
+        #     'nbconvert.preprocessors.ExtractOutputPreprocessor'
+        # ]
+        c.MarkdownExporter.preprocessors = [
             'nbconvert.preprocessors.ExecutePreprocessor',
             'nbconvert.preprocessors.ExtractOutputPreprocessor'
         ]
-        exporter = HTMLExporter(config=c)
+        #exporter = HTMLExporter(config=c)
+        exporter = MarkdownExporter(config=c)
 
         os.makedirs(c.FilesWriter.build_directory, exist_ok=True)
 
