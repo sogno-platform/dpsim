@@ -88,22 +88,29 @@ jobs:
       with:
        name: pytest-output
        path: ${{ github.workspace }}/notebooks-new
+    
     - name: Download master notebook results
       uses: actions/cache@v2
       with:
         path: ${{ github.workspace }}/notebooks-master
         key: notebook-output-cache-master
+    
     - name: Download previous commit notebook results
       uses: actions/cache@v2
       with:
         path: ${{ github.workspace }}/notebooks-previous
         key: notebook-output-cache-commit-${{ github.ref }}
+    
     - name: Compare current results with master
       shell: bash
       run: diff --color -r ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-master
+      continue-on-error: true
+
     - name: Compare current results with previous commit
       shell: bash
       run: diff --color -r ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-previous
+      continue-on-error: true
+
     - name: Cache new notebook results
       shell: bash
       run: |
