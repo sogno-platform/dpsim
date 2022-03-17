@@ -26,6 +26,7 @@ namespace CPS {
 		UInt mNumFreqs = 0;
 		///
 		MatrixVar<VarType> mVoltage;
+		MatrixVar<VarType> mApparentPower;
 		///
 		Task::List mMnaTasks;
 	public:
@@ -94,6 +95,8 @@ namespace CPS {
 		void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) { mMatrixNodeIndex[phase] = matrixNodeIndex; }
 		///
 		void setVoltage(VarType newVoltage) { }
+		///
+		void setPower(VarType newPower) { }
 
 		// #### MNA Section ####
 		///
