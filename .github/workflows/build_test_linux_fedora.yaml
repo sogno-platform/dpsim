@@ -75,19 +75,6 @@ jobs:
       with:
         path: ${{ github.workspace }}/build
         key: build-cache-fedora-${{ github.sha }}
-    
-    - name: Cache notebook outputs for comparison 1/2
-      uses: actions/cache@v2
-      with:
-        path: ${{ github.workspace }}/cache-commit
-        key: notebook-output-cache-commit-${{ github.ref }}
-
-    - name: Cache notebook outputs for comparison 2/2
-      if: github.ref_name == 'master'
-      uses: actions/cache@v2
-      with:
-        path: ${{ github.workspace }}/cache-master
-        key: notebook-output-cache-master
 
     - name: Run pytest
       shell: bash
@@ -101,19 +88,6 @@ jobs:
       with:
         name: pytest-output
         path: outputs/Examples/Notebooks/
-
-    - name: Save notebook outputs to cache 1/2
-      shell: bash
-      run: |
-        rm -rf ${{ github.workspace }}/cache-commit
-        cp -R outputs/Examples/Notebooks/ ${{ github.workspace }}/cache-commit
-
-    - name: Save notebook outputs to cache 2/2
-      if: github.ref_name == 'master'
-      shell: bash
-      run: |
-        rm -rf ${{ github.workspace }}/cache-master
-        cp -R outputs/Examples/Notebooks/ ${{ github.workspace }}/cache-master
 
   compare-notebook-results:
     name: Compare Notebook results
@@ -148,11 +122,18 @@ jobs:
       run: diff --color -r ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-previous
       continue-on-error: true
 
-    - name: Cache new notebook results
+    - name: Cache new notebook results 1/2
       shell: bash
       run: |
         rm -rf ${{ github.workspace }}/notebooks-previous
-        mv ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-previous
+        cp -R ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-previous
+
+    - name: Cache new notebook results 2/2
+      if: ${{ github.ref_name }} == 'master'
+      shell: bash
+      run: |
+        rm -rf ${{ github.workspace }}/notebooks-master
+        cp -R ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-master
 
   test-binaries:
     name: Execute Example
