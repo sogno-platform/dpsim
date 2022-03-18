@@ -34,7 +34,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         path: ${{ github.workspace }}/build
-        name: build-cache-dpsimpy
+        name: build-cache
 
   linux-fedora-examples:
     name: Build Cxx examples on Fedora Linux
@@ -50,7 +50,7 @@ jobs:
     - name: Restore build archive
       uses: actions/download-artifact@v3
       with:
-       name: build-cache-dpsimpy
+       name: build-cache
        path: ${{ github.workspace }}/build
 
     - name: Build every target
@@ -64,7 +64,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         path: ${{ github.workspace }}/build
-        name: build-cache-examples
+        name: build-cache
 
 ## Tests ##
   test-jupyter-notebooks:
@@ -76,11 +76,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Restore Build Cache
-      uses: actions/cache@v2
+    - name: Restore build archive
+      uses: actions/download-artifact@v3
       with:
-        path: ${{ github.workspace }}/build
-        key: build-cache-fedora-${{ github.sha }}
+       name: build-cache
+       path: ${{ github.workspace }}/build
 
     - name: Run pytest
       shell: bash
@@ -139,7 +139,7 @@ jobs:
         cp -R ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-previous
 
     - name: Cache new notebook results 2/2
-      if: ${{ github.ref_name }} == 'master'
+      if: github.ref_name == 'master'
       shell: bash
       run: |
         rm -rf ${{ github.workspace }}/notebooks-master
@@ -154,7 +154,7 @@ jobs:
     - name: Restore build archive
       uses: actions/download-artifact@v3
       with:
-       name: build-cache-examples
+       name: build-cache
        path: ${{ github.workspace }}/build
 
     - name: Run Binaries 1/2
