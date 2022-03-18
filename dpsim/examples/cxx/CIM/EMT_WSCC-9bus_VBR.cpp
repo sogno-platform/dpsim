@@ -97,6 +97,8 @@ int main(int argc, char *argv[]) {
 	for (auto comp : sys.mComponents) {
 		if (std::dynamic_pointer_cast<CPS::EMT::Ph3::SynchronGeneratorVBR>(comp))
 			logger->logAttribute(comp->name() + ".I", comp->attribute("i_intf"));
+			logger->logAttribute(comp->name() + ".omega", comp->attribute("w_r"));
+			logger->logAttribute(comp->name() + ".delta", comp->attribute("delta_r"));
 	}
 
 	Simulation sim(simName, Logger::Level::info);
