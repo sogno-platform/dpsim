@@ -30,11 +30,11 @@ jobs:
       env:
         MAKEFLAGS: "-j2"
 
-    - name: Cache build directory
-      uses: actions/cache@v2
+    - name: Archive build directory
+      uses: actions/upload-artifact@v2
       with:
         path: ${{ github.workspace }}/build
-        key: build-cache-fedora-${{ github.sha }}
+        name: build-cache-dpsimpy
 
   linux-fedora-examples:
     name: Build Cxx examples on Fedora Linux
@@ -47,11 +47,11 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Restore build cache
-      uses: actions/cache@v2
+    - name: Restore build archive
+      uses: actions/download-artifact@v3
       with:
-        path: ${{ github.workspace }}/build
-        key: build-cache-fedora-${{ github.sha }}
+       name: build-cache-dpsimpy
+       path: ${{ github.workspace }}/build
 
     - name: Build every target
       shell: bash
@@ -59,6 +59,12 @@ jobs:
       run: cmake --build .
       env:
         MAKEFLAGS: "-j2"
+
+    - name: Archive build directory
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{ github.workspace }}/build
+        name: build-cache-examples
 
 ## Tests ##
   test-jupyter-notebooks:
@@ -104,13 +110,17 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ github.workspace }}/notebooks-master
-        key: notebook-output-cache-master
+        key: notebook-output-cache-master-${{ github.sha }}
+        restore-keys: |
+          notebook-output-cache-master-
     
     - name: Download previous commit notebook results
       uses: actions/cache@v2
       with:
         path: ${{ github.workspace }}/notebooks-previous
-        key: notebook-output-cache-commit-${{ github.ref }}
+        key: notebook-output-cache-commit-${{ github.ref }}-${{ github.sha }}
+        restore-keys: |
+          notebook-output-cache-commit-${{ github.ref }}-
     
     - name: Compare current results with master
       shell: bash
@@ -141,11 +151,11 @@ jobs:
     container: sogno/dpsim:dev
     needs: [linux-fedora-examples]
     steps:
-    - name: Restore Cache
-      uses: actions/cache@v2
+    - name: Restore build archive
+      uses: actions/download-artifact@v3
       with:
-        path: ${{ github.workspace }}/build
-        key: build-cache-fedora-${{ github.sha }}
+       name: build-cache-examples
+       path: ${{ github.workspace }}/build
 
     - name: Run Binaries 1/2
       run: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
