@@ -5,8 +5,8 @@ on: push
 ## Build ##
 
 jobs:
-  linux-fedora:
-    name: Build on Fedora Linux
+  linux-fedora-dpsimpy:
+    name: Build dpsimpy on Fedora Linux
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
     steps:
@@ -23,10 +23,10 @@ jobs:
       working-directory: ${{ github.workspace }}/build
       run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE
 
-    - name: Build every target
+    - name: Build dpsimpy
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake --build .
+      run: cmake --build . --target dpsimpy
       env:
         MAKEFLAGS: "-j2"
 
@@ -36,22 +36,59 @@ jobs:
         path: ${{ github.workspace }}/build
         key: build-cache-fedora-${{ github.sha }}
 
+  linux-fedora-examples:
+    name: Build Cxx examples on Fedora Linux
+    runs-on: ubuntu-latest
+    needs: [linux-fedora-dpsimpy]
+    container: sogno/dpsim:dev
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Restore build cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-fedora-${{ github.sha }}
+
+    - name: Build every target
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake --build .
+      env:
+        MAKEFLAGS: "-j2"
+
 ## Tests ##
   test-jupyter-notebooks:
     name: Run pytest over all notebooks
     runs-on: ubuntu-latest
-    needs: [linux-fedora]
+    needs: [linux-fedora-dpsimpy]
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Restore Cache
+    - name: Restore Build Cache
       uses: actions/cache@v2
       with:
         path: ${{ github.workspace }}/build
         key: build-cache-fedora-${{ github.sha }}
     
+    - name: Cache notebook outputs for comparison 1/2
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/cache-commit
+        key: notebook-output-cache-commit-${{ github.ref }}
+
+    - name: Cache notebook outputs for comparison 2/2
+      if: github.ref_name == 'master'
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/cache-master
+        key: notebook-output-cache-master
+
     - name: Run pytest
       shell: bash
       working-directory: ${{ github.workspace }}
@@ -65,18 +102,18 @@ jobs:
         name: pytest-output
         path: outputs/Examples/Notebooks/
 
-    - name: Cache notebook outputs for comparison 1/2
-      uses: actions/cache@v2
-      with:
-        path: outputs/Examples/Notebooks/
-        key: notebook-output-cache-commit-${{ github.ref }}
+    - name: Save notebook outputs to cache 1/2
+      shell: bash
+      run: |
+        rm -rf ${{ github.workspace }}/cache-commit
+        cp -R outputs/Examples/Notebooks/ ${{ github.workspace }}/cache-commit
 
-    - name: Cache notebook outputs for comparison 2/2
+    - name: Save notebook outputs to cache 2/2
       if: github.ref_name == 'master'
-      uses: actions/cache@v2
-      with:
-        path: outputs/Examples/Notebooks/
-        key: notebook-output-cache-master
+      shell: bash
+      run: |
+        rm -rf ${{ github.workspace }}/cache-master
+        cp -R outputs/Examples/Notebooks/ ${{ github.workspace }}/cache-master
 
   compare-notebook-results:
     name: Compare Notebook results
@@ -121,7 +158,7 @@ jobs:
     name: Execute Example
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
-    needs: [linux-fedora]
+    needs: [linux-fedora-examples]
     steps:
     - name: Restore Cache
       uses: actions/cache@v2
