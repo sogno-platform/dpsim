@@ -10,48 +10,48 @@ endif()
 set(CIRCUIT_SOURCES
 	# DP examples
 	Circuits/DP_VS_RL1.cpp
-	# Circuits/DP_Circuits.cpp
-	# Circuits/DP_Basics_DP_Sims.cpp
-	# Circuits/DP_PiLine.cpp
-	# Circuits/DP_DecouplingLine.cpp
-	# Circuits/DP_Diakoptics.cpp
-	# Circuits/DP_VSI.cpp
+	Circuits/DP_Circuits.cpp
+	Circuits/DP_Basics_DP_Sims.cpp
+	Circuits/DP_PiLine.cpp
+	Circuits/DP_DecouplingLine.cpp
+	Circuits/DP_Diakoptics.cpp
+	Circuits/DP_VSI.cpp
 
-	# # DP examples with PF initialization
-	# Circuits/DP_Slack_PiLine_PQLoad_with_PF_Init.cpp
-	# Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
-	# Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
+	# DP examples with PF initialization
+	Circuits/DP_Slack_PiLine_PQLoad_with_PF_Init.cpp
+	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	
-	# # Powerflow examples
-	# Circuits/PF_Slack_PiLine_PQLoad.cpp
+	# Powerflow examples
+	Circuits/PF_Slack_PiLine_PQLoad.cpp
 
-	# # EMT examples
-	# Circuits/EMT_CS_RL1.cpp
-	# Circuits/EMT_VS_RL1.cpp
-	# Circuits/EMT_Circuits.cpp
-	# Circuits/DP_Basics_EMT_Sims.cpp
-	# #Circuits/EMT_ResVS_RL_Switch.cpp
-	# Circuits/EMT_VSI.cpp
-	# Circuits/EMT_PiLine.cpp
+	# EMT examples
+	Circuits/EMT_CS_RL1.cpp
+	Circuits/EMT_VS_RL1.cpp
+	Circuits/EMT_Circuits.cpp
+	Circuits/DP_Basics_EMT_Sims.cpp
+	#Circuits/EMT_ResVS_RL_Switch.cpp
+	Circuits/EMT_VSI.cpp
+	Circuits/EMT_PiLine.cpp
 
-	# # EMT examples with PF initialization
-	# Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
-	# Circuits/EMT_Slack_PiLine_VSI_with_PF_Init.cpp
-	# Circuits/EMT_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
+	# EMT examples with PF initialization
+	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
+	Circuits/EMT_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/EMT_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 
-	# # SP examples
-	# Circuits/SP_Circuits.cpp
-	# Circuits/SP_PiLine.cpp
-	# Circuits/SP_Slack_PiLine_VSI_with_PF_Init.cpp
-	# Circuits/SP_Slack_PiLine_PQLoad_with_PF_Init.cpp
+	# SP examples
+	Circuits/SP_Circuits.cpp
+	Circuits/SP_PiLine.cpp
+	Circuits/SP_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/SP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 
-	# # Combined EMT/DP/SP examples
-	# Circuits/EMT_DP_SP_Slack.cpp
-	# Circuits/EMT_DP_SP_VS_Init.cpp
-	# Circuits/EMT_DP_SP_VS_RLC.cpp
-	# Circuits/DP_EMT_RL_SourceStep.cpp
-	# Circuits/EMT_DP_SP_Trafo.cpp
-	# Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FM.cpp
+	# Combined EMT/DP/SP examples
+	Circuits/EMT_DP_SP_Slack.cpp
+	Circuits/EMT_DP_SP_VS_Init.cpp
+	Circuits/EMT_DP_SP_VS_RLC.cpp
+	Circuits/DP_EMT_RL_SourceStep.cpp
+	Circuits/EMT_DP_SP_Trafo.cpp
+	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FM.cpp
 
 	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
@@ -75,11 +75,11 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/SP_SynGen4OrderDCIM_SMIB_Fault.cpp
 
-	# #3Bus System
-	# Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
-	# Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
-	# Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
-	# Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
+	#3Bus System
+	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
+	Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
+	Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
+	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
 
 )
 
@@ -98,9 +98,9 @@ set(SYNCGEN_SOURCES
 )
 
 set(INVERTER_SOURCES
-	# Components/DP_Inverter_Grid.cpp
-	# Components/DP_Inverter_Grid_Parallel_FreqSplit.cpp
-	# Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp
+	Components/DP_Inverter_Grid.cpp
+	Components/DP_Inverter_Grid_Parallel_FreqSplit.cpp
+	Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp
 )
 
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry
@@ -125,16 +125,16 @@ list(APPEND TEST_SOURCES
 
 if(WITH_SUNDIALS)
 	list(APPEND SYNCGEN_SOURCES
-		# Components/DP_SynGenDq7odODE_SteadyState.cpp
-		# Components/DP_SynGenDq7odODE_ThreePhFault.cpp
-		# Components/DP_Multimachine_DQ_Parallel.cpp
-		# Components/DP_EMT_SynGenDq7odODE_SteadyState.cpp
-		# Components/DP_EMT_SynGenDq7odODE_ThreePhFault.cpp
-		# Components/DP_EMT_SynGenDq7odODE_LoadStep.cpp
+		Components/DP_SynGenDq7odODE_SteadyState.cpp
+		Components/DP_SynGenDq7odODE_ThreePhFault.cpp
+		Components/DP_Multimachine_DQ_Parallel.cpp
+		Components/DP_EMT_SynGenDq7odODE_SteadyState.cpp
+		Components/DP_EMT_SynGenDq7odODE_ThreePhFault.cpp
+		Components/DP_EMT_SynGenDq7odODE_LoadStep.cpp
 	)
 
 	set(DAE_SOURCES
-		# DAE/DAE_DP_test.cpp
+		DAE/DAE_DP_test.cpp
 	)
 endif()
 
@@ -150,36 +150,36 @@ if(WITH_CIM)
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 
 	set(CIM_SOURCES
-		# CIM/WSCC-9bus_CIM.cpp
-		# CIM/WSCC-9bus_CIM_Dyn.cpp
-		# CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
-		# CIM/SP_WSCC-9bus_CIM_Dyn_Switch.cpp
-		# CIM/EMT_WSCC-9bus_IdealVS.cpp
-		# CIM/EMT_WSCC-9bus_IdealCS.cpp
-		# CIM/EMT_WSCC-9bus_FullOrderSG.cpp
-		# CIM/EMT_WSCC-9bus_VBR.cpp
-		# CIM/DP_WSCC-9bus_IdealVS.cpp
+		CIM/WSCC-9bus_CIM.cpp
+		CIM/WSCC-9bus_CIM_Dyn.cpp
+		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
+		CIM/SP_WSCC-9bus_CIM_Dyn_Switch.cpp
+		CIM/EMT_WSCC-9bus_IdealVS.cpp
+		CIM/EMT_WSCC-9bus_IdealCS.cpp
+		CIM/EMT_WSCC-9bus_FullOrderSG.cpp
+		CIM/EMT_WSCC-9bus_VBR.cpp
+		CIM/DP_WSCC-9bus_IdealVS.cpp
 
-		# # PF(Power Flow) example
-		# CIM/Slack_Trafo_Load.cpp
-		# CIM/Slack_TrafoTapChanger_Load.cpp
-		# CIM/CIGRE_MV_PowerFlowTest.cpp
-		# CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
-		# CIM/IEEE_LV_PowerFlowTest.cpp
+		# PF(Power Flow) example
+		CIM/Slack_Trafo_Load.cpp
+		CIM/Slack_TrafoTapChanger_Load.cpp
+		CIM/CIGRE_MV_PowerFlowTest.cpp
+		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
+		CIM/IEEE_LV_PowerFlowTest.cpp
 
-		# # WSCC examples
-		# CIM/WSCC_9bus_mult_decoupled.cpp
-		# CIM/WSCC_9bus_mult_coupled.cpp
-		# CIM/WSCC_9bus_mult_diakoptics.cpp
+		# WSCC examples
+		CIM/WSCC_9bus_mult_decoupled.cpp
+		CIM/WSCC_9bus_mult_coupled.cpp
+		CIM/WSCC_9bus_mult_diakoptics.cpp
 
-		# # CIGRE MV examples
-		# CIM/PF_CIGRE_MV_withDG.cpp
-		# CIM/DP_CIGRE_MV_withoutDG.cpp
-		# CIM/DP_CIGRE_MV_withDG.cpp
-		# CIM/DP_CIGRE_MV_withDG_withLoadStep.cpp
-		# CIM/EMT_CIGRE_MV_withoutDG.cpp
-		# CIM/EMT_CIGRE_MV_withDG.cpp
-		# CIM/EMT_CIGRE_MV_withDG_withLoadStep.cpp
+		# CIGRE MV examples
+		CIM/PF_CIGRE_MV_withDG.cpp
+		CIM/DP_CIGRE_MV_withoutDG.cpp
+		CIM/DP_CIGRE_MV_withDG.cpp
+		CIM/DP_CIGRE_MV_withDG_withLoadStep.cpp
+		CIM/EMT_CIGRE_MV_withoutDG.cpp
+		CIM/EMT_CIGRE_MV_withDG.cpp
+		CIM/EMT_CIGRE_MV_withDG_withLoadStep.cpp
 	)
 
 	list(APPEND TEST_SOURCES
@@ -192,7 +192,7 @@ if(WITH_CIM)
 	if(WITH_RT)
 		list(APPEND RT_SOURCES
 			# The Loadflow example needs CIM++ and RT
-			# RealTime/RT_CIGRE_MV_PowerFlowTest.cpp
+			RealTime/RT_CIGRE_MV_PowerFlowTest.cpp
 		)
 	endif()
 endif()
