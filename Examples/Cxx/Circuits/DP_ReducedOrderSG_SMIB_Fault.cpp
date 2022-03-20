@@ -52,8 +52,8 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -140,17 +140,17 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP, true, logDownSampling);
-	//loggerDP->addAttribute("v_slack", 	 extnetDP->attribute("v_intf"));
-	//loggerDP->addAttribute("i_slack", 	 extnetDP->attribute("i_intf"));
-    loggerDP->addAttribute("i_gen", 	 genDP->attribute("i_intf"));
-	loggerDP->addAttribute("v_gen", 	 genDP->attribute("v_intf"));
-    loggerDP->addAttribute("Etorque", 	 genDP->attribute("Etorque"));
-    //loggerDP->addAttribute("delta", 	 genDP->attribute("delta"));
-    //loggerDP->addAttribute("w_r", 		 genDP->attribute("w_r"));
-	//loggerDP->addAttribute("Edq0",		 genDP->attribute("Edq0_t"));
-	//loggerDP->addAttribute("Vdq0", 		 genDP->attribute("Vdq0"));
-	//loggerDP->addAttribute("Idq0", 		 genDP->attribute("Idq0"));
-	//loggerDP->addAttribute("Eabc", 		 genDP->attribute("Eabc"));
+	//loggerDP->logAttribute("v_slack", 	 extnetDP->attribute("v_intf"));
+	//loggerDP->logAttribute("i_slack", 	 extnetDP->attribute("i_intf"));
+    loggerDP->logAttribute("i_gen", 	 genDP->attribute("i_intf"));
+	loggerDP->logAttribute("v_gen", 	 genDP->attribute("v_intf"));
+    loggerDP->logAttribute("Etorque", 	 genDP->attribute("Etorque"));
+    //loggerDP->logAttribute("delta", 	 genDP->attribute("delta"));
+    //loggerDP->logAttribute("w_r", 		 genDP->attribute("w_r"));
+	//loggerDP->logAttribute("Edq0",		 genDP->attribute("Edq0_t"));
+	//loggerDP->logAttribute("Vdq0", 		 genDP->attribute("Vdq0"));
+	//loggerDP->logAttribute("Idq0", 		 genDP->attribute("Idq0"));
+	//loggerDP->logAttribute("Eabc", 		 genDP->attribute("Eabc"));
 
 	Simulation simDP(simNameDP, logLevel);
 	simDP.doInitFromNodesAndTerminals(true);

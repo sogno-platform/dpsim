@@ -52,8 +52,8 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::off);
@@ -150,16 +150,16 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 			
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT, true, logDownSampling);
-	//loggerEMT->addAttribute("i_slack", 	extnetEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("v_gen", 	genEMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_gen", 	genEMT->attribute("i_intf"));
-    loggerEMT->addAttribute("Etorque", 	genEMT->attribute("Etorque"));
-    //loggerEMT->addAttribute("delta", 	genEMT->attribute("delta"));
-    //loggerEMT->addAttribute("w_r", 		genEMT->attribute("w_r"));
-	//loggerEMT->addAttribute("Vdq0", 	genEMT->attribute("Vdq0"));
-	//loggerEMT->addAttribute("Idq0", 	genEMT->attribute("Idq0"));
-	//loggerEMT->addAttribute("Edq0", 	genEMT->attribute("Edq0_t"));
-	//loggerEMT->addAttribute("Evbr", 	genEMT->attribute("Evbr"));
+	//loggerEMT->logAttribute("i_slack", 	extnetEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("v_gen", 	genEMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_gen", 	genEMT->attribute("i_intf"));
+    loggerEMT->logAttribute("Etorque", 	genEMT->attribute("Etorque"));
+    //loggerEMT->logAttribute("delta", 	genEMT->attribute("delta"));
+    //loggerEMT->logAttribute("w_r", 		genEMT->attribute("w_r"));
+	//loggerEMT->logAttribute("Vdq0", 	genEMT->attribute("Vdq0"));
+	//loggerEMT->logAttribute("Idq0", 	genEMT->attribute("Idq0"));
+	//loggerEMT->logAttribute("Edq0", 	genEMT->attribute("Edq0_t"));
+	//loggerEMT->logAttribute("Evbr", 	genEMT->attribute("Evbr"));
 
 	Simulation simEMT(simNameEMT, logLevel);
 	simEMT.doInitFromNodesAndTerminals(true);
