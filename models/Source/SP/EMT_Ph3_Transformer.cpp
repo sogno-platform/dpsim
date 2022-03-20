@@ -24,8 +24,8 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(1, 1);
-
-	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
+	
+	mRatio = Attribute<Complex>::create("ratio", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Transformer::clone(String name) {

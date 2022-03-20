@@ -24,9 +24,9 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 
-	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
-	addAttribute<Real>("R", &mResistance, Flags::write | Flags::read);
-	addAttribute<Real>("L", &mInductance, Flags::write | Flags::read);
+	mRatio = Attribute<Complex>::create("ratio", mAttributes);
+	mResistance = Attribute<Real>::create("R", mAttributes);
+	mInductance = Attribute<Real>::create("L", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
