@@ -12,14 +12,12 @@ using namespace CPS;
 
 EMT::Ph3::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
     (String uid, String name, Logger::Level logLevel)
-	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel) {
+	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
+	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)) {
 
 	// model specific variables
-	mEdq0_t = Matrix::Zero(3,1);
+	**mEdq0_t = Matrix::Zero(3,1);
 	mEhs_vbr = Matrix::Zero(3,1);
-
-    // Register attributes
-	addAttribute<Matrix>("Edq0_t", &mEdq0_t, Flags::read);
 }
 
 EMT::Ph3::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
@@ -35,7 +33,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator3OrderVBR::clone(String name)
 
 void EMT::Ph3::SynchronGenerator3OrderVBR::specificInitialization() {
 	// initial voltage behind the transient reactance in the dq0 reference frame
-	mEdq0_t(1,0) = mVdq0(1,0) + mIdq0(0,0) * mLd_t;
+	(**mEdq0_t)(1,0) = (**mVdq0)(1,0) + (**mIdq0)(0,0) * mLd_t;
 
 	// calculate auxiliar VBR constants
 	calculateAuxiliarConstants();
@@ -53,7 +51,7 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::specificInitialization() {
 		"\n--- Model specific initialization  ---"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\n--- Model specific initialization finished ---",
-		mEdq0_t(1,0)
+		(**mEdq0_t)(1,0)
 	);
 	mSLog->flush();
 }
@@ -68,13 +66,13 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::stepInPerUnit() {
 
 	if (mSimTime>0.0) {
 		// calculate Eq_t at t=k
-		mEdq0_t(1,0) = mIdq0(0,0) * mLd_t + mVdq0(1,0);
+		(**mEdq0_t)(1,0) = (**mIdq0)(0,0) * mLd_t + (**mVdq0)(1,0);
 
 		// calculate mechanical variables at t=k+1 with forward euler
-		mElecTorque = (mVdq0(0,0) * mIdq0(0,0) + mVdq0(1,0) * mIdq0(1,0));
-		mOmMech = mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - mElecTorque));
-		mThetaMech = mThetaMech + mTimeStep * (mOmMech * mBase_OmMech);
-		mDelta = mDelta + mTimeStep * (mOmMech - 1.) * mBase_OmMech;
+		**mElecTorque = ((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0));
+		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - **mElecTorque));
+		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
 	// get transformation matrix
@@ -86,10 +84,10 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::stepInPerUnit() {
 
 	// VBR history voltage
 	mEhs_vbr(0,0) = 0.0;
-	mEhs_vbr(1,0) = mAq * mIdq0(0,0) + mBq * mEdq0_t(1,0) + mCq;
+	mEhs_vbr(1,0) = mAq * (**mIdq0)(0,0) + mBq * (**mEdq0_t)(1,0) + mCq;
 	mEhs_vbr(2,0) = 0.0;
 
 	// convert Edq_t into the abc reference frame
-	mEvbr = mDq0ToAbc * mEhs_vbr * mBase_V;
+	**mEvbr = mDq0ToAbc * mEhs_vbr * mBase_V;
 }
 

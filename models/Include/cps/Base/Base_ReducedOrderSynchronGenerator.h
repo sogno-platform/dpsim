@@ -49,17 +49,19 @@ namespace Base {
 			/// (0,0) = Id
 			/// (1,0) = Iq
 			Matrix mIdq;
+		public:
 			/// dq stator terminal voltage
 			/// (0,0) = Vd
 			/// (1,0) = Vq
 			/// (2,0) = V0
-			Matrix mVdq0;
+			const Attribute<Matrix>::Ptr mVdq0;
 			/// dq armature current
 			/// (0,0) = Id
 			/// (1,0) = Iq
 			/// (2,0) = I0
-			Matrix mIdq0;
+			const Attribute<Matrix>::Ptr mIdq0;
 
+		protected:
 			// ### Base quantities (stator refered) ###
 			/// Nominal power
 			Real mNomPower;
@@ -134,23 +136,23 @@ namespace Base {
 			/// initial field voltage (p.u.)
 			Real mEf;
 
-
-			// ### State variables [p.u.]###
-			/// stator electrical torque
-			Real mElecTorque;
-			/// Mechanical torque
-			Real mMechTorque;
-			/// Rotor speed
-			Real mOmMech;
-			/// mechanical system angle (between d-axis and stator a-axis)
-			Real mThetaMech;
-			/// Load angle (between q-axis and stator a-axis)
-			Real mDelta;		
-
 			/// Flag to remember when initial values are set
 			Bool mInitialValuesSet = false;
 
+			// ### State variables [p.u.]###
+
+			/// Mechanical torque
+			Real mMechTorque;
 		public:
+			/// stator electrical torque
+			const Attribute<Real>::Ptr mElecTorque;
+			/// Rotor speed
+			const Attribute<Real>::Ptr mOmMech;
+			/// mechanical system angle (between d-axis and stator a-axis)
+			const Attribute<Real>::Ptr mThetaMech;
+			/// Load angle (between q-axis and stator a-axis)
+			const Attribute<Real>::Ptr mDelta;		
+
 			/// Destructor - does nothing.
 			virtual ~ReducedOrderSynchronGenerator() { }
 
@@ -181,9 +183,9 @@ namespace Base {
 			class MnaPreStep : public Task {
 				public:
 					MnaPreStep(ReducedOrderSynchronGenerator<VarType>& synGen)
-					: Task(synGen.mName + ".MnaPreStep"), mSynGen(synGen) {
-				    	mModifiedAttributes.push_back(synGen.attribute("right_vector"));
-				    	mPrevStepDependencies.push_back(synGen.attribute("v_intf"));
+					: Task(**synGen.mName + ".MnaPreStep"), mSynGen(synGen) {
+				    	mModifiedAttributes.push_back(synGen.mRightVector);
+				    	mPrevStepDependencies.push_back(synGen.mIntfVoltage);
 				}
 				void execute(Real time, Int timeStepCount);
 
@@ -194,10 +196,10 @@ namespace Base {
 			class MnaPostStep : public Task {
 			public:
 				MnaPostStep(ReducedOrderSynchronGenerator<VarType>& synGen, Attribute<Matrix>::Ptr leftSideVector) :
-					Task(synGen.mName + ".MnaPostStep"), 
+					Task(**synGen.mName + ".MnaPostStep"), 
 					mSynGen(synGen), mLeftVector(leftSideVector) {
 					mAttributeDependencies.push_back(mLeftVector);
-					mModifiedAttributes.push_back(synGen.attribute("v_intf"));
+					mModifiedAttributes.push_back(synGen.mIntfVoltage);
 				}
 				void execute(Real time, Int timeStepCount);
 			private:

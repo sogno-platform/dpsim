@@ -13,41 +13,37 @@ using namespace CPS;
 template <>
 Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel),
+	mElecTorque(Attribute<Real>::create("Etorque", mAttributes)),
+	mDelta(Attribute<Real>::create("delta", mAttributes)),
+	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
+	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
+	mVdq0(Attribute<Matrix>::create("Vdq0", mAttributes)),
+	mIdq0(Attribute<Matrix>::create("Idq0", mAttributes)) {
 	
 	mSimTime = 0.0;
 	
 	// declare state variables
-	mVdq0 = Matrix::Zero(3,1);
-	mIdq0 = Matrix::Zero(3,1);
-
-    // Register attributes
-	addAttribute<Real>("Etorque", &mElecTorque, Flags::read);
-	addAttribute<Real>("delta", &mDelta, Flags::read);
-	addAttribute<Real>("Theta", &mThetaMech, Flags::read);
-    addAttribute<Real>("w_r", &mOmMech, Flags::read);
-	addAttribute<Matrix>("Vdq0", &mVdq0, Flags::read);
-	addAttribute<Matrix>("Idq0", &mIdq0, Flags::read);
+	**mVdq0 = Matrix::Zero(3,1);
+	**mIdq0 = Matrix::Zero(3,1);
 }
 
 template <>
 Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mElecTorque(Attribute<Real>::create("Etorque", mAttributes)),
+	mDelta(Attribute<Real>::create("delta", mAttributes)),
+	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
+	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
+	mVdq0(Attribute<Matrix>::create("Vdq0", mAttributes)),
+	mIdq0(Attribute<Matrix>::create("Idq0", mAttributes))  {
 	
 	mSimTime = 0.0;
 	
 	// declare state variables
 	mVdq = Matrix::Zero(2,1);
 	mIdq = Matrix::Zero(2,1);
-
-    // Register attributes
-	addAttribute<Real>("Etorque", &mElecTorque, Flags::read);
-	addAttribute<Real>("delta", &mDelta, Flags::read);
-	addAttribute<Real>("Theta", &mThetaMech, Flags::read);
-    addAttribute<Real>("w_r", &mOmMech, Flags::read);
-	addAttribute<Matrix>("Vdq0", &mVdq, Flags::read);
-	addAttribute<Matrix>("Idq0", &mIdq, Flags::read);
 }
 
 template <typename VarType>
@@ -163,27 +159,27 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
 
 	// Load angle
-	mDelta = Math::phase(Eq0);
+	**mDelta = Math::phase(Eq0);
 	
 	// convert currrents to dq reference frame
-	mIdq0(0,0) = Math::abs(mInitCurrent) * sin(mDelta - mInitCurrentAngle);
-	mIdq0(1,0) = Math::abs(mInitCurrent) * cos(mDelta - mInitCurrentAngle);
+	(**mIdq0)(0,0) = Math::abs(mInitCurrent) * sin(**mDelta - mInitCurrentAngle);
+	(**mIdq0)(1,0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
 
 	// convert voltages to dq reference frame
-	mVdq0(0,0) = Math::abs(mInitVoltage) * sin(mDelta  - mInitVoltageAngle);
-	mVdq0(1,0) = Math::abs(mInitVoltage) * cos(mDelta  - mInitVoltageAngle);
+	(**mVdq0)(0,0) = Math::abs(mInitVoltage) * sin(**mDelta  - mInitVoltageAngle);
+	(**mVdq0)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta  - mInitVoltageAngle);
 
 	// calculate Ef
-	mEf = Math::abs(Eq0) + (mLd - mLq) * mIdq0(0,0);
+	mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq0)(0,0);
 
 	// initial electrical torque
-	mElecTorque = mVdq0(0,0) * mIdq0(0,0) + mVdq0(1,0) * mIdq0(1,0);
+	**mElecTorque = (**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0);
 	
 	// Initialize omega mech with nominal system frequency
-	mOmMech = mNomOmega / mBase_OmMech;
+	**mOmMech = mNomOmega / mBase_OmMech;
 	
 	// initialize theta and calculate transform matrix
-	mThetaMech = mDelta - PI / 2.;
+	**mThetaMech = **mDelta - PI / 2.;
 
 	mSLog->info(
 		"\n--- Initialization from power flow  ---"
@@ -198,15 +194,15 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
         "\nInitial delta (per unit): {:f}"
 		"\n--- Initialization from power flow finished ---",
 
-		mVdq0(0,0),
-		mVdq0(1,0),
-		mIdq0(0,0),
-		mIdq0(1,0),
+		(**mVdq0)(0,0),
+		(**mVdq0)(1,0),
+		(**mIdq0)(0,0),
+		(**mIdq0)(1,0),
 		mEf,
 		mMechTorque,
-		mElecTorque,
-		mThetaMech,
-        mDelta
+		**mElecTorque,
+		**mThetaMech,
+        **mDelta
 	);
 	mSLog->flush();
 }
@@ -226,27 +222,27 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
 	
 	// Load angle
-	mDelta = Math::phase(Eq0);
+	**mDelta = Math::phase(Eq0);
 	
 	// convert currrents to dq reference frame
-	mIdq(0,0) = Math::abs(mInitCurrent) * sin(mDelta - mInitCurrentAngle);
-	mIdq(1,0) = Math::abs(mInitCurrent) * cos(mDelta - mInitCurrentAngle);
+	mIdq(0,0) = Math::abs(mInitCurrent) * sin(**mDelta - mInitCurrentAngle);
+	mIdq(1,0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
 
 	// convert voltages to dq reference frame
-	mVdq(0,0) = Math::abs(mInitVoltage) * sin(mDelta  - mInitVoltageAngle);
-	mVdq(1,0) = Math::abs(mInitVoltage) * cos(mDelta  - mInitVoltageAngle);
+	mVdq(0,0) = Math::abs(mInitVoltage) * sin(**mDelta  - mInitVoltageAngle);
+	mVdq(1,0) = Math::abs(mInitVoltage) * cos(**mDelta  - mInitVoltageAngle);
 
 	// calculate Ef
 	mEf = Math::abs(Eq0) + (mLd - mLq) * mIdq(0,0);
 
 	// initial electrical torque
-	mElecTorque = mVdq(0,0) * mIdq(0,0) + mVdq(1,0) * mIdq(1,0);
+	**mElecTorque = mVdq(0,0) * mIdq(0,0) + mVdq(1,0) * mIdq(1,0);
 	
 	// Initialize omega mech with nominal system frequency
-	mOmMech = mNomOmega / mBase_OmMech;
+	**mOmMech = mNomOmega / mBase_OmMech;
 	
 	// initialize theta and calculate transform matrix
-	mThetaMech = mDelta - PI / 2.;
+	**mThetaMech = **mDelta - PI / 2.;
 
 	mSLog->info(
 		"\n--- Initialization from power flow  ---"
@@ -267,9 +263,9 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 		mIdq(1,0),
 		mEf,
 		mMechTorque,
-		mElecTorque,
-		mThetaMech,
-        mDelta
+		**mElecTorque,
+		**mThetaMech,
+        **mDelta
 	);
 	mSLog->flush();
 }
@@ -283,7 +279,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
 	mTimeStep = timeStep;
     specificInitialization();
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
@@ -292,13 +288,13 @@ template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mSynGen.mSimTime = time;
 	mSynGen.stepInPerUnit();
-	mSynGen.mRightVector.setZero();
-	mSynGen.mnaApplyRightSideVectorStamp(mSynGen.mRightVector);
+	(**mSynGen.mRightVector).setZero();
+	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
 }
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mSynGen.mnaPostStep(*mLeftVector);
+	mSynGen.mnaPostStep(**mLeftVector);
 }
 
 // Declare specializations to move definitions to .cpp

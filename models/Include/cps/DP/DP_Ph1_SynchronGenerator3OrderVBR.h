@@ -18,10 +18,11 @@ namespace Ph1 {
 	class SynchronGenerator3OrderVBR :
 		public SynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator3OrderVBR> {
-	protected:
+	public:
 		// #### Model specific variables ####
 		/// voltage behind transient reactance
-		Matrix mEdq_t;
+		const Attribute<Matrix>::Ptr mEdq_t;
+	protected:
 		/// history term of voltage behind the transient reactance
 		Matrix mEh_vbr;
 
