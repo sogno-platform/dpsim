@@ -40,16 +40,17 @@ namespace Base {
 			Real mTimeStep;
 			Real mSimTime;
 
+		public:
 			// ### State variables [p.u.]###
 			/// dq stator terminal voltage
 			/// (0,0) = Vd
 			/// (1,0) = Vq
-			Matrix mVdq;
+			const Attribute<Matrix>::Ptr mVdq;
 			/// dq armature current
 			/// (0,0) = Id
 			/// (1,0) = Iq
-			Matrix mIdq;
-		public:
+			const Attribute<Matrix>::Ptr mIdq;
+		
 			/// dq stator terminal voltage
 			/// (0,0) = Vd
 			/// (1,0) = Vq

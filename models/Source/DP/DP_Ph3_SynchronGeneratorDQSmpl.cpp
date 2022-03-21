@@ -154,8 +154,8 @@ void DP::Ph3::SynchronGeneratorDQSmpl::stepInPerUnit(Real om, Real dt, Real time
 
 	Matrix mIdq = Matrix::Zero(2, 1);
 	mIdq = -mR_eq.inverse()*mE_eq;
-	mId = mIdq(0);
-	mIq = mIdq(1);
+	mId = (**mIdq)(0);
+	mIq = (**mIdq)(1);
 	mIfd = (mPsifd + mLmd*mId) / (mLlfd + mLmd);
 
 	mCurrents(0, 0) = mIq;

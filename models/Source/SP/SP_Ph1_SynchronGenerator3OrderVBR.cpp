@@ -34,7 +34,7 @@ void SP::Ph1::SynchronGenerator3OrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
 	(**mEdq_t)(0,0) = 0.0;
-	(**mEdq_t)(1,0) = mVdq(1,0) + mIdq(0,0) * mLd_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
 	// initialize conductance matrix 
 	mConductanceMatrix = Matrix::Zero(2,2);
@@ -69,10 +69,10 @@ void SP::Ph1::SynchronGenerator3OrderVBR::calculateAuxiliarConstants() {
 void SP::Ph1::SynchronGenerator3OrderVBR::stepInPerUnit() {
 	if (mSimTime>0.0) {
 		// calculate Eq_t at t=k
-		(**mEdq_t)(1,0) = mIdq(0,0) * mLd_t + mVdq(1,0);
+		(**mEdq_t)(1,0) = (**mIdq)(0,0) * mLd_t + (**mVdq)(1,0);
 
 		// calculate mechanical variables at t=k+1 with forward euler
-		**mElecTorque = (mVdq(0,0) * mIdq(0,0) + mVdq(1,0) * mIdq(1,0));
+		**mElecTorque = ((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0));
 		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - **mElecTorque));
 		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
@@ -86,7 +86,7 @@ void SP::Ph1::SynchronGenerator3OrderVBR::stepInPerUnit() {
 
 	// VBR history voltage
 	mEh_vbr(0,0) = 0.0;
-	mEh_vbr(1,0) = mAq * mIdq(0,0) + mBq * (**mEdq_t)(1,0) + mCq;
+	mEh_vbr(1,0) = mAq * (**mIdq)(0,0) + mBq * (**mEdq_t)(1,0) + mCq;
 	
 	// convert Edq_t into the abc reference frame
 	mEh_vbr = mDqToComplexA * mEh_vbr;

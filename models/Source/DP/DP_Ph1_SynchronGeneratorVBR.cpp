@@ -97,13 +97,13 @@ void DP::Ph1::SynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
 	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
 	Matrix Vabc = Matrix(3,1);
 	Vabc << Vabc_(0,0).real(), Vabc_(1,0).real(), Vabc_(2,0).real();
-	mVdq = parkTransform * Vabc / mBase_V_RMS;
+	**mVdq = parkTransform * Vabc / mBase_V_RMS;
 
 	// convert armature current into dq reference frame
 	MatrixComp Iabc_ = (**mIntfCurrent)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
 	Matrix Iabc = Matrix(3,1);
 	Iabc << Iabc_(0,0).real(), Iabc_(1,0).real(), Iabc_(2,0).real();
-	mIdq = parkTransform * Iabc / mBase_I_RMS;
+	**mIdq = parkTransform * Iabc / mBase_I_RMS;
 }
 
 Matrix DP::Ph1::SynchronGeneratorVBR::get_parkTransformMatrix() {

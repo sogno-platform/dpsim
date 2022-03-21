@@ -36,14 +36,14 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
-	mVdq0(Attribute<Matrix>::create("Vdq0", mAttributes)),
-	mIdq0(Attribute<Matrix>::create("Idq0", mAttributes))  {
+	mVdq(Attribute<Matrix>::create("Vdq0", mAttributes)),
+	mIdq(Attribute<Matrix>::create("Idq0", mAttributes))  {
 	
 	mSimTime = 0.0;
 	
 	// declare state variables
-	mVdq = Matrix::Zero(2,1);
-	mIdq = Matrix::Zero(2,1);
+	**mVdq = Matrix::Zero(2,1);
+	**mIdq = Matrix::Zero(2,1);
 }
 
 template <typename VarType>
@@ -225,18 +225,18 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	**mDelta = Math::phase(Eq0);
 	
 	// convert currrents to dq reference frame
-	mIdq(0,0) = Math::abs(mInitCurrent) * sin(**mDelta - mInitCurrentAngle);
-	mIdq(1,0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
+	(**mIdq)(0,0) = Math::abs(mInitCurrent) * sin(**mDelta - mInitCurrentAngle);
+	(**mIdq)(1,0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
 
 	// convert voltages to dq reference frame
-	mVdq(0,0) = Math::abs(mInitVoltage) * sin(**mDelta  - mInitVoltageAngle);
-	mVdq(1,0) = Math::abs(mInitVoltage) * cos(**mDelta  - mInitVoltageAngle);
+	(**mVdq)(0,0) = Math::abs(mInitVoltage) * sin(**mDelta  - mInitVoltageAngle);
+	(**mVdq)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta  - mInitVoltageAngle);
 
 	// calculate Ef
-	mEf = Math::abs(Eq0) + (mLd - mLq) * mIdq(0,0);
+	mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq)(0,0);
 
 	// initial electrical torque
-	**mElecTorque = mVdq(0,0) * mIdq(0,0) + mVdq(1,0) * mIdq(1,0);
+	**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
 	
 	// Initialize omega mech with nominal system frequency
 	**mOmMech = mNomOmega / mBase_OmMech;
@@ -257,10 +257,10 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
         "\nInitial delta (per unit): {:f}"
 		"\n--- Initialization from power flow finished ---",
 
-		mVdq(0,0),
-		mVdq(1,0),
-		mIdq(0,0),
-		mIdq(1,0),
+		(**mVdq)(0,0),
+		(**mVdq)(1,0),
+		(**mIdq)(0,0),
+		(**mIdq)(1,0),
 		mEf,
 		mMechTorque,
 		**mElecTorque,

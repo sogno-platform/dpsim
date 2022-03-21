@@ -64,13 +64,13 @@ void SP::Ph1::SynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	Matrix Vabc = Matrix::Zero(2,1);
 	Vabc << (**mIntfVoltage)(0, 0).real(), (**mIntfVoltage)(0, 0).imag();
-	mVdq = mComplexAToDq * Vabc / mBase_V_RMS;
+	**mVdq = mComplexAToDq * Vabc / mBase_V_RMS;
 
 	// update armature current
 	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
 	Matrix Iabc = Matrix::Zero(2,1);
 	Iabc << (**mIntfCurrent)(0, 0).real(), (**mIntfCurrent)(0, 0).imag();
-	mIdq = mComplexAToDq * Iabc / mBase_I_RMS;
+	**mIdq = mComplexAToDq * Iabc / mBase_I_RMS;
 }
 
 Matrix SP::Ph1::SynchronGeneratorVBR::get_DqToComplexATransformMatrix() {

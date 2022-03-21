@@ -180,8 +180,8 @@ void EMT::Ph3::SynchronGeneratorDQSmpl::stepInPerUnit(Real om, Real dt, Real tim
 
 	//mVdq = mR_eq*mIdq + mE_eq;
 
-	mId = mIdq(0);
-	mIq = mIdq(1);
+	mId = (**mIdq)(0);
+	mIq = (**mIdq)(1);
 	mIfd = (mPsifd + mLmd*mId) / (mLlfd + mLmd);
 
 	mCurrents(0, 0) = mIq;

@@ -35,8 +35,8 @@ SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGenerator4OrderDCIM::clone(String na
 void SP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
-	(**mEdq_t)(0,0) = mVdq(0,0) - mIdq(1,0) * mLq_t;
-	(**mEdq_t)(1,0) = mVdq(1,0) + mIdq(0,0) * mLd_t;
+	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
     // Initialize matrix of state representation
 	mA = Matrix::Zero(2,2);
@@ -76,7 +76,7 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - **mElecTorque));
 		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
-        **mElecTorque = (mVdq(0,0) * mIdq(0,0) + mVdq(1,0) * mIdq(1,0));
+        **mElecTorque = ((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0));
 	}
 
 	// get transformation matrix
@@ -84,14 +84,14 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	mComplexAToDq = mDqToComplexA.transpose();
 
 	// calculate Edq at t=k+1. Assumption: Vdq(k) = Vdq(k+1)
-	(**mEdq_t) = Math::StateSpaceTrapezoidal(**mEdq_t, mA, mB, mC, mTimeStep, mVdq);
+	(**mEdq_t) = Math::StateSpaceTrapezoidal(**mEdq_t, mA, mB, mC, mTimeStep, **mVdq);
 
 	// armature currents for at t=k+1
-	mIdq(0,0) = ((**mEdq_t)(1,0) - mVdq(1,0) ) / mLd_t;
-	mIdq(1,0) = (mVdq(0,0) - (**mEdq_t)(0,0) ) / mLq_t;
+	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
+	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0) ) / mLq_t;
 	
 	// convert currents into the abc domain
-	Matrix Ia = mDqToComplexA * mIdq;
+	Matrix Ia = mDqToComplexA * **mIdq;
 	(**mIntfCurrent)(0,0) = Complex(Ia(0,0), Ia(1,0)) * mBase_I_RMS;
 }
 
@@ -104,7 +104,7 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::mnaPostStep(const Matrix& leftVector)
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	Matrix Vabc = Matrix::Zero(2,1);
 	Vabc << (**mIntfVoltage)(0, 0).real(), (**mIntfVoltage)(0, 0).imag();
-	mVdq = mComplexAToDq * Vabc / mBase_V_RMS;
+	**mVdq = mComplexAToDq * Vabc / mBase_V_RMS;
 
     mSimTime = mSimTime + mTimeStep;
 }
