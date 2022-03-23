@@ -112,7 +112,7 @@ void EMT::Ph3::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), -conductance(2, 1));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -conductance(2, 2));
 	}
-	mSLog->info(
+	SPDLOG_LOGGER_TRACE(mSLog, 
 		"\nConductance matrix: {:s}",
 		Logger::matrixToString(conductance));
 }
@@ -170,7 +170,7 @@ void EMT::Ph3::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& syst
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -conductance(2, 2));
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_TRACE(mSLog, 
 		"\nConductance matrix: {:s}",
 		Logger::matrixToString(conductance));
 }
