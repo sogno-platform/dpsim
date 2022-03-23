@@ -77,22 +77,19 @@ namespace Ph1 {
 
 		// #### Power flow results ####
 		/// branch Current flow [A]
-		///CHECK: Is the special matrix type necessary?
-		const Attribute<Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign>>::Ptr mCurrent;
+		const Attribute<MatrixComp>::Ptr mCurrent;
 		/// CHECK: Are these derived attributes necessary?
 		Attribute<CPS::Complex>::Ptr mCurrent_0;
 		Attribute<CPS::Complex>::Ptr mCurrent_1;
 		
 		/// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
-		///CHECK: Is the special matrix type necessary?
-		const Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::Ptr mActivePowerBranch;
+		const Attribute<Matrix>::Ptr mActivePowerBranch;
 		/// CHECK: Are these derived attributes necessary?
 		Attribute<CPS::Real>::Ptr mActivePowerBranch_0;
 		Attribute<CPS::Real>::Ptr mActivePowerBranch_1;
 
 		/// branch reactive powerflow [Var]
-		///CHECK: Is the special matrix type necessary?
-		const Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::Ptr mReactivePowerBranch;
+		const Attribute<Matrix>::Ptr mReactivePowerBranch;
 		/// CHECK: Are these derived attributes necessary?
 		Attribute<CPS::Real>::Ptr mReactivePowerBranch_0;
 		Attribute<CPS::Real>::Ptr mReactivePowerBranch_1;

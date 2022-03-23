@@ -15,9 +15,9 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes, baseVoltage)),
-	mCurrent(Attribute<Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign>>::create("current_vector", mAttributes)),
-	mActivePowerBranch(Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::create("p_branch_vector", mAttributes)),
-	mReactivePowerBranch(Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::create("q_branch_vector", mAttributes)),
+	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
+	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
+	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
 	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
 	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
 	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
@@ -32,37 +32,18 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	**mSeriesRes = resistance;
 	**mInductance = inductance;
 
-	/// CHECK: This is a nice test of the dynamic attribute system, but seems very overkill for this use case.
-	mCurrent_0 = mCurrent->derive<Complex>(
-			[](std::shared_ptr<Complex> &dependent, Attribute<Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
-				*dependent = (**dependency)(0);
-			});
-	mCurrent_1 = mCurrent->derive<Complex>(
-			[](std::shared_ptr<Complex> &dependent, Attribute<Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
-				*dependent = (**dependency)(1);
-			});
+	mCurrent_0 = mCurrent->deriveCoeff<Complex>(0, 0);
+	mCurrent_1 = mCurrent->deriveCoeff<Complex>(1, 0);
 	mAttributes["current"] = mCurrent_0;
 	mAttributes["current_1"] = mCurrent_1;
 
-	mActivePowerBranch_0 = mActivePowerBranch->derive<Real>(
-			[](std::shared_ptr<Real> &dependent, Attribute<Eigen::Matrix<CPS::Real, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
-				*dependent = (**dependency)(0);
-			});
-	mActivePowerBranch_1 = mActivePowerBranch->derive<Real>(
-			[](std::shared_ptr<Real> &dependent, Attribute<Eigen::Matrix<CPS::Real, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
-				*dependent = (**dependency)(1);
-			});
+	mActivePowerBranch_0 = mActivePowerBranch->deriveCoeff<Real>(0, 0);
+	mActivePowerBranch_1 = mActivePowerBranch->deriveCoeff<Real>(1, 0);
 	mAttributes["p_branch"] = mActivePowerBranch_0;
 	mAttributes["p_branch_1"] = mActivePowerBranch_1;
 
-	mReactivePowerBranch_0 = mReactivePowerBranch->derive<Real>(
-			[](std::shared_ptr<Real> &dependent, Attribute<Eigen::Matrix<CPS::Real, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
-				*dependent = (**dependency)(0);
-			});
-	mReactivePowerBranch_1 = mReactivePowerBranch->derive<Real>(
-			[](std::shared_ptr<Real> &dependent, Attribute<Eigen::Matrix<CPS::Real, 2, 1,Eigen::DontAlign>>::Ptr dependency) {
-				*dependent = (**dependency)(1);
-			});
+	mReactivePowerBranch_0 = mReactivePowerBranch->deriveCoeff<Real>(0, 0);
+	mReactivePowerBranch_1 = mReactivePowerBranch->deriveCoeff<Real>(1, 0);
 	mAttributes["q_branch"] = mReactivePowerBranch_0;
 	mAttributes["q_branch_1"] = mReactivePowerBranch_1;
 
@@ -74,9 +55,9 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
-	mCurrent(Attribute<Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign>>::create("current_vector", mAttributes)),
-	mActivePowerBranch(Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::create("p_branch_vector", mAttributes)),
-	mReactivePowerBranch(Attribute<Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign>>::create("q_branch_vector", mAttributes)),
+	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
+	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
+	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
 	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
 	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
 	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
