@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 	Real Vref = 1;
 
 	Signal::Exciter exciter("exciter");
-	exciter.setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
+	exciter.setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
 
 	// Variables to read input
 	std::string line_vd;
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 			exciter.initialize(Vh_init, Vf_init);
 		}
 
-		vt = exciter.step(mVd, mVq, Vref, dt);
+		vt = (Rfd / Lmd)*exciter.step(mVd, mVq, Vref, dt);
 
 		log << t << "," << vt * 257198.07031934269 << std::endl;
 	}

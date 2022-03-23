@@ -82,7 +82,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mNominalOmega = 2. * PI * frequency;
 	mReactance = mNominalOmega * mInductance;
 	mSLog->info("Reactance={} [Ohm] (referred to primary side)", mReactance);
-
+	
 	// Component parameters are referred to higher voltage side.
 	// Switch terminals to have terminal 0 at higher voltage side
 	// if transformer is connected the other way around.
@@ -303,7 +303,7 @@ void SP::Ph1::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Ma
 	updateMatrixNodeIndices();
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
+	
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
@@ -367,7 +367,7 @@ void SP::Ph1::Transformer::mnaAddPreStepDependencies(AttributeBase::List &prevSt
 	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void SP::Ph1::Transformer::mnaPreStep(Real time, Int timeStepCount) {
+void SP::Ph1::Transformer::mnaPreStep(Real time, Int timeStepCount) {	
 	// pre-step of subcomponents
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))

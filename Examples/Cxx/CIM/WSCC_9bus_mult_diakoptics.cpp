@@ -121,10 +121,23 @@ int main(int argc, char *argv[]) {
 	//}
 	//simulateDiakoptics(filenames, 19, 8, 0);
 
-	std::cout << "Simulate with " << Int(args.options["copies"]) << " copies, "
-		<< Int(args.options["threads"]) << " threads, "
-		<< UInt(args.options["splits"]) << " splits, sequence number "
-		<< Int(args.options["seq"]) << std::endl;
-	simulateDiakoptics(filenames, Int(args.options["copies"]),
-		Int(args.options["threads"]), UInt(args.options["splits"]), Int(args.options["seq"]));
+	Int numCopies = 0;
+	Int numThreads = 0;
+	Int numSeq = 0;
+	Int numSplits = 0;
+
+	if (args.options.find("copies") != args.options.end())
+		numCopies = args.getOptionInt("copies");
+	if (args.options.find("threads") != args.options.end())
+		numThreads = args.getOptionInt("threads");
+	if (args.options.find("seq") != args.options.end())
+		numSeq = args.getOptionInt("seq");
+	if (args.options.find("splits") != args.options.end())
+		numSplits = args.getOptionInt("splits");
+
+	std::cout << "Simulate with " << numCopies << " copies, "
+		<< numThreads << " threads, "
+		<< numSplits << " splits, sequence number "
+		<< numSeq << std::endl;
+	simulateDiakoptics(filenames, numCopies, numThreads, numSplits, numSeq);
 }

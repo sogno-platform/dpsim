@@ -8,13 +8,15 @@
 
 #pragma once
 
-#include <cps/IdentifiedObject.h>
+#include <cps/SimSignalComp.h>
 #include <cps/Logger.h>
 
 namespace CPS {
 namespace Signal {
 	/// Exciter model
-	class Exciter : public IdentifiedObject {
+	class Exciter :
+		public SimSignalComp,
+		public SharedFactory<Exciter> {
 	protected:
 		Real mTa;
 		Real mKa;
@@ -48,10 +50,13 @@ namespace Signal {
 
 	public:
 		///
-		Exciter(String name) : IdentifiedObject(name) { }
+		Exciter(String name) : SimSignalComp(name, name) { }
+
+		/// Constructor with log level
+		Exciter(String name, CPS::Logger::Level logLevel);
 
 		/// Initializes exciter parameters
-		void setParameters(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
+		void setParameters(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr);
 		/// Initializes exciter variables
 		void initialize(Real Vh_init, Real Vf_init);
 		/// Performs an step to update field voltage value

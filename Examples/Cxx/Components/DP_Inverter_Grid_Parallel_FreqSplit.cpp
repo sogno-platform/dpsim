@@ -15,15 +15,15 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
 	CommandLineArgs args(argc, argv);
-	std::cout 	<< "Simulate with " << Int(args.options["threads"]) << " threads, sequence "
-				<< Int(args.options["seq"]) << std::endl;
+	std::cout 	<< "Simulate with " << args.getOptionInt("threads") << " threads, sequence "
+				<< args.getOptionInt("seq") << std::endl;
 
 	// Define simulation scenario
 	Real timeStep = 0.000001;
 	Real finalTime = 0.05;
-	String simName = "DP_Inverter_Grid_Parallel_FreqSplit_t" + std::to_string(Int(args.options["threads"])) + "_s" + std::to_string(Int(args.options["seq"]));
+	String simName = "DP_Inverter_Grid_Parallel_FreqSplit_t" + std::to_string(args.getOptionInt("threads")) + "_s" + std::to_string(args.getOptionInt("seq"));
 	Logger::setLogDir("logs/"+simName);
-	Int threads = Int(args.options["threads"]);
+	Int threads = args.getOptionInt("threads");
 
 	// Set system frequencies
 	//Matrix frequencies(5,1);

@@ -72,31 +72,31 @@ int main(int argc, char* argv[]) {
 
 		// Machine parameters
 		if (args.options.find("H") != args.options.end())
-			H = args.options["H"];
+			H = args.getOptionReal("H");
 		if (args.options.find("Rs") != args.options.end())
-			Rs = args.options["Rs"];
+			Rs = args.getOptionReal("Rs");
 		if (args.options.find("Ld") != args.options.end())
-			Ld = args.options["Ld"];
+			Ld = args.getOptionReal("Ld");
 		if (args.options.find("Lq") != args.options.end())
-			Lq = args.options["Lq"];
+			Lq = args.getOptionReal("Lq");
 		if (args.options.find("Ld_t") != args.options.end())
-			Ld_t = args.options["Ld_t"];
+			Ld_t = args.getOptionReal("Ld_t");
 		if (args.options.find("Lq_t") != args.options.end())
-			Lq_t = args.options["Lq_t"];
+			Lq_t = args.getOptionReal("Lq_t");
 		if (args.options.find("Ld_s") != args.options.end())
-			Ld_s = args.options["Ld_s"];
+			Ld_s = args.getOptionReal("Ld_s");
 		if (args.options.find("Lq_s") != args.options.end())
-			Lq_s = args.options["Lq_s"];
+			Lq_s = args.getOptionReal("Lq_s");
 		if (args.options.find("Ll") != args.options.end())
-			Ll = args.options["Ll"];
+			Ll = args.getOptionReal("Ll");
 		if (args.options.find("Td0_t") != args.options.end())
-			Td0_t = args.options["Td0_t"];
+			Td0_t = args.getOptionReal("Td0_t");
 		if (args.options.find("Tq0_t") != args.options.end())
-			Tq0_t = args.options["Tq0_t"];
+			Tq0_t = args.getOptionReal("Tq0_t");
 		if (args.options.find("Td0_s") != args.options.end())
-			Td0_s = args.options["Td0_s"];
+			Td0_s = args.getOptionReal("Td0_s");
 		if (args.options.find("Tq0_s") != args.options.end())
-			Tq0_s = args.options["Tq0_s"];
+			Tq0_s = args.getOptionReal("Tq0_s");
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----

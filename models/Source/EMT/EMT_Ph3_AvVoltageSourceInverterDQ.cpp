@@ -94,9 +94,9 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysV
 	mQref = Qref;
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
+void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, 
 	Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
-
+	
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower,
 	ratioAbs, ratioPhase, resistance, inductance);
 

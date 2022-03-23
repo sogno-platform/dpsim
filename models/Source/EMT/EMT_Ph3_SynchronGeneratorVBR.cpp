@@ -131,18 +131,6 @@ void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real freque
 	}
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
-	// mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
-	// mExciter.initialize(1, 1);
-	WithExciter = true;
-}
-
-void EMT::Ph3::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef) {
-	// mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
-	// mTurbineGovernor.initialize(PmRef, Tm_init);
-	WithTurbineGovernor = true;
-}
-
 void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
@@ -305,10 +293,9 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightV
 
 void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {	
 
-	// TODO: fix hard-coded numerical values, for this reason commented out
-	/* if (WithTurbineGovernor == true) {
-		mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 300e6 / 555e6, mTimeStep);
-	}*/
+	// Update of mechanical torque from turbine governor
+	if (mHasTurbineGovernor)
+		mMechTorque = -mTurbineGovernor->step(mOmMech, 1,  mInitElecPower.real() / mNomPower, mTimeStep);
 
 	// Estimate mechanical variables with euler
 	mElecTorque = (mPsimd*mIq - mPsimq*mId);
@@ -367,10 +354,12 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaPostStep(Real time, Int timeStepCount, A
 	mVd = parkTransform(mThetaMech, mVa, mVb, mVc)(1);
 	mV0 = parkTransform(mThetaMech, mVa, mVb, mVc)(2);
 
-	/*
-	if (WithExciter == true) {
-		mVfd = mExciter.step(mVd, mVq, 1, mTimeStep);
-	}*/
+	if (mHasExciter){
+		// Get exciter output voltage
+		// Note: scaled by Rfd/Lmd to transform from exciter pu system
+		// to the synchronous generator pu system
+		mVfd = (mRfd / mLmd)*mExciter->step(mVd, mVq, 1.0, mTimeStep);
+	}
 
 	mIabc = R_eq_vbr.inverse()*(mVabc - E_eq_vbr);
 

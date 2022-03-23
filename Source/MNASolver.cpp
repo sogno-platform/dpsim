@@ -415,6 +415,20 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 		}
 	}
 
+	// collect virtual nodes of variable components
+	for (auto comp : mVariableComps) {
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
+		if (!pComp)	continue;
+
+		// Check if component requires virtual node and if so get a reference
+		if (pComp->hasVirtualNodes()) {
+			for (UInt node = 0; node < pComp->virtualNodesNumber(); ++node) {
+				mNodes.push_back(pComp->virtualNode(node));
+				mSLog->info("Collected virtual node {} of Varible Comp {}", node, pComp->name());
+			}
+		}
+	}
+
 	// Update node number to create matrices and vectors
 	mNumNodes = (UInt) mNodes.size();
 	mNumVirtualNodes = mNumNodes - mNumNetNodes;

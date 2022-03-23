@@ -56,6 +56,45 @@ namespace SynchronousGeneratorKundur {
         Real Lq = 1.7600;
     };
 }
+
+namespace GovernorKundur {
+    struct Parameters {
+        // Turbine model parameters (tandem compound single reheat steam turbine, fossil-fuelled)
+        // from P. Kundur, "Power System Stability and Control", 1994, p. 427
+        Real Ta_t = 0.3;    // T_CH
+        Real Fa = 0.3;      // F_HP
+        Real Tb = 7.0;      // T_RH
+        Real Fb = 0.3;      // F_IP
+        Real Tc = 0.5;      // T_CO
+        Real Fc = 0.4;      // F_LP
+
+        // Governor parameters (mechanical-hydraulic control)
+        // from P. Kundur, "Power System Stability and Control", 1994, p. 437
+        Real Kg = 20;       // 5% droop
+        Real Tsr = 0.1;
+        Real Tsm = 0.3;
+    };
+}
+
+namespace ExcitationSystemEremia {
+    struct Parameters {
+        // Excitation system parameters (IEEE Type DC1A)
+        // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
+        // voltage-regulator
+        Real Ka = 46;
+        Real Ta = 0.06;
+        // exciter
+        Real Ke = -0.0435;
+        Real Te = 0.46;
+        // stabilizing feedback
+        Real Kf = 0.1;
+        Real Tf = 1;
+        // voltage transducer
+        Real Tr = 0.02;
+    };
+
+}
+
 }
 
 namespace Grids {
@@ -141,8 +180,85 @@ namespace SMIB {
         Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLeng;
         Real lineInductance = lineCIGREHV.lineReactancePerKm/nomOmega*lineLeng;
         Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm/nomOmega*lineLeng;
-        Real lineConductance =lineCIGREHV.lineConductancePerKm*lineLeng;;
+        Real lineConductance =lineCIGREHV.lineConductancePerKm*lineLeng;
     };
+
+    struct ScenarioConfig2 {
+        //Scenario used to validate reduced order SG VBR models against PSAT (in SP domain)
+
+        // General grid parameters
+        Real VnomMV = 24e3;
+        Real VnomHV = 230e3;
+        Real nomFreq = 60;
+        Real ratio = VnomMV/VnomHV;
+        Real nomOmega= nomFreq * 2 * PI;
+
+        // Generator parameters
+        Real setPointActivePower = 300e6;
+        Real setPointVoltage = 1.05*VnomMV;
+
+        // CIGREHVAmerican (230 kV)
+        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
+        Real lineLength = 100;
+        Real lineResistance = lineCIGREHV.lineResistancePerKm * lineLength * std::pow(ratio,2);
+        Real lineInductance = lineCIGREHV.lineReactancePerKm * lineLength * std::pow(ratio,2) / nomOmega;
+        Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength / std::pow(ratio,2) / nomOmega;
+        Real lineConductance = 1e-15;
+
+        // In PSAT SwitchClosed is equal to 1e-3 p.u.
+        Real SwitchClosed = 1e-3 * (24*24/555);
+	    Real SwitchOpen = 1e6;
+    };
+
+    struct ScenarioConfig3 {
+        //Scenario used to validate reduced order SG VBR models in the DP and EMT domain against the SP domain
+
+        // General grid parameters
+        Real VnomMV = 24e3;
+        Real nomFreq = 60;
+        Real nomOmega= nomFreq * 2 * PI;
+
+        //-----------Generator-----------//
+        Real setPointActivePower=300e6;
+        Real mechPower = 300e6;
+        Real initActivePower = 300e6;
+        Real initReactivePower = 0;
+        Real initVoltAngle = -PI / 2;
+        Complex initComplexElectricalPower = Complex(initActivePower, initReactivePower);
+        Complex initTerminalVolt = VnomMV * Complex(cos(initVoltAngle), sin(initVoltAngle));
+
+        // 
+        Real SwitchClosed = 0.1;
+	    Real SwitchOpen = 1e6;
+    };
+
+    struct ScenarioConfig4 {
+        //Scenario used to compare DP against SP accuracy in Martin's thesis
+
+        // General grid parameters
+        Real VnomMV = 24e3;
+        Real VnomHV = 230e3;
+        Real nomFreq = 60;
+        Real ratio = VnomMV/VnomHV;
+        Real nomOmega= nomFreq * 2 * PI;
+
+        // Generator parameters
+        Real setPointActivePower = 300e6;
+        Real setPointVoltage = 1.05*VnomMV;
+
+        // CIGREHVAmerican (230 kV)
+        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
+        Real lineLength = 100;
+        Real lineResistance = lineCIGREHV.lineResistancePerKm * lineLength * std::pow(ratio,2);
+        Real lineInductance = lineCIGREHV.lineReactancePerKm * lineLength * std::pow(ratio,2) / nomOmega;
+        Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength / std::pow(ratio,2) / nomOmega;
+        Real lineConductance = 8e-2;
+
+        // In PSAT SwitchClosed is equal to 1e-3 p.u.
+        Real SwitchClosed = 0.1;
+	    Real SwitchOpen = 1e6;
+    };
+  
 }
 
 namespace ThreeBus {
