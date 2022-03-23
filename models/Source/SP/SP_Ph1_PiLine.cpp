@@ -27,6 +27,9 @@ SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
     setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mCurrent = MatrixComp::Zero(2,1);
+	**mActivePowerBranch = Matrix::Zero(2,1);
+	**mReactivePowerBranch = Matrix::Zero(2,1);
 
 	mSeriesRes = Attribute<Real>::create("R_series", mAttributes);
 	mSeriesInd = Attribute<Real>::create("L_series", mAttributes);

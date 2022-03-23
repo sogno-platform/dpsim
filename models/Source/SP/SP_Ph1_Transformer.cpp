@@ -38,6 +38,10 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 	mResistance = Attribute<Real>::create("R", mAttributes);
 	mInductance = Attribute<Real>::create("L", mAttributes);
 
+	**mCurrent = MatrixComp::Zero(2,1);
+	**mActivePowerBranch = Matrix::Zero(2,1);
+	**mReactivePowerBranch = Matrix::Zero(2,1);
+
 	mCurrent_0 = mCurrent->deriveCoeff<Complex>(0, 0);
 	mCurrent_1 = mCurrent->deriveCoeff<Complex>(1, 0);
 	mAttributes["current"] = mCurrent_0;
