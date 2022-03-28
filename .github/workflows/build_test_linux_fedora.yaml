@@ -23,10 +23,10 @@ jobs:
       working-directory: ${{ github.workspace }}/build
       run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE
 
-    - name: Build dpsimpy
+    - name: Build dpsimpy and test examples
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake --build . --target dpsimpy
+      run: cmake --build . --target dpsimpy --target tests
       env:
         MAKEFLAGS: "-j2"
 
