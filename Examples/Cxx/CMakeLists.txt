@@ -103,6 +103,22 @@ set(INVERTER_SOURCES
 	Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp
 )
 
+list(APPEND TEST_SOURCES 
+	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
+	Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp
+	Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp
+	Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp
+	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
+	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
+	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
+	Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
+	Components/EMT_SynchronGenerator9OrderVBR_LoadStep_TurbineGovernor_Exciter.cpp
+	Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
+	Circuits/EMT_SynGenVBR_OperationalParams_SMIB_Fault.cpp
+	Circuits/EMT_SynGenVBR_SMIB_Fault.cpp
+	Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
+)
+
 if(WITH_SUNDIALS)
 	list(APPEND SYNCGEN_SOURCES
 		Components/DP_SynGenDq7odODE_SteadyState.cpp
@@ -162,6 +178,13 @@ if(WITH_CIM)
 		CIM/EMT_CIGRE_MV_withDG_withLoadStep.cpp
 	)
 
+	list(APPEND TEST_SOURCES
+		CIM/CIGRE_MV_PowerFlowTest.cpp
+		CIM/DP_WSCC-9bus_IdealVS.cpp
+		CIM/EMT_WSCC-9bus_IdealCS.cpp
+		CIM/EMT_WSCC-9bus_IdealVS.cpp
+	)
+
 	if(WITH_RT)
 		list(APPEND RT_SOURCES
 			# The Loadflow example needs CIM++ and RT
@@ -180,6 +203,8 @@ if(WITH_OPENMP)
 	list(APPEND LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
 
+add_custom_target(tests)
+
 foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${DAE_SOURCES} ${INVERTER_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
@@ -188,6 +213,11 @@ foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${RT_SOU
 	target_link_libraries(${TARGET} ${LIBRARIES})
 	target_include_directories(${TARGET} PRIVATE ${INCLUDE_DIRS})
 	target_compile_options(${TARGET} PUBLIC ${DPSIM_CXX_FLAGS})
+endforeach()
+
+foreach(TEST_SOURCE ${TEST_SOURCES})
+	get_filename_component(TARGET ${TEST_SOURCE} NAME_WE)
+	add_dependencies(tests ${TARGET})
 endforeach()
 
 add_subdirectory(cim_graphviz)
