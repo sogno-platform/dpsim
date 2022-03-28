@@ -84,6 +84,11 @@ jobs:
        name: build-cache
        path: ${{ github.workspace }}/build
 
+    - name: Prepare binary permissions
+      shell: bash
+      run: |
+        chmod -R +x ./build/Examples/Cxx
+
     - name: Run pytest
       shell: bash
       working-directory: ${{ github.workspace }}
