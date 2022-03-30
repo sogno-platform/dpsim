@@ -113,12 +113,14 @@ list(APPEND TEST_SOURCES
 	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
+	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault.cpp
 	Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
 	Components/EMT_SynchronGenerator9OrderVBR_LoadStep_TurbineGovernor_Exciter.cpp
 	Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	Circuits/EMT_SynGenVBR_OperationalParams_SMIB_Fault.cpp
 	Circuits/EMT_SynGenVBR_SMIB_Fault.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
+	Circuits/EMT_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 )
 
 if(WITH_SUNDIALS)
