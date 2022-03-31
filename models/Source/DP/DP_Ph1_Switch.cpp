@@ -54,7 +54,7 @@ void DP::Ph1::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 }
 
 void DP::Ph1::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = (mIsClosed) ?
+	Complex conductance = (**mIsClosed) ?
 		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );
 
 	// Set diagonal entries
@@ -117,7 +117,7 @@ void DP::Ph1::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph1::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
-	(**mIntfCurrent)(0,0) = (mIsClosed) ?
+	(**mIntfCurrent)(0,0) = (**mIsClosed) ?
 		(**mIntfVoltage)(0,0) / **mClosedResistance :
 		(**mIntfVoltage)(0,0) / **mOpenResistance;
 }

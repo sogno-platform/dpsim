@@ -54,7 +54,7 @@ void SP::Ph1::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 }
 
 void SP::Ph1::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = (mIsClosed) ?
+	Complex conductance = (**mIsClosed) ?
 		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );
 
 	// Set diagonal entries
@@ -117,7 +117,7 @@ void SP::Ph1::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph1::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
-	(**mIntfCurrent)(0,0) = (mIsClosed) ?
+	(**mIntfCurrent)(0,0) = (**mIsClosed) ?
 		(**mIntfVoltage)(0,0) / **mClosedResistance :
 		(**mIntfVoltage)(0,0) / **mOpenResistance;
 }
@@ -127,8 +127,8 @@ void SP::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDe
 	Attribute<Matrix>::Ptr &leftVector) {
 
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void SP::Ph1::Switch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {

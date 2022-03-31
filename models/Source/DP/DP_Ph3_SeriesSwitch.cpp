@@ -46,7 +46,7 @@ void DP::Ph3::SeriesSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 }
 
 void DP::Ph3::SeriesSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = (mIsClosed)
+	Complex conductance = (**mIsClosed)
 		? Complex( 1. / **mClosedResistance, 0 )
 		: Complex( 1. / **mOpenResistance, 0 );
 

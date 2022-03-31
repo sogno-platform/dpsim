@@ -115,7 +115,7 @@ void DP::Ph1::varResSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph1::varResSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
-	(**mIntfCurrent)(0,0) = (mIsClosed) ?
+	(**mIntfCurrent)(0,0) = (**mIsClosed) ?
 		(**mIntfVoltage)(0,0) / **mClosedResistance :
 		(**mIntfVoltage)(0,0) / **mOpenResistance;
 }
