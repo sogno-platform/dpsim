@@ -36,6 +36,7 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
+	///FIXME: The mVdq0 and mVdq member variables are mutually exclusive and carry the same attribute name. Maybe they can be unified?
 	mVdq(Attribute<Matrix>::create("Vdq0", mAttributes)),
 	mIdq(Attribute<Matrix>::create("Idq0", mAttributes))  {
 	
@@ -166,8 +167,8 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	(**mIdq0)(1,0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
 
 	// convert voltages to dq reference frame
-	(**mVdq0)(0,0) = Math::abs(mInitVoltage) * sin(**mDelta  - mInitVoltageAngle);
-	(**mVdq0)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta  - mInitVoltageAngle);
+	(**mVdq0)(0,0) = Math::abs(mInitVoltage) * sin(**mDelta - mInitVoltageAngle);
+	(**mVdq0)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta - mInitVoltageAngle);
 
 	// calculate Ef
 	mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq0)(0,0);
@@ -229,8 +230,8 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	(**mIdq)(1,0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
 
 	// convert voltages to dq reference frame
-	(**mVdq)(0,0) = Math::abs(mInitVoltage) * sin(**mDelta  - mInitVoltageAngle);
-	(**mVdq)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta  - mInitVoltageAngle);
+	(**mVdq)(0,0) = Math::abs(mInitVoltage) * sin(**mDelta - mInitVoltageAngle);
+	(**mVdq)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta - mInitVoltageAngle);
 
 	// calculate Ef
 	mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq)(0,0);

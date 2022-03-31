@@ -96,7 +96,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 					"\nReactive Power [VAr]: {}",
 					Logger::matrixToString(**mActivePower),
 					Logger::matrixToString(**mReactivePower));
-		mSLog->info("Nominal Voltage={} [V]", mNomVoltage);
+		mSLog->info("Nominal Voltage={} [V]", **mNomVoltage);
 	}
 
 	if ((**mActivePower)(0,0) != 0) {
