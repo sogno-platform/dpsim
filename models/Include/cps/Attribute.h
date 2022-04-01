@@ -29,6 +29,7 @@ namespace CPS {
 			AttributePointer() : mPtr() {};
 			AttributePointer(const AttributePointer& r) = default;
 			AttributePointer(std::shared_ptr<T> ptr) : mPtr(ptr) {};
+			AttributePointer(std::nullptr_t ptr) : mPtr(ptr) {};
 
 			template<class U>
 			AttributePointer(AttributePointer<U> ptr) : mPtr() {
@@ -246,7 +247,7 @@ namespace CPS {
 			typename AttributeUpdateTask<U, T>::Actor setter = typename AttributeUpdateTask<U, T>::Actor()
 		)
 		{
-			typename Attribute<U>::Ptr derivedAttribute = std::make_shared<AttributeDynamic<U>>();
+			auto derivedAttribute = std::make_shared<AttributeDynamic<U>>();
 			if (setter) {
 				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_SET, AttributeUpdateTask<U, T>::make(UpdateTaskKind::UPDATE_ON_SET, setter, Attribute<T>::Ptr(this->shared_from_this())));
 			}
@@ -257,13 +258,13 @@ namespace CPS {
 		}
 
 		template <typename U = T, std::enable_if_t<std::is_same_v<Complex, U>, bool> = true>
-		std::shared_ptr<Attribute<Real>> deriveReal()
+		AttributePointer<Attribute<Real>> deriveReal()
 			// requires std::same_as<T, CPS::Complex> //CPP20
 		{
-			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, std::shared_ptr<Attribute<Complex>> dependency) {
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, typename Attribute<Complex>::Ptr dependency) {
 				*dependent = (**dependency).real();
 			};
-			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> &dependent, std::shared_ptr<Attribute<Complex>> dependency) {
+			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor setter = [](std::shared_ptr<Real> &dependent, typename Attribute<Complex>::Ptr dependency) {
 				CPS::Complex currentValue = dependency->get();
 				currentValue.real(*dependent);
 				dependency->set(currentValue);
@@ -272,7 +273,7 @@ namespace CPS {
 		}
 
 		template <typename U = T, std::enable_if_t<std::is_same_v<Complex, U>, bool> = true>
-		std::shared_ptr<Attribute<Real>> deriveImag()
+		AttributePointer<Attribute<Real>> deriveImag()
 			// requires std::same_as<T, CPS::Complex> //CPP20
 		{
 			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
@@ -287,7 +288,7 @@ namespace CPS {
 		}
 
 		template <typename U = T, std::enable_if_t<std::is_same_v<Complex, U>, bool> = true>
-		std::shared_ptr<Attribute<Real>> deriveMag()
+		AttributePointer<Attribute<Real>> deriveMag()
 			// requires std::same_as<T, CPS::Complex> //CPP20
 		{
 			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
@@ -301,7 +302,7 @@ namespace CPS {
 		}
 
 		template <typename U = T, std::enable_if_t<std::is_same_v<Complex, U>, bool> = true>
-		std::shared_ptr<Attribute<Real>> derivePhase()
+		AttributePointer<Attribute<Real>> derivePhase()
 			// requires std::same_as<T, CPS::Complex> //CPP20
 		{
 			AttributeUpdateTask<CPS::Real, CPS::Complex>::Actor getter = [](std::shared_ptr<Real> &dependent, Attribute<Complex>::Ptr dependency) {
@@ -315,7 +316,7 @@ namespace CPS {
 		}
 
 		template <typename U = T, std::enable_if_t<std::is_same_v<Real, U> || std::is_same_v<Complex, U>, bool> = true>
-		std::shared_ptr<Attribute<T>> deriveScaled(T scale)
+		AttributePointer<Attribute<T>> deriveScaled(T scale)
 			// requires std::same_as<T, CPS::Complex> || std::same_as<T, CPS::Real> //CPP20
 		{
 			typename AttributeUpdateTask<T, T>::Actor getter = [scale](std::shared_ptr<T> &dependent, Attribute<T>::Ptr dependency) {
@@ -328,7 +329,7 @@ namespace CPS {
 		}
 
 		template <class U, class V = T, std::enable_if_t<std::is_same_v<CPS::MatrixVar<U>, V>, bool> = true>
-		std::shared_ptr<Attribute<U>> deriveCoeff(typename CPS::MatrixVar<U>::Index row, typename CPS::MatrixVar<U>::Index column)
+		AttributePointer<Attribute<U>> deriveCoeff(typename CPS::MatrixVar<U>::Index row, typename CPS::MatrixVar<U>::Index column)
 			// requires std::same_as<T, CPS::MatrixVar<U>> //CPP20
 		{
 			typename AttributeUpdateTask<U, T>::Actor getter = [row, column](std::shared_ptr<U> &dependent, Attribute<T>::Ptr dependency) {
@@ -495,3 +496,14 @@ namespace CPS {
 }
 
 
+namespace std
+{
+    template <typename T>
+    struct hash<CPS::AttributePointer<T>>
+    {
+        size_t operator()(CPS::AttributePointer<T> const& x) const
+        {
+            return std::hash<std::shared_ptr<T>>()(x.getPtr());
+        }
+    };
+}
