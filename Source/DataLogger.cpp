@@ -153,7 +153,7 @@ CPS::Task::Ptr DataLogger::getTask() {
 }
 
 void DataLogger::logAttribute(const std::vector<String> &name, CPS::AttributeBase::Ptr attr) {
-	if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(attr)) {
+	if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(attr.getPtr())) {
 		if ((**attrMatrix).rows() == 1 && (**attrMatrix).cols() == 1) {
 			logAttribute(name[0], attrMatrix->deriveCoeff<CPS::Real>(0, 0));
 		}
@@ -171,7 +171,7 @@ void DataLogger::logAttribute(const std::vector<String> &name, CPS::AttributeBas
 				}
 			}
 		}
-	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<MatrixComp>>(attr)) {
+	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<MatrixComp>>(attr.getPtr())) {
 		if ((**attrMatrix).rows() == 1 && (**attrMatrix).cols() == 1) {
 			logAttribute(name[0], attrMatrix->deriveCoeff<CPS::Complex>(0, 0));
 		}
@@ -193,12 +193,12 @@ void DataLogger::logAttribute(const std::vector<String> &name, CPS::AttributeBas
 }
 
 void DataLogger::logAttribute(const String &name, CPS::AttributeBase::Ptr attr, UInt rowsMax, UInt colsMax) {
-	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr)) {
+	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
 		mAttributes[name] = attrReal;
-	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr)) {
+	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr.getPtr())) {
 		mAttributes[name + ".re"] = attrComp->deriveReal();
 		mAttributes[name + ".im"] = attrComp->deriveImag();
-	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(attr)) {
+	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(attr.getPtr())) {
 		UInt rows = static_cast<UInt>((**attrMatrix).rows());
 		UInt cols = static_cast<UInt>((**attrMatrix).cols());
 		if (rowsMax == 0 || rowsMax > rows) rowsMax = rows;
@@ -216,7 +216,7 @@ void DataLogger::logAttribute(const String &name, CPS::AttributeBase::Ptr attr, 
 				}
 			}
 		}
-	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<MatrixComp>>(attr)) {
+	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<MatrixComp>>(attr.getPtr())) {
 		UInt rows = static_cast<UInt>((**attrMatrix).rows());
 		UInt cols = static_cast<UInt>((**attrMatrix).cols());
 		if (rowsMax == 0 || rowsMax > rows) rowsMax = rows;

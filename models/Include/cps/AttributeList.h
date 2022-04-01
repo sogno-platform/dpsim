@@ -56,12 +56,12 @@ namespace CPS {
 		template<typename T>
 		typename Attribute<T>::Ptr attribute(const String &name) {
 			auto attr = attribute(name);
-			auto attrPtr = std::dynamic_pointer_cast<Attribute<T>>(attr);
+			auto attrPtr = std::dynamic_pointer_cast<Attribute<T>>(attr.getPtr());
 
-			if (attrPtr == NULL)
+			if (attrPtr == nullptr)
 				throw InvalidAttributeException();
 
-			return attrPtr;
+			return typename Attribute<T>::Ptr(attrPtr);
 		}
 
 		// void reset() {
