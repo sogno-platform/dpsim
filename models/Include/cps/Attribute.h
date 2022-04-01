@@ -22,10 +22,88 @@ namespace CPS {
 		UPDATE_ON_SET,
 		UPDATE_ON_SIMULATION_STEP,
 	};
-	
+
+	template<class T>
+	class AttributePointer {
+		public:
+			AttributePointer() : mPtr() {};
+			AttributePointer(const AttributePointer& r) = default;
+			AttributePointer(std::shared_ptr<T> ptr) : mPtr(ptr) {};
+
+			template<class U>
+			AttributePointer(AttributePointer<U> ptr) : mPtr() {
+				this->mPtr = ptr.getPtr();
+			};
+
+			template<class U>
+			AttributePointer(std::shared_ptr<U> ptr) : mPtr(ptr) {};
+
+			AttributePointer& operator=(const AttributePointer& r) noexcept {
+				this->mPtr = r.getPtr();
+				return *this;
+			};
+
+			template< class U >
+			AttributePointer& operator=(const AttributePointer<U>& r) noexcept {
+				this->mPtr = r.getPtr();
+				return *this;
+			};
+
+			AttributePointer& operator=(AttributePointer&& r) {
+				this->mPtr = r.getPtr();
+				return *this;
+			} 
+
+			template<class U>
+			AttributePointer& operator=(AttributePointer<U>&& r) {
+				this->mPtr = r.getPtr();
+				return *this;
+			} 
+
+			template<class U>
+			bool operator==(AttributePointer<U>&& rhs) {
+				return this->mPtr == rhs.getPtr();
+			}
+
+			T& operator*() const noexcept {
+				return *mPtr;
+			}
+
+			T* operator->() const noexcept {
+				return mPtr.operator->();
+			}
+
+			std::shared_ptr<T> getPtr() const {
+				return mPtr;
+			}
+
+			template<class U>
+			bool operator<(const AttributePointer<U>& rhs) const noexcept {
+				return this->mPtr < rhs.getPtr();
+			}
+
+			template<class U>
+			bool operator>(const AttributePointer<U>& rhs) const noexcept {
+				return this->mPtr > rhs.getPtr();
+			}
+
+			template<class U>
+			bool operator==(const AttributePointer<U>& rhs) const noexcept {
+				return this->mPtr == rhs.getPtr();
+			}
+
+			template<class U>
+			bool operator!=(const AttributePointer<U>& rhs) const noexcept {
+				return this->mPtr != rhs.getPtr();
+			}
+
+		private:
+			std::shared_ptr<T> mPtr;
+	};
+
 	class AttributeBase {
 	public:
-		typedef std::shared_ptr<AttributeBase> Ptr;
+		typedef AttributePointer<AttributeBase> Ptr;
 		typedef std::vector<Ptr> List;
 		typedef std::set<Ptr> Set;
 		typedef std::map<String, Ptr> Map;
@@ -68,19 +146,19 @@ namespace CPS {
 		public SharedFactory<AttributeUpdateTask<DependentType, DependencyTypes...>> {
 	
 	public:
-		using Actor = std::function<void(std::shared_ptr<DependentType>&, std::shared_ptr<Attribute<DependencyTypes>>...)>;
+		using Actor = std::function<void(std::shared_ptr<DependentType>&, typename Attribute<DependencyTypes>::Ptr...)>;
 
 	protected:
-		std::tuple<std::shared_ptr<Attribute<DependencyTypes>>...> mDependencies;
+		std::tuple<typename Attribute<DependencyTypes>::Ptr...> mDependencies;
 		Actor mActorFunction;
 		UpdateTaskKind mKind;
 
 	public:
-		AttributeUpdateTask(UpdateTaskKind kind, Actor &actorFunction, std::shared_ptr<Attribute<DependencyTypes>>... dependencies)
-			: mDependencies(std::forward<std::shared_ptr<Attribute<DependencyTypes>>>(dependencies)...), mActorFunction(actorFunction), mKind(kind) {}
+		AttributeUpdateTask(UpdateTaskKind kind, Actor &actorFunction, typename Attribute<DependencyTypes>::Ptr... dependencies)
+			: mDependencies(std::forward<typename Attribute<DependencyTypes>::Ptr>(dependencies)...), mActorFunction(actorFunction), mKind(kind) {}
 
 		virtual void executeUpdate(std::shared_ptr<DependentType> &dependent) override {
-			mActorFunction(dependent, std::get<std::shared_ptr<Attribute<DependencyTypes>>...>(mDependencies));
+			mActorFunction(dependent, std::get<typename Attribute<DependencyTypes>::Ptr...>(mDependencies));
 		}
 
 		virtual AttributeBase::List getDependencies() override {
@@ -100,7 +178,7 @@ namespace CPS {
 
 	public:
 		typedef T Type;
-		typedef std::shared_ptr<Attribute<T>> Ptr;
+		typedef AttributePointer<Attribute<T>> Ptr;
 
 		Attribute(T initialValue = T()) :
 			AttributeBase(), mData(std::make_shared<T>()) {
@@ -108,13 +186,13 @@ namespace CPS {
 			}
 
 		static Attribute<T>::Ptr create(String name, AttributeBase::Map &attrMap, T intitialValue = T()) {
-			Attribute<T>::Ptr newAttr = AttributeStatic<T>::make(intitialValue);
+			Attribute<T>::Ptr newAttr = AttributePointer<Attribute<T>>(AttributeStatic<T>::make(intitialValue));
 			attrMap[name] = newAttr;
 			return newAttr;
 		}
 
 		static Attribute<T>::Ptr createDynamic(String name, AttributeBase::Map &attrMap) {
-			Attribute<T>::Ptr newAttr = AttributeDynamic<T>::make();
+			Attribute<T>::Ptr newAttr = AttributePointer<Attribute<T>>(AttributeDynamic<T>::make());
 			attrMap[name] = newAttr;
 			return newAttr;
 		}
@@ -168,12 +246,12 @@ namespace CPS {
 			typename AttributeUpdateTask<U, T>::Actor setter = typename AttributeUpdateTask<U, T>::Actor()
 		)
 		{
-			auto derivedAttribute = std::make_shared<AttributeDynamic<U>>();
+			typename Attribute<U>::Ptr derivedAttribute = std::make_shared<AttributeDynamic<U>>();
 			if (setter) {
-				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_SET, AttributeUpdateTask<U, T>::make(UpdateTaskKind::UPDATE_ON_SET, setter, this->shared_from_this()));
+				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_SET, AttributeUpdateTask<U, T>::make(UpdateTaskKind::UPDATE_ON_SET, setter, Attribute<T>::Ptr(this->shared_from_this())));
 			}
 			if (getter) {
-				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<U, T>::make(UpdateTaskKind::UPDATE_ON_GET, getter, this->shared_from_this()));
+				derivedAttribute->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<U, T>::make(UpdateTaskKind::UPDATE_ON_GET, getter, Attribute<T>::Ptr(this->shared_from_this())));
 			}
 			return derivedAttribute;
 		}
