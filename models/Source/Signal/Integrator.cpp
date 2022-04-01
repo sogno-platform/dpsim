@@ -34,7 +34,7 @@ void Integrator::setInitialValues(Real input_init, Real state_init, Real output_
     **mOutputCurr = output_init;
 
     mSLog->info("Initial values:");
-    mSLog->info("inputCurrInit = {}, stateCurrInit = {}, outputCurrInit = {}", mInputCurr, mStateCurr, mOutputCurr);
+    mSLog->info("inputCurrInit = {}, stateCurrInit = {}, outputCurrInit = {}", **mInputCurr, **mStateCurr, **mOutputCurr);
 }
 
 void Integrator::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {

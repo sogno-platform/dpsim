@@ -43,7 +43,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 			std::abs(mTerminals[0]->initialSingleVoltage()));
 	}
 
-	if (mActivePower != 0) {
+	if (**mActivePower != 0) {
 		mResistance = std::pow(**mNomVoltage, 2) / **mActivePower;
 		mSubResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
@@ -55,7 +55,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mResistance = 0;
 	}
 
-	if (mReactivePower != 0)
+	if (**mReactivePower != 0)
 		mReactance = std::pow(**mNomVoltage, 2) / **mReactivePower;
 	else
 		mReactance = 0;

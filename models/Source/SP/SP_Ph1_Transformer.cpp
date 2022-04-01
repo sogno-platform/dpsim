@@ -114,7 +114,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		**mNominalVoltageEnd1 = **mNominalVoltageEnd2;
 		**mNominalVoltageEnd2 = tmpVolt;
 		mSLog->info("Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
-		mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
+		mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
 		mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", mRatioAbs, mRatioPhase);
 	}
 
@@ -226,7 +226,7 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 	mBaseImpedance = **mBaseVoltage * **mBaseVoltage / mBaseApparentPower;
 	mBaseAdmittance = 1.0 / mBaseImpedance;
 	mBaseCurrent = baseApparentPower / (**mBaseVoltage * sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
-	mSLog->info("Base Voltage={} [V]  Base Impedance={} [Ohm]", mBaseVoltage, mBaseImpedance);
+	mSLog->info("Base Voltage={} [V]  Base Impedance={} [Ohm]", **mBaseVoltage, mBaseImpedance);
 
 	mResistancePerUnit = **mResistance / mBaseImpedance;
 	mReactancePerUnit = mReactance / mBaseImpedance;

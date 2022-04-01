@@ -35,7 +35,7 @@ void SP::Ph1::SynchronGenerator::setParameters(Real ratedApparentPower, Real rat
     mPowerflowBusType = powerflowBusType;
 
 	mSLog->info("Rated Apparent Power={} [VA] Rated Voltage={} [V]", mRatedApparentPower, mRatedVoltage);
-    mSLog->info("Active Power Set Point={} [W] Voltage Set Point={} [V]", mSetPointActivePower, mSetPointVoltage);
+    mSLog->info("Active Power Set Point={} [W] Voltage Set Point={} [V]", **mSetPointActivePower, **mSetPointVoltage);
 	mSLog->flush();
 }
 
@@ -53,7 +53,7 @@ void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(Real baseApparentPow
 	**mSetPointActivePowerPerUnit = **mSetPointActivePower / mBaseApparentPower;
     **mSetPointReactivePowerPerUnit = **mSetPointReactivePower / mBaseApparentPower;
 	**mSetPointVoltagePerUnit = **mSetPointVoltage / **mBaseVoltage;
-	mSLog->info("Active Power Set Point={} [pu] Voltage Set Point={} [pu]", mSetPointActivePowerPerUnit, mSetPointVoltagePerUnit);
+	mSLog->info("Active Power Set Point={} [pu] Voltage Set Point={} [pu]", **mSetPointActivePowerPerUnit, **mSetPointVoltagePerUnit);
 	mSLog->flush();
 }
 

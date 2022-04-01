@@ -35,7 +35,7 @@ void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nom
 	mPower = { **mActivePower, **mReactivePower };
 	**mNomVoltage = nominalVoltage;
 
-	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mActivePower, mReactivePower);
+	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
 	mSLog->flush();
 
 	mParametersSet = true;
@@ -57,7 +57,7 @@ void SP::Ph1::Load::calculatePerUnitParameters(Real baseApparentPower, Real base
 
 	**mActivePowerPerUnit = **mActivePower / mBaseApparentPower;
 	**mReactivePowerPerUnit = **mReactivePower /mBaseApparentPower;
-	mSLog->info("Active Power={} [pu] Reactive Power={} [pu]", mActivePowerPerUnit, mReactivePowerPerUnit);
+	mSLog->info("Active Power={} [pu] Reactive Power={} [pu]", **mActivePowerPerUnit, **mReactivePowerPerUnit);
 	mSLog->flush();
 }
 

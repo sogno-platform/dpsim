@@ -158,11 +158,11 @@ void PowerControllerVSI::signalStep(Real time, Int timeStepCount) {
 
 	// calculate new states
 	**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
-	mSLog->debug("stateCurr = \n {}", mStateCurr);
+	mSLog->debug("stateCurr = \n {}", **mStateCurr);
 
 	// calculate new outputs
 	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	mSLog->debug("Output values: outputCurr = \n{}", mOutputCurr);
+	mSLog->debug("Output values: outputCurr = \n{}", **mOutputCurr);
 }
 
 void PowerControllerVSI::updateBMatrixStateSpaceModel() {

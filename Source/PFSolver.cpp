@@ -330,7 +330,7 @@ void PFSolver::composeAdmittanceMatrix() {
 		}
 		for(auto trans : mTransformers) {
 			//to check if this transformer could be ignored
-			if (trans->attribute("R") == 0 && trans->attribute("L") == 0) {
+			if (**trans->mResistance == 0 && **trans->mInductance == 0) {
 				mSLog->info("{} {} ignored for R = 0 and L = 0",trans->type(), trans->name());
 				continue;
 			}

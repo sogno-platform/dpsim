@@ -83,7 +83,7 @@ void DP::Ph1::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVec
 }
 
 void DP::Ph1::VoltageSourceNorton::updateState(Real time) {
-	if (mSrcFreq >= 0) {
+	if (**mSrcFreq >= 0) {
 		(**mIntfVoltage)(0,0) = Complex(
 			Math::abs(**mVoltageRef) * cos(time * 2.*PI* **mSrcFreq + Math::phase(**mVoltageRef)),
 			Math::abs(**mVoltageRef) * sin(time * 2.*PI* **mSrcFreq + Math::phase(**mVoltageRef)));

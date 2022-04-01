@@ -27,7 +27,7 @@ FIRFilter::FIRFilter(String name, std::vector<Real> filterCoefficients, Real ini
 
 void FIRFilter::initialize(Real timeStep) {
 	mSignal.assign(mFilterLength, **mInitSample);
-	mSLog->info("Initialize filter with {}", mInitSample);
+	mSLog->info("Initialize filter with {}", **mInitSample);
 }
 
 void FIRFilter::step(Real time) {
