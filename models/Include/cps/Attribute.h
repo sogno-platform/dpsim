@@ -119,7 +119,7 @@ namespace CPS {
 	public:
 		typedef AttributePointer<AttributeBase> Ptr;
 		typedef std::vector<Ptr> List;
-		typedef std::set<Ptr> Set;
+		typedef std::set<Ptr, AttributeCmp<AttributeBase>> Set;
 		typedef std::map<String, Ptr> Map;
 
 		virtual String toString() = 0;
