@@ -78,12 +78,12 @@ Scheduler::TaskTime Scheduler::getAveragedMeasurement(CPS::Task* task) {
 void Scheduler::resolveDeps(Task::List& tasks, Edges& inEdges, Edges& outEdges) {
 	// Create graph (list of out/in edges for each node) from attribute dependencies
 	tasks.push_back(mRoot);
-	std::unordered_map<AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;
-	std::unordered_set<AttributeBase::Ptr> prevStepDependencies;
+	std::unordered_map<AttributeBase::Ptr, std::deque<Task::Ptr>, std::hash<AttributeBase::Ptr>, CPS::AttributeEq<AttributeBase>> dependencies;
+	std::unordered_set<AttributeBase::Ptr, std::hash<AttributeBase::Ptr>, CPS::AttributeEq<AttributeBase>> prevStepDependencies;
 	for (auto task : tasks) {
 		for (AttributeBase::Ptr attr : task->getAttributeDependencies()) {
 			/// CHECK: Having external be the nullptr can lead to segfaults rather quickly. Maybe make it a special kind of attribute
-			if (attr != Scheduler::external) {
+			if (attr.getPtr() != Scheduler::external.getPtr()) {
 				AttributeBase::Set attrDependencies = attr->getDependencies();
 				for (AttributeBase::Ptr dep : attrDependencies) {
 					dependencies[dep].push_back(task);

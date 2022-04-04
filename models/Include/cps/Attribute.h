@@ -78,30 +78,43 @@ namespace CPS {
 				return mPtr;
 			}
 
-			template<class U>
-			bool operator<(const AttributePointer<U>& rhs) const noexcept {
-				return this->mPtr < rhs.getPtr();
-			}
+			// template<class U>
+			// bool operator<(const AttributePointer<U>& rhs) const noexcept {
+			// 	return this->mPtr < rhs.getPtr();
+			// }
 
-			template<class U>
-			bool operator>(const AttributePointer<U>& rhs) const noexcept {
-				return this->mPtr > rhs.getPtr();
-			}
+			// template<class U>
+			// bool operator>(const AttributePointer<U>& rhs) const noexcept {
+			// 	return this->mPtr > rhs.getPtr();
+			// }
 
-			template<class U>
-			bool operator==(const AttributePointer<U>& rhs) const noexcept {
-				return this->mPtr == rhs.getPtr();
-			}
+			// template<class U>
+			// bool operator==(const AttributePointer<U>& rhs) const noexcept {
+			// 	return this->mPtr == rhs.getPtr();
+			// }
 
-			template<class U>
-			bool operator!=(const AttributePointer<U>& rhs) const noexcept {
-				return this->mPtr != rhs.getPtr();
-			}
+			// template<class U>
+			// bool operator!=(const AttributePointer<U>& rhs) const noexcept {
+			// 	return this->mPtr != rhs.getPtr();
+			// }
 
 		private:
 			std::shared_ptr<T> mPtr;
 	};
 
+	template<class T>
+	struct AttributeCmp {
+		bool operator() (CPS::AttributePointer<T> a, CPS::AttributePointer<T> b) const {
+			return a.getPtr() < b.getPtr();
+		}
+	};
+
+	template<class T>
+	struct AttributeEq {
+		bool operator() (CPS::AttributePointer<T> a, CPS::AttributePointer<T> b) const {
+			return a.getPtr() == b.getPtr();
+		}
+	};
 	class AttributeBase {
 	public:
 		typedef AttributePointer<AttributeBase> Ptr;
