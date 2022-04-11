@@ -35,6 +35,8 @@ namespace CPS {
 
 		///
 		const typename Attribute<MatrixVar<VarType>>::Ptr mVoltage;
+		/// Power injected at node
+		const typename Attribute<MatrixVar<VarType>>::Ptr mApparentPower;
 
 		/// This very general constructor is used by other constructors.
 		SimNode(String uid, String name, std::vector<UInt> matrixNodeIndex,
@@ -95,6 +97,8 @@ namespace CPS {
 		void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) { mMatrixNodeIndex[phase] = matrixNodeIndex; }
 		///
 		void setVoltage(VarType newVoltage) { }
+		///
+		void setPower(VarType newPower) { }
 
 		// #### MNA Section ####
 		///

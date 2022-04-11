@@ -279,10 +279,11 @@ void PFSolverPowerPolar::setSolution() {
         sol_V_complex(i) = CPS::Complex(sol_V.coeff(i)*cos(sol_D.coeff(i)), sol_V.coeff(i)*sin(sol_D.coeff(i)));
     }
 
-    // update voltage at each node
-    for (auto node : mSystem.mNodes)
+// update voltage and power at each node
+    for (auto node : mSystem.mNodes) {
         std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setVoltage(sol_V_complex(node->matrixNodeIndex())*mBaseVoltageAtNode[node]);
-
+        std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setPower(sol_S_complex(node->matrixNodeIndex())*mBaseApparentPower);
+    }
     calculateBranchFlow();
     calculateNodalInjection();
 }
@@ -377,7 +378,7 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
 }
 
 void PFSolverPowerPolar::calculateQAtPVBuses() {
-    for (auto k: mPVBusIndices) {
+        for (auto k: mPVBusIndices) {
         CPS::Complex I(0.0, 0.0);
         for (UInt j = 0; j < mSystem.mNodes.size(); ++j) {
             I += mY.coeff(k, j) * sol_Vcx(j);

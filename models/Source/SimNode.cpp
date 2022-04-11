@@ -19,11 +19,16 @@ SimNode<VarType>::SimNode(String uid, String name,
 	if (phaseType == PhaseType::ABC) {
 		mMatrixNodeIndex = matrixNodeIndex;
 		**mVoltage = MatrixVar<VarType>::Zero(3, 1);
+		**mApparentPower = MatrixVar<VarType>::Zero(3, 1);
 	}
 	else {
 		mMatrixNodeIndex[0] = matrixNodeIndex[0];
 		**mVoltage = MatrixVar<VarType>::Zero(1, 1);
+		**mApparentPower = MatrixVar<VarType>::Zero(1, 1);
 	}
+
+	addAttribute<MatrixVar<VarType>>("v", &mVoltage, Flags::read);
+	addAttribute<MatrixVar<VarType>>("s", &mApparentPower, Flags::read);
 }
 
 template <typename VarType>
@@ -55,6 +60,11 @@ VarType SimNode<VarType>::singleVoltage(PhaseType phaseType) {
 template<>
 void SimNode<Complex>::setVoltage(Complex newVoltage) {
 	(**mVoltage)(0, 0) = newVoltage;
+}
+
+template<>
+void SimNode<Complex>::setPower(Complex newPower) {
+	mApparentPower(0, 0) = newPower;
 }
 
 template<>
