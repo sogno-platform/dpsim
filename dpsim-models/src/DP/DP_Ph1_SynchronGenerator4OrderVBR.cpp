@@ -31,6 +31,28 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator4OrderVBR::clone(String nam
 	return copy;
 }
 
+void DP::Ph1::SynchronGenerator4OrderVBR::setOperationalParametersPerUnit(Real nomPower, 
+			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
+			Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t) {
+
+	Base::ReducedOrderSynchronGenerator<Complex>::setOperationalParametersPerUnit(nomPower, 
+			nomVolt, nomFreq, H, Ld, Lq, L0,
+			Ld_t, Lq_t, Td0_t, Tq0_t);
+	
+	mSLog->info("Set base parameters: \n"
+				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
+				nomPower, nomVolt, nomFreq);
+
+	mSLog->info("Set operational parameters in per unit: \n"
+			"inertia: {:e}\n"
+			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
+			"Ld_t: {:e}\nLq_t: {:e}\n"
+			"Td0_t: {:e}\nTq0_t: {:e}\n",
+			H, Ld, Lq, L0, 
+			Ld_t, Lq_t,
+			Td0_t, Tq0_t);
+};
+
 void DP::Ph1::SynchronGenerator4OrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
