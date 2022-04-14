@@ -232,9 +232,19 @@ namespace SMIB {
 	    Real SwitchOpen = 1e6;
     };
 
-    struct ScenarioConfig4 {
-        //Scenario used to compare DP against SP accuracy in Martin's thesis
+namespace ReducedOrderSynchronGenerator {
+namespace Scenario4 {
+    //Scenario used to compare DP against SP accuracy in Martin's thesis
 
+    struct Config {
+        // default configuration of scenario
+        // adjustable using applyCommandLineArgsOptions
+        String sgType = "4";
+        Real startTimeFault = 30.0;
+	    Real endTimeFault = 30.1;
+    };
+
+    struct GridParams {
         // General grid parameters
         Real VnomMV = 24e3;
         Real VnomHV = 230e3;
@@ -258,6 +268,7 @@ namespace SMIB {
         Real SwitchClosed = 0.1;
 	    Real SwitchOpen = 1e6;
     };
+}
   
 }
 
