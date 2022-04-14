@@ -311,6 +311,7 @@ namespace Scenario5 {
         Real nomVoltageMV = 24e3;
         Real transformerResistance = 0; // referred to HV side
         Real transformerReactance = 5.2900; // referred to HV side
+        Real transformerNominalPower = 555e6;
     };
 }
 
