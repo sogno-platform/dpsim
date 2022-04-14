@@ -269,7 +269,52 @@ namespace Scenario4 {
 	    Real SwitchOpen = 1e6;
     };
 }
-  
+
+namespace Scenario5 {
+    // SMIB scenario including trafo
+    struct Config {
+        // default configuration of scenario
+        // adjustable using applyCommandLineArgsOptions
+        String sgType = "4";
+        Real startTimeFault = 1.0;
+	    Real endTimeFault = 1.1;
+    };
+
+    struct GridParams {
+
+        // General grid parameters
+        Real VnomMV = 24e3;
+        Real VnomHV = 230e3;
+        Real nomFreq = 60;
+        Real ratio = VnomMV/VnomHV;
+        Real nomOmega= nomFreq * 2 * PI;
+
+        // Generator parameters
+        Real setPointActivePower = 300e6;
+        Real setPointVoltage = 1.05*VnomMV;
+
+        // CIGREHVAmerican (230 kV)
+        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
+        Real lineLength = 100;
+        Real lineResistance = lineCIGREHV.lineResistancePerKm * lineLength;
+        Real lineInductance = lineCIGREHV.lineReactancePerKm * lineLength / nomOmega;
+        Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm * lineLength / nomOmega;
+        Real lineConductance = 1e-15;
+
+        // Fault resistance 10 Ohms at 230kV
+        Real SwitchClosed = 10;
+	    Real SwitchOpen = 1e6;
+    };
+
+    struct Transf1 {
+	    Real nomVoltageHV = 230e3;
+        Real nomVoltageMV = 24e3;
+        Real transformerResistance = 0; // referred to HV side
+        Real transformerReactance = 5.2900; // referred to HV side
+    };
+}
+
+}
 }
 
 namespace ThreeBus {
