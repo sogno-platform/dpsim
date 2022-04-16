@@ -75,6 +75,11 @@ namespace Ph1 {
 		void calculateAuxiliarConstants();
 		///
 		void stepInPerUnit();
+		/// Setter 6th order parameters - extending base class setter by logging
+		void setOperationalParametersPerUnit(Real nomPower, 
+				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
+				Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t,
+				Real Ld_s, Real Lq_s, Real Td0_s, Real Tq0_s);
 	};
 }
 }
