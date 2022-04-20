@@ -34,6 +34,13 @@ jobs:
           curl -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip ${{ env.BUILD_WRAPPER_DOWNLOAD_URL }}
           unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
           echo "$HOME/.sonar/build-wrapper-linux-x86" >> $GITHUB_PATH
+      - name: Create Build Folder
+        run: mkdir build
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{ github.workspace }}/build
+        run: |
+          cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE
       - name: Run build-wrapper
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/
