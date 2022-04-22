@@ -1,8 +1,8 @@
 include(FetchContent)
 FetchContent_Declare(
   dpsim-villas
-  GIT_REPOSITORY https://github.com/JTS22/dpsim-villas.git
-  GIT_TAG        main
+  GIT_REPOSITORY https://github.com/sogno-platform/dpsim-villas.git
+  GIT_TAG        v0.12.0
 )
 
 if(${CMAKE_VERSION} VERSION_LESS "3.14.0")
