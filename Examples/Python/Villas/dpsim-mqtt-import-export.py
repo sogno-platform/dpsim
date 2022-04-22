@@ -121,8 +121,8 @@ def dpsim():
     
     logger = dpsimpy.Logger(name)
     sim.add_logger(logger)
-    sim.log_attr('n1', 'v')
-    sim.log_attr('n2', 'v')
+    sim.log_attribute('n1', 'v')
+    sim.log_attribute('n2', 'v')
 
     intf_config = {
         "type": "mqtt",
@@ -138,9 +138,9 @@ def dpsim():
 
     intf = dpsimpyvillas.InterfaceVillas(name="dpsim-mqtt", config=intf_config)
     sim.add_interface(intf)
-    sim.import_attr('Load', 'P', 0)
-    sim.export_attr('n1', 'v', 0)
-    sim.export_attr('n2', 'v', 1, dpsimpy.AttrModifier.mag)
+    sim.import_attribute('Load', 'P', 0)
+    sim.export_attribute('n1', 'v', 0)
+    sim.export_attribute('n2', 'v', 1, dpsimpy.AttrModifier.mag)
   
     return sim, intf
 

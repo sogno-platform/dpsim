@@ -51,8 +51,8 @@ file_config = '''{
 intf = dpsimpyvillas.InterfaceVillas('dpsim-file', file_config)
 
 sim.add_interface(intf, False)
-#sim.import_attr('v_intf', 'V_ref', 0)
-sim.export_attr('v_intf', 'i_intf', 0, 0, 0)
+#sim.import_attribute('v_intf', 'V_ref', 0)
+sim.export_attribute('v_intf', 'i_intf', 0, 0, 0)
 
 sim.add_logger(logger)
 
