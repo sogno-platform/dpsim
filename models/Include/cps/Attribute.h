@@ -31,6 +31,15 @@ namespace CPS {
 		UPDATE_ON_SIMULATION_STEP,
 	};
 	
+	template<class T>
+	class Attribute;
+
+	template<class T>
+	class AttributeStatic;
+
+	template<class T>
+	class AttributeDynamic;
+
 	/**
 	 * Custom pointer class for storing attributes as member variables and in the `mAttributes` attribute map.
 	 * Using this type over the normal `std::shared_ptr` allows for disabling certain operator overloads, e.g. the comparison with the nullptr / the number 0
@@ -40,10 +49,13 @@ namespace CPS {
 	template<class T>
 	class AttributePointer {
 		public:
+			using element_type = T;
+
 			AttributePointer() : mPtr() {};
 			AttributePointer(const AttributePointer& r) = default;
 			AttributePointer(std::shared_ptr<T> ptr) : mPtr(ptr) {};
 			AttributePointer(std::nullptr_t ptr) : mPtr(ptr) {};
+			explicit AttributePointer(T *ptr) : mPtr(ptr) {};
 
 			template<class U>
 			AttributePointer(AttributePointer<U> ptr) : mPtr() {
@@ -81,6 +93,10 @@ namespace CPS {
 
 			T* operator->() const noexcept {
 				return mPtr.operator->();
+			}
+
+			T* get() const {
+				return mPtr.get();
 			}
 
 			std::shared_ptr<T> getPtr() const {
@@ -176,15 +192,6 @@ namespace CPS {
 			return deps;
 		}
 	};
-
-	template<class T>
-	class Attribute;
-
-	template<class T>
-	class AttributeStatic;
-
-	template<class T>
-	class AttributeDynamic;
 
 	/**
 	 * Base class for all AttributeUpdateTasks. Enables storing tasks in an STL list independent of the dependency types.

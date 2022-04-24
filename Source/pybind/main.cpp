@@ -31,6 +31,8 @@
 #include <Utils.h>
 #include <Attributes.h>
 
+PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);
+
 namespace py = pybind11;
 using namespace pybind11::literals;
 
