@@ -23,15 +23,14 @@ int main(int argc, char *argv[]) {
 	};
 
 	FIRFilter filter("filter", coefficients, 1);
-	Real input = 10;
-	Attribute<Real>::Ptr inputAttr = Attribute<Real>::make(&input);
+	Attribute<Real>::Ptr inputAttr = AttributeStatic<Real>::make(10);
 
 	filter.initialize(1);
 	filter.setInput(inputAttr);
 
 	for (int i = 0; i < 1000; i++) {
 		if (i == 500)
-			input = 5;
+			**inputAttr = 5;
 
 		filter.step(i);
 	}

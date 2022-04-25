@@ -102,8 +102,8 @@ def dpsim0():
 
     intf = dpsimpyvillas.InterfaceShmem('/dpsim0-out', '/dpsim0-in')
 
-    sim.import_attr('v_intf', 'V_ref', 0)
-    sim.export_attr('v_intf', 'i_intf', 0, 0, 0)
+    sim.import_attribute('v_intf', 'V_ref', 0)
+    sim.export_attribute('v_intf', 'i_intf', 0, 0, 0)
 
     sim.add_interface(intf, True)
     sim.add_logger(logger)
@@ -143,8 +143,8 @@ def dpsim1():
     sim.set_final_time(final_time)
     intf = dpsimpyvillas.InterfaceShmem('/dpsim1-out', '/dpsim1-in')
 
-    sim.import_attr('i_intf', 'I_ref', 0)
-    sim.export_attr('i_intf', 'v_intf', 0, 0, 0, scale=complex(-1, 0))
+    sim.import_attribute('i_intf', 'I_ref', 0)
+    sim.export_attribute('i_intf', 'v_intf', 0, 0, 0, scale=complex(-1, 0))
 
     sim.add_interface(intf)
     sim.add_logger(logger)

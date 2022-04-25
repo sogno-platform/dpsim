@@ -14,13 +14,13 @@ namespace CPS {
 namespace Base {
 namespace Ph1 {
 	class Capacitor {
-	protected:
-		/// Capacitance [F]
-		Real mCapacitance;
 	public:
+		/// Capacitance [F]
+		CPS::Attribute<Real>::Ptr mCapacitance;
+
 		/// Sets model specific parameters
 		void setParameters(Real capacitance) {
-			mCapacitance = capacitance;
+			**mCapacitance = capacitance;
 		}
 	};
 }

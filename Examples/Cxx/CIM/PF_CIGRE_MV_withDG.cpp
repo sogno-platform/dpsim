@@ -47,7 +47,7 @@ int main(int argc, char** argv){
     auto loggerPF = DPsim::DataLogger::make(simName);
     for (auto node : system.mNodes)
     {
-        loggerPF->addAttribute(node->name() + ".V", node->attribute("v"));
+        loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
     }
     Simulation simPF(simName, Logger::Level::debug);
 	simPF.setSystem(system);

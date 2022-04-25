@@ -22,10 +22,6 @@ namespace CPS {
 		typename SimTerminal<VarType>::List mTerminals;
 		/// List of virtual nodes
 		typename SimNode<VarType>::List mVirtualNodes;
-		/// Voltage between terminals
-		MatrixVar<VarType> mIntfVoltage;
-		/// Current through component
-		MatrixVar<VarType> mIntfCurrent;
 		/// List of considered network frequencies
 		Matrix mFrequencies;
 		/// Number of network frequencies
@@ -44,6 +40,11 @@ namespace CPS {
 		typedef std::shared_ptr<SimPowerComp<VarType>> Ptr;
 		typedef std::vector<Ptr> List;
 
+		/// Voltage between terminals
+		const typename Attribute<MatrixVar<VarType>>::Ptr mIntfVoltage;
+		/// Current through component
+		const typename Attribute<MatrixVar<VarType>>::Ptr mIntfCurrent;
+
 		/// Basic constructor that takes UID, name and log level
 		SimPowerComp(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Basic constructor that takes name and log level and sets the UID to name as well
@@ -54,7 +55,7 @@ namespace CPS {
 
 		/// Returns a modified copy of the component with the given suffix added to the name and without
 		/// connected nodes / terminals
-		/// TODO should be abstract and implemented everywhere
+		/// DEPRECATED: This method should be removed
 		virtual Ptr clone(String name) { return nullptr; }
 
 		// #### Terminals ####
@@ -89,7 +90,7 @@ namespace CPS {
 		/// Get pointer to node
 		typename SimNode<VarType>::Ptr node(UInt index) {
 			if (index >= mTerminals.size()) {
-				throw SystemError("Node not available for " + mUID);
+				throw SystemError("Node not available for " + **mUID);
 			}
 			return mTerminals[index]->node();
 		};
@@ -123,9 +124,9 @@ namespace CPS {
 		UInt virtualSimNode(UInt nodeIndex, UInt phaseIndex = 0) { return virtualMatrixNodeIndices(nodeIndex)[phaseIndex]; }
 
 		// #### States ####
-		const MatrixVar<VarType>& intfCurrent() { return mIntfCurrent; }
+		const MatrixVar<VarType>& intfCurrent() { return **mIntfCurrent; }
 		///
-		const MatrixVar<VarType>& intfVoltage() { return mIntfVoltage; }
+		const MatrixVar<VarType>& intfVoltage() { return **mIntfVoltage; }
 		///
 		MatrixComp initialVoltage(UInt index) { return mTerminals[index]->initialVoltage(); }
 		///
@@ -134,9 +135,9 @@ namespace CPS {
 		Bool terminalNotGrounded(UInt index) { return !mMatrixNodeIndexIsGround[index]; }
 
 		// #### Setters ####
-		void setIntfCurrent(MatrixVar<VarType> current) { mIntfCurrent = current; }
+		void setIntfCurrent(MatrixVar<VarType> current) { **mIntfCurrent = current; }
 		///
-		void setIntfVoltage(MatrixVar<VarType> voltage) { mIntfVoltage = voltage; }
+		void setIntfVoltage(MatrixVar<VarType> voltage) { **mIntfVoltage = voltage; }
 		///
 		void setVirtualNodeNumber(UInt num);
 		/// Sets the virtual node at index nodeNum.

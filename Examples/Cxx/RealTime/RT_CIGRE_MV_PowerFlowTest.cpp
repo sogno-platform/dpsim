@@ -43,7 +43,7 @@ int main(int argc, char** argv){
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
 	{
-		logger->addAttribute(node->name(), node->attribute("v"));
+		logger->logAttribute(node->name(), node->attribute("v"));
 	}
 
 	RealTimeSimulation sim(simName, Logger::Level::debug);

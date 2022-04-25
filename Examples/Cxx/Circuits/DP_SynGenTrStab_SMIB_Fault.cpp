@@ -64,8 +64,8 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -128,24 +128,24 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
-	loggerDP->addAttribute("v1", n1DP->attribute("v"));
-	loggerDP->addAttribute("v2", n2DP->attribute("v"));
+	loggerDP->logAttribute("v1", n1DP->attribute("v"));
+	loggerDP->logAttribute("v2", n2DP->attribute("v"));
 	//gen
-	loggerDP->addAttribute("Ep", genDP->attribute("Ep"));
-	loggerDP->addAttribute("v_gen", genDP->attribute("v_intf"));
-	loggerDP->addAttribute("i_gen", genDP->attribute("i_intf"));
-	loggerDP->addAttribute("wr_gen", genDP->attribute("w_r"));
-	loggerDP->addAttribute("delta_r_gen", genDP->attribute("delta_r"));
-	loggerDP->addAttribute("P_elec", genDP->attribute("P_elec"));
-	loggerDP->addAttribute("P_mech", genDP->attribute("P_mech"));
+	loggerDP->logAttribute("Ep", genDP->attribute("Ep"));
+	loggerDP->logAttribute("v_gen", genDP->attribute("v_intf"));
+	loggerDP->logAttribute("i_gen", genDP->attribute("i_intf"));
+	loggerDP->logAttribute("wr_gen", genDP->attribute("w_r"));
+	loggerDP->logAttribute("delta_r_gen", genDP->attribute("delta_r"));
+	loggerDP->logAttribute("P_elec", genDP->attribute("P_elec"));
+	loggerDP->logAttribute("P_mech", genDP->attribute("P_mech"));
 	//Switch
-	loggerDP->addAttribute("i_fault", faultDP->attribute("i_intf"));
+	loggerDP->logAttribute("i_fault", faultDP->attribute("i_intf"));
 	//line
-	loggerDP->addAttribute("v_line", lineDP->attribute("v_intf"));
-	loggerDP->addAttribute("i_line", lineDP->attribute("i_intf"));
+	loggerDP->logAttribute("v_line", lineDP->attribute("v_intf"));
+	loggerDP->logAttribute("i_line", lineDP->attribute("i_intf"));
 	//slack
-	loggerDP->addAttribute("v_slack", extnetDP->attribute("v_intf"));
-	loggerDP->addAttribute("i_slack", extnetDP->attribute("i_intf"));
+	loggerDP->logAttribute("v_slack", extnetDP->attribute("v_intf"));
+	loggerDP->logAttribute("i_slack", extnetDP->attribute("i_intf"));
 
 
 	Simulation simDP(simNameDP, Logger::Level::debug);

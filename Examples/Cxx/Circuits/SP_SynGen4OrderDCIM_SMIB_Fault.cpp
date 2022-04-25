@@ -52,8 +52,8 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -118,16 +118,16 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
-	//loggerSP->addAttribute("v_slack", 	 extnetSP->attribute("v_intf"));
-	//loggerSP->addAttribute("i_slack", 	 extnetSP->attribute("i_intf"));
-	loggerSP->addAttribute("v_gen", 	 genSP->attribute("v_intf"));
-    loggerSP->addAttribute("i_gen", 	 genSP->attribute("i_intf"));
-    loggerSP->addAttribute("Etorque", 	 genSP->attribute("Etorque"));
-    loggerSP->addAttribute("delta", 	 genSP->attribute("delta"));
-    loggerSP->addAttribute("w_r", 		 genSP->attribute("w_r"));
-	loggerSP->addAttribute("Edq0", 		 genSP->attribute("Edq_t"));
-	loggerSP->addAttribute("Vdq0", 		 genSP->attribute("Vdq"));
-	loggerSP->addAttribute("Idq0", 		 genSP->attribute("Idq"));
+	//loggerSP->logAttribute("v_slack", 	 extnetSP->attribute("v_intf"));
+	//loggerSP->logAttribute("i_slack", 	 extnetSP->attribute("i_intf"));
+	loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
+    loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
+    loggerSP->logAttribute("Etorque", 	 genSP->attribute("Etorque"));
+    loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
+    loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
+	loggerSP->logAttribute("Edq0", 		 genSP->attribute("Edq_t"));
+	loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Vdq"));
+	loggerSP->logAttribute("Idq0", 		 genSP->attribute("Idq"));
 
 	Simulation simSP(simNameSP, logLevel);
 	simSP.doInitFromNodesAndTerminals(true);

@@ -9,20 +9,21 @@
 #pragma once
 
 #include <cps/Definitions.h>
-
+#include <cps/AttributeList.h>
 namespace CPS {
 namespace Base {
 namespace Ph3 {
 	class Resistor {
 	protected:
-		///Resistance [ohm]
-		Matrix mResistance;
 		///Conductance [S]
+		///CHECK: Does this have to be its own member variable?
 		Matrix mConductance;
 	public:
+		///Resistance [ohm]
+		CPS::Attribute<Matrix>::Ptr mResistance;
 		/// Sets model specific parameters
 		void setParameters(Matrix resistance) {
-			mResistance = resistance;
+			**mResistance = resistance;
 		}
 	};
 }

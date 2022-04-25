@@ -12,19 +12,17 @@ using namespace CPS;
 
 EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
     (String uid, String name, Logger::Level logLevel)
-	: Base::ReducedOrderSynchronGenerator<Real>(uid, name, logLevel){
+	: Base::ReducedOrderSynchronGenerator<Real>(uid, name, logLevel),
+	mEvbr(Attribute<Matrix>::create("Evbr", mAttributes)) {
 	
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 	
 	// model variable
-	mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
-	mEvbr = Matrix::Zero(3,1);
-
-    // Register attributes
-    addAttribute<Matrix>("Evbr",  &mEvbr, Flags::read);
+	**mIntfVoltage = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
+	**mEvbr = Matrix::Zero(3,1);
 }
 
 EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
@@ -98,31 +96,31 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matri
 }
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), mEvbr(0, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), mEvbr(1, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), mEvbr(2, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), (**mEvbr)(0, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), (**mEvbr)(1, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), (**mEvbr)(2, 0));
 }
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
 	// update armature voltage
-	mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-	mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-	mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
-	mVdq0 = mAbcToDq0 * mIntfVoltage / mBase_V;
+	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+	(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+	**mVdq0 = mAbcToDq0 * **mIntfVoltage / mBase_V;
 
 	// update armature current
-	mIntfCurrent(0, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
-	mIntfCurrent(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
-	mIntfCurrent(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));
-	mIdq0 =  mAbcToDq0 * mIntfCurrent / mBase_I;
+	(**mIntfCurrent)(0, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
+	(**mIntfCurrent)(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
+	(**mIntfCurrent)(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));
+	**mIdq0 =  mAbcToDq0 * **mIntfCurrent / mBase_I;
 }
 
 Matrix EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_parkTransformMatrix() {
 	Matrix abcToDq0(3, 3);
 
 	abcToDq0 <<
-		2./3.*cos(mThetaMech),  2./3.*cos(mThetaMech - 2.*PI/3.),  2./3.*cos(mThetaMech + 2.*PI/3.),
-		-2./3.*sin(mThetaMech), -2./3.*sin(mThetaMech - 2.*PI/3.), -2./3.*sin(mThetaMech + 2.*PI/3.),
+		2./3.*cos(**mThetaMech),  2./3.*cos(**mThetaMech - 2.*PI/3.),  2./3.*cos(**mThetaMech + 2.*PI/3.),
+		-2./3.*sin(**mThetaMech), -2./3.*sin(**mThetaMech - 2.*PI/3.), -2./3.*sin(**mThetaMech + 2.*PI/3.),
 		1./3., 			        1./3., 						       1./3.;
 
 	return abcToDq0;
@@ -132,9 +130,9 @@ Matrix EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_inverseParkTransformMatri
 	Matrix dq0ToAbc(3, 3);
 
 	dq0ToAbc <<
-		cos(mThetaMech), 		    -sin(mThetaMech), 		     1.,
-		cos(mThetaMech - 2.*PI/3.), -sin(mThetaMech - 2.*PI/3.), 1.,
-		cos(mThetaMech + 2.*PI/3.), -sin(mThetaMech + 2.*PI/3.), 1.;
+		cos(**mThetaMech), 		    -sin(**mThetaMech), 		     1.,
+		cos(**mThetaMech - 2.*PI/3.), -sin(**mThetaMech - 2.*PI/3.), 1.,
+		cos(**mThetaMech + 2.*PI/3.), -sin(**mThetaMech + 2.*PI/3.), 1.;
 
 	return dq0ToAbc;
 }

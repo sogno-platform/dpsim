@@ -28,10 +28,9 @@ namespace Ph1 {
 		public SharedFactory<VoltageSource> {
 	protected:
 		void updateVoltage(Real time);
-
-		Attribute<Complex>::Ptr mVoltageRef;
-		Attribute<Real>::Ptr mSrcFreq;
 	public:
+		const Attribute<Complex>::Ptr mVoltageRef;
+		const Attribute<Real>::Ptr mSrcFreq;
 		/// Defines UID, name and logging level
 		VoltageSource(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		///
@@ -58,7 +57,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(VoltageSource& voltageSource) :
-				Task(voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
+				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
 				mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
 				mModifiedAttributes.push_back(mVoltageSource.attribute("right_vector"));
 				mModifiedAttributes.push_back(mVoltageSource.attribute("v_intf"));
@@ -73,7 +72,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource), mLeftVector(leftVector)
+				Task(**voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource), mLeftVector(leftVector)
 			{
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(mVoltageSource.attribute("i_intf"));

@@ -18,11 +18,11 @@ namespace Ph1 {
 	class SynchronGenerator4OrderDCIM :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public SharedFactory<SynchronGenerator4OrderDCIM> {
-	protected:
+	public:
 		// ### State variables [p.u.]###
 		/// voltage behing the transient reactance
-		Matrix mEdq_t;
-
+		const Attribute<Matrix>::Ptr mEdq_t;
+	protected:
 		/// state representation matrix
 		///
 		Matrix mA;

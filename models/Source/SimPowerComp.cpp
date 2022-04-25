@@ -12,9 +12,9 @@ using namespace CPS;
 
 template <typename VarType>
 SimPowerComp<VarType>::SimPowerComp(String uid, String name, Logger::Level logLevel)
-	: TopologicalPowerComp(uid, name, logLevel) {
-	addAttribute<MatrixVar<VarType>>("v_intf", &mIntfVoltage, Flags::read);
-	addAttribute<MatrixVar<VarType>>("i_intf", &mIntfCurrent, Flags::read);
+	: 	TopologicalPowerComp(uid, name, logLevel),
+		mIntfVoltage(Attribute<MatrixVar<VarType>>::create("v_intf", mAttributes)),
+		mIntfCurrent(Attribute<MatrixVar<VarType>>::create("i_intf", mAttributes)) {
 	mTerminals.clear();
 }
 
@@ -32,14 +32,14 @@ Bool SimPowerComp<VarType>::hasUnconnectedTerminals() {
 template <typename VarType>
 void SimPowerComp<VarType>::checkForUnconnectedTerminals() {
 	if ( hasUnconnectedTerminals() ) {
-		throw SystemError("Found unconnected Terminals for " + mUID);
+		throw SystemError("Found unconnected Terminals for " + **mUID);
 	}
 }
 
 template <typename VarType>
 typename SimTerminal<VarType>::Ptr SimPowerComp<VarType>::terminal(UInt index) {
 	if (index >= mTerminals.size()) {
-		throw SystemError("Terminal not available for " + mUID);
+		throw SystemError("Terminal not available for " + **mUID);
 	}
 	return mTerminals[index];
 }
@@ -64,7 +64,7 @@ void SimPowerComp<VarType>::setTerminalNumber(UInt num) {
 template <typename VarType>
 void SimPowerComp<VarType>::setTerminals(typename SimTerminal<VarType>::List terminals) {
 	if (mNumTerminals < terminals.size()) {
-		mSLog->error("Number of Terminals is too large for Component {} - Ignoring", mName);
+		mSLog->error("Number of Terminals is too large for Component {} - Ignoring", **mName);
 		return;
 	}
 	mTerminals = terminals;
@@ -73,7 +73,7 @@ void SimPowerComp<VarType>::setTerminals(typename SimTerminal<VarType>::List ter
 template <typename VarType>
 void SimPowerComp<VarType>::setTerminalAt(typename SimTerminal<VarType>::Ptr terminal, UInt terminalPosition) {
 	if (mNumTerminals <= terminalPosition) {
-		mSLog->error("Terminal position number too large for Component {} - Ignoring", mName);
+		mSLog->error("Terminal position number too large for Component {} - Ignoring", **mName);
 		return;
 	}
 	mTerminals[terminalPosition] = terminal;
@@ -112,7 +112,7 @@ void SimPowerComp<VarType>::setVirtualNodeNumber(UInt num) {
 	mVirtualNodes.resize(mNumVirtualNodes, nullptr);
 
 	for (UInt idx = 0; idx < mNumVirtualNodes; idx++) {
-		String nodeName = mName + "_vnode_" + std::to_string(idx);
+		String nodeName = **mName + "_vnode_" + std::to_string(idx);
 		setVirtualNodeAt(std::make_shared<SimNode<VarType>>(nodeName, mPhaseType), idx);
 	}
 }
@@ -120,7 +120,7 @@ void SimPowerComp<VarType>::setVirtualNodeNumber(UInt num) {
 template <typename VarType>
 void SimPowerComp<VarType>::setVirtualNodeAt(typename SimNode<VarType>::Ptr virtualNode, UInt nodeNum) {
 	if (mNumVirtualNodes <= nodeNum) {
-		mSLog->error("Virtual Node position number too large for Component {} - Ignoring", mName);
+		mSLog->error("Virtual Node position number too large for Component {} - Ignoring", **mName);
 	}
 	mVirtualNodes[nodeNum] = virtualNode;
 	mSLog->info("Set virtual Node at position {} to Node {}, simulation node {}",
@@ -130,7 +130,7 @@ void SimPowerComp<VarType>::setVirtualNodeAt(typename SimNode<VarType>::Ptr virt
 template <typename VarType>
 typename SimNode<VarType>::Ptr SimPowerComp<VarType>::virtualNode(UInt index) {
 	if (index >= mVirtualNodes.size()) {
-		throw SystemError("Node not available for " + mUID);
+		throw SystemError("Node not available for " + **mUID);
 	}
 	return mVirtualNodes[index];
 }
@@ -139,11 +139,11 @@ typename SimNode<VarType>::Ptr SimPowerComp<VarType>::virtualNode(UInt index) {
 template<typename VarType>
 void SimPowerComp<VarType>::connect(typename SimNode<VarType>::List nodes) {
 	if (mNumTerminals < nodes.size()) {
-		mSLog->error("Number of Nodes is too large for Component {} - Ignoring", mName);
+		mSLog->error("Number of Nodes is too large for Component {} - Ignoring", **mName);
 		return;
 	}
 	for (UInt i = 0; i < nodes.size(); i++) {
-		String name = mName + "_T" + std::to_string(i);
+		String name = **mName + "_T" + std::to_string(i);
 		typename SimTerminal<VarType>::Ptr terminal = SimTerminal<VarType>::make(name);
 		terminal->setNode(nodes[i]);
 		setTerminalAt(terminal, i);
@@ -156,12 +156,12 @@ void SimPowerComp<VarType>::initialize(Matrix frequencies) {
 	mNumFreqs = static_cast<UInt>(mFrequencies.size());
 
 	if (mPhaseType != PhaseType::ABC) {
-		mIntfVoltage = MatrixVar<VarType>::Zero(1, mNumFreqs);
-		mIntfCurrent = MatrixVar<VarType>::Zero(1, mNumFreqs);
+		**mIntfVoltage = MatrixVar<VarType>::Zero(1, mNumFreqs);
+		**mIntfCurrent = MatrixVar<VarType>::Zero(1, mNumFreqs);
 	}
 	else {
-		mIntfVoltage = MatrixVar<VarType>::Zero(3, mNumFreqs);
-		mIntfCurrent = MatrixVar<VarType>::Zero(3, mNumFreqs);
+		**mIntfVoltage = MatrixVar<VarType>::Zero(3, mNumFreqs);
+		**mIntfCurrent = MatrixVar<VarType>::Zero(3, mNumFreqs);
 	}
 
 	for (auto node : mVirtualNodes)

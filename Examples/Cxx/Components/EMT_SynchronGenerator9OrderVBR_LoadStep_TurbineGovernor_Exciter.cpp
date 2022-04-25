@@ -99,15 +99,15 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i_gen", gen->attribute("i_intf"));
-	logger->addAttribute("wr_gen", gen->attribute("w_r"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("i_gen", gen->attribute("i_intf"));
+	logger->logAttribute("wr_gen", gen->attribute("w_r"));
 
 	// Log further variables if exciter connected
 	if (withExciter) {
-		logger->addAttribute("vh_exc_gen", gen->mExciter->attribute("Vh"));
-		logger->addAttribute("vr_exc_gen", gen->mExciter->attribute("Vr"));
-		logger->addAttribute("vf_exc_gen", gen->mExciter->attribute("Vf"));
+		logger->logAttribute("vh_exc_gen", gen->mExciter->attribute("Vh"));
+		logger->logAttribute("vr_exc_gen", gen->mExciter->attribute("Vr"));
+		logger->logAttribute("vf_exc_gen", gen->mExciter->attribute("Vf"));
 	}
 
 	Simulation sim(simName, Logger::Level::info);

@@ -60,8 +60,8 @@ void powerFlow(SystemTopology& systemPF) {
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -112,12 +112,12 @@ void simulateDP(SystemTopology& systemPF, String waveform) {
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
-	loggerDP->addAttribute("v1", n1DP->attribute("v"));
-	loggerDP->addAttribute("v2", n2DP->attribute("v"));
-	loggerDP->addAttribute("isrc", extnetDP->attribute("i_intf"));
-	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
-	loggerDP->addAttribute("irx", loadDP->attribute("i_intf"));
-	loggerDP->addAttribute("f_src", extnetDP->attribute("f_src"));
+	loggerDP->logAttribute("v1", n1DP->attribute("v"));
+	loggerDP->logAttribute("v2", n2DP->attribute("v"));
+	loggerDP->logAttribute("isrc", extnetDP->attribute("i_intf"));
+	loggerDP->logAttribute("i12", lineDP->attribute("i_intf"));
+	loggerDP->logAttribute("irx", loadDP->attribute("i_intf"));
+	loggerDP->logAttribute("f_src", extnetDP->attribute("f_src"));
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
@@ -167,10 +167,10 @@ void simulateSP(SystemTopology& systemPF, String waveform) {
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
-	loggerSP->addAttribute("v1", n1SP->attribute("v"));
-	loggerSP->addAttribute("v2", n2SP->attribute("v"));
-	loggerSP->addAttribute("i12", lineSP->attribute("i_intf"));
-	loggerSP->addAttribute("f_src", extnetSP->attribute("f_src"));
+	loggerSP->logAttribute("v1", n1SP->attribute("v"));
+	loggerSP->logAttribute("v2", n2SP->attribute("v"));
+	loggerSP->logAttribute("i12", lineSP->attribute("i_intf"));
+	loggerSP->logAttribute("f_src", extnetSP->attribute("f_src"));
 
 	// Simulation
 	Simulation sim(simNameSP, Logger::Level::debug);
@@ -221,12 +221,12 @@ void simulateEMT(SystemTopology& systemPF, String waveform) {
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);
-	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
-	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
-	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("irx", loadEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("isrc", extnetEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("f_src", extnetEMT->attribute("f_src"));
+	loggerEMT->logAttribute("v1", n1EMT->attribute("v"));
+	loggerEMT->logAttribute("v2", n2EMT->attribute("v"));
+	loggerEMT->logAttribute("i12", lineEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("irx", loadEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("isrc", extnetEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("f_src", extnetEMT->attribute("f_src"));
 
 	// load step sized in absolute terms
 	//std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::Events::createEventAddPowerConsumption3Ph("n2", 0.1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);

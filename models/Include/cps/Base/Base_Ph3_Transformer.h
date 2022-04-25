@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cps/Definitions.h>
+#include <cps/AttributeList.h>
 
 namespace CPS {
 namespace Base {
@@ -21,20 +22,20 @@ namespace Ph3 {
 		Real mNominalVoltageEnd2;
 		/// Rated Apparent Power [VA]
 		Real mRatedPower;
-		/// Transformer ratio
-		Complex mRatio;
 		/// Resistance [Ohm]
 		Matrix mResistance;
 		/// Inductance [H]
 		Matrix mInductance;
 
 	public:
+		///Transformer ratio
+		Attribute<Complex>::Ptr mRatio;
 		///
 		void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, Real ratioPhase, Matrix resistance, Matrix inductance) {
 			mNominalVoltageEnd1 = nomVoltageEnd1;
 			mNominalVoltageEnd2 = nomVoltageEnd2;
 			mRatedPower = ratedPower;
-			mRatio = std::polar<Real>(ratioAbs, ratioPhase);
+			**mRatio = std::polar<Real>(ratioAbs, ratioPhase);
 			mResistance = resistance;
 			mInductance = inductance;
 		}

@@ -23,23 +23,23 @@ std::string getAttributeList(CPS::IdentifiedObject &obj) {
 		std::string type;
 		std::string value;
 		std::string size;
-		if (auto tryReal = std::dynamic_pointer_cast<CPS::Attribute<CPS::Real>>(attr.second)) {
+		if (auto tryReal = std::dynamic_pointer_cast<CPS::Attribute<CPS::Real>>(attr.second.getPtr())) {
 			type = "Real";
 			value = std::to_string(tryReal->get());
 			size = "";
-		} else if (auto tryComplex = std::dynamic_pointer_cast<CPS::Attribute<CPS::Complex>>(attr.second)) {
+		} else if (auto tryComplex = std::dynamic_pointer_cast<CPS::Attribute<CPS::Complex>>(attr.second.getPtr())) {
 			type = "Complex";
 			value = std::to_string(abs(tryComplex->get())) + "<" + std::to_string(arg(tryComplex->get()));
 			size = "";
-		} else if (auto tryMatrixReal = std::dynamic_pointer_cast<CPS::Attribute<CPS::Matrix>>(attr.second)) {
+		} else if (auto tryMatrixReal = std::dynamic_pointer_cast<CPS::Attribute<CPS::Matrix>>(attr.second.getPtr())) {
 			type = "MatrixReal";
 			value = "[...]";
 			size = std::to_string(tryMatrixReal->get().rows()) + "x" + std::to_string(tryMatrixReal->get().cols());
-		} else if (auto tryMatrixComp = std::dynamic_pointer_cast<CPS::Attribute<CPS::MatrixComp>>(attr.second)) {
+		} else if (auto tryMatrixComp = std::dynamic_pointer_cast<CPS::Attribute<CPS::MatrixComp>>(attr.second.getPtr())) {
 			type = "MatrixComplex";
 			value = "[...]";
 			size = std::to_string(tryMatrixComp->get().rows()) + "x" + std::to_string(tryMatrixComp->get().cols());
-		} else if (auto tryString = std::dynamic_pointer_cast<CPS::Attribute<CPS::String>>(attr.second)) {
+		} else if (auto tryString = std::dynamic_pointer_cast<CPS::Attribute<CPS::String>>(attr.second.getPtr())) {
 			type = "String";
 			value = "\"" + tryString->get() + "\"";
 			size = "";
@@ -59,20 +59,20 @@ void printAttributes(CPS::IdentifiedObject &obj) {
 
 void printAttribute(CPS::IdentifiedObject &obj, std::string attrName) {
 	auto attr = obj.attribute(attrName);
-	if (auto tryReal = std::dynamic_pointer_cast<CPS::Attribute<CPS::Real>>(attr)) {
+	if (auto tryReal = std::dynamic_pointer_cast<CPS::Attribute<CPS::Real>>(attr.getPtr())) {
 		py::print("Attribute " + attrName + " on object " + obj.name() + " has type Real and value " + std::to_string(tryReal->get()));
-	} else if (auto tryComplex = std::dynamic_pointer_cast<CPS::Attribute<CPS::Complex>>(attr)) {
+	} else if (auto tryComplex = std::dynamic_pointer_cast<CPS::Attribute<CPS::Complex>>(attr.getPtr())) {
 		std::string value = std::to_string(abs(tryComplex->get())) + "<" + std::to_string(arg(tryComplex->get()));
 		py::print("Attribute " + attrName + " on object " + obj.name() + " has type Complex and value " + value);
-	} else if (auto tryMatrixReal = std::dynamic_pointer_cast<CPS::Attribute<CPS::Matrix>>(attr)) {
+	} else if (auto tryMatrixReal = std::dynamic_pointer_cast<CPS::Attribute<CPS::Matrix>>(attr.getPtr())) {
 		std::string size = std::to_string(tryMatrixReal->get().rows()) + "x" + std::to_string(tryMatrixReal->get().cols());
 		py::print("Attribute " + attrName + " on object " + obj.name() + " has type MatrixReal (size " + size + ") and value:");
 		py::print(py::cast(tryMatrixReal->get()));
-	} else if (auto tryMatrixComp = std::dynamic_pointer_cast<CPS::Attribute<CPS::MatrixComp>>(attr)) {
+	} else if (auto tryMatrixComp = std::dynamic_pointer_cast<CPS::Attribute<CPS::MatrixComp>>(attr.getPtr())) {
 		std::string size = std::to_string(tryMatrixComp->get().rows()) + "x" + std::to_string(tryMatrixComp->get().cols());
 		py::print("Attribute " + attrName + " on object " + obj.name() + " has type MatrixComplex (size " + size + ") and value:");
 		py::print(py::cast(tryMatrixComp->get()));
-	} else if (auto tryString = std::dynamic_pointer_cast<CPS::Attribute<CPS::String>>(attr)) {
+	} else if (auto tryString = std::dynamic_pointer_cast<CPS::Attribute<CPS::String>>(attr.getPtr())) {
 		py::print("Attribute " + attrName + " on object " + obj.name() + " has type String and value \"" + tryString->get() + "\"");
 	} else {
 		py::print("Could not determine type of attribute " + attrName);

@@ -152,163 +152,92 @@ CPS::Task::Ptr DataLogger::getTask() {
 	return std::make_shared<DataLogger::Step>(*this);
 }
 
-void DataLogger::addAttribute(const String &name, CPS::Attribute<Int>::Ptr attr) {
-	mAttributes[name] = attr;
-}
-
-void DataLogger::addAttribute(const String &name, CPS::Attribute<Real>::Ptr attr) {
-	mAttributes[name] = attr;
-}
-
-void DataLogger::addAttribute(const String &name, const String &attr, CPS::IdentifiedObject::Ptr obj) {
-	addAttribute(name, obj->attribute(attr));
-}
-
-void DataLogger::addAttribute(const String &name, const String &attr, CPS::IdentifiedObject::Ptr obj, UInt rowsMax, UInt colsMax) {
-	addAttribute(name, obj->attributeMatrixComp(attr), rowsMax, colsMax);
-}
-
-void DataLogger::addAttribute(const std::vector<String> &name, const String &attr, CPS::IdentifiedObject::Ptr obj) {
-	addAttribute(name, obj->attribute(attr));
-}
-
-void DataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr) {
-	auto attrComp = std::static_pointer_cast<CPS::ComplexAttribute>(attr);
-
-	mAttributes[name + ".re"] = attrComp->real();
-	mAttributes[name + ".im"] = attrComp->imag();
-}
-
-void DataLogger::addAttribute(const std::vector<String> &name, CPS::MatrixRealAttribute::Ptr attr) {
-	const Matrix &m = attr->get();
-	auto attrMat = std::static_pointer_cast<CPS::MatrixRealAttribute>(attr);
-
-	if (m.rows() == 1 && m.cols() == 1) {
-		addAttribute(name[0], attrMat->coeff(0, 0));
-	}
-	else if (m.cols() == 1) {
-		for (UInt k = 0; k < m.rows(); ++k) {
-			addAttribute(name[k],
-				attrMat->coeff(k, 0));
+void DataLogger::logAttribute(const std::vector<String> &name, CPS::AttributeBase::Ptr attr) {
+	if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(attr.getPtr())) {
+		if ((**attrMatrix).rows() == 1 && (**attrMatrix).cols() == 1) {
+			logAttribute(name[0], attrMatrix->deriveCoeff<CPS::Real>(0, 0));
 		}
-	}
-	else {
-		for (UInt k = 0; k < m.rows(); ++k) {
-			for (UInt l = 0; l < m.cols(); ++l) {
-				addAttribute(name[k*m.cols()+l],
-					attrMat->coeff(k, l));
+		else if ((**attrMatrix).cols() == 1) {
+			for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
+				logAttribute(name[k],
+					attrMatrix->deriveCoeff<CPS::Real>(k, 0));
 			}
 		}
-	}
-}
-
-void DataLogger::addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr attr) {
-	const Matrix &m = attr->get();
-	auto attrMat = std::static_pointer_cast<CPS::MatrixRealAttribute>(attr);
-
-	if (m.rows() == 1 && m.cols() == 1) {
-		addAttribute(name, attrMat->coeff(0, 0));
-	}
-	else if (m.cols() == 1) {
-		for (UInt k = 0; k < m.rows(); ++k) {
-			addAttribute(name + "_" + std::to_string(k),
-				attrMat->coeff(k, 0));
-		}
-	}
-	else {
-		for (UInt k = 0; k < m.rows(); ++k) {
-			for (UInt l = 0; l < m.cols(); ++l) {
-				addAttribute(name + "_" + std::to_string(k) + "_" + std::to_string(l) + "_",
-					attrMat->coeff(k, l));
+		else {
+			for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
+				for (UInt l = 0; l < (**attrMatrix).cols(); ++l) {
+					logAttribute(name[k*(**attrMatrix).cols()+l],
+						attrMatrix->deriveCoeff<CPS::Real>(k, l));
+				}
 			}
 		}
-	}
-}
-
-void DataLogger::addAttribute(const String &name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax, UInt colsMax) {
-	const MatrixVar<Complex> &m = attr->get();
-	auto attrMat = std::static_pointer_cast<CPS::MatrixCompAttribute>(attr);
-	if (rowsMax == 0 || rowsMax > m.rows()) rowsMax = static_cast<UInt>(m.rows());
-	if (colsMax == 0 || colsMax > m.cols()) colsMax = static_cast<UInt>(m.cols());
-
-	if (m.rows() == 1 && m.cols() == 1) {
-		//addAttribute(name, attrMat->coeff(0, 0));
-		mAttributes[name + ".re"] = attrMat->coeffReal(0,0);
-		mAttributes[name + ".im"] = attrMat->coeffImag(0,0);
-	}
-	else if (m.cols() == 1) {
-		for (UInt k = 0; k < rowsMax; ++k) {
-			//addAttribute(name + "(" + std::to_string(k) + ")", attrMat->coeff(k, 0));
-			mAttributes[name + "_" + std::to_string(k) + ".re"] = attrMat->coeffReal(k,0);
-			mAttributes[name + "_" + std::to_string(k) + ".im"] = attrMat->coeffImag(k,0);
+	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<MatrixComp>>(attr.getPtr())) {
+		if ((**attrMatrix).rows() == 1 && (**attrMatrix).cols() == 1) {
+			logAttribute(name[0], attrMatrix->deriveCoeff<CPS::Complex>(0, 0));
 		}
-	}
-	else {
-		for (UInt k = 0; k < rowsMax; ++k) {
-			for (UInt l = 0; l < colsMax; ++l) {
-				mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l)
-					+ ".re"] = attrMat->coeffReal(k,l);
-				mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l)
-					+ ".im"] = attrMat->coeffImag(k,l);
+		else if ((**attrMatrix).cols() == 1) {
+			for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
+				logAttribute(name[k],
+					attrMatrix->deriveCoeff<CPS::Complex>(k, 0));
 			}
 		}
-	}
+		else {
+			for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
+				for (UInt l = 0; l < (**attrMatrix).cols(); ++l) {
+					logAttribute(name[k*(**attrMatrix).cols()+l],
+						attrMatrix->deriveCoeff<CPS::Complex>(k, l));
+				}
+			}
+		}
+	}	
 }
 
-void DataLogger::addAttribute(const std::vector<String> &name, CPS::AttributeBase::Ptr attr) {
-	auto realMatAttr = std::dynamic_pointer_cast<CPS::Attribute<MatrixVar<Real>>>(attr);
-	if (realMatAttr) {
-		auto realMatAttrCast = std::static_pointer_cast<CPS::MatrixRealAttribute>(attr);
-		addAttribute(name, realMatAttrCast);
-		return;
+void DataLogger::logAttribute(const String &name, CPS::AttributeBase::Ptr attr, UInt rowsMax, UInt colsMax) {
+	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
+		mAttributes[name] = attrReal;
+	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr.getPtr())) {
+		mAttributes[name + ".re"] = attrComp->deriveReal();
+		mAttributes[name + ".im"] = attrComp->deriveImag();
+	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(attr.getPtr())) {
+		UInt rows = static_cast<UInt>((**attrMatrix).rows());
+		UInt cols = static_cast<UInt>((**attrMatrix).cols());
+		if (rowsMax == 0 || rowsMax > rows) rowsMax = rows;
+		if (colsMax == 0 || colsMax > cols) colsMax = cols;
+		if (rows == 1 && cols == 1) {
+			mAttributes[name] = attrMatrix->deriveCoeff<Real>(0,0);
+		} else if (cols == 1) {
+			for (UInt k = 0; k < rowsMax; ++k) {
+				mAttributes[name + "_" + std::to_string(k)] = attrMatrix->deriveCoeff<Real>(k,0);
+			}
+		} else {
+			for (UInt k = 0; k < rowsMax; ++k) {
+				for (UInt l = 0; l < colsMax; ++l) {
+					mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l)] = attrMatrix->deriveCoeff<Real>(k,l);
+				}
+			}
+		}
+	} else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<MatrixComp>>(attr.getPtr())) {
+		UInt rows = static_cast<UInt>((**attrMatrix).rows());
+		UInt cols = static_cast<UInt>((**attrMatrix).cols());
+		if (rowsMax == 0 || rowsMax > rows) rowsMax = rows;
+		if (colsMax == 0 || colsMax > cols) colsMax = cols;
+		if (rows == 1 && cols == 1) {
+			mAttributes[name + ".re"] = attrMatrix->deriveCoeff<Complex>(0,0)->deriveReal();
+			mAttributes[name + ".im"] = attrMatrix->deriveCoeff<Complex>(0,0)->deriveImag();
+		} else if (cols == 1) {
+			for (UInt k = 0; k < rowsMax; ++k) {
+				mAttributes[name + "_" + std::to_string(k) + ".re"] = attrMatrix->deriveCoeff<Complex>(k,0)->deriveReal();
+				mAttributes[name + "_" + std::to_string(k) + ".im"] = attrMatrix->deriveCoeff<Complex>(k,0)->deriveImag();
+			}
+		} else {
+			for (UInt k = 0; k < rowsMax; ++k) {
+				for (UInt l = 0; l < colsMax; ++l) {
+					mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l) + ".re"] = attrMatrix->deriveCoeff<Complex>(k,l)->deriveReal();
+					mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l) + ".im"] = attrMatrix->deriveCoeff<Complex>(k,l)->deriveImag();
+				}
+			}
+		}
+	} else {
+		mAttributes[name] = attr;
 	}
 }
-
-void DataLogger::addAttribute(const String &name, CPS::AttributeBase::Ptr attr) {
-	auto intAttr = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr);
-	if (intAttr) {
-		addAttribute(name, intAttr);
-		return;
-	}
-
-	auto realAttr = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr);
-	if (realAttr) {
-		addAttribute(name, realAttr);
-		return;
-	}
-
-	auto compAttr = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr);
-	if (compAttr) {
-		addAttribute(name, compAttr);
-		return;
-	}
-
-	//auto realMatAttr = std::dynamic_pointer_cast<CPS::Attribute<MatrixVar<Real>>>(attr);
-	//if (realMatAttr) {
-	//	addAttribute(name, realMatAttr);
-	//	return;
-	//}
-
-	auto realMatAttr = std::dynamic_pointer_cast<CPS::Attribute<MatrixVar<Real>>>(attr);
-	if (realMatAttr) {
-		auto realMatAttrCast = std::static_pointer_cast<CPS::MatrixRealAttribute>(attr);
-		addAttribute(name, realMatAttrCast);
-		return;
-	}
-
-	//auto compMatAttr = std::dynamic_pointer_cast<CPS::Attribute<MatrixVar<Complex>>>(attr);
-	//if (compMatAttr) {
-	//	addAttribute(name, compMatAttr);
-	//	return;
-	//}
-
-	auto compMatAttr = std::dynamic_pointer_cast<CPS::Attribute<MatrixVar<Complex>>>(attr);
-	if (compMatAttr) {
-		auto compMatAttrCast = std::static_pointer_cast<CPS::MatrixCompAttribute>(attr);
-		addAttribute(name, compMatAttrCast);
-		return;
-	}
-
-	throw CPS::InvalidAttributeException();
-}
-

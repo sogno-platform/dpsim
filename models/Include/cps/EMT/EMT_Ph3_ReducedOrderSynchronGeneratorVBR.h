@@ -18,14 +18,16 @@ namespace Ph3 {
 	class ReducedOrderSynchronGeneratorVBR :
 		public Base::ReducedOrderSynchronGenerator<Real>,
 		public MNAVariableCompInterface {
-	protected:
         // Common elements of all VBR models
+    public:
+        /// voltage behind reactance
+        const Attribute<Matrix>::Ptr mEvbr;
+    protected:
         /// Resistance matrix in dq0 reference frame
 		Matrix mResistanceMatrixDq0;
 		/// Conductance matrix
 		Matrix mConductanceMatrix;
-        /// voltage behind reactance
-        Matrix mEvbr;
+        
 
 		///
 		Matrix mAbcToDq0;

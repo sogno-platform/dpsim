@@ -37,8 +37,8 @@ void voltageSourceResistorEMT3ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("iR", res->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("iR", res->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -76,8 +76,8 @@ void voltageSourceResistorDP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("iR", res->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("iR", res->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -115,8 +115,8 @@ void voltageSourceResistorSP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("iR", res->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("iR", res->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -159,10 +159,10 @@ void voltageSourceInductorEMT3ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("iR", res->attribute("i_intf"));
-	logger->addAttribute("iL", ind->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("iR", res->attribute("i_intf"));
+	logger->logAttribute("iL", ind->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -205,10 +205,10 @@ void voltageSourceInductorDP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("iR", res->attribute("i_intf"));
-	logger->addAttribute("iL", ind->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("iR", res->attribute("i_intf"));
+	logger->logAttribute("iL", ind->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -251,10 +251,10 @@ void voltageSourceInductorSP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("iR", res->attribute("i_intf"));
-	logger->addAttribute("iL", ind->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("iR", res->attribute("i_intf"));
+	logger->logAttribute("iL", ind->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -297,10 +297,10 @@ void voltageSourceCapacitorEMT3ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("iR", res->attribute("i_intf"));
-	logger->addAttribute("iC", cap->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("iR", res->attribute("i_intf"));
+	logger->logAttribute("iC", cap->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -343,10 +343,10 @@ void voltageSourceCapacitorDP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("iR", res->attribute("i_intf"));
-	logger->addAttribute("iC", cap->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("iR", res->attribute("i_intf"));
+	logger->logAttribute("iC", cap->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -389,10 +389,10 @@ void voltageSourceCapacitorSP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("iR", res->attribute("i_intf"));
-	logger->addAttribute("iC", cap->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("iR", res->attribute("i_intf"));
+	logger->logAttribute("iC", cap->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);

@@ -68,9 +68,9 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
-	loggerPF->addAttribute("i12", linePF->attribute("i_intf"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("i12", linePF->attribute("i_intf"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -116,12 +116,12 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);
-	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
-	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
-	loggerEMT->addAttribute("isrc", extnetEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("irx", loadEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("f_src", extnetEMT->attribute("f_src"));
+	loggerEMT->logAttribute("v1", n1EMT->attribute("v"));
+	loggerEMT->logAttribute("v2", n2EMT->attribute("v"));
+	loggerEMT->logAttribute("isrc", extnetEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("i12", lineEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("irx", loadEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("f_src", extnetEMT->attribute("f_src"));
 
 	// load step sized in absolute terms
 	//std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::Events::createEventAddPowerConsumption3Ph("n2", 0.1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);

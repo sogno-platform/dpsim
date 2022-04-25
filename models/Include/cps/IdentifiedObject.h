@@ -19,9 +19,9 @@ namespace CPS {
 	class IdentifiedObject: virtual public AttributeList {
 	protected:
 		/// Human readable name
-		String mName;
+		const Attribute<String>::Ptr mName;
 		/// Unique identifier
-		String mUID;
+		const Attribute<String>::Ptr mUID;
 	public:
 		typedef std::shared_ptr<IdentifiedObject> Ptr;
 		typedef std::vector<Ptr> List;
@@ -29,21 +29,24 @@ namespace CPS {
 		IdentifiedObject() { }
 
 		IdentifiedObject(String uid, String name)
-		: mName(name), mUID(uid) {
-
-			addAttribute<String>("uid", &mUID, Flags::read);
-			addAttribute<String>("name", &mName, Flags::read);
-		}
+			: 	mName(Attribute<String>::create("name", mAttributes, name)),
+				mUID(Attribute<String>::create("uid", mAttributes, uid))
+			{ }
 
 		IdentifiedObject(String name) :
 			IdentifiedObject(name, name) { }
 
 		virtual ~IdentifiedObject() { }
 
+		/// FIXME: Workaround for pybind. The methods that return attributes with and without the full (template) type should not have the same name!
+		AttributeBase::Ptr attributeBase(const String &name) {
+			return attribute(name);
+		}
+
 		/// Returns component name
-		String name() { return mName; }
+		String name() { return **mName; }
 		/// Returns unique id
-		String uid() { return mUID; }
+		String uid() { return **mUID; }
 		/// Get component type (cross-platform)
 		String type() { return Utils::className(this); }
 	};

@@ -40,9 +40,9 @@ int main(int argc, char* argv[]) {
 
 	// Logger
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("iR1", r1->attribute("i_intf"));
-	logger->addAttribute("iL1", l1->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("iR1", r1->attribute("i_intf"));
+	logger->logAttribute("iL1", l1->attribute("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);

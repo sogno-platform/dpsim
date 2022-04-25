@@ -85,7 +85,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(Inductor& inductor) :
-				Task(inductor.mName + ".MnaPreStep"), mInductor(inductor) {
+				Task(**inductor.mName + ".MnaPreStep"), mInductor(inductor) {
 					mInductor.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mInductor.mnaPreStep(time, timeStepCount); };
@@ -96,7 +96,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Inductor& inductor, Attribute<Matrix>::Ptr leftVector) :
-				Task(inductor.mName + ".MnaPostStep"),
+				Task(**inductor.mName + ".MnaPostStep"),
 				mInductor(inductor), mLeftVector(leftVector) {
 					mInductor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
@@ -109,7 +109,7 @@ namespace Ph1 {
 		class MnaPreStepHarm : public Task {
 		public:
 			MnaPreStepHarm(Inductor& inductor)
-				: Task(inductor.mName + ".MnaPreStepHarm"),
+				: Task(**inductor.mName + ".MnaPreStepHarm"),
 				mInductor(inductor) {
 				// actually depends on L, but then we'd have to modify the system matrix anyway
 				mModifiedAttributes.push_back(inductor.attribute("right_vector"));
@@ -124,7 +124,7 @@ namespace Ph1 {
 		class MnaPostStepHarm : public Task {
 		public:
 			MnaPostStepHarm(Inductor& inductor, const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
-				: Task(inductor.mName + ".MnaPostStepHarm"),
+				: Task(**inductor.mName + ".MnaPostStepHarm"),
 				mInductor(inductor), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
 					mAttributeDependencies.push_back(mLeftVectors[i]);

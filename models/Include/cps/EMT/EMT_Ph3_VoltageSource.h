@@ -36,6 +36,10 @@ namespace CPS {
 				// Updates voltage according to reference phasor and frequency
 				void updateVoltage(Real time);
 			public:
+				const CPS::Attribute<MatrixComp>::Ptr mVoltageRef;
+				const CPS::Attribute<Real>::Ptr mSrcFreq;
+				const CPS::Attribute<Complex>::Ptr mSigOut;
+
 				/// Defines UID, name and logging level
 				VoltageSource(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 				///
@@ -74,7 +78,7 @@ namespace CPS {
 				class MnaPreStep : public Task {
 				public:
 					MnaPreStep(VoltageSource& voltageSource) :
-						Task(voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
+						Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
 							mVoltageSource.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 						}
 						void execute(Real time, Int timeStepCount) { mVoltageSource.mnaPreStep(time, timeStepCount); };
@@ -85,7 +89,7 @@ namespace CPS {
 				class MnaPostStep : public Task {
 				public:
 					MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-						Task(voltageSource.mName + ".MnaPostStep"),
+						Task(**voltageSource.mName + ".MnaPostStep"),
 						mVoltageSource(voltageSource), mLeftVector(leftVector) {
 							mVoltageSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 					}

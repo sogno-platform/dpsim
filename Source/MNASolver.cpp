@@ -36,6 +36,21 @@ void MnaSolver<VarType>::initialize() {
 	// TODO: check that every system matrix has the same dimensions
 	mSLog->info("---- Start initialization ----");
 
+	// Register attribute for solution vector
+	///FIXME: This is kinda ugly... At least we should somehow unify mLeftSideVector and mLeftSideVectorHarm.
+	// Best case we have some kind of sub-attributes for attribute vectors / tensor attributes...
+	if (mFrequencyParallel) {
+		mSLog->info("Computing network harmonics in parallel.");
+		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
+			mLeftSideVectorHarm.push_back(
+				CPS::Attribute<Matrix>::create("left_vector_"+std::to_string(freq), mAttributes)
+			);
+		}
+	}
+	else {
+		mLeftSideVector = CPS::Attribute<Matrix>::create("left_vector", mAttributes);
+	}
+
 	mSLog->info("-- Process topology");
 	for (auto comp : mSystem.mComponents)
 		mSLog->info("Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
@@ -54,18 +69,6 @@ void MnaSolver<VarType>::initialize() {
 	mSLog->info("-- Create empty MNA system matrices and vectors");
 	createEmptyVectors();
 	createEmptySystemMatrix();
-
-	// Register attribute for solution vector
-	if (mFrequencyParallel) {
-		mSLog->info("Computing network harmonics in parallel.");
-		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
-			addAttribute<Matrix>("left_vector_"+std::to_string(freq), mLeftSideVectorHarm.data()+freq, Flags::read);
-			mLeftVectorHarmAttributes.push_back(attribute<Matrix>("left_vector_"+std::to_string(freq)));
-		}
-	}
-	else {
-		addAttribute<Matrix>("left_vector", &mLeftSideVector, Flags::read);
-	}
 
 	// Initialize components from powerflow solution and
 	// calculate MNA specific initialization values.
@@ -155,13 +158,13 @@ void MnaSolver<Complex>::initializeComponents() {
 		// Initialize MNA specific parts of components.
 		for (auto comp : mMNAComponents) {
 			// Initialize MNA specific parts of components.
-			comp->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep, mLeftVectorHarmAttributes);
+			comp->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep, mLeftSideVectorHarm);
 			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) mRightVectorStamps.push_back(&stamp);
 		}
 		// Initialize nodes
 		for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); ++nodeIdx) {
-			mNodes[nodeIdx]->mnaInitializeHarm(mLeftVectorHarmAttributes);
+			mNodes[nodeIdx]->mnaInitializeHarm(mLeftSideVectorHarm);
 		}
 	}
 	else {
@@ -367,7 +370,7 @@ void MnaSolver<VarType>::assignMatrixNodeIndices() {
 template<>
 void MnaSolver<Real>::createEmptyVectors() {
 	mRightSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
-	mLeftSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
+	**mLeftSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
 }
 
 template<>
@@ -375,12 +378,12 @@ void MnaSolver<Complex>::createEmptyVectors() {
 	if (mFrequencyParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
-			mLeftSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
+			mLeftSideVectorHarm.push_back(Attribute<Matrix>::create("left_vector_harm_" + freq, mAttributes, Matrix::Zero(2*(mNumMatrixNodeIndices), 1)));
 		}
 	}
 	else {
 		mRightSideVector = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 1);
-		mLeftSideVector = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 1);
+		**mLeftSideVector = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 1);
 	}
 }
 
@@ -515,10 +518,10 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 		++timeStepCount;
 
 		// Calculate difference
-		diff = prevLeftSideVector - mLeftSideVector;
-		prevLeftSideVector = mLeftSideVector;
+		diff = prevLeftSideVector - **mLeftSideVector;
+		prevLeftSideVector = **mLeftSideVector;
 		maxDiff = diff.lpNorm<Eigen::Infinity>();
-		max = mLeftSideVector.lpNorm<Eigen::Infinity>();
+		max = (**mLeftSideVector).lpNorm<Eigen::Infinity>();
 		// If difference is smaller than some epsilon, break
 		if ((maxDiff / max) < mSteadStIniAccLimit)
 			break;

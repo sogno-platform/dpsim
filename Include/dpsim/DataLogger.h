@@ -58,22 +58,10 @@ namespace DPsim {
 
 		void setColumnNames(std::vector<String> names);
 
-		void addAttribute(const String &name, CPS::AttributeBase::Ptr attr);
-		void addAttribute(const String &name, CPS::Attribute<Int>::Ptr attr);
-		void addAttribute(const String &name, CPS::Attribute<Real>::Ptr attr);
-		void addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr);
-		void addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr attr);
-		void addAttribute(const String &name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax = 0, UInt colsMax = 0);
-		void addAttribute(const String &name, const String &attr, CPS::IdentifiedObject::Ptr obj);
-		void addAttribute(const String &name, const String &attr, CPS::IdentifiedObject::Ptr obj, UInt rowsMax, UInt colsMax);
-		void addAttribute(const std::vector<String> &name, const String &attr, CPS::IdentifiedObject::Ptr obj);
-		void addAttribute(const std::vector<String> &name, CPS::AttributeBase::Ptr attr);
-		void addAttribute(const std::vector<String> &name, CPS::MatrixRealAttribute::Ptr attr);
+		void logAttribute(const String &name, CPS::AttributeBase::Ptr attr, UInt rowsMax = 0, UInt colsMax = 0);
 
-		template<typename VarType>
-		void addNode(typename CPS::SimNode<VarType>::Ptr node) {
-			addAttribute(node->name() + ".voltage", node->attributeMatrix("voltage"));
-		}
+		///DEPRECATED: Only use for compatiblity, otherwise this just adds extra overhead to the logger. Instead just call logAttribute multiple times for every coefficient using `attr->deriveCoeff<>(a,b)`.
+		void logAttribute(const std::vector<String> &name, CPS::AttributeBase::Ptr attr);
 
 		void log(Real time, Int timeStepCount);
 

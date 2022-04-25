@@ -9,33 +9,32 @@
 #pragma once
 
 #include <cps/Definitions.h>
+#include <cps/AttributeList.h>
 
 namespace CPS {
 namespace Base {
 namespace Ph1 {
 	class Transformer {
-	protected:
-		/// Nominal voltage of primary side
-		Real mNominalVoltageEnd1;
-		/// Nominal voltage of secondary side
-		Real mNominalVoltageEnd2;
-		/// Rated Apparent Power [VA]
-		Real mRatedPower;
-		/// Complex transformer ratio
-		Complex mRatio;
-		/// Resistance [Ohm]
-		Real mResistance;
-		/// Inductance [H]
-		Real mInductance;
-
 	public:
+		/// Nominal voltage of primary side
+		Attribute<Real>::Ptr mNominalVoltageEnd1;
+		/// Nominal voltage of secondary side
+		Attribute<Real>::Ptr mNominalVoltageEnd2;
+		/// Rated Apparent Power [VA]
+		Attribute<Real>::Ptr mRatedPower;
+		/// Complex transformer ratio
+		Attribute<Complex>::Ptr mRatio;
+		/// Resistance [Ohm]
+		Attribute<Real>::Ptr mResistance;
+		/// Inductance [H]
+		Attribute<Real>::Ptr mInductance;
 		///
 		void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance) {
-			mNominalVoltageEnd1 = nomVoltageEnd1;
-			mNominalVoltageEnd2 = nomVoltageEnd2;
-			mRatio = std::polar<Real>(ratioAbs, ratioPhase);
-			mResistance = resistance;
-			mInductance = inductance;
+			**mNominalVoltageEnd1 = nomVoltageEnd1;
+			**mNominalVoltageEnd2 = nomVoltageEnd2;
+			**mRatio = std::polar<Real>(ratioAbs, ratioPhase);
+			**mResistance = resistance;
+			**mInductance = inductance;
 		}
 	};
 }

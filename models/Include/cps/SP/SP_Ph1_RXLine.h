@@ -25,13 +25,9 @@ namespace Ph1 {
 		public Base::Ph1::PiLine,
 		public MNAInterface{
 	protected:
+		/// CHECK: Which of these really need to be member variables?
 		///Capacitance of the line in [F]
 		Real mCapacitance;
-		///Inductance of the line in [H]
-		Real mInductance;
-
-		///base voltage [V]
-		Real mBaseVoltage;
 		///base current [V]
 		Real mBaseCurrent;
 		///base apparent power [VA]
@@ -57,22 +53,6 @@ namespace Ph1 {
 		// #### Admittance matrix stamp ####
 		MatrixComp mY_element;
 
-		// #### Power flow results ####
-		/// branch Current flow [A]
-		Eigen::Matrix<CPS::Complex, 2, 1, Eigen::DontAlign> mCurrent;
-		/// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
-		Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign> mActivePowerBranch;
-		/// branch reactive powerflow [Var]
-		Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign> mReactivePowerBranch;
-
-		/// whether the total power injection of its from node is stored in this line
-		Bool mStoreNodalPowerInjection = false;
-		/// nodal active power injection
-		Real mActivePowerInjection;
-		/// nodal reactive power injection
-		Real mReactivePowerInjection;
-
-
 		/// Inductance submodel
 		std::shared_ptr<Inductor> mSubInductor;
 		/// Resistor submodel
@@ -81,6 +61,39 @@ namespace Ph1 {
 		std::shared_ptr<Resistor> mInitialResistor;
 
 	public:
+		///base voltage [V]
+		const Attribute<Real>::Ptr mBaseVoltage;
+		///Inductance of the line in [H]
+		/// CHECK: Why does this not use the base class' attribute mSeriesInd?
+		const Attribute<Real>::Ptr mInductance;
+
+		/// nodal active power injection
+		const Attribute<Real>::Ptr mActivePowerInjection;
+		/// nodal reactive power injection
+		const Attribute<Real>::Ptr mReactivePowerInjection;
+		/// whether the total power injection of its from node is stored in this line
+		/// FIXME: This is only written to, but never read
+		const Attribute<Bool>::Ptr mStoreNodalPowerInjection;
+
+		// #### Power flow results ####
+		/// branch Current flow [A]
+		const Attribute<MatrixComp>::Ptr mCurrent;
+		/// CHECK: Are these derived attributes necessary?
+		Attribute<CPS::Complex>::Ptr mCurrent_0;
+		Attribute<CPS::Complex>::Ptr mCurrent_1;
+		
+		/// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
+		const Attribute<Matrix>::Ptr mActivePowerBranch;
+		/// CHECK: Are these derived attributes necessary?
+		Attribute<CPS::Real>::Ptr mActivePowerBranch_0;
+		Attribute<CPS::Real>::Ptr mActivePowerBranch_1;
+
+		/// branch reactive powerflow [Var]
+		const Attribute<Matrix>::Ptr mReactivePowerBranch;
+		/// CHECK: Are these derived attributes necessary?
+		Attribute<CPS::Real>::Ptr mReactivePowerBranch_0;
+		Attribute<CPS::Real>::Ptr mReactivePowerBranch_1;
+
 		// #### constructors ####
 		// power flow
 
@@ -137,7 +150,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(RXLine& line) :
-				Task(line.mName + ".MnaPreStep"), mLine(line) {
+				Task(**line.mName + ".MnaPreStep"), mLine(line) {
 				mAttributeDependencies.push_back(line.mSubResistor->attribute("right_vector"));
 				mAttributeDependencies.push_back(line.mSubInductor->attribute("right_vector"));
 				mModifiedAttributes.push_back(line.attribute("right_vector"));
@@ -152,7 +165,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(RXLine& line, Attribute<Matrix>::Ptr leftVector) :
-				Task(line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
+				Task(**line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(leftVector);
 				mAttributeDependencies.push_back(line.mSubInductor->attribute("i_intf"));
 				mModifiedAttributes.push_back(line.attribute("i_intf"));

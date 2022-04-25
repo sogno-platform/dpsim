@@ -283,18 +283,18 @@ void MnaSolverGpuSparse<VarType>::solve(Real time, Int timeStepCount) {
 	checkCusparseStatus(csp_status, "failed to solve U*y=z:");
 
     //Copy Solution back
-    status = cudaMemcpy(&this->mLeftSideVector(0), mGpuLhsVec.data(), size * sizeof(Real), cudaMemcpyDeviceToHost);
+    status = cudaMemcpy(&(**this->mLeftSideVector)(0), mGpuLhsVec.data(), size * sizeof(Real), cudaMemcpyDeviceToHost);
 	if (status != cudaSuccess) {
 		mSLog->error("Cuda Error: {}", cudaGetErrorString(status));
 		throw SolverException();
 	}
 
 	//Apply inverse Permutation L = P' * L'
-	//this->mLeftSideVector = mTransp->inverse() * this->mLeftSideVector;
+	//**this->mLeftSideVector = mTransp->inverse() * **this->mLeftSideVector;
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)
-		this->mNodes[nodeIdx]->mnaUpdateVoltage(this->mLeftSideVector);
+		this->mNodes[nodeIdx]->mnaUpdateVoltage(**this->mLeftSideVector);
 
 
 	// Components' states will be updated by the post-step tasks

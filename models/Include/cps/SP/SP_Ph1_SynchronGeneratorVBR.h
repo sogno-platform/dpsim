@@ -18,15 +18,15 @@ namespace Ph1 {
 	class SynchronGeneratorVBR :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public MNAVariableCompInterface {
-	protected:
+	public:
         // Common elements of all VBR models
+        /// voltage behind reactance phase a
+        const Attribute<Complex>::Ptr Evbr;
+    protected:
         /// Resistance matrix in dq reference frame
 		Matrix mResistanceMatrixDq;
 		/// Conductance matrix phase A
 		Matrix mConductanceMatrix;
-        /// voltage behind reactance phase a
-        Complex Evbr;
-
         /// Park Transformation
 		///
 		Matrix mDqToComplexA;

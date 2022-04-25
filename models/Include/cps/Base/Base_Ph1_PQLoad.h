@@ -9,10 +9,13 @@
 #pragma once
 
 #include <cps/Definitions.h>
+#include <cps/AttributeList.h>
 
 namespace CPS {
 namespace Base {
 namespace Ph1 {
+
+	/// FIXME: This class is never used...
 	class PQLoad {
 	protected:
 		/// Active power [Watt]

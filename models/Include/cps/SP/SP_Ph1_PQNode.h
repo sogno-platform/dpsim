@@ -16,14 +16,16 @@ namespace SP {
 namespace Ph1 {
 
 	class PQNode: public SimPowerComp<Complex>, public SharedFactory<PQNode>{
+	public:
+		const Attribute<Real>::Ptr mPowerNom;
+		const Attribute<Real>::Ptr mReactivePowerNom;
+		const Attribute<Real>::Ptr mPower;
+		const Attribute<Real>::Ptr mReactivePower;
+
 	private:
-		Real mPowerNom;
-		Real mReactivePowerNom;
-		Real mPower;
-		Real mReactivePower;
-
-
+		/// FIXME: Never used
 		Real mVoltageAbsPerUnit;
+		/// FIXME: Never used
 		Complex mVoltagePerUnit;
 
 	public:

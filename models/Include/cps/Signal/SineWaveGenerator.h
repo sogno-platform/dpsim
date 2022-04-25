@@ -19,8 +19,6 @@ namespace Signal {
 		/// initial signal phasor with magnitude and phase
 		Real mMagnitude;
 		Real mInitialPhase;
-		/// signal's frequency
-		Real mFrequency;
     public:
 		/// init the identified object
         SineWaveGenerator(String name, Logger::Level logLevel = Logger::Level::off)

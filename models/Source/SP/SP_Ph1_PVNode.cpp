@@ -12,29 +12,25 @@ using namespace CPS;
 
 
 SP::Ph1::PVNode::PVNode(String uid, String name,
-	Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
-
-	addAttribute<Real>("P_set", &mPowerSetPoint, Flags::read | Flags::write);
-	addAttribute<Real>("V_set", &mVoltageSetPoint, Flags::read | Flags::write);
-	addAttribute<Real>("V_set_pu", &mVoltagePerUnit, Flags::read | Flags::write);
-
-}
-
+	Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel),
+	mPowerSetPoint(Attribute<Real>::create("P_set", mAttributes)),
+	mVoltageSetPoint(Attribute<Real>::create("V_set", mAttributes)),
+	mVoltagePerUnit(Attribute<Real>::create("V_set_pu", mAttributes)) { }
 
 SP::Ph1::PVNode::PVNode(String uid, String name, Real power, Real vSetPoint, Real maxQ, Real ratedU, Real ratedS,
 	Logger::Level logLevel)
 	:PVNode(uid, name, logLevel) {
 
-	mPowerSetPoint =  power;
-	mVoltageSetPoint = vSetPoint;
+	**mPowerSetPoint =  power;
+	**mVoltageSetPoint = vSetPoint;
 	mRatedU = ratedU;
 
-	mVoltagePerUnit = vSetPoint / ratedU;
+	**mVoltagePerUnit = vSetPoint / ratedU;
 
 	// maxQ=0 means no limit.
 	mQLimit = maxQ;
 
-	mSLog->info("Create PV node for {} P={}, V={}", name, mPowerSetPoint, mVoltageSetPoint);
+	mSLog->info("Create PV node for {} P={}, V={}", name, **mPowerSetPoint, **mVoltageSetPoint);
 }
 
 

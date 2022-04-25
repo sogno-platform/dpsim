@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cps/Definitions.h>
+#include <cps/AttributeList.h>
 #include <cps/Signal/Exciter.h>
 #include <cps/Signal/TurbineGovernor.h>
 
@@ -67,21 +68,12 @@ namespace Base {
 		Int mNumDampingWindings = 0;
 		/// mNumber of poles
 		Int mPoleNumber = 0;
-		/// inertia constant H [s] for per unit or moment of inertia J [kg*m^2]
-		Real mInertia = 0;
-
-		/// stator resistance Rs [Ohm]
-		Real mRs = 0;
-		/// leakage inductance Ll [H]
-		Real mLl = 0;
+		
+		
 		/// d-axis mutual inductance Lmd [H]
 		Real mLmd = 0;
-		/// d-axis inductance Ld [H]
-		Real mLd = 0;
 		/// q-axis mutual inductance Lmq [H]
 		Real mLmq = 0;
-		/// q-axis inductance Lq [H]
-		Real mLq = 0;
 		/// field resistance Rfd [Ohm]
 		Real mRfd = 0;
 		/// field leakage inductance Llfd [H]
@@ -109,24 +101,35 @@ namespace Base {
 		/// q-axis damper inductance 2 Lkq2 [H]
 		Real mLkq2 = 0;
 
+	public:
+		/// stator resistance Rs [Ohm]
+		Attribute<Real>::Ptr mRs;
+		/// leakage inductance Ll [H]
+		Attribute<Real>::Ptr mLl;
+		/// d-axis inductance Ld [H]
+		Attribute<Real>::Ptr mLd;
+		/// q-axis inductance Lq [H]
+		Attribute<Real>::Ptr mLq;
+		
 		// Operational parameters
 		/// Transient d-axis inductance [H]
-		Real mLd_t = 0;
+		Attribute<Real>::Ptr mLd_t;
 		/// Transient q-axis inductance [H]
-		Real mLq_t = 0;
+		Attribute<Real>::Ptr mLq_t;
 		/// Subtransient d-axis inductance [H]
-		Real mLd_s = 0;
+		Attribute<Real>::Ptr mLd_s;
 		/// Subtransient q-axis inductance [H]
-		Real mLq_s = 0;
+		Attribute<Real>::Ptr mLq_s;
 		/// Transient time constant of d-axis [s]
-		Real mTd0_t = 0;
+		Attribute<Real>::Ptr mTd0_t;
 		/// Transient time constant of q-axis [s]
-		Real mTq0_t = 0;
+		Attribute<Real>::Ptr mTq0_t;
 		/// Subtransient time constant of d-axis [s]
-		Real mTd0_s = 0;
+		Attribute<Real>::Ptr mTd0_s;
 		/// Subtransient time constant of q-axis [s]
-		Real mTq0_s = 0;
+		Attribute<Real>::Ptr mTq0_s;
 
+	protected:
 		// #### Initial Values ####
 		Complex mInitElecPower = 0;
 		Complex mInitTermVoltage = 0;
@@ -172,22 +175,26 @@ namespace Base {
 		Matrix mInvInductanceMat;
 
 		// ### State variables ###
-		/// rotor speed omega_r
-		Real mOmMech = 0;
 		/// theta
 		Real mThetaMech = 0;
+	public:
 		/// rotor angle delta
-		Real mDelta = 0;
-		/// mechanical Power Pm [W]
-		Real mMechPower = 0;
+		Attribute<Real>::Ptr mDelta;
 		/// mechanical torque
-		Real mMechTorque = 0;
+		Attribute<Real>::Ptr mMechTorque;
+		/// inertia constant H [s] for per unit or moment of inertia J [kg*m^2]
+		Attribute<Real>::Ptr mInertia;
+		/// rotor speed omega_r
+		Attribute<Real>::Ptr mOmMech;
 		/// Active part of the electrical power
-		Real mElecActivePower = 0;
+		Attribute<Real>::Ptr mElecActivePower;
 		/// Reactive part of the electrical power
-		Real mElecReactivePower = 0;
+		Attribute<Real>::Ptr mElecReactivePower;
+		/// mechanical Power Pm [W]
+		Attribute<Real>::Ptr mMechPower;
 		/// electrical torque
-		Real mElecTorque = 0;
+		Attribute<Real>::Ptr mElecTorque;
+	protected:
 		/// \brief Vector of stator and rotor voltages.
 		///
 		/// v_d - Stator voltage in d axis \n

@@ -20,6 +20,7 @@
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
 #include <cps/SimNode.h>
+#include <cps/Attribute.h>
 #include <dpsim/Interface.h>
 #include <nlohmann/json.hpp>
 
@@ -40,15 +41,27 @@ namespace DPsim {
 	public:
 		typedef std::shared_ptr<Simulation> Ptr;
 
-	protected:
 		/// Simulation name
-		String mName;
+		const CPS::Attribute<String>::Ptr mName;
 		/// Final time of the simulation
-		Real mFinalTime = 0.001;
+		const CPS::Attribute<Real>::Ptr mFinalTime;
+		/// Simulation timestep
+		const CPS::Attribute<Real>::Ptr mTimeStep;
+
+		/// Determines if the network should be split
+		/// into subnetworks at decoupling lines.
+		/// If the system is split, each subsystem is
+		/// solved by a dedicated MNA solver.
+		const CPS::Attribute<Bool>::Ptr mSplitSubnets;
+
+		/// Determines if steady-state initialization
+		/// should be executed prior to the simulation.
+		/// By default the initialization is disabled.
+		const CPS::Attribute<Bool>::Ptr mSteadyStateInit;
+
+	protected:
 		/// Time variable that is incremented at every step
 		Real mTime = 0;
-		/// Simulation timestep
-		Real mTimeStep = 0.001;
 		/// Number of step which have been executed for this simulation.
 		Int mTimeStepCount = 0;
 		/// The simulation event queue
@@ -85,11 +98,6 @@ namespace DPsim {
 		/// Enable recomputation of system matrix during simulation
 		Bool mSystemMatrixRecomputation = false;
 
-		/// Determines if the network should be split
-		/// into subnetworks at decoupling lines.
-		/// If the system is split, each subsystem is
-		/// solved by a dedicated MNA solver.
-		Bool mSplitSubnets = true;
 		/// If tearing components exist, the Diakoptics
 		/// solver is selected automatically.
 		CPS::IdentifiedObject::List mTearComponents = CPS::IdentifiedObject::List();
@@ -107,10 +115,6 @@ namespace DPsim {
 		Real mSteadStIniTimeLimit = 10;
 		/// steady state initialization accuracy limit
 		Real mSteadStIniAccLimit = 0.0001;
-		/// Determines if steady-state initialization
-		/// should be executed prior to the simulation.
-		/// By default the initialization is disabled.
-		Bool mSteadyStateInit = false;
 
 		// #### Task dependencies und scheduling ####
 		/// Scheduler used for task scheduling
@@ -168,9 +172,9 @@ namespace DPsim {
 		///
 		void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
 		///
-		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
+		void setTimeStep(Real timeStep) { **mTimeStep = timeStep; }
 		///
-		void setFinalTime(Real finalTime) { mFinalTime = finalTime; }
+		void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
 		///
 		void setDomain(CPS::Domain domain = CPS::Domain::DP) { mDomain = domain; }
 		///
@@ -182,7 +186,7 @@ namespace DPsim {
 		///
 		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
 		///
-		void doSplitSubnets(Bool splitSubnets = true) { mSplitSubnets = splitSubnets; }
+		void doSplitSubnets(Bool splitSubnets = true) { **mSplitSubnets = splitSubnets; }
 		///
 		void setTearingComponents(CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List()) {
 			mTearComponents = tearComponents;
@@ -198,7 +202,7 @@ namespace DPsim {
 
 		// #### Initialization ####
 		/// activate steady state initialization
-		void doSteadyStateInit(Bool f) { mSteadyStateInit = f; }
+		void doSteadyStateInit(Bool f) { **mSteadyStateInit = f; }
 		/// set steady state initialization time limit
 		void setSteadStIniTimeLimit(Real v) { mSteadStIniTimeLimit = v; }
 		/// set steady state initialization accuracy limit
@@ -252,26 +256,27 @@ namespace DPsim {
 #endif
 
 		// #### Getter ####
-		String name() const { return mName; }
+		String name() const { return **mName; }
 		Real time() const { return mTime; }
-		Real finalTime() const { return mFinalTime; }
+		Real finalTime() const { return **mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
-		Real timeStep() const { return mTimeStep; }
+		Real timeStep() const { return **mTimeStep; }
 		DataLogger::List& loggers() { return mLoggers; }
 		std::shared_ptr<Scheduler> scheduler() { return mScheduler; }
 		std::vector<Real>& stepTimes() { return mStepTimes; }
 
 		// #### Set component attributes during simulation ####
-		void setIdObjAttr(const String &comp, const String &attr, Real value);
-		void setIdObjAttr(const String &comp, const String &attr, Complex value);
+		/// CHECK: Can these be deleted? getIdObjAttribute + "**attr =" should suffice
+		// void setIdObjAttr(const String &comp, const String &attr, Real value);
+		// void setIdObjAttr(const String &comp, const String &attr, Complex value);
 
 		// #### Get component attributes during simulation ####
-		Real getRealIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
-		Complex getComplexIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
+		CPS::AttributeBase::Ptr getIdObjAttribute(const String &comp, const String &attr);
 
-		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, CPS::AttributeBase::Modifier mod, UInt row = 0, UInt col = 0, Interface* intf = nullptr);
-		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row = 0, UInt col = 0, Complex scale = Complex(1, 0), Interface* intf = nullptr);
-		void importIdObjAttr(const String &comp, const String &attr, UInt idx, Interface* intf = nullptr);
-		void logIdObjAttr(const String &comp, const String &attr);
+		void exportAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
+		void importAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
+		void logIdObjAttribute(const String &comp, const String &attr);
+		/// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
+		void logAttribute(String name, CPS::AttributeBase::Ptr attr);
 	};
 }

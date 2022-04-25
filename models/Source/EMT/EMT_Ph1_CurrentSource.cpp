@@ -11,24 +11,23 @@
 using namespace CPS;
 
 EMT::Ph1::CurrentSource::CurrentSource(String uid, String name,	Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel),
+	mCurrentRef(Attribute<Complex>::create("I_ref", mAttributes)),
+	mSrcFreq(Attribute<Real>::create("f_src", mAttributes)) {
 	setTerminalNumber(2);
-	mIntfVoltage = Matrix::Zero(1,1);
-	mIntfCurrent = Matrix::Zero(1,1);
-
-	addAttribute<Complex>("I_ref", Flags::read | Flags::write);
-	addAttribute<Real>("f_src", Flags::read | Flags::write);
+	**mIntfVoltage = Matrix::Zero(1,1);
+	**mIntfCurrent = Matrix::Zero(1,1);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph1::CurrentSource::clone(String name) {
 	auto copy = CurrentSource::make(name, mLogLevel);
-	copy->setParameters(attribute<Complex>("I_ref")->get(), attribute<Real>("f_src")->get());
+	copy->setParameters(**mCurrentRef, **mSrcFreq);
 	return copy;
 }
 
 void EMT::Ph1::CurrentSource::setParameters(Complex currentRef, Real srcFreq) {
-	attribute<Complex>("I_ref")->set(currentRef);
-	attribute<Real>("f_src")->set(srcFreq);
+	**mCurrentRef = currentRef;
+	**mSrcFreq = srcFreq;
 
 	mParametersSet = true;
 }
@@ -36,45 +35,42 @@ void EMT::Ph1::CurrentSource::setParameters(Complex currentRef, Real srcFreq) {
 void EMT::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-
-	mCurrentRef = attribute<Complex>("I_ref");
-	mSrcFreq = attribute<Real>("f_src");
-	mIntfCurrent(0,0) = Math::abs(mCurrentRef->get()) * cos(Math::phase(mCurrentRef->get()));
+	(**mIntfCurrent)(0,0) = Math::abs(**mCurrentRef) * cos(Math::phase(**mCurrentRef));
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (terminalNotGrounded(0))
-		Math::setVectorElement(rightVector, matrixNodeIndex(0), -mIntfCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0), -(**mIntfCurrent)(0,0));
 
 	if (terminalNotGrounded(1))
-		Math::setVectorElement(rightVector, matrixNodeIndex(1), mIntfCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1), (**mIntfCurrent)(0,0));
 }
 
 void EMT::Ph1::CurrentSource::updateState(Real time) {
 	Complex currentRef = mCurrentRef->get();
 	Real srcFreq = mSrcFreq->get();
 	if (srcFreq > 0)
-		mIntfCurrent(0,0) = Math::abs(currentRef) * cos(time * 2.*PI*srcFreq + Math::phase(currentRef));
+		(**mIntfCurrent)(0,0) = Math::abs(currentRef) * cos(time * 2.*PI*srcFreq + Math::phase(currentRef));
 	else
-		mIntfCurrent(0,0) = currentRef.real();
+		(**mIntfCurrent)(0,0) = currentRef.real();
 }
 
 void EMT::Ph1::CurrentSource::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mCurrentSource.updateState(time);
-	mCurrentSource.mnaApplyRightSideVectorStamp(mCurrentSource.mRightVector);
+	mCurrentSource.mnaApplyRightSideVectorStamp(**mCurrentSource.mRightVector);
 }
 
 void EMT::Ph1::CurrentSource::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mCurrentSource.mnaUpdateVoltage(*mLeftVector);
+	mCurrentSource.mnaUpdateVoltage(**mLeftVector);
 }
 
 void EMT::Ph1::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0,0) = 0;
+	(**mIntfVoltage)(0,0) = 0;
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
+		(**mIntfVoltage)(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
+		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 }

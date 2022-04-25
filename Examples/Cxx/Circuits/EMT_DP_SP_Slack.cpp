@@ -37,8 +37,8 @@ void simElementsSP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i1", vs->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("i1", vs->attribute("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -75,8 +75,8 @@ void simComponentSP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i1", sl->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("i1", sl->attribute("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -113,8 +113,8 @@ void simElementsDP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i1", vs->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("i1", vs->attribute("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -151,8 +151,8 @@ void simComponentDP1ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i1", sl->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("i1", sl->attribute("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -189,8 +189,8 @@ void simElementsEMT3ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i1", vs->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("i1", vs->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);
@@ -228,8 +228,8 @@ void simComponentEMT3ph() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i1", vs->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("i1", vs->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(simName);

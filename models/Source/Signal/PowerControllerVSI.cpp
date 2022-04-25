@@ -12,23 +12,20 @@ using namespace CPS;
 using namespace CPS::Signal;
 
 PowerControllerVSI::PowerControllerVSI(String name, Logger::Level logLevel) :
-	SimSignalComp(name, name, logLevel) {
+	SimSignalComp(name, name, logLevel),
+	/// CHECK: Which of these really need to be attributes?
+	mInputPrev(Attribute<Matrix>::create("input_prev", mAttributes, Matrix::Zero(6,1))),
+    mStatePrev(Attribute<Matrix>::create("state_prev", mAttributes, Matrix::Zero(6,1))),
+    mOutputPrev(Attribute<Matrix>::create("output_prev", mAttributes, Matrix::Zero(2,1))),
+    mInputCurr(Attribute<Matrix>::create("input_curr", mAttributes, Matrix::Zero(6,1))),
+    mStateCurr(Attribute<Matrix>::create("state_curr", mAttributes, Matrix::Zero(6,1))),
+    mOutputCurr(Attribute<Matrix>::create("output_curr", mAttributes, Matrix::Zero(2,1))),
+	mVc_d(Attribute<Real>::createDynamic("Vc_d", mAttributes)),
+	mVc_q(Attribute<Real>::createDynamic("Vc_q", mAttributes)),
+	mIrc_d(Attribute<Real>::createDynamic("Irc_d", mAttributes)),
+	mIrc_q(Attribute<Real>::createDynamic("Irc_q", mAttributes)) {
 
 	mSLog->info("Create {} {}", type(), name);
-
-	// attributes of full state space model vectors
-	addAttribute<Matrix>("input_prev", &mInputPrev, Flags::read | Flags::write);
-    addAttribute<Matrix>("state_prev", &mStatePrev, Flags::read | Flags::write);
-    addAttribute<Matrix>("output_prev", &mOutputPrev, Flags::read | Flags::write);
-    addAttribute<Matrix>("input_curr", &mInputCurr, Flags::read | Flags::write);
-    addAttribute<Matrix>("state_curr", &mStateCurr, Flags::read | Flags::write);
-    addAttribute<Matrix>("output_curr", &mOutputCurr, Flags::read | Flags::write);
-
-	// attributes of input references
-	addAttribute<Real>("Vc_d", Flags::read | Flags::write);
-	addAttribute<Real>("Vc_q", Flags::read | Flags::write);
-	addAttribute<Real>("Irc_d", Flags::read | Flags::write);
-	addAttribute<Real>("Irc_q", Flags::read | Flags::write);
 }
 
 void PowerControllerVSI::setParameters(Real Pref, Real Qref) {
@@ -117,38 +114,38 @@ void PowerControllerVSI::initializeStateSpaceModel(Real omega, Real timeStep, At
 	updateBMatrixStateSpaceModel();
 
 	// initialization of input
-	mInputCurr << mPref, mQref, attribute<Real>("Vc_d")->get(), attribute<Real>("Vc_q")->get(), attribute<Real>("Irc_d")->get(), attribute<Real>("Irc_q")->get();
-	mSLog->info("Initialization of input: \n" + Logger::matrixToString(mInputCurr));
+	**mInputCurr << mPref, mQref, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
+	mSLog->info("Initialization of input: \n" + Logger::matrixToString(**mInputCurr));
 
 	// initialization of states
-	mStateCurr << mPInit, mQInit, mPhi_dInit, mPhi_qInit, mGamma_dInit, mGamma_qInit;
-	mSLog->info("Initialization of states: \n" + Logger::matrixToString(mStateCurr));
+	**mStateCurr << mPInit, mQInit, mPhi_dInit, mPhi_qInit, mGamma_dInit, mGamma_qInit;
+	mSLog->info("Initialization of states: \n" + Logger::matrixToString(**mStateCurr));
 
 	// initialization of output
-	mOutputCurr = mC * mStateCurr + mD * mInputCurr;
-	mSLog->info("Initialization of output: \n" + Logger::matrixToString(mOutputCurr));
+	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
+	mSLog->info("Initialization of output: \n" + Logger::matrixToString(**mOutputCurr));
 }
 
 void PowerControllerVSI::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-    prevStepDependencies.push_back(attribute("input_curr"));
-	prevStepDependencies.push_back(attribute("output_curr"));
-	modifiedAttributes.push_back(attribute("input_prev"));
-    modifiedAttributes.push_back(attribute("output_prev"));
+    prevStepDependencies.push_back(mInputCurr);
+	prevStepDependencies.push_back(mOutputCurr);
+	modifiedAttributes.push_back(mInputPrev);
+    modifiedAttributes.push_back(mOutputPrev);
 };
 
 void PowerControllerVSI::signalPreStep(Real time, Int timeStepCount) {
-    mInputPrev = mInputCurr;
-    mStatePrev = mStateCurr;
-    mOutputPrev = mOutputCurr;
+    **mInputPrev = **mInputCurr;
+    **mStatePrev = **mStateCurr;
+    **mOutputPrev = **mOutputCurr;
 }
 
 void PowerControllerVSI::signalAddStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(attribute("Vc_d"));
-	attributeDependencies.push_back(attribute("Vc_q"));
-	attributeDependencies.push_back(attribute("Irc_d"));
-	attributeDependencies.push_back(attribute("Irc_q"));
-	modifiedAttributes.push_back(attribute("input_curr"));
-    modifiedAttributes.push_back(attribute("output_curr"));
+	attributeDependencies.push_back(mVc_d);
+	attributeDependencies.push_back(mVc_q);
+	attributeDependencies.push_back(mIrc_d);
+	attributeDependencies.push_back(mIrc_q);
+	modifiedAttributes.push_back(mInputCurr);
+    modifiedAttributes.push_back(mOutputCurr);
 };
 
 void PowerControllerVSI::signalStep(Real time, Int timeStepCount) {
@@ -156,23 +153,23 @@ void PowerControllerVSI::signalStep(Real time, Int timeStepCount) {
 	updateBMatrixStateSpaceModel();
 
 	// get current inputs
-	mInputCurr << mPref, mQref, attribute<Real>("Vc_d")->get(), attribute<Real>("Vc_q")->get(), attribute<Real>("Irc_d")->get(), attribute<Real>("Irc_q")->get();
-    mSLog->debug("Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, mInputCurr, mInputPrev, mStatePrev);
+	**mInputCurr << mPref, mQref, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
+    mSLog->debug("Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, **mInputCurr, **mInputPrev, **mStatePrev);
 
 	// calculate new states
-	mStateCurr = Math::StateSpaceTrapezoidal(mStatePrev, mA, mB, mTimeStep, mInputCurr, mInputPrev);
-	mSLog->debug("stateCurr = \n {}", mStateCurr);
+	**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
+	mSLog->debug("stateCurr = \n {}", **mStateCurr);
 
 	// calculate new outputs
-	mOutputCurr = mC * mStateCurr + mD * mInputCurr;
-	mSLog->debug("Output values: outputCurr = \n{}", mOutputCurr);
+	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
+	mSLog->debug("Output values: outputCurr = \n{}", **mOutputCurr);
 }
 
 void PowerControllerVSI::updateBMatrixStateSpaceModel() {
-	mB.coeffRef(0, 2) = mOmegaCutoff * attribute<Real>("Irc_d")->get();
-	mB.coeffRef(0, 3) = mOmegaCutoff * attribute<Real>("Irc_q")->get();
-	mB.coeffRef(1, 2) = -mOmegaCutoff * attribute<Real>("Irc_q")->get();
-	mB.coeffRef(1, 3) = mOmegaCutoff * attribute<Real>("Irc_d")->get();
+	mB.coeffRef(0, 2) = mOmegaCutoff * **mIrc_d;
+	mB.coeffRef(0, 3) = mOmegaCutoff * **mIrc_q;
+	mB.coeffRef(1, 2) = -mOmegaCutoff * **mIrc_q;
+	mB.coeffRef(1, 3) = mOmegaCutoff * **mIrc_d;
 }
 
 Task::List PowerControllerVSI::getTasks() {

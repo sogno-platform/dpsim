@@ -6,6 +6,7 @@ set(DPSIMPY_SOURCES
 	BaseComponents.cpp
 	main.cpp
 	Utils.cpp
+	Attributes.cpp
 )
 
 pybind11_add_module(dpsimpy ${DPSIMPY_SOURCES})

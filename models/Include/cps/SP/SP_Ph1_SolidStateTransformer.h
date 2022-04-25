@@ -31,15 +31,10 @@ namespace SP { namespace Ph1 {
     std::shared_ptr<SP::Ph1::Load> mSubLoadSide2;
 
     /// Rated Apparent Power [VA]
+    /// FIXME: Never used
     Real mRatedPower = 0;
-    /// Power [watt]
-    Real mPref = std::numeric_limits<double>::infinity();
     /// Active power at secondary side [watt]
     Real mP2 = std::numeric_limits<double>::infinity();
-    /// Reactive power at primary side [var]
-    Real mQ1ref;
-    /// Reactive power at secondary side [var]
-    Real mQ2ref;
     /// Nominal voltage of primary side [V]
     Real mNominalVoltageEnd1;
     /// Nominal voltage of secondary side [V]
@@ -55,6 +50,13 @@ namespace SP { namespace Ph1 {
     Real mQ2ref_perUnit;
 
     public:
+    /// Power [watt]
+    const Attribute<Real>::Ptr mPref;
+    /// Reactive power at primary side [var]
+    const Attribute<Real>::Ptr mQ1ref;
+    /// Reactive power at secondary side [var]
+    const Attribute<Real>::Ptr mQ2ref;
+
     ///
     SolidStateTransformer(String uid, String name, Logger::Level logLevel = Logger::Level::off);
     ///

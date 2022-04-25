@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+/// FIXME: This header-file does not exist!
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorDQSmpl.h>
 
 using namespace CPS;
@@ -19,6 +20,7 @@ EMT::Ph3::SynchronGeneratorDQSmpl::SynchronGeneratorDQSmpl(String name,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 	Real inertia, Real Ra, Logger::Level logLevel)
+	/// FIXME: SynchronGeneratorBase does not exist!
 	: SynchronGeneratorBase(name, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
 		inertia, logLevel) {
@@ -178,8 +180,8 @@ void EMT::Ph3::SynchronGeneratorDQSmpl::stepInPerUnit(Real om, Real dt, Real tim
 
 	//mVdq = mR_eq*mIdq + mE_eq;
 
-	mId = mIdq(0);
-	mIq = mIdq(1);
+	mId = (**mIdq)(0);
+	mIq = (**mIdq)(1);
 	mIfd = (mPsifd + mLmd*mId) / (mLlfd + mLmd);
 
 	mCurrents(0, 0) = mIq;

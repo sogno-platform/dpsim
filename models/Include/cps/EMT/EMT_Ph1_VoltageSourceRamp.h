@@ -21,11 +21,7 @@ namespace Ph1 {
 		public SharedFactory<VoltageSourceRamp> {
 	protected:
 		///
-		Complex mVoltageRef;
-		///
 		Complex mAddVoltage;
-		///
-		Real mSrcFreq;
 		///
 		Real mSwitchTime;
 		///
@@ -35,6 +31,10 @@ namespace Ph1 {
 		///
 		std::shared_ptr<VoltageSource> mSubVoltageSource;
 	public:
+		///
+		const Attribute<Complex>::Ptr mVoltageRef;
+		///
+		const Attribute<Real>::Ptr mSrcFreq;
 		/// Defines UID, name and logging level
 		VoltageSourceRamp(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level
@@ -65,7 +65,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(VoltageSourceRamp& voltageSource) :
-				Task(voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
+				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
 				// rampTime etc. aren't attributes (yet), so doesn't really depend on anything
 				mModifiedAttributes.push_back(voltageSource.mSubVoltageSource->attribute("V_ref"));
 			}

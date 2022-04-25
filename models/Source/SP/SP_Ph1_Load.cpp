@@ -14,29 +14,28 @@ using namespace CPS;
 // please note that P,Q values can not be passed inside constructor since P,Q are currently read from the terminal,
 // and these values are not yet assigned to the terminals when this constructor was called in reader.
 SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mActivePowerPerUnit(Attribute<Real>::create("P_pu", mAttributes)),
+	mReactivePowerPerUnit(Attribute<Real>::create("Q_pu", mAttributes)),
+	mActivePower(Attribute<Real>::create("P", mAttributes)),
+	mReactivePower(Attribute<Real>::create("Q", mAttributes)),
+	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
 
-	mSLog->info("Create {} of type {}", mName, this->type());
+	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
-	mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
     setTerminalNumber(1);
-
-	addAttribute<Real>("P_pu", &mActivePowerPerUnit, Flags::read | Flags::write);
-	addAttribute<Real>("Q_pu", &mReactivePowerPerUnit, Flags::read | Flags::write);
-	addAttribute<Real>("P", &mActivePower, Flags::read | Flags::write);
-	addAttribute<Real>("Q", &mReactivePower, Flags::read | Flags::write);
-	addAttribute<Real>("V_nom", &mNomVoltage, Flags::read | Flags::write);
 };
 
 
 void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
-	mActivePower = activePower;
-	mReactivePower = reactivePower;
-	mPower = { mActivePower, mReactivePower };
-	mNomVoltage = nominalVoltage;
+	**mActivePower = activePower;
+	**mReactivePower = reactivePower;
+	mPower = { **mActivePower, **mReactivePower };
+	**mNomVoltage = nominalVoltage;
 
-	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mActivePower, mReactivePower);
+	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
 	mSLog->flush();
 
 	mParametersSet = true;
@@ -51,14 +50,14 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Load::clone(String name) {
 
  // #### Powerflow section ####
 void SP::Ph1::Load::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
+	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);
 
-	mActivePowerPerUnit = attribute<Real>("P")->get()/mBaseApparentPower;
-	mReactivePowerPerUnit = attribute<Real>("Q")->get()/mBaseApparentPower;
-	mSLog->info("Active Power={} [pu] Reactive Power={} [pu]", mActivePowerPerUnit, mReactivePowerPerUnit);
+	**mActivePowerPerUnit = **mActivePower / mBaseApparentPower;
+	**mReactivePowerPerUnit = **mReactivePower /mBaseApparentPower;
+	mSLog->info("Active Power={} [pu] Reactive Power={} [pu]", **mActivePowerPerUnit, **mReactivePowerPerUnit);
 	mSLog->flush();
 }
 
@@ -86,14 +85,15 @@ void SP::Ph1::Load::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
 
 void SP::Ph1::Load::updatePQ(Real time) {
 	if (mLoadProfile.weightingFactors.empty()) {
-		this->attribute<Real>("P")->set(mLoadProfile.pqData.find(time)->second.p);
-		this->attribute<Real>("Q")->set(mLoadProfile.pqData.find(time)->second.q);
+		**mActivePower = mLoadProfile.pqData.find(time)->second.p;
+		**mReactivePower = mLoadProfile.pqData.find(time)->second.q;
 	} else {
 		Real wf = mLoadProfile.weightingFactors.find(time)->second;
+		///THISISBAD: P_nom and Q_nom do not exist as attributes
 		Real P_new = this->attribute<Real>("P_nom")->get()*wf;
 		Real Q_new = this->attribute<Real>("Q_nom")->get()*wf;
-		this->attribute<Real>("P")->set(P_new);
-		this->attribute<Real>("Q")->set(Q_new);
+		**mActivePower = P_new;
+		**mReactivePower = Q_new;
 	}
 };
 
@@ -108,40 +108,40 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	// instantiate subResistor for active power consumption
-	if (attribute<Real>("P")->get() != 0) {
-		mResistance = std::pow(mNomVoltage, 2) / attribute<Real>("P")->get();
+	if (**mActivePower != 0) {
+		mResistance = std::pow(**mNomVoltage, 2) / **mActivePower;
 		mConductance = 1.0 / mResistance;
-		mSubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_res", mName + "_res", Logger::Level::off);
+		mSubResistor = std::make_shared<SP::Ph1::Resistor>(**mUID + "_res", **mName + "_res", Logger::Level::off);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
 	}
 
-	if (attribute<Real>("Q")->get() != 0)
-		mReactance = std::pow(mNomVoltage, 2) / attribute<Real>("Q")->get();
+	if (**mReactivePower != 0)
+		mReactance = std::pow(**mNomVoltage, 2) / **mReactivePower;
 	else
 		mReactance = 0;
 
 	// instantiate subInductor or subCapacitor for reactive power consumption
 	if (mReactance > 0) {
 		mInductance = mReactance / (2 * PI * frequency);
-		mSubInductor = std::make_shared<SP::Ph1::Inductor>(mUID + "_res", mName + "_ind", Logger::Level::off);
+		mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mUID + "_res", **mName + "_ind", Logger::Level::off);
 		mSubInductor->setParameters(mInductance);
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromNodesAndTerminals(frequency);
 	} else if (mReactance < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) / mReactance;
-		mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(mUID + "_res", mName + "_cap", Logger::Level::off);
+		mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(**mUID + "_res", **mName + "_cap", Logger::Level::off);
 		mSubCapacitor->setParameters(mCapacitance);
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
 	}
 
-	mIntfVoltage(0, 0) = mTerminals[0]->initialSingleVoltage();
-	mIntfCurrent(0, 0) = std::conj(Complex(attribute<Real>("P")->get(), attribute<Real>("Q")->get()) / mIntfVoltage(0, 0));
+	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
+	(**mIntfCurrent)(0, 0) = std::conj(Complex(attribute<Real>("P")->get(), attribute<Real>("Q")->get()) / (**mIntfVoltage)(0, 0));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -149,8 +149,8 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)),
+		Logger::phasorToString((**mIntfVoltage)(0, 0)),
+		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 	mSLog->info(
 		"Updated parameters according to powerflow:\n"
@@ -163,7 +163,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 void SP::Ph1::Load::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	if (mSubResistor) {
 		mSubResistor->mnaInitialize(omega, timeStep, leftVector);
 		for (auto task : mSubResistor->mnaTasks()) {
@@ -197,22 +197,22 @@ void SP::Ph1::Load::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 
 void SP::Ph1::Load::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLoad.mnaUpdateVoltage(*mLeftVector);
-	mLoad.mnaUpdateCurrent(*mLeftVector);
+	mLoad.mnaUpdateVoltage(**mLeftVector);
+	mLoad.mnaUpdateCurrent(**mLeftVector);
 }
 
 
 void SP::Ph1::Load::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 
 void SP::Ph1::Load::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = 0;
+	(**mIntfCurrent)(0, 0) = 0;
 	if (mSubResistor)
-		mIntfCurrent(0, 0) += mSubResistor->intfCurrent()(0, 0);
+		(**mIntfCurrent)(0, 0) += mSubResistor->intfCurrent()(0, 0);
 	if (mSubInductor)
-		mIntfCurrent(0, 0) += mSubInductor->intfCurrent()(0, 0);
+		(**mIntfCurrent)(0, 0) += mSubInductor->intfCurrent()(0, 0);
 	if (mSubCapacitor)
-		mIntfCurrent(0, 0) += mSubCapacitor->intfCurrent()(0, 0);
+		(**mIntfCurrent)(0, 0) += mSubCapacitor->intfCurrent()(0, 0);
 }

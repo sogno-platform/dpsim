@@ -14,13 +14,12 @@ namespace CPS {
 namespace Base {
 namespace Ph1 {
 	class Inductor {
-	protected:
-		/// Inductance [H]
-		Real mInductance;
 	public:
+		/// Inductance [H]
+		CPS::Attribute<Real>::Ptr mInductance;
 		/// Sets model specific parameters
 		void setParameters(Real inductance) {
-			mInductance = inductance;
+			**mInductance = inductance;
 		}
 	};
 }

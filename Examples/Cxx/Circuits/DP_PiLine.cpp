@@ -66,9 +66,9 @@ void simElements() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("iline", ind->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("iline", ind->attribute("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -116,9 +116,9 @@ void simPiLine() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("iline", line->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("iline", line->attribute("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -162,8 +162,8 @@ void simPiLineDiakoptics() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);

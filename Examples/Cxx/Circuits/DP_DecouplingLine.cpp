@@ -56,8 +56,8 @@ void simElements() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -102,12 +102,12 @@ void simDecoupling() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("i1", vs->attribute("i_intf"));
-	logger->addAttribute("i2", load->attribute("i_intf"));
-	logger->addAttribute("i_src1", dline->attribute("i_src1"));
-	logger->addAttribute("i_src2", dline->attribute("i_src2"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("i1", vs->attribute("i_intf"));
+	logger->logAttribute("i2", load->attribute("i_intf"));
+	logger->logAttribute("i_src1", dline->attribute("i_src1"));
+	logger->logAttribute("i_src2", dline->attribute("i_src2"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -152,12 +152,12 @@ void simDecouplingEMT() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("i1", vs->attribute("i_intf"));
-	logger->addAttribute("i2", load->attribute("i_intf"));
-	logger->addAttribute("i_src1", dline->attribute("i_src1"));
-	logger->addAttribute("i_src2", dline->attribute("i_src2"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("i1", vs->attribute("i_intf"));
+	logger->logAttribute("i2", load->attribute("i_intf"));
+	logger->logAttribute("i_src1", dline->attribute("i_src1"));
+	logger->logAttribute("i_src2", dline->attribute("i_src2"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);

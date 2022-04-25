@@ -20,35 +20,40 @@
 #include <cps/PowerProfile.h>
 
 namespace CPS {
-namespace SP { namespace Ph1 {
+namespace SP {
+namespace Ph1 {
 	class Load :
 		public SimPowerComp<Complex>,
 		public SharedFactory<Load>,
 		public PFSolverInterfaceBus,
-		public MNAInterface{
+		public MNAInterface {
 	private:
 		/// Power [Watt]
+		/// FIXME: This is only written to, but never read
 		Complex mPower;
+	public:
 		/// Nominal voltage [V]
-		Real mNomVoltage;
-
+		const Attribute<Real>::Ptr mNomVoltage;
 		/// Active power [Watt]
-		Real mActivePower;
+		const Attribute<Real>::Ptr mActivePower;
 		/// Reactive power [VAr]
-		Real mReactivePower;
+		const Attribute<Real>::Ptr mReactivePower;
+		/// Active power [pu]
+		const Attribute<Real>::Ptr mActivePowerPerUnit;
+		/// Reactive power [pu]
+		const Attribute<Real>::Ptr mReactivePowerPerUnit;
 
+	private:
 		/// base apparent power[VA]
 		Real mBaseApparentPower;
 		///base omega [1/s]
 		Real mBaseOmega;
-		/// Active power [pu]
-		Real mActivePowerPerUnit;
-		/// Reactive power [pu]
-		Real mReactivePowerPerUnit;
 
 		/// Actual voltage [V]
+		/// FIXME: This is never used
 		Complex mVoltage;
 		/// Actual voltage [V]
+		/// FIXME: This is never used
 		Complex mCurrent;
 
 		/// Resistance [Ohm]
@@ -108,7 +113,7 @@ namespace SP { namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Load& load, Attribute<Matrix>::Ptr leftVector) :
-				Task(load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
+				Task(**load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(leftVector);
 				if (load.mSubResistor)
 					mAttributeDependencies.push_back(load.mSubResistor->attribute("i_intf"));

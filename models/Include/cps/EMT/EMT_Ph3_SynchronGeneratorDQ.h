@@ -70,9 +70,9 @@ namespace Ph3 {
 		///
 		void initialize(Matrix frequencies);
 		///
-		Real electricalTorque() { return mElecTorque * mBase_T; }
+		Real electricalTorque() { return **mElecTorque * mBase_T; }
 		///
-		Real rotationalSpeed() { return mOmMech * mBase_OmMech; }
+		Real rotationalSpeed() { return **mOmMech * mBase_OmMech; }
 		///
 		Real rotorPosition() { return mThetaMech; }
 
@@ -96,7 +96,7 @@ namespace Ph3 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(SynchronGeneratorDQ& synGen, Attribute<Matrix>::Ptr leftVector)
-			: Task(synGen.mName + ".MnaPostStep"), mSynGen(synGen), mLeftVector(leftVector) {
+			: Task(**synGen.mName + ".MnaPostStep"), mSynGen(synGen), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(synGen.attribute("v_intf"));
 			}

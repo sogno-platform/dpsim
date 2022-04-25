@@ -21,11 +21,12 @@ namespace Ph1 {
 		public MNAInterface,
 		public SharedFactory<SynchronGeneratorIdeal> {
 	private:
-		/// Voltage set point [V]
-		Complex mVoltageRef;
 		/// Inner voltage source that represents the generator
 		std::shared_ptr<DP::Ph1::VoltageSource> mSubVoltageSource;
 	public:
+		/// Voltage set point [V]
+		/// CHECK: Is this attribute necessary? It is not used in the component itself, only initialized
+		const Attribute<Complex>::Ptr mVoltageRef;
 		/// Defines UID, name, component parameters and logging level
 		SynchronGeneratorIdeal(String uid, String name,
 			Logger::Level logLevel = Logger::Level::off);
@@ -61,7 +62,7 @@ namespace Ph1 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(SynchronGeneratorIdeal& SynchronGeneratorIdeal) :
-				Task(SynchronGeneratorIdeal.mName + ".MnaPreStep"), mSynchronGeneratorIdeal(SynchronGeneratorIdeal) {
+				Task(**SynchronGeneratorIdeal.mName + ".MnaPreStep"), mSynchronGeneratorIdeal(SynchronGeneratorIdeal) {
 					mSynchronGeneratorIdeal.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mSynchronGeneratorIdeal.mnaPreStep(time, timeStepCount); };
@@ -73,7 +74,7 @@ namespace Ph1 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(SynchronGeneratorIdeal& SynchronGeneratorIdeal, Attribute<Matrix>::Ptr leftVector) :
-				Task(SynchronGeneratorIdeal.mName + ".MnaPostStep"), mSynchronGeneratorIdeal(SynchronGeneratorIdeal), mLeftVector(leftVector) {
+				Task(**SynchronGeneratorIdeal.mName + ".MnaPostStep"), mSynchronGeneratorIdeal(SynchronGeneratorIdeal), mLeftVector(leftVector) {
 				mSynchronGeneratorIdeal.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mSynchronGeneratorIdeal.mnaPostStep(time, timeStepCount, mLeftVector); };

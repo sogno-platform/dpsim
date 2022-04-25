@@ -23,34 +23,37 @@ namespace Ph1 {
 			public PFSolverInterfaceBus {
 	    private:
 			/// Rate apparent power [VA]
+			/// FIXME: Only used as local variable
 		    Real mRatedApparentPower;
 			/// Rated voltage [V]
+			/// FIXME: Only used as local variable
 		    Real mRatedVoltage;
-
-			/// Active power set point of the machine [W]
-			Real mSetPointActivePower;
-			/// Reactive power set point of the machine [VAr]
-			Real mSetPointReactivePower;
-			/// Voltage set point of the machine [V]
-			Real mSetPointVoltage;
 			/// Maximum reactive power [VAr]
+			/// FIXME: Never used
 			Real mMaximumReactivePower;
 
 			/// Base apparent power[VA]
 			Real mBaseApparentPower;
 			/// Base omega [1/s]
+			/// FIXME: Only used as local variable
 			Real mBaseOmega;
-			/// Base voltage [V]
-			Real mBaseVoltage;
-			/// Active power set point of the machine [pu]
-			Real mSetPointActivePowerPerUnit;
-			/// Reactive power set point of the machine [pu]
-			Real mSetPointReactivePowerPerUnit;
-			/// Voltage set point of the machine [pu]
-			Real mSetPointVoltagePerUnit;
-
 
         public:
+			/// Active power set point of the machine [W]
+			const Attribute<Real>::Ptr mSetPointActivePower;
+			/// Reactive power set point of the machine [VAr]
+			const Attribute<Real>::Ptr mSetPointReactivePower;
+			/// Voltage set point of the machine [V]
+			const Attribute<Real>::Ptr mSetPointVoltage;
+			/// Base voltage [V]
+			const Attribute<Real>::Ptr mBaseVoltage;
+			/// Active power set point of the machine [pu]
+			const Attribute<Real>::Ptr mSetPointActivePowerPerUnit;
+			/// Reactive power set point of the machine [pu]
+			const Attribute<Real>::Ptr mSetPointReactivePowerPerUnit;
+			/// Voltage set point of the machine [pu]
+			const Attribute<Real>::Ptr mSetPointVoltagePerUnit;
+
 			/// Defines UID, name and logging level
 			SynchronGenerator(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 			/// Defines name and logging level
@@ -70,7 +73,7 @@ namespace Ph1 {
 			/// Update active & reactive power injection (VD bus)
 			void updatePowerInjection(Complex powerInj);
 			/// Get Apparent power of Powerflow solution
-			Complex getApparentPower() { return Complex (mSetPointActivePower, mSetPointReactivePower);}
+			Complex getApparentPower() { return Complex (**mSetPointActivePower, **mSetPointReactivePower);}
 		};
 }
 }

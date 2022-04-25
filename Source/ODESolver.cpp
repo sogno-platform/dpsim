@@ -24,7 +24,7 @@ void ODESolver::initialize() {
 	mStates=N_VNew_Serial(mProbDim);
 	// Set initial value: (Different from DAESolver), only for already initialized components!
 	// XXX
-	N_VSetArrayPointer(mComponent->attribute<Matrix>("ode_post_state")->operator Matrix&().data(), mStates);
+	N_VSetArrayPointer((**mComponent->mOdePostState).data(), mStates);
 	// Forbid SUNdials from deleting the underlying state vector (which is managed
 	// by our attribute / shared_ptr system)
 	NV_OWN_DATA_S(mStates) = false;

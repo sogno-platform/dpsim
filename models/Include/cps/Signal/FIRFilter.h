@@ -22,15 +22,18 @@ namespace Signal {
 	protected:
 		std::vector<Real> mSignal;
 		std::vector<Real> mFilter;
-		Real mOutput;
+		
 		Attribute<Real>::Ptr mInput;
 		Int mCurrentIdx;
 		Int mFilterLength;
-		Real mInitSample;
-
+		
 		void incrementIndex();
 		Int getIndex(Int index);
 	public:
+		const Attribute<Real>::Ptr mOutput;
+		///FIXME: This is never written to, so it is always zero
+		const Attribute<Real>::Ptr mInitSample;
+
 		FIRFilter(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		FIRFilter(String name, std::vector<Real> filterCoefficients, Real initSample = 1, Logger::Level logLevel = Logger::Level::off);
 
@@ -42,9 +45,9 @@ namespace Signal {
 		class Step : public Task {
 		public:
 			Step(FIRFilter& filter) :
-				Task(filter.mName + ".Step"), mFilter(filter) {
+				Task(**filter.mName + ".Step"), mFilter(filter) {
 				mAttributeDependencies.push_back(filter.mInput);
-				mModifiedAttributes.push_back(filter.attribute("output"));
+				mModifiedAttributes.push_back(filter.mOutput);
 			}
 
 			void execute(Real time, Int timeStepCount);

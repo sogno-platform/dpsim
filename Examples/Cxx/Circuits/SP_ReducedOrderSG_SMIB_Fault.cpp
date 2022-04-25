@@ -53,8 +53,8 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, logLevel);
@@ -146,24 +146,24 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
-	//loggerSP->addAttribute("v_slack", 	 extnetSP->attribute("v_intf"));
-	//loggerSP->addAttribute("i_slack", 	 extnetSP->attribute("i_intf"));
-	//loggerSP->addAttribute("v_gen", 	 genSP->attribute("v_intf"));
-    //loggerSP->addAttribute("i_gen", 	 genSP->attribute("i_intf"));
-    loggerSP->addAttribute("Etorque", 	 genSP->attribute("Etorque"));
-    loggerSP->addAttribute("delta", 	 genSP->attribute("delta"));
-    loggerSP->addAttribute("w_r", 		 genSP->attribute("w_r"));
-	loggerSP->addAttribute("Vdq0", 		 genSP->attribute("Vdq0"));
-	loggerSP->addAttribute("Idq0", 		 genSP->attribute("Idq0"));
-	//loggerSP->addAttribute("Evbr", 		 genSP->attribute("Evbr"));
+	//loggerSP->logAttribute("v_slack", 	 extnetSP->attribute("v_intf"));
+	//loggerSP->logAttribute("i_slack", 	 extnetSP->attribute("i_intf"));
+	//loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
+    //loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
+    loggerSP->logAttribute("Etorque", 	 genSP->attribute("Etorque"));
+    loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
+    loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
+	loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Vdq0"));
+	loggerSP->logAttribute("Idq0", 		 genSP->attribute("Idq0"));
+	//loggerSP->logAttribute("Evbr", 		 genSP->attribute("Evbr"));
 	if (SGModel==6 || SGModel==7) {
-		loggerSP->addAttribute("Edq0_s", 		 genSP->attribute("Edq_s"));
-		loggerSP->addAttribute("Edq0_t", 		 genSP->attribute("Edq_t"));
+		loggerSP->logAttribute("Edq0_s", 		 genSP->attribute("Edq_s"));
+		loggerSP->logAttribute("Edq0_t", 		 genSP->attribute("Edq_t"));
 	} else {
-		loggerSP->addAttribute("Edq0", 		 genSP->attribute("Edq_t"));
+		loggerSP->logAttribute("Edq0", 		 genSP->attribute("Edq_t"));
 	}
-	loggerSP->addAttribute("v1", n1SP->attribute("v"));
-	loggerSP->addAttribute("v2", n2SP->attribute("v"));
+	loggerSP->logAttribute("v1", n1SP->attribute("v"));
+	loggerSP->logAttribute("v2", n2SP->attribute("v"));
 
 	Simulation simSP(simNameSP, logLevel);
 	simSP.doInitFromNodesAndTerminals(true);
