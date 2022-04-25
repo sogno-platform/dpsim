@@ -14,7 +14,7 @@
 <g id="a_node1"><a xlink:href="class_d_psim_1_1cuda_1_1_vector.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-30.5 107,-30.5 107,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica" font-size="10.00">DPsim::cuda::Vector</text>
-<text text-anchor="middle" x="53.5" y="-7.5" font-family="Helvetica" font-size="10.00">&lt; char &gt;</text>
+<text text-anchor="middle" x="53.5" y="-7.5" font-family="Helvetica" font-size="10.00">&lt; IndexType &gt;</text>
 </a>
 </g>
 </g>

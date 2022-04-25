@@ -1,8 +1,13 @@
 <map id="CPS::SimTerminal&lt; VarType &gt;" name="CPS::SimTerminal&lt; VarType &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="93,261,295,288"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_topological_terminal.html" title=" " alt="" coords="5,178,177,205"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="17,81,166,108"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="27,5,155,32"/>
-<area shape="rect" id="node5" href="$class_shared_factory.html" title=" " alt="" coords="202,171,394,212"/>
-<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="228,81,368,108"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1328,60,1529,87"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_topological_terminal.html" title=" " alt="" coords="1097,29,1269,56"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="717,29,867,56"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="472,5,600,32"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="453,56,619,83"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="9,7,146,33"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="201,56,340,83"/>
+<area shape="rect" id="node7" title=" " alt="" coords="199,107,343,163"/>
+<area shape="rect" id="node9" title=" " alt="" coords="5,57,149,113"/>
+<area shape="rect" id="node10" href="$class_shared_factory.html" title=" " alt="" coords="1087,81,1279,122"/>
+<area shape="rect" id="node11" href="$class_shared_factory.html" title=" " alt="" coords="722,88,862,115"/>
 </map>

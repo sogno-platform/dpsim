@@ -68,87 +68,165 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_c_p_s_1_1_attribute_base-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">CPS::AttributeBase Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_attribute_8h_source.html">Attribute.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for CPS::AttributeBase:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_attribute_base__inherit__graph.svg" width="100%" height="570"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for CPS::AttributeBase:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_attribute_base__coll__graph.svg" width="198" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_attribute_base__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:abe1d236d13d5b31ca5361f59cee8a9a1"><td class="memItemLeft" align="right" valign="top"><a id="abe1d236d13d5b31ca5361f59cee8a9a1"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>Modifier</b> { <b>real</b>
-, <b>imag</b>
-, <b>mag</b>
-, <b>phase</b>
- }</td></tr>
-<tr class="separator:abe1d236d13d5b31ca5361f59cee8a9a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb1df867ddbeb9895f612da67f23af8e"><td class="memItemLeft" align="right" valign="top"><a id="acb1df867ddbeb9895f612da67f23af8e"></a>
-typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b></td></tr>
-<tr class="separator:acb1df867ddbeb9895f612da67f23af8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af06cf61c74c46ce667c58f124d69a679"><td class="memItemLeft" align="right" valign="top"><a id="af06cf61c74c46ce667c58f124d69a679"></a>
+typedef <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b></td></tr>
+<tr class="separator:af06cf61c74c46ce667c58f124d69a679"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af43dac6e42f93597b33862000dc563be"><td class="memItemLeft" align="right" valign="top"><a id="af43dac6e42f93597b33862000dc563be"></a>
-typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>List</b></td></tr>
+typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>List</b></td></tr>
 <tr class="separator:af43dac6e42f93597b33862000dc563be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa17d63b4a338a173e15abb1e9841944"><td class="memItemLeft" align="right" valign="top"><a id="afa17d63b4a338a173e15abb1e9841944"></a>
+typedef std::set&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">Ptr</a>, <a class="el" href="struct_c_p_s_1_1_attribute_cmp.html">AttributeCmp</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Set</b></td></tr>
+<tr class="separator:afa17d63b4a338a173e15abb1e9841944"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe3836eb4d78517b454cd0a1d1aabd1e"><td class="memItemLeft" align="right" valign="top"><a id="afe3836eb4d78517b454cd0a1d1aabd1e"></a>
-typedef std::map&lt; String, Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Map</b></td></tr>
+typedef std::map&lt; String, <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Map</b></td></tr>
 <tr class="separator:afe3836eb4d78517b454cd0a1d1aabd1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ada7703793e3edb7e4bc9a60848ab0b7c"><td class="memItemLeft" align="right" valign="top"><a id="ada7703793e3edb7e4bc9a60848ab0b7c"></a>
-virtual String&#160;</td><td class="memItemRight" valign="bottom"><b>toString</b> () const =0</td></tr>
-<tr class="separator:ada7703793e3edb7e4bc9a60848ab0b7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad861322c47397d0ce698cf0d1c7c2ffc"><td class="memItemLeft" align="right" valign="top"><a id="ad861322c47397d0ce698cf0d1c7c2ffc"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>flags</b> () const</td></tr>
-<tr class="separator:ad861322c47397d0ce698cf0d1c7c2ffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedb40d3932d0971f1b49db5a7800062f"><td class="memItemLeft" align="right" valign="top"><a id="aedb40d3932d0971f1b49db5a7800062f"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()=0</td></tr>
-<tr class="separator:aedb40d3932d0971f1b49db5a7800062f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a16505112dd93c77e9d37920db5be4c00"><td class="memItemLeft" align="right" valign="top"><a id="a16505112dd93c77e9d37920db5be4c00"></a>
-static AttributeBase::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>getRefAttribute</b> (AttributeBase::Ptr &amp;attr)</td></tr>
-<tr class="separator:a16505112dd93c77e9d37920db5be4c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a61b1b0b4090d3ad3847a00c077373478"><td class="memItemLeft" align="right" valign="top"><a id="a61b1b0b4090d3ad3847a00c077373478"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AttributeBase</b> (int flags)</td></tr>
-<tr class="separator:a61b1b0b4090d3ad3847a00c077373478"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacf2448c4fb054ae20bfc06519a6064d"><td class="memItemLeft" align="right" valign="top"><a id="aacf2448c4fb054ae20bfc06519a6064d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AttributeBase</b> (int flags, const std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt; &amp;refAttribute)</td></tr>
-<tr class="separator:aacf2448c4fb054ae20bfc06519a6064d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:a8d2dc7f3bd4e8cb20adaa8ae3f985ffd"><td class="memItemLeft" align="right" valign="top"><a id="a8d2dc7f3bd4e8cb20adaa8ae3f985ffd"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#a8d2dc7f3bd4e8cb20adaa8ae3f985ffd">mFlags</a></td></tr>
-<tr class="memdesc:a8d2dc7f3bd4e8cb20adaa8ae3f985ffd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to determine access rules for this attribute. <br /></td></tr>
-<tr class="separator:a8d2dc7f3bd4e8cb20adaa8ae3f985ffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5914f199cae2672382ab5d8ea4087cb4"><td class="memItemLeft" align="right" valign="top"><a id="a5914f199cae2672382ab5d8ea4087cb4"></a>
-std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#a5914f199cae2672382ab5d8ea4087cb4">mRefAttribute</a></td></tr>
-<tr class="memdesc:a5914f199cae2672382ab5d8ea4087cb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer that serves as an unique identifier to this attribute. <br /></td></tr>
-<tr class="separator:a5914f199cae2672382ab5d8ea4087cb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd7c914705ff7bcf8f371c8ac622304e"><td class="memItemLeft" align="right" valign="top">virtual String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#abd7c914705ff7bcf8f371c8ac622304e">toString</a> ()=0</td></tr>
+<tr class="separator:abd7c914705ff7bcf8f371c8ac622304e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f9c6108086afcc87b26520c6fffa5c4"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#a3f9c6108086afcc87b26520c6fffa5c4">isStatic</a> () const =0</td></tr>
+<tr class="separator:a3f9c6108086afcc87b26520c6fffa5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad239e5eb700b2f6a13f0cf0a417e3d23"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#ad239e5eb700b2f6a13f0cf0a417e3d23">appendDependencies</a> (AttributeBase::Set *deps)=0</td></tr>
+<tr class="separator:ad239e5eb700b2f6a13f0cf0a417e3d23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abda122ccbefeb889b8d28b11354859e4"><td class="memItemLeft" align="right" valign="top">virtual AttributeBase::Set&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#abda122ccbefeb889b8d28b11354859e4">getDependencies</a> () final</td></tr>
+<tr class="separator:abda122ccbefeb889b8d28b11354859e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_attribute_8h_source.html#l00047">47</a> of file <a class="el" href="_attribute_8h_source.html">Attribute.h</a>.</p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+<div class="textblock"><p>Base class for all <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a> types. Can be used in STL containers to hide the template information. </p>
+
+<p class="definition">Definition at line <a class="el" href="_attribute_8h_source.html#l00157">157</a> of file <a class="el" href="_attribute_8h_source.html">Attribute.h</a>.</p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad239e5eb700b2f6a13f0cf0a417e3d23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad239e5eb700b2f6a13f0cf0a417e3d23">&#9670;&nbsp;</a></span>appendDependencies()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::AttributeBase::appendDependencies </td>
+          <td>(</td>
+          <td class="paramtype">AttributeBase::Set *&#160;</td>
+          <td class="paramname"><em>deps</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Append all dependencies of this attribute to the given set. For static attributes, this will only append <code>this</code>, for dynamic attributes, it will recursively collect and append all dependencies. </p>
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_attribute_dynamic.html#a6ae57409a29917f653ff5772fe1fa5de">CPS::AttributeDynamic&lt; T &gt;</a>, and <a class="el" href="class_c_p_s_1_1_attribute_static.html#a636c3781af596ecaf9bbf1f4f17df27c">CPS::AttributeStatic&lt; T &gt;</a>.</p>
+
+</div>
+</div>
+<a id="abda122ccbefeb889b8d28b11354859e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abda122ccbefeb889b8d28b11354859e4">&#9670;&nbsp;</a></span>getDependencies()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual AttributeBase::Set CPS::AttributeBase::getDependencies </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get a set of all attributes this attribute depends on. For static attributes, this set will only contain <code>this</code>. For dynamic attributes, this will recursively collect all dependency attributes. </p>
+
+<p class="definition">Definition at line <a class="el" href="_attribute_8h_source.html#l00189">189</a> of file <a class="el" href="_attribute_8h_source.html">Attribute.h</a>.</p>
+
+</div>
+</div>
+<a id="a3f9c6108086afcc87b26520c6fffa5c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f9c6108086afcc87b26520c6fffa5c4">&#9670;&nbsp;</a></span>isStatic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool CPS::AttributeBase::isStatic </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Check whether this is a static or dynamic attribute </p><dl class="section return"><dt>Returns</dt><dd>true for instances of <code><a class="el" href="class_c_p_s_1_1_attribute_static.html">AttributeStatic</a></code>, false for instances of <code><a class="el" href="class_c_p_s_1_1_attribute_dynamic.html">AttributeDynamic</a></code> </dd></dl>
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_attribute_dynamic.html#ad48bbe0d95a615ce21ac1fca9cfb0df1">CPS::AttributeDynamic&lt; T &gt;</a>, and <a class="el" href="class_c_p_s_1_1_attribute_static.html#ab7423b869b379a6f084889f83266896e">CPS::AttributeStatic&lt; T &gt;</a>.</p>
+
+</div>
+</div>
+<a id="abd7c914705ff7bcf8f371c8ac622304e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd7c914705ff7bcf8f371c8ac622304e">&#9670;&nbsp;</a></span>toString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual String CPS::AttributeBase::toString </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Display this attribute's value as a string </p>
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; MatrixVar&lt; Complex &gt; &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; MatrixVar&lt; VarType &gt; &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; CPS::Complex &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; String &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; Matrix &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; Bool &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; Complex &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; MatrixComp &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; Real &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a1f2b2431afaddf5a98845cb4dc473580">CPS::Attribute&lt; CPS::Real &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; MatrixVar&lt; Complex &gt; &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; MatrixVar&lt; VarType &gt; &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; CPS::Complex &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; String &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; Matrix &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; Bool &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; Complex &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; MatrixComp &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; Real &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">CPS::Attribute&lt; CPS::Real &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; MatrixVar&lt; Complex &gt; &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; MatrixVar&lt; VarType &gt; &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; CPS::Complex &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; String &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; Matrix &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; Bool &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; Complex &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; MatrixComp &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; Real &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">CPS::Attribute&lt; CPS::Real &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; MatrixVar&lt; Complex &gt; &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; MatrixVar&lt; VarType &gt; &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; CPS::Complex &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; String &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; Matrix &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; Bool &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; Complex &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; MatrixComp &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; Real &gt;</a>, and <a class="el" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">CPS::Attribute&lt; CPS::Real &gt;</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>/__w/dpsim/dpsim/models/Include/cps/<a class="el" href="_attribute_8h_source.html">Attribute.h</a></li>
 </ul>
 </div><!-- contents -->

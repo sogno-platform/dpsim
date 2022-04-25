@@ -75,6 +75,11 @@ $(function() {
 : <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#adc4a6a33b637eeb734ead54669072b43">CPS::DP::Ph3::SeriesSwitch</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_switch.html#a2bcf85f8c57bd17c48e91939527c9d6d">CPS::EMT::Ph3::SeriesSwitch</a>
 </li>
+<li>set()
+: <a class="el" href="class_c_p_s_1_1_attribute.html#a838e3d8f79bc73a91e6dd44c6d83c97e">CPS::Attribute&lt; T &gt;</a>
+, <a class="el" href="class_c_p_s_1_1_attribute_dynamic.html#a9b25a033a7578cfaf45573861c47d8dc">CPS::AttributeDynamic&lt; T &gt;</a>
+, <a class="el" href="class_c_p_s_1_1_attribute_static.html#a3169cd650243408920b16eb28c1f4f00">CPS::AttributeStatic&lt; T &gt;</a>
+</li>
 <li>set_state_vector()
 : <a class="el" href="class_c_p_s_1_1_o_d_eint_interface.html#aef76ce7cf5ab5f43c4f9a3df74dc4665">CPS::ODEintInterface</a>
 </li>
@@ -169,6 +174,7 @@ $(function() {
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html#a2ccd6ce05ca9b16dcb054718c5e9acc8">CPS::DP::Ph1::RXLoadSwitch</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a50e2a8a68a5a3e376f19f64f1659a4d7">CPS::DP::Ph1::Transformer</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source.html#a18578eedb628f7969c700f65609b6fdb">CPS::DP::Ph1::VoltageSource</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a67c5dba3ac49486a530c8c68fb160f5e">CPS::DP::Ph1::VoltageSourceNorton</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#a8a3e214da67b7c95299863f4f965eae1">CPS::EMT::Ph3::AvVoltageSourceInverterDQ</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a28795d107de0c7908e8eb706ba7c908c">CPS::EMT::Ph3::CurrentSource</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html#a08f07e6503c2f99a58da50504b8c24bb">CPS::EMT::Ph3::NetworkInjection</a>
@@ -195,6 +201,11 @@ $(function() {
 </li>
 <li>setPerUnitSystem()
 : <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a8bb2ee622f819e8b84772d153f230790">CPS::SP::Ph1::RXLine</a>
+</li>
+<li>setReference()
+: <a class="el" href="class_c_p_s_1_1_attribute.html#a710a833d4a1ad10f73da67105850efb0">CPS::Attribute&lt; T &gt;</a>
+, <a class="el" href="class_c_p_s_1_1_attribute_dynamic.html#a629b5054cf3a255ba8c866fef677c103">CPS::AttributeDynamic&lt; T &gt;</a>
+, <a class="el" href="class_c_p_s_1_1_attribute_static.html#ab02e7247c9d1e8ee476a7a1e051a9100">CPS::AttributeStatic&lt; T &gt;</a>
 </li>
 <li>setScheduler()
 : <a class="el" href="class_d_psim_1_1_simulation.html#a77f1b1513d2ee03310b4a47426869b3f">DPsim::Simulation</a>
@@ -284,13 +295,13 @@ $(function() {
 , <a class="el" href="class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a82fa1f75cec949844e58a7c8621f7eb3">CPS::Signal::PowerControllerVSI</a>
 </li>
 <li>SimNode()
-: <a class="el" href="class_c_p_s_1_1_sim_node.html#acd09e958259e152282dee460e155b958">CPS::SimNode&lt; VarType &gt;</a>
+: <a class="el" href="class_c_p_s_1_1_sim_node.html#a14ca16d68944ce1629164cef973aca92">CPS::SimNode&lt; VarType &gt;</a>
 </li>
 <li>SimPowerComp()
 : <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a35001c5c131c1cab0e02628e110436ba">CPS::SimPowerComp&lt; VarType &gt;</a>
 </li>
 <li>Simulation()
-: <a class="el" href="class_d_psim_1_1_simulation.html#ac3489f2a307ee9f63c5e778b13402241">DPsim::Simulation</a>
+: <a class="el" href="class_d_psim_1_1_simulation.html#aaa767184df5797ec92996161812ae54d">DPsim::Simulation</a>
 </li>
 <li>SineWaveGenerator()
 : <a class="el" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a8f4aec69c8beefe99d59c248cc1a0399">CPS::Signal::SineWaveGenerator</a>
@@ -375,10 +386,12 @@ $(function() {
 : <a class="el" href="class_d_psim_1_1_o_d_e_solver.html#afdb9fe3550d25ee4556fc6e82df528c9">DPsim::ODESolver</a>
 </li>
 <li>step()
-: <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a10ed96b82e7b2ce57a9fb501609e38b1">CPS::DP::Ph3::SynchronGeneratorDQ</a>
+: <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a46a946ebfdfb4dec3afee34225f00293">CPS::DP::Ph1::SynchronGeneratorTrStab</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a10ed96b82e7b2ce57a9fb501609e38b1">CPS::DP::Ph3::SynchronGeneratorDQ</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q.html#aeb5b28465fee402eaab9eaf59910f125">CPS::EMT::Ph3::SynchronGeneratorDQ</a>
 , <a class="el" href="class_c_p_s_1_1_signal_1_1_cosine_f_m_generator.html#a92c41b2e77c3a7d3cf25fd9306def09d">CPS::Signal::CosineFMGenerator</a>
 , <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter.html#a499b6b43f6142280cd3fac444af449d9">CPS::Signal::Exciter</a>
+, <a class="el" href="class_c_p_s_1_1_signal_1_1_f_i_r_filter.html#afc2cdd41b1ef34d10e8d805a3272e460">CPS::Signal::FIRFilter</a>
 , <a class="el" href="class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html#afe726bc3e7aeda43c52c12d1fbf32261">CPS::Signal::FrequencyRampGenerator</a>
 , <a class="el" href="class_c_p_s_1_1_signal_1_1_signal_generator.html#aad2eecfa47e996f9f2f03bd218856a17">CPS::Signal::SignalGenerator</a>
 , <a class="el" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a8c3c119165f39326b9bc5998a4908fe0">CPS::Signal::SineWaveGenerator</a>
@@ -453,13 +466,18 @@ $(function() {
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q.html#af991b028becf94ff52e726e8d998df2d">CPS::EMT::Ph3::SynchronGeneratorDQ</a>
 </li>
 <li>SynchronGeneratorIdeal()
-: <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a286d8fdf955e014f900b9788138b47fe">CPS::DP::Ph1::SynchronGeneratorIdeal</a>
+: <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a3ab9e4ce0fd9754379ee83e9d38fdb40">CPS::DP::Ph1::SynchronGeneratorIdeal</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_ideal.html#ab5797c0ac6efd50498c2deaab17f690d">CPS::EMT::Ph3::SynchronGeneratorIdeal</a>
+</li>
+<li>SynchronGeneratorTrStab()
+: <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#ab0dae83437789b988decd997e4535dea">CPS::DP::Ph1::SynchronGeneratorTrStab</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_tr_stab.html#a52210ef39beca6425b92073346056822">CPS::EMT::Ph3::SynchronGeneratorTrStab</a>
+, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#ab8d5d935f46c35eaf85f99fdd3b85158">CPS::SP::Ph1::SynchronGeneratorTrStab</a>
 </li>
 <li>SynchronGeneratorVBR()
 : <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_v_b_r.html#a42066bbe91107b7e7b25762768807503">CPS::DP::Ph1::SynchronGeneratorVBR</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ae58d6774c77e396368ac833183ade55b">CPS::DP::Ph3::SynchronGeneratorVBR</a>
-, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a1416089cf28f20454f387b89cb7c3327">CPS::EMT::Ph3::SynchronGeneratorVBR</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#accbda932610e68408e839b513ad313ba">CPS::EMT::Ph3::SynchronGeneratorVBR</a>
 , <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_v_b_r.html#a394bdd3a17c03e8ead0bc7b0e0ba2d4d">CPS::SP::Ph1::SynchronGeneratorVBR</a>
 </li>
 <li>SynchronGeneratorVBRSmpl()

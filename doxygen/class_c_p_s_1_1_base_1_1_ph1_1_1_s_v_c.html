@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -84,6 +85,12 @@ Inheritance diagram for CPS::Base::Ph1::SVC:</div>
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c__inherit__graph.svg" width="164" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for CPS::Base::Ph1::SVC:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c__coll__graph.svg" width="100%" height="425"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -98,11 +105,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setControllerParamete
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMechModelParameter</b> (Real deadband, Real switchDelay, Real maxPos, Real minPos, Real nomVolt, Real RefVolt, Real BN, Real initPos=0)</td></tr>
 <tr class="separator:acf12815c2d027082c509be2933c0ae76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a200ab3241f667dc7ffc95fb0f198f33a"><td class="memItemLeft" align="right" valign="top"><a id="a200ab3241f667dc7ffc95fb0f198f33a"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>mDeltaV</b></td></tr>
+<tr class="separator:a200ab3241f667dc7ffc95fb0f198f33a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f46f699e233673a4342456321b53850"><td class="memItemLeft" align="right" valign="top"><a id="a2f46f699e233673a4342456321b53850"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>mBPrev</b></td></tr>
+<tr class="separator:a2f46f699e233673a4342456321b53850"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab79694ec5dc98b94e0fbe8e2c842c231"><td class="memItemLeft" align="right" valign="top"><a id="ab79694ec5dc98b94e0fbe8e2c842c231"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>mViolationCounter</b></td></tr>
+<tr class="separator:ab79694ec5dc98b94e0fbe8e2c842c231"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a841eabfda7ef39d4cb2aa4edd6624e4e"><td class="memItemLeft" align="right" valign="top"><a id="a841eabfda7ef39d4cb2aa4edd6624e4e"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a841eabfda7ef39d4cb2aa4edd6624e4e">mInductance</a></td></tr>
-<tr class="memdesc:a841eabfda7ef39d4cb2aa4edd6624e4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inductance [H]. <br /></td></tr>
+<tr class="memitem:a841eabfda7ef39d4cb2aa4edd6624e4e"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a841eabfda7ef39d4cb2aa4edd6624e4e">mInductance</a></td></tr>
 <tr class="separator:a841eabfda7ef39d4cb2aa4edd6624e4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e7375336b3fa2e30c51aeca8f98449f"><td class="memItemLeft" align="right" valign="top"><a id="a7e7375336b3fa2e30c51aeca8f98449f"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a7e7375336b3fa2e30c51aeca8f98449f">mBMax</a></td></tr>
@@ -145,9 +162,6 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>mDeltaT</b></td></tr>
 <tr class="memitem:a8bee3f03458b52d4f6b590e0dfb091d7"><td class="memItemLeft" align="right" valign="top"><a id="a8bee3f03458b52d4f6b590e0dfb091d7"></a>
 Bool&#160;</td><td class="memItemRight" valign="bottom"><b>mMechMode</b> = false</td></tr>
 <tr class="separator:a8bee3f03458b52d4f6b590e0dfb091d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac195b50de6227f11666e3e9ebe984ea5"><td class="memItemLeft" align="right" valign="top"><a id="ac195b50de6227f11666e3e9ebe984ea5"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>mViolationCounter</b> = 0</td></tr>
-<tr class="separator:ac195b50de6227f11666e3e9ebe984ea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e047ff5ed9e3f5701886fcb3d13a3bf"><td class="memItemLeft" align="right" valign="top"><a id="a0e047ff5ed9e3f5701886fcb3d13a3bf"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>mDeadband</b></td></tr>
 <tr class="separator:a0e047ff5ed9e3f5701886fcb3d13a3bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,18 +180,38 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>mMinPos</b></td></tr>
 <tr class="memitem:a54370960c0333c1e3e04e5d21ac6cd65"><td class="memItemLeft" align="right" valign="top"><a id="a54370960c0333c1e3e04e5d21ac6cd65"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>mPrevVoltage</b></td></tr>
 <tr class="separator:a54370960c0333c1e3e04e5d21ac6cd65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34b26bd4061081b502329634501caff5"><td class="memItemLeft" align="right" valign="top"><a id="a34b26bd4061081b502329634501caff5"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>mDeltaV</b> = 0</td></tr>
-<tr class="separator:a34b26bd4061081b502329634501caff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a725a75cd3de47e8adc613d1362bb695a"><td class="memItemLeft" align="right" valign="top"><a id="a725a75cd3de47e8adc613d1362bb695a"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>mBPrev</b></td></tr>
-<tr class="separator:a725a75cd3de47e8adc613d1362bb695a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Static VAR compensator (<a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html" title="Static VAR compensator (SVC)">SVC</a>) </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___ph1___s_v_c_8h_source.html#l00017">17</a> of file <a class="el" href="_base___ph1___s_v_c_8h_source.html">Base_Ph1_SVC.h</a>.</p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+<p class="definition">Definition at line <a class="el" href="_base___ph1___s_v_c_8h_source.html#l00018">18</a> of file <a class="el" href="_base___ph1___s_v_c_8h_source.html">Base_Ph1_SVC.h</a>.</p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a841eabfda7ef39d4cb2aa4edd6624e4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a841eabfda7ef39d4cb2aa4edd6624e4e">&#9670;&nbsp;</a></span>mInductance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real CPS::Base::Ph1::SVC::mInductance</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Inductance [H] FIXME: This is only ever written to but never read </p>
+
+<p class="definition">Definition at line <a class="el" href="_base___ph1___s_v_c_8h_source.html#l00022">22</a> of file <a class="el" href="_base___ph1___s_v_c_8h_source.html">Base_Ph1_SVC.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>/__w/dpsim/dpsim/models/Include/cps/Base/<a class="el" href="_base___ph1___s_v_c_8h_source.html">Base_Ph1_SVC.h</a></li>
 </ul>
 </div><!-- contents -->

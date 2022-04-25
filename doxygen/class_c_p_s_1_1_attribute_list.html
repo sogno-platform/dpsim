@@ -68,7 +68,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_c_p_s_1_1_attribute_list-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">CPS::AttributeList Class Reference</div>  </div>
@@ -98,7 +98,7 @@ Public Member Functions</h2></td></tr>
 const AttributeBase::Map &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>attributes</b> ()</td></tr>
 <tr class="separator:a8e90452d76ea22aaf68db3e42feb8f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfc14de7627d787641b9528573d74be6"><td class="memItemLeft" align="right" valign="top"><a id="adfc14de7627d787641b9528573d74be6"></a>
-AttributeBase::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_list.html#adfc14de7627d787641b9528573d74be6">attribute</a> (const String &amp;name)</td></tr>
+<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_list.html#adfc14de7627d787641b9528573d74be6">attribute</a> (const String &amp;name)</td></tr>
 <tr class="memdesc:adfc14de7627d787641b9528573d74be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return pointer to an attribute. <br /></td></tr>
 <tr class="separator:adfc14de7627d787641b9528573d74be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae3ccb94373a63ed9534420070aaab3c"><td class="memTemplParams" colspan="2"><a id="aae3ccb94373a63ed9534420070aaab3c"></a>
@@ -106,36 +106,13 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aae3ccb94373a63ed9534420070aaab3c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; T &gt;::Ptr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_list.html#aae3ccb94373a63ed9534420070aaab3c">attribute</a> (const String &amp;name)</td></tr>
 <tr class="memdesc:aae3ccb94373a63ed9534420070aaab3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return pointer to an attribute. <br /></td></tr>
 <tr class="separator:aae3ccb94373a63ed9534420070aaab3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a326f66483194c12958b302d6442e55da"><td class="memTemplParams" colspan="2"><a id="a326f66483194c12958b302d6442e55da"></a>
-template&lt;typename T , typename... Args&gt; </td></tr>
-<tr class="memitem:a326f66483194c12958b302d6442e55da"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>addAttributeRef</b> (const String &amp;name, const std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt; &amp;ref, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a326f66483194c12958b302d6442e55da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec89aca670ee3d856a0bb36002ce603a"><td class="memItemLeft" align="right" valign="top"><a id="aec89aca670ee3d856a0bb36002ce603a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setAttributeRef</b> (const String &amp;name, const std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt; &amp;ref)</td></tr>
-<tr class="separator:aec89aca670ee3d856a0bb36002ce603a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa229ee303563754eb2d75ccd81ea7dc1"><td class="memItemLeft" align="right" valign="top"><a id="aa229ee303563754eb2d75ccd81ea7dc1"></a>
-ComplexAttribute::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>attributeComplex</b> (const String &amp;name)</td></tr>
-<tr class="separator:aa229ee303563754eb2d75ccd81ea7dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d9645da4a46a689b2b0d836887999d2"><td class="memTemplParams" colspan="2"><a id="a5d9645da4a46a689b2b0d836887999d2"></a>
-template&lt;typename VarType &gt; </td></tr>
-<tr class="memitem:a5d9645da4a46a689b2b0d836887999d2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_matrix_attribute.html">MatrixAttribute</a>&lt; VarType &gt;::Ptr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>attributeMatrix</b> (const String &amp;name)</td></tr>
-<tr class="separator:a5d9645da4a46a689b2b0d836887999d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65cebc1bc9a8f9c72428d2909a035e0d"><td class="memItemLeft" align="right" valign="top"><a id="a65cebc1bc9a8f9c72428d2909a035e0d"></a>
-MatrixRealAttribute::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>attributeMatrixReal</b> (const String &amp;name)</td></tr>
-<tr class="separator:a65cebc1bc9a8f9c72428d2909a035e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeac611b83c41bfa5303eaf0483e5c692"><td class="memItemLeft" align="right" valign="top"><a id="aeac611b83c41bfa5303eaf0483e5c692"></a>
-MatrixCompAttribute::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>attributeMatrixComp</b> (const String &amp;name)</td></tr>
-<tr class="separator:aeac611b83c41bfa5303eaf0483e5c692"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69af09f470834b2f153b9742f1b999eb"><td class="memItemLeft" align="right" valign="top"><a id="a69af09f470834b2f153b9742f1b999eb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
-<tr class="separator:a69af09f470834b2f153b9742f1b999eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a8e31e58e710567bf4bddcbf51710fc7a"><td class="memTemplParams" colspan="2"><a id="a8e31e58e710567bf4bddcbf51710fc7a"></a>
-template&lt;typename T , typename... Args&gt; </td></tr>
-<tr class="memitem:a8e31e58e710567bf4bddcbf51710fc7a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>addAttribute</b> (const String &amp;name, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a8e31e58e710567bf4bddcbf51710fc7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a5fdfb06b01b2a7e694a0603caa977b13"><td class="memItemLeft" align="right" valign="top"><a id="a5fdfb06b01b2a7e694a0603caa977b13"></a>
+AttributeBase::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_list.html#a5fdfb06b01b2a7e694a0603caa977b13">mAttributes</a></td></tr>
+<tr class="memdesc:a5fdfb06b01b2a7e694a0603caa977b13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of all attributes. <br /></td></tr>
+<tr class="separator:a5fdfb06b01b2a7e694a0603caa977b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class of objects having attributes to access member variables. </p>

@@ -1,7 +1,12 @@
 <map id="DPsim::MnaSolverEigenSparse&lt; VarType &gt;" name="DPsim::MnaSolverEigenSparse&lt; VarType &gt;">
-<area shape="rect" id="node1" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="97,171,303,212"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_mna_solver.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="99,95,301,121"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="5,5,112,32"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="136,5,264,32"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_system_topology.html" title=" " alt="" coords="288,5,443,32"/>
+<area shape="rect" id="node1" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="1024,74,1231,115"/>
+<area shape="rect" id="node2" href="$class_d_psim_1_1_mna_solver.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="772,81,975,108"/>
+<area shape="rect" id="node3" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="486,5,593,32"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="475,56,603,83"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_system_topology.html" title=" " alt="" coords="462,107,617,133"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="456,157,623,184"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="9,108,146,135"/>
+<area shape="rect" id="node9" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="201,157,340,184"/>
+<area shape="rect" id="node8" title=" " alt="" coords="199,208,343,264"/>
+<area shape="rect" id="node10" title=" " alt="" coords="5,159,149,215"/>
 </map>

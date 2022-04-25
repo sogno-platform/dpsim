@@ -97,78 +97,79 @@ $(function() {
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        Real mInductance;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        Real mCapacitance;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        Real mSurgeImpedance;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        Real mSrcCur1Ref;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        Real mSrcCur2Ref;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        std::shared_ptr&lt;EMT::SimNode&gt; mNode1, mNode2;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        std::shared_ptr&lt;EMT::Ph1::Resistor&gt; mRes1, mRes2;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        std::shared_ptr&lt;EMT::Ph1::CurrentSource&gt; mSrc1, mSrc2;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> mSrcCur1, mSrcCur2;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="comment">// Ringbuffers for the values of previous timesteps</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="comment">// TODO make these matrix attributes</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        std::vector&lt;Real&gt; mVolt1, mVolt2, mCur1, mCur2;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="comment">// workaround for dependency analysis as long as the states aren&#39;t attributes</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        Matrix mStates;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        UInt mBufIdx = 0;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        UInt mBufSize;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        Real mAlpha;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        std::shared_ptr&lt;EMT::SimNode&gt; mNode1, mNode2;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        std::shared_ptr&lt;EMT::Ph1::Resistor&gt; mRes1, mRes2;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        std::shared_ptr&lt;EMT::Ph1::CurrentSource&gt; mSrc1, mSrc2;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> mSrcCur1, mSrcCur2;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="comment">// Ringbuffers for the values of previous timesteps</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="comment">// TODO make these matrix attributes</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        std::vector&lt;Real&gt; mVolt1, mVolt2, mCur1, mCur2;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        UInt mBufIdx = 0;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        UInt mBufSize;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        Real mAlpha;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        Real interpolate(std::vector&lt;Real&gt;&amp; data);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keyword">typedef</span> std::shared_ptr&lt;DecouplingLineEMT&gt; Ptr;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        Real interpolate(std::vector&lt;Real&gt;&amp; data);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">typedef</span> std::shared_ptr&lt;DecouplingLineEMT&gt; Ptr;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">DecouplingLineEMT</a>(String <a class="code" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, Logger::Level logLevel = Logger::Level::info);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Real&gt;::Ptr</a> mSrcCur1Ref;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Real&gt;::Ptr</a> mSrcCur2Ref;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#af6caabbba0c7ebb77e23e3838d2ad628">   50</a></span>&#160;        <span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#af6caabbba0c7ebb77e23e3838d2ad628">mStates</a>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordtype">void</span> setParameters(SimNode&lt;Real&gt;::Ptr node1, SimNode&lt;Real&gt;::Ptr node2,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            Real resistance, Real inductance, Real capacitance);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">void</span> initialize(Real omega, Real timeStep);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordtype">void</span> step(Real time, Int timeStepCount);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">void</span> postStep();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        Task::List getTasks();</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        IdentifiedObject::List getLineComponents();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step.html">   60</a></span>&#160;        <span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step.html">PreStep</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_task.html">Task</a> {</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step.html">PreStep</a>(<a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">DecouplingLineEMT</a>&amp; line) :</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                <a class="code" href="class_c_p_s_1_1_task.html">Task</a>(line.<a class="code" href="class_c_p_s_1_1_identified_object.html#ae227717144399dcbf768b1dac14698da">mName</a> + <span class="stringliteral">&quot;.MnaPreStep&quot;</span>), mLine(line) {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                mPrevStepDependencies.push_back(mLine.<a class="code" href="class_c_p_s_1_1_attribute_list.html#adfc14de7627d787641b9528573d74be6">attribute</a>(<span class="stringliteral">&quot;states&quot;</span>));</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                mModifiedAttributes.push_back(mLine.mSrc1-&gt;attribute(<span class="stringliteral">&quot;I_ref&quot;</span>));</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                mModifiedAttributes.push_back(mLine.mSrc2-&gt;attribute(<span class="stringliteral">&quot;I_ref&quot;</span>));</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">DecouplingLineEMT</a>(String <a class="code" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, Logger::Level logLevel = Logger::Level::info);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">void</span> setParameters(SimNode&lt;Real&gt;::Ptr node1, SimNode&lt;Real&gt;::Ptr node2,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            Real resistance, Real inductance, Real capacitance);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">void</span> initialize(Real omega, Real timeStep);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordtype">void</span> step(Real time, Int timeStepCount);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordtype">void</span> postStep();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        Task::List getTasks();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        IdentifiedObject::List getLineComponents();</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step.html">   62</a></span>&#160;        <span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step.html">PreStep</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_task.html">Task</a> {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step.html">PreStep</a>(<a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">DecouplingLineEMT</a>&amp; line) :</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                <a class="code" href="class_c_p_s_1_1_task.html">Task</a>(**line.<a class="code" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a> + <span class="stringliteral">&quot;.MnaPreStep&quot;</span>), mLine(line) {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                mPrevStepDependencies.push_back(mLine.<a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#af6caabbba0c7ebb77e23e3838d2ad628">mStates</a>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                mModifiedAttributes.push_back(mLine.mSrc1-&gt;mCurrentRef);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                mModifiedAttributes.push_back(mLine.mSrc2-&gt;mCurrentRef);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            }</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">DecouplingLineEMT</a>&amp; mLine;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        };</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step.html">   75</a></span>&#160;        <span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step.html">PostStep</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_task.html">Task</a> {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step.html">PostStep</a>(<a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">DecouplingLineEMT</a>&amp; line) :</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                <a class="code" href="class_c_p_s_1_1_task.html">Task</a>(line.<a class="code" href="class_c_p_s_1_1_identified_object.html#ae227717144399dcbf768b1dac14698da">mName</a> + <span class="stringliteral">&quot;.PostStep&quot;</span>), mLine(line) {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                mAttributeDependencies.push_back(mLine.mRes1-&gt;attribute(<span class="stringliteral">&quot;v_intf&quot;</span>));</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                mAttributeDependencies.push_back(mLine.mRes1-&gt;attribute(<span class="stringliteral">&quot;i_intf&quot;</span>));</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                mAttributeDependencies.push_back(mLine.mRes2-&gt;attribute(<span class="stringliteral">&quot;v_intf&quot;</span>));</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                mAttributeDependencies.push_back(mLine.mRes2-&gt;attribute(<span class="stringliteral">&quot;i_intf&quot;</span>));</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                mModifiedAttributes.push_back(mLine.<a class="code" href="class_c_p_s_1_1_attribute_list.html#adfc14de7627d787641b9528573d74be6">attribute</a>(<span class="stringliteral">&quot;states&quot;</span>));</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            }</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">DecouplingLineEMT</a>&amp; mLine;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        };</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step.html">   77</a></span>&#160;        <span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step.html">PostStep</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_task.html">Task</a> {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step.html">PostStep</a>(<a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">DecouplingLineEMT</a>&amp; line) :</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                <a class="code" href="class_c_p_s_1_1_task.html">Task</a>(**line.<a class="code" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a> + <span class="stringliteral">&quot;.PostStep&quot;</span>), mLine(line) {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                mAttributeDependencies.push_back(mLine.mRes1-&gt;mIntfVoltage);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                mAttributeDependencies.push_back(mLine.mRes1-&gt;mIntfCurrent);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                mAttributeDependencies.push_back(mLine.mRes2-&gt;mIntfVoltage);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                mAttributeDependencies.push_back(mLine.mRes2-&gt;mIntfCurrent);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                mModifiedAttributes.push_back(mLine.<a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#af6caabbba0c7ebb77e23e3838d2ad628">mStates</a>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            }</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">DecouplingLineEMT</a>&amp; mLine;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        };</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    };</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00099">Attribute.h:101</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_list_html_adfc14de7627d787641b9528573d74be6"><div class="ttname"><a href="class_c_p_s_1_1_attribute_list.html#adfc14de7627d787641b9528573d74be6">CPS::AttributeList::attribute</a></div><div class="ttdeci">AttributeBase::Ptr attribute(const String &amp;name)</div><div class="ttdoc">Return pointer to an attribute.</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_list_8h_source.html#l00039">AttributeList.h:39</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdoc">Returns component name.</div><div class="ttdef"><b>Definition:</b> <a href="_identified_object_8h_source.html#l00044">IdentifiedObject.h:44</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_ae227717144399dcbf768b1dac14698da"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#ae227717144399dcbf768b1dac14698da">CPS::IdentifiedObject::mName</a></div><div class="ttdeci">String mName</div><div class="ttdoc">Human readable name.</div><div class="ttdef"><b>Definition:</b> <a href="_identified_object_8h_source.html#l00022">IdentifiedObject.h:22</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step_html"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step.html">CPS::Signal::DecouplingLineEMT::PostStep</a></div><div class="ttdef"><b>Definition:</b> <a href="_decoupling_line_e_m_t_8h_source.html#l00075">DecouplingLineEMT.h:75</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step_html"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step.html">CPS::Signal::DecouplingLineEMT::PreStep</a></div><div class="ttdef"><b>Definition:</b> <a href="_decoupling_line_e_m_t_8h_source.html#l00060">DecouplingLineEMT.h:60</a></div></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <a class="code" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">DecouplingLineEMT</a>&amp; mLine;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        };</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    };</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00251">Attribute.h:253</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a13661eab6b670e4a5a3aa5777f8fd5d0"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">CPS::IdentifiedObject::mName</a></div><div class="ttdeci">const Attribute&lt; String &gt;::Ptr mName</div><div class="ttdoc">Human readable name.</div><div class="ttdef"><b>Definition:</b> <a href="_identified_object_8h_source.html#l00022">IdentifiedObject.h:22</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdoc">Returns component name.</div><div class="ttdef"><b>Definition:</b> <a href="_identified_object_8h_source.html#l00047">IdentifiedObject.h:47</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step_html"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step.html">CPS::Signal::DecouplingLineEMT::PostStep</a></div><div class="ttdef"><b>Definition:</b> <a href="_decoupling_line_e_m_t_8h_source.html#l00077">DecouplingLineEMT.h:77</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step_html"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step.html">CPS::Signal::DecouplingLineEMT::PreStep</a></div><div class="ttdef"><b>Definition:</b> <a href="_decoupling_line_e_m_t_8h_source.html#l00062">DecouplingLineEMT.h:62</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_html"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html">CPS::Signal::DecouplingLineEMT</a></div><div class="ttdef"><b>Definition:</b> <a href="_decoupling_line_e_m_t_8h_source.html#l00020">DecouplingLineEMT.h:22</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_html_af6caabbba0c7ebb77e23e3838d2ad628"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#af6caabbba0c7ebb77e23e3838d2ad628">CPS::Signal::DecouplingLineEMT::mStates</a></div><div class="ttdeci">const Attribute&lt; Matrix &gt;::Ptr mStates</div><div class="ttdoc">FIXME: workaround for dependency analysis as long as the states aren't attributes.</div><div class="ttdef"><b>Definition:</b> <a href="_decoupling_line_e_m_t_8h_source.html#l00050">DecouplingLineEMT.h:50</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_signal_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_sim_signal_comp.html">CPS::SimSignalComp</a></div><div class="ttdef"><b>Definition:</b> <a href="_sim_signal_comp_8h_source.html#l00017">SimSignalComp.h:17</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_task_html"><div class="ttname"><a href="class_c_p_s_1_1_task.html">CPS::Task</a></div><div class="ttdoc">Tasks to be defined by every component.</div><div class="ttdef"><b>Definition:</b> <a href="_task_8h_source.html#l00025">Task.h:25</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition:</b> <a href="_ptr_factory_8h_source.html#l00017">PtrFactory.h:17</a></div></div>

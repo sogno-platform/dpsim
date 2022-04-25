@@ -273,11 +273,11 @@ $(function() {
 <div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    }</div>
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="comment">//Copy Solution back</span></div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    CUDA_ERROR_HANDLER(cudaMemcpy(&amp;this-&gt;mLeftSideVector(0), mDeviceCopy.vector, mDeviceCopy.size * <span class="keyword">sizeof</span>(Real), cudaMemcpyDeviceToHost))</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    CUDA_ERROR_HANDLER(cudaMemcpy(&amp;(**this-&gt;mLeftSideVector)(0), mDeviceCopy.vector, mDeviceCopy.size * <span class="keyword">sizeof</span>(Real), cudaMemcpyDeviceToHost))</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="comment">// TODO split into separate task? (dependent on x, updating all v attributes)</span></div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordflow">for</span> (UInt nodeIdx = 0; nodeIdx &lt; this-&gt;mNumNetNodes; ++nodeIdx)</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        this-&gt;mNodes[nodeIdx]-&gt;mnaUpdateVoltage(this-&gt;mLeftSideVector);</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        this-&gt;mNodes[nodeIdx]-&gt;mnaUpdateVoltage(**this-&gt;mLeftSideVector);</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160; </div>
 <div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="comment">// Components&#39; states will be updated by the post-step tasks</span></div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;}</div>

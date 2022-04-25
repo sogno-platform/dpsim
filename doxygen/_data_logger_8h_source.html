@@ -129,48 +129,35 @@ $(function() {
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordtype">void</span> setColumnNames(std::vector&lt;String&gt; names);</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> String &amp;name, CPS::AttributeBase::Ptr attr);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> String &amp;name, CPS::Attribute&lt;Int&gt;::Ptr attr);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> String &amp;name, CPS::Attribute&lt;Real&gt;::Ptr attr);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> String &amp;name, CPS::Attribute&lt;Complex&gt;::Ptr attr);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> String &amp;name, CPS::MatrixRealAttribute::Ptr attr);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> String &amp;name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax = 0, UInt colsMax = 0);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> String &amp;name, <span class="keyword">const</span> String &amp;attr, CPS::IdentifiedObject::Ptr obj);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> String &amp;name, <span class="keyword">const</span> String &amp;attr, CPS::IdentifiedObject::Ptr obj, UInt rowsMax, UInt colsMax);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> std::vector&lt;String&gt; &amp;name, <span class="keyword">const</span> String &amp;attr, CPS::IdentifiedObject::Ptr obj);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> std::vector&lt;String&gt; &amp;name, CPS::AttributeBase::Ptr attr);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordtype">void</span> addAttribute(<span class="keyword">const</span> std::vector&lt;String&gt; &amp;name, CPS::MatrixRealAttribute::Ptr attr);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> VarType&gt;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordtype">void</span> addNode(<span class="keyword">typename</span> CPS::SimNode&lt;VarType&gt;::Ptr node) {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            addAttribute(node-&gt;<a class="code" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>() + <span class="stringliteral">&quot;.voltage&quot;</span>, node-&gt;attributeMatrix(<span class="stringliteral">&quot;voltage&quot;</span>));</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordtype">void</span> log(Real time, Int timeStepCount);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">void</span> logAttribute(<span class="keyword">const</span> String &amp;name, <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr, UInt rowsMax = 0, UInt colsMax = 0);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordtype">void</span> logAttribute(<span class="keyword">const</span> std::vector&lt;String&gt; &amp;name, <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordtype">void</span> log(Real time, Int timeStepCount);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        CPS::Task::Ptr getTask();</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_data_logger_1_1_step.html">   70</a></span>&#160;        <span class="keyword">class </span><a class="code" href="class_d_psim_1_1_data_logger_1_1_step.html">Step</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <a class="code" href="class_d_psim_1_1_data_logger_1_1_step.html">Step</a>(<a class="code" href="class_d_psim_1_1_data_logger.html">DataLogger</a>&amp; logger) :</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                Task(logger.mName + <span class="stringliteral">&quot;.Write&quot;</span>), mLogger(logger) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">auto</span> attr : logger.mAttributes) {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                    mAttributeDependencies.push_back(attr.second);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                }</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                mModifiedAttributes.push_back(Scheduler::external);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            }</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        CPS::Task::Ptr getTask();</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_data_logger_1_1_step.html">   82</a></span>&#160;        <span class="keyword">class </span><a class="code" href="class_d_psim_1_1_data_logger_1_1_step.html">Step</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <a class="code" href="class_d_psim_1_1_data_logger_1_1_step.html">Step</a>(<a class="code" href="class_d_psim_1_1_data_logger.html">DataLogger</a>&amp; logger) :</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                Task(logger.mName + <span class="stringliteral">&quot;.Write&quot;</span>), mLogger(logger) {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">auto</span> attr : logger.mAttributes) {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                    mAttributeDependencies.push_back(attr.second);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                mModifiedAttributes.push_back(Scheduler::external);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <a class="code" href="class_d_psim_1_1_data_logger.html">DataLogger</a>&amp; mLogger;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        };</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    };</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdoc">Returns component name.</div><div class="ttdef"><b>Definition:</b> <a href="_identified_object_8h_source.html#l00044">IdentifiedObject.h:44</a></div></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <a class="code" href="class_d_psim_1_1_data_logger.html">DataLogger</a>&amp; mLogger;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        };</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    };</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_pointer_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributePointer</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00050">Attribute.h:50</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_task_html"><div class="ttname"><a href="class_c_p_s_1_1_task.html">CPS::Task</a></div><div class="ttdoc">Tasks to be defined by every component.</div><div class="ttdef"><b>Definition:</b> <a href="_task_8h_source.html#l00025">Task.h:25</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_data_logger_1_1_step_html"><div class="ttname"><a href="class_d_psim_1_1_data_logger_1_1_step.html">DPsim::DataLogger::Step</a></div><div class="ttdef"><b>Definition:</b> <a href="_data_logger_8h_source.html#l00082">DataLogger.h:82</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_data_logger_1_1_step_html"><div class="ttname"><a href="class_d_psim_1_1_data_logger_1_1_step.html">DPsim::DataLogger::Step</a></div><div class="ttdef"><b>Definition:</b> <a href="_data_logger_8h_source.html#l00070">DataLogger.h:70</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_data_logger_html"><div class="ttname"><a href="class_d_psim_1_1_data_logger.html">DPsim::DataLogger</a></div><div class="ttdef"><b>Definition:</b> <a href="_data_logger_8h_source.html#l00027">DataLogger.h:27</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition:</b> <a href="_ptr_factory_8h_source.html#l00017">PtrFactory.h:17</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition:</b> <a href="_diakoptics_solver_8cpp_source.html#l00020">DiakopticsSolver.cpp:20</a></div></div>

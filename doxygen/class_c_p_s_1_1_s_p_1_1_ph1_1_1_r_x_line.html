@@ -68,6 +68,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -83,7 +84,7 @@ Inheritance diagram for CPS::SP::Ph1::RXLine:</div>
 <div class="dynheader">
 Collaboration diagram for CPS::SP::Ph1::RXLine:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line__coll__graph.svg" width="100%" height="504"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -100,9 +101,8 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#acbef7bb2d6e70ec541b15cc0e530b013">RXLine</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, Real baseVoltage, Real resistance, Real inductance, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:acbef7bb2d6e70ec541b15cc0e530b013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines UID, name, base voltage, component parameters and logging level. <br /></td></tr>
 <tr class="separator:acbef7bb2d6e70ec541b15cc0e530b013"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a133ba606a01594aa4976663b78c17ffd"><td class="memItemLeft" align="right" valign="top"><a id="a133ba606a01594aa4976663b78c17ffd"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a133ba606a01594aa4976663b78c17ffd">RXLine</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, Logger::Level logLevel=Logger::Level::off)</td></tr>
-<tr class="memdesc:a133ba606a01594aa4976663b78c17ffd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines UID, name, logging level. <br /></td></tr>
+<tr class="memitem:a133ba606a01594aa4976663b78c17ffd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a133ba606a01594aa4976663b78c17ffd">RXLine</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, Logger::Level logLevel=Logger::Level::off)</td></tr>
+<tr class="memdesc:a133ba606a01594aa4976663b78c17ffd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines UID, name, logging level.  <a href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a133ba606a01594aa4976663b78c17ffd">More...</a><br /></td></tr>
 <tr class="separator:a133ba606a01594aa4976663b78c17ffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d1aa397e9deb43bbca913b5fdc0aabc"><td class="memItemLeft" align="right" valign="top"><a id="a2d1aa397e9deb43bbca913b5fdc0aabc"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a2d1aa397e9deb43bbca913b5fdc0aabc">RXLine</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, Logger::Level logLevel=Logger::Level::off)</td></tr>
@@ -131,7 +131,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 MatrixComp&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#afae1d4d78b54ad7df6b68f372e0ba537">Y_element</a> ()</td></tr>
 <tr class="memdesc:afae1d4d78b54ad7df6b68f372e0ba537"><td class="mdescLeft">&#160;</td><td class="mdescRight">get admittance matrix <br /></td></tr>
 <tr class="separator:afae1d4d78b54ad7df6b68f372e0ba537"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48a7a8b904cecaa5cbd2fe10f3e17515"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a48a7a8b904cecaa5cbd2fe10f3e17515">clone</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>) override</td></tr>
+<tr class="memitem:a48a7a8b904cecaa5cbd2fe10f3e17515"><td class="memItemLeft" align="right" valign="top"><a id="a48a7a8b904cecaa5cbd2fe10f3e17515"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a48a7a8b904cecaa5cbd2fe10f3e17515">clone</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>) override</td></tr>
+<tr class="memdesc:a48a7a8b904cecaa5cbd2fe10f3e17515"><td class="mdescLeft">&#160;</td><td class="mdescRight">DEPRECATED: Delete method. <br /></td></tr>
 <tr class="separator:a48a7a8b904cecaa5cbd2fe10f3e17515"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1589d92a6c7abe287c33e32c9af83916"><td class="memItemLeft" align="right" valign="top"><a id="a1589d92a6c7abe287c33e32c9af83916"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a1589d92a6c7abe287c33e32c9af83916">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
@@ -322,6 +324,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a626ff0890ec1af27f9f006e0bc211f04 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memItemLeft" align="right" valign="top"><a id="a626ff0890ec1af27f9f006e0bc211f04"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>IdentifiedObject</b> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>)</td></tr>
 <tr class="separator:a626ff0890ec1af27f9f006e0bc211f04 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c0d148b163d77f6510ea84cd214836b inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memItemLeft" align="right" valign="top"><a id="a1c0d148b163d77f6510ea84cd214836b"></a>
+<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a1c0d148b163d77f6510ea84cd214836b">attributeBase</a> (const String &amp;<a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>)</td></tr>
+<tr class="memdesc:a1c0d148b163d77f6510ea84cd214836b inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">FIXME: Workaround for pybind. The methods that return attributes with and without the full (template) type should not have the same name! <br /></td></tr>
+<tr class="separator:a1c0d148b163d77f6510ea84cd214836b inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38b8318459b1651160029263eff6ca47 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memItemLeft" align="right" valign="top"><a id="a38b8318459b1651160029263eff6ca47"></a>
 String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a> ()</td></tr>
 <tr class="memdesc:a38b8318459b1651160029263eff6ca47 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns component name. <br /></td></tr>
@@ -339,7 +345,7 @@ String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 const AttributeBase::Map &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>attributes</b> ()</td></tr>
 <tr class="separator:a8e90452d76ea22aaf68db3e42feb8f19 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfc14de7627d787641b9528573d74be6 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memItemLeft" align="right" valign="top"><a id="adfc14de7627d787641b9528573d74be6"></a>
-AttributeBase::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_list.html#adfc14de7627d787641b9528573d74be6">attribute</a> (const String &amp;name)</td></tr>
+<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_list.html#adfc14de7627d787641b9528573d74be6">attribute</a> (const String &amp;name)</td></tr>
 <tr class="memdesc:adfc14de7627d787641b9528573d74be6 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return pointer to an attribute. <br /></td></tr>
 <tr class="separator:adfc14de7627d787641b9528573d74be6 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae3ccb94373a63ed9534420070aaab3c inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memTemplParams" colspan="2"><a id="aae3ccb94373a63ed9534420070aaab3c"></a>
@@ -347,29 +353,6 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aae3ccb94373a63ed9534420070aaab3c inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; T &gt;::Ptr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_list.html#aae3ccb94373a63ed9534420070aaab3c">attribute</a> (const String &amp;name)</td></tr>
 <tr class="memdesc:aae3ccb94373a63ed9534420070aaab3c inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return pointer to an attribute. <br /></td></tr>
 <tr class="separator:aae3ccb94373a63ed9534420070aaab3c inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a326f66483194c12958b302d6442e55da inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memTemplParams" colspan="2"><a id="a326f66483194c12958b302d6442e55da"></a>
-template&lt;typename T , typename... Args&gt; </td></tr>
-<tr class="memitem:a326f66483194c12958b302d6442e55da inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>addAttributeRef</b> (const String &amp;name, const std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt; &amp;ref, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a326f66483194c12958b302d6442e55da inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec89aca670ee3d856a0bb36002ce603a inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memItemLeft" align="right" valign="top"><a id="aec89aca670ee3d856a0bb36002ce603a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setAttributeRef</b> (const String &amp;name, const std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt; &amp;ref)</td></tr>
-<tr class="separator:aec89aca670ee3d856a0bb36002ce603a inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa229ee303563754eb2d75ccd81ea7dc1 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memItemLeft" align="right" valign="top"><a id="aa229ee303563754eb2d75ccd81ea7dc1"></a>
-ComplexAttribute::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>attributeComplex</b> (const String &amp;name)</td></tr>
-<tr class="separator:aa229ee303563754eb2d75ccd81ea7dc1 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d9645da4a46a689b2b0d836887999d2 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memTemplParams" colspan="2"><a id="a5d9645da4a46a689b2b0d836887999d2"></a>
-template&lt;typename VarType &gt; </td></tr>
-<tr class="memitem:a5d9645da4a46a689b2b0d836887999d2 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_matrix_attribute.html">MatrixAttribute</a>&lt; VarType &gt;::Ptr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>attributeMatrix</b> (const String &amp;name)</td></tr>
-<tr class="separator:a5d9645da4a46a689b2b0d836887999d2 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65cebc1bc9a8f9c72428d2909a035e0d inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memItemLeft" align="right" valign="top"><a id="a65cebc1bc9a8f9c72428d2909a035e0d"></a>
-MatrixRealAttribute::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>attributeMatrixReal</b> (const String &amp;name)</td></tr>
-<tr class="separator:a65cebc1bc9a8f9c72428d2909a035e0d inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeac611b83c41bfa5303eaf0483e5c692 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memItemLeft" align="right" valign="top"><a id="aeac611b83c41bfa5303eaf0483e5c692"></a>
-MatrixCompAttribute::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>attributeMatrixComp</b> (const String &amp;name)</td></tr>
-<tr class="separator:aeac611b83c41bfa5303eaf0483e5c692 inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69af09f470834b2f153b9742f1b999eb inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memItemLeft" align="right" valign="top"><a id="a69af09f470834b2f153b9742f1b999eb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
-<tr class="separator:a69af09f470834b2f153b9742f1b999eb inherit pub_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html">CPS::Base::Ph1::PiLine</a></td></tr>
 <tr class="memitem:a3a29dd54adc79ad641ee5dc88f32f488 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="a3a29dd54adc79ad641ee5dc88f32f488"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters</b> (Real seriesResistance, Real seriesInductance, Real parallelCapacitance=0, Real parallelConductance=0)</td></tr>
@@ -379,6 +362,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters</b> (Re
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a0b282e18a0e1ef7c833b23a7372a9fa7">mnaInitialize</a> (Real omega, Real timeStep)</td></tr>
 <tr class="memdesc:a0b282e18a0e1ef7c833b23a7372a9fa7 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of components. <br /></td></tr>
 <tr class="separator:a0b282e18a0e1ef7c833b23a7372a9fa7 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56fef695e738311bc5ccd4e5b9292c6b inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memItemLeft" align="right" valign="top"><a id="a56fef695e738311bc5ccd4e5b9292c6b"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaInitialize</b> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector)</td></tr>
+<tr class="separator:a56fef695e738311bc5ccd4e5b9292c6b inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9da6a575cf0a0dc83e50b22ac917b11d inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memItemLeft" align="right" valign="top"><a id="a9da6a575cf0a0dc83e50b22ac917b11d"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a9da6a575cf0a0dc83e50b22ac917b11d">mnaApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)</td></tr>
 <tr class="memdesc:a9da6a575cf0a0dc83e50b22ac917b11d inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps (sparse) system matrix. <br /></td></tr>
@@ -423,20 +409,91 @@ const Task::List &amp;&#160;</td><td class="memItemRight" valign="bottom"><a cla
 <tr class="memdesc:a14852d81a7cc80b7b2a00b6c0bb5ce0c inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return list of MNA tasks. <br /></td></tr>
 <tr class="separator:a14852d81a7cc80b7b2a00b6c0bb5ce0c inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ad59884436b14543698a89cc1ceba22a9"><td class="memItemLeft" align="right" valign="top"><a id="ad59884436b14543698a89cc1ceba22a9"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#ad59884436b14543698a89cc1ceba22a9">mBaseVoltage</a></td></tr>
+<tr class="memdesc:ad59884436b14543698a89cc1ceba22a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">base voltage [V] <br /></td></tr>
+<tr class="separator:ad59884436b14543698a89cc1ceba22a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a243710fca665a22f2ee8332230106ee2"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a243710fca665a22f2ee8332230106ee2">mInductance</a></td></tr>
+<tr class="separator:a243710fca665a22f2ee8332230106ee2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46b748563f36f22565d01ddecdd60a9f"><td class="memItemLeft" align="right" valign="top"><a id="a46b748563f36f22565d01ddecdd60a9f"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a46b748563f36f22565d01ddecdd60a9f">mActivePowerInjection</a></td></tr>
+<tr class="memdesc:a46b748563f36f22565d01ddecdd60a9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">nodal active power injection <br /></td></tr>
+<tr class="separator:a46b748563f36f22565d01ddecdd60a9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad313c3d78d5b7a5e0a1491fd2ae9963e"><td class="memItemLeft" align="right" valign="top"><a id="ad313c3d78d5b7a5e0a1491fd2ae9963e"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#ad313c3d78d5b7a5e0a1491fd2ae9963e">mReactivePowerInjection</a></td></tr>
+<tr class="memdesc:ad313c3d78d5b7a5e0a1491fd2ae9963e"><td class="mdescLeft">&#160;</td><td class="mdescRight">nodal reactive power injection <br /></td></tr>
+<tr class="separator:ad313c3d78d5b7a5e0a1491fd2ae9963e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfe41ab30fbd39293b79aeabf66e4ed7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Bool &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#acfe41ab30fbd39293b79aeabf66e4ed7">mStoreNodalPowerInjection</a></td></tr>
+<tr class="separator:acfe41ab30fbd39293b79aeabf66e4ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab19e31d756c11d6084988c96b9176398"><td class="memItemLeft" align="right" valign="top"><a id="ab19e31d756c11d6084988c96b9176398"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixComp &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#ab19e31d756c11d6084988c96b9176398">mCurrent</a></td></tr>
+<tr class="memdesc:ab19e31d756c11d6084988c96b9176398"><td class="mdescLeft">&#160;</td><td class="mdescRight">branch Current flow [A] <br /></td></tr>
+<tr class="separator:ab19e31d756c11d6084988c96b9176398"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a706b96de3a4f0feb0600dc48451b1d94"><td class="memItemLeft" align="right" valign="top"><a id="a706b96de3a4f0feb0600dc48451b1d94"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; CPS::Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a706b96de3a4f0feb0600dc48451b1d94">mCurrent_0</a></td></tr>
+<tr class="memdesc:a706b96de3a4f0feb0600dc48451b1d94"><td class="mdescLeft">&#160;</td><td class="mdescRight">CHECK: Are these derived attributes necessary? <br /></td></tr>
+<tr class="separator:a706b96de3a4f0feb0600dc48451b1d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3cc5647974d9750b273ec4ac21ed5fb"><td class="memItemLeft" align="right" valign="top"><a id="ae3cc5647974d9750b273ec4ac21ed5fb"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; CPS::Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrent_1</b></td></tr>
+<tr class="separator:ae3cc5647974d9750b273ec4ac21ed5fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a1a1672f7b2f029247a8bbbc080d070"><td class="memItemLeft" align="right" valign="top"><a id="a9a1a1672f7b2f029247a8bbbc080d070"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a9a1a1672f7b2f029247a8bbbc080d070">mActivePowerBranch</a></td></tr>
+<tr class="memdesc:a9a1a1672f7b2f029247a8bbbc080d070"><td class="mdescLeft">&#160;</td><td class="mdescRight">branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1. <br /></td></tr>
+<tr class="separator:a9a1a1672f7b2f029247a8bbbc080d070"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58c43e9b3e5f712e4d1a2b99fa6457e1"><td class="memItemLeft" align="right" valign="top"><a id="a58c43e9b3e5f712e4d1a2b99fa6457e1"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; CPS::Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a58c43e9b3e5f712e4d1a2b99fa6457e1">mActivePowerBranch_0</a></td></tr>
+<tr class="memdesc:a58c43e9b3e5f712e4d1a2b99fa6457e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">CHECK: Are these derived attributes necessary? <br /></td></tr>
+<tr class="separator:a58c43e9b3e5f712e4d1a2b99fa6457e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a438c798c2a362c3029692d393bfa4b6a"><td class="memItemLeft" align="right" valign="top"><a id="a438c798c2a362c3029692d393bfa4b6a"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; CPS::Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>mActivePowerBranch_1</b></td></tr>
+<tr class="separator:a438c798c2a362c3029692d393bfa4b6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1d3e4d3606f1d2a0e4b11aad1a5886d"><td class="memItemLeft" align="right" valign="top"><a id="ac1d3e4d3606f1d2a0e4b11aad1a5886d"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#ac1d3e4d3606f1d2a0e4b11aad1a5886d">mReactivePowerBranch</a></td></tr>
+<tr class="memdesc:ac1d3e4d3606f1d2a0e4b11aad1a5886d"><td class="mdescLeft">&#160;</td><td class="mdescRight">branch reactive powerflow [Var] <br /></td></tr>
+<tr class="separator:ac1d3e4d3606f1d2a0e4b11aad1a5886d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a674a63e09171c13c7af6a1f94282eb01"><td class="memItemLeft" align="right" valign="top"><a id="a674a63e09171c13c7af6a1f94282eb01"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; CPS::Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a674a63e09171c13c7af6a1f94282eb01">mReactivePowerBranch_0</a></td></tr>
+<tr class="memdesc:a674a63e09171c13c7af6a1f94282eb01"><td class="mdescLeft">&#160;</td><td class="mdescRight">CHECK: Are these derived attributes necessary? <br /></td></tr>
+<tr class="separator:a674a63e09171c13c7af6a1f94282eb01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7834ec301850fd35be63290ef5903582"><td class="memItemLeft" align="right" valign="top"><a id="a7834ec301850fd35be63290ef5903582"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; CPS::Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>mReactivePowerBranch_1</b></td></tr>
+<tr class="separator:a7834ec301850fd35be63290ef5903582"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Complex &gt;</a></td></tr>
+<tr class="memitem:af5092d5b0b94b99ff6ff405ab0294c52 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="af5092d5b0b94b99ff6ff405ab0294c52"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixVar&lt; Complex &gt; &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#af5092d5b0b94b99ff6ff405ab0294c52">mIntfVoltage</a></td></tr>
+<tr class="memdesc:af5092d5b0b94b99ff6ff405ab0294c52 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage between terminals. <br /></td></tr>
+<tr class="separator:af5092d5b0b94b99ff6ff405ab0294c52 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac080c0dad3920e5415dbc80374f4ea34 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="ac080c0dad3920e5415dbc80374f4ea34"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixVar&lt; Complex &gt; &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#ac080c0dad3920e5415dbc80374f4ea34">mIntfCurrent</a></td></tr>
+<tr class="memdesc:ac080c0dad3920e5415dbc80374f4ea34 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current through component. <br /></td></tr>
+<tr class="separator:ac080c0dad3920e5415dbc80374f4ea34 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html">CPS::Base::Ph1::PiLine</a></td></tr>
+<tr class="memitem:a7f2f5be8d88c26138dcdd77e8d513cf8 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="a7f2f5be8d88c26138dcdd77e8d513cf8"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#a7f2f5be8d88c26138dcdd77e8d513cf8">mSeriesRes</a></td></tr>
+<tr class="memdesc:a7f2f5be8d88c26138dcdd77e8d513cf8 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistance along the line [ohms]. <br /></td></tr>
+<tr class="separator:a7f2f5be8d88c26138dcdd77e8d513cf8 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a171a38daa8672e38549147fb6531e72a inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="a171a38daa8672e38549147fb6531e72a"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#a171a38daa8672e38549147fb6531e72a">mSeriesInd</a></td></tr>
+<tr class="memdesc:a171a38daa8672e38549147fb6531e72a inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inductance along the line [H]. <br /></td></tr>
+<tr class="separator:a171a38daa8672e38549147fb6531e72a inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2166e515a2a28c43373f3611dbee2cb inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="ac2166e515a2a28c43373f3611dbee2cb"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#ac2166e515a2a28c43373f3611dbee2cb">mParallelCond</a></td></tr>
+<tr class="memdesc:ac2166e515a2a28c43373f3611dbee2cb inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conductance in parallel to the line [S]. <br /></td></tr>
+<tr class="separator:ac2166e515a2a28c43373f3611dbee2cb inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dcda6f897d255a3542903f5bc9c7d2d inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="a9dcda6f897d255a3542903f5bc9c7d2d"></a>
+<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#a9dcda6f897d255a3542903f5bc9c7d2d">mParallelCap</a></td></tr>
+<tr class="memdesc:a9dcda6f897d255a3542903f5bc9c7d2d inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="mdescLeft">&#160;</td><td class="mdescRight">Capacitance in parallel to the line [F]. <br /></td></tr>
+<tr class="separator:a9dcda6f897d255a3542903f5bc9c7d2d inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_class_c_p_s_1_1_m_n_a_interface"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_class_c_p_s_1_1_m_n_a_interface')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">CPS::MNAInterface</a></td></tr>
+<tr class="memitem:afc2d990a40e431a34c4be13aa48e8095 inherit pub_attribs_class_c_p_s_1_1_m_n_a_interface"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#afc2d990a40e431a34c4be13aa48e8095">mRightVector</a></td></tr>
+<tr class="separator:afc2d990a40e431a34c4be13aa48e8095 inherit pub_attribs_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:af50057e0c7b3cfdd93f3432b3b987d72"><td class="memItemLeft" align="right" valign="top"><a id="af50057e0c7b3cfdd93f3432b3b987d72"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#af50057e0c7b3cfdd93f3432b3b987d72">mCapacitance</a></td></tr>
-<tr class="memdesc:af50057e0c7b3cfdd93f3432b3b987d72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Capacitance of the line in [F]. <br /></td></tr>
+<tr class="memitem:af50057e0c7b3cfdd93f3432b3b987d72"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#af50057e0c7b3cfdd93f3432b3b987d72">mCapacitance</a></td></tr>
 <tr class="separator:af50057e0c7b3cfdd93f3432b3b987d72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22b613191f70b14340f351ecb19dbeac"><td class="memItemLeft" align="right" valign="top"><a id="a22b613191f70b14340f351ecb19dbeac"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a22b613191f70b14340f351ecb19dbeac">mInductance</a></td></tr>
-<tr class="memdesc:a22b613191f70b14340f351ecb19dbeac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inductance of the line in [H]. <br /></td></tr>
-<tr class="separator:a22b613191f70b14340f351ecb19dbeac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:addd55f0503f57ea5f7aaf35bcfbda258"><td class="memItemLeft" align="right" valign="top"><a id="addd55f0503f57ea5f7aaf35bcfbda258"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#addd55f0503f57ea5f7aaf35bcfbda258">mBaseVoltage</a></td></tr>
-<tr class="memdesc:addd55f0503f57ea5f7aaf35bcfbda258"><td class="mdescLeft">&#160;</td><td class="mdescRight">base voltage [V] <br /></td></tr>
-<tr class="separator:addd55f0503f57ea5f7aaf35bcfbda258"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8269026e18cccb302f4749c9cfdf0da"><td class="memItemLeft" align="right" valign="top"><a id="ae8269026e18cccb302f4749c9cfdf0da"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#ae8269026e18cccb302f4749c9cfdf0da">mBaseCurrent</a></td></tr>
 <tr class="memdesc:ae8269026e18cccb302f4749c9cfdf0da"><td class="mdescLeft">&#160;</td><td class="mdescRight">base current [V] <br /></td></tr>
@@ -480,30 +537,6 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:ad989e256c402e17c0fc715c35431de81"><td class="memItemLeft" align="right" valign="top"><a id="ad989e256c402e17c0fc715c35431de81"></a>
 MatrixComp&#160;</td><td class="memItemRight" valign="bottom"><b>mY_element</b></td></tr>
 <tr class="separator:ad989e256c402e17c0fc715c35431de81"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a247a3f14ef0850d17e107e8ca4c9fdaf"><td class="memItemLeft" align="right" valign="top"><a id="a247a3f14ef0850d17e107e8ca4c9fdaf"></a>
-Eigen::Matrix&lt; CPS::Complex, 2, 1, Eigen::DontAlign &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a247a3f14ef0850d17e107e8ca4c9fdaf">mCurrent</a></td></tr>
-<tr class="memdesc:a247a3f14ef0850d17e107e8ca4c9fdaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">branch Current flow [A] <br /></td></tr>
-<tr class="separator:a247a3f14ef0850d17e107e8ca4c9fdaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34e256e51a76fea154ea94bf79d52bf3"><td class="memItemLeft" align="right" valign="top"><a id="a34e256e51a76fea154ea94bf79d52bf3"></a>
-Eigen::Matrix&lt; CPS::Real, 2, 1, Eigen::DontAlign &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a34e256e51a76fea154ea94bf79d52bf3">mActivePowerBranch</a></td></tr>
-<tr class="memdesc:a34e256e51a76fea154ea94bf79d52bf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1. <br /></td></tr>
-<tr class="separator:a34e256e51a76fea154ea94bf79d52bf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2704e68c4e41d2efa9db60ca5d17e628"><td class="memItemLeft" align="right" valign="top"><a id="a2704e68c4e41d2efa9db60ca5d17e628"></a>
-Eigen::Matrix&lt; CPS::Real, 2, 1, Eigen::DontAlign &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a2704e68c4e41d2efa9db60ca5d17e628">mReactivePowerBranch</a></td></tr>
-<tr class="memdesc:a2704e68c4e41d2efa9db60ca5d17e628"><td class="mdescLeft">&#160;</td><td class="mdescRight">branch reactive powerflow [Var] <br /></td></tr>
-<tr class="separator:a2704e68c4e41d2efa9db60ca5d17e628"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4a032f8ec725f5c0ce422d20d1f2005"><td class="memItemLeft" align="right" valign="top"><a id="af4a032f8ec725f5c0ce422d20d1f2005"></a>
-Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#af4a032f8ec725f5c0ce422d20d1f2005">mStoreNodalPowerInjection</a> = false</td></tr>
-<tr class="memdesc:af4a032f8ec725f5c0ce422d20d1f2005"><td class="mdescLeft">&#160;</td><td class="mdescRight">whether the total power injection of its from node is stored in this line <br /></td></tr>
-<tr class="separator:af4a032f8ec725f5c0ce422d20d1f2005"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53b93d1863999df200b2913eb6ec5504"><td class="memItemLeft" align="right" valign="top"><a id="a53b93d1863999df200b2913eb6ec5504"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a53b93d1863999df200b2913eb6ec5504">mActivePowerInjection</a></td></tr>
-<tr class="memdesc:a53b93d1863999df200b2913eb6ec5504"><td class="mdescLeft">&#160;</td><td class="mdescRight">nodal active power injection <br /></td></tr>
-<tr class="separator:a53b93d1863999df200b2913eb6ec5504"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc0966b4311f20f2b67b02e6e2ca8ad6"><td class="memItemLeft" align="right" valign="top"><a id="adc0966b4311f20f2b67b02e6e2ca8ad6"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#adc0966b4311f20f2b67b02e6e2ca8ad6">mReactivePowerInjection</a></td></tr>
-<tr class="memdesc:adc0966b4311f20f2b67b02e6e2ca8ad6"><td class="mdescLeft">&#160;</td><td class="mdescRight">nodal reactive power injection <br /></td></tr>
-<tr class="separator:adc0966b4311f20f2b67b02e6e2ca8ad6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae40d87e3eaa8bbcfa3ffd781bd1f9c28"><td class="memItemLeft" align="right" valign="top"><a id="ae40d87e3eaa8bbcfa3ffd781bd1f9c28"></a>
 std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_inductor.html">Inductor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#ae40d87e3eaa8bbcfa3ffd781bd1f9c28">mSubInductor</a></td></tr>
 <tr class="memdesc:ae40d87e3eaa8bbcfa3ffd781bd1f9c28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inductance submodel. <br /></td></tr>
@@ -525,14 +558,6 @@ std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor
 <a class="el" href="class_c_p_s_1_1_sim_node.html">SimNode</a>&lt; Complex &gt;::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aab2cd19c3c3b3c26eb74cbd6a959d927">mVirtualNodes</a></td></tr>
 <tr class="memdesc:aab2cd19c3c3b3c26eb74cbd6a959d927 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of virtual nodes. <br /></td></tr>
 <tr class="separator:aab2cd19c3c3b3c26eb74cbd6a959d927 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a894f2d211d03df0cffdc797e8a07342d inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="a894f2d211d03df0cffdc797e8a07342d"></a>
-MatrixVar&lt; Complex &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a894f2d211d03df0cffdc797e8a07342d">mIntfVoltage</a></td></tr>
-<tr class="memdesc:a894f2d211d03df0cffdc797e8a07342d inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage between terminals. <br /></td></tr>
-<tr class="separator:a894f2d211d03df0cffdc797e8a07342d inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8a46a0ec79c84c3b2bf0617f14f60ee inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="ac8a46a0ec79c84c3b2bf0617f14f60ee"></a>
-MatrixVar&lt; Complex &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#ac8a46a0ec79c84c3b2bf0617f14f60ee">mIntfCurrent</a></td></tr>
-<tr class="memdesc:ac8a46a0ec79c84c3b2bf0617f14f60ee inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current through component. <br /></td></tr>
-<tr class="separator:ac8a46a0ec79c84c3b2bf0617f14f60ee inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6933742098fdd8bde1b8ea909808e5f9 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="a6933742098fdd8bde1b8ea909808e5f9"></a>
 Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a6933742098fdd8bde1b8ea909808e5f9">mFrequencies</a></td></tr>
 <tr class="memdesc:a6933742098fdd8bde1b8ea909808e5f9 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of considered network frequencies. <br /></td></tr>
@@ -580,46 +605,29 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a7be81a0a95fe67af7776aad6e22b9665 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating that parameters are set via setParameters() function. <br /></td></tr>
 <tr class="separator:a7be81a0a95fe67af7776aad6e22b9665 inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_identified_object"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_c_p_s_1_1_identified_object')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a></td></tr>
-<tr class="memitem:ae227717144399dcbf768b1dac14698da inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memItemLeft" align="right" valign="top"><a id="ae227717144399dcbf768b1dac14698da"></a>
-String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ae227717144399dcbf768b1dac14698da">mName</a></td></tr>
-<tr class="memdesc:ae227717144399dcbf768b1dac14698da inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Human readable name. <br /></td></tr>
-<tr class="separator:ae227717144399dcbf768b1dac14698da inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fa210b01d2152d7cfd0cf0ec63d3cf5 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memItemLeft" align="right" valign="top"><a id="a6fa210b01d2152d7cfd0cf0ec63d3cf5"></a>
-String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a6fa210b01d2152d7cfd0cf0ec63d3cf5">mUID</a></td></tr>
-<tr class="memdesc:a6fa210b01d2152d7cfd0cf0ec63d3cf5 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique identifier. <br /></td></tr>
-<tr class="separator:a6fa210b01d2152d7cfd0cf0ec63d3cf5 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memItemLeft" align="right" valign="top"><a id="a13661eab6b670e4a5a3aa5777f8fd5d0"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; String &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a></td></tr>
+<tr class="memdesc:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Human readable name. <br /></td></tr>
+<tr class="separator:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad143c517fdb9d0deca573f15169e97e8 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memItemLeft" align="right" valign="top"><a id="ad143c517fdb9d0deca573f15169e97e8"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; String &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a></td></tr>
+<tr class="memdesc:ad143c517fdb9d0deca573f15169e97e8 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique identifier. <br /></td></tr>
+<tr class="separator:ad143c517fdb9d0deca573f15169e97e8 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_p_s_1_1_attribute_list"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_c_p_s_1_1_attribute_list')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_attribute_list.html">CPS::AttributeList</a></td></tr>
+<tr class="memitem:a5fdfb06b01b2a7e694a0603caa977b13 inherit pro_attribs_class_c_p_s_1_1_attribute_list"><td class="memItemLeft" align="right" valign="top"><a id="a5fdfb06b01b2a7e694a0603caa977b13"></a>
+AttributeBase::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_list.html#a5fdfb06b01b2a7e694a0603caa977b13">mAttributes</a></td></tr>
+<tr class="memdesc:a5fdfb06b01b2a7e694a0603caa977b13 inherit pro_attribs_class_c_p_s_1_1_attribute_list"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of all attributes. <br /></td></tr>
+<tr class="separator:a5fdfb06b01b2a7e694a0603caa977b13 inherit pro_attribs_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html">CPS::Base::Ph1::PiLine</a></td></tr>
-<tr class="memitem:a9a82151e59b77934edb5f2c3fffdbfd6 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="a9a82151e59b77934edb5f2c3fffdbfd6"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#a9a82151e59b77934edb5f2c3fffdbfd6">mSeriesRes</a></td></tr>
-<tr class="memdesc:a9a82151e59b77934edb5f2c3fffdbfd6 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistance along the line [ohms]. <br /></td></tr>
-<tr class="separator:a9a82151e59b77934edb5f2c3fffdbfd6 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b74f6fcf5c15cd8f4b78e5b979fa852 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="a1b74f6fcf5c15cd8f4b78e5b979fa852"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#a1b74f6fcf5c15cd8f4b78e5b979fa852">mSeriesCond</a></td></tr>
-<tr class="memdesc:a1b74f6fcf5c15cd8f4b78e5b979fa852 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conductance along the line [S]. <br /></td></tr>
+<tr class="memitem:a1b74f6fcf5c15cd8f4b78e5b979fa852 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#a1b74f6fcf5c15cd8f4b78e5b979fa852">mSeriesCond</a></td></tr>
 <tr class="separator:a1b74f6fcf5c15cd8f4b78e5b979fa852 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa01ab687c2414def0a5dc3678fe9dba inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="aaa01ab687c2414def0a5dc3678fe9dba"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#aaa01ab687c2414def0a5dc3678fe9dba">mSeriesInd</a></td></tr>
-<tr class="memdesc:aaa01ab687c2414def0a5dc3678fe9dba inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inductance along the line [H]. <br /></td></tr>
-<tr class="separator:aaa01ab687c2414def0a5dc3678fe9dba inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a425604c6632b298b7f4add73ae8492e1 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="a425604c6632b298b7f4add73ae8492e1"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#a425604c6632b298b7f4add73ae8492e1">mParallelRes</a></td></tr>
-<tr class="memdesc:a425604c6632b298b7f4add73ae8492e1 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistance in parallel to the line [ohms]. <br /></td></tr>
+<tr class="memitem:a425604c6632b298b7f4add73ae8492e1 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#a425604c6632b298b7f4add73ae8492e1">mParallelRes</a></td></tr>
 <tr class="separator:a425604c6632b298b7f4add73ae8492e1 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60d1652f7b1d8848b74bfcb606a83ac9 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="a60d1652f7b1d8848b74bfcb606a83ac9"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#a60d1652f7b1d8848b74bfcb606a83ac9">mParallelCond</a></td></tr>
-<tr class="memdesc:a60d1652f7b1d8848b74bfcb606a83ac9 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conductance in parallel to the line [S]. <br /></td></tr>
-<tr class="separator:a60d1652f7b1d8848b74bfcb606a83ac9 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a998627d217b1f13914a461e59fa8f4b3 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memItemLeft" align="right" valign="top"><a id="a998627d217b1f13914a461e59fa8f4b3"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html#a998627d217b1f13914a461e59fa8f4b3">mParallelCap</a></td></tr>
-<tr class="memdesc:a998627d217b1f13914a461e59fa8f4b3 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="mdescLeft">&#160;</td><td class="mdescRight">Capacitance in parallel to the line [F]. <br /></td></tr>
-<tr class="separator:a998627d217b1f13914a461e59fa8f4b3 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_m_n_a_interface"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_c_p_s_1_1_m_n_a_interface')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">CPS::MNAInterface</a></td></tr>
 <tr class="memitem:a39277f01a5d5f1a17e7c6ed0ea6c9af3 inherit pro_attribs_class_c_p_s_1_1_m_n_a_interface"><td class="memItemLeft" align="right" valign="top"><a id="a39277f01a5d5f1a17e7c6ed0ea6c9af3"></a>
 Task::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a39277f01a5d5f1a17e7c6ed0ea6c9af3">mMnaTasks</a></td></tr>
 <tr class="memdesc:a39277f01a5d5f1a17e7c6ed0ea6c9af3 inherit pro_attribs_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of tasks that relate to using MNA for this component (usually pre-step and/or post-step) <br /></td></tr>
 <tr class="separator:a39277f01a5d5f1a17e7c6ed0ea6c9af3 inherit pro_attribs_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7475bfd011619bf6e23a3f12ad5e86ef inherit pro_attribs_class_c_p_s_1_1_m_n_a_interface"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a7475bfd011619bf6e23a3f12ad5e86ef">mRightVector</a></td></tr>
-<tr class="separator:a7475bfd011619bf6e23a3f12ad5e86ef inherit pro_attribs_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -667,11 +675,6 @@ typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bott
 <tr class="memitem:a3bf17dcbe8a312d56427036e3dc5c045 inherit pub_static_methods_class_shared_factory"><td class="memItemLeft" align="right" valign="top"><a id="a3bf17dcbe8a312d56427036e3dc5c045"></a>
 static std::shared_ptr&lt; RXLine &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>make</b> (Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a3bf17dcbe8a312d56427036e3dc5c045 inherit pub_static_methods_class_shared_factory"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_class_c_p_s_1_1_attribute_list"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_c_p_s_1_1_attribute_list')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_c_p_s_1_1_attribute_list.html">CPS::AttributeList</a></td></tr>
-<tr class="memitem:a8e31e58e710567bf4bddcbf51710fc7a inherit pro_methods_class_c_p_s_1_1_attribute_list"><td class="memTemplParams" colspan="2"><a id="a8e31e58e710567bf4bddcbf51710fc7a"></a>
-template&lt;typename T , typename... Args&gt; </td></tr>
-<tr class="memitem:a8e31e58e710567bf4bddcbf51710fc7a inherit pro_methods_class_c_p_s_1_1_attribute_list"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>addAttribute</b> (const String &amp;name, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a8e31e58e710567bf4bddcbf51710fc7a inherit pro_methods_class_c_p_s_1_1_attribute_list"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_class_c_p_s_1_1_m_n_a_interface"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_c_p_s_1_1_m_n_a_interface')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">CPS::MNAInterface</a></td></tr>
 <tr class="memitem:a461209a76975514681c0c987584afb41 inherit pro_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memItemLeft" align="right" valign="top"><a id="a461209a76975514681c0c987584afb41"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a461209a76975514681c0c987584afb41">MNAInterface</a> ()</td></tr>
@@ -681,38 +684,47 @@ template&lt;typename T , typename... Args&gt; </td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="_s_p___ph1___r_x_line_8h_source.html#l00021">21</a> of file <a class="el" href="_s_p___ph1___r_x_line_8h_source.html">SP_Ph1_RXLine.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a48a7a8b904cecaa5cbd2fe10f3e17515"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a48a7a8b904cecaa5cbd2fe10f3e17515">&#9670;&nbsp;</a></span>clone()</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a133ba606a01594aa4976663b78c17ffd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a133ba606a01594aa4976663b78c17ffd">&#9670;&nbsp;</a></span>RXLine()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr SP::Ph1::RXLine::clone </td>
+          <td class="memname">SP::Ph1::RXLine::RXLine </td>
           <td>(</td>
           <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
+          <td class="paramname"><em>uid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">String&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Logger::Level&#160;</td>
+          <td class="paramname"><em>logLevel</em> = <code>Logger::Level::off</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals TODO should be abstract and implemented everywhere </p>
 
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#ae30ce3121733956d353e627aa6f115a7">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
+<p>Defines UID, name, logging level. </p>
+<p>FIXME: Why are these attributes defined differently than in the first constructor?</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___r_x_line_8cpp_source.html#l00143">143</a> of file <a class="el" href="_s_p___ph1___r_x_line_8cpp_source.html">SP_Ph1_RXLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___r_x_line_8cpp_source.html#l00059">59</a> of file <a class="el" href="_s_p___ph1___r_x_line_8cpp_source.html">SP_Ph1_RXLine.cpp</a>.</p>
 
 </div>
 </div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a8bb2ee622f819e8b84772d153f230790"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8bb2ee622f819e8b84772d153f230790">&#9670;&nbsp;</a></span>setPerUnitSystem()</h2>
 
@@ -742,7 +754,67 @@ template&lt;typename T , typename... Args&gt; </td></tr>
 <p>Specify per-unit system by base voltage, base apparent power and omega (rms value for voltage expected) </p>
 <p>I_base = S_base / V_line</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___r_x_line_8cpp_source.html#l00055">55</a> of file <a class="el" href="_s_p___ph1___r_x_line_8cpp_source.html">SP_Ph1_RXLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___r_x_line_8cpp_source.html#l00081">81</a> of file <a class="el" href="_s_p___ph1___r_x_line_8cpp_source.html">SP_Ph1_RXLine.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="af50057e0c7b3cfdd93f3432b3b987d72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af50057e0c7b3cfdd93f3432b3b987d72">&#9670;&nbsp;</a></span>mCapacitance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real CPS::SP::Ph1::RXLine::mCapacitance</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>CHECK: Which of these really need to be member variables? Capacitance of the line in [F] </p>
+
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___r_x_line_8h_source.html#l00030">30</a> of file <a class="el" href="_s_p___ph1___r_x_line_8h_source.html">SP_Ph1_RXLine.h</a>.</p>
+
+</div>
+</div>
+<a id="a243710fca665a22f2ee8332230106ee2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a243710fca665a22f2ee8332230106ee2">&#9670;&nbsp;</a></span>mInductance</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Real&gt;::Ptr CPS::SP::Ph1::RXLine::mInductance</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Inductance of the line in [H] CHECK: Why does this not use the base class' attribute mSeriesInd? </p>
+
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___r_x_line_8h_source.html#l00068">68</a> of file <a class="el" href="_s_p___ph1___r_x_line_8h_source.html">SP_Ph1_RXLine.h</a>.</p>
+
+</div>
+</div>
+<a id="acfe41ab30fbd39293b79aeabf66e4ed7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfe41ab30fbd39293b79aeabf66e4ed7">&#9670;&nbsp;</a></span>mStoreNodalPowerInjection</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Bool&gt;::Ptr CPS::SP::Ph1::RXLine::mStoreNodalPowerInjection</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>whether the total power injection of its from node is stored in this line FIXME: This is only written to, but never read </p>
+
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___r_x_line_8h_source.html#l00076">76</a> of file <a class="el" href="_s_p___ph1___r_x_line_8h_source.html">SP_Ph1_RXLine.h</a>.</p>
 
 </div>
 </div>

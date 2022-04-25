@@ -401,7 +401,7 @@ $(function() {
 <div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        }</div>
 <div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        <span class="keywordflow">for</span>(<span class="keyword">auto</span> trans : <a class="code" href="class_d_psim_1_1_p_f_solver.html#a76fe652ca72f09092139d69976d2908f">mTransformers</a>) {</div>
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;            <span class="comment">//to check if this transformer could be ignored</span></div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;            <span class="keywordflow">if</span> (trans-&gt;attribute(<span class="stringliteral">&quot;R&quot;</span>) == 0 &amp;&amp; trans-&gt;attribute(<span class="stringliteral">&quot;L&quot;</span>) == 0) {</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;            <span class="keywordflow">if</span> (**trans-&gt;mResistance == 0 &amp;&amp; **trans-&gt;mInductance == 0) {</div>
 <div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;                <a class="code" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>-&gt;info(<span class="stringliteral">&quot;{} {} ignored for R = 0 and L = 0&quot;</span>,trans-&gt;type(), trans-&gt;name());</div>
 <div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;                <span class="keywordflow">continue</span>;</div>
 <div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;            }</div>

@@ -81,44 +81,199 @@
 It is possible to run powerflow, quasi-static, dynamic phasor and electromagnetic transient simulations
 and to parameterize all components of the network from Python.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="dpsimpy.AttrModifier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttrModifier</span></span><a class="headerlink" href="#dpsimpy.AttrModifier" title="Permalink to this definition"></a></dt>
-<dd><p>Members:</p>
-<p>real</p>
-<p>imag</p>
-<p>mag</p>
-<p>phase</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="dpsimpy.AttrModifier.imag">
-<span class="sig-name descname"><span class="pre">imag</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;AttrModifier.imag:</span> <span class="pre">1&gt;</span></em><a class="headerlink" href="#dpsimpy.AttrModifier.imag" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dpsimpy.Attribute">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">Attribute</span></span><a class="headerlink" href="#dpsimpy.Attribute" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="dpsimpy.AttrModifier.mag">
-<span class="sig-name descname"><span class="pre">mag</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;AttrModifier.mag:</span> <span class="pre">2&gt;</span></em><a class="headerlink" href="#dpsimpy.AttrModifier.mag" title="Permalink to this definition"></a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeComplex</span></span><a class="headerlink" href="#dpsimpy.AttributeComplex" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplex.derive_imag">
+<span class="sig-name descname"><span class="pre">derive_imag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeComplex" title="dpsimpy.AttributeComplex"><span class="pre">dpsimpy.AttributeComplex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.AttributeReal" title="dpsimpy.AttributeReal"><span class="pre">dpsimpy.AttributeReal</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeComplex.derive_imag" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="dpsimpy.AttrModifier.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#dpsimpy.AttrModifier.name" title="Permalink to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplex.derive_mag">
+<span class="sig-name descname"><span class="pre">derive_mag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeComplex" title="dpsimpy.AttributeComplex"><span class="pre">dpsimpy.AttributeComplex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.AttributeReal" title="dpsimpy.AttributeReal"><span class="pre">dpsimpy.AttributeReal</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeComplex.derive_mag" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="dpsimpy.AttrModifier.phase">
-<span class="sig-name descname"><span class="pre">phase</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;AttrModifier.phase:</span> <span class="pre">3&gt;</span></em><a class="headerlink" href="#dpsimpy.AttrModifier.phase" title="Permalink to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplex.derive_phase">
+<span class="sig-name descname"><span class="pre">derive_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeComplex" title="dpsimpy.AttributeComplex"><span class="pre">dpsimpy.AttributeComplex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.AttributeReal" title="dpsimpy.AttributeReal"><span class="pre">dpsimpy.AttributeReal</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeComplex.derive_phase" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="dpsimpy.AttrModifier.real">
-<span class="sig-name descname"><span class="pre">real</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;AttrModifier.real:</span> <span class="pre">0&gt;</span></em><a class="headerlink" href="#dpsimpy.AttrModifier.real" title="Permalink to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplex.derive_real">
+<span class="sig-name descname"><span class="pre">derive_real</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeComplex" title="dpsimpy.AttributeComplex"><span class="pre">dpsimpy.AttributeComplex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.AttributeReal" title="dpsimpy.AttributeReal"><span class="pre">dpsimpy.AttributeReal</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeComplex.derive_real" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="dpsimpy.AttrModifier.value">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.AttrModifier.value" title="Permalink to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplex.derive_scaled">
+<span class="sig-name descname"><span class="pre">derive_scaled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeComplex" title="dpsimpy.AttributeComplex"><span class="pre">dpsimpy.AttributeComplex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">complex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.AttributeComplex" title="dpsimpy.AttributeComplex"><span class="pre">dpsimpy.AttributeComplex</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeComplex.derive_scaled" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplex.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeComplex" title="dpsimpy.AttributeComplex"><span class="pre">dpsimpy.AttributeComplex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">complex</span></span></span><a class="headerlink" href="#dpsimpy.AttributeComplex.get" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplex.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeComplex" title="dpsimpy.AttributeComplex"><span class="pre">dpsimpy.AttributeComplex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">complex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeComplex.set" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplexDyn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeComplexDyn</span></span><a class="headerlink" href="#dpsimpy.AttributeComplexDyn" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplexDyn.set_reference">
+<span class="sig-name descname"><span class="pre">set_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeComplexDyn" title="dpsimpy.AttributeComplexDyn"><span class="pre">dpsimpy.AttributeComplexDyn</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeComplex" title="dpsimpy.AttributeComplex"><span class="pre">dpsimpy.AttributeComplex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeComplexDyn.set_reference" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeComplexStat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeComplexStat</span></span><a class="headerlink" href="#dpsimpy.AttributeComplexStat" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeMatrix</span></span><a class="headerlink" href="#dpsimpy.AttributeMatrix" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrix.derive_coeff">
+<span class="sig-name descname"><span class="pre">derive_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeMatrix" title="dpsimpy.AttributeMatrix"><span class="pre">dpsimpy.AttributeMatrix</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.AttributeReal" title="dpsimpy.AttributeReal"><span class="pre">dpsimpy.AttributeReal</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeMatrix.derive_coeff" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrix.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeMatrix" title="dpsimpy.AttributeMatrix"><span class="pre">dpsimpy.AttributeMatrix</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">[</span></span><span class="pre">m</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">n</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.AttributeMatrix.get" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrix.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeMatrix" title="dpsimpy.AttributeMatrix"><span class="pre">dpsimpy.AttributeMatrix</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">[</span></span><span class="pre">m</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">n</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeMatrix.set" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrixComp">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeMatrixComp</span></span><a class="headerlink" href="#dpsimpy.AttributeMatrixComp" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrixComp.derive_coeff">
+<span class="sig-name descname"><span class="pre">derive_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeMatrixComp" title="dpsimpy.AttributeMatrixComp"><span class="pre">dpsimpy.AttributeMatrixComp</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.AttributeComplex" title="dpsimpy.AttributeComplex"><span class="pre">dpsimpy.AttributeComplex</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeMatrixComp.derive_coeff" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrixComp.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeMatrixComp" title="dpsimpy.AttributeMatrixComp"><span class="pre">dpsimpy.AttributeMatrixComp</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.complex128</span><span class="p"><span class="pre">[</span></span><span class="pre">m</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">n</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.AttributeMatrixComp.get" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrixComp.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeMatrixComp" title="dpsimpy.AttributeMatrixComp"><span class="pre">dpsimpy.AttributeMatrixComp</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.complex128</span><span class="p"><span class="pre">[</span></span><span class="pre">m</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">n</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeMatrixComp.set" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrixCompDyn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeMatrixCompDyn</span></span><a class="headerlink" href="#dpsimpy.AttributeMatrixCompDyn" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrixCompDyn.set_reference">
+<span class="sig-name descname"><span class="pre">set_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeMatrixCompDyn" title="dpsimpy.AttributeMatrixCompDyn"><span class="pre">dpsimpy.AttributeMatrixCompDyn</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeMatrixComp" title="dpsimpy.AttributeMatrixComp"><span class="pre">dpsimpy.AttributeMatrixComp</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeMatrixCompDyn.set_reference" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrixCompStat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeMatrixCompStat</span></span><a class="headerlink" href="#dpsimpy.AttributeMatrixCompStat" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrixDyn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeMatrixDyn</span></span><a class="headerlink" href="#dpsimpy.AttributeMatrixDyn" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrixDyn.set_reference">
+<span class="sig-name descname"><span class="pre">set_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeMatrixDyn" title="dpsimpy.AttributeMatrixDyn"><span class="pre">dpsimpy.AttributeMatrixDyn</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeMatrix" title="dpsimpy.AttributeMatrix"><span class="pre">dpsimpy.AttributeMatrix</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeMatrixDyn.set_reference" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeMatrixStat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeMatrixStat</span></span><a class="headerlink" href="#dpsimpy.AttributeMatrixStat" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeReal">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeReal</span></span><a class="headerlink" href="#dpsimpy.AttributeReal" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeReal.derive_scaled">
+<span class="sig-name descname"><span class="pre">derive_scaled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeReal" title="dpsimpy.AttributeReal"><span class="pre">dpsimpy.AttributeReal</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.AttributeReal" title="dpsimpy.AttributeReal"><span class="pre">dpsimpy.AttributeReal</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeReal.derive_scaled" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeReal.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeReal" title="dpsimpy.AttributeReal"><span class="pre">dpsimpy.AttributeReal</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#dpsimpy.AttributeReal.get" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeReal.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeReal" title="dpsimpy.AttributeReal"><span class="pre">dpsimpy.AttributeReal</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeReal.set" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeRealDyn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeRealDyn</span></span><a class="headerlink" href="#dpsimpy.AttributeRealDyn" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeRealDyn.set_reference">
+<span class="sig-name descname"><span class="pre">set_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeRealDyn" title="dpsimpy.AttributeRealDyn"><span class="pre">dpsimpy.AttributeRealDyn</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeReal" title="dpsimpy.AttributeReal"><span class="pre">dpsimpy.AttributeReal</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeRealDyn.set_reference" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeRealStat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeRealStat</span></span><a class="headerlink" href="#dpsimpy.AttributeRealStat" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeString">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeString</span></span><a class="headerlink" href="#dpsimpy.AttributeString" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeString.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeString" title="dpsimpy.AttributeString"><span class="pre">dpsimpy.AttributeString</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#dpsimpy.AttributeString.get" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeString.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeString" title="dpsimpy.AttributeString"><span class="pre">dpsimpy.AttributeString</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeString.set" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeStringDyn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeStringDyn</span></span><a class="headerlink" href="#dpsimpy.AttributeStringDyn" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.AttributeStringDyn.set_reference">
+<span class="sig-name descname"><span class="pre">set_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeStringDyn" title="dpsimpy.AttributeStringDyn"><span class="pre">dpsimpy.AttributeStringDyn</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.AttributeString" title="dpsimpy.AttributeString"><span class="pre">dpsimpy.AttributeString</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.AttributeStringDyn.set_reference" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.AttributeStringStat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">AttributeStringStat</span></span><a class="headerlink" href="#dpsimpy.AttributeStringStat" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dpsimpy.CIMReader">
@@ -286,6 +441,11 @@ and to parameterize all components of the network from Python.</p>
 <dt class="sig sig-object py" id="dpsimpy.IdentifiedObject">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">IdentifiedObject</span></span><a class="headerlink" href="#dpsimpy.IdentifiedObject" title="Permalink to this definition"></a></dt>
 <dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.IdentifiedObject.attr">
+<span class="sig-name descname"><span class="pre">attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.IdentifiedObject" title="dpsimpy.IdentifiedObject"><span class="pre">dpsimpy.IdentifiedObject</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.Attribute" title="dpsimpy.Attribute"><span class="pre">dpsimpy.Attribute</span></a></span></span><a class="headerlink" href="#dpsimpy.IdentifiedObject.attr" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.IdentifiedObject.name">
 <span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.IdentifiedObject" title="dpsimpy.IdentifiedObject"><span class="pre">dpsimpy.IdentifiedObject</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#dpsimpy.IdentifiedObject.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -378,8 +538,9 @@ and to parameterize all components of the network from Python.</p>
 <span class="sig-name descname"><span class="pre">log_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dpsimpy.Logger.log_attribute" title="Permalink to this definition"></a></dt>
 <dd><p>Overloaded function.</p>
 <ol class="arabic simple">
-<li><p>log_attribute(self: dpsimpy.Logger, arg0: str, arg1: str, arg2: CPS::IdentifiedObject) -&gt; None</p></li>
-<li><p>log_attribute(self: dpsimpy.Logger, arg0: str, arg1: str, arg2: CPS::IdentifiedObject, arg3: int, arg4: int) -&gt; None</p></li>
+<li><p>log_attribute(self: dpsimpy.Logger, name: str, attr: dpsimpy.Attribute, max_cols: int = 0, max_rows: int = 0) -&gt; None</p></li>
+<li><p>log_attribute(self: dpsimpy.Logger, names: List[str], attr: dpsimpy.Attribute) -&gt; None</p></li>
+<li><p>log_attribute(self: dpsimpy.Logger, name: str, attr: str, comp: CPS::IdentifiedObject, rows_max: int = 0, cols_max: int = 0) -&gt; None</p></li>
 <li><p>log_attribute(self: dpsimpy.Logger, arg0: List[str], arg1: str, arg2: CPS::IdentifiedObject) -&gt; None</p></li>
 </ol>
 </dd></dl>
@@ -563,21 +724,6 @@ and to parameterize all components of the network from Python.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.RealTimeSimulation.get_comp_idobj_attr">
-<span class="sig-name descname"><span class="pre">get_comp_idobj_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.RealTimeSimulation" title="dpsimpy.RealTimeSimulation"><span class="pre">dpsimpy.RealTimeSimulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">complex</span></span></span><a class="headerlink" href="#dpsimpy.RealTimeSimulation.get_comp_idobj_attr" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.RealTimeSimulation.get_real_idobj_attr">
-<span class="sig-name descname"><span class="pre">get_real_idobj_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.RealTimeSimulation" title="dpsimpy.RealTimeSimulation"><span class="pre">dpsimpy.RealTimeSimulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#dpsimpy.RealTimeSimulation.get_real_idobj_attr" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.RealTimeSimulation.log_attr">
-<span class="sig-name descname"><span class="pre">log_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.RealTimeSimulation" title="dpsimpy.RealTimeSimulation"><span class="pre">dpsimpy.RealTimeSimulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.RealTimeSimulation.log_attr" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.RealTimeSimulation.name">
 <span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.RealTimeSimulation" title="dpsimpy.RealTimeSimulation"><span class="pre">dpsimpy.RealTimeSimulation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#dpsimpy.RealTimeSimulation.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -596,16 +742,6 @@ and to parameterize all components of the network from Python.</p>
 <dt class="sig sig-object py" id="dpsimpy.RealTimeSimulation.set_final_time">
 <span class="sig-name descname"><span class="pre">set_final_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.RealTimeSimulation" title="dpsimpy.RealTimeSimulation"><span class="pre">dpsimpy.RealTimeSimulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.RealTimeSimulation.set_final_time" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.RealTimeSimulation.set_idobj_attr">
-<span class="sig-name descname"><span class="pre">set_idobj_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dpsimpy.RealTimeSimulation.set_idobj_attr" title="Permalink to this definition"></a></dt>
-<dd><p>Overloaded function.</p>
-<ol class="arabic simple">
-<li><p>set_idobj_attr(self: dpsimpy.RealTimeSimulation, arg0: str, arg1: str, arg2: float) -&gt; None</p></li>
-<li><p>set_idobj_attr(self: dpsimpy.RealTimeSimulation, arg0: str, arg1: str, arg2: complex) -&gt; None</p></li>
-</ol>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.RealTimeSimulation.set_solver">
@@ -723,33 +859,28 @@ and to parameterize all components of the network from Python.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.Simulation.export_attr">
-<span class="sig-name descname"><span class="pre">export_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dpsimpy.Simulation.export_attr" title="Permalink to this definition"></a></dt>
-<dd><p>Overloaded function.</p>
-<ol class="arabic simple">
-<li><p>export_attr(self: dpsimpy.Simulation, obj: str, attr: str, idx: int, modifier: CPS::AttributeBase::Modifier, row: int = 0, col: int = 0, intf: DPsim::Interface = None) -&gt; None</p></li>
-<li><p>export_attr(self: dpsimpy.Simulation, obj: str, attr: str, idx: int, row: int = 0, col: int = 0, scale: complex = (1+0j), intf: DPsim::Interface = None) -&gt; None</p></li>
-</ol>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.Simulation.get_comp_idobj_attr">
-<span class="sig-name descname"><span class="pre">get_comp_idobj_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">complex</span></span></span><a class="headerlink" href="#dpsimpy.Simulation.get_comp_idobj_attr" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dpsimpy.Simulation.export_attribute">
+<span class="sig-name descname"><span class="pre">export_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.Simulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr:</span> <span class="pre">dpsimpy.Attribute</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intf:</span> <span class="pre">DPsim::Interface</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.export_attribute" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.Simulation.get_real_idobj_attr">
-<span class="sig-name descname"><span class="pre">get_real_idobj_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#dpsimpy.Simulation.get_real_idobj_attr" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dpsimpy.Simulation.get_idobj_attr">
+<span class="sig-name descname"><span class="pre">get_idobj_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.Attribute" title="dpsimpy.Attribute"><span class="pre">dpsimpy.Attribute</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.get_idobj_attr" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.Simulation.import_attr">
-<span class="sig-name descname"><span class="pre">import_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.Simulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intf:</span> <span class="pre">DPsim::Interface</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.import_attr" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dpsimpy.Simulation.import_attribute">
+<span class="sig-name descname"><span class="pre">import_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.Simulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr:</span> <span class="pre">dpsimpy.Attribute</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intf:</span> <span class="pre">DPsim::Interface</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.import_attribute" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.Simulation.log_attr">
-<span class="sig-name descname"><span class="pre">log_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.log_attr" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dpsimpy.Simulation.log_attribute">
+<span class="sig-name descname"><span class="pre">log_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Attribute" title="dpsimpy.Attribute"><span class="pre">dpsimpy.Attribute</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.log_attribute" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.Simulation.log_idobj_attribute">
+<span class="sig-name descname"><span class="pre">log_idobj_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.log_idobj_attribute" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -778,16 +909,6 @@ and to parameterize all components of the network from Python.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.Simulation.set_idobj_attr">
-<span class="sig-name descname"><span class="pre">set_idobj_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dpsimpy.Simulation.set_idobj_attr" title="Permalink to this definition"></a></dt>
-<dd><p>Overloaded function.</p>
-<ol class="arabic simple">
-<li><p>set_idobj_attr(self: dpsimpy.Simulation, arg0: str, arg1: str, arg2: float) -&gt; None</p></li>
-<li><p>set_idobj_attr(self: dpsimpy.Simulation, arg0: str, arg1: str, arg2: complex) -&gt; None</p></li>
-</ol>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.Simulation.set_mna_solver_implementation">
 <span class="sig-name descname"><span class="pre">set_mna_solver_implementation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.Simulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0:</span> <span class="pre">DPsim::MnaSolverFactory::MnaSolverImpl</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.set_mna_solver_implementation" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -799,7 +920,7 @@ and to parameterize all components of the network from Python.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.Simulation.set_solver_component_behaviour">
-<span class="sig-name descname"><span class="pre">set_solver_component_behaviour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SolverBehaviour" title="dpsimpy.SolverBehaviour"><span class="pre">dpsimpy.SolverBehaviour</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.set_solver_component_behaviour" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_solver_component_behaviour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.Simulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0:</span> <span class="pre">DPsim::Solver::Behaviour</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.set_solver_component_behaviour" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

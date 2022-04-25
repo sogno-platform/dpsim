@@ -83,129 +83,128 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;DP::Ph1::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    (String uid, String name, Logger::Level logLevel)</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    : SynchronGeneratorVBR(uid, name, logLevel) {</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="comment">// model specific variables</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    mEdq_t = Matrix::Zero(2,1);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    mEdq_s = Matrix::Zero(2,1);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    mEh_s = Matrix::Zero(2,1);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    mEh_t = Matrix::Zero(2,1);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="comment">// Register attributes</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    addAttribute&lt;Matrix&gt;(<span class="stringliteral">&quot;Edq_t&quot;</span>, &amp;mEdq_t, Flags::read);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    addAttribute&lt;Matrix&gt;(<span class="stringliteral">&quot;Edq_s&quot;</span>, &amp;mEdq_s, Flags::read);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;DP::Ph1::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    (String name, Logger::Level logLevel)</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    : SynchronGenerator6aOrderVBR(name, name, logLevel) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html#a4bede712742f4a14c23df6a884d2c83e">   33</a></span>&#160;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp&lt;Complex&gt;::Ptr</a> DP::Ph1::SynchronGenerator6aOrderVBR::clone(String name) {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">auto</span> copy = SynchronGenerator6aOrderVBR::make(<a class="code" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code" href="class_c_p_s_1_1_topological_power_comp.html#a113e3e3f5ce50c5162079cad7d206a40">mLogLevel</a>);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">return</span> copy;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    : SynchronGeneratorVBR(uid, name, logLevel),</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    mEdq_t(<a class="code" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Matrix&gt;::create(<span class="stringliteral">&quot;Edq_t&quot;</span>, mAttributes)),</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    mEdq_s(<a class="code" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Matrix&gt;::create(<span class="stringliteral">&quot;Edq_s&quot;</span>, mAttributes)) {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="comment">// model specific variables</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    **mEdq_t = Matrix::Zero(2,1);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    **mEdq_s = Matrix::Zero(2,1);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    mEh_s = Matrix::Zero(2,1);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    mEh_t = Matrix::Zero(2,1);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;DP::Ph1::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    (String name, Logger::Level logLevel)</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    : SynchronGenerator6aOrderVBR(name, name, logLevel) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html#a4bede712742f4a14c23df6a884d2c83e">   31</a></span>&#160;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp&lt;Complex&gt;::Ptr</a> DP::Ph1::SynchronGenerator6aOrderVBR::clone(String name) {</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">auto</span> copy = SynchronGenerator6aOrderVBR::make(<a class="code" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code" href="class_c_p_s_1_1_topological_power_comp.html#a113e3e3f5ce50c5162079cad7d206a40">mLogLevel</a>);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordflow">return</span> copy;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html#a48f404ee1b923731f1d96c799f341f78">   37</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html#a48f404ee1b923731f1d96c799f341f78">DP::Ph1::SynchronGenerator6aOrderVBR::specificInitialization</a>() {</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html#a48f404ee1b923731f1d96c799f341f78">   39</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html#a48f404ee1b923731f1d96c799f341f78">DP::Ph1::SynchronGenerator6aOrderVBR::specificInitialization</a>() {</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">// calculate auxiliar constants</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    calculateAuxiliarConstants();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// initial voltage behind the transient reactance in the dq reference frame</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    mEdq_t(0,0) = (mLq - mLq_t - mYq) * mIdq(1,0);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    mEdq_t(1,0) = (1 - mTaa / mTd0_t) * mEf - (mLd - mLd_t - mYd) * mIdq(0,0);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">// initial dq behind the subtransient reactance in the dq reference frame</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    mEdq_s(0,0) = mVdq(0,0) - mLq_s * mIdq(1,0);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    mEdq_s(1,0) = mVdq(1,0) + mLd_s * mIdq(0,0);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// constant part of ABC resistance matrix</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    mResistanceMatrix_const = Matrix::Zero(1,3);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    mResistanceMatrix_const &lt;&lt;  -mL0,   -sqrt(3) / 2. * (mA - mB) - mL0,    sqrt(3) / 2. * (mA - mB) - mL0;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    mResistanceMatrix_const = (-1. / 3.) * mResistanceMatrix_const;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    mR_const_1ph = (mResistanceMatrix_const * mShiftVector)(0,0);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    mSLog-&gt;info(</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="stringliteral">&quot;\n--- Model specific initialization  ---&quot;</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="stringliteral">&quot;\nInitial Ed_t (per unit): {:f}&quot;</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="stringliteral">&quot;\nInitial Eq_t (per unit): {:f}&quot;</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="stringliteral">&quot;\nInitial Ed_s (per unit): {:f}&quot;</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="stringliteral">&quot;\nInitial Eq_s (per unit): {:f}&quot;</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="stringliteral">&quot;\n--- Model specific initialization finished ---&quot;</span>,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        mEdq_t(0,0),</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        mEdq_t(1,0),</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        mEdq_s(0,0),</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        mEdq_s(1,0)</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    );</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    mSLog-&gt;flush();</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">void</span> DP::Ph1::SynchronGenerator6aOrderVBR::calculateAuxiliarConstants() {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    mYq = (mTq0_s / mTq0_t) * (mLq_s / mLq_t) * (mLq - mLq_t);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    Real Zq_t = mLd - mLd_t - mYd;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    Real Zd_t = mLq - mLq_t - mYq;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    Real Zq_s = mLd_t - mLd_s + mYd;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    Real Zd_s = mLq_t - mLq_s + mYq;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    Real Tf = mTaa / mTd0_t;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    mAd_t = mTimeStep * Zd_t / (2 * mTq0_t + mTimeStep);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    mBd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    mAq_t = - mTimeStep * Zq_t / (2 * mTd0_t + mTimeStep);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    mDq_t = 2 * mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    mAd_s = (mTimeStep * Zd_s + mTimeStep * mAd_t) / (2 * mTq0_s + mTimeStep);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * mTq0_s + mTimeStep);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    mDq_s = (mTimeStep * mDq_t + 2 * Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    mB = mLd_s - mAq_s;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    mA = -mLq_s - mAd_s;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    mKc = Matrix::Zero(1,3);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    mKc &lt;&lt; Complex(cos(PI/2.), -sin(PI/2.)), Complex(cos(7.*PI/6.), -sin(7.*PI/6.)),    Complex(cos(PI/6.), sin(PI/6.));</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    mKc = (-1. / 6.) * (mA + mB) * mKc;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">// calculate auxiliar constants</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    calculateAuxiliarConstants();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// initial voltage behind the transient reactance in the dq reference frame</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    (**mEdq_t)(0,0) = (mLq - mLq_t - mYq) * (**mIdq)(1,0);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    (**mEdq_t)(1,0) = (1 - mTaa / mTd0_t) * mEf - (mLd - mLd_t - mYd) * (**mIdq)(0,0);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">// initial dq behind the subtransient reactance in the dq reference frame</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    (**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    (**mEdq_s)(1,0) = (**mVdq)(1,0) + mLd_s * (**mIdq)(0,0);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// constant part of ABC resistance matrix</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    mResistanceMatrix_const = Matrix::Zero(1,3);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    mResistanceMatrix_const &lt;&lt;  -mL0,   -sqrt(3) / 2. * (mA - mB) - mL0,    sqrt(3) / 2. * (mA - mB) - mL0;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    mResistanceMatrix_const = (-1. / 3.) * mResistanceMatrix_const;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    mR_const_1ph = (mResistanceMatrix_const * mShiftVector)(0,0);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    mSLog-&gt;info(</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="stringliteral">&quot;\n--- Model specific initialization  ---&quot;</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="stringliteral">&quot;\nInitial Ed_t (per unit): {:f}&quot;</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="stringliteral">&quot;\nInitial Eq_t (per unit): {:f}&quot;</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="stringliteral">&quot;\nInitial Ed_s (per unit): {:f}&quot;</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="stringliteral">&quot;\nInitial Eq_s (per unit): {:f}&quot;</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="stringliteral">&quot;\n--- Model specific initialization finished ---&quot;</span>,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        (**mEdq_t)(0,0),</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        (**mEdq_t)(1,0),</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        (**mEdq_s)(0,0),</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        (**mEdq_s)(1,0)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    );</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    mSLog-&gt;flush();</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">void</span> DP::Ph1::SynchronGenerator6aOrderVBR::calculateAuxiliarConstants() {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    mYq = (mTq0_s / mTq0_t) * (mLq_s / mLq_t) * (mLq - mLq_t);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    Real Zq_t = mLd - mLd_t - mYd;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    Real Zd_t = mLq - mLq_t - mYq;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    Real Zq_s = mLd_t - mLd_s + mYd;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    Real Zd_s = mLq_t - mLq_s + mYq;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    Real Tf = mTaa / mTd0_t;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    mAd_t = mTimeStep * Zd_t / (2 * mTq0_t + mTimeStep);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    mBd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    mAq_t = - mTimeStep * Zq_t / (2 * mTd0_t + mTimeStep);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    mDq_t = 2 * mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    mAd_s = (mTimeStep * Zd_s + mTimeStep * mAd_t) / (2 * mTq0_s + mTimeStep);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * mTq0_s + mTimeStep);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    mDq_s = (mTimeStep * mDq_t + 2 * Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    mB = mLd_s - mAq_s;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    mA = -mLq_s - mAd_s;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    mKc = Matrix::Zero(1,3);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    mKc &lt;&lt; Complex(cos(PI/2.), -sin(PI/2.)), Complex(cos(7.*PI/6.), -sin(7.*PI/6.)),    Complex(cos(PI/6.), sin(PI/6.));</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    mKc = (-1. / 6.) * (mA + mB) * mKc;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keywordtype">void</span> DP::Ph1::SynchronGenerator6aOrderVBR::stepInPerUnit() {</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keywordtype">void</span> DP::Ph1::SynchronGenerator6aOrderVBR::stepInPerUnit() {</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">if</span> (mSimTime&gt;0.0){</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="comment">// calculate Edq_t at t=k</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        mEdq_t(0,0) = mAd_t * mIdq(1,0) + mEh_t(0,0);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        mEdq_t(1,0) = mAq_t * mIdq(0,0) + mEh_t(1,0);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="comment">// calculate Edq_s at t=k</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        mEdq_s(0,0) = -mIdq(1,0) * mLq_s + mVdq(0,0);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        mEdq_s(1,0) = mIdq(0,0) * mLd_s + mVdq(1,0);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        mElecTorque = mVdq(0,0) * mIdq(0,0) + mVdq(1,0) * mIdq(1,0);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        mOmMech = mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - mElecTorque));</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        mThetaMech = mThetaMech + mTimeStep * (mOmMech * mBase_OmMech);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        mDelta = mDelta + mTimeStep * (mOmMech - 1.) * mBase_OmMech;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="comment">// VBR history voltage</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    calculateAuxiliarVariables();</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    calculateConductanceMatrix();</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="comment">// calculate history term behind the transient reactance</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    mEh_t(0,0) = mAd_t * mIdq(1,0) + mBd_t * mEdq_t(0,0);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    mEh_t(1,0) = mAq_t * mIdq(0,0) + mBq_t * mEdq_t(1,0) + mDq_t * mEf;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="comment">// calculate history term behind the subtransient reactance</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    mEh_s(0,0) = mAd_s * mIdq(1,0) + mBd_s * mEdq_t(0,0) + mCd_s * mEdq_s(0,0);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    mEh_s(1,0) = mAq_s * mIdq(0,0) + mBq_s * mEdq_t(1,0) + mCq_s * mEdq_s(1,0) + mDq_s * mEf;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="comment">// convert Edq_t into the abc reference frame</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    mEvbr = (mKvbr * mEh_s * mBase_V_RMS)(0,0);</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;}</div>
-<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r_html_a48f404ee1b923731f1d96c799f341f78"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html#a48f404ee1b923731f1d96c799f341f78">CPS::DP::Ph1::SynchronGenerator6aOrderVBR::specificInitialization</a></div><div class="ttdeci">void specificInitialization()</div><div class="ttdoc">Initializes component from power flow data.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph1___synchron_generator6a_order_v_b_r_8cpp_source.html#l00039">DP_Ph1_SynchronGenerator6aOrderVBR.cpp:39</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdoc">Returns component name.</div><div class="ttdef"><b>Definition:</b> <a href="_identified_object_8h_source.html#l00044">IdentifiedObject.h:44</a></div></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">if</span> (mSimTime&gt;0.0){</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">// calculate Edq_t at t=k</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        (**mEdq_t)(0,0) = mAd_t * (**mIdq)(1,0) + mEh_t(0,0);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        (**mEdq_t)(1,0) = mAq_t * (**mIdq)(0,0) + mEh_t(1,0);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="comment">// calculate Edq_s at t=k</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        (**mEdq_s)(0,0) = -(**mIdq)(1,0) * mLq_s + (**mVdq)(0,0);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        (**mEdq_s)(1,0) = (**mIdq)(0,0) * mLd_s + (**mVdq)(1,0);</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        **mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        **mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - **mElecTorque));</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        **mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        **mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    }</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="comment">// VBR history voltage</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    calculateAuxiliarVariables();</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    calculateConductanceMatrix();</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="comment">// calculate history term behind the transient reactance</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    mEh_t(0,0) = mAd_t * (**mIdq)(1,0) + mBd_t * (**mEdq_t)(0,0);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    mEh_t(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * mEf;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="comment">// calculate history term behind the subtransient reactance</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    mEh_s(0,0) = mAd_s * (**mIdq)(1,0) + mBd_s * (**mEdq_t)(0,0) + mCd_s * (**mEdq_s)(0,0);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    mEh_s(1,0) = mAq_s * (**mIdq)(0,0) + mBq_s * (**mEdq_t)(1,0) + mCq_s * (**mEdq_s)(1,0) + mDq_s * mEf;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="comment">// convert Edq_t into the abc reference frame</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    **mEvbr = (mKvbr * mEh_s * mBase_V_RMS)(0,0);</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00251">Attribute.h:253</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r_html_a48f404ee1b923731f1d96c799f341f78"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html#a48f404ee1b923731f1d96c799f341f78">CPS::DP::Ph1::SynchronGenerator6aOrderVBR::specificInitialization</a></div><div class="ttdeci">void specificInitialization()</div><div class="ttdoc">Initializes component from power flow data.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph1___synchron_generator6a_order_v_b_r_8cpp_source.html#l00037">DP_Ph1_SynchronGenerator6aOrderVBR.cpp:37</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdoc">Returns component name.</div><div class="ttdef"><b>Definition:</b> <a href="_identified_object_8h_source.html#l00047">IdentifiedObject.h:47</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp</a></div><div class="ttdoc">Base class for all components that are transmitting power.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00018">SimPowerComp.h:18</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_topological_power_comp_html_a113e3e3f5ce50c5162079cad7d206a40"><div class="ttname"><a href="class_c_p_s_1_1_topological_power_comp.html#a113e3e3f5ce50c5162079cad7d206a40">CPS::TopologicalPowerComp::mLogLevel</a></div><div class="ttdeci">Logger::Level mLogLevel</div><div class="ttdoc">Component logger control for internal variables.</div><div class="ttdef"><b>Definition:</b> <a href="_topological_power_comp_8h_source.html#l00035">TopologicalPowerComp.h:35</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

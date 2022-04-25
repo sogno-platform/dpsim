@@ -88,8 +88,8 @@ $(function() {
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    : <a class="code" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt;Complex&gt;(uid, name, logLevel) {</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    setTerminalNumber(1);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    setVirtualNodeNumber(1);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="class_c_p_s_1_1_sim_power_comp.html#a894f2d211d03df0cffdc797e8a07342d">mIntfVoltage</a> = MatrixComp::Zero(1,1);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="class_c_p_s_1_1_sim_power_comp.html#ac8a46a0ec79c84c3b2bf0617f14f60ee">mIntfCurrent</a> = MatrixComp::Zero(1,1);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    **<a class="code" href="class_c_p_s_1_1_sim_power_comp.html#af5092d5b0b94b99ff6ff405ab0294c52">mIntfVoltage</a> = MatrixComp::Zero(1,1);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    **<a class="code" href="class_c_p_s_1_1_sim_power_comp.html#ac080c0dad3920e5415dbc80374f4ea34">mIntfCurrent</a> = MatrixComp::Zero(1,1);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keywordtype">void</span> DP::Ph1::Inverter::setParameters(<span class="keyword">const</span> std::vector&lt;Int&gt; &amp;carrierHarms, <span class="keyword">const</span> std::vector&lt;Int&gt; &amp;modulHarms,</div>
@@ -158,15 +158,15 @@ $(function() {
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keywordtype">void</span> DP::Ph1::Inverter::calculatePhasors() {</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Compute fundamental content of grid frequency</span></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    mVfund = mModIdx * mVin;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    mIntfVoltage(0,0) = Complex(0, mVfund * -1);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    (**mIntfVoltage)(0,0) = Complex(0, mVfund * -1);</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// Compute sideband harmonics for even multiplies of carrier frequency m</span></div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">// and odd reference signal multiplies n</span></div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">for</span> (UInt h = 0; h &lt; mHarNum; h++ ) {</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        Real Jn = besselFirstKind_n_opt(mModHarms[h], mMaxBesselSumIdx, mCarHarms[h]*mModIdx*PI/2.);</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="comment">//mPhasorMags(h, 0) = (4.*mVin/PI) * (Jn/mCarHarms[h]) * cos(mCarHarms[h] * PI/2.);</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="comment">//mIntfVoltage(0, h+1) = mPhasorMags(h, 0) * -1i;</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        mIntfVoltage(0, h+1) = Complex(0, -1 * (4.*mVin/PI) * (Jn/mCarHarms[h]) * cos(mCarHarms[h] * PI/2.));</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="comment">//(**mIntfVoltage)(0, h+1) = mPhasorMags(h, 0) * -1i;</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        (**mIntfVoltage)(0, h+1) = Complex(0, -1 * (4.*mVin/PI) * (Jn/mCarHarms[h]) * cos(mCarHarms[h] * PI/2.));</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    SPDLOG_LOGGER_DEBUG(mSLog,</div>
@@ -174,7 +174,7 @@ $(function() {
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="stringliteral">&quot;\n{}&quot;</span></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="stringliteral">&quot;\n{}&quot;</span></div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="stringliteral">&quot;\n--- Phasor calculation end ---&quot;</span>,</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        mPhasorMags, mIntfVoltage);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        mPhasorMags, **mIntfVoltage);</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">// #### MNA functions ####</span></div>
@@ -185,18 +185,18 @@ $(function() {
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    mMnaTasks.push_back(std::make_shared&lt;MnaPreStep&gt;(*<span class="keyword">this</span>));</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    mMnaTasks.push_back(std::make_shared&lt;MnaPostStep&gt;(*<span class="keyword">this</span>, leftVector));</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    mRightVector = Matrix::Zero(leftVector-&gt;get().rows(), 1);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    **mRightVector = Matrix::Zero(leftVector-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">get</a>().rows(), 1);</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    calculatePhasors();</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a3558a49cbdd2a5575e523e8f2bea7674">  122</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a3558a49cbdd2a5575e523e8f2bea7674">DP::Ph1::Inverter::mnaInitializeHarm</a>(Real omega, Real timeStep, std::vector&lt;<a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a>&gt; leftVectors) {</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keywordtype">void</span> DP::Ph1::Inverter::mnaInitializeHarm(Real omega, Real timeStep, std::vector&lt;<a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a>&gt; leftVectors) {</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <a class="code" href="class_c_p_s_1_1_m_n_a_interface.html#a0b282e18a0e1ef7c833b23a7372a9fa7">MNAInterface::mnaInitialize</a>(omega, timeStep);</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    updateMatrixNodeIndices();</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    mMnaTasks.push_back(std::make_shared&lt;MnaPreStepHarm&gt;(*<span class="keyword">this</span>));</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    mMnaTasks.push_back(std::make_shared&lt;MnaPostStepHarm&gt;(*<span class="keyword">this</span>, leftVectors));</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    mRightVector = Matrix::Zero(leftVectors[0]-&gt;get().rows(), mNumFreqs);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    **mRightVector = Matrix::Zero(leftVectors[0]-&gt;get().rows(), mNumFreqs);</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    calculatePhasors();</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}</div>
@@ -236,10 +236,10 @@ $(function() {
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    SPDLOG_LOGGER_DEBUG(mSLog, <span class="stringliteral">&quot;Stamp harmonics into source vector&quot;</span>);</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordflow">for</span> (UInt freq = 0; freq &lt; mNumFreqs; freq++) {</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            Math::setVectorElement(rightVector, mVirtualNodes[0]-&gt;matrixNodeIndex(), mIntfVoltage(0,freq), mNumFreqs, freq);</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            Math::setVectorElement(rightVector, mVirtualNodes[0]-&gt;matrixNodeIndex(), (**mIntfVoltage)(0,freq), mNumFreqs, freq);</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            SPDLOG_LOGGER_DEBUG(mSLog, <span class="stringliteral">&quot;Add {:s} to source vector at {:d}, harmonic {:d}&quot;</span>,</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                Logger::complexToString(mIntfVoltage(0,freq)), mVirtualNodes[0]-&gt;matrixNodeIndex(), freq);</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                Logger::complexToString((**mIntfVoltage)(0,freq)), mVirtualNodes[0]-&gt;matrixNodeIndex(), freq);</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        }</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    }</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;}</div>
@@ -248,24 +248,24 @@ $(function() {
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    SPDLOG_LOGGER_DEBUG(mSLog, <span class="stringliteral">&quot;Stamp harmonics into source vector&quot;</span>);</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordflow">for</span> (UInt freq = 0; freq &lt; mNumFreqs; freq++) {</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            Math::setVectorElement(rightVector, mVirtualNodes[0]-&gt;matrixNodeIndex(), mIntfVoltage(0,freq), 1, 0, freq);</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            Math::setVectorElement(rightVector, mVirtualNodes[0]-&gt;matrixNodeIndex(), (**mIntfVoltage)(0,freq), 1, 0, freq);</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        }</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    }</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;}</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#aad432af4f30dd3391c60fa2dec480e0b">DP::Ph1::Inverter::mnaApplyRightSideVectorStampHarm</a>(Matrix&amp; rightVector, Int freq) {</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    Math::setVectorElement(rightVector, mVirtualNodes[0]-&gt;matrixNodeIndex(), mIntfVoltage(0,freq));</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    Math::setVectorElement(rightVector, mVirtualNodes[0]-&gt;matrixNodeIndex(), (**mIntfVoltage)(0,freq));</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;}</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="keywordtype">void</span> DP::Ph1::Inverter::MnaPreStep::execute(Real time, Int timeStepCount) {</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    mInverter.calculatePhasors();</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    mInverter.mnaApplyRightSideVectorStamp(mInverter.mRightVector);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    mInverter.mnaApplyRightSideVectorStamp(**mInverter.mRightVector);</div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;}</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="keywordtype">void</span> DP::Ph1::Inverter::MnaPreStepHarm::execute(Real time, Int timeStepCount) {</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    mInverter.calculatePhasors();</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    mInverter.mnaApplyRightSideVectorStampHarm(mInverter.mRightVector);</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    mInverter.mnaApplyRightSideVectorStampHarm(**mInverter.mRightVector);</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;}</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160; </div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="keywordtype">void</span> DP::Ph1::Inverter::MnaPostStep::execute(Real time, Int timeStepCount) {</div>
@@ -277,8 +277,8 @@ $(function() {
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;}</div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160; </div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00099">Attribute.h:101</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter_html_a3558a49cbdd2a5575e523e8f2bea7674"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a3558a49cbdd2a5575e523e8f2bea7674">CPS::DP::Ph1::Inverter::mnaInitializeHarm</a></div><div class="ttdeci">void mnaInitializeHarm(Real omega, Real timeStep, std::vector&lt; Attribute&lt; Matrix &gt;::Ptr &gt; leftVectors)</div><div class="ttdoc">Initializes variables of components.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph1___inverter_8cpp_source.html#l00122">DP_Ph1_Inverter.cpp:122</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00251">Attribute.h:253</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a9b287cc553000b9221b9c5076e495e55"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">CPS::Attribute::get</a></div><div class="ttdeci">virtual T &amp; get()=0</div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter_html_a73edf7fa7b55a0a86d4366c7833e11c1"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a73edf7fa7b55a0a86d4366c7833e11c1">CPS::DP::Ph1::Inverter::Inverter</a></div><div class="ttdeci">Inverter(String name, String uid, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdoc">Defines UID, name and logging level.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph1___inverter_8cpp_source.html#l00016">DP_Ph1_Inverter.cpp:16</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter_html_a91ed1206f1cc8236251286ea17cb46e5"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a91ed1206f1cc8236251286ea17cb46e5">CPS::DP::Ph1::Inverter::mnaInitialize</a></div><div class="ttdeci">void mnaInitialize(Real omega, Real timeStep, Attribute&lt; Matrix &gt;::Ptr leftVector)</div><div class="ttdoc">Initializes internal variables of the component.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph1___inverter_8cpp_source.html#l00111">DP_Ph1_Inverter.cpp:111</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter_html_aad432af4f30dd3391c60fa2dec480e0b"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#aad432af4f30dd3391c60fa2dec480e0b">CPS::DP::Ph1::Inverter::mnaApplyRightSideVectorStampHarm</a></div><div class="ttdeci">void mnaApplyRightSideVectorStampHarm(Matrix &amp;rightVector)</div><div class="ttdoc">Stamps right side (source) vector considering the frequency index.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph1___inverter_8cpp_source.html#l00176">DP_Ph1_Inverter.cpp:176</a></div></div>
@@ -287,11 +287,11 @@ $(function() {
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter_html_aebbb430257d430f3babbe59dc0633d25"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#aebbb430257d430f3babbe59dc0633d25">CPS::DP::Ph1::Inverter::initializeFromNodesAndTerminals</a></div><div class="ttdeci">void initializeFromNodesAndTerminals(Real frequency)</div><div class="ttdoc">Initializes Component variables according to power flow data stored in Nodes.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph1___inverter_8cpp_source.html#l00035">DP_Ph1_Inverter.cpp:35</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter_html_af88a432eb525f45dcbbf685ad656bf5e"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#af88a432eb525f45dcbbf685ad656bf5e">CPS::DP::Ph1::Inverter::mnaApplySystemMatrixStamp</a></div><div class="ttdeci">void mnaApplySystemMatrixStamp(Matrix &amp;systemMatrix)</div><div class="ttdoc">Stamps system matrix.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph1___inverter_8cpp_source.html#l00133">DP_Ph1_Inverter.cpp:133</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter_html_afb4c818b63db646abde0885e5cdd846d"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#afb4c818b63db646abde0885e5cdd846d">CPS::DP::Ph1::Inverter::initialize</a></div><div class="ttdeci">void initialize(Matrix frequencies)</div><div class="ttdoc">Initialize components with correct network frequencies.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph1___inverter_8cpp_source.html#l00048">DP_Ph1_Inverter.cpp:48</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_interface_html_a0b282e18a0e1ef7c833b23a7372a9fa7"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_interface.html#a0b282e18a0e1ef7c833b23a7372a9fa7">CPS::MNAInterface::mnaInitialize</a></div><div class="ttdeci">virtual void mnaInitialize(Real omega, Real timeStep)</div><div class="ttdoc">Initializes variables of components.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_interface_8h_source.html#l00025">MNAInterface.h:25</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_interface_html_a0b282e18a0e1ef7c833b23a7372a9fa7"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_interface.html#a0b282e18a0e1ef7c833b23a7372a9fa7">CPS::MNAInterface::mnaInitialize</a></div><div class="ttdeci">virtual void mnaInitialize(Real omega, Real timeStep)</div><div class="ttdoc">Initializes variables of components.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_interface_8h_source.html#l00029">MNAInterface.h:29</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp</a></div><div class="ttdoc">Base class for all components that are transmitting power.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00018">SimPowerComp.h:18</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a69a018f851bb62cf5147e25a93f2cb2c"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a69a018f851bb62cf5147e25a93f2cb2c">CPS::SimPowerComp::initialize</a></div><div class="ttdeci">virtual void initialize(Matrix frequencies)</div><div class="ttdoc">Initialize components with correct network frequencies.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8cpp_source.html#l00154">SimPowerComp.cpp:154</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a894f2d211d03df0cffdc797e8a07342d"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a894f2d211d03df0cffdc797e8a07342d">CPS::SimPowerComp&lt; Complex &gt;::mIntfVoltage</a></div><div class="ttdeci">MatrixVar&lt; Complex &gt; mIntfVoltage</div><div class="ttdoc">Voltage between terminals.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00026">SimPowerComp.h:26</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_ac8a46a0ec79c84c3b2bf0617f14f60ee"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#ac8a46a0ec79c84c3b2bf0617f14f60ee">CPS::SimPowerComp&lt; Complex &gt;::mIntfCurrent</a></div><div class="ttdeci">MatrixVar&lt; Complex &gt; mIntfCurrent</div><div class="ttdoc">Current through component.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00028">SimPowerComp.h:28</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_ac080c0dad3920e5415dbc80374f4ea34"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#ac080c0dad3920e5415dbc80374f4ea34">CPS::SimPowerComp&lt; Complex &gt;::mIntfCurrent</a></div><div class="ttdeci">const Attribute&lt; MatrixVar&lt; Complex &gt; &gt;::Ptr mIntfCurrent</div><div class="ttdoc">Current through component.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00046">SimPowerComp.h:46</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_af5092d5b0b94b99ff6ff405ab0294c52"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#af5092d5b0b94b99ff6ff405ab0294c52">CPS::SimPowerComp&lt; Complex &gt;::mIntfVoltage</a></div><div class="ttdeci">const Attribute&lt; MatrixVar&lt; Complex &gt; &gt;::Ptr mIntfVoltage</div><div class="ttdoc">Voltage between terminals.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00044">SimPowerComp.h:44</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -354,18 +354,18 @@ $(function() {
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    checkCusparseStatus(csp_status, <span class="stringliteral">&quot;failed to solve U*y=z:&quot;</span>);</div>
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="comment">//Copy Solution back</span></div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    status = cudaMemcpy(&amp;this-&gt;mLeftSideVector(0), mGpuLhsVec.data(), size * <span class="keyword">sizeof</span>(Real), cudaMemcpyDeviceToHost);</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    status = cudaMemcpy(&amp;(**this-&gt;mLeftSideVector)(0), mGpuLhsVec.data(), size * <span class="keyword">sizeof</span>(Real), cudaMemcpyDeviceToHost);</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    <span class="keywordflow">if</span> (status != cudaSuccess) {</div>
 <div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        mSLog-&gt;error(<span class="stringliteral">&quot;Cuda Error: {}&quot;</span>, cudaGetErrorString(status));</div>
 <div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;        <span class="keywordflow">throw</span> <a class="code" href="class_d_psim_1_1_solver_exception.html">SolverException</a>();</div>
 <div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    }</div>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
 <div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    <span class="comment">//Apply inverse Permutation L = P&#39; * L&#39;</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <span class="comment">//this-&gt;mLeftSideVector = mTransp-&gt;inverse() * this-&gt;mLeftSideVector;</span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <span class="comment">//**this-&gt;mLeftSideVector = mTransp-&gt;inverse() * **this-&gt;mLeftSideVector;</span></div>
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
 <div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="comment">// TODO split into separate task? (dependent on x, updating all v attributes)</span></div>
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keywordflow">for</span> (UInt nodeIdx = 0; nodeIdx &lt; this-&gt;mNumNetNodes; ++nodeIdx)</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        this-&gt;mNodes[nodeIdx]-&gt;mnaUpdateVoltage(this-&gt;mLeftSideVector);</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        this-&gt;mNodes[nodeIdx]-&gt;mnaUpdateVoltage(**this-&gt;mLeftSideVector);</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <span class="comment">// Components&#39; states will be updated by the post-step tasks</span></div>

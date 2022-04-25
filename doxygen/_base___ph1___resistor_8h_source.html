@@ -80,25 +80,27 @@ $(function() {
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;cps/Definitions.h&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>Base {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span>Ph1 {</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html">   16</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html">Resistor</a> {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#a50ce35d7d6ef18eccd9687a587beb63b">   19</a></span>&#160;        Real <a class="code" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#a50ce35d7d6ef18eccd9687a587beb63b">mResistance</a>;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;cps/AttributeList.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>CPS {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span>Base {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>Ph1 {</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html">   17</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html">Resistor</a> {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#ab3cc7c41b332049c7b2eebf3a53f94b0">   21</a></span>&#160;        Real <a class="code" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#ab3cc7c41b332049c7b2eebf3a53f94b0">mConductance</a>;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordtype">void</span> setParameters(Real resistance) {</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            <a class="code" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#a50ce35d7d6ef18eccd9687a587beb63b">mResistance</a> = resistance;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        }</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    };</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#a2573c9ac1e41e1018df6956fbc3b8521">   24</a></span>&#160;        <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::Attribute&lt;Real&gt;::Ptr</a> <a class="code" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#a2573c9ac1e41e1018df6956fbc3b8521">mResistance</a>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">void</span> setParameters(Real resistance) {</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            **<a class="code" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#a2573c9ac1e41e1018df6956fbc3b8521">mResistance</a> = resistance;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        }</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    };</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
-<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph1_1_1_resistor_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html">CPS::Base::Ph1::Resistor</a></div><div class="ttdef"><b>Definition:</b> <a href="_base___ph1___resistor_8h_source.html#l00016">Base_Ph1_Resistor.h:16</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph1_1_1_resistor_html_a50ce35d7d6ef18eccd9687a587beb63b"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#a50ce35d7d6ef18eccd9687a587beb63b">CPS::Base::Ph1::Resistor::mResistance</a></div><div class="ttdeci">Real mResistance</div><div class="ttdoc">Resistance [ohm].</div><div class="ttdef"><b>Definition:</b> <a href="_base___ph1___resistor_8h_source.html#l00019">Base_Ph1_Resistor.h:19</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph1_1_1_resistor_html_ab3cc7c41b332049c7b2eebf3a53f94b0"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#ab3cc7c41b332049c7b2eebf3a53f94b0">CPS::Base::Ph1::Resistor::mConductance</a></div><div class="ttdeci">Real mConductance</div><div class="ttdoc">Conductance [S].</div><div class="ttdef"><b>Definition:</b> <a href="_base___ph1___resistor_8h_source.html#l00021">Base_Ph1_Resistor.h:21</a></div></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_pointer_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributePointer</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00050">Attribute.h:50</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph1_1_1_resistor_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html">CPS::Base::Ph1::Resistor</a></div><div class="ttdef"><b>Definition:</b> <a href="_base___ph1___resistor_8h_source.html#l00017">Base_Ph1_Resistor.h:17</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph1_1_1_resistor_html_a2573c9ac1e41e1018df6956fbc3b8521"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#a2573c9ac1e41e1018df6956fbc3b8521">CPS::Base::Ph1::Resistor::mResistance</a></div><div class="ttdeci">CPS::Attribute&lt; Real &gt;::Ptr mResistance</div><div class="ttdoc">Resistance [ohm].</div><div class="ttdef"><b>Definition:</b> <a href="_base___ph1___resistor_8h_source.html#l00024">Base_Ph1_Resistor.h:24</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph1_1_1_resistor_html_ab3cc7c41b332049c7b2eebf3a53f94b0"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#ab3cc7c41b332049c7b2eebf3a53f94b0">CPS::Base::Ph1::Resistor::mConductance</a></div><div class="ttdeci">Real mConductance</div><div class="ttdef"><b>Definition:</b> <a href="_base___ph1___resistor_8h_source.html#l00021">Base_Ph1_Resistor.h:21</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -84,6 +84,12 @@ Inheritance diagram for DPsim::Scheduler:</div>
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_scheduler__inherit__graph.svg" width="100%" height="440"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for DPsim::Scheduler:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_scheduler__coll__graph.svg" width="191" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -125,7 +131,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a5369e74df20f3b2e96a5442ff36bd62c"><td class="memItemLeft" align="right" valign="top"><a id="a5369e74df20f3b2e96a5442ff36bd62c"></a>
-static CPS::AttributeBase::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>external</b></td></tr>
+static <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>external</b></td></tr>
 <tr class="separator:a5369e74df20f3b2e96a5442ff36bd62c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
@@ -239,7 +245,7 @@ CPS::Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 </div><div class="memdoc">
 <p>Separate topologically sorted list of tasks into levels which can be executed in parallel </p>
 
-<p class="definition">Definition at line <a class="el" href="_scheduler_8cpp_source.html#l00174">174</a> of file <a class="el" href="_scheduler_8cpp_source.html">Scheduler.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scheduler_8cpp_source.html#l00182">182</a> of file <a class="el" href="_scheduler_8cpp_source.html">Scheduler.cpp</a>.</p>
 
 </div>
 </div>
@@ -275,6 +281,7 @@ CPS::Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el
       </table>
 </div><div class="memdoc">
 <p>Helper function that resolves the task-attribute dependencies to task-task dependencies and inserts a root task </p>
+<p>CHECK: Having external be the nullptr can lead to segfaults rather quickly. Maybe make it a special kind of attribute</p>
 
 <p class="definition">Definition at line <a class="el" href="_scheduler_8cpp_source.html#l00078">78</a> of file <a class="el" href="_scheduler_8cpp_source.html">Scheduler.cpp</a>.</p>
 

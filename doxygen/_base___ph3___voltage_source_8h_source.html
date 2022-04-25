@@ -80,21 +80,22 @@ $(function() {
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;cps/Definitions.h&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>Base {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span>Ph3 {</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html">   16</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html">VoltageSource</a> {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html#a47c32bbc4d1df734145b0bd8201f6180">   20</a></span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html#a47c32bbc4d1df734145b0bd8201f6180">setParameters</a>(Complex voltageRef, Real srcFreq = -1) {}=0;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> updateVoltage()=0;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    };</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;}</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;cps/AttributeList.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>CPS {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span>Base {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>Ph3 {</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html">   17</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html">VoltageSource</a> {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html#a47c32bbc4d1df734145b0bd8201f6180">   21</a></span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html#a47c32bbc4d1df734145b0bd8201f6180">setParameters</a>(Complex voltageRef, Real srcFreq = -1) {}=0;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> updateVoltage()=0;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    };</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
-<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html">CPS::Base::Ph3::VoltageSource</a></div><div class="ttdef"><b>Definition:</b> <a href="_base___ph3___voltage_source_8h_source.html#l00016">Base_Ph3_VoltageSource.h:16</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source_html_a47c32bbc4d1df734145b0bd8201f6180"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html#a47c32bbc4d1df734145b0bd8201f6180">CPS::Base::Ph3::VoltageSource::setParameters</a></div><div class="ttdeci">virtual void setParameters(Complex voltageRef, Real srcFreq=-1)</div><div class="ttdoc">Sets model specific parameters.</div><div class="ttdef"><b>Definition:</b> <a href="_base___ph3___voltage_source_8h_source.html#l00020">Base_Ph3_VoltageSource.h:20</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
+<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html">CPS::Base::Ph3::VoltageSource</a></div><div class="ttdef"><b>Definition:</b> <a href="_base___ph3___voltage_source_8h_source.html#l00017">Base_Ph3_VoltageSource.h:17</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source_html_a47c32bbc4d1df734145b0bd8201f6180"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html#a47c32bbc4d1df734145b0bd8201f6180">CPS::Base::Ph3::VoltageSource::setParameters</a></div><div class="ttdeci">virtual void setParameters(Complex voltageRef, Real srcFreq=-1)</div><div class="ttdoc">Sets model specific parameters.</div><div class="ttdef"><b>Definition:</b> <a href="_base___ph3___voltage_source_8h_source.html#l00021">Base_Ph3_VoltageSource.h:21</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
