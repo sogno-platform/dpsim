@@ -36,7 +36,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		CPS::Domain sd,
 		Solver::Type st,
 		MnaSolverFactory::MnaSolverImpl mi,
-		String solverPluginName,
+		String spn,
 		String ps
 	) :
 	mProgramName(argv[0]),
@@ -73,7 +73,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 	steadyInit(si),
 	solver{sd, st},
 	mnaImpl(mi),
-	solverPluginName(solverPluginName)
+	solverPluginName(spn)
 {
 	parseArguments(argc, argv);
 }
@@ -92,7 +92,7 @@ CommandLineArgs::CommandLineArgs(
 		CPS::Domain sd,
 		Solver::Type st,
 		MnaSolverFactory::MnaSolverImpl mi,
-		String solverPluginName
+		String spn
 		) :
 	mProgramName("dpsim"),
 	mArguments {
@@ -126,7 +126,7 @@ CommandLineArgs::CommandLineArgs(
 	steadyInit(si),
 	solver{sd, st},
 	mnaImpl(mi),
-	solverPluginName(solverPluginName)
+	solverPluginName(spn)
 {
 }
 

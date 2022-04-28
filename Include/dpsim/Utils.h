@@ -65,7 +65,7 @@ public:
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA,
 		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back(),
-		String solverPluginName = "plugin.so",
+		String spn = "plugin.so",
 		String params = "default.json"
 	);
 	CommandLineArgs(
@@ -83,7 +83,7 @@ public:
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA,
 		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back(),
-		String solverPluginName = "plugin.so"
+		String spn = "plugin.so"
 	);
 
 	void parseArguments(int argc, char *argv[]);
