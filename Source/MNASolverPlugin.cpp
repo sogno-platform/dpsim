@@ -158,7 +158,7 @@ void MnaSolverPlugin<VarType>::solve(Real time, Int timeStepCount) {
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)
-		this->mNodes[nodeIdx]->mnaUpdateVoltage(this->mLeftSideVector);
+		this->mNodes[nodeIdx]->mnaUpdateVoltage(**(this->mLeftSideVector));
 
 
 	// Components' states will be updated by the post-step tasks
