@@ -3,7 +3,6 @@ set(DPSIM_SOURCES
 	RealTimeSimulation.cpp
 	MNASolver.cpp
 	MNASolverEigenDense.cpp
-	MNASolverPlugin.cpp
 	PFSolver.cpp
 	PFSolverPowerPolar.cpp
 	Utils.cpp
@@ -19,7 +18,13 @@ set(DPSIM_SOURCES
 )
 
 list(APPEND DPSIM_LIBRARIES cps)
-list(APPEND DPSIM_LIBRARIES ${CMAKE_DL_LIBS})
+
+if(WITH_MNASOLVERPLUGIN)
+	list(APPEND DPSIM_LIBRARIES ${CMAKE_DL_LIBS})
+	list(APPEND DPSIM_SOURCES
+		MNASolverPlugin.cpp
+	)
+endif()
 
 if(WITH_RT AND HAVE_TIMERFD)
 	list(APPEND DPSIM_LIBRARIES "-lrt")

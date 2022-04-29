@@ -23,7 +23,9 @@
 #endif
 #endif
 #endif
+#ifdef WITH_MNASOLVERPLUGIN
 #include <dpsim/MNASolverPlugin.h>
+#endif
 
 namespace DPsim {
 
@@ -101,9 +103,11 @@ class MnaSolverFactory {
 #endif
 #endif
 #endif
+#ifdef WITH_MNASOLVERPLUGIN
 		case MnaSolverImpl::Plugin:
 			log->info("creating Plugin solver implementation");
 			return std::make_shared<MnaSolverPlugin<VarType>>(pluginName, name, domain, logLevel);
+#endif
 		default:
 			throw CPS::SystemError("unsupported MNA implementation.");
 
