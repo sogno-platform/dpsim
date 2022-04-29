@@ -1,18 +1,11 @@
 FROM fedora:34
 
-ARG VILLAS_VERSION=0.8.0
-ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-
-
 LABEL \
-	org.label-schema.schema-version = "1.0" \
+	org.label-schema.schema-version = "1.0.0" \
 	org.label-schema.name = "DPsim" \
 	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
-	org.label-schema.author.name = "Markus Mirz" \
-	org.label-schema.author.email = "mmirz@eonerc.rwth-aachen.de" \
-	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
-	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/public/simulation/dpsim"
+	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
+	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
 
 RUN dnf -y update
 
@@ -28,7 +21,8 @@ RUN dnf -y install \
 # Tools needed for developement
 RUN dnf -y install \
 	doxygen graphviz \
-	gdb
+	gdb \
+	procps-ng
 
 # Dependencies
 RUN dnf --refresh -y install \
@@ -36,25 +30,12 @@ RUN dnf --refresh -y install \
 	eigen3-devel \
 	libxml2-devel \
 	graphviz-devel \
-	gsl-devel \
 	spdlog-devel \
 	fmt-devel
 
-## Build & Install fmtlib
-#RUN cd /tmp && \
-#	git clone --recursive https://github.com/fmtlib/fmt.git && \
-#	mkdir -p fmt/build && cd fmt/build && \
-#	git checkout 6.1.2  && \
-#	cmake -DBUILD_SHARED_LIBS=ON .. && \
-#	make -j$(nproc) install
-
-## Build & Install spdlog
-#RUN cd /tmp && \
-#	git clone --recursive https://github.com/gabime/spdlog.git && \
-#	mkdir -p spdlog/build && cd spdlog/build && \
-#	git checkout v1.5.0 && \
-#  cmake -DSPDLOG_BUILD_SHARED=ON .. && \
-#	make -j$(nproc) install
+# Install some debuginfos
+RUN dnf -y debuginfo-install \
+	python3
 
 # Build & Install sundials
 RUN cd /tmp && \
@@ -63,10 +44,6 @@ RUN cd /tmp && \
 	git checkout v3.2.1 && \
 	cmake -DCMAKE_BUILD_TYPE=Release ..  && \
 	make -j$(nproc) install
-
-# Install some debuginfos
-RUN dnf -y debuginfo-install \
-	python3
 
 # CIMpp and VILLAS are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
@@ -87,15 +64,14 @@ RUN dnf -y install \
 
 # Python dependencies
 ADD requirements.txt .
-RUN pip3 install -U setuptools
-RUN pip3 install -U wheel
+RUN pip3 install --upgrade wheel build
 RUN pip3 install -r requirements.txt
 
 # Install CIMpp from source
 RUN cd /tmp && \
 	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=CGMES_2.4.15_16FEB2016 -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
 	rm -rf /tmp/libcimpp
 
 # Install VILLAS from source
