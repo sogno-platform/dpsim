@@ -46,7 +46,9 @@ class MnaSolverFactory {
 	/// MNA implementations supported by this compilation
 	static const std::vector<MnaSolverImpl> mSupportedSolverImpls(void) {
 		static std::vector<MnaSolverImpl> ret = {
+#ifdef WITH_MNASOLVERPLUGIN
 			Plugin,
+#endif //WITH_MNASOLVERPLUGIN
 			EigenDense,
 #ifdef WITH_SPARSE
 			EigenSparse,
