@@ -1,6 +1,9 @@
 name: Build & Test Windows
 
-on: push
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 ## Build ##
 

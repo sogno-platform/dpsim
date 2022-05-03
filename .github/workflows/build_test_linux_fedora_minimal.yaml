@@ -1,6 +1,9 @@
 name: Build & Test Fedora Minimal
 
-on: push
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 ## Build ##
 
