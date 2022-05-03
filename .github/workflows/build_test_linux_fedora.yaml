@@ -89,12 +89,21 @@ jobs:
       run: |
         chmod -R +x ./build/Examples/Cxx
 
+    - name: Debug
+      shell: bash
+      working-directory: ${{ github.workspace }}      
+      run: |
+        ls -l python/src
+        ls -l python/src/dpsim
+
     - name: Run pytest
       shell: bash
       working-directory: ${{ github.workspace }}
       env:
         PYTHONPATH: "${{ github.workspace }}/build"
-      run: pytest -v Examples/Notebooks
+      run: |
+        cp -r python/src/dpsim build/
+        pytest -v Examples/Notebooks
     
     - name: Archive notebook outputs
       uses: actions/upload-artifact@v2
