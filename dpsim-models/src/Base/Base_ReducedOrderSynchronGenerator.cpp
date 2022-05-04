@@ -128,6 +128,18 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mH = H;
 }
 
+template <>
+void Base::ReducedOrderSynchronGenerator<Real>::scaleInertiaConstant(Real scalingFactor) {
+	mH = mH * scalingFactor;
+	mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH); 
+}
+
+template <>
+void Base::ReducedOrderSynchronGenerator<Complex>::scaleInertiaConstant(Real scalingFactor) {
+	mH = mH * scalingFactor;
+	mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH); 
+}
+
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 	Complex initComplexElectricalPower, Real initMechanicalPower, Complex initTerminalVoltage) {
