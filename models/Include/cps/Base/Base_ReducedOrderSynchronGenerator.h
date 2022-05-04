@@ -175,7 +175,7 @@ namespace Base {
 				Real initMechanicalPower, Complex initTerminalVoltage);
 
 			/// ### Setters ###
-			void reduceInertiaConstant(Real porcent) {mH = mH * (1.-porcent);}
+			void scaleInertiaConstant(Real scalingFactor); 
 
 			/// ### Mna Section ###
 			class MnaPreStep : public Task {
