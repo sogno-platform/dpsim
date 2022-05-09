@@ -62,7 +62,8 @@ int main(int argc, char* argv[]) {
 			exciter.initialize(Vh_init, Vf_init);
 		}
 
-		vt = (Rfd / Lmd)*exciter.step(mVd, mVq, Vref, dt);
+		//vt = (Rfd / Lmd)*exciter.step(mVd, mVq, Vref, dt);
+		vt = (Rfd / Lmd)*exciter.step(mVd, mVq, dt);
 
 		log << t << "," << vt * 257198.07031934269 << std::endl;
 	}
