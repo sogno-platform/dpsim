@@ -79,7 +79,7 @@ void DP::Ph1::SynchronGenerator3OrderVBR::specificInitialization() {
 void DP::Ph1::SynchronGenerator3OrderVBR::calculateAuxiliarConstants() {
 	mAq = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
 	mBq = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mCq = 2 * mTimeStep * mEf / (2 * mTd0_t + mTimeStep);
+	mCq = mTimeStep / (2 * mTd0_t + mTimeStep);
 
 	mB = mLd_t - mAq;
 	mA = -mLq;
@@ -105,7 +105,7 @@ void DP::Ph1::SynchronGenerator3OrderVBR::stepInPerUnit() {
 	calculateAuxiliarVariables();
 	calculateConductanceMatrix();
 	mEh_vbr(0,0) = 0.0;
-	mEh_vbr(1,0) = mAq * (**mIdq)(0,0) + mBq * (**mEdq_t)(1,0) + mCq;
+	mEh_vbr(1,0) = mAq * (**mIdq)(0,0) + mBq * (**mEdq_t)(1,0) + mCq * mEf_prev + mCq * (**mEf);
 
 	// convert Edq_t into the abc reference frame
 	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);

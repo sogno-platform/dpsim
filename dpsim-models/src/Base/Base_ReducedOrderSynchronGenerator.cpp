@@ -19,14 +19,16 @@ Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
+	mEf(Attribute<Real>::create("Ef", mAttributes)),
 	mVdq0(Attribute<Matrix>::create("Vdq0", mAttributes)),
 	mIdq0(Attribute<Matrix>::create("Idq0", mAttributes)) {
-
-	mSimTime = 0.0;
 
 	// declare state variables
 	**mVdq0 = Matrix::Zero(3,1);
 	**mIdq0 = Matrix::Zero(3,1);
+
+	//
+	mSimTime = 0.0;
 }
 
 template <>
@@ -38,12 +40,14 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
+	mEf(Attribute<Real>::create("Ef", mAttributes)),
 	mVdq(Attribute<Matrix>::create("Vdq0", mAttributes)),
 	mIdq(Attribute<Matrix>::create("Idq0", mAttributes))  {
 
 	mSimTime = 0.0;
 
 	// declare state variables
+	///FIXME: The mVdq0 and mVdq member variables are mutually exclusive and carry the same attribute name. Maybe they can be unified?
 	**mVdq = Matrix::Zero(2,1);
 	**mIdq = Matrix::Zero(2,1);
 }
@@ -184,7 +188,16 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	(**mVdq0)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta - mInitVoltageAngle);
 
 	// calculate Ef
-	mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq0)(0,0);
+	**mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq0)(0,0);
+	mEf_prev = **mEf;
+
+	// Initialize controllers
+	if (mHasExciter){
+		mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+	}
+	//if (mHasTurbineGovernor){
+	//	mTurbineGovernor->initialize(PmRef, Tm_init);
+	//}
 
 	// initial electrical torque
 	**mElecTorque = (**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0);
@@ -205,18 +218,19 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 		"\nInitial mechanical torque (per unit): {:f}"
 		"\nInitial electrical torque (per unit): {:f}"
 		"\nInitial initial mechanical theta (per unit): {:f}"
-        "\nInitial delta (per unit): {:f}"
+        "\nInitial delta (per unit): {:f} (= {:f}°)"
 		"\n--- Initialization from power flow finished ---",
 
 		(**mVdq0)(0,0),
 		(**mVdq0)(1,0),
 		(**mIdq0)(0,0),
 		(**mIdq0)(1,0),
-		mEf,
+		**mEf,
 		**mMechTorque,
 		**mElecTorque,
 		**mThetaMech,
-        **mDelta
+        **mDelta,
+        **mDelta * 180 / PI
 	);
 	mSLog->flush();
 }
@@ -247,7 +261,13 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	(**mVdq)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta - mInitVoltageAngle);
 
 	// calculate Ef
-	mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq)(0,0);
+	**mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq)(0,0);
+	mEf_prev = **mEf;
+
+	// Initialize controllers
+	if (mHasExciter){
+		mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+	}
 
 	// initial electrical torque
 	**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
@@ -268,7 +288,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 		"\nInitial mechanical torque (per unit): {:f}"
 		"\nInitial electrical torque (per unit): {:f}"
 		"\nInitial initial mechanical theta (per unit): {:f}"
-        "\nInitial delta (per unit): {:f}"
+        "\nInitial delta (per unit): {:f} (= {:f}°)"
 		"\n--- Initialization from power flow finished ---",
 
 		(**mVdq)(0,0),
@@ -279,7 +299,8 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 		**mMechTorque,
 		**mElecTorque,
 		**mThetaMech,
-        **mDelta
+        **mDelta,
+		**mDelta * 180 / PI
 	);
 	mSLog->flush();
 }
@@ -298,9 +319,25 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::MnaPreStep::execute(Real time, Int timeStepCount) {
+template <>
+void Base::ReducedOrderSynchronGenerator<Complex>::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mSynGen.mSimTime = time;
+	if (mSynGen.mHasExciter) {
+		mSynGen.mEf_prev = mSynGen.mEf;
+		mSynGen.mEf = mSynGen.mExciter->step(mSynGen.mVdq(0,0), mSynGen.mVdq(1,0), mSynGen.mTimeStep);
+	}
+	mSynGen.stepInPerUnit();
+	mSynGen.mRightVector.setZero();
+	mSynGen.mnaApplyRightSideVectorStamp(mSynGen.mRightVector);
+}
+
+template <>
+void Base::ReducedOrderSynchronGenerator<Real>::MnaPreStep::execute(Real time, Int timeStepCount) {
+	mSynGen.mSimTime = time;
+	if (mSynGen.mHasExciter) {
+		mSynGen.mEf_prev = mSynGen.mEf;
+		mSynGen.mEf = mSynGen.mExciter->step(mSynGen.mVdq0(0,0), mSynGen.mVdq0(1,0), mSynGen.mTimeStep);
+	}
 	mSynGen.stepInPerUnit();
 	(**mSynGen.mRightVector).setZero();
 	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
@@ -309,6 +346,42 @@ void Base::ReducedOrderSynchronGenerator<VarType>::MnaPreStep::execute(Real time
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::MnaPostStep::execute(Real time, Int timeStepCount) {
 	mSynGen.mnaPostStep(**mLeftVector);
+}
+
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(Real Ta, Real Ka, Real Te, Real Ke, 
+	Real Tf, Real Kf, Real Tr)
+{
+	mExciter = Signal::Exciter::make(this->mName + "_Exciter", this->mLogLevel);
+	mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
+	mHasExciter = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
+	std::shared_ptr<Signal::Exciter> exciter)
+{
+	mExciter = exciter;
+	mHasExciter = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, 
+	Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
+{
+	mTurbineGovernor = Signal::TurbineGovernor::make(this->mName + "_Governor");
+	mTurbineGovernor->setParameters(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
+	mTurbineGovernor->initialize(PmRef, Tm_init);
+	mHasTurbineGovernor = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(
+	std::shared_ptr<Signal::TurbineGovernor> turbineGovernor)
+{
+	mTurbineGovernor = turbineGovernor;
+	mHasTurbineGovernor = true;
 }
 
 // Declare specializations to move definitions to .cpp
