@@ -14,6 +14,15 @@ template <>
 Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
+<<<<<<< HEAD
+=======
+	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
+	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
+	mDelta(Attribute<Real>::create("delta", mAttributes)),
+	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
+	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
+	mEf(Attribute<Real>::create("Ef", mAttributes)),
+>>>>>>> 8b431af5 (improve vbr models to support exciter and fix exciter model)
 	mVdq0(Attribute<Matrix>::create("Vdq0", mAttributes)),
 	mIdq0(Attribute<Matrix>::create("Idq0", mAttributes)),
 	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
@@ -23,18 +32,32 @@ Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mEf(Attribute<Real>::create("Ef", mAttributes)) {
 	
+<<<<<<< HEAD
 	//
 	mSimTime = 0.0;
 
+=======
+>>>>>>> 8b431af5 (improve vbr models to support exciter and fix exciter model)
 	// declare state variables
 	**mVdq0 = Matrix::Zero(3,1);
 	**mIdq0 = Matrix::Zero(3,1);
+
+	mSimTime = 0.0;
 }
 
 template <>
 Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
+<<<<<<< HEAD
+=======
+	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
+	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
+	mDelta(Attribute<Real>::create("delta", mAttributes)),
+	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
+	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
+	mEf(Attribute<Real>::create("Ef", mAttributes)),
+>>>>>>> 8b431af5 (improve vbr models to support exciter and fix exciter model)
 	mVdq(Attribute<Matrix>::create("Vdq0", mAttributes)),
 	mIdq(Attribute<Matrix>::create("Idq0", mAttributes)),
 	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
@@ -299,9 +322,15 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	if (mHasExciter){
 		mExciter->initialize(Math::abs(mInitVoltage), **mEf);
 	}
+<<<<<<< HEAD
 	if (mHasTurbineGovernor){
 		mTurbineGovernor->initialize(**mMechTorque);
 	}
+=======
+	//if (mHasTurbineGovernor){
+	//	mTurbineGovernor->initialize(PmRef, Tm_init);
+	//}
+>>>>>>> 8b431af5 (improve vbr models to support exciter and fix exciter model)
 
 	// initial electrical torque
 	**mElecTorque = (**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0);
@@ -373,9 +402,12 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	if (mHasExciter){
 		mExciter->initialize(Math::abs(mInitVoltage), **mEf);
 	}
+<<<<<<< HEAD
 	if (mHasTurbineGovernor){
 		mTurbineGovernor->initialize(**mMechTorque);
 	}
+=======
+>>>>>>> 8b431af5 (improve vbr models to support exciter and fix exciter model)
 
 	// initial electrical torque
 	**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
@@ -433,6 +465,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
 template <>
 void Base::ReducedOrderSynchronGenerator<Complex>::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mSynGen.mSimTime = time;
+<<<<<<< HEAD
 
 	// update controller variables
 	if (mSynGen.mHasExciter) {
@@ -455,12 +488,22 @@ void Base::ReducedOrderSynchronGenerator<Complex>::MnaPreStep::execute(Real time
 	mSynGen.stepInPerUnit();
 	(**mSynGen.mRightVector).setZero();
 	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+=======
+	if (mSynGen.mHasExciter) {
+		mSynGen.mEf_prev = mSynGen.mEf;
+		mSynGen.mEf = mSynGen.mExciter->step(mSynGen.mVdq(0,0), mSynGen.mVdq(1,0), mSynGen.mTimeStep);
+	}
+	mSynGen.stepInPerUnit();
+	mSynGen.mRightVector.setZero();
+	mSynGen.mnaApplyRightSideVectorStamp(mSynGen.mRightVector);
+>>>>>>> 8b431af5 (improve vbr models to support exciter and fix exciter model)
 }
 
 template <>
 void Base::ReducedOrderSynchronGenerator<Real>::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mSynGen.mSimTime = time;
 	if (mSynGen.mHasExciter) {
+<<<<<<< HEAD
 		mSynGen.mEf_prev = **mSynGen.mEf;
 		**mSynGen.mEf = mSynGen.mExciter->step((**mSynGen.mVdq0)(0,0), (**mSynGen.mVdq0)(1,0), mSynGen.mTimeStep);
 	}
@@ -477,6 +520,11 @@ void Base::ReducedOrderSynchronGenerator<Real>::MnaPreStep::execute(Real time, I
 		**mSynGen.mDelta = **mSynGen.mDelta + mSynGen.mTimeStep * (**mSynGen.mOmMech - 1.) * mSynGen.mBase_OmMech;
 	}
 
+=======
+		mSynGen.mEf_prev = mSynGen.mEf;
+		mSynGen.mEf = mSynGen.mExciter->step(mSynGen.mVdq0(0,0), mSynGen.mVdq0(1,0), mSynGen.mTimeStep);
+	}
+>>>>>>> 8b431af5 (improve vbr models to support exciter and fix exciter model)
 	mSynGen.stepInPerUnit();
 	(**mSynGen.mRightVector).setZero();
 	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
@@ -492,7 +540,11 @@ template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(Real Ta, Real Ka, Real Te, Real Ke, 
 	Real Tf, Real Kf, Real Tr)
 {
+<<<<<<< HEAD
 	mExciter = Signal::Exciter::make(**this->mName + "_Exciter", this->mLogLevel);
+=======
+	mExciter = Signal::Exciter::make(this->mName + "_Exciter", this->mLogLevel);
+>>>>>>> 8b431af5 (improve vbr models to support exciter and fix exciter model)
 	mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
 	mHasExciter = true;
 }
@@ -506,18 +558,31 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
 }
 
 template <typename VarType>
+<<<<<<< HEAD
 void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(Real T3, Real T4, Real T5, Real Tc, 
 	Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef, Real TmRef)
 {
 	mTurbineGovernor = Signal::TurbineGovernorType1::make(**this->mName + "_TurbineGovernor", this->mLogLevel);
 	mTurbineGovernor->setParameters(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef);
 	mTurbineGovernor->initialize(TmRef);
+=======
+void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, 
+	Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
+{
+	mTurbineGovernor = Signal::TurbineGovernor::make(this->mName + "_Governor");
+	mTurbineGovernor->setParameters(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
+	mTurbineGovernor->initialize(PmRef, Tm_init);
+>>>>>>> 8b431af5 (improve vbr models to support exciter and fix exciter model)
 	mHasTurbineGovernor = true;
 }
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(
+<<<<<<< HEAD
 	std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor)
+=======
+	std::shared_ptr<Signal::TurbineGovernor> turbineGovernor)
+>>>>>>> 8b431af5 (improve vbr models to support exciter and fix exciter model)
 {
 	mTurbineGovernor = turbineGovernor;
 	mHasTurbineGovernor = true;
