@@ -11,9 +11,12 @@ Examples::Grids::SMIB::ScenarioConfig2 GridParams;
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
+// Excitation system
+Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
+
 void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
-	Real switchClosed, int SGModel, Logger::Level logLevel) {
+	Real switchClosed, int SGModel, bool withExciter, Logger::Level logLevel) {
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
@@ -102,7 +105,18 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
     genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 
-	//Grid bus as Slack
+	// Exciter
+	std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
+	if (withExciter) {
+		exciterSP = Signal::Exciter::make("SynGen_Exciter", logLevel);
+		exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka, 
+								 excitationEremia.Te, excitationEremia.Ke, 
+								 excitationEremia.Tf, excitationEremia.Kf, 
+								 excitationEremia.Tr);
+		genSP->addExciter(exciterSP);
+	}
+
+	// Grid bus as Slack
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
 	extnetSP->setParameters(GridParams.VnomMV);
 
@@ -165,6 +179,11 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	loggerSP->logAttribute("v1", n1SP->attribute("v"));
 	loggerSP->logAttribute("v2", n2SP->attribute("v"));
 
+	// Exciter
+	if (withExciter) {
+		loggerSP->addAttribute("Vf", exciterSP->attribute("Vf"));
+	}
+
 	Simulation simSP(simNameSP, logLevel);
 	simSP.doInitFromNodesAndTerminals(true);
 	simSP.setSystem(systemSP);
@@ -195,6 +214,7 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 20;
 	Real timeStep = 1e-3;
 	Real H = syngenKundur.H;
+	bool with_exciter = false;
 	int SGModel = 4;
 	std::string SGModel_str = "4Order";
 	std::string stepSize_str = "";
@@ -224,6 +244,12 @@ int main(int argc, char* argv[]) {
 			H = args.getOptionReal("Inertia");
 			inertia_str = "_Inertia_" + std::to_string(H);
 		}
+		if (args.options.find("WithExciter") != args.options.end())  {
+			with_exciter = args.getOptionBool("WithExciter");
+		}
+		if (args.options.find("FinalTime") != args.options.end())  {
+			finalTime = args.getOptionReal("FinalTime");
+		}
 	}
 
 	Real logDownSampling;
@@ -235,5 +261,5 @@ int main(int argc, char* argv[]) {
 
 	std::string simName = "SP_SynGen" + SGModel_str + "VBR_SMIB_Fault" + stepSize_str + inertia_str;
 	SP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
-			logDownSampling, SwitchOpen, SwitchClosed, SGModel, logLevel);
+			logDownSampling, SwitchOpen, SwitchClosed, SGModel, with_exciter, logLevel);
 }

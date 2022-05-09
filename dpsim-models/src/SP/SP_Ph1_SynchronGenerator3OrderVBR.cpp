@@ -83,7 +83,7 @@ void SP::Ph1::SynchronGenerator3OrderVBR::specificInitialization() {
 void SP::Ph1::SynchronGenerator3OrderVBR::calculateAuxiliarConstants() {
 	mAq = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
 	mBq = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mCq = 2 * mTimeStep * mEf / (2 * mTd0_t + mTimeStep);
+	mCq = mTimeStep / (2 * mTd0_t + mTimeStep);
 }
 
 void SP::Ph1::SynchronGenerator3OrderVBR::stepInPerUnit() {
@@ -106,7 +106,7 @@ void SP::Ph1::SynchronGenerator3OrderVBR::stepInPerUnit() {
 
 	// VBR history voltage
 	mEh_vbr(0,0) = 0.0;
-	mEh_vbr(1,0) = mAq * (**mIdq)(0,0) + mBq * (**mEdq_t)(1,0) + mCq;
+	mEh_vbr(1,0) = mAq * (**mIdq)(0,0) + mBq * (**mEdq_t)(1,0) + mCq * mEf_prev + mCq * (**mEf);
 	
 	// convert Edq_t into the abc reference frame
 	mEh_vbr = mDqToComplexA * mEh_vbr;

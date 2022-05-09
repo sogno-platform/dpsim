@@ -84,7 +84,7 @@ void EMT::Ph3::SynchronGenerator6aOrderVBR::calculateAuxiliarConstants() {
 	mBd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
 	mAq_t = - mTimeStep * Zq_t / (2 * mTd0_t + mTimeStep);
 	mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mDq_t = 2 * mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);
+	mDq_t = mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);
 
 	mAd_s = (mTimeStep * Zd_s + mTimeStep * mAd_t) / (2 * mTq0_s + mTimeStep);
 	mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * mTq0_s + mTimeStep);
@@ -92,7 +92,7 @@ void EMT::Ph3::SynchronGenerator6aOrderVBR::calculateAuxiliarConstants() {
 	mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);
 	mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);
 	mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
-	mDq_s = (mTimeStep * mDq_t + 2 * Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);
+	mDq_s = (mTimeStep * mDq_t + Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);
 }
 
 void EMT::Ph3::SynchronGenerator6aOrderVBR::stepInPerUnit() {
@@ -123,12 +123,12 @@ void EMT::Ph3::SynchronGenerator6aOrderVBR::stepInPerUnit() {
 
 	// calculate history term behind the transient reactance
 	mEh_t(0,0) = mAd_t * (**mIdq0)(1,0) + mBd_t * (**mEdq0_t)(0,0);
-	mEh_t(1,0) = mAq_t * (**mIdq0)(0,0) + mBq_t * (**mEdq0_t)(1,0) + mDq_t * mEf;
+	mEh_t(1,0) = mAq_t * (**mIdq0)(0,0) + mBq_t * (**mEdq0_t)(1,0) + mDq_t * (**mEf) + mDq_t * mEf_prev;
 	mEh_t(2,0) = 0.0;
 
 	// calculate history term behind the subtransient reactance
 	mEh_s(0,0) = mAd_s * (**mIdq0)(1,0) + mBd_s * (**mEdq0_t)(0,0) + mCd_s * (**mEdq0_s)(0,0);
-	mEh_s(1,0) = mAq_s * (**mIdq0)(0,0) + mBq_s * (**mEdq0_t)(1,0) + mCq_s * (**mEdq0_s)(1,0) + mDq_s * mEf;
+	mEh_s(1,0) = mAq_s * (**mIdq0)(0,0) + mBq_s * (**mEdq0_t)(1,0) + mCq_s * (**mEdq0_s)(1,0) + mDq_s * (**mEf) + mDq_s * mEf_prev;
 	mEh_s(2,0) = 0.0;
 
 	// convert Edq_s into the abc reference frame
