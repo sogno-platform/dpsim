@@ -81,7 +81,7 @@ void DP::Ph1::SynchronGenerator6aOrderVBR::calculateAuxiliarConstants() {
 	mBd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
 	mAq_t = - mTimeStep * Zq_t / (2 * mTd0_t + mTimeStep);
 	mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mDq_t = 2 * mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);
+	mDq_t = mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);
 
 	mAd_s = (mTimeStep * Zd_s + mTimeStep * mAd_t) / (2 * mTq0_s + mTimeStep);
 	mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * mTq0_s + mTimeStep);
@@ -89,7 +89,7 @@ void DP::Ph1::SynchronGenerator6aOrderVBR::calculateAuxiliarConstants() {
 	mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);
 	mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);
 	mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
-	mDq_s = (mTimeStep * mDq_t + 2 * Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);
+	mDq_s = (mTimeStep * mDq_t + Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);
 
 	mB = mLd_s - mAq_s;
 	mA = -mLq_s - mAd_s;
@@ -122,11 +122,11 @@ void DP::Ph1::SynchronGenerator6aOrderVBR::stepInPerUnit() {
 	
 	// calculate history term behind the transient reactance
 	mEh_t(0,0) = mAd_t * (**mIdq)(1,0) + mBd_t * (**mEdq_t)(0,0);
-	mEh_t(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * mEf;
+	mEh_t(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * (**mEf) + mDq_t * mEf_prev;
 
 	// calculate history term behind the subtransient reactance
 	mEh_s(0,0) = mAd_s * (**mIdq)(1,0) + mBd_s * (**mEdq_t)(0,0) + mCd_s * (**mEdq_s)(0,0);
-	mEh_s(1,0) = mAq_s * (**mIdq)(0,0) + mBq_s * (**mEdq_t)(1,0) + mCq_s * (**mEdq_s)(1,0) + mDq_s * mEf;
+	mEh_s(1,0) = mAq_s * (**mIdq)(0,0) + mBq_s * (**mEdq_t)(1,0) + mCq_s * (**mEdq_s)(1,0) + mDq_s * (**mEf) + mDq_s * mEf_prev;
 
 	// convert Edq_t into the abc reference frame
 	**mEvbr = (mKvbr * mEh_s * mBase_V_RMS)(0,0);

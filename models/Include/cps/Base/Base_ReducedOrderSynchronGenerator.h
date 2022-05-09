@@ -10,6 +10,8 @@
 
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
+#include <cps/Signal/Exciter.h>
+#include <cps/Signal/TurbineGovernor.h>
 
 namespace CPS {
 namespace Base {
@@ -18,28 +20,7 @@ namespace Base {
 	class ReducedOrderSynchronGenerator : 
 		public SimPowerComp<VarType>,
 		public MNAInterface {
-
-		protected:
-			///
-			ReducedOrderSynchronGenerator(String uid, String name, Logger::Level logLevel);
-			///
-			void initializeFromNodesAndTerminals(Real frequency);
-			/// Function to initialize the specific variables of each SG model
-			virtual void specificInitialization()=0;
-			///
-        	virtual void stepInPerUnit()=0;
-			
-			// ### MNA Section ###
-        	///
-        	void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-        	virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix)=0;
-        	virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector)=0;
-        	virtual void mnaPostStep(const Matrix& leftVector)=0;
-
-			///
-			Real mTimeStep;
-			Real mSimTime;
-
+				
 		public:
 			// ### State variables [p.u.]###
 			/// dq stator terminal voltage
@@ -50,17 +31,20 @@ namespace Base {
 			/// (0,0) = Id
 			/// (1,0) = Iq
 			const Attribute<Matrix>::Ptr mIdq;
-		
-			/// dq stator terminal voltage
-			/// (0,0) = Vd
-			/// (1,0) = Vq
-			/// (2,0) = V0
-			const Attribute<Matrix>::Ptr mVdq0;
-			/// dq armature current
-			/// (0,0) = Id
-			/// (1,0) = Iq
-			/// (2,0) = I0
-			const Attribute<Matrix>::Ptr mIdq0;
+			/// stator electrical torque
+			const Attribute<Real>::Ptr mElecTorque;
+			/// Mechanical torque
+			const Attribute<Real>::Ptr mMechTorque;
+			/// Rotor speed
+			const Attribute<Real>::Ptr mOmMech;
+			/// mechanical system angle (between d-axis and stator a-axis)
+			const Attribute<Real>::Ptr mThetaMech;
+			/// Load angle (between q-axis and stator a-axis)
+			const Attribute<Real>::Ptr mDelta;	
+			/// induced emf by the field current under no-load conditions at time k+1 (p.u.)
+			const Attribute<Real>::Ptr mEf;
+			/// induced emf by the field current under no-load conditions at time k (p.u.)
+			Real mEf_prev;
 
 		protected:
 			// ### Base quantities (stator refered) ###
@@ -134,26 +118,43 @@ namespace Base {
 			Complex mInitCurrent;
 			/// angle of initial armature current
 			Real mInitCurrentAngle;
-			/// initial field voltage (p.u.)
-			Real mEf;
 
 			/// Flag to remember when initial values are set
 			Bool mInitialValuesSet = false;
 
-			// ### State variables [p.u.]###
+			// #### Controllers ####
+			/// Determines if Turbine and Governor are activated
+			Bool mHasTurbineGovernor = false;
+			/// Determines if Exciter is activated
+			Bool mHasExciter = false;
+			/// Signal component modelling governor control and steam turbine
+			std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
+			/// Signal component modelling voltage regulator and exciter
+			// std::shared_ptr<Signal::Exciter> mExciter;
+			std::shared_ptr<Signal::Exciter> mExciter;
 
-			/// Mechanical torque
-			Real mMechTorque;
-		public:
-			/// stator electrical torque
-			const Attribute<Real>::Ptr mElecTorque;
-			/// Rotor speed
-			const Attribute<Real>::Ptr mOmMech;
-			/// mechanical system angle (between d-axis and stator a-axis)
-			const Attribute<Real>::Ptr mThetaMech;
-			/// Load angle (between q-axis and stator a-axis)
-			const Attribute<Real>::Ptr mDelta;		
+			///
+			Real mTimeStep;
+			Real mSimTime;
 
+		protected:
+			///
+			ReducedOrderSynchronGenerator(String uid, String name, Logger::Level logLevel);
+			///
+			void initializeFromNodesAndTerminals(Real frequency);
+			/// Function to initialize the specific variables of each SG model
+			virtual void specificInitialization()=0;
+			///
+        	virtual void stepInPerUnit()=0;
+			
+			// ### MNA Section ###
+        	///
+        	void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+        	virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix)=0;
+        	virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector)=0;
+        	virtual void mnaPostStep(const Matrix& leftVector)=0;
+			
+		public:	
 			/// Destructor - does nothing.
 			virtual ~ReducedOrderSynchronGenerator() { }
 
@@ -176,6 +177,15 @@ namespace Base {
 			///
 			void setInitialValues(Complex initComplexElectricalPower, 
 				Real initMechanicalPower, Complex initTerminalVoltage);
+
+			/// Add governor and turbine
+			void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
+				Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
+			void addGovernor(std::shared_ptr<Signal::TurbineGovernor> turbineGovernor);
+			/// Add voltage regulator and exciter
+			void addExciter(Real Ta, Real Ka, Real Te, Real Ke, 
+				Real Tf, Real Kf, Real Tr);
+			void addExciter(std::shared_ptr<Signal::Exciter> exciter);
 
 			/// ### Setters ###
 			void reduceInertiaConstant(Real porcent) {mH = mH * (1.-porcent);}
