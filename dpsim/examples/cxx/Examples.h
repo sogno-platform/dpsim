@@ -154,6 +154,7 @@ namespace KundurExample1 {
         Real transformerReactance = 10.8108; // referred to HV side
     };
 }
+
 namespace SMIB {
     struct ScenarioConfig {
         //-----------Network-----------//
@@ -206,7 +207,7 @@ namespace SMIB {
         Real lineConductance = 1e-15;
 
         // In PSAT SwitchClosed is equal to 1e-3 p.u.
-        Real SwitchClosed = 1e-3 * (24*24/555);
+        Real SwitchClosed = 0.001 * (24*24/555);
 	    Real SwitchOpen = 1e6;
     };
 
