@@ -11,9 +11,12 @@ Examples::Grids::SMIB::ScenarioConfig3 GridParams;
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
+// Excitation system
+Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
+
 void SP_1ph_SynGen_Load(String simName, Real timeStep, Real finalTime, Real H,
 	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
-	Real switchClosed, int SGModel, Logger::Level logLevel) {
+	Real switchClosed, int SGModel, bool withExciter, Logger::Level logLevel) {
 
 	// ----- Dynamic simulation ------
 	String simNameSP = simName;
@@ -45,6 +48,18 @@ void SP_1ph_SynGen_Load(String simName, Real timeStep, Real finalTime, Real H,
 				Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle), 
 						GridParams.VnomMV * sin(GridParams.initVoltAngle)));
 
+	// Exciter
+	std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
+	if (withExciter) {
+		exciterSP = Signal::Exciter::make("SynGen_Exciter", logLevel);
+		exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka, 
+								 excitationEremia.Te, excitationEremia.Ke, 
+								 excitationEremia.Tf, excitationEremia.Kf, 
+								 excitationEremia.Tr);
+		genSP->addExciter(exciterSP);
+	}
+
+	// Load
 	auto load = CPS::SP::Ph1::Load::make("Load", logLevel);
 	load->setParameters(GridParams.initActivePower, GridParams.initReactivePower, 
 						GridParams.VnomMV);
@@ -85,12 +100,22 @@ void SP_1ph_SynGen_Load(String simName, Real timeStep, Real finalTime, Real H,
 	loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
     loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
     loggerSP->logAttribute("Etorque", 	 genSP->attribute("Etorque"));
-    //loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
-    //loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
-	//loggerSP->logAttribute("Edq0", 		 genSP->attribute("Edq0_t"));
-	//loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Vdq0"));
-	//loggerSP->logAttribute("Idq0", 		 genSP->attribute("Idq0"));
+    loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
+    loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
+	loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Vdq0"));
+	loggerSP->logAttribute("Idq0", 		 genSP->attribute("Idq0"));
 	//loggerSP->logAttribute("Evbr", 		 genSP->attribute("Evbr"));
+	if (SGModel==6 || SGModel==7) {
+		loggerSP->logAttribute("Edq0_s", 	 genSP->attribute("Edq_s"));
+		loggerSP->logAttribute("Edq0_t", 	 genSP->attribute("Edq_t"));
+	} else {
+		loggerSP->logAttribute("Edq0", 		 genSP->attribute("Edq_t"));
+	}
+	
+	// Exciter
+	if (withExciter) {
+		loggerSP->logAttribute("Vf", exciterSP->attribute("Vf"));
+	}
 
 	Simulation simSP(simNameSP, logLevel);
 	simSP.doInitFromNodesAndTerminals(true);
@@ -123,6 +148,7 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 5;
 	Real timeStep = 1e-3;
 	Real H = syngenKundur.H;
+	bool withExciter = false;
 	int SGModel = 4;
 	std::string SGModel_str = "4Order";
 	std::string stepSize_str = "";
@@ -152,6 +178,8 @@ int main(int argc, char* argv[]) {
 			H = args.getOptionReal("Inertia");
 			inertia_str = "_Inertia_" + std::to_string(H);
 		}
+		if (args.options.find("WITHEXCITER") != args.options.end())
+			withExciter = args.getOptionBool("WITHEXCITER");
 	}
 
 	Real logDownSampling;
@@ -162,5 +190,5 @@ int main(int argc, char* argv[]) {
 	Logger::Level logLevel = Logger::Level::off;
 	std::string simName = "SP_SynGen" + SGModel_str + "VBR_Load_Fault" + stepSize_str + inertia_str;
 	SP_1ph_SynGen_Load(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
-			logDownSampling, SwitchOpen, SwitchClosed, SGModel, logLevel);
+			logDownSampling, SwitchOpen, SwitchClosed, SGModel, withExciter, logLevel);
 }
