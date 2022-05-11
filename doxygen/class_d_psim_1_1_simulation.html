@@ -295,6 +295,10 @@ Public Attributes</h2></td></tr>
 const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; String &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_simulation.html#af038202f42605d76827385fa284f1322">mName</a></td></tr>
 <tr class="memdesc:af038202f42605d76827385fa284f1322"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> name. <br /></td></tr>
 <tr class="separator:af038202f42605d76827385fa284f1322"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a691d0320e81e9b81ebe596bad27a2c8d"><td class="memItemLeft" align="right" valign="top"><a id="a691d0320e81e9b81ebe596bad27a2c8d"></a>
+String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_simulation.html#a691d0320e81e9b81ebe596bad27a2c8d">mSolverPluginName</a></td></tr>
+<tr class="memdesc:a691d0320e81e9b81ebe596bad27a2c8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">If there we use a solver plugin, this specifies its name (excluding .so) <br /></td></tr>
+<tr class="separator:a691d0320e81e9b81ebe596bad27a2c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79e5b01e62de7b2e2cdd48671f038430"><td class="memItemLeft" align="right" valign="top"><a id="a79e5b01e62de7b2e2cdd48671f038430"></a>
 const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_simulation.html#a79e5b01e62de7b2e2cdd48671f038430">mFinalTime</a></td></tr>
 <tr class="memdesc:a79e5b01e62de7b2e2cdd48671f038430"><td class="mdescLeft">&#160;</td><td class="mdescRight">Final time of the simulation. <br /></td></tr>
@@ -461,7 +465,7 @@ AttributeBase::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <p>Reset internal state of simulation. </p>
 <p>DEPRECATED: Unused. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00417">417</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00418">418</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -487,7 +491,7 @@ AttributeBase::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="
 </div><div class="memdoc">
 <p>Determines if the system matrix is split into several smaller matrices, one for each frequency. This can only be done if the network is composed of linear components that do no create cross frequency coupling. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00109">109</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00111">111</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -504,7 +508,7 @@ AttributeBase::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="
 </div><div class="memdoc">
 <p>Determines if the network should be split into subnetworks at decoupling lines. If the system is split, each subsystem is solved by a dedicated MNA solver. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00055">55</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00057">57</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -521,7 +525,7 @@ AttributeBase::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="
 </div><div class="memdoc">
 <p>Determines if steady-state initialization should be executed prior to the simulation. By default the initialization is disabled. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00060">60</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00062">62</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -546,7 +550,7 @@ AttributeBase::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="
 </div><div class="memdoc">
 <p>If tearing components exist, the Diakoptics solver is selected automatically. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00103">103</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00105">105</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>

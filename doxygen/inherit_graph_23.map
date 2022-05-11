@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="5,5991,92,6018"/>
+<area shape="rect" id="node1" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="5,6057,92,6083"/>
 <area shape="rect" id="node2" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator_1_1_mna_post_step.html" title=" " alt="" coords="140,5,377,47"/>
 <area shape="rect" id="node3" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator_1_1_mna_pre_step.html" title=" " alt="" coords="141,71,376,112"/>
 <area shape="rect" id="node4" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q_1_1_control_pre_step.html" title=" " alt="" coords="151,136,366,177"/>
@@ -181,7 +181,9 @@
 <area shape="rect" id="node180" href="$class_d_psim_1_1_mna_solver_gpu_magma_1_1_solve_task.html" title=" " alt="" coords="159,11579,358,11620"/>
 <area shape="rect" id="node181" href="$class_d_psim_1_1_mna_solver_gpu_sparse_1_1_log_task.html" title=" " alt="" coords="160,11644,357,11685"/>
 <area shape="rect" id="node182" href="$class_d_psim_1_1_mna_solver_gpu_sparse_1_1_solve_task.html" title=" " alt="" coords="160,11709,357,11751"/>
-<area shape="rect" id="node183" href="$class_d_psim_1_1_o_d_e_solver_1_1_solve_task.html" title=" " alt="" coords="158,11775,359,11802"/>
-<area shape="rect" id="node184" href="$class_d_psim_1_1_p_f_solver_1_1_solve_task.html" title=" " alt="" coords="163,11826,354,11853"/>
-<area shape="rect" id="node185" href="$class_d_psim_1_1_scheduler_1_1_root.html" title=" " alt="" coords="177,11877,341,11903"/>
+<area shape="rect" id="node183" href="$class_d_psim_1_1_mna_solver_plugin_1_1_log_task.html" title=" " alt="" coords="175,11775,342,11816"/>
+<area shape="rect" id="node184" href="$class_d_psim_1_1_mna_solver_plugin_1_1_solve_task.html" title=" " alt="" coords="175,11840,342,11881"/>
+<area shape="rect" id="node185" href="$class_d_psim_1_1_o_d_e_solver_1_1_solve_task.html" title=" " alt="" coords="158,11906,359,11933"/>
+<area shape="rect" id="node186" href="$class_d_psim_1_1_p_f_solver_1_1_solve_task.html" title=" " alt="" coords="163,11957,354,11983"/>
+<area shape="rect" id="node187" href="$class_d_psim_1_1_scheduler_1_1_root.html" title=" " alt="" coords="177,12007,341,12034"/>
 </map>
