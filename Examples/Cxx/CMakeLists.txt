@@ -140,6 +140,11 @@ if(WITH_CIM)
 		CIM/EMT_WSCC-9bus_VBR.cpp
 		CIM/DP_WSCC-9bus_IdealVS.cpp
 
+		# WSCC Reduced Order
+		CIM/SP_WSCC9bus_SGReducedOrderVBR.cpp
+		CIM/EMT_WSCC9bus_SGReducedOrderVBR.cpp	
+		CIM/DP_WSCC9bus_SGReducedOrderVBR.cpp
+
 		# PF(Power Flow) example
 		CIM/Slack_Trafo_Load.cpp
 		CIM/Slack_TrafoTapChanger_Load.cpp
