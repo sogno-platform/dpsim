@@ -158,8 +158,7 @@ int main(int argc, char* argv[]) {
 	// Logging
 	// log node voltage
 	auto logger = DataLogger::make(simName, true, logDownSampling);
-		for (auto node : systemDP.mNodes)
-			logger->logAttribute(node->name() + ".V", node->attribute("v"));
+		for (auto node : systemDP.mNodes)			logger->logAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log generator vars
 	logger->logAttribute(genDP->name() + ".Tm", genDP->attribute("Tm"));
