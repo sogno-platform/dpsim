@@ -75,6 +75,11 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/SP_SynGen4OrderDCIM_SMIB_Fault.cpp
 
+	# SMIB Reduced Order - Load step
+	Circuits/SP_SMIB_ReducedOrderSG_LoadStep.cpp
+	Circuits/DP_SMIB_ReducedOrderSG_LoadStep.cpp
+	Circuits/EMT_SMIB_ReducedOrderSG_LoadStep.cpp
+
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
