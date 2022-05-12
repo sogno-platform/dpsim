@@ -6,7 +6,7 @@ using namespace CPS;
 using namespace CPS::CIM;
 
 // Grid parameters
-Examples::Grids::SMIB::ScenarioConfig4 GridParams;
+Examples::Grids::SMIB::ReducedOrderSynchronGenerator::Scenario4::GridParams GridParams;
 
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
