@@ -67,6 +67,27 @@ void DP::Ph1::SynchronGeneratorVBR::calculateAuxiliarVariables() {
 	mKvbr(0,1) = -Complex(cos(mThetaMech - mBase_OmMech * mSimTime - PI/2.), sin(mThetaMech - mBase_OmMech * mSimTime - PI/2.));
 }
 
+void DP::Ph1::SynchronGeneratorVBR::mnaInitialize(Real omega, 
+		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+
+	Base::ReducedOrderSynchronGenerator<Complex>::mnaInitialize(omega, timeStep, leftVector);
+
+	// upper left
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex()));
+
+	// buttom right
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
+
+	// off diagonal
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0)));
+	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex()));
+	
+	mSLog->info("List of index pairs of varying matrix entries: ");
+	for (auto indexPair : mVariableSystemMatrixEntries)
+		mSLog->info("({}, {})", indexPair.first, indexPair.second);
+
+}
+
 void DP::Ph1::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Stamp voltage source
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1, 0));

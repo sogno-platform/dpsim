@@ -51,6 +51,7 @@ namespace Ph3 {
         void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
         void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		void mnaPostStep(const Matrix& leftVector);
+        void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 
     public:
         virtual ~ReducedOrderSynchronGeneratorVBR();
