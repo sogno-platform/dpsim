@@ -89,13 +89,6 @@ jobs:
       run: |
         chmod -R +x ./build/Examples/Cxx
 
-    - name: Debug
-      shell: bash
-      working-directory: ${{ github.workspace }}      
-      run: |
-        ls -l python/src
-        ls -l python/src/dpsim
-
     - name: Run pytest
       shell: bash
       working-directory: ${{ github.workspace }}
