@@ -10,7 +10,6 @@
 #include <list>
 
 #include <DPsim.h>
-#include "../../dpsim/Examples/Cxx/Examples.h"
 
 using namespace DPsim;
 using namespace CPS::SP;
