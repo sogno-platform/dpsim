@@ -127,7 +127,7 @@ namespace DPsim {
         CPS::String logVector(std::vector<CPS::UInt> indexVector) {
             std::stringstream result;
             std::copy(indexVector.begin(), indexVector.end(), std::ostream_iterator<CPS::UInt>(result, " "));
-            return result.str().c_str();
+            return result.str();
         };
         ///
         CPS::Task::List getTasks();
