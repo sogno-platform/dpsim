@@ -148,7 +148,7 @@ $(function() {
 <div class="line"><a name="l00127"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_p_f_solver.html#a46991dff2a64421a692242c1befbefc2">  127</a></span>&#160;        CPS::String <a class="code" href="class_d_psim_1_1_p_f_solver.html#a46991dff2a64421a692242c1befbefc2">logVector</a>(std::vector&lt;CPS::UInt&gt; indexVector) {</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            std::stringstream result;</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            std::copy(indexVector.begin(), indexVector.end(), std::ostream_iterator&lt;CPS::UInt&gt;(result, <span class="stringliteral">&quot; &quot;</span>));</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <span class="keywordflow">return</span> result.str().c_str();</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <span class="keywordflow">return</span> result.str();</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        };</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        CPS::Task::List <a class="code" href="class_d_psim_1_1_p_f_solver.html#a5eae6daeaa25e6aed45c1710e05a0ad0">getTasks</a>();</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="comment">// determines power flow bus type for each node according to the components attached to it.</span></div>
