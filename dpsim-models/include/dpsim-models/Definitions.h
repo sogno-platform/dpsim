@@ -26,7 +26,7 @@
 
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
-#include <Eigen/NICSLUSupport>
+#include <Eigen/KLUSupport>
 
 #ifdef __clang__
 #elif defined(__GNUC__)
@@ -88,7 +88,7 @@ namespace CPS {
 	///
 	typedef Eigen::SparseLU<SparseMatrix> LUFactorizedSparse;
 	///
-	typedef Eigen::NICSLU<Matrix> LUFactorizedNICSLU;
+	typedef Eigen::KLU<SparseMatrix> LUFactorizedKLU;
 	///
 	typedef Eigen::Matrix<Real, Eigen::Dynamic, 1> Vector;
 	///
