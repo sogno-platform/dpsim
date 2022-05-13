@@ -116,8 +116,10 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Complex>::Ptr, CPS::SimNode<CPS::Complex>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Complex>))
 		.def("component", &DPsim::SystemTopology::component<CPS::TopologicalPowerComp>)
 		.def("add_tear_component", &DPsim::SystemTopology::addTearComponent)
+#ifdef WITH_GRAPHVIZ
 		.def("_repr_svg_", &DPsim::SystemTopology::render)
 		.def("render_to_file", &DPsim::SystemTopology::renderToFile)
+#endif
 		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
 		.def_readwrite("components", &DPsim::SystemTopology::mComponents)
 		.def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
@@ -205,9 +207,11 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("HOURS", CPS::CSVReader::DataFormat::HOURS)
 		.value("MINUTES", CPS::CSVReader::DataFormat::MINUTES);
 
+#ifdef WITH_CIM
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
 		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info, "comploglevel"_a = CPS::Logger::Level::off)
 		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM);
+#endif
 
 	py::class_<CPS::CSVReader>(m, "CSVReader")
 		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())
