@@ -1,17 +1,11 @@
 FROM fedora:34
 
-ARG VILLAS_VERSION=0.8.0
-ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-
 LABEL \
-	org.label-schema.schema-version = "1.0" \
+	org.label-schema.schema-version = "1.0.0" \
 	org.label-schema.name = "DPsim" \
 	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
-	org.label-schema.author.name = "Markus Mirz" \
-	org.label-schema.author.email = "mmirz@eonerc.rwth-aachen.de" \
-	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
-	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/public/simulation/dpsim"
+	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
+	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
 
 RUN dnf -y update
 

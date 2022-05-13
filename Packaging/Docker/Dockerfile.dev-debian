@@ -1,8 +1,5 @@
 FROM debian:10
 
-ARG VILLAS_VERSION=0.8.0
-ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-
 RUN apt-get update -y
 
 # Toolchain
@@ -97,7 +94,7 @@ RUN pip3 install -r requirements.txt
 RUN cd /tmp && \
 	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib -DUSE_CIM_VERSION=CGMES_2.4.15_16FEB2016 -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
 	rm -rf /tmp/libcimpp
 
 # Install VILLAS from source

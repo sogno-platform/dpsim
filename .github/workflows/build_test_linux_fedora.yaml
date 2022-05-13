@@ -94,7 +94,9 @@ jobs:
       working-directory: ${{ github.workspace }}
       env:
         PYTHONPATH: "${{ github.workspace }}/build"
-      run: pytest -v Examples/Notebooks
+      run: |
+        cp -r python/src/dpsim build/
+        pytest -v Examples/Notebooks
     
     - name: Archive notebook outputs
       uses: actions/upload-artifact@v2

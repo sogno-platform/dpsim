@@ -14,15 +14,18 @@ template <typename VarType>
 SimNode<VarType>::SimNode(String uid, String name,
 	std::vector<UInt> matrixNodeIndex, PhaseType phaseType, const std::vector<Complex> &initialVoltage)
 	: TopologicalNode(uid, name, phaseType, initialVoltage),
-	mVoltage(Attribute<MatrixVar<VarType>>::create("v", mAttributes)) {
+	mVoltage(Attribute<MatrixVar<VarType>>::create("v", mAttributes)),
+	mApparentPower(Attribute<MatrixVar<VarType>>::create("s", mAttributes)) {
 
 	if (phaseType == PhaseType::ABC) {
 		mMatrixNodeIndex = matrixNodeIndex;
 		**mVoltage = MatrixVar<VarType>::Zero(3, 1);
+		**mApparentPower = MatrixVar<VarType>::Zero(3, 1);
 	}
 	else {
 		mMatrixNodeIndex[0] = matrixNodeIndex[0];
 		**mVoltage = MatrixVar<VarType>::Zero(1, 1);
+		**mApparentPower = MatrixVar<VarType>::Zero(1, 1);
 	}
 }
 
@@ -55,6 +58,11 @@ VarType SimNode<VarType>::singleVoltage(PhaseType phaseType) {
 template<>
 void SimNode<Complex>::setVoltage(Complex newVoltage) {
 	(**mVoltage)(0, 0) = newVoltage;
+}
+
+template<>
+void SimNode<Complex>::setPower(Complex newPower) {
+	(**mApparentPower)(0, 0) = newPower;
 }
 
 template<>
