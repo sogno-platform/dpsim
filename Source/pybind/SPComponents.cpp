@@ -10,7 +10,6 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <cps/IdentifiedObject.h>
-#include <cps/CIM/Reader.h>
 #include <DPsim.h>
 #include <cps/CSVReader.h>
 #include <Utils.h>

@@ -10,7 +10,6 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <cps/IdentifiedObject.h>
-#include <cps/CIM/Reader.h>
 #include <DPsim.h>
 #include <cps/CSVReader.h>
 #include <Utils.h>
@@ -36,7 +35,7 @@ void addAttributes(py::module_ m) {
 		py::class_<CPS::AttributeStatic<CPS::Real>, CPS::AttributePointer<CPS::AttributeStatic<CPS::Real>>, CPS::Attribute<CPS::Real>>(m, "AttributeRealStat");
 		py::class_<CPS::AttributeDynamic<CPS::Real>, CPS::AttributePointer<CPS::AttributeDynamic<CPS::Real>>, CPS::Attribute<CPS::Real>>(m, "AttributeRealDyn")
 			.def("set_reference", &CPS::AttributeDynamic<CPS::Real>::setReference);
-		
+
 
 		py::class_<CPS::Attribute<CPS::Complex>, CPS::AttributePointer<CPS::Attribute<CPS::Complex>>, CPS::AttributeBase>(m, "AttributeComplex")
 			.def("get", &CPS::Attribute<CPS::Complex>::get)
@@ -50,7 +49,7 @@ void addAttributes(py::module_ m) {
 		py::class_<CPS::AttributeStatic<CPS::Complex>, CPS::AttributePointer<CPS::AttributeStatic<CPS::Complex>>, CPS::Attribute<CPS::Complex>>(m, "AttributeComplexStat");
 		py::class_<CPS::AttributeDynamic<CPS::Complex>, CPS::AttributePointer<CPS::AttributeDynamic<CPS::Complex>>, CPS::Attribute<CPS::Complex>>(m, "AttributeComplexDyn")
 			.def("set_reference", &CPS::AttributeDynamic<CPS::Complex>::setReference);
-		
+
 
 		py::class_<CPS::Attribute<CPS::Matrix>, CPS::AttributePointer<CPS::Attribute<CPS::Matrix>>, CPS::AttributeBase>(m, "AttributeMatrix")
 			.def("get", &CPS::Attribute<CPS::Matrix>::get)
@@ -60,7 +59,7 @@ void addAttributes(py::module_ m) {
 		py::class_<CPS::AttributeStatic<CPS::Matrix>, CPS::AttributePointer<CPS::AttributeStatic<CPS::Matrix>>, CPS::Attribute<CPS::Matrix>>(m, "AttributeMatrixStat");
 		py::class_<CPS::AttributeDynamic<CPS::Matrix>, CPS::AttributePointer<CPS::AttributeDynamic<CPS::Matrix>>, CPS::Attribute<CPS::Matrix>>(m, "AttributeMatrixDyn")
 			.def("set_reference", &CPS::AttributeDynamic<CPS::Matrix>::setReference);
-		
+
 
 		py::class_<CPS::Attribute<CPS::MatrixComp>, CPS::AttributePointer<CPS::Attribute<CPS::MatrixComp>>, CPS::AttributeBase>(m, "AttributeMatrixComp")
 			.def("get", &CPS::Attribute<CPS::MatrixComp>::get)
@@ -70,7 +69,7 @@ void addAttributes(py::module_ m) {
 		py::class_<CPS::AttributeStatic<CPS::MatrixComp>, CPS::AttributePointer<CPS::AttributeStatic<CPS::MatrixComp>>, CPS::Attribute<CPS::MatrixComp>>(m, "AttributeMatrixCompStat");
 		py::class_<CPS::AttributeDynamic<CPS::MatrixComp>, CPS::AttributePointer<CPS::AttributeDynamic<CPS::MatrixComp>>, CPS::Attribute<CPS::MatrixComp>>(m, "AttributeMatrixCompDyn")
 			.def("set_reference", &CPS::AttributeDynamic<CPS::MatrixComp>::setReference);
-		
+
 		py::class_<CPS::Attribute<CPS::String>, CPS::AttributePointer<CPS::Attribute<CPS::String>>, CPS::AttributeBase>(m, "AttributeString")
 			.def("get", &CPS::Attribute<CPS::String>::get)
 			.def("set", &CPS::Attribute<CPS::String>::set);

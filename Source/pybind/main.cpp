@@ -18,7 +18,6 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <cps/IdentifiedObject.h>
-#include <cps/CIM/Reader.h>
 #include <DPsim.h>
 
 #include <cps/CSVReader.h>
@@ -142,12 +141,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("log_attribute", [](DPsim::DataLogger &logger, const std::vector<CPS::String> &names, const CPS::String &attr, CPS::IdentifiedObject &comp) {
 			logger.logAttribute(names, comp.attribute(attr));
 		});
-		
+
 	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
 		.def("name", &CPS::IdentifiedObject::name)
-		/// CHECK: It would be nicer if all the attributes of an IdObject were bound as properties so they show up in the documentation and auto-completion. 
+		/// CHECK: It would be nicer if all the attributes of an IdObject were bound as properties so they show up in the documentation and auto-completion.
 		/// I don't know if this is possible to do because it depends on if the attribute map is filled before or after the code in this file is run.
-		/// Manually adding the attributes would of course be possible but very tedious to do for all existing components / attributes 
+		/// Manually adding the attributes would of course be possible but very tedious to do for all existing components / attributes
 		.def("attr", &CPS::IdentifiedObject::attributeBase, "name"_a)
 		.def("print_attribute_list", &printAttributes)
 		.def("print_attribute", &printAttribute, "attribute_name"_a)
