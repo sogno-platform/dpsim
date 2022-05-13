@@ -273,7 +273,8 @@
 <title>Node15&#45;&gt;Node1</title>
 <path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M587.15,-252.23C692.95,-256.4 891.2,-257.63 1055,-221 1086.78,-213.89 1121.29,-197.92 1141.62,-187.57"/>
 <polygon fill="#9a32cd" stroke="#9a32cd" points="587.03,-248.72 576.9,-251.81 586.74,-255.72 587.03,-248.72"/>
-<text text-anchor="middle" x="848.5" y="-255" font-family="Helvetica" font-size="10.00"> mVoltage</text>
+<text text-anchor="middle" x="848.5" y="-266" font-family="Helvetica" font-size="10.00"> mApparentPower</text>
+<text text-anchor="middle" x="848.5" y="-255" font-family="Helvetica" font-size="10.00">mVoltage</text>
 </g>
 <!-- Node16 -->
 <g id="node16" class="node">

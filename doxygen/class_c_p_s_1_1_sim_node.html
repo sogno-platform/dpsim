@@ -165,6 +165,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setMatrixNodeIndex</b
 <tr class="memitem:a1d4fb526068e176fd22564f4ebfe74ed"><td class="memItemLeft" align="right" valign="top"><a id="a1d4fb526068e176fd22564f4ebfe74ed"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setVoltage</b> (VarType newVoltage)</td></tr>
 <tr class="separator:a1d4fb526068e176fd22564f4ebfe74ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bd39301abd00f334ef2b4e4ec179468"><td class="memItemLeft" align="right" valign="top"><a id="a2bd39301abd00f334ef2b4e4ec179468"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setPower</b> (VarType newPower)</td></tr>
+<tr class="separator:a2bd39301abd00f334ef2b4e4ec179468"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c113b8eda48c0787a312c75f7c8d2b0"><td class="memItemLeft" align="right" valign="top"><a id="a1c113b8eda48c0787a312c75f7c8d2b0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaUpdateVoltage</b> (const Matrix &amp;leftVector)</td></tr>
 <tr class="separator:a1c113b8eda48c0787a312c75f7c8d2b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -258,6 +261,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a3cbb439b2ef573b19d010752f175e8b1"><td class="memItemLeft" align="right" valign="top"><a id="a3cbb439b2ef573b19d010752f175e8b1"></a>
 const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixVar&lt; VarType &gt; &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>mVoltage</b></td></tr>
 <tr class="separator:a3cbb439b2ef573b19d010752f175e8b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16189961f5d8989f67777784420484b2"><td class="memItemLeft" align="right" valign="top"><a id="a16189961f5d8989f67777784420484b2"></a>
+const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixVar&lt; VarType &gt; &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_node.html#a16189961f5d8989f67777784420484b2">mApparentPower</a></td></tr>
+<tr class="memdesc:a16189961f5d8989f67777784420484b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Power injected at node. <br /></td></tr>
+<tr class="separator:a16189961f5d8989f67777784420484b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_class_c_p_s_1_1_topological_node"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_class_c_p_s_1_1_topological_node')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_topological_node.html">CPS::TopologicalNode</a></td></tr>
 <tr class="memitem:a577bb94f712bc4aa0134035cd8ca4880 inherit pub_attribs_class_c_p_s_1_1_topological_node"><td class="memItemLeft" align="right" valign="top"><a id="a577bb94f712bc4aa0134035cd8ca4880"></a>
 const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixComp &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>mInitialVoltage</b></td></tr>
@@ -364,7 +371,7 @@ template&lt;typename VarType &gt; </div>
 </div><div class="memdoc">
 <p>Create named node and optionally assigns an initial voltage. This should be the constructor called by users in examples. </p>
 
-<p class="definition">Definition at line <a class="el" href="_sim_node_8h_source.html#l00046">46</a> of file <a class="el" href="_sim_node_8h_source.html">SimNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_sim_node_8h_source.html#l00048">48</a> of file <a class="el" href="_sim_node_8h_source.html">SimNode.h</a>.</p>
 
 </div>
 </div>
@@ -423,7 +430,7 @@ template&lt;typename VarType &gt; </div>
 </div><div class="memdoc">
 <p>Create node with name and node number. This is mostly used by functions. </p>
 
-<p class="definition">Definition at line <a class="el" href="_sim_node_8h_source.html#l00051">51</a> of file <a class="el" href="_sim_node_8h_source.html">SimNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_sim_node_8h_source.html#l00053">53</a> of file <a class="el" href="_sim_node_8h_source.html">SimNode.h</a>.</p>
 
 </div>
 </div>
@@ -464,7 +471,7 @@ template&lt;typename VarType &gt; </div>
 </div><div class="memdoc">
 <p>Create node with default name and node number. This is mostly used by functions. </p>
 
-<p class="definition">Definition at line <a class="el" href="_sim_node_8h_source.html#l00056">56</a> of file <a class="el" href="_sim_node_8h_source.html">SimNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_sim_node_8h_source.html#l00058">58</a> of file <a class="el" href="_sim_node_8h_source.html">SimNode.h</a>.</p>
 
 </div>
 </div>
