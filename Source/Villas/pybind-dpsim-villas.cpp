@@ -18,8 +18,8 @@
 #include <pybind11/complex.h>
 #include <pybind11/stl.h>
 
-#include <dpsim-villas/InterfaceShmem.h>
-#include <dpsim-villas/InterfaceVillas.h>
+#include <dpsim/Villas/InterfaceShmem.h>
+#include <dpsim/Villas/InterfaceVillas.h>
 
 namespace py = pybind11;
 using namespace py::literals;

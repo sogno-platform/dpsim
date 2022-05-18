@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <dpsim-villas/InterfaceSampleBased.h>
+#include <dpsim/Villas/InterfaceSampleBased.h>
 
 #include <villas/node.hpp>
 #include <villas/exceptions.hpp>
