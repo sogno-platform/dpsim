@@ -88,6 +88,19 @@ if(WITH_OPENMP)
 	list(APPEND DPSIM_LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
 
+if(WITH_SHMEM)
+	message("Configuring dpsim-villas...")
+
+	set(DPSIM_VILLAS_SOURCES
+		Villas/InterfaceSampleBased.cpp
+		Villas/InterfaceShmem.cpp
+		Villas/InterfaceVillas.cpp
+	)
+
+	set(DPSIM_VILLAS_LIBRARIES ${VILLASNODE_LIBRARIES} pthread)
+	set(DPSIM_VILLAS_INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
+endif()
+
 add_library(dpsim ${DPSIM_SOURCES} ${DPSIM_VILLAS_SOURCES})
 target_link_libraries(dpsim PUBLIC ${DPSIM_LIBRARIES} ${DPSIM_VILLAS_LIBRARIES})
 target_include_directories(dpsim PUBLIC ${DPSIM_INCLUDE_DIRS} ${DPSIM_VILLAS_INCLUDE_DIRS})
