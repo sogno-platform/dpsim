@@ -1,10 +1,4 @@
-/* Copyright 2017-2022 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-License-Identifier: Apache-2.0
 
 #include <fstream>
 
@@ -18,7 +12,7 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[]) {
 	// Very simple test circuit. Just a few resistors and an inductance.
 	// Voltage is read from VILLASnode and current through everything is written back.
-	String simName = "Mqtt_example";
+	String simName = "Shmem_example";
 	CPS::Logger::setLogDir("logs/"+simName);
 	Real timeStep = 0.1;
 
@@ -56,22 +50,22 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(2.0);
 	
-    std::string mqttConfig = R"STRING({
-        "type": "mqtt",
-        "format": "json",
-        "host": "mqtt",
+    std::string shmemConfig = R"STRING(
+		{
+        "type": "shmem",
         "in": {
-            "subscribe": "/mqtt-dpsim"
+            "name": "shmem-dpsim"
         },
         "out": {
-            "publish": "/dpsim-mqtt"
-        }
+            "name": "dpsim-shmem"
+        },
+		"queuelen": 1024
     })STRING";
 
-    InterfaceVillas intf("dpsim-mqtt", mqttConfig);
+    InterfaceVillas intf("dpsim-shmem", shmemConfig);
 
 	// Interface
-	evs->mVoltageRef->setReference(intf.importComplex(0));
+	//evs->setAttributeRef("V_ref", intf.importComplex(0));
 	intf.exportComplex(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, "v_src");
 	intf.exportComplex(rL->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1, "v_load");
 	sim.addInterface(&intf, true);

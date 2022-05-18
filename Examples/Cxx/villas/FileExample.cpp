@@ -1,15 +1,9 @@
-/* Copyright 2017-2022 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-License-Identifier: Apache-2.0
 
 #include <fstream>
 
 #include <DPsim.h>
-#include <dpsim/Villas/InterfaceShmem.h>
+#include <dpsim/Villas/InterfaceVillas.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -18,9 +12,9 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[]) {
 	// Very simple test circuit. Just a few resistors and an inductance.
 	// Voltage is read from VILLASnode and current through everything is written back.
-	String simName = "Shmem_Example";
+	String simName = "File_example";
 	CPS::Logger::setLogDir("logs/"+simName);
-	Real timeStep = 0.001;
+	Real timeStep = 0.01;
 
 	// Nodes
 	auto n1 = SimNode::make("n1");
@@ -51,22 +45,24 @@ int main(int argc, char* argv[]) {
 		SystemNodeList{SimNode::GND, n1, n2, n3, n4},
 		SystemComponentList{evs, rs, rl, ll, rL});
 
-#ifdef REALTIME
 	RealTimeSimulation sim(simName);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
-	sim.setFinalTime(1.0);
-	InterfaceShmem intf("/villas1-in", "/villas1-out", nullptr, false);
-#else
-	Simulation sim(simName);
-	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(1.0);
-	InterfaceShmem intf("/villas1-in", "/villas1-out");
-#endif
+	sim.setFinalTime(10.0);
+	
+    std::string fileConfig = R"STRING({
+        "type": "file",
+		"uri": "logs/output.csv",
+        "format": "csv",
+        "out": {
+            "flush": true
+        }
+    })STRING";
+
+    InterfaceVillas intf("dpsim-file", fileConfig);
 
 	// Interface
-	evs->mVoltageRef->setReference(intf.importComplex(0));
+	//evs->setAttributeRef("V_ref", intf.importComplex(0));
 	intf.exportComplex(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
 	sim.addInterface(&intf);
 
@@ -80,7 +76,7 @@ int main(int argc, char* argv[]) {
 	logger->logAttribute("i_evs", evs->mIntfCurrent, 1, 1);
 	sim.addLogger(logger);
 
-	sim.run();
+	sim.run(1);
 
 	//std::ofstream of("task_dependencies.svg");
 	//sim.dependencyGraph().render(of);
