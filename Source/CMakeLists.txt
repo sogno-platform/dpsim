@@ -92,9 +92,9 @@ if(WITH_SHMEM)
 	message("Configuring dpsim-villas...")
 
 	set(DPSIM_VILLAS_SOURCES
-		Villas/InterfaceSampleBased.cpp
-		Villas/InterfaceShmem.cpp
-		Villas/InterfaceVillas.cpp
+		../villas/source/InterfaceSampleBased.cpp
+		../villas/source/InterfaceShmem.cpp
+		../villas/source/InterfaceVillas.cpp
 	)
 
 	set(DPSIM_VILLAS_LIBRARIES ${VILLASNODE_LIBRARIES} pthread)

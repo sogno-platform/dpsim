@@ -209,6 +209,15 @@ set(DPSIM_INCLUDE_DIRS
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
 
+if (WITH_SHMEM)
+	list (APPEND DPSIM_INCLUDE_DIRS
+		${CMAKE_CURRENT_BINARY_DIR}/villas/include
+		${CMAKE_CURRENT_SOURCE_DIR}/villas/include
+	)
+endif(WITH_SHMEM)
+
+message(${DPSIM_INCLUDE_DIRS})
+
 add_subdirectory(models)
 add_subdirectory(Source)
 add_subdirectory(docs)
@@ -223,7 +232,7 @@ if(WITH_PYBIND)
 	)
 
 	if(WITH_SHMEM)
-    	pybind11_add_module(dpsimpyvillas Source/Villas/pybind-dpsim-villas.cpp)
+    	pybind11_add_module(dpsimpyvillas villas/source/pybind-dpsim-villas.cpp)
     	target_link_libraries(dpsimpyvillas PRIVATE dpsim)
 	endif()
 

@@ -228,5 +228,5 @@ add_subdirectory(cim_graphviz)
 add_subdirectory(signals)
 
 if(WITH_SHMEM)
-	add_subdirectory(Villas)
+	add_subdirectory(villas)
 endif()

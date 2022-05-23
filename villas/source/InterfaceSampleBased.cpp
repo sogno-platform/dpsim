@@ -6,7 +6,7 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-#include <dpsim/Villas/InterfaceSampleBased.h>
+#include <dpsim/InterfaceSampleBased.h>
 #include <cps/Logger.h>
 
 using namespace CPS;
