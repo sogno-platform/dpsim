@@ -6,7 +6,7 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-#include <dpsim/InterfaceVillas.h>
+#include <dpsim-villas/InterfaceVillas.h>
 #include <cps/Logger.h>
 #include <villas/signal_list.hpp>
 #include <villas/path.hpp>
