@@ -1,5 +1,9 @@
-cmake_minimum_required(VERSION 3.11)
-project(DPsim CXX)
+cmake_minimum_required(VERSION 3.20...3.23)
+project(DPsim
+		VERSION 1.1.0
+		DESCRIPTION "C++ Power System Simulation Library"
+		LANGUAGES CXX
+		HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
 
 set(PROJECT_AUTHOR "The DPsim Authors.")
 set(PROJECT_COPYRIGHT "2017-2021, The DPsim Authors.")
