@@ -29,7 +29,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 	if (!mInitialized)
 		initialize();
 
-#ifdef WITH_SHMEM
+#ifdef WITH_VILLAS
 	mLog->info("Opening interfaces.");
 
 	for (auto ifm : mInterfaces)
@@ -60,7 +60,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 
 	mScheduler->stop();
 
-#ifdef WITH_SHMEM
+#ifdef WITH_VILLAS
 	for (auto ifm : mInterfaces)
 		ifm.interface->close();
 #endif

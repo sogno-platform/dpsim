@@ -19,7 +19,7 @@
 
 // Features
 #cmakedefine WITH_RT
-#cmakedefine WITH_SHMEM
+#cmakedefine WITH_VILLAS
 #cmakedefine WITH_CIM
 #cmakedefine WITH_PYBIND
 #cmakedefine WITH_SUNDIALS

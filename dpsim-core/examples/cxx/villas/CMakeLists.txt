@@ -6,7 +6,7 @@ if (NOT WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
-if(WITH_SHMEM)
+if(WITH_VILLAS)
 	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
 	list(APPEND LIBRARIES "jansson")
 	list(APPEND LIBRARIES "uuid")
@@ -28,7 +28,7 @@ if(WITH_SHMEM)
 	)
 endif()
 
-if(WITH_CIM AND WITH_SHMEM)
+if(WITH_CIM AND WITH_VILLAS)
 	set(CIM_SHMEM_SOURCES
 		Shmem_WSCC-9bus.cpp
 		Shmem_WSCC-9bus_Ctrl.cpp
@@ -46,7 +46,7 @@ foreach(SOURCE ${SHMEM_SOURCES} ${CIM_SHMEM_SOURCES})
 	target_compile_options(${TARGET} PUBLIC ${DPSIM_CXX_FLAGS})
 endforeach()
 
-if(WITH_SHMEM)
+if(WITH_VILLAS)
 	add_executable(ShmemRealtimeExample ShmemExample.cpp)
 	target_link_libraries(ShmemRealtimeExample ${LIBRARIES})
 	target_include_directories(ShmemRealtimeExample PRIVATE ${INCLUDE_DIRS})

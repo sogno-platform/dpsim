@@ -227,6 +227,6 @@ endforeach()
 add_subdirectory(cim_graphviz)
 add_subdirectory(signals)
 
-if(WITH_SHMEM)
+if(WITH_VILLAS)
 	add_subdirectory(villas)
 endif()
