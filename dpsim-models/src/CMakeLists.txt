@@ -164,6 +164,8 @@ if(WITH_GSL)
 	list(APPEND CPS_LIBRARIES ${GSL_LIBRARIES})
 endif()
 
+list(APPEND CPS_INCLUDE_DIRS ../include)
+
 target_link_libraries(cps PUBLIC ${CPS_LIBRARIES})
 target_include_directories(cps PUBLIC ${CPS_INCLUDE_DIRS})
 target_sources(cps PRIVATE ${CPS_SOURCES})

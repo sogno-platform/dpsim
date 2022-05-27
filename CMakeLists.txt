@@ -20,12 +20,6 @@ if(WIN32)
     cmake_policy(SET CMP0074 NEW)
 endif()
 
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-	set(TOPLEVEL_PROJECT ON)
-else()
-	set(TOPLEVEL_PROJECT OFF)
-endif()
-
 # Select C++-Version
 # For the pybind11-python interface to compile, a minimum version of C++14 is required
 # If you need to compile using C++11, either disable the python interface or modify the source-files in Source/pybind,
@@ -161,9 +155,8 @@ option(WITH_SPARSE       	"Use sparse matrices in MNA-Solver"	ON )
 
 include(CMakeDependentOption)
 cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"       	ON 	"Sundials_FOUND"  	OFF)
-cmake_dependent_option(WITH_SHMEM   	"Enable shared memory interface"     	ON 	"VILLASnode_FOUND"	OFF)
+cmake_dependent_option(WITH_VILLAS   	"Enable VILLASnode interface"     		ON 	"VILLASnode_FOUND"	OFF)
 cmake_dependent_option(WITH_RT      	"Enable real-time features"          	ON 	"Linux_FOUND"     	OFF)
-cmake_dependent_option(WITH_PYTHON  	"Enable Python support"              	ON 	"Python_FOUND"    	OFF) # Combine with PYBIND
 cmake_dependent_option(WITH_CIM     	"Enable support for parsing CIM"     	ON 	"CIMpp_FOUND"     	OFF)
 cmake_dependent_option(WITH_OPENMP  	"Enable OpenMP-based parallelisation"	ON 	"OPENMP_FOUND"    	OFF)
 cmake_dependent_option(WITH_CUDA    	"Enable CUDA-based parallelisation"  	OFF	"CUDA_FOUND"      	OFF)
@@ -203,56 +196,23 @@ if(WITH_CUDA)
     # END OF WORKAROUND
 endif()
 
-configure_file(
-	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in
-	${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim/Config.h
-)
+add_subdirectory(dpsim-core)
+add_subdirectory(dpsim-models)
 
-set(DPSIM_INCLUDE_DIRS
-	${CMAKE_CURRENT_BINARY_DIR}/Include
-	${CMAKE_CURRENT_SOURCE_DIR}/Include
-)
-
-if (WITH_SHMEM)
-	list (APPEND DPSIM_INCLUDE_DIRS
-		${CMAKE_CURRENT_BINARY_DIR}/villas/include
-		${CMAKE_CURRENT_SOURCE_DIR}/villas/include
-	)
-endif(WITH_SHMEM)
-
-message(${DPSIM_INCLUDE_DIRS})
-
-add_subdirectory(models)
-add_subdirectory(Source)
+if (WITH_VILLAS)
+	add_subdirectory(dpsim-villas)
+endif(WITH_VILLAS)
 add_subdirectory(docs)
-
-if(DPSIM_BUILD_EXAMPLES)
-	add_subdirectory(Examples)
-endif(DPSIM_BUILD_EXAMPLES)
-
-if(WITH_PYBIND)
-	set(DPSIMPY_INCLUDE_DIRS
-		${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/pybind
-	)
-
-	if(WITH_SHMEM)
-    	pybind11_add_module(dpsimpyvillas villas/source/pybind-dpsim-villas.cpp)
-    	target_link_libraries(dpsimpyvillas PRIVATE dpsim)
-	endif()
-
-	add_subdirectory(Source/pybind)
-endif()
 
 include(cmake/GetGridData.cmake)
 
 message(VERBOSE "Compiler Release Flags: " 	${CMAKE_CXX_FLAGS_RELEASE})
 message(VERBOSE "Compiler Debug Flags: " 	${CMAKE_CXX_FLAGS_DEBUG})
 
-if(TOPLEVEL_PROJECT)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	include(FeatureSummary)
 	add_feature_info(CIM		WITH_CIM			"Loading Common Information Model Files")
-	add_feature_info(Python 	WITH_PYTHON 		"Use DPsim as a Python module")
-	add_feature_info(Shmem  	WITH_SHMEM  		"Interface DPsim solvers via shared-memory interfaces")
+	add_feature_info(Villas  	WITH_VILLAS  		"Interface DPsim solvers via VILLASnode interfaces")
 	add_feature_info(RT	    	WITH_RT     		"Extended real-time features")
 	add_feature_info(JSON		WITH_JSON  			"Use JSON library")
 	add_feature_info(GSL		WITH_GSL  			"Use GNU Scientific library")
