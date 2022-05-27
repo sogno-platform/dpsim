@@ -10,7 +10,7 @@
 
 // Features
 #cmakedefine WITH_CIM
-#cmakedefine WITH_PYTHON
+#cmakedefine WITH_PYBIND
 #cmakedefine WITH_GRAPHVIZ
 #cmakedefine WITH_SUNDIALS
 #cmakedefine WITH_NUMPY

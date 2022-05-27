@@ -197,7 +197,7 @@ if(WITH_CIM)
 	endif()
 endif()
 
-if(WITH_PYTHON)
+if(WITH_PYBIND)
 	#list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
 	list(APPEND INCLUDE_DIRS ${Python_INCLUDE_DIRS})
 endif()

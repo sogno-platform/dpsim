@@ -12,3 +12,7 @@ if(WITH_PYBIND)
 	
 	add_subdirectory(src/pybind)
 endif()
+
+if(WITH_EXAMPLES)
+	add_subdirectory(examples)
+endif()
