@@ -19,6 +19,7 @@ set(DPSIM_SOURCES
 
 set(DPSIM_INCLUDE_DIRS
 	../include
+	${CMAKE_CURRENT_BINARY_DIR}/../include
 	)
 
 set(DPSIM_LIBRARIES
@@ -94,8 +95,6 @@ if(WITH_OPENMP)
 endif()
 
 include(GNUInstallDirs)
-
-message("Include dirs: ${DPSIM_INCLUDE_DIRS}")
 
 add_library(dpsim ${DPSIM_SOURCES})
 target_link_libraries(dpsim PUBLIC ${DPSIM_LIBRARIES})

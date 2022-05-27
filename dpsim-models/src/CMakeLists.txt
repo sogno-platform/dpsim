@@ -164,7 +164,10 @@ if(WITH_GSL)
 	list(APPEND CPS_LIBRARIES ${GSL_LIBRARIES})
 endif()
 
-list(APPEND CPS_INCLUDE_DIRS ../include)
+list(APPEND CPS_INCLUDE_DIRS
+	../include 
+	${CMAKE_CURRENT_BINARY_DIR}/../include
+	)
 
 target_link_libraries(cps PUBLIC ${CPS_LIBRARIES})
 target_include_directories(cps PUBLIC ${CPS_INCLUDE_DIRS})
