@@ -13,6 +13,6 @@ if(WITH_PYBIND)
 	add_subdirectory(src/pybind)
 endif()
 
-if(WITH_EXAMPLES)
+if(DPSIM_BUILD_EXAMPLES)
 	add_subdirectory(examples)
 endif()
