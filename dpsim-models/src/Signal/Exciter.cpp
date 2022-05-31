@@ -14,12 +14,11 @@ using namespace CPS;
 Signal::Exciter::Exciter(String name, CPS::Logger::Level logLevel) 
 	: SimSignalComp(name, name, logLevel),
 	mVh(Attribute<Real>::create("Vh", mAttributes, 0)),
-	mVr(Attribute<Real>::create("Vm", mAttributes, 0)),
-	mVf(Attribute<Real>::create("Vr", mAttributes, 0)),
-	mVf(Attribute<Real>::create("Vf", mAttributes, 0)),
-	mVf(Attribute<Real>::create("Vis", mAttributes, 0)),
-	mVf(Attribute<Real>::create("Vse", mAttributes, 0)) { }
-}
+	mVm(Attribute<Real>::create("Vm", mAttributes, 0)),
+	mVr(Attribute<Real>::create("Vr", mAttributes, 0)),
+	mEf(Attribute<Real>::create("Ef", mAttributes, 0)),
+	mVis(Attribute<Real>::create("Vis", mAttributes, 0)),
+	mVse(Attribute<Real>::create("Vse", mAttributes, 0)) { }
 
 void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
 	Real Tf, Real Kf, Real Tr, Real maxVr, Real minVr) {
@@ -51,24 +50,24 @@ void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
 				mMinVr);
 }
 
-void Signal::Exciter::initialize(Real Vh_init, Real Vf_init) {
+void Signal::Exciter::initialize(Real Vh_init, Real Ef_init) {
 	
 	mSLog->info("Initially set excitation system initial values: \n"
-				"Vh_init: {:e}\nVf_init: {:e}\n",
-				Vh_init, Vf_init);
+				"Vh_init: {:e}\nEf_init: {:e}\n",
+				Vh_init, Ef_init);
 
 	**mVm = Vh_init;
-	**mVf = Vf_init;
+	**mEf = Ef_init;
 
 	// mVse is the ceiling function in PSAT
-	// mVse = mVf * (0.33 * (exp(0.1 * abs(mVf)) - 1.));
-	**mVse = **mVf * (0.33 * exp(0.1 * abs(**mVf)));
+	// mVse = mEf * (0.33 * (exp(0.1 * abs(mEf)) - 1.));
+	**mVse = **mEf * (0.33 * exp(0.1 * abs(**mEf)));
 
 	// mVis = vr2 in PSAT
-	**mVis = - mKf / mTf * **mVf;
+	**mVis = - mKf / mTf * **mEf;
 
 	// mVr = vr1 in PSAT
-	**mVr = mKe * **mVf + **mVse;
+	**mVr = mKe * **mEf + **mVse;
 	if (**mVr > mMaxVr)
 		**mVr = mMaxVr;
 	else if (**mVr < mMinVr)
@@ -78,13 +77,13 @@ void Signal::Exciter::initialize(Real Vh_init, Real Vf_init) {
 	mSLog->info("Actually applied excitation system initial values:"
 				"\nVref : {:e}"
 				"\ninit_Vm: {:e}"
-				"\ninit_Vf: {:e}"
+				"\ninit_Ef: {:e}"
 				"\ninit_Vc: {:e}"
 				"\ninit_Vr: {:e}"				
 				"\ninit_Vr2: {:e}",
 				mVref,
 				**mVm, 
-				**mVf,
+				**mEf,
 				**mVse, 
 				**mVr,
 				**mVis);
@@ -98,7 +97,7 @@ Real Signal::Exciter::step(Real mVd, Real mVq, Real dt) {
 	mVm_prev = **mVm;
 	mVis_prev = **mVis;
 	mVr_prev = **mVr;
-	mVf_prev = **mVf;
+	mEf_prev = **mEf;
 
 	// compute state variables at time k using euler forward
 
@@ -106,36 +105,36 @@ Real Signal::Exciter::step(Real mVd, Real mVq, Real dt) {
 	**mVm = Math::StateSpaceEuler(mVm_prev, -1 / mTr, 1 / mTr, dt, **mVh);
 
 	// Stabilizing feedback equation
-	// mVse = mVf * (0.33 * (exp(0.1 * abs(mVf)) - 1.));
-	**mVse = mVf_prev * (0.33 * exp(0.1 * abs(mVf_prev)));
-	**mVis = Math::StateSpaceEuler(mVis_prev, -1 / mTf, -mKf / mTf / mTf, dt, mVf_prev);
+	// mVse = mEf * (0.33 * (exp(0.1 * abs(mEf)) - 1.));
+	**mVse = mEf_prev * (0.33 * exp(0.1 * abs(mEf_prev)));
+	**mVis = Math::StateSpaceEuler(mVis_prev, -1 / mTf, -mKf / mTf / mTf, dt, mEf_prev);
 
 	// Voltage regulator equation
-	**mVr = Math::StateSpaceEuler(mVr_prev, -1 / mTa, mKa / mTa, dt, mVref - **mVm - mVis_prev - mKf / mTf * mVf_prev);
+	**mVr = Math::StateSpaceEuler(mVr_prev, -1 / mTa, mKa / mTa, dt, mVref - **mVm - mVis_prev - mKf / mTf * mEf_prev);
 	if (**mVr > mMaxVr)
 		**mVr = mMaxVr;
 	else if (**mVr < mMinVr)
 		**mVr = mMinVr;
 
 	// Exciter equation
-	**mVf = Math::StateSpaceEuler(mVf_prev, - mKe / mTe, 1. / mTe, dt, mVr_prev - **mVse);
+	**mEf = Math::StateSpaceEuler(mEf_prev, - mKe / mTe, 1. / mTe, dt, mVr_prev - **mVse);
 	
-	return **mVf;
+	return **mEf;
 }
 
 /*
 // Saturation function according to Viviane thesis
 Real Signal::Exciter::saturation_fcn1(Real mVd, Real mVq, Real Vref, Real dt) {
-	if (mVf <= 2.3)
-		mVse = (0.1 / 2.3)*mVf;
+	if (mEf <= 2.3)
+		mVse = (0.1 / 2.3)*mEf;
 	else
-		mVse = (0.33 / 3.1)*mVf;
-	mVse = mVse*mVf;
+		mVse = (0.33 / 3.1)*mEf;
+	mVse = mVse*mEf;
 }
 
 // Saturation function according to PSAT
 Real Signal::Exciter::saturation_fcn2() {
-	return mA * (exp(mB * abs(mVf)) - 1);
+	return mA * (exp(mB * abs(mEf)) - 1);
 }
 
 */

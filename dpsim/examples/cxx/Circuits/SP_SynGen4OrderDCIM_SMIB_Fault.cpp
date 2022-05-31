@@ -177,7 +177,7 @@ int main(int argc, char* argv[]) {
 
 	Real logDownSampling;
 	if (timeStep<100e-6)
-		logDownSampling = floor((100e-6) / timeStep);
+		logDownSampling = floor(100e-6 / timeStep);
 	else
 		logDownSampling = 1.0;
 	Logger::Level logLevel = Logger::Level::off;

@@ -88,7 +88,7 @@ void EMT::Ph3::SynchronGenerator4OrderVBR::calculateAuxiliarConstants() {
 
 	mAq = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
 	mBq = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mCq = mTimeStep / (2 * mTd0_t + mTimeStep);
+	mDq = mTimeStep / (2 * mTd0_t + mTimeStep);
 }
 
 void EMT::Ph3::SynchronGenerator4OrderVBR::stepInPerUnit() {
@@ -98,12 +98,6 @@ void EMT::Ph3::SynchronGenerator4OrderVBR::stepInPerUnit() {
 		(**mEdq0_t)(0,0) = -(**mIdq0)(1,0) * mLq_t + (**mVdq0)(0,0);
 		(**mEdq0_t)(1,0) = (**mIdq0)(0,0) * mLd_t + (**mVdq0)(1,0);
 		(**mEdq0_t)(2,0) = 0.0;
-
-		// calculate mechanical variables at t=k+1 with forward euler
-		**mElecTorque = ((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0));
-		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (**mMechTorque - **mElecTorque));
-		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
 	// get transformation matrix
@@ -115,7 +109,7 @@ void EMT::Ph3::SynchronGenerator4OrderVBR::stepInPerUnit() {
 
 	// VBR history voltage
 	mEhs_vbr(0,0) = mAd * (**mIdq0)(1,0) + mBd * (**mEdq0_t)(0,0);
-	mEhs_vbr(1,0) = mAq * (**mIdq0)(0,0) + mBq * (**mEdq0_t)(1,0) + mCq * mEf_prev + mCq * (**mEf);
+	mEhs_vbr(1,0) = mAq * (**mIdq0)(0,0) + mBq * (**mEdq0_t)(1,0) + mDq * mEf_prev + mDq * (**mEf);
 	mEhs_vbr(2,0) = 0.0;
 
 	// convert Edq_t into the abc reference frame

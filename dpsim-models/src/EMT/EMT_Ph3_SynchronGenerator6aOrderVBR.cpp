@@ -40,7 +40,7 @@ void EMT::Ph3::SynchronGenerator6aOrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
 	(**mEdq0_t)(0,0) = (mLq - mLq_t - mYq) * (**mIdq0)(1,0);
-	(**mEdq0_t)(1,0) = (1 - mTaa / mTd0_t) * mEf - (mLd - mLd_t - mYd) * (**mIdq0)(0,0);
+	(**mEdq0_t)(1,0) = (1 - mTaa / mTd0_t) * **mEf - (mLd - mLd_t - mYd) * (**mIdq0)(0,0);
 
 	// initial dq behind the subtransient reactance in the dq reference frame
 	(**mEdq0_s)(0,0) = (**mVdq0)(0,0) - mLq_s * (**mIdq0)(1,0);
@@ -106,12 +106,6 @@ void EMT::Ph3::SynchronGenerator6aOrderVBR::stepInPerUnit() {
 		// calculate Edq_s at t=k
 		(**mEdq0_s)(0,0) = -(**mIdq0)(1,0) * mLq_s + (**mVdq0)(0,0);
 		(**mEdq0_s)(1,0) = (**mIdq0)(0,0) * mLd_s + (**mVdq0)(1,0);
-
-		// calculate mechanical variables at t=k+1 with forward euler
-		**mElecTorque = ((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0));
-		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (**mMechTorque - **mElecTorque));
-		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
 	// get transformation matrix

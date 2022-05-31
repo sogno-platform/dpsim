@@ -34,7 +34,7 @@ namespace Ph1 {
 		///
 		Real mBq;
 		///
-		Real mCq;
+		Real mDq;
 
 	public:
 		///
