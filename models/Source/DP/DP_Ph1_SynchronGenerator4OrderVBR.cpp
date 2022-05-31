@@ -78,14 +78,6 @@ void DP::Ph1::SynchronGenerator4OrderVBR::stepInPerUnit() {
 	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
-	if (mSimTime>0.0){
-		// 	calculate mechanical variables at t=k+1 using forward euler
-		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - **mElecTorque));
-		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
-	}
-
 	// VBR history voltage
 	calculateAuxiliarVariables();
 	calculateConductanceMatrix();

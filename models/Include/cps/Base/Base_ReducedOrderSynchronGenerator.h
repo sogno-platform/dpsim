@@ -11,7 +11,7 @@
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Signal/Exciter.h>
-#include <cps/Signal/TurbineGovernor.h>
+#include <cps/Signal/TurbineGovernorType1.h>
 
 namespace CPS {
 namespace Base {
@@ -35,6 +35,7 @@ namespace Base {
 			const Attribute<Real>::Ptr mElecTorque;
 			/// Mechanical torque
 			const Attribute<Real>::Ptr mMechTorque;
+			Real mMechTorque_prev;
 			/// Rotor speed
 			const Attribute<Real>::Ptr mOmMech;
 			/// mechanical system angle (between d-axis and stator a-axis)
@@ -128,7 +129,7 @@ namespace Base {
 			/// Determines if Exciter is activated
 			Bool mHasExciter = false;
 			/// Signal component modelling governor control and steam turbine
-			std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
+			std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
 			/// Signal component modelling voltage regulator and exciter
 			// std::shared_ptr<Signal::Exciter> mExciter;
 			std::shared_ptr<Signal::Exciter> mExciter;
@@ -179,9 +180,9 @@ namespace Base {
 				Real initMechanicalPower, Complex initTerminalVoltage);
 
 			/// Add governor and turbine
-			void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
-				Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
-			void addGovernor(std::shared_ptr<Signal::TurbineGovernor> turbineGovernor);
+			void addGovernor(Real T3, Real T4, Real T5, Real Tc, 
+				Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef, Real TmRef);
+			void addGovernor(std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor);
 			/// Add voltage regulator and exciter
 			void addExciter(Real Ta, Real Ka, Real Te, Real Ke, 
 				Real Tf, Real Kf, Real Tr);

@@ -121,6 +121,7 @@
 #include <cps/Signal/DecouplingLineEMT.h>
 #include <cps/Signal/Exciter.h>
 #include <cps/Signal/TurbineGovernor.h>
+#include <cps/Signal/TurbineGovernorType1.h>
 #include <cps/Signal/FIRFilter.h>
 #include <cps/Signal/Integrator.h>
 #include <cps/Signal/SignalGenerator.h>

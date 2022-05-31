@@ -73,13 +73,6 @@ void DP::Ph1::SynchronGenerator3OrderVBR::stepInPerUnit() {
 
 	// update Edq_t
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
-
-	if (mSimTime>0.0){
-		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - **mElecTorque));
-		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
-	}
 	
 	// VBR history voltage
 	calculateAuxiliarVariables();

@@ -14,9 +14,13 @@ Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur
 // Excitation system
 Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
 
+// Turbine Goverour
+Examples::Components::TurbineGovernor::TurbineGovernorPSAT1 turbineGovernor;
+
 void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
-	Real switchClosed, int SGModel, bool withExciter, Logger::Level logLevel) {
+	Real switchClosed, int SGModel, bool withExciter, bool withTurbineGovernor,
+	Logger::Level logLevel) {
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
@@ -116,6 +120,17 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 		genSP->addExciter(exciterSP);
 	}
 
+
+	// Turbine Governor
+	std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorSP = nullptr;
+	if (withTurbineGovernor) {
+		turbineGovernorSP = Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
+		turbineGovernorSP->setParameters(turbineGovernor.T3, turbineGovernor.T4, 
+			turbineGovernor.T5, turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R, 
+			turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
+		genSP->addGovernor(turbineGovernorSP);
+	}
+
 	// Grid bus as Slack
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
 	extnetSP->setParameters(GridParams.VnomMV);
@@ -184,6 +199,11 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 		loggerSP->addAttribute("Vf", exciterSP->attribute("Vf"));
 	}
 
+	// Turbine Governor
+	if (withTurbineGovernor) {
+		loggerSP->addAttribute("Tm", turbineGovernorSP->attribute("Tm"));
+	}
+
 	Simulation simSP(simNameSP, logLevel);
 	simSP.doInitFromNodesAndTerminals(true);
 	simSP.setSystem(systemSP);
@@ -214,7 +234,8 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 20;
 	Real timeStep = 1e-3;
 	Real H = syngenKundur.H;
-	bool with_exciter = false;
+	bool withExciter = false;
+	bool withTurbineGovernor = false;
 	int SGModel = 4;
 	std::string SGModel_str = "4Order";
 	std::string stepSize_str = "";
@@ -245,7 +266,10 @@ int main(int argc, char* argv[]) {
 			inertia_str = "_Inertia_" + std::to_string(H);
 		}
 		if (args.options.find("WithExciter") != args.options.end())  {
-			with_exciter = args.getOptionBool("WithExciter");
+			withExciter = args.getOptionBool("WithExciter");
+		}
+		if (args.options.find("WithTurbineGovernor") != args.options.end())  {
+			withTurbineGovernor = args.getOptionBool("WithTurbineGovernor");
 		}
 		if (args.options.find("FinalTime") != args.options.end())  {
 			finalTime = args.getOptionReal("FinalTime");
@@ -261,5 +285,6 @@ int main(int argc, char* argv[]) {
 
 	std::string simName = "SP_SynGen" + SGModel_str + "VBR_SMIB_Fault" + stepSize_str + inertia_str;
 	SP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
-			logDownSampling, SwitchOpen, SwitchClosed, SGModel, with_exciter, logLevel);
+			logDownSampling, SwitchOpen, SwitchClosed, SGModel, withExciter, withTurbineGovernor, 
+			logLevel);
 }
