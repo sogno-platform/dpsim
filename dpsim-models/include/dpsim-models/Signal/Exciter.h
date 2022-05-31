@@ -13,17 +13,26 @@
 
 namespace CPS {
 namespace Signal {
-	/// Exciter model
+	/// AVR model type 1
+	/// Ref.: Milano - Power system modelling and scripting, page 363
 	class Exciter :
 		public SimSignalComp,
 		public SharedFactory<Exciter> {
 	protected:
+		// ### Exciter Parameters ####
+		/// Ampliﬁer time constant (s)
 		Real mTa;
+		/// Ampliﬁer gain (pu/pu)
 		Real mKa;
+		/// Field circuit integral deviation
 		Real mKe;
+		/// Field circuit time constant (s)
 		Real mTe;
+		/// Stabilizer gain (s pu/pu)
 		Real mKf;
+		/// Stabilizer time constant (s)
 		Real mTf;
+		/// Measurement time constant (s)
 		Real mTr;
 
 		/// Reference voltage
@@ -46,10 +55,10 @@ namespace Signal {
 		const Attribute<Real>::Ptr mVr;
 		/// Output of regulator output at time k-1
 		Real mVr_prev = 0;
-		/// Exciter output at time k
-		const Attribute<Real>::Ptr mVf;
+		/// Exciter output at time k (induced emf by the field current under no-load conditions)
+		const Attribute<Real>::Ptr mEf;
 		/// Exciter output at time k-1
-		Real mVf_prev = 0;
+		Real mEf_prev = 0;
 		/// Maximum regulator voltage (p.u.)
 		Real mMaxVr;
 		/// Minumum regulator voltage (p.u.)

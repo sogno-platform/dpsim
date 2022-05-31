@@ -38,7 +38,7 @@ void DP::Ph1::SynchronGenerator6bOrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
 	(**mEdq_t)(0,0) = (mLq - mLq_t) * (**mIdq)(1,0);
-	(**mEdq_t)(1,0) = mEf - (mLd - mLd_t) * (**mIdq)(0,0);
+	(**mEdq_t)(1,0) = **mEf - (mLd - mLd_t) * (**mIdq)(0,0);
 
 	// initial dq behind the subtransient reactance in the dq reference frame
 	(**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);
@@ -102,11 +102,6 @@ void DP::Ph1::SynchronGenerator6bOrderVBR::stepInPerUnit() {
 		// calculate Edq_s at t=k
 		(**mEdq_s)(0,0) = -(**mIdq)(1,0) * mLq_s + (**mVdq)(0,0);
 		(**mEdq_s)(1,0) = (**mIdq)(0,0) * mLd_s + (**mVdq)(1,0);
-
-		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - **mElecTorque));
-		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
 	// VBR history voltage
@@ -118,8 +113,8 @@ void DP::Ph1::SynchronGenerator6bOrderVBR::stepInPerUnit() {
 	mEh_t(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * (**mEf) + mDq_t * mEf_prev;
 
 	// calculate history term behind the subtransient reactance
-	mEh_s(0,0) = mAd_s * (**mIdq)(1,0) + mBd_s * (**mEdq_t)(0,0) + mCd_s * mEdq_s(0,0);
-	mEh_s(1,0) = mAq_s * (**mIdq)(0,0) + mBq_s * (**mEdq_t)(1,0) + mCq_s * mEdq_s(1,0) + mDq_s * (**mEf) + mDq_s * mEf_prev;
+	mEh_s(0,0) = mAd_s * (**mIdq)(1,0) + mBd_s * (**mEdq_t)(0,0) + mCd_s * (**mEdq_s)(0,0);
+	mEh_s(1,0) = mAq_s * (**mIdq)(0,0) + mBq_s * (**mEdq_t)(1,0) + mCq_s * (**mEdq_s)(1,0) + mDq_s * (**mEf) + mDq_s * mEf_prev;
 
 	// convert Edq_t into the abc reference frame
 	**mEvbr = (mKvbr * mEh_s * mBase_V_RMS)(0,0);

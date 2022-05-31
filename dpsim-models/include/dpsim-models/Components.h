@@ -121,6 +121,7 @@
 #include <dpsim-models/Signal/DecouplingLineEMT.h>
 #include <dpsim-models/Signal/Exciter.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
+#include <dpsim-models/Signal/TurbineGovernorType1.h>
 #include <dpsim-models/Signal/FIRFilter.h>
 #include <dpsim-models/Signal/Integrator.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
