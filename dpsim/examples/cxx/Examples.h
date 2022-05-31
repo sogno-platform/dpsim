@@ -95,9 +95,57 @@ namespace ExcitationSystemEremia {
         // voltage transducer
         Real Tr = 0.02;
     };
-
 }
 
+namespace TurbineGovernor {
+    struct TurbineGovernorPSAT1 {
+        // Turbine Governor type 1 
+        // Taken from from PSAT - example d_014_pss_l14 
+        
+        // Reference speed (p.u.)
+        Real OmegaRef = 1.0;
+        // Pilot valve droop (p.u.)
+        Real R = 0.02;
+        // Maximum Torque (p.u.)
+        Real Tmax = 1.2;
+        // Minimim Torque (p.u.)
+        Real Tmin = 0.3;
+        // Governor time constant (s)
+        Real Ts = 0.1;
+        // Servo time constant (s)
+        Real Tc = 0.45;
+        // Transient gain time constant (s)
+        Real T3 = 0.0;
+        // Power fraction time constant (s)
+        Real T4 = 12.0;
+        // Reheat time constant (s)
+        Real T5 = 50.0;
+    };
+
+    struct TurbineGovernorPSAT2 {
+        // Turbine Governor type 1 
+        // Taked from PSAT - example d_anderson_farmer
+        
+        // Reference speed (p.u.)
+        Real OmegaRef = 1.0;
+        // Pilot valve droop (p.u.)
+        Real R = 0.04;
+        // Maximum Torque (p.u.)
+        Real Tmax = 100;
+        // Minimim Torque (p.u.)
+        Real Tmin = 0.0;
+        // Governor time constant (s)
+        Real Ts = 20;
+        // Servo time constant (s)
+        Real Tc = 0.2;
+        // Transient gain time constant (s)
+        Real T3 = 0.2;
+        // Power fraction time constant (s)
+        Real T4 = 0.2;
+        // Reheat time constant (s)
+        Real T5 = 0.2;
+    };
+}
 }
 
 namespace Grids {
@@ -606,7 +654,7 @@ namespace Events {
             loadSwitch->open();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
-            logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
+            //logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
             return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
         } else if (domain == CPS::Domain::SP) {
             auto loadSwitch = SP::Ph1::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
@@ -616,7 +664,7 @@ namespace Events {
             loadSwitch->open();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
-            logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
+            //logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
             return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
         } else {
             return nullptr;

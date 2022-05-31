@@ -31,7 +31,7 @@ namespace Ph3 {
 		///
 		Real mBq;
 		///
-		Real mCq;
+		Real mDq;
 
 	public:
 		///

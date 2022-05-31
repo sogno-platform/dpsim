@@ -129,6 +129,7 @@ list(APPEND MODELS_SOURCES
 	Signal/Exciter.cpp
 	Signal/FIRFilter.cpp
 	Signal/TurbineGovernor.cpp
+	Signal/TurbineGovernorType1.cpp
 	Signal/PLL.cpp
 	Signal/Integrator.cpp
 	Signal/PowerControllerVSI.cpp
