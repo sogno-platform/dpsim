@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cps/Definitions.h>
+#include <cps/AttributeList.h>
 
 namespace CPS {
 namespace Base {
@@ -17,6 +18,7 @@ namespace Ph1 {
 	class SVC {
 	protected:
 		/// Inductance [H]
+		/// FIXME: This is only ever written to but never read
 		Real mInductance;
 		/// Maximium susceptance [p.u.]
 		Real mBMax;
@@ -40,7 +42,6 @@ namespace Ph1 {
 
 		// param for mechanical model
 		Bool mMechMode = false;
-		Real mViolationCounter = 0;
 		Real mDeadband;
 		Real mMechSwitchDelay;
 		Real mTapPos;
@@ -49,10 +50,12 @@ namespace Ph1 {
 
 		// save for numerical integration
 		Real mPrevVoltage;
-		Real mDeltaV = 0;
-		Real mBPrev;
 
 	public:
+		Attribute<Real>::Ptr mDeltaV;
+		Attribute<Real>::Ptr mBPrev;
+		Attribute<Real>::Ptr mViolationCounter;
+
 		/// Sets model specific parameters
 		void setParameters(Real Bmax, Real Bmin, Real QN, Real nomVolt, Real RefVolt = 0) {
 			// initial inductance very high 10^6 [Ohm] @ 50 Hz

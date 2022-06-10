@@ -54,8 +54,8 @@ void SP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -106,22 +106,22 @@ void SP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
-	loggerSP->addAttribute("v1", n1SP->attribute("v"));
-	loggerSP->addAttribute("v2", n2SP->attribute("v"));
+	loggerSP->logAttribute("v1", n1SP->attribute("v"));
+	loggerSP->logAttribute("v2", n2SP->attribute("v"));
 	//gen
-	loggerSP->addAttribute("Ep", genSP->attribute("Ep"));
-	loggerSP->addAttribute("v_gen", genSP->attribute("v_intf"));
-	loggerSP->addAttribute("i_gen", genSP->attribute("i_intf"));
-	loggerSP->addAttribute("wr_gen", genSP->attribute("w_r"));
-	loggerSP->addAttribute("delta_r_gen", genSP->attribute("delta_r"));
-	loggerSP->addAttribute("P_elec", genSP->attribute("P_elec"));
-	loggerSP->addAttribute("P_mech", genSP->attribute("P_mech"));
+	loggerSP->logAttribute("Ep", genSP->attribute("Ep"));
+	loggerSP->logAttribute("v_gen", genSP->attribute("v_intf"));
+	loggerSP->logAttribute("i_gen", genSP->attribute("i_intf"));
+	loggerSP->logAttribute("wr_gen", genSP->attribute("w_r"));
+	loggerSP->logAttribute("delta_r_gen", genSP->attribute("delta_r"));
+	loggerSP->logAttribute("P_elec", genSP->attribute("P_elec"));
+	loggerSP->logAttribute("P_mech", genSP->attribute("P_mech"));
 	//line
-	loggerSP->addAttribute("v_line", lineSP->attribute("v_intf"));
-	loggerSP->addAttribute("i_line", lineSP->attribute("i_intf"));
+	loggerSP->logAttribute("v_line", lineSP->attribute("v_intf"));
+	loggerSP->logAttribute("i_line", lineSP->attribute("i_intf"));
 	//slack
-	loggerSP->addAttribute("v_slack", extnetSP->attribute("v_intf"));
-	loggerSP->addAttribute("i_slack", extnetSP->attribute("i_intf"));
+	loggerSP->logAttribute("v_slack", extnetSP->attribute("v_intf"));
+	loggerSP->logAttribute("i_slack", extnetSP->attribute("i_intf"));
 
 
 

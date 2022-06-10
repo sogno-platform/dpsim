@@ -14,16 +14,16 @@ using namespace CPS::DP::Ph1;
 DP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mEquivCurrent = { 0, 0 };
-	mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfVoltage = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
-
-	addAttribute<Real>("C", &mCapacitance, Flags::read | Flags::write);
+	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mCapacitance = CPS::Attribute<Real>::create("C", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
-	copy->setParameters(mCapacitance);
+	copy->setParameters(**mCapacitance);
 	return copy;
 }
 
@@ -38,13 +38,13 @@ void DP::Ph1::Capacitor::initialize(Matrix frequencies) {
 void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
-	Complex impedance = { 0, - 1. / (omega * mCapacitance) };
-	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	mIntfCurrent(0,0) = mIntfVoltage(0,0) / impedance;
+	Complex impedance = { 0, - 1. / (omega * **mCapacitance) };
+	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
 	mSLog->info("\nCapacitance [F]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
-				Logger::realToString(mCapacitance),
+				Logger::realToString(**mCapacitance),
 				Logger::complexToString(impedance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -53,8 +53,8 @@ void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString((**mIntfVoltage)(0,0)),
+		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -63,20 +63,20 @@ void DP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	Real equivCondReal = 2.0 * mCapacitance / timeStep;
-	Real prevVoltCoeffReal = 2.0 * mCapacitance / timeStep;
+	Real equivCondReal = 2.0 * **mCapacitance / timeStep;
+	Real prevVoltCoeffReal = 2.0 * **mCapacitance / timeStep;
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		Real equivCondImag = 2.*PI * mFrequencies(freq,0) * mCapacitance;
+		Real equivCondImag = 2.*PI * mFrequencies(freq,0) * **mCapacitance;
 		mEquivCond(freq,0) = { equivCondReal, equivCondImag };
-		Real prevVoltCoeffImag = - 2.*PI * mFrequencies(freq,0) * mCapacitance;
+		Real prevVoltCoeffImag = - 2.*PI * mFrequencies(freq,0) * **mCapacitance;
 		mPrevVoltCoeff(freq,0) = { prevVoltCoeffReal, prevVoltCoeffImag };
 
-		mEquivCurrent(freq,0) = -mIntfCurrent(0,freq) + -mPrevVoltCoeff(freq,0) * mIntfVoltage(0,freq);
-		mIntfCurrent(0, freq) = mEquivCond(freq,0) * mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
+		mEquivCurrent(freq,0) = -(**mIntfCurrent)(0,freq) + -mPrevVoltCoeff(freq,0) * (**mIntfVoltage)(0,freq);
+		(**mIntfCurrent)(0, freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 	}
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
@@ -86,8 +86,8 @@ void DP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 		"\nInitial current {:s}"
 		"\nEquiv. current {:s}"
 		"\n--- MNA initialization finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString((**mIntfVoltage)(0,0)),
+		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::complexToString(mEquivCurrent(0,0)));
 }
 
@@ -95,22 +95,22 @@ void DP::Ph1::Capacitor::mnaInitializeHarm(Real omega, Real timeStep, std::vecto
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	Real equivCondReal = 2.0 * mCapacitance / timeStep;
-	Real prevVoltCoeffReal = 2.0 * mCapacitance / timeStep;
+	Real equivCondReal = 2.0 * **mCapacitance / timeStep;
+	Real prevVoltCoeffReal = 2.0 * **mCapacitance / timeStep;
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		Real equivCondImag = 2.*PI * mFrequencies(freq,0) * mCapacitance;
+		Real equivCondImag = 2.*PI * mFrequencies(freq,0) * **mCapacitance;
 		mEquivCond(freq,0) = { equivCondReal, equivCondImag };
-		Real prevVoltCoeffImag = - 2.*PI * mFrequencies(freq,0) * mCapacitance;
+		Real prevVoltCoeffImag = - 2.*PI * mFrequencies(freq,0) * **mCapacitance;
 		mPrevVoltCoeff(freq,0) = { prevVoltCoeffReal, prevVoltCoeffImag };
 
-		mEquivCurrent(freq,0) = -mIntfCurrent(0,freq) + -mPrevVoltCoeff(freq,0) * mIntfVoltage(0,freq);
-		mIntfCurrent(0, freq) = mEquivCond(freq,0) * mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
+		mEquivCurrent(freq,0) = -(**mIntfCurrent)(0,freq) + -mPrevVoltCoeff(freq,0) * (**mIntfVoltage)(0,freq);
+		(**mIntfCurrent)(0, freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 	}
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-	mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+	**mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -169,8 +169,8 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		//mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
 		//mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
-		mEquivCurrent(freq,0) = -mIntfCurrent(0,freq)
-			+ -mPrevVoltCoeff(freq,0) * mIntfVoltage(0,freq);
+		mEquivCurrent(freq,0) = -(**mIntfCurrent)(0,freq)
+			+ -mPrevVoltCoeff(freq,0) * (**mIntfVoltage)(0,freq);
 
 		if (terminalNotGrounded(0))
 			Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freq,0), mNumFreqs, freq);
@@ -192,8 +192,8 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		//mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
 		//mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
-		mEquivCurrent(freq,0) = -mIntfCurrent(0,freq)
-			+ -mPrevVoltCoeff(freq,0) * mIntfVoltage(0,freq);
+		mEquivCurrent(freq,0) = -(**mIntfCurrent)(0,freq)
+			+ -mPrevVoltCoeff(freq,0) * (**mIntfVoltage)(0,freq);
 
 		if (terminalNotGrounded(0))
 			Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freq,0), 1, 0, freq);
@@ -205,8 +205,8 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 void DP::Ph1::Capacitor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector, Int freq) {
 		//mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
 		//mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
-		mEquivCurrent(freq,0) = -mIntfCurrent(0,freq)
-			+ -mPrevVoltCoeff(freq,0) * mIntfVoltage(0,freq);
+		mEquivCurrent(freq,0) = -(**mIntfCurrent)(0,freq)
+			+ -mPrevVoltCoeff(freq,0) * (**mIntfVoltage)(0,freq);
 
 		if (terminalNotGrounded(0))
 			Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freq,0));
@@ -222,7 +222,7 @@ void DP::Ph1::Capacitor::mnaAddPreStepDependencies(AttributeBase::List &prevStep
 }
 
 void DP::Ph1::Capacitor::mnaPreStep(Real time, Int timeStepCount) {
-	this->mnaApplyRightSideVectorStamp(this->mRightVector);
+	this->mnaApplyRightSideVectorStamp(**this->mRightVector);
 }
 
 void DP::Ph1::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -232,54 +232,54 @@ void DP::Ph1::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevSte
 }
 
 void DP::Ph1::Capacitor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaUpdateVoltage(*leftVector);
-	this->mnaUpdateCurrent(*leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph1::Capacitor::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaApplyRightSideVectorStampHarm(mCapacitor.mRightVector);
+	mCapacitor.mnaApplyRightSideVectorStampHarm(**mCapacitor.mRightVector);
 }
 
 void DP::Ph1::Capacitor::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 	for (UInt freq = 0; freq < mCapacitor.mNumFreqs; freq++)
-		mCapacitor.mnaUpdateVoltageHarm(*mLeftVectors[freq], freq);
+		mCapacitor.mnaUpdateVoltageHarm(**mLeftVectors[freq], freq);
 	mCapacitor.mnaUpdateCurrentHarm();
 }
 
 void DP::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfVoltage(0,freq) = 0;
+		(**mIntfVoltage)(0,freq) = 0;
 		if (terminalNotGrounded(1))
-			mIntfVoltage(0,freq) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1), mNumFreqs, freq);
+			(**mIntfVoltage)(0,freq) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1), mNumFreqs, freq);
 		if (terminalNotGrounded(0))
-			mIntfVoltage(0,freq) = mIntfVoltage(0,freq) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq);
+			(**mIntfVoltage)(0,freq) = (**mIntfVoltage)(0,freq) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq);
 
-		SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:e}<{:e}", std::abs(mIntfVoltage(0,freq)), std::arg(mIntfVoltage(0,freq)));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:e}<{:e}", std::abs((**mIntfVoltage)(0,freq)), std::arg((**mIntfVoltage)(0,freq)));
 	}
 }
 
 void DP::Ph1::Capacitor::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) {
 	// v1 - v0
-	mIntfVoltage(0,freqIdx) = 0;
+	(**mIntfVoltage)(0,freqIdx) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,freqIdx) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+		(**mIntfVoltage)(0,freqIdx) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,freqIdx) = mIntfVoltage(0,freqIdx) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+		(**mIntfVoltage)(0,freqIdx) = (**mIntfVoltage)(0,freqIdx) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString(mIntfVoltage(0,freqIdx)));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,freqIdx)));
 }
 
 void DP::Ph1::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = mEquivCond(freq,0) * mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(mIntfCurrent(0,freq)));
+		(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }
 
 void DP::Ph1::Capacitor::mnaUpdateCurrentHarm() {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = mEquivCond(freq,0) * mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString(mIntfCurrent(0,freq)));
+		(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }

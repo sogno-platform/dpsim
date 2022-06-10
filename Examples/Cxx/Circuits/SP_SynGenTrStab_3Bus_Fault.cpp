@@ -81,9 +81,9 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v_bus1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v_bus2", n2PF->attribute("v"));
-	loggerPF->addAttribute("v_bus3", n3PF->attribute("v"));
+	loggerPF->logAttribute("v_bus1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v_bus2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v_bus3", n3PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -170,33 +170,33 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
-	loggerSP->addAttribute("v1", n1SP->attribute("v"));
-	loggerSP->addAttribute("v2", n2SP->attribute("v"));
-	loggerSP->addAttribute("v3", n3SP->attribute("v"));
-	loggerSP->addAttribute("v_line12", line12SP->attribute("v_intf"));
-	loggerSP->addAttribute("i_line12", line12SP->attribute("i_intf"));
-	loggerSP->addAttribute("v_line13", line13SP->attribute("v_intf"));
-	loggerSP->addAttribute("i_line13", line13SP->attribute("i_intf"));
-	loggerSP->addAttribute("v_line23", line23SP->attribute("v_intf"));
-	loggerSP->addAttribute("i_line23", line23SP->attribute("i_intf"));
-	loggerSP->addAttribute("Ep_gen1", gen1SP->attribute("Ep_mag"));
-	loggerSP->addAttribute("v_gen1", gen1SP->attribute("v_intf"));
-	loggerSP->addAttribute("i_gen1", gen1SP->attribute("i_intf"));
-	loggerSP->addAttribute("wr_gen1", gen1SP->attribute("w_r"));
-	loggerSP->addAttribute("delta_gen1", gen1SP->attribute("delta_r"));
-	loggerSP->addAttribute("Ep_gen2", gen2SP->attribute("Ep_mag"));
-	loggerSP->addAttribute("v_gen2", gen2SP->attribute("v_intf"));
-	loggerSP->addAttribute("i_gen2", gen2SP->attribute("i_intf"));
-	loggerSP->addAttribute("wr_gen2", gen2SP->attribute("w_r"));
-	loggerSP->addAttribute("wref_gen2", gen2SP->attribute("w_ref"));
-	loggerSP->addAttribute("delta_gen2", gen2SP->attribute("delta_r"));
-	loggerSP->addAttribute("i_fault", faultSP->attribute("i_intf"));
-	loggerSP->addAttribute("v_load", loadSP->attribute("v_intf"));
-	loggerSP->addAttribute("i_load", loadSP->attribute("i_intf"));
-	loggerSP->addAttribute("P_mech1", gen1SP->attribute("P_mech"));
-	loggerSP->addAttribute("P_mech2", gen2SP->attribute("P_mech"));
-	loggerSP->addAttribute("P_elec1", gen1SP->attribute("P_elec"));
-	loggerSP->addAttribute("P_elec2", gen2SP->attribute("P_elec"));
+	loggerSP->logAttribute("v1", n1SP->attribute("v"));
+	loggerSP->logAttribute("v2", n2SP->attribute("v"));
+	loggerSP->logAttribute("v3", n3SP->attribute("v"));
+	loggerSP->logAttribute("v_line12", line12SP->attribute("v_intf"));
+	loggerSP->logAttribute("i_line12", line12SP->attribute("i_intf"));
+	loggerSP->logAttribute("v_line13", line13SP->attribute("v_intf"));
+	loggerSP->logAttribute("i_line13", line13SP->attribute("i_intf"));
+	loggerSP->logAttribute("v_line23", line23SP->attribute("v_intf"));
+	loggerSP->logAttribute("i_line23", line23SP->attribute("i_intf"));
+	loggerSP->logAttribute("Ep_gen1", gen1SP->attribute("Ep_mag"));
+	loggerSP->logAttribute("v_gen1", gen1SP->attribute("v_intf"));
+	loggerSP->logAttribute("i_gen1", gen1SP->attribute("i_intf"));
+	loggerSP->logAttribute("wr_gen1", gen1SP->attribute("w_r"));
+	loggerSP->logAttribute("delta_gen1", gen1SP->attribute("delta_r"));
+	loggerSP->logAttribute("Ep_gen2", gen2SP->attribute("Ep_mag"));
+	loggerSP->logAttribute("v_gen2", gen2SP->attribute("v_intf"));
+	loggerSP->logAttribute("i_gen2", gen2SP->attribute("i_intf"));
+	loggerSP->logAttribute("wr_gen2", gen2SP->attribute("w_r"));
+	loggerSP->logAttribute("wref_gen2", gen2SP->attribute("w_ref"));
+	loggerSP->logAttribute("delta_gen2", gen2SP->attribute("delta_r"));
+	loggerSP->logAttribute("i_fault", faultSP->attribute("i_intf"));
+	loggerSP->logAttribute("v_load", loadSP->attribute("v_intf"));
+	loggerSP->logAttribute("i_load", loadSP->attribute("i_intf"));
+	loggerSP->logAttribute("P_mech1", gen1SP->attribute("P_mech"));
+	loggerSP->logAttribute("P_mech2", gen2SP->attribute("P_mech"));
+	loggerSP->logAttribute("P_elec1", gen1SP->attribute("P_elec"));
+	loggerSP->logAttribute("P_elec2", gen2SP->attribute("P_elec"));
 
 	Simulation simSP(simNameSP, Logger::Level::debug);
 	simSP.setSystem(systemSP);

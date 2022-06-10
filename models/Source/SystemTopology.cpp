@@ -77,10 +77,11 @@ void SystemTopology::multiply(Int numCopies) {
 	multiplyPowerComps<Complex>(numCopies);
 }
 
+/// DEPRECATED: Unused
 void SystemTopology::reset() {
-	for (auto c : mComponents) {
-		c->reset();
-	}
+	// for (auto c : mComponents) {
+	// 	c->reset();
+	// }
 }
 
 template <typename VarType>

@@ -17,8 +17,8 @@ DP::Ph1::Inverter::Inverter(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
 	setVirtualNodeNumber(1);
-	mIntfVoltage = MatrixComp::Zero(1,1);
-	mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfVoltage = MatrixComp::Zero(1,1);
+	**mIntfCurrent = MatrixComp::Zero(1,1);
 }
 
 void DP::Ph1::Inverter::setParameters(const std::vector<Int> &carrierHarms, const std::vector<Int> &modulHarms,
@@ -87,15 +87,15 @@ void DP::Ph1::Inverter::initialize(Matrix frequencies) {
 void DP::Ph1::Inverter::calculatePhasors() {
 	// Compute fundamental content of grid frequency
 	mVfund = mModIdx * mVin;
-	mIntfVoltage(0,0) = Complex(0, mVfund * -1);
+	(**mIntfVoltage)(0,0) = Complex(0, mVfund * -1);
 
 	// Compute sideband harmonics for even multiplies of carrier frequency m
 	// and odd reference signal multiplies n
 	for (UInt h = 0; h < mHarNum; h++ ) {
 		Real Jn = besselFirstKind_n_opt(mModHarms[h], mMaxBesselSumIdx, mCarHarms[h]*mModIdx*PI/2.);
 		//mPhasorMags(h, 0) = (4.*mVin/PI) * (Jn/mCarHarms[h]) * cos(mCarHarms[h] * PI/2.);
-		//mIntfVoltage(0, h+1) = mPhasorMags(h, 0) * -1i;
-		mIntfVoltage(0, h+1) = Complex(0, -1 * (4.*mVin/PI) * (Jn/mCarHarms[h]) * cos(mCarHarms[h] * PI/2.));
+		//(**mIntfVoltage)(0, h+1) = mPhasorMags(h, 0) * -1i;
+		(**mIntfVoltage)(0, h+1) = Complex(0, -1 * (4.*mVin/PI) * (Jn/mCarHarms[h]) * cos(mCarHarms[h] * PI/2.));
 	}
 
 	SPDLOG_LOGGER_DEBUG(mSLog,
@@ -103,7 +103,7 @@ void DP::Ph1::Inverter::calculatePhasors() {
 		"\n{}"
 		"\n{}"
 		"\n--- Phasor calculation end ---",
-		mPhasorMags, mIntfVoltage);
+		mPhasorMags, **mIntfVoltage);
 }
 
 // #### MNA functions ####
@@ -114,7 +114,7 @@ void DP::Ph1::Inverter::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	calculatePhasors();
 }
@@ -125,7 +125,7 @@ void DP::Ph1::Inverter::mnaInitializeHarm(Real omega, Real timeStep, std::vector
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-	mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+	**mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
 
 	calculatePhasors();
 }
@@ -165,10 +165,10 @@ void DP::Ph1::Inverter::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Stamp harmonics into source vector");
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0)) {
-			Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0,freq), mNumFreqs, freq);
+			Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mIntfVoltage)(0,freq), mNumFreqs, freq);
 
 			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}, harmonic {:d}",
-				Logger::complexToString(mIntfVoltage(0,freq)), mVirtualNodes[0]->matrixNodeIndex(), freq);
+				Logger::complexToString((**mIntfVoltage)(0,freq)), mVirtualNodes[0]->matrixNodeIndex(), freq);
 		}
 	}
 }
@@ -177,24 +177,24 @@ void DP::Ph1::Inverter::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Stamp harmonics into source vector");
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0)) {
-			Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0,freq), 1, 0, freq);
+			Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mIntfVoltage)(0,freq), 1, 0, freq);
 		}
 	}
 }
 
 void DP::Ph1::Inverter::mnaApplyRightSideVectorStampHarm(Matrix& rightVector, Int freq) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0,freq));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mIntfVoltage)(0,freq));
 }
 
 
 void DP::Ph1::Inverter::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mInverter.calculatePhasors();
-	mInverter.mnaApplyRightSideVectorStamp(mInverter.mRightVector);
+	mInverter.mnaApplyRightSideVectorStamp(**mInverter.mRightVector);
 }
 
 void DP::Ph1::Inverter::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 	mInverter.calculatePhasors();
-	mInverter.mnaApplyRightSideVectorStampHarm(mInverter.mRightVector);
+	mInverter.mnaApplyRightSideVectorStampHarm(**mInverter.mRightVector);
 }
 
 void DP::Ph1::Inverter::MnaPostStep::execute(Real time, Int timeStepCount) {

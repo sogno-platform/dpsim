@@ -82,7 +82,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Resistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(resistor.mName + ".MnaPostStep"),
+				Task(**resistor.mName + ".MnaPostStep"),
 				mResistor(resistor), mLeftVector(leftSideVector) {
 				mResistor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}

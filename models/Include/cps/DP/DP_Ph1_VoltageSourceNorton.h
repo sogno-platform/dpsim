@@ -30,14 +30,15 @@ namespace Ph1 {
 		Complex mEquivCurrent;
 
 		//  ### Real Voltage source parameters ###
-		/// Resistance [ohm]
-		Real mResistance;
 		/// conductance [S]
 		Real mConductance;
 
 		/// Helper function for PreStep
 		void updateState(Real time);
 	public:
+		//  ### Real Voltage source parameters ###
+		/// Resistance [ohm]
+		const Attribute<Real>::Ptr mResistance;
 		/// Defines UID, name and logging level
 		VoltageSourceNorton(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level
@@ -50,10 +51,11 @@ namespace Ph1 {
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency) { }
 		///
-		void setVoltageRef(Complex voltage) { mVoltageRef = voltage; }
+		void setVoltageRef(Complex voltage) { **mVoltageRef = voltage; }
 		///
 		using Base::Ph1::VoltageSource::setParameters;
 		///
+		/// THISISBAD: This declaration and Base::Ph1::VoltageSource::setParameters(Complex, Real) are ambiguous to each other. Clang does not like this.
 		void setParameters(Complex voltage, Real srcFreq = -1, Real resistance = 1e9);
 
 		// #### MNA section ####
@@ -71,7 +73,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(VoltageSourceNorton& voltageSource) :
-				Task(voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
+				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
 				mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
 				mModifiedAttributes.push_back(voltageSource.attribute("right_vector"));
 			}
@@ -86,7 +88,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(VoltageSourceNorton& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource),
+				Task(**voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource),
 				mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(leftVector);
 				mModifiedAttributes.push_back(voltageSource.attribute("i_intf"));

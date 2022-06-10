@@ -32,17 +32,14 @@ namespace Ph1 {
 
 		// ### General Parameters ###
 		/// Nominal system angle
+		/// CHECK: Should this be an Attribute?
 		Real mThetaN = 0;
-		/// Nominal frequency
-		Real mOmegaN;
 		/// Nominal voltage
+		/// CHECK: Should this be an Attribute?
 		Real mVnom;
 		/// Simulation step
 		Real mTimeStep;
-		/// Active power reference
-		Real mPref;
-		/// Reactive power reference
-		Real mQref;
+
 
 		// ### Control Subcomponents ###
 		/// PLL
@@ -64,20 +61,6 @@ namespace Ph1 {
 		/// Optional connection transformer
 		std::shared_ptr<DP::Ph1::Transformer> mConnectionTransformer;
 
-		// ### Inverter Interfacing Variables ###
-		// Control inputs
-		/// Measured voltage d-axis in local reference frame
-		Real mVcd = 0;
-		/// Measured voltage q-axis in local reference frame
-		Real mVcq = 0;
-		/// Measured current d-axis in local reference frame
-		Real mIrcd = 0;
-		/// Measured current q-axis in local reference frame
-		Real mIrcq = 0;
-		// Control outputs
-		/// Voltage as control output after transformation interface
-		MatrixComp mVsref = MatrixComp::Zero(1,1);
-
 		/// Flag for connection transformer usage
 		Bool mWithConnectionTransformer=false;
 		/// Flag for controller usage
@@ -88,6 +71,40 @@ namespace Ph1 {
 		std::vector<const Matrix*> mRightVectorStamps;
 
 	public:
+		// ### General Parameters ###
+
+		/// Nominal frequency
+		const Attribute<Real>::Ptr mOmegaN;
+		/// Active power reference
+		const Attribute<Real>::Ptr mPref;
+		/// Reactive power reference
+		const Attribute<Real>::Ptr mQref;
+
+		// ### Inverter Interfacing Variables ###
+		// Control inputs
+		/// Measured voltage d-axis in local reference frame
+		const Attribute<Real>::Ptr mVcd;
+		/// Measured voltage q-axis in local reference frame
+		const Attribute<Real>::Ptr mVcq;
+		/// Measured current d-axis in local reference frame
+		const Attribute<Real>::Ptr mIrcd;
+		/// Measured current q-axis in local reference frame
+		const Attribute<Real>::Ptr mIrcq;
+		// Control outputs
+		/// Voltage as control output after transformation interface
+		const Attribute<MatrixComp>::Ptr mVsref;
+
+		// Sub voltage source
+		const Attribute<MatrixComp>::Ptr mVs;
+
+		// PLL
+		const Attribute<Matrix>::Ptr mPllOutput;
+
+		// input, state and output vector for logging
+		const Attribute<Matrix>::Ptr mPowerctrlInputs;
+		const Attribute<Matrix>::Ptr mPowerctrlStates;
+		const Attribute<Matrix>::Ptr mPowerctrlOutputs;
+
 		/// Defines name amd logging level
 		AvVoltageSourceInverterDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: AvVoltageSourceInverterDQ(name, name, logLevel) {}
@@ -144,7 +161,7 @@ namespace Ph1 {
 		class ControlPreStep : public CPS::Task {
 		public:
 			ControlPreStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(AvVoltageSourceInverterDQ.mName + ".ControlPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
+				Task(**AvVoltageSourceInverterDQ.mName + ".ControlPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
 					mAvVoltageSourceInverterDQ.addControlPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.controlPreStep(time, timeStepCount); };
@@ -156,7 +173,7 @@ namespace Ph1 {
 		class ControlStep : public CPS::Task {
 		public:
 			ControlStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(AvVoltageSourceInverterDQ.mName + ".ControlStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
+				Task(**AvVoltageSourceInverterDQ.mName + ".ControlStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
 					mAvVoltageSourceInverterDQ.addControlStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.controlStep(time, timeStepCount); };
@@ -168,7 +185,7 @@ namespace Ph1 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(AvVoltageSourceInverterDQ.mName + ".MnaPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
+				Task(**AvVoltageSourceInverterDQ.mName + ".MnaPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
 					mAvVoltageSourceInverterDQ.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.mnaPreStep(time, timeStepCount); };
@@ -180,7 +197,7 @@ namespace Ph1 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ, Attribute<Matrix>::Ptr leftVector) :
-				Task(AvVoltageSourceInverterDQ.mName + ".MnaPostStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ), mLeftVector(leftVector) {
+				Task(**AvVoltageSourceInverterDQ.mName + ".MnaPostStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ), mLeftVector(leftVector) {
 				mAvVoltageSourceInverterDQ.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.mnaPostStep(time, timeStepCount, mLeftVector); };

@@ -12,23 +12,21 @@ using namespace CPS;
 
  SP::Ph1::PQNode::PQNode(String uid, String name,
 	 Logger::Level logLevel)
-	 : SimPowerComp<Complex>(uid, name, logLevel) {
+	 : SimPowerComp<Complex>(uid, name, logLevel),
+	 mPower(Attribute<Real>::create("P", mAttributes)),
+	 mReactivePower(Attribute<Real>::create("Q", mAttributes)),
+	 mPowerNom(Attribute<Real>::create("P_nom", mAttributes)),
+	 mReactivePowerNom(Attribute<Real>::create("Q_nom", mAttributes)) {}
 
-	addAttribute<Real>("P", &mPower, Flags::read | Flags::write);
-	addAttribute<Real>("Q", &mReactivePower, Flags::read | Flags::write);
-	addAttribute<Real>("P_nom", &mPowerNom, Flags::read | Flags::write);
-	addAttribute<Real>("Q_nom", &mReactivePowerNom, Flags::read | Flags::write);
-
-}
  SP::Ph1::PQNode::PQNode(String uid, String name, Real power, Real reactive_power,
 	 Logger::Level logLevel):PQNode(uid,name,logLevel) {
 
-	 mPower = power;
-	 mPowerNom = power;
-	 mReactivePower = reactive_power;
-	 mReactivePowerNom = reactive_power;
+	 **mPower = power;
+	 **mPowerNom = power;
+	 **mReactivePower = reactive_power;
+	 **mReactivePowerNom = reactive_power;
 
-     mSLog->info("Create PQ node for {} P={}, Q={}", name, mPowerNom, mReactivePowerNom);
+     mSLog->info("Create PQ node for {} P={}, Q={}", name, **mPowerNom, **mReactivePowerNom);
 
  }
 

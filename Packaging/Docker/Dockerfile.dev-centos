@@ -1,17 +1,13 @@
 FROM centos:8
 
-ARG VILLAS_VERSION=0.8.0
-ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-
 LABEL \
-	org.label-schema.schema-version = "1.0" \
+	org.label-schema.schema-version = "1.0.0" \
 	org.label-schema.name = "DPsim" \
 	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
-	org.label-schema.author.name = "Steffen Vogel" \
-	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
-	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
-	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/public/simulation/dpsim"
+	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
+	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
+
+RUN cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-* && yum update -y
 
 RUN dnf -y update && \
     dnf install -y epel-release dnf-plugins-core && \
@@ -108,7 +104,7 @@ RUN pip3 install gprof2dot
 RUN cd /tmp && \
 	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=CGMES_2.4.15_16FEB2016 -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
 	rm -rf /tmp/libcimpp
 
 # Install MAGMA from source

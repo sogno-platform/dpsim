@@ -52,12 +52,10 @@ namespace Ph1 {
 		Real mCounter = 0;
 
 		Real mBSetCounter = 0;
-		Real mVpcc=0;
 
 		// values of PT1 for measurement of voltage at PCC
 		Real mTm = 0.01;
 		Real mKm = 1;
-		Real mVmeasPrev = 0;
 		Real mLPrev;
 		Real mCPrev;
 
@@ -68,6 +66,10 @@ namespace Ph1 {
 		Bool mDisconnect = false;
 
 	public:
+		/// FIXME: This is only written once and never read
+		const Attribute<Real>::Ptr mVpcc;
+		const Attribute<Real>::Ptr mVmeasPrev;
+
 		/// Defines UID, name and log level
 		SVC(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and log level
@@ -112,7 +114,7 @@ namespace Ph1 {
 
 		class MnaPreStep : public Task {
 		public:
-			MnaPreStep(SVC& svc) : Task(svc.mName + ".MnaPreStep"), mSVC(svc) {
+			MnaPreStep(SVC& svc) : Task(**svc.mName + ".MnaPreStep"), mSVC(svc) {
 				mSVC.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mSVC.mnaPreStep(time, timeStepCount); }
@@ -123,7 +125,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(SVC& svc, Attribute<Matrix>::Ptr leftVector) :
-				Task(svc.mName + ".MnaPostStep"), mSVC(svc), mLeftVector(leftVector) {
+				Task(**svc.mName + ".MnaPostStep"), mSVC(svc), mLeftVector(leftVector) {
 				mSVC.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mSVC.mnaPostStep(time, timeStepCount, mLeftVector); }

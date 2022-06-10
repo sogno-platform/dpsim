@@ -20,10 +20,7 @@ namespace Ph1 {
 		public SimPowerComp<Complex>,
 		public SharedFactory<ResIndSeries> {
 	protected:
-		/// Inductance [H]
-		Real mInductance;
-		///Resistance [ohm]
-		Real mResistance;
+		///FIXME: This is never used...
 		///Conductance [S]
 		Real mConductance;
 		/// DC equivalent current source for harmonics [A]
@@ -33,6 +30,10 @@ namespace Ph1 {
 		/// Coefficient in front of previous current value for harmonics
 		MatrixComp mPrevCurrFac;
 	public:
+		/// Inductance [H]
+		const Attribute<Real>::Ptr mInductance;
+		///Resistance [ohm]
+		const Attribute<Real>::Ptr mResistance;
 		/// Defines UID, name and log level
 		ResIndSeries(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and log level
@@ -42,8 +43,8 @@ namespace Ph1 {
 		// #### General ####
 		/// Sets model specific parameters
 		void setParameters(Real resistance, Real inductance) {
-			mResistance = resistance;
-			mInductance = inductance;
+			**mResistance = resistance;
+			**mInductance = inductance;
 		}
 		/// Return new instance with the same parameters
 		SimPowerComp<Complex>::Ptr clone(String name);
@@ -67,7 +68,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(Inductor& ResIndSeries) :
-				Task(inductor.mName + ".MnaPreStep"), mResIndSeries(resIndSeries) {
+				Task(**inductor.mName + ".MnaPreStep"), mResIndSeries(resIndSeries) {
 				// actually depends on L, but then we'd have to modify the system matrix anyway
 				mModifiedAttributes.push_back(mResIndSeries.attribute("right_vector"));
 				mPrevStepDependencies.push_back(mResIndSeries.attribute("v_intf"));
@@ -81,7 +82,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(ResIndSeries& inductor, Attribute<Matrix>::Ptr leftVector) :
-				Task(inductor.mName + ".MnaPostStep"),
+				Task(**inductor.mName + ".MnaPostStep"),
 				mResIndSeries(resIndSeries), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(mResIndSeries.attribute("v_intf"));

@@ -1,7 +1,7 @@
-# rwthacs/dpsim-dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
-ARG DOCKER_TAG=latest
+# sogno/dpsim:dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
+ARG BASE_IMAGE=sogno/dpsim:dev
 
-FROM rwthacs/dpsim-dev:${DOCKER_TAG}
+FROM ${BASE_IMAGE}
 
 ADD . /dpsim
 

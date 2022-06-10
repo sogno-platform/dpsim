@@ -55,7 +55,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Inductor& inductor, Attribute<Matrix>::Ptr leftVector) :
-				Task(inductor.mName + ".MnaPostStep"),
+				Task(**inductor.mName + ".MnaPostStep"),
 				mInductor(inductor), mLeftVector(leftVector) {
 					mInductor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}

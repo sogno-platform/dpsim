@@ -23,7 +23,9 @@ template <typename VarType>
 DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	SystemTopology system, IdentifiedObject::List tearComponents,
 	Real timeStep, Logger::Level logLevel) :
-	Solver(name, logLevel) {
+	Solver(name, logLevel),
+	mMappedTearCurrents(Attribute<Matrix>::create("mapped_tear_currents", mAttributes)),
+	mOrigLeftSideVector(Attribute<Matrix>::create("old_left_vector", mAttributes)) {
 	mTimeStep = timeStep;
 
 	// Raw source and solution vector logging
@@ -210,16 +212,14 @@ void DiakopticsSolver<VarType>::createMatrices() {
 
 	mRightSideVector = Matrix::Zero(totalSize, 1);
 	mLeftSideVector = Matrix::Zero(totalSize, 1);
-	mOrigLeftSideVector = Matrix::Zero(totalSize, 1);
-	addAttribute<Matrix>("old_left_vector", &mOrigLeftSideVector, Flags::read);
-	mMappedTearCurrents = Matrix::Zero(totalSize, 1);
-	addAttribute<Matrix>("mapped_tear_currents", &mMappedTearCurrents, Flags::read);
+	**mOrigLeftSideVector = Matrix::Zero(totalSize, 1);
+	**mMappedTearCurrents = Matrix::Zero(totalSize, 1);
 
 	for (auto& net : mSubnets) {
 		// The subnets' components expect to be passed a left-side vector matching
 		// the size of the subnet, so we have to create separate vectors here and
 		// copy the solution there
-		net.leftVector = Attribute<Matrix>::make(Flags::read | Flags::write);
+		net.leftVector = AttributeStatic<Matrix>::make();
 		net.leftVector->set(Matrix::Zero(net.sysSize, 1));
 	}
 
@@ -373,7 +373,7 @@ void DiakopticsSolver<VarType>::SubnetSolveTask::execute(Real time, Int timeStep
 	for (auto stamp : mSubnet.rightVectorStamps)
 		rBlock += *stamp;
 
-	auto lBlock = mSolver.mOrigLeftSideVector.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
+	auto lBlock = (**mSolver.mOrigLeftSideVector).block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
 	// Solve Y' * v' = I
 	lBlock = mSubnet.luFactorization.solve(rBlock);
 }
@@ -386,22 +386,22 @@ void DiakopticsSolver<VarType>::PreSolveTask::execute(Real time, Int timeStepCou
 		tComp->mnaTearApplyVoltageStamp(mSolver.mTearVoltages);
 	}
 	// -C^T * v'
-	mSolver.mTearVoltages -= mSolver.mTearTopology.transpose() * mSolver.mOrigLeftSideVector;
+	mSolver.mTearVoltages -= mSolver.mTearTopology.transpose() * **mSolver.mOrigLeftSideVector;
 	// Solve Z' * i = E - C^T * v'
 	mSolver.mTearCurrents = mSolver.mTotalTearImpedance.solve(mSolver.mTearVoltages);
 	// C * i
-	mSolver.mMappedTearCurrents = mSolver.mTearTopology * mSolver.mTearCurrents;
-	mSolver.mLeftSideVector = mSolver.mOrigLeftSideVector;
+	**mSolver.mMappedTearCurrents = mSolver.mTearTopology * mSolver.mTearCurrents;
+	mSolver.mLeftSideVector = **mSolver.mOrigLeftSideVector;
 }
 
 template <typename VarType>
 void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 	auto lBlock = mSolver.mLeftSideVector.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
-	auto rBlock = mSolver.mMappedTearCurrents.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
+	auto rBlock = (**mSolver.mMappedTearCurrents).block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
 	// Solve Y' * x = C * i
 	// v = v' + x
 	lBlock += mSubnet.luFactorization.solve(rBlock);
-	*mSubnet.leftVector = lBlock;
+	**mSubnet.leftVector = lBlock;
 }
 
 template <typename VarType>

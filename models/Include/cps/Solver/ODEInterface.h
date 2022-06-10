@@ -18,6 +18,9 @@ namespace CPS {
 		typedef std::shared_ptr<ODEInterface> Ptr;
 		//typedef std::vector<Ptr> List;
 
+		const CPS::Attribute<Matrix>::Ptr mOdePreState;
+		const CPS::Attribute<Matrix>::Ptr mOdePostState;
+
 		/// Use this to pass the individual components StateSpace implementation to the ODESolver class
 		using StSpFn = std::function<void(double, const double *, double *)>;
 
@@ -33,11 +36,9 @@ namespace CPS {
 		                         double tmp1[], double tmp2[], double tmp3[]) = 0;
 
 	protected:
-		ODEInterface() {
-			addAttribute<Matrix>("ode_pre_state", &mOdePreState, Flags::read);
-			addAttribute<Matrix>("ode_post_state", &mOdePostState, Flags::read | Flags::write);
-		}
-
-		Matrix mOdePreState, mOdePostState;
+		ODEInterface() :
+		mOdePreState(CPS::Attribute<Matrix>::create("ode_pre_state", mAttributes)),
+		mOdePostState(CPS::Attribute<Matrix>::create("ode_post_state", mAttributes))
+		{ }
 	};
 }

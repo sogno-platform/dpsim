@@ -66,7 +66,7 @@ namespace Ph3 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(Capacitor& capacitor)
-				: Task(capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
+				: Task(**capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
 				// actually depends on C, but then we'd have to modify the system matrix anyway
 				mModifiedAttributes.push_back(capacitor.attribute("right_vector"));
 				mPrevStepDependencies.push_back(capacitor.attribute("i_intf"));
@@ -82,7 +82,7 @@ namespace Ph3 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(Capacitor& capacitor, Attribute<Matrix>::Ptr leftVector)
-				: Task(capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
+				: Task(**capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(mCapacitor.attribute("v_intf"));
 				mModifiedAttributes.push_back(mCapacitor.attribute("i_intf"));

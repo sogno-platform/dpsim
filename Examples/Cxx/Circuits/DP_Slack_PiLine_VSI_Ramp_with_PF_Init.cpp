@@ -71,8 +71,8 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -124,10 +124,10 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
-	loggerDP->addAttribute("v1", n1DP->attribute("v"));
-	loggerDP->addAttribute("v2", n2DP->attribute("v"));
-	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
-	loggerDP->addAttribute("f_src", extnetDP->attribute("f_src"));
+	loggerDP->logAttribute("v1", n1DP->attribute("v"));
+	loggerDP->logAttribute("v2", n2DP->attribute("v"));
+	loggerDP->logAttribute("i12", lineDP->attribute("i_intf"));
+	loggerDP->logAttribute("f_src", extnetDP->attribute("f_src"));
 
 	CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerDP, pv);
 

@@ -29,9 +29,33 @@ namespace Ph1 {
 	 public SharedFactory<PiLine>,
 	 public Base::Ph1::PiLine,
 	 public PFSolverInterfaceBranch {
-	protected:
+	public:
 		///base voltage [V]
-		Real mBaseVoltage;
+		const Attribute<Real>::Ptr mBaseVoltage;
+
+		// #### Power flow results ####
+		/// branch Current flow [A]
+		const Attribute<MatrixComp>::Ptr mCurrent;
+		/// CHECK: Are these derived attributes necessary?
+		Attribute<CPS::Complex>::Ptr mCurrent_0;
+		Attribute<CPS::Complex>::Ptr mCurrent_1;
+		
+		/// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
+		const Attribute<Matrix>::Ptr mActivePowerBranch;
+		/// CHECK: Are these derived attributes necessary?
+		Attribute<CPS::Real>::Ptr mActivePowerBranch_0;
+		Attribute<CPS::Real>::Ptr mActivePowerBranch_1;
+
+		/// branch reactive powerflow [Var]
+		const Attribute<Matrix>::Ptr mReactivePowerBranch;
+		/// CHECK: Are these derived attributes necessary?
+		Attribute<CPS::Real>::Ptr mReactivePowerBranch_0;
+		Attribute<CPS::Real>::Ptr mReactivePowerBranch_1;
+
+
+
+	protected:
+		/// CHECK: Which of these really need to be member variables?
 		///base current [A]
 		Real mBaseCurrent;
 		///base apparent power [VA]
@@ -58,21 +82,6 @@ namespace Ph1 {
 
 		// #### Admittance matrix stamp ####
 		MatrixComp mY_element;
-
-		// #### Power flow results ####
-		/// branch Current flow [A]
-		Eigen::Matrix<CPS::Complex, 2, 1,Eigen::DontAlign> mCurrent;
-		/// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
-		Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign> mActivePowerBranch;
-		/// branch reactive powerflow [Var]
-		Eigen::Matrix<CPS::Real, 2, 1, Eigen::DontAlign> mReactivePowerBranch;
-
-		/// whether the total power injection of its from node is stored in this line
-		Bool mStoreNodalPowerInjection = false;
-		/// nodal active power injection
-		Real mActivePowerInjection;
-		/// nodal reactive power injection
-		Real mReactivePowerInjection;
 		/// Series Inductance submodel
 		std::shared_ptr<Inductor> mSubSeriesInductor;
 		/// Series Resistor submodel
@@ -88,6 +97,14 @@ namespace Ph1 {
 		/// Right side vectors of subcomponents
 		std::vector<const Matrix*> mRightVectorStamps;
 	public:
+		/// nodal active power injection
+		const Attribute<Real>::Ptr mActivePowerInjection;
+		/// nodal reactive power injection
+		const Attribute<Real>::Ptr mReactivePowerInjection;
+		/// whether the total power injection of its from node is stored in this line
+		/// FIXME: This is only written to, but never read
+		const Attribute<Bool>::Ptr mStoreNodalPowerInjection;
+
 		// #### General ####
 		/// Defines UID, name and logging level
 		PiLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -136,7 +153,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(PiLine& line, Attribute<Matrix>::Ptr leftVector) :
-				Task(line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
+				Task(**line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
 					mLine.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mLine.mnaPostStep(time, timeStepCount, mLeftVector); };

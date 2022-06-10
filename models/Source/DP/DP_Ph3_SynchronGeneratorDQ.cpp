@@ -19,10 +19,28 @@ DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logge
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
-	mIntfVoltage = MatrixComp::Zero(3,1);
-	mIntfCurrent = MatrixComp::Zero(3,1);
+	**mIntfVoltage = MatrixComp::Zero(3,1);
+	**mIntfCurrent = MatrixComp::Zero(3,1);
 
-	addAttribute<Real>("w_r", &mOmMech, Flags::read);
+	/// CHECK: Which of these are actually required in this class or its base classes?
+	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
+	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
+	mLd = Attribute<Real>::create("Ld", mAttributes, 0);
+	mLq = Attribute<Real>::create("Lq", mAttributes, 0);
+	mTd0_t = Attribute<Real>::create("Td0_t", mAttributes, 0);
+	mTd0_s = Attribute<Real>::create("Td0_s", mAttributes, 0);
+	mTq0_t = Attribute<Real>::create("Tq0_t", mAttributes, 0);
+	mTq0_s = Attribute<Real>::create("Tq0_s", mAttributes, 0);
+	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
+	mElecTorque = Attribute<Real>::create("T_e", mAttributes, 0);
+	mMechTorque = Attribute<Real>::create("T_m", mAttributes, 0);
+	mMechPower = Attribute<Real>::create("P_m", mAttributes, 0);
+	mOmMech = Attribute<Real>::create("w_r", mAttributes);
+	mDelta = Attribute<Real>::create("delta_r", mAttributes, 0);
+	mLd_s = Attribute<Real>::create("Ld_s", mAttributes, 0);
+	mLd_t = Attribute<Real>::create("Ld_t", mAttributes, 0);
+	mLq_s = Attribute<Real>::create("Lq_s", mAttributes, 0);
+	mLq_t = Attribute<Real>::create("Lq_t", mAttributes, 0);
 }
 
 DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String name, Logger::Level logLevel)
@@ -73,8 +91,8 @@ void DP::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
 		mIdq0 << mIsr(0,0), mIsr(3,0), mIsr(5,0);
 	}
 
-	mIntfVoltage = mBase_V * dq0ToAbcTransform(mThetaMech, mVdq0);
-	mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
+	**mIntfVoltage = mBase_V * dq0ToAbcTransform(mThetaMech, mVdq0);
+	**mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 }
 
 void DP::Ph3::SynchronGeneratorDQ::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -95,26 +113,26 @@ void DP::Ph3::SynchronGeneratorDQ::mnaApplySystemMatrixStamp(Matrix& systemMatri
 
 void DP::Ph3::SynchronGeneratorDQ::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (mCompensationOn)
-		mCompensationCurrent = mIntfVoltage / mRcomp;
+		mCompensationCurrent = **mIntfVoltage / mRcomp;
 
 	// If the interface current is positive, it is flowing out of the connected node and into ground.
 	// Therefore, the generator is interfaced as a consumer but since the currents are reversed the equations
 	// are in generator mode.
 	if (terminalNotGrounded(0)) {
-		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), -mIntfCurrent(0,0) + mCompensationCurrent(0,0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0,1), -mIntfCurrent(1,0) + mCompensationCurrent(1,0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0,2), -mIntfCurrent(2,0) + mCompensationCurrent(2,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), -(**mIntfCurrent)(0,0) + mCompensationCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,1), -(**mIntfCurrent)(1,0) + mCompensationCurrent(1,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,2), -(**mIntfCurrent)(2,0) + mCompensationCurrent(2,0));
 	}
 }
 
 void DP::Ph3::SynchronGeneratorDQ::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,0));
-	mIntfVoltage(1,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,1));
-	mIntfVoltage(2,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,2));
+	(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,0));
+	(**mIntfVoltage)(1,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,1));
+	(**mIntfVoltage)(2,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,2));
 }
 
 void DP::Ph3::SynchronGeneratorDQ::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mSynGen.mnaUpdateVoltage(*mLeftVector);
+	mSynGen.mnaUpdateVoltage(**mLeftVector);
 }
 
 Matrix DP::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta, MatrixComp& abcVector) {

@@ -102,8 +102,8 @@ void doSim(int threads, int generators, int repNumber) {
 
 	// Logging
 	//auto logger = DataLogger::make(name);
-	//logger->addAttribute("v1", n1->attribute("v"));
-	//logger->addAttribute("i_load", res->attribute("i_intf"));
+	//logger->logAttribute("v1", n1->attribute("v"));
+	//logger->logAttribute("i_load", res->attribute("i_intf"));
 
 	// Simulation
 	Simulation sim(name, Logger::Level::off);

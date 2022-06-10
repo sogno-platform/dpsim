@@ -17,11 +17,12 @@ namespace CPS {
 	class TopologicalNode : public IdentifiedObject {
 	protected:
 		PhaseType mPhaseType = PhaseType::Single;
-		MatrixComp mInitialVoltage;
 		Bool mIsGround = false;
 	public:
 		typedef std::shared_ptr<TopologicalNode> Ptr;
 		typedef std::vector<Ptr> List;
+
+		const Attribute<MatrixComp>::Ptr mInitialVoltage;
 
 		TopologicalNode() { }
 		/// This very general constructor is used by other constructors.
@@ -33,14 +34,14 @@ namespace CPS {
 		///
 		Bool isGround() { return mIsGround; }
 		///
-		MatrixComp initialVoltage() { return mInitialVoltage; }
+		MatrixComp initialVoltage() { return **mInitialVoltage; }
 		///
-		void setInitialVoltage(MatrixComp voltage) { mInitialVoltage = voltage; }
+		void setInitialVoltage(MatrixComp voltage) { **mInitialVoltage = voltage; }
 		///
-		void setInitialVoltage(Complex voltage) { mInitialVoltage(0,0) = voltage; }
+		void setInitialVoltage(Complex voltage) { (**mInitialVoltage)(0,0) = voltage; }
 		///
 		void setInitialVoltage(Complex voltage, Int phaseIndex) {
-			mInitialVoltage(phaseIndex, 0) = voltage;
+			(**mInitialVoltage)(phaseIndex, 0) = voltage;
 		}
 		///
 		Complex initialSingleVoltage(PhaseType phaseType = PhaseType::Single);

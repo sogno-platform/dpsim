@@ -28,9 +28,9 @@ void EMT::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, 
 	SynchronGeneratorDQ::initializeMatrixAndStates();
 
 	mDim = mNumDampingWindings + 7;
-	mOdePreState = Matrix::Zero(mDim, 1);
-	mOdePostState = Matrix::Zero(mDim, 1);
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mOdePreState = Matrix::Zero(mDim, 1);
+	**mOdePostState = Matrix::Zero(mDim, 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -40,18 +40,18 @@ void EMT::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, 
 void EMT::Ph3::SynchronGeneratorDQODE::MnaPreStep::execute(Real time, Int timeStepCount) {
 	// ODEPreStep and ODESolver.Solve guaranteed to be executed by scheduler
 	mSynGen.odePostStep();
-	mSynGen.mnaApplyRightSideVectorStamp(mSynGen.mRightVector);
+	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
 }
 
 void EMT::Ph3::SynchronGeneratorDQODE::odePreStep() {
 	for(int i=0; i<mDim-2;i++)
-		mOdePreState(i)=mPsisr(i, 0);
+		(**mOdePreState)(i)=mPsisr(i, 0);
 
-	mOdePreState(mDim-2)=mThetaMech;
-	mOdePreState(mDim-1)=mOmMech;
+	(**mOdePreState)(mDim-2)=mThetaMech;
+	(**mOdePreState)(mDim-1)= **mOmMech;
 
 	//copied from stepInPerUnit
-	mVdq0 = abcToDq0Transform(mThetaMech, mIntfVoltage);
+	mVdq0 = abcToDq0Transform(mThetaMech, **mIntfVoltage);
 	mVdq0 = mVdq0 / mBase_V;
 }
 
@@ -61,10 +61,10 @@ void EMT::Ph3::SynchronGeneratorDQODE::ODEPreStep::execute(Real time, Int timeSt
 
 void EMT::Ph3::SynchronGeneratorDQODE::odePostStep() {
 	for(int i=0; i<mDim-2;i++)
-		mPsisr(i,0)=mOdePostState(i);
+		mPsisr(i,0)=(**mOdePostState)(i);
 
-	mThetaMech=mOdePostState(mDim-2);
-	mOmMech=mOdePostState(mDim-1);
+	mThetaMech=(**mOdePostState)(mDim-2);
+	**mOmMech =(**mOdePostState)(mDim-1);
 
 	//copied from stepInPerUnit ; makes only sense to call this after write back
 	mIsr = mFluxToCurrentMat * mPsisr;
@@ -72,10 +72,10 @@ void EMT::Ph3::SynchronGeneratorDQODE::odePostStep() {
 	mIdq0(0, 0) = mIsr(0, 0);
 	mIdq0(1, 0) = mIsr(3, 0);
 	mIdq0(2, 0) = mIsr(6, 0);
-	mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
+	**mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "\nCurrent: \n{:s}",
-		Logger::matrixCompToString(mIntfCurrent));
+		Logger::matrixCompToString(**mIntfCurrent));
 }
 
 // ODE-Class simulation state-space
@@ -119,7 +119,7 @@ void EMT::Ph3::SynchronGeneratorDQODE::odeStateSpace(double t, const double y[],
 	}
 
 	// Compute Omega (according to stepInPerUnit)
-	ydot[mDim-1]=1/(2*mInertia)*(mMechTorque-(y[3]*i_d-y[0]*i_q));
+	ydot[mDim-1]=1/(2* **mInertia)*(**mMechTorque-(y[3]*i_d-y[0]*i_q));
 }
 
 void EMT::Ph3::SynchronGeneratorDQODE::odeJacobian(double t, const double y[], double fy[], double J[], double tmp1[], double tmp2[], double tmp3[]){
@@ -142,6 +142,6 @@ void EMT::Ph3::SynchronGeneratorDQODE::odeJacobian(double t, const double y[], d
 		i_q+=mFluxToCurrentMat(3,i)*y[i];
 	}
 	//fluxes show up in omega eq. (with mBase_OmMech ?)
-	J[(mDim-1)*(mDim-2)+0]=1/(2*mInertia)*i_q;
-	J[(mDim-1)*(mDim-2)+3]=-1/(2*mInertia)*i_d;
+	J[(mDim-1)*(mDim-2)+0]=1/(2* **mInertia)*i_q;
+	J[(mDim-1)*(mDim-2)+3]=-1/(2* **mInertia)*i_d;
 }

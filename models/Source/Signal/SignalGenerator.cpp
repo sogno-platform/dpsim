@@ -11,15 +11,13 @@
 using namespace CPS;
 
 Signal::SignalGenerator::SignalGenerator(String uid, String name, Logger::Level logLevel) 
-    : SimSignalComp(name, logLevel) {
+    : SimSignalComp(name, logLevel),
+    mSigOut(Attribute<Complex>::create("sigOut", mAttributes)),
+    mFreq(Attribute<Real>::create("freq", mAttributes)) {
 
     mSLog->info("Create {} {}", type(), name);
-    
-    addAttribute<Complex>("sigOut", Flags::read | Flags::write);
-	addAttribute<Real>("freq", Flags::read | Flags::write);
 }
 
 Complex Signal::SignalGenerator::getSignal() {
-    Complex sigOut = attribute<Complex>("sigOut")->get();
-    return sigOut;
+    return **mSigOut;
 }

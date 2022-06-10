@@ -9,18 +9,18 @@
 #pragma once
 
 #include <cps/Definitions.h>
+#include <cps/AttributeList.h>
 
 namespace CPS {
 namespace Base {
 namespace Ph3 {
 	class Inductor {
-	protected:
-		/// Inductance [H]
-		Matrix mInductance;
 	public:
+		/// Inductance [H]
+		CPS::Attribute<Matrix>::Ptr mInductance;
 		/// Sets model specific parameters
 		void setParameters(Matrix inductance) {
-			mInductance = inductance;
+			**mInductance = inductance;
 		}
 	};
 }

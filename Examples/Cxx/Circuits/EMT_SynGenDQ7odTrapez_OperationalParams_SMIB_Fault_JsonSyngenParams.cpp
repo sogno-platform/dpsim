@@ -100,12 +100,12 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
-	loggerPF->addAttribute("v_line", linePF->attribute("v_intf"));
-	loggerPF->addAttribute("i_line", linePF->attribute("i_intf"));
-	loggerPF->addAttribute("v_gen", genPF->attribute("v_intf"));
-	loggerPF->addAttribute("ig", genPF->attribute("i_intf"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v_line", linePF->attribute("v_intf"));
+	loggerPF->logAttribute("i_line", linePF->attribute("i_intf"));
+	loggerPF->logAttribute("v_gen", genPF->attribute("v_intf"));
+	loggerPF->logAttribute("ig", genPF->attribute("i_intf"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -173,14 +173,14 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v_line", line->attribute("v_intf"));
-	logger->addAttribute("i_line", line->attribute("i_intf"));
-	logger->addAttribute("v_gen", gen->attribute("v_intf"));
-	logger->addAttribute("i_gen", gen->attribute("i_intf"));
-	logger->addAttribute("wr_gen", gen->attribute("w_r"));
-	logger->addAttribute("delta_r", gen->attribute("delta_r"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v_line", line->attribute("v_intf"));
+	logger->logAttribute("i_line", line->attribute("i_intf"));
+	logger->logAttribute("v_gen", gen->attribute("v_intf"));
+	logger->logAttribute("i_gen", gen->attribute("i_intf"));
+	logger->logAttribute("wr_gen", gen->attribute("w_r"));
+	logger->logAttribute("delta_r", gen->attribute("delta_r"));
 
 	// Events
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);

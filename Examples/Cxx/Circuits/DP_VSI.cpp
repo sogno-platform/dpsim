@@ -110,44 +110,44 @@ void DP_Ph1_VSI2_4bus_SampleGrid() {
 	// Logging
 	auto logger = DataLogger::make(simName);
 	// currents
-	/*logger->addAttribute("i_vs", vs->attribute("i_intf"));
-	logger->addAttribute("i_vsi", vsi->attribute("i_intf"));
-	logger->addAttribute("i_vsi2", vsi2->attribute("i_intf"));
-	logger->addAttribute("iload", rload->attribute("i_intf"));
-	logger->addAttribute("iqload", Lload->attribute("i_intf"));*/
+	/*logger->logAttribute("i_vs", vs->attribute("i_intf"));
+	logger->logAttribute("i_vsi", vsi->attribute("i_intf"));
+	logger->logAttribute("i_vsi2", vsi2->attribute("i_intf"));
+	logger->logAttribute("iload", rload->attribute("i_intf"));
+	logger->logAttribute("iqload", Lload->attribute("i_intf"));*/
 	// nodal voltages
-	logger->addAttribute("vBus1", n1->attribute("v"));
-	logger->addAttribute("v_slack", n5->attribute("v"));
-	logger->addAttribute("vBus2", n2->attribute("v"));
-	logger->addAttribute("vBus3", n3->attribute("v"));
-	logger->addAttribute("vBus4", n4->attribute("v"));
+	logger->logAttribute("vBus1", n1->attribute("v"));
+	logger->logAttribute("v_slack", n5->attribute("v"));
+	logger->logAttribute("vBus2", n2->attribute("v"));
+	logger->logAttribute("vBus3", n3->attribute("v"));
+	logger->logAttribute("vBus4", n4->attribute("v"));
 	// power outputs
-	logger->addAttribute("P", vsi->attribute("p"));
-	logger->addAttribute("Q", vsi->attribute("q"));
-	logger->addAttribute("P2", vsi2->attribute("p"));
-	logger->addAttribute("Q2", vsi2->attribute("q"));
-	logger->addAttribute("P_ref", vsi->attribute("P_ref"));
-	logger->addAttribute("Q_ref", vsi->attribute("Q_ref"));
-	logger->addAttribute("P_ref2", vsi2->attribute("P_ref"));
-	logger->addAttribute("Q_ref2", vsi2->attribute("Q_ref"));
+	logger->logAttribute("P", vsi->attribute("p"));
+	logger->logAttribute("Q", vsi->attribute("q"));
+	logger->logAttribute("P2", vsi2->attribute("p"));
+	logger->logAttribute("Q2", vsi2->attribute("q"));
+	logger->logAttribute("P_ref", vsi->attribute("P_ref"));
+	logger->logAttribute("Q_ref", vsi->attribute("Q_ref"));
+	logger->logAttribute("P_ref2", vsi2->attribute("P_ref"));
+	logger->logAttribute("Q_ref2", vsi2->attribute("Q_ref"));
 	// states of controller
-	logger->addAttribute("theta", vsi->attribute("theta"));
-	logger->addAttribute("phi_pll", vsi->attribute("phipll"));
-	logger->addAttribute("phid", vsi->attribute("phid"));
-	logger->addAttribute("phiq", vsi->attribute("phiq"));
-	logger->addAttribute("gammad", vsi->attribute("gammad"));
-	logger->addAttribute("gammaq", vsi->attribute("gammaq"));
-	logger->addAttribute("ifdq", vsi->attribute("ifdq"));
-	logger->addAttribute("igdq", vsi->attribute("igdq"));
-	logger->addAttribute("Vsdq", vsi->attribute("Vsdq"));
+	logger->logAttribute("theta", vsi->attribute("theta"));
+	logger->logAttribute("phi_pll", vsi->attribute("phipll"));
+	logger->logAttribute("phid", vsi->attribute("phid"));
+	logger->logAttribute("phiq", vsi->attribute("phiq"));
+	logger->logAttribute("gammad", vsi->attribute("gammad"));
+	logger->logAttribute("gammaq", vsi->attribute("gammaq"));
+	logger->logAttribute("ifdq", vsi->attribute("ifdq"));
+	logger->logAttribute("igdq", vsi->attribute("igdq"));
+	logger->logAttribute("Vsdq", vsi->attribute("Vsdq"));
 
 
 	// frequency
-	logger->addAttribute("freq_vsi1", vsi->attribute("freq"));
-	logger->addAttribute("freq_vsi2", vsi2->attribute("freq"));
+	logger->logAttribute("freq_vsi1", vsi->attribute("freq"));
+	logger->logAttribute("freq_vsi2", vsi2->attribute("freq"));
 	// output voltages
-	logger->addAttribute("vsi", vsi->attribute("v_intf"));
-	logger->addAttribute("vsi2", vsi2->attribute("v_intf"));
+	logger->logAttribute("vsi", vsi->attribute("v_intf"));
+	logger->logAttribute("vsi2", vsi2->attribute("v_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);

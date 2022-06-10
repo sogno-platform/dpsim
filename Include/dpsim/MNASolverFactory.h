@@ -23,6 +23,9 @@
 #endif
 #endif
 #endif
+#ifdef WITH_MNASOLVERPLUGIN
+#include <dpsim/MNASolverPlugin.h>
+#endif
 
 namespace DPsim {
 
@@ -37,11 +40,15 @@ class MnaSolverFactory {
 		CUDADense,
 		CUDASparse,
 		CUDAMagma,
+		Plugin,
 	};
 
 	/// MNA implementations supported by this compilation
 	static const std::vector<MnaSolverImpl> mSupportedSolverImpls(void) {
 		static std::vector<MnaSolverImpl> ret = {
+#ifdef WITH_MNASOLVERPLUGIN
+			Plugin,
+#endif //WITH_MNASOLVERPLUGIN
 			EigenDense,
 #ifdef WITH_SPARSE
 			EigenSparse,
@@ -65,7 +72,8 @@ class MnaSolverFactory {
 	static std::shared_ptr<MnaSolver<VarType>> factory(String name,
 		CPS::Domain domain = CPS::Domain::DP,
 		CPS::Logger::Level logLevel = CPS::Logger::Level::info,
-		MnaSolverImpl implementation = mSupportedSolverImpls().back())
+		MnaSolverImpl implementation = mSupportedSolverImpls().back(),
+		String pluginName = "plugin.so")
 	{
 		//To avoid regression we use EigenDense in case of undefined implementation
 		if (implementation == MnaSolverImpl::Undef) {
@@ -96,6 +104,11 @@ class MnaSolverFactory {
 			return std::make_shared<MnaSolverGpuMagma<VarType>>(name, domain, logLevel);
 #endif
 #endif
+#endif
+#ifdef WITH_MNASOLVERPLUGIN
+		case MnaSolverImpl::Plugin:
+			log->info("creating Plugin solver implementation");
+			return std::make_shared<MnaSolverPlugin<VarType>>(pluginName, name, domain, logLevel);
 #endif
 		default:
 			throw CPS::SystemError("unsupported MNA implementation.");

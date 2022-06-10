@@ -1,11 +1,11 @@
-# rwthacs/dpsim-dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
-ARG DOCKER_TAG=latest
+# sogno/dpsim:dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
+ARG BASE_IMAGE=sogno/dpsim:dev
 ARG CI
 ARG CI_COMMIT_SHA
 ARG CI_COMMIT_REF_NAME
 ARG CI_COMMIT_TAG
 
-FROM rwthacs/dpsim-dev:${DOCKER_TAG} AS builder
+FROM ${BASE_IMAGE} AS builder
 
 COPY . /dpsim/
 
@@ -18,14 +18,11 @@ RUN make -j$(nproc) package
 FROM fedora:29
 
 LABEL \
-	org.label-schema.schema-version = "1.0" \
+	org.label-schema.schema-version = "1.0.0" \
 	org.label-schema.name = "DPsim" \
 	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
-	org.label-schema.author.name = "Steffen Vogel" \
-	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
-	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
-	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
+	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
+	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
 
 COPY --from=builder /dpsim/build/*.rpm /tmp
 RUN dnf -y install /tmp/*.rpm

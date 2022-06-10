@@ -82,9 +82,9 @@ void DP_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i_gen", gen->attribute("i_intf"));
-	logger->addAttribute("wr_gen", gen->attribute("w_r"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("i_gen", gen->attribute("i_intf"));
+	logger->logAttribute("wr_gen", gen->attribute("w_r"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -132,9 +132,9 @@ void EMT_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i_gen", gen->attribute("i_intf"));
-	logger->addAttribute("wr_gen", gen->attribute("w_r"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("i_gen", gen->attribute("i_intf"));
+	logger->logAttribute("wr_gen", gen->attribute("w_r"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);

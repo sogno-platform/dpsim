@@ -12,17 +12,15 @@ using namespace CPS;
 
 SP::Ph1::SynchronGeneratorVBR::SynchronGeneratorVBR
     (String uid, String name, Logger::Level logLevel)
-	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel){
+	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
+	Evbr(Attribute<Complex>::create("Evbr", mAttributes)) {
 
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 	
 	// model variables
-	mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
-
-	// register attributes
-    addAttribute<Complex>("Evbr", &Evbr, Flags::read);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 }
 
 SP::Ph1::SynchronGeneratorVBR::SynchronGeneratorVBR
@@ -58,28 +56,28 @@ void SP::Ph1::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatr
 }
 
 void SP::Ph1::SynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), Evbr);
+	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), **Evbr);
 }
 
 void SP::Ph1::SynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
 	// update armature voltage
-	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	Matrix Vabc = Matrix::Zero(2,1);
-	Vabc << mIntfVoltage(0, 0).real(), mIntfVoltage(0, 0).imag();
-	mVdq = mComplexAToDq * Vabc / mBase_V_RMS;
+	Vabc << (**mIntfVoltage)(0, 0).real(), (**mIntfVoltage)(0, 0).imag();
+	**mVdq = mComplexAToDq * Vabc / mBase_V_RMS;
 
 	// update armature current
-	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
+	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
 	Matrix Iabc = Matrix::Zero(2,1);
-	Iabc << mIntfCurrent(0, 0).real(), mIntfCurrent(0, 0).imag();
-	mIdq = mComplexAToDq * Iabc / mBase_I_RMS;
+	Iabc << (**mIntfCurrent)(0, 0).real(), (**mIntfCurrent)(0, 0).imag();
+	**mIdq = mComplexAToDq * Iabc / mBase_I_RMS;
 }
 
 Matrix SP::Ph1::SynchronGeneratorVBR::get_DqToComplexATransformMatrix() {
 	Matrix dqToComplexA(2, 2);
 	dqToComplexA <<
-		cos(mThetaMech - mBase_OmMech * mSimTime),	-sin(mThetaMech - mBase_OmMech * mSimTime), 
-		sin(mThetaMech - mBase_OmMech * mSimTime),	cos(mThetaMech - mBase_OmMech * mSimTime);
+		cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime), 
+		sin(**mThetaMech - mBase_OmMech * mSimTime),	cos(**mThetaMech - mBase_OmMech * mSimTime);
 
 	return dqToComplexA;
 }

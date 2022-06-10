@@ -12,28 +12,27 @@ using namespace CPS;
 
 TopologicalNode::TopologicalNode(String uid, String name,
 	PhaseType phaseType, const std::vector<Complex> &initialVoltage)
-	: IdentifiedObject(uid, name) {
+	: IdentifiedObject(uid, name),
+		mInitialVoltage(Attribute<MatrixComp>::create("voltage_init", mAttributes)) {
 
 	mPhaseType = phaseType;
 	if (phaseType == PhaseType::ABC) {
 		//mMatrixNodeIndex = matrixNodeIndex;
-		mInitialVoltage = MatrixComp::Zero(3, 1);
-		mInitialVoltage << initialVoltage[0], initialVoltage[1], initialVoltage[2];
+		**mInitialVoltage = MatrixComp::Zero(3, 1);
+		**mInitialVoltage << initialVoltage[0], initialVoltage[1], initialVoltage[2];
 	}
 	else {
 		//mMatrixNodeIndex = { matrixNodeIndex[0] };
-		mInitialVoltage = MatrixComp::Zero(1, 1);
-		mInitialVoltage << initialVoltage[0];
+		**mInitialVoltage = MatrixComp::Zero(1, 1);
+		**mInitialVoltage << initialVoltage[0];
 	}
-
-	addAttribute<MatrixComp>("voltage_init", &mInitialVoltage, Flags::read);
 }
 
 Complex TopologicalNode::initialSingleVoltage(PhaseType phaseType) {
 	if (phaseType == PhaseType::B)
-		return mInitialVoltage(1,0);
+		return (**mInitialVoltage)(1,0);
 	else if (phaseType == PhaseType::C)
-		return mInitialVoltage(2,0);
+		return (**mInitialVoltage)(2,0);
 	else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
-		return mInitialVoltage(0,0);
+		return (**mInitialVoltage)(0,0);
 }

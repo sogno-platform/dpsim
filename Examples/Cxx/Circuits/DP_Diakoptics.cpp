@@ -52,11 +52,11 @@ void DP_VS_CS_R4() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v3", n3->attribute("v"));
-	logger->addAttribute("i12", r1->attribute("i_intf"));
-	logger->addAttribute("i23", r3->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v3", n3->attribute("v"));
+	logger->logAttribute("i12", r1->attribute("i_intf"));
+	logger->logAttribute("i23", r3->attribute("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -109,11 +109,11 @@ void DP_VS_CS_R4_Diakoptics() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v3", n3->attribute("v"));
-	logger->addAttribute("i12", r1->attribute("i_intf"));
-	logger->addAttribute("i23", r3->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v3", n3->attribute("v"));
+	logger->logAttribute("i12", r1->attribute("i_intf"));
+	logger->logAttribute("i23", r3->attribute("i_intf"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -165,12 +165,12 @@ void DP_VS_R2L3() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v3", n3->attribute("v"));
-	logger->addAttribute("v4", n4->attribute("v"));
-	logger->addAttribute("i12", r1->attribute("i_intf"));
-	logger->addAttribute("i34", l3->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v3", n3->attribute("v"));
+	logger->logAttribute("v4", n4->attribute("v"));
+	logger->logAttribute("i12", r1->attribute("i_intf"));
+	logger->logAttribute("i34", l3->attribute("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -222,12 +222,12 @@ void DP_VS_R2L3_Diakoptics() {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v3", n3->attribute("v"));
-	logger->addAttribute("v4", n4->attribute("v"));
-	logger->addAttribute("i12", r1->attribute("i_intf"));
-	logger->addAttribute("i34", l3->attribute("i_intf"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v3", n3->attribute("v"));
+	logger->logAttribute("v4", n4->attribute("v"));
+	logger->logAttribute("i12", r1->attribute("i_intf"));
+	logger->logAttribute("i34", l3->attribute("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);

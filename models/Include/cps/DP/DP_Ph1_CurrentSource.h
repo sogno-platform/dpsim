@@ -25,9 +25,8 @@ namespace Ph1 {
 		public MNAInterface,
 		public SimPowerComp<Complex>,
 		public SharedFactory<CurrentSource> {
-	protected:
-		Attribute<Complex>::Ptr mCurrentRef;
 	public:
+		const Attribute<Complex>::Ptr mCurrentRef;
 		/// Defines UID, name and logging level
 		CurrentSource(String uid, String name, Logger::Level loglevel = Logger::Level::off);
 		/// Defines name and logging level
@@ -58,7 +57,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(CurrentSource& currentSource) :
-				Task(currentSource.mName + ".MnaPreStep"), mCurrentSource(currentSource)
+				Task(**currentSource.mName + ".MnaPreStep"), mCurrentSource(currentSource)
 			{
 				mAttributeDependencies.push_back(currentSource.attribute("I_ref"));
 				mModifiedAttributes.push_back(currentSource.attribute("right_vector"));
@@ -74,7 +73,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(CurrentSource& currentSource, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(currentSource.mName + ".MnaPostStep"), mCurrentSource(currentSource), mLeftVector(leftSideVector)
+				Task(**currentSource.mName + ".MnaPostStep"), mCurrentSource(currentSource), mLeftVector(leftSideVector)
 			{
 				mAttributeDependencies.push_back(mLeftVector);
 				mModifiedAttributes.push_back(mCurrentSource.attribute("v_intf"));

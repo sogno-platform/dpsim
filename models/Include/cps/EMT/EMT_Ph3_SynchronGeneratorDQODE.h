@@ -48,7 +48,7 @@ namespace Ph3 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(SynchronGeneratorDQODE& synGen)
-				: Task(synGen.mName + ".MnaPreStep"), mSynGen(synGen) {
+				: Task(**synGen.mName + ".MnaPreStep"), mSynGen(synGen) {
 				mAttributeDependencies.push_back(synGen.attribute("ode_post_state"));
 				mModifiedAttributes.push_back(synGen.attribute("right_vector"));
 				mPrevStepDependencies.push_back(synGen.attribute("v_intf"));
@@ -63,7 +63,7 @@ namespace Ph3 {
 		class ODEPreStep : public Task {
 		public:
 			ODEPreStep(SynchronGeneratorDQODE& synGen)
-			: Task(synGen.mName + ".ODEPreStep"), mSynGen(synGen) {
+			: Task(**synGen.mName + ".ODEPreStep"), mSynGen(synGen) {
 				mModifiedAttributes.push_back(synGen.attribute("ode_pre_state"));
 				mModifiedAttributes.push_back(synGen.attribute("i_intf"));
 			}

@@ -231,8 +231,8 @@ namespace Ph3 {
 		void CalculateAuxiliarVariables(Real time);
 
 		Matrix& dqStatorCurrents() { return mDqStatorCurrents; }
-		Real electricalTorque() { return mElecTorque*mBase_T; }
-		Real rotationalSpeed() { return mOmMech*mBase_OmMech; }
+		Real electricalTorque() { return **mElecTorque * mBase_T; }
+		Real rotationalSpeed() { return **mOmMech * mBase_OmMech; }
 		Real rotorPosition() { return mThetaMech; }
 		Matrix& statorCurrents() { return mIabc; }
 	};

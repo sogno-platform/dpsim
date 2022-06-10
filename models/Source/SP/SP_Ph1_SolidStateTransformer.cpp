@@ -11,16 +11,15 @@
 using namespace CPS;
 
 SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
-	mSLog->info("Create {} of type {}", mName, this->type());
+	: SimPowerComp<Complex>(uid, name, logLevel),
+    mPref(Attribute<Real>::create("P_ref", mAttributes, std::numeric_limits<double>::infinity())),
+    mQ1ref(Attribute<Real>::create("Q1_ref", mAttributes)),
+    mQ2ref(Attribute<Real>::create("Q2_ref", mAttributes)) {
+	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
-	mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
     setTerminalNumber(2);
-
-	addAttribute<Real>("P_ref", &mPref, Flags::read | Flags::write);
-	addAttribute<Real>("Q1_ref", &mQ1ref, Flags::read | Flags::write);
-	addAttribute<Real>("Q2_ref", &mQ2ref, Flags::read | Flags::write);
 };
 
 SimPowerComp<Complex>::Ptr SP::Ph1::SolidStateTransformer::clone(String name) {
@@ -31,9 +30,9 @@ SimPowerComp<Complex>::Ptr SP::Ph1::SolidStateTransformer::clone(String name) {
 void SP::Ph1::SolidStateTransformer::setParameters(Real nomV1, Real nomV2, Real Pref, Real Q1ref, Real Q2ref){
     mNominalVoltageEnd1 = nomV1;
     mNominalVoltageEnd2 = nomV2;
-    mPref = Pref;
-    mQ1ref = Q1ref;
-    mQ2ref = Q2ref;
+    **mPref = Pref;
+    **mQ1ref = Q1ref;
+    **mQ2ref = Q2ref;
     mP2 = -1 * std::sqrt(Pref * Pref + Q1ref * Q1ref - Q2ref * Q2ref);
 }
 
@@ -44,13 +43,13 @@ void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(Real freque
         ss << "SST >>" << this->name() << ": infinite or nan values. Or initialized before setting parameters.";
         throw std::invalid_argument(ss.str());
     }
-    if ((mPref * mP2) > 0){
+    if ((**mPref * mP2) > 0){
         throw std::invalid_argument("power at primary and secondary sides should be opposite");
     }
-    mSubLoadSide1 = Load::make(mName + "_subLoad1", mLogLevel);
-    mSubLoadSide1->setParameters(mPref, mQ1ref, mNominalVoltageEnd1);
-    mSubLoadSide2 = Load::make(mName + "_subLoad2", mLogLevel);
-    mSubLoadSide2->setParameters(mP2, mQ2ref, mNominalVoltageEnd2);
+    mSubLoadSide1 = Load::make(**mName + "_subLoad1", mLogLevel);
+    mSubLoadSide1->setParameters(**mPref, **mQ1ref, mNominalVoltageEnd1);
+    mSubLoadSide2 = Load::make(**mName + "_subLoad2", mLogLevel);
+    mSubLoadSide2->setParameters(mP2, **mQ2ref, mNominalVoltageEnd2);
     mSubLoadSide1->connect({mTerminals[0]->node()});
     mSubLoadSide2->connect({mTerminals[1]->node()});
 
@@ -59,16 +58,16 @@ void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(Real freque
 		"\nTerminal 0 power flow: {:s} VA"
 		"\nTerminal 1 power flow: {:s} VA"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::complexToString(Complex(mPref,mQ1ref)),
-		Logger::complexToString(Complex(mP2,mQ2ref)));
+		Logger::complexToString(Complex(**mPref,**mQ1ref)),
+		Logger::complexToString(Complex(mP2,**mQ2ref)));
 
 }
 
 void SP::Ph1::SolidStateTransformer::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-    mPref_perUnit = mPref / baseApparentPower;
+    mPref_perUnit = **mPref / baseApparentPower;
     mP2_perUnit = mP2 / baseApparentPower;
-    mQ1ref_perUnit = mQ1ref / baseApparentPower;
-    mQ2ref_perUnit = mQ2ref / baseApparentPower;
+    mQ1ref_perUnit = **mQ1ref / baseApparentPower;
+    mQ2ref_perUnit = **mQ2ref / baseApparentPower;
     mSubLoadSide1->calculatePerUnitParameters(baseApparentPower, baseOmega);
     mSubLoadSide2->calculatePerUnitParameters(baseApparentPower, baseOmega);
     mSLog->info(
@@ -76,7 +75,7 @@ void SP::Ph1::SolidStateTransformer::calculatePerUnitParameters(Real baseApparen
         "\nTerminal 0 power flow: {:s} p.u."
         "\nTerminal 1 power flow: {:s} p.u."
         "\n#### Calculate Per Unit Parameters finished ---",
-        mName,
+        **mName,
         Logger::complexToString(Complex(mPref_perUnit, mQ1ref_perUnit)),
         Logger::complexToString(Complex(mP2_perUnit, mQ2ref_perUnit)));
 }

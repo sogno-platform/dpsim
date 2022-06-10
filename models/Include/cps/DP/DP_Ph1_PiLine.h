@@ -76,7 +76,7 @@ namespace Ph1 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(PiLine& line) :
-				Task(line.mName + ".MnaPreStep"), mLine(line) {
+				Task(**line.mName + ".MnaPreStep"), mLine(line) {
 					mLine.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mLine.mnaPreStep(time, timeStepCount); };
@@ -87,7 +87,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(PiLine& line, Attribute<Matrix>::Ptr leftVector) :
-				Task(line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
+				Task(**line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
 					mLine.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mLine.mnaPostStep(time, timeStepCount, mLeftVector); };

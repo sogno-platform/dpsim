@@ -17,7 +17,7 @@ using namespace DPsim;
 RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel)
 	: Simulation(name, logLevel), mTimer() {
 
-	addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
+	//addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
 	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
 }
 
@@ -44,7 +44,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 			  std::chrono::duration_cast<std::chrono::seconds>(startAt - Timer::StartClock::now()).count());
 
 	mTimer.setStartTime(startAt);
-	mTimer.setInterval(mTimeStep);
+	mTimer.setInterval(**mTimeStep);
 	mTimer.start();
 
 	// main loop
@@ -54,7 +54,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 
 		if (mTimer.ticks() == 1)
 			mLog->info("Simulation started.");
-	} while (mTime < mFinalTime);
+	} while (mTime < **mFinalTime);
 
 	mLog->info("Simulation finished.");
 

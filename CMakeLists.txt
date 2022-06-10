@@ -167,6 +167,7 @@ cmake_dependent_option(WITH_CUDA    	"Enable CUDA-based parallelisation"  	OFF	"
 cmake_dependent_option(WITH_GRAPHVIZ	"Enable Graphviz Graphs"             	ON 	"GRAPHVIZ_FOUND"  	OFF)
 cmake_dependent_option(WITH_PYBIND     	"Enable PYBIND support"            	ON 	"pybind11_FOUND"   	OFF)
 cmake_dependent_option(WITH_MAGMA     	"Enable MAGMA features"            	ON 	"MAGMA_FOUND"   	OFF)
+cmake_dependent_option(WITH_MNASOLVERPLUGIN "Enable MNASolver Plugins"      ON  "NOT WIN32"       OFF)
 
 if(WITH_CUDA)
     # BEGIN OF WORKAROUND - enable cuda dynamic linking.

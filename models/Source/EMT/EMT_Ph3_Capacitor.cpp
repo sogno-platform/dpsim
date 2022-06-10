@@ -15,16 +15,17 @@ EMT::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = Matrix::Zero(3, 1);
-	mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
+	**mIntfVoltage = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	addAttribute<Matrix>("C", &mCapacitance, Flags::read | Flags::write);
+	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mCapacitance = CPS::Attribute<Matrix>::create("C", mAttributes);
 }
 
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
-	copy->setParameters(mCapacitance);
+	copy->setParameters(**mCapacitance);
 	return copy;
 }
 void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
@@ -32,20 +33,20 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2 * PI * frequency;
 	MatrixComp admittance = MatrixComp::Zero(3, 3);
 	admittance <<
-		Complex(0, omega * mCapacitance(0, 0)), Complex(0, omega * mCapacitance(0, 1)), Complex(0, omega * mCapacitance(0, 2)),
-		Complex(0, omega * mCapacitance(1, 0)), Complex(0, omega * mCapacitance(1, 1)), Complex(0, omega * mCapacitance(1, 2)),
-		Complex(0, omega * mCapacitance(2, 0)), Complex(0, omega * mCapacitance(2, 1)), Complex(0, omega * mCapacitance(2, 2));
+		Complex(0, omega * (**mCapacitance)(0, 0)), Complex(0, omega * (**mCapacitance)(0, 1)), Complex(0, omega * (**mCapacitance)(0, 2)),
+		Complex(0, omega * (**mCapacitance)(1, 0)), Complex(0, omega * (**mCapacitance)(1, 1)), Complex(0, omega * (**mCapacitance)(1, 2)),
+		Complex(0, omega * (**mCapacitance)(2, 0)), Complex(0, omega * (**mCapacitance)(2, 1)), Complex(0, omega * (**mCapacitance)(2, 2));
 
 	MatrixComp vInitABC = Matrix::Zero(3, 1);
 	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(1) - RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
-	mIntfVoltage = vInitABC.real();
-	mIntfCurrent = (admittance * vInitABC).real();
+	**mIntfVoltage = vInitABC.real();
+	**mIntfCurrent = (admittance * vInitABC).real();
 
 	mSLog->info("\nCapacitance [F]: {:s}"
 				"\nAdmittance [S]: {:s}",
-				Logger::matrixToString(mCapacitance),
+				Logger::matrixToString(**mCapacitance),
 				Logger::matrixCompToString(admittance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -54,8 +55,8 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::matrixToString(mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(**mIntfVoltage),
+		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
 }
@@ -63,11 +64,11 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 void EMT::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-	mEquivCond = (2.0 * mCapacitance) / timeStep;
+	mEquivCond = (2.0 * **mCapacitance) / timeStep;
 	// Update internal state
-	mEquivCurrent = - mIntfCurrent + - mEquivCond * mIntfVoltage;
+	mEquivCurrent = - **mIntfCurrent + - mEquivCond * **mIntfVoltage;
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
@@ -128,7 +129,7 @@ void EMT::Ph3::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void EMT::Ph3::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mEquivCurrent = -mIntfCurrent + -mEquivCond * mIntfVoltage;
+	mEquivCurrent = -**mIntfCurrent + -mEquivCond * **mIntfVoltage;
 	if (terminalNotGrounded(0)) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), mEquivCurrent(0, 0));
 		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), mEquivCurrent(1, 0));
@@ -152,7 +153,7 @@ void EMT::Ph3::Capacitor::mnaAddPreStepDependencies(AttributeBase::List &prevSte
 }
 
 void EMT::Ph3::Capacitor::mnaPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -162,30 +163,30 @@ void EMT::Ph3::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevSt
 }
 
 void EMT::Ph3::Capacitor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(*leftVector);
-	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
-	mIntfVoltage = Matrix::Zero(3,1);
+	**mIntfVoltage = Matrix::Zero(3,1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
+		(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+		(**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		(**mIntfVoltage)(1, 0) = (**mIntfVoltage)(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 
 void EMT::Ph3::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mEquivCond * mIntfVoltage + mEquivCurrent;
+	**mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
 	mSLog->debug(
 		"\nCurrent: {:s}",
-		Logger::matrixToString(mIntfCurrent)
+		Logger::matrixToString(**mIntfCurrent)
 	);
 }
 

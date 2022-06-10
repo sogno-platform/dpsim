@@ -71,8 +71,8 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -123,11 +123,11 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);
-	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
-	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
-	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("f_src", extnetEMT->attribute("f_src"));
-	loggerEMT->addAttribute("sigOut", extnetEMT->attribute("sigOut"));
+	loggerEMT->logAttribute("v1", n1EMT->attribute("v"));
+	loggerEMT->logAttribute("v2", n2EMT->attribute("v"));
+	loggerEMT->logAttribute("i12", lineEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("f_src", extnetEMT->attribute("f_src"));
+	loggerEMT->logAttribute("sigOut", extnetEMT->attribute("sigOut"));
 
 	CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerEMT, pv);
 

@@ -109,6 +109,7 @@ namespace CPS {
 	class AccessException : public Exception { };
 	class TypeException : public Exception { };
 	class InvalidAttributeException : public Exception { };
+	class InvalidArgumentException : public Exception { };
 
 	class SystemError {
 	protected:

@@ -12,16 +12,13 @@ using namespace CPS;
 
 DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name,
 	Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel),
+	mActivePower(Attribute<Real>::create("P", mAttributes, 0)),
+	mReactivePower(Attribute<Real>::create("Q", mAttributes, 0)),
+	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
 	setTerminalNumber(1);
-	mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
-
-	addAttribute<Real>("P", Flags::read | Flags::write);
-	addAttribute<Real>("Q", Flags::read | Flags::write);
-	addAttribute<Real>("V_nom", Flags::read | Flags::write);
-	attribute<Real>("P")->set(0.);
-	attribute<Real>("Q")->set(0.);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 }
 
 DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name,
@@ -43,13 +40,13 @@ DP::Ph1::PQLoadCS::PQLoadCS(String name,
 }
 
 void DP::Ph1::PQLoadCS::setParameters(Real activePower, Real reactivePower, Real nomVolt) {
-	attribute<Real>("P")->set(activePower);
-	attribute<Real>("Q")->set(reactivePower);
-	attribute<Real>("V_nom")->set(nomVolt);
-
+	**mActivePower = activePower;
+	**mReactivePower = reactivePower;
+	**mNomVoltage = nomVolt;
 	mParametersSet = true;
 }
 
+///DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
 	auto copy = PQLoadCS::make(name, mLogLevel);
 	copy->setParameters(attribute<Real>("P")->get(), attribute<Real>("Q")->get(), attribute<Real>("V_nom")->get());
@@ -57,27 +54,23 @@ SimPowerComp<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
 }
 
 void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
-
-	mActivePower = attribute<Real>("P");
-	mReactivePower = attribute<Real>("Q");
-	mNomVoltage = attribute<Real>("V_nom");
 	// Get power from Terminals if it was not set previously.
-	if (mActivePower->get() == 0 && mReactivePower->get() == 0 && !mParametersSet) {
-		mActivePower->set(mTerminals[0]->singleActivePower());
-		mReactivePower->set(mTerminals[0]->singleReactivePower());
-		mNomVoltage->set(std::abs(mTerminals[0]->initialSingleVoltage()));
+	if (**mActivePower == 0 && **mReactivePower == 0 && !mParametersSet) {
+		**mActivePower = mTerminals[0]->singleActivePower();
+		**mReactivePower = mTerminals[0]->singleReactivePower();
+		**mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
 	}
-	Complex power = Complex(mActivePower->get(), mReactivePower->get());
+	Complex power = Complex(**mActivePower, **mReactivePower);
 
 	Complex current;
-	if (mNomVoltage != 0)
-		current = std::conj(power / mNomVoltage->get());
+	///CHECK: The original code compared the attribute pointer with zero, however this does not rule out division by zero.
+	if (**mNomVoltage != 0)
+		current = std::conj(power / **mNomVoltage);
 	else
 		current = 0;
 
-	mSubCurrentSource = std::make_shared<DP::Ph1::CurrentSource>(mName + "_cs", mLogLevel);
+	mSubCurrentSource = std::make_shared<DP::Ph1::CurrentSource>(**mName + "_cs", mLogLevel);
 	mSubCurrentSource->setParameters(current);
-	mCurrentSourceRef = mSubCurrentSource->attribute<Complex>("I_ref");
 	// A positive power should result in a positive current to ground.
 	mSubCurrentSource->connect({ mTerminals[0]->node(), SimNode::GND });
 	mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
@@ -90,8 +83,8 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nCurrent set point: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString((**mIntfVoltage)(0,0)),
+		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(current));
 }
@@ -100,7 +93,8 @@ void DP::Ph1::PQLoadCS::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 	mSubCurrentSource->mnaInitialize(omega, timeStep, leftVector);
-	setAttributeRef("right_vector", mSubCurrentSource->attribute("right_vector"));
+	///CHECK: Can we avoid setting the right_vector attribute to dynamic? Maybe just copy the current source's right_vector somewhere? Or make a new attribute?
+	mRightVector->setReference(mSubCurrentSource->mRightVector);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this));
 	for (auto task : mSubCurrentSource->mnaTasks())
@@ -117,11 +111,11 @@ void DP::Ph1::PQLoadCS::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 void DP::Ph1::PQLoadCS::updateSetPoint() {
 	// Calculate new current set point.
-	Complex power = { mActivePower->get(), mReactivePower->get()};
-	Complex current = power / mNomVoltage->get();
-	//Complex current = power / mIntfVoltage(0,0);
+	Complex power = { **mActivePower, **mReactivePower};
+	Complex current = power / **mNomVoltage;
+	//Complex current = power / (**mIntfVoltage)(0,0);
 
-	mCurrentSourceRef->set(std::conj(current));
+	**mSubCurrentSource->mCurrentRef = std::conj(current);
 	mSLog->debug(
 		"\n--- update set points ---"
 		"\npower: {:s}"
@@ -135,8 +129,8 @@ void DP::Ph1::PQLoadCS::MnaPreStep::execute(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::PQLoadCS::updateIntfValues() {
-	mIntfCurrent = mSubCurrentSource->intfCurrent();
-	mIntfVoltage = mSubCurrentSource->intfVoltage();
+	**mIntfCurrent = mSubCurrentSource->intfCurrent();
+	**mIntfVoltage = mSubCurrentSource->intfVoltage();
 }
 
 void DP::Ph1::PQLoadCS::MnaPostStep::execute(Real time, Int timeStepCount) {

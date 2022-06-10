@@ -81,9 +81,9 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v_bus1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v_bus2", n2PF->attribute("v"));
-	loggerPF->addAttribute("v_bus3", n3PF->attribute("v"));
+	loggerPF->logAttribute("v_bus1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v_bus2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v_bus3", n3PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -170,33 +170,33 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
-	loggerDP->addAttribute("v1", n1DP->attribute("v"));
-	loggerDP->addAttribute("v2", n2DP->attribute("v"));
-	loggerDP->addAttribute("v3", n3DP->attribute("v"));
-	loggerDP->addAttribute("v_line12", line12DP->attribute("v_intf"));
-	loggerDP->addAttribute("i_line12", line12DP->attribute("i_intf"));
-	loggerDP->addAttribute("v_line13", line13DP->attribute("v_intf"));
-	loggerDP->addAttribute("i_line13", line13DP->attribute("i_intf"));
-	loggerDP->addAttribute("v_line23", line23DP->attribute("v_intf"));
-	loggerDP->addAttribute("i_line23", line23DP->attribute("i_intf"));
-	loggerDP->addAttribute("Ep_gen1", gen1DP->attribute("Ep_mag"));
-	loggerDP->addAttribute("v_gen1", gen1DP->attribute("v_intf"));
-	loggerDP->addAttribute("i_gen1", gen1DP->attribute("i_intf"));
-	loggerDP->addAttribute("wr_gen1", gen1DP->attribute("w_r"));
-	loggerDP->addAttribute("delta_gen1", gen1DP->attribute("delta_r"));
-	loggerDP->addAttribute("Ep_gen2", gen2DP->attribute("Ep_mag"));
-	loggerDP->addAttribute("v_gen2", gen2DP->attribute("v_intf"));
-	loggerDP->addAttribute("i_gen2", gen2DP->attribute("i_intf"));
-	loggerDP->addAttribute("wr_gen2", gen2DP->attribute("w_r"));
-	loggerDP->addAttribute("wref_gen2", gen2DP->attribute("w_ref"));
-	loggerDP->addAttribute("delta_gen2", gen2DP->attribute("delta_r"));
-	loggerDP->addAttribute("i_fault", faultDP->attribute("i_intf"));
-	loggerDP->addAttribute("v_load", loadDP->attribute("v_intf"));
-	loggerDP->addAttribute("i_load", loadDP->attribute("i_intf"));
-	loggerDP->addAttribute("P_mech1", gen1DP->attribute("P_mech"));
-	loggerDP->addAttribute("P_mech2", gen2DP->attribute("P_mech"));
-	loggerDP->addAttribute("P_elec1", gen1DP->attribute("P_elec"));
-	loggerDP->addAttribute("P_elec2", gen2DP->attribute("P_elec"));
+	loggerDP->logAttribute("v1", n1DP->attribute("v"));
+	loggerDP->logAttribute("v2", n2DP->attribute("v"));
+	loggerDP->logAttribute("v3", n3DP->attribute("v"));
+	loggerDP->logAttribute("v_line12", line12DP->attribute("v_intf"));
+	loggerDP->logAttribute("i_line12", line12DP->attribute("i_intf"));
+	loggerDP->logAttribute("v_line13", line13DP->attribute("v_intf"));
+	loggerDP->logAttribute("i_line13", line13DP->attribute("i_intf"));
+	loggerDP->logAttribute("v_line23", line23DP->attribute("v_intf"));
+	loggerDP->logAttribute("i_line23", line23DP->attribute("i_intf"));
+	loggerDP->logAttribute("Ep_gen1", gen1DP->attribute("Ep_mag"));
+	loggerDP->logAttribute("v_gen1", gen1DP->attribute("v_intf"));
+	loggerDP->logAttribute("i_gen1", gen1DP->attribute("i_intf"));
+	loggerDP->logAttribute("wr_gen1", gen1DP->attribute("w_r"));
+	loggerDP->logAttribute("delta_gen1", gen1DP->attribute("delta_r"));
+	loggerDP->logAttribute("Ep_gen2", gen2DP->attribute("Ep_mag"));
+	loggerDP->logAttribute("v_gen2", gen2DP->attribute("v_intf"));
+	loggerDP->logAttribute("i_gen2", gen2DP->attribute("i_intf"));
+	loggerDP->logAttribute("wr_gen2", gen2DP->attribute("w_r"));
+	loggerDP->logAttribute("wref_gen2", gen2DP->attribute("w_ref"));
+	loggerDP->logAttribute("delta_gen2", gen2DP->attribute("delta_r"));
+	loggerDP->logAttribute("i_fault", faultDP->attribute("i_intf"));
+	loggerDP->logAttribute("v_load", loadDP->attribute("v_intf"));
+	loggerDP->logAttribute("i_load", loadDP->attribute("i_intf"));
+	loggerDP->logAttribute("P_mech1", gen1DP->attribute("P_mech"));
+	loggerDP->logAttribute("P_mech2", gen2DP->attribute("P_mech"));
+	loggerDP->logAttribute("P_elec1", gen1DP->attribute("P_elec"));
+	loggerDP->logAttribute("P_elec2", gen2DP->attribute("P_elec"));
 
 	Simulation simDP(simNameDP, Logger::Level::debug);
 	simDP.setSystem(systemDP);

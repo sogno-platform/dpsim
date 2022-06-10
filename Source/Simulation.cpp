@@ -35,15 +35,22 @@ using namespace CPS;
 using namespace DPsim;
 
 Simulation::Simulation(String name,	Logger::Level logLevel) :
-	mName(name),
-	mLogLevel(logLevel) {
+	mName(Attribute<String>::create("name", mAttributes, name)),
+	mFinalTime(Attribute<Real>::create("final_time", mAttributes, 0.001)),
+	mTimeStep(Attribute<Real>::create("time_step", mAttributes, 0.001)),
+	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true)),
+	mSteadyStateInit(Attribute<Bool>::create("steady_state_init", mAttributes, false)),
+	mLogLevel(logLevel)  {
 	create();
 }
 
 Simulation::Simulation(String name, CommandLineArgs& args) :
-	mName(name),
-	mFinalTime(args.duration),
-	mTimeStep(args.timeStep),
+	mName(Attribute<String>::create("name", mAttributes, name)),
+	mSolverPluginName(args.solverPluginName),
+	mFinalTime(Attribute<Real>::create("final_time", mAttributes, args.duration)),
+	mTimeStep(Attribute<Real>::create("time_step", mAttributes, args.timeStep)),
+	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true)),
+	mSteadyStateInit(Attribute<Bool>::create("steady_state_init", mAttributes, false)),
 	mLogLevel(args.logLevel),
 	mDomain(args.solver.domain),
 	mSolverType(args.solver.type),
@@ -53,15 +60,7 @@ Simulation::Simulation(String name, CommandLineArgs& args) :
 
 void Simulation::create() {
 	// Logging
-	mLog = Logger::get(mName, mLogLevel, std::max(Logger::Level::info, mLogLevel));
-
-	// Attributes
-	addAttribute<String>("name", &mName, Flags::read);
-	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
-	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
-	addAttribute<Bool>("steady_state_init", &mSteadyStateInit, Flags::read|Flags::write);
-	addAttribute<Bool>("split_subnets", &mSplitSubnets, Flags::read|Flags::write);
-	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
+	mLog = Logger::get(**mName, mLogLevel, std::max(Logger::Level::info, mLogLevel));
 
 	Eigen::setNbThreads(1);
 
@@ -102,12 +101,12 @@ void Simulation::createSolvers() {
 			break;
 #ifdef WITH_SUNDIALS
 		case Solver::Type::DAE:
-			solver = std::make_shared<DAESolver>(mName, mSystem, mTimeStep, 0.0);
+			solver = std::make_shared<DAESolver>(**mName, mSystem, **mTimeStep, 0.0);
 			mSolvers.push_back(solver);
 			break;
 #endif /* WITH_SUNDIALS */
 		case Solver::Type::NRP:
-			solver = std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel);
+			solver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem, **mTimeStep, mLogLevel);
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
 			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->initialize();
@@ -125,7 +124,7 @@ void Simulation::createSolvers() {
 		if (odeComp) {
 			// TODO explicit / implicit integration
 			auto odeSolver = std::make_shared<ODESolver>(
-				odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, mTimeStep);
+				odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, **mTimeStep);
 			mSolvers.push_back(odeSolver);
 		}
 	}
@@ -138,7 +137,7 @@ void Simulation::createMNASolver() {
 	std::vector<SystemTopology> subnets;
 	// The Diakoptics solver splits the system at a later point.
 	// That is why the system is not split here if tear components exist.
-	if (mSplitSubnets && mTearComponents.size() == 0)
+	if (**mSplitSubnets && mTearComponents.size() == 0)
 		mSystem.splitSubnets<VarType>(subnets);
 	else
 		subnets.push_back(mSystem);
@@ -152,14 +151,14 @@ void Simulation::createMNASolver() {
 		// solvers for different subnets if deemed useful
 		if (mTearComponents.size() > 0) {
 			// Tear components available, use diakoptics
-			solver = std::make_shared<DiakopticsSolver<VarType>>(mName,
-				subnets[net], mTearComponents, mTimeStep, mLogLevel);
+			solver = std::make_shared<DiakopticsSolver<VarType>>(**mName,
+				subnets[net], mTearComponents, **mTimeStep, mLogLevel);
 		} else {
 			// Default case with lu decomposition from mna factory
-			solver = MnaSolverFactory::factory<VarType>(mName + copySuffix, mDomain,
-												 mLogLevel, mMnaImpl);
-			solver->setTimeStep(mTimeStep);
-			solver->doSteadyStateInit(mSteadyStateInit);
+			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
+												 mLogLevel, mMnaImpl, mSolverPluginName);
+			solver->setTimeStep(**mTimeStep);
+			solver->doSteadyStateInit(**mSteadyStateInit);
 			solver->doFrequencyParallelization(mFreqParallel);
 			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
 			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
@@ -344,7 +343,7 @@ Graph::Graph Simulation::dependencyGraph() {
 #endif
 
 void Simulation::start() {
-	mLog->info("Initialize simulation: {}", mName);
+	mLog->info("Initialize simulation: {}", **mName);
 	if (!mInitialized)
 		initialize();
 
@@ -355,9 +354,9 @@ void Simulation::start() {
 
 	sync();
 
-	mLog->info("Start simulation: {}", mName);
-	mLog->info("Time step: {:e}", mTimeStep);
-	mLog->info("Final time: {:e}", mFinalTime);
+	mLog->info("Start simulation: {}", **mName);
+	mLog->info("Time step: {:e}", **mTimeStep);
+	mLog->info("Final time: {:e}", **mFinalTime);
 
 	mSimulationStartTimePoint = std::chrono::steady_clock::now();
 }
@@ -381,7 +380,7 @@ void Simulation::stop() {
 }
 
 Real Simulation::next() {
-	if (mTime < mFinalTime)
+	if (mTime < **mFinalTime)
 		step();
 	else
 		stop();
@@ -393,7 +392,7 @@ Real Simulation::next() {
 void Simulation::run() {
 	start();
 
-	while (mTime < mFinalTime) {
+	while (mTime < **mFinalTime) {
 		step();
 	}
 
@@ -406,7 +405,7 @@ Real Simulation::step() {
 
 	mScheduler->step(mTime, mTimeStepCount);
 
-	mTime += mTimeStep;
+	mTime += **mTimeStep;
 	++mTimeStepCount;
 
 	auto end = std::chrono::steady_clock::now();
@@ -415,6 +414,7 @@ Real Simulation::step() {
 	return mTime;
 }
 
+/// DEPRECATED: Unused
 void Simulation::reset() {
 
 	// Resets component states
@@ -440,253 +440,73 @@ void Simulation::logStepTimes(String logName) {
 	mLog->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
 }
 
-void Simulation::setIdObjAttr(const String &comp, const String &attr, Real value) {
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (compObj) {
-		try {
-			compObj->attribute<Real>(attr)->set(value);
-		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute not found");
-		}
-	}
-	else
-		mLog->error("Component not found");
-}
-
-void Simulation::setIdObjAttr(const String &comp, const String &attr, Complex value){
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (compObj) {
-		try {
-			compObj->attributeComplex(attr)->set(value);
-		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute not found");
-		}
-	}
-	else
-		mLog->error("Component not found");
-}
-
-Real Simulation::getRealIdObjAttr(const String &comp, const String &attr, UInt row, UInt col) {
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (!compObj) compObj = mSystem.node<IdentifiedObject>(comp);
-
-	if (compObj) {
-		try {
-			return compObj->attribute<Real>(attr)->getByValue();
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			return compObj->attributeMatrixReal(attr)->coeff(row, col)->getByValue();
-		} catch (InvalidAttributeException &e) { }
-
-		mLog->error("Attribute not found");
-	}
-	else {
-		mLog->error("Component not found");
-	}
-
-	return 0;
-}
-
-Complex Simulation::getComplexIdObjAttr(const String &comp, const String &attr, UInt row, UInt col) {
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (!compObj) compObj = mSystem.node<IdentifiedObject>(comp);
-
-	if (compObj) {
-		try {
-			return compObj->attributeComplex(attr)->getByValue();
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			return compObj->attributeMatrixComp(attr)->coeff(row, col)->getByValue();
-		} catch (InvalidAttributeException &e) { }
-
-		mLog->error("Attribute not found");
-	}
-	else {
-		mLog->error("Component not found");
-	}
-
-	return 0;
-}
-
-void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row, UInt col, Complex scale, Interface* intf) {
+void Simulation::exportAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf) {
 	if (intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
-
-	Bool found = false;
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
-
-	if (compObj) {
-		try {
-			auto v = compObj->attribute<Real>(attr);
-
-			if (scale != Complex(1, 0)) {
-				throw TypeException();
-			}
-
-			intf->exportReal(v, idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeComplex(attr)->scale(scale);
-			intf->exportComplex(v, idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeMatrixReal(attr)->coeff(row, col);
-			if (scale != Complex(1, 0)) {
-				throw TypeException();
-			}
-			intf->exportReal(v, idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeMatrixComp(attr);
-			intf->exportComplex(v->coeff(row, col)->scale(scale), idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		if (!found) mLog->error("Attribute not found");
-	}
-	else {
-		mLog->error("Component not found");
+	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
+		intf->exportReal(attrReal, idx);
+	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr.getPtr())) {
+		intf->exportComplex(attrComp, idx);
+	} else if (auto attrInt = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr.getPtr())) {
+		intf->exportInt(attrInt, idx);
+	} else if (auto attrBool = std::dynamic_pointer_cast<CPS::Attribute<Bool>>(attr.getPtr())) {
+		intf->exportBool(attrBool, idx);
+	} else {
+		mLog->error("Only scalar attributes of type Int, Bool, Real or Complex can be exported. Use the Attribute::derive methods to export individual Matrix coefficients!");
 	}
 }
 
-void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt idx, AttributeBase::Modifier mod, UInt row, UInt col, Interface* intf) {
-	if(intf == nullptr) {
-		intf = mInterfaces[0].interface;
+
+void Simulation::importAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf) {
+	if (attr->isStatic()) {
+		mLog->error("Cannot import to a static attribute. Please provide a dynamic attribute!");
+		throw InvalidAttributeException();
 	}
 
-	Bool found = false;
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
-
-	auto name = fmt::format("{}.{}", comp, attr);
-
-	if (compObj) {
-		try {
-			auto v = compObj->attribute<Real>(attr);
-			intf->exportReal(v, idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeComplex(attr);
-			switch(mod) {
-				case AttributeBase::Modifier::real :
-					intf->exportReal(v->real(), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::imag :
-					intf->exportReal(v->imag(), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::mag :
-					intf->exportReal(v->mag(), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::phase :
-					intf->exportReal(v->phase(), idx, name);
-					found = true;
-					break;
-			}
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeMatrixReal(attr)->coeff(row, col);
-			intf->exportReal(v, idx);
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeMatrixComp(attr);
-			switch(mod) {
-				case AttributeBase::Modifier::real :
-					intf->exportReal(v->coeffReal(row, col), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::imag :
-					intf->exportReal(v->coeffImag(row, col), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::mag :
-					intf->exportReal(v->coeffMag(row, col), idx, name);
-					found = true;
-					break;
-				case AttributeBase::Modifier::phase :
-					intf->exportReal(v->coeffPhase(row, col), idx, name);
-					found = true;
-					break;
-			}
-		} catch (InvalidAttributeException &e) { }
-
-		if (!found) mLog->error("Attribute not found");
-	}
-	else {
-		mLog->error("Component not found");
-	}
-}
-
-void Simulation::importIdObjAttr(const String &comp, const String &attr, UInt idx, Interface* intf) {
 	if (intf == nullptr) {
 		intf = mInterfaces[0].interface;
 	}
-	Bool found = false;
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
-
-	if (compObj) {
-		try {
-			auto v = compObj->attribute<Real>(attr);
-			compObj->setAttributeRef(attr, intf->importReal(idx));
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		try {
-			auto v = compObj->attributeComplex(attr);
-			compObj->setAttributeRef(attr, intf->importComplex(idx));
-			found = true;
-		} catch (InvalidAttributeException &e) { }
-
-		if (!found) mLog->error("Attribute not found");
-	}
-	else {
-		mLog->error("Component not found");
+	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
+		attrReal->setReference(intf->importReal(idx));
+	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr.getPtr())) {
+		attrComp->setReference(intf->importComplex(idx));
+	} else if (auto attrInt = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr.getPtr())) {
+		attrInt->setReference(intf->importInt(idx));
+	} else if (auto attrBool = std::dynamic_pointer_cast<CPS::Attribute<Bool>>(attr.getPtr())) {
+		attrBool->setReference(intf->importBool(idx));
+	} else {
+		mLog->error("Only scalar attributes of type Int, Bool, Real or Complex can be imported.");
+		throw InvalidAttributeException();
 	}
 }
 
-
-void Simulation::logIdObjAttr(const String &comp, const String &attr) {
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
-	IdentifiedObject::Ptr nodeObj = mSystem.node<TopologicalNode>(comp);
-
-	if (compObj) {
-		try {
-			auto name = compObj->name() + "." + attr;
-			auto v = compObj->attribute(attr);
-			mLoggers[0]->addAttribute(name, v);
-
-		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute not found");
-		}
-	} else if (nodeObj) {
-		try {
-			auto name = nodeObj->name() + "." + attr;
-			auto v = nodeObj->attribute(attr);
-			mLoggers[0]->addAttribute(name, v);
-
-		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute not found");
-		}
+CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const String &attr) {
+	IdentifiedObject::Ptr idObj = mSystem.component<IdentifiedObject>(comp);
+	if (!idObj) {
+		idObj = mSystem.node<TopologicalNode>(comp);
 	}
-	else {
-		mLog->error("Component not found");
+
+	if (idObj) {
+		try {
+			CPS::AttributeBase::Ptr attrPtr = idObj->attribute(attr);
+			return attrPtr;
+		} catch (InvalidAttributeException &e) {
+			mLog->error("Attribute with name {} not found on component {}", attr, comp);
+			throw InvalidAttributeException();
+		}
+	} else {
+		mLog->error("Component or node with name {} not found", comp);
+		throw InvalidArgumentException();
 	}
+}
+
+void Simulation::logIdObjAttribute(const String &comp, const String &attr) {
+	CPS::AttributeBase::Ptr attrPtr = getIdObjAttribute(comp, attr);
+	String name = comp + "." + attr;
+	logAttribute(name, attrPtr);
+}
+
+void Simulation::logAttribute(String name, CPS::AttributeBase::Ptr attr) {
+	mLoggers[0]->logAttribute(name, attr);
 }

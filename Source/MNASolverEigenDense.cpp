@@ -128,11 +128,11 @@ void MnaSolverEigenDense<VarType>::solve(Real time, Int timeStepCount) {
 		MnaSolver<VarType>::updateSwitchStatus();
 
 	if (mSwitchedMatrices.size() > 0)
-		mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0].solve(mRightSideVector);
+		**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0].solve(mRightSideVector);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
-		mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
+		mNodes[nodeIdx]->mnaUpdateVoltage(**mLeftSideVector);
 
 	// Components' states will be updated by the post-step tasks
 }
@@ -145,7 +145,7 @@ void MnaSolverEigenDense<VarType>::solveWithHarmonics(Real time, Int timeStepCou
 	for (auto stamp : mRightVectorStamps)
 		mRightSideVectorHarm[freqIdx] += stamp->col(freqIdx);
 
-	mLeftSideVectorHarm[freqIdx] =	mLuFactorizations[mCurrentSwitchStatus][freqIdx].solve(mRightSideVectorHarm[freqIdx]);
+	**mLeftSideVectorHarm[freqIdx] =	mLuFactorizations[mCurrentSwitchStatus][freqIdx].solve(mRightSideVectorHarm[freqIdx]);
 }
 
 template <typename VarType>

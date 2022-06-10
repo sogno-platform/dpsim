@@ -64,7 +64,7 @@ namespace CPS {
 				class MnaPostStep : public Task {
 				public:
 					MnaPostStep(Inductor& inductor, Attribute<Matrix>::Ptr leftVector) :
-						Task(inductor.mName + ".MnaPostStep"), mInductor(inductor), mLeftVector(leftVector) {
+						Task(**inductor.mName + ".MnaPostStep"), mInductor(inductor), mLeftVector(leftVector) {
 						mAttributeDependencies.push_back(mLeftVector);
 						mModifiedAttributes.push_back(mInductor.attribute("v_intf"));
 						mModifiedAttributes.push_back(mInductor.attribute("i_intf"));

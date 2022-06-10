@@ -19,12 +19,13 @@ namespace Ph3 {
 	class SynchronGenerator6aOrderVBR :
 		public ReducedOrderSynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator6aOrderVBR> {
-	protected:
+	public:
 		// ### Model specific elements ###
 		/// voltage behind transient reactance
-		Matrix mEdq0_t;
+		const Attribute<Matrix>::Ptr mEdq0_t;
 		/// voltage behind subtransient reactance
-		Matrix mEdq0_s;
+		const Attribute<Matrix>::Ptr mEdq0_s;
+	protected:
 		/// history term of voltage behind the transient reactance
 		Matrix mEh_t;
 		/// history term of voltage behind the subtransient reactance

@@ -9,18 +9,18 @@
 #pragma once
 
 #include <cps/Definitions.h>
+#include <cps/AttributeList.h>
 
 namespace CPS {
 namespace Base {
 namespace Ph3 {
 	class Capacitor {
-	protected:
-		/// Capacitance [F]
-		Matrix mCapacitance;
 	public:
+		/// Capacitance [F]
+		CPS::Attribute<Matrix>::Ptr mCapacitance;
 		/// Sets model specific parameters
 		void setParameters(Matrix capacitance) {
-			mCapacitance = capacitance;
+			**mCapacitance = capacitance;
 		}
 	};
 }

@@ -85,7 +85,7 @@ namespace DPsim {
 		/// Create a solve task for recomputation solver
 		virtual std::shared_ptr<CPS::Task> createSolveTaskRecomp() override;
 		/// Recomputes systems matrix
-		void recomputeSystemMatrix(Real time);
+		virtual void recomputeSystemMatrix(Real time);
 
 		// #### Scheduler Task Methods ####
 		/// Create a solve task for this solver implementation

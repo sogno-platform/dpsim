@@ -37,22 +37,27 @@ namespace Ph1 {
 		std::vector<const Matrix*> mRightVectorStamps;
 
 		// #### Powerflow section ####
-		/// Voltage set point [V]
-        Real mVoltageSetPoint;
 		/// Apparent Power Injection [VA]
+		/// FIXME: Never used
 		Complex mPowerInjection;
-		/// Active Power Injection [W]
-		Real mActivePowerInjection;
-		/// Reactive Power Injection [Var]
-		Real mReactivePowerInjection;
 
 		/// Base voltage [V]
 		Real mBaseVoltage;
 
-		/// Voltage set point [pu]
-		Real mVoltageSetPointPerUnit=1.0;
-
     public:
+		const Attribute<Complex>::Ptr mVoltageRef;
+		const Attribute<Real>::Ptr mSrcFreq; 
+
+		// #### Powerflow section ####
+		/// Voltage set point [V]
+        const Attribute<Real>::Ptr mVoltageSetPoint;
+		/// Voltage set point [pu]
+		const Attribute<Real>::Ptr mVoltageSetPointPerUnit;
+		/// Active Power Injection [W]
+		const Attribute<Real>::Ptr mActivePowerInjection;
+		/// Reactive Power Injection [Var]
+		const Attribute<Real>::Ptr mReactivePowerInjection;
+
 		/// Defines UID, name and logging level
 		NetworkInjection(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level
@@ -106,7 +111,7 @@ namespace Ph1 {
 		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(NetworkInjection& networkInjection) :
-				Task(networkInjection.mName + ".MnaPreStep"), mNetworkInjection(networkInjection) {
+				Task(**networkInjection.mName + ".MnaPreStep"), mNetworkInjection(networkInjection) {
 					mNetworkInjection.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPreStep(time, timeStepCount); };
@@ -118,7 +123,7 @@ namespace Ph1 {
 		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(NetworkInjection& networkInjection, Attribute<Matrix>::Ptr leftVector) :
-				Task(networkInjection.mName + ".MnaPostStep"), mNetworkInjection(networkInjection), mLeftVector(leftVector) {
+				Task(**networkInjection.mName + ".MnaPostStep"), mNetworkInjection(networkInjection), mLeftVector(leftVector) {
 				mNetworkInjection.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPostStep(time, timeStepCount, mLeftVector); };

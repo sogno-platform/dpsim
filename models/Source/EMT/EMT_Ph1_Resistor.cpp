@@ -13,22 +13,23 @@ using namespace CPS;
 EMT::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
-	mIntfVoltage = Matrix::Zero(1,1);
-	mIntfCurrent = Matrix::Zero(1,1);
+	**mIntfVoltage = Matrix::Zero(1,1);
+	**mIntfCurrent = Matrix::Zero(1,1);
 
-	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
+	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
+	mResistance = CPS::Attribute<Real>::create("R", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph1::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
-	copy->setParameters(mResistance);
+	copy->setParameters(**mResistance);
 	return copy;
 }
 
 void EMT::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
-	mIntfVoltage(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
-	mIntfCurrent(0,0) = mIntfVoltage(0,0) / mResistance;
+	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
+	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / **mResistance;
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -37,8 +38,8 @@ void EMT::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:f}"
 		"\nTerminal 1 voltage: {:f}"
 		"\n--- Initialization from powerflow finished ---",
-		mIntfVoltage(0,0),
-		mIntfCurrent(0,0),
+		(**mIntfVoltage)(0,0),
+		(**mIntfCurrent)(0,0),
 		initialSingleVoltage(0).real(),
 		initialSingleVoltage(1).real());
 }
@@ -51,7 +52,7 @@ void EMT::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 }
 
 void EMT::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Real conductance = 1. / mResistance;
+	Real conductance = 1. / **mResistance;
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), conductance);
@@ -74,19 +75,19 @@ void EMT::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void EMT::Ph1::Resistor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResistor.mnaUpdateVoltage(*mLeftVector);
-	mResistor.mnaUpdateCurrent(*mLeftVector);
+	mResistor.mnaUpdateVoltage(**mLeftVector);
+	mResistor.mnaUpdateCurrent(**mLeftVector);
 }
 
 void EMT::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
-	mIntfVoltage(0,0) = 0;
+	(**mIntfVoltage)(0,0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
+		(**mIntfVoltage)(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
+		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void EMT::Ph1::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0,0) = mIntfVoltage(0,0) / mResistance;
+	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / **mResistance;
 }

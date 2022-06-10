@@ -12,14 +12,12 @@ using namespace CPS;
 
 DP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
     (String uid, String name, Logger::Level logLevel)
-	: SynchronGeneratorVBR(uid, name, logLevel) {
+	: SynchronGeneratorVBR(uid, name, logLevel),
+	mEdq_t(Attribute<Matrix>::create("Edq0_t", mAttributes)) {
 
 	// model variables
-	mEdq_t = Matrix::Zero(2,1);
+	**mEdq_t = Matrix::Zero(2,1);
 	mEh_vbr = Matrix::Zero(2,1);
-
-    // Register attributes
-	addAttribute<Matrix>("Edq0_t", &mEdq_t, Flags::read);
 }
 
 DP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
@@ -36,8 +34,8 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator4OrderVBR::clone(String nam
 void DP::Ph1::SynchronGenerator4OrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
-	mEdq_t(0,0) = mVdq(0,0) - mIdq(1,0) * mLq_t;
-	mEdq_t(1,0) = mVdq(1,0) + mIdq(0,0) * mLd_t;
+	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
 	calculateAuxiliarConstants();
 
@@ -52,8 +50,8 @@ void DP::Ph1::SynchronGenerator4OrderVBR::specificInitialization() {
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\n--- Model specific initialization finished ---",
-		mEdq_t(0,0),
-		mEdq_t(1,0)
+		(**mEdq_t)(0,0),
+		(**mEdq_t)(1,0)
 	);
 	mSLog->flush();
 }
@@ -77,23 +75,23 @@ void DP::Ph1::SynchronGenerator4OrderVBR::calculateAuxiliarConstants() {
 void DP::Ph1::SynchronGenerator4OrderVBR::stepInPerUnit() {
 
 	// calculate Edq_t at t=k
-	mEdq_t(0,0) = mVdq(0,0) - mIdq(1,0) * mLq_t;
-	mEdq_t(1,0) = mVdq(1,0) + mIdq(0,0) * mLd_t;
+	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
 	if (mSimTime>0.0){
 		// 	calculate mechanical variables at t=k+1 using forward euler
-		mElecTorque = mVdq(0,0) * mIdq(0,0) + mVdq(1,0) * mIdq(1,0);
-		mOmMech = mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - mElecTorque));
-		mThetaMech = mThetaMech + mTimeStep * (mOmMech * mBase_OmMech);
-		mDelta = mDelta + mTimeStep * (mOmMech - 1.) * mBase_OmMech;
+		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
+		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - **mElecTorque));
+		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
 	// VBR history voltage
 	calculateAuxiliarVariables();
 	calculateConductanceMatrix();
-	mEh_vbr(0,0) = mAd * mIdq(1,0) + mBd * mEdq_t(0,0);
-	mEh_vbr(1,0) = mAq * mIdq(0,0) + mBq * mEdq_t(1,0) + mCq;
+	mEh_vbr(0,0) = mAd * (**mIdq)(1,0) + mBd * (**mEdq_t)(0,0);
+	mEh_vbr(1,0) = mAq * (**mIdq)(0,0) + mBq * (**mEdq_t)(1,0) + mCq;
 
 	// convert Edq_t into the abc reference frame
-	mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
+	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
 }

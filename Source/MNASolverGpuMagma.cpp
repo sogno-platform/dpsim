@@ -178,11 +178,11 @@ void MnaSolverGpuMagma<VarType>::solve(Real time, Int timeStepCount) {
     mSLog->debug("result has size ({},{})", size, one);
 
 	//Apply inverse Permutation: TODO: This seems to be wrong, but why?
-	//this->mLeftSideVector = mTransp->inverse() * this->mLeftSideVector;
+	//**this->mLeftSideVector = mTransp->inverse() * **this->mLeftSideVector;
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)
-		this->mNodes[nodeIdx]->mnaUpdateVoltage(this->mLeftSideVector);
+		this->mNodes[nodeIdx]->mnaUpdateVoltage(**this->mLeftSideVector);
 
 
 	// Components' states will be updated by the post-step tasks

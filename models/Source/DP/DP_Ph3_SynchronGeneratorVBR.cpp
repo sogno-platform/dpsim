@@ -16,10 +16,17 @@ DP::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String name,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 	Real inertia, Logger::Level logLevel)
+	/// FIXME: SynchronGeneratorBase does not exist!
 	: SynchronGeneratorBase(name, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
 		inertia, logLevel)
 {
+	///CHECK: Are all of these used in this class or in subclasses?
+	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
+	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
+	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
+	mElecTorque = Attribute<Real>::create("T_e", mAttributes, 0);
+	mMechTorque = Attribute<Real>::create("T_m", mAttributes, 0);
 }
 
 void DP::Ph3::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
@@ -46,9 +53,9 @@ void DP::Ph3::SynchronGeneratorVBR::initialize(Real om, Real dt,
 
 	mResistanceMat = Matrix::Zero(3, 3);
 	mResistanceMat <<
-		mRs, 0, 0,
-		0, mRs, 0,
-		0, 0, mRs;
+		**mRs, 0, 0,
+		0, **mRs, 0,
+		0, 0, **mRs;
 
 	//Dynamic mutual inductances
 	mDLmd = 1. / (1. / mLmd + 1. / mLlfd + 1. / mLlkd);
@@ -66,9 +73,9 @@ void DP::Ph3::SynchronGeneratorVBR::initialize(Real om, Real dt,
 	mLb = (mDLmd - mDLmq) / 3.;
 
 	LD0 <<
-		(mLl + mLa), -mLa / 2, -mLa / 2,
-		-mLa / 2, mLl + mLa, -mLa / 2,
-		-mLa / 2, -mLa / 2, mLl + mLa;
+		(**mLl + mLa), -mLa / 2, -mLa / 2,
+		-mLa / 2, **mLl + mLa, -mLa / 2,
+		-mLa / 2, -mLa / 2, **mLl + mLa;
 
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
@@ -76,7 +83,7 @@ void DP::Ph3::SynchronGeneratorVBR::initialize(Real om, Real dt,
 	mThetaMech2 = mThetaMech + PI / 2;
 	mThetaMech = mThetaMech + PI / 2;
 	mTheta0 = mThetaMech2;
-	mMechTorque = -mMechTorque;
+	**mMechTorque = - **mMechTorque;
 	mIq = -mIq;
 	mId = -mId;
 
@@ -189,13 +196,13 @@ void DP::Ph3::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real time, N
 
 	// Calculate mechanical variables with euler
 	if (mHasTurbineGovernor == true) {
-		mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 300e6 / 555e6, dt);
+		** = -mTurbineGovernor.step(**mOmMech, 1, 300e6 / 555e6, dt);
 	}
 
-	mElecTorque = (mPsimd*mIq - mPsimq*mId);
-	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
-	mThetaMech = mThetaMech + dt * ((mOmMech - 1) * mBase_OmMech);
-	mThetaMech2 = mThetaMech2 + dt * (mOmMech* mBase_OmMech);
+	**mElecTorque = (mPsimd*mIq - mPsimq*mId);
+	**mOmMech = **mOmMech + dt * (1. / (2. * mH) * (**mElecTorque - **mMechTorque));
+	mThetaMech = mThetaMech + dt * ((**mOmMech - 1) * mBase_OmMech);
+	mThetaMech2 = mThetaMech2 + dt * (**mOmMech* mBase_OmMech);
 
 	mPsikq1kq2 <<
 		mPsikq1,
@@ -324,10 +331,10 @@ void DP::Ph3::SynchronGeneratorVBR::mnaPostStep(Matrix& rightVector, Matrix& lef
 void DP::Ph3::SynchronGeneratorVBR::CalculateAuxiliarVariables(Real time) {
 
 	if (mNumDampingWindings == 2) {
-		c21_omega = -mOmMech*mDLmq / mLlkq1;
-		c22_omega = -mOmMech*mDLmq / mLlkq2;
-		c13_omega = mOmMech*mDLmd / mLlfd;
-		c14_omega = mOmMech*mDLmd / mLlkd;
+		c21_omega = - **mOmMech*mDLmq / mLlkq1;
+		c22_omega = - **mOmMech*mDLmq / mLlkq2;
+		c13_omega = **mOmMech*mDLmd / mLlfd;
+		c14_omega = **mOmMech*mDLmd / mLlkd;
 
 		K1a <<
 			c11, c12,
@@ -338,9 +345,9 @@ void DP::Ph3::SynchronGeneratorVBR::CalculateAuxiliarVariables(Real time) {
 		K1 = K1a*E1 + K1b;
 	}
 	else {
-		c21_omega = -mOmMech*mDLmq / mLlkq1;
-		c13_omega = mOmMech*mDLmd / mLlfd;
-		c14_omega = mOmMech*mDLmd / mLlkd;
+		c21_omega = - **mOmMech*mDLmq / mLlkq1;
+		c13_omega = **mOmMech*mDLmd / mLlfd;
+		c14_omega = **mOmMech*mDLmd / mLlkd;
 
 		K1a <<
 			c11,
@@ -480,8 +487,8 @@ void DP::Ph3::SynchronGeneratorVBR::CalculateLandR(Real time, Real dt)
 	Matrix Re_L2(3, 3);
 	Matrix Im_L2(3, 3);
 
-	Real b_Re = cos(2 * mOmMech* mBase_OmMech*time);
-	Real b_Im = sin(2 * mOmMech* mBase_OmMech*time);
+	Real b_Re = cos(2 * **mOmMech* mBase_OmMech*time);
+	Real b_Im = sin(2 * **mOmMech* mBase_OmMech*time);
 	Real c_Re = cos(2 * mThetaMech2 - 2 * 1 * mBase_OmMech*time - 2 * mTheta0);
 	Real c_Im = sin(2 * mThetaMech2 - 2 * 1 * mBase_OmMech*time - 2 * mTheta0);
 
@@ -498,12 +505,12 @@ void DP::Ph3::SynchronGeneratorVBR::CalculateLandR(Real time, Real dt)
 		sin(2 * PI / 3 + a), sin(a), sin(4 * PI / 3 + a);
 	L1_Im = mLb*L1_Im;
 
-	Re_R = mResistanceMat + (2 * mOmMech + 1) / 2. * (L1_Re*b_Im + L1_Im*b_Re);
-	Im_R = LD0 - (2 * mOmMech + 1) / 2. *(L1_Re*b_Re - L1_Im*b_Im);
+	Re_R = mResistanceMat + (2 * **mOmMech + 1) / 2. * (L1_Re*b_Im + L1_Im*b_Re);
+	Im_R = LD0 - (2 * **mOmMech + 1) / 2. *(L1_Re*b_Re - L1_Im*b_Im);
 	Re_L = LD0 - 1. / 2.*(L1_Re*b_Re - L1_Im*b_Im);
 	Im_L = -1. / 2.*(L1_Re*b_Im + L1_Im*b_Re);
-	Re_R2 = 1. / 2.*(2 * mOmMech - 1)*(L1_Im*c_Re + L1_Re*c_Im);
-	Im_R2 = -1. / 2.*(2 * mOmMech - 1)*(L1_Re*c_Re - L1_Im*c_Im);
+	Re_R2 = 1. / 2.*(2 * **mOmMech - 1)*(L1_Im*c_Re + L1_Re*c_Im);
+	Im_R2 = -1. / 2.*(2 * **mOmMech - 1)*(L1_Re*c_Re - L1_Im*c_Im);
 	Re_L2 = -1. / 2.*(L1_Re*c_Re - L1_Im*c_Im);
 	Im_L2 = -1. / 2.*(L1_Im*c_Re + L1_Re*c_Im);
 

@@ -31,6 +31,10 @@ namespace CPS {
 				/// Vector to collect subcomponent right vector stamps
 				std::vector<const Matrix*> mRightVectorStamps;
 			public:
+				const CPS::Attribute<MatrixComp>::Ptr mVoltageRef;
+				const CPS::Attribute<Real>::Ptr mSrcFreq;
+				const CPS::Attribute<Complex>::Ptr mSigOut;
+
 				/// Defines UID, name, component parameters and logging level
 				NetworkInjection(String uid, String name, Logger::Level loglevel = Logger::Level::off);
 				/// Defines UID, name, component parameters and logging level
@@ -75,7 +79,7 @@ namespace CPS {
 				class MnaPreStep : public CPS::Task {
 				public:
 					MnaPreStep(NetworkInjection& networkInjection) :
-						Task(networkInjection.mName + ".MnaPreStep"), mNetworkInjection(networkInjection) {
+						Task(**networkInjection.mName + ".MnaPreStep"), mNetworkInjection(networkInjection) {
 							mNetworkInjection.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 					}
 					void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPreStep(time, timeStepCount); };
@@ -87,7 +91,7 @@ namespace CPS {
 				class MnaPostStep : public CPS::Task {
 				public:
 					MnaPostStep(NetworkInjection& networkInjection, Attribute<Matrix>::Ptr leftVector) :
-						Task(networkInjection.mName + ".MnaPostStep"), mNetworkInjection(networkInjection), mLeftVector(leftVector) {
+						Task(**networkInjection.mName + ".MnaPostStep"), mNetworkInjection(networkInjection), mLeftVector(leftVector) {
 						mNetworkInjection.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 					}
 					void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPostStep(time, timeStepCount, mLeftVector); };

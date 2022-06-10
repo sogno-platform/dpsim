@@ -9,33 +9,33 @@
 #pragma once
 
 #include <cps/Definitions.h>
+#include <cps/AttributeList.h>
 
 namespace CPS {
 namespace Base {
 namespace Ph1 {
 	/// Dynamic Phasor Three-Phase Switch
 	class Switch {
-	protected:
-		/// Resistance if switch is open [ohm]
-		Real mOpenResistance;
-		/// Resistance if switch is closed [ohm]
-		Real mClosedResistance;
-		/// Defines if Switch is open or closed
-		Bool mIsClosed;
 	public:
+		/// Resistance if switch is open [ohm]
+		Attribute<Real>::Ptr mOpenResistance;
+		/// Resistance if switch is closed [ohm]
+		Attribute<Real>::Ptr mClosedResistance;
+		/// Defines if Switch is open or closed
+		Attribute<Bool>::Ptr mIsClosed;
 		///
 		void setParameters(Real openResistance, Real closedResistance, Bool closed = false) {
-			mOpenResistance = openResistance;
-			mClosedResistance = closedResistance;
-			mIsClosed = closed;
+			**mOpenResistance = openResistance;
+			**mClosedResistance = closedResistance;
+			**mIsClosed = closed;
 		}
 
 		/// Close switch
-		void close() { mIsClosed = true; }
+		void close() { **mIsClosed = true; }
 		/// Open switch
-		void open() { mIsClosed = false; }
+		void open() { **mIsClosed = false; }
 		/// Check if switch is closed
-		Bool isClosed() { return mIsClosed; }
+		Bool isClosed() { return **mIsClosed; }
 	};
 }
 }

@@ -21,7 +21,7 @@ namespace Ph1 {
 	protected:
 		// #### Model specific variables ####
 		/// voltage behind transient reactance
-		Matrix mEdq_t;
+		const Attribute<Matrix>::Ptr mEdq_t;
 		/// history term of voltage behind the transient reactance
 		Matrix mEh_vbr;
 

@@ -31,19 +31,6 @@ namespace Signal {
 		/// Integration time step
         Real mTimeStep;
 
-        /// Previous Input
-        Matrix mInputPrev = Matrix::Zero(2,1);
-        /// Current Input
-        Matrix mInputCurr = Matrix::Zero(2,1);
-        /// Previous State
-        Matrix mStatePrev = Matrix::Zero(2,1);
-        /// Current State
-        Matrix mStateCurr = Matrix::Zero(2,1);
-        /// Previous Output
-        Matrix mOutputPrev = Matrix::Zero(2,1);
-        /// Current Output
-        Matrix mOutputCurr = Matrix::Zero(2,1);
-
 		/// matrix A of state space model
 		Matrix mA = Matrix::Zero(2, 2);
 		/// matrix B of state space model
@@ -54,6 +41,23 @@ namespace Signal {
 		Matrix mD = Matrix::Zero(2, 2);
 
 	public:
+
+		///FIXME: This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
+		const Attribute<Real>::Ptr mInputRef;
+
+		/// Previous Input
+        const Attribute<Matrix>::Ptr mInputPrev;
+        /// Current Input
+        const Attribute<Matrix>::Ptr mInputCurr;
+        /// Previous State
+        const Attribute<Matrix>::Ptr mStatePrev;
+        /// Current State
+        const Attribute<Matrix>::Ptr mStateCurr;
+        /// Previous Output
+        const Attribute<Matrix>::Ptr mOutputPrev;
+        /// Current Output
+        const Attribute<Matrix>::Ptr mOutputCurr;
+
 		PLL(String name, Logger::Level logLevel = Logger::Level::off);
 		/// Setter for PLL parameters
 		void setParameters(Real kpPLL, Real kiPLL, Real omegaNom);
@@ -77,7 +81,7 @@ namespace Signal {
         class PreStep : public Task {
         public:
 			PreStep(PLL& pll) :
-                Task(pll.mName + ".PreStep"), mPLL(pll) {
+                Task(**pll.mName + ".PreStep"), mPLL(pll) {
 					mPLL.signalAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mPLL.signalPreStep(time, timeStepCount); };
@@ -88,7 +92,7 @@ namespace Signal {
 		class Step : public Task {
 		public:
 			Step(PLL& pll) :
-				Task(pll.mName + ".Step"), mPLL(pll) {
+				Task(**pll.mName + ".Step"), mPLL(pll) {
 					mPLL.signalAddStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mPLL.signalStep(time, timeStepCount); };

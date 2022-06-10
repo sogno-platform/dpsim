@@ -14,12 +14,15 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 
-class VDNode : public SimPowerComp<Complex>, public SharedFactory<VDNode>{
-    private:
-        Real mDeltaSetPoint;
-        Real mVoltageSetPointPerUnit;
+class VDNode :
+    public SimPowerComp<Complex>,
+    public SharedFactory<VDNode>{
 
     public:
+        /// CHECK: This seems to never be read anywhere
+        const Attribute<Real>::Ptr mDeltaSetPoint;
+        const Attribute<Real>::Ptr mVoltageSetPointPerUnit;
+
         VDNode(String uid, String name,
             Logger::Level logLevel = Logger::Level::off);
 

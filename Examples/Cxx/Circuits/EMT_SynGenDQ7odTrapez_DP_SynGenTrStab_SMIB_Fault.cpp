@@ -87,12 +87,12 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
-	loggerPF->addAttribute("v_line", linePF->attribute("v_intf"));
-	loggerPF->addAttribute("i_line", linePF->attribute("i_intf"));
-	loggerPF->addAttribute("v_gen", genPF->attribute("v_intf"));
-	loggerPF->addAttribute("ig", genPF->attribute("i_intf"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v_line", linePF->attribute("v_intf"));
+	loggerPF->logAttribute("i_line", linePF->attribute("i_intf"));
+	loggerPF->logAttribute("v_gen", genPF->attribute("v_intf"));
+	loggerPF->logAttribute("ig", genPF->attribute("i_intf"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -160,14 +160,14 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v_line", line->attribute("v_intf"));
-	logger->addAttribute("i_line", line->attribute("i_intf"));
-	logger->addAttribute("v_gen", gen->attribute("v_intf"));
-	logger->addAttribute("i_gen", gen->attribute("i_intf"));
-	logger->addAttribute("wr_gen", gen->attribute("w_r"));
-	logger->addAttribute("delta_r", gen->attribute("delta_r"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v_line", line->attribute("v_intf"));
+	logger->logAttribute("i_line", line->attribute("i_intf"));
+	logger->logAttribute("v_gen", gen->attribute("v_intf"));
+	logger->logAttribute("i_gen", gen->attribute("i_intf"));
+	logger->logAttribute("wr_gen", gen->attribute("w_r"));
+	logger->logAttribute("delta_r", gen->attribute("delta_r"));
 
 	// Simulation
 	Simulation sim(simName, Logger::Level::debug);
@@ -230,12 +230,12 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
-	loggerPF->addAttribute("v_line", linePF->attribute("v_intf"));
-	loggerPF->addAttribute("i_line", linePF->attribute("i_intf"));
-	loggerPF->addAttribute("v_gen", genPF->attribute("v_intf"));
-	loggerPF->addAttribute("ig", genPF->attribute("i_intf"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v_line", linePF->attribute("v_intf"));
+	loggerPF->logAttribute("i_line", linePF->attribute("i_intf"));
+	loggerPF->logAttribute("v_gen", genPF->attribute("v_intf"));
+	loggerPF->logAttribute("ig", genPF->attribute("i_intf"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -300,15 +300,15 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v_line", line->attribute("v_intf"));
-	logger->addAttribute("i_line", line->attribute("i_intf"));
-	logger->addAttribute("v_gen", gen->attribute("v_intf"));
-	logger->addAttribute("i_gen", gen->attribute("i_intf"));
-	logger->addAttribute("wr_gen", gen->attribute("w_r"));
-	logger->addAttribute("delta_r", gen->attribute("delta_r"));
-	logger->addAttribute("Ep", gen->attribute("Ep_mag"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v_line", line->attribute("v_intf"));
+	logger->logAttribute("i_line", line->attribute("i_intf"));
+	logger->logAttribute("v_gen", gen->attribute("v_intf"));
+	logger->logAttribute("i_gen", gen->attribute("i_intf"));
+	logger->logAttribute("wr_gen", gen->attribute("w_r"));
+	logger->logAttribute("delta_r", gen->attribute("delta_r"));
+	logger->logAttribute("Ep", gen->attribute("Ep_mag"));
 
 	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(system);
@@ -372,12 +372,12 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
-	loggerPF->addAttribute("v_line", linePF->attribute("v_intf"));
-	loggerPF->addAttribute("i_line", linePF->attribute("i_intf"));
-	loggerPF->addAttribute("v_gen", genPF->attribute("v_intf"));
-	loggerPF->addAttribute("ig", genPF->attribute("i_intf"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v_line", linePF->attribute("v_intf"));
+	loggerPF->logAttribute("i_line", linePF->attribute("i_intf"));
+	loggerPF->logAttribute("v_gen", genPF->attribute("v_intf"));
+	loggerPF->logAttribute("ig", genPF->attribute("i_intf"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -442,15 +442,15 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v_line", line->attribute("v_intf"));
-	logger->addAttribute("i_line", line->attribute("i_intf"));
-	logger->addAttribute("v_gen", gen->attribute("v_intf"));
-	logger->addAttribute("i_gen", gen->attribute("i_intf"));
-	logger->addAttribute("wr_gen", gen->attribute("w_r"));
-	logger->addAttribute("delta_r", gen->attribute("delta_r"));
-	logger->addAttribute("Ep", gen->attribute("Ep_mag"));
+	logger->logAttribute("v1", n1->attribute("v"));
+	logger->logAttribute("v2", n2->attribute("v"));
+	logger->logAttribute("v_line", line->attribute("v_intf"));
+	logger->logAttribute("i_line", line->attribute("i_intf"));
+	logger->logAttribute("v_gen", gen->attribute("v_intf"));
+	logger->logAttribute("i_gen", gen->attribute("i_intf"));
+	logger->logAttribute("wr_gen", gen->attribute("w_r"));
+	logger->logAttribute("delta_r", gen->attribute("delta_r"));
+	logger->logAttribute("Ep", gen->attribute("Ep_mag"));
 
 	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(system);

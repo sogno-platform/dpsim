@@ -18,7 +18,6 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <cps/IdentifiedObject.h>
-#include <cps/CIM/Reader.h>
 #include <DPsim.h>
 
 #include <cps/CSVReader.h>
@@ -29,6 +28,9 @@
 #include <SignalComponents.h>
 #include <BaseComponents.h>
 #include <Utils.h>
+#include <Attributes.h>
+
+PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -61,9 +63,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 	m.attr("P_SNUB_TRANSFORMER") = P_SNUB_TRANSFORMER;
 	m.attr("Q_SNUB_TRANSFORMER") = Q_SNUB_TRANSFORMER;
 
-	py::enum_<DPsim::Solver::Behaviour>(m, "SolverBehaviour")
-		.value("Initialization", DPsim::Solver::Behaviour::Initialization)
-		.value("Simulation", DPsim::Solver::Behaviour::Simulation);
+	addAttributes(m);
 
     py::class_<DPsim::Simulation>(m, "Simulation")
 	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
@@ -77,15 +77,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_domain", &DPsim::Simulation::setDomain)
 		.def("start", &DPsim::Simulation::start)
 		.def("next", &DPsim::Simulation::next)
-		.def("set_idobj_attr", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Real)>(&DPsim::Simulation::setIdObjAttr))
-		.def("set_idobj_attr", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setIdObjAttr))
-		.def("get_real_idobj_attr", &DPsim::Simulation::getRealIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a = 0)
-		.def("get_comp_idobj_attr", &DPsim::Simulation::getComplexIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a = 0)
+		.def("get_idobj_attr", &DPsim::Simulation::getIdObjAttribute, "comp"_a, "attr"_a)
 		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a, "syncStart"_a = false) // cppcheck-suppress assignBoolToPointer
-		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::AttributeBase::Modifier, CPS::UInt, CPS::UInt, DPsim::Interface*>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "modifier"_a, "row"_a = 0, "col"_a = 0, "intf"_a = nullptr)
-		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::UInt, CPS::UInt, CPS::Complex, DPsim::Interface*>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "row"_a = 0, "col"_a = 0, "scale"_a = CPS::Complex(1, 0), "intf"_a = nullptr)
-		.def("import_attr", &DPsim::Simulation::importIdObjAttr, "obj"_a, "attr"_a, "idx"_a, "intf"_a = nullptr)
-		.def("log_attr", &DPsim::Simulation::logIdObjAttr)
+		.def("export_attribute", &DPsim::Simulation::exportAttribute, "attr"_a, "idx"_a, "intf"_a = nullptr)
+		.def("import_attribute", &DPsim::Simulation::importAttribute, "attr"_a, "idx"_a, "intf"_a = nullptr)
+		.def("log_idobj_attribute", &DPsim::Simulation::logIdObjAttribute, "comp"_a, "attr"_a)
+		.def("log_attribute", &DPsim::Simulation::logAttribute, "name"_a, "attr"_a)
 		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
 		.def("do_system_matrix_recomputation", &DPsim::Simulation::doSystemMatrixRecomputation)
 		.def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
@@ -105,12 +102,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("run", static_cast<void (DPsim::RealTimeSimulation::*)(CPS::Int startIn)>(&DPsim::RealTimeSimulation::run))
 		.def("set_solver", &DPsim::RealTimeSimulation::setSolverType)
 		.def("set_domain", &DPsim::RealTimeSimulation::setDomain)
-		.def("set_idobj_attr", static_cast<void (DPsim::RealTimeSimulation::*)(const std::string&, const std::string&, CPS::Real)>(&DPsim::Simulation::setIdObjAttr))
-		.def("set_idobj_attr", static_cast<void (DPsim::RealTimeSimulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setIdObjAttr))
-		.def("get_real_idobj_attr", &DPsim::RealTimeSimulation::getRealIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a= 0)
-		.def("get_comp_idobj_attr", &DPsim::RealTimeSimulation::getComplexIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a= 0)
-		.def("add_interface", &DPsim::RealTimeSimulation::addInterface, "interface"_a, "syncStart"_a = false) // cppcheck-suppress assignBoolToPointer
-		.def("log_attr", &DPsim::RealTimeSimulation::logIdObjAttr);
+		.def("add_interface", &DPsim::RealTimeSimulation::addInterface, "interface"_a, "syncStart"_a = false); // cppcheck-suppress assignBoolToPointer
 
 	py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(m, "SystemTopology")
         .def(py::init<CPS::Real, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
@@ -124,8 +116,10 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Complex>::Ptr, CPS::SimNode<CPS::Complex>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Complex>))
 		.def("component", &DPsim::SystemTopology::component<CPS::TopologicalPowerComp>)
 		.def("add_tear_component", &DPsim::SystemTopology::addTearComponent)
+#ifdef WITH_GRAPHVIZ
 		.def("_repr_svg_", &DPsim::SystemTopology::render)
 		.def("render_to_file", &DPsim::SystemTopology::renderToFile)
+#endif
 		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
 		.def_readwrite("components", &DPsim::SystemTopology::mComponents)
 		.def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
@@ -138,23 +132,33 @@ PYBIND11_MODULE(dpsimpy, m) {
         .def(py::init<std::string>())
 		.def_static("set_log_dir", &CPS::Logger::setLogDir)
 		.def_static("get_log_dir", &CPS::Logger::logDir)
-		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute)
-		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr, CPS::UInt, CPS::UInt)) &DPsim::DataLogger::addAttribute)
-		.def("log_attribute", (void (DPsim::DataLogger::*)(const std::vector<CPS::String> &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute);
+		.def("log_attribute", py::overload_cast<const CPS::String&, CPS::AttributeBase::Ptr, CPS::UInt, CPS::UInt>(&DPsim::DataLogger::logAttribute), "name"_a, "attr"_a, "max_cols"_a = 0, "max_rows"_a = 0)
+		/// Compatibility method. Might be removed later when the python examples have been fully adapted.
+		.def("log_attribute", py::overload_cast<const std::vector<CPS::String>&, CPS::AttributeBase::Ptr>(&DPsim::DataLogger::logAttribute), "names"_a, "attr"_a)
+		/// Compatibility method. Might be removed later when the python examples have been fully adapted.
+		.def("log_attribute", [](DPsim::DataLogger &logger, const CPS::String &name, const CPS::String &attr, CPS::IdentifiedObject &comp, CPS::UInt rowsMax, CPS::UInt colsMax) {
+			logger.logAttribute(name, comp.attribute(attr), rowsMax, colsMax);
+		}, "name"_a, "attr"_a, "comp"_a, "rows_max"_a = 0, "cols_max"_a = 0)
+		/// Compatibility method. Might be removed later when the python examples have been fully adapted.;
+		.def("log_attribute", [](DPsim::DataLogger &logger, const std::vector<CPS::String> &names, const CPS::String &attr, CPS::IdentifiedObject &comp) {
+			logger.logAttribute(names, comp.attribute(attr));
+		});
 
 	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
 		.def("name", &CPS::IdentifiedObject::name)
+		/// CHECK: It would be nicer if all the attributes of an IdObject were bound as properties so they show up in the documentation and auto-completion.
+		/// I don't know if this is possible to do because it depends on if the attribute map is filled before or after the code in this file is run.
+		/// Manually adding the attributes would of course be possible but very tedious to do for all existing components / attributes
+		.def("attr", &CPS::IdentifiedObject::attributeBase, "name"_a)
 		.def("print_attribute_list", &printAttributes)
 		.def("print_attribute", &printAttribute, "attribute_name"_a)
 		.def("__str__", &getAttributeList);
 
 	//Enums
 
-	py::enum_<CPS::AttributeBase::Modifier>(m, "AttrModifier")
-		.value("real", CPS::AttributeBase::Modifier::real)
-		.value("imag", CPS::AttributeBase::Modifier::imag)
-		.value("mag", CPS::AttributeBase::Modifier::mag)
-		.value("phase", CPS::AttributeBase::Modifier::phase);
+	py::enum_<DPsim::Solver::Behaviour>(m, "SolverBehaviour")
+		.value("Initialization", DPsim::Solver::Behaviour::Initialization)
+		.value("Simulation", DPsim::Solver::Behaviour::Simulation);
 
 	py::enum_<CPS::Domain>(m, "Domain")
 		.value("SP", CPS::Domain::SP)
@@ -203,9 +207,11 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("HOURS", CPS::CSVReader::DataFormat::HOURS)
 		.value("MINUTES", CPS::CSVReader::DataFormat::MINUTES);
 
+#ifdef WITH_CIM
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
 		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info, "comploglevel"_a = CPS::Logger::Level::off)
 		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM);
+#endif
 
 	py::class_<CPS::CSVReader>(m, "CSVReader")
 		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())

@@ -26,7 +26,7 @@ namespace Ph3 {
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(SynchronGeneratorDQTrapez& synGen)
-				: Task(synGen.mName + ".MnaPreStep"), mSynGen(synGen) {
+				: Task(**synGen.mName + ".MnaPreStep"), mSynGen(synGen) {
 				mModifiedAttributes.push_back(synGen.attribute("right_vector"));
 				mPrevStepDependencies.push_back(synGen.attribute("v_intf"));
 			}

@@ -86,8 +86,8 @@ void EMT_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -149,22 +149,22 @@ void EMT_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);
-	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
-	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
+	loggerEMT->logAttribute("v1", n1EMT->attribute("v"));
+	loggerEMT->logAttribute("v2", n2EMT->attribute("v"));
 	//gen
-	loggerEMT->addAttribute("Ep", genEMT->attribute("Ep"));
-	loggerEMT->addAttribute("v_gen", genEMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_gen", genEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("wr_gen", genEMT->attribute("w_r"));
-	loggerEMT->addAttribute("delta_r_gen", genEMT->attribute("delta_r"));
-	loggerEMT->addAttribute("P_elec", genEMT->attribute("P_elec"));
-	loggerEMT->addAttribute("P_mech", genEMT->attribute("P_mech"));
+	loggerEMT->logAttribute("Ep", genEMT->attribute("Ep"));
+	loggerEMT->logAttribute("v_gen", genEMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_gen", genEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("wr_gen", genEMT->attribute("w_r"));
+	loggerEMT->logAttribute("delta_r_gen", genEMT->attribute("delta_r"));
+	loggerEMT->logAttribute("P_elec", genEMT->attribute("P_elec"));
+	loggerEMT->logAttribute("P_mech", genEMT->attribute("P_mech"));
 	//line
-	loggerEMT->addAttribute("v_line", lineEMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_line", lineEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("v_line", lineEMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_line", lineEMT->attribute("i_intf"));
 	//slack
-	loggerEMT->addAttribute("v_slack", extnetEMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_slack", extnetEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("v_slack", extnetEMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_slack", extnetEMT->attribute("i_intf"));
 
 
 

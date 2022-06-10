@@ -25,8 +25,6 @@ namespace CPS {
 		/// Number of harmonics
 		UInt mNumFreqs = 0;
 		///
-		MatrixVar<VarType> mVoltage;
-		///
 		Task::List mMnaTasks;
 	public:
 		typedef VarType Type;
@@ -34,6 +32,11 @@ namespace CPS {
 		typedef std::vector<Ptr> List;
 		///
 		static Ptr GND;
+
+		///
+		const typename Attribute<MatrixVar<VarType>>::Ptr mVoltage;
+		/// Power injected at node
+		const typename Attribute<MatrixVar<VarType>>::Ptr mApparentPower;
 
 		/// This very general constructor is used by other constructors.
 		SimNode(String uid, String name, std::vector<UInt> matrixNodeIndex,
@@ -89,11 +92,13 @@ namespace CPS {
 		///
 		VarType singleVoltage(PhaseType phaseType = PhaseType::Single);
 		///
-		MatrixVar<VarType> voltage() { return mVoltage; }
+		MatrixVar<VarType> voltage() { return **mVoltage; }
 		///
 		void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) { mMatrixNodeIndex[phase] = matrixNodeIndex; }
 		///
 		void setVoltage(VarType newVoltage) { }
+		///
+		void setPower(VarType newPower) { }
 
 		// #### MNA Section ####
 		///
@@ -110,7 +115,7 @@ namespace CPS {
 		class MnaPostStepHarm : public Task {
 		public:
 			MnaPostStepHarm(SimNode& node, const std::vector<Attribute<Matrix>::Ptr> &leftVectors) :
-				Task(node.mName + ".MnaPostStepHarm"),
+				Task(**node.mName + ".MnaPostStepHarm"),
 				mNode(node), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
 					mAttributeDependencies.push_back(mLeftVectors[i]);

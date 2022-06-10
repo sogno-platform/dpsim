@@ -23,20 +23,25 @@ namespace Signal {
 	protected:
 		/// Integration time step
         Real mTimeStep;
-        /// Previous Input
-        Real mInputPrev;
-        /// Current Input
-        Real mInputCurr;
-        /// Previous State
-        Real mStatePrev;
-        /// Current State
-        Real mStateCurr;
-        /// Previous Output
-        Real mOutputPrev;
-        /// Current Output
-        Real mOutputCurr;
 
 	public:
+
+		///FIXME: This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
+		const Attribute<Real>::Ptr mInputRef;
+
+		/// Previous Input
+        const Attribute<Real>::Ptr mInputPrev;
+        /// Current Input
+        const Attribute<Real>::Ptr mInputCurr;
+        /// Previous State
+        const Attribute<Real>::Ptr mStatePrev;
+        /// Current State
+        const Attribute<Real>::Ptr mStateCurr;
+        /// Previous Output
+        const Attribute<Real>::Ptr mOutputPrev;
+        /// Current Output
+        const Attribute<Real>::Ptr mOutputCurr;
+
 		Integrator(String name, Logger::Level logLevel = Logger::Level::off);
 		/// Setter for integration step parameter
 		void setParameters(Real timestep);
@@ -56,7 +61,7 @@ namespace Signal {
         class PreStep : public Task {
         public:
 			PreStep(Integrator& integrator) :
-                Task(integrator.mName + ".PreStep"), mIntegrator(integrator) {
+                Task(**integrator.mName + ".PreStep"), mIntegrator(integrator) {
 					mIntegrator.signalAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mIntegrator.signalPreStep(time, timeStepCount); };
@@ -67,7 +72,7 @@ namespace Signal {
 		class Step : public Task {
 		public:
 			Step(Integrator& integrator) :
-				Task(integrator.mName + ".Step"), mIntegrator(integrator) {
+				Task(**integrator.mName + ".Step"), mIntegrator(integrator) {
 					mIntegrator.signalAddStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mIntegrator.signalStep(time, timeStepCount); };

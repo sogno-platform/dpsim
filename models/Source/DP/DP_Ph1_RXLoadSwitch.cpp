@@ -14,12 +14,12 @@ DP::Ph1::RXLoadSwitch::RXLoadSwitch(String uid, String name, Logger::Level logLe
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
 	setVirtualNodeNumber(1);
-	mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Create sub components
-	mSubRXLoad = std::make_shared<DP::Ph1::RXLoad>(mName + "_rxload", mLogLevel);
-	mSubSwitch = std::make_shared<DP::Ph1::Switch>(mName + "_switch", mLogLevel);
+	mSubRXLoad = std::make_shared<DP::Ph1::RXLoad>(**mName + "_rxload", mLogLevel);
+	mSubSwitch = std::make_shared<DP::Ph1::Switch>(**mName + "_switch", mLogLevel);
 	mSubComponents.push_back(mSubRXLoad);
 	mSubComponents.push_back(mSubSwitch);
 	// Set switch default values
@@ -47,8 +47,8 @@ void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSwitch->initialize(mFrequencies);
 	mSubSwitch->initializeFromNodesAndTerminals(frequency);
 
-	mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
-	mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
+	**mIntfVoltage = **mSubRXLoad->mIntfVoltage;
+	**mIntfCurrent = **mSubRXLoad->mIntfCurrent;
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -56,8 +56,8 @@ void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0,0)),
-		Logger::phasorToString(mIntfCurrent(0,0)),
+		Logger::phasorToString((**mIntfVoltage)(0,0)),
+		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
 
@@ -79,9 +79,9 @@ void DP::Ph1::RXLoadSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 	mSubRXLoad->mnaInitialize(omega, timeStep, leftVector);
 	mSubSwitch->mnaInitialize(omega, timeStep, leftVector);
 	// get sub component right vector
-	mRightVectorStamps.push_back(&mSubRXLoad->attribute<Matrix>("right_vector")->get());
+	mRightVectorStamps.push_back(&**mSubRXLoad->mRightVector);
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
@@ -108,9 +108,9 @@ void DP::Ph1::RXLoadSwitch::mnaAddPreStepDependencies(AttributeBase::List &prevS
 	this->mSubRXLoad->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 
 	// add pre-step dependencies of component
-	prevStepDependencies.push_back(attribute("i_intf"));
-	prevStepDependencies.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(mIntfCurrent);
+	prevStepDependencies.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mRightVector);
 }
 
 void DP::Ph1::RXLoadSwitch::mnaPreStep(Real time, Int timeStepCount) {
@@ -118,7 +118,7 @@ void DP::Ph1::RXLoadSwitch::mnaPreStep(Real time, Int timeStepCount) {
 
 	// pre-step of component itself
 	updateSwitchState(time);
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::RXLoadSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
@@ -138,15 +138,15 @@ void DP::Ph1::RXLoadSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<
 	this->mSubRXLoad->mnaPostStep(time, timeStepCount, leftVector);
 	this->mSubSwitch->mnaPostStep(time, timeStepCount, leftVector);
 
-	mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
-	mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
+	**mIntfVoltage = **mSubRXLoad->mIntfVoltage;
+	**mIntfCurrent = **mSubRXLoad->mIntfCurrent;
 }
 
 void DP::Ph1::RXLoadSwitch::updateSwitchState(Real time) {
 
 	if (time > mSwitchTimeOffset && mSubSwitch->isClosed()) {
-		Real VRef = Math::abs(mSubRXLoad->attributeComplex("V_nom")->get());
-		Real V = Math::abs(mIntfVoltage(0, 0));
+		Real VRef = Math::abs(**mSubRXLoad->mNomVoltage);
+		Real V = Math::abs((**mIntfVoltage)(0, 0));
 
 		Real deltaV = Math::abs((V - VRef) / VRef);
 

@@ -11,49 +11,49 @@
 using namespace CPS;
 
 SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::Level logLevel)
- : SimPowerComp<Complex>(uid, name, logLevel) {
+ : SimPowerComp<Complex>(uid, name, logLevel),
+    mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
+    mSetPointActivePower(Attribute<Real>::create("P_set", mAttributes)),
+    mSetPointReactivePower(Attribute<Real>::create("Q_set", mAttributes)),
+    mSetPointVoltage(Attribute<Real>::create("V_set", mAttributes)),
+    mSetPointActivePowerPerUnit(Attribute<Real>::create("P_set_pu", mAttributes)),
+    mSetPointReactivePowerPerUnit(Attribute<Real>::create("Q_set_pu", mAttributes)),
+    mSetPointVoltagePerUnit(Attribute<Real>::create("V_set_pu", mAttributes)) {
 
     mSLog->info("Create {} of type {}", name, this->type());
     mSLog->flush();
 
     setTerminalNumber(1);
-    addAttribute<Real>("base_Voltage", &mBaseVoltage, Flags::read | Flags::write);
-    addAttribute<Real>("P_set", &mSetPointActivePower, Flags::read | Flags::write);
-    addAttribute<Real>("Q_set", &mSetPointReactivePower, Flags::read | Flags::write);
-    addAttribute<Real>("V_set", &mSetPointVoltage, Flags::read | Flags::write);
-    addAttribute<Real>("P_set_pu", &mSetPointActivePowerPerUnit, Flags::read | Flags::write);
-    addAttribute<Real>("Q_set_pu", &mSetPointReactivePowerPerUnit, Flags::read | Flags::write);
-    addAttribute<Real>("V_set_pu", &mSetPointVoltagePerUnit, Flags::read | Flags::write);
 };
 
 void SP::Ph1::SynchronGenerator::setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType, Real setPointReactivePower) {
 	mRatedApparentPower = ratedApparentPower;
     mRatedVoltage = ratedVoltage;
-    mSetPointActivePower = setPointActivePower;
-    mSetPointReactivePower= setPointReactivePower;
-    mSetPointVoltage = setPointVoltage;
+    **mSetPointActivePower = setPointActivePower;
+    **mSetPointReactivePower= setPointReactivePower;
+    **mSetPointVoltage = setPointVoltage;
     mPowerflowBusType = powerflowBusType;
 
 	mSLog->info("Rated Apparent Power={} [VA] Rated Voltage={} [V]", mRatedApparentPower, mRatedVoltage);
-    mSLog->info("Active Power Set Point={} [W] Voltage Set Point={} [V]", mSetPointActivePower, mSetPointVoltage);
+    mSLog->info("Active Power Set Point={} [W] Voltage Set Point={} [V]", **mSetPointActivePower, **mSetPointVoltage);
 	mSLog->flush();
 }
 
 // #### Powerflow section ####
 void SP::Ph1::SynchronGenerator::setBaseVoltage(Real baseVoltage) {
-    mBaseVoltage = baseVoltage;
+    **mBaseVoltage = baseVoltage;
 }
 
 void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
+	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);
 
-	mSetPointActivePowerPerUnit = mSetPointActivePower/mBaseApparentPower;
-    mSetPointReactivePowerPerUnit = mSetPointReactivePower/mBaseApparentPower;
-	mSetPointVoltagePerUnit = mSetPointVoltage/mBaseVoltage;
-	mSLog->info("Active Power Set Point={} [pu] Voltage Set Point={} [pu]", mSetPointActivePowerPerUnit, mSetPointVoltagePerUnit);
+	**mSetPointActivePowerPerUnit = **mSetPointActivePower / mBaseApparentPower;
+    **mSetPointReactivePowerPerUnit = **mSetPointReactivePower / mBaseApparentPower;
+	**mSetPointVoltagePerUnit = **mSetPointVoltage / **mBaseVoltage;
+	mSLog->info("Active Power Set Point={} [pu] Voltage Set Point={} [pu]", **mSetPointActivePowerPerUnit, **mSetPointVoltagePerUnit);
 	mSLog->flush();
 }
 
@@ -79,15 +79,15 @@ void SP::Ph1::SynchronGenerator::modifyPowerFlowBusType(PowerflowBusType powerfl
 
 //Method used in PF to update reactive power for PV-Bus generator
 void SP::Ph1::SynchronGenerator::updateReactivePowerInjection(Complex powerInj) {
-	mSetPointReactivePower = powerInj.imag();
-    mSetPointReactivePowerPerUnit= mSetPointReactivePower/mBaseApparentPower;
+	**mSetPointReactivePower = powerInj.imag();
+    **mSetPointReactivePowerPerUnit= **mSetPointReactivePower / mBaseApparentPower;
 }
 
 //Method used in PF to update active & reactive power for VD-Bus generator
 void SP::Ph1::SynchronGenerator::updatePowerInjection(Complex powerInj) {
-	mSetPointActivePower = powerInj.real();
-    mSetPointActivePowerPerUnit= mSetPointActivePower/mBaseApparentPower;
-    mSetPointReactivePower = powerInj.imag();
-    mSetPointReactivePowerPerUnit= mSetPointReactivePower/mBaseApparentPower;
+	**mSetPointActivePower = powerInj.real();
+    **mSetPointActivePowerPerUnit= **mSetPointActivePower / mBaseApparentPower;
+    **mSetPointReactivePower = powerInj.imag();
+    **mSetPointReactivePowerPerUnit= **mSetPointReactivePower / mBaseApparentPower;
 }
 

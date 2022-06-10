@@ -12,18 +12,15 @@ using namespace CPS;
 using namespace CPS::Signal;
 
 PLL::PLL(String name, Logger::Level logLevel) :
-	SimSignalComp(name, name, logLevel) {
-
-    addAttribute<Real>("input_ref", Flags::read | Flags::write);
-
-    addAttribute<Matrix>("input_prev", &mInputPrev, Flags::read | Flags::write);
-    addAttribute<Matrix>("state_prev", &mStatePrev, Flags::read | Flags::write);
-    addAttribute<Matrix>("output_prev", &mOutputPrev, Flags::read | Flags::write);
-
-    addAttribute<Matrix>("input_curr", &mInputCurr, Flags::read | Flags::write);
-    addAttribute<Matrix>("state_curr", &mStateCurr, Flags::read | Flags::write);
-    addAttribute<Matrix>("output_curr", &mOutputCurr, Flags::read | Flags::write);
-}
+	SimSignalComp(name, name, logLevel),
+    mInputRef(Attribute<Real>::createDynamic("input_ref", mAttributes)),
+    /// CHECK: Which of these really need to be attributes?
+    mInputPrev(Attribute<Matrix>::create("input_prev", mAttributes, Matrix::Zero(2,1))),
+    mStatePrev(Attribute<Matrix>::create("state_prev", mAttributes, Matrix::Zero(2,1))),
+    mOutputPrev(Attribute<Matrix>::create("output_prev", mAttributes, Matrix::Zero(2,1))),
+    mInputCurr(Attribute<Matrix>::create("input_curr", mAttributes, Matrix::Zero(2,1))),
+    mStateCurr(Attribute<Matrix>::create("state_curr", mAttributes, Matrix::Zero(2,1))),
+    mOutputCurr(Attribute<Matrix>::create("output_curr", mAttributes, Matrix::Zero(2,1))) { }
 
 
 void PLL::setParameters(Real kpPLL, Real kiPLL, Real omegaNom) {
@@ -33,7 +30,7 @@ void PLL::setParameters(Real kpPLL, Real kiPLL, Real omegaNom) {
     mSLog->info("Kp = {}, Ki = {}", mKp, mKi);
 
     // First entry of input vector is constant omega
-    mInputCurr(0,0) = mOmegaNom;
+    (**mInputCurr)(0,0) = mOmegaNom;
 }
 
 void PLL::setSimulationParameters(Real timestep) {
@@ -42,12 +39,12 @@ void PLL::setSimulationParameters(Real timestep) {
 }
 
 void PLL::setInitialValues(Real input_init, Matrix state_init, Matrix output_init) {
-	mInputCurr(1,0) = input_init;
-    mStateCurr = state_init;
-    mOutputCurr = output_init;
+	(**mInputCurr)(1,0) = input_init;
+    **mStateCurr = state_init;
+    **mOutputCurr = output_init;
 
     mSLog->info("Initial values:");
-    mSLog->info("inputCurrInit = ({}, {}), stateCurrInit = ({}, {}), outputCurrInit = ({}, {})", mInputCurr(0,0), mInputCurr(1,0), mInputPrev(0,0), mInputPrev(1,0), mStateCurr(0,0), mStateCurr(1,0), mStatePrev(0,0), mStatePrev(1,0));
+    mSLog->info("inputCurrInit = ({}, {}), stateCurrInit = ({}, {}), outputCurrInit = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
 }
 
 void PLL::composeStateSpaceMatrices() {
@@ -68,35 +65,35 @@ void PLL::composeStateSpaceMatrices() {
 }
 
 void PLL::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-    prevStepDependencies.push_back(attribute("input_curr"));
-	prevStepDependencies.push_back(attribute("output_curr"));
-	modifiedAttributes.push_back(attribute("input_prev"));
-    modifiedAttributes.push_back(attribute("output_prev"));
+    prevStepDependencies.push_back(mInputCurr);
+	prevStepDependencies.push_back(mOutputCurr);
+	modifiedAttributes.push_back(mInputPrev);
+    modifiedAttributes.push_back(mOutputPrev);
 };
 
 void PLL::signalPreStep(Real time, Int timeStepCount) {
-    mInputPrev = mInputCurr;
-    mStatePrev = mStateCurr;
-    mOutputPrev = mOutputCurr;
+    **mInputPrev = **mInputCurr;
+    **mStatePrev = **mStateCurr;
+    **mOutputPrev = **mOutputCurr;
 }
 
 void PLL::signalAddStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(attribute("input_ref"));
-	modifiedAttributes.push_back(attribute("input_curr"));
-    modifiedAttributes.push_back(attribute("output_curr"));
+	attributeDependencies.push_back(mInputRef);
+	modifiedAttributes.push_back(mInputCurr);
+    modifiedAttributes.push_back(mOutputCurr);
 };
 
 void PLL::signalStep(Real time, Int timeStepCount) {
-    mInputCurr(1,0) = attribute<Real>("input_ref")->get();
+    (**mInputCurr)(1,0) = **mInputRef;
 
     mSLog->info("Time {}:", time);
-    mSLog->info("Input values: inputCurr = ({}, {}), inputPrev = ({}, {}), stateCurr = ({}, {}), statePrev = ({}, {})", mInputCurr(0,0), mInputCurr(1,0), mInputPrev(0,0), mInputPrev(1,0), mStateCurr(0,0), mStateCurr(1,0), mStatePrev(0,0), mStatePrev(1,0));
+    mSLog->info("Input values: inputCurr = ({}, {}), inputPrev = ({}, {}), stateCurr = ({}, {}), statePrev = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
 
-    mStateCurr = Math::StateSpaceTrapezoidal(mStatePrev, mA, mB, mTimeStep, mInputCurr, mInputPrev);
-    mOutputCurr = mC * mStateCurr + mD * mInputCurr;
+    **mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
+    **mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
 
-    mSLog->info("State values: stateCurr = ({}, {})", mStateCurr(0,0), mStateCurr(1,0));
-    mSLog->info("Output values: outputCurr = ({}, {}):", mOutputCurr(0,0), mOutputCurr(1,0));
+    mSLog->info("State values: stateCurr = ({}, {})", (**mStateCurr)(0,0), (**mStateCurr)(1,0));
+    mSLog->info("Output values: outputCurr = ({}, {}):", (**mOutputCurr)(0,0), (**mOutputCurr)(1,0));
 }
 
 Task::List PLL::getTasks() {

@@ -12,7 +12,8 @@ using namespace CPS;
 
 
 EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name, Logger::Level logLevel, CPS::GeneratorType sourceType)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel),
+	mRefVoltage(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	mSourceType = sourceType;
 
@@ -22,10 +23,8 @@ EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name
 		setVirtualNodeNumber(0);
 		
 	setTerminalNumber(1);
-	mIntfVoltage = Matrix::Zero(3, 1);
-	mIntfCurrent = Matrix::Zero(3, 1);
-
-	addAttribute<MatrixComp>("V_ref", Flags::read | Flags::write);
+	**mIntfVoltage = Matrix::Zero(3, 1);
+	**mIntfCurrent = Matrix::Zero(3, 1);
 }
 
 EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String name,
@@ -39,10 +38,10 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorIdeal::clone(String name) {
 void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequency) {
 
 	if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {
-		mSubVoltageSource = EMT::Ph3::VoltageSource::make(mName + "_vs", mLogLevel);
+		mSubVoltageSource = EMT::Ph3::VoltageSource::make(**mName + "_vs", mLogLevel);
 		mSubComponents.push_back(mSubVoltageSource);
 	} else {
-		mSubCurrentSource = EMT::Ph3::CurrentSource::make(mName + "_cs", mLogLevel);
+		mSubCurrentSource = EMT::Ph3::CurrentSource::make(**mName + "_cs", mLogLevel);
 		mSubComponents.push_back(mSubCurrentSource);
 	}
 
@@ -58,7 +57,7 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real freq
 	mSubComponents[0]->initializeFromNodesAndTerminals(frequency);
 	
 	if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
-		setAttributeRef("V_ref", mSubComponents[0]->attribute<MatrixComp>("V_ref"));
+		mRefVoltage->setReference(mSubComponents[0]->attribute<MatrixComp>("V_ref"));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -80,7 +79,7 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaInitialize(Real omega, Real timeStep, 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
-	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -96,7 +95,7 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaPreStep(Real time, Int timeStepCount) 
 	// pre-step of subcomponents
 	std::dynamic_pointer_cast<MNAInterface>(mSubComponents[0])->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -112,16 +111,16 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaPostStep(Real time, Int timeStepCount,
 	// post-step of subcomponents
 	std::dynamic_pointer_cast<MNAInterface>(mSubComponents[0])->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
-	mnaUpdateCurrent(*leftVector);
-	mnaUpdateVoltage(*leftVector);
+	mnaUpdateCurrent(**leftVector);
+	mnaUpdateVoltage(**leftVector);
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateCurrent(const Matrix& leftvector) {
-	mIntfCurrent = mSubComponents[0]->attribute<Matrix>("i_intf")->get();
+	**mIntfCurrent = mSubComponents[0]->attribute<Matrix>("i_intf")->get();
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage = mSubComponents[0]->attribute<Matrix>("v_intf")->get();
+	**mIntfVoltage = mSubComponents[0]->attribute<Matrix>("v_intf")->get();
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
