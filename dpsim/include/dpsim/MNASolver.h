@@ -17,9 +17,11 @@
 #include <dpsim/Config.h>
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
+<<<<<<< HEAD:dpsim/include/dpsim/MNASolver.h
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
+#include <dpsim-models/Solver/MNASyncGenInterface.h>
 #include <dpsim-models/SimSignalComp.h>
 #include <dpsim-models/SimPowerComp.h>
 
@@ -75,6 +77,8 @@ namespace DPsim {
 		CPS::SimSignalComp::List mSimSignalComps;
 		/// Current status of all switches encoded as bitset
 		std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
+		/// List of synchronous generators that need iterate to solve the differential equations
+		CPS::MNASyncGenInterface::List mSyncGen;
 
 		/// Source vector of known quantities
 		Matrix mRightSideVector;
