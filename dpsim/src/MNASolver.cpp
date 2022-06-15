@@ -311,6 +311,11 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 
 	for (auto comp : mSystem.mComponents) {
 
+		auto genComp = std::dynamic_pointer_cast<CPS::MNASyncGenInterface>(comp);
+		if (genComp) {
+			mSyncGen.push_back(genComp);
+		}
+		
 		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
 		if (swComp) {
 			mSwitches.push_back(swComp);
