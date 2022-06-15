@@ -11,14 +11,14 @@ Examples::Grids::SMIB::ScenarioConfig2 GridParams;
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Simulation parameters
 	Real switchClosed = GridParams.SwitchClosed;
 	Real switchOpen = GridParams.SwitchOpen;
 	Real startTimeFault = 1.0;
 	Real endTimeFault   = 1.1;
-	Real timeStep = 1e-6;
+	Real timeStep = 10e-6;
 	Real finalTime = 20;
 
 	// Command line args processing
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
-	genPF->setParameters(syngenKundur.nomPower, GridParams.VnomMV, GridParams.setPointActivePower, 
+	genPF->setParameters(syngenKundur.nomPower, GridParams.VnomMV, GridParams.setPointActivePower,
 						 GridParams.setPointVoltage, PowerflowBusType::PV);
     genPF->setBaseVoltage(GridParams.VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -57,10 +57,10 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(GridParams.VnomMV);
 	extnetPF->setBaseVoltage(GridParams.VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+	linePF->setParameters(GridParams.lineResistance, GridParams.lineInductance,
 						  GridParams.lineCapacitance, GridParams.lineConductance);
 	linePF->setBaseVoltage(GridParams.VnomMV);
 
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 	// ----- Dynamic simulation ------
 	String simNameSP = simName;
 	Logger::setLogDir("logs/" + simNameSP);
-	
+
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initReactivePower = genPF->getApparentPower().imag();
@@ -110,9 +110,9 @@ int main(int argc, char* argv[]) {
 	genSP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, syngenKundur.H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
     genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 
 	//Grid bus as Slack
@@ -121,9 +121,9 @@ int main(int argc, char* argv[]) {
 
     // Line
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", logLevel);
-	lineSP->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+	lineSP->setParameters(GridParams.lineResistance, GridParams.lineInductance,
 						  GridParams.lineCapacitance, GridParams.lineConductance);
-	
+
 	//Breaker
 	auto fault = CPS::SP::Ph1::Switch::make("Br_fault", logLevel);
 	fault->setParameters(switchOpen, switchClosed);
@@ -165,6 +165,6 @@ int main(int argc, char* argv[]) {
 
 	auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 	simSP.addEvent(sw2);
-	
+
 	simSP.run();
 }

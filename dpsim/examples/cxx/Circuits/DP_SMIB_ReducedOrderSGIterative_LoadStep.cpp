@@ -1,12 +1,10 @@
 #include <DPsim.h>
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 using namespace Examples::Grids::SMIB::ReducedOrderSynchronGenerator;
-
 
 // Default configuration of scenario
 Scenario6::Config defaultConfig;
@@ -20,7 +18,7 @@ Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur
 int main(int argc, char* argv[]) {	
 
 	// Simulation parameters
-	String simName = "EMT_SMIB_ReducedOrderSG_LoadStep";
+	String simName = "DP_SMIB_ReducedOrderSGIterative_LoadStep";
 	Real timeStep = 10e-6;
 	Real finalTime = 35;
 
@@ -33,9 +31,10 @@ int main(int argc, char* argv[]) {
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
-		finalTime = args.duration;
-		if (args.name != "dpsim")
-			simName = args.name;
+		//finalTime = args.duration;
+		//if (args.name != "dpsim")
+		if (args.options.find("SimName") != args.options.end())
+			simName = args.getOptionString("SimName");
 		if (args.options.find("sgType") != args.options.end())
 			sgType = args.getOptionString("sgType");
 		if (args.options.find("loadStepEventTime") != args.options.end())
@@ -49,7 +48,7 @@ int main(int argc, char* argv[]) {
 
 	// apply downsampling for simulation step sizes lower than 10us
 	Real logDownSampling;
-	if (timeStep < 10e-6)
+	if (timeStep < 1e-6)
 		logDownSampling = floor((10e-6) / timeStep);
 	else
 		logDownSampling = 1.0;
@@ -91,8 +90,8 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->logAttribute("v1", n1PF->attribute("v"));
-	loggerPF->logAttribute("v2", n2PF->attribute("v"));
+	loggerPF->addAttribute("v1", n1PF->attribute("v"));
+	loggerPF->addAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, logLevel);
@@ -108,8 +107,8 @@ int main(int argc, char* argv[]) {
 
 
 	// ----- Dynamic simulation ------
-	String simNameEMT = simName;
-	Logger::setLogDir("logs/" + simNameEMT);
+	String simNameDP = simName;
+	Logger::setLogDir("logs/" + simNameDP);
 	
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
@@ -118,73 +117,72 @@ int main(int argc, char* argv[]) {
 	Real initMechPower = initActivePower;
 
 	// Nodes
-	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0), 
-											n1PF->voltage()(0,0) * SHIFT_TO_PHASE_B,
-											n1PF->voltage()(0,0) * SHIFT_TO_PHASE_C
-										  };
-	auto n1EMT = SimNode<Real>::make("n1EMT", PhaseType::ABC, initialVoltage_n1);
-	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0), 
-											n2PF->voltage()(0,0) * SHIFT_TO_PHASE_B,
-											n2PF->voltage()(0,0) * SHIFT_TO_PHASE_C
-										  };
-	auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
+	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0)};
+	auto n1DP = SimNode<Complex>::make("n1DP", PhaseType::Single, initialVoltage_n1);
+	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0)};
+	auto n2DP = SimNode<Complex>::make("n2DP", PhaseType::Single, initialVoltage_n2);
 
 	// Synchronous generator
-	auto genEMT = GeneratorFactory::createGenEMT(sgType, "SynGen", logLevel);
-	genEMT->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage,
-			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
-			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-    genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
-	genEMT->setModelAsCurrentSource(true);
+	auto genDP = DP::Ph1::SynchronGenerator4OrderIter::make("SynGen", logLevel);
+	genDP->setOperationalParametersPerUnit(
+		syngenKundur.nomPower, syngenKundur.nomVoltage, 
+		syngenKundur.nomFreq, H, 
+		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
+		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t); 
+    genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+	genDP->setMaxIterations(defaultConfig.maxIter);
+	genDP->setTolerance(defaultConfig.tolerance);
 
 	//Grid bus as Slack
-	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", logLevel);
+	//Grid bus as Slack
+	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
+	extnetDP->setParameters(gridParams.VnomMV);
 
     // Line
-	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", logLevel);
-	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(gridParams.lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(gridParams.lineInductance), 
-					      Math::singlePhaseParameterToThreePhase(gridParams.lineCapacitance),
-						  Math::singlePhaseParameterToThreePhase(gridParams.lineConductance));
+	auto lineDP = DP::Ph1::PiLine::make("PiLine", logLevel);
+	lineDP->setParameters(gridParams.lineResistance, 
+	                      gridParams.lineInductance, 
+					      gridParams.lineCapacitance,
+						  gridParams.lineConductance);
 	
 	// Topology
-	genEMT->connect({ n1EMT });
-	lineEMT->connect({ n1EMT, n2EMT });
-	extnetEMT->connect({ n2EMT });
-	auto systemEMT = SystemTopology(gridParams.nomFreq,
-			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{genEMT, lineEMT, extnetEMT});
+	genDP->connect({ n1DP });
+	lineDP->connect({ n1DP, n2DP });
+	extnetDP->connect({ n2DP });
+	SystemTopology systemDP = SystemTopology(gridParams.nomFreq,
+			SystemNodeList{n1DP, n2DP},
+			SystemComponentList{genDP, lineDP, extnetDP});
 
 	// Logging
-	// log node voltage
 	auto logger = DataLogger::make(simName, true, logDownSampling);
-		for (auto node : systemEMT.mNodes)
-			logger->logAttribute(node->name() + ".V", node->attribute("v"));
+
+	// log node voltage
+	for (auto node : systemDP.mNodes)
+		logger->addAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log generator vars
-	logger->logAttribute(genEMT->name() + ".Tm", genEMT->attribute("Tm"));
-	logger->logAttribute(genEMT->name() + ".Te", genEMT->attribute("Te"));
-	logger->logAttribute(genEMT->name() + ".omega", genEMT->attribute("w_r"));
-	logger->logAttribute(genEMT->name() + ".delta", genEMT->attribute("delta"));
+	//logger->addAttribute(genDP->name() + ".Tm", genDP->attribute("Tm"));
+	logger->addAttribute(genDP->name() + ".Te", genDP->attribute("Te"));
+	//logger->addAttribute(genDP->name() + ".omega", genDP->attribute("w_r"));
+	logger->addAttribute(genDP->name() + ".delta", genDP->attribute("delta"));
+	logger->addAttribute(genDP->name() + ".NIterations", genDP->attribute("NIterations"));
+	//logger->addAttribute(genDP->name() + ".theta", genDP->attribute("Theta"));
 
 	// load step event
-	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::Events::createEventAddPowerConsumption3Ph("n1EMT", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemEMT, Domain::EMT, logger);
+	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::Events::createEventAddPowerConsumption("n1DP", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemDP, Domain::DP, logger);
 
-	Simulation simEMT(simNameEMT, logLevel);
-	simEMT.doInitFromNodesAndTerminals(true);
-	simEMT.setSystem(systemEMT);
-	simEMT.setTimeStep(timeStep);
-	simEMT.setFinalTime(finalTime);
-	simEMT.setDomain(Domain::EMT);
-	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
-	simEMT.addLogger(logger);
-	simEMT.doSystemMatrixRecomputation(true);
+	Simulation simDP(simNameDP, logLevel);
+	simDP.doInitFromNodesAndTerminals(true);
+	simDP.setSystem(systemDP);
+	simDP.setTimeStep(timeStep);
+	simDP.setFinalTime(finalTime);
+	simDP.setDomain(Domain::DP);
+	simDP.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
+	simDP.addLogger(logger);
+	//simDP.doSystemMatrixRecomputation(true);
 
 	// Events
-	simEMT.addEvent(loadStepEvent);
+	simDP.addEvent(loadStepEvent);
 	
-	simEMT.run();
+	simDP.run();
 }

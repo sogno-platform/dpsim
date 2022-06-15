@@ -215,25 +215,64 @@ std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createLogTask()
 
 template <typename VarType>
 void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
-	// Reset source vector
-	mRightSideVector.setZero();
+	if 	(mSyncGen.size()==0) {
+		// Reset source vector
+		mRightSideVector.setZero();
 
-	// Add together the right side vector (computed by the components'
-	// pre-step tasks)
-	for (auto stamp : mRightVectorStamps)
-		mRightSideVector += *stamp;
+		// Add together the right side vector (computed by the components'
+		// pre-step tasks)
+		for (auto stamp : mRightVectorStamps)
+			mRightSideVector += *stamp;
 
-	if (!mIsInInitialization)
-		MnaSolver<VarType>::updateSwitchStatus();
+		if (!mIsInInitialization)
+			MnaSolver<VarType>::updateSwitchStatus();
 
-	if (mSwitchedMatrices.size() > 0) {
-		auto start = std::chrono::steady_clock::now();
-		**mLeftSideVector = mDirectLinearSolvers[mCurrentSwitchStatus][0]->solve(mRightSideVector);
-		auto end = std::chrono::steady_clock::now();
-		std::chrono::duration<Real> diff = end-start;
-		mSolveTimes.push_back(diff.count());
+		if (mSwitchedMatrices.size() > 0){
+			auto start = std::chrono::steady_clock::now();
+			**mLeftSideVector = mDirectLinearSolvers[mCurrentSwitchStatus][0]->solve(mRightSideVector);
+			auto end = std::chrono::steady_clock::now();
+			std::chrono::duration<Real> diff = end-start;
+			mSolveTimes.push_back(diff.count());
+	} else {
+		// if there is iterative syncGens, then it is necessary to iterate
+		bool iterate = true;
+		while (iterate) {
+			// Reset source vector
+			mRightSideVector.setZero();
+
+			if (!mIsInInitialization)
+				MnaSolver<VarType>::updateSwitchStatus();
+
+			for (auto syncGen : mSyncGen)
+				syncGen->correctorStep();
+
+			// Add together the right side vector (computed by the components'
+			// pre-step tasks)
+			for (auto stamp : mRightVectorStamps)
+				mRightSideVector += *stamp;
+
+			if (mSwitchedMatrices.size() > 0) {
+				auto start = std::chrono::steady_clock::now();
+				**mLeftSideVector = mDirectLinearSolvers[mCurrentSwitchStatus][0]->solve(mRightSideVector);
+				auto end = std::chrono::steady_clock::now();
+				std::chrono::duration<Real> diff = end-start;
+				mSolveTimes.push_back(diff.count());
+			}
+
+			for (auto syncGen : mSyncGen)
+				//update voltages
+				syncGen->updateVoltage(mLeftSideVector);
+
+			// check if there is sync generators that need iterate
+			int count=0;
+			for (auto syncGen : mSyncGen) {
+				if (syncGen->checkVoltageDifference())
+					count = count+1;
+			}
+			if (count==0)
+				iterate=false;
+		}
 	}
-
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
