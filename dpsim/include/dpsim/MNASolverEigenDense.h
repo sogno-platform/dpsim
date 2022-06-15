@@ -48,6 +48,7 @@ namespace DPsim {
 		using MnaSolver<VarType>::mLeftSideVectorHarm;
 		using MnaSolver<VarType>::mFrequencyParallel;
 		using MnaSolver<VarType>::mSLog;
+		using MnaSolver<VarType>::mSyncGen;
 
 		/// Create system matrix
 		virtual void createEmptySystemMatrix() override;

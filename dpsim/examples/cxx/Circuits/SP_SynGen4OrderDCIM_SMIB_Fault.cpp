@@ -156,7 +156,7 @@ int main(int argc, char* argv[]) {
 	Real SwitchOpen = GridParams.SwitchOpen;
 	Real startTimeFault = 1.0;
 	Real endTimeFault   = 1.1;
-	Real timeStep = 1e-6;
+	Real timeStep = 10e-6;
 	Real H = syngenKundur.H;
 	Real finalTime = 20;
 

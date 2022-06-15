@@ -18,7 +18,7 @@ Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur
 int main(int argc, char* argv[]) {	
 
 	// Simulation parameters
-	String simName = "EMT_SMIB_ReducedOrderSG_LoadStep";
+	String simName = "EMT_SMIB_ReducedOrderSGIterative_LoadStep";
 	Real timeStep = 10e-6;
 	Real finalTime = 35;
 
@@ -89,8 +89,8 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->logAttribute("v1", n1PF->attribute("v"));
-	loggerPF->logAttribute("v2", n2PF->attribute("v"));
+	loggerPF->addAttribute("v1", n1PF->attribute("v"));
+	loggerPF->addAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, logLevel);
@@ -128,31 +128,15 @@ int main(int argc, char* argv[]) {
 	auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
 
 	// Synchronous generator
-	std::shared_ptr<EMT::Ph3::ReducedOrderSynchronGeneratorVBR> genEMT = nullptr;
-	if (sgType=="3") {
-		genEMT = EMT::Ph3::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator3OrderVBR>(genEMT)->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage, 
-			syngenKundur.nomFreq, H, 
-			syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t, syngenKundur.Td0_t);
-	} else if (sgType=="4") {
-		genEMT = EMT::Ph3::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator4OrderVBR>(genEMT)->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage, 
-			syngenKundur.nomFreq, H, 
-			syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
-			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t); 
-	} else if (sgType=="6b") {
-		genEMT = EMT::Ph3::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6bOrderVBR>(genEMT)->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage,
-			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
-			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-	} else 
-		throw CPS::SystemError("Unsupported reduced-order SG type!");	
+	auto genEMT = EMT::Ph3::SynchronGenerator4OrderIter::make("SynGen", logLevel);
+	genEMT->setOperationalParametersPerUnit(
+		syngenKundur.nomPower, syngenKundur.nomVoltage, 
+		syngenKundur.nomFreq, H, 
+		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
+		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t); 
     genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+	genEMT->setMaxIterations(defaultConfig.maxIter);
+	genEMT->setTolerance(defaultConfig.tolerance);
 
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", logLevel);
@@ -168,31 +152,23 @@ int main(int argc, char* argv[]) {
 	genEMT->connect({ n1EMT });
 	lineEMT->connect({ n1EMT, n2EMT });
 	extnetEMT->connect({ n2EMT });
-	SystemTopology systemEMT;
-	if (sgType=="3")
-		systemEMT = SystemTopology(gridParams.nomFreq,
+	SystemTopology systemEMT = SystemTopology(gridParams.nomFreq,
 			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator3OrderVBR>(genEMT), lineEMT, extnetEMT});
-	else if (sgType=="4")
-		systemEMT = SystemTopology(gridParams.nomFreq,
-			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator4OrderVBR>(genEMT), lineEMT, extnetEMT});
-	else if (sgType=="6b")
-		systemEMT = SystemTopology(gridParams.nomFreq,
-			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6bOrderVBR>(genEMT), lineEMT, extnetEMT});
+			SystemComponentList{genEMT, lineEMT, extnetEMT});
 
 	// Logging
 	// log node voltage
 	auto logger = DataLogger::make(simName, true, logDownSampling);
 		for (auto node : systemEMT.mNodes)
-			logger->logAttribute(node->name() + ".V", node->attribute("v"));
+			logger->addAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log generator vars
-	logger->logAttribute(genEMT->name() + ".Tm", genEMT->attribute("Tm"));
-	logger->logAttribute(genEMT->name() + ".Te", genEMT->attribute("Te"));
-	logger->logAttribute(genEMT->name() + ".omega", genEMT->attribute("w_r"));
-	logger->logAttribute(genEMT->name() + ".delta", genEMT->attribute("delta"));
+	//logger->addAttribute(genEMT->name() + ".Tm", genEMT->attribute("Tm"));
+	logger->addAttribute(genEMT->name() + ".Te", genEMT->attribute("Te"));
+	logger->addAttribute(genEMT->name() + ".omega", genEMT->attribute("w_r"));
+	logger->addAttribute(genEMT->name() + ".delta", genEMT->attribute("delta"));
+	logger->addAttribute(genEMT->name() + ".NIterations", genEMT->attribute("NIterations"));
+	//logger->addAttribute(genEMT->name() + ".theta", genEMT->attribute("Theta"));
 
 	// load step event
 	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::Events::createEventAddPowerConsumption3Ph("n1EMT", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemEMT, Domain::EMT, logger);
@@ -205,7 +181,7 @@ int main(int argc, char* argv[]) {
 	simEMT.setDomain(Domain::EMT);
 	simEMT.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
 	simEMT.addLogger(logger);
-	simEMT.doSystemMatrixRecomputation(true);
+	//simEMT.doSystemMatrixRecomputation(true);
 
 	// Events
 	simEMT.addEvent(loadStepEvent);
