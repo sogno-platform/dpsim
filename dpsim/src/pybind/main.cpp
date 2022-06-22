@@ -22,13 +22,13 @@
 
 #include <cps/CSVReader.h>
 
-#include <DPComponents.h>
-#include <EMTComponents.h>
-#include <SPComponents.h>
-#include <SignalComponents.h>
-#include <BaseComponents.h>
-#include <Utils.h>
-#include <Attributes.h>
+#include <dpsim/pybind/DPComponents.h>
+#include <dpsim/pybind/EMTComponents.h>
+#include <dpsim/pybind/SPComponents.h>
+#include <dpsim/pybind/SignalComponents.h>
+#include <dpsim/pybind/BaseComponents.h>
+#include <dpsim/pybind/Utils.h>
+#include <dpsim/pybind/Attributes.h>
 
 PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);
 

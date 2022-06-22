@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <Utils.h>
+#include <dpsim/pybind/Utils.h>
 
 CPS::Matrix zeroMatrix(int dim) {
 	return CPS::Matrix::Zero(dim, dim);

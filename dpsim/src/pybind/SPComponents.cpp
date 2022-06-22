@@ -6,13 +6,13 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <SPComponents.h>
+#include <dpsim/pybind/SPComponents.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <cps/IdentifiedObject.h>
 #include <DPsim.h>
 #include <cps/CSVReader.h>
-#include <Utils.h>
+#include <dpsim/pybind/Utils.h>
 
 namespace py = pybind11;
 using namespace pybind11::literals;
