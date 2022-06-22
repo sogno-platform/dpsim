@@ -16,16 +16,16 @@
 #include <dpsim/Solver.h>
 #include <dpsim/Scheduler.h>
 #include <dpsim/Event.h>
-#include <cps/Definitions.h>
-#include <cps/Logger.h>
-#include <cps/SystemTopology.h>
-#include <cps/SimNode.h>
-#include <cps/Attribute.h>
+#include <dpsim-models/Definitions.h>
+#include <dpsim-models/Logger.h>
+#include <dpsim-models/SystemTopology.h>
+#include <dpsim-models/SimNode.h>
+#include <dpsim-models/Attribute.h>
 #include <dpsim/Interface.h>
 #include <nlohmann/json.hpp>
 
 #ifdef WITH_GRAPHVIZ
-  #include <cps/Graph.h>
+  #include <dpsim-models/Graph.h>
 #endif
 
 using json = nlohmann::json;

@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/SimNode.h>
+#include <dpsim-models/SimNode.h>
 
 using namespace CPS;
 

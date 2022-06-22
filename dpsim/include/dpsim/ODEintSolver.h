@@ -13,8 +13,8 @@
 #include <list>
 
 #include <dpsim/Solver.h>
-#include <cps/SystemTopology.h>
-#include <cps/Solver/ODEintInterface.h>
+#include <dpsim-models/SystemTopology.h>
+#include <dpsim-models/Solver/ODEintInterface.h>
 
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp> //ODEInt Runge-Kutta stepper
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>//ODEInt Integrator with constant time step

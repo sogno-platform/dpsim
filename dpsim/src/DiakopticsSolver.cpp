@@ -10,8 +10,8 @@
 
 #include <iomanip>
 
-#include <cps/MathUtils.h>
-#include <cps/Solver/MNATearInterface.h>
+#include <dpsim-models/MathUtils.h>
+#include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim/Definitions.h>
 
 using namespace CPS;

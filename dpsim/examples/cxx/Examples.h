@@ -6,9 +6,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Definitions.h>
-#include <cps/SystemTopology.h>
-#include <cps/Components.h>
+#include <dpsim-models/Definitions.h>
+#include <dpsim-models/SystemTopology.h>
+#include <dpsim-models/Components.h>
 
 #pragma once
 

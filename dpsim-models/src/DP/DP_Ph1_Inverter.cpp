@@ -6,8 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/DP/DP_Ph1_Inverter.h>
-#include <cps/MathUtils.h>
+#include <dpsim-models/DP/DP_Ph1_Inverter.h>
+#include <dpsim-models/MathUtils.h>
 #include <cmath>
 
 using namespace CPS;

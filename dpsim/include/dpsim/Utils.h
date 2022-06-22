@@ -22,9 +22,9 @@
 
 #include <dpsim/Timer.h>
 #include <dpsim/Solver.h>
-#include <cps/Logger.h>
+#include <dpsim-models/Logger.h>
 #include <dpsim/MNASolverFactory.h>
-#include <cps/Components.h>
+#include <dpsim-models/Components.h>
 #include <dpsim/Simulation.h>
 #include <nlohmann/json.hpp>
 

@@ -15,10 +15,10 @@
 
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
-#include <cps/PtrFactory.h>
-#include <cps/Attribute.h>
-#include <cps/SimNode.h>
-#include <cps/Task.h>
+#include <dpsim-models/PtrFactory.h>
+#include <dpsim-models/Attribute.h>
+#include <dpsim-models/SimNode.h>
+#include <dpsim-models/Task.h>
 
 namespace fs = std::experimental::filesystem;
 

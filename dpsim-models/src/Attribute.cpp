@@ -8,8 +8,8 @@
 
 #include <iostream>
 
-#include <cps/Config.h>
-#include <cps/Attribute.h>
+#include <dpsim-models/Config.h>
+#include <dpsim-models/Attribute.h>
 
 using namespace CPS;
 

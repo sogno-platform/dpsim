@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Signal/Integrator.h>
+#include <dpsim-models/Signal/Integrator.h>
 
 using namespace CPS;
 using namespace CPS::Signal;

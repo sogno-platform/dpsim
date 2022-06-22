@@ -7,7 +7,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 #include <dpsim-villas/InterfaceShmem.h>
-#include <cps/Logger.h>
+#include <dpsim-models/Logger.h>
 
 using namespace CPS;
 using namespace DPsim;

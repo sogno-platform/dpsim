@@ -10,8 +10,8 @@
 #include <graphviz/cgraph.h>
 #include <graphviz/gvcommon.h>
 
-#include <cps/Definitions.h>
-#include <cps/CIM/Reader.h>
+#include <dpsim-models/Definitions.h>
+#include <dpsim-models/CIM/Reader.h>
 
 using namespace CPS;
 using namespace CPS::CIM;

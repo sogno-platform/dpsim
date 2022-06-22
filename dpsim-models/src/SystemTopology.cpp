@@ -11,7 +11,7 @@
 #include <fstream>
 #include <unordered_map>
 
-#include <cps/SystemTopology.h>
+#include <dpsim-models/SystemTopology.h>
 
 using namespace CPS;
 

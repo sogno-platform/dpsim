@@ -17,10 +17,10 @@
 
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
-#include <cps/IdentifiedObject.h>
+#include <dpsim-models/IdentifiedObject.h>
 #include <DPsim.h>
 
-#include <cps/CSVReader.h>
+#include <dpsim-models/CSVReader.h>
 
 #include <dpsim/pybind/DPComponents.h>
 #include <dpsim/pybind/EMTComponents.h>

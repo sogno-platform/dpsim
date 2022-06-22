@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-#include <cps/CIM/Reader.h>
+#include <dpsim-models/CIM/Reader.h>
 #include <DPsim.h>
 #include <dpsim/Villas/InterfaceShmem.h>
 

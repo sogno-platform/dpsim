@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/DP/DP_Ph3_SynchronGeneratorDQ.h>
+#include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQ.h>
 
 //Added for testing/printing purposes:
 #include <iostream>

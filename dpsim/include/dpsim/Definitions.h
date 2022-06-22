@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <cps/Definitions.h>
+#include <dpsim-models/Definitions.h>
 
 namespace DPsim {
 	// #### Types ####

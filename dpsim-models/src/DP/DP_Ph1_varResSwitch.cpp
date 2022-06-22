@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/DP/DP_Ph1_varResSwitch.h>
+#include <dpsim-models/DP/DP_Ph1_varResSwitch.h>
 
 using namespace CPS;
 

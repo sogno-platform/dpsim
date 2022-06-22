@@ -9,7 +9,7 @@
 #include <iomanip>
 
 #include <dpsim/DataLogger.h>
-#include <cps/Logger.h>
+#include <dpsim-models/Logger.h>
 
 using namespace DPsim;
 

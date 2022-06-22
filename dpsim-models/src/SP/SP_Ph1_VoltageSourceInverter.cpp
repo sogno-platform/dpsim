@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
-#include <cps/SP/SP_Ph1_VoltageSourceInverter.h>
+#include <dpsim-models/SP/SP_Ph1_VoltageSourceInverter.h>
 
 using namespace CPS;
 

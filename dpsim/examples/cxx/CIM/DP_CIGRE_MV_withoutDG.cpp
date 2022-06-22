@@ -6,9 +6,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include "cps/CIM/Reader.h"
+#include "dpsim-models/CIM/Reader.h"
 #include <DPsim.h>
-#include <cps/CSVReader.h>
+#include <dpsim-models/CSVReader.h>
 
 using namespace std;
 using namespace DPsim;

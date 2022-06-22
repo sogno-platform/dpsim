@@ -7,7 +7,7 @@
  *********************************************************************************/
 
 /// FIXME: This header-file does not exist!
-#include <cps/EMT/EMT_Ph3_SynchronGeneratorDQSmplCompSource.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQSmplCompSource.h>
 
 using namespace CPS;
 

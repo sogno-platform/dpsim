@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/TopologicalNode.h>
+#include <dpsim-models/TopologicalNode.h>
 
 using namespace CPS;
 

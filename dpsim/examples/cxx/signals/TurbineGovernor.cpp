@@ -8,7 +8,7 @@
 
 #include <fstream>
 
-#include <cps/Signal/TurbineGovernor.h>
+#include <dpsim-models/Signal/TurbineGovernor.h>
 
 using namespace CPS;
 using namespace CPS::Signal;

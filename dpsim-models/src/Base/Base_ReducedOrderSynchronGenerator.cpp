@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Base/Base_ReducedOrderSynchronGenerator.h>
+#include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 
 using namespace CPS;
 

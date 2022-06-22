@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-#include <cps/PtrFactory.h>
+#include <dpsim-models/PtrFactory.h>
 #include <dpsim/Interface.h>
 
 #include <villas/sample.hpp>

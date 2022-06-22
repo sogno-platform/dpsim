@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Signal/SignalGenerator.h>
+#include <dpsim-models/Signal/SignalGenerator.h>
 
 using namespace CPS;
 

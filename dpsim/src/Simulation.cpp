@@ -14,7 +14,7 @@
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/Utils.h>
-#include <cps/Utils.h>
+#include <dpsim-models/Utils.h>
 #include <dpsim/MNASolverFactory.h>
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/DiakopticsSolver.h>
@@ -22,11 +22,11 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 #ifdef WITH_CIM
-  #include <cps/CIM/Reader.h>
+  #include <dpsim-models/CIM/Reader.h>
 #endif
 
 #ifdef WITH_SUNDIALS
-  #include <cps/Solver/ODEInterface.h>
+  #include <dpsim-models/Solver/ODEInterface.h>
   #include <dpsim/DAESolver.h>
   #include <dpsim/ODESolver.h>
 #endif

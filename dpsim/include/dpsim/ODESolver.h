@@ -10,7 +10,7 @@
 
 #include <dpsim/Solver.h>
 
-#include <cps/Solver/ODEInterface.h>
+#include <dpsim-models/Solver/ODEInterface.h>
 
 #include <arkode/arkode.h>              // prototypes for ARKode fcts., consts. and includes sundials_types.h
 #include <nvector/nvector_serial.h>     // access to serial N_Vector

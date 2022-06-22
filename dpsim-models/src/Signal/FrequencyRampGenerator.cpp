@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Signal/FrequencyRampGenerator.h>
+#include <dpsim-models/Signal/FrequencyRampGenerator.h>
 
 using namespace CPS;
 

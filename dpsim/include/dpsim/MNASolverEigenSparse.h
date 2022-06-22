@@ -18,11 +18,11 @@
 #include <dpsim/Config.h>
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
-#include <cps/AttributeList.h>
-#include <cps/Solver/MNASwitchInterface.h>
-#include <cps/Solver/MNAVariableCompInterface.h>
-#include <cps/SimSignalComp.h>
-#include <cps/SimPowerComp.h>
+#include <dpsim-models/AttributeList.h>
+#include <dpsim-models/Solver/MNASwitchInterface.h>
+#include <dpsim-models/Solver/MNAVariableCompInterface.h>
+#include <dpsim-models/SimSignalComp.h>
+#include <dpsim-models/SimPowerComp.h>
 #include <dpsim/MNASolver.h>
 
 

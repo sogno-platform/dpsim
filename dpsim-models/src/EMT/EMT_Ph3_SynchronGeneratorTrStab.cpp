@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/EMT/EMT_Ph3_SynchronGeneratorTrStab.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorTrStab.h>
 using namespace CPS;
 
 Matrix EMT::Ph3::SynchronGeneratorTrStab::parkTransformPowerInvariant(Real theta, const Matrix &fabc) {

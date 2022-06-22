@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <cps/AttributeList.h>
-#include <cps/Solver/MNAInterface.h>
-#include <cps/SimSignalComp.h>
+#include <dpsim-models/AttributeList.h>
+#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/SimSignalComp.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
 

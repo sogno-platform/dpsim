@@ -6,8 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Signal/Exciter.h>
-#include <cps/MathUtils.h>
+#include <dpsim-models/Signal/Exciter.h>
+#include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
 

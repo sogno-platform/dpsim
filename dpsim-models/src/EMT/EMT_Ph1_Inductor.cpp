@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/EMT/EMT_Ph1_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph1_Inductor.h>
 
 using namespace CPS;
 

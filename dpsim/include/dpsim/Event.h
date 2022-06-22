@@ -12,12 +12,12 @@
 #include <queue>
 
 #include <dpsim/Config.h>
-#include <cps/Definitions.h>
-#include <cps/Attribute.h>
-#include <cps/Logger.h>
-#include <cps/Base/Base_Ph1_Switch.h>
-#include <cps/Base/Base_Ph3_Switch.h>
-#include <cps/PtrFactory.h>
+#include <dpsim-models/Definitions.h>
+#include <dpsim-models/Attribute.h>
+#include <dpsim-models/Logger.h>
+#include <dpsim-models/Base/Base_Ph1_Switch.h>
+#include <dpsim-models/Base/Base_Ph3_Switch.h>
+#include <dpsim-models/PtrFactory.h>
 
 namespace DPsim {
 

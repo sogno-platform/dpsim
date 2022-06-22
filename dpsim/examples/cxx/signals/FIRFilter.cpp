@@ -7,7 +7,7 @@
  *********************************************************************************/
 
 #include <iostream>
-#include <cps/Signal/FIRFilter.h>
+#include <dpsim-models/Signal/FIRFilter.h>
 
 using namespace CPS;
 using namespace CPS;

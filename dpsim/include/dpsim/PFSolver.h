@@ -13,8 +13,8 @@
 
 #include <dpsim/Solver.h>
 #include <dpsim/Scheduler.h>
-#include "cps/SystemTopology.h"
-#include "cps/Components.h"
+#include "dpsim-models/SystemTopology.h"
+#include "dpsim-models/Components.h"
 
 namespace DPsim {
     /// Solver class using the nonlinear powerflow (PF) formulation.

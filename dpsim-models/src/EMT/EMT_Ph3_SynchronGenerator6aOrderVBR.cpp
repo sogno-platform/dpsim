@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h>
 
 using namespace CPS;
 

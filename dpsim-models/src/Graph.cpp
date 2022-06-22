@@ -8,7 +8,7 @@
 
 #include <graphviz/gvc.h>
 
-#include <cps/Graph.h>
+#include <dpsim-models/Graph.h>
 
 using namespace CPS;
 using namespace CPS::Graph;

@@ -6,8 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Signal/TurbineGovernor.h>
-#include <cps/MathUtils.h>
+#include <dpsim-models/Signal/TurbineGovernor.h>
+#include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
 using namespace CPS::Signal;

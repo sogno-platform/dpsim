@@ -12,7 +12,7 @@ namespace fs = std::experimental::filesystem;
 
 #include <iomanip>
 
-#include <cps/Logger.h>
+#include <dpsim-models/Logger.h>
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 

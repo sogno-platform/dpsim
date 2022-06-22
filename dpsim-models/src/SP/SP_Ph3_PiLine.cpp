@@ -6,4 +6,4 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/SP/SP_Ph1_PiLine.h>
+#include <dpsim-models/SP/SP_Ph1_PiLine.h>

@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <cps/Task.h>
+#include <dpsim-models/Task.h>
 
 #include <dpsim/Definitions.h>
-#include <cps/Logger.h>
+#include <dpsim-models/Logger.h>
 
 #include <atomic>
 #include <chrono>

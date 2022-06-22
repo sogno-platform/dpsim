@@ -10,7 +10,7 @@
 #include <thread>
 
 #include <dpsim/Timer.h>
-#include <cps/Definitions.h>
+#include <dpsim-models/Definitions.h>
 
 #ifdef HAVE_TIMERFD
   #include <unistd.h>

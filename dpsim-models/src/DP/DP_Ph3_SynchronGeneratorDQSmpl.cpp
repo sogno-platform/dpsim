@@ -7,7 +7,7 @@
  *********************************************************************************/
 
 /// FIXME: This header-file does not exist!
-#include <cps/DP/DP_Ph3_SynchronGeneratorDQSmpl.h>
+#include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQSmpl.h>
 
 using namespace CPS;
 

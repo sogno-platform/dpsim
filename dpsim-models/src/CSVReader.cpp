@@ -7,7 +7,7 @@
  *********************************************************************************/
 
 
-#include <cps/CSVReader.h>
+#include <dpsim-models/CSVReader.h>
 
 using namespace CPS;
 

@@ -7,8 +7,8 @@
  *********************************************************************************/
 
 #include <dpsim/DAESolver.h>
-#include <cps/SimPowerComp.h>
-#include <cps/Solver/MNAInterface.h>
+#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/Solver/MNAInterface.h>
 
 using namespace DPsim;
 using namespace CPS;

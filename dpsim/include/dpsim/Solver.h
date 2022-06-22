@@ -14,9 +14,9 @@
 
 #include <dpsim/Definitions.h>
 #include <dpsim/Config.h>
-#include <cps/Logger.h>
-#include <cps/SystemTopology.h>
-#include <cps/Task.h>
+#include <dpsim-models/Logger.h>
+#include <dpsim-models/SystemTopology.h>
+#include <dpsim-models/Task.h>
 
 namespace DPsim {
 	/// Holds switching time and which system should be activated.

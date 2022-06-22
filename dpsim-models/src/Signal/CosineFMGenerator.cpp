@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Signal/CosineFMGenerator.h>
+#include <dpsim-models/Signal/CosineFMGenerator.h>
 
 using namespace CPS;
 

@@ -7,7 +7,7 @@
  *********************************************************************************/
 
 #include <dpsim/ODESolver.h>
-#include <cps/SimPowerComp.h>
+#include <dpsim-models/SimPowerComp.h>
 
 using namespace DPsim;
 

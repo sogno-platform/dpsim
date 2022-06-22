@@ -6,8 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include "cps/Definitions.h"
-#include <cps/Signal/DecouplingLine.h>
+#include "dpsim-models/Definitions.h"
+#include <dpsim-models/Signal/DecouplingLine.h>
 
 using namespace CPS;
 using namespace CPS::DP::Ph1;

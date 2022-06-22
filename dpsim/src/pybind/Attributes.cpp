@@ -9,9 +9,9 @@
 #include <dpsim/pybind/BaseComponents.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
-#include <cps/IdentifiedObject.h>
+#include <dpsim-models/IdentifiedObject.h>
 #include <DPsim.h>
-#include <cps/CSVReader.h>
+#include <dpsim-models/CSVReader.h>
 #include <dpsim/pybind/Utils.h>
 
 PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);

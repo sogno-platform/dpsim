@@ -14,9 +14,9 @@
 
 #include <dpsim/Solver.h>
 
-#include <cps/SystemTopology.h>
-#include <cps/Solver/DAEInterface.h>
-#include <cps/Logger.h>
+#include <dpsim-models/SystemTopology.h>
+#include <dpsim-models/Solver/DAEInterface.h>
+#include <dpsim-models/Logger.h>
 
 #include <ida/ida.h>
 #include <ida/ida_direct.h>

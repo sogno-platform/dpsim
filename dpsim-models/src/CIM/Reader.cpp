@@ -12,7 +12,7 @@
 #include <memory>
 
 #define READER_CPP
-#include <cps/CIM/Reader.h>
+#include <dpsim-models/CIM/Reader.h>
 
 using namespace CPS;
 using namespace CPS::CIM;

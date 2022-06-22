@@ -5,7 +5,7 @@
 
 #include <DPsim.h>
 #include <dpsim/Villas/InterfaceShmem.h>
-#include <cps/CIM/Reader.h>
+#include <dpsim-models/CIM/Reader.h>
 
 using namespace DPsim;
 using namespace CPS;

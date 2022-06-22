@@ -8,7 +8,7 @@
 
 #include <fstream>
 
-#include <cps/Signal/Exciter.h>
+#include <dpsim-models/Signal/Exciter.h>
 
 using namespace CPS;
 

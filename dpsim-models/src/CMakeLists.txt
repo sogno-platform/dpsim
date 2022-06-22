@@ -1,4 +1,4 @@
-add_library(cps STATIC
+add_library(dpsim-models STATIC
 	Logger.cpp
 	MathUtils.cpp
 	Attribute.cpp
@@ -10,7 +10,7 @@ add_library(cps STATIC
 	CSVReader.cpp
 )
 
-list(APPEND CPS_SOURCES
+list(APPEND MODELS_SOURCES
 	Base/Base_ReducedOrderSynchronGenerator.cpp
 	Base/Base_SynchronGenerator.cpp
 	Base/Base_AvVoltageSourceInverterDQ.cpp
@@ -139,37 +139,37 @@ list(APPEND CPS_SOURCES
 )
 
 if(WITH_CIM)
-	list(APPEND CPS_SOURCES CIM/Reader.cpp)
+	list(APPEND MODELS_SOURCES CIM/Reader.cpp)
 
-	list(APPEND CPS_INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
-	list(APPEND CPS_LIBRARIES ${CIMPP_LIBRARIES})
+	list(APPEND MODELS_INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
+	list(APPEND MODELS_LIBRARIES ${CIMPP_LIBRARIES})
 endif()
 
 if(WITH_GRAPHVIZ)
-	list(APPEND CPS_SOURCES Graph.cpp)
+	list(APPEND MODELS_SOURCES Graph.cpp)
 
-	list(APPEND CPS_INCLUDE_DIRS ${GRAPHVIZ_INCLUDE_DIRS})
-	list(APPEND CPS_LIBRARIES ${GRAPHVIZ_LIBRARIES})
+	list(APPEND MODELS_INCLUDE_DIRS ${GRAPHVIZ_INCLUDE_DIRS})
+	list(APPEND MODELS_LIBRARIES ${GRAPHVIZ_LIBRARIES})
 endif()
 
 if(WITH_SUNDIALS)
-	list(APPEND CPS_SOURCES DP/DP_Ph3_SynchronGeneratorDQODE.cpp)
-	list(APPEND CPS_SOURCES EMT/EMT_Ph3_SynchronGeneratorDQODE.cpp)
-	list(APPEND CPS_INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
-	list(APPEND CPS_LIBRARIES ${SUNDIALS_LIBRARIES})
+	list(APPEND MODELS_SOURCES DP/DP_Ph3_SynchronGeneratorDQODE.cpp)
+	list(APPEND MODELS_SOURCES EMT/EMT_Ph3_SynchronGeneratorDQODE.cpp)
+	list(APPEND MODELS_INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
+	list(APPEND MODELS_LIBRARIES ${SUNDIALS_LIBRARIES})
 endif()
 
 if(WITH_GSL)
-	list(APPEND CPS_INCLUDE_DIRS ${GSL_INCLUDE_DIRS})
-	list(APPEND CPS_LIBRARIES ${GSL_LIBRARIES})
+	list(APPEND MODELS_INCLUDE_DIRS ${GSL_INCLUDE_DIRS})
+	list(APPEND MODELS_LIBRARIES ${GSL_LIBRARIES})
 endif()
 
-list(APPEND CPS_INCLUDE_DIRS
+list(APPEND MODELS_INCLUDE_DIRS
 	../include 
 	${CMAKE_CURRENT_BINARY_DIR}/../include
 	)
 
-target_link_libraries(cps PUBLIC ${CPS_LIBRARIES})
-target_include_directories(cps PUBLIC ${CPS_INCLUDE_DIRS})
-target_sources(cps PRIVATE ${CPS_SOURCES})
-target_compile_options(cps PUBLIC ${CPS_CXX_FLAGS})
+target_link_libraries(dpsim-models PUBLIC ${MODELS_LIBRARIES})
+target_include_directories(dpsim-models PUBLIC ${MODELS_INCLUDE_DIRS})
+target_sources(dpsim-models PRIVATE ${MODELS_SOURCES})
+target_compile_options(dpsim-models PUBLIC ${MODELS_CXX_FLAGS})

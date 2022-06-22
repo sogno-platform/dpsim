@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <cps/Logger.h>
+#include <dpsim-models/Logger.h>
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
-#include <cps/Attribute.h>
-#include <cps/Task.h>
+#include <dpsim-models/Attribute.h>
+#include <dpsim-models/Task.h>
 
 namespace DPsim {
 

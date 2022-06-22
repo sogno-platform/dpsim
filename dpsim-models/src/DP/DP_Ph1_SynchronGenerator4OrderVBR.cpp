@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/DP/DP_Ph1_SynchronGenerator4OrderVBR.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderVBR.h>
 
 using namespace CPS;
 

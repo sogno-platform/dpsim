@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Base/Base_AvVoltageSourceInverterDQWithStateSpace.h>
+#include <dpsim-models/Base/Base_AvVoltageSourceInverterDQWithStateSpace.h>
 
 using namespace CPS;
 

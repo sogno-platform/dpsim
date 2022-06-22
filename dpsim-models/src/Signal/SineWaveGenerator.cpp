@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Signal/SineWaveGenerator.h>
+#include <dpsim-models/Signal/SineWaveGenerator.h>
 
 using namespace CPS;
 

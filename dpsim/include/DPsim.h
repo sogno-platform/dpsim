@@ -14,11 +14,11 @@
   #include <dpsim/RealTimeSimulation.h>
 #endif
 
-#include <cps/Components.h>
-#include <cps/Logger.h>
+#include <dpsim-models/Components.h>
+#include <dpsim-models/Logger.h>
 
 #ifdef WITH_CIM
-  #include <cps/CIM/Reader.h>
+  #include <dpsim-models/CIM/Reader.h>
 #endif
 
 #ifdef WITH_OPENMP

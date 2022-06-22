@@ -7,7 +7,7 @@
  *********************************************************************************/
 
 
-#include <cps/DP/DP_Ph3_Capacitor.h>
+#include <dpsim-models/DP/DP_Ph3_Capacitor.h>
 
 
 using namespace CPS;

@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/TopologicalTerminal.h>
+#include <dpsim-models/TopologicalTerminal.h>
 
 using namespace CPS;
 
