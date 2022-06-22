@@ -2,7 +2,7 @@
 
 #include <dpsim-models/CIM/Reader.h>
 #include <DPsim.h>
-#include <dpsim/Villas/InterfaceShmem.h>
+#include <dpsim-villas/InterfaceShmem.h>
 #include <dpsim-models/CSVReader.h>
 #include <iostream>
 #include <fstream>
