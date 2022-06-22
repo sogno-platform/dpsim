@@ -196,7 +196,7 @@ if(WITH_CUDA)
     # END OF WORKAROUND
 endif()
 
-add_subdirectory(dpsim-core)
+add_subdirectory(dpsim)
 add_subdirectory(dpsim-models)
 
 if (WITH_VILLAS)
