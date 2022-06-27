@@ -52,9 +52,9 @@ void MnaSolverEigenPartialKLU<VarType>::stampVariableSystemMatrix() {
 	this->mSLog->flush();
 
 	// Calculate factorization of current matrix
-	this->mLuFactorizationVariableSystemMatrix.analyzePattern(this->mVariableSystemMatrix, this->mListVariableSystemMatrixEntries, 0);
+	this->mLuFactorizationVariableSystemMatrix.analyzePattern(this->mVariableSystemMatrix, this->mListVariableSystemMatrixEntries, 1);
 	auto start = std::chrono::steady_clock::now();
-	this->mLuFactorizationVariableSystemMatrix.fctorize_partial(this->mVariableSystemMatrix, this->mListVariableSystemMatrixEntries);
+	this->mLuFactorizationVariableSystemMatrix.factorize_partial(this->mVariableSystemMatrix, this->mListVariableSystemMatrixEntries, 1);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
 	this->mLUTimes.push_back(diff.count());
