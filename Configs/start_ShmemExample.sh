@@ -24,7 +24,7 @@ nodes = {
             )
 		}
 
-        exec = [ "build/Examples/Cxx/ShmemExample" ]
+        exec = [ "build/dpsim/examples/cxx/ShmemExample" ]
     }
 
     input = {

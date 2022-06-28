@@ -1,5 +1,5 @@
 DP_VS_RL1:
-  cmd: build/Examples/Cxx/DP_VS_RL1
+  cmd: build/dpsim/examples/cxx/DP_VS_RL1
 
 EMT_VS_RL1:
-  cmd: build/Examples/Cxx/EMT_VS_RL1
+  cmd: build/dpsim/examples/cxx/EMT_VS_RL1

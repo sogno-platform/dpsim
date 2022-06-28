@@ -5,7 +5,7 @@ do
     do
         for (( k = 1; k <= 50; k++ ))
 	    do
-            sudo taskset --all-tasks --cpu-list 12-23 chrt --fifo 99 build/Examples/Cxx/DP_Multimachine_DQ_Parallel -ogen=$i -othreads=$j -oseq=$k
+            sudo taskset --all-tasks --cpu-list 12-23 chrt --fifo 99 build/dpsim/examples/cxx/DP_Multimachine_DQ_Parallel -ogen=$i -othreads=$j -oseq=$k
         done
     done
 done
