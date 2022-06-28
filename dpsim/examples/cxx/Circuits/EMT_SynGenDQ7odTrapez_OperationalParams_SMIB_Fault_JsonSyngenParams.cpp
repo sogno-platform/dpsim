@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 	else
 		configFilename = DPsim::Utils::findFile({
 			"EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_SyngenParams.json"
-			}, "Configs/example_configs_json");
+			}, "configs/example_configs_json");
 
 
 	std::ifstream jsonFile(configFilename);

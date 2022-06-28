@@ -2,7 +2,7 @@ services:
   dpsim:
     build:
       context: ../../../../ #dpsim top-level folder
-      dockerfile: Packaging/Docker/Dockerfile.dev
+      dockerfile: packaging/Docker/Dockerfile.dev
     environment:
       PYTHONPATH: /dpsim/build:/dpsim/build/Source/Python:/dpsim/Source/Python 
     ports:

@@ -1,4 +1,4 @@
-# sogno/dpsim:dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
+# sogno/dpsim:dev is built by dpsim-git/packaging/Docker/Dockerfile.dev
 ARG BASE_IMAGE=sogno/dpsim:dev
 
 FROM ${BASE_IMAGE}

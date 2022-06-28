@@ -33,7 +33,7 @@ _parseConfig() {
 
     if [ "$DPSIM_USE_DOCKER" = "true" ]; then
         DPSIM_EXEC="docker exec -w /dpsim $DOCKER_CONTAINER_NAME \
-            ./Configs/shmem_cosim/start_Shmem_cosim.sh \
+            ./configs/shmem_cosim/start_Shmem_cosim.sh \
             -s $DPSIM_SCENARIO_DIR/$DPSIM_SCENARIO_NAME \
             -v $VILLAS_CONFIG_PATH"
 
@@ -42,7 +42,7 @@ _parseConfig() {
             DPSIM_EXEC="$DPSIM_EXEC -a $DPSIM_SCENARIO_ARGS"
         fi
     else
-        DPSIM_EXEC="./Configs/shmem_cosim/start_Shmem_cosim.sh \
+        DPSIM_EXEC="./configs/shmem_cosim/start_Shmem_cosim.sh \
             -s $DPSIM_SCENARIO_DIR/$DPSIM_SCENARIO_NAME \
             -v $VILLAS_CONFIG_PATH"
     

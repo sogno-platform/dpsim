@@ -21,7 +21,7 @@ stages:
 #  needs: []
 #  script:
 #    - docker build
-#        --file Packaging/Docker/Dockerfile.dev
+#        --file packaging/Docker/Dockerfile.dev
 #        ${TAGS}
 #        ${BUILD_ARGS} .
 #  tags:
@@ -45,7 +45,7 @@ docker:centos:
   needs: []
   script:
     - docker build
-        --file Packaging/Docker/Dockerfile.dev-centos
+        --file packaging/Docker/Dockerfile.dev-centos
         --tag ${DOCKER_IMAGE_DEV_CENTOS}:${CI_COMMIT_REF_NAME} .
   tags:
     - docker
@@ -133,7 +133,7 @@ build:linux-cuda:
 #  needs: []
 #  script:
 #    - docker build
-#        --file Packaging/Docker/Dockerfile
+#        --file packaging/Docker/Dockerfile
 #        --build-arg DOCKER_TAG=${DOCKER_TAG}
 #        --build-arg CI=1
 #        --build-arg CI_COMMIT_SHA=${CI_COMMIT_SHA}
