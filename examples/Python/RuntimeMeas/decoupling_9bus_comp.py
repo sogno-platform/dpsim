@@ -66,7 +66,7 @@ def do_sim(name, system):
     sim.run()
 
 name = 'WSCC-9bus'
-files = glob.glob('../dpsim/Examples/CIM/WSCC-09_RX/*.xml')
+files = glob.glob('../dpsim/examples/CIM/WSCC-09_RX/*.xml')
 
 system = dpsim.load_cim(name, files, frequency=60)
 do_sim('normal', system)

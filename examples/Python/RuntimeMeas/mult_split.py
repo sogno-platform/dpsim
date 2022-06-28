@@ -14,7 +14,7 @@ matplotlib.use('SVG')
 import matplotlib.pyplot as plt
 
 name = 'WSCC-9bus_RX_dyn'
-files = glob.glob('../dpsim/Examples/CIM/WSCC-09_RX_Dyn/*.xml')
+files = glob.glob('../dpsim/examples/CIM/WSCC-09_RX_Dyn/*.xml')
 
 threads = [1, 2, 4, 8, 16]
 sizes = range(1, 32)

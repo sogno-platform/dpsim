@@ -40,7 +40,7 @@ RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
 # Copy Example materials
 RUN mkdir dpsim
-COPY --from=builder /dpsim/Examples /dpsim/
+COPY --from=builder /dpsim/examples /dpsim/
 RUN find /dpsim \
 	-name conftest.py -o \
 	-name "*.yml" -o \

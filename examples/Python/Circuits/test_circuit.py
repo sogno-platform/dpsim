@@ -31,7 +31,7 @@ def test_circuit():
     sim.run()
 
     #results = rt.read_timeseries_dpsim_cmpl('Logs/' + sim.name + '_LeftVector.csv')
-    #expected = rt.read_timeseries_dpsim_real('Examples/Results/Simulink/Circuits/SL_' + sim.name() + '.csv')
+    #expected = rt.read_timeseries_dpsim_real('examples/Results/Simulink/Circuits/SL_' + sim.name() + '.csv')
 
     err = 0
     #err += ts.TimeSeries.rmse(expected[0], results[0].dynphasor_shift_to_emt('n1_emt', 50))

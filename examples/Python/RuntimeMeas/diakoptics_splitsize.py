@@ -26,7 +26,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         name = sys.argv[1]
 
-    instance = SimInstance(name, glob.glob('../dpsim/Examples/CIM/WSCC-09_RX_Dyn/*.xml'), 60.0, 10)
+    instance = SimInstance(name, glob.glob('../dpsim/examples/CIM/WSCC-09_RX_Dyn/*.xml'), 60.0, 10)
     instance.sim_args = {
         'timestep': 0.0001,
         'duration': 0.1,

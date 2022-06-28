@@ -108,13 +108,13 @@ jobs:
         PYTHONPATH: "${{ github.workspace }}/build"
       run: |
         cp -r python/src/dpsim build/
-        pytest -v Examples/Notebooks
+        pytest -v examples/Notebooks
     
     - name: Archive notebook outputs
       uses: actions/upload-artifact@v2
       with:
         name: pytest-output
-        path: outputs/Examples/Notebooks/
+        path: outputs/examples/Notebooks/
 
   compare-notebook-results:
     name: Compare Notebook results

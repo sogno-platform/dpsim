@@ -171,7 +171,7 @@ build:linux-cuda:
 #  variables:
 #    PYTHONPATH: "build/Source/Python:Source/Python"
 #  script:
-#    - pytest -v Examples/CIM/test_CIM.yml
+#    - pytest -v examples/CIM/test_CIM.yml
 #  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
 #  dependencies:
 #    - build:linux
@@ -189,7 +189,7 @@ build:linux-cuda:
 #  variables:
 #    PYTHONPATH: "build:build/Source/Python:Source/Python"
 #  script:
-#    - pytest -v Examples/Notebooks
+#    - pytest -v examples/Notebooks
 #  dependencies:
 #    - build:linux-cgmes
 #  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
@@ -197,14 +197,14 @@ build:linux-cuda:
 #    - docker
 #  artifacts:
 #    paths:
-#      - outputs/Examples/Notebooks/
+#      - outputs/examples/Notebooks/
 #
 #test:cppcheck 1/2:
 #  stage: test
 #  needs: ["docker:centos"]
 #  script:
 #    - set -o pipefail
-#    - cppcheck --max-configs=32 -j 32 --error-exitcode=1 -q --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/ | tee cppcheck-error.log
+#    - cppcheck --max-configs=32 -j 32 --error-exitcode=1 -q --std=c++11 -I Include/ -I models/Include/ Source/ examples/ models/Source/ | tee cppcheck-error.log
 #  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
 #  dependencies:
 #    - docker:centos
@@ -222,7 +222,7 @@ build:linux-cuda:
 #  allow_failure: true
 #  script:
 #    - set -o pipefail
-#    - cppcheck --max-configs=32 -j 32 --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/ | tee cppcheck-warn.log
+#    - cppcheck --max-configs=32 -j 32 --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ examples/ models/Source/ | tee cppcheck-warn.log
 #  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
 #  dependencies:
 #    - docker:centos
