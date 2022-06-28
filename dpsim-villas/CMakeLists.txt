@@ -4,3 +4,7 @@ if(WITH_PYBIND)
 endif()
 
 add_subdirectory(src)
+
+if(DPSIM_BUILD_EXAMPLES)
+	add_subdirectory(examples)
+endif()
