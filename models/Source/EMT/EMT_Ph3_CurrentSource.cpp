@@ -147,3 +147,12 @@ void EMT::Ph3::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
+
+
+void EMT::Ph3::CurrentSource::setParameters(Real mSrcFreq, Complex mCurrentRef, Real mSigOut)
+{
+	**this->mSrcFreq = mSrcFreq;
+	**this->mCurrentRef = CPS::Math::singlePhaseVariableToThreePhase(mCurrentRef);
+	**this->mSigOut = mSigOut;
+	mParametersSet = true;
+}
