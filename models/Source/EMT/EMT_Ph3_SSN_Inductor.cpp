@@ -93,14 +93,6 @@ void EMT::Ph3::SSN::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute
 }
 
 void EMT::Ph3::SSN::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-
-		//	Voltage over Inductor is V0-V1
-		//	Current through Inductor is from n0 to n1
-		//	
-		//	->Node 0: Positive for V0 entries, negative for V1 entries
-		//	->Node 1: Negative for V0 entries, positive for V1 entries
-		//
-
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), Dufour_W_k_n(0, 0));
@@ -154,14 +146,14 @@ void EMT::Ph3::SSN::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) 
 	// Update internal state
 	historicCurrent = Dufour_B_k_hat * **mIntfVoltage + **mIntfCurrent;
 	if (terminalNotGrounded(0)) {
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), -historicCurrent(0, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), -historicCurrent(1, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 2), -historicCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), historicCurrent(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), historicCurrent(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 2), historicCurrent(2, 0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), historicCurrent(0, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), historicCurrent(1, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), historicCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), -historicCurrent(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), -historicCurrent(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), -historicCurrent(2, 0));
 	}
 	mSLog->debug(
 		"\nHistory current term (mnaApplyRightSideVectorStamp): {:s}",

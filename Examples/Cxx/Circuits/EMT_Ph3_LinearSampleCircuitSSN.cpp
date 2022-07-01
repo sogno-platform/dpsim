@@ -26,7 +26,7 @@ void EMT_PH3_R3_C1_L1_CS()
 
 
 	auto cs0 = Ph3::CurrentSource::make("cs0");
-	cs0->setParameters(50.0, CPS::Math::polar(1.0, 0.0), 0.0);
+	cs0->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(1.0,0.0)),50.0);
 
 	auto r1 = Ph3::Resistor::make("r1", Logger::Level::debug);
 	r1->setParameters(10*param);
@@ -95,7 +95,7 @@ void EMT_PH3_R3_C1_L1_VS()
 		0, 0, 1.;
 
 	auto vs0 = Ph3::VoltageSource::make("vs0", Logger::Level::debug);
-	vs0->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(10.0,0.0)),50.0);
+	vs0->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(1.0,0.0)),50.0);
 
 	auto r1 = Ph3::Resistor::make("r1", Logger::Level::debug);
 	r1->setParameters(10*param);
@@ -165,7 +165,7 @@ void SSN_EMT_PH3_R3_C1_L1_CS()
 
 
 	auto cs0 = Ph3::CurrentSource::make("cs0");
-	cs0->setParameters(50.0, CPS::Math::polar(1.0, 0.0), 0.0);
+	cs0->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(1.0,0.0)),50.0);
 
 	auto r1 = Ph3::Resistor::make("r1", Logger::Level::debug);
 	r1->setParameters(10*param);
@@ -216,6 +216,6 @@ void SSN_EMT_PH3_R3_C1_L1_CS()
 int main(int argc, char* argv[])
 {
 	//EMT_PH3_R3_C1_L1_VS();
-    //EMT_PH3_R3_C1_L1_CS();
-	SSN_EMT_PH3_R3_C1_L1_CS();
+    EMT_PH3_R3_C1_L1_CS();
+	//SSN_EMT_PH3_R3_C1_L1_CS();
 }

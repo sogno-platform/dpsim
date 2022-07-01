@@ -47,9 +47,9 @@ namespace CPS {
 				/// Initializes component from power flow data
 				void initializeFromNodesAndTerminals(Real frequency);
 				/// Setter for reference voltage
-				void setParameters(MatrixComp voltageRef, Real srcFreq = 50.0);
+				//void setParameters(MatrixComp voltageRef, Real srcFreq = 50.0);
 
-				void setParameters(Real mSrcFreq, Complex mCurrentRef, Real mSigOut);
+				void setParameters(MatrixComp CurrentRef, Real SrcFreq);
 				/// Setter for reference signal of type frequency ramp
 				void setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
 				/// Setter for reference signal of type cosine frequency modulation

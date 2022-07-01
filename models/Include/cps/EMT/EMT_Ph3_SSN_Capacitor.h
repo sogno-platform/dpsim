@@ -25,7 +25,7 @@ namespace CPS {
 					Matrix Dufour_B_k_hat = Matrix::Zero(3, 3);
 					Matrix Dufour_W_k_n = Matrix::Zero(3, 3);
                     Matrix mHistoricVoltage = Matrix::Zero(3, 1);
-
+					
 		        public:
 				    /// Defines UID, name and logging level
 				    Capacitor(String uid, String name, Logger::Level logLevel = Logger::Level::off);
