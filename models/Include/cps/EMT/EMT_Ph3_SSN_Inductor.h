@@ -18,8 +18,7 @@ namespace CPS{
                     /// Defines UID, name, component parameters and logging level
 				    Inductor(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 				    /// Defines name and logging level
-				    Inductor(String name, Logger::Level logLevel = Logger::Level::off)
-					    : Inductor(name, name, logLevel) { }
+				    Inductor(String name, Logger::Level logLevel = Logger::Level::off);
 
 				    SimPowerComp<Real>::Ptr clone(String name);
 
@@ -74,8 +73,8 @@ namespace CPS{
                     //rightsideVector history term
                     Matrix historicCurrent =  Matrix::Zero(3, 1);
                     //dependency on latest Voltage, represented by Conductance in system matrix
-                    Matrix nodalConductance = Matrix::Zero(3, 3);
-
+					Matrix Dufour_B_k_hat = Matrix::Zero(3, 3);
+					Matrix Dufour_W_k_n = Matrix::Zero(3, 3);
                 private:
                 };    
             }

@@ -52,7 +52,7 @@ void EMT_PH3_R3_C1_L1_CS()
 
 	l1->connect(SimNode::List{ n2, SimNode::GND });
 
-	c1->connect(SimNode::List{ n2, n1 });
+	c1->connect(SimNode::List{ n1, n2 });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs0, r1, r2, r3, l1, c1});
@@ -179,7 +179,7 @@ void SSN_EMT_PH3_R3_C1_L1_CS()
 	auto l1 = Ph3::SSN::Inductor::make("l1");
 	l1->setParameters(0.02 * param);
 
-	auto c1 = Ph3::Capacitor::make("c1");
+	auto c1 = Ph3::SSN::Capacitor::make("c1");
     c1->setParameters(0.001 * param);
 
 	// Topology
@@ -216,6 +216,6 @@ void SSN_EMT_PH3_R3_C1_L1_CS()
 int main(int argc, char* argv[])
 {
 	//EMT_PH3_R3_C1_L1_VS();
-    EMT_PH3_R3_C1_L1_CS();
-	//SSN_EMT_PH3_R3_C1_L1_CS()
+    //EMT_PH3_R3_C1_L1_CS();
+	SSN_EMT_PH3_R3_C1_L1_CS();
 }

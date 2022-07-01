@@ -22,7 +22,12 @@ EMT::Ph3::SSN::Inductor::Inductor(String uid, String name, Logger::Level logLeve
 	mInductance = CPS::Attribute<Matrix>::create("L", mAttributes);
 }
 
-SimPowerComp<Real>::Ptr EMT::Ph3::Inductor::clone(String name) {
+EMT::Ph3::SSN::Inductor::Inductor(String name, Logger::Level logLevel)
+					    : Inductor(name, name, logLevel)
+{
+}
+
+SimPowerComp<Real>::Ptr EMT::Ph3::SSN::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
 	copy->setParameters(**mInductance);
 	return copy;
@@ -67,7 +72,9 @@ void EMT::Ph3::SSN::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute
 
 	updateMatrixNodeIndices();
     //update history term
-    historicCurrent = (timeStep / 2. * (**mInductance).inverse()) * **mIntfVoltage + **mIntfCurrent;
+	Dufour_B_k_hat = (timeStep / 2. * (**mInductance).inverse());
+	Dufour_W_k_n = Dufour_B_k_hat;
+    historicCurrent = Dufour_B_k_hat * **mIntfVoltage + **mIntfCurrent;
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -86,58 +93,66 @@ void EMT::Ph3::SSN::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute
 }
 
 void EMT::Ph3::SSN::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+
+		//	Voltage over Inductor is V0-V1
+		//	Current through Inductor is from n0 to n1
+		//	
+		//	->Node 0: Positive for V0 entries, negative for V1 entries
+		//	->Node 1: Negative for V0 entries, positive for V1 entries
+		//
+
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), nodalConductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), nodalConductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 2), nodalConductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 0), nodalConductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), nodalConductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 2), nodalConductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 0), nodalConductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1), nodalConductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), nodalConductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), Dufour_W_k_n(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), Dufour_W_k_n(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 2), Dufour_W_k_n(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 0), Dufour_W_k_n(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), Dufour_W_k_n(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 2), Dufour_W_k_n(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 0), Dufour_W_k_n(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1), Dufour_W_k_n(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), Dufour_W_k_n(2, 2));
 	}
 	if (terminalNotGrounded(1)) {
 		// set buttom right block, 3x3 entries
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), nodalConductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 1), nodalConductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 2), nodalConductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 0), nodalConductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 1), nodalConductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 2), nodalConductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 0), nodalConductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 1), nodalConductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 2), nodalConductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), Dufour_W_k_n(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 1), Dufour_W_k_n(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 2), Dufour_W_k_n(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 0), Dufour_W_k_n(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 1), Dufour_W_k_n(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 2), Dufour_W_k_n(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 0), Dufour_W_k_n(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 1), Dufour_W_k_n(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 2), Dufour_W_k_n(2, 2));
 	}
 	// Set off diagonal blocks, 2x3x3 entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), -nodalConductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 1), -nodalConductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 2), -nodalConductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 0), -nodalConductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 1), -nodalConductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 2), -nodalConductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 0), -nodalConductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 1), -nodalConductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), -nodalConductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), -Dufour_W_k_n(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 1), -Dufour_W_k_n(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 2), -Dufour_W_k_n(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 0), -Dufour_W_k_n(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 1), -Dufour_W_k_n(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 2), -Dufour_W_k_n(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 0), -Dufour_W_k_n(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 1), -Dufour_W_k_n(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), -Dufour_W_k_n(2, 2));
 
 
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), -nodalConductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 1), -nodalConductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 2), -nodalConductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 0), -nodalConductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 1), -nodalConductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 2), -nodalConductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 0), -nodalConductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), -nodalConductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -nodalConductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), -Dufour_W_k_n(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 1), -Dufour_W_k_n(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 2), -Dufour_W_k_n(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 0), -Dufour_W_k_n(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 1), -Dufour_W_k_n(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 2), -Dufour_W_k_n(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 0), -Dufour_W_k_n(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), -Dufour_W_k_n(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -Dufour_W_k_n(2, 2));
 	}
 }
 
 void EMT::Ph3::SSN::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// Update internal state
-	historicCurrent = (timeStep / 2. * (**mInductance).inverse()) * **mIntfVoltage + **mIntfCurrent;
+	historicCurrent = Dufour_B_k_hat * **mIntfVoltage + **mIntfCurrent;
 	if (terminalNotGrounded(0)) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), -historicCurrent(0, 0));
 		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), -historicCurrent(1, 0));
@@ -196,7 +211,7 @@ void EMT::Ph3::SSN::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::SSN::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = historicCurrent + (timeStep / 2. * (**mInductance).inverse()) **mIntfVoltage;
+	**mIntfCurrent = historicCurrent + Dufour_W_k_n * **mIntfVoltage;
 	mSLog->debug(
 		"\nUpdate Current: {:s}",
 		Logger::matrixToString(**mIntfCurrent)
