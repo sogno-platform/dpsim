@@ -119,6 +119,9 @@
 
 #include <cps/EMT/EMT_Ph3_SSN_Inductor.h>
 #include <cps/EMT/EMT_Ph3_SSN_Capacitor.h>
+#include <cps/EMT/EMT_Ph3_SSN_Full_Serial_RLC.h>
+
+#include <cps/EMT/EMT_Ph1_SSN_Full_Serial_RLC.h>
 
 #include <cps/Signal/DecouplingLine.h>
 #include <cps/Signal/DecouplingLineEMT.h>
