@@ -22,7 +22,17 @@ namespace Base {
 		public MNAInterface {
 				
 		public:
-			// ### State variables [p.u.]###
+			// ### State variables [p.u.]###c
+			/// dq stator terminal voltage
+			/// (0,0) = Vd
+			/// (1,0) = Vq
+			/// (2,0) = V0
+			const Attribute<Matrix>::Ptr mVdq0;
+			/// dq0 armature current
+			/// (0,0) = Id
+			/// (1,0) = Iq
+			/// (2,0) = I0
+			const Attribute<Matrix>::Ptr mIdq0;
 			/// dq stator terminal voltage
 			/// (0,0) = Vd
 			/// (1,0) = Vq

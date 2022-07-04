@@ -67,12 +67,6 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::stepInPerUnit() {
 	if (mSimTime>0.0) {
 		// calculate Eq_t at t=k
 		(**mEdq0_t)(1,0) = (**mIdq0)(0,0) * mLd_t + (**mVdq0)(1,0);
-
-		// calculate mechanical variables at t=k+1 with forward euler
-		**mElecTorque = ((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0));
-		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque - **mElecTorque));
-		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
 	// get transformation matrix

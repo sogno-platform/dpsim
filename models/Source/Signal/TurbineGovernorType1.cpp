@@ -53,7 +53,7 @@ void TurbineGovernorType1::initialize(Real TmRef) {
 	**mXg1 = TmRef;
 	**mXg2 = (1 - mT3 / mTc) * **mXg1;
 	**mXg3 = (1 - mT4 / mT5) * (**mXg2 + mT3 / mTc * **mXg1);
-	**mTm = mXg3 + mT4 / mT5 * (**mXg2 + mT3 / mTc * **mXg1);
+	**mTm = **mXg3 + mT4 / mT5 * (**mXg2 + mT3 / mTc * **mXg1);
 
 	mSLog->info("Governor initial values: \n"
 				"\nTorder: {:f}"

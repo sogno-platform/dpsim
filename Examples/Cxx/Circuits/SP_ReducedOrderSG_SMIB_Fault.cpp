@@ -196,12 +196,12 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Exciter
 	if (withExciter) {
-		loggerSP->addAttribute("Vf", exciterSP->attribute("Vf"));
+		loggerSP->logAttribute("Vf", exciterSP->attribute("Vf"));
 	}
 
 	// Turbine Governor
 	if (withTurbineGovernor) {
-		loggerSP->addAttribute("Tm", turbineGovernorSP->attribute("Tm"));
+		loggerSP->logAttribute("Tm", turbineGovernorSP->attribute("Tm"));
 	}
 
 	Simulation simSP(simNameSP, logLevel);

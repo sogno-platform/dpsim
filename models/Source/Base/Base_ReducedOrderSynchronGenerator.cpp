@@ -15,8 +15,9 @@ Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
 	mElecTorque(Attribute<Real>::create("Etorque", mAttributes)),
-	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
+	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
+	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
 	mEf(Attribute<Real>::create("Ef", mAttributes)),
 	mVdq0(Attribute<Matrix>::create("Vdq0", mAttributes)),
@@ -34,6 +35,7 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
 	mElecTorque(Attribute<Real>::create("Etorque", mAttributes)),
+	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
@@ -316,7 +318,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::MnaPreStep::execute(Real time
 	// update controller variables
 	if (mSynGen.mHasExciter) {
 		mSynGen.mEf_prev = **(mSynGen.mEf);
-		**(mSynGen.mEf) = mSynGen.mExciter->step(**(mSynGen.mVdq)(0,0), mSynGen.mVdq(1,0), mSynGen.mTimeStep);
+		**(mSynGen.mEf) = mSynGen.mExciter->step((**mSynGen.mVdq)(0,0), (**mSynGen.mVdq)(1,0), mSynGen.mTimeStep);
 	}
 	if (mSynGen.mHasTurbineGovernor) {
 		mSynGen.mMechTorque_prev = **mSynGen.mMechTorque;
@@ -332,8 +334,8 @@ void Base::ReducedOrderSynchronGenerator<Complex>::MnaPreStep::execute(Real time
 	}
 
 	mSynGen.stepInPerUnit();
-	mSynGen.mRightVector.setZero();
-	mSynGen.mnaApplyRightSideVectorStamp(mSynGen.mRightVector);
+	(**mSynGen.mRightVector).setZero();
+	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
 }
 
 template <>
@@ -347,6 +349,15 @@ void Base::ReducedOrderSynchronGenerator<Real>::MnaPreStep::execute(Real time, I
 		mSynGen.mMechTorque_prev = **mSynGen.mMechTorque;
 		**mSynGen.mMechTorque = mSynGen.mTurbineGovernor->step(**mSynGen.mOmMech, mSynGen.mTimeStep);
 	}
+	
+	// calculate mechanical variables at t=k+1 with forward euler
+	if (mSynGen.mSimTime>0.0) {
+		**mSynGen.mElecTorque = ((**mSynGen.mVdq0)(0,0) * (**mSynGen.mIdq0)(0,0) + (**mSynGen.mVdq0)(1,0) * (**mSynGen.mIdq0)(1,0));
+		**mSynGen.mOmMech = **mSynGen.mOmMech + mSynGen.mTimeStep * (1. / (2. * mSynGen.mH) * (mSynGen.mMechTorque_prev - **mSynGen.mElecTorque));
+		**mSynGen.mThetaMech = **mSynGen.mThetaMech + mSynGen.mTimeStep * (**mSynGen.mOmMech * mSynGen.mBase_OmMech);
+		**mSynGen.mDelta = **mSynGen.mDelta + mSynGen.mTimeStep * (**mSynGen.mOmMech - 1.) * mSynGen.mBase_OmMech;
+	}
+
 	mSynGen.stepInPerUnit();
 	(**mSynGen.mRightVector).setZero();
 	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
@@ -362,7 +373,7 @@ template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(Real Ta, Real Ka, Real Te, Real Ke, 
 	Real Tf, Real Kf, Real Tr)
 {
-	mExciter = Signal::Exciter::make(this->mName + "_Exciter", this->mLogLevel);
+	mExciter = Signal::Exciter::make(**this->mName + "_Exciter", this->mLogLevel);
 	mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
 	mHasExciter = true;
 }
@@ -379,7 +390,7 @@ template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(Real T3, Real T4, Real T5, Real Tc, 
 	Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef, Real TmRef)
 {
-	mTurbineGovernor = Signal::TurbineGovernorType1::make(this->mName + "_TurbineGovernor");
+	mTurbineGovernor = Signal::TurbineGovernorType1::make(**this->mName + "_TurbineGovernor", this->mLogLevel);
 	mTurbineGovernor->setParameters(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef);
 	mTurbineGovernor->initialize(TmRef);
 	mHasTurbineGovernor = true;

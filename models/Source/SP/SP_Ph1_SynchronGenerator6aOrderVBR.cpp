@@ -40,7 +40,7 @@ void SP::Ph1::SynchronGenerator6aOrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
 	(**mEdq_t)(0,0) = (mLq - mLq_t - mYq) * (**mIdq)(1,0);
-	(**mEdq_t)(1,0) = (1 - mTaa / mTd0_t) * mEf - (mLd - mLd_t - mYd) * (**mIdq)(0,0);
+	(**mEdq_t)(1,0) = (1 - mTaa / mTd0_t) * **mEf - (mLd - mLd_t - mYd) * (**mIdq)(0,0);
 
 	// initial dq behind the subtransient reactance in the dq reference frame
 	(**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);
