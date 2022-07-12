@@ -99,13 +99,13 @@ def dpsim():
     
     logger = dpsimpy.Logger(name)
     sim.add_logger(logger)
-    sim.log_attribute('n1', 'v')
-    sim.log_attribute('n2', 'v')
+    sim.log_attribute('n1.v', n1.attr('v'))
+    sim.log_attribute('n2.v', n2.attr('v'))
 
     intf = dpsimpyvillas.InterfaceShmem()
     sim.add_interface(intf)
     sim.import_attribute(load.attr('P'), 0)
-    sim.export_attribute(n2.attr('v').derive_mag(), 0)
+    sim.export_attribute(n2.attr('v').derive_coeff(0,0).derive_mag(), 0)
 
     return sim, intf
 
