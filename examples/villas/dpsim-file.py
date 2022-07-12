@@ -52,7 +52,7 @@ intf = dpsimpyvillas.InterfaceVillas('dpsim-file', file_config)
 
 sim.add_interface(intf, False)
 #sim.import_attribute('v_intf', 'V_ref', 0)
-sim.export_attribute('v_intf', 'i_intf', 0, 0, 0)
+sim.export_attribute(evs.attr('i_intf').derive_coeff(0, 0), 0)
 
 sim.add_logger(logger)
 

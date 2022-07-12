@@ -56,8 +56,8 @@ intf = dpsimpyvillas.InterfaceVillas(name='dpsim-mqtt', config=mqtt_config)
 
 sim.add_interface(intf, True)
 
-sim.import_attribute('v_intf', 'V_ref', 0)
-sim.export_attribute('v_intf', 'i_intf', 0, 0, 0)
+sim.import_attribute(evs.attr('V_ref'), 0)
+sim.export_attribute(evs.attr('i_intf').derive_coeff(0, 0), 0)
 
 sim.add_logger(logger)
 

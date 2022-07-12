@@ -104,8 +104,8 @@ def dpsim():
 
     intf = dpsimpyvillas.InterfaceShmem()
     sim.add_interface(intf)
-    sim.import_attribute('Load', 'P', 0)
-    sim.export_attribute('n2', 'v', 0, dpsimpy.AttrModifier.mag)
+    sim.import_attribute(load.attr('P'), 0)
+    sim.export_attribute(n2.attr('v').derive_mag(), 0)
 
     return sim, intf
 

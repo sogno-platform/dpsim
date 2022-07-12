@@ -129,8 +129,12 @@ def dpsim():
 
     for i in range(15):
         objname = 'N'+str(i)
-        sim.export_attribute(objname, 'v', (i*2), dpsimpy.AttrModifier.mag)
-        sim.export_attribute(objname, 'v', (i*2)+1, dpsimpy.AttrModifier.phase)
+        sim.export_attribute(sim.get_idobj_attribute(objname, 'v')
+            .derive_coeff(0,0)
+            .derive_mag(), (i*2))
+        sim.export_attribute(sim.get_idobj_attribute(objname, 'v')
+            .derive_coeff(0,0)
+            .derive_phase(), (i*2)+1)
 
     for node in system.nodes:
         logger.log_attribute(node.name()+'.V', 'v', node)
