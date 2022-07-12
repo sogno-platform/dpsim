@@ -17,8 +17,8 @@ SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
 	mActivePowerPerUnit(Attribute<Real>::create("P_pu", mAttributes)),
 	mReactivePowerPerUnit(Attribute<Real>::create("Q_pu", mAttributes)),
-	mActivePower(Attribute<Real>::create("P", mAttributes)),
-	mReactivePower(Attribute<Real>::create("Q", mAttributes)),
+	mActivePower(Attribute<Real>::createDynamic("P", mAttributes)), //Made dynamic so it can be imported through InterfaceVillas
+	mReactivePower(Attribute<Real>::createDynamic("Q", mAttributes)), //Made dynamic so it can be imported through InterfaceVillas
 	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
 
 	mSLog->info("Create {} of type {}", **mName, this->type());
