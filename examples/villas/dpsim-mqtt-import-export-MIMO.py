@@ -182,10 +182,10 @@ def dpsim():
     intf2 = dpsimpyvillas.InterfaceVillas(name="dpsim-shmem", config=intf_config_2)
     sim.add_interface(intf2)
     sim.import_attribute(load.attr('P'), 0, intf=intf)
-    sim.export_attribute(n1.attr('v'), 0, intf=intf)
+    sim.export_attribute(n1.attr('v').derive_coeff(0,0), 0, intf=intf)
     sim.export_attribute(n2.attr('v').derive_coeff(0,0).derive_mag(), 1, intf=intf)
     sim.import_attribute(load.attr('Q'), 0, intf=intf2)
-    sim.export_attribute(n1.attr('v'), 0, intf=intf2)
+    sim.export_attribute(n1.attr('v').derive_coeff(0,0), 0, intf=intf2)
     sim.export_attribute(n2.attr('v').derive_coeff(0,0).derive_mag(), 1, intf=intf2)
   
     return sim, intf, intf2
