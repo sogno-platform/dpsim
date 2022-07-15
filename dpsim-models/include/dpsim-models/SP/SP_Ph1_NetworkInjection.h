@@ -40,7 +40,7 @@ namespace Ph1 {
 
 		// #### Powerflow section ####
 		/// Base voltage [V]
-		Real mBaseVoltage;
+		const Attribute<Real>::Ptr mBaseVoltage;
 
     public:
 		const Attribute<Complex>::Ptr mVoltageRef;

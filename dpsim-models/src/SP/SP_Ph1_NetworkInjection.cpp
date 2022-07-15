@@ -13,12 +13,13 @@ using namespace CPS;
 
 SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
     Logger::Level logLevel) : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
-	mSrcFreq(mAttributes->createDynamic<Real>("f_src")),
-	mVoltageSetPoint(mAttributes->create<Real>("V_set")),
-	mVoltageSetPointPerUnit(mAttributes->create<Real>("V_set_pu", 1.0)),
-	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
-	mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
+	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)),
+	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
+	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
+	mVoltageSetPoint(Attribute<Real>::create("V_set", mAttributes)),
+	mVoltageSetPointPerUnit(Attribute<Real>::create("V_set_pu", mAttributes, 1.0)),
+	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
+	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)) {
 
 	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
@@ -73,14 +74,14 @@ void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modula
 }
 
 void SP::Ph1::NetworkInjection::setBaseVoltage(Real baseVoltage) {
-    mBaseVoltage = baseVoltage;
+    **mBaseVoltage = baseVoltage;
 }
 
 void SP::Ph1::NetworkInjection::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
     mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
-	mSLog->info("Base Voltage={} [V]", mBaseVoltage);
+	mSLog->info("Base Voltage={} [V]", **mBaseVoltage);
 
-    **mVoltageSetPointPerUnit = **mVoltageSetPoint / mBaseVoltage;
+    **mVoltageSetPointPerUnit = **mVoltageSetPoint / **mBaseVoltage;
 
 	mSLog->info("Voltage Set-Point ={} [pu]", **mVoltageSetPointPerUnit);
 	mSLog->flush();
