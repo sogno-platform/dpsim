@@ -9,7 +9,6 @@ on:
         type: string
       compose_file_path:
         # The compose file MUST always include a container named "dpsim" and CAN include a container named "external"
-        # The composition MUST have the name "dpsim-compose"
         description: 'Path to the multi-container compose file'
         required: true
         type: string
@@ -37,7 +36,7 @@ jobs:
        path: ${{ github.workspace }}/build
 
     - name: Start containers
-      run: cd ${{ inputs.compose_file_path }} && docker-compose up -d
+      run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose up -d
 
     - name: Configure cmake in dpsim container
       run: docker exec dpsim-compose-dpsim-1 cd /dpsim/build && cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 ..

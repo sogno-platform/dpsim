@@ -1,4 +1,4 @@
-name: dpsim-compose
+version: "3.9"
 services:
   dpsim:
     image: sogno/dpsim:dev
