@@ -9,13 +9,16 @@ on:
         type: string
       compose_file_path:
         # The compose file MUST always include a container named "dpsim" and CAN include a container named "external"
-        # The dpsim container MUST volume-mount the host-folder /dpsim to the guest folder /dpsim
         # The composition MUST have the name "dpsim-compose"
         description: 'Path to the multi-container compose file'
         required: true
         type: string
       external_cmd:
-        description: 'Command to be run in the external container'
+        description: 'Action command to be run in the external container'
+        required: false
+        type: string
+      watcher_cmd:
+        description: 'Watcher command to be run in the external container'
         required: false
         type: string
 
@@ -23,8 +26,6 @@ jobs:
   run-villas-example:
     name: Run a villas example across multiple containers
     runs-on: ubuntu-latest
-    env:
-      GITHUB_WORKSPACE: /dpsim
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -33,7 +34,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
        name: build-cache
-       path: /dpsim/build
+       path: ${{ github.workspace }}/build
 
     - name: Start containers
       run: cd ${{ inputs.compose_file_path }} && docker-compose up -d
@@ -44,7 +45,11 @@ jobs:
     - name: Build dpsimpyvillas in dpsim container
       run: docker exec dpsim-compose-dpsim-1 cmake --build dpsimpyvillas
     
-    - name: Run external container command
+    - name: Run external container watcher command
+      if: ${{ inputs.watcher_cmd }}
+      run: docker exec dpsim-compose-external-1 ${{ inputs.watcher_cmd }}&
+
+    - name: Run external container action command
       if: ${{ inputs.external_cmd }}
       run: docker exec dpsim-compose-external-1 ${{ inputs.external_cmd }}&
     
