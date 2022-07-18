@@ -39,21 +39,21 @@ jobs:
       run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose up -d
 
     - name: Configure cmake in dpsim container
-      run: docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim/build && cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 .."
+      run: docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim/build && cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 .."
 
     - name: Build dpsimpyvillas in dpsim container
-      run: docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && cmake --build dpsimpyvillas"
+      run: docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && cmake --build dpsimpyvillas"
     
     - name: Run external container watcher command
       if: ${{ inputs.watcher_cmd }}
-      run: docker exec dpsim-compose-external-1 ${{ inputs.watcher_cmd }}&
+      run: docker exec dpsim-compose_external_1 ${{ inputs.watcher_cmd }}&
 
     - name: Run external container action command
       if: ${{ inputs.external_cmd }}
-      run: docker exec dpsim-compose-external-1 ${{ inputs.external_cmd }}&
+      run: docker exec dpsim-compose_external_1 ${{ inputs.external_cmd }}&
     
     - name: Run dpsim container command
       if: ${{ inputs.dpsim_cmd }}
       timeout-minutes: 5
-      run: docker exec dpsim-compose-dpsim-1 ${{ inputs.dpsim_cmd }}
+      run: docker exec dpsim-compose_dpsim_1 ${{ inputs.dpsim_cmd }}
     
