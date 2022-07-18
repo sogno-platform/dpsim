@@ -1,0 +1,53 @@
+name: Run a villas example using multiple containers
+
+on:
+  workflow_call:
+    inputs:
+      dpsim_cmd:
+        description: 'Command to be run in the dpsim container'
+        required: false
+        type: string
+      compose_file_path:
+        # The compose file MUST always include a container named "dpsim" and CAN include a container named "external"
+        # The dpsim container MUST volume-mount the host-folder /dpsim to the guest folder /dpsim
+        # The composition MUST have the name "dpsim-compose"
+        description: 'Path to the multi-container compose file'
+        required: true
+        type: string
+      external_cmd:
+        description: 'Command to be run in the external container'
+        required: false
+        type: string
+
+jobs:
+  run-villas-example:
+    name: Run a villas example across multiple containers
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      working-directory: /dpsim
+      uses: actions/checkout@v2
+
+    - name: Restore build archive
+      working-directory: /dpsim
+      uses: actions/download-artifact@v3
+      with:
+       name: build-cache
+       path: /dpsim/build
+
+    - name: Start containers
+      run: cd ${{ inputs.compose_file_path }} && docker-compose up -d
+
+    - name: Configure cmake in dpsim container
+      run: docker exec dpsim-compose-dpsim-1 cd /dpsim/build && cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 ..
+
+    - name: Build dpsimpyvillas in dpsim container
+      run: docker exec dpsim-compose-dpsim-1 cmake --build dpsimpyvillas
+    
+    - name: Run dpsim container command
+      if: ${{ inputs.dpsim_cmd }}
+      run: docker exec dpsim-compose-dpsim-1 ${{ inputs.dpsim_cmd }}
+    
+    - name: Run external container command
+      if: ${{ inputs.external_cmd }}
+      run: docker exec dpsim-compose-external-1 ${{ inputs.external_cmd }}
