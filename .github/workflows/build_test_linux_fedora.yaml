@@ -267,7 +267,7 @@ jobs:
     needs: [linux-fedora-dpsimpy]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
-      compose_file_path: /dpsim/examples/villas/docker-compose-tests
+      compose_file_path: examples/villas/docker-compose-tests
       dpsim_cmd: python examples/villas/dpsim-mqtt.py
       external_cmd: >-
         /bin/sh -c "while true; do mosquitto_pub -t '/mqtt-dpsim' -m '[{\"ts\": {}, \"data\": [{\"real\": 0.0,\"imag\":10000.0}]}]'; sleep 0.1; done"

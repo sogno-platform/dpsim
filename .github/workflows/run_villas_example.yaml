@@ -55,5 +55,6 @@ jobs:
     
     - name: Run dpsim container command
       if: ${{ inputs.dpsim_cmd }}
+      timeout-minutes: 5
       run: docker exec dpsim-compose-dpsim-1 ${{ inputs.dpsim_cmd }}
     
