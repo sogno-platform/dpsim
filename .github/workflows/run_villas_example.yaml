@@ -44,10 +44,11 @@ jobs:
     - name: Build dpsimpyvillas in dpsim container
       run: docker exec dpsim-compose-dpsim-1 cmake --build dpsimpyvillas
     
+    - name: Run external container command
+      if: ${{ inputs.external_cmd }}
+      run: docker exec dpsim-compose-external-1 ${{ inputs.external_cmd }}&
+    
     - name: Run dpsim container command
       if: ${{ inputs.dpsim_cmd }}
       run: docker exec dpsim-compose-dpsim-1 ${{ inputs.dpsim_cmd }}
     
-    - name: Run external container command
-      if: ${{ inputs.external_cmd }}
-      run: docker exec dpsim-compose-external-1 ${{ inputs.external_cmd }}
