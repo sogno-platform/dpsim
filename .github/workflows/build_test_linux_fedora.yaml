@@ -75,7 +75,7 @@ jobs:
   test-villas-examples:
     name: Run multi-container villas examples
     needs: [linux-fedora-dpsimpy]
-    uses: sogno-platform/dpsim/.github/workflows/run_villas_example.yaml@villas-tests
+    uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: /dpsim/examples/villas/docker-compose-tests
       dpsim_cmd: python examples/villas/dpsim-mqtt.py
