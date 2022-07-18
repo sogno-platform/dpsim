@@ -23,13 +23,13 @@ jobs:
   run-villas-example:
     name: Run a villas example across multiple containers
     runs-on: ubuntu-latest
+    env:
+      GITHUB_WORKSPACE: /dpsim
     steps:
     - name: Checkout
-      working-directory: /dpsim
       uses: actions/checkout@v2
 
     - name: Restore build archive
-      working-directory: /dpsim
       uses: actions/download-artifact@v3
       with:
        name: build-cache
