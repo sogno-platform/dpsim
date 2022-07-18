@@ -72,15 +72,6 @@ jobs:
         retention-days: 1
 
 ## Tests ##
-  test-villas-examples:
-    name: Run multi-container villas examples
-    needs: [linux-fedora-dpsimpy]
-    uses: ./.github/workflows/run_villas_example.yaml
-    with:
-      compose_file_path: /dpsim/examples/villas/docker-compose-tests
-      dpsim_cmd: python examples/villas/dpsim-mqtt.py
-      external_cmd: mosquitto_sub -t "#" -u wildcard -v
-
   test-jupyter-notebooks:
     name: Run pytest over all notebooks
     runs-on: ubuntu-latest
@@ -270,3 +261,13 @@ jobs:
       with:
         name: cppcheck-output
         path: cppcheck-output.log
+
+  test-villas-examples:
+    name: Run multi-container villas examples
+    needs: [linux-fedora-dpsimpy]
+    uses: ./.github/workflows/run_villas_example.yaml
+    with:
+      compose_file_path: /dpsim/examples/villas/docker-compose-tests
+      dpsim_cmd: python examples/villas/dpsim-mqtt.py
+      external_cmd: /bin/sh -c "while true; do mosquitto_pub -t '/mqtt-dpsim' -m '[{\"ts\": {}, \"data\": [{\"real\": 0.0,\"imag\":10000.0}]}]'; sleep 0.1; done"
+      watcher_cmd: mosquitto_sub -t "#" -u wildcard -v
