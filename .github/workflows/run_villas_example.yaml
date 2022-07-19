@@ -38,11 +38,14 @@ jobs:
     - name: Start containers
       run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose up -d
 
+    - name: Delete cmake cache in dpsim container
+      run: docker exec dpsim-compose_dpsim_1 /bin/bash -c "rm -rf /dpsim/build/CMakeCache.txt /dpsim/build/CMakeFiles /dpsim/build/_deps"
+
     - name: Configure cmake in dpsim container
       run: docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim/build && cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 .."
 
     - name: Build dpsimpyvillas in dpsim container
-      run: docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && cmake --build dpsimpyvillas"
+      run: docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim/build && cmake --build . --target dpsimpy --target dpsimpyvillas"
     
     - name: Run external container watcher command
       if: ${{ inputs.watcher_cmd }}
