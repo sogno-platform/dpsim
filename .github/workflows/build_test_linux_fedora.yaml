@@ -270,5 +270,5 @@ jobs:
       compose_file_path: examples/villas/docker-compose-tests
       dpsim_cmd: cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt.py
       external_cmd: >-
-        /bin/sh -c "while true; do mosquitto_pub -t '/mqtt-dpsim' -m '[{\"ts\": {}, \"data\": [{\"real\": 0.0,\"imag\":10000.0}]}]'; sleep 0.1; done"
+        /bin/sh -c "while true; do mosquitto_pub -t '/mqtt-dpsim' -m '[{\"ts\": {}, \"data\": [{\"real\": 10.0,\"imag\":0.0}]}]'; sleep 0.1; done"
       watcher_cmd: mosquitto_sub -t "#" -u wildcard -v

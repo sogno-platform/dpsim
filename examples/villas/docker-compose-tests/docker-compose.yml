@@ -13,6 +13,7 @@ services:
     tty: true
   external:
     image: eclipse-mosquitto:latest
+    hostname: mqtt
     ports:
       - "1883:1883"
       - "9001:9001"
