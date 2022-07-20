@@ -3,7 +3,7 @@ services:
   dpsim:
     image: sogno/dpsim:dev
     environment:
-      PYTHONPATH: /dpsim/build:/dpsim/build/Source/Python:/dpsim/Source/Python 
+      PYTHONPATH: /dpsim/build
     ports:
       - "8888:8888"
     volumes:
