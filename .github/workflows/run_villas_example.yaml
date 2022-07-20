@@ -38,7 +38,7 @@ jobs:
     - name: Start containers
       run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose up -d
 
-    - name: Run external container watcher commandA
+    - name: Run external container watcher command
       if: ${{ inputs.watcher_cmd }}
       run: docker exec dpsim-compose_external_1 ${{ inputs.watcher_cmd }}&
 
