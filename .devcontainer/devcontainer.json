@@ -1,0 +1,13 @@
+{
+	"name": "DPsim",
+	"build": {
+		"dockerfile": "../Packaging/Docker/Dockerfile.dev",
+		"target": "dev-vscode",
+		"context": ".."
+	},
+	"remoteUser": "dpsim",
+	"runArgs": [
+		"--privileged",
+		"--security-opt=seccomp=unconfined"
+	]
+}

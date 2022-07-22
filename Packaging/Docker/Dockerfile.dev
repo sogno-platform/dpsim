@@ -1,4 +1,4 @@
-FROM fedora:34
+FROM fedora:34 AS base
 
 LABEL \
 	org.label-schema.schema-version = "1.0.0" \
@@ -88,3 +88,18 @@ RUN dnf -y --refresh install npm
 RUN pip3 install jupyter jupyterlab jupyter_contrib_nbextensions nbconvert nbformat
 
 EXPOSE 8888
+
+# target for vscode dev container
+FROM base AS dev-vscode
+
+# create a non-root user for vscode to use
+ARG USERNAME=dpsim
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+RUN groupadd --gid $USER_GID $USERNAME \
+	&& useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+	&& echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+	&& chmod 0440 /etc/sudoers.d/$USERNAME
+
+FROM base
