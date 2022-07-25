@@ -262,8 +262,8 @@ jobs:
         name: cppcheck-output
         path: cppcheck-output.log
 
-  test-villas-examples:
-    name: Run multi-container villas examples
+  test-villas-examples-1:
+    name: Run dpsim-mqtt Villas example
     needs: [linux-fedora-dpsimpy]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
@@ -272,3 +272,14 @@ jobs:
         docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "/dpsim-mqtt" -u wildcard -v&
         docker exec dpsim-compose_mqtt_1 /bin/sh -c "while true; do mosquitto_pub -t '/mqtt-dpsim' -m '[{\"ts\": {}, \"data\": [{\"real\": 10.0,\"imag\":0.0}]}]'; sleep 0.05; done"&
         docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt.py"
+
+  test-villas-examples-2:
+    name: Run dpsim-mqtt-import-export Villas example
+    needs: [linux-fedora-dpsimpy]
+    uses: ./.github/workflows/run_villas_example.yaml
+    with:
+      compose_file_path: examples/villas/docker-compose-tests
+      container_commands: |
+        docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "/dpsim-mqtt" -u wildcard -v&
+        docker exec dpsim-compose_mqtt_1 /bin/sh -c "while true; do mosquitto_pub -t '/mqtt-dpsim' -m '[{\"ts\": {}, \"data\": [{\"real\": 10.0,\"imag\":0.0}]}]'; sleep 1; done"&
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-import-export.py"
