@@ -11,6 +11,11 @@ on:
         description: 'docker exec commands for running tests in the containers'
         required: true
         type: string
+      continue_on_error:
+        description: 'Do not fail test when the container commands fail'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   run-villas-example:
@@ -31,6 +36,7 @@ jobs:
 
     - name: Run container commands
       timeout-minutes: 5
+      continue-on-error: ${{ inputs.continue_on_error }}
       shell: bash
       run: ${{ inputs.container_commands }}
 
