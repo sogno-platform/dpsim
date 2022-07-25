@@ -3,22 +3,13 @@ name: Run a villas example using multiple containers
 on:
   workflow_call:
     inputs:
-      dpsim_cmd:
-        description: 'Command to be run in the dpsim container'
-        required: false
-        type: string
       compose_file_path:
-        # The compose file MUST always include a container named "dpsim" and CAN include a container named "external"
         description: 'Path to the multi-container compose file'
         required: true
         type: string
-      external_cmd:
-        description: 'Action command to be run in the external container'
-        required: false
-        type: string
-      watcher_cmd:
-        description: 'Watcher command to be run in the external container'
-        required: false
+      container_commands:
+        description: 'docker exec commands for running tests in the containers'
+        required: true
         type: string
 
 jobs:
@@ -38,16 +29,11 @@ jobs:
     - name: Start containers
       run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose up -d
 
-    - name: Run external container watcher command
-      if: ${{ inputs.watcher_cmd }}
-      run: docker exec dpsim-compose_external_1 ${{ inputs.watcher_cmd }}&
-
-    - name: Run external container action command
-      if: ${{ inputs.external_cmd }}
-      run: docker exec dpsim-compose_external_1 ${{ inputs.external_cmd }}&
-    
-    - name: Run dpsim container command
-      if: ${{ inputs.dpsim_cmd }}
+    - name: Run container commands
       timeout-minutes: 5
-      run: docker exec dpsim-compose_dpsim_1 /bin/bash -c "${{ inputs.dpsim_cmd }}"
+      shell: bash
+      run: ${{ inputs.container_commands }}
+
+    - name: Stop containers
+      run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose down
     

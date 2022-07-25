@@ -11,7 +11,7 @@ services:
     privileged: true
     stdin_open: true
     tty: true
-  external:
+  mqtt:
     image: eclipse-mosquitto:latest
     hostname: mqtt
     ports:
