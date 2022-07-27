@@ -1,0 +1,10 @@
+Shmem_WSCC_9bus_CtrlDist:
+  cmd: configs/shmem_WSCC-9bus/start_Shmem_WSCC_9bus_CtrlDist.sh
+
+Shmem_WSCC_9bus_Ctrl:
+  cmd: configs/shmem_WSCC-9bus/start_Shmem_WSCC_9bus_Ctrl.sh
+
+ShmemDistributedDirect:
+  skip: true
+  shell: True
+  cmd: configs/start_ShmemDistributedDirect.sh

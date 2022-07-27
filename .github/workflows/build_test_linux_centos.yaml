@@ -76,7 +76,7 @@ jobs:
     needs: [profiling]
     uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@master
     with:
-      path: ./build/Examples/Cxx/WSCC_9bus_mult_decoupled
+      path: ./build/dpsim/examples/cxx/WSCC_9bus_mult_decoupled
       name: WSCC_9bus_mult_decoupled
 
   test-examples-2:
@@ -84,5 +84,5 @@ jobs:
     needs: [profiling]
     uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@master
     with:
-      path: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
+      path: ./build/dpsim/examples/cxx/WSCC_9bus_mult_coupled
       name: WSCC_9bus_mult_coupled

@@ -22,7 +22,7 @@ jobs:
         id: docker_build_dev_centos
         uses: docker/build-push-action@v2
         with:
-         file: Packaging/Docker/Dockerfile.dev-centos
+         file: packaging/Docker/Dockerfile.dev-centos
          push: true
          tags: sogno/dpsim:dev-centos
 
@@ -42,7 +42,7 @@ jobs:
         id: docker_build_release
         uses: docker/build-push-action@v2
         with:
-         file: Packaging/Docker/Dockerfile
+         file: packaging/Docker/Dockerfile
          push: true
          tags: sogno/dpsim:latest
 
@@ -62,7 +62,7 @@ jobs:
         id: docker_build_dev
         uses: docker/build-push-action@v2
         with:
-         file: Packaging/Docker/Dockerfile.dev
+         file: packaging/Docker/Dockerfile.dev
          push: true
          tags: sogno/dpsim:dev
 
@@ -82,7 +82,7 @@ jobs:
         id: docker_build_dev
         uses: docker/build-push-action@v2
         with:
-         file: Packaging/Docker/Dockerfile.dev-minimal
+         file: packaging/Docker/Dockerfile.dev-minimal
          push: true
          tags: sogno/dpsim:dev-minimal
 
