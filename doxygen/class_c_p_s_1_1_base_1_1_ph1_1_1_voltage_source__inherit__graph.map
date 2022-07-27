@@ -1,7 +1,0 @@
-<map id="CPS::Base::Ph1::VoltageSource" name="CPS::Base::Ph1::VoltageSource">
-<area shape="rect" id="node1" title=" " alt="" coords="5,111,216,138"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html" title="Resistive dynamic phasor voltage source." alt="" coords="268,5,468,47"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html" title="Voltage source as Norton equivalent." alt="" coords="264,71,472,112"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" title="average inverter model with LC filter" alt="" coords="267,136,469,177"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html" title="Voltage source with Norton equivalent model." alt="" coords="264,201,472,243"/>
-</map>

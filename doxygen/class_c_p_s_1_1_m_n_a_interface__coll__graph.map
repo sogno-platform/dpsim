@@ -1,9 +1,0 @@
-<map id="CPS::MNAInterface" name="CPS::MNAInterface">
-<area shape="rect" id="node1" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="755,31,893,57"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="475,5,603,32"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="456,56,623,83"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="9,7,146,33"/>
-<area shape="rect" id="node6" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="201,56,340,83"/>
-<area shape="rect" id="node5" title=" " alt="" coords="199,107,343,163"/>
-<area shape="rect" id="node7" title=" " alt="" coords="5,57,149,113"/>
-</map>

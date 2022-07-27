@@ -1,7 +1,0 @@
-<map id="CPS::TopologicalNode" name="CPS::TopologicalNode">
-<area shape="rect" id="node1" title=" " alt="" coords="17,157,171,184"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_sim_node.html" title=" " alt="" coords="5,323,193,349"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_sim_node.html" title=" " alt="" coords="116,233,299,260"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="19,81,169,108"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="30,5,158,32"/>
-</map>

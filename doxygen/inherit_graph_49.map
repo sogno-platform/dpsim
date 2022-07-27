@@ -1,8 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_d_psim_1_1_scheduler.html" title=" " alt="" coords="5,56,133,83"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_open_m_p_level_scheduler.html" title=" " alt="" coords="181,5,391,32"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_sequential_scheduler.html" title=" " alt="" coords="191,56,381,83"/>
-<area shape="rect" id="node4" href="$class_d_psim_1_1_thread_scheduler.html" title=" " alt="" coords="202,107,370,133"/>
-<area shape="rect" id="node5" href="$class_d_psim_1_1_thread_level_scheduler.html" title=" " alt="" coords="439,81,637,108"/>
-<area shape="rect" id="node6" href="$class_d_psim_1_1_thread_list_scheduler.html" title=" " alt="" coords="443,132,633,159"/>
-</map>

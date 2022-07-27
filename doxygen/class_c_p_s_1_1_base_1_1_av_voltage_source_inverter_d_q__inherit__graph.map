@@ -1,6 +1,0 @@
-<map id="CPS::Base::AvVoltageSourceInverterDQ" name="CPS::Base::AvVoltageSourceInverterDQ">
-<area shape="rect" id="node1" title="Base model of average inverter." alt="" coords="5,71,200,112"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html" title=" " alt="" coords="248,5,463,47"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html" title=" " alt="" coords="264,71,447,112"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html" title=" " alt="" coords="248,136,463,177"/>
-</map>

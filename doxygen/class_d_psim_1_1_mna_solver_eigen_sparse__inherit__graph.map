@@ -1,9 +1,0 @@
-<map id="DPsim::MnaSolverEigenSparse&lt; VarType &gt;" name="DPsim::MnaSolverEigenSparse&lt; VarType &gt;">
-<area shape="rect" id="node1" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="432,71,639,112"/>
-<area shape="rect" id="node5" href="$class_d_psim_1_1_mna_solver_gpu_magma.html" title=" " alt="" coords="687,5,885,47"/>
-<area shape="rect" id="node6" href="$class_d_psim_1_1_mna_solver_gpu_sparse.html" title=" " alt="" coords="687,71,885,112"/>
-<area shape="rect" id="node7" href="$class_d_psim_1_1_mna_solver_plugin.html" title=" " alt="" coords="703,136,869,177"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_mna_solver.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="181,78,384,105"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="16,53,123,79"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="5,103,133,130"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="DPsim::Simulation" name="DPsim::Simulation">
-<area shape="rect" id="node1" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="33,80,164,107"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_real_time_simulation.html" title="Extending Simulation class by real&#45;time functionality." alt="" coords="5,155,192,181"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="35,5,163,32"/>
-</map>
