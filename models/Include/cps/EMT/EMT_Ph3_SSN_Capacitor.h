@@ -58,6 +58,11 @@ namespace CPS {
 				    /// Add MNA post step dependencies
 				    void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
+					bool isLinear() const
+					{
+						return true;
+					}
+
 				    class MnaPreStep : public Task {
 				    public:
 				    	MnaPreStep(Capacitor& capacitor)

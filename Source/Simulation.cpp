@@ -18,6 +18,7 @@
 #include <dpsim/MNASolverFactory.h>
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/DiakopticsSolver.h>
+#include <dpsim/SSNSolver.h>
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
@@ -98,6 +99,11 @@ void Simulation::createSolvers() {
 	switch (mSolverType) {
 		case Solver::Type::MNA:
 			createMNASolver<VarType>();
+			break;
+		case Solver::Type::SSN:
+			solver = std::make_shared<SSNSolver>(**mName, mSystem, **mTimeStep, mLogLevel);
+			solver->initialize();
+			mSolvers.push_back(solver);
 			break;
 #ifdef WITH_SUNDIALS
 		case Solver::Type::DAE:

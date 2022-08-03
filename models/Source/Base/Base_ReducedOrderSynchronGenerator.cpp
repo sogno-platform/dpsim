@@ -278,9 +278,10 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
 	MNAInterface::mnaInitialize(omega, timeStep);
 	this->updateMatrixNodeIndices();
 	mTimeStep = timeStep;
+	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
     specificInitialization();
 
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }

@@ -70,6 +70,8 @@ void EMT::Ph3::SSN::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 void EMT::Ph3::SSN::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
+
+	mHistoricVoltage = Dufour_B_k_hat * **mIntfCurrent  + **mIntfVoltage;
 	Dufour_B_k_hat = timeStep * (2.0 * **mCapacitance).inverse();
 	Dufour_W_k_n = Dufour_B_k_hat;
 
@@ -100,6 +102,7 @@ void EMT::Ph3::SSN::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), 1);
 		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(1, 2), 1);
 	}
+	//mesh equations are independent from grounded terminals
     Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), -Dufour_W_k_n(0, 0));
 	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), -Dufour_W_k_n(0, 1));
 	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), -Dufour_W_k_n(0, 2));

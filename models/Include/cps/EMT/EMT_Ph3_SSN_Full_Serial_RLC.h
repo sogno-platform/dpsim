@@ -19,7 +19,18 @@ namespace CPS{
 					public Base::Ph3::Inductor,
 					public Base::Ph3::Capacitor
                     {
-                public:
+                protected:
+                    Matrix State = Matrix::Zero(6, 1);
+                    Matrix yHistory =  Matrix::Zero(3, 1);
+
+					Matrix Dufour_u_n_t = Matrix::Zero(3, 1);
+
+                    Matrix Dufour_A_k_hat = Matrix::Zero(6, 6);
+					Matrix Dufour_B_k_hat = Matrix::Zero(6, 3);
+                    Matrix Dufour_B_k_n_hat = Matrix::Zero(6, 3);
+					Matrix Dufour_W_k_n = Matrix::Zero(3, 3);
+                    Matrix Dufour_C_k_n = Matrix(3, 6);
+				public:
                     /// Defines UID, name, component parameters and logging level
 				    Full_Serial_RLC(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 				    /// Defines name and logging level
@@ -78,17 +89,6 @@ namespace CPS{
 				    	Full_Serial_RLC& mFull_Serial_RLC;
 				    	Attribute<Matrix>::Ptr mLeftVector;
                     };
-                protected:
-                    Matrix State = Matrix::Zero(6, 1);
-                    Matrix yHistory =  Matrix::Zero(3, 1);
-
-					Matrix Dufour_u_n_t = Matrix::Zero(3, 1);
-
-                    Matrix Dufour_A_k_hat = Matrix::Zero(6, 6);
-					Matrix Dufour_B_k_hat = Matrix::Zero(6, 3);
-                    Matrix Dufour_B_k_n_hat = Matrix::Zero(6, 3);
-					Matrix Dufour_W_k_n = Matrix::Zero(3, 3);
-                    Matrix Dufour_C_k_n = Matrix(3, 6);
                 private:
                 };    
             }

@@ -75,8 +75,8 @@ namespace DPsim {
 
 		// #### Solver settings ####
 		/// Solver types:
-		/// Modified Nodal Analysis, Differential Algebraic, Newton Raphson
-		enum class Type { MNA, DAE, NRP };
+		/// Modified Nodal Analysis, State Space Nodal, Differential Algebraic, Newton Raphson
+		enum class Type { MNA, SSN, DAE, NRP };
 		///
 		void setTimeStep(Real timeStep) {
 			mTimeStep = timeStep;

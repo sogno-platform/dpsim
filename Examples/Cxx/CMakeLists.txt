@@ -31,6 +31,9 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_Circuits.cpp
 	Circuits/DP_Basics_EMT_Sims.cpp
 	Circuits/EMT_Ph3_LinearSampleCircuitSSN.cpp
+	Circuits/EMT_Ph3_LinearSampleCircuit.cpp
+	Circuits/EMT_Ph3_SG4OVBR_Load.cpp
+	Circuits/EMT_Ph3_SG4O_SSN.cpp
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp

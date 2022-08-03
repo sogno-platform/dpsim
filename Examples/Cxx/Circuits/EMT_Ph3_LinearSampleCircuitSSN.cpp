@@ -3,18 +3,17 @@
 using namespace DPsim;
 using namespace CPS::EMT;
 
-
 void EMT_PH3_SSN_R3_C1_L1_CS()
 {
-		// Define simulation scenario
+	// Define simulation scenario
 	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
 	String simName = "EMT_Ph3_LinearSampleCircuitSSN";
 	Logger::setLogDir("logs/" + simName);
-
+	
 	// Nodes
-	auto n1 = SimNode::make("n1", PhaseType::ABC);
-	auto n2 = SimNode::make("n2", PhaseType::ABC);
+	auto n1 = CPS::EMT::SimNode::make("n1", PhaseType::ABC);
+	auto n2 = CPS::EMT::SimNode::make("n2", PhaseType::ABC);
 
 	// Components
 
@@ -44,15 +43,15 @@ void EMT_PH3_SSN_R3_C1_L1_CS()
     c1->setParameters(0.001 * param);
 
 	// Topology
-	cs0->connect(SimNode::List{ n1, SimNode::GND });
+	cs0->connect(CPS::EMT::SimNode::List{ n1, CPS::EMT::SimNode::GND });
 
-	r1->connect(SimNode::List{ n2, n1 });
-    r2->connect(SimNode::List{ n2, SimNode::GND });
-    r3->connect(SimNode::List{ n2, SimNode::GND });
+	r1->connect(CPS::EMT::SimNode::List{ n2, n1 });
+    r2->connect(CPS::EMT::SimNode::List{ n2, CPS::EMT::SimNode::GND });
+    r3->connect(CPS::EMT::SimNode::List{ n2, CPS::EMT::SimNode::GND });
 
-	l1->connect(SimNode::List{ n2, SimNode::GND });
+	l1->connect(CPS::EMT::SimNode::List{ n2, CPS::EMT::SimNode::GND });
 
-	c1->connect(SimNode::List{ n2, n1 });
+	c1->connect(CPS::EMT::SimNode::List{ n1, n2 });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs0, r1, r2, r3, l1, c1});
@@ -76,14 +75,14 @@ void EMT_PH3_SSN_R3_C1_L1_CS()
 
 void EMT_Ph1_SSN_RLC_VS()
 {
-				// Define simulation scenario
+	// Define simulation scenario
 	Real timeStep = 0.0001;
 	Real finalTime = 100.;
 	String simName = "EMT_Ph3_LinearSampleCircuitSSN";
 	Logger::setLogDir("logs/" + simName);
 
 	// Nodes
-	auto n1 = SimNode::make("n1", PhaseType::Single);
+	auto n1 = CPS::EMT::SimNode::make("n1", PhaseType::Single);
 
 	// Components
 
@@ -96,9 +95,9 @@ void EMT_Ph1_SSN_RLC_VS()
 	rlc->setParameters(10. * param, 0.02 * param, 0.001 * param);
 
 	// Topology
-	vs0->connect(SimNode::List{ n1, SimNode::GND });
+	vs0->connect(CPS::EMT::SimNode::List{ n1, CPS::EMT::SimNode::GND });
 
-	rlc->connect(SimNode::List{ n1, SimNode::GND });
+	rlc->connect(CPS::EMT::SimNode::List{ n1, CPS::EMT::SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{vs0, rlc});
@@ -126,7 +125,7 @@ void EMT_Ph3_SSN_RLC_VS()
 	Logger::setLogDir("logs/" + simName);
 
 	// Nodes
-	auto n1 = SimNode::make("n1", PhaseType::ABC);
+	auto n1 = CPS::EMT::SimNode::make("n1", PhaseType::ABC);
 
 	// Components
 
@@ -141,12 +140,12 @@ void EMT_Ph3_SSN_RLC_VS()
 	vs0->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(1.0,0.0)),50.0);
 
 	auto rlc = Ph3::SSN::Full_Serial_RLC::make("RLC");
-	rlc->setParameters(10. * param, 0.02 * param, 0.001 * param);
+	rlc->setParameters(1. * param, 0.05 * param, 0.01 * param);
 
 	// Topology
-	vs0->connect(SimNode::List{ n1, SimNode::GND });
+	vs0->connect(CPS::EMT::SimNode::List{ n1, CPS::EMT::SimNode::GND });
 
-	rlc->connect(SimNode::List{ n1, SimNode::GND });
+	rlc->connect(CPS::EMT::SimNode::List{ n1, CPS::EMT::SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{vs0, rlc});
@@ -159,6 +158,7 @@ void EMT_Ph3_SSN_RLC_VS()
 	sim.setSystem(sys);
 	sim.addLogger(logger);
 	sim.setDomain(Domain::EMT);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.run();
@@ -169,9 +169,7 @@ int main(int argc, char* argv[])
 {
 	//EMT_PH3_SSN_R3_C1_L1_CS();
 
-
 	//EMT_Ph1_SSN_RLC_VS();
-
 
 	EMT_Ph3_SSN_RLC_VS();
 }

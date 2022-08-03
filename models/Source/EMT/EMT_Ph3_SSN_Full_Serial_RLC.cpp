@@ -291,7 +291,7 @@ void EMT::Ph3::SSN::Full_Serial_RLC::mnaApplySystemMatrixStamp(Matrix& systemMat
 }
 
 void EMT::Ph3::SSN::Full_Serial_RLC::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	// Update internal state
+	// Update history term
 	yHistory = Dufour_C_k_n * (Dufour_A_k_hat * State +  Dufour_B_k_hat * **mIntfVoltage);
 	
 	if (terminalNotGrounded(0)) {

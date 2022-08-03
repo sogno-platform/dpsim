@@ -14,6 +14,12 @@ namespace CPS{
 				    public SimPowerComp<Real>,
 				    public SharedFactory<Inductor>
                     {
+                protected:
+                    //rightsideVector history term
+                    Matrix historicCurrent =  Matrix::Zero(3, 1);
+                    //dependency on latest Voltage, represented by Conductance in system matrix
+					Matrix Dufour_B_k_hat = Matrix::Zero(3, 3);
+					Matrix Dufour_W_k_n = Matrix::Zero(3, 3);
                 public:
                     /// Defines UID, name, component parameters and logging level
 				    Inductor(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -46,6 +52,12 @@ namespace CPS{
 				    /// Add MNA post step dependencies
 				    void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
+					bool isLinear() const
+					{
+						return true;
+					}
+
+
 				    class MnaPreStep : public Task {
 				    public:
 					    MnaPreStep(Inductor& inductor) :
@@ -69,12 +81,6 @@ namespace CPS{
 				    	Inductor& mInductor;
 				    	Attribute<Matrix>::Ptr mLeftVector;
                     };
-                protected:
-                    //rightsideVector history term
-                    Matrix historicCurrent =  Matrix::Zero(3, 1);
-                    //dependency on latest Voltage, represented by Conductance in system matrix
-					Matrix Dufour_B_k_hat = Matrix::Zero(3, 3);
-					Matrix Dufour_W_k_n = Matrix::Zero(3, 3);
                 private:
                 };    
             }

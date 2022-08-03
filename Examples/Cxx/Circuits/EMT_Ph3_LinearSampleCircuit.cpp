@@ -9,7 +9,7 @@ void EMT_PH3_R3_C1_L1_CS()
 	// Define simulation scenario
 	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
-	String simName = "EMT_Ph3_LinearSampleCircuitSSN";
+	String simName = "EMT_Ph3_LinearSampleCircuit";
 	Logger::setLogDir("logs/" + simName);
 
 	// Nodes
@@ -76,10 +76,10 @@ void EMT_PH3_R3_C1_L1_CS()
 
 void EMT_Ph1_RLC_VS()
 {
-			// Define simulation scenario
+	// Define simulation scenario
 	Real timeStep = 0.0001;
 	Real finalTime = 1.;
-	String simName = "EMT_Ph3_LinearSampleCircuitSSN";
+	String simName = "EMT_Ph3_LinearSampleCircuit";
 	Logger::setLogDir("logs/" + simName);
 
 	// Nodes
@@ -89,7 +89,7 @@ void EMT_Ph1_RLC_VS()
 
 	// Components
 
-	Real param = 100.;
+	Real param = 1.;
 
 	auto vs0 = Ph1::VoltageSource::make("vs0");
 	vs0->setParameters(CPS::Math::polar(1.0,0.0),50.0);
@@ -131,10 +131,10 @@ void EMT_Ph1_RLC_VS()
 
 void EMT_Ph3_RLC_VS()
 {
-		// Define simulation scenario
+	// Define simulation scenario
 	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
-	String simName = "EMT_Ph3_LinearSampleCircuitSSN";
+	String simName = "EMT_Ph3_LinearSampleCircuit";
 	Logger::setLogDir("logs/" + simName);
 
 	// Nodes
@@ -155,13 +155,13 @@ void EMT_Ph3_RLC_VS()
 	vs0->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(1.0,0.0)),50.0);
 
 	auto r1 = Ph3::Resistor::make("r1", Logger::Level::debug);
-	r1->setParameters(10*param);
+	r1->setParameters(1.*param);
 
 	auto l1 = Ph3::Inductor::make("l1");
-	l1->setParameters(0.02 * param);
+	l1->setParameters(0.05 * param);
 
 	auto c1 = Ph3::Capacitor::make("c1");
-    c1->setParameters(0.001 * param);
+    c1->setParameters(0.01 * param);
 
 	// Topology
 	vs0->connect(SimNode::List{ n1, SimNode::GND });
@@ -191,7 +191,7 @@ void EMT_Ph3_RLC_VS()
 
 int main(int argc, char* argv[])
 {
-    //EMT_PH3_R3_C1_L1_CS();
+   	//EMT_PH3_R3_C1_L1_CS();
 
 	//EMT_Ph1_RLC_VS();
 

@@ -15,6 +15,7 @@ set(DPSIM_SOURCES
 	ThreadLevelScheduler.cpp
 	ThreadListScheduler.cpp
 	DiakopticsSolver.cpp
+	SSNSolver.cpp
 )
 
 list(APPEND DPSIM_LIBRARIES cps)

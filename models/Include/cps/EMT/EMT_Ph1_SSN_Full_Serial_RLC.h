@@ -64,6 +64,10 @@ namespace SSN {
 		void mnaUpdateCurrent(const Matrix& leftVector);
 
 		void ssnUpdateState();
+		bool isLinear() const
+		{
+			return true;
+		}		
 
 		class MnaPreStep : public Task {
 		public:
