@@ -1,4 +1,4 @@
-if(WITH_PYTHON)
+if(WITH_PYBIND)
 	find_package(Sphinx)
 
 	if(SPHINX_EXECUTABLE)

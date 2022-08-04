@@ -14,7 +14,7 @@ wheelhouse/
 *.pdf
 *.svg
 *.png
-Examples/Notebooks/Grids/reference-results/
+examples/Notebooks/Grids/reference-results/
 villas_sent_data.conf
 *.so
 
@@ -29,7 +29,7 @@ cmake-build-debug/
 .idea/
 .vs/
 *.json
-!Configs/example_configs_json/*.json
+!configs/example_configs_json/*.json
 .vscode/
 
 # CMake

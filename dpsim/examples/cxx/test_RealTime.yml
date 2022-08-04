@@ -1,0 +1,2 @@
+RT_DP_ResVS_RL1:
+  cmd: build/dpsim/examples/cxx/RT_DP_VS_RL2

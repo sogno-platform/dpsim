@@ -91,7 +91,7 @@ jobs:
       shell: bash
       working-directory: ${{ github.workspace }}
       run: |
-        chmod -R +x ./build/Examples/Cxx
+        chmod -R +x ./build/dpsim/examples/cxx
 
     - name: Work around permission issue
       run: git config --global --add safe.directory /__w/dpsim/dpsim
@@ -99,7 +99,7 @@ jobs:
     - name: Check for test binaries
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: ls -l ./build/Examples/Cxx
+      run: ls -l ./build/dpsim/examples/cxx/
 
     - name: Run pytest
       shell: bash
@@ -108,13 +108,13 @@ jobs:
         PYTHONPATH: "${{ github.workspace }}/build"
       run: |
         cp -r python/src/dpsim build/
-        pytest -v Examples/Notebooks
+        pytest -v examples/Notebooks
     
     - name: Archive notebook outputs
       uses: actions/upload-artifact@v2
       with:
         name: pytest-output
-        path: outputs/Examples/Notebooks/
+        path: outputs/examples/Notebooks/
 
   compare-notebook-results:
     name: Compare Notebook results
@@ -181,13 +181,13 @@ jobs:
     - name: Prepare binary permissions
       shell: bash
       run: |
-        chmod -R +x ./build/Examples/Cxx
+        chmod -R +x ./build/dpsim/examples/cxx
 
     - name: Run Binaries 1/2
-      run: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
+      run: ./build/dpsim/examples/cxx/WSCC_9bus_mult_coupled
 
     - name: Run Binaries 2/2
-      run: ./build/Examples/Cxx/WSCC_9bus_mult_decoupled
+      run: ./build/dpsim/examples/cxx/WSCC_9bus_mult_decoupled
 
   cpp-check:
     name: Scan Sourcecode with Cppcheck
@@ -204,7 +204,7 @@ jobs:
       id: cppcheck
       run: |
         set -o pipefail
-        cppcheck --max-configs=32 -j 32 --inline-suppr --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++17 -I Include/ -I models/Include/ Source/ models/Source/ 2>&1 | tee cppcheck-output.log
+        cppcheck --max-configs=32 -j 32 --inline-suppr --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++17 -I dpsim/include/ -I dpsim-models/include/ -I dpsim-villas/include dpsim/src/ dpsim-models/src/ dpsim-villas/src/ 2>&1 | tee cppcheck-output.log
       continue-on-error: true
 
     - name: Print cppcheck errors
