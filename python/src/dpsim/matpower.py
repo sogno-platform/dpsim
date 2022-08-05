@@ -152,7 +152,7 @@ class Reader:
 
                     dpsimpy_comp_dict[load_name] = [dpsimpy.sp.ph1.Load(load_name, dpsimpy.LogLevel.info)]
                     dpsimpy_comp_dict[load_name][0].set_parameters(load_p, load_q, load_baseV)
-                    # dpsimpy_comp_dict[load_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.PQ)
+                    dpsimpy_comp_dict[load_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.PQ)
 
                     # add connections
                     dpsimpy_comp_dict[load_name].append([dpsimpy_busses_dict[bus_index]]) # [to bus]
@@ -165,37 +165,42 @@ class Reader:
                 extnet_name = "extnet%s" %inj
 
                 # # relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
-                # extnet = self.mpc_gen_data.loc[self.mpc_gen_data['bus'] == self.mpc_bus_data.at[index,'bus_i']]
+                extnet = self.mpc_gen_data.loc[self.mpc_gen_data['bus'] == self.mpc_bus_data.at[index,'bus_i']]
 
-                # # extnet_baseS= extnet['mBase']*mw_w # default is mpc.baseMVA
-                # extnet_baseV = self.mpc_bus_data.at[index,'baseKV']*kv_v
-                # extnet_v = extnet['Vg']*extnet_baseV
+                # extnet_baseS= extnet['mBase']*mw_w # default is mpc.baseMVA
+                extnet_baseV = self.mpc_bus_data.at[index,'baseKV']*kv_v
+                extnet_v = extnet['Vg']*extnet_baseV
 
-                # dpsimpy_comp_dict[extnet_name] = [dpsimpy.sp.ph1.NetworkInjection(extnet_name, dpsimpy.LogLevel.info)]
-                # dpsimpy_comp_dict[extnet_name][0].set_parameters(extnet_v)
-                # dpsimpy_comp_dict[extnet_name][0].set_base_voltage(extnet_baseV)
-                # dpsimpy_comp_dict[extnet_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.VD)
-
-                # # add connections
-                # dpsimpy_comp_dict[extnet_name].append([dpsimpy_busses_dict[bus_index]]) # [to bus]
-
-
-                # relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
-                gen = self.mpc_gen_data.loc[self.mpc_gen_data['bus'] == self.mpc_bus_data.at[index,'bus_i']]
-
-                gen_baseS = gen['mBase']*mw_w # gen base MVA default is mpc.baseMVA
-                gen_baseV = self.mpc_bus_data.at[index,'baseKV']*kv_v # gen base kV
-                gen_v = gen['Vg']*gen_baseV   # gen set point voltage (gen['Vg'] in p.u.)
-                gen_p = gen['Pg']*mw_w   # gen ini. active power (gen['Pg'] in MVA)
-                gen_q = gen['Qg']*mw_w   # gen ini. reactive power (gen['Qg'] in MVAr)
-                gen_nom_s = abs(complex(gen['Pmax'], gen['Qmax'])) # gen nominal power (set default to mpc.baseMVA ? )
-
-                dpsimpy_comp_dict[extnet_name] = [dpsimpy.sp.ph1.SynchronGenerator(extnet_name, dpsimpy.LogLevel.info)]
-                dpsimpy_comp_dict[extnet_name][0].set_parameters(gen_nom_s, gen_baseV, gen_p, gen_v, dpsimpy.PowerflowBusType.VD, gen_q)
-                dpsimpy_comp_dict[extnet_name][0].set_base_voltage(gen_baseV)
+                dpsimpy_comp_dict[extnet_name] = [dpsimpy.sp.ph1.NetworkInjection(extnet_name, dpsimpy.LogLevel.info)]
+                dpsimpy_comp_dict[extnet_name][0].set_parameters(extnet_v)
+                dpsimpy_comp_dict[extnet_name][0].set_base_voltage(extnet_baseV)
+                dpsimpy_comp_dict[extnet_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.VD)
 
                 # add connections
                 dpsimpy_comp_dict[extnet_name].append([dpsimpy_busses_dict[bus_index]]) # [to bus]
+
+                # # set initial Q is not implemented for slack in DPsim. The mapping was changed here to test cas39.
+                # # This mapping does not work with asm uc because Pg and Qg of the slack are equal to zero
+                # # TODO implement initial reactive power for slack in Dpsim.
+                # # This way the maaping can be done exclusively with extnet compoe
+                # # nent
+
+                # # relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
+                # gen = self.mpc_gen_data.loc[self.mpc_gen_data['bus'] == self.mpc_bus_data.at[index,'bus_i']]
+
+                # gen_baseS = gen['mBase']*mw_w # gen base MVA default is mpc.baseMVA
+                # gen_baseV = self.mpc_bus_data.at[index,'baseKV']*kv_v # gen base kV
+                # gen_v = gen['Vg']*gen_baseV   # gen set point voltage (gen['Vg'] in p.u.)
+                # gen_p = gen['Pg']*mw_w   # gen ini. active power (gen['Pg'] in MVA)
+                # gen_q = gen['Qg']*mw_w   # gen ini. reactive power (gen['Qg'] in MVAr)
+                # gen_nom_s = abs(complex(gen['Pmax'], gen['Qmax'])) # gen nominal power (set default to mpc.baseMVA ? )
+
+                # dpsimpy_comp_dict[extnet_name] = [dpsimpy.sp.ph1.SynchronGenerator(extnet_name, dpsimpy.LogLevel.info)]
+                # dpsimpy_comp_dict[extnet_name][0].set_parameters(gen_nom_s, gen_baseV, gen_p, gen_v, dpsimpy.PowerflowBusType.VD, gen_q)
+                # dpsimpy_comp_dict[extnet_name][0].set_base_voltage(gen_baseV)
+
+                # # add connections
+                # dpsimpy_comp_dict[extnet_name].append([dpsimpy_busses_dict[bus_index]]) # [to bus]
 
                 # check if there is a load connected to PV bus
                 P_d = self.mpc_bus_data.at[index,'Pd'] * mw_w
@@ -274,7 +279,10 @@ class Reader:
 
             # Transformers
             else:
-                branch_ratio= 1
+                ### Distinction between lines and transformer is done now with the off nominal ratio.
+                ### -> need to be changed cause the transformers with no tap (position) have 0 off nominal ratio in the matpower use cases
+                ### TODO distinguish with volatge busses (from<>to):
+                branch_ratio= self.mpc_branch_data.at[index,'ratio']
                 trafo = trafo + 1
                 transf_name = "transformer%s_%s-%s" %(trafo, self.mpc_branch_data.at[index,'fbus'] , self.mpc_branch_data.at[index,'tbus'])
                 transf_s = self.mpc_branch_data.at[index,'rateA']*mw_w # Matpower: Used to specify branch flow limits.  By default these are limits on apparent power with units in MV
