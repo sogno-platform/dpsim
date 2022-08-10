@@ -36,7 +36,7 @@ jobs:
 
     - name: Run container commands
       timeout-minutes: 5
-      #continue-on-error: ${{ inputs.continue_on_error }}
+      continue-on-error: ${{ inputs.continue_on_error }}
       shell: bash
       run: ${{ inputs.container_commands }}
 
