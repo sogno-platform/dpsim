@@ -57,7 +57,7 @@ logger = dpsimpy.Logger(name)
 # setup VILLASnode
 intf_mqtt = dpsimpyvillas.InterfaceVillas(name='MQTT', config='''{
     "type": "mqtt",
-    "host": "localhost",
+    "host": "mqtt",
     "in": {
         "subscribe": "mqtt-dpsim"
     },
@@ -74,7 +74,7 @@ sim.set_solver(dpsimpy.Solver.NRP)
 sim.set_time_step(time_step)
 sim.set_final_time(final_time)
 sim.add_logger(logger)
-sim.add_interface(intf_mqtt, True)
+sim.add_interface(intf_mqtt)
 
 # setup exports
 for i in range(15):
