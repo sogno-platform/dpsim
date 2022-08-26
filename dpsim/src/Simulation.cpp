@@ -414,19 +414,6 @@ Real Simulation::step() {
 	return mTime;
 }
 
-/// DEPRECATED: Unused
-void Simulation::reset() {
-
-	// Resets component states
-	mSystem.reset();
-
-	for (auto l : mLoggers)
-		l->reopen();
-
-	// Force reinitialization for next run
-	mInitialized = false;
-}
-
 void Simulation::logStepTimes(String logName) {
 	auto stepTimeLog = Logger::get(logName, Logger::Level::info);
 	Logger::setLogPattern(stepTimeLog, "%v");
