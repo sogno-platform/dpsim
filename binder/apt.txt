@@ -1,0 +1,16 @@
+gcc
+g++
+clang
+git
+make
+cmake
+pkg-config
+python3-pip
+wget
+python3-dev
+libeigen3-dev
+libxml2-dev
+libgraphviz-dev
+libgsl-dev
+libspdlog-dev
+pybind11-dev
