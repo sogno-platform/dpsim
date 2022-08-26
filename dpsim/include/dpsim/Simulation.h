@@ -120,16 +120,9 @@ namespace DPsim {
 		/// Task dependencies as incoming / outgoing edges
 		Scheduler::Edges mTaskInEdges, mTaskOutEdges;
 
-		struct InterfaceMapping {
-			/// A pointer to the external interface
-			Interface *interface;
-			/// Is this interface used for synchronization of the simulation start?
-			bool syncStart;
-		};
-
 		/// Vector of Interfaces
-		//TODO: Replace with a new class, InterfaceManager, which handles synchronization, threading and import / export through the queues
-		std::vector<InterfaceMapping> mInterfaces;
+		//TODO: Let the Interface class handle synchronization, threading and import / export through the queues
+		std::vector<std::shared_ptr<Interface>> mInterfaces;
 
 		struct LoggerMapping {
 			/// Simulation data logger
@@ -235,15 +228,13 @@ namespace DPsim {
 		void logStepTimes(String logName);
 
 		///
-		void addInterface(Interface *eint, Bool syncStart = true) {
+		void addInterface(std::shared_ptr<Interface> eint) {
 			if (mInterfaces.size() > 0) {
 				mLog->warn(
 					"This simulation contains more than one interface! When using multiple InterfaceVillas instances, all of them will block the simulation thread in undefined order until the data is read / written! Continue with caution!");
 			}
-			mInterfaces.push_back({eint, syncStart});
+			mInterfaces.push_back(eint);
 		}
-		/// Return list of interfaces
-		std::vector<InterfaceMapping> & interfaces() { return mInterfaces; }
 
 #ifdef WITH_GRAPHVIZ
 		///
@@ -268,8 +259,6 @@ namespace DPsim {
 		// #### Get component attributes during simulation ####
 		CPS::AttributeBase::Ptr getIdObjAttribute(const String &comp, const String &attr);
 
-		void exportAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
-		void importAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
 		void logIdObjAttribute(const String &comp, const String &attr);
 		/// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
 		void logAttribute(String name, CPS::AttributeBase::Ptr attr);

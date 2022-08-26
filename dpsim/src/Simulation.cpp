@@ -167,19 +167,20 @@ void Simulation::createMNASolver() {
 }
 
 void Simulation::sync() {
-	int numOfSyncInterfaces = std::count_if(mInterfaces.begin(), mInterfaces.end(), [](InterfaceMapping ifm) {return ifm.syncStart;});
+	//TODO: Is this log output necessary?
+	int numOfSyncInterfaces = std::count_if(mInterfaces.begin(), mInterfaces.end(), [](std::shared_ptr<Interface> intf) {return intf->shouldSyncOnSimulationStart();});
 	mLog->info("Start synchronization with remotes on {} interfaces", numOfSyncInterfaces);
 
-	for (auto ifm : mInterfaces) {
+	for (auto intf : mInterfaces) {
 		//TODO: Change or document this synchronization behavior
-		if(ifm.syncStart) {
+		if(intf->shouldSyncOnSimulationStart()) {
 			// Send initial state over interface
-			ifm.interface->writeValues();
+			intf->writeValues();
 
 			// Blocking wait for interface
-			ifm.interface->readValues(ifm.syncStart);
+			intf->readValues(true);
 
-			ifm.interface->writeValues();
+			intf->writeValues();
 		}
 	}
 
@@ -198,8 +199,8 @@ void Simulation::prepSchedule() {
 
 	//TODO: This will add the tasks for reading and writing directly from the registered attributes
 	// These tasks should be moved to the simulation and used for reading / writing from / to the queues
-	for (auto intfm : mInterfaces) {
-		for (auto t : intfm.interface->getTasks()) {
+	for (auto intf : mInterfaces) {
+		for (auto t : intf->getTasks()) {
 			mTasks.push_back(t);
 		}
 	}
@@ -347,8 +348,8 @@ void Simulation::start() {
 	mLog->info("Opening interfaces.");
 
 	//TODO: Move to new interface threads
-	for (auto ifm : mInterfaces)
-		ifm.interface->open(mLog);
+	for (auto intf : mInterfaces)
+		intf->open(mLog);
 
 	sync();
 
@@ -369,8 +370,8 @@ void Simulation::stop() {
 
 
 	//TODO: Close all interface threads
-	for (auto ifm : mInterfaces)
-		ifm.interface->close();
+	for (auto intf : mInterfaces)
+		intf->close();
 
 	for (auto lg : mLoggers)
 		lg->close();
@@ -425,49 +426,6 @@ void Simulation::logStepTimes(String logName) {
 		stepTimeLog->info("{:f}", meas);
 	}
 	mLog->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
-}
-
-void Simulation::exportAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf) {
-	if (intf == nullptr) {
-		//FIXME: This will just crash when there is no interface registered
-		intf = mInterfaces[0].interface;
-	}
-	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
-		intf->exportReal(attrReal, idx);
-	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr.getPtr())) {
-		intf->exportComplex(attrComp, idx);
-	} else if (auto attrInt = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr.getPtr())) {
-		intf->exportInt(attrInt, idx);
-	} else if (auto attrBool = std::dynamic_pointer_cast<CPS::Attribute<Bool>>(attr.getPtr())) {
-		intf->exportBool(attrBool, idx);
-	} else {
-		mLog->error("Only scalar attributes of type Int, Bool, Real or Complex can be exported. Use the Attribute::derive methods to export individual Matrix coefficients!");
-	}
-}
-
-
-void Simulation::importAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf) {
-	if (attr->isStatic()) {
-		mLog->error("Cannot import to a static attribute. Please provide a dynamic attribute!");
-		throw InvalidAttributeException();
-	}
-
-	if (intf == nullptr) {
-		//FIXME: This will just crash when there is no interface registered
-		intf = mInterfaces[0].interface;
-	}
-	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
-		attrReal->setReference(intf->importReal(idx));
-	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr.getPtr())) {
-		attrComp->setReference(intf->importComplex(idx));
-	} else if (auto attrInt = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr.getPtr())) {
-		attrInt->setReference(intf->importInt(idx));
-	} else if (auto attrBool = std::dynamic_pointer_cast<CPS::Attribute<Bool>>(attr.getPtr())) {
-		attrBool->setReference(intf->importBool(idx));
-	} else {
-		mLog->error("Only scalar attributes of type Int, Bool, Real or Complex can be imported.");
-		throw InvalidAttributeException();
-	}
 }
 
 CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const String &attr) {

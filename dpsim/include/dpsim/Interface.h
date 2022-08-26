@@ -28,18 +28,20 @@ namespace DPsim {
 	public:
 		typedef std::shared_ptr<Interface> Ptr;
 
-        Interface() = default;
+        Interface(bool syncOnSimulationStart = false) : mSyncOnSimulationStart(syncOnSimulationStart) { };
 		virtual ~Interface() { };
 
 		virtual void open(CPS::Logger::Log log) = 0;
 		virtual void close() = 0;
 
+		virtual void importAttribute(CPS::AttributeBase::Ptr attr, UInt idx);
 		virtual CPS::Attribute<Int>::Ptr importInt(UInt idx) = 0;
 		virtual CPS::Attribute<Real>::Ptr importReal(UInt idx) = 0;
 		virtual CPS::Attribute<Bool>::Ptr importBool(UInt idx) = 0;
 		virtual CPS::Attribute<Complex>::Ptr importComplex(UInt idx) = 0;
 		virtual CPS::Attribute<Complex>::Ptr importComplexMagPhase(UInt idx) = 0;
 
+		virtual void exportAttribute(CPS::AttributeBase::Ptr attr, Int idx);
 		virtual void exportInt(CPS::Attribute<Int>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
 		virtual void exportReal(CPS::Attribute<Real>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
 		virtual void exportBool(CPS::Attribute<Bool>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
@@ -57,6 +59,13 @@ namespace DPsim {
 		virtual void writeValues() = 0;
 
 		virtual CPS::Task::List getTasks() = 0;
+
+		bool shouldSyncOnSimulationStart() const {
+			return mSyncOnSimulationStart;
+		}
+
+	protected:
+		bool mSyncOnSimulationStart = false;
 	};
 }
 
