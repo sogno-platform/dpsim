@@ -1,10 +1,4 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-License-Identifier: Apache-2.0
 
 #include <chrono>
 #include <iomanip>
@@ -177,6 +171,7 @@ void Simulation::sync() {
 	mLog->info("Start synchronization with remotes on {} interfaces", numOfSyncInterfaces);
 
 	for (auto ifm : mInterfaces) {
+		//TODO: Change or document this synchronization behavior
 		if(ifm.syncStart) {
 			// Send initial state over interface
 			ifm.interface->writeValues();
@@ -201,6 +196,8 @@ void Simulation::prepSchedule() {
 		}
 	}
 
+	//TODO: This will add the tasks for reading and writing directly from the registered attributes
+	// These tasks should be moved to the simulation and used for reading / writing from / to the queues
 	for (auto intfm : mInterfaces) {
 		for (auto t : intfm.interface->getTasks()) {
 			mTasks.push_back(t);
@@ -349,6 +346,7 @@ void Simulation::start() {
 
 	mLog->info("Opening interfaces.");
 
+	//TODO: Move to new interface threads
 	for (auto ifm : mInterfaces)
 		ifm.interface->open(mLog);
 
@@ -369,6 +367,8 @@ void Simulation::stop() {
 
 	mScheduler->stop();
 
+
+	//TODO: Close all interface threads
 	for (auto ifm : mInterfaces)
 		ifm.interface->close();
 
@@ -429,6 +429,7 @@ void Simulation::logStepTimes(String logName) {
 
 void Simulation::exportAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf) {
 	if (intf == nullptr) {
+		//FIXME: This will just crash when there is no interface registered
 		intf = mInterfaces[0].interface;
 	}
 	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
@@ -452,6 +453,7 @@ void Simulation::importAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interfac
 	}
 
 	if (intf == nullptr) {
+		//FIXME: This will just crash when there is no interface registered
 		intf = mInterfaces[0].interface;
 	}
 	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
@@ -495,5 +497,6 @@ void Simulation::logIdObjAttribute(const String &comp, const String &attr) {
 }
 
 void Simulation::logAttribute(String name, CPS::AttributeBase::Ptr attr) {
+	//FIXME: Safety: This will crash when no logger is registered
 	mLoggers[0]->logAttribute(name, attr);
 }
