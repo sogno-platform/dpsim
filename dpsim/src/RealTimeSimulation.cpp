@@ -29,14 +29,12 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 	if (!mInitialized)
 		initialize();
 
-#ifdef WITH_VILLAS
 	mLog->info("Opening interfaces.");
 
-	for (auto ifm : mInterfaces)
-		ifm.interface->open(mLog);
+	for (auto intf : mInterfaces)
+		intf->open(mLog);
 
 	sync();
-#endif
 
 	auto now_time = std::chrono::system_clock::to_time_t(startAt);
 	mLog->info("Starting simulation at {} (delta_T = {} seconds)",
@@ -60,10 +58,8 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 
 	mScheduler->stop();
 
-#ifdef WITH_VILLAS
-	for (auto ifm : mInterfaces)
-		ifm.interface->close();
-#endif
+	for (auto intf : mInterfaces)
+		intf->close();
 
 	for (auto lg : mLoggers)
 		lg->close();
