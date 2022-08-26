@@ -227,8 +227,6 @@ namespace DPsim {
 		void sync();
 		/// Create the schedule for the independent tasks
 		void schedule();
-		/// Reset internal state of simulation
-		void reset();
 
 		/// Schedule an event in the simulation
 		void addEvent(Event::Ptr e) {
