@@ -15,6 +15,7 @@ set(DPSIM_SOURCES
 	ThreadLevelScheduler.cpp
 	ThreadListScheduler.cpp
 	DiakopticsSolver.cpp
+	Interface.cpp
 )
 
 set(DPSIM_INCLUDE_DIRS
@@ -23,7 +24,9 @@ set(DPSIM_INCLUDE_DIRS
 	)
 
 set(DPSIM_LIBRARIES
-	dpsim-models)
+	dpsim-models
+	readerwriterqueue #TODO: Is there any need to only add this + the interface classes conditionally / introduce a new cmake variable for this?
+	)
 
 if(WITH_MNASOLVERPLUGIN)
 	list(APPEND DPSIM_LIBRARIES ${CMAKE_DL_LIBS})
