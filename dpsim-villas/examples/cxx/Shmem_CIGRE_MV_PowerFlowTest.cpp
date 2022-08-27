@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 		intf.exportReal(v->derivePhase(), (i*2)+1); o++;
 	}
 
-	sim.addInterface(&intf, false);
+	sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 	sim.run(std::chrono::seconds(5));
 

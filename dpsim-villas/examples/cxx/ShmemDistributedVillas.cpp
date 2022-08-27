@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(20);
-	sim.addInterface(&intf);
+	sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 	if (String(argv[1]) == "1") {
 		auto evt = SwitchEvent::make(10, sys.component<CPS::Base::Ph1::Switch>("sw"), true);

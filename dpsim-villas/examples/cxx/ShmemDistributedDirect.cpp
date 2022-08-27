@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
 		evs->mVoltageRef->setReference(intf.importComplex(0));
 		auto evsAttrMinus = evs->mIntfCurrent->deriveCoeff<Complex>(0,0);
 		intf.exportComplex(evsAttrMinus, 0);
-		sim.addInterface(&intf);
+		sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 		MatrixComp initialEvsCurrent = MatrixComp::Zero(1,1);
 		initialEvsCurrent(0,0) = Complex(5,0);
@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
 		ecs->mCurrentRef->setReference(intf.importComplex(0));
 		//intf.exportComplex(ecs->mIntfVoltage->coeff(0, 0), 0);
 		intf.exportComplex(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0)->deriveScaled(Complex(-1.,0)), 0);
-		sim.addInterface(&intf);
+		sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 		sim.run();
 	}

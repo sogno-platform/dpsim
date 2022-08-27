@@ -81,11 +81,15 @@ public:
 PYBIND11_MODULE(dpsimpyvillas, m) {
 	py::object interface = (py::object) py::module_::import("dpsimpy").attr("Interface");
 
-	py::class_<PyInterfaceShmem>(m, "InterfaceShmem", interface)
+	py::class_<PyInterfaceShmem, std::shared_ptr<PyInterfaceShmem>>(m, "InterfaceShmem", interface)
 	    .def(py::init<const CPS::String&, const CPS::String&>(), py::arg("shmwrite") = "/dpsim-villas", py::arg("shmread") = "/villas-dpsim")
-		.def("get_config", &PyInterfaceShmem::getConfig);
+		.def("get_config", &PyInterfaceShmem::getConfig)
+		.def("import_attribute", &PyInterfaceShmem::importAttribute, "attr"_a, "idx"_a)
+		.def("export_attribute", &PyInterfaceShmem::exportAttribute, "attr"_a, "idx"_a);
 
-	py::class_<PyInterfaceVillas>(m, "InterfaceVillas", interface)
+	py::class_<PyInterfaceVillas, std::shared_ptr<PyInterfaceVillas>>(m, "InterfaceVillas", interface)
 	    .def(py::init<const CPS::String&, const CPS::String&, CPS::UInt, CPS::UInt, CPS::UInt>(), "name"_a, "config"_a, "queue_length"_a=512, "sample_length"_a = 64, "downsampling"_a=1)
-		.def(py::init<const CPS::String&, py::dict, CPS::UInt, CPS::UInt, CPS::UInt>(), "name"_a, "config"_a, "queue_length"_a=512, "sample_length"_a = 64, "downsampling"_a=1);
+		.def(py::init<const CPS::String&, py::dict, CPS::UInt, CPS::UInt, CPS::UInt>(), "name"_a, "config"_a, "queue_length"_a=512, "sample_length"_a = 64, "downsampling"_a=1)
+		.def("import_attribute", &PyInterfaceVillas::importAttribute, "attr"_a, "idx"_a)
+		.def("export_attribute", &PyInterfaceVillas::exportAttribute, "attr"_a, "idx"_a);
 }
