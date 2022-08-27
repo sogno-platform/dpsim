@@ -54,8 +54,8 @@ int main(int argc, char *argv[]) {
 
 		InterfaceShmem intf1("/dpsim01", "/dpsim10", nullptr, false);
 		InterfaceShmem intf2("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
-		sim.addInterface(&intf1);
-		sim.addInterface(&intf2, false);
+		sim.addInterface(std::shared_ptr<Interface>(&intf1));
+		sim.addInterface(std::shared_ptr<Interface>(&intf2));
 
 		// Controllers and filter
 		std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
@@ -118,10 +118,10 @@ int main(int argc, char *argv[]) {
 		sim.setFinalTime(args.duration);
 
 		InterfaceShmem intf1("/dpsim10", "/dpsim01", nullptr, false);
-		sim.addInterface(&intf1);
+		sim.addInterface(std::shared_ptr<Interface>(&intf1));
 
 		InterfaceShmem intf2("/dpsim2-villas", "/villas-dpsim2", nullptr, false);
-		sim.addInterface(&intf2, false);
+		sim.addInterface(std::shared_ptr<Interface>(&intf2));
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention

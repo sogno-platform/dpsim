@@ -78,9 +78,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("start", &DPsim::Simulation::start)
 		.def("next", &DPsim::Simulation::next)
 		.def("get_idobj_attr", &DPsim::Simulation::getIdObjAttribute, "comp"_a, "attr"_a)
-		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a, "syncStart"_a = false) // cppcheck-suppress assignBoolToPointer
-		.def("export_attribute", &DPsim::Simulation::exportAttribute, "attr"_a, "idx"_a, "intf"_a = nullptr)
-		.def("import_attribute", &DPsim::Simulation::importAttribute, "attr"_a, "idx"_a, "intf"_a = nullptr)
+		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a) // cppcheck-suppress assignBoolToPointer
 		.def("log_idobj_attribute", &DPsim::Simulation::logIdObjAttribute, "comp"_a, "attr"_a)
 		.def("log_attribute", &DPsim::Simulation::logAttribute, "name"_a, "attr"_a)
 		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
@@ -101,8 +99,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_system", &DPsim::RealTimeSimulation::setSystem)
 		.def("run", static_cast<void (DPsim::RealTimeSimulation::*)(CPS::Int startIn)>(&DPsim::RealTimeSimulation::run))
 		.def("set_solver", &DPsim::RealTimeSimulation::setSolverType)
-		.def("set_domain", &DPsim::RealTimeSimulation::setDomain)
-		.def("add_interface", &DPsim::RealTimeSimulation::addInterface, "interface"_a, "syncStart"_a = false); // cppcheck-suppress assignBoolToPointer
+		.def("set_domain", &DPsim::RealTimeSimulation::setDomain);
 
 	py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(m, "SystemTopology")
         .def(py::init<CPS::Real, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
@@ -126,7 +123,9 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
 		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow);
 
-	py::class_<DPsim::Interface>(m, "Interface");
+	py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m, "Interface")
+		.def("import_attribute", &DPsim::Interface::importAttribute, "attr"_a, "idx"_a)
+		.def("export_attribute", &DPsim::Interface::exportAttribute, "attr"_a, "idx"_a);
 
 	py::class_<DPsim::DataLogger, std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
         .def(py::init<std::string>())

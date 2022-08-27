@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 	sim.setDomain(Domain::DP);
 	sim.setSolverType(Solver::Type::MNA);
 
-	sim.addInterface(&intf);
+	sim.addInterface(std::shared_ptr<Interface>(&intf));
 	sim.run();
 
 	return 0;

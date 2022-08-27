@@ -62,13 +62,13 @@ int main(int argc, char* argv[]) {
 		"queuelen": 1024
     })STRING";
 
-    InterfaceVillas intf("dpsim-shmem", shmemConfig);
+    auto intf = std::make_shared<InterfaceVillas>("dpsim-shmem", shmemConfig);
 
 	// Interface
 	//evs->setAttributeRef("V_ref", intf.importComplex(0));
-	intf.exportComplex(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, "v_src");
-	intf.exportComplex(rL->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1, "v_load");
-	sim.addInterface(&intf, true);
+	intf->exportComplex(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, "v_src");
+	intf->exportComplex(rL->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1, "v_load");
+	sim.addInterface(intf);
 
 	// Logger
 	auto logger = DataLogger::make(simName);

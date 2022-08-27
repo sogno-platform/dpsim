@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
 	intf.exportReal(load->attribute<Real>("P"), o++);
 	intf.exportReal(load_profile->attribute<Real>("P"), o++);
 
-	sim.addInterface(&intf, false);
+	sim.addInterface(std::shared_ptr<Interface>(&intf));
 	sim.addLogger(logger);
 	sim.run(args.startTime);
 

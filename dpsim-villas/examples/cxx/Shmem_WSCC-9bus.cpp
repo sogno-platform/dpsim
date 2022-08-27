@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 		o += 2;
 	}
 
-	sim.addInterface(&intf);
+	sim.addInterface(std::shared_ptr<Interface>(&intf));
 	sim.run();
 
 	return 0;

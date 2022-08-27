@@ -39,7 +39,7 @@ namespace DPsim {
 		 *
 		 * @param name The name of the newly created VillasNode
 		 */
-		InterfaceVillas(const String &name, const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
+		InterfaceVillas(const String &name, const String &nodeConfig, bool syncOnSimulationStart = false, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
 
 		void open(CPS::Logger::Log log);
 		void close();

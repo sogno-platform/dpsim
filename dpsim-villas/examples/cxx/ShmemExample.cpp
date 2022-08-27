@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 	// Interface
 	evs->mVoltageRef->setReference(intf.importComplex(0));
 	intf.exportComplex(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
-	sim.addInterface(&intf);
+	sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 	// Logger
 	auto logger = DataLogger::make(simName);

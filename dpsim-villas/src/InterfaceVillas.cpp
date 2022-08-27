@@ -19,8 +19,8 @@ UInt InterfaceVillas::villasAffinity = 0;
 UInt InterfaceVillas::villasPriority = 0;
 UInt InterfaceVillas::villasHugePages = 100;
 
-InterfaceVillas::InterfaceVillas(const String &name, const String &nodeConfig, UInt queueLength, UInt sampleLength, UInt downsampling) :
-	InterfaceSampleBased(name, name, true, downsampling), // Set sync=true for all InterfaceVillas instances
+InterfaceVillas::InterfaceVillas(const String &name, const String &nodeConfig, bool syncOnSimulationStart = false, UInt queueLength, UInt sampleLength, UInt downsampling) :
+	InterfaceSampleBased(name, name, syncOnSimulationStart, downsampling), // Set sync=true for all InterfaceVillas instances
 	mNodeConfig(nodeConfig),
 	mQueueLength(queueLength),
 	mSampleLength(sampleLength)
