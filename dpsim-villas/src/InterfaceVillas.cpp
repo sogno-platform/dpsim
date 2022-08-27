@@ -20,7 +20,7 @@ UInt InterfaceVillas::villasPriority = 0;
 UInt InterfaceVillas::villasHugePages = 100;
 
 InterfaceVillas::InterfaceVillas(const String &name, const String &nodeConfig, bool syncOnSimulationStart = false, UInt queueLength, UInt sampleLength, UInt downsampling) :
-	InterfaceSampleBased(name, name, syncOnSimulationStart, downsampling), // Set sync=true for all InterfaceVillas instances
+	Interface(name, name, syncOnSimulationStart, downsampling), // Set sync=true for all InterfaceVillas instances
 	mNodeConfig(nodeConfig),
 	mQueueLength(queueLength),
 	mSampleLength(sampleLength)
@@ -152,7 +152,7 @@ void InterfaceVillas::close() {
 	delete mNode;
 }
 
-void InterfaceVillas::readValues(bool blocking) {
+void InterfaceVillas::readValuesFromEnv() {
 	Sample *sample = node::sample_alloc(&mSamplePool);
 	int ret = 0;
 	try {
@@ -181,7 +181,7 @@ void InterfaceVillas::readValues(bool blocking) {
 	}
 }
 
-void InterfaceVillas::writeValues() {
+void InterfaceVillas::writeValuesToEnv() {
 	Sample *sample = nullptr;
 	Int ret = 0;
 	bool done = false;
@@ -240,4 +240,179 @@ void InterfaceVillas::initVillas() {
 		throw RuntimeError("Error: VillasNode failed to initialize memory system");
 
 	villas::kernel::rt::init(villasPriority, villasAffinity);
+}
+
+
+Attribute<Int>::Ptr InterfaceVillas::importInt(UInt idx) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return nullptr;
+	}
+	
+	AttributeStatic<Int>::Ptr attr = AttributeStatic<Int>::make();
+	auto& log = mLog;
+	addImport([attr, idx, log](Sample *smp) {
+		if (idx >= smp->length) {
+			log->error("incomplete data received from InterfaceVillas");
+			return;
+		}
+		attr->set(smp->data[idx].i);
+	});
+	mImportAttrsDpsim.push_back(attr);
+	mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::INTEGER);
+	return attr;
+}
+
+Attribute<Real>::Ptr InterfaceVillas::importReal(UInt idx) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return nullptr;
+	}
+
+	AttributeStatic<Real>::Ptr attr = AttributeStatic<Real>::make();
+	auto& log = mLog;
+	addImport([attr, idx, log](Sample *smp) {
+		if (idx >= smp->length) {
+			log->error("incomplete data received from InterfaceVillas");
+			return;
+		}
+		attr->set(smp->data[idx].f);
+	});
+	mImportAttrsDpsim.push_back(attr);
+	mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::FLOAT);
+	return attr;
+}
+
+Attribute<Bool>::Ptr InterfaceVillas::importBool(UInt idx) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return nullptr;
+	}
+
+	AttributeStatic<Bool>::Ptr attr = AttributeStatic<Bool>::make();
+	auto& log = mLog;
+	addImport([attr, idx, log](Sample *smp) {
+		if (idx >= smp->length) {
+			log->error("incomplete data received from InterfaceVillas");
+			return;
+		}
+		attr->set(smp->data[idx].b);
+	});
+	mImportAttrsDpsim.push_back(attr);
+	mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::BOOLEAN);
+	return attr;
+}
+
+Attribute<Complex>::Ptr InterfaceVillas::importComplex(UInt idx) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return nullptr;
+	}
+
+	AttributeStatic<Complex>::Ptr attr = AttributeStatic<Complex>::make();
+	auto& log = mLog;
+	addImport([attr, idx, log](Sample *smp) {
+		if (idx >= smp->length) {
+			log->error("incomplete data received from InterfaceVillas");
+			return;
+		}
+		auto y = Complex(smp->data[idx].z.real(), smp->data[idx].z.imag());
+
+		attr->set(y);
+	});
+	mImportAttrsDpsim.push_back(attr);
+	mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::COMPLEX);
+	return attr;
+}
+
+Attribute<Complex>::Ptr InterfaceVillas::importComplexMagPhase(UInt idx) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return nullptr;
+	}
+
+	AttributeStatic<Complex>::Ptr attr = AttributeStatic<Complex>::make();
+	auto& log = mLog;
+	addImport([attr, idx, log](Sample *smp) {
+		if (idx >= smp->length) {
+			log->error("incomplete data received from InterfaceVillas");
+			return;
+		}
+		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
+		auto  y = std::polar(z[0], z[1]);
+
+		attr->set(y);
+	});
+	mImportAttrsDpsim.push_back(attr);
+	mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::COMPLEX);
+	return attr;
+}
+
+void InterfaceVillas::exportInt(Attribute<Int>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return;
+	}
+
+	addExport([attr, idx](Sample *smp) {
+		if (idx >= smp->capacity)
+			throw std::out_of_range("not enough space in allocated sample");
+		if (idx >= smp->length)
+			smp->length = idx + 1;
+
+		smp->data[idx].i = **attr;
+	});
+	mExportAttrsDpsim.push_back(attr);
+	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::INTEGER);
+}
+
+void InterfaceVillas::exportReal(Attribute<Real>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
+	addExport([attr, idx](Sample *smp) {
+		if (idx >= smp->capacity)
+			throw std::out_of_range("not enough space in allocated sample");
+		if (idx >= smp->length)
+			smp->length = idx + 1;
+
+		smp->data[idx].f = **attr;
+	});
+	mExportAttrsDpsim.push_back(attr);
+	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::FLOAT);
+}
+
+void InterfaceVillas::exportBool(Attribute<Bool>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return;
+	}
+	
+	addExport([attr, idx](Sample *smp) {
+		if (idx >= smp->capacity)
+			throw std::out_of_range("not enough space in allocated sample");
+		if (idx >= smp->length)
+			smp->length = idx + 1;
+
+		smp->data[idx].b = **attr;
+	});
+	mExportAttrsDpsim.push_back(attr);
+	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::BOOLEAN);
+}
+
+void InterfaceVillas::exportComplex(Attribute<Complex>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return;
+	}
+	
+	addExport([attr, idx](Sample *smp) {
+		if (idx >= smp->capacity)
+			throw std::out_of_range("not enough space in allocated sample");
+		if (idx >= smp->length)
+			smp->length = idx + 1;
+
+		auto y = **attr;
+
+		smp->data[idx].z = std::complex<float>(y.real(), y.imag());
+	});
+	mExportAttrsDpsim.push_back(attr);
+	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::COMPLEX);
 }

@@ -2,28 +2,44 @@
 
 #pragma once
 
-#include <dpsim-villas/InterfaceSampleBased.h>
+#include <dpsim-models/PtrFactory.h>
+#include <dpsim/Interface.h>
 
 #include <villas/node.hpp>
 #include <villas/exceptions.hpp>
 #include <villas/memory.hpp>
 #include <villas/kernel/rt.hpp>
 #include <villas/pool.hpp>
+#include <villas/sample.hpp>
+#include <villas/signal.hpp>
+#include <villas/signal_list.hpp>
 
 using namespace villas;
 
 namespace DPsim {
 	class InterfaceVillas :
-		public InterfaceSampleBased,
+		public Interface,
 		public SharedFactory<InterfaceVillas> {
 
 	public:
 		typedef std::shared_ptr<InterfaceVillas> Ptr;
+		typedef struct node::Sample Sample;
+
 		static UInt villasPriority;
 		static UInt villasAffinity;
 		static UInt villasHugePages;
 
 	protected:
+		static Bool villasInitialized;
+
+		// Using std::function / lambda makes the other template code nicer, but from
+		// the outside, only the attribute-based functions should be used to
+		// guarantee proper scheduling
+		void addImport(std::function<void(Sample*)> l) { mImports.push_back(l); }
+		void addExport(std::function<void(Sample*)> l) { mExports.push_back(l); }
+
+		std::vector<std::function<void(Sample*)>> mExports, mImports;
+		
 		//Villas node to send / receive data to / from
 		String mNodeConfig;
 		node::Node* mNode;
@@ -32,7 +48,11 @@ namespace DPsim {
 		int mSampleLength;
 		node::Pool mSamplePool;
 
-		static Bool villasInitialized;
+		Sample *mLastSample;
+		int mSequence;
+
+		std::map<int, node::Signal::Ptr> mExportSignals;
+		std::map<int, node::Signal::Ptr> mImportSignals;
 
 	public:
 		/** Create a InterfaceVillas with a specific configuration for the VillasNode
@@ -41,16 +61,28 @@ namespace DPsim {
 		 */
 		InterfaceVillas(const String &name, const String &nodeConfig, bool syncOnSimulationStart = false, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
 
-		void open(CPS::Logger::Log log);
-		void close();
+		virtual void open(CPS::Logger::Log log) override;
+		virtual void close() override;
+		
+	protected:
+		CPS::Attribute<Int>::Ptr importInt(UInt idx);
+		CPS::Attribute<Real>::Ptr importReal(UInt idx);
+		CPS::Attribute<Bool>::Ptr importBool(UInt idx);
+		CPS::Attribute<Complex>::Ptr importComplex(UInt idx);
+		CPS::Attribute<Complex>::Ptr importComplexMagPhase(UInt idx);
 
-		void readValues(bool blocking = true);
-		void writeValues();
-		void initVillas();
-
+		void exportInt(CPS::Attribute<Int>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
+		void exportReal(CPS::Attribute<Real>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
+		void exportBool(CPS::Attribute<Bool>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
+		void exportComplex(CPS::Attribute<Complex>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
+		
+		virtual void readValuesFromEnv() override;
+		virtual void writeValuesToEnv() override;
+	
 	private:
 		void prepareNode();
 		void setupNodeSignals();
+		void initVillas();
 	};
 }
 

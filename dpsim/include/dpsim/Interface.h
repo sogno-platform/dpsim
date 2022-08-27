@@ -34,38 +34,86 @@ namespace DPsim {
 		virtual void open(CPS::Logger::Log log) = 0;
 		virtual void close() = 0;
 
-		virtual void importAttribute(CPS::AttributeBase::Ptr attr, UInt idx);
-		virtual CPS::Attribute<Int>::Ptr importInt(UInt idx) = 0;
-		virtual CPS::Attribute<Real>::Ptr importReal(UInt idx) = 0;
-		virtual CPS::Attribute<Bool>::Ptr importBool(UInt idx) = 0;
-		virtual CPS::Attribute<Complex>::Ptr importComplex(UInt idx) = 0;
-		virtual CPS::Attribute<Complex>::Ptr importComplexMagPhase(UInt idx) = 0;
+		virtual void importAttribute(CPS::AttributeBase::Ptr attr);
+		virtual void exportAttribute(CPS::AttributeBase::Ptr attr);
 
-		virtual void exportAttribute(CPS::AttributeBase::Ptr attr, Int idx);
-		virtual void exportInt(CPS::Attribute<Int>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
-		virtual void exportReal(CPS::Attribute<Real>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
-		virtual void exportBool(CPS::Attribute<Bool>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
-		virtual void exportComplex(CPS::Attribute<Complex>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
+		//Function used in the interface's simulation task to read all imported attributes from the queue
+		//Called once before every simulation timestep
+		virtual void readValuesFromQueue();
+		//Function used in the interface's simulation task to write all exported attributes to the queue
+		//Called once after every simulation timestep
+		virtual void writeValuesToQueue();
 
-		/** Read data for a timestep from the interface and passes the values
-		 * to all registered current / voltage sources.
-		 */
-		virtual void readValues(bool blocking = true);
+		//Function that will be called on loop in its separate thread.
+		//Should be used to read values from the environment and push them into the queue
+		virtual void readValuesFromEnv() = 0;
 
-		/** Write all exported values to the interface. Called after every timestep.
-		 * @param model Reference to the system model which should be used to
-		 * calculate needed voltages.
-		 */
-		virtual void writeValues() = 0;
+		//Function that will be called on loop in its separate thread.
+		//Should be used to read values from the queue and write them to the environment
+		virtual void writeValuesToEnv() = 0;
 
-		virtual CPS::Task::List getTasks() = 0;
+		//Function that will be called once on the dpsim thread before starting the interface thread
+		//Can be used for mapping the attributes in `mExportAttrsDpsim` and `mImportAttrsDpsim` to interface import / exports
+		virtual void prepareInterfaceThread() = 0;
+
+		virtual CPS::Task::List getTasks();
 
 		bool shouldSyncOnSimulationStart() const {
 			return mSyncOnSimulationStart;
 		}
 
+		virtual ~Interface() {
+			if (mOpened)
+				close();
+		}
+
+		// Attributes used in the DPsim simulation. Should only be accessed by the dpsim-thread
+		CPS::AttributeBase::List mExportAttrsDpsim, mImportAttrsDpsim;
+
 	protected:
-		bool mSyncOnSimulationStart = false;
+		// Attributes used by the interface thread for importing and exporting
+		CPS::AttributeBase::List mExportAttrsInterface, mImportAttrsInterface;
+		CPS::Logger::Log mLog;
+		bool mBlockOnRead;
+		bool mSyncOnSimulationStart;
+		UInt mDownsampling;
+		String mName;
+		bool mOpened;
+
+	public:
+		class PreStep : public CPS::Task {
+		public:
+			PreStep(Interface& intf) :
+				Task(intf.mName + ".Read"), mIntf(intf) {
+				for (auto attr : intf.mImportAttrsDpsim) {
+					mModifiedAttributes.push_back(attr);
+				}
+				//TODO: Is this necessary / what effect does a dependency on external have?
+				mAttributeDependencies.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			Interface& mIntf;
+		};
+
+		class PostStep : public CPS::Task {
+		public:
+			PostStep(Interface& intf) :
+				Task(intf.mName + ".Write"), mIntf(intf) {
+				for (auto attr : intf.mExportAttrsDpsim) {
+					mAttributeDependencies.push_back(attr);
+				}
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			Interface& mIntf;
+		};
+
 	};
 }
 
