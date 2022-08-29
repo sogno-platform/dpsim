@@ -152,7 +152,7 @@ void InterfaceVillas::close() {
 	delete mNode;
 }
 
-void InterfaceVillas::readValuesFromEnv() {
+void InterfaceVillas::readValuesFromEnv(CPS::AttributeBase::List& updatedAttrs) {
 	Sample *sample = node::sample_alloc(&mSamplePool);
 	int ret = 0;
 	try {
@@ -165,7 +165,7 @@ void InterfaceVillas::readValuesFromEnv() {
 		}
 
 		for (auto imp : mImports) {
-			imp(sample);
+			updatedAttrs.push_back(imp(sample));
 		}
 
 		sample_decref(sample);
@@ -181,7 +181,7 @@ void InterfaceVillas::readValuesFromEnv() {
 	}
 }
 
-void InterfaceVillas::writeValuesToEnv() {
+void InterfaceVillas::writeValuesToEnv(CPS::AttributeBase::List& updatedAttrs) {
 	Sample *sample = nullptr;
 	Int ret = 0;
 	bool done = false;
