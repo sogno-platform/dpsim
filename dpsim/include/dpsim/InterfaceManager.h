@@ -64,7 +64,7 @@ namespace DPsim {
 		String mName;
 		bool mOpened;
 
-		std::shared_ptr<Interface> mInterface;
+		Interface::Ptr mInterface;
 
 		moodycamel::BlockingReaderWriterQueue<CPS::AttributeBase::Ptr> mQueueDpsimToInterface;
 		moodycamel::BlockingReaderWriterQueue<CPS::AttributeBase::Ptr> mQueueInterfaceToDpsim;

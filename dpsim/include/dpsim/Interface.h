@@ -13,8 +13,11 @@ namespace DPsim {
     protected:
         bool mOpened;
         CPS::Logger::Log mLog;
+        std::weak_ptr<InterfaceManager> mManager;
     
     public:
+        typedef std::shared_ptr<Interface> Ptr;
+
         //Function that will be called on loop in its separate thread.
 		//Should be used to read values from the environment and push them into `updatedAttrs`
 		virtual void readValuesFromEnv(CPS::AttributeBase::List& updatedAttrs) = 0;
