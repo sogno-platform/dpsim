@@ -55,7 +55,9 @@ namespace DPsim {
     }
 
     void InterfaceManager::pushDpsimAttrsToQueue() {
-        //UNIMPLEMENTED!
+        for (auto attr : mExportAttrsDpsim) {
+            mQueueDpsimToInterface.enqueue(attr);
+        }
     }
 
 }
