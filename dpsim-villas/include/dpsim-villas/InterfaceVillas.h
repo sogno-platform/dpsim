@@ -56,13 +56,10 @@ namespace DPsim {
 		std::map<int, node::Signal::Ptr> mImportSignals;
 
 	public:
-		/** Create a InterfaceVillas with a specific configuration for the VillasNode
-		 *
-		 * @param name The name of the newly created VillasNode
-		 */
-		InterfaceVillas(const String &name, const String &nodeConfig, bool syncOnSimulationStart = false, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
 
-		virtual void open() override;
+		InterfaceVillas(const String &nodeConfig, bool syncOnSimulationStart = false, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
+
+		virtual void open(CPS::Logger::Log log) override;
 		virtual void close() override;
 		
 	protected:

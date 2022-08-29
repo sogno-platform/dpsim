@@ -15,7 +15,7 @@ set(DPSIM_SOURCES
 	ThreadLevelScheduler.cpp
 	ThreadListScheduler.cpp
 	DiakopticsSolver.cpp
-	Interface.cpp
+	InterfaceManager.cpp
 )
 
 set(DPSIM_INCLUDE_DIRS
