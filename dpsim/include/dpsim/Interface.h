@@ -13,16 +13,6 @@
 
 namespace DPsim {
 
-	/**
-	 * After an Interface is created, components that should use values
-	 * from this interface can be registered with it using the appropiate
-	 * methods implemented by the subclass. Subclasses must also implement the
-	 * readValues and writeValues methods, which should update the values of
-	 * the registered components or send voltages or currents to the external
-	 * sink.
-	 */
-
-	//TODO: Expand this to add reading and writing from the queue
 	class Interface {
 
 	public:
@@ -31,30 +21,28 @@ namespace DPsim {
         Interface(bool syncOnSimulationStart = false) : mSyncOnSimulationStart(syncOnSimulationStart) { };
 		virtual ~Interface() { };
 
-		virtual void open(CPS::Logger::Log log) = 0;
-		virtual void close() = 0;
-
-		virtual void importAttribute(CPS::AttributeBase::Ptr attr);
-		virtual void exportAttribute(CPS::AttributeBase::Ptr attr);
+		virtual void open();
+		virtual void close();
 
 		//Function used in the interface's simulation task to read all imported attributes from the queue
 		//Called once before every simulation timestep
-		virtual void readValuesFromQueue();
+		virtual void pushDpsimAttrsToQueue();
 		//Function used in the interface's simulation task to write all exported attributes to the queue
 		//Called once after every simulation timestep
-		virtual void writeValuesToQueue();
+		virtual void popDpsimAttrsFromQueue();
+
+		//Function used in the interface thread to read updated attributes from the environment and push them into the queue
+		virtual void pushInterfaceAttrsToQueue();
+		//Function used in the interface thread to read updated attributes from the queue and push them into the environment
+		virtual void popInterfaceAttrsFromQueue();
 
 		//Function that will be called on loop in its separate thread.
-		//Should be used to read values from the environment and push them into the queue
-		virtual void readValuesFromEnv() = 0;
+		//Should be used to read values from the environment and push them into `updatedAttrs`
+		virtual void readValuesFromEnv(CPS::AttributeBase::List& updatedAttrs) = 0;
 
 		//Function that will be called on loop in its separate thread.
-		//Should be used to read values from the queue and write them to the environment
-		virtual void writeValuesToEnv() = 0;
-
-		//Function that will be called once on the dpsim thread before starting the interface thread
-		//Can be used for mapping the attributes in `mExportAttrsDpsim` and `mImportAttrsDpsim` to interface import / exports
-		virtual void prepareInterfaceThread() = 0;
+		//Should be used to read values from `updatedAttrs` and write them to the environment
+		virtual void writeValuesToEnv(CPS::AttributeBase::List& updatedAttrs) = 0;
 
 		virtual CPS::Task::List getTasks();
 
@@ -71,14 +59,20 @@ namespace DPsim {
 		CPS::AttributeBase::List mExportAttrsDpsim, mImportAttrsDpsim;
 
 	protected:
-		// Attributes used by the interface thread for importing and exporting
-		CPS::AttributeBase::List mExportAttrsInterface, mImportAttrsInterface;
 		CPS::Logger::Log mLog;
 		bool mBlockOnRead;
 		bool mSyncOnSimulationStart;
 		UInt mDownsampling;
 		String mName;
 		bool mOpened;
+
+		moodycamel::BlockingReaderWriterQueue<CPS::AttributeBase::Ptr> mQueueDpsimToInterface;
+		moodycamel::BlockingReaderWriterQueue<CPS::AttributeBase::Ptr> mQueueInterfaceToDpsim;
+
+		//Has to be called by the interface implementation whenever a new import is configured
+		virtual void importAttribute(CPS::AttributeBase::Ptr attr);
+		//Has to be called by the interface implementation whenever a new export is configured
+		virtual void exportAttribute(CPS::AttributeBase::Ptr attr);
 
 	public:
 		class PreStep : public CPS::Task {

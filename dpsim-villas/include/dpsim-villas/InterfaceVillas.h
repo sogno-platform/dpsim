@@ -35,10 +35,11 @@ namespace DPsim {
 		// Using std::function / lambda makes the other template code nicer, but from
 		// the outside, only the attribute-based functions should be used to
 		// guarantee proper scheduling
-		void addImport(std::function<void(Sample*)> l) { mImports.push_back(l); }
-		void addExport(std::function<void(Sample*)> l) { mExports.push_back(l); }
+		void addImport(std::function<CPS::AttributeBase::Ptr(Sample*)> l) { mImports.push_back(l); }
+		void addExport(std::function<void(CPS::AttributeBase::Ptr, Sample*)> l) { mExports.push_back(l); }
 
-		std::vector<std::function<void(Sample*)>> mExports, mImports;
+		std::vector<std::function<CPS::AttributeBase::Ptr(Sample*)>> mImports;
+		std::vector<std::function<void(CPS::AttributeBase::Ptr, Sample*)>> mExports;
 		
 		//Villas node to send / receive data to / from
 		String mNodeConfig;
@@ -61,7 +62,7 @@ namespace DPsim {
 		 */
 		InterfaceVillas(const String &name, const String &nodeConfig, bool syncOnSimulationStart = false, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
 
-		virtual void open(CPS::Logger::Log log) override;
+		virtual void open() override;
 		virtual void close() override;
 		
 	protected:
@@ -76,8 +77,8 @@ namespace DPsim {
 		void exportBool(CPS::Attribute<Bool>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
 		void exportComplex(CPS::Attribute<Complex>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
 		
-		virtual void readValuesFromEnv() override;
-		virtual void writeValuesToEnv() override;
+		virtual void readValuesFromEnv(CPS::AttributeBase::List& updatedAttrs) override;
+		virtual void writeValuesToEnv(CPS::AttributeBase::List& updatedAttrs) override;
 	
 	private:
 		void prepareNode();
