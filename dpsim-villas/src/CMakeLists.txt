@@ -1,6 +1,4 @@
 set(DPSIM_VILLAS_SOURCES
-    InterfaceSampleBased.cpp
-    InterfaceShmem.cpp
     InterfaceVillas.cpp
 )
 

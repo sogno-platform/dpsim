@@ -121,8 +121,8 @@ namespace DPsim {
 		Scheduler::Edges mTaskInEdges, mTaskOutEdges;
 
 		/// Vector of Interfaces
-		//TODO: Let the Interface class handle synchronization, threading and import / export through the queues
-		std::vector<std::shared_ptr<Interface>> mInterfaces;
+		//TODO: Let the InterfaceManager class handle synchronization, threading and import / export through the queues
+		std::vector<std::shared_ptr<InterfaceManager>> mInterfaces;
 
 		struct LoggerMapping {
 			/// Simulation data logger
@@ -228,7 +228,7 @@ namespace DPsim {
 		void logStepTimes(String logName);
 
 		///
-		void addInterface(std::shared_ptr<Interface> eint) {
+		void addInterface(std::shared_ptr<InterfaceManager> eint) {
 			if (mInterfaces.size() > 0) {
 				mLog->warn(
 					"This simulation contains more than one interface! When using multiple InterfaceVillas instances, all of them will block the simulation thread in undefined order until the data is read / written! Continue with caution!");
