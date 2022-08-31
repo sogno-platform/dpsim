@@ -1,7 +1,7 @@
 {
 	"name": "DPsim",
 	"build": {
-		"dockerfile": "../Packaging/Docker/Dockerfile.dev",
+		"dockerfile": "../packaging/Docker/Dockerfile.dev",
 		"target": "dev-vscode",
 		"context": ".."
 	},
