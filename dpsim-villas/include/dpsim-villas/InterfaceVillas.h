@@ -4,6 +4,7 @@
 
 #include <dpsim-models/PtrFactory.h>
 #include <dpsim/Interface.h>
+#include <dpsim/InterfaceManager.h>
 
 #include <villas/node.hpp>
 #include <villas/exceptions.hpp>
@@ -59,7 +60,7 @@ namespace DPsim {
 
 		InterfaceVillas(const String &nodeConfig, bool syncOnSimulationStart = false, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
 
-		virtual void open(CPS::Logger::Log log) override;
+		virtual void open() override;
 		virtual void close() override;
 		
 	protected:

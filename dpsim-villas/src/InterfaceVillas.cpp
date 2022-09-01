@@ -26,8 +26,7 @@ InterfaceVillas::InterfaceVillas(const String &nodeConfig, bool syncOnSimulation
 	mSampleLength(sampleLength)
 	{ }
 
-void InterfaceVillas::open(CPS::Logger::Log log) {
-	mLog = log;
+void InterfaceVillas::open() {
 	mLog->info("Opening InterfaceVillas...");
 
 	if (!InterfaceVillas::villasInitialized) {
@@ -251,14 +250,14 @@ Attribute<Int>::Ptr InterfaceVillas::importInt(UInt idx) {
 	
 	AttributeStatic<Int>::Ptr attr = AttributeStatic<Int>::make();
 	auto& log = mLog;
-	addImport([attr, idx, log](Sample *smp) {
+	addImport([idx, log](Sample *smp) -> AttributeBase::Ptr {
 		if (idx >= smp->length) {
 			log->error("incomplete data received from InterfaceVillas");
 			return;
 		}
-		attr->set(smp->data[idx].i);
+		return AttributePointer<AttributeBase>(AttributeStatic<Int>::make(smp->data[idx].i));
 	});
-	mImportAttrsDpsim.push_back(attr);
+	tryGetManager()->importAttribute(attr);
 	mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::INTEGER);
 	return attr;
 }
@@ -271,14 +270,14 @@ Attribute<Real>::Ptr InterfaceVillas::importReal(UInt idx) {
 
 	AttributeStatic<Real>::Ptr attr = AttributeStatic<Real>::make();
 	auto& log = mLog;
-	addImport([attr, idx, log](Sample *smp) {
+	addImport([idx, log](Sample *smp) -> AttributeBase::Ptr {
 		if (idx >= smp->length) {
 			log->error("incomplete data received from InterfaceVillas");
 			return;
 		}
-		attr->set(smp->data[idx].f);
+		return AttributePointer<AttributeBase>(AttributeStatic<Real>::make(smp->data[idx].f));
 	});
-	mImportAttrsDpsim.push_back(attr);
+	tryGetManager()->importAttribute(attr);
 	mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::FLOAT);
 	return attr;
 }
@@ -291,14 +290,14 @@ Attribute<Bool>::Ptr InterfaceVillas::importBool(UInt idx) {
 
 	AttributeStatic<Bool>::Ptr attr = AttributeStatic<Bool>::make();
 	auto& log = mLog;
-	addImport([attr, idx, log](Sample *smp) {
+	addImport([idx, log](Sample *smp) -> AttributeBase::Ptr {
 		if (idx >= smp->length) {
 			log->error("incomplete data received from InterfaceVillas");
 			return;
 		}
-		attr->set(smp->data[idx].b);
+		return AttributePointer<AttributeBase>(AttributeStatic<Bool>::make(smp->data[idx].b));
 	});
-	mImportAttrsDpsim.push_back(attr);
+	tryGetManager()->importAttribute(attr);
 	mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::BOOLEAN);
 	return attr;
 }
@@ -311,16 +310,16 @@ Attribute<Complex>::Ptr InterfaceVillas::importComplex(UInt idx) {
 
 	AttributeStatic<Complex>::Ptr attr = AttributeStatic<Complex>::make();
 	auto& log = mLog;
-	addImport([attr, idx, log](Sample *smp) {
+	addImport([idx, log](Sample *smp) -> AttributeBase::Ptr {
 		if (idx >= smp->length) {
 			log->error("incomplete data received from InterfaceVillas");
 			return;
 		}
 		auto y = Complex(smp->data[idx].z.real(), smp->data[idx].z.imag());
 
-		attr->set(y);
+		return AttributePointer<AttributeBase>(AttributeStatic<Complex>::make(y));
 	});
-	mImportAttrsDpsim.push_back(attr);
+	tryGetManager()->importAttribute(attr);
 	mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::COMPLEX);
 	return attr;
 }
@@ -333,7 +332,7 @@ Attribute<Complex>::Ptr InterfaceVillas::importComplexMagPhase(UInt idx) {
 
 	AttributeStatic<Complex>::Ptr attr = AttributeStatic<Complex>::make();
 	auto& log = mLog;
-	addImport([attr, idx, log](Sample *smp) {
+	addImport([idx, log](Sample *smp) -> AttributeBase::Ptr {
 		if (idx >= smp->length) {
 			log->error("incomplete data received from InterfaceVillas");
 			return;
@@ -341,9 +340,9 @@ Attribute<Complex>::Ptr InterfaceVillas::importComplexMagPhase(UInt idx) {
 		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
 		auto  y = std::polar(z[0], z[1]);
 
-		attr->set(y);
+		return AttributePointer<AttributeBase>(AttributeStatic<Complex>::make(y));
 	});
-	mImportAttrsDpsim.push_back(attr);
+	tryGetManager()->importAttribute(attr);
 	mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::COMPLEX);
 	return attr;
 }
@@ -354,28 +353,40 @@ void InterfaceVillas::exportInt(Attribute<Int>::Ptr attr, UInt idx, const std::s
 		return;
 	}
 
-	addExport([attr, idx](Sample *smp) {
+	addExport([idx](AttributeBase::Ptr attr, Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		smp->data[idx].i = **attr;
+		Attribute<Int>::Ptr attrTyped = std::dynamic_pointer_cast<Attribute<Int>>(attr.getPtr());
+
+		if (attrTyped.isNull()) {
+			throw InvalidAttributeException();
+		}
+
+		smp->data[idx].i = **attrTyped;
 	});
-	mExportAttrsDpsim.push_back(attr);
+	tryGetManager()->exportAttribute(attr);
 	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::INTEGER);
 }
 
 void InterfaceVillas::exportReal(Attribute<Real>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
-	addExport([attr, idx](Sample *smp) {
+	addExport([idx](AttributeBase::Ptr attr, Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		smp->data[idx].f = **attr;
+		Attribute<Real>::Ptr attrTyped = std::dynamic_pointer_cast<Attribute<Real>>(attr.getPtr());
+
+		if (attrTyped.isNull()) {
+			throw InvalidAttributeException();
+		}
+
+		smp->data[idx].f = **attrTyped;
 	});
-	mExportAttrsDpsim.push_back(attr);
+	tryGetManager()->exportAttribute(attr);
 	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::FLOAT);
 }
 
@@ -385,15 +396,21 @@ void InterfaceVillas::exportBool(Attribute<Bool>::Ptr attr, UInt idx, const std:
 		return;
 	}
 	
-	addExport([attr, idx](Sample *smp) {
+	addExport([idx](AttributeBase::Ptr attr, Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		smp->data[idx].b = **attr;
+		Attribute<Bool>::Ptr attrTyped = std::dynamic_pointer_cast<Attribute<Bool>>(attr.getPtr());
+
+		if (attrTyped.isNull()) {
+			throw InvalidAttributeException();
+		}
+
+		smp->data[idx].b = **attrTyped;
 	});
-	mExportAttrsDpsim.push_back(attr);
+	tryGetManager()->exportAttribute(attr);
 	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::BOOLEAN);
 }
 
@@ -403,16 +420,22 @@ void InterfaceVillas::exportComplex(Attribute<Complex>::Ptr attr, UInt idx, cons
 		return;
 	}
 	
-	addExport([attr, idx](Sample *smp) {
+	addExport([idx](AttributeBase::Ptr attr, Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		auto y = **attr;
+		Attribute<Complex>::Ptr attrTyped = std::dynamic_pointer_cast<Attribute<Complex>>(attr.getPtr());
+
+		if (attrTyped.isNull()) {
+			throw InvalidAttributeException();
+		}
+
+		auto y = **attrTyped;
 
 		smp->data[idx].z = std::complex<float>(y.real(), y.imag());
 	});
-	mExportAttrsDpsim.push_back(attr);
+	tryGetManager()->exportAttribute(attr);
 	mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::COMPLEX);
 }

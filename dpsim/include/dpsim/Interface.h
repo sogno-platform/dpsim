@@ -28,8 +28,17 @@ namespace DPsim {
 		//Should be used to read values from `updatedAttrs` and write them to the environment
 		virtual void writeValuesToEnv(CPS::AttributeBase::List& updatedAttrs) = 0;
 
-        virtual void open(CPS::Logger::Log log);
+        virtual void open();
         virtual void close();
+
+        std::shared_ptr<InterfaceManager> tryGetManager() {
+            std::shared_ptr<InterfaceManager> manager = mManager.lock();
+            if (manager == nullptr) {
+                mLog->error("Error: The interface is not connected yet to a manager! Please add this interface to a simulation first before configuring imports and exports.");
+                std::exit(1);
+            }
+            return manager;
+        }
 
     };
 }
