@@ -26,7 +26,6 @@ namespace DPsim {
 		} typedef AttributePacket;
 
         InterfaceManager(bool syncOnSimulationStart = false) : mSyncOnSimulationStart(syncOnSimulationStart) { };
-		virtual ~InterfaceManager() { };
 
 		virtual void open();
 		virtual void close();
