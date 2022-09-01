@@ -19,6 +19,12 @@ namespace DPsim {
 	public:
 		typedef std::shared_ptr<InterfaceManager> Ptr;
 
+		struct AttributePacket {
+			CPS::AttributeBase::Ptr value;
+			UInt attributeId;
+			UInt sequenceId;
+		} typedef AttributePacket;
+
         InterfaceManager(bool syncOnSimulationStart = false) : mSyncOnSimulationStart(syncOnSimulationStart) { };
 		virtual ~InterfaceManager() { };
 
@@ -62,14 +68,20 @@ namespace DPsim {
 		bool mSyncOnSimulationStart;
 		UInt mDownsampling;
 		String mName;
-		bool mOpened;
+		bool mOpened = false;
+
+		UInt mReceivedIdsDpsim = 0;
+
+		UInt mCurrentSequenceDpsimToInterface = 0;
+		UInt mCurrentSequenceInterfaceToDpsim = 0;
 
 		Interface::Ptr mInterface;
 
-		moodycamel::BlockingReaderWriterQueue<CPS::AttributeBase::Ptr> mQueueDpsimToInterface;
-		moodycamel::BlockingReaderWriterQueue<CPS::AttributeBase::Ptr> mQueueInterfaceToDpsim;
+		moodycamel::BlockingReaderWriterQueue<AttributePacket> mQueueDpsimToInterface;
+		moodycamel::BlockingReaderWriterQueue<AttributePacket> mQueueInterfaceToDpsim;
 
 	public:
+
 		class PreStep : public CPS::Task {
 		public:
 			PreStep(InterfaceManager& intf) :

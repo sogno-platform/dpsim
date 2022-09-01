@@ -51,14 +51,26 @@ namespace DPsim {
     }
 
     void InterfaceManager::popDpsimAttrsFromQueue() {
-        //UNIMPLEMENTED!
-    }
+        if (mBlockOnRead) {
+            //UNIMPLEMENTED
+        } else {
+            AttributePacket receivedPacket;
+            while (mQueueDpsimToInterface.try_dequeue(receivedPacket)) {
 
-    void InterfaceManager::pushDpsimAttrsToQueue() {
-        for (auto attr : mExportAttrsDpsim) {
-            mQueueDpsimToInterface.enqueue(attr);
+                //TODO: Save the type of the attributes somewhere to perform the conversion
+                **(mImportAttrsDpsim[receivedPacket.attributeId]) = **receivedPacket.value;
+            }
         }
     }
 
+    void InterfaceManager::pushDpsimAttrsToQueue() {
+        for (UInt i = 0; i < mExportAttrsDpsim.size(); i++) {
+            mQueueDpsimToInterface.enqueue(AttributePacket {
+                mExportAttrsDpsim[i],
+                i,
+                mCurrentSequenceDpsimToInterface++
+            });
+        }
+    }
 }
 

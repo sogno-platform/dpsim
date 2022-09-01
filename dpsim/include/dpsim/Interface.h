@@ -29,5 +29,5 @@ namespace DPsim {
         virtual void open(CPS::Logger::Log log);
         virtual void close();
 
-    }
+    };
 }
