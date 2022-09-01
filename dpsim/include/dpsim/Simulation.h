@@ -15,7 +15,7 @@
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/SimNode.h>
 #include <dpsim-models/Attribute.h>
-#include <dpsim/Interface.h>
+#include <dpsim/InterfaceManager.h>
 #include <nlohmann/json.hpp>
 
 #ifdef WITH_GRAPHVIZ

@@ -141,7 +141,7 @@ namespace CPS {
 		}
 	};
 
-		/**
+	/**
 	 * Struct providing an (explicit) equals function for Attribute Pointers. Can be used in STL containers.
 	 * */
 	template<class T>
@@ -174,7 +174,18 @@ namespace CPS {
 
 		virtual ~AttributeBase() = default;
 		
-		
+		/**
+		 * @brief Copy the attribute value of `copyFrom` onto this attribute
+		 * @return true if the copy operation was successful, false otherwise
+		 */
+		virtual bool copyValue(AttributeBase::Ptr copyFrom) = 0;
+
+		/**
+		 * @brief Generates a new attribute of the same type and copies the current value in the heap. Does not copy any dependency relations!
+		 * @return Pointer to the copied attribute
+		 */
+		virtual AttributeBase::Ptr cloneValueOntoNewAttribute() = 0;
+
 		/**
 		 * Append all dependencies of this attribute to the given set.
 		 * For static attributes, this will only append `this`, for dynamic attributes, it will recursively collect and append
@@ -334,6 +345,30 @@ namespace CPS {
 		T& operator*(){
 			return this->get();
 		}
+
+		/**
+		 * @brief Copy the attribute value of `copyFrom` onto this attribute
+		 * @return true if the copy operation was successful, false otherwise
+		 */
+		virtual bool copyValue(AttributeBase::Ptr copyFrom) {
+			if (!this->isStatic()) {
+				return false;
+			}
+			Attribute<T>::Ptr copyFromTyped = std::dynamic_pointer_cast<Attribute<T>>(copyFrom.getPtr());
+			if (copyFromTyped.getPtr() == nullptr) {
+				return false;
+			}
+			this->set(**copyFromTyped);
+			return true;
+		}
+
+		/**
+		 * @brief Generates a new attribute of the same type and copies the current value in the heap. Does not copy any dependency relations!
+		 * @return Pointer to the copied attribute
+		 */
+		virtual AttributeBase::Ptr cloneValueOntoNewAttribute() {
+			return AttributePointer<AttributeBase>(AttributeStatic<T>::make(this->get()));
+		};
 
 		/**
 		 * General method for deriving a new attribute from this attribute. Custom getter and setter functions have to be provided. The newly created

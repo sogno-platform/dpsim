@@ -32,7 +32,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 	mLog->info("Opening interfaces.");
 
 	for (auto intf : mInterfaces)
-		intf->open(mLog);
+		intf->open();
 
 	sync();
 

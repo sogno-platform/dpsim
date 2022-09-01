@@ -8,6 +8,8 @@
 
 namespace DPsim {
 
+    class InterfaceManager;
+
 	class Interface {
 
     protected:

@@ -56,9 +56,7 @@ namespace DPsim {
         } else {
             AttributePacket receivedPacket;
             while (mQueueDpsimToInterface.try_dequeue(receivedPacket)) {
-
-                //TODO: Save the type of the attributes somewhere to perform the conversion
-                **(mImportAttrsDpsim[receivedPacket.attributeId]) = **receivedPacket.value;
+                mImportAttrsDpsim[receivedPacket.attributeId]->copyValue(receivedPacket.value);
             }
         }
     }
@@ -66,7 +64,7 @@ namespace DPsim {
     void InterfaceManager::pushDpsimAttrsToQueue() {
         for (UInt i = 0; i < mExportAttrsDpsim.size(); i++) {
             mQueueDpsimToInterface.enqueue(AttributePacket {
-                mExportAttrsDpsim[i],
+                mExportAttrsDpsim[i]->cloneValueOntoNewAttribute(),
                 i,
                 mCurrentSequenceDpsimToInterface++
             });

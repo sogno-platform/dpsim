@@ -167,24 +167,24 @@ void Simulation::createMNASolver() {
 }
 
 void Simulation::sync() {
-	//TODO: Is this log output necessary?
-	int numOfSyncInterfaces = std::count_if(mInterfaces.begin(), mInterfaces.end(), [](std::shared_ptr<Interface> intf) {return intf->shouldSyncOnSimulationStart();});
-	mLog->info("Start synchronization with remotes on {} interfaces", numOfSyncInterfaces);
+	// //TODO: Is this log output necessary?
+	// int numOfSyncInterfaces = std::count_if(mInterfaces.begin(), mInterfaces.end(), [](std::shared_ptr<Interface> intf) {return intf->shouldSyncOnSimulationStart();});
+	// mLog->info("Start synchronization with remotes on {} interfaces", numOfSyncInterfaces);
 
-	for (auto intf : mInterfaces) {
-		//TODO: Change or document this synchronization behavior
-		if(intf->shouldSyncOnSimulationStart()) {
-			// Send initial state over interface
-			intf->writeValues();
+	// for (auto intf : mInterfaces) {
+	// 	//TODO: Change or document this synchronization behavior
+	// 	if(intf->shouldSyncOnSimulationStart()) {
+	// 		// Send initial state over interface
+	// 		intf->writeValues();
 
-			// Blocking wait for interface
-			intf->readValues(true);
+	// 		// Blocking wait for interface
+	// 		intf->readValues(true);
 
-			intf->writeValues();
-		}
-	}
+	// 		intf->writeValues();
+	// 	}
+	// }
 
-	mLog->info("Synchronized simulation start with remotes");
+	// mLog->info("Synchronized simulation start with remotes");
 }
 
 void Simulation::prepSchedule() {
@@ -349,7 +349,7 @@ void Simulation::start() {
 
 	//TODO: Move to new interface threads
 	for (auto intf : mInterfaces)
-		intf->open(mLog);
+		intf->open();
 
 	sync();
 
