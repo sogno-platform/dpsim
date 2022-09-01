@@ -21,8 +21,8 @@ namespace DPsim {
 
 		struct AttributePacket {
 			CPS::AttributeBase::Ptr value;
-			UInt attributeId;
-			UInt sequenceId;
+			UInt attributeId; //Used to identify the attribute. Defined by the position in the `mExportAttrsDpsim` and `mImportAttrsDpsim` lists
+			UInt sequenceId; //Increasing ID used to discern multiple consecutive updates of a single attribute
 		} typedef AttributePacket;
 
         InterfaceManager(bool syncOnSimulationStart = false) : mSyncOnSimulationStart(syncOnSimulationStart) { };
