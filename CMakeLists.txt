@@ -69,6 +69,7 @@ include(GetVersion)
 GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 
 option(WITH_EIGEN_MODULE "Build with Eigen as module" OFF)
+option(WITH_KLU_MODULE "Build with KLU as module" OFF)
 option(WITH_SPDLOG_SUBMODULE "Build with Spdlog as module" OFF)
 option(WITH_CIM_SUBMODULE "Build with CIMpp as module" OFF)
 option(WITH_PYBIND_MODULE "Build with pybind11 as module" OFF)
@@ -158,7 +159,6 @@ endif()
 
 # WITH_SPARSE and WITH_CUDA can be combined
 option(WITH_SPARSE       	"Use sparse matrices in MNA-Solver"	ON )
-option(WITH_KLU 			"Build with KLU" 				ON )
 
 include(CMakeDependentOption)
 cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"       	ON 	"Sundials_FOUND"  	OFF)
@@ -226,7 +226,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	add_feature_info(Graphviz  	WITH_GRAPHVIZ  		"Graphviz Graphs")
 	add_feature_info(Sundials  	WITH_SUNDIALS  		"Sundials solvers")
 	add_feature_info(PYBIND 	WITH_PYBIND 		"Use DPsim as a PYBIND module")
-	add_feature_info(KLU		WITH_KLU			"A sparse LU solver")
+	add_feature_info(KLU		WITH_KLU			"A partially refactoring LU solver")
 	feature_summary(WHAT ALL VAR enabledFeaturesText)
 
 	if (FOUND_GIT_VERSION)

@@ -5,6 +5,7 @@ configure_file(
 
 set(MODELS_INCLUDE_DIRS
 	${EIGEN3_INCLUDE_DIR}
+	${KLU_INCLUDE_DIR}
 	${SPDLOG_INCLUDE_DIR}
 	${KLU_INCLUDE_DIR}
 )
@@ -27,6 +28,10 @@ if (WITH_EIGEN_SUBMODULE OR WIN32)
 	# do not add eigen here
 else()
 	list(APPEND MODELS_LIBRARIES Eigen3::Eigen)
+endif()
+
+if(WITH_KLU)
+	list(APPEND CPS_LIBRARIES klu)
 endif()
 
 if(Linux_FOUND OR MacOS_FOUND)
