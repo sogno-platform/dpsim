@@ -13,13 +13,6 @@
 using namespace DPsim;
 using namespace CPS;
 
-#define AMD_FP 0
-#define AMD_NV_FP 1
-#define AMD_BRA_RR 2
-#define AMD_RR 3
-
-#define ORDERING AMD_NV_FP
-
 namespace DPsim {
 
 template <typename VarType>
@@ -59,7 +52,7 @@ void MnaSolverEigenPartialKLU<VarType>::stampVariableSystemMatrix() {
 	this->mSLog->flush();
 
 	// Calculate factorization of current matrix
-	this->mLuFactorizationVariableSystemMatrix.analyzePatternPartial(this->mVariableSystemMatrix, this->mListVariableSystemMatrixEntries, ORDERING);
+	this->mLuFactorizationVariableSystemMatrix.analyzePatternPartial(this->mVariableSystemMatrix, this->mListVariableSystemMatrixEntries);
 	auto start = std::chrono::steady_clock::now();
 	this->mLuFactorizationVariableSystemMatrix.factorize_partial(this->mVariableSystemMatrix, this->mListVariableSystemMatrixEntries);
 	auto end = std::chrono::steady_clock::now();
