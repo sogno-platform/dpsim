@@ -45,10 +45,6 @@ namespace DPsim {
     }
 
     void InterfaceManager::importAttribute(CPS::AttributeBase::Ptr attr) {
-        if (attr->isStatic()) {
-            mLog->error("Cannot import to a static attribute. Please provide a dynamic attribute!");
-            throw InvalidAttributeException();
-        }
         mImportAttrsDpsim.push_back(attr);
     }
 

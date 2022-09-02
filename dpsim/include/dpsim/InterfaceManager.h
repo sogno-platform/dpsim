@@ -16,7 +16,8 @@
 
 namespace DPsim {
 
-	class InterfaceManager : public SharedFactory<InterfaceManager> {
+	class InterfaceManager :
+		public SharedFactory<InterfaceManager> {
 
 	public:
 		typedef std::shared_ptr<InterfaceManager> Ptr;
