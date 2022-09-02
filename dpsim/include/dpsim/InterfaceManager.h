@@ -116,8 +116,6 @@ namespace DPsim {
 				for (auto attr : intf.mImportAttrsDpsim) {
 					mModifiedAttributes.push_back(attr);
 				}
-				//TODO: Is this necessary / what effect does a dependency on external have?
-				mAttributeDependencies.push_back(Scheduler::external);
 			}
 
 			void execute(Real time, Int timeStepCount);
