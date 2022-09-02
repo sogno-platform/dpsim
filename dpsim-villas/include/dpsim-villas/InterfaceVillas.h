@@ -58,12 +58,11 @@ namespace DPsim {
 
 	public:
 
-		InterfaceVillas(const String &nodeConfig, bool syncOnSimulationStart = false, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
+		InterfaceVillas(const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64);
 
 		virtual void open() override;
 		virtual void close() override;
 		
-	protected:
 		CPS::Attribute<Int>::Ptr importInt(UInt idx);
 		CPS::Attribute<Real>::Ptr importReal(UInt idx);
 		CPS::Attribute<Bool>::Ptr importBool(UInt idx);
@@ -74,7 +73,7 @@ namespace DPsim {
 		void exportReal(CPS::Attribute<Real>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
 		void exportBool(CPS::Attribute<Bool>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
 		void exportComplex(CPS::Attribute<Complex>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
-		
+	
 		virtual void readValuesFromEnv(CPS::AttributeBase::List& updatedAttrs) override;
 		virtual void writeValuesToEnv(CPS::AttributeBase::List& updatedAttrs) override;
 	
