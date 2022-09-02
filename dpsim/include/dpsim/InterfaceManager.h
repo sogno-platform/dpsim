@@ -40,6 +40,8 @@ namespace DPsim {
 			mBlockOnRead(blockOnRead),
 			mDownsampling(downsampling) {
 				mInterface->mLog = log;
+				mQueueDpsimToInterface = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
+				mQueueInterfaceToDpsim = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
 			};
 
 		virtual void open();
@@ -53,9 +55,7 @@ namespace DPsim {
 		virtual void popDpsimAttrsFromQueue();
 
 		//Function used in the interface thread to read updated attributes from the environment and push them into the queue
-		virtual void pushInterfaceAttrsToQueue();
-		//Function used in the interface thread to read updated attributes from the queue and push them into the environment
-		virtual void popInterfaceAttrsFromQueue();
+		virtual void pushInterfaceAttrsToQueue() {};
 
 		virtual CPS::Task::List getTasks();
 
@@ -77,23 +77,36 @@ namespace DPsim {
 		virtual void exportAttribute(CPS::AttributeBase::Ptr attr);
 
 	protected:
+		Interface::Ptr mInterface;
 		CPS::Logger::Log mLog;
-		bool mBlockOnRead;
-		bool mSyncOnSimulationStart;
-		UInt mDownsampling;
 		String mName;
+		bool mSyncOnSimulationStart;
+		bool mBlockOnRead;
+		UInt mDownsampling;
 		bool mOpened = false;
 
 		UInt mCurrentSequenceDpsimToInterface = 0;
 		UInt mCurrentSequenceInterfaceToDpsim = 0;
 
-		Interface::Ptr mInterface;
 		std::thread mInterfaceThread;
 
-		moodycamel::BlockingReaderWriterQueue<AttributePacket> mQueueDpsimToInterface;
-		moodycamel::BlockingReaderWriterQueue<AttributePacket> mQueueInterfaceToDpsim;
+		std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueDpsimToInterface;
+		std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueInterfaceToDpsim;
 
 	public:
+
+		class WriterThread {
+			private:
+				std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueDpsimToInterface;
+				DPsim::Interface::Ptr mInterface;
+
+			public:
+				WriterThread(std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> queue, DPsim::Interface::Ptr intf) :
+					mQueueDpsimToInterface(queue),
+					mInterface(intf) {};
+				void operator() ();
+
+		};
 
 		class PreStep : public CPS::Task {
 		public:

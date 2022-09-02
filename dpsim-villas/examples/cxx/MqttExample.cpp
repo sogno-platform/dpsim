@@ -62,13 +62,13 @@ int main(int argc, char* argv[]) {
         }
     })STRING";
 
-    auto intf = std::make_shared<InterfaceVillas>("dpsim-mqtt", mqttConfig);
+    auto intf = std::make_shared<InterfaceVillas>(mqttConfig);
 
 	// Interface
+	sim.addInterface(intf);
 	evs->mVoltageRef->setReference(intf->importComplex(0));
 	intf->exportComplex(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, "v_src");
 	intf->exportComplex(rL->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1, "v_load");
-	sim.addInterface(intf);
 
 	// Logger
 	auto logger = DataLogger::make(simName);

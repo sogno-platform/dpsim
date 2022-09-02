@@ -7,13 +7,13 @@ using namespace CPS;
 namespace DPsim {
 
     void InterfaceManager::open() {
-        mInterfaceThread = std::thread(InterfaceManager::popInterfaceAttrsFromQueue);
+        mInterfaceThread = std::thread(InterfaceManager::WriterThread(mQueueDpsimToInterface, mInterface));
         mOpened = true;
     }
 
     void InterfaceManager::close() {
 	    mOpened = false;
-        mQueueDpsimToInterface.enqueue(AttributePacket {
+        mQueueDpsimToInterface->enqueue(AttributePacket {
             nullptr,
             0,
             0,
@@ -61,7 +61,7 @@ namespace DPsim {
             //UNIMPLEMENTED
         } else {
             AttributePacket receivedPacket;
-            while (mQueueDpsimToInterface.try_dequeue(receivedPacket)) {
+            while (mQueueDpsimToInterface->try_dequeue(receivedPacket)) {
                 mImportAttrsDpsim[receivedPacket.attributeId]->copyValue(receivedPacket.value);
             }
         }
@@ -69,7 +69,7 @@ namespace DPsim {
 
     void InterfaceManager::pushDpsimAttrsToQueue() {
         for (UInt i = 0; i < mExportAttrsDpsim.size(); i++) {
-            mQueueDpsimToInterface.enqueue(AttributePacket {
+            mQueueDpsimToInterface->enqueue(AttributePacket {
                 mExportAttrsDpsim[i]->cloneValueOntoNewAttribute(),
                 i,
                 mCurrentSequenceDpsimToInterface++,
@@ -78,13 +78,13 @@ namespace DPsim {
         }
     }
 
-    void InterfaceManager::popInterfaceAttrsFromQueue() {
+    void InterfaceManager::WriterThread::operator() () {
         bool interfaceClosed = false;
         CPS::AttributeBase::List attrsToWrite;
         mInterface->open();
         while (!interfaceClosed) {
             AttributePacket nextPacket;
-            mQueueDpsimToInterface.wait_dequeue(nextPacket);
+            mQueueDpsimToInterface->wait_dequeue(nextPacket);
             if (nextPacket.flags & AttributePacketFlags::PACKET_CLOSE_INTERFACE) {
                 mInterface->close();
                 interfaceClosed = true;
