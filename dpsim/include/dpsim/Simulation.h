@@ -228,12 +228,8 @@ namespace DPsim {
 		void logStepTimes(String logName);
 
 		///
-		void addInterface(std::shared_ptr<InterfaceManager> eint) {
-			if (mInterfaces.size() > 0) {
-				mLog->warn(
-					"This simulation contains more than one interface! When using multiple InterfaceVillas instances, all of them will block the simulation thread in undefined order until the data is read / written! Continue with caution!");
-			}
-			mInterfaces.push_back(eint);
+		void addInterface(std::shared_ptr<Interface> eint) {
+			mInterfaces.push_back(InterfaceManager::make(eint, mLog));
 		}
 
 #ifdef WITH_GRAPHVIZ

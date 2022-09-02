@@ -19,7 +19,7 @@ UInt InterfaceVillas::villasAffinity = 0;
 UInt InterfaceVillas::villasPriority = 0;
 UInt InterfaceVillas::villasHugePages = 100;
 
-InterfaceVillas::InterfaceVillas(const String &nodeConfig, bool syncOnSimulationStart = false, UInt queueLength, UInt sampleLength, UInt downsampling) :
+InterfaceVillas::InterfaceVillas(const String &nodeConfig, UInt queueLength, UInt sampleLength) :
 	Interface(),
 	mNodeConfig(nodeConfig),
 	mQueueLength(queueLength),

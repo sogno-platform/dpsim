@@ -16,7 +16,7 @@
 
 namespace DPsim {
 
-	class InterfaceManager {
+	class InterfaceManager : public SharedFactory<InterfaceManager> {
 
 	public:
 		typedef std::shared_ptr<InterfaceManager> Ptr;
@@ -32,7 +32,15 @@ namespace DPsim {
 			PACKET_CLOSE_INTERFACE = 1,
 		};
 
-        InterfaceManager(bool syncOnSimulationStart = false) : mSyncOnSimulationStart(syncOnSimulationStart) { };
+        InterfaceManager(Interface::Ptr intf, CPS::Logger::Log log, String name = "", bool syncOnSimulationStart = false, bool blockOnRead = false, UInt downsampling = 1) : 
+			mInterface(intf),
+			mLog(log),
+			mName(name),
+			mSyncOnSimulationStart(syncOnSimulationStart),
+			mBlockOnRead(blockOnRead),
+			mDownsampling(downsampling) {
+				mInterface->mLog = log;
+			};
 
 		virtual void open();
 		virtual void close();

@@ -14,11 +14,12 @@ namespace DPsim {
 
     protected:
         bool mOpened;
-        CPS::Logger::Log mLog;
         std::weak_ptr<InterfaceManager> mManager;
     
     public:
         typedef std::shared_ptr<Interface> Ptr;
+        
+        CPS::Logger::Log mLog;
 
         /**
          * Function that will be called on loop in its separate thread.
