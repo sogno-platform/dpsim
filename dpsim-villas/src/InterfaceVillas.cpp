@@ -195,7 +195,7 @@ void InterfaceVillas::writeValuesToEnv(CPS::AttributeBase::List& updatedAttrs) {
 
 		for (auto exp : mExports) {
 			//TODO: At this point, we need to have a full list of queued attributes corresponding to an export lambda each
-			exp(sample);
+			exp(updatedAttrs[0], sample); //FIXME: This will crash!
 		}
 
 		sample->sequence = mSequence++;

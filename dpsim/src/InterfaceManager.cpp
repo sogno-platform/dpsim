@@ -7,12 +7,18 @@ using namespace CPS;
 namespace DPsim {
 
     void InterfaceManager::open() {
+        mInterfaceThread = std::thread(InterfaceManager::popInterfaceAttrsFromQueue);
         mOpened = true;
     }
 
     void InterfaceManager::close() {
-        //TODO: Close threads / queue
 	    mOpened = false;
+        mQueueDpsimToInterface.enqueue(AttributePacket {
+            nullptr,
+            0,
+            0,
+            AttributePacketFlags::PACKET_CLOSE_INTERFACE
+        });
     }
 
     CPS::Task::List InterfaceManager::getTasks() {
@@ -66,8 +72,26 @@ namespace DPsim {
             mQueueDpsimToInterface.enqueue(AttributePacket {
                 mExportAttrsDpsim[i]->cloneValueOntoNewAttribute(),
                 i,
-                mCurrentSequenceDpsimToInterface++
+                mCurrentSequenceDpsimToInterface++,
+                0
             });
+        }
+    }
+
+    void InterfaceManager::popInterfaceAttrsFromQueue() {
+        bool interfaceClosed = false;
+        CPS::AttributeBase::List attrsToWrite;
+        mInterface->open();
+        while (!interfaceClosed) {
+            AttributePacket nextPacket;
+            mQueueDpsimToInterface.wait_dequeue(nextPacket);
+            if (nextPacket.flags & AttributePacketFlags::PACKET_CLOSE_INTERFACE) {
+                mInterface->close();
+                interfaceClosed = true;
+            } else {
+                attrsToWrite.push_back(nextPacket.value); //TODO: The interface should know about the attribute and sequence IDs
+                mInterface->writeValuesToEnv(attrsToWrite);
+            }
         }
     }
 }

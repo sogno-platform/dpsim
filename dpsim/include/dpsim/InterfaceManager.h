@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <thread>
+
 #include <dpsim-models/Logger.h>
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
@@ -23,7 +25,12 @@ namespace DPsim {
 			CPS::AttributeBase::Ptr value;
 			UInt attributeId; //Used to identify the attribute. Defined by the position in the `mExportAttrsDpsim` and `mImportAttrsDpsim` lists
 			UInt sequenceId; //Increasing ID used to discern multiple consecutive updates of a single attribute
+			unsigned char flags; //Bit 0 set: Close interface
 		} typedef AttributePacket;
+
+		enum AttributePacketFlags {
+			PACKET_CLOSE_INTERFACE = 1,
+		};
 
         InterfaceManager(bool syncOnSimulationStart = false) : mSyncOnSimulationStart(syncOnSimulationStart) { };
 
@@ -69,12 +76,11 @@ namespace DPsim {
 		String mName;
 		bool mOpened = false;
 
-		UInt mReceivedIdsDpsim = 0;
-
 		UInt mCurrentSequenceDpsimToInterface = 0;
 		UInt mCurrentSequenceInterfaceToDpsim = 0;
 
 		Interface::Ptr mInterface;
+		std::thread mInterfaceThread;
 
 		moodycamel::BlockingReaderWriterQueue<AttributePacket> mQueueDpsimToInterface;
 		moodycamel::BlockingReaderWriterQueue<AttributePacket> mQueueInterfaceToDpsim;
