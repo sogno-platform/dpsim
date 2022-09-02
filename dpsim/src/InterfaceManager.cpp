@@ -19,6 +19,7 @@ namespace DPsim {
             0,
             AttributePacketFlags::PACKET_CLOSE_INTERFACE
         });
+        mInterfaceThread.detach();
     }
 
     CPS::Task::List InterfaceManager::getTasks() {
