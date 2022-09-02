@@ -15,12 +15,12 @@ namespace DPsim {
 
     protected:
         bool mOpened;
-        std::weak_ptr<InterfaceManager> mManager;
     
     public:
         typedef std::shared_ptr<Interface> Ptr;
 
         CPS::Logger::Log mLog;
+        std::weak_ptr<InterfaceManager> mManager;
 
         Interface() = default;
         virtual ~Interface() { }

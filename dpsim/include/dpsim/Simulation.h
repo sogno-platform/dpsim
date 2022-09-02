@@ -229,7 +229,9 @@ namespace DPsim {
 
 		///
 		void addInterface(std::shared_ptr<Interface> eint) {
-			mInterfaces.push_back(InterfaceManager::make(eint, mLog));
+			auto newIntfManager = InterfaceManager::make(eint, mLog);
+			eint->mManager = newIntfManager;
+			mInterfaces.push_back(newIntfManager);
 		}
 
 #ifdef WITH_GRAPHVIZ
