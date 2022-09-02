@@ -1,10 +1,11 @@
+#pragma once
+
 #include <dpsim-models/Logger.h>
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/Task.h>
-
 
 namespace DPsim {
 
@@ -18,8 +19,11 @@ namespace DPsim {
     
     public:
         typedef std::shared_ptr<Interface> Ptr;
-        
+
         CPS::Logger::Log mLog;
+
+        Interface() = default;
+        virtual ~Interface() { }
 
         /**
          * Function that will be called on loop in its separate thread.
@@ -39,13 +43,13 @@ namespace DPsim {
          * Open the interface and set up the connection to the environment
          * This is guaranteed to be called before any calls to `readValuesFromEnv` and `writeValuesToEnv`
          */
-        virtual void open();
+        virtual void open() = 0;
 
         /**
          * Close the interface and all connections to the environment
          * After this has been called, no further calls to `readValuesFromEnv` or `writeValuesToEnv` will occur
          */
-        virtual void close();
+        virtual void close() = 0;
 
         /**
          * Will try to get a pointer to the parent `InterfaceManager` instance

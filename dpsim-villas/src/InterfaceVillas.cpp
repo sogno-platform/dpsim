@@ -254,7 +254,7 @@ Attribute<Int>::Ptr InterfaceVillas::importInt(UInt idx) {
 	addImport([idx, log](Sample *smp) -> AttributeBase::Ptr {
 		if (idx >= smp->length) {
 			log->error("incomplete data received from InterfaceVillas");
-			return;
+			return nullptr;
 		}
 		return AttributePointer<AttributeBase>(AttributeStatic<Int>::make(smp->data[idx].i));
 	});
@@ -274,7 +274,7 @@ Attribute<Real>::Ptr InterfaceVillas::importReal(UInt idx) {
 	addImport([idx, log](Sample *smp) -> AttributeBase::Ptr {
 		if (idx >= smp->length) {
 			log->error("incomplete data received from InterfaceVillas");
-			return;
+			return nullptr;
 		}
 		return AttributePointer<AttributeBase>(AttributeStatic<Real>::make(smp->data[idx].f));
 	});
@@ -294,7 +294,7 @@ Attribute<Bool>::Ptr InterfaceVillas::importBool(UInt idx) {
 	addImport([idx, log](Sample *smp) -> AttributeBase::Ptr {
 		if (idx >= smp->length) {
 			log->error("incomplete data received from InterfaceVillas");
-			return;
+			return nullptr;
 		}
 		return AttributePointer<AttributeBase>(AttributeStatic<Bool>::make(smp->data[idx].b));
 	});
@@ -314,7 +314,7 @@ Attribute<Complex>::Ptr InterfaceVillas::importComplex(UInt idx) {
 	addImport([idx, log](Sample *smp) -> AttributeBase::Ptr {
 		if (idx >= smp->length) {
 			log->error("incomplete data received from InterfaceVillas");
-			return;
+			return nullptr;
 		}
 		auto y = Complex(smp->data[idx].z.real(), smp->data[idx].z.imag());
 
@@ -336,7 +336,7 @@ Attribute<Complex>::Ptr InterfaceVillas::importComplexMagPhase(UInt idx) {
 	addImport([idx, log](Sample *smp) -> AttributeBase::Ptr {
 		if (idx >= smp->length) {
 			log->error("incomplete data received from InterfaceVillas");
-			return;
+			return nullptr;
 		}
 		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
 		auto  y = std::polar(z[0], z[1]);

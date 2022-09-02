@@ -3,7 +3,6 @@
 #pragma once
 
 #include <dpsim-models/PtrFactory.h>
-#include <dpsim/Interface.h>
 #include <dpsim/InterfaceManager.h>
 
 #include <villas/node.hpp>
