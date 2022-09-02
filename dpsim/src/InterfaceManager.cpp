@@ -19,12 +19,10 @@ namespace DPsim {
             0,
             AttributePacketFlags::PACKET_CLOSE_INTERFACE
         });
-        mInterfaceThread.detach();
+        mInterfaceThread.join();
     }
 
     CPS::Task::List InterfaceManager::getTasks() {
-        //TODO: Should this only be two tasks (reading + writing) or one task for every attribute that is imported / exported?
-        //Due to the dependencies on external, it should not matter --> verify this behavior?
         return CPS::Task::List({
             std::make_shared<InterfaceManager::PreStep>(*this),
             std::make_shared<InterfaceManager::PostStep>(*this)
