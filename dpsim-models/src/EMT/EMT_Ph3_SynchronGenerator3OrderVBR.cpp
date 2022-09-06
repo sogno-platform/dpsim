@@ -15,6 +15,9 @@ EMT::Ph3::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
 	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)) {
 
+	//
+	mSGOrder = SGOrder::SG3Order;
+
 	// model specific variables
 	**mEdq0_t = Matrix::Zero(3,1);
 	mEhs_vbr = Matrix::Zero(3,1);
@@ -55,18 +58,6 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::specificInitialization() {
 	// initial voltage behind the transient reactance in the dq0 reference frame
 	(**mEdq0_t)(1,0) = (**mVdq0)(1,0) + (**mIdq0)(0,0) * mLd_t;
 
-	// calculate auxiliar VBR constants
-	calculateAuxiliarConstants();
-
-	// dq0 resistance matrix
-	mResistanceMatrixDq0 = Matrix::Zero(3,3);
-	mResistanceMatrixDq0 <<	0.0,			-mLq,	0.0,
-							mLd_t - mAq,	0.0,	0.0,
-					  		0.0,			0.0,	mL0;
-
-	// initialize conductance matrix 
-	mConductanceMatrix = Matrix::Zero(3,3);
-
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
 		"\nInitial Eq_t (per unit): {:f}"
@@ -74,12 +65,6 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::specificInitialization() {
 		(**mEdq0_t)(1,0)
 	);
 	mSLog->flush();
-}
-
-void EMT::Ph3::SynchronGenerator3OrderVBR::calculateAuxiliarConstants() {
-	mAq = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
-	mBq = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mDq = mTimeStep / (2 * mTd0_t + mTimeStep);
 }
 
 void EMT::Ph3::SynchronGenerator3OrderVBR::stepInPerUnit() {
@@ -98,7 +83,7 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::stepInPerUnit() {
 
 	// VBR history voltage
 	mEhs_vbr(0,0) = 0.0;
-	mEhs_vbr(1,0) = mAq * (**mIdq0)(0,0) + mBq * (**mEdq0_t)(1,0) + mDq * mEf_prev + mDq * (**mEf);
+	mEhs_vbr(1,0) = mAq_t * (**mIdq0)(0,0) + mBq_t * (**mEdq0_t)(1,0) + mDq_t * mEf_prev + mDq_t * (**mEf);
 	mEhs_vbr(2,0) = 0.0;
 
 	// convert Edq_t into the abc reference frame

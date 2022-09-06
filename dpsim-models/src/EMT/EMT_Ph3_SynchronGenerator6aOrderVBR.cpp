@@ -16,6 +16,9 @@ EMT::Ph3::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR
 	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)),
 	mEdq0_s(Attribute<Matrix>::create("Edq0_s", mAttributes))  {
 
+	//
+	mSGOrder = SGOrder::SG6aOrder;
+	
 	// model specific variables
 	**mEdq0_t = Matrix::Zero(3,1);
 	**mEdq0_s = Matrix::Zero(3,1);
@@ -35,9 +38,6 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator6aOrderVBR::clone(String name
 }
 
 void EMT::Ph3::SynchronGenerator6aOrderVBR::specificInitialization() {
-	// calculate auxiliar VBR constants
-	calculateAuxiliarConstants();
-
 	// initial voltage behind the transient reactance in the dq reference frame
 	(**mEdq0_t)(0,0) = (mLq - mLq_t - mYq) * (**mIdq0)(1,0);
 	(**mEdq0_t)(1,0) = (1 - mTaa / mTd0_t) * **mEf - (mLd - mLd_t - mYd) * (**mIdq0)(0,0);
@@ -45,15 +45,6 @@ void EMT::Ph3::SynchronGenerator6aOrderVBR::specificInitialization() {
 	// initial dq behind the subtransient reactance in the dq reference frame
 	(**mEdq0_s)(0,0) = (**mVdq0)(0,0) - mLq_s * (**mIdq0)(1,0);
 	(**mEdq0_s)(1,0) = (**mVdq0)(1,0) + mLd_s * (**mIdq0)(0,0);
-
-	// dq0 resistance matrix
-	mResistanceMatrixDq0 = Matrix::Zero(3,3);
-	mResistanceMatrixDq0 <<	0.0,			-mAd_s -mLq_s,	0.0,
-							mLd_s - mAq_s,	0.0,			0.0,
-					  		0.0,			0.0,			mL0;
-
-	// initialize conductance matrix 
-	mConductanceMatrix = Matrix::Zero(3,3);
 
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
@@ -69,30 +60,6 @@ void EMT::Ph3::SynchronGenerator6aOrderVBR::specificInitialization() {
 		(**mEdq0_s)(1,0)
 	);
 	mSLog->flush();
-}
-
-void EMT::Ph3::SynchronGenerator6aOrderVBR::calculateAuxiliarConstants() {
-	mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);
-	mYq = (mTq0_s / mTq0_t) * (mLq_s / mLq_t) * (mLq - mLq_t);
-	Real Zq_t = mLd - mLd_t - mYd;
-	Real Zd_t = mLq - mLq_t - mYq;
-	Real Zq_s = mLd_t - mLd_s + mYd;
-	Real Zd_s = mLq_t - mLq_s + mYq;
-	Real Tf = mTaa / mTd0_t;
-
-	mAd_t = mTimeStep * Zd_t / (2 * mTq0_t + mTimeStep);
-	mBd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
-	mAq_t = - mTimeStep * Zq_t / (2 * mTd0_t + mTimeStep);
-	mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mDq_t = mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);
-
-	mAd_s = (mTimeStep * Zd_s + mTimeStep * mAd_t) / (2 * mTq0_s + mTimeStep);
-	mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * mTq0_s + mTimeStep);
-	mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
-	mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);
-	mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);
-	mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
-	mDq_s = (mTimeStep * mDq_t + Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);
 }
 
 void EMT::Ph3::SynchronGenerator6aOrderVBR::stepInPerUnit() {

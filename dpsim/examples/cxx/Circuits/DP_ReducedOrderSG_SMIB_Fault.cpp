@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
 	auto n2DP = SimNode<Complex>::make("n2DP", PhaseType::Single, initialVoltage_n2);
 
 	// Synchronous generator
-	std::shared_ptr<DP::Ph1::SynchronGeneratorVBR> genDP = nullptr;
+	std::shared_ptr<DP::Ph1::ReducedOrderSynchronGeneratorVBR> genDP = nullptr;
 	if (SGModel=="3")
 		genDP = DP::Ph1::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
 	else if (SGModel=="4")

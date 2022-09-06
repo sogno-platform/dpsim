@@ -15,7 +15,7 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 	/// @brief Base class for SP VBR synchronous generator model single phase
-	class SynchronGeneratorVBR :
+	class ReducedOrderSynchronGeneratorVBR :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public MNAVariableCompInterface {
 	public:
@@ -25,8 +25,10 @@ namespace Ph1 {
     protected:
         /// Resistance matrix in dq reference frame
 		Matrix mResistanceMatrixDq;
+
 		/// Conductance matrix phase A
 		Matrix mConductanceMatrix;
+        
         /// Park Transformation
 		///
 		Matrix mDqToComplexA;
@@ -34,17 +36,19 @@ namespace Ph1 {
 		Matrix mComplexAToDq;
 
         /// Constructor 
-        SynchronGeneratorVBR(String uid, String name, Logger::Level logLevel);
-        SynchronGeneratorVBR(String name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(const String & uid, const String & name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
       
         ///
         virtual void specificInitialization()=0;
+        ///
+        void initializeResistanceMatrix();
         ///
         virtual void stepInPerUnit()=0;
 		///
         void calculateResistanceMatrix();
         ///
-        Matrix get_DqToComplexATransformMatrix();
+        Matrix get_DqToComplexATransformMatrix() const;
 
         // ### MNA Section ###
         ///
@@ -53,7 +57,7 @@ namespace Ph1 {
         void mnaPostStep(const Matrix& leftVector);
         
     public:
-        virtual ~SynchronGeneratorVBR();
+        virtual ~ReducedOrderSynchronGeneratorVBR()=default;
 
         /// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override;

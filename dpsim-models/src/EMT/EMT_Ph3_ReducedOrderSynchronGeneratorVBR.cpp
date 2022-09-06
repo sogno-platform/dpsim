@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
-    (String uid, String name, Logger::Level logLevel)
+    (const String & uid, const String & name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Real>(uid, name, logLevel),
 	mEvbr(Attribute<Matrix>::create("Evbr", mAttributes)) {
 	
@@ -26,11 +26,22 @@ EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
 }
 
 EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
-	(String name, Logger::Level logLevel)
+	(const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(name, name, logLevel) {
 }
 
-EMT::Ph3::ReducedOrderSynchronGeneratorVBR::~ReducedOrderSynchronGeneratorVBR() {
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::initializeResistanceMatrix() {
+	// dq0 resistance matrix
+	mResistanceMatrixDq0 = Matrix::Zero(3,3);
+	
+	// dq0 resistance matrix
+	mResistanceMatrixDq0 = Matrix::Zero(3,3);
+	mResistanceMatrixDq0 <<	0.0,	mA,		0.0,
+							mB,		0.0,	0.0,
+					  		0.0,	0.0,	mL0;
+
+	// initialize conductance matrix 
+	mConductanceMatrix = Matrix::Zero(3,3);
 }
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
@@ -168,7 +179,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaPostStep(const Matrix& leftV
 	**mIdq0 =  mAbcToDq0 * **mIntfCurrent / mBase_I;
 }
 
-Matrix EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_parkTransformMatrix() {
+Matrix EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_parkTransformMatrix() const {
 	Matrix abcToDq0(3, 3);
 
 	abcToDq0 <<
@@ -179,7 +190,7 @@ Matrix EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_parkTransformMatrix() {
 	return abcToDq0;
 }
 
-Matrix EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_inverseParkTransformMatrix() {
+Matrix EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_inverseParkTransformMatrix() const {
 	Matrix dq0ToAbc(3, 3);
 
 	dq0ToAbc <<

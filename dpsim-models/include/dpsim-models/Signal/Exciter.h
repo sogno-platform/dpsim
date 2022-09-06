@@ -66,10 +66,10 @@ namespace Signal {
 
 	public:
 		///
-		Exciter(String name) : SimSignalComp(name, name) { }
+		Exciter(const String & name) : SimSignalComp(name, name) { }
 
 		/// Constructor with log level
-		Exciter(String name, CPS::Logger::Level logLevel);
+		Exciter(const String & name, CPS::Logger::Level logLevel);
 
 		/// Initializes exciter parameters
 		void setParameters(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real maxVr=1.0, Real minVr = -0.9);

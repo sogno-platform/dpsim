@@ -30,30 +30,6 @@ namespace Ph3 {
 		Matrix mEh_t;
 		/// history term of voltage behind the subtransient reactance
 		Matrix mEh_s;
-		///
-		Real mAd_t;
-		///
-		Real mBd_t;
-		///
-		Real mAq_t;
-		///
-		Real mBq_t;
-		///
-		Real mDq_t;
-		///
-		Real mAd_s;
-		///
-		Real mAq_s;
-		/// 
-		Real mBd_s;
-		/// 
-		Real mBq_s;
-		///
-		Real mCd_s;
-		///
-		Real mCq_s;
-		///
-		Real mDq_s;
 
 	public:
 		///
@@ -66,8 +42,6 @@ namespace Ph3 {
 		// #### General Functions ####
 		///
 		void specificInitialization();
-		///
-		void calculateAuxiliarConstants();
 		///
 		void stepInPerUnit();
 		/// Setter 6th order parameters - extending base class setter by logging
