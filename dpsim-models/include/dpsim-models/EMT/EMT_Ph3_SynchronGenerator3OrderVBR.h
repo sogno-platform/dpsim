@@ -26,12 +26,6 @@ namespace Ph3 {
 	protected:
 		/// history term of VBR
 		Matrix mEhs_vbr;
-		///
-		Real mAq;
-		///
-		Real mBq;
-		///
-		Real mDq;
 
 	public:
 		///
@@ -44,8 +38,6 @@ namespace Ph3 {
 		// #### General Functions ####
 		///
 		void specificInitialization();
-		///
-		void calculateAuxiliarConstants();
 		///
 		void stepInPerUnit();
 	};

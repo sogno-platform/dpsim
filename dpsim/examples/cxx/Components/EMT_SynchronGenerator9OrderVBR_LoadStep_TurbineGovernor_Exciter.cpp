@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
 	if (withExciter) {
 		logger->logAttribute("vh_exc_gen", gen->mExciter->attribute("Vh"));
 		logger->logAttribute("vr_exc_gen", gen->mExciter->attribute("Vr"));
-		logger->logAttribute("vf_exc_gen", gen->mExciter->attribute("Vf"));
+		logger->logAttribute("vf_exc_gen", gen->mExciter->attribute("Ef"));
 	}
 
 	Simulation sim(simName, Logger::Level::info);

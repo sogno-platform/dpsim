@@ -16,6 +16,9 @@ EMT::Ph3::SynchronGenerator6bOrderVBR::SynchronGenerator6bOrderVBR
 	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)),
 	mEdq0_s(Attribute<Matrix>::create("Edq0_s", mAttributes)) {
 
+	//
+	mSGOrder = SGOrder::SG6bOrder;
+
 	// model specific variables
 	**mEdq0_t = Matrix::Zero(3,1);
 	**mEdq0_s = Matrix::Zero(3,1);
@@ -43,18 +46,6 @@ void EMT::Ph3::SynchronGenerator6bOrderVBR::specificInitialization() {
 	(**mEdq0_s)(0,0) = (**mVdq0)(0,0) - mLq_s * (**mIdq0)(1,0);
 	(**mEdq0_s)(1,0) = (**mVdq0)(1,0) + mLd_s * (**mIdq0)(0,0);
 
-	// calculate auxiliar VBR constants
-	calculateAuxiliarConstants();
-
-	// dq0 resistance matrix
-	mResistanceMatrixDq0 = Matrix::Zero(3,3);
-	mResistanceMatrixDq0 <<	0.0,			-mAd_s -mLq_s,	0.0,
-							mLd_s - mAq_s,	0.0,			0.0,
-					  		0.0,			0.0,			mL0;
-
-	// initialize conductance matrix 
-	mConductanceMatrix = Matrix::Zero(3,3);
-
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
@@ -69,22 +60,6 @@ void EMT::Ph3::SynchronGenerator6bOrderVBR::specificInitialization() {
 		(**mEdq0_s)(1,0)
 	);
 	mSLog->flush();
-}
-
-void EMT::Ph3::SynchronGenerator6bOrderVBR::calculateAuxiliarConstants() {
-	mAd_t = mTimeStep * (mLq - mLq_t) / (2 * mTq0_t + mTimeStep);
-	mBd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
-	mAq_t = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
-	mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mDq_t = mTimeStep / (2 * mTd0_t + mTimeStep);
-
-	mAd_s = (mTimeStep * (mLq_t - mLq_s) + mTimeStep * mAd_t) / (2 * mTq0_s + mTimeStep);
-	mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * mTq0_s + mTimeStep);
-	mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
-	mAq_s = (-mTimeStep * (mLd_t - mLd_s) + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);
-	mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);
-	mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
-	mDq_s = mTimeStep * mDq_t / (2 * mTd0_s + mTimeStep);
 }
 
 void EMT::Ph3::SynchronGenerator6bOrderVBR::stepInPerUnit() {

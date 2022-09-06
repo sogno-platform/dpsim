@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 	auto n1SP = SimNode<Complex>::make("n1SP", PhaseType::Single, initVoltN1);
 
 	// Synchronous generator
-	std::shared_ptr<SP::Ph1::SynchronGeneratorVBR> genSP = nullptr;
+	std::shared_ptr<SP::Ph1::ReducedOrderSynchronGeneratorVBR> genSP = nullptr;
 	if (SGModel=="3")
 		genSP = SP::Ph1::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
 	else if (SGModel=="4")

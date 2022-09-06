@@ -15,7 +15,7 @@ namespace CPS {
 namespace DP {
 namespace Ph1 {
 	/// @brief Base class for DP VBR synchronous generator model single phase
-	class SynchronGeneratorVBR :
+	class ReducedOrderSynchronGeneratorVBR :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public MNAVariableCompInterface {
 	public:
@@ -49,12 +49,14 @@ namespace Ph1 {
 		MatrixComp mKvbr;
 
         /// Constructor 
-        SynchronGeneratorVBR(String uid, String name, Logger::Level logLevel);
-        SynchronGeneratorVBR(String name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(const String & uid, const String & name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
       
 	  	// #### General Functions ####
         /// Specific component initialization
         virtual void specificInitialization()=0;
+        ///
+		void initializeResistanceMatrix();
         ///
         virtual void stepInPerUnit()=0;
 		///
@@ -62,7 +64,7 @@ namespace Ph1 {
 		/// Calculate Ka, Kb and Kvbr
 		void calculateAuxiliarVariables();
 		///
-		Matrix get_parkTransformMatrix();        
+		Matrix get_parkTransformMatrix() const;        
 
 		// ### MNA Section ###
 		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
@@ -70,7 +72,7 @@ namespace Ph1 {
 		void mnaPostStep(const Matrix& leftVector);
 
     public:
-        virtual ~SynchronGeneratorVBR();
+        virtual ~ReducedOrderSynchronGeneratorVBR()=default;
 
         /// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override { return 1; };

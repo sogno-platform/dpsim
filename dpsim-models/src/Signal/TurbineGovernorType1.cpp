@@ -13,12 +13,12 @@ using namespace CPS;
 using namespace CPS::Signal;
 
 Signal::TurbineGovernorType1::TurbineGovernorType1(
-	String name, CPS::Logger::Level logLevel) 
+	const String & name, CPS::Logger::Level logLevel) 
 	: SimSignalComp(name, name, logLevel),
-	mTm(Attribute<Real>::create("Tm", mAttributes, 0)),
 	mXg1(Attribute<Real>::create("Xg1", mAttributes, 0)),
 	mXg2(Attribute<Real>::create("Xg2", mAttributes, 0)),
-	mXg3(Attribute<Real>::create("Xg3", mAttributes, 0)) { }
+	mXg3(Attribute<Real>::create("Xg3", mAttributes, 0)),
+	mTm(Attribute<Real>::create("Tm", mAttributes, 0)) { }
 
 
 void TurbineGovernorType1::setParameters(Real T3, Real T4, Real T5, 

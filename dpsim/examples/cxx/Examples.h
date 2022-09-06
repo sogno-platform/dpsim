@@ -559,7 +559,7 @@ namespace Events {
             loadSwitch->open();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
-            //logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
+            logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
             return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
         } else if (domain == CPS::Domain::SP) {
             auto loadSwitch = SP::Ph1::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
@@ -569,7 +569,7 @@ namespace Events {
             loadSwitch->open();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
-            //logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
+            logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
             return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
         } else {
             return nullptr;

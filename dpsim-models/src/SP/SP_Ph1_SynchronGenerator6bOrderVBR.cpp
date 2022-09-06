@@ -12,9 +12,12 @@ using namespace CPS;
 
 SP::Ph1::SynchronGenerator6bOrderVBR::SynchronGenerator6bOrderVBR
     (String uid, String name, Logger::Level logLevel)
-	: SynchronGeneratorVBR(uid, name, logLevel),
+	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
 	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)),
 	mEdq_s(Attribute<Matrix>::create("Edq_s", mAttributes))  {
+
+	//
+	mSGOrder = SGOrder::SG6bOrder;
 
 	// model specific variables
 	**mEdq_t = Matrix::Zero(2,1);
@@ -43,17 +46,6 @@ void SP::Ph1::SynchronGenerator6bOrderVBR::specificInitialization() {
 	(**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);
 	(**mEdq_s)(1,0) = (**mVdq)(1,0) + mLd_s * (**mIdq)(0,0);
 
-	// initialize conductance matrix 
-	mConductanceMatrix = Matrix::Zero(2,2);
-
-	// auxiliar VBR constants
-	calculateAuxiliarConstants();
-
-	// calculate resistance matrix in dq reference frame
-	mResistanceMatrixDq = Matrix::Zero(2,2);
-	mResistanceMatrixDq <<	0.0,			-mLq_s - mAd_s,
-					  		mLd_s - mAq_s,	0.0;
-
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
@@ -68,22 +60,6 @@ void SP::Ph1::SynchronGenerator6bOrderVBR::specificInitialization() {
 		(**mEdq_s)(1,0)
 	);
 	mSLog->flush();
-}
-
-void SP::Ph1::SynchronGenerator6bOrderVBR::calculateAuxiliarConstants() {
-	mAd_t = mTimeStep * (mLq - mLq_t) / (2 * mTq0_t + mTimeStep);
-	mBd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
-	mAq_t = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
-	mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mDq_t = mTimeStep / (2 * mTd0_t + mTimeStep);
-
-	mAd_s = (mTimeStep * (mLq_t - mLq_s) + mTimeStep * mAd_t) / (2 * mTq0_s + mTimeStep);
-	mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * mTq0_s + mTimeStep);
-	mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
-	mAq_s = (-mTimeStep * (mLd_t - mLd_s) + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);
-	mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);
-	mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
-	mDq_s = mTimeStep * mDq_t / (2 * mTd0_s + mTimeStep);
 }
 
 void SP::Ph1::SynchronGenerator6bOrderVBR::stepInPerUnit() {

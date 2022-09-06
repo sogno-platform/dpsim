@@ -131,6 +131,62 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 }
 
 template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::calculateVBRconstants() {
+
+	Real Tf = 0;	
+	if (mSGOrder == SGOrder::SG6aOrder) {
+		if ((mLd_t!=0) && (mTd0_t!=0))
+			mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);
+
+		if ((mLq_t!=0) && (mTq0_t!=0))	
+			mYq = (mTq0_s / mTq0_t) * (mLq_s / mLq_t) * (mLq - mLq_t);
+
+		if (mTd0_t != 0)
+			Tf = mTaa / mTd0_t;
+	} else {
+		mYd = 0;
+		mYq = 0;
+	}
+
+	Real Zq_t = mLd - mLd_t - mYd;
+	Real Zd_t = mLq - mLq_t - mYq;
+	Real Zq_s = mLd_t - mLd_s + mYd;
+	Real Zd_s = mLq_t - mLq_s + mYq;
+
+	mAd_t = mTimeStep * Zd_t / (2 * mTq0_t + mTimeStep);
+	mBd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
+	mAq_t = - mTimeStep * Zq_t / (2 * mTd0_t + mTimeStep);
+	mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
+	mDq_t = mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);
+
+	if (mSGOrder == SGOrder::SG6aOrder || mSGOrder == SGOrder::SG6bOrder) {
+		mAd_s = (mTimeStep * Zd_s + mTimeStep * mAd_t) / (2 * mTq0_s + mTimeStep);
+		mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * mTq0_s + mTimeStep);
+		mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
+		mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);
+		mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);
+		mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
+		mDq_s = (mTimeStep * mDq_t + Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);
+	}
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::calculateResistanceMatrixConstants() {
+	if (mSGOrder == SGOrder::SG3Order) {
+		mA = -mLq;
+		mB = mLd_t - mAq_t;
+	}
+	if (mSGOrder == SGOrder::SG4Order) {
+		mA = -mAd_t - mLq_t;
+		mB = mLd_t - mAq_t;
+	}
+	if (mSGOrder == SGOrder::SG6aOrder || mSGOrder == SGOrder::SG6bOrder) {
+		mA = -mLq_s - mAd_s;
+		mB = mLd_s - mAq_s;
+	}
+}
+
+template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 	Complex initComplexElectricalPower, Real initMechanicalPower, Complex initTerminalVoltage) {
 	
@@ -304,6 +360,9 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
 	MNAInterface::mnaInitialize(omega, timeStep);
 	this->updateMatrixNodeIndices();
 	mTimeStep = timeStep;
+	calculateVBRconstants();
+	calculateResistanceMatrixConstants();
+	initializeResistanceMatrix();
     specificInitialization();
 
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);

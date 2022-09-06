@@ -6,12 +6,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/SP/SP_Ph1_SynchronGeneratorVBR.h>
+#include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 
 using namespace CPS;
 
-SP::Ph1::SynchronGeneratorVBR::SynchronGeneratorVBR
-    (String uid, String name, Logger::Level logLevel)
+SP::Ph1::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
+    (const String & uid, const String & name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
 	Evbr(Attribute<Complex>::create("Evbr", mAttributes)) {
 
@@ -23,21 +23,28 @@ SP::Ph1::SynchronGeneratorVBR::SynchronGeneratorVBR
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 }
 
-SP::Ph1::SynchronGeneratorVBR::SynchronGeneratorVBR
-	(String name, Logger::Level logLevel)
-	: SynchronGeneratorVBR(name, name, logLevel) {
+SP::Ph1::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
+	(const String & name, Logger::Level logLevel)
+	: ReducedOrderSynchronGeneratorVBR(name, name, logLevel) {
 }
 
-SP::Ph1::SynchronGeneratorVBR::~SynchronGeneratorVBR() {
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::initializeResistanceMatrix() {
+	// resistance matrix in dq reference frame
+	mResistanceMatrixDq = Matrix::Zero(2,2);
+	mResistanceMatrixDq <<	0.0,	mA,
+					  		mB,		0.0;
+	
+	// initialize conductance matrix 
+	mConductanceMatrix = Matrix::Zero(2,2);
 }
 
-void SP::Ph1::SynchronGeneratorVBR::calculateResistanceMatrix() {
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
 	Matrix resistanceMatrix =  mDqToComplexA * mResistanceMatrixDq * mComplexAToDq;
 	resistanceMatrix = resistanceMatrix * mBase_Z;
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
-void SP::Ph1::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Stamp voltage source
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1, 0));
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
@@ -55,11 +62,11 @@ void SP::Ph1::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatr
 	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(), -mConductanceMatrix);
 }
 
-void SP::Ph1::SynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), **Evbr);
 }
 
-void SP::Ph1::SynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
 	// update armature voltage
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	Matrix Vabc = Matrix::Zero(2,1);
@@ -73,7 +80,7 @@ void SP::Ph1::SynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
 	**mIdq = mComplexAToDq * Iabc / mBase_I_RMS;
 }
 
-Matrix SP::Ph1::SynchronGeneratorVBR::get_DqToComplexATransformMatrix() {
+Matrix SP::Ph1::ReducedOrderSynchronGeneratorVBR::get_DqToComplexATransformMatrix() const {
 	Matrix dqToComplexA(2, 2);
 	dqToComplexA <<
 		cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime), 
