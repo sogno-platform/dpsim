@@ -58,6 +58,8 @@ namespace Base {
 			Real mEf_prev;
 
 		protected:
+			//
+			SGOrder mSGOrder; 
 			// ### Base quantities (stator refered) ###
 			/// Nominal power
 			Real mNomPower;
@@ -112,6 +114,42 @@ namespace Base {
 			/// d-axis additional leakage time constant
 			Real mTaa = 0;
 
+			// ### VBR constants ###
+			///
+			Real mAd_t = 0;
+			///
+			Real mBd_t = 0;
+			///
+			Real mAq_t = 0;
+			///
+			Real mBq_t = 0;
+			///
+			Real mDq_t = 0;
+			///
+			Real mAd_s = 0;
+			///
+			Real mAq_s = 0;
+			/// 
+			Real mBd_s = 0;
+			/// 
+			Real mBq_s = 0;
+			///
+			Real mCd_s = 0;
+			///
+			Real mCq_s = 0;
+			///
+			Real mDq_s = 0;
+			///
+			Real mYd = 0;
+			///
+			Real mYq = 0;
+
+			// ### Constants of resistance matrix (VBR) ###
+			///
+			Real mA = 0;
+			///
+			Real mB = 0;
+
 			// ### Initial values ###
 			/// Complex interface current
 			Complex mIntfCurrentComplex;
@@ -147,23 +185,6 @@ namespace Base {
 			///
 			Real mTimeStep;
 			Real mSimTime;
-
-		protected:
-			///
-			ReducedOrderSynchronGenerator(String uid, String name, Logger::Level logLevel);
-			///
-			void initializeFromNodesAndTerminals(Real frequency);
-			/// Function to initialize the specific variables of each SG model
-			virtual void specificInitialization()=0;
-			///
-        	virtual void stepInPerUnit()=0;
-			
-			// ### MNA Section ###
-        	///
-        	void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-        	virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix)=0;
-        	virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector)=0;
-        	virtual void mnaPostStep(const Matrix& leftVector)=0;
 			
 		public:	
 			/// Destructor - does nothing.
@@ -180,6 +201,7 @@ namespace Base {
 				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 				Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t);
 			/// Initialization for 6 Order SynGen
+			/// Taa=0 for 6b Order SynGen
 			void setOperationalParametersPerUnit(Real nomPower, 
 				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 				Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t,
@@ -228,6 +250,29 @@ namespace Base {
 				ReducedOrderSynchronGenerator<VarType>& mSynGen;
 				Attribute<Matrix>::Ptr mLeftVector;
 			};
+
+		protected:
+			///
+			ReducedOrderSynchronGenerator(String uid, String name, Logger::Level logLevel);
+			/// 
+			void calculateVBRconstants();
+			/// 
+			void calculateResistanceMatrixConstants();
+			/// 
+			virtual void initializeResistanceMatrix()=0;
+			///
+			void initializeFromNodesAndTerminals(Real frequency);
+			/// Function to initialize the specific variables of each SG model
+			virtual void specificInitialization()=0;
+			///
+        	virtual void stepInPerUnit()=0;
+			
+			// ### MNA Section ###
+        	///
+        	void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+        	virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix)=0;
+        	virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector)=0;
+        	virtual void mnaPostStep(const Matrix& leftVector)=0;
 	};
 }
 }

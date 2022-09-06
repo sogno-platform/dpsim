@@ -62,10 +62,10 @@ namespace Signal {
 
 	public:
 		/// 
-		TurbineGovernorType1(String name) : SimSignalComp(name, name) { }
+		TurbineGovernorType1(const String & name) : SimSignalComp(name, name) { }
 
 		/// Constructor with log level
-		TurbineGovernorType1(String name, CPS::Logger::Level logLevel);
+		TurbineGovernorType1(const String & name, CPS::Logger::Level logLevel);
 
 		/// Initializes exciter parameters
 		void setParameters(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R, 

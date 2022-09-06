@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SP/SP_Ph1_SynchronGeneratorVBR.h>
+#include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 
 namespace CPS {
 namespace SP {
@@ -16,7 +16,7 @@ namespace Ph1 {
 	/// @brief Voltage-Behind-Reactance (VBR) implementation
 	/// of 3rd order synchronous generator model
 	class SynchronGenerator3OrderVBR :
-		public SynchronGeneratorVBR,
+		public ReducedOrderSynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator3OrderVBR> {
 	public:
 		// #### Model specific variables ####
@@ -25,12 +25,6 @@ namespace Ph1 {
 	protected:
 		/// history term of VBR
 		Matrix mEh_vbr;
-		///
-		Real mAq;
-		/// 
-		Real mBq;
-		///
-		Real mDq;
 
 	public:
 		///
@@ -43,8 +37,6 @@ namespace Ph1 {
 		// #### General Functions ####
 		///
 		void specificInitialization();
-		///
-		void calculateAuxiliarConstants();
 		///
 		void stepInPerUnit();
 		/// Setter 3rd order parameters - extending base class setter by logging

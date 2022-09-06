@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SP/SP_Ph1_SynchronGeneratorVBR.h>
+#include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 
 namespace CPS {
 namespace SP {
@@ -17,7 +17,7 @@ namespace Ph1 {
 	/// of 6th order synchronous generator model
 	/// Anderson-Fouad's model (Milano, Power System modelling and scripting, chapter 15)
 	class SynchronGenerator6bOrderVBR :
-		public SynchronGeneratorVBR,
+		public ReducedOrderSynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator6bOrderVBR> {
 	public:
 		// ### Model specific elements ###
@@ -30,30 +30,6 @@ namespace Ph1 {
 		Matrix mEh_t;
 		/// history term of voltage behind the subtransient reactance
 		Matrix mEh_s;
-		///
-		Real mAd_t;
-		///
-		Real mBd_t;
-		///
-		Real mAq_t;
-		///
-		Real mBq_t;
-		///
-		Real mDq_t;
-		///
-		Real mAd_s;
-		///
-		Real mAq_s;
-		/// 
-		Real mBd_s;
-		/// 
-		Real mBq_s;
-		///
-		Real mCd_s;
-		///
-		Real mCq_s;
-		///
-		Real mDq_s;
 
 	public:
 		///
@@ -66,8 +42,6 @@ namespace Ph1 {
 		// #### General Functions ####
 		///
 		void specificInitialization();
-		///
-		void calculateAuxiliarConstants();
 		///
 		void stepInPerUnit();
 		/// Setter 6th order parameters - extending base class setter by logging

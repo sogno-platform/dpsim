@@ -46,6 +46,8 @@ namespace Ph1 {
 		/// Specific component initialization
         void specificInitialization(); 
 		///
+		void initializeResistanceMatrix() {};
+		///
 		void stepInPerUnit();
 
 		// ### MNA Section ###
