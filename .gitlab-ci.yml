@@ -103,7 +103,6 @@ docker:rocky:
 
 build:linux-cuda:
   stage: build
-  needs: ["docker:centos"]
   needs: ["docker:rocky"]
   image: ${DOCKER_IMAGE_DEV_ROCKY}:${CI_COMMIT_REF_NAME}
   artifacts:
