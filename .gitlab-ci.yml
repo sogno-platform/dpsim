@@ -45,7 +45,7 @@ docker:rocky:
   needs: []
   script:
     - docker build
-        --file Packaging/Docker/Dockerfile.dev-rocky
+        --file packaging/Docker/Dockerfile.dev-rocky
         --tag ${DOCKER_IMAGE_DEV_ROCKY}:${CI_COMMIT_REF_NAME}
   tags:
     - docker
