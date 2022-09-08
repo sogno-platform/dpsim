@@ -11,25 +11,20 @@
 using namespace CPS;
 
 SP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
-    (String uid, String name, Logger::Level logLevel)
+    (const String & uid, const String & name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
 	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)) {
 
 	setTerminalNumber(1);
+	mModApproach = ModApproach::CurrentSource;
 
 	// model variables
 	**mEdq_t = Matrix::Zero(2,1);
 }
 
 SP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
-	(String name, Logger::Level logLevel)
+	(const String & name, Logger::Level logLevel)
 	: SynchronGenerator4OrderDCIM(name, name, logLevel) {
-}
-
-SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGenerator4OrderDCIM::clone(String name) {
-	
-	auto copy = SynchronGenerator4OrderDCIM::make(name, mLogLevel);
-	return copy;
 }
 
 void SP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
@@ -86,6 +81,12 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	Matrix Ia = mDqToComplexA * **mIdq;
 	(**mIntfCurrent)(0,0) = Complex(Ia(0,0), Ia(1,0)) * mBase_I_RMS;
 }
+
+void SP::Ph1::SynchronGenerator4OrderDCIM::setModellingApproach(ModApproach modApproach) const {
+	if (mModApproach == ModApproach::VoltageSource) 
+		mSLog->debug("DCIM is only implemented as CurrentSource!");
+}
+
 
 void SP::Ph1::SynchronGenerator4OrderDCIM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0), (**mIntfCurrent)(0, 0));

@@ -19,12 +19,14 @@ namespace Ph1 {
 	class SynchronGenerator6bOrderVBR :
 		public ReducedOrderSynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator6bOrderVBR> {
+
 	public:
 		// ### Model specific elements ###
 		/// voltage behind transient reactance
 		const Attribute<Matrix>::Ptr mEdq_t;
 		/// voltage behind subtransient reactance
 		const Attribute<Matrix>::Ptr mEdq_s;
+
 	protected:
 		/// history term of voltage behind the transient reactance
 		Matrix mEh_t;
@@ -33,17 +35,15 @@ namespace Ph1 {
 
 	public:
 		///
-		SynchronGenerator6bOrderVBR(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator6bOrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator6bOrderVBR(String name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SynchronGenerator6bOrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General Functions ####
 		///
-		void specificInitialization();
+		void specificInitialization() override;
 		///
-		void stepInPerUnit();
+		void stepInPerUnit() override;
 		/// Setter 6th order parameters - extending base class setter by logging
 		void setOperationalParametersPerUnit(Real nomPower, 
 				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,

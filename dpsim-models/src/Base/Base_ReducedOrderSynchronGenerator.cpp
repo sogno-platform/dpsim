@@ -14,42 +14,52 @@ template <>
 Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
-	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
-	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
-	mDelta(Attribute<Real>::create("delta", mAttributes)),
-	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
-	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
-	mEf(Attribute<Real>::create("Ef", mAttributes)),
 	mVdq0(Attribute<Matrix>::create("Vdq0", mAttributes)),
-	mIdq0(Attribute<Matrix>::create("Idq0", mAttributes)) {
+	mIdq0(Attribute<Matrix>::create("Idq0", mAttributes)),
+	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
+	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
+	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
+	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
+	mDelta(Attribute<Real>::create("delta", mAttributes)),
+	mEf(Attribute<Real>::create("Ef", mAttributes)) {
+	
+	//
+	mModApproach = ModApproach::CurrentSource;
+	mSimTime = 0.0;
 
 	// declare state variables
 	**mVdq0 = Matrix::Zero(3,1);
 	**mIdq0 = Matrix::Zero(3,1);
-
-	//
-	mSimTime = 0.0;
 }
 
 template <>
 Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
-	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
-	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
-	mDelta(Attribute<Real>::create("delta", mAttributes)),
-	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
-	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
-	mEf(Attribute<Real>::create("Ef", mAttributes)),
 	mVdq(Attribute<Matrix>::create("Vdq0", mAttributes)),
-	mIdq(Attribute<Matrix>::create("Idq0", mAttributes))  {
-
+	mIdq(Attribute<Matrix>::create("Idq0", mAttributes)),
+	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
+	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
+	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
+	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
+	mDelta(Attribute<Real>::create("delta", mAttributes)),
+	mEf(Attribute<Real>::create("Ef", mAttributes)) {
+	
+	//
+	mModApproach = ModApproach::CurrentSource;
 	mSimTime = 0.0;
 
 	// declare state variables
 	///FIXME: The mVdq0 and mVdq member variables are mutually exclusive and carry the same attribute name. Maybe they can be unified?
 	**mVdq = Matrix::Zero(2,1);
 	**mIdq = Matrix::Zero(2,1);
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::setModellingApproach(ModApproach modApproach) {
+	mModApproach = modApproach;
+	if (mModApproach == ModApproach::VoltageSource)
+		this->setVirtualNodeNumber(2);
 }
 
 template <typename VarType>

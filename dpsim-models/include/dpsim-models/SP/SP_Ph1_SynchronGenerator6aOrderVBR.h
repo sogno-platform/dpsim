@@ -25,6 +25,7 @@ namespace Ph1 {
 		const Attribute<Matrix>::Ptr mEdq_t;
 		/// voltage behind subtransient reactance
 		const Attribute<Matrix>::Ptr mEdq_s;
+
 	protected:
 		/// history term of voltage behind the transient reactance
 		Matrix mEh_t;
@@ -33,17 +34,15 @@ namespace Ph1 {
 
 	public:
 		///
-		SynchronGenerator6aOrderVBR(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator6aOrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator6aOrderVBR(String name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SynchronGenerator6aOrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General Functions ####
 		///
-		void specificInitialization();
+		void specificInitialization() override;
 		///
-		void stepInPerUnit();
+		void stepInPerUnit() override;
 	};
 }
 }

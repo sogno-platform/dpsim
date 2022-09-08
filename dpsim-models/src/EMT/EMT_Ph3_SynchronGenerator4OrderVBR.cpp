@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
-    (String uid, String name, Logger::Level logLevel)
+    (const String & uid, const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
 	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)) {
 
@@ -24,14 +24,8 @@ EMT::Ph3::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
 }
 
 EMT::Ph3::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
-	(String name, Logger::Level logLevel)
+	(const String & name, Logger::Level logLevel)
 	: SynchronGenerator4OrderVBR(name, name, logLevel) {
-}
-
-SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator4OrderVBR::clone(String name) {
-	
-	auto copy = SynchronGenerator4OrderVBR::make(name, mLogLevel);
-	return copy;
 }
 
 void EMT::Ph3::SynchronGenerator4OrderVBR::setOperationalParametersPerUnit(Real nomPower, 
@@ -54,7 +48,7 @@ void EMT::Ph3::SynchronGenerator4OrderVBR::setOperationalParametersPerUnit(Real 
 			H, Ld, Lq, L0, 
 			Ld_t, Lq_t,
 			Td0_t, Tq0_t);
-};
+}
 
 void EMT::Ph3::SynchronGenerator4OrderVBR::specificInitialization() {
 	// initial voltage behind the transient reactance in the dq0 reference frame
@@ -95,6 +89,6 @@ void EMT::Ph3::SynchronGenerator4OrderVBR::stepInPerUnit() {
 	mEhs_vbr(2,0) = 0.0;
 
 	// convert Edq_t into the abc reference frame
-	**mEvbr = mDq0ToAbc * mEhs_vbr * mBase_V;
+	mEvbr = mDq0ToAbc * mEhs_vbr * mBase_V;
 }
 

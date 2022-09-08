@@ -59,6 +59,8 @@ namespace Base {
 
 		protected:
 			//
+			ModApproach mModApproach;
+			//
 			SGOrder mSGOrder; 
 			// ### Base quantities (stator refered) ###
 			/// Nominal power
@@ -179,7 +181,6 @@ namespace Base {
 			/// Signal component modelling governor control and steam turbine
 			std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
 			/// Signal component modelling voltage regulator and exciter
-			// std::shared_ptr<Signal::Exciter> mExciter;
 			std::shared_ptr<Signal::Exciter> mExciter;
 
 			///
@@ -189,7 +190,8 @@ namespace Base {
 		public:	
 			/// Destructor - does nothing.
 			virtual ~ReducedOrderSynchronGenerator() { }
-
+			///
+			void setModellingApproach(ModApproach modApproach);
 			/// 
 			void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
 			/// Initialization for 3 Order SynGen
@@ -259,7 +261,7 @@ namespace Base {
 			/// 
 			void calculateResistanceMatrixConstants();
 			/// 
-			virtual void initializeResistanceMatrix()=0;
+			virtual void initializeResistanceMatrix() =0;
 			///
 			void initializeFromNodesAndTerminals(Real frequency);
 			/// Function to initialize the specific variables of each SG model

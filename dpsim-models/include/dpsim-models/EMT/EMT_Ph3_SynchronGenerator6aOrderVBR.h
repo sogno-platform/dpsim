@@ -34,17 +34,15 @@ namespace Ph3 {
 
 	public:
 		///
-		SynchronGenerator6aOrderVBR(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator6aOrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator6aOrderVBR(String name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SimPowerComp<Real>::Ptr clone(String name);
+		SynchronGenerator6aOrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General Functions ####
 		///
-		void specificInitialization();
+		void specificInitialization() override;
 		///
-		void stepInPerUnit();
+		void stepInPerUnit() override;
 	};
 }
 }

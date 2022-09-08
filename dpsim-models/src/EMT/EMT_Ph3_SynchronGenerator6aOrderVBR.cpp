@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR
-    (String uid, String name, Logger::Level logLevel)
+    (const String & uid, const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
 	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)),
 	mEdq0_s(Attribute<Matrix>::create("Edq0_s", mAttributes))  {
@@ -27,14 +27,8 @@ EMT::Ph3::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR
 }
 
 EMT::Ph3::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR
-	(String name, Logger::Level logLevel)
+	(const String & name, Logger::Level logLevel)
 	: SynchronGenerator6aOrderVBR(name, name, logLevel) {
-}
-
-SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator6aOrderVBR::clone(String name) {
-	
-	auto copy = SynchronGenerator6aOrderVBR::make(name, mLogLevel);
-	return copy;
 }
 
 void EMT::Ph3::SynchronGenerator6aOrderVBR::specificInitialization() {
@@ -93,6 +87,6 @@ void EMT::Ph3::SynchronGenerator6aOrderVBR::stepInPerUnit() {
 	mEh_s(2,0) = 0.0;
 
 	// convert Edq_s into the abc reference frame
-	**mEvbr = mDq0ToAbc * mEh_s * mBase_V;
+	mEvbr = mDq0ToAbc * mEh_s * mBase_V;
 }
 

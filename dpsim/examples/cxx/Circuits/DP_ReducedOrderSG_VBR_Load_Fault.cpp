@@ -1,5 +1,6 @@
 #include <DPsim.h>
 #include "../Examples.h"
+#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -73,16 +74,7 @@ int main(int argc, char* argv[]) {
 	auto n1DP = SimNode<Complex>::make("n1DP", PhaseType::Single, initVoltN1);
 
 	// Synchronous generator
-	std::shared_ptr<DP::Ph1::ReducedOrderSynchronGeneratorVBR> genDP = nullptr;
-	if (SGModel=="3")
-		genDP = DP::Ph1::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="4")
-		genDP = DP::Ph1::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="6a")
-		genDP = DP::Ph1::SynchronGenerator6aOrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="6b")
-		genDP = DP::Ph1::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
-
+	auto genDP = GeneratorFactory::createGenDP(SGModel, "SynGen", logLevel);
 	genDP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
@@ -92,6 +84,7 @@ int main(int argc, char* argv[]) {
     genDP->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower, 
 			Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle), 
 					GridParams.VnomMV * sin(GridParams.initVoltAngle)));
+	genDP->setModellingApproach(ModApproach::CurrentSource);
 
 	// Exciter
 	std::shared_ptr<Signal::Exciter> exciterDP = nullptr;
@@ -114,7 +107,7 @@ int main(int argc, char* argv[]) {
 		genDP->addGovernor(turbineGovernorDP);
 	}
 
-	// Lod
+	// Load
 	auto load = CPS::DP::Ph1::RXLoad::make("Load", logLevel);
 	load->setParameters(GridParams.initActivePower, GridParams.initReactivePower, 
 						GridParams.VnomMV);
@@ -128,23 +121,9 @@ int main(int argc, char* argv[]) {
 	genDP->connect({ n1DP });
 	load->connect({ n1DP });
 	fault->connect({SP::SimNode::GND, n1DP});
-	SystemTopology systemDP;
-	if (SGModel=="3")
-		systemDP = SystemTopology(GridParams.nomFreq,
+	auto systemDP = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator3OrderVBR>(genDP), load, fault});
-	else if (SGModel=="4")
-		systemDP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator4OrderVBR>(genDP), load, fault});
-	else if (SGModel=="6a")
-		systemDP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6aOrderVBR>(genDP), load, fault});
-	else if (SGModel=="6b")
-		systemDP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6bOrderVBR>(genDP), load, fault});
+			SystemComponentList{genDP, load, fault});
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP, true, logDownSampling);

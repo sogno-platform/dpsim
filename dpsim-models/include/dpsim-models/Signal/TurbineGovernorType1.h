@@ -19,7 +19,7 @@ namespace Signal {
 	class TurbineGovernorType1 :
 		public SimSignalComp,
 		public SharedFactory<TurbineGovernorType1> {
-	protected:
+	private:
 		// ### Steam Turbine Parameters ####
 		/// Maximum turbine output
 		Real mTmax;
@@ -45,24 +45,27 @@ namespace Signal {
 		// ### Variables ###
 		/// Mechanical speed at time k-1
 		Real mOmega_prev;
-		/// Governor output at time k
- 		const Attribute<Real>::Ptr mXg1;
 		/// Governor output at time k-1
 		Real mXg1_prev;
-		/// Servo output at time k
- 		const Attribute<Real>::Ptr mXg2;
 		/// Servo output at time k-1
 		Real mXg2_prev;
-		/// Reheat output at time k
-		const Attribute<Real>::Ptr mXg3;
 		/// Reheat output at time k-1
 		Real mXg3_prev;
+
+	protected:
+		// ### Variables ###
+		/// Governor output at time k
+ 		const Attribute<Real>::Ptr mXg1;
+		/// Servo output at time k
+ 		const Attribute<Real>::Ptr mXg2;
+		/// Reheat output at time k
+		const Attribute<Real>::Ptr mXg3;
 		/// Mechanical Torque in pu (output of steam turbine)
 		const Attribute<Real>::Ptr mTm;
 
 	public:
 		/// 
-		TurbineGovernorType1(const String & name) : SimSignalComp(name, name) { }
+		explicit TurbineGovernorType1(const String & name) : SimSignalComp(name, name) { }
 
 		/// Constructor with log level
 		TurbineGovernorType1(const String & name, CPS::Logger::Level logLevel);
@@ -71,7 +74,7 @@ namespace Signal {
 		void setParameters(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R, 
 			Real Tmin, Real Tmax, Real OmRef);
 		///
-		void initialize(Real TmRef);
+		void initialize(Real TmRef) override;
 		/// Performs an step to update field voltage value
 		Real step(Real Omega, Real dt);
 	};

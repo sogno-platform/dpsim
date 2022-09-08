@@ -27,17 +27,15 @@ namespace Ph1 {
 
 	public:
 		///
-		SynchronGenerator4OrderVBR(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator4OrderVBR(String name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SynchronGenerator4OrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General Functions ####
 		/// Initializes component from power flow data
-		void specificInitialization();
+		void specificInitialization() override;
 		///
-		void stepInPerUnit();
+		void stepInPerUnit() override;
 		/// Setter 4th order parameters - extending base class setter by logging
 		void setOperationalParametersPerUnit(Real nomPower, 
 			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,

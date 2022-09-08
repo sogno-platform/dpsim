@@ -1,16 +1,13 @@
 #include <DPsim.h>
 #include "../Examples.h"
+#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
 // Grid parameters
-<<<<<<< HEAD
-Examples::Grids::SMIB::ReducedOrderSynchronGenerator::Scenario4::GridParams GridParams;
-=======
-const Examples::Grids::SMIB::ScenarioConfig4 GridParams;
->>>>>>> e1ddd691 (added new Turbine Governor model (type1))
+const Examples::Grids::SMIB::ReducedOrderSynchronGenerator::Scenario4::GridParams GridParams;
 
 // Generator parameters
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
@@ -132,15 +129,7 @@ int main(int argc, char* argv[]) {
 	auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
 
 	// Synchronous generator
-	std::shared_ptr<EMT::Ph3::ReducedOrderSynchronGeneratorVBR> genEMT = nullptr;
-	if (SGModel=="3")
-		genEMT = EMT::Ph3::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="4")
-		genEMT = EMT::Ph3::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="6a")
-		genEMT = EMT::Ph3::SynchronGenerator6aOrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="6b")
-		genEMT = EMT::Ph3::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
+	auto genEMT = GeneratorFactory::createGenEMT(SGModel, "SynGen", logLevel);
 	genEMT->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
@@ -148,7 +137,8 @@ int main(int argc, char* argv[]) {
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
     genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
-
+	genEMT->setModellingApproach(ModApproach::CurrentSource);
+	
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", logLevel);
 	
@@ -171,23 +161,9 @@ int main(int argc, char* argv[]) {
 	extnetEMT->connect({ n2EMT });
 	fault->connect({EMT::SimNode::GND, n1EMT});
 
-	SystemTopology systemEMT;
-	if (SGModel=="3")
-		systemEMT = SystemTopology(GridParams.nomFreq,
+	auto systemEMT = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator3OrderVBR>(genEMT), lineEMT, fault, extnetEMT});
-	else if (SGModel=="4")
-		systemEMT = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator4OrderVBR>(genEMT), lineEMT, fault, extnetEMT});
-	else if (SGModel=="6a")
-		systemEMT = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6aOrderVBR>(genEMT), lineEMT, fault, extnetEMT});
-	else if (SGModel=="6b")
-		systemEMT = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6bOrderVBR>(genEMT), lineEMT, fault, extnetEMT});
+			SystemComponentList{genEMT, lineEMT, fault, extnetEMT});
 			
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT, true, logDownSampling);
