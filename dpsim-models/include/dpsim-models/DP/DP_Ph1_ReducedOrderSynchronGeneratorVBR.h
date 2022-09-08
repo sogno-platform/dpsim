@@ -18,10 +18,14 @@ namespace Ph1 {
 	class ReducedOrderSynchronGeneratorVBR :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public MNAVariableCompInterface {
+
 	public:
         // Common elements of all VBR models
 		/// voltage behind reactance phase a
-        const Attribute<Complex>::Ptr mEvbr;
+        Complex mEvbr;
+		/// norton equivalent current of mEvbr
+		Matrix mIvbr;
+
 	protected:
         /// Resistance matrix in dq reference frame
 		Matrix mResistanceMatrixDq;
@@ -54,11 +58,11 @@ namespace Ph1 {
       
 	  	// #### General Functions ####
         /// Specific component initialization
-        virtual void specificInitialization()=0;
+        virtual void specificInitialization() override =0;
         ///
-		void initializeResistanceMatrix();
+		void initializeResistanceMatrix() override;
         ///
-        virtual void stepInPerUnit()=0;
+        virtual void stepInPerUnit() override =0;
 		///
         void calculateConductanceMatrix();
 		/// Calculate Ka, Kb and Kvbr
@@ -67,17 +71,16 @@ namespace Ph1 {
 		Matrix get_parkTransformMatrix() const;        
 
 		// ### MNA Section ###
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaPostStep(const Matrix& leftVector);
 		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaPostStep(const Matrix& leftVector) override;
+		
     public:
         virtual ~ReducedOrderSynchronGeneratorVBR()=default;
 
         /// Mark that parameter changes so that system matrix is updated
-		Bool hasParameterChanged() override;
-
+		Bool hasParameterChanged() override { return true; };
     };
 }
 }

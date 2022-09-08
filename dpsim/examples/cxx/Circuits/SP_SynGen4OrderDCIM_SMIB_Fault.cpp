@@ -24,11 +24,9 @@ int main(int argc, char* argv[]) {
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
 	std::string stepSize_str = "";
-	if (argc > 1) {
-		if (args.options.find("StepSize") != args.options.end()) {
+	if (argc > 1 && (args.options.find("StepSize") != args.options.end())) {
 			timeStep = args.getOptionReal("StepSize");
 			stepSize_str = "_StepSize_" + std::to_string(timeStep);
-		}
 	}
 
 	Real logDownSampling;

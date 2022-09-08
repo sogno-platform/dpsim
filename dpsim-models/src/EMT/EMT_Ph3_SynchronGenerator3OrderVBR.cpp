@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
-    (String uid, String name, Logger::Level logLevel)
+    (const String & uid, const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
 	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)) {
 
@@ -24,14 +24,8 @@ EMT::Ph3::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
 }
 
 EMT::Ph3::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
-	(String name, Logger::Level logLevel)
+	(const String & name, Logger::Level logLevel)
 	: SynchronGenerator3OrderVBR(name, name, logLevel) {
-}
-
-SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator3OrderVBR::clone(String name) {
-	
-	auto copy = SynchronGenerator3OrderVBR::make(name, mLogLevel);
-	return copy;
 }
 
 void EMT::Ph3::SynchronGenerator3OrderVBR::setOperationalParametersPerUnit(Real nomPower, 
@@ -87,6 +81,6 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::stepInPerUnit() {
 	mEhs_vbr(2,0) = 0.0;
 
 	// convert Edq_t into the abc reference frame
-	**mEvbr = mDq0ToAbc * mEhs_vbr * mBase_V;
+	mEvbr = mDq0ToAbc * mEhs_vbr * mBase_V;
 }
 

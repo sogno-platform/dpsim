@@ -1,5 +1,6 @@
 #include <DPsim.h>
 #include "../Examples.h"
+#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -137,15 +138,7 @@ int main(int argc, char* argv[]) {
 	auto n2SP = SimNode<Complex>::make("n2SP", PhaseType::Single, initialVoltage_n2);
 
 	// Synchronous generator
-	std::shared_ptr<SP::Ph1::ReducedOrderSynchronGeneratorVBR> genSP = nullptr;
-	if (SGModel=="3")
-		genSP = SP::Ph1::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="4")
-		genSP = SP::Ph1::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="6a")
-		genSP = SP::Ph1::SynchronGenerator6aOrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="6b")
-		genSP = SP::Ph1::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
+	auto genSP = GeneratorFactory::createGenSP(SGModel, "SynGen", logLevel);
 	genSP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
@@ -153,6 +146,7 @@ int main(int argc, char* argv[]) {
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
     genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+	genSP->setModellingApproach(ModApproach::CurrentSource);
 
 	// Exciter
 	std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
@@ -195,27 +189,9 @@ int main(int argc, char* argv[]) {
 	extnetSP->connect({ n2SP });
 	fault->connect({SP::SimNode::GND, n1SP});
 	
-	SystemTopology systemSP;
-	if (SGModel=="3")
-		systemSP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator3OrderVBR>(genSP), 
-								lineSP, extnetSP, fault});
-	else if (SGModel=="4")
-		systemSP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator4OrderVBR>(genSP), 
-								lineSP, extnetSP, fault});
-	else if (SGModel=="6a")
-		systemSP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator6aOrderVBR>(genSP), 
-								lineSP, extnetSP, fault});
-	else if (SGModel=="6b")
-		systemSP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator6bOrderVBR>(genSP), 
-								lineSP, extnetSP, fault});
+	auto systemSP = SystemTopology(GridParams.nomFreq,
+			   SystemNodeList{n1SP, n2SP},
+			   SystemComponentList{genSP, lineSP, extnetSP, fault});
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);

@@ -18,7 +18,8 @@ namespace Signal {
 	class Exciter :
 		public SimSignalComp,
 		public SharedFactory<Exciter> {
-	protected:
+
+	private: 
 		// ### Exciter Parameters ####
 		/// Ampliﬁer time constant (s)
 		Real mTa;
@@ -38,25 +39,13 @@ namespace Signal {
 		/// Reference voltage
 		Real mVref = 0;
 		/// Output of voltage transducer at time k-1
-		const Attribute<Real>::Ptr mVm;
-		/// Output of voltage transducer at time k-1
 		Real mVm_prev = 0;
-		/// Input of voltage transducer
-		const Attribute<Real>::Ptr mVh;
-		/// Output of stablizing feedback at time k
-		const Attribute<Real>::Ptr mVis;
 		/// Output of stablizing feedback at time k-1
 		Real mVis_prev = 0;
 		/// Output of ceiling function at time k-1
-		const Attribute<Real>::Ptr mVse;
-		/// Output of ceiling function at time k-1
 		Real mVse_prev = 0;
-		/// Regulator output at time k
-		const Attribute<Real>::Ptr mVr;
 		/// Output of regulator output at time k-1
 		Real mVr_prev = 0;
-		/// Exciter output at time k (induced emf by the field current under no-load conditions)
-		const Attribute<Real>::Ptr mEf;
 		/// Exciter output at time k-1
 		Real mEf_prev = 0;
 		/// Maximum regulator voltage (p.u.)
@@ -64,10 +53,23 @@ namespace Signal {
 		/// Minumum regulator voltage (p.u.)
 		Real mMinVr;
 
+	protected:
+		/// Output of voltage transducer at time k-1
+		const Attribute<Real>::Ptr mVm;
+		/// Input of voltage transducer
+		const Attribute<Real>::Ptr mVh;
+		/// Output of stablizing feedback at time k
+		const Attribute<Real>::Ptr mVis;
+		/// Regulator output at time k
+		const Attribute<Real>::Ptr mVr;
+		/// Output of ceiling function at time k-1
+		const Attribute<Real>::Ptr mVse;
+		/// Exciter output at time k (induced emf by the field current under no-load conditions)
+		const Attribute<Real>::Ptr mEf;
+
 	public:
 		///
-		Exciter(const String & name) : SimSignalComp(name, name) { }
-
+		explicit Exciter(const String & name) : SimSignalComp(name, name) { }
 		/// Constructor with log level
 		Exciter(const String & name, CPS::Logger::Level logLevel);
 

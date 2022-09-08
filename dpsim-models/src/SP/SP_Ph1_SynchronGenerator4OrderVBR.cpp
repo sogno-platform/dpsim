@@ -12,7 +12,7 @@
 using namespace CPS;
 
 SP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
-    (String uid, String name, Logger::Level logLevel)
+    (const String & uid, const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
 	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)) {
 
@@ -25,13 +25,8 @@ SP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
 }
 
 SP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
-	(String name, Logger::Level logLevel)
+	(const String & name, Logger::Level logLevel)
 	: SynchronGenerator4OrderVBR(name, name, logLevel) {
-}
-
-SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGenerator4OrderVBR::clone(String name) {
-	auto copy = SynchronGenerator4OrderVBR::make(name, mLogLevel);
-	return copy;
 }
 
 void SP::Ph1::SynchronGenerator4OrderVBR::setOperationalParametersPerUnit(Real nomPower, 
@@ -55,7 +50,6 @@ void SP::Ph1::SynchronGenerator4OrderVBR::setOperationalParametersPerUnit(Real n
 			Ld_t, Lq_t,
 			Td0_t, Tq0_t);
 };
-
 
 void SP::Ph1::SynchronGenerator4OrderVBR::specificInitialization() {
 
@@ -96,5 +90,5 @@ void SP::Ph1::SynchronGenerator4OrderVBR::stepInPerUnit() {
 	
 	// convert Edq_t into the abc reference frame
 	mEh_vbr = mDqToComplexA * mEh_vbr;
-	**Evbr = Complex(mEh_vbr(0,0), mEh_vbr(1,0)) * mBase_V_RMS;
+	mEvbr = Complex(mEh_vbr(0,0), mEh_vbr(1,0)) * mBase_V_RMS;
 }

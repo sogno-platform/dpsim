@@ -1,16 +1,13 @@
 #include <DPsim.h>
 #include "../Examples.h"
+#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
 // Grid parameters
-<<<<<<< HEAD
-Examples::Grids::SMIB::ReducedOrderSynchronGenerator::Scenario4::GridParams GridParams;
-=======
-const Examples::Grids::SMIB::ScenarioConfig4 GridParams;
->>>>>>> e1ddd691 (added new Turbine Governor model (type1))
+const Examples::Grids::SMIB::ReducedOrderSynchronGenerator::Scenario4::GridParams GridParams;
 
 // Generator parameters
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
@@ -124,15 +121,7 @@ int main(int argc, char* argv[]) {
 	auto n2DP = SimNode<Complex>::make("n2DP", PhaseType::Single, initialVoltage_n2);
 
 	// Synchronous generator
-	std::shared_ptr<DP::Ph1::ReducedOrderSynchronGeneratorVBR> genDP = nullptr;
-	if (SGModel=="3")
-		genDP = DP::Ph1::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="4")
-		genDP = DP::Ph1::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="6a")
-		genDP = DP::Ph1::SynchronGenerator6aOrderVBR::make("SynGen", logLevel);
-	else if (SGModel=="6b")
-		genDP = DP::Ph1::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
+	auto genDP = GeneratorFactory::createGenDP(SGModel, "SynGen", logLevel);
 	genDP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
@@ -140,6 +129,7 @@ int main(int argc, char* argv[]) {
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+	genDP->setModellingApproach(ModApproach::CurrentSource);
 
 	//Grid bus as Slack
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
@@ -160,34 +150,20 @@ int main(int argc, char* argv[]) {
 	lineDP->connect({ n1DP, n2DP });
 	extnetDP->connect({ n2DP });
 	fault->connect({SP::SimNode::GND, n1DP});
-	SystemTopology systemDP;
-	if (SGModel=="3")
-		systemDP = SystemTopology(GridParams.nomFreq,
+	auto systemDP = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator3OrderVBR>(genDP), lineDP, extnetDP, fault});
-	else if (SGModel=="4")
-		systemDP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator4OrderVBR>(genDP), lineDP, extnetDP, fault});
-	else if (SGModel=="6a")
-		systemDP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6aOrderVBR>(genDP), lineDP, extnetDP, fault});
-	else if (SGModel=="6b")
-		systemDP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6bOrderVBR>(genDP), lineDP, extnetDP, fault});
+			SystemComponentList{genDP, lineDP, extnetDP, fault});
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP, true, logDownSampling);
-	loggerEMT->logAttribute("v_gen", 	genEMT->attribute("v_intf"));
-	loggerEMT->logAttribute("i_gen", 	genEMT->attribute("i_intf"));
-    loggerDP->logAttribute("Te", 	 genDP->attribute("Te"));
-    loggerDP->logAttribute("delta", 	 genDP->attribute("delta"));
-    loggerDP->logAttribute("w_r", 		 genDP->attribute("w_r"));
-	loggerDP->logAttribute("Edq0",		 genDP->attribute("Edq0_t"));
-	loggerDP->logAttribute("Vdq0", 		 genDP->attribute("Vdq0"));
-	loggerDP->logAttribute("Idq0", 		 genDP->attribute("Idq0"));
+	loggerDP->logAttribute("v_gen", 	genDP->attribute("v_intf"));
+	loggerDP->logAttribute("i_gen", 	genDP->attribute("i_intf"));
+    loggerDP->logAttribute("Te", 	 	genDP->attribute("Te"));
+    loggerDP->logAttribute("delta", 	genDP->attribute("delta"));
+    loggerDP->logAttribute("w_r", 		genDP->attribute("w_r"));
+	loggerDP->logAttribute("Edq0",		genDP->attribute("Edq0_t"));
+	loggerDP->logAttribute("Vdq0", 		genDP->attribute("Vdq0"));
+	loggerDP->logAttribute("Idq0", 		genDP->attribute("Idq0"));
 
 	Simulation simDP(simNameDP, logLevel);
 	simDP.doInitFromNodesAndTerminals(true);
