@@ -16,6 +16,9 @@ DP::Ph1::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
 
 	mPhaseType = PhaseType::Single;
 	setTerminalNumber(1);
+	if (mModApproach == ModApproach::VoltageSource) {
+		setVirtualNodeNumber(2);
+	}
 	
 	// model variables
 	**mIntfVoltage = MatrixComp::Zero(1, 1);

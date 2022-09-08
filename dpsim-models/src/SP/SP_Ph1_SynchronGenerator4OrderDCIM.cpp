@@ -17,6 +17,7 @@ SP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
 
 	//
 	setTerminalNumber(1);
+	mModApproach = ModApproach::CurrentSource;
 
 	// model variables
 	**mEdq_t = Matrix::Zero(2,1);
@@ -81,6 +82,12 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	Matrix Ia = mDqToComplexA * **mIdq;
 	(**mIntfCurrent)(0,0) = Complex(Ia(0,0), Ia(1,0)) * mBase_I_RMS;
 }
+
+void SP::Ph1::SynchronGenerator4OrderDCIM::setModellingApproach(ModApproach modApproach) const {
+	if (mModApproach == ModApproach::VoltageSource) 
+		mSLog->debug("DCIM is only implemented as CurrentSource!");
+}
+
 
 void SP::Ph1::SynchronGenerator4OrderDCIM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0), (**mIntfCurrent)(0, 0));
