@@ -144,7 +144,7 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	//loggerDP->logAttribute("i_slack", 	 extnetDP->attribute("i_intf"));
     loggerDP->logAttribute("i_gen", 	 genDP->attribute("i_intf"));
 	loggerDP->logAttribute("v_gen", 	 genDP->attribute("v_intf"));
-    loggerDP->logAttribute("Etorque", 	 genDP->attribute("Etorque"));
+    loggerDP->logAttribute("Te", 	 genDP->attribute("Te"));
     //loggerDP->logAttribute("delta", 	 genDP->attribute("delta"));
     //loggerDP->logAttribute("w_r", 		 genDP->attribute("w_r"));
 	//loggerDP->logAttribute("Edq0",		 genDP->attribute("Edq0_t"));
