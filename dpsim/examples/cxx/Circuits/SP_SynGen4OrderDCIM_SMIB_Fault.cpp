@@ -122,7 +122,7 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	//loggerSP->logAttribute("i_slack", 	 extnetSP->attribute("i_intf"));
 	loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
     loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
-    loggerSP->logAttribute("Etorque", 	 genSP->attribute("Etorque"));
+    loggerSP->logAttribute("Te", 	 genSP->attribute("Te"));
     loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
     loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
 	loggerSP->logAttribute("Edq0", 		 genSP->attribute("Edq_t"));

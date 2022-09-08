@@ -168,7 +168,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 		this->setInitialValues(-this->terminal(0)->singlePower(), -this->terminal(0)->singlePower().real(), this->initialSingleVoltage(0));
 
 	// Initialize mechanical torque
-	mMechTorque = mInitMechPower / mNomPower;
+	**mMechTorque = mInitMechPower / mNomPower;
 		
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
@@ -214,7 +214,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 		(**mIdq0)(0,0),
 		(**mIdq0)(1,0),
 		mEf,
-		mMechTorque,
+		**mMechTorque,
 		**mElecTorque,
 		**mThetaMech,
         **mDelta
@@ -231,7 +231,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 		this->setInitialValues(-this->terminal(0)->singlePower(), -this->terminal(0)->singlePower().real(), this->initialSingleVoltage(0));
 
 	// Initialize mechanical torque
-	mMechTorque = mInitMechPower / mNomPower;
+	**mMechTorque = mInitMechPower / mNomPower;
 		
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
@@ -277,7 +277,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 		(**mIdq)(0,0),
 		(**mIdq)(1,0),
 		mEf,
-		mMechTorque,
+		**mMechTorque,
 		**mElecTorque,
 		**mThetaMech,
         **mDelta

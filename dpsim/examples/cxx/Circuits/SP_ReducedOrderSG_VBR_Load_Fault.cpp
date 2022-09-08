@@ -84,7 +84,7 @@ void SP_1ph_SynGen_Load(String simName, Real timeStep, Real finalTime, Real H,
 	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
 	loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
     loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
-    loggerSP->logAttribute("Etorque", 	 genSP->attribute("Etorque"));
+    loggerSP->logAttribute("Te", 	 genSP->attribute("Te"));
     //loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
     //loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
 	//loggerSP->logAttribute("Edq0", 		 genSP->attribute("Edq0_t"));
