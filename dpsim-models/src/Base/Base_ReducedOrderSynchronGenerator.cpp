@@ -14,7 +14,8 @@ template <>
 Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
-	mElecTorque(Attribute<Real>::create("Etorque", mAttributes)),
+	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
+	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
@@ -32,7 +33,8 @@ template <>
 Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
-	mElecTorque(Attribute<Real>::create("Etorque", mAttributes)),
+	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
+	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
@@ -126,6 +128,18 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mH = H;
 }
 
+template <>
+void Base::ReducedOrderSynchronGenerator<Real>::scaleInertiaConstant(Real scalingFactor) {
+	mH = mH * scalingFactor;
+	mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH); 
+}
+
+template <>
+void Base::ReducedOrderSynchronGenerator<Complex>::scaleInertiaConstant(Real scalingFactor) {
+	mH = mH * scalingFactor;
+	mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH); 
+}
+
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 	Complex initComplexElectricalPower, Real initMechanicalPower, Complex initTerminalVoltage) {
@@ -151,10 +165,10 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	this->updateMatrixNodeIndices();
 
 	if(!mInitialValuesSet)
-		this->setInitialValues(-this->terminal(0)->singlePower(), mInitMechPower, this->initialSingleVoltage(0));
+		this->setInitialValues(-this->terminal(0)->singlePower(), -this->terminal(0)->singlePower().real(), this->initialSingleVoltage(0));
 
 	// Initialize mechanical torque
-	mMechTorque = mInitMechPower / mNomPower;
+	**mMechTorque = mInitMechPower / mNomPower;
 		
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
@@ -200,7 +214,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 		(**mIdq0)(0,0),
 		(**mIdq0)(1,0),
 		mEf,
-		mMechTorque,
+		**mMechTorque,
 		**mElecTorque,
 		**mThetaMech,
         **mDelta
@@ -214,10 +228,10 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	this->updateMatrixNodeIndices();
 
 	if(!mInitialValuesSet)
-		this->setInitialValues(-this->terminal(0)->singlePower(), mInitMechPower, this->initialSingleVoltage(0));
+		this->setInitialValues(-this->terminal(0)->singlePower(), -this->terminal(0)->singlePower().real(), this->initialSingleVoltage(0));
 
 	// Initialize mechanical torque
-	mMechTorque = mInitMechPower / mNomPower;
+	**mMechTorque = mInitMechPower / mNomPower;
 		
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
@@ -263,7 +277,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 		(**mIdq)(0,0),
 		(**mIdq)(1,0),
 		mEf,
-		mMechTorque,
+		**mMechTorque,
 		**mElecTorque,
 		**mThetaMech,
         **mDelta

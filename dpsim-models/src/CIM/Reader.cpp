@@ -496,7 +496,11 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 
 	if (mDomain == Domain::DP) {
 		mSLog->info("    Create generator in DP domain.");
-		if (mGeneratorType == GeneratorType::TransientStability || mGeneratorType == GeneratorType::SG4OrderVBR) {
+		if (mGeneratorType == GeneratorType::TransientStability 
+			|| mGeneratorType == GeneratorType::SG6aOrderVBR
+			|| mGeneratorType == GeneratorType::SG6bOrderVBR
+			|| mGeneratorType == GeneratorType::SG4OrderVBR
+			|| mGeneratorType == GeneratorType::SG3OrderVBR) {
 
 			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
 			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
@@ -580,7 +584,11 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 		}
 	} else if (mDomain == Domain::SP) {
 		mSLog->info("    Create generator in SP domain.");
-		if (mGeneratorType == GeneratorType::TransientStability || mGeneratorType == GeneratorType::SG4OrderVBR) {
+		if (mGeneratorType == GeneratorType::TransientStability 
+			|| mGeneratorType == GeneratorType::SG6aOrderVBR
+			|| mGeneratorType == GeneratorType::SG6bOrderVBR
+			|| mGeneratorType == GeneratorType::SG4OrderVBR
+			|| mGeneratorType == GeneratorType::SG3OrderVBR) {
 
 			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
 			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);

@@ -231,34 +231,34 @@ void PFSolver::determineNodeBaseVoltages() {
 		for (auto comp : mSystem.mComponentsAtNode[node]) {
             if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi = std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
 				baseVoltage_=Math::abs(vsi->attribute<CPS::Complex>("vnom")->get());
-                mSLog->info("Choose base voltage of {} to convert pu-solution of {}.", vsi->name(), node->name());
+                mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, vsi->name(), node->name());
                 break;
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::RXLine> rxline = std::dynamic_pointer_cast<CPS::SP::Ph1::RXLine>(comp)) {
 				baseVoltage_ = rxline->attribute<CPS::Real>("base_Voltage")->get();
-                mSLog->info("Choose base voltage of {} to convert pu-solution of {}.", rxline->name(), node->name());
+                mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, rxline->name(), node->name());
                 break;
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp)) {
 				baseVoltage_ = line->attribute<CPS::Real>("base_Voltage")->get();
-                mSLog->info("Choose base voltage of {} to convert pu-solution of {}.", line->name(), node->name());
+                mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, line->name(), node->name());
                 break;
 			}
 			else if (std::shared_ptr<CPS::SP::Ph1::Transformer> trans = std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp)) {
 				if (trans->terminal(0)->node()->name() == node->name()){
                     baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end1")->get();
-                    mSLog->info("Choose base voltage of {} to convert pu-solution of {}.", trans->name(), node->name());
+                    mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, trans->name(), node->name());
                     break;
                 }
 				else if (trans->terminal(1)->node()->name() == node->name()){
                     baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end2")->get();
-                    mSLog->info("Choose base voltage of {} to convert pu-solution of {}.", trans->name(), node->name());
+                    mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, trans->name(), node->name());
                     break;
                 }
             }
             else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
                     baseVoltage_ = gen->attribute<CPS::Real>("base_Voltage")->get();
-                    mSLog->info("Choose base voltage of {} to convert pu-solution of {}.", gen->name(), node->name());
+                    mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, gen->name(), node->name());
                     break;
                 }
             else {
