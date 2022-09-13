@@ -30,12 +30,12 @@ int main(int argc, char* argv[]) {
 
 		if (args.name != "dpsim")
 			simName = args.name;
-		if (args.options_bool.find("control") != args.options_bool.end())
-			pvWithControl = args.options_bool["control"];
+		if (args.options.find("control") != args.options.end())
+			pvWithControl = args.getOptionBool("control");
 		if (args.options.find("scale_kp") != args.options.end())
-			cmdScaleI = args.options["scale_kp"];
+			cmdScaleI = args.getOptionReal("scale_kp");
 		if (args.options.find("scale_ki") != args.options.end())
-			cmdScaleI = args.options["scale_ki"];
+			cmdScaleI = args.getOptionReal("scale_ki");
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
@@ -71,8 +71,8 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -123,10 +123,10 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
-	loggerSP->addAttribute("v1", n1SP->attribute("v"));
-	loggerSP->addAttribute("v2", n2SP->attribute("v"));
-	loggerSP->addAttribute("i12", lineSP->attribute("i_intf"));
-	loggerSP->addAttribute("f_src", extnetSP->attribute("f_src"));
+	loggerSP->logAttribute("v1", n1SP->attribute("v"));
+	loggerSP->logAttribute("v2", n2SP->attribute("v"));
+	loggerSP->logAttribute("i12", lineSP->attribute("i_intf"));
+	loggerSP->logAttribute("f_src", extnetSP->attribute("f_src"));
 
 	CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerSP, pv);
 
