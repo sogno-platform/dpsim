@@ -26,15 +26,20 @@ int main(int argc, char* argv[]) {
 	String sgType = defaultConfig.sgType;
 	Real loadStepEventTime = defaultConfig.loadStepEventTime;
 	Real H = syngenKundur.H;
+	Real tolerance = defaultConfig.tolerance;
+	int maxIter = defaultConfig.maxIter;
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-		timeStep = args.timeStep;
-		//finalTime = args.duration;
-		//if (args.name != "dpsim")
 		if (args.options.find("SimName") != args.options.end())
 			simName = args.getOptionString("SimName");
+		if (args.options.find("TimeStep") != args.options.end())
+			timeStep = args.getOptionReal("TimeStep");
+		if (args.options.find("Tolerance") != args.options.end())
+			tolerance = args.getOptionReal("Tolerance");
+		if (args.options.find("MaxIter") != args.options.end())
+			maxIter = int(args.getOptionReal("MaxIter"));
 		if (args.options.find("sgType") != args.options.end())
 			sgType = args.getOptionString("sgType");
 		if (args.options.find("loadStepEventTime") != args.options.end())
@@ -43,6 +48,13 @@ int main(int argc, char* argv[]) {
 			H = args.getOptionReal("inertia");
 	}
 
+	std::cout << "Simulation Parameters: " << std::endl;
+	std::cout << "SimName: " << simName << std::endl;
+	std::cout << "Time Step: " << timeStep << std::endl;
+	std::cout << "Tolerance: " << tolerance << std::endl;
+	std::cout << "Max N° of Iterations: " << maxIter << std::endl;
+	std::cout << "SG: " << sgType << std::endl;
+	
 	// Configure logging
 	Logger::Level logLevel = Logger::Level::info;
 
@@ -130,10 +142,9 @@ int main(int argc, char* argv[]) {
 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t); 
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
-	genDP->setMaxIterations(defaultConfig.maxIter);
-	genDP->setTolerance(defaultConfig.tolerance);
+	genDP->setMaxIterations(maxIter);
+	genDP->setTolerance(tolerance);
 
-	//Grid bus as Slack
 	//Grid bus as Slack
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
 	extnetDP->setParameters(gridParams.VnomMV);
@@ -161,12 +172,9 @@ int main(int argc, char* argv[]) {
 		logger->addAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log generator vars
-	//logger->addAttribute(genDP->name() + ".Tm", genDP->attribute("Tm"));
 	logger->addAttribute(genDP->name() + ".Te", genDP->attribute("Te"));
-	//logger->addAttribute(genDP->name() + ".omega", genDP->attribute("w_r"));
 	logger->addAttribute(genDP->name() + ".delta", genDP->attribute("delta"));
 	logger->addAttribute(genDP->name() + ".NIterations", genDP->attribute("NIterations"));
-	//logger->addAttribute(genDP->name() + ".theta", genDP->attribute("Theta"));
 
 	// load step event
 	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::Events::createEventAddPowerConsumption("n1DP", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemDP, Domain::DP, logger);
@@ -179,7 +187,6 @@ int main(int argc, char* argv[]) {
 	simDP.setDomain(Domain::DP);
 	simDP.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
 	simDP.addLogger(logger);
-	//simDP.doSystemMatrixRecomputation(true);
 
 	// Events
 	simDP.addEvent(loadStepEvent);

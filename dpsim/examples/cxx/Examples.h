@@ -377,7 +377,7 @@ namespace Scenario6 {
         Real loadStepEventTime = 10.0;
 
         // parameters of iterative model
-        Real maxIter = 20;
+        Real maxIter = 25;
         Real tolerance = 1e-10;
     };
 
