@@ -4,7 +4,7 @@ import dpsimpy
 import dpsimpyvillas
 
 sim_name = "DPsim_File"
-time_step = 0.001
+time_step = 0.01
 final_time = 10
 
 n1 = dpsimpy.dp.SimNode('n1', dpsimpy.PhaseType.Single, [10])

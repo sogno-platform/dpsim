@@ -67,12 +67,8 @@ namespace Ph1 {
 		/// Reactance [Ohm]
 		Real mReactance;
 
-		/// Magnetizing reactance [Ohm]
-		Real mMagnetizingReactance=1e9;
 		/// Leakage
 		Complex mLeakage;
-		/// Magnetizing impedance
-		Complex mMagnetizing;
 
 		/// base apparent power[VA]
 		Real mBaseApparentPower;

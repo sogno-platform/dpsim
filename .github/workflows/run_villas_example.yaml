@@ -1,0 +1,46 @@
+name: Run a villas example using multiple containers
+
+on:
+  workflow_call:
+    inputs:
+      compose_file_path:
+        description: 'Path to the multi-container compose file'
+        required: true
+        type: string
+      container_commands:
+        description: 'docker exec commands for running tests in the containers'
+        required: true
+        type: string
+      continue_on_error:
+        description: 'Do not fail test when the container commands fail'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  run-villas-example:
+    name: Run a villas example across multiple containers
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Restore build archive
+      uses: actions/download-artifact@v3
+      with:
+       name: build-cache
+       path: ${{ github.workspace }}/build
+
+    - name: Start containers
+      run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose up -d
+
+    - name: Run container commands
+      timeout-minutes: 5
+      continue-on-error: ${{ inputs.continue_on_error }}
+      shell: bash
+      run: ${{ inputs.container_commands }}
+
+    - name: Stop containers
+      if: ${{ always() }}
+      run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose down
+    
