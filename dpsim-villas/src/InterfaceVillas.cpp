@@ -155,19 +155,21 @@ void InterfaceVillas::readValuesFromEnv(CPS::AttributeBase::List& updatedAttrs) 
 	Sample *sample = node::sample_alloc(&mSamplePool);
 	int ret = 0;
 	try {
-		while (ret == 0)
-			ret = mNode->read(&sample, 1);
+		ret = mNode->read(&sample, 1);
 		if (ret < 0) {
 			mLog->error("Fatal error: failed to read sample from InterfaceVillas. Read returned code {}", ret);
 			close();
 			std::exit(1);
 		}
 
-		for (auto imp : mImports) {
-			updatedAttrs.push_back(imp(sample));
+		if (ret != 0) {
+			for (auto imp : mImports) {
+				updatedAttrs.push_back(imp(sample));
+			}
 		}
 
 		sample_decref(sample);
+
 	}
 	catch (std::exception& exc) {
 		/* probably won't happen (if the timer expires while we're still reading data,
@@ -181,6 +183,9 @@ void InterfaceVillas::readValuesFromEnv(CPS::AttributeBase::List& updatedAttrs) 
 }
 
 void InterfaceVillas::writeValuesToEnv(CPS::AttributeBase::List& updatedAttrs) {
+	
+	if (updatedAttrs.size() < mExports.size()) return;
+	
 	Sample *sample = nullptr;
 	Int ret = 0;
 	bool done = false;
@@ -192,11 +197,15 @@ void InterfaceVillas::writeValuesToEnv(CPS::AttributeBase::List& updatedAttrs) {
 		}
 
 		sample->signals = mNode->getOutputSignals(false);
-
-		for (auto exp : mExports) {
-			//TODO: At this point, we need to have a full list of queued attributes corresponding to an export lambda each
-			exp(updatedAttrs[0], sample); //FIXME: This will crash!
+		for (unsigned int i = 0; i < updatedAttrs.size(); i++) {
+			mExports[i](updatedAttrs[i], sample);
 		}
+		updatedAttrs.clear();
+
+		// for (auto exp : mExports) {
+		// 	//TODO: At this point, we need to have a full list of queued attributes corresponding to an export lambda each
+		// 	exp(updatedAttrs[0], sample); //FIXME: This will crash!
+		// }
 
 		sample->sequence = mSequence++;
 		sample->flags |= (int) villas::node::SampleFlags::HAS_SEQUENCE;

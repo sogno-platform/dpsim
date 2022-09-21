@@ -7,7 +7,7 @@ using namespace CPS;
 namespace DPsim {
 
     void InterfaceManager::open() {
-        mInterfaceThread = std::thread(InterfaceManager::WriterThread(mQueueDpsimToInterface, mInterface));
+        mInterfaceThread = std::thread(InterfaceManager::WriterThread(mQueueDpsimToInterface, mQueueInterfaceToDpsim, mInterface));
         mOpened = true;
     }
 
@@ -56,7 +56,7 @@ namespace DPsim {
             //UNIMPLEMENTED
         } else {
             AttributePacket receivedPacket;
-            while (mQueueDpsimToInterface->try_dequeue(receivedPacket)) {
+            if(mQueueInterfaceToDpsim->try_dequeue(receivedPacket)) {
                 mImportAttrsDpsim[receivedPacket.attributeId]->copyValue(receivedPacket.value);
             }
         }
@@ -76,18 +76,34 @@ namespace DPsim {
     void InterfaceManager::WriterThread::operator() () {
         bool interfaceClosed = false;
         CPS::AttributeBase::List attrsToWrite;
+        CPS::AttributeBase::List attrsRead;
         mInterface->open();
         while (!interfaceClosed) {
-            AttributePacket nextPacket;
-            mQueueDpsimToInterface->wait_dequeue(nextPacket);
-            if (nextPacket.flags & AttributePacketFlags::PACKET_CLOSE_INTERFACE) {
-                mInterface->close();
-                interfaceClosed = true;
-            } else {
-                attrsToWrite.push_back(nextPacket.value); //TODO: The interface should know about the attribute and sequence IDs
-                mInterface->writeValuesToEnv(attrsToWrite);
+
+            mInterface->readValuesFromEnv(attrsRead);
+            for (unsigned int i = 0; i < attrsRead.size(); i++) {
+                mQueueInterfaceToDpsim->enqueue(AttributePacket {
+                    attrsRead[i],
+                    i,
+                    mCurrentSequenceInterfaceToDpsim++,
+                    0
+                });
             }
+            attrsRead.clear();
+
+            AttributePacket nextPacket;
+            if(mQueueDpsimToInterface->try_dequeue(nextPacket)) {
+                if (nextPacket.flags & AttributePacketFlags::PACKET_CLOSE_INTERFACE) {
+                    mInterface->close();
+                    interfaceClosed = true;
+                } else {
+                    attrsToWrite.push_back(nextPacket.value); //TODO: The interface should know about the attribute and sequence IDs
+                    mInterface->writeValuesToEnv(attrsToWrite);
+                }
+            }
+            
         }
     }
+
 }
 
