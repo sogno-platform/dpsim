@@ -87,8 +87,6 @@ namespace DPsim {
 		bool mOpened = false;
 
 		UInt mCurrentSequenceDpsimToInterface = 0;
-		UInt mCurrentSequenceInterfaceToDpsim = 0;
-
 		std::thread mInterfaceThread;
 
 		std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueDpsimToInterface;
@@ -99,14 +97,20 @@ namespace DPsim {
 		class WriterThread {
 			private:
 				std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueDpsimToInterface;
+				std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueInterfaceToDpsim;
 				DPsim::Interface::Ptr mInterface;
+				UInt mCurrentSequenceInterfaceToDpsim = 0;
 
 			public:
-				WriterThread(std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> queue, DPsim::Interface::Ptr intf) :
-					mQueueDpsimToInterface(queue),
+				WriterThread(
+						std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> queueDpsimToInterface,
+						std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> queueInterfaceToDpsim,
+				 		DPsim::Interface::Ptr intf
+					) :
+					mQueueDpsimToInterface(queueDpsimToInterface),
+					mQueueInterfaceToDpsim(queueInterfaceToDpsim),
 					mInterface(intf) {};
 				void operator() ();
-
 		};
 
 		class PreStep : public CPS::Task {
