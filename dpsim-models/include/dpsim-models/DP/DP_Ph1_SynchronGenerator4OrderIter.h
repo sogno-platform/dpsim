@@ -22,9 +22,6 @@ namespace Ph1 {
 		public MNASyncGenInterface,
 		public SharedFactory<SynchronGenerator4OrderIter> {
 	protected:
-		///
-		Int mNumIterations2;
-
 		/// sim flags
 		bool mVoltageForm;
 
