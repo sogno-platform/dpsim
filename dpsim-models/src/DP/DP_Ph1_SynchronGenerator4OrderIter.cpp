@@ -34,7 +34,7 @@ DP::Ph1::SynchronGenerator4OrderIter::SynchronGenerator4OrderIter
 	mShiftVector << Complex(1., 0), SHIFT_TO_PHASE_B, SHIFT_TO_PHASE_C;
 
     // Register attributes
-	addAttribute<Int>("NIterations", &mNumIterations2 , Flags::read);
+	addAttribute<Int>("NIterations", &mNumIter , Flags::read);
 	addAttribute<Matrix>("Edq0_t", &mEdq_t, Flags::read);
 }
 
@@ -147,7 +147,8 @@ void DP::Ph1::SynchronGenerator4OrderIter::mnaApplyRightSideVectorStamp(Matrix& 
 void DP::Ph1::SynchronGenerator4OrderIter::correctorStep() {
 	// corrector step (trapezoidal rule)
 
-	if (mNumIter==0)
+	mNumIter = mNumIter + 1;
+	if (mNumIter==1)
 		return;
 
 	//predict mechanical variables
@@ -203,9 +204,9 @@ void DP::Ph1::SynchronGenerator4OrderIter::updateVoltage(const Matrix& leftVecto
 }
 
 bool DP::Ph1::SynchronGenerator4OrderIter::checkVoltageDifference() {
-	if (mNumIter==0) {
+	if (mNumIter==1) {
 		// if no corrector step has been performed yet
-		mNumIter = 1;
+		//mNumIter = 1;
 		return true;
 	}
 
@@ -214,7 +215,7 @@ bool DP::Ph1::SynchronGenerator4OrderIter::checkVoltageDifference() {
 		if (mNumIter > mMaxIter) {
 			return false;
 		} else {
-			mNumIter = mNumIter + 1;
+			//mNumIter = mNumIter + 1;
 			return true;
 		}
 	} else {
@@ -229,9 +230,6 @@ void DP::Ph1::SynchronGenerator4OrderIter::mnaPostStep(const Matrix& leftVector)
 	mOmMech = mOmMech_corr;
 	mThetaMech = mThetaMech_corr;
 	mDelta = mDelta_corr;
-
-	//
-	mNumIterations2 = mNumIter;
 }
 
 Matrix DP::Ph1::SynchronGenerator4OrderIter::parkTransform(Real theta, const Matrix& abcVector) {

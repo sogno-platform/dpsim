@@ -35,7 +35,7 @@ namespace CPS {
 		///
 		Int mNumIter = 0;
 		///
-		Int mMaxIter = 10;
+		Int mMaxIter = 25;
 		///
 		Real mTolerance = 1e-6;
 	};

@@ -173,7 +173,6 @@ int main(int argc, char* argv[]) {
 
 	// log generator vars
 	logger->addAttribute(genDP->name() + ".Te", genDP->attribute("Te"));
-	logger->addAttribute(genDP->name() + ".delta", genDP->attribute("delta"));
 	logger->addAttribute(genDP->name() + ".NIterations", genDP->attribute("NIterations"));
 
 	// load step event
