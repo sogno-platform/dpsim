@@ -595,6 +595,7 @@ namespace CPS {
 				this->addTask(UpdateTaskKind::UPDATE_ONCE, AttributeUpdateTask<T, T>::make(UpdateTaskKind::UPDATE_ONCE, getter, reference));
 			} else {
 				this->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<T, T>::make(UpdateTaskKind::UPDATE_ON_GET, getter, reference));
+				this->addTask(UpdateTaskKind::UPDATE_ONCE, AttributeUpdateTask<T, T>::make(UpdateTaskKind::UPDATE_ONCE, getter, reference));
 			}
 		}
 
