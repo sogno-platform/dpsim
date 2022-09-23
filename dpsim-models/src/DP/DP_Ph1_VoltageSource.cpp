@@ -32,10 +32,9 @@ SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
 	srcSigSine->setParameters(voltageRef, srcFreq);
+	srcSigSine->mMagnitude->setReference(mVoltageRef->deriveMag());
+	srcSigSine->mFreq->setReference(mSrcFreq);
 	mSrcSig = srcSigSine;
-
-	mVoltageRef->setReference(mSrcSig->mSigOut);
-	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mParametersSet = true;
 }
@@ -43,10 +42,8 @@ void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
 	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(**mName + "_fr");
 	srcSigFreqRamp->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
+	srcSigFreqRamp->mFreq->setReference(mSrcFreq);
 	mSrcSig = srcSigFreqRamp;
-
-	mVoltageRef->setReference(mSrcSig->mSigOut);
-	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mParametersSet = true;
 }
@@ -54,10 +51,8 @@ void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart
 void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {
     auto srcSigFm = Signal::CosineFMGenerator::make(**mName + "_fm");
 	srcSigFm->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
+	srcSigFm->mFreq->setReference(mSrcFreq);
 	mSrcSig = srcSigFm;
-
-	mVoltageRef->setReference(mSrcSig->mSigOut);
-	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mParametersSet = true;
 }
@@ -69,12 +64,11 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
 	if (mSrcSig == nullptr) {
-		Signal::SineWaveGenerator srcSigSine(**mName);
-		srcSigSine.setParameters(voltageRef);
-		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
-
-		mVoltageRef->setReference(mSrcSig->mSigOut);
-		mSrcFreq->setReference(mSrcSig->mFreq);
+		auto srcSigSine = Signal::SineWaveGenerator::make(**mName);
+		srcSigSine->setParameters(voltageRef);
+		srcSigSine->mMagnitude->setReference(mVoltageRef->deriveMag());
+		srcSigSine->mFreq->setReference(mSrcFreq);
+		mSrcSig = srcSigSine;
 	} else {
 		**mVoltageRef = voltageRef;
 	}
@@ -93,7 +87,7 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 // #### MNA functions ####
 
 void DP::Ph1::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(mVoltageRef);
+	attributeDependencies.push_back(mSrcSig->mSigOut);
 	modifiedAttributes.push_back(mRightVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 }
@@ -197,7 +191,7 @@ void DP::Ph1::VoltageSource::updateVoltage(Real time) {
 		mSrcSig->step(time);
 		(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
 	} else {
-		(**mIntfVoltage)(0,0) = **mVoltageRef;
+		throw SystemError("VoltageSource::updateVoltage was called but no signal generator is configured!");
 	}
 
 	mSLog->debug("Update Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,0)));

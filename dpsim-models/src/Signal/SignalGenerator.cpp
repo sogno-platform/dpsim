@@ -13,7 +13,7 @@ using namespace CPS;
 Signal::SignalGenerator::SignalGenerator(String uid, String name, Logger::Level logLevel) 
     : SimSignalComp(name, logLevel),
     mSigOut(Attribute<Complex>::create("sigOut", mAttributes)),
-    mFreq(Attribute<Real>::create("freq", mAttributes)) {
+    mFreq(Attribute<Real>::createDynamic("freq", mAttributes)) {
 
     mSLog->info("Create {} {}", type(), name);
 }

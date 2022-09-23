@@ -16,13 +16,12 @@ namespace Signal {
 		public SignalGenerator,
         public SharedFactory<SineWaveGenerator>  {
     private:
-		/// initial signal phasor with magnitude and phase
-		Real mMagnitude;
+		/// initial signal phasor phase
 		Real mInitialPhase;
     public:
+		const Attribute<Real>::Ptr mMagnitude;
 		/// init the identified object
-        SineWaveGenerator(String name, Logger::Level logLevel = Logger::Level::off)
-			: SignalGenerator(name, logLevel) { }
+        SineWaveGenerator(String name, Logger::Level logLevel = Logger::Level::off);
 		/// set the source's parameters
 		void setParameters(Complex initialPhasor, Real frequency = 0.0);
 		/// implementation of inherited method step to update and return the current signal value

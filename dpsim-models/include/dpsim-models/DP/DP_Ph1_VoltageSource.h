@@ -116,9 +116,9 @@ namespace Ph1 {
 			MnaPreStepHarm(VoltageSource& voltageSource) :
 				Task(**voltageSource.mName + ".MnaPreStepHarm"),
 				mVoltageSource(voltageSource) {
-				mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
-				mModifiedAttributes.push_back(mVoltageSource.attribute("right_vector"));
-				mModifiedAttributes.push_back(mVoltageSource.attribute("v_intf"));
+				mAttributeDependencies.push_back(mVoltageSource.mVoltageRef);
+				mModifiedAttributes.push_back(mVoltageSource.mRightVector);
+				mModifiedAttributes.push_back(mVoltageSource.mIntfVoltage);
 			}
 			void execute(Real time, Int timeStepCount);
 		private:
@@ -132,7 +132,7 @@ namespace Ph1 {
 				mVoltageSource(voltageSource), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
 					mAttributeDependencies.push_back(mLeftVectors[i]);
-				mModifiedAttributes.push_back(mVoltageSource.attribute("i_intf"));
+				mModifiedAttributes.push_back(mVoltageSource.mIntfCurrent);
 			}
 			void execute(Real time, Int timeStepCount);
 		private:
