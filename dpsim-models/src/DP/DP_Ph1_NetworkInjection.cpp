@@ -41,6 +41,8 @@ SimPowerComp<Complex>::Ptr DP::Ph1::NetworkInjection::clone(String name) {
 void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) {
 	mParametersSet = true;
 
+	**mVoltageRef = voltageRef;
+	**mSrcFreq = srcFreq;
 	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
