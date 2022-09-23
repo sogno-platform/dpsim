@@ -31,18 +31,16 @@ SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 
 void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
-	srcSigSine->setParameters(voltageRef, srcFreq);
 	srcSigSine->mMagnitude->setReference(mVoltageRef->deriveMag());
 	srcSigSine->mFreq->setReference(mSrcFreq);
+	srcSigSine->setParameters(voltageRef, srcFreq);
 	mSrcSig = srcSigSine;
-
 	mParametersSet = true;
 }
 
 void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
 	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(**mName + "_fr");
 	srcSigFreqRamp->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
-	srcSigFreqRamp->mFreq->setReference(mSrcFreq);
 	mSrcSig = srcSigFreqRamp;
 
 	mParametersSet = true;
@@ -51,21 +49,21 @@ void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart
 void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {
     auto srcSigFm = Signal::CosineFMGenerator::make(**mName + "_fm");
 	srcSigFm->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
-	srcSigFm->mFreq->setReference(mSrcFreq);
 	mSrcSig = srcSigFm;
 
 	mParametersSet = true;
 }
 
 void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
+	//CHECK: The frequency parameter is unused
 	if (**mVoltageRef == Complex(0, 0))
 		**mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
 	if (mSrcSig == nullptr) {
 		auto srcSigSine = Signal::SineWaveGenerator::make(**mName);
-		srcSigSine->setParameters(**mVoltageRef);
 		srcSigSine->mMagnitude->setReference(mVoltageRef->deriveMag());
 		srcSigSine->mFreq->setReference(mSrcFreq);
+		srcSigSine->setParameters(**mVoltageRef);
 		mSrcSig = srcSigSine;
 	}
 
