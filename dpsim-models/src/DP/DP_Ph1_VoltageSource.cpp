@@ -58,19 +58,15 @@ void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulatio
 }
 
 void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-	Complex voltageRef = **mVoltageRef;
-
-	if (voltageRef == Complex(0, 0))
-		voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
+	if (**mVoltageRef == Complex(0, 0))
+		**mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
 	if (mSrcSig == nullptr) {
 		auto srcSigSine = Signal::SineWaveGenerator::make(**mName);
-		srcSigSine->setParameters(voltageRef);
+		srcSigSine->setParameters(**mVoltageRef);
 		srcSigSine->mMagnitude->setReference(mVoltageRef->deriveMag());
 		srcSigSine->mFreq->setReference(mSrcFreq);
 		mSrcSig = srcSigSine;
-	} else {
-		**mVoltageRef = voltageRef;
 	}
 
 	mSLog->info(
