@@ -8,3 +8,5 @@ pybind11[global]
 
 villas-dataprocessing>=0.2.6
 villas-node
+
+paho-mqtt==1.1
