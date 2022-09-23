@@ -10,8 +10,12 @@
 
 using namespace CPS;
 
+Signal::SineWaveGenerator::SineWaveGenerator(String name, Logger::Level logLevel)
+			: SignalGenerator(name, logLevel),
+			mMagnitude(Attribute<Real>::createDynamic("V_max", mAttributes)) { }
+
 void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real frequency /*= -1*/) {
-    mMagnitude = Math::abs(initialPhasor);
+    **mMagnitude = Math::abs(initialPhasor);
     mInitialPhase = Math::phase(initialPhasor);
 	**mFreq = frequency;
 	**mSigOut = initialPhasor;
@@ -20,13 +24,11 @@ void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real freque
 					 "Sine wave magnitude: {} [V] \n"
 					 "Sine wave initial phase: {} [rad] \n"
 					 "Sine wave frequency: {} [Hz] \n",
-					mMagnitude, mInitialPhase, **mFreq);				 
+					**mMagnitude, mInitialPhase, **mFreq);				 
 }
 
 void Signal::SineWaveGenerator::step(Real time) {
-	if (**mFreq != 0.0) {
-		**mSigOut = Complex(
-			mMagnitude * cos(time * 2.*PI* **mFreq + mInitialPhase),
-			mMagnitude * sin(time * 2.*PI* **mFreq + mInitialPhase));
-	}
+	**mSigOut = Complex(
+		**mMagnitude * cos(time * 2.*PI* **mFreq + mInitialPhase),
+		**mMagnitude * sin(time * 2.*PI* **mFreq + mInitialPhase));
 }
