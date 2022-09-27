@@ -35,8 +35,8 @@ SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
 		mSLog->info("- {}", subcomp->name());
 
 	// MNA attributes
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
+	mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
+	mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
 }
 
 // #### Powerflow section ####
@@ -55,10 +55,6 @@ void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqSt
 
 	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 
-	///FIXME: This should not be necessary, because the reference is already set in the constructor
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
-
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
 				Logger::phasorToString(initialPhasor),
@@ -69,10 +65,6 @@ void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modula
 	mParametersSet = true;
 
 	mSubVoltageSource->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
-
-	///FIXME: This should not be necessary, because the reference is already set in the constructor
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
