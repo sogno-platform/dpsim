@@ -30,14 +30,11 @@ SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 }
 
 void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
-	**mVoltageRef = voltageRef;
-	**mSrcFreq = srcFreq;
 	auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
-	srcSigSine->setParameters(voltageRef, srcFreq);
 	srcSigSine->mMagnitude->setReference(mVoltageRef->deriveMag());
 	srcSigSine->mFreq->setReference(mSrcFreq);
+	srcSigSine->setParameters(voltageRef, srcFreq);
 	mSrcSig = srcSigSine;
-
 	mParametersSet = true;
 }
 
@@ -64,9 +61,9 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 
 	if (mSrcSig == nullptr) {
 		auto srcSigSine = Signal::SineWaveGenerator::make(**mName);
-		srcSigSine->setParameters(**mVoltageRef);
 		srcSigSine->mMagnitude->setReference(mVoltageRef->deriveMag());
 		srcSigSine->mFreq->setReference(mSrcFreq);
+		srcSigSine->setParameters(**mVoltageRef);
 		mSrcSig = srcSigSine;
 	}
 
