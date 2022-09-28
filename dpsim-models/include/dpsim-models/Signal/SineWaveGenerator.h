@@ -18,8 +18,9 @@ namespace Signal {
     private:
 		/// initial signal phasor phase
 		Real mInitialPhase;
+		Attribute<Real>::Ptr mMagnitude;
     public:
-		const Attribute<Real>::Ptr mMagnitude;
+		const Attribute<Complex>::Ptr mVoltageRef;
 		/// init the identified object
         SineWaveGenerator(String name, Logger::Level logLevel = Logger::Level::off);
 		/// set the source's parameters
