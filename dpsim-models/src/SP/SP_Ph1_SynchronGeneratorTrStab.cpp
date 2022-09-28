@@ -297,13 +297,13 @@ void SP::Ph1::SynchronGeneratorTrStab::mnaApplyRightSideVectorStamp(Matrix& righ
 void SP::Ph1::SynchronGeneratorTrStab::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mGenerator.step(time);
 	//change V_ref of subvoltage source
-	mGenerator.mSubVoltageSource->attribute<Complex>("V_ref")->set(**mGenerator.mEp);
+	mGenerator.mSubVoltageSource->mVoltageRef->set(**mGenerator.mEp);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeStepCount) {
 	**mGenerator.mRightVector =
-		mGenerator.mSubInductor->attribute<Matrix>("right_vector")->get()
-		+ mGenerator.mSubVoltageSource->attribute<Matrix>("right_vector")->get();
+		mGenerator.mSubInductor->mRightVector->get()
+		+ mGenerator.mSubVoltageSource->mRightVector->get();
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int timeStepCount) {
@@ -319,7 +319,7 @@ void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector
 void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
 	//Current flowing out of component
-	**mIntfCurrent = mSubInductor->attribute<MatrixComp>("i_intf")->get();
+	**mIntfCurrent = mSubInductor->mIntfCurrent->get();
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setReferenceOmega(Attribute<Real>::Ptr refOmegaPtr, Attribute<Real>::Ptr refDeltaPtr) {
