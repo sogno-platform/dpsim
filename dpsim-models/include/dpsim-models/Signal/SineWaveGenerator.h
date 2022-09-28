@@ -17,7 +17,7 @@ namespace Signal {
         public SharedFactory<SineWaveGenerator>  {
     private:
 		/// initial signal phasor phase
-		Real mInitialPhase;
+		Attribute<Real>::Ptr mPhase;
 		Attribute<Real>::Ptr mMagnitude;
     public:
 		const Attribute<Complex>::Ptr mVoltageRef;
