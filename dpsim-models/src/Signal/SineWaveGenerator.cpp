@@ -17,7 +17,7 @@ Signal::SineWaveGenerator::SineWaveGenerator(String name, Logger::Level logLevel
 void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real frequency /*= -1*/) {
     **mVoltageRef = initialPhasor;
 	mMagnitude = mVoltageRef->deriveMag(); 
-    mInitialPhase = Math::phase(initialPhasor);
+    mPhase = mVoltageRef->derivePhase();
 	**mFreq = frequency;
 	**mSigOut = initialPhasor;
 
@@ -25,11 +25,11 @@ void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real freque
 					 "Sine wave magnitude: {} [V] \n"
 					 "Sine wave initial phase: {} [rad] \n"
 					 "Sine wave frequency: {} [Hz] \n",
-					**mMagnitude, mInitialPhase, **mFreq);				 
+					**mMagnitude, **mPhase, **mFreq);				 
 }
 
 void Signal::SineWaveGenerator::step(Real time) {
 	**mSigOut = Complex(
-		**mMagnitude * cos(time * 2.*PI* **mFreq + mInitialPhase),
-		**mMagnitude * sin(time * 2.*PI* **mFreq + mInitialPhase));
+		**mMagnitude * cos(time * 2.*PI* **mFreq + **mPhase),
+		**mMagnitude * sin(time * 2.*PI* **mFreq + **mPhase));
 }
