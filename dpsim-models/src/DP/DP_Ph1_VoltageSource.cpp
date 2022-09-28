@@ -82,7 +82,7 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 // #### MNA functions ####
 
 void DP::Ph1::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(mSrcSig->mSigOut);
+	attributeDependencies.push_back(mVoltageRef);
 	modifiedAttributes.push_back(mRightVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 }
