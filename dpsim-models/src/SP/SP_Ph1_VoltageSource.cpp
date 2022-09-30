@@ -55,7 +55,7 @@ void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulatio
 }
 
 void SP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-	//CHECK: The frequency parameter is unused
+	///CHECK: The frequency parameter is unused
 	if (**mVoltageRef == Complex(0, 0))
 		**mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
