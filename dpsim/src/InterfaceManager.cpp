@@ -7,7 +7,9 @@ using namespace CPS;
 namespace DPsim {
 
     void InterfaceManager::open() {
-        mInterfaceThread = std::thread(InterfaceManager::WriterThread(mQueueDpsimToInterface, mQueueInterfaceToDpsim, mInterface));
+        mInterface->open();
+        mInterfaceWriterThread = std::thread(InterfaceManager::WriterThread(mQueueDpsimToInterface, mInterface));
+        mInterfaceReaderThread = std::thread(InterfaceManager::ReaderThread(mQueueInterfaceToDpsim, mInterface, mOpened));
         mOpened = true;
     }
 
@@ -19,7 +21,9 @@ namespace DPsim {
             0,
             AttributePacketFlags::PACKET_CLOSE_INTERFACE
         });
-        mInterfaceThread.join();
+        mInterfaceWriterThread.join();
+        mInterfaceReaderThread.join();
+        mInterface->close();
     }
 
     CPS::Task::List InterfaceManager::getTasks() {
@@ -53,7 +57,10 @@ namespace DPsim {
 
     void InterfaceManager::popDpsimAttrsFromQueue() {
         if (mBlockOnRead) {
-            //UNIMPLEMENTED
+            AttributePacket receivedPacket;
+            //TODO: This will only wait for ONE packet, not for all requested attributes
+            mQueueInterfaceToDpsim->wait_dequeue(receivedPacket);
+            mImportAttrsDpsim[receivedPacket.attributeId]->copyValue(receivedPacket.value);
         } else {
             AttributePacket receivedPacket;
             if(mQueueInterfaceToDpsim->try_dequeue(receivedPacket)) {
@@ -76,25 +83,10 @@ namespace DPsim {
     void InterfaceManager::WriterThread::operator() () {
         bool interfaceClosed = false;
         CPS::AttributeBase::List attrsToWrite;
-        CPS::AttributeBase::List attrsRead;
-        mInterface->open();
         while (!interfaceClosed) {
-
-            mInterface->readValuesFromEnv(attrsRead);
-            for (unsigned int i = 0; i < attrsRead.size(); i++) {
-                mQueueInterfaceToDpsim->enqueue(AttributePacket {
-                    attrsRead[i],
-                    i,
-                    mCurrentSequenceInterfaceToDpsim++,
-                    0
-                });
-            }
-            attrsRead.clear();
-
             AttributePacket nextPacket;
             if(mQueueDpsimToInterface->try_dequeue(nextPacket)) {
                 if (nextPacket.flags & AttributePacketFlags::PACKET_CLOSE_INTERFACE) {
-                    mInterface->close();
                     interfaceClosed = true;
                 } else {
                     attrsToWrite.push_back(nextPacket.value); //TODO: The interface should know about the attribute and sequence IDs
@@ -102,6 +94,22 @@ namespace DPsim {
                 }
             }
             
+        }
+    }
+
+    void InterfaceManager::ReaderThread::operator() () {
+        CPS::AttributeBase::List attrsRead;
+        while (mOpened) { //TODO: As long as reading blocks, there is no real way to force-stop thread execution from the dpsim side
+            mInterface->readValuesFromEnv(attrsRead);
+            for (unsigned int i = 0; i < attrsRead.size(); i++) {
+                mQueueInterfaceToDpsim->enqueue(AttributePacket {
+                    attrsRead[i],
+                    i, //TODO: The attribute ID should be provided by the interface
+                    mCurrentSequenceInterfaceToDpsim++,
+                    0
+                });
+            }
+            attrsRead.clear();
         }
     }
 
