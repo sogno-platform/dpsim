@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <typeinfo>
+
 #include <dpsim-models/Logger.h>
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
@@ -17,6 +19,7 @@ namespace DPsim {
 
     protected:
         bool mOpened;
+        UInt mCurrentSequenceInterfaceToDpsim = 0;
     
     public:
         typedef std::shared_ptr<Interface> Ptr;
@@ -32,14 +35,14 @@ namespace DPsim {
          * Should be used to read values from the environment and push them into `updatedAttrs`
          * `updatedAttrs` will always be empty when this function is invoked
          */
-		virtual void readValuesFromEnv(CPS::AttributeBase::List& updatedAttrs) = 0;
+		virtual void readValuesFromEnv(std::vector<InterfaceManager::AttributePacket>& updatedAttrs) = 0;
 
 		/**
 		 * Function that will be called on loop in its separate thread.
          * Should be used to read values from `updatedAttrs` and write them to the environment
-         * Every new value will only be passed in `updatedAttrs` once, so the interface needs to buffer these values if they are not send right away
+         * The `updatedAttrs` list will not be cleared by the caller in between function calls
 		 */
-        virtual void writeValuesToEnv(CPS::AttributeBase::List& updatedAttrs) = 0;
+        virtual void writeValuesToEnv(std::vector<InterfaceManager::AttributePacket>& updatedAttrs) = 0;
 
         /**
          * Open the interface and set up the connection to the environment

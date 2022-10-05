@@ -185,6 +185,12 @@ namespace CPS {
 		virtual bool copyValue(AttributeBase::Ptr copyFrom) = 0;
 
 		/**
+		 * @brief Get the type of this attribute
+		 * @return std::type_info 
+		 */
+		virtual std::type_info getType() = 0;
+
+		/**
 		 * @brief Generates a new attribute of the same type and copies the current value in the heap. Does not copy any dependency relations!
 		 * @return Pointer to the copied attribute
 		 */
@@ -364,6 +370,14 @@ namespace CPS {
 			}
 			this->set(**copyFromTyped);
 			return true;
+		}
+
+		/**
+		 * @brief Get the type of this attribute
+		 * @return std::type_info 
+		 */
+		virtual std::type_info getType() {
+			return typeid(T);
 		}
 
 		/**
