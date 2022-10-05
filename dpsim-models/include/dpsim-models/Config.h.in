@@ -14,4 +14,5 @@
 #cmakedefine WITH_GRAPHVIZ
 #cmakedefine WITH_SUNDIALS
 #cmakedefine WITH_NUMPY
+#cmakedefine WITH_KLU
 #cmakedefine CGMES_BUILD

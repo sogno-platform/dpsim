@@ -15,6 +15,7 @@
 #include <exception>
 #include <cerrno>
 #include <system_error>
+#include <dpsim-models/Config.h>
 
 #ifdef __clang__
 #elif defined(__GNUC__)
@@ -26,7 +27,9 @@
 
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
+#ifdef WITH_KLU
 #include <Eigen/KLUSupport>
+#endif
 
 #ifdef __clang__
 #elif defined(__GNUC__)
@@ -88,7 +91,9 @@ namespace CPS {
 	///
 	typedef Eigen::SparseLU<SparseMatrix> LUFactorizedSparse;
 	///
+	#ifdef WITH_KLU
 	typedef Eigen::KLU<SparseMatrix> LUFactorizedKLU;
+	#endif
 	///
 	typedef Eigen::Matrix<Real, Eigen::Dynamic, 1> Vector;
 	///

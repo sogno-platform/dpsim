@@ -28,7 +28,6 @@
 #cmakedefine WITH_SPARSE
 #cmakedefine WITH_KLU
 #cmakedefine WITH_MAGMA
-#cmakedefine WITH_KLU
 #cmakedefine CGMES_BUILD
 
 #cmakedefine HAVE_TIMERFD
