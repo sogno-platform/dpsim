@@ -47,49 +47,65 @@ namespace DPsim {
         }
     }
 
-    void InterfaceManager::importAttribute(CPS::AttributeBase::Ptr attr) {
-        mImportAttrsDpsim.push_back(attr);
+    void InterfaceManager::importAttribute(CPS::AttributeBase::Ptr attr, bool blockOnRead) {
+        mImportAttrsDpsim.push_back(std::make_tuple(attr, 0, blockOnRead));
+        //mInterface->configureImport(mImportAttrsDpsim.size() - 1, attr->getType());
     }
 
     void InterfaceManager::exportAttribute(CPS::AttributeBase::Ptr attr) {
-        mExportAttrsDpsim.push_back(attr);
+        mExportAttrsDpsim.push_back(std::make_tuple(attr, 0));
+        //mInterface->configureExport(mImportAttrsDpsim.size() - 1, attr->getType());
     }
 
     void InterfaceManager::popDpsimAttrsFromQueue() {
-        if (mBlockOnRead) {
-            AttributePacket receivedPacket;
-            //TODO: This will only wait for ONE packet, not for all requested attributes
+        AttributePacket receivedPacket;
+        UInt currentSequenceId = mCurrentSequenceInterfaceToDpsim;
+
+        //Wait for and dequeue all attributes that read should block on
+        //The std::find_if will look for all attributes that have not been updated in the current while loop (i. e. whose sequence ID is lower than the next expected sequence ID)
+        while (std::find_if(
+                mImportAttrsDpsim.cbegin(),
+                mImportAttrsDpsim.cend(),
+                [](auto attrTuple) {
+                    return std::get<2>(attrTuple) && std::get<1>(attrTuple) < currentSequenceId
+                }) != mImportAttrsDpsim.cend()) {
             mQueueInterfaceToDpsim->wait_dequeue(receivedPacket);
-            mImportAttrsDpsim[receivedPacket.attributeId]->copyValue(receivedPacket.value);
-        } else {
-            AttributePacket receivedPacket;
-            if(mQueueInterfaceToDpsim->try_dequeue(receivedPacket)) {
-                mImportAttrsDpsim[receivedPacket.attributeId]->copyValue(receivedPacket.value);
-            }
+            std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value);
+            std::get<1>(mImportAttrsDpsim[receivedPacket.attributeId]) = receivedPacket.sequenceId;
+            mCurrentSequenceInterfaceToDpsim = receivedPacket.sequenceId + 1;
+        }
+
+        //Fetch all remaining queue packets
+        while (mQueueInterfaceToDpsim->try_dequeue(receivedPacket)) {
+            std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value);
+            std::get<1>(mImportAttrsDpsim[receivedPacket.attributeId]) = receivedPacket.sequenceId;
+            mCurrentSequenceInterfaceToDpsim = receivedPacket.sequenceId + 1;
         }
     }
 
     void InterfaceManager::pushDpsimAttrsToQueue() {
         for (UInt i = 0; i < mExportAttrsDpsim.size(); i++) {
             mQueueDpsimToInterface->enqueue(AttributePacket {
-                mExportAttrsDpsim[i]->cloneValueOntoNewAttribute(),
+                std::get<0>(mExportAttrsDpsim[i])->cloneValueOntoNewAttribute(),
                 i,
-                mCurrentSequenceDpsimToInterface++,
-                0
+                std::get<1>(mExportAttrsDpsim[i]),
+                AttributePacketFlags::PACKET_NO_FLAGS
             });
+            std::get<1>(mExportAttrsDpsim[i]) = mCurrentSequenceDpsimToInterface;
+            mCurrentSequenceDpsimToInterface++;
         }
     }
 
     void InterfaceManager::WriterThread::operator() () {
         bool interfaceClosed = false;
-        CPS::AttributeBase::List attrsToWrite;
+        std::vector<InterfaceManager::AttributePacket> attrsToWrite;
         while (!interfaceClosed) {
             AttributePacket nextPacket;
             if(mQueueDpsimToInterface->try_dequeue(nextPacket)) {
                 if (nextPacket.flags & AttributePacketFlags::PACKET_CLOSE_INTERFACE) {
                     interfaceClosed = true;
                 } else {
-                    attrsToWrite.push_back(nextPacket.value); //TODO: The interface should know about the attribute and sequence IDs
+                    attrsToWrite.push_back(nextPacket);
                     mInterface->writeValuesToEnv(attrsToWrite);
                 }
             }
@@ -98,16 +114,11 @@ namespace DPsim {
     }
 
     void InterfaceManager::ReaderThread::operator() () {
-        CPS::AttributeBase::List attrsRead;
+        std::vector<InterfaceManager::AttributePacket>  attrsRead;
         while (mOpened) { //TODO: As long as reading blocks, there is no real way to force-stop thread execution from the dpsim side
             mInterface->readValuesFromEnv(attrsRead);
-            for (unsigned int i = 0; i < attrsRead.size(); i++) {
-                mQueueInterfaceToDpsim->enqueue(AttributePacket {
-                    attrsRead[i],
-                    i, //TODO: The attribute ID should be provided by the interface
-                    mCurrentSequenceInterfaceToDpsim++,
-                    0
-                });
+            for (auto packet : attrsRead) {
+                mQueueInterfaceToDpsim->enqueue(packet);
             }
             attrsRead.clear();
         }

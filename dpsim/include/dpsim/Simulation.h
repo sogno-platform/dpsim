@@ -122,7 +122,7 @@ namespace DPsim {
 
 		/// Vector of Interfaces
 		//TODO: Let the InterfaceManager class handle synchronization, threading and import / export through the queues
-		std::vector<std::shared_ptr<InterfaceManager>> mInterfaces;
+		std::vector<InterfaceManager::Ptr> mInterfaces;
 
 		struct LoggerMapping {
 			/// Simulation data logger
@@ -228,10 +228,8 @@ namespace DPsim {
 		void logStepTimes(String logName);
 
 		///
-		void addInterface(std::shared_ptr<Interface> eint) {
-			auto newIntfManager = InterfaceManager::make(eint, mLog, "", false, true);
-			eint->mManager = newIntfManager;
-			mInterfaces.push_back(newIntfManager);
+		void addInterface(InterfaceManager::Ptr eint) {
+			mInterfaces.push_back(eint);
 		}
 
 #ifdef WITH_GRAPHVIZ

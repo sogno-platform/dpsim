@@ -30,15 +30,15 @@ namespace DPsim {
 		} typedef AttributePacket;
 
 		enum AttributePacketFlags {
+			PACKET_NO_FLAGS = 0,
 			PACKET_CLOSE_INTERFACE = 1,
 		};
 
-        InterfaceManager(Interface::Ptr intf, CPS::Logger::Log log, String name = "", bool syncOnSimulationStart = false, bool blockOnRead = false, UInt downsampling = 1) : 
+        InterfaceManager(Interface::Ptr intf, CPS::Logger::Log log, String name = "", bool syncOnSimulationStart = false, UInt downsampling = 1) : 
 			mInterface(intf),
 			mLog(log),
 			mName(name),
 			mSyncOnSimulationStart(syncOnSimulationStart),
-			mBlockOnRead(blockOnRead),
 			mDownsampling(downsampling) {
 				mInterface->mLog = log;
 				mQueueDpsimToInterface = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
@@ -70,11 +70,10 @@ namespace DPsim {
 		}
 
 		// Attributes used in the DPsim simulation. Should only be accessed by the dpsim-thread
-		CPS::AttributeBase::List mExportAttrsDpsim, mImportAttrsDpsim;
+		std::vector<std::tuple<CPS::AttributeBase::Ptr, UInt, bool>> mImportAttrsDpsim;
+		std::vector<std::tuple<CPS::AttributeBase::Ptr, UInt>> mExportAttrsDpsim;
 
-		//Has to be called by the interface implementation whenever a new import is configured
-		virtual void importAttribute(CPS::AttributeBase::Ptr attr);
-		//Has to be called by the interface implementation whenever a new export is configured
+		virtual void importAttribute(CPS::AttributeBase::Ptr attr, bool blockOnRead = false);
 		virtual void exportAttribute(CPS::AttributeBase::Ptr attr);
 
 	protected:
@@ -82,11 +81,10 @@ namespace DPsim {
 		CPS::Logger::Log mLog;
 		String mName;
 		bool mSyncOnSimulationStart;
-		bool mBlockOnRead;
+		UInt mCurrentSequenceDpsimToInterface = 0;
+		UInt mCurrentSequenceInterfaceToDpsim = 0;
 		UInt mDownsampling;
 		std::atomic<bool> mOpened;
-
-		UInt mCurrentSequenceDpsimToInterface = 0;
 		std::thread mInterfaceWriterThread;
 		std::thread mInterfaceReaderThread;
 
@@ -114,7 +112,6 @@ namespace DPsim {
 			private:
 				std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueInterfaceToDpsim;
 				DPsim::Interface::Ptr mInterface;
-				UInt mCurrentSequenceInterfaceToDpsim = 0;
 				std::atomic<bool>& mOpened;
 
 			public:
@@ -134,7 +131,7 @@ namespace DPsim {
 			PreStep(InterfaceManager& intf) :
 				Task(intf.mName + ".Read"), mIntf(intf) {
 				for (auto attr : intf.mImportAttrsDpsim) {
-					mModifiedAttributes.push_back(attr);
+					mModifiedAttributes.push_back(std::get<0>(attr));
 				}
 			}
 
@@ -149,7 +146,7 @@ namespace DPsim {
 			PostStep(InterfaceManager& intf) :
 				Task(intf.mName + ".Write"), mIntf(intf) {
 				for (auto attr : intf.mExportAttrsDpsim) {
-					mAttributeDependencies.push_back(attr);
+					mAttributeDependencies.push_back(std::get<0>(attr));
 				}
 				mModifiedAttributes.push_back(Scheduler::external);
 			}
