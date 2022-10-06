@@ -3,7 +3,7 @@
 #pragma once
 
 #include <dpsim-models/PtrFactory.h>
-#include <dpsim/InterfaceManager.h>
+#include <dpsim/Interface.h>
 
 #include <villas/node.hpp>
 #include <villas/exceptions.hpp>
@@ -17,12 +17,12 @@
 using namespace villas;
 
 namespace DPsim {
-	class InterfaceVillas :
-		public Interface,
-		public SharedFactory<InterfaceVillas> {
+	class InterfaceWorkerVillas :
+		public InterfaceWorker,
+		public SharedFactory<InterfaceWorkerVillas> {
 
 	public:
-		typedef std::shared_ptr<InterfaceVillas> Ptr;
+		typedef std::shared_ptr<InterfaceWorkerVillas> Ptr;
 		typedef struct node::Sample Sample;
 
 		static UInt villasPriority;
@@ -51,13 +51,13 @@ namespace DPsim {
 
 	public:
 
-		InterfaceVillas(const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64);
+		InterfaceWorkerVillas(const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64);
 
 		virtual void open() override;
 		virtual void close() override;
 	
-		virtual void readValuesFromEnv(std::vector<InterfaceManager::AttributePacket>& updatedAttrs) override;
-		virtual void writeValuesToEnv(std::vector<InterfaceManager::AttributePacket>& updatedAttrs) override;
+		virtual void readValuesFromEnv(std::vector<Interface::AttributePacket>& updatedAttrs) override;
+		virtual void writeValuesToEnv(std::vector<Interface::AttributePacket>& updatedAttrs) override;
 
         virtual void configureImport(UInt attributeId, std::type_info type, UInt idx);
         virtual void configureExport(UInt attributeId, std::type_info type, UInt idx, Bool waitForOnWrite, String name = "", String unit = "");

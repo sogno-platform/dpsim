@@ -2,72 +2,162 @@
 
 #pragma once
 
-#include <typeinfo>
+#include <thread>
 
 #include <dpsim-models/Logger.h>
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
+#include <dpsim/Interface.h>
+#include <dpsim/InterfaceWorker.h>
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/Task.h>
 
+#include <readerwriterqueue.h>
+
 namespace DPsim {
 
-    class InterfaceManager;
+	class Interface :
+		public SharedFactory<Interface> {
 
-	class Interface {
+	public:
+		typedef std::shared_ptr<Interface> Ptr;
 
-    protected:
-        bool mOpened;
-        UInt mCurrentSequenceInterfaceToDpsim = 0;
-    
-    public:
-        typedef std::shared_ptr<Interface> Ptr;
+		struct AttributePacket {
+			CPS::AttributeBase::Ptr value;
+			UInt attributeId; //Used to identify the attribute. Defined by the position in the `mExportAttrsDpsim` and `mImportAttrsDpsim` lists
+			UInt sequenceId; //Increasing ID used to discern multiple consecutive updates of a single attribute
+			unsigned char flags; //Bit 0 set: Close interface
+		} typedef AttributePacket;
 
-        CPS::Logger::Log mLog;
-        std::weak_ptr<InterfaceManager> mManager;
+		enum AttributePacketFlags {
+			PACKET_NO_FLAGS = 0,
+			PACKET_CLOSE_INTERFACE = 1,
+		};
 
-        Interface() = default;
-        virtual ~Interface() { }
+        Interface(InterfaceWorker::Ptr intf, CPS::Logger::Log log, String name = "", bool syncOnSimulationStart = false, UInt downsampling = 1) : 
+			mInterfaceWorker(intf),
+			mLog(log),
+			mName(name),
+			mSyncOnSimulationStart(syncOnSimulationStart),
+			mDownsampling(downsampling) {
+				mInterfaceWorker->mLog = log;
+				mQueueDpsimToInterface = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
+				mQueueInterfaceToDpsim = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
+			};
 
-        /**
-         * Function that will be called on loop in its separate thread.
-         * Should be used to read values from the environment and push them into `updatedAttrs`
-         * `updatedAttrs` will always be empty when this function is invoked
-         */
-		virtual void readValuesFromEnv(std::vector<InterfaceManager::AttributePacket>& updatedAttrs) = 0;
+		virtual void open();
+		virtual void close();
 
-		/**
-		 * Function that will be called on loop in its separate thread.
-         * Should be used to read values from `updatedAttrs` and write them to the environment
-         * The `updatedAttrs` list will not be cleared by the caller in between function calls
-		 */
-        virtual void writeValuesToEnv(std::vector<InterfaceManager::AttributePacket>& updatedAttrs) = 0;
+		//Function used in the interface's simulation task to read all imported attributes from the queue
+		//Called once before every simulation timestep
+		virtual void pushDpsimAttrsToQueue();
+		//Function used in the interface's simulation task to write all exported attributes to the queue
+		//Called once after every simulation timestep
+		virtual void popDpsimAttrsFromQueue();
 
-        /**
-         * Open the interface and set up the connection to the environment
-         * This is guaranteed to be called before any calls to `readValuesFromEnv` and `writeValuesToEnv`
-         */
-        virtual void open() = 0;
+		//Function used in the interface thread to read updated attributes from the environment and push them into the queue
+		virtual void pushInterfaceAttrsToQueue() {};
 
-        /**
-         * Close the interface and all connections to the environment
-         * After this has been called, no further calls to `readValuesFromEnv` or `writeValuesToEnv` will occur
-         */
-        virtual void close() = 0;
+		virtual CPS::Task::List getTasks();
 
-        /**
-         * Will try to get a pointer to the parent `InterfaceManager` instance
-         * Will throw an error and exit if this interface has no manager
-         */
-        std::shared_ptr<InterfaceManager> tryGetManager() {
-            std::shared_ptr<InterfaceManager> manager = mManager.lock();
-            if (manager == nullptr) {
-                mLog->error("Error: The interface is not connected yet to a manager! Please add this interface to a simulation first before configuring imports and exports.");
-                std::exit(1);
-            }
-            return manager;
-        }
+		bool shouldSyncOnSimulationStart() const {
+			return mSyncOnSimulationStart;
+		}
 
-    };
+		virtual ~Interface() {
+			if (mOpened)
+				close();
+		}
+
+		// Attributes used in the DPsim simulation. Should only be accessed by the dpsim-thread
+		std::vector<std::tuple<CPS::AttributeBase::Ptr, UInt, bool>> mImportAttrsDpsim;
+		std::vector<std::tuple<CPS::AttributeBase::Ptr, UInt>> mExportAttrsDpsim;
+
+		virtual void importAttribute(CPS::AttributeBase::Ptr attr, bool blockOnRead = false);
+		virtual void exportAttribute(CPS::AttributeBase::Ptr attr);
+
+	protected:
+		InterfaceWorker::Ptr mInterfaceWorker;
+		CPS::Logger::Log mLog;
+		String mName;
+		bool mSyncOnSimulationStart;
+		UInt mCurrentSequenceDpsimToInterface = 0;
+		UInt mCurrentSequenceInterfaceToDpsim = 0;
+		UInt mDownsampling;
+		std::atomic<bool> mOpened;
+		std::thread mInterfaceWriterThread;
+		std::thread mInterfaceReaderThread;
+
+		std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueDpsimToInterface;
+		std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueInterfaceToDpsim;
+
+	public:
+
+		class WriterThread {
+			private:
+				std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueDpsimToInterface;
+				DPsim::InterfaceWorker::Ptr mInterfaceWorker;
+
+			public:
+				WriterThread(
+						std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> queueDpsimToInterface,
+				 		DPsim::InterfaceWorker::Ptr intf
+					) :
+					mQueueDpsimToInterface(queueDpsimToInterface),
+					mInterfaceWorker(intf) {};
+				void operator() ();
+		};
+
+		class ReaderThread {
+			private:
+				std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueInterfaceToDpsim;
+				DPsim::InterfaceWorker::Ptr mInterfaceWorker;
+				std::atomic<bool>& mOpened;
+
+			public:
+				ReaderThread(
+						std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> queueInterfaceToDpsim,
+				 		DPsim::InterfaceWorker::Ptr intf,
+						std::atomic<bool>& opened
+					) :
+					mQueueInterfaceToDpsim(queueInterfaceToDpsim),
+					mInterfaceWorker(intf),
+					mOpened(opened) {};
+				void operator() ();
+		};
+
+		class PreStep : public CPS::Task {
+		public:
+			PreStep(Interface& intf) :
+				Task(intf.mName + ".Read"), mIntf(intf) {
+				for (auto attr : intf.mImportAttrsDpsim) {
+					mModifiedAttributes.push_back(std::get<0>(attr));
+				}
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			Interface& mIntf;
+		};
+
+		class PostStep : public CPS::Task {
+		public:
+			PostStep(Interface& intf) :
+				Task(intf.mName + ".Write"), mIntf(intf) {
+				for (auto attr : intf.mExportAttrsDpsim) {
+					mAttributeDependencies.push_back(std::get<0>(attr));
+				}
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			Interface& mIntf;
+		};
+
+	};
 }
+

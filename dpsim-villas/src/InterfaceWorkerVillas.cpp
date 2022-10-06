@@ -6,7 +6,7 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-#include <dpsim-villas/InterfaceVillas.h>
+#include <dpsim-villas/InterfaceWorkerVillas.h>
 #include <dpsim-models/Logger.h>
 #include <villas/signal_list.hpp>
 #include <villas/path.hpp>
@@ -14,25 +14,25 @@
 using namespace CPS;
 using namespace DPsim;
 
-Bool InterfaceVillas::villasInitialized = false;
-UInt InterfaceVillas::villasAffinity = 0;
-UInt InterfaceVillas::villasPriority = 0;
-UInt InterfaceVillas::villasHugePages = 100;
+Bool InterfaceWorkerVillas::villasInitialized = false;
+UInt InterfaceWorkerVillas::villasAffinity = 0;
+UInt InterfaceWorkerVillas::villasPriority = 0;
+UInt InterfaceWorkerVillas::villasHugePages = 100;
 
-InterfaceVillas::InterfaceVillas(const String &nodeConfig, UInt queueLength, UInt sampleLength) :
-	Interface(),
+InterfaceWorkerVillas::InterfaceWorkerVillas(const String &nodeConfig, UInt queueLength, UInt sampleLength) :
+	InterfaceWorker(),
 	mNodeConfig(nodeConfig),
 	mQueueLength(queueLength),
 	mSampleLength(sampleLength)
 	{ }
 
-void InterfaceVillas::open() {
-	mLog->info("Opening InterfaceVillas...");
+void InterfaceWorkerVillas::open() {
+	mLog->info("Opening InterfaceWorkerVillas...");
 
-	if (!InterfaceVillas::villasInitialized) {
+	if (!InterfaceWorkerVillas::villasInitialized) {
 		mLog->info("Initializing Villas...");
 		initVillas();
-		InterfaceVillas::villasInitialized = true;
+		InterfaceWorkerVillas::villasInitialized = true;
 	}
 
 	json_error_t error;
@@ -81,7 +81,7 @@ void InterfaceVillas::open() {
 }
 
 
-void InterfaceVillas::prepareNode() {
+void InterfaceWorkerVillas::prepareNode() {
 	int ret = node::pool_init(&mSamplePool, mQueueLength, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLength));
 	if (ret < 0) {
 		mLog->error("Error: InterfaceVillas failed to init sample pool. pool_init returned code {}", ret);
@@ -104,7 +104,7 @@ void InterfaceVillas::prepareNode() {
 	}
 }
 
-void InterfaceVillas::setupNodeSignals() {
+void InterfaceWorkerVillas::setupNodeSignals() {
 	mNode->out.path = new node::Path();
 	mNode->out.path->signals = std::make_shared<node::SignalList>();
 	node::SignalList::Ptr nodeOutputSignals = mNode->out.path->getOutputSignals(false);
@@ -132,7 +132,7 @@ void InterfaceVillas::setupNodeSignals() {
 	}
 }
 
-void InterfaceVillas::close() {
+void InterfaceWorkerVillas::close() {
 	mLog->info("Closing InterfaceVillas...");
 	int ret = mNode->stop();
 	if (ret < 0) {
@@ -151,7 +151,7 @@ void InterfaceVillas::close() {
 	delete mNode;
 }
 
-void InterfaceVillas::readValuesFromEnv(std::vector<InterfaceManager::AttributePacket>& updatedAttrs) {
+void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePacket>& updatedAttrs) {
 	Sample *sample = node::sample_alloc(&mSamplePool);
 	int ret = 0;
 	try {
@@ -166,11 +166,11 @@ void InterfaceVillas::readValuesFromEnv(std::vector<InterfaceManager::AttributeP
 			for (UInt i = 0; i < mImports.size(); i++) {
 				auto importedAttr = std::get<0>(mImports[i])(sample);
 				if (!importedAttr.isNull()) {
-					updatedAttrs.push_back(InterfaceManager::AttributePacket {
+					updatedAttrs.push_back(Interface::AttributePacket {
 						importedAttr,
 						i,
 						mCurrentSequenceInterfaceToDpsim,
-						InterfaceManager::AttributePacketFlags::PACKET_NO_FLAGS
+						Interface::AttributePacketFlags::PACKET_NO_FLAGS
 					});
 					mCurrentSequenceInterfaceToDpsim++;
 				}
@@ -191,7 +191,7 @@ void InterfaceVillas::readValuesFromEnv(std::vector<InterfaceManager::AttributeP
 	}
 }
 
-void InterfaceVillas::writeValuesToEnv(std::vector<InterfaceManager::AttributePacket>& updatedAttrs) {
+void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePacket>& updatedAttrs) {
 	
 	//Update export sequence IDs
 	for (auto packet : updatedAttrs) {
@@ -277,7 +277,7 @@ void InterfaceVillas::writeValuesToEnv(std::vector<InterfaceManager::AttributePa
 	}
 }
 
-void InterfaceVillas::initVillas() {
+void InterfaceWorkerVillas::initVillas() {
 	int ret = node::memory::init(villasHugePages);
 	if (ret)
 		throw RuntimeError("Error: VillasNode failed to initialize memory system");
@@ -285,7 +285,7 @@ void InterfaceVillas::initVillas() {
 	villas::kernel::rt::init(villasPriority, villasAffinity);
 }
 
-void InterfaceVillas::configureExport(UInt attributeId, std::type_info type, UInt idx, Bool waitForOnWrite, String name, String unit) {
+void InterfaceWorkerVillas::configureExport(UInt attributeId, std::type_info type, UInt idx, Bool waitForOnWrite, String name, String unit) {
 	if (mOpened) {
 		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
 	}
@@ -360,7 +360,7 @@ void InterfaceVillas::configureExport(UInt attributeId, std::type_info type, UIn
 	}	
 }
 
-void InterfaceVillas::configureImport(UInt attributeId, std::type_info type, UInt idx) {
+void InterfaceWorkerVillas::configureImport(UInt attributeId, std::type_info type, UInt idx) {
 	if (mOpened) {
 		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
 		return;

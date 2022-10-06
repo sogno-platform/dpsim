@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
-#include <dpsim/InterfaceManager.h>
+#include <dpsim/Interface.h>
 
 using namespace CPS;
 
 namespace DPsim {
 
-    void InterfaceManager::open() {
-        mInterface->open();
-        mInterfaceWriterThread = std::thread(InterfaceManager::WriterThread(mQueueDpsimToInterface, mInterface));
-        mInterfaceReaderThread = std::thread(InterfaceManager::ReaderThread(mQueueInterfaceToDpsim, mInterface, mOpened));
+    void Interface::open() {
+        mInterfaceWorker->open();
+        mInterfaceWriterThread = std::thread(Interface::WriterThread(mQueueDpsimToInterface, mInterfaceWorker));
+        mInterfaceReaderThread = std::thread(Interface::ReaderThread(mQueueInterfaceToDpsim, mInterfaceWorker, mOpened));
         mOpened = true;
     }
 
-    void InterfaceManager::close() {
+    void Interface::close() {
 	    mOpened = false;
         mQueueDpsimToInterface->enqueue(AttributePacket {
             nullptr,
@@ -23,41 +23,41 @@ namespace DPsim {
         });
         mInterfaceWriterThread.join();
         mInterfaceReaderThread.join();
-        mInterface->close();
+        mInterfaceWorker->close();
     }
 
-    CPS::Task::List InterfaceManager::getTasks() {
+    CPS::Task::List Interface::getTasks() {
         return CPS::Task::List({
-            std::make_shared<InterfaceManager::PreStep>(*this),
-            std::make_shared<InterfaceManager::PostStep>(*this)
+            std::make_shared<Interface::PreStep>(*this),
+            std::make_shared<Interface::PostStep>(*this)
         });
     }
 
-    void InterfaceManager::PreStep::execute(Real time, Int timeStepCount) {
+    void Interface::PreStep::execute(Real time, Int timeStepCount) {
         if (!mIntf.mImportAttrsDpsim.empty()) {
             if (timeStepCount % mIntf.mDownsampling == 0)
                 mIntf.popDpsimAttrsFromQueue();
         }	
     }
 
-    void InterfaceManager::PostStep::execute(Real time, Int timeStepCount) {
+    void Interface::PostStep::execute(Real time, Int timeStepCount) {
         if (!mIntf.mExportAttrsDpsim.empty()) {
             if (timeStepCount % mIntf.mDownsampling == 0)
                 mIntf.pushDpsimAttrsToQueue();
         }
     }
 
-    void InterfaceManager::importAttribute(CPS::AttributeBase::Ptr attr, bool blockOnRead) {
+    void Interface::importAttribute(CPS::AttributeBase::Ptr attr, bool blockOnRead) {
         mImportAttrsDpsim.push_back(std::make_tuple(attr, 0, blockOnRead));
-        //mInterface->configureImport(mImportAttrsDpsim.size() - 1, attr->getType());
+        //mInterfaceWorker->configureImport(mImportAttrsDpsim.size() - 1, attr->getType());
     }
 
-    void InterfaceManager::exportAttribute(CPS::AttributeBase::Ptr attr) {
+    void Interface::exportAttribute(CPS::AttributeBase::Ptr attr) {
         mExportAttrsDpsim.push_back(std::make_tuple(attr, 0));
-        //mInterface->configureExport(mImportAttrsDpsim.size() - 1, attr->getType());
+        //mInterfaceWorker->configureExport(mImportAttrsDpsim.size() - 1, attr->getType());
     }
 
-    void InterfaceManager::popDpsimAttrsFromQueue() {
+    void Interface::popDpsimAttrsFromQueue() {
         AttributePacket receivedPacket;
         UInt currentSequenceId = mCurrentSequenceInterfaceToDpsim;
 
@@ -83,7 +83,7 @@ namespace DPsim {
         }
     }
 
-    void InterfaceManager::pushDpsimAttrsToQueue() {
+    void Interface::pushDpsimAttrsToQueue() {
         for (UInt i = 0; i < mExportAttrsDpsim.size(); i++) {
             mQueueDpsimToInterface->enqueue(AttributePacket {
                 std::get<0>(mExportAttrsDpsim[i])->cloneValueOntoNewAttribute(),
@@ -96,9 +96,9 @@ namespace DPsim {
         }
     }
 
-    void InterfaceManager::WriterThread::operator() () {
+    void Interface::WriterThread::operator() () {
         bool interfaceClosed = false;
-        std::vector<InterfaceManager::AttributePacket> attrsToWrite;
+        std::vector<Interface::AttributePacket> attrsToWrite;
         while (!interfaceClosed) {
             AttributePacket nextPacket;
             if(mQueueDpsimToInterface->try_dequeue(nextPacket)) {
@@ -106,17 +106,17 @@ namespace DPsim {
                     interfaceClosed = true;
                 } else {
                     attrsToWrite.push_back(nextPacket);
-                    mInterface->writeValuesToEnv(attrsToWrite);
+                    mInterfaceWorker->writeValuesToEnv(attrsToWrite);
                 }
             }
             
         }
     }
 
-    void InterfaceManager::ReaderThread::operator() () {
-        std::vector<InterfaceManager::AttributePacket>  attrsRead;
+    void Interface::ReaderThread::operator() () {
+        std::vector<Interface::AttributePacket>  attrsRead;
         while (mOpened) { //TODO: As long as reading blocks, there is no real way to force-stop thread execution from the dpsim side
-            mInterface->readValuesFromEnv(attrsRead);
+            mInterfaceWorker->readValuesFromEnv(attrsRead);
             for (auto packet : attrsRead) {
                 mQueueInterfaceToDpsim->enqueue(packet);
             }
