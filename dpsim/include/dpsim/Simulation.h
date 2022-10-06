@@ -121,8 +121,8 @@ namespace DPsim {
 		Scheduler::Edges mTaskInEdges, mTaskOutEdges;
 
 		/// Vector of Interfaces
-		//TODO: Let the InterfaceManager class handle synchronization, threading and import / export through the queues
-		std::vector<InterfaceManager::Ptr> mInterfaces;
+		//TODO: Let the Interface class handle synchronization, threading and import / export through the queues
+		std::vector<Interface::Ptr> mInterfaces;
 
 		struct LoggerMapping {
 			/// Simulation data logger
@@ -228,7 +228,7 @@ namespace DPsim {
 		void logStepTimes(String logName);
 
 		///
-		void addInterface(InterfaceManager::Ptr eint) {
+		void addInterface(Interface::Ptr eint) {
 			mInterfaces.push_back(eint);
 		}
 
