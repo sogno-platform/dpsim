@@ -79,9 +79,9 @@ int main(int argc, char *argv[]) {
 
 		// Map attributes to interface entries
 		InterfaceShmem intf(in, out);
-		evs->mVoltageRef->setReference(intf.importComplex(0));
+		intf.importAttribute(evs->mVoltageRef, 0);
 		auto evsAttrMinus = evs->mIntfCurrent->deriveCoeff<Complex>(0,0);
-		intf.exportComplex(evsAttrMinus, 0);
+		intf.exportAttribute(evsAttrMinus, 0);
 		sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 		MatrixComp initialEvsCurrent = MatrixComp::Zero(1,1);
@@ -126,9 +126,9 @@ int main(int argc, char *argv[]) {
 
 		// Map attributes to interface entries
 		InterfaceShmem intf(in, out);
-		ecs->mCurrentRef->setReference(intf.importComplex(0));
+		intf.importAttribute(ecs->mCurrentRef, 0);
 		//intf.exportComplex(ecs->mIntfVoltage->coeff(0, 0), 0);
-		intf.exportComplex(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0)->deriveScaled(Complex(-1.,0)), 0);
+		intf.exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0)->deriveScaled(Complex(-1.,0)), 0);
 		sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 		sim.run();

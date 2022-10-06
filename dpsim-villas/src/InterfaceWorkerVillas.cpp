@@ -201,8 +201,8 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 	}
 
 	//Remove outdated packets
-	std::remove_if(updatedAttrs.begin(), updatedAttrs.end(), [](auto packet) {
-		return std::get<1>(mExports[packet.attributeId] > packet.sequenceId);
+	std::remove_if(updatedAttrs.begin(), updatedAttrs.end(), [this](auto packet) {
+		return std::get<1>(mExports[packet.attributeId]) > packet.sequenceId;
 	});
 	
 	Sample *sample = nullptr;
@@ -224,12 +224,12 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 				sampleFilled = true;
 			}
 		}
-		std::remove_if(updatedAttrs.begin(), updatedAttrs.end(), [](auto packet) {
+		std::remove_if(updatedAttrs.begin(), updatedAttrs.end(), [this](auto packet) {
 			return !std::get<2>(mExports[packet.attributeId]);
 		});
 
 		//Check if the remaining packets form a complete set
-		if (updatedAttrs.size() == std::count_if(mExports.cbegin(), mExports.cend(), [](auto x) {
+		if (((long) updatedAttrs.size()) == std::count_if(mExports.cbegin(), mExports.cend(), [this](auto x) {
 			return std::get<2>(x);
 		})) {
 			for (auto packet : updatedAttrs) {
@@ -285,7 +285,7 @@ void InterfaceWorkerVillas::initVillas() {
 	villas::kernel::rt::init(villasPriority, villasAffinity);
 }
 
-void InterfaceWorkerVillas::configureExport(UInt attributeId, std::type_info type, UInt idx, Bool waitForOnWrite, String name, String unit) {
+void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_info& type, UInt idx, Bool waitForOnWrite, String name, String unit) {
 	if (mOpened) {
 		if (mLog != nullptr) {
 			mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
@@ -298,7 +298,6 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, std::type_info typ
 		}
 		return; 
 	}
-	auto& log = mLog;
 
 	if (type == typeid(Int)) {
 		mExports.push_back(std::make_tuple([idx](AttributeBase::Ptr attr, Sample *smp) {
@@ -367,7 +366,7 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, std::type_info typ
 	}	
 }
 
-void InterfaceWorkerVillas::configureImport(UInt attributeId, std::type_info type, UInt idx) {
+void InterfaceWorkerVillas::configureImport(UInt attributeId, const std::type_info& type, UInt idx) {
 	if (mOpened) {
 		if (mLog != nullptr) {
 			mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");

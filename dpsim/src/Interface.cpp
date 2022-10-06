@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <dpsim/Interface.h>
+#include <dpsim/InterfaceWorker.h>
 
 using namespace CPS;
 
@@ -55,6 +56,14 @@ namespace DPsim {
         mExportAttrsDpsim.push_back(std::make_tuple(attr, 0));
     }
 
+    void Interface::setLogger(CPS::Logger::Log log) {
+        mLog = log;
+        if (mInterfaceWorker != nullptr)
+        {
+            mInterfaceWorker->mLog = log;
+        }	
+	}
+
     void Interface::popDpsimAttrsFromQueue() {
         AttributePacket receivedPacket;
         UInt currentSequenceId = mCurrentSequenceInterfaceToDpsim;
@@ -64,8 +73,8 @@ namespace DPsim {
         while (std::find_if(
                 mImportAttrsDpsim.cbegin(),
                 mImportAttrsDpsim.cend(),
-                [](auto attrTuple) {
-                    return std::get<2>(attrTuple) && std::get<1>(attrTuple) < currentSequenceId
+                [currentSequenceId](auto attrTuple) {
+                    return std::get<2>(attrTuple) && std::get<1>(attrTuple) < currentSequenceId;
                 }) != mImportAttrsDpsim.cend()) {
             mQueueInterfaceToDpsim->wait_dequeue(receivedPacket);
             std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value);

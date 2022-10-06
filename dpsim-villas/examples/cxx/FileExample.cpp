@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 
 	// Interface
 	//evs->setAttributeRef("V_ref", intf.importComplex(0));
-	intf->exportComplex(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
+	intf->exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
 	sim.addInterface(intf);
 
 	// Logger

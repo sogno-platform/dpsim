@@ -65,8 +65,8 @@ int main(int argc, char *argv[]) {
 		sys.mComponents.push_back(filtP_profile);
 
 		// Register interface current source and voltage drop
-		ecs->mCurrentRef->setReference(intf1.importComplex(0));
-		intf1.exportComplex(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
+		intf1.importAttribute(ecs->mCurrentRef, 0);
+		intf1.exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
 
 		// TODO: gain by 20e8
 		filtP_profile->setInput(intf2.importReal(0));
@@ -125,9 +125,9 @@ int main(int argc, char *argv[]) {
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
-		evs->mVoltageRef->setReference(intf1.importComplex(0));
+		intf1.importAttribute(evs->mVoltageRef, 0);
 		// TODO: invalid sign
-		intf1.exportComplex(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
+		intf1.exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
 
 		// Register controllable load
 		filtP->setInput(intf2.importReal(0));

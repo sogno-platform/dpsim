@@ -66,8 +66,8 @@ int main(int argc, char* argv[]) {
 
 	// Interface
 	//evs->setAttributeRef("V_ref", intf.importComplex(0));
-	intf->exportComplex(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, "v_src");
-	intf->exportComplex(rL->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1, "v_load");
+	intf->exportAttribute(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, "v_src");
+	intf->exportAttribute(rL->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1, "v_load");
 	sim.addInterface(intf);
 
 	// Logger

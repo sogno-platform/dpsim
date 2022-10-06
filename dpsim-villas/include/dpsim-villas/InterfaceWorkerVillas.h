@@ -3,7 +3,7 @@
 #pragma once
 
 #include <dpsim-models/PtrFactory.h>
-#include <dpsim/Interface.h>
+#include <dpsim/InterfaceWorker.h>
 
 #include <villas/node.hpp>
 #include <villas/exceptions.hpp>
@@ -59,8 +59,8 @@ namespace DPsim {
 		virtual void readValuesFromEnv(std::vector<Interface::AttributePacket>& updatedAttrs) override;
 		virtual void writeValuesToEnv(std::vector<Interface::AttributePacket>& updatedAttrs) override;
 
-        virtual void configureImport(UInt attributeId, std::type_info type, UInt idx);
-        virtual void configureExport(UInt attributeId, std::type_info type, UInt idx, Bool waitForOnWrite, String name = "", String unit = "");
+        virtual void configureImport(UInt attributeId, const std::type_info& type, UInt idx);
+        virtual void configureExport(UInt attributeId, const std::type_info& type, UInt idx, Bool waitForOnWrite, String name = "", String unit = "");
 	
 	private:
 		void prepareNode();

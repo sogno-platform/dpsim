@@ -15,7 +15,7 @@
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/SimNode.h>
 #include <dpsim-models/Attribute.h>
-#include <dpsim/InterfaceManager.h>
+#include <dpsim/Interface.h>
 #include <nlohmann/json.hpp>
 
 #ifdef WITH_GRAPHVIZ
@@ -121,7 +121,6 @@ namespace DPsim {
 		Scheduler::Edges mTaskInEdges, mTaskOutEdges;
 
 		/// Vector of Interfaces
-		//TODO: Let the Interface class handle synchronization, threading and import / export through the queues
 		std::vector<Interface::Ptr> mInterfaces;
 
 		struct LoggerMapping {

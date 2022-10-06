@@ -60,8 +60,8 @@ int main(int argc, char* argv[]) {
 #endif
 
 	// Interface
-	evs->mVoltageRef->setReference(intf.importComplex(0));
-	intf.exportComplex(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
+	intf.importAttribute(evs->mVoltageRef, 0);
+	intf.exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
 	sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 	// Logger
