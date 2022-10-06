@@ -287,10 +287,15 @@ void InterfaceWorkerVillas::initVillas() {
 
 void InterfaceWorkerVillas::configureExport(UInt attributeId, std::type_info type, UInt idx, Bool waitForOnWrite, String name, String unit) {
 	if (mOpened) {
-		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		if (mLog != nullptr) {
+			mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		}
+		return;
 	}
 	if (attributeId != mExports.size()) {
-		mLog->warn("The imports already configured do not match with the given attribute ID! Configuration will remain unchanged.");
+		if (mLog != nullptr) {
+			mLog->warn("The exports already configured do not match with the given attribute ID! Configuration will remain unchanged.");
+		}
 		return; 
 	}
 	auto& log = mLog;
@@ -356,17 +361,23 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, std::type_info typ
 		}, 0, waitForOnWrite));
 		mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::BOOLEAN);
 	} else {
-		mLog->warn("Unsupported attribute type! Interface configuration will remain unchanged!");
+		if (mLog != nullptr) {
+			mLog->warn("Unsupported attribute type! Interface configuration will remain unchanged!");
+		}
 	}	
 }
 
 void InterfaceWorkerVillas::configureImport(UInt attributeId, std::type_info type, UInt idx) {
 	if (mOpened) {
-		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		if (mLog != nullptr) {
+			mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		}
 		return;
 	}
 	if (attributeId != mImports.size()) {
-		mLog->warn("The imports already configured do not match with the given attribute ID! Configuration will remain unchanged.");
+		if (mLog != nullptr) {
+			mLog->warn("The imports already configured do not match with the given attribute ID! Configuration will remain unchanged.");
+		}
 		return; 
 	}
 	auto& log = mLog;
@@ -408,6 +419,8 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId, std::type_info typ
 		}, 0));
 		mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::BOOLEAN);
 	} else {
-		mLog->warn("Unsupported attribute type! Interface configuration will remain unchanged!");
+		if (mLog != nullptr) {
+			mLog->warn("Unsupported attribute type! Interface configuration will remain unchanged!");
+		}
 	}	
 }

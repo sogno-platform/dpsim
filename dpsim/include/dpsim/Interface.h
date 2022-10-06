@@ -35,13 +35,11 @@ namespace DPsim {
 			PACKET_CLOSE_INTERFACE = 1,
 		};
 
-        Interface(InterfaceWorker::Ptr intf, CPS::Logger::Log log, String name = "", bool syncOnSimulationStart = false, UInt downsampling = 1) : 
+        Interface(InterfaceWorker::Ptr intf, String name = "", bool syncOnSimulationStart = false, UInt downsampling = 1) : 
 			mInterfaceWorker(intf),
-			mLog(log),
 			mName(name),
 			mSyncOnSimulationStart(syncOnSimulationStart),
 			mDownsampling(downsampling) {
-				mInterfaceWorker->mLog = log;
 				mQueueDpsimToInterface = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
 				mQueueInterfaceToDpsim = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
 			};
@@ -65,6 +63,14 @@ namespace DPsim {
 			return mSyncOnSimulationStart;
 		}
 
+		void setLogger(CPS::Logger::Log log) {
+			mLog = log;
+			if (mInterfaceWorker != nullptr)
+			{
+				mInterfaceWorker->mLog = log;
+			}	
+		}
+
 		virtual ~Interface() {
 			if (mOpened)
 				close();
@@ -73,9 +79,6 @@ namespace DPsim {
 		// Attributes used in the DPsim simulation. Should only be accessed by the dpsim-thread
 		std::vector<std::tuple<CPS::AttributeBase::Ptr, UInt, bool>> mImportAttrsDpsim;
 		std::vector<std::tuple<CPS::AttributeBase::Ptr, UInt>> mExportAttrsDpsim;
-
-		virtual void importAttribute(CPS::AttributeBase::Ptr attr, bool blockOnRead = false);
-		virtual void exportAttribute(CPS::AttributeBase::Ptr attr);
 
 	protected:
 		InterfaceWorker::Ptr mInterfaceWorker;
@@ -91,6 +94,9 @@ namespace DPsim {
 
 		std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueDpsimToInterface;
 		std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueInterfaceToDpsim;
+
+		virtual void importAttribute(CPS::AttributeBase::Ptr attr, bool blockOnRead = false);
+		virtual void exportAttribute(CPS::AttributeBase::Ptr attr);
 
 	public:
 
