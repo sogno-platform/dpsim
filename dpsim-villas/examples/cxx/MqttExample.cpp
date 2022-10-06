@@ -66,9 +66,9 @@ int main(int argc, char* argv[]) {
 
 	// Interface
 	sim.addInterface(intf);
-	evs->mVoltageRef->setReference(intf->importComplex(0));
-	intf->exportComplex(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, "v_src");
-	intf->exportComplex(ll->mIntfCurrent->deriveCoeff<Complex>(0, 0), 1, "v_load");
+	intf->importAttribute(evs->mVoltageRef, 0, true);
+	intf->exportAttribute(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, "v_src");
+	intf->exportAttribute(ll->mIntfCurrent->deriveCoeff<Complex>(0, 0), 1, "v_load");
 
 	// Logger
 	auto logger = DataLogger::make(simName);

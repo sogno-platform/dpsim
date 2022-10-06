@@ -123,9 +123,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
 		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow);
 
-	py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m, "Interface")
-		.def("import_attribute", &DPsim::Interface::importAttribute, "attr"_a, "idx"_a)
-		.def("export_attribute", &DPsim::Interface::exportAttribute, "attr"_a, "idx"_a);
+	py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m, "Interface");
 
 	py::class_<DPsim::DataLogger, std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
         .def(py::init<std::string>())

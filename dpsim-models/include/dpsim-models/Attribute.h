@@ -188,7 +188,7 @@ namespace CPS {
 		 * @brief Get the type of this attribute
 		 * @return std::type_info 
 		 */
-		virtual std::type_info getType() = 0;
+		virtual const std::type_info& getType() = 0;
 
 		/**
 		 * @brief Generates a new attribute of the same type and copies the current value in the heap. Does not copy any dependency relations!
@@ -376,7 +376,7 @@ namespace CPS {
 		 * @brief Get the type of this attribute
 		 * @return std::type_info 
 		 */
-		virtual std::type_info getType() {
+		virtual const std::type_info& getType() {
 			return typeid(T);
 		}
 

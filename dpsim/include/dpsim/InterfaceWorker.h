@@ -10,10 +10,9 @@
 #include <dpsim/Scheduler.h>
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/Task.h>
+#include <dpsim/Interface.h>
 
 namespace DPsim {
-
-    class Interface;
 
 	class InterfaceWorker {
 

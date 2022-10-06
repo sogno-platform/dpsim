@@ -9,13 +9,14 @@
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
 #include <dpsim/Interface.h>
-#include <dpsim/InterfaceWorker.h>
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/Task.h>
 
 #include <readerwriterqueue.h>
 
 namespace DPsim {
+
+	class InterfaceWorker;
 
 	class Interface :
 		public SharedFactory<Interface> {
@@ -35,7 +36,7 @@ namespace DPsim {
 			PACKET_CLOSE_INTERFACE = 1,
 		};
 
-        Interface(InterfaceWorker::Ptr intf, String name = "", bool syncOnSimulationStart = false, UInt downsampling = 1) : 
+        Interface(std::shared_ptr<InterfaceWorker> intf, String name = "", bool syncOnSimulationStart = false, UInt downsampling = 1) : 
 			mInterfaceWorker(intf),
 			mName(name),
 			mSyncOnSimulationStart(syncOnSimulationStart),
@@ -63,13 +64,7 @@ namespace DPsim {
 			return mSyncOnSimulationStart;
 		}
 
-		void setLogger(CPS::Logger::Log log) {
-			mLog = log;
-			if (mInterfaceWorker != nullptr)
-			{
-				mInterfaceWorker->mLog = log;
-			}	
-		}
+		void setLogger(CPS::Logger::Log log);
 
 		virtual ~Interface() {
 			if (mOpened)
@@ -81,7 +76,7 @@ namespace DPsim {
 		std::vector<std::tuple<CPS::AttributeBase::Ptr, UInt>> mExportAttrsDpsim;
 
 	protected:
-		InterfaceWorker::Ptr mInterfaceWorker;
+		std::shared_ptr<InterfaceWorker> mInterfaceWorker;
 		CPS::Logger::Log mLog;
 		String mName;
 		bool mSyncOnSimulationStart;
@@ -103,12 +98,12 @@ namespace DPsim {
 		class WriterThread {
 			private:
 				std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueDpsimToInterface;
-				DPsim::InterfaceWorker::Ptr mInterfaceWorker;
+				std::shared_ptr<InterfaceWorker> mInterfaceWorker;
 
 			public:
 				WriterThread(
 						std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> queueDpsimToInterface,
-				 		DPsim::InterfaceWorker::Ptr intf
+				 		std::shared_ptr<InterfaceWorker> intf
 					) :
 					mQueueDpsimToInterface(queueDpsimToInterface),
 					mInterfaceWorker(intf) {};
@@ -118,13 +113,13 @@ namespace DPsim {
 		class ReaderThread {
 			private:
 				std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueInterfaceToDpsim;
-				DPsim::InterfaceWorker::Ptr mInterfaceWorker;
+				std::shared_ptr<InterfaceWorker> mInterfaceWorker;
 				std::atomic<bool>& mOpened;
 
 			public:
 				ReaderThread(
 						std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> queueInterfaceToDpsim,
-				 		DPsim::InterfaceWorker::Ptr intf,
+				 		std::shared_ptr<InterfaceWorker> intf,
 						std::atomic<bool>& opened
 					) :
 					mQueueInterfaceToDpsim(queueInterfaceToDpsim),
