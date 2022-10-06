@@ -49,12 +49,10 @@ namespace DPsim {
 
     void Interface::importAttribute(CPS::AttributeBase::Ptr attr, bool blockOnRead) {
         mImportAttrsDpsim.push_back(std::make_tuple(attr, 0, blockOnRead));
-        //mInterfaceWorker->configureImport(mImportAttrsDpsim.size() - 1, attr->getType());
     }
 
     void Interface::exportAttribute(CPS::AttributeBase::Ptr attr) {
         mExportAttrsDpsim.push_back(std::make_tuple(attr, 0));
-        //mInterfaceWorker->configureExport(mImportAttrsDpsim.size() - 1, attr->getType());
     }
 
     void Interface::popDpsimAttrsFromQueue() {

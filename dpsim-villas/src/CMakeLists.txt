@@ -1,4 +1,5 @@
 set(DPSIM_VILLAS_SOURCES
+    InterfaceVillas.cpp
     InterfaceWorkerVillas.cpp
 )
 
