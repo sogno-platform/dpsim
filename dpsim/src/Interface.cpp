@@ -9,9 +9,9 @@ namespace DPsim {
 
     void Interface::open() {
         mInterfaceWorker->open();
+        mOpened = true;
         mInterfaceWriterThread = std::thread(Interface::WriterThread(mQueueDpsimToInterface, mInterfaceWorker));
         mInterfaceReaderThread = std::thread(Interface::ReaderThread(mQueueInterfaceToDpsim, mInterfaceWorker, mOpened));
-        mOpened = true;
     }
 
     void Interface::close() {
@@ -66,7 +66,7 @@ namespace DPsim {
 
     void Interface::popDpsimAttrsFromQueue() {
         AttributePacket receivedPacket;
-        UInt currentSequenceId = mCurrentSequenceInterfaceToDpsim;
+        UInt currentSequenceId = mNextSequenceInterfaceToDpsim;
 
         //Wait for and dequeue all attributes that read should block on
         //The std::find_if will look for all attributes that have not been updated in the current while loop (i. e. whose sequence ID is lower than the next expected sequence ID)
@@ -79,14 +79,14 @@ namespace DPsim {
             mQueueInterfaceToDpsim->wait_dequeue(receivedPacket);
             std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value);
             std::get<1>(mImportAttrsDpsim[receivedPacket.attributeId]) = receivedPacket.sequenceId;
-            mCurrentSequenceInterfaceToDpsim = receivedPacket.sequenceId + 1;
+            mNextSequenceInterfaceToDpsim = receivedPacket.sequenceId + 1;
         }
 
         //Fetch all remaining queue packets
         while (mQueueInterfaceToDpsim->try_dequeue(receivedPacket)) {
             std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value);
             std::get<1>(mImportAttrsDpsim[receivedPacket.attributeId]) = receivedPacket.sequenceId;
-            mCurrentSequenceInterfaceToDpsim = receivedPacket.sequenceId + 1;
+            mNextSequenceInterfaceToDpsim = receivedPacket.sequenceId + 1;
         }
     }
 
@@ -108,15 +108,24 @@ namespace DPsim {
         std::vector<Interface::AttributePacket> attrsToWrite;
         while (!interfaceClosed) {
             AttributePacket nextPacket;
-            if(mQueueDpsimToInterface->try_dequeue(nextPacket)) {
+
+            //Wait for at least one packet
+            mQueueDpsimToInterface->wait_dequeue(nextPacket);
+            if (nextPacket.flags & AttributePacketFlags::PACKET_CLOSE_INTERFACE) {
+                interfaceClosed = true;
+            } else {
+                attrsToWrite.push_back(nextPacket);
+            }
+
+            //See if there are more packets
+            while(mQueueDpsimToInterface->try_dequeue(nextPacket)) {
                 if (nextPacket.flags & AttributePacketFlags::PACKET_CLOSE_INTERFACE) {
                     interfaceClosed = true;
                 } else {
                     attrsToWrite.push_back(nextPacket);
-                    mInterfaceWorker->writeValuesToEnv(attrsToWrite);
                 }
             }
-            
+            mInterfaceWorker->writeValuesToEnv(attrsToWrite);
         }
     }
 

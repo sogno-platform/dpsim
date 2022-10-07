@@ -80,8 +80,8 @@ namespace DPsim {
 		CPS::Logger::Log mLog;
 		String mName;
 		bool mSyncOnSimulationStart;
-		UInt mCurrentSequenceDpsimToInterface = 0;
-		UInt mCurrentSequenceInterfaceToDpsim = 0;
+		UInt mCurrentSequenceDpsimToInterface = 1;
+		UInt mNextSequenceInterfaceToDpsim = 1;
 		UInt mDownsampling;
 		std::atomic<bool> mOpened;
 		std::thread mInterfaceWriterThread;

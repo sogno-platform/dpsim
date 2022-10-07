@@ -201,9 +201,10 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 	}
 
 	//Remove outdated packets
-	std::remove_if(updatedAttrs.begin(), updatedAttrs.end(), [this](auto packet) {
+	auto beginOutdated = std::remove_if(updatedAttrs.begin(), updatedAttrs.end(), [this](auto packet) {
 		return std::get<1>(mExports[packet.attributeId]) > packet.sequenceId;
 	});
+	updatedAttrs.erase(beginOutdated, updatedAttrs.end());
 	
 	Sample *sample = nullptr;
 	Int ret = 0;
@@ -217,16 +218,16 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 		}
 
 		sample->signals = mNode->getOutputSignals(false);
-		for (auto packet : updatedAttrs) {
+		auto beginExported = std::remove_if(updatedAttrs.begin(), updatedAttrs.end(), [this, &sampleFilled, &sample](auto packet) {
 			if (!std::get<2>(mExports[packet.attributeId])) {
 				//Write attribute to sample ASAP
 				std::get<0>(mExports[packet.attributeId])(packet.value, sample);
 				sampleFilled = true;
+				return true;
 			}
-		}
-		std::remove_if(updatedAttrs.begin(), updatedAttrs.end(), [this](auto packet) {
-			return !std::get<2>(mExports[packet.attributeId]);
+			return false;
 		});
+		updatedAttrs.erase(beginExported, updatedAttrs.end());
 
 		//Check if the remaining packets form a complete set
 		if (((long) updatedAttrs.size()) == std::count_if(mExports.cbegin(), mExports.cend(), [this](auto x) {
