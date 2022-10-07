@@ -6,6 +6,8 @@
 
 #include <dpsim-villas/InterfaceVillas.h>
 
+PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);
+
 namespace py = pybind11;
 using namespace py::literals;
 using namespace villas;
