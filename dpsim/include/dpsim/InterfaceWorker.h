@@ -18,7 +18,7 @@ namespace DPsim {
 
     protected:
         bool mOpened;
-        UInt mCurrentSequenceInterfaceToDpsim = 0;
+        UInt mCurrentSequenceInterfaceToDpsim = 1;
     
     public:
         typedef std::shared_ptr<InterfaceWorker> Ptr;
@@ -39,6 +39,7 @@ namespace DPsim {
 		 * Function that will be called on loop in its separate thread.
          * Should be used to read values from `updatedAttrs` and write them to the environment
          * The `updatedAttrs` list will not be cleared by the caller in between function calls
+         * When this function is called, `updatedAttrs` will include at least one value
 		 */
         virtual void writeValuesToEnv(std::vector<Interface::AttributePacket>& updatedAttrs) = 0;
 
