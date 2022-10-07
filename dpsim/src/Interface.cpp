@@ -65,7 +65,12 @@ namespace DPsim {
 	}
 
     void Interface::popDpsimAttrsFromQueue() {
-        AttributePacket receivedPacket;
+        AttributePacket receivedPacket = {
+            nullptr,
+            0,
+            0,
+            AttributePacketFlags::PACKET_NO_FLAGS
+        };
         UInt currentSequenceId = mNextSequenceInterfaceToDpsim;
 
         //Wait for and dequeue all attributes that read should block on
@@ -111,7 +116,12 @@ namespace DPsim {
         bool interfaceClosed = false;
         std::vector<Interface::AttributePacket> attrsToWrite;
         while (!interfaceClosed) {
-            AttributePacket nextPacket;
+            AttributePacket nextPacket = {
+                nullptr,
+                0,
+                0,
+                AttributePacketFlags::PACKET_NO_FLAGS
+            };
 
             //Wait for at least one packet
             mQueueDpsimToInterface->wait_dequeue(nextPacket);
