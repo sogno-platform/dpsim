@@ -361,9 +361,6 @@ namespace CPS {
 		 * @return true if the copy operation was successful, false otherwise
 		 */
 		virtual bool copyValue(AttributeBase::Ptr copyFrom) {
-			if (!this->isStatic()) {
-				return false;
-			}
 			Attribute<T>::Ptr copyFromTyped = std::dynamic_pointer_cast<Attribute<T>>(copyFrom.getPtr());
 			if (copyFromTyped.getPtr() == nullptr) {
 				return false;
