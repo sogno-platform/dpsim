@@ -77,14 +77,18 @@ namespace DPsim {
                     return std::get<2>(attrTuple) && std::get<1>(attrTuple) < currentSequenceId;
                 }) != mImportAttrsDpsim.cend()) {
             mQueueInterfaceToDpsim->wait_dequeue(receivedPacket);
-            std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value);
+            if (!std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value)) {
+                mLog->warn("Failed to copy received value onto attribute in Interface!");
+            }
             std::get<1>(mImportAttrsDpsim[receivedPacket.attributeId]) = receivedPacket.sequenceId;
             mNextSequenceInterfaceToDpsim = receivedPacket.sequenceId + 1;
         }
 
         //Fetch all remaining queue packets
         while (mQueueInterfaceToDpsim->try_dequeue(receivedPacket)) {
-            std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value);
+            if (!std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value)) {
+                mLog->warn("Failed to copy received value onto attribute in Interface!");
+            }
             std::get<1>(mImportAttrsDpsim[receivedPacket.attributeId]) = receivedPacket.sequenceId;
             mNextSequenceInterfaceToDpsim = receivedPacket.sequenceId + 1;
         }
