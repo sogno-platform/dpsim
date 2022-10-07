@@ -78,7 +78,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("start", &DPsim::Simulation::start)
 		.def("next", &DPsim::Simulation::next)
 		.def("get_idobj_attr", &DPsim::Simulation::getIdObjAttribute, "comp"_a, "attr"_a)
-		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a) // cppcheck-suppress assignBoolToPointer
+		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a)
 		.def("log_idobj_attribute", &DPsim::Simulation::logIdObjAttribute, "comp"_a, "attr"_a)
 		.def("log_attribute", &DPsim::Simulation::logAttribute, "name"_a, "attr"_a)
 		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
