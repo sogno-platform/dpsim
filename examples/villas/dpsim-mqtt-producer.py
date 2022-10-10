@@ -14,7 +14,7 @@ if __name__ == '__main__':
     seq = 0
     T_s = 0.01
     tf = 10.0
-    num_samples = int(tf/T_s) + 2
+    num_samples = int(tf/T_s) + 1
     for n in range(0, num_samples):
         if n < int(num_samples/2):
             m_v_ref = {"real":5.0, "imag":0.0}

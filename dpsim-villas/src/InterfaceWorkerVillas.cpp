@@ -4,6 +4,11 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <unistd.h>
+#include <poll.h>
+#include <chrono>
+#include <thread>
+
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 #include <dpsim-villas/InterfaceWorkerVillas.h>
@@ -152,38 +157,93 @@ void InterfaceWorkerVillas::close() {
 }
 
 void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePacket>& updatedAttrs) {
-	Sample *sample = node::sample_alloc(&mSamplePool);
+	Sample *sample = nullptr;
 	int ret = 0;
+	bool shouldRead = false;
 	try {
-		ret = mNode->read(&sample, 1);
-		if (ret < 0) {
-			mLog->error("Fatal error: failed to read sample from InterfaceVillas. Read returned code {}", ret);
-			close();
-			std::exit(1);
-		}
+		auto pollFds = mNode->getPollFDs();
 
-		if (ret != 0) {
-			for (UInt i = 0; i < mImports.size(); i++) {
-				auto importedAttr = std::get<0>(mImports[i])(sample);
-				if (!importedAttr.isNull()) {
-					updatedAttrs.push_back(Interface::AttributePacket {
-						importedAttr,
-						i,
-						mCurrentSequenceInterfaceToDpsim,
-						Interface::AttributePacketFlags::PACKET_NO_FLAGS
-					});
-					mCurrentSequenceInterfaceToDpsim++;
+		if (!pollFds.empty()) {
+			std::vector<struct pollfd> pfds = std::vector<struct pollfd>();
+
+			for (auto pollFd : pollFds) {
+				pfds.push_back(pollfd {
+					.fd = pollFd,
+					.events = POLLIN
+				});
+			}
+
+			ret = ::poll(pfds.data(), pfds.size(), 0);
+
+			if (ret < 0) {
+				mLog->error("Fatal error: failed to read sample from InterfaceVillas. Poll returned code {}", ret);
+				close();
+				std::exit(1);
+			}
+
+			if (ret == 0){
+				return;
+			}
+
+			for (unsigned i = 0; i < pfds.size(); i++) {
+				auto &pfd = pfds[i];
+				if (pfd.revents & POLLIN) {
+					shouldRead = true;
+					break;
 				}
 			}
+		} else  {
+			//If the node does not support pollFds just do a blocking read
+			shouldRead = true;
 		}
 
-		sample_decref(sample);
+		if (shouldRead) {
+			sample = node::sample_alloc(&mSamplePool);
 
+			ret = mNode->read(&sample, 1);
+			if (ret < 0) {
+				mLog->error("Fatal error: failed to read sample from InterfaceVillas. Read returned code {}", ret);
+				close();
+				std::exit(1);
+			}
+
+			if (ret != 0) {
+				for (UInt i = 0; i < mImports.size(); i++) {
+					auto importedAttr = std::get<0>(mImports[i])(sample);
+					if (!importedAttr.isNull()) {
+						updatedAttrs.push_back(Interface::AttributePacket {
+							importedAttr,
+							i,
+							mCurrentSequenceInterfaceToDpsim,
+							Interface::AttributePacketFlags::PACKET_NO_FLAGS
+						});
+						mCurrentSequenceInterfaceToDpsim++;
+					}
+				}
+
+				if (!pollFds.empty()) {
+					//Manually clear the event file descriptor since Villas does not do that for some reason
+					//See https://git.rwth-aachen.de/acs/public/villas/node/-/issues/347
+					uint64_t result = 0;
+					ret = ::read(pollFds[0], &result, 8);
+					if (ret < 0) {
+						mLog->warn("Could not reset poll file descriptor! Read returned {}", ret);
+					}
+					if (result > 1) {
+						result = result - 1;
+						ret = ::write(pollFds[0], (void*) &result, 8);
+						if (ret < 0) {
+							mLog->warn("Could not decrement poll file descriptor! Write returned {}", ret);
+						}
+					}
+				}
+
+			}
+
+			sample_decref(sample);
+		}
 	}
 	catch (std::exception& exc) {
-		/* probably won't happen (if the timer expires while we're still reading data,
-		 * we have a bigger problem somewhere else), but nevertheless, make sure that
-		 * we're not leaking memory from the queue pool */
 		if (sample)
 			sample_decref(sample);
 
