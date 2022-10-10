@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 	// Voltage is read from VILLASnode and current through everything is written back.
 	String simName = "Mqtt_example";
 	CPS::Logger::setLogDir("logs/"+simName);
-	Real timeStep = 0.1;
+	Real timeStep = 0.01;
 
 	// Nodes
 	auto n1 = SimNode::make("n1");
