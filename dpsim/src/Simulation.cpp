@@ -197,8 +197,6 @@ void Simulation::prepSchedule() {
 		}
 	}
 
-	//TODO: This will add the tasks for reading and writing directly from the registered attributes
-	// These tasks should be moved to the simulation and used for reading / writing from / to the queues
 	for (auto intf : mInterfaces) {
 		for (auto t : intf->getTasks()) {
 			mTasks.push_back(t);
