@@ -10,8 +10,13 @@ namespace DPsim {
     void Interface::open() {
         mInterfaceWorker->open();
         mOpened = true;
-        mInterfaceWriterThread = std::thread(Interface::WriterThread(mQueueDpsimToInterface, mInterfaceWorker));
-        mInterfaceReaderThread = std::thread(Interface::ReaderThread(mQueueInterfaceToDpsim, mInterfaceWorker, mOpened));
+
+        if (!mImportAttrsDpsim.empty()) {
+            mInterfaceReaderThread = std::thread(Interface::ReaderThread(mQueueInterfaceToDpsim, mInterfaceWorker, mOpened));
+        }
+        if (!mExportAttrsDpsim.empty()) {
+            mInterfaceWriterThread = std::thread(Interface::WriterThread(mQueueDpsimToInterface, mInterfaceWorker));
+        }
     }
 
     void Interface::close() {
@@ -22,37 +27,53 @@ namespace DPsim {
             0,
             AttributePacketFlags::PACKET_CLOSE_INTERFACE
         });
-        mInterfaceWriterThread.join();
-        mInterfaceReaderThread.join();
+
+        if (!mExportAttrsDpsim.empty()) {
+            mInterfaceWriterThread.join();
+        }
+
+        if (!mImportAttrsDpsim.empty()) {
+            mInterfaceReaderThread.join();
+        }
         mInterfaceWorker->close();
     }
 
     CPS::Task::List Interface::getTasks() {
-        return CPS::Task::List({
-            std::make_shared<Interface::PreStep>(*this),
-            std::make_shared<Interface::PostStep>(*this)
-        });
+        auto tasks = CPS::Task::List();
+        if (!mImportAttrsDpsim.empty()) {
+            tasks.push_back(std::make_shared<Interface::PreStep>(*this));
+        }
+        if (!mExportAttrsDpsim.empty()) {
+            tasks.push_back(std::make_shared<Interface::PostStep>(*this));
+        }
+        return tasks;
     }
 
     void Interface::PreStep::execute(Real time, Int timeStepCount) {
-        if (!mIntf.mImportAttrsDpsim.empty()) {
-            if (timeStepCount % mIntf.mDownsampling == 0)
-                mIntf.popDpsimAttrsFromQueue();
-        }	
+        if (timeStepCount % mIntf.mDownsampling == 0)
+            mIntf.popDpsimAttrsFromQueue();
     }
 
     void Interface::PostStep::execute(Real time, Int timeStepCount) {
-        if (!mIntf.mExportAttrsDpsim.empty()) {
-            if (timeStepCount % mIntf.mDownsampling == 0)
-                mIntf.pushDpsimAttrsToQueue();
-        }
+        if (timeStepCount % mIntf.mDownsampling == 0)
+            mIntf.pushDpsimAttrsToQueue();
     }
 
     void Interface::importAttribute(CPS::AttributeBase::Ptr attr, bool blockOnRead) {
+        if (mOpened) {
+            mLog->error("Cannot modify interface configuration after simulation start!");
+            std::exit(1);
+        }
+
         mImportAttrsDpsim.push_back(std::make_tuple(attr, 0, blockOnRead));
     }
 
     void Interface::exportAttribute(CPS::AttributeBase::Ptr attr) {
+        if (mOpened) {
+            mLog->error("Cannot modify interface configuration after simulation start!");
+            std::exit(1);
+        }
+
         mExportAttrsDpsim.push_back(std::make_tuple(attr, 0));
     }
 
