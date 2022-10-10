@@ -59,11 +59,11 @@ int main(int argc, char* argv[]) {
         }
     })STRING";
 
-    auto intf = std::make_shared<InterfaceVillas>("dpsim-file", fileConfig);
+    auto intf = std::make_shared<InterfaceVillas>(fileConfig);
 
 	// Interface
 	//evs->setAttributeRef("V_ref", intf.importComplex(0));
-	intf->exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
+	intf->exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0, true);
 	sim.addInterface(intf);
 
 	// Logger
