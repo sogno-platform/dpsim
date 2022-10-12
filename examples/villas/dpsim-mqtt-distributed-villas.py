@@ -1,6 +1,3 @@
-# This example reads a sine signal from villas that modifies the active power set point
-# of the PQ load. The n2 voltage is exported to a file via MQTT and VILLASnode.
-
 import sys
 import os.path
 import logging
@@ -19,123 +16,6 @@ base = os.path.splitext(os.path.basename(sys.argv[0]))[0]
 log = logging.getLogger(base)
 
 def villas():
-
-    # log_filename=datetime.now().strftime(f'{base}-villas-%y-%m-%d_%H_%M_%S.log')
-
-    # nodes = {
-    #     'mqtt0': {
-    #         'type': 'mqtt',
-    #         'format': 'json',
-    #         'host': 'mqtt',
-    #         'in': {
-    #             'subscribe': '/dpsim0-mqtt0',
-    #             'signals':  [
-    #                 {
-    #                     'name': 'i_intf',
-    #                     'type': 'complex'
-    #                 }
-    #             ]
-    #         },
-    #         'out': {
-    #             'publish': '/mqtt0-dpsim0'
-    #         }
-    #     },
-    #     'mqtt1': {
-    #         'type': 'mqtt',
-    #         'format': 'json',
-    #         'host': 'mqtt',
-    #         'in': {
-    #             'subscribe': '/dpsim1-mqtt1',
-    #             'signals':  [
-    #                 {
-    #                     'name': 'v_intf',
-    #                     'type': 'complex'
-    #                 }
-    #             ]
-    #         },
-    #         'out': {
-    #             'publish': '/mqtt1-dpsim1'
-    #         }
-    #     }
-    # }
-
-    # paths = [
-    #     {
-    #         'in': 'mqtt0',
-    #         'out': 'mqtt1',
-    #         'reverse': True,
-    #         'hooks': [{'type':'print'}]
-    #     }
-    # ]
-
-    # config = {
-    #     'nodes': nodes,
-    #     'paths': paths
-    # }
-    # config['nodes']['mqtt0']['out']['hooks'] = [{'type':'print'}]
-    # config['nodes']['mqtt1']['out']['hooks'] = [{'type':'print'}]
-
-    # nodes = {
-    #     'mqtt0': {
-    #         'type': 'mqtt',
-    #         'format': 'json',
-    #         'host': 'mqtt',
-    #         'in': {
-    #             'subscribe': '/dpsim0-mqtt0',
-    #             'signals':  [
-    #                 {
-    #                     'name': 'i_intf',
-    #                     'type': 'complex'
-    #                 }
-    #             ]
-    #         },
-    #         'out': {
-    #             'publish': '/mqtt0-dpsim0'
-    #         }
-    #     },
-    #     'mqtt1': {
-    #         'type': 'mqtt',
-    #         'format': 'json',
-    #         'host': 'mqtt',
-    #         'in': {
-    #             'subscribe': '/dpsim1-mqtt1',
-    #             'signals':  [
-    #                 {
-    #                     'name': 'v_intf',
-    #                     'type': 'complex'
-    #                 }
-    #             ]
-    #         },
-    #         'out': {
-    #             'publish': '/mqtt1-dpsim1'
-    #         }
-    #     },
-    #     'file1': {
-    #         'type': 'file',
-    #         'uri': f'{base}-results-%y-%m-%d_%H_%M_%S.csv'
-    #     }
-    # }
-
-    # paths = [
-    #     {
-    #         'in': 'mqtt1',
-    #         'out': 'file1',
-    #         'hooks': [{'type':'print'}]
-    #     }
-    # ]
-
-    # config = {
-    #     'nodes': nodes,
-    #     'paths': paths
-    # }
-    # config['nodes']['mqtt0']['out']['hooks'] = [{'type':'print'}]
-
-    # log.info('VILLASnode config: \n%s', json.dumps(config, indent=2))
-
-    # node = VILLASnode(config=config, log_filename=log_filename)
-    # node.start()
-
-    # return VILLASnode(config=config, log_filename=log_filename)
 
     villas_conf = """
         {
@@ -261,30 +141,14 @@ def dpsim0():
             "publish": "/dpsim0-mqtt0"
         }
     }
-
-    # file_config = '''{
-    #     "type": "file",
-    #     "format": "csv",
-    #     "uri": "dpsim-mqtt-distributed-villas-results-22-09-12_16_27_53.csv",
-    #     "in": {
-    #         "signals": [
-    #             {
-    #                 "name": "v_intf",
-    #                 "type": "complex"
-    #             }
-    #         ]
-    #     }
-    # }'''
     
     intf = dpsimpyvillas.InterfaceVillas(name="dpsim0-mqtt0", config=intf_config)
-    # intf = dpsimpyvillas.InterfaceVillas(name="file-dpsim0", config=file_config)
 
     sim.add_interface(intf, True)
     sim.import_attribute(evs.attr('V_ref'), 0)
     sim.export_attribute(evs.attr('i_intf').derive_coeff(0,0), 0)
   
     sim.run(1)
-    # return sim, intf
 
 def dpsim1():
     sim_name = "DistributedVILLAS1"
@@ -335,8 +199,6 @@ def dpsim1():
   
     sim.run(1)
 
-    # return sim, intf
-
 if __name__ == '__main__':
     logging.basicConfig(format='[%(asctime)s %(name)s %(levelname)s] %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
 
@@ -355,11 +217,3 @@ if __name__ == '__main__':
     print('Both simulations have ended!')
 
     p_node.join()
-    # p_node.stop()
-
-    # sim, intf = dpsim0() #intf needs to be extracted from the dpsim-function since the interface object gets deleted otherwise leading to SegFault when starting the simulation
-    # # node = villas()
-    
-    # # node.start()
-    # sim.run(1)
-    # # node.stop()
