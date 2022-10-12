@@ -277,8 +277,8 @@ namespace CPS {
 		std::shared_ptr<T> mData;
 
 	public:
-		typedef T Type;
-		typedef AttributePointer<Attribute<T>> Ptr;
+		using Type = T;
+		using Ptr = AttributePointer<Attribute<T>>;
 
 		Attribute(T initialValue = T()) :
 			AttributeBase(), mData(std::make_shared<T>()) {
@@ -330,7 +330,7 @@ namespace CPS {
 		virtual std::shared_ptr<T> asRawPointer() = 0;
 
 		/// Fallback method for all attribute types not covered by the specifications in Attribute.cpp
-		virtual String toString() override {
+		String toString() override {
 			std::stringstream ss;
 			ss << this->get();
 			return ss.str();
@@ -360,7 +360,7 @@ namespace CPS {
 		 * @brief Copy the attribute value of `copyFrom` onto this attribute
 		 * @return true if the copy operation was successful, false otherwise
 		 */
-		virtual bool copyValue(AttributeBase::Ptr copyFrom) {
+		bool copyValue(AttributeBase::Ptr copyFrom) override {
 			Attribute<T>::Ptr copyFromTyped = std::dynamic_pointer_cast<Attribute<T>>(copyFrom.getPtr());
 			if (copyFromTyped.getPtr() == nullptr) {
 				return false;
@@ -373,7 +373,7 @@ namespace CPS {
 		 * @brief Get the type of this attribute
 		 * @return std::type_info 
 		 */
-		virtual const std::type_info& getType() {
+		const std::type_info& getType() override {
 			return typeid(T);
 		}
 
@@ -381,7 +381,7 @@ namespace CPS {
 		 * @brief Generates a new attribute of the same type and copies the current value in the heap. Does not copy any dependency relations!
 		 * @return Pointer to the copied attribute
 		 */
-		virtual AttributeBase::Ptr cloneValueOntoNewAttribute() {
+		AttributeBase::Ptr cloneValueOntoNewAttribute() override {
 			return AttributePointer<AttributeBase>(AttributeStatic<T>::make(this->get()));
 		};
 

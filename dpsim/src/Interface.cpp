@@ -21,7 +21,7 @@ namespace DPsim {
 
     void Interface::close() {
 	    mOpened = false;
-        mQueueDpsimToInterface->enqueue(AttributePacket {
+        mQueueDpsimToInterface->emplace(AttributePacket {
             nullptr,
             0,
             0,
@@ -59,22 +59,22 @@ namespace DPsim {
             mIntf.pushDpsimAttrsToQueue();
     }
 
-    void Interface::importAttribute(CPS::AttributeBase::Ptr attr, bool blockOnRead) {
+    void Interface::addImport(CPS::AttributeBase::Ptr attr, bool blockOnRead) {
         if (mOpened) {
             mLog->error("Cannot modify interface configuration after simulation start!");
             std::exit(1);
         }
 
-        mImportAttrsDpsim.push_back(std::make_tuple(attr, 0, blockOnRead));
+        mImportAttrsDpsim.emplace_back(std::make_tuple(attr, 0, blockOnRead));
     }
 
-    void Interface::exportAttribute(CPS::AttributeBase::Ptr attr) {
+    void Interface::addExport(CPS::AttributeBase::Ptr attr) {
         if (mOpened) {
             mLog->error("Cannot modify interface configuration after simulation start!");
             std::exit(1);
         }
 
-        mExportAttrsDpsim.push_back(std::make_tuple(attr, 0));
+        mExportAttrsDpsim.emplace_back(std::make_tuple(attr, 0));
     }
 
     void Interface::setLogger(CPS::Logger::Log log) {
@@ -122,7 +122,7 @@ namespace DPsim {
 
     void Interface::pushDpsimAttrsToQueue() {
         for (UInt i = 0; i < mExportAttrsDpsim.size(); i++) {
-            mQueueDpsimToInterface->enqueue(AttributePacket {
+            mQueueDpsimToInterface->emplace(AttributePacket {
                 std::get<0>(mExportAttrsDpsim[i])->cloneValueOntoNewAttribute(),
                 i,
                 std::get<1>(mExportAttrsDpsim[i]),
@@ -133,7 +133,7 @@ namespace DPsim {
         }
     }
 
-    void Interface::WriterThread::operator() () {
+    void Interface::WriterThread::operator() () const {
         bool interfaceClosed = false;
         std::vector<Interface::AttributePacket> attrsToWrite;
         while (!interfaceClosed) {
@@ -164,7 +164,7 @@ namespace DPsim {
         }
     }
 
-    void Interface::ReaderThread::operator() () {
+    void Interface::ReaderThread::operator() () const {
         std::vector<Interface::AttributePacket>  attrsRead;
         while (mOpened) { //TODO: As long as reading blocks, there is no real way to force-stop thread execution from the dpsim side
             mInterfaceWorker->readValuesFromEnv(attrsRead);

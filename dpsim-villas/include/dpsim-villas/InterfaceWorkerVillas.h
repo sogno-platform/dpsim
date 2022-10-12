@@ -22,14 +22,14 @@ namespace DPsim {
 		public SharedFactory<InterfaceWorkerVillas> {
 
 	public:
-		typedef std::shared_ptr<InterfaceWorkerVillas> Ptr;
-		typedef struct node::Sample Sample;
+		using Ptr = std::shared_ptr<InterfaceWorkerVillas>;
+		using Sample = struct node::Sample;
 
 		static UInt villasPriority;
 		static UInt villasAffinity;
 		static UInt villasHugePages;
 
-	protected:
+	private:
 		static Bool villasInitialized;
 
 		std::vector<std::tuple<std::function<CPS::AttributeBase::Ptr(Sample*)>, UInt>> mImports;
@@ -53,19 +53,19 @@ namespace DPsim {
 
 		InterfaceWorkerVillas(const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64);
 
-		virtual void open() override;
-		virtual void close() override;
+		void open() override;
+		void close() override;
 	
-		virtual void readValuesFromEnv(std::vector<Interface::AttributePacket>& updatedAttrs) override;
-		virtual void writeValuesToEnv(std::vector<Interface::AttributePacket>& updatedAttrs) override;
+		void readValuesFromEnv(std::vector<Interface::AttributePacket>& updatedAttrs) override;
+		void writeValuesToEnv(std::vector<Interface::AttributePacket>& updatedAttrs) override;
 
         virtual void configureImport(UInt attributeId, const std::type_info& type, UInt idx);
-        virtual void configureExport(UInt attributeId, const std::type_info& type, UInt idx, Bool waitForOnWrite, String name = "", String unit = "");
+        virtual void configureExport(UInt attributeId, const std::type_info& type, UInt idx, Bool waitForOnWrite, const String& name = "", const String& unit = "");
 	
 	private:
 		void prepareNode();
 		void setupNodeSignals();
-		void initVillas();
+		void initVillas() const;
 	};
 }
 
