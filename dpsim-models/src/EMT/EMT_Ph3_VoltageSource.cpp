@@ -22,15 +22,6 @@ EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level lo
 	**mIntfCurrent = Matrix::Zero(3, 1);
 }
 
-void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef) {
-	attribute<MatrixComp>("V_ref")->set(voltageRef);
-
-	mSLog->info("\nVoltage reference phasor [V]: {:s}",
-				Logger::matrixCompToString(voltageRef));
-
-	mParametersSet = true;
-}
-
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq) {
 	auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
 	// Complex(1,0) is used as initialPhasor, since magnitude and phase of V_ref are taken into account by updateVoltage
