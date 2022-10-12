@@ -20,7 +20,7 @@ jobs:
     container: sogno/dpsim:dev-centos
     steps:
     - name: Restore Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/build
         key: build-cache-centos-profiling-${{ github.sha }}
@@ -40,7 +40,7 @@ jobs:
       run: gprof ${{ inputs.path }} | gprof2dot -s | dot -Tpng -o profiling.png || true
 
     - name: Archive profiler output
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: profiler-output-${{ inputs.name }}
         path: |
