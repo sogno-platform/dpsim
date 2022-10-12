@@ -21,12 +21,12 @@ namespace DPsim {
         UInt mCurrentSequenceInterfaceToDpsim = 1;
     
     public:
-        typedef std::shared_ptr<InterfaceWorker> Ptr;
+        using Ptr = std::shared_ptr<InterfaceWorker>;
 
         CPS::Logger::Log mLog;
 
         InterfaceWorker() = default;
-        virtual ~InterfaceWorker() { }
+        virtual ~InterfaceWorker() = default;
 
         /**
          * Function that will be called on loop in its separate thread.
