@@ -31,12 +31,10 @@ SimPowerComp<Complex>::Ptr SP::Ph1::VoltageSource::clone(String name) {
 
 void SP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
+	srcSigSine->mVoltageRef->setReference(mVoltageRef);
+	srcSigSine->mFreq->setReference(mSrcFreq);
 	srcSigSine->setParameters(voltageRef, srcFreq);
 	mSrcSig = srcSigSine;
-
-	mVoltageRef->setReference(mSrcSig->mSigOut);
-	mSrcFreq->setReference(mSrcSig->mFreq);
-
 	mParametersSet = true;
 }
 
@@ -44,9 +42,6 @@ void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart
 	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(**mName + "_fr");
 	srcSigFreqRamp->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 	mSrcSig = srcSigFreqRamp;
-
-	mVoltageRef->setReference(mSrcSig->mSigOut);
-	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mParametersSet = true;
 }
@@ -56,27 +51,20 @@ void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulatio
 	srcSigFm->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 	mSrcSig = srcSigFm;
 
-	mVoltageRef->setReference(mSrcSig->mSigOut);
-	mSrcFreq->setReference(mSrcSig->mFreq);
-
 	mParametersSet = true;
 }
 
 void SP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-	Complex voltageRef = **mVoltageRef;
-
-	if (voltageRef == Complex(0, 0))
-		voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
+	///CHECK: The frequency parameter is unused
+	if (**mVoltageRef == Complex(0, 0))
+		**mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
 	if (mSrcSig == nullptr) {
-		Signal::SineWaveGenerator srcSigSine(**mName);
-		srcSigSine.setParameters(voltageRef);
-		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
-
-		mVoltageRef->setReference(mSrcSig->mSigOut);
-	mSrcFreq->setReference(mSrcSig->mFreq);
-	} else {
-		**mVoltageRef = voltageRef;
+		auto srcSigSine = Signal::SineWaveGenerator::make(**mName);
+		srcSigSine->mVoltageRef->setReference(mVoltageRef);
+		srcSigSine->mFreq->setReference(mSrcFreq);
+		srcSigSine->setParameters(**mVoltageRef);
+		mSrcSig = srcSigSine;
 	}
 
 	mSLog->info(
