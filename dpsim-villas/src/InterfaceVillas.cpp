@@ -7,11 +7,11 @@ using namespace villas;
 
 namespace DPsim {
 
-    InterfaceVillas::InterfaceVillas(const String &nodeConfig, UInt queueLenght, UInt sampleLenght, const String& name, bool syncOnSimulationStart, UInt downsampling)
-        : Interface(InterfaceWorkerVillas::make(nodeConfig, queueLenght, sampleLenght), name, syncOnSimulationStart, downsampling) { }
+    InterfaceVillas::InterfaceVillas(const String &nodeConfig, UInt queueLenght, UInt sampleLenght, const String& name, UInt downsampling)
+        : Interface(InterfaceWorkerVillas::make(nodeConfig, queueLenght, sampleLenght), name, downsampling) { }
 
-    void InterfaceVillas::importAttribute(CPS::AttributeBase::Ptr attr, UInt idx, Bool blockOnRead) {
-        Interface::addImport(attr, blockOnRead);
+    void InterfaceVillas::importAttribute(CPS::AttributeBase::Ptr attr, UInt idx, Bool blockOnRead, Bool syncOnSimulationStart) {
+        Interface::addImport(attr, blockOnRead, syncOnSimulationStart);
         std::dynamic_pointer_cast<InterfaceWorkerVillas>(mInterfaceWorker)->configureImport((UInt)mImportAttrsDpsim.size() - 1, attr->getType(), idx);
     }
 

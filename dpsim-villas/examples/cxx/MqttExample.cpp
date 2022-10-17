@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
 
 	// Interface
 	sim.addInterface(intf);
-	intf->importAttribute(evs->mVoltageRef, 0, true);
+	intf->importAttribute(evs->mVoltageRef, 0, true, true);
 	intf->exportAttribute(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, true, "v_src");
 	intf->exportAttribute(ll->mIntfCurrent->deriveCoeff<Complex>(0, 0), 1, true, "v_load");
 

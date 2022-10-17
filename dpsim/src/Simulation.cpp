@@ -167,24 +167,16 @@ void Simulation::createMNASolver() {
 }
 
 void Simulation::sync() {
-	// //TODO: Is this log output necessary?
-	// int numOfSyncInterfaces = std::count_if(mInterfaces.begin(), mInterfaces.end(), [](std::shared_ptr<Interface> intf) {return intf->shouldSyncOnSimulationStart();});
-	// mLog->info("Start synchronization with remotes on {} interfaces", numOfSyncInterfaces);
+	mLog->info("Start synchronization with remotes on interfaces");
 
-	// for (auto intf : mInterfaces) {
-	// 	//TODO: Change or document this synchronization behavior
-	// 	if(intf->shouldSyncOnSimulationStart()) {
-	// 		// Send initial state over interface
-	// 		intf->writeValues();
+	for (auto intf : mInterfaces) {
+		intf->syncExports();
+		intf->syncImports();
 
-	// 		// Blocking wait for interface
-	// 		intf->readValues(true);
+		///TODO: Do another syncExport here?
+	}
 
-	// 		intf->writeValues();
-	// 	}
-	// }
-
-	// mLog->info("Synchronized simulation start with remotes");
+	mLog->info("Synchronized simulation start with remotes");
 }
 
 void Simulation::prepSchedule() {

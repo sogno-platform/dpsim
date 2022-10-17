@@ -22,9 +22,9 @@ namespace DPsim {
 		public SharedFactory<InterfaceVillas> {
 
 	public:
-		InterfaceVillas(const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64, const String& name = "", bool syncOnSimulationStart = false, UInt downsampling = 1);
+		InterfaceVillas(const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64, const String& name = "", UInt downsampling = 1);
 
-        void importAttribute(CPS::AttributeBase::Ptr attr, UInt idx, Bool blockOnRead = false);
+        void importAttribute(CPS::AttributeBase::Ptr attr, UInt idx, Bool blockOnRead = false, Bool syncOnSimulationStart = true);
 		void exportAttribute(CPS::AttributeBase::Ptr attr, UInt idx, Bool waitForOnWrite, const String& name = "", const String& unit = "");
 
 	};

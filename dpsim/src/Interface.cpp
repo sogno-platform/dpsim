@@ -59,13 +59,13 @@ namespace DPsim {
             mIntf.pushDpsimAttrsToQueue();
     }
 
-    void Interface::addImport(CPS::AttributeBase::Ptr attr, bool blockOnRead) {
+    void Interface::addImport(CPS::AttributeBase::Ptr attr, bool blockOnRead, bool syncOnSimulationStart) {
         if (mOpened) {
             mLog->error("Cannot modify interface configuration after simulation start!");
             std::exit(1);
         }
 
-        mImportAttrsDpsim.emplace_back(std::make_tuple(attr, 0, blockOnRead));
+        mImportAttrsDpsim.emplace_back(std::make_tuple(attr, 0, blockOnRead, syncOnSimulationStart));
     }
 
     void Interface::addExport(CPS::AttributeBase::Ptr attr) {
@@ -85,7 +85,17 @@ namespace DPsim {
         }	
 	}
 
-    void Interface::popDpsimAttrsFromQueue() {
+    void Interface::syncImports() {
+        //Block on read until all attributes with syncOnSimulationStart are read
+        this->popDpsimAttrsFromQueue(true);
+    }
+
+    void Interface::syncExports() {
+        //Just push all the attributes
+        this->pushDpsimAttrsToQueue();
+    }
+
+    void Interface::popDpsimAttrsFromQueue(bool isSync) {
         AttributePacket receivedPacket = {
             nullptr,
             0,
@@ -99,8 +109,13 @@ namespace DPsim {
         while (std::find_if(
                 mImportAttrsDpsim.cbegin(),
                 mImportAttrsDpsim.cend(),
-                [currentSequenceId](auto attrTuple) {
-                    return std::get<2>(attrTuple) && std::get<1>(attrTuple) < currentSequenceId;
+                [currentSequenceId, isSync](auto attrTuple) {
+                    auto &[_attr, seqId, blockOnRead, syncOnStart] = attrTuple;
+                    if (isSync) {
+                        return syncOnStart && seqId < currentSequenceId;
+                    } else {
+                        return blockOnRead && seqId < currentSequenceId;
+                    }
                 }) != mImportAttrsDpsim.cend()) {
             mQueueInterfaceToDpsim->wait_dequeue(receivedPacket);
             if (!std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value)) {
@@ -166,7 +181,7 @@ namespace DPsim {
 
     void Interface::ReaderThread::operator() () const {
         std::vector<Interface::AttributePacket>  attrsRead;
-        while (mOpened) { //TODO: As long as reading blocks, there is no real way to force-stop thread execution from the dpsim side
+        while (mOpened) {
             mInterfaceWorker->readValuesFromEnv(attrsRead);
             for (auto packet : attrsRead) {
                 mQueueInterfaceToDpsim->enqueue(packet);
