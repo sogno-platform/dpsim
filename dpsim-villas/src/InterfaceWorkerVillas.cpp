@@ -224,13 +224,13 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 					//Manually clear the event file descriptor since Villas does not do that for some reason
 					//See https://git.rwth-aachen.de/acs/public/villas/node/-/issues/347
 					uint64_t result = 0;
-					ret = ::read(pollFds[0], &result, 8);
+					ret = (int) ::read(pollFds[0], &result, 8);
 					if (ret < 0) {
 						mLog->warn("Could not reset poll file descriptor! Read returned {}", ret);
 					}
 					if (result > 1) {
 						result = result - 1;
-						ret = ::write(pollFds[0], (void*) &result, 8);
+						ret = (int) ::write(pollFds[0], (void*) &result, 8);
 						if (ret < 0) {
 							mLog->warn("Could not decrement poll file descriptor! Write returned {}", ret);
 						}
@@ -242,11 +242,11 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 			sample_decref(sample);
 		}
 	}
-	catch (const std::exception& exc) {
+	catch (const std::exception&) {
 		if (sample)
 			sample_decref(sample);
 
-		throw exc;
+		throw;
 	}
 }
 
@@ -317,7 +317,7 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 		}
 		sample_decref(sample);
 	}
-	catch (const std::exception& exc) {
+	catch (const std::exception&) {
 		/* We need to at least send something, so determine where exactly the
 		 * timer expired and either resend the last successfully sent sample or
 		 * just try to send this one again.
@@ -359,7 +359,7 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 	}
 
 	if (type == typeid(Int)) {
-		mExports.emplace_back(std::make_tuple([idx](AttributeBase::Ptr attr, Sample *smp) {
+		mExports.emplace_back([idx](AttributeBase::Ptr attr, Sample *smp) {
 			if (idx >= smp->capacity)
 				throw std::out_of_range("not enough space in allocated sample");
 			if (idx >= smp->length)
@@ -371,10 +371,10 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 				throw InvalidAttributeException();
 
 			smp->data[idx].i = **attrTyped;
-		}, 0, waitForOnWrite));
+		}, 0, waitForOnWrite);
 		mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::INTEGER);
 	} else if (type == typeid(Real)) {
-		mExports.emplace_back(std::make_tuple([idx](AttributeBase::Ptr attr, Sample *smp) {
+		mExports.emplace_back([idx](AttributeBase::Ptr attr, Sample *smp) {
 			if (idx >= smp->capacity)
 				throw std::out_of_range("not enough space in allocated sample");
 			if (idx >= smp->length)
@@ -386,10 +386,10 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 				throw InvalidAttributeException();
 
 			smp->data[idx].f = **attrTyped;
-		}, 0, waitForOnWrite));
+		}, 0, waitForOnWrite);
 		mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::FLOAT);
 	} else if (type == typeid(Complex)) {
-		mExports.emplace_back(std::make_tuple([idx](AttributeBase::Ptr attr, Sample *smp) {
+		mExports.emplace_back([idx](AttributeBase::Ptr attr, Sample *smp) {
 			if (idx >= smp->capacity)
 				throw std::out_of_range("not enough space in allocated sample");
 			if (idx >= smp->length)
@@ -401,10 +401,10 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 				throw InvalidAttributeException();
 
 			smp->data[idx].z = **attrTyped;
-		}, 0, waitForOnWrite));
+		}, 0, waitForOnWrite);
 		mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::COMPLEX);
 	} else if (type == typeid(Bool)) {
-		mExports.emplace_back(std::make_tuple([idx](AttributeBase::Ptr attr, Sample *smp) {
+		mExports.emplace_back([idx](AttributeBase::Ptr attr, Sample *smp) {
 			if (idx >= smp->capacity)
 				throw std::out_of_range("not enough space in allocated sample");
 			if (idx >= smp->length)
@@ -416,7 +416,7 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 				throw InvalidAttributeException();
 
 			smp->data[idx].b = **attrTyped;
-		}, 0, waitForOnWrite));
+		}, 0, waitForOnWrite);
 		mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::BOOLEAN);
 	} else {
 		if (mLog != nullptr) {
@@ -441,40 +441,40 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId, const std::type_in
 	const auto& log = mLog;
 
 	if (type == typeid(Int)) {
-		mImports.emplace_back(std::make_tuple([idx, log](Sample *smp) -> AttributeBase::Ptr {
+		mImports.emplace_back([idx, log](Sample *smp) -> AttributeBase::Ptr {
 			if (idx >= smp->length) {
 				log->error("incomplete data received from InterfaceVillas");
 				return nullptr;
 			}
 			return AttributePointer<AttributeBase>(AttributeStatic<Int>::make(smp->data[idx].i));
-		}, 0));
+		}, 0);
 		mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::INTEGER);
 	} else if (type == typeid(Real)) {
-		mImports.emplace_back(std::make_tuple([idx, log](Sample *smp) -> AttributeBase::Ptr {
+		mImports.emplace_back([idx, log](Sample *smp) -> AttributeBase::Ptr {
 			if (idx >= smp->length) {
 				log->error("incomplete data received from InterfaceVillas");
 				return nullptr;
 			}
 			return AttributePointer<AttributeBase>(AttributeStatic<Real>::make(smp->data[idx].f));
-		}, 0));
+		}, 0);
 		mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::FLOAT);
 	} else if (type == typeid(Complex)) {
-		mImports.emplace_back(std::make_tuple([idx, log](Sample *smp) -> AttributeBase::Ptr {
+		mImports.emplace_back([idx, log](Sample *smp) -> AttributeBase::Ptr {
 			if (idx >= smp->length) {
 				log->error("incomplete data received from InterfaceVillas");
 				return nullptr;
 			}
 			return AttributePointer<AttributeBase>(AttributeStatic<Complex>::make(smp->data[idx].z));
-		}, 0));
+		}, 0);
 		mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::COMPLEX);
 	} else if (type == typeid(Bool)) {
-		mImports.emplace_back(std::make_tuple([idx, log](Sample *smp) -> AttributeBase::Ptr {
+		mImports.emplace_back([idx, log](Sample *smp) -> AttributeBase::Ptr {
 			if (idx >= smp->length) {
 				log->error("incomplete data received from InterfaceVillas");
 				return nullptr;
 			}
 			return AttributePointer<AttributeBase>(AttributeStatic<Bool>::make(smp->data[idx].b));
-		}, 0));
+		}, 0);
 		mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::BOOLEAN);
 	} else {
 		if (mLog != nullptr) {

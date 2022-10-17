@@ -65,7 +65,7 @@ namespace DPsim {
             std::exit(1);
         }
 
-        mImportAttrsDpsim.emplace_back(std::make_tuple(attr, 0, blockOnRead, syncOnSimulationStart));
+        mImportAttrsDpsim.emplace_back(attr, 0, blockOnRead, syncOnSimulationStart);
     }
 
     void Interface::addExport(CPS::AttributeBase::Ptr attr) {
@@ -74,7 +74,7 @@ namespace DPsim {
             std::exit(1);
         }
 
-        mExportAttrsDpsim.emplace_back(std::make_tuple(attr, 0));
+        mExportAttrsDpsim.emplace_back(attr, 0);
     }
 
     void Interface::setLogger(CPS::Logger::Log log) {
@@ -183,7 +183,7 @@ namespace DPsim {
         std::vector<Interface::AttributePacket>  attrsRead;
         while (mOpened) {
             mInterfaceWorker->readValuesFromEnv(attrsRead);
-            for (auto packet : attrsRead) {
+            for (const auto &packet : attrsRead) {
                 mQueueInterfaceToDpsim->enqueue(packet);
             }
             attrsRead.clear();
