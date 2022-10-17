@@ -166,7 +166,7 @@ void Simulation::createMNASolver() {
 	}
 }
 
-void Simulation::sync() {
+void Simulation::sync() const {
 	mLog->info("Start synchronization with remotes on interfaces");
 
 	for (auto intf : mInterfaces) {
@@ -337,7 +337,6 @@ void Simulation::start() {
 
 	mLog->info("Opening interfaces.");
 
-	//TODO: Move to new interface threads
 	for (auto intf : mInterfaces)
 		intf->open();
 
@@ -358,8 +357,6 @@ void Simulation::stop() {
 
 	mScheduler->stop();
 
-
-	//TODO: Close all interface threads
 	for (auto intf : mInterfaces)
 		intf->close();
 

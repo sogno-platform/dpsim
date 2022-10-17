@@ -211,7 +211,7 @@ namespace DPsim {
 		/// Solve system A * x = z for x and current time
 		virtual Real step();
 		/// Synchronize simulation with remotes by exchanging intial state over interfaces
-		void sync();
+		void sync() const;
 		/// Create the schedule for the independent tasks
 		void schedule();
 
