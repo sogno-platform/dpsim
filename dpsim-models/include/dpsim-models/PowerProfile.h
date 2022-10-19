@@ -19,4 +19,13 @@ namespace CPS {
 		std::map<Real, PQData> pqData;
 		std::map<Real, Real> weightingFactors;
 	};
+
+	struct VData {
+		Complex v;
+	};
+
+	struct VoltageProfile {
+		std::map<Real, VData> vData;
+		std::map<Real, Real> weightingFactors;
+	};
 }

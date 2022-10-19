@@ -19,6 +19,7 @@
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/SP/SP_Ph1_Load.h>
 #include <dpsim-models/DP/DP_Ph1_PQLoadCS.h>
+#include <dpsim-models/DP/DP_Ph1_NetworkInjection.h>
 #include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
 
@@ -97,6 +98,11 @@ namespace CPS {
 		std::vector<Real> readPQData (fs::path file,
 			Real start_time = -1, Real time_step = 1, Real end_time = -1,
 			CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
+		///
+		VoltageProfile readVoltageProfile(fs::path file,
+			Real start_time = -1, Real time_step = 1, Real end_time = -1,
+			CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
+
 		/// assign load profile to corresponding load object
 		void assignLoadProfile(SystemTopology& sys,
 			Real start_time = -1, Real time_step = 1, Real end_time = -1,
@@ -106,9 +112,17 @@ namespace CPS {
 		void assignPVGeneration(SystemTopology& sys,
 			Real start_time = -1, Real time_step = 1, Real end_time = -1,
 			CSVReader::Mode mode = CSVReader::Mode::AUTO);
+		/// assign voltage source profile to corresponding source object
+		void assignSourceProfile(std::vector<std::shared_ptr<CPS::DP::Ph1::NetworkInjection>>& sources,
+			Real start_time = -1, Real time_step = 1, Real end_time = -1,
+			CSVReader::Mode mode = CSVReader::Mode::AUTO,
+			CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
 
 		/// interpolation for PQ data points
 		PQData interpol_linear(std::map<Real, PQData>& data_PQ, Real x);
+
+		/// interpolation for Voltage data points
+		VData interpol_linear(std::map<Real, VData>& vData, Real x);
 
 		/// interpolation for weighting factor data points
 		Real interpol_linear(std::map<Real, Real>& data_wf, Real x);

@@ -157,10 +157,17 @@ void DP::Ph1::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attrib
 			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
 	mnaUpdateCurrent(**leftVector);
-	mnaUpdateVoltage(**leftVector);
+	mnaUpdateVoltage(time, **leftVector);
 }
 
-void DP::Ph1::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph1::NetworkInjection::mnaUpdateVoltage(Real time, const Matrix& leftVector) {
+	if (mSourceProfile.vData.size() > 0) {
+		std::map<Real, VData>::iterator it;
+		it = mSourceProfile.vData.lower_bound(time);
+		if (it != mSourceProfile.vData.end()) {
+			mSubVoltageSource->setParameters(it->second.v);
+		}
+	}
 	**mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
 }
 

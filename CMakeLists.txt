@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.11...3.23)
+set(CMAKE_SYSTEM_VERSION "10.0")
 project(DPsim
 		VERSION 1.1.0
 		DESCRIPTION "C++ Power System Simulation Library"

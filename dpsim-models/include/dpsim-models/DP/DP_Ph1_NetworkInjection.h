@@ -12,6 +12,7 @@
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
+#include <dpsim-models/PowerProfile.h>
 
 namespace CPS {
 namespace DP {
@@ -34,6 +35,12 @@ namespace Ph1 {
 		std::vector<const Matrix*> mRightVectorStamps;
 
 	public:
+		// ### Source profile as time series ###
+		/// Source profile data
+		VoltageProfile mSourceProfile;
+		/// Use the assigned load profile
+		bool use_profile = false;
+
 		const Attribute<Complex>::Ptr mVoltageRef;
 		const Attribute<Real>::Ptr mSrcFreq; 
 
@@ -70,7 +77,7 @@ namespace Ph1 {
 		/// Returns current through the component
 		void mnaUpdateCurrent(const Matrix& leftVector);
 		/// Updates voltage across component
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaUpdateVoltage(Real time, const Matrix& leftVector);
 		/// MNA pre step operations
 		void mnaPreStep(Real time, Int timeStepCount);
 		/// MNA post step operations

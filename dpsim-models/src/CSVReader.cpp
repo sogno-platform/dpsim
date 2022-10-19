@@ -8,6 +8,7 @@
 
 
 #include <dpsim-models/CSVReader.h>
+#include <cctype>  // we'll use the non-locale <cctype>'s std::isdigit
 
 using namespace CPS;
 
@@ -136,7 +137,6 @@ std::vector<PQData> CSVReader::readLoadProfileDP(fs::path file,
 	std::vector<PQData> load_profileDP;
 	std::ifstream csvfile(file);
 	CSVReaderIterator row_(csvfile);
-
 
 	// ignore the first row if it is a title
 	if (mSkipFirstRow && !std::isdigit((*row_).get(0)[0])) {
@@ -534,6 +534,167 @@ void CSVReader::assignLoadProfile(CPS::SystemTopology& sys, Real start_time, Rea
 		}
 	}
 }
+
+VoltageProfile CSVReader::readVoltageProfile(std::experimental::filesystem::path file,
+	Real start_time, Real time_step, Real end_time, CSVReader::DataFormat format) {
+
+	VoltageProfile source_profile;
+	std::ifstream csvfile(file);
+	bool need_that_conversion = (format == DataFormat::HHMMSS) ? true : false;
+	bool data_with_weighting_factor = false;
+
+	CSVReaderIterator loop(csvfile);
+
+	// ignore the first row if it is a title
+	if (!std::isdigit((*loop).get(0)[0])) {
+		loop.next();
+	}
+	/*
+	 loop over rows of the csv file to find the entry point to read in.
+	 and determine data type prior to read in. (assuming only time,p,q or time,weighting factor)
+	 if start_time and end_time are negative (as default), it reads in all rows.
+	*/
+	for (; loop != CSVReaderIterator(); loop.next()) {
+		CSVReaderIterator nextRow = loop;
+		nextRow.next();
+		CPS::Real nextTime = (need_that_conversion) ? time_format_convert((*nextRow).get(0)) : std::stod((*nextRow).get(0));
+		if ((*nextRow).size() == 2) {
+			data_with_weighting_factor = true;
+		}
+		if ((start_time < 0) | (nextTime >= Int(start_time)))
+		{
+			break;
+		}
+	}
+	/*
+		reading data after entry point until end_time is reached
+	*/
+	for (; loop != CSVReaderIterator(); loop.next()) {
+		CPS::Real currentTime = (need_that_conversion) ? time_format_convert((*loop).get(0)) : std::stod((*loop).get(0));
+		if (data_with_weighting_factor) {
+			Real wf = std::stod((*loop).get(1));
+			source_profile.weightingFactors.insert(std::pair<Real, Real>(currentTime, wf));
+		}
+		else {
+			VData v;
+
+			v.v.real(std::stod((*loop).get(1)));
+			v.v.imag(std::stod((*loop).get(2)));
+			source_profile.vData.insert(std::pair<Real, VData>(currentTime, v));
+		}
+
+		if (end_time > 0 && currentTime > end_time)
+			break;
+	}
+	std::vector<CPS::Real> times;
+	for (CPS::Real x_ = start_time; x_ <= end_time; x_ += time_step) {
+		times.push_back(x_);
+	}
+
+	for (auto x : times) {
+		if (source_profile.vData.find(x) == source_profile.vData.end()) {
+			if (data_with_weighting_factor) {
+				Real y = interpol_linear(source_profile.weightingFactors, x);
+				source_profile.weightingFactors.insert(std::pair<Real, Real>(x, y));
+			}
+			else {
+				VData y = interpol_linear(source_profile.vData, x);
+				source_profile.vData.insert(std::pair<Real, VData>(x, y));
+			}
+		}
+	}
+
+	return source_profile;
+
+}
+
+
+void CSVReader::assignSourceProfile(std::vector<std::shared_ptr<CPS::DP::Ph1::NetworkInjection>>& sources,
+	Real start_time, Real time_step, Real end_time,
+	CSVReader::Mode mode, CSVReader::DataFormat format) {
+
+	switch (mode) {
+	case CSVReader::Mode::AUTO: {
+		mSLog->info("Assigning source profiles");
+		for (auto source : sources) {
+			String source_name = source->name();
+			String source_voltage = source->attribute("V_ref")->toString();
+			for (auto file : mFileList) {
+				String file_name = file.filename().string();
+				/// changing file name and load name to upper case for later matching
+				for (auto & c : source_name) c = toupper(c);
+				for (auto & c : file_name) c = toupper(c);
+				/// strip off all non-alphanumeric characters
+				source_name.erase(remove_if(source_name.begin(), source_name.end(), [](char c) { return !isalnum(c); }), source_name.end());
+				file_name.erase(remove_if(file_name.begin(), file_name.end(), [](char c) { return !isalnum(c); }), file_name.end());
+				if (file_name == (source_name + "CSV")) {
+					source->mSourceProfile = readVoltageProfile(file, start_time, time_step, end_time, format);
+					source->use_profile = true;
+					mSLog->info("Assigned {} to {}", file.filename().string(), source->name());
+					mSLog->info("Initial value = {}", source->mSourceProfile.vData.at(0).v);
+					mSLog->info("Format = {}", format);
+				}
+			}
+
+		}
+
+		break;
+	}
+	case CSVReader::Mode::MANUAL: {
+		Int LP_assigned_counter = 0;
+		Int LP_not_assigned_counter = 0;
+		mSLog->info("Assigning source profiles with user defined pattern ...");
+		for (auto source : sources) {
+			std::map<String, String>::iterator file = mAssignPattern.find(source->name());
+			if (file == mAssignPattern.end()) {
+
+				mSLog->info("{} has no profile given.", source->name());
+				LP_not_assigned_counter++;
+				continue;
+			}
+			for (auto path : mFileList) {
+				if (path.string().find(file->second) != std::string::npos) {
+					source->mSourceProfile = readVoltageProfile(path, start_time, time_step, end_time);
+					source->use_profile = true;
+					mSLog->info("Assigned {}.csv to {}", file->second, source->name());
+					LP_assigned_counter++;
+				}
+
+			}
+		}
+		mSLog->info("Assigned profiles for {} sources, {} not assigned.", LP_assigned_counter, LP_not_assigned_counter);
+		break;
+	}
+	default: {
+		throw std::invalid_argument(
+			"Source profile assign mode error");
+		break;
+	}
+	}
+}
+
+
+CPS::VData CSVReader::interpol_linear(std::map<CPS::Real, CPS::VData>& vData, CPS::Real x) {
+	std::map <Real, VData>::const_iterator entry = vData.upper_bound(x);
+	VData y;
+
+	if (entry == vData.end()) {
+		return (--entry)->second;
+	}
+	if (entry == vData.begin()) {
+		return entry->second;
+	}
+	std::map <Real, VData>::const_iterator prev = entry;
+	--prev;
+
+	const CPS::Real delta = (x - prev->first) / (entry->first - prev->first);
+
+	y.v.real(delta * entry->second.v.real() + (1 - delta)*prev->second.v.real());
+	y.v.imag(delta * entry->second.v.imag() + (1 - delta)*prev->second.v.imag());
+	return y;
+}
+
+
 
 CPS::PQData CSVReader::interpol_linear(std::map<CPS::Real, CPS::PQData>& pqData, CPS::Real x) {
 	std::map <Real, PQData>::const_iterator entry = pqData.upper_bound(x);
