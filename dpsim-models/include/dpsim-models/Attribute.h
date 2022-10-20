@@ -306,9 +306,7 @@ namespace CPS {
 		 * Exposing the underlying shared_ptr for this attribute's data. Used to create reference relations between two attributes.
 		 * @return The shared_ptr to this attribute's underlying data
 		 * */
-		virtual const std::shared_ptr<T> asRawPointer() {
-			return this->mData;
-		}
+		virtual std::shared_ptr<T> asRawPointer() = 0;
 
 		/// Fallback method for all attribute types not covered by the specifications in Attribute.cpp
 		virtual String toString() override {
@@ -509,6 +507,10 @@ namespace CPS {
 			throw TypeException();
 		}
 
+		virtual std::shared_ptr<T> asRawPointer() {
+			return this->mData;
+		}
+
 		virtual void appendDependencies(AttributeBase::Set *deps) override {
 			deps->insert(this->shared_from_this());
 		}
@@ -594,6 +596,13 @@ namespace CPS {
 			} else {
 				this->addTask(UpdateTaskKind::UPDATE_ON_GET, AttributeUpdateTask<T, T>::make(UpdateTaskKind::UPDATE_ON_GET, getter, reference));
 			}
+		}
+
+		virtual std::shared_ptr<T> asRawPointer() {
+			for(typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnGet) {
+				task->executeUpdate(this->mData);
+			}
+			return this->mData;
 		}
 
 		virtual void set(T value) override {
