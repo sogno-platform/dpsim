@@ -47,15 +47,16 @@ namespace DPsim {
 		virtual void open();
 		virtual void close();
 
-		//Function used in the interface's simulation task to read all imported attributes from the queue
-		//Called once before every simulation timestep
+		// Function used in the interface's simulation task to read all imported attributes from the queue
+		// Called once before every simulation timestep
 		virtual void pushDpsimAttrsToQueue();
-		//Function used in the interface's simulation task to write all exported attributes to the queue
-		//Called once after every simulation timestep
+		// Function used in the interface's simulation task to write all exported attributes to the queue
+		// Called once after every simulation timestep
 		virtual void popDpsimAttrsFromQueue(bool isSync = false);
 
-		//Function called by the Simulation to perform interfacde synchronization
+		// Function called by the Simulation to perform interface synchronization
 		virtual void syncExports();
+		/// Function called by the Simulation to perform interface synchronization
 		virtual void syncImports();
 
 		virtual CPS::Task::List getTasks();
