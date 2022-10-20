@@ -37,8 +37,7 @@ namespace Signal {
     public:
 		/// init the identified object
         CosineFMGenerator(String name, Logger::Level logLevel = Logger::Level::off)
-			: SignalGenerator(name, logLevel) {
-				mZigZag = false;
+			: SignalGenerator(name, logLevel), mZigZag(false) {
 				mSLog->info("Create {} {}", type(), name);
 			}
 		/// set the source's parameters
