@@ -216,4 +216,4 @@ if __name__ == '__main__':
 
     print('Both simulations have ended!')
 
-    p_node.join()
+    p_node.join(1)
