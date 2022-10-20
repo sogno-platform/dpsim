@@ -7,8 +7,8 @@ using namespace villas;
 
 namespace DPsim {
 
-    InterfaceVillas::InterfaceVillas(const String &nodeConfig, UInt queueLenght, UInt sampleLenght, const String& name, UInt downsampling)
-        : Interface(InterfaceWorkerVillas::make(nodeConfig, queueLenght, sampleLenght), name, downsampling) { }
+    InterfaceVillas::InterfaceVillas(const String &nodeConfig, UInt queueLength, UInt sampleLength, const String& name, UInt downsampling)
+        : Interface(InterfaceWorkerVillas::make(nodeConfig, queueLength, sampleLength), name, downsampling) { }
 
     void InterfaceVillas::importAttribute(CPS::AttributeBase::Ptr attr, UInt idx, Bool blockOnRead, Bool syncOnSimulationStart) {
         Interface::addImport(attr, blockOnRead, syncOnSimulationStart);

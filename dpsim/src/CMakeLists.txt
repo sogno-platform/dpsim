@@ -25,7 +25,7 @@ set(DPSIM_INCLUDE_DIRS
 
 set(DPSIM_LIBRARIES
 	dpsim-models
-	readerwriterqueue #TODO: Is there any need to only add this + the interface classes conditionally / introduce a new cmake variable for this?
+	readerwriterqueue
 	)
 
 if(WITH_MNASOLVERPLUGIN)
