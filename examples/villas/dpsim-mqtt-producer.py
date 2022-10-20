@@ -4,6 +4,7 @@ import time
 
 def build_message(sequence, v_ref):
     ts_field = {"origin":[int(elem) for elem in str(time.time()).split('.')]}
+    # ts_field = {"origin": ts}
     data_field = [v_ref]
     message = {"ts": ts_field, "sequence": sequence, "data": data_field}
 
@@ -16,6 +17,7 @@ if __name__ == '__main__':
     tf = 10.0
     num_samples = int(tf/T_s) + 2
     for n in range(0, num_samples):
+        # ts = [0, n*1000000]
         if n < int(num_samples/2):
             m_v_ref = {"real":5.0, "imag":0.0}
         else:
