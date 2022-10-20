@@ -58,6 +58,7 @@ sim.add_interface(intf, True)
 
 sim.import_attribute(evs.attr('V_ref'), 0)
 sim.export_attribute(r12.attr('i_intf').derive_coeff(0, 0), 0)
+sim.export_attribute(evs.attr('v_intf').derive_coeff(0, 0).derive_scaled(complex(-1,0)), 1)
 
 sim.add_logger(logger)
 
