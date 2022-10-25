@@ -371,7 +371,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	(**mIntfVoltage)(0,0) = (mInitVoltage * mBase_V).real();
 	(**mIntfVoltage)(1,0) = (mInitVoltage * mBase_V * SHIFT_TO_PHASE_B).real();
 	(**mIntfVoltage)(2,0) = (mInitVoltage * mBase_V * SHIFT_TO_PHASE_C).real();
-
+	
 	SPDLOG_LOGGER_DEBUG(this->mSLog,
 		"\n--- Initialization from power flow  ---"
 		"\nInitial Vd (per unit): {:f}"

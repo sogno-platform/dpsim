@@ -18,6 +18,12 @@ Scenario6::GridParams gridParams;
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
 int main(int argc, char* argv[]) {
+<<<<<<< HEAD
+=======
+
+	// initiaize factories
+	SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
+>>>>>>> 41541d9d (add PSS type 2 and add base class for exciter)
 
 	// initiaize factories
 	SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
