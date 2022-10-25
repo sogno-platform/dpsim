@@ -1,6 +1,6 @@
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -14,13 +14,18 @@ const Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
 // Excitation system
-const Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
+const Base::ExciterParameters excitationEremia =
+    Examples::Components::Exciter::getExciterEremia();
 
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1
     turbineGovernor;
 
 int main(int argc, char *argv[]) {
+
+  // initiaize factories
+  ExciterFactory::registerExciters();
+  SynchronGeneratorFactory::DP::Ph1::registerSynchronGenerators();
 
   //Simultion parameters
   Real switchClosed = GridParams.SwitchClosed;
@@ -89,27 +94,28 @@ int main(int argc, char *argv[]) {
               GridParams.VnomMV * sin(GridParams.initVoltAngle)));
   genDP->setModelAsNortonSource(true);
 
-  // Exciter
-  std::shared_ptr<Signal::Exciter> exciterDP = nullptr;
-  if (withExciter) {
-    exciterDP = Signal::Exciter::make("SynGen_Exciter", logLevel);
-    exciterDP->setParameters(excitationEremia.Ta, excitationEremia.Ka,
-                             excitationEremia.Te, excitationEremia.Ke,
-                             excitationEremia.Tf, excitationEremia.Kf,
-                             excitationEremia.Tr);
-    genDP->addExciter(exciterDP);
-  }
+  // Synchronous generator
+  auto genDP = Factory<DP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(
+      SGModel, "SynGen", logLevel);
+  genDP->setOperationalParametersPerUnit(
+      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
+      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
+      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
+      syngenKundur.Tq0_s);
+  genDP->setInitialValues(
+      GridParams.initComplexElectricalPower, GridParams.mechPower,
+      Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle),
+              GridParams.VnomMV * sin(GridParams.initVoltAngle)));
+  genDP->setModelAsNortonSource(true);
 
-  // Turbine Governor
-  std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorDP = nullptr;
-  if (withTurbineGovernor) {
-    turbineGovernorDP =
-        Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
-    turbineGovernorDP->setParameters(
-        turbineGovernor.T3, turbineGovernor.T4, turbineGovernor.T5,
-        turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R,
-        turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
-    genDP->addGovernor(turbineGovernorDP);
+  // Exciter
+  std::shared_ptr<Base::Exciter> exciterDP = nullptr;
+  if (withExciter) {
+    exciterDP =
+        Factory<Base::Exciter>::get().create("DC1Simp", "Exciter", logLevel);
+    exciterDP->setParameters(excitationEremia);
+    genDP->addExciter(exciterDP);
   }
 
   // Load
@@ -139,24 +145,18 @@ int main(int argc, char *argv[]) {
   loggerDP->logAttribute("Vdq0", genDP->attribute("Vdq0"));
   loggerDP->logAttribute("Idq0", genDP->attribute("Idq0"));
 
-  // Exciter
-  if (withExciter) {
-    loggerDP->logAttribute("Ef", exciterDP->attribute("Ef"));
-  }
-
-  // Turbine Governor
-  if (withTurbineGovernor) {
+  // Logging
+  auto loggerDP = DataLogger::make(simNameDP, true, logDownSampling);
+  loggerDP->logAttribute("v_gen", genDP->attribute("v_intf"));
+  loggerDP->logAttribute("i_gen", genDP->attribute("i_intf"));
+  loggerDP->logAttribute("Te", genDP->attribute("Te"));
+  loggerDP->logAttribute("delta", genDP->attribute("delta"));
+  loggerDP->logAttribute("w_r", genDP->attribute("w_r"));
+  loggerDP->logAttribute("Vdq0", genDP->attribute("Vdq0"));
+  loggerDP->logAttribute("Idq0", genDP->attribute("Idq0"));
+  loggerDP->logAttribute("Ef", genDP->attribute("Ef"));
+  if (withTurbineGovernor)
     loggerDP->logAttribute("Tm", turbineGovernorDP->attribute("Tm"));
-  }
-
-  Simulation simDP(simNameDP, logLevel);
-  simDP.doInitFromNodesAndTerminals(true);
-  simDP.setSystem(systemDP);
-  simDP.setTimeStep(timeStep);
-  simDP.setFinalTime(finalTime);
-  simDP.setDomain(Domain::DP);
-  simDP.addLogger(loggerDP);
-  simDP.doSystemMatrixRecomputation(true);
 
   // Events
   auto sw1 = SwitchEvent::make(startTimeFault, fault, true);

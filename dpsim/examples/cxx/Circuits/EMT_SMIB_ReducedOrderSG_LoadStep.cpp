@@ -1,6 +1,6 @@
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -17,7 +17,17 @@ Scenario6::GridParams gridParams;
 Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
+<<<<<<< HEAD
 int main(int argc, char *argv[]) {
+=======
+int main(int argc, char *argv[]) {
+<<<<<<< HEAD
+=======
+
+  // initiaize factories
+  SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
+>>>>>>> 41541d9d (add PSS type 2 and add base class for exciter)
+>>>>>>> 614929412 (add PSS type 2 and add base class for exciter)
 
   // Simulation parameters
   String simName = "EMT_SMIB_ReducedOrderSG_LoadStep";
@@ -137,8 +147,23 @@ int main(int argc, char *argv[]) {
   genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
   genEMT->setModelAsNortonSource(true);
 
+<<<<<<< HEAD
   //Grid bus as Slack
   auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", logLevel);
+=======
+  // Synchronous generator
+  auto genEMT =
+      Factory<EMT::Ph3::ReducedOrderSynchronGeneratorVBR>::get().create(
+          sgType, "SynGen", logLevel);
+  genEMT->setOperationalParametersPerUnit(
+      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
+      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
+      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
+      syngenKundur.Tq0_s);
+  genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
+  genEMT->setModelAsNortonSource(true);
+>>>>>>> 614929412 (add PSS type 2 and add base class for exciter)
 
   // Line
   auto lineEMT = EMT::Ph3::PiLine::make("PiLine", logLevel);

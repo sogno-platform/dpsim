@@ -1,6 +1,6 @@
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -14,13 +14,18 @@ const Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
 // Excitation system
-const Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
+const Base::ExciterParameters excitationEremia =
+    Examples::Components::Exciter::getExciterEremia();
 
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1
     turbineGovernor;
 
 int main(int argc, char *argv[]) {
+
+  // initiaize factories
+  ExciterFactory::registerExciters();
+  SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
 
   // Simultion parameters
   Real switchClosed = GridParams.SwitchClosed;
@@ -88,27 +93,28 @@ int main(int argc, char *argv[]) {
                            GridParams.mechPower, GridParams.initTerminalVolt);
   genEMT->setModelAsNortonSource(true);
 
-  // Exciter
-  std::shared_ptr<Signal::Exciter> exciterEMT = nullptr;
-  if (withExciter) {
-    exciterEMT = Signal::Exciter::make("SynGen_Exciter", logLevel);
-    exciterEMT->setParameters(excitationEremia.Ta, excitationEremia.Ka,
-                              excitationEremia.Te, excitationEremia.Ke,
-                              excitationEremia.Tf, excitationEremia.Kf,
-                              excitationEremia.Tr);
-    genEMT->addExciter(exciterEMT);
-  }
+  // Components
+  // Synchronous generator
+  auto genEMT =
+      Factory<EMT::Ph3::ReducedOrderSynchronGeneratorVBR>::get().create(
+          SGModel, "SynGen", logLevel);
+  genEMT->setOperationalParametersPerUnit(
+      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
+      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
+      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
+      syngenKundur.Tq0_s);
+  genEMT->setInitialValues(GridParams.initComplexElectricalPower,
+                           GridParams.mechPower, GridParams.initTerminalVolt);
+  genEMT->setModelAsNortonSource(true);
 
-  // Turbine Governor
-  std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorEMT = nullptr;
-  if (withTurbineGovernor) {
-    turbineGovernorEMT =
-        Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
-    turbineGovernorEMT->setParameters(
-        turbineGovernor.T3, turbineGovernor.T4, turbineGovernor.T5,
-        turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R,
-        turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
-    genEMT->addGovernor(turbineGovernorEMT);
+  // Exciter
+  std::shared_ptr<Base::Exciter> exciterEMT = nullptr;
+  if (withExciter) {
+    exciterEMT =
+        Factory<Base::Exciter>::get().create("DC1Simp", "Exciter", logLevel);
+    exciterEMT->setParameters(excitationEremia);
+    genEMT->addExciter(exciterEMT);
   }
 
   // Load
@@ -142,24 +148,18 @@ int main(int argc, char *argv[]) {
   loggerEMT->logAttribute("Vdq0", genEMT->attribute("Vdq0"));
   loggerEMT->logAttribute("Idq0", genEMT->attribute("Idq0"));
 
-  // Exciter
-  if (withExciter) {
-    loggerEMT->logAttribute("Ef", exciterEMT->attribute("Ef"));
-  }
-
-  // Turbine Governor
-  if (withTurbineGovernor) {
+  // Logging
+  auto loggerEMT = DataLogger::make(simNameEMT, true, logDownSampling);
+  loggerEMT->logAttribute("v_gen", genEMT->attribute("v_intf"));
+  loggerEMT->logAttribute("i_gen", genEMT->attribute("i_intf"));
+  loggerEMT->logAttribute("Te", genEMT->attribute("Te"));
+  loggerEMT->logAttribute("delta", genEMT->attribute("delta"));
+  loggerEMT->logAttribute("w_r", genEMT->attribute("w_r"));
+  loggerEMT->logAttribute("Vdq0", genEMT->attribute("Vdq0"));
+  loggerEMT->logAttribute("Idq0", genEMT->attribute("Idq0"));
+  loggerEMT->logAttribute("Ef", genEMT->attribute("Ef"));
+  if (withTurbineGovernor)
     loggerEMT->logAttribute("Tm", turbineGovernorEMT->attribute("Tm"));
-  }
-
-  Simulation simEMT(simNameEMT, logLevel);
-  simEMT.doInitFromNodesAndTerminals(true);
-  simEMT.setSystem(systemEMT);
-  simEMT.setTimeStep(timeStep);
-  simEMT.setFinalTime(finalTime);
-  simEMT.setDomain(Domain::EMT);
-  simEMT.addLogger(loggerEMT);
-  simEMT.doSystemMatrixRecomputation(true);
 
   // Events
   auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);
