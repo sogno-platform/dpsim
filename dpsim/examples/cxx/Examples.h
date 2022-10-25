@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/Components.h>
@@ -60,8 +61,97 @@ namespace SynchronousGeneratorKundur {
     };
 }
 
-namespace GovernorKundur {
-    struct Parameters {
+namespace Exciter{
+    // Excitation system parameters (IEEE Type DC1 - simplified)
+    // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
+    // voltage-regulator
+
+    CPS::Base::ExciterParameters getExciterEremia() {
+        CPS::Base::ExciterParameters ExcitationSystemEremia;    
+        ExcitationSystemEremia.Ka = 46;
+        ExcitationSystemEremia.Ta = 0.06;
+        // exciter
+        ExcitationSystemEremia.Kef = -0.0435;
+        ExcitationSystemEremia.Tef = 0.46;
+        // stabilizing feedback
+        ExcitationSystemEremia.Kf = 0.1;
+        ExcitationSystemEremia.Tf = 1;
+        // voltage transducer
+        ExcitationSystemEremia.Tr = 0.02;
+        // saturation function coefficients
+        ExcitationSystemEremia.Aef = 0.33;
+        ExcitationSystemEremia.Bef = 0.1;
+        
+        ExcitationSystemEremia.MaxVr = 1.0;
+        ExcitationSystemEremia.MinVr = -0.9;
+
+        return ExcitationSystemEremia;
+    }
+
+    struct ExcitationKundur {
+        /// Exciter model used in Kundurs. It is a very simplified version of a thyristor 
+	    /// exciter (ST1 type) without transient gain reduction or derivative feedback 
+	    /// (only proportional block + terminal voltage transducer) 
+	    /// Ref.: Kundur,  Power System Stability and Control, p. 865
+        Real Ka = 200;
+        // voltage transducer
+        Real Tr = 0.02;
+    };
+}
+
+namespace PowerSystemStabilizer {
+    struct PSSType2PSAT {
+        // Power system stabilizer type 2 
+        // Taken from from PSAT - example d_anderson_farmer Gen2
+
+        /// Stabilizer gain for active power (pu/pu)
+		Real Kp = 0;
+		/// Stabilizer gain for bus voltage magnitude (pu/pu)
+		Real Kv = 0;
+		/// Stabilizer gain for omega gain (pu/pu)
+		Real Kw = 15;
+		/// First stabilizer time constant (s)
+		Real T1 = 0.1;
+		/// Second stabilizer time constant (s)
+		Real T2 = 0.01;
+		/// Thrid stabilizer time constant (s)
+		Real T3 = 0.12;
+		/// Fourth stabilizer time constant (s)
+		Real T4 = 0.01;
+		/// Max stabilizer output signal (pu)
+		Real Vs_max = 0.1;
+		/// Min stabilizer output signal (pu)
+		Real Vs_min = -0.1;
+		/// Wash-out time constant (s)
+		Real Tw = 10;
+    };
+
+    struct PSSKundur {
+        /// Power system stabilizer consisting of three blocks: a phase compensation
+        /// block, a signal washout block, and a gain block
+        /// Ref: Kundur, Power System Stability and Control, p. 865
+
+        /// Stabilizer gain for active power (pu/pu)
+		Real Kp = 0;
+		/// Stabilizer gain for bus voltage magnitude (pu/pu)
+		Real Kv = 0;
+		/// Stabilizer gain for omega gain (pu/pu)
+		Real Kw = 9.5;
+		/// First stabilizer time constant (s)
+		Real T1 = 0.154;
+		/// Second stabilizer time constant (s)
+		Real T2 = 0.033;
+		/// Max stabilizer output signal (pu)
+		Real Vs_max = 0.2;
+		/// Min stabilizer output signal (pu)
+		Real Vs_min = -0.2;
+		/// Wash-out time constant (s)
+		Real Tw = 1.41;
+    };
+}
+
+namespace TurbineGovernor {
+    struct GovernorKundur {
         // Turbine model parameters (tandem compound single reheat steam turbine, fossil-fuelled)
         // from P. Kundur, "Power System Stability and Control", 1994, p. 427
         Real Ta_t = 0.3;    // T_CH
@@ -77,27 +167,7 @@ namespace GovernorKundur {
         Real Tsr = 0.1;
         Real Tsm = 0.3;
     };
-}
 
-namespace ExcitationSystemEremia {
-    struct Parameters {
-        // Excitation system parameters (IEEE Type DC1A)
-        // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
-        // voltage-regulator
-        Real Ka = 46;
-        Real Ta = 0.06;
-        // exciter
-        Real Ke = -0.0435;
-        Real Te = 0.46;
-        // stabilizing feedback
-        Real Kf = 0.1;
-        Real Tf = 1;
-        // voltage transducer
-        Real Tr = 0.02;
-    };
-}
-
-namespace TurbineGovernor {
     struct TurbineGovernorPSAT1 {
         // Turbine Governor type 1 
         // Taken from from PSAT - example d_014_pss_l14 
@@ -180,6 +250,8 @@ namespace KundurExample1 {
     // P. Kundur, "Power System Stability and Control", Example 13.2, pp. 864-869.
     struct Network {
         Real nomVoltage = 400e3;
+        Real nomFreq = 60;
+        Real nomOmega = nomFreq* 2*PI;
     };
 
     struct Gen {
@@ -189,8 +261,20 @@ namespace KundurExample1 {
         Real XpdPU = 0.3;
         Real RsPU = 0;
         Real D = 1.0;
+        Real initActivePower = 0.9 * nomPower;
+        Real initMechPower = 0.9 * nomPower;
+        Real setPointVoltage = nomVoltage;
     };
+
     struct Line1 {
+        // Vnom = 400kV
+        Real lineResistance = 0.0721;
+        Real lineReactance = 36.0360;
+        Real lineSusceptance = 0;
+        Real lineConductance =0;
+    };
+
+    struct Line2 {
         // Vnom = 400kV
         Real lineResistance = 0.0721;
         Real lineReactance = 36.0360;

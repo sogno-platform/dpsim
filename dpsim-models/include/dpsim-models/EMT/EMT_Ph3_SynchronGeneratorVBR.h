@@ -12,7 +12,7 @@
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
 #include <dpsim-models/Base/Base_SynchronGenerator.h>
-#include <dpsim-models/Signal/Exciter.h>
+#include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 #include <dpsim-models/EMT/EMT_Ph1_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph1_Resistor.h>
@@ -94,9 +94,6 @@ namespace Ph3 {
 		Real mPsimq;
 		/// Magnetizing flux linkage in d axis
 		Real mPsimd;
-
-		/// Voltage excitation
-		Real mVfd;
 
 		/// Phase currents in pu
 		Matrix mIabc = Matrix::Zero(3, 1);
