@@ -1,6 +1,6 @@
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -15,6 +15,9 @@ const Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
 int main(int argc, char *argv[]) {
+
+  // initiaize gen factory
+  SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
 
   // Simultion parameters
   Real switchClosed = GridParams.SwitchClosed;
@@ -155,11 +158,18 @@ int main(int argc, char *argv[]) {
                        Math::singlePhaseParameterToThreePhase(switchClosed));
   fault->openSwitch();
 
-  // Topology
-  genEMT->connect({n1EMT});
-  lineEMT->connect({n1EMT, n2EMT});
-  extnetEMT->connect({n2EMT});
-  fault->connect({EMT::SimNode::GND, n1EMT});
+  // Synchronous generator
+  auto genEMT =
+      Factory<EMT::Ph3::ReducedOrderSynchronGeneratorVBR>::get().create(
+          SGModel, "SynGen", logLevel);
+  genEMT->setOperationalParametersPerUnit(
+      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
+      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
+      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
+      syngenKundur.Tq0_s);
+  genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
+  genEMT->setModelAsNortonSource(true);
 
   auto systemEMT =
       SystemTopology(GridParams.nomFreq, SystemNodeList{n1EMT, n2EMT},

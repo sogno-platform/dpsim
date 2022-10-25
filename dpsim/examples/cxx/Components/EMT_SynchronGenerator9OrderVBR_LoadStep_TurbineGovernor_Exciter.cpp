@@ -16,8 +16,7 @@ using namespace CPS::CIM;
 // Parameters synchronous generator
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
-const Examples::Components::GovernorKundur::Parameters govKundur;
-const Examples::Components::ExcitationSystemEremia::Parameters excEremia;
+const Examples::Components::TurbineGovernor::GovernorKundur govKundur;
 
 // Initialization parameters
 Real nominalVoltage = 24e3;
@@ -97,11 +96,13 @@ int main(int argc, char *argv[]) {
     gen->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke,
                     excEremia.Tf, excEremia.Kf, excEremia.Tr);
 
-  auto fault =
-      CPS::EMT::Ph3::Switch::make("Br_fault", CPS::Logger::Level::info);
-  fault->setParameters(Math::singlePhaseParameterToThreePhase(RloadOriginal),
-                       Math::singlePhaseParameterToThreePhase(RloadNew));
-  fault->openSwitch();
+  std::shared_ptr<Base::Exciter> exciter = nullptr;
+  if (withExciter) {
+    exciter =
+        CPS::Signal::ExciterDC1Simp::make("Exciter", CPS::Logger::Level::info);
+    exciter->setParameters(Examples::Components::Exciter::getExciterEremia());
+    gen->addExciter(exciter);
+  }
 
   // Connections
   gen->connect({n1});
@@ -123,17 +124,12 @@ int main(int argc, char *argv[]) {
     logger->logAttribute("vf_exc_gen", gen->mExciter->attribute("Ef"));
   }
 
-  Simulation sim(simName, Logger::Level::info);
-  sim.setSystem(sys);
-  sim.setTimeStep(timeStep);
-  sim.setFinalTime(finalTime);
-  sim.doSystemMatrixRecomputation(true);
-  sim.setDomain(Domain::EMT);
-  sim.addLogger(logger);
-
-  // Events
-  auto sw1 = SwitchEvent3Ph::make(timeStepEvent, fault, true);
-  sim.addEvent(sw1);
+  // Logging
+  auto logger = DataLogger::make(simName);
+  logger->logAttribute("v1", n1->attribute("v"));
+  logger->logAttribute("i_gen", gen->attribute("i_intf"));
+  logger->logAttribute("wr_gen", gen->attribute("w_r"));
+  logger->logAttribute("vf_exc_gen", gen->attribute("Vfd"));
 
   sim.run();
 }

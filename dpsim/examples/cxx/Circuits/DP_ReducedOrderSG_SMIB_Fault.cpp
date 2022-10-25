@@ -1,6 +1,6 @@
-#include "../Examples.h"
-#include "../GeneratorFactory.h"
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
+#include "../Examples.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -28,21 +28,20 @@ int main(int argc, char *argv[]) {
   std::string stepSize_str = "";
   std::string inertia_str = "";
 
-  // Command line args processing
-  CommandLineArgs args(argc, argv);
-  if (argc > 1) {
-    if (args.options.find("StepSize") != args.options.end()) {
-      timeStep = args.getOptionReal("StepSize");
-      stepSize_str = "_StepSize_" + std::to_string(timeStep);
-    }
-    if (args.options.find("SGModel") != args.options.end()) {
-      SGModel = args.getOptionString("SGModel");
-    }
-    if (args.options.find("Inertia") != args.options.end()) {
-      H = args.getOptionReal("Inertia");
-      inertia_str = "_Inertia_" + std::to_string(H);
-    }
-  }
+	// initiaize gen factory
+	SynchronGeneratorFactory::DP::Ph1::registerSynchronGenerators();
+
+	//Simultion parameters
+	Real startTimeFault = 30.0;
+	Real endTimeFault   = 30.1;
+	Real finalTime = 40;
+	Real timeStep = 100e-6;
+	Real H = syngenKundur.H;
+	Real switchClosed = GridParams.SwitchClosed;
+	Real switchOpen = GridParams.SwitchOpen;
+	std::string SGModel = "4";
+	std::string stepSize_str = "";
+	std::string inertia_str = "";
 
   Real logDownSampling;
   if (timeStep < 100e-6)
@@ -144,10 +143,16 @@ int main(int argc, char *argv[]) {
   lineDP->setParameters(GridParams.lineResistance, GridParams.lineInductance,
                         GridParams.lineCapacitance, GridParams.lineConductance);
 
-  //Breaker
-  auto fault = CPS::DP::Ph1::Switch::make("Br_fault", logLevel);
-  fault->setParameters(switchOpen, switchClosed);
-  fault->open();
+	// Synchronous generator
+	auto genDP = Factory<DP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(SGModel, "SynGen", logLevel);
+	genDP->setOperationalParametersPerUnit(
+			syngenKundur.nomPower, syngenKundur.nomVoltage,
+			syngenKundur.nomFreq, H,
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
+			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
+    genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+	genDP->setModelAsNortonSource(true);
 
   // Topology
   genDP->connect({n1DP});

@@ -1,6 +1,6 @@
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -18,6 +18,9 @@ Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
 int main(int argc, char *argv[]) {
+
+  // initiaize factories
+  SynchronGeneratorFactory::DP::Ph1::registerSynchronGenerators();
 
   // Simulation parameters
   String simName = "DP_SMIB_ReducedOrderSG_VBR_LoadStep";
@@ -140,9 +143,17 @@ int main(int argc, char *argv[]) {
   genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
   genDP->setModelAsNortonSource(true);
 
-  //Grid bus as Slack
-  auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
-  extnetDP->setParameters(gridParams.VnomMV);
+  // Synchronous generator
+  auto genDP = Factory<DP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(
+      sgType, "SynGen", logLevel);
+  genDP->setOperationalParametersPerUnit(
+      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
+      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
+      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
+      syngenKundur.Tq0_s);
+  genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
+  genDP->setModelAsNortonSource(true);
 
   // Line
   auto lineDP = DP::Ph1::PiLine::make("PiLine", logLevel);

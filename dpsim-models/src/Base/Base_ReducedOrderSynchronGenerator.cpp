@@ -347,14 +347,6 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
   **mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq0)(0, 0);
   mEf_prev = **mEf;
 
-  // Initialize controllers
-  if (mHasExciter) {
-    mExciter->initialize(Math::abs(mInitVoltage), **mEf);
-  }
-  if (mHasTurbineGovernor) {
-    mTurbineGovernor->initialize(**mMechTorque);
-  }
-
   // initial electrical torque
   **mElecTorque =
       (**mVdq0)(0, 0) * (**mIdq0)(0, 0) + (**mVdq0)(1, 0) * (**mIdq0)(1, 0);
@@ -364,6 +356,15 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 
   // initialize theta and calculate transform matrix
   **mThetaMech = **mDelta - PI / 2.;
+
+  // Initialize controllers
+  if (mHasPSS)
+    mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq0)(0, 0),
+                     (**mVdq0)(1, 0));
+  if (mHasExciter)
+    mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+  if (mHasTurbineGovernor)
+    mTurbineGovernor->initialize(**mMechTorque);
 
   // set initial interface current
   (**mIntfCurrent)(0, 0) = (mInitCurrent * mBase_I).real();
@@ -427,14 +428,6 @@ void Base::ReducedOrderSynchronGenerator<
   **mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq)(0, 0);
   mEf_prev = **mEf;
 
-  // Initialize controllers
-  if (mHasExciter) {
-    mExciter->initialize(Math::abs(mInitVoltage), **mEf);
-  }
-  if (mHasTurbineGovernor) {
-    mTurbineGovernor->initialize(**mMechTorque);
-  }
-
   // initial electrical torque
   **mElecTorque =
       (**mVdq)(0, 0) * (**mIdq)(0, 0) + (**mVdq)(1, 0) * (**mIdq)(1, 0);
@@ -445,8 +438,19 @@ void Base::ReducedOrderSynchronGenerator<
   // initialize theta and calculate transform matrix
   **mThetaMech = **mDelta - PI / 2.;
 
+  // Initialize controllers
+  if (mHasPSS)
+    mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq)(0, 0), (**mVdq)(1, 0));
+  if (mHasExciter)
+    mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+  if (mHasTurbineGovernor)
+    mTurbineGovernor->initialize(**mMechTorque);
+
   // set initial value of current
   (**mIntfCurrent)(0, 0) = mInitCurrent * mBase_I_RMS;
+
+  // set initial interface voltage
+  (**mIntfVoltage)(0, 0) = mInitVoltage * mBase_V_RMS;
 
   // set initial interface voltage
   (**mIntfVoltage)(0, 0) = mInitVoltage * mBase_V_RMS;
@@ -487,11 +491,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(
     Real time, Int timeStepCount) {
   mSimTime = time;
 
-  // update controller variables
-  if (mHasExciter) {
-    mEf_prev = **mEf;
-    **mEf = mExciter->step((**mVdq)(0, 0), (**mVdq)(1, 0), mTimeStep);
-  }
+  // update governor variables
   if (mHasTurbineGovernor) {
     mMechTorque_prev = **mMechTorque;
     **mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
@@ -505,24 +505,26 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(
   **mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
   **mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 
-  // model specific calculation of electrical vars
-  stepInPerUnit();
+  // update exciter and PSS variables
+  if (mHasPSS)
+    mVpss =
+        mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0, 0), (**mVdq)(1, 0));
+  if (mHasExciter) {
+    mEf_prev = **mEf;
+    **mEf = mExciter->step((**mVdq)(0, 0), (**mVdq)(1, 0), mTimeStep, mVpss);
+  }
 
-  // stamp model specific right side vector after calculation of electrical vars
+  stepInPerUnit();
   (**mRightVector).setZero();
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
+  mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <>
 void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(
     Real time, Int timeStepCount) {
-  mSimTime = time;
+  mSynGen.mSimTime = time;
 
-  // update controller variables
-  if (mHasExciter) {
-    mEf_prev = **mEf;
-    **mEf = mExciter->step((**mVdq0)(0, 0), (**mVdq0)(1, 0), mTimeStep);
-  }
+  // update governor variables
   if (mHasTurbineGovernor) {
     mMechTorque_prev = **mMechTorque;
     **mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
@@ -536,12 +538,18 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(
   **mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
   **mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 
-  // model specific calculation of electrical vars
-  stepInPerUnit();
+  // update exciter and PSS variables
+  if (mHasPSS)
+    mVpss =
+        mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0, 0), (**mVdq)(1, 0));
+  if (mHasExciter) {
+    mEf_prev = **mEf;
+    **mEf = mExciter->step((**mVdq)(0, 0), (**mVdq)(1, 0), mTimeStep, mVpss);
+  }
 
-  // stamp model specific right side vector after calculation of electrical vars
+  stepInPerUnit();
   (**mRightVector).setZero();
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
+  mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <typename VarType>
@@ -579,20 +587,40 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPostStep(
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(Real Ta, Real Ka,
-                                                              Real Te, Real Ke,
-                                                              Real Tf, Real Kf,
-                                                              Real Tr) {
-  mExciter = Signal::Exciter::make(**this->mName + "_Exciter", this->mLogLevel);
-  mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
+void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
+    std::shared_ptr<Base::Exciter> exciter) {
+  mExciter = exciter;
   mHasExciter = true;
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
-    std::shared_ptr<Signal::Exciter> exciter) {
-  mExciter = exciter;
-  mHasExciter = true;
+void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
+    Real Kp, Real Kv, Real Kw, Real T1, Real T2, Real T3, Real T4, Real Vs_max,
+    Real Vs_min, Real Tw, Real dt) {
+
+  if (!mHasExciter) {
+    this->mSLog->error(
+        "PSS can not be used without Exciter! PSS will be ignored!");
+    return;
+  }
+
+  mPSS = Signal::PSSType2::make(**this->mName + "_PSS", this->mLogLevel);
+  mPSS->setParameters(Kp, Kv, Kw, T1, T2, T3, T4, Vs_max, Vs_min, Tw, dt);
+  mHasPSS = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
+    std::shared_ptr<Signal::PSSType2> PSS) {
+
+  if (!mHasExciter) {
+    this->mSLog->error(
+        "PSS can not be used without Exciter! PSS will be ignored!");
+    return;
+  }
+
+  mPSS = PSS;
+  mHasPSS = true;
 }
 
 template <typename VarType>

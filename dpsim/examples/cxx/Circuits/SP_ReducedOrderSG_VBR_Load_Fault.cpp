@@ -1,6 +1,6 @@
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -14,13 +14,18 @@ const Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
 // Excitation system
-const Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
+const Base::ExciterParameters excitationEremia =
+    Examples::Components::Exciter::getExciterEremia();
 
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1
     turbineGovernor;
 
 int main(int argc, char *argv[]) {
+
+  // initiaize factories
+  ExciterFactory::registerExciters();
+  SynchronGeneratorFactory::SP::Ph1::registerSynchronGenerators();
 
   // Simulation parameters
   Real switchClosed = GridParams.SwitchClosed;
@@ -88,27 +93,28 @@ int main(int argc, char *argv[]) {
               GridParams.VnomMV * sin(GridParams.initVoltAngle)));
   genSP->setModelAsNortonSource(true);
 
-  // Exciter
-  std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
-  if (withExciter) {
-    exciterSP = Signal::Exciter::make("SynGen_Exciter", logLevel);
-    exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka,
-                             excitationEremia.Te, excitationEremia.Ke,
-                             excitationEremia.Tf, excitationEremia.Kf,
-                             excitationEremia.Tr);
-    genSP->addExciter(exciterSP);
-  }
+  // Synchronous generator
+  auto genSP = Factory<SP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(
+      SGModel, "SynGen", logLevel);
+  genSP->setOperationalParametersPerUnit(
+      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
+      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
+      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
+      syngenKundur.Tq0_s);
+  genSP->setInitialValues(
+      GridParams.initComplexElectricalPower, GridParams.mechPower,
+      Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle),
+              GridParams.VnomMV * sin(GridParams.initVoltAngle)));
+  genSP->setModelAsNortonSource(true);
 
-  // Turbine Governor
-  std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorSP = nullptr;
-  if (withTurbineGovernor) {
-    turbineGovernorSP =
-        Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
-    turbineGovernorSP->setParameters(
-        turbineGovernor.T3, turbineGovernor.T4, turbineGovernor.T5,
-        turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R,
-        turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
-    genSP->addGovernor(turbineGovernorSP);
+  // Exciter
+  std::shared_ptr<Base::Exciter> exciterSP = nullptr;
+  if (withExciter) {
+    exciterSP =
+        Factory<Base::Exciter>::get().create("DC1Simp", "Exciter", logLevel);
+    exciterSP->setParameters(excitationEremia);
+    genSP->addExciter(exciterSP);
   }
 
   // Load
@@ -144,14 +150,23 @@ int main(int argc, char *argv[]) {
     loggerSP->logAttribute("Edq0", genSP->attribute("Edq_t"));
   }
 
-  // Exciter
-  if (withExciter) {
-    loggerSP->logAttribute("Ef", exciterSP->attribute("Ef"));
-  }
-
-  // Turbine Governor
-  if (withTurbineGovernor) {
+  // Logging
+  auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
+  loggerSP->logAttribute("v_gen", genSP->attribute("v_intf"));
+  loggerSP->logAttribute("i_gen", genSP->attribute("i_intf"));
+  loggerSP->logAttribute("Te", genSP->attribute("Te"));
+  loggerSP->logAttribute("delta", genSP->attribute("delta"));
+  loggerSP->logAttribute("w_r", genSP->attribute("w_r"));
+  loggerSP->logAttribute("Vdq0", genSP->attribute("Vdq0"));
+  loggerSP->logAttribute("Idq0", genSP->attribute("Idq0"));
+  loggerSP->logAttribute("Ef", genSP->attribute("Ef"));
+  if (withTurbineGovernor)
     loggerSP->logAttribute("Tm", turbineGovernorSP->attribute("Tm"));
+  if (SGModel == "6a" || SGModel == "6b") {
+    loggerSP->logAttribute("Edq0_s", genSP->attribute("Edq_s"));
+    loggerSP->logAttribute("Edq0_t", genSP->attribute("Edq_t"));
+  } else {
+    loggerSP->logAttribute("Edq0", genSP->attribute("Edq_t"));
   }
 
   Simulation simSP(simNameSP, logLevel);
@@ -162,10 +177,6 @@ int main(int argc, char *argv[]) {
   simSP.setDomain(Domain::SP);
   simSP.addLogger(loggerSP);
   simSP.doSystemMatrixRecomputation(true);
-
-  // Events
-  auto sw1 = SwitchEvent::make(startTimeFault, fault, true);
-  simSP.addEvent(sw1);
 
   auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
   simSP.addEvent(sw2);
