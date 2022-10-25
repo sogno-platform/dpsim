@@ -15,8 +15,7 @@ using namespace CPS::CIM;
 
 // Parameters synchronous generator
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
-const Examples::Components::GovernorKundur::Parameters govKundur;
-const Examples::Components::ExcitationSystemEremia::Parameters excEremia;
+const Examples::Components::TurbineGovernor::GovernorKundur govKundur;
 
 // Initialization parameters
 Real nominalVoltage = 24e3;
@@ -81,8 +80,13 @@ int main(int argc, char* argv[]) {
 	if (withGovernor) 
 		gen->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa, govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr, govKundur.Tsm, initActivePower / syngenKundur.nomPower, initMechPower / syngenKundur.nomPower);
 	
-	if (withExciter)
-		gen->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke, excEremia.Tf, excEremia.Kf, excEremia.Tr);
+
+	std::shared_ptr<Base::Exciter> exciter = nullptr;
+	if (withExciter) {
+		exciter = CPS::Signal::ExciterDC1Simp::make("Exciter", CPS::Logger::Level::info);
+		exciter->setParameters(Examples::Components::Exciter::getExciterEremia());
+		gen->addExciter(exciter);
+	}
 
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", CPS::Logger::Level::info);
 	fault->setParameters(Math::singlePhaseParameterToThreePhase(RloadOriginal), 
@@ -101,6 +105,7 @@ int main(int argc, char* argv[]) {
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i_gen", gen->attribute("i_intf"));
 	logger->logAttribute("wr_gen", gen->attribute("w_r"));
+	logger->logAttribute("vf_exc_gen", gen->attribute("Vfd"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);

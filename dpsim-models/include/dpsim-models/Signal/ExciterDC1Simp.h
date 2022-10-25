@@ -9,15 +9,20 @@
 #pragma once
 
 #include <dpsim-models/SimSignalComp.h>
+#include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Logger.h>
 
 namespace CPS {
 namespace Signal {
 	/// AVR model type 1
+	/// Simplified model of IEEE DC1 type exciter. It does not model the time constants
+	/// Tb and Tc which are normally small and thereby ignored. 
 	/// Ref.: Milano - Power system modelling and scripting, page 363
-	class Exciter :
+	
+	class ExciterDC1Simp :
+		public Base::Exciter,
 		public SimSignalComp,
-		public SharedFactory<Exciter> {
+		public SharedFactory<ExciterDC1Simp> {
 
 	private: 
 		// ### Exciter Parameters ####
@@ -35,8 +40,12 @@ namespace Signal {
 		Real mTf;
 		/// Measurement time constant (s)
 		Real mTr;
+		/// First ceiling coefficient
+		Real mAef;
+		/// Second ceiling coefficient
+		Real mBef;
 
-		/// Reference voltage
+		/// Reference voltage (with effect of PSS)
 		Real mVref = 0;
 		/// Output of voltage transducer at time k-1
 		Real mVm_prev = 0;
@@ -68,17 +77,14 @@ namespace Signal {
 		const Attribute<Real>::Ptr mEf;
 
 	public:
-		///
-		explicit Exciter(const String & name) : SimSignalComp(name, name) { }
-		/// Constructor with log level
-		Exciter(const String & name, CPS::Logger::Level logLevel);
-
+		/// Constructor
+		ExciterDC1Simp(const String & name, CPS::Logger::Level logLevel = Logger::Level::debug);
 		/// Initializes exciter parameters
-		void setParameters(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real maxVr=1.0, Real minVr = -0.9);
+		void setParameters(Base::ExciterParameters parameters) override;
 		/// Initializes exciter variables
-		void initialize(Real Vh_init, Real Vf_init);
+		void initialize(Real Vh_init, Real Vf_init) override;
 		/// Performs an step to update field voltage value
-		Real step(Real mVd, Real mVq, Real dt);
+		Real step(Real mVd, Real mVq, Real dt, Real Vpss = 0) override;
 	};
 }
 }

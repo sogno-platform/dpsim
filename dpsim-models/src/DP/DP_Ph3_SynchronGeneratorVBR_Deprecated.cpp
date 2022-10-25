@@ -29,11 +29,9 @@ DP::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String name,
 	mMechTorque = Attribute<Real>::create("T_m", mAttributes, 0);
 }
 
-void DP::Ph3::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
-{
-	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
-	mExciter.initialize(1, 1);
-
+void DP::Ph3::SynchronGeneratorVBR::addExciter(
+	std::shared_ptr<Base::Exciter> exciter) {
+	mExciter = exciter;
 	mHasExciter = true;
 }
 
