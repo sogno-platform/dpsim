@@ -385,10 +385,9 @@ Real Base::SynchronGenerator::calcHfromJ(Real J, Real omegaNominal,
   return J * 0.5 * omegaNominal * omegaNominal / polePairNumber;
 }
 
-void Base::SynchronGenerator::addExciter(Real Ta, Real Ka, Real Te, Real Ke,
-                                         Real Tf, Real Kf, Real Tr) {
-  mExciter = Signal::Exciter::make("Exciter", CPS::Logger::Level::info);
-  mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
+void Base::SynchronGenerator::addExciter(
+    std::shared_ptr<Base::Exciter> exciter) {
+  mExciter = exciter;
   mHasExciter = true;
 }
 
