@@ -1,6 +1,6 @@
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -13,6 +13,9 @@ const Examples::Grids::SMIB::ReducedOrderSynchronGenerator::Scenario4::GridParam
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
 int main(int argc, char* argv[]) {
+
+	// initiaize gen factory
+	SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
 
 	// Simultion parameters
 	Real switchClosed = GridParams.SwitchClosed;
@@ -129,7 +132,7 @@ int main(int argc, char* argv[]) {
 	auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
 
 	// Synchronous generator
-	auto genEMT = GeneratorFactory::createGenEMT(SGModel, "SynGen", logLevel);
+	auto genEMT = Factory<EMT::Ph3::ReducedOrderSynchronGeneratorVBR>::get().create(SGModel, "SynGen", logLevel);
 	genEMT->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,

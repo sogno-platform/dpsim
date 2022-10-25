@@ -1,6 +1,6 @@
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -18,6 +18,12 @@ Scenario6::GridParams gridParams;
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
 int main(int argc, char* argv[]) {
+<<<<<<< HEAD
+=======
+
+	// initiaize factories
+	SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
+>>>>>>> 41541d9d (add PSS type 2 and add base class for exciter)
 
 	// Simulation parameters
 	String simName = "EMT_SMIB_ReducedOrderSG_LoadStep";
@@ -130,7 +136,7 @@ int main(int argc, char* argv[]) {
 	auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
 
 	// Synchronous generator
-	auto genEMT = GeneratorFactory::createGenEMT(sgType, "SynGen", logLevel);
+	auto genEMT = Factory<EMT::Ph3::ReducedOrderSynchronGeneratorVBR>::get().create(sgType, "SynGen", logLevel);
 	genEMT->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,

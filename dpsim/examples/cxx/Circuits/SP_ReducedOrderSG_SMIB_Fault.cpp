@@ -1,6 +1,6 @@
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -13,12 +13,19 @@ const Examples::Grids::SMIB::ScenarioConfig2 GridParams;
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
 // Excitation system
-const Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
+const Base::ExciterParameters excitationEremia = Examples::Components::Exciter::getExciterEremia();
+
+// PSS
+const Examples::Components::PowerSystemStabilizer::PSSType2PSAT pssAndersonFarmer;
 
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1 turbineGovernor;
 
 int main(int argc, char* argv[]) {
+
+	// initiaize factories
+	ExciterFactory::registerExciters();
+	SynchronGeneratorFactory::SP::Ph1::registerSynchronGenerators();
 
 	// Simulation parameters
 	Real switchClosed = GridParams.SwitchClosed;
@@ -29,6 +36,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 1e-3;
 	Real H = syngenKundur.H;
 	bool withExciter = false;
+	bool withPSS = false;
 	bool withTurbineGovernor = false;
 	std::string SGModel = "4";
 	std::string stepSize_str = "";
@@ -37,25 +45,28 @@ int main(int argc, char* argv[]) {
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-		if (args.options.find("StepSize") != args.options.end()) {
-			timeStep = args.getOptionReal("StepSize");
-			stepSize_str = "_StepSize_" + std::to_string(timeStep);
-		}
 		if (args.options.find("SGModel") != args.options.end()) {
 			SGModel = args.getOptionString("SGModel");
+		}
+		if (args.options.find("WithExciter") != args.options.end())  {
+			withExciter = args.getOptionBool("WithExciter");
+		}
+		if (args.options.find("WithPSS") != args.options.end())  {
+			withPSS = args.getOptionBool("WithPSS");
+		}
+		if (args.options.find("WithTurbineGovernor") != args.options.end())  {
+			withTurbineGovernor = args.getOptionBool("WithTurbineGovernor");
 		}
 		if (args.options.find("Inertia") != args.options.end())  {
 			H = args.getOptionReal("Inertia");
 			inertia_str = "_Inertia_" + std::to_string(H);
 		}
-		if (args.options.find("WithExciter") != args.options.end())  {
-			withExciter = args.getOptionBool("WithExciter");
-		}
-		if (args.options.find("WithTurbineGovernor") != args.options.end())  {
-			withTurbineGovernor = args.getOptionBool("WithTurbineGovernor");
-		}
 		if (args.options.find("FinalTime") != args.options.end())  {
 			finalTime = args.getOptionReal("FinalTime");
+		}
+		if (args.options.find("StepSize") != args.options.end()) {
+			timeStep = args.getOptionReal("StepSize");
+			stepSize_str = "_StepSize_" + std::to_string(timeStep);
 		}
 	}
 
@@ -64,7 +75,7 @@ int main(int argc, char* argv[]) {
 		logDownSampling = floor(100e-6 / timeStep);
 	else
 		logDownSampling = 1.0;
-	Logger::Level logLevel = Logger::Level::off;
+	Logger::Level logLevel = Logger::Level::debug;
 	std::string simName = "SP_SynGen" + SGModel + "Order_VBR_SMIB_Fault" + stepSize_str + inertia_str;
 
 
@@ -138,7 +149,7 @@ int main(int argc, char* argv[]) {
 	auto n2SP = SimNode<Complex>::make("n2SP", PhaseType::Single, initialVoltage_n2);
 
 	// Synchronous generator
-	auto genSP = GeneratorFactory::createGenSP(SGModel, "SynGen", logLevel);
+	auto genSP = Factory<SP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(SGModel, "SynGen", logLevel);
 	genSP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
@@ -149,14 +160,21 @@ int main(int argc, char* argv[]) {
 	genSP->setModelAsNortonSource(true);
 
 	// Exciter
-	std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
+	std::shared_ptr<Base::Exciter> exciterSP = nullptr;
 	if (withExciter) {
-		exciterSP = Signal::Exciter::make("SynGen_Exciter", logLevel);
-		exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka,
-								 excitationEremia.Te, excitationEremia.Ke,
-								 excitationEremia.Tf, excitationEremia.Kf,
-								 excitationEremia.Tr);
+		exciterSP = Factory<Base::Exciter>::get().create("DC1Simp", "Exciter", logLevel);
+		exciterSP->setParameters(excitationEremia);
 		genSP->addExciter(exciterSP);
+	}
+
+	// Power system stabilizer
+	std::shared_ptr<Signal::PSSType2> pssSP = nullptr;
+	if (withPSS) {
+		pssSP = Signal::PSSType2::make("SynGen_PSS", logLevel);
+		pssSP->setParameters(pssAndersonFarmer.Kp, pssAndersonFarmer.Kv, pssAndersonFarmer.Kw, 
+			pssAndersonFarmer.T1, pssAndersonFarmer.T2, pssAndersonFarmer.T3, pssAndersonFarmer.T4, 
+			pssAndersonFarmer.Vs_max, pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw, timeStep);
+		genSP->addPSS(pssSP);
 	}
 
 	// Turbine Governor
@@ -203,7 +221,7 @@ int main(int argc, char* argv[]) {
     loggerSP->logAttribute("w_r", 	genSP->attribute("w_r"));
 	loggerSP->logAttribute("Vdq0", 	genSP->attribute("Vdq0"));
 	loggerSP->logAttribute("Idq0",	genSP->attribute("Idq0"));
-	if (SGModel=="5b" || SGModel=="6a" || SGModel=="6b") {
+	if (SGModel=="5" || SGModel=="6a" || SGModel=="6b") {
 		loggerSP->logAttribute("Edq0_s", 		 genSP->attribute("Edq_s"));
 		loggerSP->logAttribute("Edq0_t", 		 genSP->attribute("Edq_t"));
 	} else {
@@ -212,15 +230,10 @@ int main(int argc, char* argv[]) {
 	loggerSP->logAttribute("v1", n1SP->attribute("v"));
 	loggerSP->logAttribute("v2", n2SP->attribute("v"));
 
-	// Exciter
-	if (withExciter) {
-		loggerSP->logAttribute("Ef", exciterSP->attribute("Ef"));
-	}
-
 	// Turbine Governor
-	if (withTurbineGovernor) {
+	if (withTurbineGovernor)
 		loggerSP->logAttribute("Tm", turbineGovernorSP->attribute("Tm"));
-	}
+
 
 	Simulation simSP(simNameSP, logLevel);
 	simSP.doInitFromNodesAndTerminals(true);

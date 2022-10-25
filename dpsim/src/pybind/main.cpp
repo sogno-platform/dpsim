@@ -133,6 +133,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 #endif
 		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
 		.def_readwrite("components", &DPsim::SystemTopology::mComponents)
+		.def_readwrite("components_at_node", &DPsim::SystemTopology::mComponentsAtNode)
 		.def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
 		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
 		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow);

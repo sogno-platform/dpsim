@@ -386,7 +386,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Real time, Int timeStepCoun
 			mId;
 
 		mPsikq1 = E1_1d*mIq + E2_1d*mPsikq1 + E1_1d*mIq_hist;
-		mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3*mVfd;
+		mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3 * mVfd;
 
 		mPsifd = mPsifdkd(0);
 		mPsikd = mPsifdkd(1);
@@ -563,9 +563,9 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarVariables() {
 	K = mKrs_teta_inv*K*mKrs_teta;
 
 	if (mNumDampingWindings == 2)
-		h_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+		h_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26) * mVfd;
 	else
-		h_qdr = K1a*E2_1d*mPsikq1 + K1a*E1_1d*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+		h_qdr = K1a*E2_1d*mPsikq1 + K1a*E1_1d*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26) * mVfd;
 
 	H_qdr << h_qdr,
 		0;
