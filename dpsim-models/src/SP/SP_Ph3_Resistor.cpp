@@ -39,8 +39,7 @@ void SP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(2, 0) = Complex(
 		voltMag * cos(voltPhase + 2. / 3. * M_PI),
 		voltMag * sin(voltPhase + 2. / 3. * M_PI));
-	mConductance = (**mResistance).inverse();
-	**mIntfCurrent = mConductance * **mIntfVoltage;
+	**mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
 
 	mSLog->info("Node 1 : {}", Logger::phasorToString(initialVoltage(0)(0, 0)));
 	mSLog->info("Node 2 : {}", Logger::phasorToString(initialVoltage(1)(0, 0)));
@@ -56,52 +55,55 @@ void SP::Ph3::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 }
 
 void SP::Ph3::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+	
+	Matrix conductance = (**mResistance).inverse();
+
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), Complex( mConductance(0, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), Complex( mConductance(0, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 2), Complex( mConductance(0, 2), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 0), Complex( mConductance(1, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), Complex( mConductance(1, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 2), Complex( mConductance(1, 2), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 0), Complex( mConductance(2, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1), Complex( mConductance(2, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), Complex( mConductance(2, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), Complex( conductance(0, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), Complex( conductance(0, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 2), Complex( conductance(0, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 0), Complex( conductance(1, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), Complex( conductance(1, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 2), Complex( conductance(1, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 0), Complex( conductance(2, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1), Complex( conductance(2, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), Complex( conductance(2, 2), 0));
 	}
 	if (terminalNotGrounded(1)) {
 		// set buttom right block, 3x3 entries
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), Complex( mConductance(0, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 1), Complex( mConductance(0, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 2), Complex( mConductance(0, 2), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 0), Complex( mConductance(1, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 1), Complex( mConductance(1, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 2), Complex( mConductance(1, 2), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 0), Complex( mConductance(2, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 1), Complex( mConductance(2, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 2), Complex( mConductance(2, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), Complex( conductance(0, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 1), Complex( conductance(0, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 2), Complex( conductance(0, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 0), Complex( conductance(1, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 1), Complex( conductance(1, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 2), Complex( conductance(1, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 0), Complex( conductance(2, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 1), Complex( conductance(2, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 2), Complex( conductance(2, 2), 0));
 	}
 	// Set off diagonal blocks, 2x3x3 entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), - Complex( mConductance(0, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 1), - Complex( mConductance(0, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 2), - Complex( mConductance(0, 2), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 0), - Complex( mConductance(1, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 1), - Complex( mConductance(1, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 2), - Complex( mConductance(1, 2), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 0), - Complex( mConductance(2, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 1), - Complex( mConductance(2, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), - Complex( mConductance(2, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), - Complex( conductance(0, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 1), - Complex( conductance(0, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 2), - Complex( conductance(0, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 0), - Complex( conductance(1, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 1), - Complex( conductance(1, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 2), - Complex( conductance(1, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 0), - Complex( conductance(2, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 1), - Complex( conductance(2, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), - Complex( conductance(2, 2), 0));
 
 
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), - Complex( mConductance(0, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 1), - Complex( mConductance(0, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 2), - Complex( mConductance(0, 2), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 0), - Complex( mConductance(1, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 1), - Complex( mConductance(1, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 2), - Complex( mConductance(1, 2), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 0), - Complex( mConductance(2, 0), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), - Complex( mConductance(2, 1), 0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), - Complex( mConductance(2, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), - Complex( conductance(0, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 1), - Complex( conductance(0, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 2), - Complex( conductance(0, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 0), - Complex( conductance(1, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 1), - Complex( conductance(1, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 2), - Complex( conductance(1, 2), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 0), - Complex( conductance(2, 0), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), - Complex( conductance(2, 1), 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), - Complex( conductance(2, 2), 0));
 	}
 
 	// TODO: add Log
@@ -139,7 +141,7 @@ void SP::Ph3::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph3::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = mConductance * **mIntfVoltage;
+	**mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
 	//mLog.debug() << "Current A: " << std::abs((**mIntfCurrent)(0, 0))
 	//	<< "<" << std::arg((**mIntfCurrent)(0, 0)) << std::endl;
 }
