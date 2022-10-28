@@ -14,10 +14,6 @@ namespace CPS {
 namespace Base {
 namespace Ph3 {
 	class Resistor {
-	protected:
-		///Conductance [S]
-		///CHECK: Does this have to be its own member variable?
-		Matrix mConductance;
 	public:
 		///Resistance [ohm]
 		CPS::Attribute<Matrix>::Ptr mResistance;

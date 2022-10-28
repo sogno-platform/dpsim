@@ -30,9 +30,8 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Resistor::clone(String name) {
 
 void SP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
-	mConductance = 1 / **mResistance;
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	**mIntfCurrent = mConductance * **mIntfVoltage;
+	**mIntfCurrent = (1 / **mResistance) * **mIntfVoltage;
 
 	mSLog->info("\nResistance [Ohm]: {:s}",
 				Logger::realToString(**mResistance));
