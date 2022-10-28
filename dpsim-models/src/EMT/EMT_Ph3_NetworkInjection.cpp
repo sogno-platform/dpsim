@@ -29,8 +29,8 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 	for (auto subcomp: mSubComponents)
 		mSLog->info("- {}", subcomp->name());
 
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
+	mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
+	mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
@@ -44,10 +44,6 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real srcFr
 
 	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
-	///FIXME: This should not be necessary, because the reference is already set in the constructor
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
-
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
 				Logger::matrixCompToString(voltageRef),
@@ -59,10 +55,6 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real freqS
 
 	mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart, duration, smoothRamp);
 
-	///FIXME: This should not be necessary, because the reference is already set in the constructor
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
-
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
 				Logger::matrixCompToString(voltageRef),
@@ -73,10 +65,6 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real modul
 	mParametersSet = true;
 
 	mSubVoltageSource->setParameters(voltageRef, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
-
-	///FIXME: This should not be necessary, because the reference is already set in the constructor
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
@@ -93,10 +81,6 @@ void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency)
 		subcomp->initialize(mFrequencies);
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
-
-	///FIXME: This should not be necessary, because the reference is already set in the constructor
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 }
 
 // #### MNA functions ####
