@@ -117,7 +117,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
 				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Ll"_a, "Lmd"_a, "Llfd"_a, "H"_a, "D"_a = 0)
 		.def("set_initial_values", &CPS::DP::Ph1::SynchronGeneratorTrStab::setInitialValues, "elec_power"_a, "mech_power"_a)
 		.def("connect", &CPS::DP::Ph1::SynchronGeneratorTrStab::connect)
-		.def("set_model_flags", &CPS::DP::Ph1::SynchronGeneratorTrStab::setModelFlags, "use_omega_ref"_a, "convert_with_omega_mech"_a)
+		.def("set_model_flags", &CPS::DP::Ph1::SynchronGeneratorTrStab::setModelFlags, "convert_with_omega_mech"_a)
 		.def("set_reference_omega", [](CPS::DP::Ph1::SynchronGeneratorTrStab &gen, std::string refOmegaName, CPS::IdentifiedObject::Ptr refOmegaComp,
 			std::string refDeltaName, CPS::IdentifiedObject::Ptr refDeltaComp) {
 				gen.setReferenceOmega(refOmegaComp->attribute<CPS::Real>(refOmegaName), refDeltaComp->attribute<CPS::Real>(refDeltaName));

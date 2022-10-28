@@ -142,7 +142,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	genSP->setStandardParametersPU(syngenNomPower, syngenNomVoltage, nomFreq, syngenXpdPU, cmdInertiaFactor*syngenH, syngenRsPU, syngenD);
-	genSP->setModelFlags(false, false);
+	genSP->setModelFlags(false);
 
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower= genPF->getApparentPower();

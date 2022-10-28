@@ -136,13 +136,11 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 				"\nDamping: {:f}", mXpd, mLpd, **mInertia, mKd);
 }
 
-void SP::Ph1::SynchronGeneratorTrStab::setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech) {
-	mUseOmegaRef = useOmegaRef;
+void SP::Ph1::SynchronGeneratorTrStab::setModelFlags(Bool convertWithOmegaMech) {
 	mConvertWithOmegaMech = convertWithOmegaMech;
 
 	mSLog->info("\n--- Model flags ---"
-			"\nuseOmegaRef: {:s}"
-			"\nconvertWithOmegaMech: {:s}", std::to_string(mUseOmegaRef), std::to_string(mConvertWithOmegaMech));
+			"\nconvertWithOmegaMech: {:s}", std::to_string(mConvertWithOmegaMech));
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower, Real mechPower) {
@@ -242,16 +240,7 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 	// Derivative of rotor angle at time step k + 1
 	// if reference omega is set, calculate delta with respect to reference
-	Real refOmega;
-	Real refDelta;
-	if (mUseOmegaRef) {
-		refOmega = attribute<Real>("w_ref")->get();
-		refDelta = attribute<Real>("delta_ref")->get();
-	} else {
-		refOmega = mNomOmega;
-		refDelta = 0;
-	}
-	Real dDelta_p = **mOmMech - refOmega;
+	Real dDelta_p = **mOmMech - (mUseOmegaRef ? **mRefOmega : mNomOmega);
 
 	// Rotor angle at time step k + 1 applying Euler backward
 	// Update emf - only phase changes

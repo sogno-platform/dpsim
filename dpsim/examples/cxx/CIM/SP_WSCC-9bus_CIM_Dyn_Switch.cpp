@@ -44,9 +44,9 @@ int main(int argc, char *argv[]) {
 	sys.addComponent(sw);
 
 	// Use omegNom for torque conversion in SG models for validation with PSAT
-	sys.component<Ph1::SynchronGeneratorTrStab>("GEN1")->setModelFlags(false, false);
-	sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->setModelFlags(false, false);
-	sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->setModelFlags(false, false);
+	sys.component<Ph1::SynchronGeneratorTrStab>("GEN1")->setModelFlags(false);
+	sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->setModelFlags(false);
+	sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->setModelFlags(false);
 
 	// Logging
 	auto logger = DataLogger::make(simName);
