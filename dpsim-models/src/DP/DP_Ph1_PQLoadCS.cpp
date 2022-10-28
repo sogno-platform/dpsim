@@ -63,7 +63,6 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 	Complex power = Complex(**mActivePower, **mReactivePower);
 
 	Complex current;
-	///CHECK: The original code compared the attribute pointer with zero, however this does not rule out division by zero.
 	if (**mNomVoltage != 0)
 		current = std::conj(power / **mNomVoltage);
 	else
