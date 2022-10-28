@@ -11,7 +11,6 @@
 #include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
-#include <dpsim-models/Base/Base_Ph1_PQLoad.h>
 #include <dpsim-models/PowerProfile.h>
 
 namespace CPS {
