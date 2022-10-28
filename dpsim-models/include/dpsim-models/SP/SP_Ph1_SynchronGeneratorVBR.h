@@ -56,7 +56,7 @@ namespace Ph1 {
         virtual ~SynchronGeneratorVBR();
 
         /// Mark that parameter changes so that system matrix is updated
-		Bool hasParameterChanged() override { return 1; };
+		Bool hasParameterChanged() override;
     };
 }
 }

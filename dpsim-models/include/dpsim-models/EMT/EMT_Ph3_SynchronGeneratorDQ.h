@@ -40,6 +40,9 @@ namespace Ph3 {
 		Matrix dq0ToAbcTransform(Real theta, Matrix& dq0);
 
 	public:
+		///
+		const std::vector<String> attrParamNames = {"Rs", "Ll", "Ld", "Lq", "Ld_t", "Ld_s", "Lq_t", "Lq_s", "Td0_t", "Td0_s", "Tq0_t", "Tq0_s"};
+
 		virtual ~SynchronGeneratorDQ();
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
@@ -70,14 +73,11 @@ namespace Ph3 {
 		///
 		void initialize(Matrix frequencies);
 		///
-		Real electricalTorque() { return **mElecTorque * mBase_T; }
+		Real electricalTorque();
 		///
-		Real rotationalSpeed() { return **mOmMech * mBase_OmMech; }
+		Real rotationalSpeed();
 		///
-		Real rotorPosition() { return mThetaMech; }
-
-		///
-		const std::vector<String> attrParamNames = {"Rs", "Ll", "Ld", "Lq", "Ld_t", "Ld_s", "Lq_t", "Lq_s", "Td0_t", "Td0_s", "Tq0_t", "Tq0_s"};
+		Real rotorPosition();
 
 		/// General step function for standalone simulation
 		void step(Matrix& voltage, Real time);

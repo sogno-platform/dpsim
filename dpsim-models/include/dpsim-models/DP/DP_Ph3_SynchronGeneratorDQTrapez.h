@@ -20,9 +20,7 @@ namespace Ph3 {
 		SynchronGeneratorDQTrapez(String uid, String name, Logger::Level loglevel = Logger::Level::off);
 		SynchronGeneratorDQTrapez(String name, Logger::Level loglevel = Logger::Level::off);
 
-		void setMultisamplingRate(Int rate) {
-			mMultisamplingRate = rate;
-		}
+		void setMultisamplingRate(Int rate);
 
 		// #### MNA Section ####
 		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);

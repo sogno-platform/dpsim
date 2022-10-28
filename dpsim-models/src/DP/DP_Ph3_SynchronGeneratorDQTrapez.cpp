@@ -41,6 +41,10 @@ void DP::Ph3::SynchronGeneratorDQTrapez::MnaPreStep::execute(Real time, Int time
 	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
 }
 
+void DP::Ph3::SynchronGeneratorDQTrapez::setMultisamplingRate(Int rate) {
+			mMultisamplingRate = rate;
+}
+
 void DP::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 	// Receives the voltage of time step k and has to
 	// calculate the current output for time step k+1

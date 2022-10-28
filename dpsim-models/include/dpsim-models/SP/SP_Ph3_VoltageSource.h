@@ -60,6 +60,12 @@ namespace CPS {
 				/// Returns current through the component
 				void mnaUpdateCurrent(const Matrix& leftVector);
 
+				// #### DAE Section ####
+				/// Residual function for DAE Solver
+				void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
+				///Voltage Getter
+				Complex daeInitialize();
+
 				class MnaPreStep : public CPS::Task {
 				public:
 					MnaPreStep(VoltageSource& voltageSource) :
@@ -90,12 +96,6 @@ namespace CPS {
 					VoltageSource& mVoltageSource;
 					Attribute<Matrix>::Ptr mLeftVector;
 				};
-
-				// #### DAE Section ####
-				/// Residual function for DAE Solver
-				void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
-				///Voltage Getter
-				Complex daeInitialize();
 			};
 		}
 	}

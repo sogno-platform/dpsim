@@ -28,6 +28,11 @@ SimPowerComp<Complex>::Ptr DP::Ph1::ResIndSeries::clone(String name) {
 	return copy;
 }
 
+void DP::Ph1::ResIndSeries::setParameters(Real resistance, Real inductance) {
+	**mResistance = resistance;
+	**mInductance = inductance;
+}
+
 void DP::Ph1::ResIndSeries::initialize(Matrix frequencies) {
 	SimPowerComp<Complex>::initialize(frequencies);
 

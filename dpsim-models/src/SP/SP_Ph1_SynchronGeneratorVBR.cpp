@@ -81,3 +81,5 @@ Matrix SP::Ph1::SynchronGeneratorVBR::get_DqToComplexATransformMatrix() {
 
 	return dqToComplexA;
 }
+
+Bool SP::Ph1::SynchronGeneratorVBR::hasParameterChanged() { return true; };

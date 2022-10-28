@@ -29,6 +29,8 @@ DP::Ph1::RXLoadSwitch::RXLoadSwitch(String uid, String name, Logger::Level logLe
 DP::Ph1::RXLoadSwitch::RXLoadSwitch(String name, Logger::Level logLevel)
 	: RXLoadSwitch(name, name, logLevel) { }
 
+Bool DP::Ph1::RXLoadSwitch::mnaIsClosed() { return mSubSwitch->isClosed(); }
+
 void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
 	if(!mParametersSet) {

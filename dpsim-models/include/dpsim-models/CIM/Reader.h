@@ -169,28 +169,15 @@ namespace CIM {
 			GeneratorType genType = GeneratorType::None);
 		///
 		SystemTopology loadCIM(Real systemFrequency, const std::list<CPS::String> &filenamesString, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
-			GeneratorType genType = GeneratorType::None) {
-			std::list<fs::path> filenames;
-			for (auto f : filenamesString)
-				filenames.emplace_back(f);
-
-			return loadCIM(systemFrequency, filenames, domain, phase, genType);
-		}
+			GeneratorType genType = GeneratorType::None);
 
 		// #### shunt component settings ####
 		/// set shunt capacitor value
-		void setShuntCapacitor(Real v) {
-			mShuntCapacitorValue = v;
-			mSetShuntCapacitor = true;
-		}
+		void setShuntCapacitor(Real v);
 		/// set shunt conductance value
-		void setShuntConductance(Real v) {
-			mShuntConductanceValue = v;
-			mSetShuntConductance = true;
-		}
-
+		void setShuntConductance(Real v);
 		/// If set, some components like loads include protection switches
-		void useProtectionSwitches(Bool value = true) { mUseProtectionSwitches = value; }
+		void useProtectionSwitches(Bool value = true);
 	};
 }
 }

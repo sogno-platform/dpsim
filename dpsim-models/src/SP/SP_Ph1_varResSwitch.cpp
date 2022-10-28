@@ -47,6 +47,8 @@ void SP::Ph1::varResSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
+Bool SP::Ph1::varResSwitch::mnaIsClosed() { return isClosed(); }
+
 void SP::Ph1::varResSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Complex conductance = (**mIsClosed) ?
 		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );

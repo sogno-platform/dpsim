@@ -136,3 +136,7 @@ Matrix DP::Ph1::SynchronGeneratorVBR::get_parkTransformMatrix() {
 
 	return abcToDq0;
 }
+
+Bool DP::Ph1::SynchronGeneratorVBR::hasParameterChanged() {
+	return true;
+};

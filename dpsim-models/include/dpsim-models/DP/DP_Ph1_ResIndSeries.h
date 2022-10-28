@@ -42,10 +42,7 @@ namespace Ph1 {
 
 		// #### General ####
 		/// Sets model specific parameters
-		void setParameters(Real resistance, Real inductance) {
-			**mResistance = resistance;
-			**mInductance = inductance;
-		}
+		void setParameters(Real resistance, Real inductance);
 		/// Return new instance with the same parameters
 		SimPowerComp<Complex>::Ptr clone(String name);
 		/// Initializes state variables considering the number of frequencies

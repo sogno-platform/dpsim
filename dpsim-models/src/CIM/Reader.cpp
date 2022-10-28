@@ -30,6 +30,30 @@ Reader::~Reader() {
 	delete mModel;
 }
 
+SystemTopology Reader::loadCIM(Real systemFrequency, const std::list<CPS::String> &filenamesString, Domain domain, PhaseType phase,
+	GeneratorType genType) {
+	std::list<fs::path> filenames;
+	for (auto f : filenamesString)
+		filenames.emplace_back(f);
+
+	return loadCIM(systemFrequency, filenames, domain, phase, genType);
+}
+
+// #### shunt component settings ####
+/// set shunt capacitor value
+void Reader::setShuntCapacitor(Real v) {
+	mShuntCapacitorValue = v;
+	mSetShuntCapacitor = true;
+}
+/// set shunt conductance value
+void Reader::setShuntConductance(Real v) {
+	mShuntConductanceValue = v;
+	mSetShuntConductance = true;
+}
+
+/// If set, some components like loads include protection switches
+void Reader::useProtectionSwitches(Bool value) { mUseProtectionSwitches = value; }
+
 Real Reader::unitValue(Real value, CIMPP::UnitMultiplier mult) {
 	switch (mult) {
 	case UnitMultiplier::p:

@@ -46,6 +46,22 @@ EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Logger::Level 
 	: SynchronGeneratorVBR(name, name, logLevel) {
 }
 
+void EMT::Ph3::SynchronGeneratorVBR::initialize(Matrix frequencies) {
+	SimPowerComp<Real>::initialize(frequencies);
+}
+
+Matrix& EMT::Ph3::SynchronGeneratorVBR::dqStatorCurrents() { return mDqStatorCurrents; }
+
+Real EMT::Ph3::SynchronGeneratorVBR::electricalTorque() { return **mElecTorque * mBase_T; }
+
+Real EMT::Ph3::SynchronGeneratorVBR::rotationalSpeed() { return **mOmMech * mBase_OmMech; }
+
+Real EMT::Ph3::SynchronGeneratorVBR::rotorPosition() { return mThetaMech; }
+
+Matrix& EMT::Ph3::SynchronGeneratorVBR::statorCurrents() { return mIabc; }
+
+Bool EMT::Ph3::SynchronGeneratorVBR::hasParameterChanged() { return true; }
+
 void EMT::Ph3::SynchronGeneratorVBR::setBaseAndOperationalPerUnitParameters(
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ld, Real Lq, Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,

@@ -109,6 +109,8 @@ void DP::Ph1::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& syste
 
 void DP::Ph1::Switch::mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
 
+Bool DP::Ph1::Switch::mnaIsClosed() { return isClosed(); }
+
 void DP::Ph1::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	(**mIntfVoltage)(0, 0) = 0;

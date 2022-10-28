@@ -18,6 +18,78 @@ SimPowerComp<VarType>::SimPowerComp(String uid, String name, Logger::Level logLe
 	mTerminals.clear();
 }
 
+template <typename VarType>
+typename SimPowerComp<VarType>::Ptr SimPowerComp<VarType>::clone(String name) { return nullptr; }
+
+template <typename VarType>
+UInt SimPowerComp<VarType>::terminalNumber() { return mNumTerminals; }
+
+template <typename VarType>
+typename SimTerminal<VarType>::List SimPowerComp<VarType>::terminals() { return mTerminals; }
+
+template <typename VarType>
+typename SimNode<VarType>::Ptr SimPowerComp<VarType>::node(UInt index) {
+	if (index >= mTerminals.size()) {
+		throw SystemError("Node not available for " + **mUID);
+	}
+	return mTerminals[index]->node();
+};
+
+template <typename VarType>
+UInt SimPowerComp<VarType>::matrixNodeIndex(UInt nodeIndex) {
+	return mMatrixNodeIndices[nodeIndex * 3];
+}
+
+template <typename VarType>
+UInt SimPowerComp<VarType>::matrixNodeIndex(UInt nodeIndex, UInt phaseIndex) {
+	return mMatrixNodeIndices[nodeIndex * 3 + phaseIndex];
+}
+
+template <typename VarType>
+std::vector<UInt> SimPowerComp<VarType>::matrixNodeIndices(UInt index) { return node(index)->matrixNodeIndices(); }
+
+template <typename VarType>
+UInt SimPowerComp<VarType>::virtualNodesNumber() { return mNumVirtualNodes; }
+
+template <typename VarType>
+Bool SimPowerComp<VarType>::hasVirtualNodes() { return mNumVirtualNodes > 0; }
+
+template <typename VarType>
+Bool SimPowerComp<VarType>::hasSubComponents() { return mSubComponents.size() > 0; }
+
+template <typename VarType>
+typename SimPowerComp<VarType>::List SimPowerComp<VarType>::subComponents() { return mSubComponents; }
+
+template <typename VarType>
+typename SimNode<VarType>::List& SimPowerComp<VarType>::virtualNodes() { return mVirtualNodes; }
+
+template <typename VarType>
+std::vector<UInt> SimPowerComp<VarType>::virtualMatrixNodeIndices(UInt index) { return virtualNode(index)->matrixNodeIndices(); }
+
+template <typename VarType>
+UInt SimPowerComp<VarType>::virtualSimNode(UInt nodeIndex, UInt phaseIndex) { return virtualMatrixNodeIndices(nodeIndex)[phaseIndex]; }
+
+template <typename VarType>
+const MatrixVar<VarType>& SimPowerComp<VarType>::intfCurrent() { return **mIntfCurrent; }
+
+template <typename VarType>
+const MatrixVar<VarType>& SimPowerComp<VarType>::intfVoltage() { return **mIntfVoltage; }
+
+template <typename VarType>
+MatrixComp SimPowerComp<VarType>::initialVoltage(UInt index) { return mTerminals[index]->initialVoltage(); }
+
+template <typename VarType>
+Complex SimPowerComp<VarType>::initialSingleVoltage(UInt index) { return mTerminals[index]->initialSingleVoltage(); }
+
+template <typename VarType>
+Bool SimPowerComp<VarType>::terminalNotGrounded(UInt index) { return !mMatrixNodeIndexIsGround[index]; }
+
+template <typename VarType>
+void SimPowerComp<VarType>::setIntfCurrent(MatrixVar<VarType> current) { **mIntfCurrent = current; }
+
+template <typename VarType>
+void SimPowerComp<VarType>::setIntfVoltage(MatrixVar<VarType> voltage) { **mIntfVoltage = voltage; }
+
 // #### Terminals ####
 template <typename VarType>
 UInt SimPowerComp<VarType>::terminalNumberConnected() {

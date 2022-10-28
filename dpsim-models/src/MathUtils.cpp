@@ -10,6 +10,183 @@
 
 using namespace CPS;
 
+// #### Angular Operations ####
+Real Math::radtoDeg(Real rad) {
+	return rad * 180 / PI;
+}
+
+Real Math::degToRad(Real deg) {
+	return deg * PI / 180;
+}
+
+Real Math::phase(Complex value) {
+	return std::arg(value);
+}
+
+Real Math::phaseDeg(Complex value) {
+	return radtoDeg(phase(value));
+}
+
+Real Math::abs(Complex value) {
+	return std::abs(value);
+}
+
+Matrix Math::abs(const MatrixComp& mat) {
+	size_t nRows = mat.rows();
+	size_t nCols = mat.cols();
+	Matrix res(mat.rows(), mat.cols());
+
+	for (size_t i = 0; i < nRows; ++i) {
+		for (size_t j = 0; j < nCols; ++j) {
+			res(i,j) = std::abs(mat(i,j));
+		}
+	}
+	return res;
+}
+
+Matrix Math::phase(const MatrixComp& mat) {
+	size_t nRows = mat.rows();
+	size_t nCols = mat.cols();
+	Matrix res(mat.rows(), mat.cols());
+
+	for (size_t i = 0; i < nRows; ++i) {
+		for (size_t j = 0; j < nCols; ++j) {
+			res(i,j) = std::arg(mat(i,j));
+		}
+	}
+	return res;
+}
+
+Complex Math::polar(Real abs, Real phase) {
+	return std::polar<Real>(abs, phase);
+}
+
+Complex Math::polarDeg(Real abs, Real phase) {
+	return std::polar<Real>(abs, radtoDeg(phase));
+}
+
+void Math::setVectorElement(Matrix& mat, Matrix::Index row, Complex value, Int maxFreq, Int freqIdx, Matrix::Index colOffset) {
+	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+	Eigen::Index complexOffset = harmonicOffset / 2;
+	Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+
+	mat(harmRow, colOffset) = value.real();
+	mat(harmRow + complexOffset, colOffset) = value.imag();
+}
+
+void Math::addToVectorElement(Matrix& mat, Matrix::Index row, Complex value, Int maxFreq, Int freqIdx) {
+	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+	Eigen::Index complexOffset = harmonicOffset / 2;
+	Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+
+	mat(harmRow, 0) = mat(harmRow, 0) + value.real();
+	mat(harmRow + complexOffset, 0) = mat(harmRow + complexOffset, 0) + value.imag();
+}
+
+Complex Math::complexFromVectorElement(const Matrix& mat, Matrix::Index row, Int maxFreq, Int freqIdx) {
+	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+	Eigen::Index complexOffset = harmonicOffset / 2;
+	Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+
+	return Complex(mat(harmRow, 0), mat(harmRow + complexOffset, 0));
+}
+
+void Math::addToVectorElement(Matrix& mat, Matrix::Index row, Real value) {
+	mat(row, 0) = mat(row, 0) + value;
+}
+
+void Math::setVectorElement(Matrix& mat, Matrix::Index row, Real value) {
+	mat(row, 0) = value;
+}
+
+Real Math::realFromVectorElement(const Matrix& mat, Matrix::Index row) {
+	return mat(row, 0);
+}
+
+void Math::setMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq, Int freqIdx) {
+	// Assume square matrix
+	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+	Eigen::Index complexOffset = harmonicOffset / 2;
+	Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+	Eigen::Index harmCol = column + harmonicOffset * freqIdx;
+
+	mat(harmRow, harmCol) = value.real();
+	mat(harmRow + complexOffset, harmCol + complexOffset) = value.real();
+	mat(harmRow, harmCol + complexOffset) = - value.imag();
+	mat(harmRow + complexOffset, harmCol) = value.imag();
+}
+
+void Math::addToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq, Int freqIdx) {
+	// Assume square matrix
+	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+	Eigen::Index complexOffset = harmonicOffset / 2;
+	Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+	Eigen::Index harmCol = column + harmonicOffset * freqIdx;
+
+	mat(harmRow, harmCol) = mat(harmRow, harmCol) + value.real();
+	mat(harmRow + complexOffset, harmCol + complexOffset) = mat(harmRow + complexOffset, harmCol + complexOffset) + value.real();
+	mat(harmRow, harmCol + complexOffset) = mat(harmRow, harmCol + complexOffset) - value.imag();
+	mat(harmRow + complexOffset, harmCol) = mat(harmRow + complexOffset, harmCol) + value.imag();
+}
+
+void Math::addToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Matrix value, Int maxFreq, Int freqIdx) {
+	// Assume square matrix
+	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+	Eigen::Index complexOffset = harmonicOffset / 2;
+	Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+	Eigen::Index harmCol = column + harmonicOffset * freqIdx;
+
+	mat(harmRow, harmCol) = mat(harmRow, harmCol) + value(0,0);
+	mat(harmRow + complexOffset, harmCol + complexOffset) = mat(harmRow + complexOffset, harmCol + complexOffset) + value(1,1);
+	mat(harmRow, harmCol + complexOffset) = mat(harmRow, harmCol + complexOffset) + value(0,1);
+	mat(harmRow + complexOffset, harmCol) = mat(harmRow + complexOffset, harmCol) + value(1,0);
+}
+
+void Math::setMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Real value) {
+	mat(row, column) =  value;
+}
+
+void Math::addToMatrixElement(Matrix& mat, std::vector<UInt> rows, std::vector<UInt> columns, Complex value) {
+	for (UInt phase = 0; phase < rows.size(); phase++)
+		addToMatrixElement(mat, rows[phase], columns[phase], value);
+}
+
+void Math::addToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Real value) {
+	mat(row, column) = mat(row, column) + value;
+}
+
+void Math::addToMatrixElement(Matrix& mat, std::vector<UInt> rows, std::vector<UInt> columns, Real value) {
+	for (UInt phase = 0; phase < rows.size(); phase++)
+		addToMatrixElement(mat, rows[phase], columns[phase], value);
+}
+
+MatrixComp Math::singlePhaseVariableToThreePhase(Complex var_1ph) {
+	MatrixComp var_3ph = MatrixComp::Zero(3, 1);
+	var_3ph <<
+		var_1ph,
+		var_1ph * SHIFT_TO_PHASE_B,
+		var_1ph * SHIFT_TO_PHASE_C;
+	return var_3ph;
+}
+
+Matrix Math::singlePhaseParameterToThreePhase(Real parameter) {
+	Matrix param_3ph = Matrix::Zero(3, 3);
+	param_3ph <<
+		parameter, 0., 0.,
+		0., parameter, 0.,
+		0, 0., parameter;
+	return param_3ph;
+}
+
+Matrix Math::singlePhasePowerToThreePhase(Real power) {
+	Matrix power_3ph = Matrix::Zero(3, 3);
+	power_3ph <<
+		power/3., 0., 0.,
+		0., power/3., 0.,
+		0, 0., power/3.;
+	return power_3ph;
+}
+
 Matrix Math::StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_new, Matrix u_old) {
 	Matrix::Index n = states.rows();
 	Matrix I = Matrix::Identity(n, n);

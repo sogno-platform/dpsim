@@ -61,40 +61,15 @@ namespace CPS {
 		/// Initialize state matrices with size according to phase type and frequency number
 		void initialize(Matrix frequencies);
 		/// Returns matrix index for specified phase
-		UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single) {
-			if ((phaseType == PhaseType::A || phaseType == PhaseType::Single)
-				&& (mPhaseType == PhaseType::Single
-				|| mPhaseType == PhaseType::A
-				|| mPhaseType == PhaseType::ABC))
-				return mMatrixNodeIndex[0];
-			else if (phaseType == PhaseType::B
-				&& (mPhaseType == PhaseType::B
-				|| mPhaseType == PhaseType::ABC))
-				return mMatrixNodeIndex[1];
-			else if (phaseType == PhaseType::C
-				&& (mPhaseType == PhaseType::C
-				|| mPhaseType == PhaseType::ABC))
-				return mMatrixNodeIndex[2];
-			else
-				return 0;
-		}
+		UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single);
 		/// Returns all matrix indices
-		std::vector<UInt> matrixNodeIndices() {
-			if (mPhaseType == PhaseType::B)
-				return { mMatrixNodeIndex[1] };
-			else if (mPhaseType == PhaseType::C)
-				return { mMatrixNodeIndex[2] };
-			else if (mPhaseType == PhaseType::ABC)
-				return mMatrixNodeIndex;
-			else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
-				return { mMatrixNodeIndex[0] };
-		}
+		std::vector<UInt> matrixNodeIndices();
 		///
 		VarType singleVoltage(PhaseType phaseType = PhaseType::Single);
 		///
-		MatrixVar<VarType> voltage() { return **mVoltage; }
+		MatrixVar<VarType> voltage();
 		///
-		void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) { mMatrixNodeIndex[phase] = matrixNodeIndex; }
+		void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex);
 		///
 		void setVoltage(VarType newVoltage) { }
 		///
@@ -108,9 +83,7 @@ namespace CPS {
 		///
 		void mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx);
 		/// Return list of MNA tasks
-		const Task::List& mnaTasks() {
-			return mMnaTasks;
-		}
+		const Task::List& mnaTasks();
 		///
 		class MnaPostStepHarm : public Task {
 		public:

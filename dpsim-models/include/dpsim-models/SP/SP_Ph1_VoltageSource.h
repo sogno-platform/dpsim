@@ -95,6 +95,12 @@ namespace Ph1 {
 		/// Add MNA post step dependencies
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
+		// #### DAE Section ####
+		/// Residual function for DAE Solver
+		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
+		///Voltage Getter
+		Complex daeInitialize();
+
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(VoltageSource& voltageSource) :
@@ -118,12 +124,6 @@ namespace Ph1 {
 			VoltageSource& mVoltageSource;
 			Attribute<Matrix>::Ptr mLeftVector;
 		};
-
-		// #### DAE Section ####
-		/// Residual function for DAE Solver
-		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
-		///Voltage Getter
-		Complex daeInitialize();
 	};
 }
 }

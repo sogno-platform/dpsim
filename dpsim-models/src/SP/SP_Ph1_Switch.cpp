@@ -53,6 +53,8 @@ void SP::Ph1::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
+Bool SP::Ph1::Switch::mnaIsClosed() { return isClosed(); }
+
 void SP::Ph1::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Complex conductance = (**mIsClosed) ?
 		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );

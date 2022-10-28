@@ -18,6 +18,60 @@ namespace fs = std::experimental::filesystem;
 
 using namespace CPS;
 
+
+void Logger::setLogLevel(std::shared_ptr<spdlog::logger> logger, Logger::Level level) {
+	logger->set_level(level);
+}
+
+void Logger::setLogPattern(std::shared_ptr<spdlog::logger> logger, std::string pattern) {
+	logger->set_pattern(pattern);
+}
+
+// #### to string methods ####
+String Logger::matrixToString(const Matrix& mat) {
+	std::stringstream ss;
+	ss << std::scientific << "\n" << mat;
+	return ss.str();
+}
+
+String Logger::matrixCompToString(const MatrixComp& mat) {
+	std::stringstream ss;
+	ss << std::scientific << "\n" << mat;
+	return ss.str();
+}
+
+String Logger::sparseMatrixToString(const SparseMatrix& mat) {
+	return matrixToString(Matrix(mat));
+}
+
+String Logger::sparseMatrixCompToString(const SparseMatrixComp& mat) {
+	return matrixCompToString(MatrixComp(mat));
+}
+
+String Logger::phasorMatrixToString(const MatrixComp& mat) {
+	std::stringstream ss;
+	ss << std::scientific << Math::abs(mat) << "\n\n" << Math::phase(mat);
+	return ss.str();
+}
+
+String Logger::phasorToString(const Complex& num) {
+	std::stringstream ss;
+	ss << std::defaultfloat << Math::abs(num) << "<" << Math::phaseDeg(num);
+	return ss.str();
+}
+
+String Logger::complexToString(const Complex& num) {
+	std::stringstream ss;
+	ss << std::defaultfloat << num.real() << "+j" << num.imag();
+	return ss.str();
+}
+
+String Logger::realToString(const Real& num) {
+	std::stringstream ss;
+	ss << std::defaultfloat << num;
+	return ss.str();
+}
+
 String Logger::prefix() {
 	char *p = getenv("CPS_LOG_PREFIX");
 
