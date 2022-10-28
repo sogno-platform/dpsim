@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 	auto load = Ph1::Switch::make("StepLoad", Logger::Level::debug);
 	load->setParameters(Rload, RloadStep);
 	load->connect({SimNode::GND, n1});
-	load->open();
+	load->openSwitch();
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, load});

@@ -72,7 +72,7 @@ void DP_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerCl
 
 	auto fault = CPS::DP::Ph3::SeriesSwitch::make("Br_fault");
 	fault->setParameters(BreakerOpen, breakerClosed);
-	fault->open();
+	fault->openSwitch();
 
 	// Connections
 	gen->connect({n1});
@@ -124,7 +124,7 @@ void EMT_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerC
 
 	auto fault = CPS::EMT::Ph3::SeriesSwitch::make("Br_fault");
 	fault->setParameters(BreakerOpen, breakerClosed);
-	fault->open();
+	fault->openSwitch();
 
 	// Connections
 	gen->connect({n1});

@@ -86,9 +86,9 @@ namespace DPsim {
 
 		void execute() {
 			if (mNewState)
-				mSwitch->close();
+				mSwitch->closeSwitch();
 			else
-				mSwitch->open();
+				mSwitch->openSwitch();
 		}
 	};
 

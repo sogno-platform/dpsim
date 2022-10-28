@@ -151,7 +151,7 @@ void DP::Ph1::RXLoadSwitch::updateSwitchState(Real time) {
 		Real deltaV = Math::abs((V - VRef) / VRef);
 
 		if (deltaV > 0.1) {
-			mSubSwitch->open();
+			mSubSwitch->openSwitch();
 			mSLog->info("Opened Switch at {}", (float)time);
 		}
 	}

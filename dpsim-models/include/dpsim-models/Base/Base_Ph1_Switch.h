@@ -22,20 +22,20 @@ namespace Ph1 {
 		/// Resistance if switch is closed [ohm]
 		Attribute<Real>::Ptr mClosedResistance;
 		/// Defines if Switch is open or closed
-		Attribute<Bool>::Ptr mIsClosed;
+		Attribute<Bool>::Ptr mSwitchClosed;
 		///
 		void setParameters(Real openResistance, Real closedResistance, Bool closed = false) {
 			**mOpenResistance = openResistance;
 			**mClosedResistance = closedResistance;
-			**mIsClosed = closed;
+			**mSwitchClosed = closed;
 		}
 
 		/// Close switch
-		void close() { **mIsClosed = true; }
+		void closeSwitch() { **mSwitchClosed = true; }
 		/// Open switch
-		void open() { **mIsClosed = false; }
+		void openSwitch() { **mSwitchClosed = false; }
 		/// Check if switch is closed
-		Bool isClosed() { return **mIsClosed; }
+		Bool isClosed() { return **mSwitchClosed; }
 	};
 }
 }
