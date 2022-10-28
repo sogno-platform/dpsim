@@ -35,22 +35,6 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	**mCurrent = MatrixComp::Zero(2,1);
 	**mActivePowerBranch = Matrix::Zero(2,1);
 	**mReactivePowerBranch = Matrix::Zero(2,1);
-
-	mCurrent_0 = mCurrent->deriveCoeff<Complex>(0, 0);
-	mCurrent_1 = mCurrent->deriveCoeff<Complex>(1, 0);
-	mAttributes["current"] = mCurrent_0;
-	mAttributes["current_1"] = mCurrent_1;
-
-	mActivePowerBranch_0 = mActivePowerBranch->deriveCoeff<Real>(0, 0);
-	mActivePowerBranch_1 = mActivePowerBranch->deriveCoeff<Real>(1, 0);
-	mAttributes["p_branch"] = mActivePowerBranch_0;
-	mAttributes["p_branch_1"] = mActivePowerBranch_1;
-
-	mReactivePowerBranch_0 = mReactivePowerBranch->deriveCoeff<Real>(0, 0);
-	mReactivePowerBranch_1 = mReactivePowerBranch->deriveCoeff<Real>(1, 0);
-	mAttributes["q_branch"] = mReactivePowerBranch_0;
-	mAttributes["q_branch_1"] = mReactivePowerBranch_1;
-
 	// mLog.Log(Logger::Level::DEBUG) << "Create " << this->type() << " " << name
 	// 	<< " R=" << resistance << " L=" << inductance
 	// 	 << std::endl;

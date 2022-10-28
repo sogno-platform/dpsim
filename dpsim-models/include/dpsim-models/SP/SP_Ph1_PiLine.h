@@ -34,25 +34,14 @@ namespace Ph1 {
 		const Attribute<Real>::Ptr mBaseVoltage;
 
 		// #### Power flow results ####
-		/// branch Current flow [A]
+		/// branch Current flow [A], coef(0) has data from node 0, coef(1) from node 1.
 		const Attribute<MatrixComp>::Ptr mCurrent;
-		/// CHECK: Are these derived attributes necessary?
-		Attribute<CPS::Complex>::Ptr mCurrent_0;
-		Attribute<CPS::Complex>::Ptr mCurrent_1;
-		
+
 		/// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
 		const Attribute<Matrix>::Ptr mActivePowerBranch;
-		/// CHECK: Are these derived attributes necessary?
-		Attribute<CPS::Real>::Ptr mActivePowerBranch_0;
-		Attribute<CPS::Real>::Ptr mActivePowerBranch_1;
 
-		/// branch reactive powerflow [Var]
+		/// branch reactive powerflow [Var], coef(0) has data from node 0, coef(1) from node 1.
 		const Attribute<Matrix>::Ptr mReactivePowerBranch;
-		/// CHECK: Are these derived attributes necessary?
-		Attribute<CPS::Real>::Ptr mReactivePowerBranch_0;
-		Attribute<CPS::Real>::Ptr mReactivePowerBranch_1;
-
-
 
 	protected:
 		/// CHECK: Which of these really need to be member variables?

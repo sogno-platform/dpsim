@@ -35,21 +35,6 @@ SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	mSeriesInd = Attribute<Real>::create("L_series", mAttributes);
 	mParallelCap = Attribute<Real>::create("C_parallel", mAttributes);
 	mParallelCond = Attribute<Real>::create("G_parallel", mAttributes);
-	
-	mCurrent_0 = mCurrent->deriveCoeff<Complex>(0, 0);
-	mCurrent_1 = mCurrent->deriveCoeff<Complex>(1, 0);
-	mAttributes["current"] = mCurrent_0;
-	mAttributes["current_1"] = mCurrent_1;
-
-	mActivePowerBranch_0 = mActivePowerBranch->deriveCoeff<Real>(0, 0);
-	mActivePowerBranch_1 = mActivePowerBranch->deriveCoeff<Real>(1, 0);
-	mAttributes["p_branch"] = mActivePowerBranch_0;
-	mAttributes["p_branch_1"] = mActivePowerBranch_1;
-
-	mReactivePowerBranch_0 = mReactivePowerBranch->deriveCoeff<Real>(0, 0);
-	mReactivePowerBranch_1 = mReactivePowerBranch->deriveCoeff<Real>(1, 0);
-	mAttributes["q_branch"] = mReactivePowerBranch_0;
-	mAttributes["q_branch_1"] = mReactivePowerBranch_1;
 }
 
 void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capacitance, Real conductance) {
