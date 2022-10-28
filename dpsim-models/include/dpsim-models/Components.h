@@ -76,7 +76,6 @@
 #ifdef WITH_SUNDIALS
   #include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQODE.h>
 #endif
-#include <dpsim-models/DP/DP_Ph3_SynchronGeneratorVBR.h>
 #include <dpsim-models/EMT/EMT_Ph1_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph1_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph1_Inductor.h>
@@ -107,8 +106,6 @@
 #endif
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorIdeal.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorVBR.h>
-#include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorVBRSmpl.h>
-#include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorVBRStandalone.h>
 #include <dpsim-models/EMT/EMT_Ph3_PiLine.h>
 #include <dpsim-models/EMT/EMT_Ph3_RXLoad.h>
 #include <dpsim-models/EMT/EMT_Ph3_RxLine.h>
