@@ -32,21 +32,19 @@ namespace CPS {
 		virtual ~TopologicalNode() { }
 
 		///
-		Bool isGround() { return mIsGround; }
+		Bool isGround();
 		///
-		MatrixComp initialVoltage() { return **mInitialVoltage; }
+		MatrixComp initialVoltage();
 		///
-		void setInitialVoltage(MatrixComp voltage) { **mInitialVoltage = voltage; }
+		void setInitialVoltage(MatrixComp voltage);
 		///
-		void setInitialVoltage(Complex voltage) { (**mInitialVoltage)(0,0) = voltage; }
+		void setInitialVoltage(Complex voltage);
 		///
-		void setInitialVoltage(Complex voltage, Int phaseIndex) {
-			(**mInitialVoltage)(phaseIndex, 0) = voltage;
-		}
+		void setInitialVoltage(Complex voltage, Int phaseIndex);
 		///
 		Complex initialSingleVoltage(PhaseType phaseType = PhaseType::Single);
 		///
-		PhaseType phaseType() { return mPhaseType; }
+		PhaseType phaseType();
 		///
 		virtual UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single) = 0;
 		///

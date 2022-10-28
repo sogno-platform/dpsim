@@ -51,6 +51,12 @@ namespace Ph3 {
 		/// Update interface current from MNA system result
 		void mnaUpdateCurrent(const Matrix& leftVector);
 
+		// #### MNA section for switches ####
+		/// Check if switch is closed
+		Bool mnaIsClosed();
+		/// Stamps system matrix considering the defined switch position
+		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
+
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Switch& switchRef, Attribute<Matrix>::Ptr leftSideVector) :
@@ -66,12 +72,6 @@ namespace Ph3 {
 			Switch& mSwitch;
 			Attribute<Matrix>::Ptr mLeftVector;
 		};
-
-		// #### MNA section for switches ####
-		/// Check if switch is closed
-		Bool mnaIsClosed() { return **mSwitchClosed; }
-		/// Stamps system matrix considering the defined switch position
-		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 	};
 }
 }

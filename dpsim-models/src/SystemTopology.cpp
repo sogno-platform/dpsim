@@ -15,6 +15,137 @@
 
 using namespace CPS;
 
+Matrix SystemTopology::initFrequency(Real frequency) {
+	Matrix frequencies(1,1);
+	frequencies << frequency;
+	return frequencies;
+}
+
+void SystemTopology::addNode(TopologicalNode::Ptr topNode) {
+	auto nodeComplex = std::dynamic_pointer_cast<SimNode<Complex>>(topNode);
+	if (nodeComplex) nodeComplex->initialize(mFrequencies);
+
+	auto nodeReal = std::dynamic_pointer_cast<SimNode<Real>>(topNode);
+	if (nodeReal) nodeReal->initialize(mFrequencies);
+
+	mNodes.push_back(topNode);
+}
+
+void SystemTopology::addNodeAt(TopologicalNode::Ptr topNode, UInt index) {
+	auto node = std::dynamic_pointer_cast<SimNode<Complex>>(topNode);
+	if (node) node->initialize(mFrequencies);
+
+	auto nodeReal = std::dynamic_pointer_cast<SimNode<Real>>(topNode);
+	if (nodeReal) nodeReal->initialize(mFrequencies);
+
+	if (index > mNodes.capacity())
+		mNodes.resize(index+1);
+
+	mNodes[index] = topNode;
+}
+
+
+void SystemTopology::addNodes(TopologicalNode::List topNodes) {
+	for (auto topNode : topNodes)
+		addNode(topNode);
+}
+
+void SystemTopology::addComponent(IdentifiedObject::Ptr component) {
+	auto powerCompComplex = std::dynamic_pointer_cast<SimPowerComp<Complex>>(component);
+	if (powerCompComplex) powerCompComplex->initialize(mFrequencies);
+
+	auto powerCompReal = std::dynamic_pointer_cast<SimPowerComp<Real>>(component);
+	if (powerCompReal) powerCompReal->initialize(mFrequencies);
+
+	mComponents.push_back(component);
+}
+
+template <typename VarType>
+void SystemTopology::connectComponentToNodes(typename SimPowerComp<VarType>::Ptr component, typename SimNode<VarType>::List simNodes) {
+	component->connect(simNodes);
+	for (auto simNode : simNodes)
+		mComponentsAtNode[simNode].push_back(component);
+}
+
+void SystemTopology::componentsAtNodeList() {
+	for (auto comp : mComponents) {
+		auto powerComp = std::dynamic_pointer_cast<TopologicalPowerComp>(comp);
+		if (powerComp)
+			for (auto topoNode : powerComp->topologicalNodes())
+				mComponentsAtNode[topoNode].push_back(powerComp);
+	}
+}
+
+void SystemTopology::addComponents(IdentifiedObject::List components) {
+	for (auto comp : components)
+		addComponent(comp);
+}
+
+void SystemTopology::initWithPowerflow(SystemTopology& systemPF) {
+	for (auto nodePF : systemPF.mNodes) {
+		if (auto node = this->node<TopologicalNode>(nodePF->name())) {
+			//mSLog->info("Updating initial voltage of {} according to powerflow", node->name());
+			//mSLog->info("Former initial voltage: {}", node->initialSingleVoltage());
+			node->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(nodePF)->singleVoltage());
+			//mSLog->info("Updated initial voltage: {}", node->initialSingleVoltage());
+		}
+	}
+}
+
+void SystemTopology::addTearComponent(IdentifiedObject::Ptr component) {
+	auto powerCompComplex = std::dynamic_pointer_cast<SimPowerComp<Complex>>(component);
+	if (powerCompComplex) powerCompComplex->initialize(mFrequencies);
+
+	auto powerCompReal = std::dynamic_pointer_cast<SimPowerComp<Real>>(component);
+	if (powerCompReal) powerCompReal->initialize(mFrequencies);
+
+	mTearComponents.push_back(component);
+}
+
+void SystemTopology::addTearComponents(IdentifiedObject::List components) {
+	for (auto comp : components)
+		addTearComponent(comp);
+}
+
+
+template<typename Type>
+typename std::shared_ptr<Type> SystemTopology::node(UInt index) {
+	if (index < mNodes.size()) {
+		auto topoNode = mNodes[index];
+		auto node = std::dynamic_pointer_cast<Type>(topoNode);
+		if (node)
+			return node;
+	}
+
+	return nullptr;
+}
+
+template<typename Type>
+typename std::shared_ptr<Type> SystemTopology::node(const String &name) {
+	for (auto topoNode : mNodes) {
+		if (topoNode->name() == name) {
+			auto node = std::dynamic_pointer_cast<Type>(topoNode);
+			if (node)
+				return node;
+			else
+				return nullptr;
+		}
+	}
+	return nullptr;
+}
+
+std::map<String, String> SystemTopology::listIdObjects() {
+	std::map<String, String> objTypeMap;
+
+	for (auto node : mNodes) {
+		objTypeMap[node->name()] = node->type();
+	}
+	for (auto comp : mComponents) {
+		objTypeMap[comp->name()] = comp->type();
+	}
+	return objTypeMap;
+}
+
 template<typename VarType>
 void SystemTopology::multiplyPowerComps(Int numberCopies) {
 	typename SimNode<VarType>::List newNodes;
@@ -302,6 +433,16 @@ void SystemTopology::renderToFile(String filename) {
 #endif
 
 // Explicit instantiation of template functions to be able to keep the definition in the cpp
+template void SystemTopology::multiplyPowerComps<Real>(Int numberCopies);
+template void SystemTopology::multiplyPowerComps<Complex>(Int numberCopies);
+template std::shared_ptr<TopologicalNode> SystemTopology::node<TopologicalNode>(UInt index);
+template std::shared_ptr<TopologicalNode> SystemTopology::node<TopologicalNode>(const String &name);
+template std::shared_ptr<SimNode<Real>> SystemTopology::node<SimNode<Real>>(UInt index);
+template std::shared_ptr<SimNode<Complex>> SystemTopology::node<SimNode<Complex>>(UInt index);
+template std::shared_ptr<SimNode<Real>> SystemTopology::node<SimNode<Real>>(const String &name);
+template std::shared_ptr<SimNode<Complex>> SystemTopology::node<SimNode<Complex>>(const String &name);
+template void SystemTopology::connectComponentToNodes<Real>(typename SimPowerComp<Real>::Ptr component, typename SimNode<Real>::List simNodes);
+template void SystemTopology::connectComponentToNodes<Complex>(typename SimPowerComp<Complex>::Ptr component, typename SimNode<Complex>::List simNodes);
 template int SystemTopology::checkTopologySubnets<Real>(std::unordered_map<typename CPS::SimNode<Real>::Ptr, int>& subnet);
 template int SystemTopology::checkTopologySubnets<Complex>(std::unordered_map<typename CPS::SimNode<Complex>::Ptr, int>& subnet);
 template void SystemTopology::splitSubnets<Real>(std::vector<CPS::SystemTopology>& splitSystems);

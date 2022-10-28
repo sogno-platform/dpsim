@@ -80,39 +80,12 @@ namespace Ph1 {
 		// #### Math functions ####
 
 		/// Bessel function
-		Real besselFirstKind_n(Int n, Int k_max, Real x) {
-			Real Jn = 0;
-			for (Int k = 0; k <= k_max; ++k) {
-				Real Jn_k = pow(-1,k) / factorial(k) * multInvFactorial(k+n) * pow(x/2., 2.*k+n);
-				Jn = Jn + Jn_k;
-				//mSLog->info("Jn_n = {:f}", Jn_n);
-			}
-  			return Jn;
-		}
-
+		Real besselFirstKind_n(Int n, Int k_max, Real x);
 		/// Bessel function using look up tables for factorials
-		Real besselFirstKind_n_opt(Int n, Int k_max, Real x) {
-			Real Jn = 0;
-			for (Int k = 0; k <= k_max; ++k) {
-				Real Jn_k = pow(-1,k) / mFactorials[k] * mMultInvFactorials[k+n] * pow(x/2., 2.*k+n);
-				Jn = Jn + Jn_k;
-			}
-			return Jn;
-		}
-
-		long long factorial(Int n) {
-			return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
-		}
-
-		Real multInvFactorial(Int n) {
-			if(n < 0) return 0;
-			else return 1. / factorial(n);
-		}
-
-		Real multInvIntGamma(Real n) {
-			if(n <= 0) return 0;
-			else return 1./std::tgamma(n);
-		}
+		Real besselFirstKind_n_opt(Int n, Int k_max, Real x);
+		long long factorial(Int n);
+		Real multInvFactorial(Int n);
+		Real multInvIntGamma(Real n);
 
 	public:
 		/// Defines UID, name and logging level

@@ -205,4 +205,41 @@ void DP::Ph1::Inverter::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 
 }
 
+// #### Math functions ####
+
+/// Bessel function
+Real DP::Ph1::Inverter::besselFirstKind_n(Int n, Int k_max, Real x) {
+	Real Jn = 0;
+	for (Int k = 0; k <= k_max; ++k) {
+		Real Jn_k = pow(-1,k) / factorial(k) * multInvFactorial(k+n) * pow(x/2., 2.*k+n);
+		Jn = Jn + Jn_k;
+		//mSLog->info("Jn_n = {:f}", Jn_n);
+	}
+	return Jn;
+}
+
+/// Bessel function using look up tables for factorials
+Real DP::Ph1::Inverter::besselFirstKind_n_opt(Int n, Int k_max, Real x) {
+	Real Jn = 0;
+	for (Int k = 0; k <= k_max; ++k) {
+		Real Jn_k = pow(-1,k) / mFactorials[k] * mMultInvFactorials[k+n] * pow(x/2., 2.*k+n);
+		Jn = Jn + Jn_k;
+	}
+	return Jn;
+}
+
+long long DP::Ph1::Inverter::factorial(Int n) {
+	return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
+}
+
+Real DP::Ph1::Inverter::multInvFactorial(Int n) {
+	if(n < 0) return 0;
+	else return 1. / factorial(n);
+}
+
+Real DP::Ph1::Inverter::multInvIntGamma(Real n) {
+	if(n <= 0) return 0;
+	else return 1./std::tgamma(n);
+}
+
 

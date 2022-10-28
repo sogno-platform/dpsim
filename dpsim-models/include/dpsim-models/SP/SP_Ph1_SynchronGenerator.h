@@ -73,7 +73,7 @@ namespace Ph1 {
 			/// Update active & reactive power injection (VD bus)
 			void updatePowerInjection(Complex powerInj);
 			/// Get Apparent power of Powerflow solution
-			Complex getApparentPower() { return Complex (**mSetPointActivePower, **mSetPointReactivePower);}
+			Complex getApparentPower();
 		};
 }
 }
