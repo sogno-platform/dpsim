@@ -44,6 +44,7 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_Circuits.cpp
 	Circuits/SP_PiLine.cpp
 	Circuits/SP_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/SP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	Circuits/SP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 
 	# Combined EMT/DP/SP examples
@@ -52,7 +53,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_DP_SP_VS_RLC.cpp
 	Circuits/DP_EMT_RL_SourceStep.cpp
 	Circuits/EMT_DP_SP_Trafo.cpp
-	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FM.cpp
+	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FrequencyRamp_CosineFM.cpp
 
 	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
@@ -127,6 +128,7 @@ list(APPEND TEST_SOURCES
 	Circuits/EMT_SynGenVBR_SMIB_Fault.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
 	Circuits/EMT_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
+	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FrequencyRamp_CosineFM.cpp
 )
 
 if(WITH_SUNDIALS)

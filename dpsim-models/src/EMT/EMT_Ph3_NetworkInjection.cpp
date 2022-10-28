@@ -13,8 +13,7 @@ using namespace CPS;
 EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
 	mVoltageRef(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
-	mSigOut(Attribute<Complex>::createDynamic("sigOut", mAttributes))  {
+	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
@@ -32,7 +31,6 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
-	mSigOut->setReference(mSubVoltageSource->mSigOut);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
@@ -56,15 +54,14 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real srcFr
 				Logger::realToString(srcFreq));
 }
 
-void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
+void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp) {
 	mParametersSet = true;
 
-	mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
+	mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart, duration, smoothRamp);
 
 	///FIXME: This should not be necessary, because the reference is already set in the constructor
 	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
 	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
-	mSigOut->setReference(mSubVoltageSource->mSigOut);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",

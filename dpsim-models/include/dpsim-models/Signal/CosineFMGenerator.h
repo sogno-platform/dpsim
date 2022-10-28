@@ -12,17 +12,24 @@
 
 namespace CPS {
 namespace Signal {
+	/// \brief Model to generate signals containing a frequency ramp
+	///
+	/// Inherits from the abstract SignalGenerator class.
+	/// Models a periodic frequency modulation of the signal's frequency.
+	/// The resulting signal oscillates inside a given frequency range.
 	class CosineFMGenerator :
 		public SignalGenerator,
         public SharedFactory<CosineFMGenerator>  {
     private:
-		/// initial signal phasor with magnitude and phase
+		/// magnitude of the initial signal phasor
 		Real mMagnitude;
+		/// phase of the initial signal phasor
 		Real mInitialPhase;
 		/// signal's frequency
 		Real mBaseFrequency;
-		/// Modulation parameters
+		/// modulation frequency
 		Real mModulationFrequency;
+		/// amplitude of the modulation
 		Real mModulationAmplitude;
 		/// toggle a zig zag like frequency modulation
 		bool mZigZag = false;
@@ -30,7 +37,9 @@ namespace Signal {
     public:
 		/// init the identified object
         CosineFMGenerator(String name, Logger::Level logLevel = Logger::Level::off)
-			: SignalGenerator(name, logLevel) { }
+			: SignalGenerator(name, logLevel), mZigZag(false) {
+				mSLog->info("Create {} {}", type(), name);
+			}
 		/// set the source's parameters
 		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real frequency = 0.0, bool zigzag = false);
 		/// implementation of inherited method step to update and return the current signal value
