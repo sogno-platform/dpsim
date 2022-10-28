@@ -123,7 +123,7 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	Complex initApparentPower_G2= gen2PF->getApparentPower();
 	gen2SP->setInitialValues(initApparentPower_G2, ThreeBus.initMechPower_G2);
 
-	gen2SP->setModelFlags(true, true);
+	gen2SP->setModelFlags(true);
 	gen2SP->setReferenceOmega(gen1SP->attribute<Real>("w_r"), gen1SP->attribute<Real>("delta_r"));
 
 	//Load
