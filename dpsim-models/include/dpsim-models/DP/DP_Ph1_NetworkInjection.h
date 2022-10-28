@@ -19,6 +19,10 @@ namespace Ph1 {
 	/// \brief Network injection model
 	///
 	/// This model represents network injections by an ideal voltage source.
+	/// The voltage source can be configured to use different types of SignalGenerators using the various setParameters functions
+	/// When the SineWaveGenerator is configured via the void setParameters(Complex voltageRef, Real srcFreq = 0.0) function,
+	/// the frequency, magnitude and phase of the sine wave can be modified through the mVoltageRef and mSrcFreq attributes.
+	/// See DP_Ph1_VoltageSource.h for more details.
 	class NetworkInjection :
 		public SimPowerComp<Complex>,
 		public MNAInterface,
@@ -51,11 +55,15 @@ namespace Ph1 {
 		// #### General ####
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
-		/// Setter for reference voltage parameters
+		/// Setter for reference voltage and frequency with a sine wave generator
+		/// This will initialize the values of mVoltageRef and mSrcFreq to match the given parameters
+		/// However, the attributes can be modified during the simulation to dynamically change the magnitude, frequency, and phase of the sine wave.
 		void setParameters(Complex voltageRef, Real srcFreq = 0.0);
 		/// Setter for reference signal of type frequency ramp
-		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
+		/// This will create a FrequencyRampGenerator which will not react to external changes to mVoltageRef or mSrcFreq!
+		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp = true);
 		/// Setter for reference signal of type cosine frequency modulation
+		/// This will create a CosineFMGenerator which will not react to external changes to mVoltageRef or mSrcFreq!
 		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 0.0, bool zigzag = false);
 		/// More General setter for voltage source parameters
 		//void setVoltageSource(std::shared_ptr<DP::Ph1::VoltageSource> subVoltageSource);

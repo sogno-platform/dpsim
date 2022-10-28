@@ -33,7 +33,6 @@ namespace CPS {
 			public:
 				const CPS::Attribute<MatrixComp>::Ptr mVoltageRef;
 				const CPS::Attribute<Real>::Ptr mSrcFreq;
-				const CPS::Attribute<Complex>::Ptr mSigOut;
 
 				/// Defines UID, name, component parameters and logging level
 				NetworkInjection(String uid, String name, Logger::Level loglevel = Logger::Level::off);
@@ -52,7 +51,7 @@ namespace CPS {
 				/// Setter for reference voltage parameters
 				void setParameters(MatrixComp voltageRef, Real srcFreq = 50.0);
 				/// Setter for reference signal of type frequency ramp
-				void setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
+				void setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp = true);
 				/// Setter for reference signal of type cosine frequency modulation
 				void setParameters(MatrixComp voltageRef, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 50.0, bool zigzag = false);
 
