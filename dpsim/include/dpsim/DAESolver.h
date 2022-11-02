@@ -19,10 +19,9 @@
 #include <dpsim-models/Logger.h>
 
 #include <ida/ida.h>
-#include <ida/ida_direct.h>
+#include <nvector/nvector_serial.h>
 #include <sunlinsol/sunlinsol_dense.h>
 #include <sundials/sundials_types.h>
-#include <nvector/nvector_serial.h>
 
 
 namespace DPsim {
@@ -44,6 +43,8 @@ namespace DPsim {
         CPS::SimNode<Complex>::List mNodes;
 
 		// IDA simulation variables
+		/// Reference to a common simulation context object
+		SUNContext mSunctx {nullptr};
 		/// Memory block allocated by IDA
 		void *mem = NULL;
 		/// Vector of problem variables

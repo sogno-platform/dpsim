@@ -9,14 +9,12 @@
 #pragma once
 
 #include <dpsim/Solver.h>
-
 #include <dpsim-models/Solver/ODEInterface.h>
 
-#include <arkode/arkode.h>              // prototypes for ARKode fcts., consts. and includes sundials_types.h
-#include <nvector/nvector_serial.h>     // access to serial N_Vector
-#include <sunmatrix/sunmatrix_dense.h>  // access to dense SUNMatrix
-#include <sunlinsol/sunlinsol_dense.h>  // access to dense SUNLinearSolver
-#include <arkode/arkode_direct.h>       // access to ARKDls interface
+#include <arkode/arkode_arkstep.h>       // prototypes for ARKode fcts., consts. and includes sundials_types.h
+#include <nvector/nvector_serial.h>      // access to serial N_Vector
+#include <sunmatrix/sunmatrix_dense.h>   // access to dense SUNMatrix
+#include <sunlinsol/sunlinsol_dense.h>   // access to dense SUNLinearSolver
 
 //using namespace CPS; // led to problems
 
@@ -31,6 +29,9 @@ namespace DPsim {
 		Int mProbDim;
 
 		// ###ARKode-specific variables ###
+		/// Reference to a common simulation context object
+		SUNContext mSunctx {nullptr};
+
 		/// Memory block allocated by ARKode
 		void* mArkode_mem {nullptr};
 		/// State vector

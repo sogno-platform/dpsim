@@ -75,14 +75,20 @@ void DAESolver::initialize(Real t0) {
     realtype *sval = NULL, *s_dtval = NULL;
     std::cout << "Init states" << std::endl;
 
+    /* Create SUNDIALS context */
+    ret = SUNContext_Create(NULL, &mSunctx);
+    //if (check_retval(&ret, "SUNContext_Create", 1)) return(1);
+
     // Allocate state vectors
-    state = N_VNew_Serial(mNEQ);
-    dstate_dt = N_VNew_Serial(mNEQ);
+    state = N_VNew_Serial(mNEQ, mSunctx);
+    //if(check_retval((void *)state, "N_VNew_Serial", 0)) return(1);
+    dstate_dt = N_VNew_Serial(mNEQ, mSunctx);
+    //if(check_retval((void *)dstate_dt, "N_VNew_Serial", 0)) return(1);
 
     std::cout << "State Init done" << std::endl;
     std::cout << "Pointer Init" << std::endl;
-    sval = N_VGetArrayPointer_Serial(state);
-    s_dtval = N_VGetArrayPointer_Serial(dstate_dt);
+    sval = N_VGetArrayPointer(state);
+    s_dtval = N_VGetArrayPointer(dstate_dt);
     std::cout << "Pointer Init done" << std::endl << std::endl;
 
     for (auto node : mNodes) {
@@ -144,7 +150,7 @@ void DAESolver::initialize(Real t0) {
     abstol = RCONST(1.0e-4); // Set absolute error
     std::cout << "Init Tolerances done" << std::endl;
 
-    mem = IDACreate();
+    mem = IDACreate(mSunctx);
     if (mem != NULL) std::cout << "Memory Ok" << std::endl;
     std::cout << "Define Userdata" << std::endl;
     // This passes the solver instance as the user_data argument to the residual functions
@@ -165,9 +171,9 @@ void DAESolver::initialize(Real t0) {
 //	}
     std::cout << "Call IDA Solver Stuff" << std::endl;
     // Allocate and connect Matrix A and solver LS to IDA
-    A = SUNDenseMatrix(mNEQ, mNEQ);
-    LS = SUNDenseLinearSolver(state, A);
-    ret = IDADlsSetLinearSolver(mem, LS, A);
+    A = SUNDenseMatrix(mNEQ, mNEQ,mSunctx);
+    LS = SUNLinSol_Dense(state, A, mSunctx);
+    ret = IDASetLinearSolver(mem, LS, A);
 
     //Optional IDA input functions
     //ret = IDASetMaxNumSteps(mem, -1);  //Max. number of timesteps until tout (-1 = unlimited)
@@ -242,4 +248,5 @@ DAESolver::~DAESolver() {
     N_VDestroy(dstate_dt);
     SUNLinSolFree(LS);
     SUNMatDestroy(A);
+    SUNContext_Free(&mSunctx);
 }
