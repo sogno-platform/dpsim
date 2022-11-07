@@ -154,7 +154,7 @@ void MnaSolverEigenDense<VarType>::solve(Real time, Int timeStepCount) {
 
 			for (auto syncGen : mSyncGen)
 				//update voltages
-				syncGen->updateVoltage(mLeftSideVector);
+				syncGen->updateVoltage(**mLeftSideVector);
 
 			// check if there is sync generators that need iterate
 			int count=0; 

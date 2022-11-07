@@ -141,6 +141,7 @@ namespace Base {
 			Bool mInitialValuesSet = false;
 
 		public:
+			// ### State variables [p.u.] ###
 			/// Mechanical torque
 			const Attribute<Real>::Ptr mMechTorque;
 			/// stator electrical torque

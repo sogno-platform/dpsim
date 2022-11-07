@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
-    (String uid, String name, Logger::Level logLevel)
+    (const String& uid, const String& name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Real>(uid, name, logLevel),
 	mEvbr(Attribute<Matrix>::create("Evbr", mAttributes)) {
 	
@@ -26,7 +26,7 @@ EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
 }
 
 EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
-	(String name, Logger::Level logLevel)
+	(const String& name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(name, name, logLevel) {
 }
 

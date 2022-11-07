@@ -35,6 +35,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_SynchronGeneratorVBR.cpp
 	DP/DP_Ph1_SynchronGenerator3OrderVBR.cpp
 	DP/DP_Ph1_SynchronGenerator4OrderVBR.cpp
+	DP/DP_Ph1_SynchronGenerator4OrderDCIM.cpp
 	DP/DP_Ph1_SynchronGenerator4OrderIter.cpp
 	DP/DP_Ph1_SynchronGenerator6OrderIter.cpp
 	DP/DP_Ph1_SynchronGenerator6aOrderVBR.cpp

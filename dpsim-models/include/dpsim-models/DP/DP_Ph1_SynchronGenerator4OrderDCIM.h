@@ -11,18 +11,18 @@
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 
 namespace CPS {
-namespace SP {
+namespace DP {
 namespace Ph1 {
 	/// @brief Delayed-Current-Injection (DCIM) implementation
 	/// of 4th order synchronous generator model
 	class SynchronGenerator4OrderDCIM :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public SharedFactory<SynchronGenerator4OrderDCIM> {
-	public:
+	protected:
 		// ### State variables [p.u.]###
 		/// voltage behing the transient reactance
 		const Attribute<Matrix>::Ptr mEdq_t;
-	protected:
+		/// 
 		Matrix mStates;
 		Matrix mStates_prev;
 
@@ -45,18 +45,18 @@ namespace Ph1 {
 		Matrix mB;
 		/// 
 		Matrix mC;
-		///
+
+		/// Transformation matrix dp->dq
+		MatrixComp mDpToDq;
+
+		/// Vector to create abc vector from a component
+		MatrixComp mShiftVector;
 
 		/// Park Transformation
-		///
-		Matrix mDqToComplexA;
-		///
-		Matrix mComplexAToDq;
-		///
-        Matrix get_DqToComplexATransformMatrix();
+		Matrix parkTransform(Real theta, const Matrix& abcVector);
 
 		// #### General Functions ####
-		/// Specific component initialization
+		/// DPecific component initialization
         void specificInitialization(); 
 		///
 		void stepInPerUnit();
