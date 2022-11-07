@@ -102,8 +102,8 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, logLevel);
@@ -169,11 +169,11 @@ int main(int argc, char* argv[]) {
 
 	// log node voltage
 	for (auto node : systemDP.mNodes)
-		logger->addAttribute(node->name() + ".V", node->attribute("v"));
+		logger->logAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log generator vars
-	logger->addAttribute(genDP->name() + ".Te", genDP->attribute("Te"));
-	logger->addAttribute(genDP->name() + ".NIterations", genDP->attribute("NIterations"));
+	logger->logAttribute(genDP->name() + ".Te", genDP->attribute("Te"));
+	logger->logAttribute(genDP->name() + ".NIterations", genDP->attribute("NIterations"));
 
 	// load step event
 	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::Events::createEventAddPowerConsumption("n1DP", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemDP, Domain::DP, logger);

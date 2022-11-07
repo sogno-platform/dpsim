@@ -38,8 +38,8 @@ namespace Ph3 {
 		Matrix mDq0ToAbc;
 
         /// Constructor
-        ReducedOrderSynchronGeneratorVBR(const String & uid, const String & name, Logger::Level logLevel);
-        ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(const String& uid, const String& name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(const String& name, Logger::Level logLevel);
 
 	  	// #### General Functions ####
         /// Specific component initialization

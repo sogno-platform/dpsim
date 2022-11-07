@@ -256,6 +256,22 @@ namespace Base {
 			std::shared_ptr<Signal::Exciter> mExciter;
 
 			///
+			void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
+			/// Initialization for 3 Order SynGen
+			void setOperationalParametersPerUnit(Real nomPower,
+				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
+				Real Ld_t, Real Td0_t);
+			/// Initialization for 4 Order SynGen
+			void setOperationalParametersPerUnit(Real nomPower,
+				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
+				Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t);
+			/// Initialization for 6 Order SynGen
+			void setOperationalParametersPerUnit(Real nomPower,
+				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
+				Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t,
+				Real Ld_s, Real Lq_s, Real Td0_s, Real Tq0_s,
+				Real Taa=0);
+			///
 			Real mTimeStep;
 			Real mSimTime;
 	};

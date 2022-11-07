@@ -89,8 +89,8 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, logLevel);
@@ -160,15 +160,15 @@ int main(int argc, char* argv[]) {
 	// log node voltage
 	auto logger = DataLogger::make(simName, true, logDownSampling);
 		for (auto node : systemEMT.mNodes)
-			logger->addAttribute(node->name() + ".V", node->attribute("v"));
+			logger->logAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log generator vars
-	//logger->addAttribute(genEMT->name() + ".Tm", genEMT->attribute("Tm"));
-	logger->addAttribute(genEMT->name() + ".Te", genEMT->attribute("Te"));
-	logger->addAttribute(genEMT->name() + ".omega", genEMT->attribute("w_r"));
-	logger->addAttribute(genEMT->name() + ".delta", genEMT->attribute("delta"));
-	logger->addAttribute(genEMT->name() + ".NIterations", genEMT->attribute("NIterations"));
-	//logger->addAttribute(genEMT->name() + ".theta", genEMT->attribute("Theta"));
+	//logger->logAttribute(genEMT->name() + ".Tm", genEMT->attribute("Tm"));
+	logger->logAttribute(genEMT->name() + ".Te", genEMT->attribute("Te"));
+	logger->logAttribute(genEMT->name() + ".omega", genEMT->attribute("w_r"));
+	logger->logAttribute(genEMT->name() + ".delta", genEMT->attribute("delta"));
+	logger->logAttribute(genEMT->name() + ".NIterations", genEMT->attribute("NIterations"));
+	//logger->logAttribute(genEMT->name() + ".theta", genEMT->attribute("Theta"));
 
 	// load step event
 	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::Events::createEventAddPowerConsumption3Ph("n1EMT", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemEMT, Domain::EMT, logger);
