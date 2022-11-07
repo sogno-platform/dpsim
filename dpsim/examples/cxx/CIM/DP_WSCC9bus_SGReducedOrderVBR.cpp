@@ -149,11 +149,7 @@ int main(int argc, char *argv[]) {
 	// log node voltage
 	auto logger = DataLogger::make(simName, true, logDownSampling);
 		for (auto node : sys.mNodes)
-<<<<<<< HEAD
 			logger->logAttribute(node->name() + ".V", node->attribute("v"));
-=======
-			logger->addAttribute(node->name() + ".V", node->attribute("v"));
->>>>>>> 15f7252d (add wscc reduced order examples)
 
 	// log generator vars
 	for (auto comp : sys.mComponents) {

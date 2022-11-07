@@ -30,8 +30,8 @@ int main(int argc, char* argv[]) {
 	}
 
 	Real logDownSampling;
-	if (timeStep<100e-6)
-		logDownSampling = floor(100e-6 / timeStep);
+	if (timeStep<10e-6)
+		logDownSampling = floor(10e-6 / timeStep);
 	else
 		logDownSampling = 1.0;
 	Logger::Level logLevel = Logger::Level::off;
@@ -142,11 +142,11 @@ int main(int argc, char* argv[]) {
 	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
 	loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
     loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
-    loggerSP->logAttribute("Te", 	 genSP->attribute("Te"));
+    loggerSP->logAttribute("Te", 	 	 genSP->attribute("Te"));
     loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
     loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
 	loggerSP->logAttribute("Edq0", 		 genSP->attribute("Edq_t"));
-	loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Idq0"));
+	loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Vdq0"));
 	loggerSP->logAttribute("Idq0", 		 genSP->attribute("Idq0"));
 
 	Simulation simSP(simNameSP, logLevel);
