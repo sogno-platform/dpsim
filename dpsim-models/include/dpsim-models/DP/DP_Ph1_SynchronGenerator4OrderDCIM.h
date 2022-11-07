@@ -11,20 +11,18 @@
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 
 namespace CPS {
-namespace SP {
+namespace DP {
 namespace Ph1 {
 	/// @brief Delayed-Current-Injection (DCIM) implementation
 	/// of 4th order synchronous generator model
 	class SynchronGenerator4OrderDCIM :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public SharedFactory<SynchronGenerator4OrderDCIM> {
-
-	public:
+	protected:
 		// ### State variables [p.u.]###
 		/// voltage behing the transient reactance
 		const Attribute<Matrix>::Ptr mEdq_t;
-
-	protected:
+		/// 
 		Matrix mStates;
 		Matrix mStates_prev;
 
@@ -45,41 +43,37 @@ namespace Ph1 {
 		Matrix mA_inv;
 		///
 		Matrix mB;
-		///
+		/// 
 		Matrix mC;
-		///
+
+		/// Transformation matrix dp->dq
+		MatrixComp mDpToDq;
+
+		/// Vector to create abc vector from a component
+		MatrixComp mShiftVector;
 
 		/// Park Transformation
-		///
-		Matrix mDqToComplexA;
-		///
-		Matrix mComplexAToDq;
-		///
-        Matrix get_DqToComplexATransformMatrix();
+		Matrix parkTransform(Real theta, const Matrix& abcVector);
 
 		// #### General Functions ####
-		/// Specific component initialization
-        void specificInitialization() final;
+		/// DPecific component initialization
+        void specificInitialization(); 
 		///
-		void initializeResistanceMatrix() final {};
-		///
-		void stepInPerUnit() final;
+		void stepInPerUnit();
 
 		// ### MNA Section ###
         ///
-        void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
-        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
-        void mnaCompPostStep(const Matrix& leftVector) override;
+        void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+        void mnaPostStep(const Matrix& leftVector);
 
 	public:
 		///
-		SynchronGenerator4OrderDCIM(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderDCIM(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator4OrderDCIM(const String & name, Logger::Level logLevel = Logger::Level::off);
-		/// DCIM is only implmented as current source!
-		void setModelAsCurrentSource(Bool modelAsCurrentSource) const {
-			SPDLOG_LOGGER_DEBUG(mSLog, "DCIM model can only be used as current source!");
-		}
+		SynchronGenerator4OrderDCIM(String name, Logger::Level logLevel = Logger::Level::off);
+		///
+		SimPowerComp<Complex>::Ptr clone(String name);
 	};
 }
 }

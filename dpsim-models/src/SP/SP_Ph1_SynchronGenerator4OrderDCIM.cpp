@@ -33,6 +33,19 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
+	//
+	mStates = Matrix::Zero(4,1);
+	mStates << **mEdq_t, **mIdq;
+	mStates_prev = Matrix::Zero(6,1);
+
+	//
+	mAd = mTimeStep * (mLq - mLq_t) / (2 * mTq0_t + mTimeStep);
+	mBd = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
+
+	mAq = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
+	mBq = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
+	mCq = 2 * mTimeStep * mEf / (2 * mTd0_t + mTimeStep);
+
     // Initialize matrix of state representation
 	mA = Matrix::Zero(2,2);
 	mB = Matrix::Zero(2,2);
@@ -43,7 +56,7 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
-		"\n--- Model specific initialization finished ---",
+		"\n--- Model SPecific initialization finished ---",
 
 		(**mEdq_t)(0,0),
 		(**mEdq_t)(1,0)

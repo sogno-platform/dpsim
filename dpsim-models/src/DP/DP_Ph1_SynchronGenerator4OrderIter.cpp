@@ -6,13 +6,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/DP/DP_Ph1_SynchronGenerator4OrderIter.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderIter.h>
 
 using namespace CPS;
 
 DP::Ph1::SynchronGenerator4OrderIter::SynchronGenerator4OrderIter
     (String uid, String name, Logger::Level logLevel)
-	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel) {
+	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
+	mEdq_t(Attribute<Matrix>::create("Edq0_t", mAttributes)) {
 
 	mPhaseType = PhaseType::Single;
 	setTerminalNumber(1);
@@ -21,9 +22,7 @@ DP::Ph1::SynchronGenerator4OrderIter::SynchronGenerator4OrderIter
 	mVoltageForm = false;
 	
 	// model variables
-	mIntfVoltage = MatrixComp::Zero(1, 1);
-	mIntfCurrent = MatrixComp::Zero(1, 1);
-	mEdq_t = Matrix::Zero(2,1);
+	**mEdq_t = Matrix::Zero(2,1);
 	mEdq_t_pred = Matrix::Zero(2,1);
 	mEdq_t_corr = Matrix::Zero(2,1);
 	mdEdq_t = Matrix::Zero(2,1);
@@ -33,9 +32,8 @@ DP::Ph1::SynchronGenerator4OrderIter::SynchronGenerator4OrderIter
 	mShiftVector = Matrix::Zero(3,1);
 	mShiftVector << Complex(1., 0), SHIFT_TO_PHASE_B, SHIFT_TO_PHASE_C;
 
-    // Register attributes
-	addAttribute<Int>("NIterations", &mNumIter , Flags::read);
-	addAttribute<Matrix>("Edq0_t", &mEdq_t, Flags::read);
+	// Initialize attributes
+	mNumIter = Attribute<Int>::create("NIterations", mAttributes, 0);
 }
 
 DP::Ph1::SynchronGenerator4OrderIter::SynchronGenerator4OrderIter
@@ -58,8 +56,8 @@ void DP::Ph1::SynchronGenerator4OrderIter::specificInitialization() {
 	calculateStateMatrix();
 
 	// initial voltage behind the transient reactance in the dq0 reference frame
-	mEdq_t(0,0) = mVdq(0,0) - mIdq(1,0) * mLq_t;
-	mEdq_t(1,0) = mVdq(1,0) + mIdq(0,0) * mLd_t;
+	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
 	// initialize transformation matrix dp->dq
 	mDpToDq = Matrix::Zero(1,2);
@@ -72,8 +70,8 @@ void DP::Ph1::SynchronGenerator4OrderIter::specificInitialization() {
 		"\nTolerance: {:f}"
 		"\n--- Model specific initialization finished ---",
 
-		mEdq_t(0,0),
-		mEdq_t(1,0),
+		(**mEdq_t)(0,0),
+		(**mEdq_t)(1,0),
 		mMaxIter,
 		mTolerance
 	);
@@ -109,113 +107,111 @@ void DP::Ph1::SynchronGenerator4OrderIter::stepInPerUnit() {
 
 	//predict mechanical variables at t=k+1
 	if (mSimTime>0.0) {
-		mElecTorque = mVdq(0,0) * mIdq(0,0) + mVdq(1,0) * mIdq(1,0);
-		mdOmMech = 1 / (2.* mH) * (mMechTorque - mElecTorque);
-		mOmMech_pred = mOmMech + mTimeStep * mdOmMech;
+		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
+		mdOmMech = 1 / (2.* mH) * (**mMechTorque - **mElecTorque);
+		mOmMech_pred = **mOmMech + mTimeStep * mdOmMech;
 		mdDelta = (mOmMech_pred - 1.) * mBase_OmMech;
-		mDelta_pred = mDelta + mTimeStep * mdDelta;
-		mThetaMech_pred = mThetaMech + mTimeStep * mOmMech_pred * mBase_OmMech;
+		mDelta_pred = **mDelta + mTimeStep * mdDelta;
+		mThetaMech_pred = **mThetaMech + mTimeStep * mOmMech_pred * mBase_OmMech;
 	} else {
 		mdOmMech = 0;
-		mOmMech_pred = mOmMech;
+		mOmMech_pred = **mOmMech;
 		mdDelta = 0;
-		mDelta_pred = mDelta;
-		mThetaMech_pred = mThetaMech;
+		mDelta_pred = **mDelta;
+		mThetaMech_pred = **mThetaMech;
 	}
 
 	//predict voltage behind transient reactance 
 	if (mVoltageForm)
-		mdEdq_t = mA * mEdq_t + mB * mVdq + mC;
+		mdEdq_t = mA * **mEdq_t + mB * **mVdq + mC;
 	else
-		mdEdq_t = mA * mEdq_t + mB * mIdq + mC;
-	mEdq_t_pred = mEdq_t + mTimeStep * mdEdq_t;
+		mdEdq_t = mA * **mEdq_t + mB * **mIdq + mC;
+	mEdq_t_pred = **mEdq_t + mTimeStep * mdEdq_t;
 
 	// predict armature currents for at t=k+1
-	mIdq(0,0) = (mEdq_t_pred(1,0) - mVdq(1,0) ) / mLd_t;
-	mIdq(1,0) = (mVdq(0,0) - mEdq_t_pred(0,0) ) / mLq_t;
+	(**mIdq)(0,0) = (mEdq_t_pred(1,0) - (**mVdq)(1,0) ) / mLd_t;
+	(**mIdq)(1,0) = ((**mVdq)(0,0) - mEdq_t_pred(0,0) ) / mLq_t;
 
 	// convert currents into the abc reference frame
 	mDpToDq(0,0) = Complex(cos(mThetaMech_pred - mBase_OmMech * mSimTime), sin(mThetaMech_pred - mBase_OmMech * mSimTime));
 	mDpToDq(0,1) = -Complex(cos(mThetaMech_pred - mBase_OmMech * mSimTime - PI/2.), sin(mThetaMech_pred - mBase_OmMech * mSimTime - PI/2.));
-	mIntfCurrent(0,0) = (mDpToDq * mIdq)(0,0) * mBase_I_RMS;
+	(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
 }
 
 void DP::Ph1::SynchronGenerator4OrderIter::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, matrixNodeIndex(0,0), mIntfCurrent(0, 0));
+	Math::setVectorElement(rightVector, matrixNodeIndex(0,0), (**mIntfCurrent)(0, 0));
 }
 
 void DP::Ph1::SynchronGenerator4OrderIter::correctorStep() {
 	// corrector step (trapezoidal rule)
 
-	mNumIter = mNumIter + 1;
-	if (mNumIter==1)
+	**mNumIter = **mNumIter + 1;
+	if (**mNumIter == 1)
 		return;
 
 	//predict mechanical variables
 	if (mSimTime>0.0) {
-		mElecTorque_corr = mVdq(0,0) * mIdq(0,0) + mVdq(1,0) * mIdq(1,0);
-		mdOmMech_corr = 1 / (2.* mH) * (mMechTorque - mElecTorque_corr);
-		mOmMech_corr = mOmMech + mTimeStep / 2. * (mdOmMech + mdOmMech_corr);
+		mElecTorque_corr = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
+		mdOmMech_corr = 1 / (2.* mH) * (**mMechTorque - mElecTorque_corr);
+		mOmMech_corr = **mOmMech + mTimeStep / 2. * (mdOmMech + mdOmMech_corr);
 		mdDelta_corr = (mOmMech_corr - 1.) * mBase_OmMech;
-		mDelta_corr = mDelta + mTimeStep / 2. * (mdDelta + mdDelta_corr);
-		mThetaMech_corr = mThetaMech + mTimeStep / 2. *(mOmMech + mOmMech_corr) * mBase_OmMech;
+		mDelta_corr = **mDelta + mTimeStep / 2. * (mdDelta + mdDelta_corr);
+		mThetaMech_corr = **mThetaMech + mTimeStep / 2. *(**mOmMech + mOmMech_corr) * mBase_OmMech;
 	} else {
-		mElecTorque_corr = mElecTorque;
+		mElecTorque_corr = **mElecTorque;
 		mdOmMech_corr = 0;
-		mOmMech_corr = mOmMech;
+		mOmMech_corr = **mOmMech;
 		mdDelta_corr = 0;
-		mDelta_corr = mDelta;
-		mThetaMech_corr = mThetaMech;
+		mDelta_corr = **mDelta;
+		mThetaMech_corr = **mThetaMech;
 	}
 
 	//predict voltage behind transient reactance
 	if (mVoltageForm)
-		mdEdq_t_corr = mA * mEdq_t + mB * mVdq + mC;
+		mdEdq_t_corr = mA * **mEdq_t + mB * **mVdq + mC;
 	else
-		mdEdq_t_corr = mA * mEdq_t + mB * mIdq + mC;
-	mEdq_t_corr = mEdq_t + mTimeStep / 2 * (mdEdq_t + mdEdq_t_corr);
+		mdEdq_t_corr = mA * **mEdq_t + mB * **mIdq + mC;
+	mEdq_t_corr = **mEdq_t + mTimeStep / 2 * (mdEdq_t + mdEdq_t_corr);
 
 	// armature currents for at t=k+1
-	mIdq(0,0) = (mEdq_t_corr(1,0) - mVdq(1,0) ) / mLd_t;
-	mIdq(1,0) = (mVdq(0,0) - mEdq_t_corr(0,0) ) / mLq_t;
+	(**mIdq)(0,0) = (mEdq_t_corr(1,0) - (**mVdq)(1,0) ) / mLd_t;
+	(**mIdq)(1,0) = ((**mVdq)(0,0) - mEdq_t_corr(0,0) ) / mLq_t;
 
 	// convert currents into the abc reference frame
 	mDpToDq(0,0) = Complex(cos(mThetaMech_corr - mBase_OmMech * mSimTime), sin(mThetaMech_corr - mBase_OmMech * mSimTime));
 	mDpToDq(0,1) = -Complex(cos(mThetaMech_corr - mBase_OmMech * mSimTime - PI/2.), sin(mThetaMech_corr - mBase_OmMech * mSimTime - PI/2.));
-	mIntfCurrent(0,0) = (mDpToDq * mIdq)(0,0) * mBase_I_RMS;
+	(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
 
 	// stamp currents
-	mnaApplyRightSideVectorStamp(mRightVector);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::SynchronGenerator4OrderIter::updateVoltage(const Matrix& leftVector) {
-	mVdq_prev = mVdq;
-	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+	mVdq_prev = **mVdq;
+	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	
 	// convert armature voltage into dq reference frame
-	MatrixComp Vabc_ = mIntfVoltage(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
+	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
 	Matrix Vabc = Matrix(3,1);
 	Vabc << Vabc_(0,0).real(), Vabc_(1,0).real(), Vabc_(2,0).real();
-	if (mNumIter==0) {
-		mVdq = parkTransform(mThetaMech_pred, Vabc) / mBase_V_RMS;
+	if (**mNumIter == 0) {
+		**mVdq = parkTransform(mThetaMech_pred, Vabc) / mBase_V_RMS;
 	} else {
-		mVdq = parkTransform(mThetaMech_corr, Vabc) / mBase_V_RMS;
+		**mVdq = parkTransform(mThetaMech_corr, Vabc) / mBase_V_RMS;
 	}
 }
 
 bool DP::Ph1::SynchronGenerator4OrderIter::checkVoltageDifference() {
-	if (mNumIter==1) {
+	if (**mNumIter == 0) {
 		// if no corrector step has been performed yet
-		//mNumIter = 1;
 		return true;
 	}
 
-	Matrix voltageDifference = mVdq - mVdq_prev;
+	Matrix voltageDifference = **mVdq - mVdq_prev;
 	if (Math::abs(voltageDifference(0,0)) > mTolerance || Math::abs(voltageDifference(1,0)) > mTolerance) {
-		if (mNumIter > mMaxIter) {
+		if (**mNumIter == mMaxIter) {
 			return false;
 		} else {
-			//mNumIter = mNumIter + 1;
 			return true;
 		}
 	} else {
@@ -226,10 +222,10 @@ bool DP::Ph1::SynchronGenerator4OrderIter::checkVoltageDifference() {
 
 void DP::Ph1::SynchronGenerator4OrderIter::mnaPostStep(const Matrix& leftVector) {
 	// update variables
-	mEdq_t = mEdq_t_corr;
-	mOmMech = mOmMech_corr;
-	mThetaMech = mThetaMech_corr;
-	mDelta = mDelta_corr;
+	**mEdq_t = mEdq_t_corr;
+	**mOmMech = mOmMech_corr;
+	**mThetaMech = mThetaMech_corr;
+	**mDelta = mDelta_corr;
 }
 
 Matrix DP::Ph1::SynchronGenerator4OrderIter::parkTransform(Real theta, const Matrix& abcVector) {
