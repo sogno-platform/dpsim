@@ -9,7 +9,7 @@
 #pragma once
 
 #include <dpsim-models/Solver/MNASyncGenInterface.h>
-#include <dpsim-models/DP/Base/Base_ReducedOrderSynchronGenerator.h>
+#include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 
 namespace CPS {
 namespace DP {
@@ -33,7 +33,7 @@ namespace Ph1 {
 		/// corrected generator current at time k
 		Matrix mIdq_corr;
 		/// voltage behind the transient impedance at time k-1
-		Matrix mEdq;
+		const Attribute<Matrix>::Ptr mEdq_t;
 		/// predicted voltage behind the transient and subtransient impedance at time k+1
 		Matrix mEdq_pred;
 		/// corrected voltage behind the transient and subtransient impedance at time k+1
@@ -73,11 +73,11 @@ namespace Ph1 {
 
 	public:
 		///
-		SynchronGenerator6OrderIter(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator6OrderIter(const String& uid, const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator6OrderIter(String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator6OrderIter(const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(const String& name);
 
 		// #### General Functions ####
 		///

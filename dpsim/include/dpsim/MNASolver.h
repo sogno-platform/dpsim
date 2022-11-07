@@ -17,7 +17,6 @@
 #include <dpsim/Config.h>
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
-<<<<<<< HEAD:dpsim/include/dpsim/MNASolver.h
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>

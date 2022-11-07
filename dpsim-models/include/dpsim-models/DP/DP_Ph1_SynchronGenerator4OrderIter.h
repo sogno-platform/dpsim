@@ -22,6 +22,8 @@ namespace Ph1 {
 		public MNASyncGenInterface,
 		public SharedFactory<SynchronGenerator4OrderIter> {
 	protected:
+		using MNASyncGenInterface::mNumIter;
+		
 		/// sim flags
 		bool mVoltageForm;
 
@@ -29,7 +31,7 @@ namespace Ph1 {
 		///
 		Matrix mVdq_prev;
 		/// previous voltage behind the transient impedance (p.u.)
-		Matrix mEdq_t;
+		const Attribute<Matrix>::Ptr mEdq_t;
 		Matrix mEdq_t_pred;
 		Matrix mEdq_t_corr;
 		/// derivative voltage behind the transient impedance (p.u.)

@@ -22,8 +22,7 @@ namespace Ph3 {
 		public MNASyncGenInterface,
 		public SharedFactory<SynchronGenerator4OrderIter> {
 	protected:
-		///
-		Int mNumIterations2;
+
 
 		/// sim flags
 		bool mVoltageForm;
@@ -32,7 +31,7 @@ namespace Ph3 {
 		///
 		Matrix mVdq0_prev;
 		/// previous voltage behind the transient impedance (p.u.)
-		Matrix mEdq0_t;
+		const Attribute<Matrix>::Ptr mEdq0_t;
 		Matrix mEdq0_t_pred;
 		Matrix mEdq0_t_corr;
 		/// derivative voltage behind the transient impedance (p.u.)
@@ -64,11 +63,11 @@ namespace Ph3 {
 
 	public:
 		///
-		SynchronGenerator4OrderIter(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderIter(const String& uid, const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator4OrderIter(String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderIter(const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SimPowerComp<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(const String& name);
 
 		// #### General Functions ####
 		///

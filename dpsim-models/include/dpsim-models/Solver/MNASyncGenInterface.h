@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <cps/AttributeList.h>
-#include <cps/Config.h>
-#include <cps/Definitions.h>
+#include <dpsim-models/AttributeList.h>
+#include <dpsim-models/Config.h>
+#include <dpsim-models/Definitions.h>
 
 namespace CPS {
 	/// Interface to be used by synchronous generators
@@ -33,7 +33,7 @@ namespace CPS {
 		void setTolerance(Real Tolerance) {mTolerance = Tolerance;}	
 
 		///
-		Int mNumIter = 0;
+		Attribute<Int>::Ptr mNumIter;
 		///
 		Int mMaxIter = 25;
 		///
