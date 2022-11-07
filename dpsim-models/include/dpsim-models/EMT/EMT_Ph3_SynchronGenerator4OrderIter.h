@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <cps/Solver/MNASyncGenInterface.h>
-#include <cps/Base/Base_ReducedOrderSynchronGenerator.h>
+#include <dpsim-models/Solver/MNASyncGenInterface.h>
+#include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 
 namespace CPS {
 namespace EMT {

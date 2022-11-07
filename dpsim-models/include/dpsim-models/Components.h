@@ -61,6 +61,7 @@
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderIter.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6aOrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6bOrderVBR.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderIter.h>
 #include <dpsim-models/DP/DP_Ph1_Inverter.h>
 #include <dpsim-models/DP/DP_Ph1_NetworkInjection.h>
 #include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
