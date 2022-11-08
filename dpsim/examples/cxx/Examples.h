@@ -434,7 +434,7 @@ namespace Three_bus_cfg{
        
         // Initialization parameters
         Real initActivePower_G1 = 0.3386e6;
-        Real initReactivePower_G2= 0.3222e6;
+        Real initReactivePower_G1= 0.3222e6;
         Real setPointVoltage_G1=nomPhPhVoltRMS_G1;
 
         //-----------Generator 2 (bus2)-----------//
