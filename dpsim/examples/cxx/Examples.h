@@ -419,7 +419,7 @@ namespace ThreeBus {
     };
 }
 
-namespace Three_bus_sim_cfg{
+namespace Three_bus_cfg{
     struct ScenarioConfig {
 
         //-----------Network-----------//
@@ -444,7 +444,7 @@ namespace Three_bus_sim_cfg{
        
         // Initialization parameters
         Real initActivePower_G2 = 0.2222e6;
-        Real initReactivePower_G2=-0.0285e6;
+        Real initReactivePower_G2=(-1)*0.0285e6;
         Real setPointVoltage_G2=nomPhPhVoltRMS_G2;
 
         //-----------Transformers-----------//
