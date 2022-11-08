@@ -1,0 +1,83 @@
+#include <DPsim.h>
+#include "../Examples.h"
+
+using namespace DPsim;
+using namespace CPS;
+using namespace CIM::Examples::Grids::Three_Bus_sim_cfg;
+
+ScenarioConfig Three_Bus_sim_cfg;
+
+void Three_bus_sim(String simName, Real timeStep, Real finalTime, Real cmdInertia_G1, Real cmdInertia_G2, Real cmdDamping_G1, Real cmdDamping_G2) {
+	// ----- POWERFLOW FOR INITIALIZATION -----
+	Real timeStepPF = finalTime;
+	Real finalTimePF = finalTime+timeStepPF;
+	String simNamePF = simName + "_PF";
+	Logger::setLogDir("logs/" + simNamePF);
+
+	//Components
+    //nodes
+	auto n1_PF = SimNode<Complex>::make("n1", PhaseType::Single);
+	auto n2_PF = SimNode<Complex>::make("n2", PhaseType::Single);
+	auto n3_PF = SimNode<Complex>::make("n3", PhaseType::Single);
+
+	//injection
+    //configuration(Synchronous generator 1)
+	auto gen1_PF = SP::Ph1::SynchronGenerator::make("Generator_1", Logger::Level::debug);
+	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
+	gen1_PF->setParameters(Three_Bus_sim_cfg.nomPower_G1, Three_Bus_sim_cfg.nomPhPhVoltRMS_G1, Three_Bus_sim_cfg.initActivePower_G1, Three_Bus_sim_cfg.setPointVoltage_G1*Three_Bus_sim_cfg.t1_ratio, PowerflowBusType::VD,Three_bus_sim_cfg.initReactivePower_G1);
+	gen1_PF->setBaseVoltage(Three_Bus_sim_cfg.Vnom);
+
+	//Synchronous generator 2
+	auto gen2_PF = SP::Ph1::SynchronGenerator::make("Generator_2", Logger::Level::debug);
+	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
+	gen2_PF->setParameters(Three_Bus_sim_cfg.nomPower_G2, Three_Bus_sim_cfg.nomPhPhVoltRMS_G2, Three_Bus_sim_cfg.initActivePower_G2, Three_Bus_sim_cfg.setPointVoltage_G2*Three_Bus_sim_cfg.t2_ratio, PowerflowBusType::PV,Three_bus_sim_cfg.initReactivePower_G2);
+	gen2_PF->setBaseVoltage(Three_Bus_sim_cfg.Vnom);
+
+	//use Shunt as Load for powerflow
+	auto load_PF = SP::Ph1::Shunt::make("Load", Logger::Level::debug);
+	load_PF->setParameters(Three_Bus_sim_cfg.activePower_L / std::pow(Three_Bus_sim_cfg.Vnom, 2), - Three_Bus_sim_cfg.reactivePower_L / std::pow(Three_Bus_sim_cfg.Vnom, 2));
+	load_PF->setBaseVoltage(Three_Bus_sim_cfg.Vnom);
+
+	//Line12
+	auto line_pf_1 = SP::Ph1::PiLine::make("PiLine_13", Logger::Level::debug);
+	line_pf_1->setParameters(Three_Bus_sim_cfg.lineResistance, Three_Bus_sim_cfg.lineInductance, Three_Bus_sim_cfg.lineCapacitance);
+	line_pf_1->setBaseVoltage(Three_Bus_sim_cfg.Vnom);
+	//Line13
+	auto line_pf_2 = SP::Ph1::PiLine::make("PiLine_31", Logger::Level::debug);
+	line_pf_2->setParameters(Three_Bus_sim_cfg.lineResistance, Three_Bus_sim_cfg.lineInductance, Three_Bus_sim_cfg.lineCapacitance);
+	line_pf_2->setBaseVoltage(Three_Bus_sim_cfg.Vnom);
+	//Line23
+	auto line_pf_3 = SP::Ph1::PiLine::make("PiLine_23", Logger::Level::debug);
+	line_pf_3->setParameters(Three_Bus_sim_cfg.lineResistance, 2*Three_Bus_sim_cfg.lineInductance, 2*Three_Bus_sim_cfg.lineCapacitance);
+	line_pf_3->setBaseVoltage(Three_Bus_sim_cfg.Vnom);
+
+	// Topology
+	gen1_PF->connect({ n1_PF });
+	gen2_PF->connect({ n2_PF });
+	load_PF->connect({ n3_PF });
+	line_pf_1->connect({ n1_PF, n2_PF });
+	line_pf_2->connect({ n1_PF, n3_PF });
+	line_pf_3->connect({ n2_PF, n3_PF });
+	auto systemPF = SystemTopology(50,
+			SystemNodeList{n1_PF, n2_PF, n3_PF},
+			SystemComponentList{gen1_PF, gen2_PF, line_pf_1, line_pf_2, line_pf_3, load_PF});
+
+	// Logging
+	auto loggerPF = DataLogger::make(simNamePF);
+	loggerPF->logAttribute("v_bus1", n1_PF->attribute("v"));
+	loggerPF->logAttribute("v_bus2", n2_PF->attribute("v"));
+	loggerPF->logAttribute("v_bus3", n3_PF->attribute("v"));
+	loggerPF->logAttribute("i13",'i_intf',line_pf_1);
+	loggerPF->logAttribute("i23",'i_intf',line_pf_3);
+
+	// Simulation
+	Simulation simPF(simNamePF, Logger::Level::debug);
+	simPF.setSystem(systemPF);
+	simPF.setTimeStep(timeStepPF);
+	simPF.setFinalTime(finalTimePF);
+	simPF.setDomain(Domain::SP);
+	simPF.setSolverType(Solver::Type::NRP);
+	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	simPF.doInitFromNodesAndTerminals(false);
+	simPF.addLogger(loggerPF);
+	simPF.run();
