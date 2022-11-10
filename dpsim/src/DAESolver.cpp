@@ -7,18 +7,18 @@
  *********************************************************************************/
 
 #include <dpsim/DAESolver.h>
-#include <dpsim-models/SimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
 
 using namespace DPsim;
 using namespace CPS;
 
-//#define NVECTOR_DATA(vec) NV_DATA_S (vec) // Returns pointer to the first element of array vec
+static int check_retval(void *returnvalue, const char *funcname, int opt);
 
-DAESolver::DAESolver(String name, const CPS::SystemTopology &system, Real dt, Real t0) :
-	Solver(name, CPS::Logger::Level::info),
-	mSystem(system),
-	mTimestep(dt) {
+template <typename VarType>
+DAESolver<VarType>::DAESolver(const String& name, CPS::SystemTopology system, 
+    Real dt, Real t0, CPS::Logger::Level logLevel, Real relTol) :
+	Solver(name, logLevel), mSystem(system), mTimestep(dt) {
+
+    mInitTime=t0;
 
     // Defines offset vector of the residual which is composed as follows:
     // mOffset[0] = # nodal voltage equations
@@ -27,226 +27,582 @@ DAESolver::DAESolver(String name, const CPS::SystemTopology &system, Real dt, Re
     mOffsets.push_back(0);
     mOffsets.push_back(0);
 
-    // Set initial values of all required variables and create IDA solver environment
-    for(IdentifiedObject::Ptr comp : mSystem.mComponents) {
-        auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
-        std::cout <<"Added Comp"<<std::endl;
-        if (!daeComp)
-            throw CPS::Exception(); // Component does not support the DAE solver interface
+    // Set number of equations to zero
+    mNEQ=0;
 
-        mComponents.push_back(comp);
-    }
-
+    mSLog->info("-- Process system nodes");
     for (auto baseNode : mSystem.mNodes) {
         // Add nodes to the list and ignore ground nodes.
         if (!baseNode->isGround()) {
-            auto node = std::dynamic_pointer_cast<CPS::SimNode<Complex>>(baseNode);
+            auto node = std::dynamic_pointer_cast<CPS::SimNode<VarType>>(baseNode);
+            if (!node) 
+                throw CPS::Exception(); 
+            
+            if (node->phaseType() == PhaseType::Single) {
+                mNEQ += 1;
+            } else if (node->phaseType() == PhaseType::ABC) {
+                mNEQ += 3;
+            }
             mNodes.push_back(node);
-            std::cout <<"Added Node"<<std::endl;
+            mSLog->info("Added node {:s} to state vector", node->name());
         }
     }
 
-    mNEQ = mComponents.size() + (2 * mNodes.size());
-    std::cout<<std::endl;
-    std::cout<<"Number of Eqn. "<<mNEQ<<std::endl;
-
-    std::cout <<"Processing Nodes"<<std::endl;
-    UInt matrixNodeIndexIdx = 0;
-
-    for (UInt idx = 0; idx < mNodes.size(); ++idx) {
-
-        mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
-        ++matrixNodeIndexIdx;
+    UInt matrixNodeIndex = 0;
+    for (UInt idx = 0; idx < mNodes.size(); idx++) {
+        mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndex);
+        ++matrixNodeIndex;
         if (mNodes[idx]->phaseType() == PhaseType::ABC) {
-            mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
-            ++matrixNodeIndexIdx;
-            mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
-            ++matrixNodeIndexIdx;
+            mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndex);
+            ++matrixNodeIndex;
+            mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndex);
+            ++matrixNodeIndex;
         }
     }
 
-    std::cout <<"Nodes Setup Done"<<std::endl;
-    initialize(t0);
+    mSLog->info("");
+    mSLog->flush();
 }
 
-void DAESolver::initialize(Real t0) {
-    int ret;
-    int counter = 0;
-    realtype *sval = NULL, *s_dtval = NULL;
-    std::cout << "Init states" << std::endl;
 
-    /* Create SUNDIALS context */
-    ret = SUNContext_Create(NULL, &mSunctx);
-    //if (check_retval(&ret, "SUNContext_Create", 1)) return(1);
-
-    // Allocate state vectors
-    state = N_VNew_Serial(mNEQ, mSunctx);
-    //if(check_retval((void *)state, "N_VNew_Serial", 0)) return(1);
-    dstate_dt = N_VNew_Serial(mNEQ, mSunctx);
-    //if(check_retval((void *)dstate_dt, "N_VNew_Serial", 0)) return(1);
-
-    std::cout << "State Init done" << std::endl;
-    std::cout << "Pointer Init" << std::endl;
-    sval = N_VGetArrayPointer(state);
-    s_dtval = N_VGetArrayPointer(dstate_dt);
-    std::cout << "Pointer Init done" << std::endl << std::endl;
-
-    for (auto node : mNodes) {
-        // Initialize nodal voltages of state vector
-        Real tempVolt;
-        PhaseType phase = node->phaseType();
-        tempVolt = std::real(node->initialSingleVoltage(phase));
-
-        std::cout << "Node Volt " << counter << ": " << tempVolt << std::endl;
-        sval[counter++] = tempVolt;
-    }
-
-
-
-    for (IdentifiedObject::Ptr comp : mComponents) {
-        auto emtComp = std::dynamic_pointer_cast<SimPowerComp<Complex> >(comp);
-        if (emtComp) {
-            emtComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);// Set initial values of all components
+template <typename VarType>
+void DAESolver<VarType>::initializeComponents() {
+    mSLog->info("-- Initialize components from power flow");
+    for(IdentifiedObject::Ptr comp : mSystem.mComponents) {
+        // Initialize components and add component eqs. to state vector
+        auto emtComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
+        if (!emtComp) {
+            throw CPS::Exception();
+        }
+        // Set initial values of all components
+        emtComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
+        auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
+        if (!daeComp) {
+            throw CPS::Exception();
         }
 
-        auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
-        if (!daeComp)
-            throw CPS::Exception();
-
-        // Initialize component values of state vector
-        sval[counter++] = std::real(daeComp->daeInitialize());
-        std::cout << "Comp Volt " << counter-1 << ": " << sval[counter-1]<< std::endl;
-//		sval[counter++] = component inductance;
-
+        mDAEComponents.push_back(daeComp);
 
         // Register residual functions of components
-
-
         mResidualFunctions.push_back(
-                [daeComp](double ttime, const double state[], const double dstate_dt[], double resid[],
-                          std::vector<int> &off) {
-                    daeComp->daeResidual(ttime, state, dstate_dt, resid, off);
-                });
+                [daeComp](double sim_time, const double state[], const double dstate_dt[], 
+                            double resid[], std::vector<int> &off) {
+                                daeComp->daeResidual(sim_time, state, dstate_dt, resid, off);
+                            });
+        mNEQ += daeComp->getNumberOfStateVariables();
+        mSLog->info("Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
+        mSLog->flush();
     }
-
-    for (int j = 0; j < (int) mNodes.size(); j++) {
-        // Initialize nodal current equations
-        sval[counter++] = 0; //TODO: check for correctness
-        std::cout << "Nodal Equation value " << sval[counter - 1] << std::endl;
-    }
-
-    std::cout << std::endl;
-
-    // Set initial values for state derivative for now all equal to 0
-    for (int i = 0; i < (mNEQ); i++) {
-        s_dtval[i] = 0; // TODO: add derivative calculation
-        std::cout << "derivative " << i << ": " << s_dtval[i] << std::endl;
-    }
-
-    std::cout << std::endl;
-
-    std::cout << "Init Tolerances" << std::endl;
-    rtol = RCONST(1.0e-10); // Set relative tolerance
-    abstol = RCONST(1.0e-4); // Set absolute error
-    std::cout << "Init Tolerances done" << std::endl;
-
-    mem = IDACreate(mSunctx);
-    if (mem != NULL) std::cout << "Memory Ok" << std::endl;
-    std::cout << "Define Userdata" << std::endl;
-    // This passes the solver instance as the user_data argument to the residual functions
-    ret = IDASetUserData(mem, this);
-//	if (check_flag(&ret, "IDASetUserData", 1)) {
-//		throw CPS::Exception();
-//	}
-    std::cout << "Call IDAInit" << std::endl;
-
-    ret = IDAInit(mem, &DAESolver::residualFunctionWrapper, t0, state, dstate_dt);
-//	if (check_flag(&ret, "IDAInit", 1)) {
-//		throw CPS::Exception();
-//	}
-    std::cout << "Call IDATolerances" << std::endl;
-    ret = IDASStolerances(mem, rtol, abstol);
-// 	if (check_flag(&ret, "IDASStolerances", 1)) {
-//		throw CPS::Exception();
-//	}
-    std::cout << "Call IDA Solver Stuff" << std::endl;
-    // Allocate and connect Matrix A and solver LS to IDA
-    A = SUNDenseMatrix(mNEQ, mNEQ,mSunctx);
-    LS = SUNLinSol_Dense(state, A, mSunctx);
-    ret = IDASetLinearSolver(mem, LS, A);
-
-    //Optional IDA input functions
-    //ret = IDASetMaxNumSteps(mem, -1);  //Max. number of timesteps until tout (-1 = unlimited)
-    //ret = IDASetMaxConvFails(mem, 100); //Max. number of convergence failures at one step
-    (void) ret;
 }
 
-int DAESolver::residualFunctionWrapper(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
+template <typename VarType>
+void DAESolver<VarType>::initialize() {
+    mSLog->info("---- Start DAE initialization ----");
+    mSLog->info("Number of Eqn.: {}", mNEQ);
+    
+    /* Create SUNDIALS context */
+    auto ret = SUNContext_Create(NULL, &mSunctx);
+    if (check_retval(&ret, "SUNContext_Create", 1)) throw CPS::Exception();
+
+    int counter = 0;
+    realtype *sval = NULL;
+    realtype *s_dtval = NULL;
+    realtype *state_var_types = NULL;
+    realtype *absolute_tolerances = NULL;
+    
+    // creates and allocates memory for state vector
+    mStateVector = N_VNew_Serial(mNEQ, mSunctx);
+    if(check_retval((void *)mStateVector, "N_VNew_Serial", 0)) throw CPS::Exception();
+    
+    // creates and allocates memory for derivatives of state vector
+    mDerivativeStateVector = N_VNew_Serial(mNEQ, mSunctx);
+    if(check_retval((void *)mDerivativeStateVector, "N_VNew_Serial", 0)) throw CPS::Exception();
+
+    // creates and allocates memory for vector of variable types (differential or algebraic)
+    mStateIDsVector = N_VNew_Serial(mNEQ, mSunctx);
+    if(check_retval((void *)mStateIDsVector, "N_VNew_Serial", 0)) throw CPS::Exception();
+
+    // creates and allocates memory for vector of absolute tolerances
+    mAbsoluteTolerances = N_VNew_Serial(mNEQ, mSunctx);
+    if(check_retval((void *)mAbsoluteTolerances, "N_VNew_Serial", 0)) throw CPS::Exception();
+
+    // creates and allocates memory for vector of error weights
+    mErrorWeights = N_VNew_Serial(mNEQ, mSunctx);
+    if(check_retval((void *)mErrorWeights, "N_VNew_Serial", 0)) throw CPS::Exception();
+    
+    // creates and allocates memory for vector of estimated local errors
+    mEstLocalErrors = N_VNew_Serial(mNEQ, mSunctx);
+    if(check_retval((void *)mEstLocalErrors, "N_VNew_Serial", 0)) throw CPS::Exception();
+
+    // capturing a returned array/pointer
+    sval  = N_VGetArrayPointer(mStateVector);
+    s_dtval = N_VGetArrayPointer_Serial(mDerivativeStateVector);
+    state_var_types = N_VGetArrayPointer_Serial(mStateIDsVector);
+    absolute_tolerances = N_VGetArrayPointer_Serial(mAbsoluteTolerances);
+   
+    // Initialize nodal voltages of state vector
+    for (auto node : mNodes) {
+        if (node->phaseType() == PhaseType::Single) {
+	        Real omega = 2 * PI * mSystem.mSystemFrequency;
+            Complex initVoltage = node->initialSingleVoltage(PhaseType::Single);
+            sval[counter] = std::real(node->initialSingleVoltage(PhaseType::Single));
+            s_dtval[counter] = -omega*initVoltage.imag();
+            node->setVoltage(sval[counter], PhaseType::Single);
+            node->setdVoltage(s_dtval[counter]);
+            state_var_types[counter] = (Real)(0.0);	     //set node variable as algebraic variable
+            absolute_tolerances[counter] = (Real)(node->daeGetAbsoluteTolerance()); 
+            mSLog->info(
+		        "Added node '{:s}' to state vector, init voltage = {:f}V"
+                "\nAdded derivative of the voltage node of '{:s}' to derivative state vector, initial value = {:f}"
+                "\nAbsolute_tolerances of node '{:s}' = {:f}",
+                node->name(), sval[counter], node->name(), s_dtval[counter], node->name(), absolute_tolerances[counter]
+            );
+            counter++;
+        }
+        else if (node->phaseType() == PhaseType::ABC) {
+            Real frequency = mSystem.mSystemFrequency;
+	        Real omega = 2 * PI * frequency;
+           
+            Complex initVolt_phase_A = RMS3PH_TO_PEAK1PH*node->initialSingleVoltage(PhaseType::A);
+            Complex initVolt_phase_B = RMS3PH_TO_PEAK1PH*node->initialSingleVoltage(PhaseType::B);
+            Complex initVolt_phase_C = RMS3PH_TO_PEAK1PH*node->initialSingleVoltage(PhaseType::C);
+
+            sval[counter] = std::real(initVolt_phase_A);
+            s_dtval[counter] = -omega*initVolt_phase_A.imag();
+            node->setVoltage(sval[counter],PhaseType::A);
+            node->setdVoltage(s_dtval[counter], PhaseType::A);
+            state_var_types[counter] = (Real)(0.0);	        //set node variable as differential variable
+            absolute_tolerances[counter] = (Real)(node->daeGetAbsoluteTolerance()); ;    
+            mSLog->info(
+		        "Added node '{:s}'-phase_A to state vector, init voltage = {:f}V"
+                "\nAdded derivative of the voltage node of '{:s}'-phase_A to derivative state vector, initial value = {:f}"
+                "\nAbsolute_tolerances = {:f}",
+                node->name(), sval[counter], node->name(), s_dtval[counter], absolute_tolerances[counter]
+            );
+            counter++;
+
+            sval[counter] = std::real(initVolt_phase_B);
+            s_dtval[counter] = -omega*initVolt_phase_B.imag();
+            node->setVoltage(sval[counter],PhaseType::B);
+            node->setdVoltage(s_dtval[counter], PhaseType::B);
+            state_var_types[counter] = (Real)(0.0);	        //set node variable as differential variable
+            absolute_tolerances[counter] = (Real)(node->daeGetAbsoluteTolerance()); 
+            mSLog->info(
+		        "Added node '{:s}'-phase_B to state vector, init voltage = {:f}V"
+                "\nAdded derivative of the voltage node of '{:s}'-phase_B to derivative state vector, initial value = {:f}"
+                "\nAbsolute_tolerances = {:f}",
+                node->name(), sval[counter], node->name(), s_dtval[counter], absolute_tolerances[counter]
+            );
+            counter++;
+
+            sval[counter] = std::real(initVolt_phase_C);
+            s_dtval[counter] = -omega*initVolt_phase_C.imag();
+            node->setVoltage(sval[counter],PhaseType::C);
+            node->setdVoltage(s_dtval[counter], PhaseType::C);
+            state_var_types[counter] = (Real)(0.0);	        //set node variable as differential variable
+            absolute_tolerances[counter] = (Real)(node->daeGetAbsoluteTolerance()); 
+            mSLog->info(
+		        "Added node '{:s}'-phase_C to state vector, init voltage = {:f}V"
+                "\nAdded derivative of the voltage node of '{:s}'-phase_C to derivative state vector, initial value = {:f}"
+                "\nAbsolute_tolerances of node = {:f}",
+                node->name(), sval[counter], node->name(), s_dtval[counter], absolute_tolerances[counter]
+            );
+            counter++;
+        }
+    }
+
+    for (auto daeComp : mDAEComponents) {
+        // Initialize component voltages of state vector
+        daeComp->daeInitialize(mInitTime, sval, s_dtval, 
+            absolute_tolerances, state_var_types, counter);
+    }
+
+    // creates the IDA solver memory block
+    mSLog->info("");
+    mSLog->info("Creates the IDA solver memory block");
+    mIDAMemoryBlock = IDACreate(mSunctx);
+    if (mIDAMemoryBlock == NULL)  {
+        std::cout << "Error: IDACreate() returns NULL" << std::endl;
+        throw CPS::Exception();
+    }
+    
+    // This passes the solver instance as the user_data argument to the residual functions
+    mSLog->info("Define Userdata");
+    ret = IDASetUserData(mIDAMemoryBlock, this);
+	if (check_retval(&ret, "IDASetUserData", 1)) throw CPS::Exception();
+
+    //
+    mSLog->info("Call IDAInit");
+    ret = IDAInit(mIDAMemoryBlock, &DAESolver::residualFunctionWrapper, mInitTime, 
+        mStateVector, mDerivativeStateVector);
+    if (check_retval(&ret, "IDAInit", 1)) throw CPS::Exception();
+
+    // Set relative and absolute tolerances
+    mSLog->info("Call IDATolerances");
+    ret = IDASVtolerances(mIDAMemoryBlock, mRelativeTolerance, mAbsoluteTolerances);
+    if (check_retval(&ret, "IDASVtolerances", 1)) throw CPS::Exception();
+        mSLog->info("Set relative tolerance =  {:f}", mRelativeTolerance);
+
+    // specify algebraic/differential components in the state vector.
+    mSLog->info("Call IDASetId");
+    ret = IDASetId(mIDAMemoryBlock, mStateIDsVector);
+    if (check_retval(&ret, "IDASetId", 1)) throw CPS::Exception();
+
+    // constant integration time: set IDASetInitStep == IDASetMaxStep !!!
+    mSLog->info("Call IDASetInitStep");
+    ret = IDASetInitStep(mIDAMemoryBlock, (Real)(mTimestep));
+    if (check_retval(&ret, "IDASetInitStep", 1)) throw CPS::Exception();
+
+    mSLog->info("Call IDASetMaxStep");
+    ret = IDASetMaxStep(mIDAMemoryBlock, (Real)(mTimestep));
+    if (check_retval(&ret, "IDASetMaxStep", 1)) throw CPS::Exception();
+
+    /*
+    // If tstop is enabled,  then IDASolve returns the solution at tstop.
+    // If itask is IDA_NORMAL, then the solver integrates from its current 
+    // internal t value to a point at or beyond tout, then interpolates 
+    // to t = tout and returns y(tret). In general, tret = tout.
+    ret = IDASetStopTime(mIDAMemoryBlock, mTimestep);
+    if (check_retval(&ret, "IDASetStopTime", 1)) {
+        throw CPS::Exception();
+	}
+    */
+
+    mSLog->info("Call IDASetMaxNumSteps");
+    ret = IDASetMaxNumSteps(mIDAMemoryBlock, -1);  //Max. number of timesteps until tout (-1 = unlimited)
+    if (check_retval(&ret, "IDASetMaxNumSteps", 1)) throw CPS::Exception();
+
+    mSLog->info("Call IDASetSuppressAlg");
+    ret = IDASetSuppressAlg(mIDAMemoryBlock, SUNTRUE);
+    if (check_retval(&ret, "IDASetSuppressAlg", 1)) throw CPS::Exception();
+ 
+    /*
+    mSLog->info("Call IDASetMaxConvFails");
+    ret = IDASetMaxConvFails(mIDAMemoryBlock, 50000); //Max. number of convergence failures at one step
+    if (check_retval(&ret, "IDASetMaxNumSteps", 1)) {
+    	throw CPS::Exception();
+	}
+    mSLog->info("Call IDASetNonlinConvCoef");
+    ret = IDASetNonlinConvCoef(mIDAMemoryBlock, (Real)(0.33));
+    if (check_retval(&ret, "IDASetNonlinConvCoef", 1)) {
+    	throw CPS::Exception();
+	}
+    */
+
+    mSLog->info("Call IDA Solver Stuff");
+    // Allocate and connect Matrix mJacobianMatrix and solver mLinearSolver to IDA
+    mJacobianMatrix = SUNDenseMatrix(mNEQ, mNEQ, mSunctx);
+    mLinearSolver = SUNLinSol_Dense(mStateVector, mJacobianMatrix, mSunctx);
+    ret = IDASetLinearSolver(mIDAMemoryBlock, mLinearSolver, mJacobianMatrix);
+    if (check_retval(&ret, "IDADlsSetLinearSolver", 1)) throw CPS::Exception();
+
+    /*
+    // calculates corrected initial conditions
+    ret = IDACalcIC(mIDAMemoryBlock, IDA_Y_INIT, mTimeStep);
+    if (check_retval(&ret, "IDACalcIC", 1)) {
+     	throw CPS::Exception();
+	}
+    */
+
+    mSLog->info("--- Finished initialization --- \n");
+    
+    mSLog->info("--- Summary --- \n");
+    //log name of state variables
+    std::vector<std::string> stateVar_names(mNEQ);
+    mSLog->info("\nVector of State Variables: ");
+    int count_=0;
+    for (auto node : mNodes) {
+        if (node->phaseType() == PhaseType::Single) {
+            mSLog->info("Voltage_{:s}", node->name());
+            std::string nameVar = "Voltage_" + node->name();
+            stateVar_names[count_] = nameVar;
+            count_++;
+        }
+        else if (node->phaseType() == PhaseType::ABC) {
+            mSLog->info("Voltage_{:s}-phase_A", node->name());
+            std::string nameVar_a= "Voltage_" + node->name() + "-phase_A";
+            stateVar_names[count_] = nameVar_a;
+            count_++;
+            mSLog->info("Voltage_{:s}-phase_B", node->name());
+            std::string nameVar_b= "Voltage_" + node->name() + "-phase_B";
+            stateVar_names[count_] = nameVar_b;
+            count_++;
+            mSLog->info("Voltage_{:s}-phase_C", node->name());
+            std::string nameVar_c= "Voltage_" + node->name() + "-phase_C";
+            stateVar_names[count_] = nameVar_c;
+            count_++;
+        }
+    }
+    for (auto comp: mDAEComponents) {
+        for (int i=0; i<comp->getNumberOfStateVariables(); i++) {
+            mSLog->info("Current_{:s}_stateVariable{}", 
+                (std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp))->name(), i);
+            std::string nameVar= "Current_" + std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp)->name() + "_stateVariable" + std::to_string(i);
+            stateVar_names[count_] = nameVar;
+            count_++;
+        }
+    }
+
+    //Initial states of state variables
+    mSLog->info("\nInitial values of state variables: ");
+    for (int n=0; n<mNEQ; n++) {
+        mSLog->info("Initial state of {:s}= {}", stateVar_names[n], sval[n]);
+    }
+
+    //Initial states of derivative of state variables
+    mSLog->info("\nInitial values of derivative of state variables: ");
+    for (int n=0; n<mNEQ; n++) {
+        mSLog->info("Initial dstate of {:s}= {}", stateVar_names[n], s_dtval[n]);
+    }
+
+    // Log type of state variables
+    mSLog->info("\nType of state variables: ");
+    std::string typeVar = "";
+    for (int n=0; n<mNEQ; n++) {
+        if (state_var_types[n]==0.0)
+            typeVar = "differential";
+        else
+            typeVar = "algebraic";
+        mSLog->info("Type of {:s}: {:s}", stateVar_names[n], typeVar);
+    }
+
+    // Log absolute tolerances of state variables
+    mSLog->info("\nAbsolute tolerances of state variables: ");
+    for (int n=0; n<mNEQ; n++) {
+        mSLog->info("Absolute tolerance of {:s}: {}", stateVar_names[n], absolute_tolerances[n]);
+    }
+
+    mSLog->flush();
+}
+
+template <typename VarType>
+int DAESolver<VarType>::residualFunctionWrapper(realtype step_time, 
+    N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
 {
     DAESolver *self = reinterpret_cast<DAESolver *>(user_data);
-
-    return self->residualFunction(ttime, state, dstate_dt, resid);
+    return self->residualFunction(step_time, state, dstate_dt, resid);
 }
 
-int DAESolver::residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid)
+template <typename VarType>
+int DAESolver<VarType>::residualFunction(realtype step_time, 
+    N_Vector state, N_Vector dstate_dt, N_Vector resid)
 {
-    mOffsets[0] = 0; // Reset Offset
-    mOffsets[1] = 0; // Reset Offset
-    double *residual = NV_DATA_S(resid);
-    double *tempstate = NV_DATA_S(state);
-    // Solve for all node Voltages
+    // Reset Offset of nodes
+    mOffsets[0]=0;
     for (auto node : mNodes) {
+        if (node->phaseType() == PhaseType::Single) {
+            mOffsets[0] +=1;
+        }
+        else if (node->phaseType() == PhaseType::ABC) {
+            mOffsets[0] +=3;
+        }
+    }
+    mOffsets[1] = 0;    // Reset Offset of componentes
 
-        Real tempVolt = 0;
-
-        tempVolt += std::real(node->singleVoltage());
-
-
-        residual[mOffsets[0]] = tempVolt - tempstate[mOffsets[0]];
-        mOffsets[0] += 1;
+    //reset residual functions of nodes (nodal equations)
+    realtype *residual = NULL;
+    residual  = N_VGetArrayPointer(resid);
+    for (int i=0; i<mOffsets[0]; i++) {
+        residual[i] = 0;
     }
 
     // Call all registered component residual functions
     for (auto resFn : mResidualFunctions) {
-        resFn(ttime, NV_DATA_S(state), NV_DATA_S(dstate_dt), NV_DATA_S(resid), mOffsets);
+        resFn(mSimTime, NV_DATA_S(state), NV_DATA_S(dstate_dt), NV_DATA_S(resid), mOffsets);
     }
 
+    mSLog->flush();
     // If successful; positive value if recoverable error, negative if fatal error
     // TODO: Error handling
     return 0;
 }
 
-Real DAESolver::step(Real time) {
+template <typename VarType>
+Real DAESolver<VarType>::step(Real time) {
+    int ret=0;
+    mSimTime = time+mTimestep;
 
-    Real NextTime = time + mTimestep;
-    std::cout<<"Current Time "<<NextTime<<std::endl;
-    int ret = IDASolve(mem, NextTime, &tret, state, dstate_dt, IDA_NORMAL);  // TODO: find alternative to IDA_NORMAL
+    for (auto comp : mDAEComponents) { 
+        comp->daePreStep(mSimTime);
+    }
+    ret = IDASolve(mIDAMemoryBlock, mSimTime, &mTimeReachedSolver,
+        mStateVector, mDerivativeStateVector, IDA_NORMAL);  // TODO: find alternative to IDA_NORMAL
+    if (ret != IDA_SUCCESS) {
+        IDAGetNumSteps(mIDAMemoryBlock, &mNumberStepsIDA);
+        IDAGetNumResEvals(mIDAMemoryBlock, &mNumberCallsResidualFunctions);
+        IDAGetNumNonlinSolvIters(mIDAMemoryBlock, &mNonLinearIters);
+        IDAGetLastStep(mIDAMemoryBlock, &mLastIntegrationStep);
+        IDAGetErrWeights(mIDAMemoryBlock, mErrorWeights);
+        IDAGetEstLocalErrors(mIDAMemoryBlock, mEstLocalErrors);
+        mSLog->info(
+            "\n----------------------IDA Error: {}"
+            "\nTime: {}"
+            "\nCumulative number of internal steps: {}"
+            "\nCumulative number of calls residual function: {}"
+            "\nCumulative number of nonlinear iterations performed: {}"
+            "\nTime Reached Solver: {}"
+            "\nIntegration step size taken on the last internal step: {}"
+            "\nWeighted errors:\n{:s}"    
+            "\nSimulation finished",
+            ret,
+            mSimTime, 
+            mNumberStepsIDA, 
+            mNumberCallsResidualFunctions,
+            mNonLinearIters, 
+            mTimeReachedSolver, 
+            mLastIntegrationStep,
+            printWeightedErrors()
+        );
+        mSLog->flush();
+        throw CPS::Exception();
+    } 
+    if (mLogLevel==Logger::Level::info) {
+        IDAGetNumSteps(mIDAMemoryBlock, &mNumberStepsIDA);
+        IDAGetNumResEvals(mIDAMemoryBlock, &mNumberCallsResidualFunctions);
+        IDAGetNumNonlinSolvIters(mIDAMemoryBlock, &mNonLinearIters);
+        IDAGetActualInitStep(mIDAMemoryBlock, &mActualInitialStepSize);
+        IDAGetLastStep(mIDAMemoryBlock, &mLastIntegrationStep);
+        IDAGetCurrentStep(mIDAMemoryBlock, &mNextStepSize);
+        mSLog->debug(
+            "\n\n----------------------"
+            "\nSimTime: {}"
+            "\nCumulative number of internal steps: {}"
+            "\nCumulative number of calls residual function: {}"
+            "\nCumulative number of nonlinear iterations performed: {}"
+            "\nTime Reached Solver: {}"
+            "\nActual initial step size used: {}"
+            "\nIntegration step size taken on the last internal step: {}"
+            "\nStep size to be attempted on the next step: {}",
+            time, 
+            mNumberStepsIDA, 
+            mNumberCallsResidualFunctions,
+            mNonLinearIters, 
+            mTimeReachedSolver, 
+            mActualInitialStepSize,
+            mLastIntegrationStep,
+            mNextStepSize
+        );
+        mSLog->flush();
+    }
 
-    if (ret == IDA_SUCCESS) {
-        return NextTime;
+    //update node voltages
+    realtype *sval = NULL;
+    sval  = N_VGetArrayPointer(mStateVector);
+    realtype *dstate_val = NULL;
+    dstate_val  = N_VGetArrayPointer(mDerivativeStateVector);
+    mOffsets[0] = 0;             // Reset Offset of nodes
+
+    // Update voltage of nodes
+    for (auto node : mNodes) {
+        if (node->phaseType() == PhaseType::Single) {
+            node->setVoltage(sval[mOffsets[0]], PhaseType::Single);
+            node->setdVoltage(dstate_val[mOffsets[0]]);
+            mOffsets[0] +=1;
+        }
+        else if (node->phaseType() == PhaseType::ABC) {
+            node->setVoltage(sval[mOffsets[0]], PhaseType::A);
+            node->setdVoltage(dstate_val[mOffsets[0]], PhaseType::A);
+            mOffsets[0] +=1;
+            node->setVoltage(sval[mOffsets[0]], PhaseType::B);
+            node->setdVoltage(dstate_val[mOffsets[0]], PhaseType::B);
+            mOffsets[0] +=1;
+            node->setVoltage(sval[mOffsets[0]], PhaseType::C);
+            node->setdVoltage(dstate_val[mOffsets[0]], PhaseType::C);
+            mOffsets[0] +=1;
+        }
     }
-    else {
-        std::cout <<"Ida Error "<<ret<<std::endl;
-        //throw CPS::Exception();
-        void(IDAGetNumSteps(mem, &interalSteps));
-        void(IDAGetNumResEvals(mem, &resEval));
-        std::cout<<"Interal steps: "<< interalSteps<<std::endl;
-        std::cout<<"Res Eval :"<<resEval<<std::endl;
-        return NextTime;
+
+    //update components
+    mOffsets[1] = mOffsets[0];      // Reset Offset of componentes
+    for (auto comp : mDAEComponents) { 
+        comp->daePostStep(mSimTime, sval, dstate_val, mOffsets[1]);
     }
+
+    return mSimTime;
 }
 
-Task::List DAESolver::getTasks() {
-	// TODO
-	return Task::List();
+template <typename VarType>
+Task::List DAESolver<VarType>::getTasks() {
+    Task::List l;
+    l.push_back(std::make_shared<DAESolver<VarType>::SolveStep>(*this));
+    l.push_back(std::make_shared<DAESolver<VarType>::LogTask>(*this));
+    return l;
 }
 
-DAESolver::~DAESolver() {
+template <typename VarType>
+DAESolver<VarType>::~DAESolver() {
     // Releasing all memory allocated by IDA
-    IDAFree(&mem);
-    N_VDestroy(state);
-    N_VDestroy(dstate_dt);
-    SUNLinSolFree(LS);
-    SUNMatDestroy(A);
-    SUNContext_Free(&mSunctx);
+    IDAFree(&mIDAMemoryBlock);
+    N_VDestroy(mStateVector);
+    N_VDestroy(mDerivativeStateVector);
+    N_VDestroy(mStateIDsVector);
+    N_VDestroy(mAbsoluteTolerances);
+    N_VDestroy(mErrorWeights);
+    N_VDestroy(mEstLocalErrors);
+    SUNLinSolFree(mLinearSolver);
+    SUNMatDestroy(mJacobianMatrix);
 }
+
+template <typename VarType>
+std::string DAESolver<VarType>::printWeightedErrors() {
+    realtype *errorsWeight = NULL;
+    realtype *estLocalErrors = NULL;
+    Matrix weightedErrors= Matrix::Zero(mNEQ, 1);
+    errorsWeight  = N_VGetArrayPointer(mErrorWeights);
+    estLocalErrors = N_VGetArrayPointer_Serial(mEstLocalErrors);
+    for (int i=0; i<mNEQ; i++) 
+        weightedErrors(i,0) = errorsWeight[i]*estLocalErrors[i];
+        
+    //get vector with names of the state variables
+    std::string nameVariables[mNEQ];
+    int counter = 0, counter2=0;
+    for (auto node : mNodes) {
+        if (node->phaseType() == PhaseType::Single) {
+            nameVariables[counter++] = node->name();
+        }
+        else if (node->phaseType() == PhaseType::ABC) {
+            nameVariables[counter++] = node->name() + "-phase_A";
+            nameVariables[counter++] = node->name() + "-phase_B";
+            nameVariables[counter++] = node->name() + "-phase_C";
+        }
+    }
+    
+    for (auto comp: mDAEComponents) {
+        for (int i=0; i<comp->getNumberOfStateVariables(); i++) {
+            nameVariables[counter++] =  mSystem.mComponents[counter2]->name() + "_stateVariable" + std::to_string(i);
+        }
+        counter2++;
+    }
+
+    std::string output;
+    for (int i=0; i<mNEQ; i++) {
+        output += "\t"+nameVariables[i] + ": " + std::to_string(weightedErrors(i,0)) + "\n";
+    }
+    
+    return output;
+}
+
+static int check_retval(void *returnvalue, const char *funcname, int opt) {
+    int *retval;
+    /* Check if SUNDIALS function returned NULL pointer - no memory allocated */
+    if (opt == 0 && returnvalue == NULL) {
+        std::cout << "\nSUNDIALS_ERROR: " << funcname << "() failed - returned NULL pointer" << std::endl;
+        return(1);
+    } else if (opt == 1) {
+        /* Check if retval < 0 */
+        retval = (int *) returnvalue;
+        if (*retval < 0) {
+            std::cout << "\nSUNDIALS_ERROR: " << funcname << "() failed with retval = " << *retval << std::endl;
+            return(1);
+        }
+    } else if (opt == 2 && returnvalue == NULL) {
+        /* Check if function returned NULL pointer - no memory allocated */
+         std::cout << "\nMEMORY_ERROR: " << funcname << "() failed - returned NULL pointer" << std::endl;
+        return(1);
+    }
+
+    return (0);
+}
+
+template class DPsim::DAESolver<Real>;
+template class DPsim::DAESolver<Complex>;

@@ -175,38 +175,3 @@ void DP::Ph1::Resistor::mnaCompUpdateCurrentHarm() {
 void DP::Ph1::Resistor::mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) {
 	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex(**mResistance, 0));
 }
-
-// #### DAE functions ####
-
-void DP::Ph1::Resistor::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
-	// new state vector definintion:
-	// state[0]=node0_voltage
-	// state[1]=node1_voltage
-	// ....
-	// state[n]=noden_voltage
-	// state[n+1]=component0_voltage
-	// state[n+2]=component0_inductance (not yet implemented)
-	// ...
-	// state[m-1]=componentm_voltage
-	// state[m]=componentm_inductance
-	// ...
-	// state[x] = nodal_equation_1
-	// state[x+1] = nodal_equation_2
-	// ...
-
-    int Pos1 = matrixNodeIndex(0);
-    int Pos2 = matrixNodeIndex(1);
-	int c_offset = off[0]+off[1]; //current offset for component
-	int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation
-	int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation
-	resid[c_offset] = (state[Pos2]-state[Pos1]) - state[c_offset]; // Voltage equation for Resistor
-	//resid[c_offset+1] = ; //TODO : add inductance equation
-    resid[n_offset_1] += 1.0/ **mResistance * state[c_offset];
-    resid[n_offset_2] += 1.0/ **mResistance * state[c_offset];
-	off[1] += 1;
-}
-
-Complex DP::Ph1::Resistor::daeInitialize() {
-
-	 return (**mIntfVoltage)(0,0);
-}

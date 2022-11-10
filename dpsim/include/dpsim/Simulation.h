@@ -43,6 +43,8 @@ namespace DPsim {
 		const CPS::Attribute<Real>::Ptr mFinalTime;
 		/// Simulation timestep
 		const CPS::Attribute<Real>::Ptr mTimeStep;
+		/// Relative Tolerance (DAE Solver)
+		Real mRelTol = 1e-6;
 
 		/// Determines if the network should be split
 		/// into subnetworks at decoupling lines.

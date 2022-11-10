@@ -95,10 +95,14 @@ void Simulation::createSolvers() {
 			break;
 #ifdef WITH_SUNDIALS
 		case Solver::Type::DAE:
-			solver = std::make_shared<DAESolver>(**mName, mSystem, **mTimeStep, 0.0);
+			solver = std::make_shared<DAESolver<VarType>>(**mName, mSystem, 
+				**mTimeStep, 0.0, mLogLevel);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setRelativeTolerance(mRelTol);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->initialize();
 			mSolvers.push_back(solver);
 			break;
 #endif /* WITH_SUNDIALS */
+
 		case Solver::Type::NRP:
 			solver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem, **mTimeStep, mLogLevel);
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
