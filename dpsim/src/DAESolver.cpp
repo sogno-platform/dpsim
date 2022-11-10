@@ -30,6 +30,11 @@ DAESolver<VarType>::DAESolver(const String& name, CPS::SystemTopology system,
     // Set number of equations to zero
     mNEQ=0;
 
+    //
+    mSLog->info("-- Process system components");
+    this->initializeComponents();
+
+    //
     mSLog->info("-- Process system nodes");
     for (auto baseNode : mSystem.mNodes) {
         // Add nodes to the list and ignore ground nodes.
@@ -59,7 +64,6 @@ DAESolver<VarType>::DAESolver(const String& name, CPS::SystemTopology system,
             ++matrixNodeIndex;
         }
     }
-
     mSLog->info("");
     mSLog->flush();
 }
@@ -82,7 +86,6 @@ void DAESolver<VarType>::initializeComponents() {
         }
 
         mDAEComponents.push_back(daeComp);
-
         // Register residual functions of components
         mResidualFunctions.push_back(
                 [daeComp](double sim_time, const double state[], const double dstate_dt[], 
@@ -139,7 +142,7 @@ void DAESolver<VarType>::initialize() {
     s_dtval = N_VGetArrayPointer_Serial(mDerivativeStateVector);
     state_var_types = N_VGetArrayPointer_Serial(mStateIDsVector);
     absolute_tolerances = N_VGetArrayPointer_Serial(mAbsoluteTolerances);
-   
+
     // Initialize nodal voltages of state vector
     for (auto node : mNodes) {
         if (node->phaseType() == PhaseType::Single) {

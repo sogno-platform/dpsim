@@ -10,6 +10,7 @@
 
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/Base/Base_Ph3_PiLine.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
@@ -24,6 +25,7 @@ namespace Ph3 {
 	/// RLC elements of a PI-line.
 	class PiLine :
 		public CompositePowerComp<Real>,
+		public DAEInterface,
 		public Base::Ph3::PiLine,
 		public SharedFactory<PiLine> {
 	protected:
@@ -73,6 +75,22 @@ namespace Ph3 {
 		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
 		void mnaTearApplyVoltageStamp(Matrix& voltageVector);
 		void mnaTearPostStep(Matrix voltage, Matrix current);*/
+
+		// #### DAE Section ####
+		
+		///
+		void daeInitialize(double time, double state[], double dstate_dt[], 
+			double absoluteTolerances[], double stateVarTypes[], int& offset);
+		///
+		void daePreStep(double time) {};
+		///Residual Function for DAE Solver
+		void daeResidual(double time, const double state[], 
+			const double dstate_dt[], double resid[], std::vector<int>& off);
+		///
+		void daePostStep(double Nexttime, const double state[], 
+			const double dstate_dt[], int& counter);
+		///
+		int getNumberOfStateVariables() {return 3;}
 
 	};
 }

@@ -21,11 +21,13 @@ SimNode<VarType>::SimNode(String uid, String name,
 		mMatrixNodeIndex = matrixNodeIndex;
 		**mVoltage = MatrixVar<VarType>::Zero(3, 1);
 		**mApparentPower = MatrixVar<VarType>::Zero(3, 1);
+		mDerVoltage = MatrixVar<VarType>::Zero(3, 1);
 	}
 	else {
 		mMatrixNodeIndex[0] = matrixNodeIndex[0];
 		**mVoltage = MatrixVar<VarType>::Zero(1, 1);
 		**mApparentPower = MatrixVar<VarType>::Zero(1, 1);
+		mDerVoltage = MatrixVar<VarType>::Zero(1, 1);
 	}
 }
 

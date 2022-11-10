@@ -73,6 +73,7 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real modul
 }
 
 void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) {
+	
 	// Connect electrical subcomponents
 	mSubVoltageSource->connect({ SimNode::GND, node(0) });
 
@@ -116,4 +117,143 @@ void EMT::Ph3::NetworkInjection::mnaCompUpdateVoltage(const Matrix& leftVector) 
 
 void EMT::Ph3::NetworkInjection::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
+}
+
+// #### DAE functions ####
+
+/// set init value of current, calculate and set initial value of the derivative of the current
+void EMT::Ph3::NetworkInjection::setInitialComplexIntfCurrent(Complex initCurrent) {
+	mSubVoltageSource->setInitialComplexIntfCurrent(initCurrent);
+	**mIntfCurrent = mSubVoltageSource->intfCurrent();
+	mIntfDerCurrent = mSubVoltageSource->intfDerCurrent();
+}
+
+void EMT::Ph3::NetworkInjection::daeInitialize(double time, double state[],double dstate_dt[], 
+	double absoluteTolerances[], double stateVarTypes[], int& offset) {
+	//current is positive when flows out of the network injection (into the node)
+
+	updateMatrixNodeIndices();
+	daePreStep(time);
+
+	state[offset] = (**mIntfCurrent)(0,0);
+	dstate_dt[offset] = mIntfDerCurrent(0,0);
+	state[offset+1] = (**mIntfCurrent)(1,0);
+	dstate_dt[offset+1] = mIntfDerCurrent(1,0);
+	state[offset+2] = (**mIntfCurrent)(2,0);
+	dstate_dt[offset+2] = mIntfDerCurrent(2,0);
+
+	//set state variable as algebraic variable
+	stateVarTypes[offset]   = 0.0;
+	stateVarTypes[offset+1] = 0.0;
+	stateVarTypes[offset+2] = 0.0;
+
+	//set absolute tolerance
+	absoluteTolerances[offset] = mAbsTolerance;
+	absoluteTolerances[offset+1] = mAbsTolerance;
+	absoluteTolerances[offset+2] = mAbsTolerance;
+
+	mSLog->info(
+		"\n--- daeInitialize ---"
+		"\nInitial time={:f}s"
+		"\nAdded current phase1 of NetworkInjection '{:s}' to state vector, initial value={:f}A"
+		"\nAdded current phase2 of NetworkInjection '{:s}' to state vector, initial value={:f}A"
+		"\nAdded current phase3 of NetworkInjection '{:s}' to state vector, initial value={:f}A"
+		"\nAdded derivative of current phase1 of NetworkInjection '{:s}' to derivative state vector, initial value={:f}"
+		"\nAdded derivative of current phase2 of NetworkInjection '{:s}' to derivative state vector, initial value={:f}"
+		"\nAdded derivative of current phase3 of NetworkInjection '{:s}' to derivative state vector, initial value={:f}"
+		"\nInitial voltage phase1 of NetworkInjection '{:s}' ={:f}V"
+		"\nInitial voltage phase2 of NetworkInjection '{:s}' ={:f}V"
+		"\nInitial voltage phase3 of NetworkInjection '{:s}' ={:f}V"
+		"\nState variable set as differential"
+		"\nAbsolute tolerance={:f}"
+		"\n--- daeInitialize finished ---",
+		time,
+		this->name(), state[offset],
+		this->name(), state[offset+1],
+		this->name(), state[offset+2],
+		this->name(), dstate_dt[offset],
+		this->name(), dstate_dt[offset+1],
+		this->name(), dstate_dt[offset+2],
+		this->name(), (**mIntfVoltage)(0,0),
+		this->name(), (**mIntfVoltage)(1,0),
+		this->name(), (**mIntfVoltage)(2,0),
+		absoluteTolerances[offset]
+	);
+	mSLog->flush();
+	offset+=3;
+}
+
+void EMT::Ph3::NetworkInjection::daePreStep(Real sim_time){
+	mSubVoltageSource->daePreStep(sim_time);
+	**mIntfVoltage = mSubVoltageSource->intfVoltage();
+}
+
+void EMT::Ph3::NetworkInjection::daeResidual(double sim_time,
+	const double state[], const double dstate_dt[],
+	double resid[], std::vector<int>& off) {
+
+	//this->updateVoltage(sim_time);
+	int c_offset = off[0]+off[1]; //current offset for component
+
+	//mIntfVoltage = mSubVoltageSource->attribute<Matrix>("v_intf")->get();
+
+	int pos_node1 = matrixNodeIndex(0, 0);
+	int pos_node2 = matrixNodeIndex(0, 1);
+	int pos_node3 = matrixNodeIndex(0, 2);
+
+	//std::cout << "simTime=" << sim_time << std::endl; 
+	//std::cout << mIntfVoltage(0,0) << std::endl;
+	//Real test=0.0;
+    //std::cin >> test;
+
+	resid[c_offset]   = state[pos_node1] - (**mIntfVoltage)(0,0);
+	resid[c_offset+1] = state[pos_node2] - (**mIntfVoltage)(1,0);
+	resid[c_offset+2] = state[pos_node3] - (**mIntfVoltage)(2,0);
+
+	// update nodal equations
+	resid[pos_node1] += state[c_offset];
+	resid[pos_node2] += state[c_offset+1];
+	resid[pos_node3] += state[c_offset+2];
+
+	mSLog->debug(
+		"\n\n--- NetworkInjection name: {:s} - SimTime= {:f} ---"
+		"\nresid[c_offset]   = state[pos_node1] - mIntfVoltage(0,0) = {:f} - {:f} = {:f}"
+		"\nresid[c_offset+1] = state[pos_node2] - mIntfVoltage(1,0) = {:f} - {:f} = {:f}"
+		"\nresid[c_offset+2] = state[pos_node3] - mIntfVoltage(2,0) = {:f} - {:f} = {:f}"
+		"\nupdate nodal equations:"
+		"\nresid[pos_node1] += state[c_offset]   --> resid[pos_node1] += {:f} --> resid[pos_node1] = {:f} "
+		"\nresid[pos_node2] += state[c_offset+1] --> resid[pos_node2] += {:f} --> resid[pos_node1] = {:f}"
+		"\nresid[pos_node3] += state[c_offset+2] --> resid[pos_node3] += {:f} --> resid[pos_node1] = {:f}"
+		"\ndstate[c_offset]   = {:f}"
+		"\ndstate[c_offset+1] = {:f}"
+		"\ndstate[c_offset+2] = {:f}"
+		,
+		this->name(), sim_time,
+		state[pos_node1], (**mIntfVoltage)(0,0), resid[c_offset],
+		state[pos_node2], (**mIntfVoltage)(1,0), resid[c_offset+1],
+		state[pos_node3], (**mIntfVoltage)(2,0), resid[c_offset+2],
+		state[c_offset],   resid[pos_node1],
+		state[c_offset+1], resid[pos_node2],
+		state[c_offset+2], resid[pos_node3],
+		dstate_dt[c_offset],
+		dstate_dt[c_offset+1],
+		dstate_dt[c_offset+2]
+	);
+	mSLog->flush();
+	off[1]+=3;
+}
+
+void EMT::Ph3::NetworkInjection::daePostStep(double Nexttime, const double state[], 
+	const double dstate_dt[], int& offset) {
+
+	(**mIntfCurrent)(0,0) = state[offset];
+	(**mIntfCurrent)(1,0) = state[offset+1];
+	(**mIntfCurrent)(2,0) = state[offset+2];
+	(**mIntfVoltage)(0,0) = state[matrixNodeIndex(0, 0)];
+	(**mIntfVoltage)(1,0) = state[matrixNodeIndex(0, 1)];
+	(**mIntfVoltage)(2,0) = state[matrixNodeIndex(0, 2)];
+	mIntfDerCurrent(0,0) = dstate_dt[offset];
+	mIntfDerCurrent(1,0) = dstate_dt[offset+1];
+	mIntfDerCurrent(2,0) = dstate_dt[offset+2];
+	offset +=3;
 }

@@ -179,3 +179,22 @@ void EMT::Ph3::VoltageSource::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
 	(**mIntfCurrent)(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
 }
+
+void EMT::Ph3::VoltageSource::setInitialComplexIntfCurrent(Complex initCurrent) {
+	//set initial current 
+    (**mIntfCurrent)(0, 0) = initCurrent.real();
+	(**mIntfCurrent)(1, 0) = (initCurrent*SHIFT_TO_PHASE_B).real();
+	(**mIntfCurrent)(2, 0) = (initCurrent*SHIFT_TO_PHASE_C).real();	
+	
+	// Calculate initial derivative of current = -omega*Imag(Complex_voltage)
+	Real omega = 2 * PI * **mSrcFreq;
+	
+	mIntfDerCurrent = Matrix::Zero(3,1);
+	mIntfDerCurrent(0,0) = -omega * initCurrent.imag();
+	mIntfDerCurrent(1,0) = -omega * (initCurrent*SHIFT_TO_PHASE_B).imag();
+	mIntfDerCurrent(2,0) = -omega * (initCurrent*SHIFT_TO_PHASE_C).imag();
+}
+
+void EMT::Ph3::VoltageSource::daePreStep(Real time) {
+	updateVoltage(time);
+}

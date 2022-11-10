@@ -186,6 +186,10 @@ namespace DPsim {
 		void setTearingComponents(CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List()) {
 			mTearComponents = tearComponents;
 		}
+		/// Set relative Tolerance (DAE Solver)
+		void setRelativeTolerance(Real relTol) {
+			mRelTol=relTol;
+		}
 		/// Set the scheduling method
 		void setScheduler(const std::shared_ptr<Scheduler> &scheduler) {
 			mScheduler = scheduler;

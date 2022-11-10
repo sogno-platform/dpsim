@@ -10,6 +10,7 @@
 
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
@@ -22,6 +23,7 @@ namespace CPS {
 			/// Model as current source and read from CSV files
 			class RXLoad :
 				public CompositePowerComp<Real>,
+				public DAEInterface,
 				public SharedFactory<RXLoad> {
 			protected:
 				/// Power [Watt]
@@ -78,6 +80,23 @@ namespace CPS {
 
 				void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 				void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+
+				// #### DAE Section ####
+				/// Derivative of the current
+				MatrixVar<Real> mIntfDerCurrent;
+				///
+				void daeInitialize(double time, double state[], double dstate_dt[], 
+					double absoluteTolerances[], double stateVarTypes[], int& offset);
+				///
+				void daePreStep(double time) {};
+				/// Residual function for DAE Solver
+				void daeResidual(double time, const double state[], const double dstate_dt[], 
+					double resid[], std::vector<int>& off);
+				///
+				void daePostStep(double Nexttime, const double state[], 
+					const double dstate_dt[], int& offset);
+				///
+				int getNumberOfStateVariables() {return 3;}
 			};
 		}
 	}
