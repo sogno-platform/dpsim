@@ -432,15 +432,15 @@ namespace SGIB {
         Real lineCapacitance = 50e-6/314 * length;
 
         // PV controller parameters
-        Real scaling_P = 1;
-        Real scaling_I = 0.1;
+        Real scalingKp = 1;
+        Real scalingKi = 0.1;
 
-        Real KpPLL = 0.25*scaling_P;
-        Real KiPLL = 2*scaling_I;
-        Real KpPowerCtrl = 0.001*scaling_P;
-        Real KiPowerCtrl = 0.08*scaling_I;
-        Real KpCurrCtrl = 0.3*scaling_P;
-        Real KiCurrCtrl = 10*scaling_I;
+        Real KpPLL = 0.25*scalingKp;
+        Real KiPLL = 2*scalingKi;
+        Real KpPowerCtrl = 0.001*scalingKp;
+        Real KiPowerCtrl = 0.08*scalingKi;
+        Real KpCurrCtrl = 0.3*scalingKp;
+        Real KiCurrCtrl = 10*scalingKi;
         Real OmegaCutoff = 2 * PI * systemFrequency;
 
         // Initial state values
@@ -490,15 +490,15 @@ namespace CIGREMV {
         Int numberPVUnitsPerPlant = numberPVUnits / numberPVPlants;
 
         // PV controller parameters
-        Real scaling_P = 10.0;
-        Real scaling_I = 1000.0;
+        Real scalingKp = 1;
+        Real scalingKi = 0.001;
 
-        Real KpPLL = 0.25/scaling_P;
-        Real KiPLL = 2/scaling_I;
-        Real KpPowerCtrl = 0.001/scaling_P;
-        Real KiPowerCtrl = 0.08/scaling_I;
-        Real KpCurrCtrl = 0.3/scaling_P;
-        Real KiCurrCtrl = 10/scaling_I;
+		Real KpPLL = 0.25*scalingKp;
+        Real KiPLL = 2*scalingKi;
+        Real KpPowerCtrl = 0.001*scalingKp;
+        Real KiPowerCtrl = 0.08*scalingKi;
+        Real KpCurrCtrl = 0.3*scalingKp;
+        Real KiCurrCtrl = 10*scalingKi;
         Real OmegaCutoff = 2 * PI * systemFrequency;
 
         // PV filter parameters
@@ -519,10 +519,10 @@ namespace CIGREMV {
         Real phiPLLInit = 8e-06;
         Real pInit = 450000.716605;
         Real qInit = -0.577218;
-        Real phi_dInit = 3854.197405*scaling_I;
-        Real phi_qInit = -0.003737*scaling_I;
-        Real gamma_dInit = 128.892668*scaling_I;
-        Real gamma_qInit = 23.068682*scaling_I;
+        Real phi_dInit = 3854197405*scalingKi;
+        Real phi_qInit = -3737*scalingKi;
+        Real gamma_dInit = 128892668*scalingKi;
+        Real gamma_qInit = 23068682*scalingKi;
     };
 
     void addInvertersToCIGREMV(SystemTopology& system, CIGREMV::ScenarioConfig scenario, Domain domain) {

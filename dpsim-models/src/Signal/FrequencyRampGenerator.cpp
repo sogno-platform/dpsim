@@ -10,7 +10,7 @@
 
 using namespace CPS;
 
-void Signal::FrequencyRampGenerator::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
+void Signal::FrequencyRampGenerator::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp) {
     mMagnitude = Math::abs(initialPhasor);
     mInitialPhase = Math::phase(initialPhasor);
 
@@ -21,11 +21,18 @@ void Signal::FrequencyRampGenerator::setParameters(Complex initialPhasor, Real f
     mFreqEnd = freqStart + rocof * duration;
     mOldTime = 0.0;
 
-    mUseAbsoluteCalc = useAbsoluteCalc;
-    mSmooth = true;
+    mSmoothRamp = smoothRamp;
 
     attribute<Complex>("sigOut")->set(initialPhasor);
 	attribute<Real>("freq")->set(freqStart);
+
+	mSLog->info("Parameters:");
+	mSLog->info("\nInitial Phasor={}"
+				"\nStart Frequency={} [Hz]"
+				"\nRoCoF={} [Hz/s]"
+				"\nStart time={} [s]"
+				"\nDuration={} [s]",
+				Logger::phasorToString(initialPhasor), freqStart, rocof, timeStart, duration);
 }
 
 void Signal::FrequencyRampGenerator::step(Real time) {
@@ -38,7 +45,7 @@ void Signal::FrequencyRampGenerator::step(Real time) {
     Real currFreq;
     Real timestep = time - mOldTime;
     mOldTime = time;
-    
+
     currPhase = Math::phase(attribute<Complex>("sigOut")->get());
 
     if(time <= mTimeStart) {
@@ -63,7 +70,7 @@ void Signal::FrequencyRampGenerator::stepAbsolute(Real time) {
         currPhase += 2 * PI * mRocof * mDuration * (time - (mTimeStart + mDuration));
         currFreq = mFreqEnd;
     } else if(time > mTimeStart) {
-        if(mSmooth) { // cos shape
+        if(mSmoothRamp) { // cos shape
             // the phase is calculated as 2pi times the integral of the frequency term below
             currPhase += 2 * PI * (mFreqEnd - mFreqStart) / 2 * ((time-mTimeStart) - 2 * mDuration / (2 * PI) * sin(2 * PI / (2 * mDuration) * (time-mTimeStart)));
             currFreq += (mFreqEnd - mFreqStart) / 2 * (1 - cos(2 * PI / (2 * mDuration) * (time-mTimeStart)));
@@ -71,7 +78,7 @@ void Signal::FrequencyRampGenerator::stepAbsolute(Real time) {
             currPhase += 2 * PI * mRocof * pow(time - mTimeStart, 2) / 2;
             currFreq += mRocof * (time - mTimeStart);
         }
-    } 
+    }
 
     attribute<Complex>("sigOut")->set(mMagnitude * Complex(cos(currPhase), sin(currPhase)));
     attribute<Real>("freq")->set(currFreq);

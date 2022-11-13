@@ -12,7 +12,9 @@ using namespace CPS;
 
 Signal::SineWaveGenerator::SineWaveGenerator(String name, Logger::Level logLevel)
 			: SignalGenerator(name, logLevel),
-			mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)) { }
+			mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)) {
+				mSLog->info("Create {} {}", type(), name);
+			}
 
 void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real frequency /*= -1*/) {
     **mVoltageRef = initialPhasor;
