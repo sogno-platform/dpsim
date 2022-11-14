@@ -1,10 +1,4 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-License-Identifier: Apache-2.0
 
 #pragma once
 
@@ -126,15 +120,8 @@ namespace DPsim {
 		/// Task dependencies as incoming / outgoing edges
 		Scheduler::Edges mTaskInEdges, mTaskOutEdges;
 
-		struct InterfaceMapping {
-			/// A pointer to the external interface
-			Interface *interface;
-			/// Is this interface used for synchronization of the simulation start?
-			bool syncStart;
-		};
-
 		/// Vector of Interfaces
-		std::vector<InterfaceMapping> mInterfaces;
+		std::vector<Interface::Ptr> mInterfaces;
 
 		struct LoggerMapping {
 			/// Simulation data logger
@@ -224,11 +211,9 @@ namespace DPsim {
 		/// Solve system A * x = z for x and current time
 		virtual Real step();
 		/// Synchronize simulation with remotes by exchanging intial state over interfaces
-		void sync();
+		void sync() const;
 		/// Create the schedule for the independent tasks
 		void schedule();
-		/// Reset internal state of simulation
-		void reset();
 
 		/// Schedule an event in the simulation
 		void addEvent(Event::Ptr e) {
@@ -242,15 +227,10 @@ namespace DPsim {
 		void logStepTimes(String logName);
 
 		///
-		void addInterface(Interface *eint, Bool syncStart = true) {
-			if (mInterfaces.size() > 0) {
-				mLog->warn(
-					"This simulation contains more than one interface! When using multiple InterfaceVillas instances, all of them will block the simulation thread in undefined order until the data is read / written! Continue with caution!");
-			}
-			mInterfaces.push_back({eint, syncStart});
+		void addInterface(Interface::Ptr eint) {
+			eint->setLogger(mLog);
+			mInterfaces.push_back(eint);
 		}
-		/// Return list of interfaces
-		std::vector<InterfaceMapping> & interfaces() { return mInterfaces; }
 
 #ifdef WITH_GRAPHVIZ
 		///
@@ -275,8 +255,6 @@ namespace DPsim {
 		// #### Get component attributes during simulation ####
 		CPS::AttributeBase::Ptr getIdObjAttribute(const String &comp, const String &attr);
 
-		void exportAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
-		void importAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf = nullptr);
 		void logIdObjAttribute(const String &comp, const String &attr);
 		/// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
 		void logAttribute(String name, CPS::AttributeBase::Ptr attr);

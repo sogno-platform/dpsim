@@ -56,8 +56,8 @@ int main(int argc, char *argv[]) {
 		comps = SystemComponentList{evs, vs, l1, r1};
 		nodes = SystemNodeList{SimNode::GND, n1, n2, n3};
 
-		evs->mVoltageRef->setReference(intf.importComplex(0));
-		intf.exportComplex(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
+		intf.importAttribute(evs->mVoltageRef, 0);
+		intf.exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
 
 	}
 	else if (String(argv[1]) == "1") {
@@ -86,8 +86,8 @@ int main(int argc, char *argv[]) {
 		comps = SystemComponentList{ecs, sw, r2A, r2B};
 		nodes = SystemNodeList{SimNode::GND, n4, n5};
 
-		ecs->mCurrentRef->setReference(intf.importComplex(0));
-		intf.exportComplex(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
+		intf.importAttribute(ecs->mCurrentRef, 0);
+		intf.exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(20);
-	sim.addInterface(&intf);
+	sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 	if (String(argv[1]) == "1") {
 		auto evt = SwitchEvent::make(10, sys.component<CPS::Base::Ph1::Switch>("sw"), true);

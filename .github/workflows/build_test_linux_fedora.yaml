@@ -14,7 +14,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -34,7 +34,7 @@ jobs:
         MAKEFLAGS: "-j2"
 
     - name: Archive build directory
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ${{ github.workspace }}/build
         name: build-cache
@@ -47,7 +47,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -65,7 +65,7 @@ jobs:
         MAKEFLAGS: "-j2"
 
     - name: Archive build directory
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ${{ github.workspace }}/build
         name: build-cache
@@ -79,7 +79,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Restore build archive
       uses: actions/download-artifact@v3
@@ -111,7 +111,7 @@ jobs:
         pytest -v examples/Notebooks
     
     - name: Archive notebook outputs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: pytest-output
         path: outputs/examples/Notebooks/
@@ -128,7 +128,7 @@ jobs:
        path: ${{ github.workspace }}/notebooks-new
     
     - name: Download master notebook results
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/notebooks-master
         key: notebook-output-cache-master-${{ github.sha }}
@@ -136,7 +136,7 @@ jobs:
           notebook-output-cache-master-
     
     - name: Download previous commit notebook results
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/notebooks-previous
         key: notebook-output-cache-commit-${{ github.ref }}-${{ github.sha }}
@@ -196,7 +196,7 @@ jobs:
     #needs: [linux-fedora]
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Run cppcheck
       working-directory: ${{ github.workspace }}
@@ -256,7 +256,7 @@ jobs:
       continue-on-error: true
 
     - name: Archive cppcheck output
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
       with:
         name: cppcheck-output

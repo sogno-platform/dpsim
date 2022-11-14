@@ -103,7 +103,7 @@ int main(int argc, char** argv){
 	}
     villas_conf.close();
 
-	sim.addInterface(&intf, false);
+	sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 	sim.run(std::chrono::seconds(5));
 
