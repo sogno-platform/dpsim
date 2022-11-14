@@ -1,0 +1,38 @@
+name: Publish dpsim package to PyPi
+
+on:
+  push:
+    branches:
+      - master
+      - pypi-actions
+
+jobs:
+  build-and-publish:
+    name: Build dpsim and publish to PyPi
+    runs-on: ubuntu-latest
+    container: sogno/dpsim:dev
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Build dpsim source dist and wheel
+      shell: bash
+      run: python -m build --sdist --wheel --outdir dist/
+
+    - name: Remove built wheel # Necessary as long as the wheel is not built on manylinux and therefore has the wrong target for PyPi
+      shell: bash
+      run: rm dist/*.whl
+
+    - name: Publish distribution to Test PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        repository_url: https://test.pypi.org/legacy/
+
+    # - name: Publish distribution to PyPI
+    #   if: startsWith(github.ref, 'refs/tags')
+    #   uses: pypa/gh-action-pypi-publish@release/v1
+    #   with:
+    #     password: ${{ secrets.PYPI_API_TOKEN }}
