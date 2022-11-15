@@ -1,9 +1,7 @@
 name: Container
 
-on:
-  push:
-    branches:
-      - deploy-docker
+# manually trigger workflow since it takes very long
+on: workflow_dispatch
 
 jobs:
   create-docker-centos:
