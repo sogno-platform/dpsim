@@ -85,7 +85,7 @@ void EMT_3ph_SynGen_Load(String simName, Real timeStep, Real finalTime, Real H,
 	auto loggerEMT = DataLogger::make(simNameEMT, true, logDownSampling);
 	loggerEMT->logAttribute("v_gen", 	genEMT->attribute("v_intf"));
 	loggerEMT->logAttribute("i_gen", 	genEMT->attribute("i_intf"));
-    loggerEMT->logAttribute("Etorque", 	genEMT->attribute("Etorque"));
+    loggerEMT->logAttribute("Te", 	genEMT->attribute("Te"));
     //loggerEMT->logAttribute("delta", 	genEMT->attribute("delta"));
     //loggerEMT->logAttribute("w_r", 		genEMT->attribute("w_r"));
 	//loggerEMT->logAttribute("Vdq0", 	genEMT->attribute("Vdq0"));

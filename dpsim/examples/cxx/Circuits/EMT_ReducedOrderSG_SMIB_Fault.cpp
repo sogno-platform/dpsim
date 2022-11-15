@@ -6,7 +6,7 @@ using namespace CPS;
 using namespace CPS::CIM;
 
 // Grid parameters
-Examples::Grids::SMIB::ScenarioConfig4 GridParams;
+Examples::Grids::SMIB::ReducedOrderSynchronGenerator::Scenario4::GridParams GridParams;
 
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
@@ -153,7 +153,7 @@ void EMT_3ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	//loggerEMT->logAttribute("i_slack", 	extnetEMT->attribute("i_intf"));
 	loggerEMT->logAttribute("v_gen", 	genEMT->attribute("v_intf"));
 	loggerEMT->logAttribute("i_gen", 	genEMT->attribute("i_intf"));
-    loggerEMT->logAttribute("Etorque", 	genEMT->attribute("Etorque"));
+    loggerEMT->logAttribute("Te", 	genEMT->attribute("Te"));
     //loggerEMT->logAttribute("delta", 	genEMT->attribute("delta"));
     //loggerEMT->logAttribute("w_r", 		genEMT->attribute("w_r"));
 	//loggerEMT->logAttribute("Vdq0", 	genEMT->attribute("Vdq0"));

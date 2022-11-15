@@ -26,8 +26,8 @@ int main(int argc, char *argv[]) {
 	ecs->connect({ SimNode::GND, n1 });
 	r1->connect({ SimNode::GND, n1 });
 
-	ecs->mCurrentRef->setReference(intf.importComplex(0));
-	intf.exportComplex(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
+	intf.importAttribute(ecs->mCurrentRef, 0);
+	intf.exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
 	
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 	sim.setDomain(Domain::DP);
 	sim.setSolverType(Solver::Type::MNA);
 
-	sim.addInterface(&intf);
+	sim.addInterface(std::shared_ptr<Interface>(&intf));
 	sim.run();
 
 	return 0;

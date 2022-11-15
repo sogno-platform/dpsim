@@ -28,8 +28,8 @@ DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name, Logger::Lev
 	for (auto subcomp: mSubComponents)
 		mSLog->info("- {}", subcomp->name());
 
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
+	mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
+	mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::NetworkInjection::clone(String name) {
@@ -43,24 +43,16 @@ void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) 
 
 	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
-	///FIXME: This should not be necessary, because the reference is already set in the constructor
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
-
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
 				Logger::phasorToString(voltageRef),
 				Logger::realToString(srcFreq));
 }
 
-void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
+void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp) {
 	mParametersSet = true;
 
-	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
-
-	///FIXME: This should not be necessary, because the reference is already set in the constructor
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
+	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, smoothRamp);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
@@ -72,10 +64,6 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modula
 	mParametersSet = true;
 
 	mSubVoltageSource->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
-
-	/// FIXME: This should not be necessary, because the reference is already set in the constructor
-	mVoltageRef->setReference(mSubVoltageSource->mVoltageRef);
-	mSrcFreq->setReference(mSubVoltageSource->mSrcFreq);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",

@@ -54,8 +54,8 @@ int main(int argc, char *argv[]) {
 
 		InterfaceShmem intf1("/dpsim01", "/dpsim10", nullptr, false);
 		InterfaceShmem intf2("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
-		sim.addInterface(&intf1);
-		sim.addInterface(&intf2, false);
+		sim.addInterface(std::shared_ptr<Interface>(&intf1));
+		sim.addInterface(std::shared_ptr<Interface>(&intf2));
 
 		// Controllers and filter
 		std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
@@ -65,8 +65,8 @@ int main(int argc, char *argv[]) {
 		sys.mComponents.push_back(filtP_profile);
 
 		// Register interface current source and voltage drop
-		ecs->mCurrentRef->setReference(intf1.importComplex(0));
-		intf1.exportComplex(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
+		intf1.importAttribute(ecs->mCurrentRef, 0);
+		intf1.exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
 
 		// TODO: gain by 20e8
 		filtP_profile->setInput(intf2.importReal(0));
@@ -118,16 +118,16 @@ int main(int argc, char *argv[]) {
 		sim.setFinalTime(args.duration);
 
 		InterfaceShmem intf1("/dpsim10", "/dpsim01", nullptr, false);
-		sim.addInterface(&intf1);
+		sim.addInterface(std::shared_ptr<Interface>(&intf1));
 
 		InterfaceShmem intf2("/dpsim2-villas", "/villas-dpsim2", nullptr, false);
-		sim.addInterface(&intf2, false);
+		sim.addInterface(std::shared_ptr<Interface>(&intf2));
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
-		evs->mVoltageRef->setReference(intf1.importComplex(0));
+		intf1.importAttribute(evs->mVoltageRef, 0);
 		// TODO: invalid sign
-		intf1.exportComplex(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
+		intf1.exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
 
 		// Register controllable load
 		filtP->setInput(intf2.importReal(0));

@@ -14,7 +14,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -29,12 +29,12 @@ jobs:
     - name: Build dpsimpy and test examples
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake --build . --target dpsimpy --target tests
+      run: cmake --build . --target dpsimpy --target tests --target dpsimpyvillas
       env:
         MAKEFLAGS: "-j2"
 
     - name: Archive build directory
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ${{ github.workspace }}/build
         name: build-cache
@@ -47,7 +47,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -65,7 +65,7 @@ jobs:
         MAKEFLAGS: "-j2"
 
     - name: Archive build directory
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ${{ github.workspace }}/build
         name: build-cache
@@ -79,7 +79,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Restore build archive
       uses: actions/download-artifact@v3
@@ -111,7 +111,7 @@ jobs:
         pytest -v examples/Notebooks
     
     - name: Archive notebook outputs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: pytest-output
         path: outputs/examples/Notebooks/
@@ -128,7 +128,7 @@ jobs:
        path: ${{ github.workspace }}/notebooks-new
     
     - name: Download master notebook results
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/notebooks-master
         key: notebook-output-cache-master-${{ github.sha }}
@@ -136,7 +136,7 @@ jobs:
           notebook-output-cache-master-
     
     - name: Download previous commit notebook results
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/notebooks-previous
         key: notebook-output-cache-commit-${{ github.ref }}-${{ github.sha }}
@@ -196,7 +196,7 @@ jobs:
     #needs: [linux-fedora]
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Run cppcheck
       working-directory: ${{ github.workspace }}
@@ -256,8 +256,62 @@ jobs:
       continue-on-error: true
 
     - name: Archive cppcheck output
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
       with:
         name: cppcheck-output
         path: cppcheck-output.log
+
+  test-villas-examples-1:
+    name: Run dpsim-mqtt Villas example
+    needs: [linux-fedora-dpsimpy]
+    uses: ./.github/workflows/run_villas_example.yaml
+    with:
+      compose_file_path: examples/villas/docker-compose-tests
+      container_commands: |
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "pip install paho-mqtt"
+        docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "/dpsim-mqtt" -u wildcard -v&
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-producer.py"&
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt.py"
+
+  test-villas-examples-2:
+    name: Run dpsim-mqtt-import-export Villas example
+    needs: [linux-fedora-dpsimpy]
+    uses: ./.github/workflows/run_villas_example.yaml
+    with:
+      compose_file_path: examples/villas/docker-compose-tests
+      container_commands: |
+        docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "#" -u wildcard -v&
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-import-export.py"
+  
+  test-villas-examples-3:
+    name: Run dpsim-mqtt-import-export-MIMO Villas example
+    needs: [linux-fedora-dpsimpy]
+    uses: ./.github/workflows/run_villas_example.yaml
+    with:
+      compose_file_path: examples/villas/docker-compose-tests
+      continue_on_error: true
+      container_commands: |
+        docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "#" -u wildcard -v&
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-import-export-MIMO.py"
+
+  test-villas-examples-4:
+    name: Run dpsim-file Villas example
+    needs: [linux-fedora-dpsimpy]
+    uses: ./.github/workflows/run_villas_example.yaml
+    with:
+      compose_file_path: examples/villas/docker-compose-tests
+      continue_on_error: true
+      container_commands: |
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "sleep 3 && tail -f /dpsim/logs/output.csv"&
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-file.py"
+
+  test-villas-examples-5:
+    name: Run mqtt-cigre-mv-pf-profiles Villas example
+    needs: [linux-fedora-dpsimpy]
+    uses: ./.github/workflows/run_villas_example.yaml
+    with:
+      compose_file_path: examples/villas/docker-compose-tests
+      container_commands: |
+        docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "#" -u wildcard -v&
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-cigre-mv-pf-profiles.py"

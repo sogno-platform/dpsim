@@ -15,6 +15,7 @@ set(DPSIM_SOURCES
 	ThreadLevelScheduler.cpp
 	ThreadListScheduler.cpp
 	DiakopticsSolver.cpp
+	Interface.cpp
 )
 
 set(DPSIM_INCLUDE_DIRS
@@ -23,7 +24,9 @@ set(DPSIM_INCLUDE_DIRS
 	)
 
 set(DPSIM_LIBRARIES
-	dpsim-models)
+	dpsim-models
+	readerwriterqueue
+	)
 
 if(WITH_MNASOLVERPLUGIN)
 	list(APPEND DPSIM_LIBRARIES ${CMAKE_DL_LIBS})

@@ -4,7 +4,7 @@ import dpsimpy
 import dpsimpyvillas
 
 sim_name = "DPsim_File"
-time_step = 0.001
+time_step = 0.01
 final_time = 10
 
 n1 = dpsimpy.dp.SimNode('n1', dpsimpy.PhaseType.Single, [10])
@@ -48,11 +48,11 @@ file_config = '''{
         }
 }'''
 
-intf = dpsimpyvillas.InterfaceVillas('dpsim-file', file_config)
+intf = dpsimpyvillas.InterfaceVillas(file_config, name='dpsim-file')
+intf.export_attribute(evs.attr('i_intf').derive_coeff(0, 0), 0)
 
-sim.add_interface(intf, False)
+sim.add_interface(intf)
 #sim.import_attribute('v_intf', 'V_ref', 0)
-sim.export_attribute(evs.attr('i_intf').derive_coeff(0, 0), 0)
 
 sim.add_logger(logger)
 

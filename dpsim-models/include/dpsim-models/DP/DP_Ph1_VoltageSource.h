@@ -21,6 +21,15 @@ namespace DP {
 namespace Ph1 {
 	/// \brief Ideal Voltage source model
 	///
+	/// This component uses a SignalGenerator instance to produce an output signal on mIntfVoltage.
+	/// The signal generator can be configured to produce different signal shapes
+	/// By default or when the setParameters(Complex voltageRef, Real srcFreq = 0.0) function is used to configure this VoltageSource,
+	/// the SineWaveGenerator will be used. The frequency of the sine wave can be modified through the mSrcFreq attribute while the
+	/// magnitude and phase of the wave are derived from the magnitude and phase of the mVoltageRef attribute. Refer to the formula
+	/// in SineWaveGenerator.cpp for further details.
+	/// When one of the other setParameters functions is used to configure this VoltageSource, the output signal will not react to changes in
+	/// mVoltageRef or mSrcFreq. Instead, only the parameters given in the setParameters call are used to produce the signal.
+	///
 	/// This model uses modified nodal analysis to represent an ideal voltage source.
 	/// For a voltage source between nodes j and k, a new variable
 	/// (current across the voltage source) is added to the left side vector
@@ -57,13 +66,15 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 		///
 		void setSourceValue(Complex voltage);
-		///
-		//void setSourceSignal(CPS::Signal::SignalGenerator::Ptr srcSig);
-		///
+		/// Setter for reference voltage and frequency with a sine wave generator
+		/// This will initialize the values of mVoltageRef and mSrcFreq to match the given parameters
+		/// However, the attributes can be modified during the simulation to dynamically change the magnitude, frequency, and phase of the sine wave.
 		void setParameters(Complex voltageRef, Real srcFreq = 0.0);
 		/// Setter for reference signal of type frequency ramp
-		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
+		/// This will create a FrequencyRampGenerator which will not react to external changes to mVoltageRef or mSrcFreq!
+		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp = true);
 		/// Setter for reference signal of type cosine frequency modulation
+		/// This will create a CosineFMGenerator which will not react to external changes to mVoltageRef or mSrcFreq!
 		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 0.0, bool zigzag = false);
 
 		// #### MNA Section ####
@@ -116,9 +127,9 @@ namespace Ph1 {
 			MnaPreStepHarm(VoltageSource& voltageSource) :
 				Task(**voltageSource.mName + ".MnaPreStepHarm"),
 				mVoltageSource(voltageSource) {
-				mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
-				mModifiedAttributes.push_back(mVoltageSource.attribute("right_vector"));
-				mModifiedAttributes.push_back(mVoltageSource.attribute("v_intf"));
+				mAttributeDependencies.push_back(mVoltageSource.mVoltageRef);
+				mModifiedAttributes.push_back(mVoltageSource.mRightVector);
+				mModifiedAttributes.push_back(mVoltageSource.mIntfVoltage);
 			}
 			void execute(Real time, Int timeStepCount);
 		private:
@@ -132,7 +143,7 @@ namespace Ph1 {
 				mVoltageSource(voltageSource), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
 					mAttributeDependencies.push_back(mLeftVectors[i]);
-				mModifiedAttributes.push_back(mVoltageSource.attribute("i_intf"));
+				mModifiedAttributes.push_back(mVoltageSource.mIntfCurrent);
 			}
 			void execute(Real time, Int timeStepCount);
 		private:

@@ -4,7 +4,7 @@ variables:
   RSYNC_OPTS: --recursive --ignore-missing-args --chown ${DEPLOY_USER}:${DEPLOY_USER}
   DOCKER_IMAGE: sogno/dpsim
   DOCKER_IMAGE_DEV: sogno/dpsim-dev
-  DOCKER_IMAGE_DEV_CENTOS: sogno/dpsim-dev-centos
+  DOCKER_IMAGE_DEV_ROCKY: sogno/dpsim-dev-rocky
 
 
 stages:
@@ -40,13 +40,13 @@ stages:
 #    TAGS:       --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME}-cim
 #    BUILD_ARGS: --build-arg CIM_VERSION=IEC61970_16v29a
 
-docker:centos:
+docker:rocky:
   stage: prepare
   needs: []
   script:
     - docker build
-        --file packaging/Docker/Dockerfile.dev-centos
-        --tag ${DOCKER_IMAGE_DEV_CENTOS}:${CI_COMMIT_REF_NAME} .
+        --file packaging/Docker/Dockerfile.dev-rocky
+        --tag ${DOCKER_IMAGE_DEV_ROCKY}:${CI_COMMIT_REF_NAME}
   tags:
     - docker
 
@@ -103,8 +103,8 @@ docker:centos:
 
 build:linux-cuda:
   stage: build
-  needs: ["docker:centos"]
-  image: ${DOCKER_IMAGE_DEV_CENTOS}:${CI_COMMIT_REF_NAME}
+  needs: ["docker:rocky"]
+  image: ${DOCKER_IMAGE_DEV_ROCKY}:${CI_COMMIT_REF_NAME}
   artifacts:
     paths:
       - build
@@ -290,7 +290,7 @@ build:linux-cuda:
   stage: test
   script:
     - *benchmark-script
-  image: ${DOCKER_IMAGE_DEV_CENTOS}:${CI_COMMIT_REF_NAME}
+  image: ${DOCKER_IMAGE_DEV_ROCKY}:${CI_COMMIT_REF_NAME}
   tags:
     - docker
 
@@ -390,7 +390,7 @@ test:solver-benchmark 2/2:
   after_script:
     - ssh $GPU_TARGET rm -rf $RDIR
     - ssh $GPU_TARGET pkill -fe -2 $RDIR/$TEST_BINARY
-  image: ${DOCKER_IMAGE_DEV_CENTOS}:${CI_COMMIT_REF_NAME}
+  image: ${DOCKER_IMAGE_DEV_ROCKY}:${CI_COMMIT_REF_NAME}
   tags:
     - docker
 
@@ -510,7 +510,7 @@ generate:metrics:
   script:
     - echo "set terminal svg size 800, 500; set output 'metrics.svg'; set title 'Speed of different Solver-Configurations'; set style data lines; set key outside; set xlabel \"Copies (WSCC-9bus Example)\"; set ylabel \"Average steptime (µs)\"; set xtics 1; set xtics nomirror; set ytics nomirror; set grid; plot \"cpu-dense-metrics.txt\" using (\$1 * 1000000) title \"Solving with CPU and dense matrices\", \"gpu-dense-metrics.txt\" using (\$1 * 1000000) title \"Solving with GPU and dense matrices\", \"cpu-sparse-metrics.txt\" using (\$1 * 1000000) title \"Solving with CPU and sparse matrices\"" > script.p
     - gnuplot script.p
-  image: ${DOCKER_IMAGE_DEV_CENTOS}:${CI_COMMIT_REF_NAME}
+  image: ${DOCKER_IMAGE_DEV_ROCKY}:${CI_COMMIT_REF_NAME}
   artifacts:
     reports:
       metrics: metrics.svg

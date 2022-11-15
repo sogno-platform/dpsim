@@ -1,4 +1,4 @@
-name: Build & Test CentOS
+name: Build & Test RockyLinux
 
 on:
   push:
@@ -8,13 +8,13 @@ on:
 ## Build ##
 
 jobs:
-  linux-centos:
-    name: Build on CentOS Linux
+  linux-rocky:
+    name: Build on Rocky Linux
     runs-on: ubuntu-latest
-    container: sogno/dpsim:dev-centos
+    container: sogno/dpsim:dev-rocky
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -34,18 +34,18 @@ jobs:
         MAKEFLAGS: "-j2"
 
     - name: Cache build directory
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/build
-        key: build-cache-centos-${{ github.sha }}
+        key: build-cache-rocky-${{ github.sha }}
 
   profiling:
     name: Build with Profiling options
     runs-on: ubuntu-latest
-    container: sogno/dpsim:dev-centos
+    container: sogno/dpsim:dev-rocky
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -65,10 +65,10 @@ jobs:
         MAKEFLAGS: "-j2"
 
     - name: Cache build directory
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/build
-        key: build-cache-centos-profiling-${{ github.sha }}
+        key: build-cache-rocky-profiling-${{ github.sha }}
 
 ## Tests ##
   test-examples-1:

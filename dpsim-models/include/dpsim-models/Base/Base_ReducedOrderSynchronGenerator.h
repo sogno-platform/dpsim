@@ -140,11 +140,9 @@ namespace Base {
 			/// Flag to remember when initial values are set
 			Bool mInitialValuesSet = false;
 
-			// ### State variables [p.u.]###
-
-			/// Mechanical torque
-			Real mMechTorque;
 		public:
+			/// Mechanical torque
+			const Attribute<Real>::Ptr mMechTorque;
 			/// stator electrical torque
 			const Attribute<Real>::Ptr mElecTorque;
 			/// Rotor speed
@@ -178,7 +176,7 @@ namespace Base {
 				Real initMechanicalPower, Complex initTerminalVoltage);
 
 			/// ### Setters ###
-			void reduceInertiaConstant(Real porcent) {mH = mH * (1.-porcent);}
+			void scaleInertiaConstant(Real scalingFactor); 
 
 			/// ### Mna Section ###
 			class MnaPreStep : public Task {

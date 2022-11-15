@@ -2,55 +2,50 @@
 
 #pragma once
 
-#include <dpsim-villas/InterfaceSampleBased.h>
+#include <dpsim-models/PtrFactory.h>
+#include <dpsim/Interface.h>
 
 #include <villas/node.hpp>
 #include <villas/exceptions.hpp>
 #include <villas/memory.hpp>
 #include <villas/kernel/rt.hpp>
 #include <villas/pool.hpp>
+#include <villas/sample.hpp>
+#include <villas/signal.hpp>
+#include <villas/signal_list.hpp>
 
 using namespace villas;
 
 namespace DPsim {
+	/// Interface type that can be used to import and export simulation attributes over any node type supported by VILLASnode
 	class InterfaceVillas :
-		public InterfaceSampleBased,
+		public Interface,
 		public SharedFactory<InterfaceVillas> {
 
 	public:
-		typedef std::shared_ptr<InterfaceVillas> Ptr;
-		static UInt villasPriority;
-		static UInt villasAffinity;
-		static UInt villasHugePages;
+		/// @brief create a new InterfaceVillas instance
+		/// @param nodeConfig VILLASnode node configuration in JSON format
+		/// @param queueLength queue lenght configured for the node
+		/// @param sampleLength sample length configured for the node
+		/// @param name Name of this interface. Currently only used for naming the simulation tasks
+		/// @param downsampling Only import and export attributes on every nth timestep
+		InterfaceVillas(const String &nodeConfig, UInt queueLength = 512, UInt sampleLength = 64, const String& name = "", UInt downsampling = 1);
 
-	protected:
-		//Villas node to send / receive data to / from
-		String mNodeConfig;
-		node::Node* mNode;
+		/// @brief configure an attribute import
+		/// @param attr the attribute that should be updated with the imported values
+		/// @param idx The id given to the attribute within VILLASnode samples
+		/// @param blockOnRead Whether the simulation should block on every import until the attribute has been updated
+		/// @param syncOnSimulationStart Whether the simulation should block before the first timestep until this attribute has been updated
+        void importAttribute(CPS::AttributeBase::Ptr attr, UInt idx, Bool blockOnRead = false, Bool syncOnSimulationStart = true);
+		
+		/// @brief configure an attribute export
+		/// @param attr the attribute which's value should be exported
+		/// @param idx The id given to the attribute within VILLASnode samples
+		/// @param waitForOnWrite Whether a sample that is sent from this interface is required to contain an updated value of this attribute
+		/// @param name Name given to the attribute within VILLASnode samples
+		/// @param unit Unit given to the attribute within VILLASnode samples
+		void exportAttribute(CPS::AttributeBase::Ptr attr, UInt idx, Bool waitForOnWrite, const String& name = "", const String& unit = "");
 
-		int mQueueLength;
-		int mSampleLength;
-		node::Pool mSamplePool;
-
-		static Bool villasInitialized;
-
-	public:
-		/** Create a InterfaceVillas with a specific configuration for the VillasNode
-		 *
-		 * @param name The name of the newly created VillasNode
-		 */
-		InterfaceVillas(const String &name, const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
-
-		void open(CPS::Logger::Log log);
-		void close();
-
-		void readValues(bool blocking = true);
-		void writeValues();
-		void initVillas();
-
-	private:
-		void prepareNode();
-		void setupNodeSignals();
 	};
 }
 
