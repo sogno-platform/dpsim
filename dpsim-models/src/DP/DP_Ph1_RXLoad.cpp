@@ -119,7 +119,7 @@ void DP::Ph1::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 	}
 	if (mSubCapacitor) {
 		mSubCapacitor->mnaInitialize(omega, timeStep, leftVector);
-		mRightVectorStamps.push_back(&**mSubInductor->mRightVector);
+		mRightVectorStamps.push_back(&**mSubCapacitor->mRightVector);
 	}
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
