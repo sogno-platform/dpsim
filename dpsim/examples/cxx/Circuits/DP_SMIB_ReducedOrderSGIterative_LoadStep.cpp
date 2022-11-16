@@ -1,4 +1,5 @@
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 #include "../Examples.h"
 
 using namespace DPsim;
@@ -17,17 +18,21 @@ Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur
 
 int main(int argc, char* argv[]) {	
 
+	// initiaize gen factory
+	SynchronGeneratorFactory::DP::Ph1::registerSynchronGenerators();
+
 	// Simulation parameters
 	String simName = "DP_SMIB_ReducedOrderSGIterative_LoadStep";
-	Real timeStep = 10e-6;
+	Real timeStep = 32e-6;
 	Real finalTime = 35;
 
 	// Default configuration
-	String sgType = defaultConfig.sgType;
 	Real loadStepEventTime = defaultConfig.loadStepEventTime;
 	Real H = syngenKundur.H;
 	Real tolerance = defaultConfig.tolerance;
 	int maxIter = defaultConfig.maxIter;
+	String SGModel = defaultConfig.sgType + "Iter";
+	SGModel = "4Iter";
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
@@ -40,12 +45,12 @@ int main(int argc, char* argv[]) {
 			tolerance = args.getOptionReal("Tolerance");
 		if (args.options.find("MaxIter") != args.options.end())
 			maxIter = int(args.getOptionReal("MaxIter"));
-		if (args.options.find("sgType") != args.options.end())
-			sgType = args.getOptionString("sgType");
 		if (args.options.find("loadStepEventTime") != args.options.end())
 			loadStepEventTime = args.getOptionReal("loadStepEventTime");
 		if (args.options.find("inertia") != args.options.end())
 			H = args.getOptionReal("inertia");
+		if (args.options.find("SGModel") != args.options.end())
+			SGModel = args.getOptionString("SGModel");
 	}
 
 	std::cout << "Simulation Parameters: " << std::endl;
@@ -53,7 +58,7 @@ int main(int argc, char* argv[]) {
 	std::cout << "Time Step: " << timeStep << std::endl;
 	std::cout << "Tolerance: " << tolerance << std::endl;
 	std::cout << "Max N° of Iterations: " << maxIter << std::endl;
-	std::cout << "SG: " << sgType << std::endl;
+	std::cout << "SG: " << SGModel << std::endl;
 	
 	// Configure logging
 	Logger::Level logLevel = Logger::Level::info;
@@ -135,15 +140,16 @@ int main(int argc, char* argv[]) {
 	auto n2DP = SimNode<Complex>::make("n2DP", PhaseType::Single, initialVoltage_n2);
 
 	// Synchronous generator
-	auto genDP = DP::Ph1::SynchronGenerator4OrderIter::make("SynGen", logLevel);
+	auto genDP = Factory<CPS::Base::ReducedOrderSynchronGenerator<Complex>>::get().create(SGModel, "SynGen", logLevel);
 	genDP->setOperationalParametersPerUnit(
 		syngenKundur.nomPower, syngenKundur.nomVoltage, 
 		syngenKundur.nomFreq, H, 
 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
-		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t); 
+		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+		syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
-	genDP->setMaxIterations(maxIter);
-	genDP->setTolerance(tolerance);
+	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setMaxIterations(maxIter); 
+	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setTolerance(tolerance);
 
 	//Grid bus as Slack
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);

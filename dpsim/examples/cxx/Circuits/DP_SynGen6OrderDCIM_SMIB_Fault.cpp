@@ -84,7 +84,7 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	auto n2DP = SimNode<Complex>::make("nDSP", PhaseType::Single, initialVoltage_n2);
 
 	// Components
-	auto genDP = DP::Ph1::SynchronGenerator4OrderDCIM::make("SynGen", Logger::Level::debug);
+	auto genDP = DP::Ph1::SynchronGenerator6OrderDCIM::make("SynGen", Logger::Level::debug);
 	genDP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, syngenKundur.H,
@@ -125,9 +125,10 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
     loggerDP->logAttribute("Te", 	 	 genDP->attribute("Te"));
     loggerDP->logAttribute("delta", 	 genDP->attribute("delta"));
     loggerDP->logAttribute("w_r", 		 genDP->attribute("w_r"));
-	loggerDP->logAttribute("Edq0", 		 genDP->attribute("Edq_t"));
-	loggerDP->logAttribute("Vdq0", 		 genDP->attribute("Vdq0"));
-	loggerDP->logAttribute("Idq0", 		 genDP->attribute("Idq0"));
+	loggerDP->logAttribute("Edq_t", 		 genDP->attribute("Edq_t"));
+	loggerDP->logAttribute("Edq_s", 		 genDP->attribute("Edq_s"));
+	loggerDP->logAttribute("Vdq", 		 genDP->attribute("Vdq0"));
+	loggerDP->logAttribute("Idq", 		 genDP->attribute("Idq0"));
 
 	Simulation simDP(simNameDP, logLevel);
 	simDP.doInitFromNodesAndTerminals(true);
@@ -158,7 +159,7 @@ int main(int argc, char* argv[]) {
 	Real endTimeFault   = 1.1;
 	Real timeStep = 1e-9;
 	Real H = syngenKundur.H;
-	Real finalTime = 2;
+	Real finalTime = 3;
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
@@ -181,7 +182,7 @@ int main(int argc, char* argv[]) {
 	else
 		logDownSampling = 1.0;
 	Logger::Level logLevel = Logger::Level::off;
-	std::string simName = "DP_SynGen4OrderDCIM_SMIB_Fault" + stepSize_str + inertia_str;
+	std::string simName = "DP_SynGen6OrderDCIM_SMIB_Fault" + stepSize_str + inertia_str;
 	DP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
 			logDownSampling, SwitchOpen, SwitchClosed, logLevel);
 }
