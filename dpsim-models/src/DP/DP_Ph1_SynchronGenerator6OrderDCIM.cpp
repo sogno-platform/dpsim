@@ -6,19 +6,21 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderDCIM.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderDCIM.h>
 
 using namespace CPS;
 
-DP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
+DP::Ph1::SynchronGenerator6OrderDCIM::SynchronGenerator6OrderDCIM
     (String uid, String name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)) {
+	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)),
+	mEdq_s(Attribute<Matrix>::create("Edq_s", mAttributes)) {
 
 	setTerminalNumber(1);
 
 	// model variables
 	**mEdq_t = Matrix::Zero(2,1);
+	**mEdq_s = Matrix::Zero(2,1);
 
 	//
 	mShiftVector = Matrix::Zero(3,1);
@@ -28,69 +30,88 @@ DP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
 	mDpToDq = Matrix::Zero(1,2);
 }
 
-DP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
+DP::Ph1::SynchronGenerator6OrderDCIM::SynchronGenerator6OrderDCIM
 	(String name, Logger::Level logLevel)
-	: SynchronGenerator4OrderDCIM(name, name, logLevel) {
+	: SynchronGenerator6OrderDCIM(name, name, logLevel) {
 }
 
-SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator4OrderDCIM::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator6OrderDCIM::clone(String name) {
 	
-	auto copy = SynchronGenerator4OrderDCIM::make(name, mLogLevel);
+	auto copy = SynchronGenerator6OrderDCIM::make(name, mLogLevel);
 	return copy;
 }
 
-void DP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
+void DP::Ph1::SynchronGenerator6OrderDCIM::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
-	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
-	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
+	(**mEdq_t)(0,0) = (mLq - mLq_t) * (**mIdq)(1,0);
+	(**mEdq_t)(1,0) = mEf - (mLd - mLd_t) * (**mIdq)(0,0);
+
+	// initial dq behind the subtransient reactance in the dq reference frame
+	(**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);
+	(**mEdq_s)(1,0) = (**mVdq)(1,0) + mLd_s * (**mIdq)(0,0);
 
 	//
-	mStates = Matrix::Zero(4,1);
-	mStates << **mEdq_t, **mIdq;
-	mStates_prev = Matrix::Zero(6,1);
+	mStates = Matrix::Zero(6,1);
+	mStates << **mEdq_s, **mEdq_t, **mIdq;
+	mStates_prev = Matrix::Zero(8,1);
 
 	//
-	mAd = mTimeStep * (mLq - mLq_t) / (2 * mTq0_t + mTimeStep);
-	mBd = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
+	mAd_t = mTimeStep * (mLq - mLq_t) / (2 * mTq0_t + mTimeStep);
+	mBd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
+	mAq_t = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
+	mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
+	mDq_t = 2 * mTimeStep / (2 * mTd0_t + mTimeStep);
 
-	mAq = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
-	mBq = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mCq = 2 * mTimeStep / (2 * mTd0_t + mTimeStep);
+	//
+	mAd_s = mTimeStep * (mLq_t - mLq_s) / (2 * mTq0_s + mTimeStep);
+	mBd_s = mTimeStep / (2 * mTq0_s + mTimeStep);
+	mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
+	mAq_s = mTimeStep * (mLd_t - mLd_s) / (2 * mTd0_s + mTimeStep);
+	mBq_s = mTimeStep / (2 * mTd0_s + mTimeStep);
+	mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
 
     // Initialize matrix of state representation
-	mA = Matrix::Zero(4,4);
-	mA <<	1,	0,		0,		-mAd,
-			0,	1,		-mAq,	0,
-			0,	-1,		mLd_t,	0,
-			1,	0,		0,		mLq_t;
+	mA = Matrix::Zero(6,6);
+	mA <<	1,		0,		-mBd_s,		0,			0,		-mAd_s,
+			0,		1,		0,		-mBq_s,		mAq_s,		0,
+			0,		0,		1,			0,			0,		-mAd_t,
+			0,		0,		0,			1,		-mAq_t,		0,
+			0,		-1,		0,			0,		mLd_s,		0,
+			1,		0,		0,			0,			0,		mLq_s;
 	mA_inv = mA.inverse();
 	
-	mB = Matrix::Zero(4,6);
-	mB <<	mBd,	0,		0,		mAd,	0,		0,
-			0,		mBq,	mAq,	0,		0,		0,
-			0,		0,		0,		0,		0,		-1,
-			0,		0,		0,		0,		1,		0;
+	mB = Matrix::Zero(6,8);
+	mB <<	mCd_s,	0,		mBd_s,		0,		0,		mAd_s,	0,	0,
+			0,		mCq_s,	0,			mBq_s,	-mAq_s,		0,	0,	0,
+			0,		0,		mBd_t,		0,		0,		mAd_t,	0,	0,
+			0,		0,		0,			mBq_t,	mAq_t,		0,	0,	0,
+			0,		0,		0,			0,		0,			0,	0,	-1,
+			0,		0,		0,			0,		0,			0,	1,	0;
 
-	mC = Matrix::Zero(4,1);
-	mC <<	0,	mCq,	0,	0;
+	mC = Matrix::Zero(6,1);
+	mC <<	0,	0,	0,	mDq_t,	0,	0;
     
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
-		"\n--- Model DPecific initialization finished ---",
+		"\nInitial Ed_s (per unit): {:f}"
+		"\nInitial Eq_s (per unit): {:f}"
+		"\n--- Model specific initialization finished ---",
 
 		(**mEdq_t)(0,0),
-		(**mEdq_t)(1,0)
+		(**mEdq_t)(1,0),
+		(**mEdq_s)(0,0),
+		(**mEdq_s)(1,0)
 	);
 	mSLog->flush();
 }
 
-void DP::Ph1::SynchronGenerator4OrderDCIM::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::SynchronGenerator6OrderDCIM::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
-void DP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
+void DP::Ph1::SynchronGenerator6OrderDCIM::stepInPerUnit() {
 	if (mSimTime>0.0) {
 		// calculate mechanical variables at t=k+1 with forward euler
 		**mElecTorque = ((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0));
@@ -102,8 +123,9 @@ void DP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	// calculate Edq and Idq at t=k+1. Assumption: Vdq(k) = Vdq(k+1)
 	mStates_prev << mStates, **mVdq;
 	mStates = mA_inv * mB * mStates_prev + mA_inv * mC * mEf;
-	**mEdq_t <<	mStates(0,0), mStates(1,0);
-	**mIdq << mStates(2,0), mStates(3,0);
+	**mEdq_s <<	mStates(0,0), mStates(1,0);
+	**mEdq_t <<	mStates(2,0), mStates(3,0);
+	**mIdq << mStates(4,0), mStates(5,0);
 
 	// convert currents into the abc reference frame
 	mDpToDq(0,0) = Complex(cos(**mThetaMech - mBase_OmMech * mSimTime), sin(**mThetaMech - mBase_OmMech * mSimTime));
@@ -111,11 +133,11 @@ void DP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
 }
 
-void DP::Ph1::SynchronGenerator4OrderDCIM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph1::SynchronGenerator6OrderDCIM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0), (**mIntfCurrent)(0, 0));
 }
 
-void DP::Ph1::SynchronGenerator4OrderDCIM::mnaPostStep(const Matrix& leftVector) {
+void DP::Ph1::SynchronGenerator6OrderDCIM::mnaPostStep(const Matrix& leftVector) {
 
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	
@@ -128,7 +150,7 @@ void DP::Ph1::SynchronGenerator4OrderDCIM::mnaPostStep(const Matrix& leftVector)
     mSimTime = mSimTime + mTimeStep;
 }
 
-Matrix DP::Ph1::SynchronGenerator4OrderDCIM::parkTransform(Real theta, const Matrix& abcVector) {
+Matrix DP::Ph1::SynchronGenerator6OrderDCIM::parkTransform(Real theta, const Matrix& abcVector) {
 	Matrix dq0Vector(3, 1);
 	Matrix dqVector(2, 1);
 	Matrix abcToDq0(3, 3);

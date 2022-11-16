@@ -49,7 +49,7 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 
 	mAq = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
 	mBq = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mCq = 2 * mTimeStep * mEf / (2 * mTd0_t + mTimeStep);
+	mCq = 2 * mTimeStep / (2 * mTd0_t + mTimeStep);
 
     // Initialize matrix of state representation
 	mA = Matrix::Zero(4,4);
@@ -86,10 +86,10 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::mnaApplySystemMatrixStamp(Matrix& sys
 void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	if (mSimTime>0.0) {
 		// calculate mechanical variables at t=k+1 with forward euler
+		**mElecTorque = ((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0));
 		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (**mMechTorque - **mElecTorque));
 		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
-        **mElecTorque = ((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0));
 	}
 
 	// get transformation matrix
@@ -97,9 +97,9 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	mComplexAToDq = mDqToComplexA.transpose();
 
 	// calculate Edq and Idq at t=k+1. Assumption: Vdq(k) = Vdq(k+1)
-	mStates_prev << mStates, mVdq;
+	mStates_prev << mStates, **mVdq;
 	mStates = mA_inv * mB * mStates_prev + mA_inv * mC * mEf;
-	(**mEdq_t) <<	mStates(0,0), mStates(1,0);
+	(**mEdq_t) << mStates(0,0), mStates(1,0);
 	(**mIdq) << mStates(2,0), mStates(3,0);
 
 	// convert currents into the abc domain

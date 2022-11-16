@@ -11,7 +11,7 @@ Examples::Grids::SMIB::ScenarioConfig2 GridParams;
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
-void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
+void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
 	Real switchClosed, Logger::Level logLevel) {
 
@@ -68,8 +68,8 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 
 	// ----- Dynamic simulation ------
-	String simNameSP = simName;
-	Logger::setLogDir("logs/" + simNameSP);
+	String simNameDP = simName;
+	Logger::setLogDir("logs/" + simNameDP);
 	
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
@@ -80,73 +80,74 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	// Nodes
 	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0), 0.0, 0.0};
 	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0), 0.0, 0.0};
-	auto n1SP = SimNode<Complex>::make("n1SP", PhaseType::Single, initialVoltage_n1);
-	auto n2SP = SimNode<Complex>::make("n2SP", PhaseType::Single, initialVoltage_n2);
+	auto n1DP = SimNode<Complex>::make("n1DP", PhaseType::Single, initialVoltage_n1);
+	auto n2DP = SimNode<Complex>::make("nDSP", PhaseType::Single, initialVoltage_n2);
 
 	// Components
-	auto genSP = SP::Ph1::SynchronGenerator4OrderDCIM::make("SynGen", Logger::Level::debug);
-	genSP->setOperationalParametersPerUnit(
+	auto genDP = DP::Ph1::SynchronGenerator6OrderDCIM::make("SynGen", Logger::Level::debug);
+	genDP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, syngenKundur.H,
 	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-    genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+    genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 
 	//Grid bus as Slack
-	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
-	extnetSP->setParameters(GridParams.VnomMV);
+	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
+	extnetDP->setParameters(GridParams.VnomMV);
 
     // Line
-	auto lineSP = SP::Ph1::PiLine::make("PiLine", logLevel);
-	lineSP->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+	auto lineDP = DP::Ph1::PiLine::make("PiLine", logLevel);
+	lineDP->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
 						  GridParams.lineCapacitance, GridParams.lineConductance);
 	
 	//Breaker
-	auto fault = CPS::SP::Ph1::Switch::make("Br_fault", logLevel);
+	auto fault = DP::Ph1::Switch::make("Br_fault", logLevel);
 	fault->setParameters(switchOpen, switchClosed);
 	fault->open();
 
 	// Topology
-	genSP->connect({ n1SP });
-	lineSP->connect({ n1SP, n2SP });
-	extnetSP->connect({ n2SP });
-	fault->connect({SP::SimNode::GND, n1SP});
-	auto systemSP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{genSP, lineSP, extnetSP, fault});
+	genDP->connect({ n1DP });
+	lineDP->connect({ n1DP, n2DP });
+	extnetDP->connect({ n2DP });
+	fault->connect({DP::SimNode::GND, n1DP});
+	auto systemDP = SystemTopology(GridParams.nomFreq,
+			SystemNodeList{n1DP, n2DP},
+			SystemComponentList{genDP, lineDP, extnetDP, fault});
 
 	// Logging
-	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
-	//loggerSP->logAttribute("v_slack", 	 extnetSP->attribute("v_intf"));
-	//loggerSP->logAttribute("i_slack", 	 extnetSP->attribute("i_intf"));
-	loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
-    loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
-    loggerSP->logAttribute("Te", 	 	 genSP->attribute("Te"));
-    loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
-    loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
-	loggerSP->logAttribute("Edq0", 		 genSP->attribute("Edq_t"));
-	loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Vdq0"));
-	loggerSP->logAttribute("Idq0", 		 genSP->attribute("Idq0"));
+	auto loggerDP = DataLogger::make(simNameDP, true, logDownSampling);
+	//loggerDP->logAttribute("v_slack", 	 extnetDP->attribute("v_intf"));
+	//loggerDP->logAttribute("i_slack", 	 extnetDP->attribute("i_intf"));
+	//loggerDP->logAttribute("v_gen", 	 genDP->attribute("v_intf"));
+    //loggerDP->logAttribute("i_gen", 	 genDP->attribute("i_intf"));
+    loggerDP->logAttribute("Te", 	 	 genDP->attribute("Te"));
+    loggerDP->logAttribute("delta", 	 genDP->attribute("delta"));
+    loggerDP->logAttribute("w_r", 		 genDP->attribute("w_r"));
+	loggerDP->logAttribute("Edq_t", 		 genDP->attribute("Edq_t"));
+	loggerDP->logAttribute("Edq_s", 		 genDP->attribute("Edq_s"));
+	loggerDP->logAttribute("Vdq", 		 genDP->attribute("Vdq0"));
+	loggerDP->logAttribute("Idq", 		 genDP->attribute("Idq0"));
 
-	Simulation simSP(simNameSP, logLevel);
-	simSP.doInitFromNodesAndTerminals(true);
-	simSP.setSystem(systemSP);
-	simSP.setTimeStep(timeStep);
-	simSP.setFinalTime(finalTime);
-	simSP.setDomain(Domain::SP);
-	simSP.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
-	simSP.addLogger(loggerSP);
-	//simSP.doSystemMatrixRecomputation(true);
+	Simulation simDP(simNameDP, logLevel);
+	simDP.doInitFromNodesAndTerminals(true);
+	simDP.setSystem(systemDP);
+	simDP.setTimeStep(timeStep);
+	simDP.setFinalTime(finalTime);
+	simDP.setDomain(Domain::DP);
+	simDP.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
+	simDP.addLogger(loggerDP);
+	//simDP.doSystemMatrixRecomputation(true);
 
 	// Events
 	auto sw1 = SwitchEvent::make(startTimeFault, fault, true);
-	simSP.addEvent(sw1);
+	simDP.addEvent(sw1);
 
 	auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
-	simSP.addEvent(sw2);
+	simDP.addEvent(sw2);
 	
-	simSP.run();
+	simDP.run();
 }
 
 int main(int argc, char* argv[]) {	
@@ -158,7 +159,7 @@ int main(int argc, char* argv[]) {
 	Real endTimeFault   = 1.1;
 	Real timeStep = 1e-9;
 	Real H = syngenKundur.H;
-	Real finalTime = 20;
+	Real finalTime = 3;
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
@@ -176,13 +177,12 @@ int main(int argc, char* argv[]) {
 	}
 
 	Real logDownSampling;
-	if (timeStep<1e-6)
-		logDownSampling = floor((1e-6) / timeStep);
+	if (timeStep<10e-6)
+		logDownSampling = floor((10e-6) / timeStep);
 	else
 		logDownSampling = 1.0;
-	logDownSampling = 1.0;
 	Logger::Level logLevel = Logger::Level::off;
-	std::string simName = "SP_SynGen4OrderDCIM_SMIB_Fault" + stepSize_str + inertia_str;
-	SP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
+	std::string simName = "DP_SynGen6OrderDCIM_SMIB_Fault" + stepSize_str + inertia_str;
+	DP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
 			logDownSampling, SwitchOpen, SwitchClosed, logLevel);
 }
