@@ -21,85 +21,35 @@ namespace Ph1 {
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public MNASyncGenInterface,
 		public SharedFactory<SynchronGenerator4OrderIter> {
-	protected:
-		using MNASyncGenInterface::mNumIter;
-		
-		/// sim flags
-		bool mVoltageForm;
-
-		// #### Model specific variables ####
-		///
-		Matrix mVdq_prev;
-		/// previous voltage behind the transient impedance (p.u.)
-		const Attribute<Matrix>::Ptr mEdq_t;
-		Matrix mEdq_t_pred;
-		Matrix mEdq_t_corr;
-		/// derivative voltage behind the transient impedance (p.u.)
-		Matrix mdEdq_t;
-		Matrix mdEdq_t_corr;
-		///
-		Real mElecTorque_corr;
-		///
-		Real mdOmMech = 0; 
-		Real mdOmMech_corr = 0;
-		Real mOmMech_pred;
-		Real mOmMech_corr;
-		/// prediction of mechanical system angle
-		Real mThetaMech_pred;
-		Real mThetaMech_corr;
-		///
-		Real mDelta_pred;
-		Real mDelta_corr;
-		Real mdDelta = 0;
-		Real mdDelta_corr = 0;
-
-		/// State Matrix x(k+1) = Ax(k) + Bu(k) + C
-		/// A Matrix
-		Matrix mA;
-		/// B Matrix
-		Matrix mB;
-		/// Constant Matrix
-		Matrix mC;
-
-		/// Transformation matrix dp->dq
-		MatrixComp mDpToDq;
-
-		/// Vector to create abc vector from a component
-		MatrixComp mShiftVector;
-
 	public:
 		///
-		SynchronGenerator4OrderIter(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderIter(const String& uid, const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator4OrderIter(String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderIter(const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(const String& name);
 
 		// #### General Functions ####
 		///
-		void specificInitialization();
+		void specificInitialization() override;
 		///
 		void calculateStateMatrix();
 		///
-		void stepInPerUnit();
+		void stepInPerUnit() override;
 		// 
-		void correctorStep();
+		void correctorStep() override;
 		/// 
-		void updateVoltage(const Matrix& leftVector);
+		void updateVoltage(const Matrix& leftVector) override;
 		///
-		bool checkVoltageDifference();
+		bool checkVoltageDifference() override;
+
+		// #### MNA Functions ####
 		///
-		Matrix parkTransform(Real theta, const Matrix& abcVector);
-
-
-		/// Setters
+		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		///
-		void useVoltageForm(bool state) {mVoltageForm = state;}	
-
-		// #### MNA Functions ####		
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaPostStep(const Matrix& leftVector);
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix){};
+		void mnaPostStep(const Matrix& leftVector) override;
+		///
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override {};
 	};
 }
 }

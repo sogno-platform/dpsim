@@ -12,28 +12,19 @@ using namespace CPS;
 
 DP::Ph1::SynchronGenerator6OrderIter::SynchronGenerator6OrderIter
     (const String& uid, const String& name, Logger::Level logLevel)
-	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq0_t", mAttributes)) {
+	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel) {
 
 	mPhaseType = PhaseType::Single;
 	setTerminalNumber(1);
 
-	// model flags (deprecated)
-	mVoltageForm = false;
-	
+	/// initialize attributes
+	mEdq = Attribute<Matrix>::create("Edq", mAttributes);
+	mNumIter = Attribute<Int>::create("NIterations", mAttributes, 0);
+
 	// Initialize matrix
-	mIdq_pred = Matrix::Zero(2,1);
-	mIdq_corr = Matrix::Zero(2,1);
-	**mEdq_t = Matrix::Zero(4,1);
+	**mEdq = Matrix::Zero(4,1);
 	mEdq_pred = Matrix::Zero(4,1);
 	mEdq_corr = Matrix::Zero(4,1);
-
-	//
-	mShiftVector = Matrix::Zero(3,1);
-	mShiftVector << Complex(1., 0), SHIFT_TO_PHASE_B, SHIFT_TO_PHASE_C;
-
-    // Initialize attributes
-	mNumIter = Attribute<Int>::create("NIterations", mAttributes, 0);
 }
 
 DP::Ph1::SynchronGenerator6OrderIter::SynchronGenerator6OrderIter
@@ -59,10 +50,10 @@ void DP::Ph1::SynchronGenerator6OrderIter::specificInitialization() {
 	calculateStateMatrix();
 
 	// initial voltage behind the transient reactance in the dq0 reference frame
-	(**mEdq_t)(0,0) = (mLq - mLq_t) * (**mIdq)(1,0);
-	(**mEdq_t)(1,0) = - (mLd- mLd_t) * (**mIdq)(0,0) + mEf;
-	(**mEdq_t)(2,0) = (**mEdq_t)(0,0) + (mLq_t - mLq_s) * (**mIdq)(1,0);
-	(**mEdq_t)(3,0) = (**mEdq_t)(1,0) - (mLd_t - mLd_s) * (**mIdq)(0,0);
+	(**mEdq)(0,0) = (mLq - mLq_t) * (**mIdq)(1,0);
+	(**mEdq)(1,0) = - (mLd- mLd_t) * (**mIdq)(0,0) + mEf;
+	(**mEdq)(2,0) = (**mEdq)(0,0) + (mLq_t - mLq_s) * (**mIdq)(1,0);
+	(**mEdq)(3,0) = (**mEdq)(1,0) - (mLd_t - mLd_s) * (**mIdq)(0,0);
 
 	// initialize transformation matrix dp->dq
 	mDpToDq = Matrix::Zero(1,2);
@@ -77,10 +68,10 @@ void DP::Ph1::SynchronGenerator6OrderIter::specificInitialization() {
 		"\nTolerance: {:f}"
 		"\n--- Model specific initialization finished ---",
 
-		(**mEdq_t)(0,0),
-		(**mEdq_t)(1,0),
-		(**mEdq_t)(2,0),
-		(**mEdq_t)(3,0),
+		(**mEdq)(0,0),
+		(**mEdq)(1,0),
+		(**mEdq)(2,0),
+		(**mEdq)(3,0),
 		mMaxIter,
 		mTolerance
 	);
@@ -133,7 +124,7 @@ void DP::Ph1::SynchronGenerator6OrderIter::stepInPerUnit() {
 	}
 
 	//predict voltage behind transient reactance 
-	mEdq_pred = mA * (**mEdq_t) + mB * **mIdq + mC * mEf;
+	mEdq_pred = mA * (**mEdq) + mB * **mIdq + mC * mEf;
 
 	// predict armature currents for at t=k+1
 	mIdq_pred(0,0) = (mEdq_pred(3,0) - (**mVdq)(1,0) ) / mLd_s;
@@ -168,11 +159,12 @@ void DP::Ph1::SynchronGenerator6OrderIter::correctorStep() {
 	}
 
 	//predict voltage behind transient reactance
-	mEdq_corr = mA_prev * **mEdq_t + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC * mEf   ;
+	mEdq_corr = mA_prev * **mEdq + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC * mEf;
 
 	// armature currents for at t=k+1
-	mIdq_corr(0,0) = (mEdq_corr(1,0) - (**mVdq)(1,0) ) / mLd_t;
-	mIdq_corr(1,0) = ((**mVdq)(0,0) - mEdq_corr(0,0) ) / mLq_t;
+	mIdq_corr(0,0) = (mEdq_corr(3,0) - (**mVdq)(1,0) ) / mLd_s;
+	mIdq_corr(1,0) = ((**mVdq)(0,0) - mEdq_corr(2,0) ) / mLq_s;
+
 
 	// convert currents into the abc reference frame
 	mDpToDq(0,0) = Complex(cos(mThetaMech_corr - mBase_OmMech * mSimTime), sin(mThetaMech_corr - mBase_OmMech * mSimTime));
@@ -191,18 +183,16 @@ void DP::Ph1::SynchronGenerator6OrderIter::updateVoltage(const Matrix& leftVecto
 	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
 	Matrix Vabc = Matrix(3,1);
 	Vabc << Vabc_(0,0).real(), Vabc_(1,0).real(), Vabc_(2,0).real();
-	if (**mNumIter == 0) {
+	if (**mNumIter == 0)
 		**mVdq = parkTransform(mThetaMech_pred, Vabc) / mBase_V_RMS;
-	} else {
+	else 
 		**mVdq = parkTransform(mThetaMech_corr, Vabc) / mBase_V_RMS;
-	}
 }
 
 bool DP::Ph1::SynchronGenerator6OrderIter::checkVoltageDifference() {
-	if (**mNumIter == 0) {
+	if (**mNumIter == 0)
 		// if no corrector step has been performed yet
 		return true;
-	}
 
 	Matrix voltageDifference = **mVdq - mVdq_prev;
 	if (Math::abs(voltageDifference(0,0)) > mTolerance || Math::abs(voltageDifference(1,0)) > mTolerance) {
@@ -228,22 +218,7 @@ void DP::Ph1::SynchronGenerator6OrderIter::mnaPostStep(const Matrix& leftVector)
 	**mOmMech = mOmMech_corr;
 	**mThetaMech = mThetaMech_corr;
 	**mDelta = mDelta_corr;
-	**mEdq_t = mEdq_corr;
+	**mEdq = mEdq_corr;
 	**mIdq = mIdq_corr;
 }
 
-Matrix DP::Ph1::SynchronGenerator6OrderIter::parkTransform(Real theta, const Matrix& abcVector) {
-	Matrix dq0Vector(3, 1);
-	Matrix dqVector(2, 1);
-	Matrix abcToDq0(3, 3);
-
-	// Park transform according to Kundur
-	abcToDq0 <<
-		 2./3.*cos(theta),	2./3.*cos(theta - 2.*PI/3.),  2./3.*cos(theta + 2.*PI/3.),
-		-2./3.*sin(theta), -2./3.*sin(theta - 2.*PI/3.), -2./3.*sin(theta + 2.*PI/3.),
-		 1./3., 			1./3., 						  1./3.;
-
-	dq0Vector = abcToDq0 * abcVector;
-	dqVector << dq0Vector(0,0), dq0Vector(1,0);
-	return dqVector;
-}
