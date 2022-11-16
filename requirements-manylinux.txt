@@ -1,0 +1,7 @@
+sphinx
+sphinx_rtd_theme
+
+pytest-runner
+pytest
+pyyaml
+pybind11[global]
