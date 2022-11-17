@@ -161,6 +161,7 @@ void Simulation::createMNASolver() {
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
 			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
 			solver->initialize();
+			solver->setMaxNumberOfIterations(mMaxIterations);
 		}
 		mSolvers.push_back(solver);
 	}
