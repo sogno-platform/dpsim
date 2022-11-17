@@ -193,6 +193,7 @@ std::shared_ptr<CPS::Task> MnaSolverEigenSparse<VarType>::createLogTask()
 
 template <typename VarType>
 void MnaSolverEigenSparse<VarType>::solve(Real time, Int timeStepCount) {
+	mIter = 0;
 	if 	(mSyncGen.size()==0) {
 		// Reset source vector
 		mRightSideVector.setZero();
@@ -212,6 +213,9 @@ void MnaSolverEigenSparse<VarType>::solve(Real time, Int timeStepCount) {
 		// if there is iterative syncGens, then it is necessary to iterate
 		bool iterate = true;
 		while (iterate) {
+			// 
+			mIter = mIter + 1;
+
 			// Reset source vector
 			mRightSideVector.setZero();
 
@@ -239,8 +243,41 @@ void MnaSolverEigenSparse<VarType>::solve(Real time, Int timeStepCount) {
 				if (syncGen->checkVoltageDifference())
 					count = count+1;
 			}
-			if (count==0) 
+
+			/*
+			for (auto sys : mSwitchedMatrices) {
+				if (mCurrentSwitchStatus == sys.first) {
+					//std::cout <<  Logger::matrixToString(sys.second[0]) << std::endl;
+					//std::cout << "\n\n\nmRightSideVector: \n" << mRightSideVector << std::endl;
+					//std::cout << "\n\n\nA * **mLeftSideVector: \n" << sys.second[0] *  **mLeftSideVector << std::endl;
+					auto residual = mRightSideVector - sys.second[0] * **mLeftSideVector;
+					auto max_residual = residual.cwiseAbs().maxCoeff();
+					if ( mIter >= mMaxIterations) {
+						iterate=false;
+						if (max_residual > 1e-11)  {
+							// std::cout << "\n\n\nResidual: \n" << mRightSideVector - sys.second[0] * **mLeftSideVector << std::endl;
+							std::cout << "max = " << max_residual << std::endl;
+							std::cout << "Iter: " << mIter << std::endl;
+						}
+						mIter = 0;
+					}
+					else {
+						if (max_residual < 1e-11)  {
+							std::cout << "Iter: " << mIter << std::endl;
+							mIter = 0;
+							iterate = false;
+						}
+						else {
+							iterate = true;
+						}
+					}
+
+				}
+			}
+			*/
+			if (count==0)  {
 				iterate=false;
+			}	
 		}
 	}
 

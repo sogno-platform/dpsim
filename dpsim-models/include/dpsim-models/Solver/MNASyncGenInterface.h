@@ -44,28 +44,66 @@ namespace CPS {
 		/// corrected delta at time k
 		Real mDelta_corr;
 
-		/// State Matrix backward euler: Edq(k) = A * Edq(k) + B * Idq + C * Ef
-		/// State Matrix trapezoidal rule (corrector step): x(k+1) = mA_prev * Edq(k-1) + mA_corr * Edq_corr(k) + B_corr * Idq_corr(k) + C * Ef
-		/// A Matrix
-		Matrix mA;
+		/// Matrix used when numerical method of predictor step = Euler
+		/// State Matrix backward euler: Edq(k) = mA_euler * Edq(k) + mB_euler * Idq + mC_euler * Ef
+		Matrix mA_euler;
+		Matrix mB_euler;
+		Matrix mC_euler;
+
+		/// Matrixes used when numerical method of predictor step = trapezoidal rule
+		/// State Matrix trapezoidal rule: mStates = mA_trap_inv * mB_trap * mStates_prev + mA_trap_inv * mC_trap * Ef
+		/// where mStates_prev << Ed(k-1), Ed(k-1), Id(k-1), Iq(k-1), Vd(k-1), Vq(k-1)
+		/// and mStates << Ed(k), Ed(k), Id(k), Iq(k)
+		Matrix mA_trap;
+		Matrix mA_trap_inv;
+		Matrix mB_trap;
+		Matrix mC_trap;
+		Matrix mStates_trap_prev;
+		Matrix mStates_trap;
+
+		/// Matrixes used when numerical method of corrector step = trapezoidal rule
+		/// State Matrix trapezoidal rule (corrector step): x(k+1) = mA_prev * Edq(k-1) + mA_corr * Edq_corr(k) + B_corr * Idq_corr(k) + mC_corr * Ef
 		Matrix mA_prev;
 		Matrix mA_corr;
-		/// B Matrix
-		Matrix mB;
 		Matrix mB_corr;
-		/// Constant Matrix
-		Matrix mC;
+		Matrix mC_corr;
 
 		/// Transformation matrix dp->dq
 		MatrixComp mDpToDq;
 
 		/// Vector to create abc vector from a component
 		MatrixComp mShiftVector;
+		
+		///
+		Attribute<Int>::Ptr mNumIter;
+		///
+		Int mMaxIter = 25;
+		///
+		Real mTolerance = 1e-6;
+		///
+		CPS::NumericalMethod mNumericalMethod = CPS::NumericalMethod::Trapezoidal;
 
 	public:
 		typedef std::shared_ptr<MNASyncGenInterface> Ptr;
 		typedef std::vector<Ptr> List;
 
+		// Solver functions
+		/// 
+		virtual void correctorStep()=0;
+		///
+		virtual void updateVoltage(const Matrix& leftVector)=0;
+		///
+		virtual bool checkVoltageDifference() {return false;}
+
+		/// Setters
+		/// 
+		void setMaxIterations(Int maxIterations) {mMaxIter = maxIterations;}
+		/// 
+		void setTolerance(Real Tolerance) {mTolerance = Tolerance;}	
+		///
+		void setNumericalMethod(CPS::NumericalMethod numericalMethod) {mNumericalMethod = numericalMethod;}
+
+	protected:
 		/// Constructor
 		MNASyncGenInterface() {
 			// inizialize matrix that are not model dependent
@@ -78,12 +116,6 @@ namespace CPS {
 			mShiftVector << Complex(1., 0), SHIFT_TO_PHASE_B, SHIFT_TO_PHASE_C;
 		}
 
-		/// Returns true if it needs to iterate
-		virtual void correctorStep()=0;
-		///
-		virtual void updateVoltage(const Matrix& leftVector)=0;
-		///
-		virtual bool checkVoltageDifference() {return false;}
 		///
 		Matrix parkTransform(Real theta, const Matrix& abcVector) {
 			Matrix dq0Vector(3, 1);
@@ -102,17 +134,5 @@ namespace CPS {
 			return dqVector;
 		}
 
-		/// Setters
-		/// 
-		void setMaxIterations(Int maxIterations) {mMaxIter = maxIterations;}
-		/// 
-		void setTolerance(Real Tolerance) {mTolerance = Tolerance;}	
-
-		///
-		Attribute<Int>::Ptr mNumIter;
-		///
-		Int mMaxIter = 25;
-		///
-		Real mTolerance = 1e-6;
 	};
 }

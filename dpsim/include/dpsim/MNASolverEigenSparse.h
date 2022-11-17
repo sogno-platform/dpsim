@@ -65,6 +65,7 @@ namespace DPsim {
 		using MnaSolver<VarType>::hasVariableComponentChanged;
 		using MnaSolver<VarType>::mNumRecomputations;
 		using MnaSolver<VarType>::mSyncGen;
+		using Solver::mMaxIterations;
 
 		// #### General
 		/// Create system matrix
@@ -111,6 +112,9 @@ namespace DPsim {
 
 		/// Destructor
 		virtual ~MnaSolverEigenSparse() { };
+
+		/// ### SynGen Interface ###
+		int mIter = 0;
 
 		// #### MNA Solver Tasks ####
 		///
