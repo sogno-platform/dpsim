@@ -120,5 +120,9 @@ namespace DPsim {
 		virtual CPS::Task::List getTasks() = 0;
 		/// Log results
 		virtual void log(Real time, Int timeStepCount) { };
+
+		/// ### SynGen Interface ###
+		int mMaxIterations = 10;
+		void setMaxNumberOfIterations(int maxIterations) {mMaxIterations = maxIterations;}
 	};
 }
