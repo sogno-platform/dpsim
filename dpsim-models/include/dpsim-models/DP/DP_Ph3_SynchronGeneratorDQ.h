@@ -62,11 +62,11 @@ namespace Ph3 {
 		///
 		void initialize(Matrix frequencies);
 		///
-		Real electricalTorque();
+		Real electricalTorque() const;
 		///
-		Real rotationalSpeed();
+		Real rotationalSpeed() const;
 		///
-		Real rotorPosition();
+		Real rotorPosition() const;
 		/// Calculates flux and current from the voltage vector.
 		void step(MatrixComp& voltage, Real time);
 

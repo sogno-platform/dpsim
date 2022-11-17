@@ -73,11 +73,11 @@ namespace Ph3 {
 		///
 		void initialize(Matrix frequencies);
 		///
-		Real electricalTorque();
+		Real electricalTorque() const;
 		///
-		Real rotationalSpeed();
+		Real rotationalSpeed() const;
 		///
-		Real rotorPosition();
+		Real rotorPosition() const;
 
 		/// General step function for standalone simulation
 		void step(Matrix& voltage, Real time);

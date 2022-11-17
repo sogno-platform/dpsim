@@ -48,11 +48,11 @@ EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String name, Logger::Level lo
 EMT::Ph3::SynchronGeneratorDQ::~SynchronGeneratorDQ() {
 }
 
-Real EMT::Ph3::SynchronGeneratorDQ::electricalTorque() { return **mElecTorque * mBase_T; }
+Real EMT::Ph3::SynchronGeneratorDQ::electricalTorque() const { return **mElecTorque * mBase_T; }
 
-Real EMT::Ph3::SynchronGeneratorDQ::rotationalSpeed() { return **mOmMech * mBase_OmMech; }
+Real EMT::Ph3::SynchronGeneratorDQ::rotationalSpeed() const { return **mOmMech * mBase_OmMech; }
 
-Real EMT::Ph3::SynchronGeneratorDQ::rotorPosition() { return mThetaMech; }
+Real EMT::Ph3::SynchronGeneratorDQ::rotorPosition() const { return mThetaMech; }
 
 void EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,

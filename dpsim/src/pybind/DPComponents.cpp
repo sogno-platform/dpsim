@@ -22,9 +22,9 @@ void addDPComponents(py::module_ mDP) {
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::PhaseType>())
 		.def(py::init<std::string, CPS::PhaseType, const std::vector<CPS::Complex>>())
-		.def("set_initial_voltage", py::overload_cast<CPS::MatrixComp>(&CPS::DP::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::overload_cast<CPS::Complex>(&CPS::DP::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::overload_cast<CPS::Complex, int>(&CPS::DP::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::MatrixComp>(&CPS::DP::SimNode::setInitialVoltage, py::const_))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex>(&CPS::DP::SimNode::setInitialVoltage, py::const_))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex, int>(&CPS::DP::SimNode::setInitialVoltage, py::const_))
 		.def("single_voltage", &CPS::DP::SimNode::singleVoltage, "phase_type"_a=CPS::PhaseType::Single)
 		.def_readonly_static("gnd", &CPS::DP::SimNode::GND);
 

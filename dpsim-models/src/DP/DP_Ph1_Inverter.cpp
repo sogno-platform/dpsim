@@ -208,12 +208,11 @@ void DP::Ph1::Inverter::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 // #### Math functions ####
 
 /// Bessel function
-Real DP::Ph1::Inverter::besselFirstKind_n(Int n, Int k_max, Real x) {
+Real DP::Ph1::Inverter::besselFirstKind_n(Int n, Int k_max, Real x) const {
 	Real Jn = 0;
 	for (Int k = 0; k <= k_max; ++k) {
-		Real Jn_k = pow(-1,k) / factorial(k) * multInvFactorial(k+n) * pow(x/2., 2.*k+n);
+		Real Jn_k = pow(-1,k) / (double) factorial(k) * multInvFactorial(k+n) * pow(x/2., 2.*k+n);
 		Jn = Jn + Jn_k;
-		//mSLog->info("Jn_n = {:f}", Jn_n);
 	}
 	return Jn;
 }
@@ -228,16 +227,16 @@ Real DP::Ph1::Inverter::besselFirstKind_n_opt(Int n, Int k_max, Real x) {
 	return Jn;
 }
 
-long long DP::Ph1::Inverter::factorial(Int n) {
+long long DP::Ph1::Inverter::factorial(Int n) const {
 	return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
 
-Real DP::Ph1::Inverter::multInvFactorial(Int n) {
+Real DP::Ph1::Inverter::multInvFactorial(Int n) const {
 	if(n < 0) return 0;
-	else return 1. / factorial(n);
+	else return 1. / (double) factorial(n);
 }
 
-Real DP::Ph1::Inverter::multInvIntGamma(Real n) {
+Real DP::Ph1::Inverter::multInvIntGamma(Real n) const {
 	if(n <= 0) return 0;
 	else return 1./std::tgamma(n);
 }

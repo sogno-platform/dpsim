@@ -63,13 +63,13 @@ namespace CPS {
 		/// Returns matrix index for specified phase
 		UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single);
 		/// Returns all matrix indices
-		std::vector<UInt> matrixNodeIndices();
+		std::vector<UInt> matrixNodeIndices() override;
 		///
 		VarType singleVoltage(PhaseType phaseType = PhaseType::Single);
 		///
 		MatrixVar<VarType> voltage();
 		///
-		void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex);
+		void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) override;
 		///
 		void setVoltage(VarType newVoltage) { }
 		///

@@ -80,12 +80,12 @@ namespace Ph1 {
 		// #### Math functions ####
 
 		/// Bessel function
-		Real besselFirstKind_n(Int n, Int k_max, Real x);
+		Real besselFirstKind_n(Int n, Int k_max, Real x) const;
 		/// Bessel function using look up tables for factorials
 		Real besselFirstKind_n_opt(Int n, Int k_max, Real x);
-		long long factorial(Int n);
-		Real multInvFactorial(Int n);
-		Real multInvIntGamma(Real n);
+		long long factorial(Int n) const;
+		Real multInvFactorial(Int n) const;
+		Real multInvIntGamma(Real n) const;
 
 	public:
 		/// Defines UID, name and logging level

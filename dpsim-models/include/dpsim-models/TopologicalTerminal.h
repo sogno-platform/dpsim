@@ -29,7 +29,7 @@ namespace CPS {
 		/// Returns reference to TopologicalNode
 		virtual TopologicalNode::Ptr topologicalNodes() = 0;
 		/// Returns Power as complex matrix, where the size depends on the number of phases
-		MatrixComp power();
+		MatrixComp power() const;
 		/// Returns single complex number for power
 		Complex singlePower();
 		///
