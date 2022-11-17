@@ -202,6 +202,7 @@ std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createLogTask()
 
 template <typename VarType>
 void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
+	mIter = 0;
 	if 	(mSyncGen.size()==0) {
 		// Reset source vector
 		mRightSideVector.setZero();
@@ -220,6 +221,9 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 		// if there is iterative syncGens, then it is necessary to iterate
 		bool iterate = true;
 		while (iterate) {
+			//
+			mIter = mIter + 1;
+
 			// Reset source vector
 			mRightSideVector.setZero();
 
@@ -249,6 +253,7 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 			}
 			if (count==0)
 				iterate=false;
+			}
 		}
 	}
 

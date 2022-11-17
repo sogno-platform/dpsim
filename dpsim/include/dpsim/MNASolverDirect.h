@@ -99,6 +99,7 @@ namespace DPsim {
 		using MnaSolver<VarType>::mSolveTimes;
 		using MnaSolver<VarType>::mRecomputationTimes;
 		using MnaSolver<VarType>::mListVariableSystemMatrixEntries;
+		using Solver::mMaxIterations;
 
 		// #### General
 		/// Create system matrix
@@ -158,6 +159,9 @@ namespace DPsim {
 
 		/// Sets the linear solver to "implementation" and creates an object
 		void setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);
+
+		/// ### SynGen Interface ###
+		int mIter = 0;
 
 		// #### MNA Solver Tasks ####
 		///

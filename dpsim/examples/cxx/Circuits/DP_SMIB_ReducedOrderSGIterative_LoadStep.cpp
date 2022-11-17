@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
 	int maxIter = defaultConfig.maxIter;
 	String SGModel = defaultConfig.sgType + "Iter";
 	SGModel = "4Iter";
+	NumericalMethod numericalMethod = NumericalMethod::Euler;
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
@@ -61,7 +62,7 @@ int main(int argc, char* argv[]) {
 	std::cout << "SG: " << SGModel << std::endl;
 	
 	// Configure logging
-	Logger::Level logLevel = Logger::Level::info;
+	Logger::Level logLevel = Logger::Level::off;
 
 	// apply downsampling for simulation step sizes lower than 10us
 	Real logDownSampling;
@@ -150,7 +151,7 @@ int main(int argc, char* argv[]) {
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setMaxIterations(maxIter); 
 	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setTolerance(tolerance);
-
+	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setNumericalMethod(numericalMethod);
 	//Grid bus as Slack
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
 	extnetDP->setParameters(gridParams.VnomMV);
@@ -180,6 +181,9 @@ int main(int argc, char* argv[]) {
 	// log generator vars
 	logger->logAttribute(genDP->name() + ".Te", genDP->attribute("Te"));
 	logger->logAttribute(genDP->name() + ".NIterations", genDP->attribute("NIterations"));
+	logger->logAttribute(genDP->name() + ".Edq", genDP->attribute("Edq"));
+	logger->logAttribute(genDP->name() + ".Vdq0", genDP->attribute("Vdq0"));
+	logger->logAttribute(genDP->name() + ".Idq0", genDP->attribute("Idq0"));
 
 	// load step event
 	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::Events::createEventAddPowerConsumption("n1DP", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemDP, Domain::DP, logger);
