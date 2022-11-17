@@ -40,13 +40,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator6OrderIter::clone(const Str
 
 void DP::Ph1::SynchronGenerator6OrderIter::specificInitialization() {
 
-	// Initialize matrix of state representation
-	mA = Matrix::Zero(4,4);
-	mA_prev = Matrix::Zero(4,4);
-	mA_corr = Matrix::Zero(4,4);
-	mB = Matrix::Zero(4,2);
-	mB_corr = Matrix::Zero(4,2);
-	mC = Matrix::Zero(4,1);
+	// calculate state representation matrix
 	calculateStateMatrix();
 
 	// initial voltage behind the transient reactance in the dq0 reference frame
@@ -78,28 +72,86 @@ void DP::Ph1::SynchronGenerator6OrderIter::specificInitialization() {
 	mSLog->flush();
 }
 
-void DP::Ph1::SynchronGenerator6OrderIter::calculateStateMatrix() {	
-	mA << 1 - mTimeStep / mTq0_t,	0.0,	0.0,	0.0,
-	      0.0,		1 - mTimeStep / mTd0_t,	0.0,	0.0,
-		  mTimeStep / mTq0_s,	0.0,	1 - mTimeStep / mTq0_s, 0.0,
-		  0.0,	mTimeStep / mTd0_s,		0.0,	1 - mTimeStep / mTd0_s;
-	mA_prev <<  1 - mTimeStep / (2 * mTq0_t),	0.0,	0.0,	0.0,
-	       		0.0,		1 - mTimeStep / (2 * mTd0_t),	0.0,	0.0,
-		  		mTimeStep / (2 * mTq0_s),	0.0,	1 - mTimeStep / (2 * mTq0_s), 0.0,
-		  		0.0,	mTimeStep / (2 * mTd0_s),		0.0,	1 - mTimeStep / (2 * mTd0_s);
-	mA_corr << 	- mTimeStep / (2 * mTq0_t),	0.0,	0.0,	0.0,
-	       		0.0, - mTimeStep / (2 * mTd0_t),	0.0,	0.0,
-		  		mTimeStep / (2 * mTq0_s),	0.0,	- mTimeStep / (2 * mTq0_s), 0.0,
-		  		0.0,	mTimeStep / (2 * mTd0_s),		0.0,	- mTimeStep / (2 * mTd0_s);
-	mB << 0.0, (mLq - mLq_t) * mTimeStep / mTq0_t,
-		  - (mLd - mLd_t) * mTimeStep / mTd0_t, 0.0,
-		  0.0, (mLq_t - mLq_s) * mTimeStep / mTq0_s,
-		  - (mLd_t - mLd_s) * mTimeStep / mTd0_s, 0.0;
+void DP::Ph1::SynchronGenerator6OrderIter::calculateStateMatrix() {
+	// Initialize matrix of state representation of predictor step
+	if (mNumericalMethod == CPS::NumericalMethod::Euler) {
+		mA_euler = Matrix::Zero(4,4);
+		mA_euler << 1 - mTimeStep / mTq0_t, 0.0,	0.0,	0.0,
+	    	  		0.0, 1 - mTimeStep / mTd0_t,	0.0,	0.0,
+		  	 		mTimeStep / mTq0_s, 0.0, 1 - mTimeStep / mTq0_s, 0.0,
+		  	  		0.0, mTimeStep / mTd0_s, 0.0,	1 - mTimeStep / mTd0_s;
+		mB_euler = Matrix::Zero(4,2);
+		mB_euler << 0.0, (mLq - mLq_t) * mTimeStep / mTq0_t,
+		  			- (mLd - mLd_t) * mTimeStep / mTd0_t, 0.0,
+		  			0.0, (mLq_t - mLq_s) * mTimeStep / mTq0_s,
+		  			- (mLd_t - mLd_s) * mTimeStep / mTd0_s, 0.0;
+		mC_euler = Matrix::Zero(4,1);
+		mC_euler << 0.0,
+	  				(mTimeStep / mTd0_t),
+					0.0,
+					0.0;
+
+	} else if (mNumericalMethod == CPS::NumericalMethod::Trapezoidal) {
+		//
+		mStates_trap = Matrix::Zero(6,1);
+		mStates_trap << **mEdq, **mIdq;
+		mStates_trap_prev = Matrix::Zero(8,1);
+
+		//
+		Real Ad_t = mTimeStep * (mLq - mLq_t) / (2 * mTq0_t + mTimeStep);
+		Real Bd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
+		Real Aq_t = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
+		Real Bq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
+		Real Dq_t = 2 * mTimeStep / (2 * mTd0_t + mTimeStep);
+
+		//
+		Real Ad_s = mTimeStep * (mLq_t - mLq_s) / (2 * mTq0_s + mTimeStep);
+		Real Bd_s = mTimeStep / (2 * mTq0_s + mTimeStep);
+		Real Cd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
+		Real Aq_s = mTimeStep * (mLd_t - mLd_s) / (2 * mTd0_s + mTimeStep);
+		Real Bq_s = mTimeStep / (2 * mTd0_s + mTimeStep);
+		Real Cq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
+
+    	// Initialize matrix of state representation
+		mA_trap = Matrix::Zero(6,6);
+		mA_trap <<	1,		0,		-Bd_s,		0,			0,		-Ad_s,
+					0,		1,		0,		-Bq_s,		Aq_s,		0,
+					0,		0,		1,			0,			0,		-Ad_t,
+					0,		0,		0,			1,		-Aq_t,		0,
+					0,		-1,		0,			0,		mLd_s,		0,
+					1,		0,		0,			0,			0,		mLq_s;
+		mA_trap_inv = mA_trap.inverse();
+	
+		mB_trap = Matrix::Zero(6,8);
+		mB_trap <<	 Cd_s,		0,		Bd_s,	0,		0,		Ad_s,		0,		0,
+						0,		Cq_s,	0,		Bq_s,	-Aq_s,		0,		0,		0,
+						0,		0,		Bd_t,	0,		0,		Ad_t,		0,		0,
+						0,		0,		0,		Bq_t,	Aq_t,		0,		0,		0,
+						0,		0,		0,		0,		0,			0,		0,		-1,
+						0,		0,		0,		0,		0,			0,		1,		0;
+
+		mC_trap = Matrix::Zero(6,1);
+		mC_trap <<	0,	0,	0,	Dq_t,	0,	0;
+	}
+
+	mA_prev = Matrix::Zero(4, 4);
+	mA_prev <<  1 - mTimeStep / (2 * mTq0_t),		0.0,				 0.0,	  	 0.0,
+	       		0.0,		1 - mTimeStep / (2 * mTd0_t),				 0.0,	  	 0.0,
+		  		mTimeStep / (2 * mTq0_s),	0.0,	1 - mTimeStep / (2 * mTq0_s), 	 0.0,
+		  		0.0,	mTimeStep / (2 * mTd0_s),	0.0,	1 - mTimeStep / (2 * mTd0_s);
+	mA_corr = Matrix::Zero(4,4);
+	mA_corr << 	- mTimeStep / (2 * mTq0_t),	0.0,							0.0,	0.0,
+	       		0.0, 						- mTimeStep / (2 * mTd0_t),		0.0,	0.0,
+		  		mTimeStep / (2 * mTq0_s),			0.0,	- mTimeStep / (2 * mTq0_s), 0.0,
+		  		0.0,	mTimeStep / (2 * mTd0_s),	0.0,		- mTimeStep / (2 * mTd0_s);
+	
+	mB_corr = Matrix::Zero(4,2);
 	mB_corr <<  0.0, (mLq - mLq_t) * mTimeStep / (2 * mTq0_t),
 			- (mLd - mLd_t) * mTimeStep / (2 * mTd0_t), 0.0,
 	  		0.0, (mLq_t - mLq_s) * mTimeStep / (2 * mTq0_s),
 	  		- (mLd_t - mLd_s) * mTimeStep / (2 * mTd0_s), 0.0;
-	mC <<   0.0,
+	mC_corr = Matrix::Zero(4,1);
+	mC_corr <<   0.0,
 	  		(mTimeStep / mTd0_t),
 			0.0,
 			0.0;
@@ -123,12 +175,20 @@ void DP::Ph1::SynchronGenerator6OrderIter::stepInPerUnit() {
 		mThetaMech_pred = **mThetaMech;
 	}
 
-	//predict voltage behind transient reactance 
-	mEdq_pred = mA * (**mEdq) + mB * **mIdq + mC * mEf;
+	// calculate Edq and Idq at t=k+1. Assumption: Vdq(k) = Vdq(k+1)
+	if (mNumericalMethod == CPS::NumericalMethod::Euler) { 
+		mEdq_pred = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * mEf;
 
-	// predict armature currents for at t=k+1
-	mIdq_pred(0,0) = (mEdq_pred(3,0) - (**mVdq)(1,0) ) / mLd_s;
-	mIdq_pred(1,0) = ((**mVdq)(0,0) - mEdq_pred(2,0) ) / mLq_s;
+		// predict armature currents for at t=k+1
+		mIdq_pred(0,0) = (mEdq_pred(3,0) - (**mVdq)(1,0) ) / mLd_s;
+		mIdq_pred(1,0) = ((**mVdq)(0,0) - mEdq_pred(2,0) ) / mLq_s;
+
+	} else if (mNumericalMethod == CPS::NumericalMethod::Trapezoidal) {
+		mStates_trap_prev << **mEdq, **mIdq, **mVdq;
+		mStates_trap = mA_trap_inv * mB_trap * mStates_trap_prev + mA_trap_inv * mC_trap * mEf;
+		mEdq_pred << mStates_trap(0,0), mStates_trap(1,0), mStates_trap(2,0), mStates_trap(3,0);
+		mIdq_pred << mStates_trap(4,0), mStates_trap(5,0);
+	}
 
 	// convert currents into the abc reference frame
 	mDpToDq(0,0) = Complex(cos(mThetaMech_pred - mBase_OmMech * mSimTime), sin(mThetaMech_pred - mBase_OmMech * mSimTime));
@@ -159,7 +219,7 @@ void DP::Ph1::SynchronGenerator6OrderIter::correctorStep() {
 	}
 
 	//predict voltage behind transient reactance
-	mEdq_corr = mA_prev * **mEdq + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC * mEf;
+	mEdq_corr = mA_prev * **mEdq + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * mEf;
 
 	// armature currents for at t=k+1
 	mIdq_corr(0,0) = (mEdq_corr(3,0) - (**mVdq)(1,0) ) / mLd_s;
@@ -202,7 +262,7 @@ bool DP::Ph1::SynchronGenerator6OrderIter::checkVoltageDifference() {
 			// set predicted values equal to corrected values for the next iteration
 			mOmMech_pred = mOmMech_corr;
 			mDelta_pred = mDelta_corr;
-			mThetaMech_pred= mDelta_corr;
+			mThetaMech_pred= mThetaMech_corr;
 			mIdq_pred = mIdq_corr;
 			mEdq_pred = mEdq_corr;
 			

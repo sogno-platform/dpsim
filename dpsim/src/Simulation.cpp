@@ -162,6 +162,7 @@ void Simulation::createMNASolver() {
 			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
 			solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
 			solver->initialize();
+			solver->setMaxNumberOfIterations(mMaxIterations);
 		}
 		mSolvers.push_back(solver);
 	}

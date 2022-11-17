@@ -102,6 +102,7 @@ namespace DPsim {
 		using MnaSolver<VarType>::mSolveTimes;
 		using MnaSolver<VarType>::mRecomputationTimes;
 		using MnaSolver<VarType>::mListVariableSystemMatrixEntries;
+		using Solver::mMaxIterations;
 
 		// #### General
 		/// Create system matrix
@@ -167,6 +168,9 @@ namespace DPsim {
 
 		/// log LU decomposition times
 		void logLUTimes() override;
+
+		/// ### SynGen Interface ###
+		int mIter = 0;
 
 		// #### MNA Solver Tasks ####
 		///
