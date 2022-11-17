@@ -47,7 +47,7 @@ namespace Ph1 {
 		///
 		void setParameters(Complex voltage, Real srcFreq, Real resistance);
 		///
-		void setVoltageRef(Complex voltage);
+		void setVoltageRef(Complex voltage) const;
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component

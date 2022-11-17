@@ -97,4 +97,4 @@ void EMT::Ph1::VoltageSourceNorton::mnaUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = mEquivCurrent - (**mIntfVoltage)(0,0) / **mResistance;
 }
 
-void EMT::Ph1::VoltageSourceNorton::setVoltageRef(Complex voltage) { **mVoltageRef = voltage; }
+void EMT::Ph1::VoltageSourceNorton::setVoltageRef(Complex voltage) const { **mVoltageRef = voltage; }

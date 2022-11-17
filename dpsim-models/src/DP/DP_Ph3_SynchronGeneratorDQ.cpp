@@ -135,11 +135,11 @@ void DP::Ph3::SynchronGeneratorDQ::MnaPostStep::execute(Real time, Int timeStepC
 	mSynGen.mnaUpdateVoltage(**mLeftVector);
 }
 
-Real DP::Ph3::SynchronGeneratorDQ::electricalTorque() { return **mElecTorque * mBase_T; }
+Real DP::Ph3::SynchronGeneratorDQ::electricalTorque() const { return **mElecTorque * mBase_T; }
 
-Real DP::Ph3::SynchronGeneratorDQ::rotationalSpeed() { return **mOmMech * mBase_OmMech; }
+Real DP::Ph3::SynchronGeneratorDQ::rotationalSpeed() const { return **mOmMech * mBase_OmMech; }
 
-Real DP::Ph3::SynchronGeneratorDQ::rotorPosition() { return mThetaMech; }
+Real DP::Ph3::SynchronGeneratorDQ::rotorPosition() const { return mThetaMech; }
 
 Matrix DP::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta, MatrixComp& abcVector) {
 	// Balanced case because we do not return the zero sequence component

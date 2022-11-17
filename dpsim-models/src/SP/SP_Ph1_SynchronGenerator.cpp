@@ -91,4 +91,4 @@ void SP::Ph1::SynchronGenerator::updatePowerInjection(Complex powerInj) {
     **mSetPointReactivePowerPerUnit= **mSetPointReactivePower / mBaseApparentPower;
 }
 
-Complex SP::Ph1::SynchronGenerator::getApparentPower() { return Complex (**mSetPointActivePower, **mSetPointReactivePower);}
+Complex SP::Ph1::SynchronGenerator::getApparentPower() const { return Complex (**mSetPointActivePower, **mSetPointReactivePower);}

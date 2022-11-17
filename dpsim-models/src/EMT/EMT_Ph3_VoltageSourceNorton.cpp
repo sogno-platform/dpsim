@@ -33,7 +33,7 @@ void EMT::Ph3::VoltageSourceNorton::setParameters(Complex voltageRef, Real srcFr
 	mParametersSet = true;
 }
 
-void EMT::Ph3::VoltageSourceNorton::setVoltageRef(Complex voltage) { **mVoltageRef = voltage; }
+void EMT::Ph3::VoltageSourceNorton::setVoltageRef(Complex voltage) const { **mVoltageRef = voltage; }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::VoltageSourceNorton::clone(String name) {
 	auto copy = VoltageSourceNorton::make(name, mLogLevel);

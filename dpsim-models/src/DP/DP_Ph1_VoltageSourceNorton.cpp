@@ -37,7 +37,7 @@ void DP::Ph1::VoltageSourceNorton::setParameters(Complex voltage, Real srcFreq, 
 	mParametersSet = true;
 }
 
-void DP::Ph1::VoltageSourceNorton::setVoltageRef(Complex voltage) { **mVoltageRef = voltage; }
+void DP::Ph1::VoltageSourceNorton::setVoltageRef(Complex voltage) const { **mVoltageRef = voltage; }
 
 void DP::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);

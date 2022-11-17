@@ -51,7 +51,7 @@ namespace Ph1 {
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
 		///
-		void setVoltageRef(Complex voltage);
+		void setVoltageRef(Complex voltage) const;
 		///
 		using Base::Ph1::VoltageSource::setParameters;
 		///

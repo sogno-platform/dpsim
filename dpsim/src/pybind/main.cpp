@@ -107,7 +107,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def(py::init<CPS::Real>())
 		.def("add", &DPsim::SystemTopology::addComponent)
 		.def("add", &DPsim::SystemTopology::addComponents)
-		.def("node", py::overload_cast<const CPS::String&>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
+		.def("node", py::overload_cast<std::string_view>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
 		.def("node", py::overload_cast<CPS::UInt>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
 		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Real>::Ptr, CPS::SimNode<CPS::Real>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Real>))
 		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Complex>::Ptr, CPS::SimNode<CPS::Complex>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Complex>))

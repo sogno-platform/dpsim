@@ -15,7 +15,7 @@ TopologicalTerminal::TopologicalTerminal(String uid, String name, PhaseType phas
 	setPhaseType(phase);
 }
 
-MatrixComp TopologicalTerminal::power() { return mPower; }
+MatrixComp TopologicalTerminal::power() const { return mPower; }
 
 void TopologicalTerminal::setPower(Complex power) { mPower(0,0) = power; }
 

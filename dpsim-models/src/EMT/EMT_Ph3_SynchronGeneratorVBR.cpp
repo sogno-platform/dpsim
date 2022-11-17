@@ -52,11 +52,11 @@ void EMT::Ph3::SynchronGeneratorVBR::initialize(Matrix frequencies) {
 
 Matrix& EMT::Ph3::SynchronGeneratorVBR::dqStatorCurrents() { return mDqStatorCurrents; }
 
-Real EMT::Ph3::SynchronGeneratorVBR::electricalTorque() { return **mElecTorque * mBase_T; }
+Real EMT::Ph3::SynchronGeneratorVBR::electricalTorque() const { return **mElecTorque * mBase_T; }
 
-Real EMT::Ph3::SynchronGeneratorVBR::rotationalSpeed() { return **mOmMech * mBase_OmMech; }
+Real EMT::Ph3::SynchronGeneratorVBR::rotationalSpeed() const { return **mOmMech * mBase_OmMech; }
 
-Real EMT::Ph3::SynchronGeneratorVBR::rotorPosition() { return mThetaMech; }
+Real EMT::Ph3::SynchronGeneratorVBR::rotorPosition() const { return mThetaMech; }
 
 Matrix& EMT::Ph3::SynchronGeneratorVBR::statorCurrents() { return mIabc; }
 

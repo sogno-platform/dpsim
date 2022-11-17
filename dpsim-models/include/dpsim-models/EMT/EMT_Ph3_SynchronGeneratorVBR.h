@@ -243,9 +243,9 @@ namespace Ph3 {
 
 		//Matrix& rotorFluxes() { return mRotorFlux; }
 		Matrix& dqStatorCurrents();
-		Real electricalTorque();
-		Real rotationalSpeed();
-		Real rotorPosition();
+		Real electricalTorque() const;
+		Real rotationalSpeed() const;
+		Real rotorPosition() const;
 		Matrix& statorCurrents();
 
 		// #### MNA section ####

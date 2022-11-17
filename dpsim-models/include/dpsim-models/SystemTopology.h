@@ -79,7 +79,7 @@ namespace CPS {
 			componentsAtNodeList();
 		}
 
-		Matrix initFrequency(Real frequency);
+		Matrix initFrequency(Real frequency) const;
 
 		/// Reset state of components
 		void reset();
@@ -93,7 +93,7 @@ namespace CPS {
 		void addNodeAt(TopologicalNode::Ptr topNode, UInt index);
 
 		/// Add multiple nodes
-		void addNodes(TopologicalNode::List topNodes);
+		void addNodes(const TopologicalNode::List& topNodes);
 
 		/// Adds component and initializes frequencies
 		void addComponent(IdentifiedObject::Ptr component);
@@ -105,16 +105,16 @@ namespace CPS {
 		void componentsAtNodeList();
 
 		/// Add multiple components
-		void addComponents(IdentifiedObject::List components);
+		void addComponents(const IdentifiedObject::List& components);
 
 		/// Initialize nodes from PowerFlow
-		void initWithPowerflow(SystemTopology& systemPF);
+		void initWithPowerflow(const SystemTopology& systemPF);
 
 		/// Adds component and initializes frequencies
 		void addTearComponent(IdentifiedObject::Ptr component);
 
 		/// Add multiple components
-		void addTearComponents(IdentifiedObject::List components);
+		void addTearComponents(const IdentifiedObject::List& components);
 
 		// #### Get Objects from SystemTopology ####
 
@@ -124,7 +124,7 @@ namespace CPS {
 
 		/// Returns TopologicalNode by name
 		template<typename Type>
-		typename std::shared_ptr<Type> node(const String &name);
+		typename std::shared_ptr<Type> node(std::string_view name);
 
 		/// Returns Component by name
 		template<typename Type>
@@ -141,7 +141,7 @@ namespace CPS {
 			return nullptr;
 		}
 
-		std::map<String, String> listIdObjects();
+		std::map<String, String, std::less<>> listIdObjects() const;
 
 		// #### Operations on the SystemTopology ####
 
