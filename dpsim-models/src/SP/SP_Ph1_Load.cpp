@@ -205,7 +205,7 @@ void SP::Ph1::Load::mnaUpdateVoltage(const Matrix& leftVector) {
 void SP::Ph1::Load::mnaUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = 0;
 
-	for (auto subc : mSubComponents) {
+	for (auto& subc : mSubComponents) {
 		(**mIntfCurrent)(0, 0) += subc->intfCurrent()(0, 0);
 	}
 }
