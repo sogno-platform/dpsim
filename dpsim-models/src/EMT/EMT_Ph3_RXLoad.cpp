@@ -107,6 +107,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubResistor);
 	}
 
 	if ((**mReactivePower)(0, 0) != 0)
@@ -122,6 +123,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubInductor);
 	}
 	else if (mReactance(0,0) < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) * mReactance.inverse();
@@ -131,6 +133,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubCapacitor);
 	}
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
@@ -174,51 +177,61 @@ void EMT::Ph3::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	if (mSubResistor) {
-		mSubResistor->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : mSubResistor->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
+
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
 	}
-	if (mSubInductor) {
-		mSubInductor->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : mSubInductor->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
-	if (mSubCapacitor) {
-		mSubCapacitor->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : mSubCapacitor->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
+
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void EMT::Ph3::RXLoad::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	if (mSubResistor)
-		mSubResistor->mnaApplyRightSideVectorStamp(rightVector);
-	if (mSubInductor)
-		mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaApplyRightSideVectorStamp(rightVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplyRightSideVectorStamp(rightVector);
+	}
 }
 
 void EMT::Ph3::RXLoad::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	if (mSubResistor)
-		mSubResistor->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mSubInductor)
-		mSubInductor->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaApplySystemMatrixStamp(systemMatrix);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
+	}
 }
 
+void EMT::Ph3::RXLoad::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	}
+	modifiedAttributes.push_back(mRightVector);
+};
+
+void EMT::Ph3::RXLoad::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	}
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mIntfVoltage);
+};
+
 void EMT::Ph3::RXLoad::MnaPreStep::execute(Real time, Int timeStepCount) {
+	for (auto subComp : mLoad.mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
+	}
 	mLoad.mnaApplyRightSideVectorStamp(**mLoad.mRightVector);
 }
 
 void EMT::Ph3::RXLoad::MnaPostStep::execute(Real time, Int timeStepCount) {
+	for (auto subComp : mLoad.mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, mLeftVector);
+	}
 	mLoad.mnaUpdateVoltage(**mLeftVector);
 	mLoad.mnaUpdateCurrent(**mLeftVector);
 }
@@ -232,10 +245,7 @@ void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void EMT::Ph3::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = Matrix::Zero(3, 1);
-	if (mSubResistor)
-		**mIntfCurrent += mSubResistor->intfCurrent();
-	if (mSubInductor)
-		**mIntfCurrent += mSubInductor->intfCurrent();
-	if (mSubCapacitor)
-		**mIntfCurrent += mSubCapacitor->intfCurrent();
+	for (auto& subc : mSubComponents) {
+		**mIntfCurrent += subc->intfCurrent();
+	}
 }

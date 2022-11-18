@@ -116,6 +116,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubResistor);
 	}
 
 	if (**mReactivePower != 0)
@@ -131,6 +132,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubInductor);
 	} else if (mReactance < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) / mReactance;
 		mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(**mUID + "_res", **mName + "_cap", Logger::Level::off);
@@ -138,6 +140,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubCapacitor);
 	}
 
 	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
@@ -164,39 +167,32 @@ void SP::Ph1::Load::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	if (mSubResistor) {
-		mSubResistor->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : mSubResistor->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
-	if (mSubInductor) {
-		mSubInductor->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : mSubInductor->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
-	if (mSubCapacitor) {
-		mSubCapacitor->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : mSubCapacitor->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
 	}
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 
 void SP::Ph1::Load::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	if (mSubResistor)
-		mSubResistor->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mSubInductor)
-		mSubInductor->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaApplySystemMatrixStamp(systemMatrix);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
+	}
 }
 
+void SP::Ph1::Load::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mIntfVoltage);
+};
 
 void SP::Ph1::Load::MnaPostStep::execute(Real time, Int timeStepCount) {
+	for (auto subComp : mLoad.mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, mLeftVector);
+	}
 	mLoad.mnaUpdateVoltage(**mLeftVector);
 	mLoad.mnaUpdateCurrent(**mLeftVector);
 }
@@ -209,10 +205,8 @@ void SP::Ph1::Load::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void SP::Ph1::Load::mnaUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = 0;
-	if (mSubResistor)
-		(**mIntfCurrent)(0, 0) += mSubResistor->intfCurrent()(0, 0);
-	if (mSubInductor)
-		(**mIntfCurrent)(0, 0) += mSubInductor->intfCurrent()(0, 0);
-	if (mSubCapacitor)
-		(**mIntfCurrent)(0, 0) += mSubCapacitor->intfCurrent()(0, 0);
+
+	for (auto& subc : mSubComponents) {
+		(**mIntfCurrent)(0, 0) += subc->intfCurrent()(0, 0);
+	}
 }

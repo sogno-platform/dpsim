@@ -56,9 +56,9 @@ namespace Ph3 {
 		const Attribute<Real>::Ptr mEp_phase;
 		/// Angle by which the emf Ep is leading the terminal voltage
 		const Attribute<Real>::Ptr mDelta_p;
-		/// 
+		///
 		const Attribute<Real>::Ptr mRefOmega;
-		/// 
+		///
 		const Attribute<Real>::Ptr mRefDelta;
 		///
 		SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -107,14 +107,17 @@ namespace Ph3 {
 		///
 		void mnaUpdateVoltage(const Matrix& leftVector);
 
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(SynchronGeneratorTrStab& generator) :
 				Task(**generator.mName + ".MnaPreStep"), mGenerator(generator) {
 				// other attributes generally also influence the pre step,
 				// but aren't marked as writable anyway
-				mPrevStepDependencies.push_back(generator.attribute("v_intf"));
-				mModifiedAttributes.push_back(generator.mSubVoltageSource->attribute("V_ref"));
+				/// CHECK: Is the upper comment still relevant. Any attribute is writable now...
+				mGenerator.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -127,9 +130,6 @@ namespace Ph3 {
 		public:
 			AddBStep(SynchronGeneratorTrStab& generator) :
 				Task(**generator.mName + ".AddBStep"), mGenerator(generator) {
-				mAttributeDependencies.push_back(generator.mSubVoltageSource->attribute("right_vector"));
-				mAttributeDependencies.push_back(generator.mSubInductor->attribute("right_vector"));
-				mModifiedAttributes.push_back(generator.attribute("right_vector"));
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -142,6 +142,7 @@ namespace Ph3 {
 		public:
 			MnaPostStep(SynchronGeneratorTrStab& generator, Attribute<Matrix>::Ptr leftVector) :
 				Task(**generator.mName + ".MnaPostStep"), mGenerator(generator), mLeftVector(leftVector) {
+				mGenerator.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, leftVector);
 				mAttributeDependencies.push_back(leftVector);
 				mAttributeDependencies.push_back(generator.mSubInductor->attribute("i_intf"));
 				mModifiedAttributes.push_back(generator.attribute("v_intf"));

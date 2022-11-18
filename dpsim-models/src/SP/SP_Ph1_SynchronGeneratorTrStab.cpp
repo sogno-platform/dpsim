@@ -195,6 +195,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
 	mSubVoltageSource->initialize(mFrequencies);
 	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
+	mSubComponents.push_back(mSubVoltageSource);
 
 	// Create sub inductor as Xpd
 	mSubInductor = SP::Ph1::Inductor::make(**mName + "_ind", mLogLevel);
@@ -202,6 +203,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
 	mSubInductor->initialize(mFrequencies);
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
+	mSubComponents.push_back(mSubInductor);
 
 	mSLog->info("\n--- Initialize according to powerflow ---"
 				"\nTerminal 0 voltage: {:e}<{:e}"
@@ -258,35 +260,60 @@ void SP::Ph1::SynchronGeneratorTrStab::mnaInitialize(Real omega, Real timeStep, 
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
-	mSubInductor->mnaInitialize(omega, timeStep, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
+	}
+
 	mTimeStep = timeStep;
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	for (auto task : mSubVoltageSource->mnaTasks()) {
-		mMnaTasks.push_back(task);
-	}
-	for (auto task : mSubInductor->mnaTasks()) {
-		mMnaTasks.push_back(task);
-	}
+
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<AddBStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubVoltageSource->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubInductor->mnaApplySystemMatrixStamp(systemMatrix);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
+	}
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSubVoltageSource->mnaApplyRightSideVectorStamp(rightVector);
-	mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplyRightSideVectorStamp(rightVector);
+	}
 }
+
+void SP::Ph1::SynchronGeneratorTrStab::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	}
+
+	prevStepDependencies.push_back(mIntfVoltage);
+};
+
+void SP::Ph1::SynchronGeneratorTrStab::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	}
+
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfVoltage);
+};
 
 void SP::Ph1::SynchronGeneratorTrStab::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mGenerator.step(time);
 	//change V_ref of subvoltage source
 	mGenerator.mSubVoltageSource->mVoltageRef->set(**mGenerator.mEp);
+	for (auto subComp : mGenerator.mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
+	}
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeStepCount) {
@@ -296,6 +323,11 @@ void SP::Ph1::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeStep
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int timeStepCount) {
+	for (auto subComp : mGenerator.mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, mLeftVector);
+	}
+
 	mGenerator.mnaUpdateVoltage(**mLeftVector);
 	mGenerator.mnaUpdateCurrent(**mLeftVector);
 }

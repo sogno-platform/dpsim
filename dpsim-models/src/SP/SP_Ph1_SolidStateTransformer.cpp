@@ -53,6 +53,9 @@ void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(Real freque
     mSubLoadSide1->connect({mTerminals[0]->node()});
     mSubLoadSide2->connect({mTerminals[1]->node()});
 
+	mSubComponents.push_back(mSubLoadSide1);
+	mSubComponents.push_back(mSubLoadSide2);
+
     mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nTerminal 0 power flow: {:s} VA"

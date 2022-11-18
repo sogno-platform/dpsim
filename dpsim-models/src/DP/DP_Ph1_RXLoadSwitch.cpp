@@ -78,8 +78,11 @@ void DP::Ph1::RXLoadSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mSubRXLoad->mnaInitialize(omega, timeStep, leftVector);
-	mSubSwitch->mnaInitialize(omega, timeStep, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
+	}
+
 	// get sub component right vector
 	mRightVectorStamps.push_back(&**mSubRXLoad->mRightVector);
 
@@ -95,8 +98,10 @@ void DP::Ph1::RXLoadSwitch::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 }
 
 void DP::Ph1::RXLoadSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubRXLoad->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubSwitch->mnaApplySystemMatrixStamp(systemMatrix);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
+	}
 }
 
 void DP::Ph1::RXLoadSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
@@ -107,8 +112,10 @@ void DP::Ph1::RXLoadSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix&
 void DP::Ph1::RXLoadSwitch::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
 	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
-	this->mSubRXLoad->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	}
 	// add pre-step dependencies of component
 	prevStepDependencies.push_back(mIntfCurrent);
 	prevStepDependencies.push_back(mIntfVoltage);
@@ -116,7 +123,10 @@ void DP::Ph1::RXLoadSwitch::mnaAddPreStepDependencies(AttributeBase::List &prevS
 }
 
 void DP::Ph1::RXLoadSwitch::mnaPreStep(Real time, Int timeStepCount) {
-	mSubRXLoad->mnaPreStep(time, timeStepCount);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
+	}
 
 	// pre-step of component itself
 	updateSwitchState(time);
@@ -126,19 +136,23 @@ void DP::Ph1::RXLoadSwitch::mnaPreStep(Real time, Int timeStepCount) {
 void DP::Ph1::RXLoadSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
 	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	// add post-step dependencies of subcomponents
-	mSubRXLoad->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	mSubSwitch->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	}
 
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void DP::Ph1::RXLoadSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of subcomponents
-	this->mSubRXLoad->mnaPostStep(time, timeStepCount, leftVector);
-	this->mSubSwitch->mnaPostStep(time, timeStepCount, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
+	}
 
 	**mIntfVoltage = **mSubRXLoad->mIntfVoltage;
 	**mIntfCurrent = **mSubRXLoad->mIntfCurrent;

@@ -61,14 +61,14 @@ namespace Ph1 {
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		void mnaUpdateVoltage(const Matrix& leftVector);
 		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(RxLine& line) :
 				Task(**line.mName + ".MnaPreStep"), mLine(line) {
-				mAttributeDependencies.push_back(line.mSubResistor->attribute("right_vector"));
-				mAttributeDependencies.push_back(line.mSubInductor->attribute("right_vector"));
-				mModifiedAttributes.push_back(line.attribute("right_vector"));
+				mLine.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -81,10 +81,7 @@ namespace Ph1 {
 		public:
 			MnaPostStep(RxLine& line, Attribute<Matrix>::Ptr leftVector) :
 				Task(**line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(leftVector);
-				mAttributeDependencies.push_back(line.mSubInductor->attribute("i_intf"));
-				mModifiedAttributes.push_back(line.attribute("i_intf"));
-				mModifiedAttributes.push_back(line.attribute("v_intf"));
+				mLine.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, leftVector);
 			}
 
 			void execute(Real time, Int timeStepCount);

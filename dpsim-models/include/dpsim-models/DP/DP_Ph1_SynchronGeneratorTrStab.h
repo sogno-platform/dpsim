@@ -57,9 +57,9 @@ namespace Ph1 {
 		const Attribute<Real>::Ptr mEp_phase;
 		/// Angle by which the emf Ep is leading the terminal voltage
 		const Attribute<Real>::Ptr mDelta_p;
-		/// 
+		///
 		const Attribute<Real>::Ptr mRefOmega;
-		/// 
+		///
 		const Attribute<Real>::Ptr mRefDelta;
 		///
 		SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -105,16 +105,19 @@ namespace Ph1 {
 		///
 		void mnaUpdateVoltage(const Matrix& leftVector);
 
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+
 		void setReferenceOmega(Attribute<Real>::Ptr refOmegaPtr, Attribute<Real>::Ptr refDeltaPtr);
 
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(SynchronGeneratorTrStab& generator) :
 				Task(**generator.mName + ".MnaPreStep"), mGenerator(generator) {
+				mGenerator.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 				// other attributes generally also influence the pre step,
 				// but aren't marked as writable anyway
-				mPrevStepDependencies.push_back(generator.attribute("v_intf"));
-				mModifiedAttributes.push_back(generator.mSubVoltageSource->attribute("V_ref"));
+				/// CHECK: Is the upper comment still relevant. Any attribute is writable now...
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -142,9 +145,7 @@ namespace Ph1 {
 		public:
 			MnaPostStep(SynchronGeneratorTrStab& generator, Attribute<Matrix>::Ptr leftVector) :
 				Task(**generator.mName + ".MnaPostStep"), mGenerator(generator), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(leftVector);
-				mAttributeDependencies.push_back(generator.mSubInductor->attribute("i_intf"));
-				mModifiedAttributes.push_back(generator.attribute("v_intf"));
+				mGenerator.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, leftVector);
 			}
 
 			void execute(Real time, Int timeStepCount);

@@ -73,6 +73,7 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 	// A positive power should result in a positive current to ground.
 	mSubCurrentSource->connect({ mTerminals[0]->node(), SimNode::GND });
 	mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
+	mSubComponents.push_back(mSubCurrentSource);
 	updateIntfValues();
 
 	mSLog->info(
@@ -91,21 +92,29 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 void DP::Ph1::PQLoadCS::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-	mSubCurrentSource->mnaInitialize(omega, timeStep, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
+	}
+
 	///CHECK: Can we avoid setting the right_vector attribute to dynamic? Maybe just copy the current source's right_vector somewhere? Or make a new attribute?
 	mRightVector->setReference(mSubCurrentSource->mRightVector);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this));
-	for (auto task : mSubCurrentSource->mnaTasks())
-		mMnaTasks.push_back(task);
+	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void DP::Ph1::PQLoadCS::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSubCurrentSource->mnaApplyRightSideVectorStamp(rightVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplyRightSideVectorStamp(rightVector);
+	}
 }
 
 void DP::Ph1::PQLoadCS::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubCurrentSource->mnaApplySystemMatrixStamp(systemMatrix);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
+	}
 }
 
 void DP::Ph1::PQLoadCS::updateSetPoint() {
@@ -123,8 +132,31 @@ void DP::Ph1::PQLoadCS::updateSetPoint() {
 		Logger::phasorToString(std::conj(current)));
 }
 
+void DP::Ph1::PQLoadCS::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(mActivePower);
+	attributeDependencies.push_back(mReactivePower);
+	attributeDependencies.push_back(mNomVoltage);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	}
+}
+
+void DP::Ph1::PQLoadCS::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	modifiedAttributes.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mIntfVoltage);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	}
+}
+
 void DP::Ph1::PQLoadCS::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mLoad.updateSetPoint();
+	for (auto subComp : mLoad.mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
+	}
 }
 
 void DP::Ph1::PQLoadCS::updateIntfValues() {
@@ -133,6 +165,10 @@ void DP::Ph1::PQLoadCS::updateIntfValues() {
 }
 
 void DP::Ph1::PQLoadCS::MnaPostStep::execute(Real time, Int timeStepCount) {
+	for (auto subComp : mLoad.mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, mLeftVector);
+	}
 	mLoad.updateIntfValues();
 }
 
