@@ -90,17 +90,14 @@ namespace CPS {
 				void mnaUpdateCurrent(const Matrix& leftVector);
 				void mnaUpdateVoltage(const Matrix& leftVector);
 
+				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+
 				class MnaPreStep : public Task {
 				public:
 					MnaPreStep(RXLoad& load) :
 						Task(**load.mName + ".MnaPreStep"), mLoad(load) {
-						if (load.mSubResistor)
-							mAttributeDependencies.push_back(load.mSubResistor->attribute("right_vector"));
-						if (load.mSubInductor)
-							mAttributeDependencies.push_back(load.mSubInductor->attribute("right_vector"));
-						if (load.mSubCapacitor)
-							mAttributeDependencies.push_back(load.mSubCapacitor->attribute("right_vector"));
-						mModifiedAttributes.push_back(load.attribute("right_vector"));
+						mLoad.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 					}
 
 					void execute(Real time, Int timeStepCount);
@@ -114,15 +111,7 @@ namespace CPS {
 				public:
 					MnaPostStep(RXLoad& load, Attribute<Matrix>::Ptr leftVector) :
 						Task(**load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
-						mAttributeDependencies.push_back(leftVector);
-						if (load.mSubResistor)
-							mAttributeDependencies.push_back(load.mSubResistor->attribute("i_intf"));
-						if (load.mSubInductor)
-							mAttributeDependencies.push_back(load.mSubInductor->attribute("i_intf"));
-						if (load.mSubCapacitor)
-							mAttributeDependencies.push_back(load.mSubCapacitor->attribute("i_intf"));
-						mModifiedAttributes.push_back(load.attribute("i_intf"));
-						mModifiedAttributes.push_back(load.attribute("v_intf"));
+						mLoad.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, leftVector);
 					}
 
 					void execute(Real time, Int timeStepCount);

@@ -51,6 +51,7 @@ void DP::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
 	mSubVoltageSource->connect({ node(0), node(1) });
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubVoltageSource->initialize(frequencies);
+	mSubComponents.push_back(mSubVoltageSource);
 }
 
 void DP::Ph1::VoltageSourceRamp::initializeFromNodesAndTerminals(Real frequency) {
@@ -60,23 +61,31 @@ void DP::Ph1::VoltageSourceRamp::initializeFromNodesAndTerminals(Real frequency)
 void DP::Ph1::VoltageSourceRamp::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
+
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
+	}
+
 	// only need a new MnaPreStep that updates the reference voltage of mSubVoltageSource;
 	// its own tasks then do the rest
 	/// FIXME: Can we avoid setting right_vector to dynamic?
 	mRightVector->setReference(mSubVoltageSource->mRightVector);
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	for (auto task : mSubVoltageSource->mnaTasks()) {
-		mMnaTasks.push_back(task);
-	}
 }
 
 void DP::Ph1::VoltageSourceRamp::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubVoltageSource->mnaApplySystemMatrixStamp(systemMatrix);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
+	}
 }
 
 void DP::Ph1::VoltageSourceRamp::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSubVoltageSource->mnaApplyRightSideVectorStamp(rightVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplyRightSideVectorStamp(rightVector);
+	}
 }
 
 void DP::Ph1::VoltageSourceRamp::updateState(Real time) {
@@ -98,4 +107,8 @@ void DP::Ph1::VoltageSourceRamp::updateState(Real time) {
 void DP::Ph1::VoltageSourceRamp::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mVoltageSource.updateState(time);
 	**mVoltageSource.mSubVoltageSource->mVoltageRef = (**mVoltageSource.mIntfVoltage)(0, 0);
+	for (auto subComp : mVoltageSource.mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
+	}
 }

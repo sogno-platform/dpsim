@@ -110,19 +110,13 @@ namespace Ph1 {
 		/// Updates internal voltage variable of the component
 		void mnaUpdateVoltage(const Matrix& leftVector) override;
 
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Load& load, Attribute<Matrix>::Ptr leftVector) :
 				Task(**load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(leftVector);
-				if (load.mSubResistor)
-					mAttributeDependencies.push_back(load.mSubResistor->attribute("i_intf"));
-				if (load.mSubInductor)
-					mAttributeDependencies.push_back(load.mSubInductor->attribute("i_intf"));
-				if (load.mSubCapacitor)
-					mAttributeDependencies.push_back(load.mSubCapacitor->attribute("i_intf"));
-				mModifiedAttributes.push_back(load.attribute("i_intf"));
-				mModifiedAttributes.push_back(load.attribute("v_intf"));
+				mLoad.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, leftVector);
 			}
 
 			void execute(Real time, Int timeStepCount);
