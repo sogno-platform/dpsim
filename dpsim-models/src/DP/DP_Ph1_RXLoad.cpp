@@ -50,6 +50,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubResistor);
 	}
 	else {
 		mResistance = 0;
@@ -67,6 +68,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubInductor);
 	}
 	else if (mReactance < 0) {
 		mCapacitance = -1. / (2.*PI*frequency) / mReactance;
@@ -75,6 +77,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubCapacitor);
 	}
 
 	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
@@ -110,15 +113,15 @@ void DP::Ph1::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	if (mSubResistor) {
-		mSubResistor->mnaInitialize(omega, timeStep, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
 	}
+
 	if (mSubInductor) {
-		mSubInductor->mnaInitialize(omega, timeStep, leftVector);
 		mRightVectorStamps.push_back(&**mSubInductor->mRightVector);
 	}
 	if (mSubCapacitor) {
-		mSubCapacitor->mnaInitialize(omega, timeStep, leftVector);
 		mRightVectorStamps.push_back(&**mSubCapacitor->mRightVector);
 	}
 
@@ -128,21 +131,17 @@ void DP::Ph1::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 }
 
 void DP::Ph1::RXLoad::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	if (mSubResistor)
-		mSubResistor->mnaApplyRightSideVectorStamp(rightVector);
-	if (mSubInductor)
-		mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaApplyRightSideVectorStamp(rightVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplyRightSideVectorStamp(rightVector);
+	}
 }
 
 void DP::Ph1::RXLoad::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	if (mSubResistor)
-		mSubResistor->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mSubInductor)
-		mSubInductor->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaApplySystemMatrixStamp(systemMatrix);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
+	}
 }
 
 void DP::Ph1::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
@@ -151,20 +150,18 @@ void DP::Ph1::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void DP::Ph1::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = 0;
-	if (mSubResistor)
-		(**mIntfCurrent)(0, 0) += mSubResistor->intfCurrent()(0,0);
-	if (mSubInductor)
-		(**mIntfCurrent)(0, 0) += mSubInductor->intfCurrent()(0,0);
-	if (mSubCapacitor)
-		(**mIntfCurrent)(0, 0) += mSubCapacitor->intfCurrent()(0,0);
+
+	for (auto subComp : mSubComponents) {
+		(**mIntfCurrent)(0, 0) += subComp->intfCurrent()(0, 0);
+	}
 }
 
 void DP::Ph1::RXLoad::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
-	if (mSubInductor)
-		mSubInductor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	}
 
 	// add pre-step dependencies of component itself
 	modifiedAttributes.push_back(mRightVector);
@@ -172,10 +169,10 @@ void DP::Ph1::RXLoad::mnaAddPreStepDependencies(AttributeBase::List &prevStepDep
 
 void DP::Ph1::RXLoad::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents
-	if (mSubInductor)
-		mSubInductor->mnaPreStep(time, timeStepCount);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaPreStep(time, timeStepCount);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
+	}
 
 	// pre-step of component itself
 	mnaApplyRightSideVectorStamp(**mRightVector);
@@ -183,27 +180,23 @@ void DP::Ph1::RXLoad::mnaPreStep(Real time, Int timeStepCount) {
 
 void DP::Ph1::RXLoad::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	// add post-step dependencies of subcomponents
-	if (mSubResistor)
-		mSubResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	if (mSubInductor)
-		mSubInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	}
 
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void DP::Ph1::RXLoad::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of subcomponents
-	if (mSubResistor)
-		mSubResistor->mnaPostStep(time, timeStepCount, leftVector);
-	if (mSubInductor)
-		mSubInductor->mnaPostStep(time, timeStepCount, leftVector);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaPostStep(time, timeStepCount, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
+	}
 
 	// post-step of component itself
 	mnaUpdateVoltage(**leftVector);

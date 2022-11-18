@@ -62,14 +62,15 @@ namespace Ph1 {
 		/// Stamps right side (source) vector
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+
+
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(PQLoadCS& load) :
 				Task(**load.mName + ".MnaPreStep"), mLoad(load) {
-				mAttributeDependencies.push_back(load.attribute("P"));
-				mAttributeDependencies.push_back(load.attribute("Q"));
-				mAttributeDependencies.push_back(load.attribute("V_nom"));
-				mModifiedAttributes.push_back(load.mSubCurrentSource->attribute("I_ref"));
+				mLoad.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -80,18 +81,16 @@ namespace Ph1 {
 
 		class MnaPostStep : public Task {
 		public:
-			MnaPostStep(PQLoadCS& load) :
-				Task(**load.mName + ".MnaPostStep"), mLoad(load) {
-				mAttributeDependencies.push_back(load.mSubCurrentSource->attribute("i_intf"));
-				mAttributeDependencies.push_back(load.mSubCurrentSource->attribute("v_intf"));
-				mModifiedAttributes.push_back(load.attribute("i_intf"));
-				mModifiedAttributes.push_back(load.attribute("v_intf"));
+			MnaPostStep(PQLoadCS& load, Attribute<Matrix>::Ptr leftVector) :
+				Task(**load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
+				mLoad.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, leftVector);
 			}
 
 			void execute(Real time, Int timeStepCount);
 
 		private:
 			PQLoadCS& mLoad;
+			Attribute<Matrix>::Ptr mLeftVector;
 		};
 	};
 }

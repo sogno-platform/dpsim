@@ -50,12 +50,14 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSeriesResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubSeriesResistor->initialize(mFrequencies);
 	mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
+	mSubComponents.push_back(mSubSeriesResistor);
 
 	mSubSeriesInductor = std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 	mSubSeriesInductor->setParameters(**mSeriesInd);
 	mSubSeriesInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubSeriesInductor->initialize(mFrequencies);
 	mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
+	mSubComponents.push_back(mSubSeriesInductor);
 
 	// By default there is always a small conductance to ground to
 	// avoid problems with floating nodes.
@@ -68,12 +70,14 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 	mSubParallelResistor0->initialize(mFrequencies);
 	mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
+	mSubComponents.push_back(mSubParallelResistor0);
 
 	mSubParallelResistor1 = std::make_shared<DP::Ph1::Resistor>(**mName + "_con1", mLogLevel);
 	mSubParallelResistor1->setParameters(2. / **mParallelCond);
 	mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 	mSubParallelResistor1->initialize(mFrequencies);
 	mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
+	mSubComponents.push_back(mSubParallelResistor1);
 
 
 	if (**mParallelCap >= 0) {
@@ -82,12 +86,14 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelCapacitor0->initialize(mFrequencies);
 		mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubParallelCapacitor0);
 
 		mSubParallelCapacitor1 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap1", mLogLevel);
 		mSubParallelCapacitor1->setParameters(**mParallelCap / 2.);
 		mSubParallelCapacitor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelCapacitor1->initialize(mFrequencies);
 		mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
+		mSubComponents.push_back(mSubParallelCapacitor1);
 	}
 
 	mSLog->info(
@@ -108,24 +114,16 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 void DP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-	MNAInterface::List subComps({mSubSeriesResistor, mSubSeriesInductor});
 
-	mSubSeriesResistor->mnaInitialize(omega, timeStep, leftVector);
-	mSubSeriesInductor->mnaInitialize(omega, timeStep, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
+	}
 	mRightVectorStamps.push_back(&**mSubSeriesInductor->mRightVector);
 
-	mSubParallelResistor0->mnaInitialize(omega, timeStep, leftVector);
-	mSubParallelResistor1->mnaInitialize(omega, timeStep, leftVector);
-	subComps.push_back(mSubParallelResistor0);
-	subComps.push_back(mSubParallelResistor1);
-
 	if (**mParallelCap >= 0) {
-		mSubParallelCapacitor0->mnaInitialize(omega, timeStep, leftVector);
-		mSubParallelCapacitor1->mnaInitialize(omega, timeStep, leftVector);
 		mRightVectorStamps.push_back(&**mSubParallelCapacitor0->mRightVector);
 		mRightVectorStamps.push_back(&**mSubParallelCapacitor1->mRightVector);
-		subComps.push_back(mSubParallelCapacitor0);
-		subComps.push_back(mSubParallelCapacitor1);
 	}
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -133,15 +131,9 @@ void DP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 }
 
 void DP::Ph1::PiLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubSeriesResistor->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubSeriesInductor->mnaApplySystemMatrixStamp(systemMatrix);
-
-	mSubParallelResistor0->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubParallelResistor1->mnaApplySystemMatrixStamp(systemMatrix);
-
-	if (**mParallelCap >= 0) {
-		mSubParallelCapacitor0->mnaApplySystemMatrixStamp(systemMatrix);
-		mSubParallelCapacitor1->mnaApplySystemMatrixStamp(systemMatrix);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 	}
 }
 
@@ -153,11 +145,11 @@ void DP::Ph1::PiLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 
 void DP::Ph1::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
-	this->mSubSeriesInductor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	if (**this->mParallelCap >= 0) {
-		this->mSubParallelCapacitor0->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-		this->mSubParallelCapacitor1->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	}
+
 	// add pre-step dependencies of component itself
 	prevStepDependencies.push_back(mIntfCurrent);
 	prevStepDependencies.push_back(mIntfVoltage);
@@ -166,10 +158,9 @@ void DP::Ph1::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDep
 
 void DP::Ph1::PiLine::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents
-	this->mSubSeriesInductor->mnaPreStep(time, timeStepCount);
-	if (**this->mParallelCap >= 0) {
-		this->mSubParallelCapacitor0->mnaPreStep(time, timeStepCount);
-		this->mSubParallelCapacitor1->mnaPreStep(time, timeStepCount);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
 	}
 	// pre-step of component itself
 	this->mnaApplyRightSideVectorStamp(**mRightVector);
@@ -177,15 +168,10 @@ void DP::Ph1::PiLine::mnaPreStep(Real time, Int timeStepCount) {
 
 void DP::Ph1::PiLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	// add post-step dependencies of subcomponents
-	this->mSubSeriesResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	this->mSubSeriesInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	if (**this->mParallelCap >= 0) {
-		this->mSubParallelCapacitor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-		this->mSubParallelCapacitor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	}
-
-	this->mSubParallelResistor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	this->mSubParallelResistor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
@@ -195,15 +181,10 @@ void DP::Ph1::PiLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepDe
 
 void DP::Ph1::PiLine::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of subcomponents
-	this->mSubSeriesResistor->mnaPostStep(time, timeStepCount, leftVector);
-	this->mSubSeriesInductor->mnaPostStep(time, timeStepCount, leftVector);
-	if (**this->mParallelCap >= 0) {
-		this->mSubParallelCapacitor0->mnaPostStep(time, timeStepCount, leftVector);
-		this->mSubParallelCapacitor1->mnaPostStep(time, timeStepCount, leftVector);
+	for (auto subComp : mSubComponents) {
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	}
-
-	this->mSubParallelResistor0->mnaPostStep(time, timeStepCount, leftVector);
-	this->mSubParallelResistor1->mnaPostStep(time, timeStepCount, leftVector);
 
 	// post-step of component itself
 	this->mnaUpdateVoltage(**leftVector);
