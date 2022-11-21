@@ -188,6 +188,41 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 	}
 }
 
+// template <>
+// void MnaSolverDirect<Real, Matrix>::createEmptySystemMatrix() {
+// 	if (mSwitches.size() > SWITCH_NUM)
+// 		throw SystemError("Too many Switches.");
+
+// 	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
+// 		auto bit = std::bitset<SWITCH_NUM>(i);
+// 		mSwitchedMatrices[bit].push_back(Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
+// 		mLuFactorizations[bit].push_back(createDirectSolverImplementation());
+// 	}
+// }
+
+// template <>
+// void MnaSolverDirect<Complex, Matrix>::createEmptySystemMatrix() {
+// 	if (mSwitches.size() > SWITCH_NUM)
+// 		throw SystemError("Too many Switches.");
+
+// 	if (mFrequencyParallel) {
+// 		for (UInt i = 0; i < std::pow(2,mSwitches.size()); ++i) {
+// 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
+// 				auto bit = std::bitset<SWITCH_NUM>(i);
+// 				mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
+// 				mLuFactorizations[bit].push_back(createDirectSolverImplementation());
+// 			}
+// 		}
+// 	}
+// 	else {
+// 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
+// 			auto bit = std::bitset<SWITCH_NUM>(i);
+// 			mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
+// 			mLuFactorizations[bit].push_back(createDirectSolverImplementation());
+// 		}
+// 	}
+// }
+
 template <typename VarType>
 std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createSolveTask()
 {
