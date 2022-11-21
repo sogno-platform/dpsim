@@ -2,7 +2,9 @@ set(DPSIM_SOURCES
 	Simulation.cpp
 	RealTimeSimulation.cpp
 	MNASolver.cpp
-	MNASolverEigenDense.cpp
+	MNASolverDirect.cpp
+	#DirectLinearSolver.cpp
+	#DenseLUAdapter.cpp
 	PFSolver.cpp
 	PFSolverPowerPolar.cpp
 	Utils.cpp
@@ -52,7 +54,15 @@ if(WITH_JSON)
 endif()
 
 if(WITH_SPARSE)
-	list(APPEND DPSIM_SOURCES MNASolverEigenSparse.cpp)
+	list(APPEND DPSIM_SOURCES
+		SparseLUAdapter.cpp
+	)
+endif()
+
+if(WITH_KLU)
+	list(APPEND DPSIM_SOURCES
+		KLUAdapter.cpp
+	)
 endif()
 
 if(WITH_CUDA)
@@ -61,7 +71,7 @@ if(WITH_CUDA)
 		${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}
 	)
 
-	list(APPEND DPSIM_SOURCES MNASolverGpuDense.cpp)
+	list(APPEND DPSIM_SOURCES GpuDenseAdapter.cpp)
 
 	list(APPEND DPSIM_LIBRARIES
 		${CUDA_LIBRARIES}
@@ -69,13 +79,18 @@ if(WITH_CUDA)
 	)
 
 	if(WITH_MAGMA)
-		list(APPEND DPSIM_SOURCES MNASolverGpuMagma.cpp)
+		list(APPEND DPSIM_SOURCES
+			GpuMagmaAdapter.cpp
+			)
 		list(APPEND DPSIM_LIBRARIES ${MAGMA_LIBRARIES})
 		list(APPEND DPSIM_INCLUDE_DIRS ${MAGMA_INCLUDE_DIR})
 	endif()
 
 	if(WITH_SPARSE)
-		list(APPEND DPSIM_SOURCES MNASolverGpuSparse.cpp)
+		list(APPEND DPSIM_SOURCES
+			GpuSparseAdapter.cpp
+		)
+
 		list(APPEND DPSIM_LIBRARIES ${CUDA_cusparse_LIBRARY})
 	endif()
 endif()

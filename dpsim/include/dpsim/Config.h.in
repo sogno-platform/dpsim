@@ -27,6 +27,7 @@
 #cmakedefine WITH_CUDA
 #cmakedefine WITH_SPARSE
 #cmakedefine WITH_MAGMA
+#cmakedefine WITH_KLU
 #cmakedefine CGMES_BUILD
 
 #cmakedefine HAVE_GETOPT

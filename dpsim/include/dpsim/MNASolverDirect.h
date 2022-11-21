@@ -13,10 +13,15 @@
 #include <list>
 #include <unordered_map>
 #include <bitset>
+#include <memory>
 
 #include <dpsim/Config.h>
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
+#include <dpsim/DirectLinearSolver.h>
+#include <dpsim/KLUAdapter.h>
+#include <dpsim/SparseLUAdapter.h>
+//#include <dpsim/DenseLUAdapter.h>
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
@@ -26,17 +31,40 @@
 
 
 namespace DPsim {
+	
+	enum DirectLinearSolverImpl{
+		Undef = 0,
+		KLU,
+		SparseLU,
+		DenseLU,
+		Plugin
+	};
 
 	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
-	class MnaSolverEigenDense : public MnaSolver<VarType> {
+	class MnaSolverDirect : public MnaSolver<VarType> {
 	protected:
+		// #### Data structures for precomputed switch matrices (optionally with parallel frequencies) ####
 		/// Map of system matrices where the key is the bitset describing the switch states
-		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<Matrix> > mSwitchedMatrices;
+		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<SparseMatrix> > mSwitchedMatrices;
 		/// Map of LU factorizations related to the system matrices
-		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<CPS::LUFactorized> > mLuFactorizations;
+		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector< std::shared_ptr< DirectLinearSolver> > > mLuFactorizations;
+
+		// #### Data structures for system recomputation over time ####
+		/// System matrix including all static elements
+		SparseMatrix mBaseSystemMatrix;
+		/// System matrix including stamp of static and variable elements
+		SparseMatrix mVariableSystemMatrix;
+		/// LU factorization of variable system matrix
+		std::shared_ptr<DirectLinearSolver> mLuFactorizationVariableSystemMatrix;
+		/// LU factorization indicator
+		DirectLinearSolverImpl implementationInUse;
 
 		using MnaSolver<VarType>::mSwitches;
+		using MnaSolver<VarType>::mMNAIntfSwitches;
+		using MnaSolver<VarType>::mMNAComponents;
+		using MnaSolver<VarType>::mVariableComps;
+		using MnaSolver<VarType>::mMNAIntfVariableComps;
 		using MnaSolver<VarType>::mRightSideVector;
 		using MnaSolver<VarType>::mLeftSideVector;
 		using MnaSolver<VarType>::mCurrentSwitchStatus;
@@ -48,18 +76,37 @@ namespace DPsim {
 		using MnaSolver<VarType>::mLeftSideVectorHarm;
 		using MnaSolver<VarType>::mFrequencyParallel;
 		using MnaSolver<VarType>::mSLog;
+		using MnaSolver<VarType>::mSystemMatrixRecomputation;
+		using MnaSolver<VarType>::hasVariableComponentChanged;
+		using MnaSolver<VarType>::mNumRecomputations;
+		using MnaSolver<VarType>::mLUTimes;
+		using MnaSolver<VarType>::mSolveTimes;
+		using MnaSolver<VarType>::mRecomputationTimes;
+		using MnaSolver<VarType>::mListVariableSystemMatrixEntries;
 
+		// #### General
 		/// Create system matrix
 		virtual void createEmptySystemMatrix() override;
+
+		// #### Methods for precomputed switch matrices (optionally with parallel frequencies) ####
 		/// Sets all entries in the matrix with the given switch index to zero
 		virtual void switchedMatrixEmpty(std::size_t index) override;
 		/// Sets all entries in the matrix with the given switch index and frequency index to zero
 		virtual void switchedMatrixEmpty(std::size_t swIdx, Int freqIdx) override;
 		/// Applies a component stamp to the matrix with the given switch index
 		virtual void switchedMatrixStamp(std::size_t index, std::vector<std::shared_ptr<CPS::MNAInterface>>& comp) override;
-		/// Applies a component and switch stamp to the matrix with the given switch index
-		virtual void switchedMatrixStamp(std::size_t swIdx, Int freqIdx, CPS::MNAInterface::List& components, CPS::MNASwitchInterface::List& switches) override;
 
+		// #### Methods for system recomputation over time ####
+		/// Stamps components into the variable system matrix
+		void stampVariableSystemMatrix() override;
+		/// Solves the system with variable system matrix
+		void solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) override;
+		/// Create a solve task for recomputation solver
+		virtual std::shared_ptr<CPS::Task> createSolveTaskRecomp() override;
+		/// Recomputes systems matrix
+		virtual void recomputeSystemMatrix(Real time);
+
+		// #### Scheduler Task Methods ####
 		/// Create a solve task for this solver implementation
 		virtual std::shared_ptr<CPS::Task> createSolveTask() override;
 		/// Create a solve task for this solver implementation
@@ -68,37 +115,45 @@ namespace DPsim {
 		virtual std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
 		/// Logging of system matrices and source vector
 		virtual void logSystemMatrices() override;
-
-		// #### Methods for system recomputation over time ####
-		// -------- TODO: Implement methods for EigenDense ----
-		/// Stamps components into the variable system matrix
-		void stampVariableSystemMatrix() override { throw CPS::SystemError("SysRecomp not supported yet by EigenDense."); };
-		/// Solves the system with variable system matrix
-		void solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) override { throw CPS::SystemError("SysRecomp not supported yet by EigenDense."); };
-		/// Create a solve task for recomputation solver
-		virtual std::shared_ptr<CPS::Task> createSolveTaskRecomp() override { throw CPS::SystemError("SysRecomp not supported yet by EigenDense."); };
-
-		// #### Scheduler Task Methods ####
 		/// Solves system for single frequency
 		virtual void solve(Real time, Int timeStepCount) override;
 		/// Solves system for multiple frequencies
 		virtual void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) override;
 
+		/// Logging of the right-hand-side solution time
+		void logSolveTime();
+		/// Logging of the LU factorization time
+		void logLUTime();
+		/// Logging of the LU refactorization time
+		void logRecomputationTime();
+
+		/// Returns a pointer to an object of type DirectLinearSolver
+		std::shared_ptr<DirectLinearSolver> createDirectSolverImplementation();
+
 	public:
 		/// Constructor should not be called by users but by Simulation
 		/// sovlerImpl: choose the most advanced solver implementation available by default
-		MnaSolverEigenDense(String name,
+		MnaSolverDirect(String name,
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		/// Destructor
-		virtual ~MnaSolverEigenDense() { };
+		virtual ~MnaSolverDirect() { };
+
+		/// Sets the linear solver to "implementation" and creates an object
+		void setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);
 
 		// #### MNA Solver Tasks ####
 		///
 		class SolveTask : public CPS::Task {
 		public:
-			SolveTask(MnaSolverEigenDense<VarType>& solver) :
+			~SolveTask() {
+				mSolver.logLUTime();
+				mSolver.logSolveTime();
+				mSolver.logRecomputationTime();
+			}
+
+			SolveTask(MnaSolverDirect<VarType>& solver) :
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
 				for (auto it : solver.mMNAComponents) {
@@ -114,13 +169,19 @@ namespace DPsim {
 			void execute(Real time, Int timeStepCount) { mSolver.solve(time, timeStepCount); }
 
 		private:
-			MnaSolverEigenDense<VarType>& mSolver;
+			MnaSolverDirect<VarType>& mSolver;
 		};
 
 		///
 		class SolveTaskHarm : public CPS::Task {
 		public:
-			SolveTaskHarm(MnaSolverEigenDense<VarType>& solver, UInt freqIdx) :
+			~SolveTaskHarm() {
+				mSolver.logLUTime();
+				mSolver.logSolveTime();
+				mSolver.logRecomputationTime();
+			}
+
+			SolveTaskHarm(MnaSolverDirect<VarType>& solver, UInt freqIdx) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mFreqIdx(freqIdx) {
 
 				for (auto it : solver.mMNAComponents) {
@@ -138,14 +199,49 @@ namespace DPsim {
 			void execute(Real time, Int timeStepCount) { mSolver.solveWithHarmonics(time, timeStepCount, mFreqIdx); }
 
 		private:
-			MnaSolverEigenDense<VarType>& mSolver;
+			MnaSolverDirect<VarType>& mSolver;
 			UInt mFreqIdx;
+		};
+
+		///
+		class SolveTaskRecomp : public CPS::Task {
+		public:
+			~SolveTaskRecomp() {
+				mSolver.logLUTime();
+				mSolver.logSolveTime();
+				mSolver.logRecomputationTime();
+			}
+
+			SolveTaskRecomp(MnaSolverDirect<VarType>& solver) :
+				Task(solver.mName + ".Solve"), mSolver(solver) {
+
+				for (auto it : solver.mMNAComponents) {
+					if (it->getRightVector()->get().size() != 0)
+						mAttributeDependencies.push_back(it->getRightVector());
+				}
+				for (auto it : solver.mMNAIntfVariableComps) {
+					if (it->getRightVector()->get().size() != 0)
+						mAttributeDependencies.push_back(it->getRightVector());
+				}
+				for (auto node : solver.mNodes) {
+					mModifiedAttributes.push_back(node->mVoltage);
+				}
+				mModifiedAttributes.push_back(solver.mLeftSideVector);
+			}
+
+			void execute(Real time, Int timeStepCount) { 
+				mSolver.solveWithSystemMatrixRecomputation(time, timeStepCount); 
+				mSolver.log(time, timeStepCount);
+				}
+
+		private:
+			MnaSolverDirect<VarType>& mSolver;
 		};
 
 		///
 		class LogTask : public CPS::Task {
 		public:
-			LogTask(MnaSolverEigenDense<VarType>& solver) :
+			LogTask(MnaSolverDirect<VarType>& solver) :
 				Task(solver.mName + ".Log"), mSolver(solver) {
 				mAttributeDependencies.push_back(solver.mLeftSideVector);
 				mModifiedAttributes.push_back(Scheduler::external);
@@ -154,7 +250,7 @@ namespace DPsim {
 			void execute(Real time, Int timeStepCount) { mSolver.log(time, timeStepCount); }
 
 		private:
-			MnaSolverEigenDense<VarType>& mSolver;
+			MnaSolverDirect<VarType>& mSolver;
 		};
 	};
 }
