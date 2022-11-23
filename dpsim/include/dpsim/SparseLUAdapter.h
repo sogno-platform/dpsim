@@ -23,7 +23,7 @@ namespace DPsim
 {
 	class SparseLUAdapter : public DirectLinearSolver
     {
-        Eigen::SparseLU<SparseMatrix, Eigen::COLAMDOrdering<int> > LUFactorizedSparse;
+        Eigen::SparseLU<CPS::SparseMatrixRow, Eigen::COLAMDOrdering<int> > LUFactorizedSparse;
 
         public:
 		
