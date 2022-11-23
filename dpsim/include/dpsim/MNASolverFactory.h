@@ -59,13 +59,13 @@ class MnaSolverFactory {
 		CPS::Logger::Log log = CPS::Logger::get("MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
 
 		switch(implementation) {
-		// case DirectLinearSolverImpl::DenseLU:
-		// {
-		// 	log->info("creating DenseLUAdapter solver implementation");
-		// 	std::shared_ptr<MnaSolverDirect<VarType, Matrix>> denseSolver = std::make_shared<MnaSolverDirect<VarType, Matrix>>(name, domain, logLevel);
-		// 	denseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::DenseLU);
-		// 	return denseSolver;
-		// }
+		case DirectLinearSolverImpl::DenseLU:
+		{
+			log->info("creating DenseLUAdapter solver implementation");
+			std::shared_ptr<MnaSolverDirect<VarType>> denseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			denseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::DenseLU);
+			return denseSolver;
+		}
 #ifdef WITH_SPARSE
 		case DirectLinearSolverImpl::SparseLU:
 		{

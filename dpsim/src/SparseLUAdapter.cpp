@@ -41,6 +41,6 @@ namespace DPsim
 
     Matrix SparseLUAdapter::solve(Matrix& mRightHandSideVector)
     {
-        return LUFactorizedSparse.solve(mRightHandSideVector);
+        return LUFactorizedSparse.transpose().solve(mRightHandSideVector);
     }
 }

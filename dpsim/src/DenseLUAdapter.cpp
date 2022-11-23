@@ -20,24 +20,24 @@ namespace DPsim
 
     }
     
-    void DenseLUAdapter::preprocessing(Matrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
+    void DenseLUAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
         
     }
     
-    void DenseLUAdapter::factorize(Matrix& mVariableSystemMatrix)
+    void DenseLUAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
     {
-        LUFactorized.compute(mVariableSystemMatrix);
+        LUFactorized.compute(Matrix(mVariableSystemMatrix));
     }
     
-    void DenseLUAdapter::refactorize(Matrix& mVariableSystemMatrix)
+    void DenseLUAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
     {
-        LUFactorized.compute(mVariableSystemMatrix);
+        LUFactorized.compute(Matrix(mVariableSystemMatrix));
     }
     
-    void DenseLUAdapter::partialRefactorize(Matrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
+    void DenseLUAdapter::partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
-        LUFactorized.compute(mVariableSystemMatrix);
+        LUFactorized.compute(Matrix(mVariableSystemMatrix));
     }
     
     Matrix DenseLUAdapter::solve(Matrix& mRightHandSideVector)

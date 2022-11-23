@@ -88,7 +88,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
 		.def("add_event", &DPsim::Simulation::addEvent)
 		.def("set_solver_component_behaviour", &DPsim::Simulation::setSolverAndComponentBehaviour)
-		.def("set_mna_solver_implementation", &DPsim::Simulation::setMnaSolverImplementation);
+		.def("set_direct_solver_implementation", &DPsim::Simulation::setDirectSolverImplementation);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info)
@@ -186,13 +186,11 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("DAE", DPsim::Solver::Type::DAE)
 		.value("NRP", DPsim::Solver::Type::NRP);
 
-	py::enum_<DPsim::MnaSolverFactory::MnaSolverImpl>(m, "MnaSolverImpl")
-		.value("Undef", DPsim::MnaSolverFactory::MnaSolverImpl::Undef)
-		.value("EigenDense", DPsim::MnaSolverFactory::MnaSolverImpl::EigenDense)
-		.value("EigenSparse", DPsim::MnaSolverFactory::MnaSolverImpl::EigenSparse)
-		.value("CUDADense", DPsim::MnaSolverFactory::MnaSolverImpl::CUDADense)
-		.value("CUDASparse", DPsim::MnaSolverFactory::MnaSolverImpl::CUDASparse)
-		.value("CUDAMagma", DPsim::MnaSolverFactory::MnaSolverImpl::CUDAMagma);
+	py::enum_<DPsim::DirectSolverImpl>(m, "DirectSolverImpl")
+		.value("Undef", DPsim::DirectSolverImpl::Undef)
+		.value("DenseLU", DPsim::DirectSolverImpl::DenseLU)
+		.value("SparseLU", DPsim::DirectSolverImpl::SparseLU)
+		.value("KLU", DPsim::DirectSolverImpl::KLU);
 
 	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
 		.value("AUTO", CPS::CSVReader::Mode::AUTO)
