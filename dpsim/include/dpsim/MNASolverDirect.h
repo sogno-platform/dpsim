@@ -19,9 +19,12 @@
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/DirectLinearSolver.h>
+#ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
+#endif
+#ifdef WITH_SPARSE
 #include <dpsim/SparseLUAdapter.h>
-//#include <dpsim/DenseLUAdapter.h>
+#endif
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>

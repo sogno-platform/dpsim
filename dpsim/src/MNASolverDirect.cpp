@@ -373,10 +373,14 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 		/*case DirectLinearSolverImpl::DenseLU:
 			return std::make_shared<DenseLUAdapter>();
 			*/
+		#ifdef WITH_SPARSE
 		case DirectLinearSolverImpl::SparseLU:
 			return std::make_shared<SparseLUAdapter>();
+		#endif
+		#ifdef WITH_KLU
 		case DirectLinearSolverImpl::KLU:
 			return std::make_shared<KLUAdapter>();
+		#endif
 		default:
 			throw CPS::SystemError("unsupported linear solver implementation.");
 	}
