@@ -3,8 +3,7 @@ set(DPSIM_SOURCES
 	RealTimeSimulation.cpp
 	MNASolver.cpp
 	MNASolverDirect.cpp
-	#DirectLinearSolver.cpp
-	#DenseLUAdapter.cpp
+	DenseLUAdapter.cpp
 	PFSolver.cpp
 	PFSolverPowerPolar.cpp
 	Utils.cpp

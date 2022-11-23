@@ -370,9 +370,8 @@ template<typename VarType>
 std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolverImplementation() {
 	switch(this->implementationInUse)
 	{
-		/*case DirectLinearSolverImpl::DenseLU:
+		case DirectLinearSolverImpl::DenseLU:
 			return std::make_shared<DenseLUAdapter>();
-			*/
 		#ifdef WITH_SPARSE
 		case DirectLinearSolverImpl::SparseLU:
 			return std::make_shared<SparseLUAdapter>();

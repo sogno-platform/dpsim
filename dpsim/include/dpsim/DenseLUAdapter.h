@@ -21,7 +21,7 @@
 
 namespace DPsim
 {
-    class DenseLUAdapter : public DirectLinearSolver<Matrix>
+    class DenseLUAdapter : public DirectLinearSolver
     {
         Eigen::PartialPivLU<Matrix> LUFactorized;
 
@@ -33,16 +33,16 @@ namespace DPsim
 		virtual void initialize() override;
 
 		/// preprocessing function pre-ordering and scaling the matrix
-		virtual void preprocessing(Matrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
+		virtual void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
 
 		/// factorization function with partial pivoting
-		virtual void factorize(Matrix& mVariableSystemMatrix) override;
+		virtual void factorize(SparseMatrix& mVariableSystemMatrix) override;
 
 		/// refactorization without partial pivoting
-		virtual void refactorize(Matrix& mVariableSystemMatrix) override;
+		virtual void refactorize(SparseMatrix& mVariableSystemMatrix) override;
 
 		/// partial refactorization withouth partial pivoting
-		virtual void partialRefactorize(Matrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
+		virtual void partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
 
 		/// solution function for a right hand side
 		virtual Matrix solve(Matrix& mRightSideVector) override;

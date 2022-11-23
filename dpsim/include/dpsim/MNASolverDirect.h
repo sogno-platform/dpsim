@@ -19,6 +19,7 @@
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/DirectLinearSolver.h>
+#include <dpsim/DenseLUAdapter.h>
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
 #endif
