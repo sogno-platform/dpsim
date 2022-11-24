@@ -11,7 +11,7 @@ def build_message(sequence, v_ref):
     return "[" + json.dumps(message) + "]"
 
 if __name__ == '__main__':
-    time.sleep(5)
+    time.sleep(10)
     seq = 0
     T_s = 0.01
     tf = 10.0

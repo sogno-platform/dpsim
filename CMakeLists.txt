@@ -132,6 +132,7 @@ find_package(GSL)
 find_package(Graphviz)
 find_package(MAGMA)
 
+include(cmake/GetReaderWriterQueue.cmake)
 
 find_package (Python COMPONENTS Interpreter Development)
 if (WITH_PYBIND_MODULE)

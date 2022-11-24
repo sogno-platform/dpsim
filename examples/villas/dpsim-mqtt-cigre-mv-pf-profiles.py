@@ -79,11 +79,11 @@ sim.add_interface(intf_mqtt)
 # setup exports
 for i in range(15):
     objname = 'N'+str(i)
-    sim.export_attribute(sim \
+    intf_mqtt.export_attribute(sim \
         .get_idobj_attr(objname, 'v') \
         .derive_coeff(0,0) \
         .derive_mag(), 2*i)
-    sim.export_attribute(sim \
+    intf_mqtt.export_attribute(sim \
         .get_idobj_attr(objname, 'v') \
         .derive_coeff(0,0) \
         .derive_phase(), 2*i+1)

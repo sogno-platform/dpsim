@@ -1,10 +1,12 @@
 {
 	"name": "DPsim",
-	"build": {
-		"dockerfile": "../Packaging/Docker/Dockerfile.dev",
-		"target": "dev-vscode",
-		"context": ".."
-	},
+	"image": "sogno/dpsim:dev",
+	// uncomment to build devcontainer image locally
+	// "build": {
+	// 	"dockerfile": "../packaging/Docker/Dockerfile.dev",
+	// 	"target": "dev-vscode",
+	// 	"context": ".."
+	// },
 	"remoteUser": "dpsim",
 	"runArgs": [
 		"--privileged",

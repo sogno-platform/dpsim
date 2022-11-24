@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 	// Voltage is read from VILLASnode and current through everything is written back.
 	String simName = "Mqtt_example";
 	CPS::Logger::setLogDir("logs/"+simName);
-	Real timeStep = 0.1;
+	Real timeStep = 0.01;
 
 	// Nodes
 	auto n1 = SimNode::make("n1");
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 	RealTimeSimulation sim(simName);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
-	sim.setFinalTime(2.0);
+	sim.setFinalTime(10.0);
 	
     std::string mqttConfig = R"STRING({
         "type": "mqtt",
@@ -62,13 +62,13 @@ int main(int argc, char* argv[]) {
         }
     })STRING";
 
-    InterfaceVillas intf("dpsim-mqtt", mqttConfig);
+    auto intf = std::make_shared<InterfaceVillas>(mqttConfig);
 
 	// Interface
-	evs->mVoltageRef->setReference(intf.importComplex(0));
-	intf.exportComplex(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, "v_src");
-	intf.exportComplex(rL->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1, "v_load");
-	sim.addInterface(&intf, true);
+	sim.addInterface(intf);
+	intf->importAttribute(evs->mVoltageRef, 0, true, true);
+	intf->exportAttribute(evs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, true, "v_src");
+	intf->exportAttribute(ll->mIntfCurrent->deriveCoeff<Complex>(0, 0), 1, true, "v_load");
 
 	// Logger
 	auto logger = DataLogger::make(simName);
@@ -77,6 +77,7 @@ int main(int argc, char* argv[]) {
 	logger->logAttribute("v3", n3->mVoltage);
 	logger->logAttribute("v4", n4->mVoltage);
 	logger->logAttribute("v_src", evs->mVoltageRef);
+	logger->logAttribute("i_r", rl->mIntfCurrent, 1, 1);
 	logger->logAttribute("i_evs", evs->mIntfCurrent, 1, 1);
 	logger->logAttribute("v_evs", evs->mIntfVoltage, 1, 1);
 	sim.addLogger(logger);

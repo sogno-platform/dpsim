@@ -1,10 +1,4 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-License-Identifier: Apache-2.0
 
 #include <chrono>
 #include <iomanip>
@@ -172,20 +166,13 @@ void Simulation::createMNASolver() {
 	}
 }
 
-void Simulation::sync() {
-	int numOfSyncInterfaces = std::count_if(mInterfaces.begin(), mInterfaces.end(), [](InterfaceMapping ifm) {return ifm.syncStart;});
-	mLog->info("Start synchronization with remotes on {} interfaces", numOfSyncInterfaces);
+void Simulation::sync() const {
+	mLog->info("Start synchronization with remotes on interfaces");
 
-	for (auto ifm : mInterfaces) {
-		if(ifm.syncStart) {
-			// Send initial state over interface
-			ifm.interface->writeValues();
-
-			// Blocking wait for interface
-			ifm.interface->readValues(ifm.syncStart);
-
-			ifm.interface->writeValues();
-		}
+	for (auto intf : mInterfaces) {
+		intf->syncExports();
+		intf->syncImports();
+		intf->syncExports();
 	}
 
 	mLog->info("Synchronized simulation start with remotes");
@@ -201,8 +188,8 @@ void Simulation::prepSchedule() {
 		}
 	}
 
-	for (auto intfm : mInterfaces) {
-		for (auto t : intfm.interface->getTasks()) {
+	for (auto intf : mInterfaces) {
+		for (auto t : intf->getTasks()) {
 			mTasks.push_back(t);
 		}
 	}
@@ -349,8 +336,8 @@ void Simulation::start() {
 
 	mLog->info("Opening interfaces.");
 
-	for (auto ifm : mInterfaces)
-		ifm.interface->open(mLog);
+	for (auto intf : mInterfaces)
+		intf->open();
 
 	sync();
 
@@ -369,8 +356,8 @@ void Simulation::stop() {
 
 	mScheduler->stop();
 
-	for (auto ifm : mInterfaces)
-		ifm.interface->close();
+	for (auto intf : mInterfaces)
+		intf->close();
 
 	for (auto lg : mLoggers)
 		lg->close();
@@ -414,19 +401,6 @@ Real Simulation::step() {
 	return mTime;
 }
 
-/// DEPRECATED: Unused
-void Simulation::reset() {
-
-	// Resets component states
-	mSystem.reset();
-
-	for (auto l : mLoggers)
-		l->reopen();
-
-	// Force reinitialization for next run
-	mInitialized = false;
-}
-
 void Simulation::logStepTimes(String logName) {
 	auto stepTimeLog = Logger::get(logName, Logger::Level::info);
 	Logger::setLogPattern(stepTimeLog, "%v");
@@ -438,47 +412,6 @@ void Simulation::logStepTimes(String logName) {
 		stepTimeLog->info("{:f}", meas);
 	}
 	mLog->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
-}
-
-void Simulation::exportAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf) {
-	if (intf == nullptr) {
-		intf = mInterfaces[0].interface;
-	}
-	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
-		intf->exportReal(attrReal, idx);
-	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr.getPtr())) {
-		intf->exportComplex(attrComp, idx);
-	} else if (auto attrInt = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr.getPtr())) {
-		intf->exportInt(attrInt, idx);
-	} else if (auto attrBool = std::dynamic_pointer_cast<CPS::Attribute<Bool>>(attr.getPtr())) {
-		intf->exportBool(attrBool, idx);
-	} else {
-		mLog->error("Only scalar attributes of type Int, Bool, Real or Complex can be exported. Use the Attribute::derive methods to export individual Matrix coefficients!");
-	}
-}
-
-
-void Simulation::importAttribute(CPS::AttributeBase::Ptr attr, Int idx, Interface* intf) {
-	if (attr->isStatic()) {
-		mLog->error("Cannot import to a static attribute. Please provide a dynamic attribute!");
-		throw InvalidAttributeException();
-	}
-
-	if (intf == nullptr) {
-		intf = mInterfaces[0].interface;
-	}
-	if (auto attrReal = std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
-		attrReal->setReference(intf->importReal(idx));
-	} else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr.getPtr())) {
-		attrComp->setReference(intf->importComplex(idx));
-	} else if (auto attrInt = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr.getPtr())) {
-		attrInt->setReference(intf->importInt(idx));
-	} else if (auto attrBool = std::dynamic_pointer_cast<CPS::Attribute<Bool>>(attr.getPtr())) {
-		attrBool->setReference(intf->importBool(idx));
-	} else {
-		mLog->error("Only scalar attributes of type Int, Bool, Real or Complex can be imported.");
-		throw InvalidAttributeException();
-	}
 }
 
 CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const String &attr) {
@@ -508,5 +441,6 @@ void Simulation::logIdObjAttribute(const String &comp, const String &attr) {
 }
 
 void Simulation::logAttribute(String name, CPS::AttributeBase::Ptr attr) {
+	//FIXME: Safety: This will crash when no logger is registered
 	mLoggers[0]->logAttribute(name, attr);
 }

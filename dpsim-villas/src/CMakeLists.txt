@@ -1,7 +1,6 @@
 set(DPSIM_VILLAS_SOURCES
-    InterfaceSampleBased.cpp
-    InterfaceShmem.cpp
     InterfaceVillas.cpp
+    InterfaceWorkerVillas.cpp
 )
 
 add_library(dpsim-villas ${DPSIM_VILLAS_SOURCES})
