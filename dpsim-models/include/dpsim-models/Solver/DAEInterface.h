@@ -11,6 +11,7 @@
 #include<vector>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
+#include <sunmatrix/sunmatrix_dense.h>
 
 namespace CPS {
 	class DAEInterface {
@@ -19,16 +20,17 @@ namespace CPS {
 		typedef std::vector<Ptr> List;
 
 		using ResFn = std::function<void(double, const double *, const double *, double *, std::vector<int>&)>;
+		using JacobianFn = std::function<void(double, const double *, const double *, SUNMatrix, double, std::vector<int>&)>;
 
 		// DAE Solver: Initial complex Current (of phase a)
 		Complex mInitfComplexCurrent = Complex(0,0);
 		/// Derivative of the current
 		//Matrix mIntfDerCurrent = Matrix::Zero(3,1);
 		///
-		Real mAbsTolerance = 1e-3;
+		Real mAbsTolerance = 1e-9;
 		///
 		void daeSetAbsoluteTolerance(Real AbsTol) {
-			mAbsTolerance=AbsTol;
+			mAbsTolerance = AbsTol;
 		} 
 		/// set init value of the current, calculate and set the 
 		/// initial value of the derivative of the current
@@ -36,11 +38,12 @@ namespace CPS {
 		///
 		virtual void daeInitialize(double time, double state[], double dstate_dt[], 
 			double absoluteTolerances[], double stateVarTypes[], int& counter)=0;
-		///
-		virtual void daePreStep(double time)=0;
 		///Residual Function for DAE Solver
 		virtual void daeResidual(double sim_time, const double state[], const double dstate_dt[], 
 			double resid[], std::vector<int>& off) = 0;
+		
+		virtual void daeJacobian(double current_time, const double state[], const double dstate_dt[], 
+			SUNMatrix jacobian, double cj, std::vector<int>& off) = 0;
 		///
 		virtual void daePostStep(double Nexttime, const double state[], 
 			const double dstate_dt[], int& counter)=0;

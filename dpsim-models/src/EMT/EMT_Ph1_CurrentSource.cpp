@@ -81,3 +81,42 @@ void EMT::Ph1::CurrentSource::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	if (terminalNotGrounded(1))
 		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 }
+
+// #### DAE functions ####
+void EMT::Ph1::CurrentSource::daeInitialize(double time, double state[], double dstate_dt[], 
+	double absoluteTolerances[], double stateVarTypes[], int& offset) {
+
+	updateMatrixNodeIndices();
+	mSLog->info(
+		"\n--- daeInitialize ---"
+		"\nno variable was added by the ideal current source '{:s}' to the state vector"
+		"\n--- daeInitialize finished ---",
+		this->name());
+	mSLog->flush();
+}
+
+void EMT::Ph1::CurrentSource::daeResidual(double sim_time, 
+	const double state[], const double dstate_dt[], 
+	double resid[], std::vector<int>& off) {
+	// current source does not has states variables
+	// Only the current flowing out of the component must be added to the node current equations
+
+	int Pos1 = matrixNodeIndex(0);
+    int Pos2 = matrixNodeIndex(1);
+
+	if (terminalNotGrounded(0))
+		resid[Pos1] += (**mIntfCurrent)(0,0);
+	if (terminalNotGrounded(1))
+		resid[Pos2] -= (**mIntfCurrent)(0,0);
+}
+
+void EMT::Ph1::CurrentSource::daePostStep(double Nexttime, const double state[], 
+	const double dstate_dt[], int& offset) {
+
+	(**mIntfVoltage)(0,0) = 0.0;
+	if (terminalNotGrounded(1))
+		(**mIntfVoltage)(0,0) += state[matrixNodeIndex(1)];
+	if (terminalNotGrounded(0))
+		(**mIntfVoltage)(0,0) -= state[matrixNodeIndex(0)];
+}
+

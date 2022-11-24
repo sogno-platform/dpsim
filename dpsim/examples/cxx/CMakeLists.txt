@@ -142,6 +142,8 @@ if(WITH_SUNDIALS)
 
 	set(DAE_SOURCES
 		DAE/DAE_DP_test.cpp
+		DAE/DAE_EMT_VS_C1.cpp
+		DAE/DAE_EMT_VS_RLC1.cpp
 		DAE/DAE_EMT_Slack_PiLine_RXLoad.cpp
 	)
 endif()

@@ -133,7 +133,7 @@ void EMT::Ph3::NetworkInjection::daeInitialize(double time, double state[],doubl
 	//current is positive when flows out of the network injection (into the node)
 
 	updateMatrixNodeIndices();
-	daePreStep(time);
+	//daePreStep(time);
 
 	state[offset] = (**mIntfCurrent)(0,0);
 	dstate_dt[offset] = mIntfDerCurrent(0,0);
@@ -183,15 +183,17 @@ void EMT::Ph3::NetworkInjection::daeInitialize(double time, double state[],doubl
 	offset+=3;
 }
 
+/*
 void EMT::Ph3::NetworkInjection::daePreStep(Real sim_time){
 	mSubVoltageSource->daePreStep(sim_time);
 	**mIntfVoltage = mSubVoltageSource->intfVoltage();
 }
+*/
 
 void EMT::Ph3::NetworkInjection::daeResidual(double sim_time,
 	const double state[], const double dstate_dt[],
 	double resid[], std::vector<int>& off) {
-
+	
 	//this->updateVoltage(sim_time);
 	int c_offset = off[0]+off[1]; //current offset for component
 

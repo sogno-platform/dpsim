@@ -102,6 +102,19 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_direct_solver_implementation", &DPsim::Simulation::setDirectLinearSolverImplementation)
 		.def("set_direct_linear_solver_configuration", &DPsim::Simulation::setDirectLinearSolverConfiguration)
 		.def("log_lu_times", &DPsim::Simulation::logLUTimes);
+		.def("set_relative_rolerance", &DPsim::Simulation::setRelativeTolerance, "rel_tol"_a)
+		.def("set_ida_max_conv_fails", &DPsim::Simulation::setIDAMaxConvFails,   "ida_max_conv_fails"_a)
+		.def("set_ida_non_lin_conv_coef", &DPsim::Simulation::setIDANonlinConvCoef, "ida_non_lin_conv_coef"_a)
+		.def("set_ida_max_non_lin_iters", &DPsim::Simulation::setIDAMaxNonlinIters, "ida_max_non_lin_iters"_a)
+		.def("set_ida_max_bdf_order", &DPsim::Simulation::setIDAMaxBDFOrder, "ida_max_bdf_order"_a)
+		.def("set_ida_max_num_steps", &DPsim::Simulation::setIDAMaxNumSteps, "ida_max_num_steps"_a)
+		.def("set_variable_step_size", &DPsim::Simulation::setVariableStepSize, "variable_step_size"_a)
+		.def("set_min_step_size", &DPsim::Simulation::setMinStepSize, "min_step_size"_a)
+		.def("set_max_step_size", &DPsim::Simulation::setMaxStepSize, "max_step_size"_a)
+		.def("set_max_err_test_fails", &DPsim::Simulation::setMaxErrTestFails, "max_err_test_fails"_a)
+		.def("set_ida_suppress_alg", &DPsim::Simulation::setIDASetSuppressAlg, "ida_suppress_alg"_a)
+		.def("set_min_step_size", &DPsim::Simulation::setMinStepSize, "max_step_size"_a)
+		.def("set_max_step_size", &DPsim::Simulation::setMaxStepSize, "max_step_size"_a);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info)

@@ -25,6 +25,7 @@ void addEMTComponents(py::module_ mEMT) {
 		.def("set_initial_voltage", py::overload_cast<CPS::MatrixComp>(&CPS::EMT::SimNode::setInitialVoltage, py::const_))
 		.def("set_initial_voltage", py::overload_cast<CPS::Complex>(&CPS::EMT::SimNode::setInitialVoltage, py::const_))
 		.def("set_initial_voltage", py::overload_cast<CPS::Complex, int>(&CPS::EMT::SimNode::setInitialVoltage, py::const_))
+		.def("dae_set_abs_tolerance", &CPS::EMT::SimNode::daeSetAbsoluteTolerance, "abs_tol"_a)
 		.def_readonly_static("gnd", &CPS::EMT::SimNode::GND);
 
 	py::module mEMTPh1 = mEMT.def_submodule("ph1", "single phase electromagnetic-transient models");
@@ -47,6 +48,8 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
 		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph1::VoltageSource::setParameters, "V_ref"_a, "f_src"_a = -1)
 		.def("connect", &CPS::EMT::Ph1::VoltageSource::connect)
+		.def("set_initial_current", &CPS::EMT::Ph1::VoltageSource::setInitialComplexIntfCurrent, "init_current"_a)
+		.def("dae_set_abs_tolerance", &CPS::EMT::Ph1::VoltageSource::daeSetAbsoluteTolerance, "abs_tol"_a)
 		.def_property("V_ref", createAttributeGetter<CPS::Complex>("V_ref"), createAttributeSetter<CPS::Complex>("V_ref"))
 		.def_property("f_src", createAttributeGetter<CPS::Real>("f_src"), createAttributeSetter<CPS::Real>("f_src"));
 
@@ -55,6 +58,7 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
 		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph1::Resistor::setParameters, "R"_a)
 		.def("connect", &CPS::EMT::Ph1::Resistor::connect)
+		.def("dae_set_abs_tolerance", &CPS::EMT::Ph1::Resistor::daeSetAbsoluteTolerance, "abs_tol"_a)
 		.def_property("R", createAttributeGetter<CPS::Real>("R"), createAttributeSetter<CPS::Real>("R"));
 
 	py::class_<CPS::EMT::Ph1::Capacitor, std::shared_ptr<CPS::EMT::Ph1::Capacitor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Capacitor", py::multiple_inheritance())
@@ -62,6 +66,7 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
 		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph1::Capacitor::setParameters, "C"_a)
 		.def("connect", &CPS::EMT::Ph1::Capacitor::connect)
+		.def("dae_set_abs_tolerance", &CPS::EMT::Ph1::Capacitor::daeSetAbsoluteTolerance, "abs_tol"_a)
 		.def_property("C", createAttributeGetter<CPS::Real>("C"), createAttributeSetter<CPS::Real>("C"));
 
 	py::class_<CPS::EMT::Ph1::Inductor, std::shared_ptr<CPS::EMT::Ph1::Inductor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Inductor", py::multiple_inheritance())
@@ -69,6 +74,7 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
 		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph1::Inductor::setParameters, "L"_a)
 		.def("connect", &CPS::EMT::Ph1::Inductor::connect)
+		.def("dae_set_abs_tolerance", &CPS::EMT::Ph1::Inductor::daeSetAbsoluteTolerance, "abs_tol"_a)
 		.def_property("L", createAttributeGetter<CPS::Real>("L"), createAttributeSetter<CPS::Real>("L"));
 
 }

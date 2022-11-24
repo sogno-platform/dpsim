@@ -86,17 +86,18 @@ namespace CPS {
 				MatrixVar<Real> mIntfDerCurrent;
 				///
 				void daeInitialize(double time, double state[], double dstate_dt[], 
-					double absoluteTolerances[], double stateVarTypes[], int& offset);
-				///
-				void daePreStep(double time) {};
+					double absoluteTolerances[], double stateVarTypes[], int& offset) override;
 				/// Residual function for DAE Solver
 				void daeResidual(double time, const double state[], const double dstate_dt[], 
-					double resid[], std::vector<int>& off);
+					double resid[], std::vector<int>& off) override;
+				/// Calculation of jacobian
+				void daeJacobian(double current_time, const double state[], const double dstate_dt[], 
+					SUNMatrix jacobian, double cj, std::vector<int>& off) override {};
 				///
 				void daePostStep(double Nexttime, const double state[], 
-					const double dstate_dt[], int& offset);
+					const double dstate_dt[], int& offset) override;
 				///
-				int getNumberOfStateVariables() {return 3;}
+				int getNumberOfStateVariables() override {return 3;}
 			};
 		}
 	}

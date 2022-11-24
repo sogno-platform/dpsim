@@ -11,10 +11,18 @@
 using namespace CPS;
 
 EMT::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), Base::Ph1::Inductor(mAttributes) {
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), 
+	Base::Ph1::Inductor(mAttributes),
+	mIntfDerCurrent(Attribute<Matrix>::create("di_intf", mAttributes)) {
+
 	mEquivCurrent = 0;
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);
+
+	// initialize dae specific attributes
+	**mIntfDerCurrent = Matrix::Zero(1,1);
+
+	//
 	setTerminalNumber(2);
 }
 
@@ -107,3 +115,103 @@ void EMT::Ph1::Inductor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = mEquivCond * (**mIntfVoltage)(0,0) + mEquivCurrent;
 }
 
+// #### DAE functions ####
+
+void EMT::Ph1::Inductor::daeInitialize(double time, double state[], double dstate_dt[], 
+	double absoluteTolerances[], double stateVarTypes[], int &offset) {
+	// state[offset] = current through inductor
+	// dstate_dt[offset] = inductor current derivative
+	updateMatrixNodeIndices();
+
+	// set init values of states
+	state[offset] = (**mIntfCurrent)(0,0);	
+	dstate_dt[offset] = (**mIntfVoltage)(0,0) / **mInductance;		
+	(**mIntfDerCurrent)(0,0) = dstate_dt[offset];
+	
+	//set state variable as differential variable
+	stateVarTypes[offset]  = 1.0;
+
+	//set absolute tolerance
+	absoluteTolerances[offset] = mAbsTolerance;
+
+	mSLog->info(
+		"\n--- daeInitialize ---"
+		"\nAdded current through inductor '{:s}' to state vector, initial value = {:f}A"
+		"\nAdded derivative of current inductor '{:s}' to derivative state vector, initial value = {:f}"
+		"\nState variable set as differential"
+		"\nAbsolute tolerance={:f}"
+		"\n--- daeInitialize finished ---",
+		this->name(), state[offset], 
+		this->name(), dstate_dt[offset],
+		absoluteTolerances[offset]
+	);
+	mSLog->flush();
+	offset++;
+}
+
+void EMT::Ph1::Inductor::daeResidual(double sim_time, 
+	const double state[], const double dstate_dt[], 
+	double resid[], std::vector<int>& off) {
+	// state[c_offset] = current through inductor, flowing into node matrixNodeIndex(0)
+	// dstate_dt[c_offset] = inductor current derivative
+	// state[Pos2] = voltage of node matrixNodeIndex(1)
+	// state[Pos1] = voltage of node matrixNodeIndex(0)
+	// resid[c_offset] = voltage eq of inductor: v_ind(t) -L*(d/dt)i_ind(t) = 0 --> state[Pos2] - state[Pos1] - L*dstate_dt[c_offset] = 0
+	// resid[Pos1] = nodal current equation of node matrixNodeIndex(0) ---> substract state[c_offset]
+	// resid[Pos2] = nodal current equation of node matrixNodeIndex(1) ---> add state[c_offset]
+
+	int Pos1 = matrixNodeIndex(0);
+    int Pos2 = matrixNodeIndex(1);
+	int c_offset = off[0] + off[1]; //current offset for component
+
+	resid[c_offset] = - **mInductance * dstate_dt[c_offset];
+	if (terminalNotGrounded(0)) {
+		resid[c_offset] -= state[Pos1];
+		resid[Pos1] -= state[c_offset];
+	}
+	if (terminalNotGrounded(1)) {
+		resid[c_offset] += state[Pos2];
+		resid[Pos2] += state[c_offset];
+	}
+
+	off[1] += 1;
+}
+
+void EMT::Ph1::Inductor::daeJacobian(double current_time, const double state[], 
+			const double dstate_dt[], SUNMatrix jacobian, double cj, std::vector<int>& off) {
+
+	int node_pos0 = matrixNodeIndex(0);
+    int node_pos1 = matrixNodeIndex(1);
+	int c_offset = off[0] + off[1]; //current offset for component
+
+	SM_ELEMENT_D(jacobian, c_offset, c_offset) -= cj * **mInductance;
+	if (terminalNotGrounded(1)) {
+		SM_ELEMENT_D(jacobian, c_offset, node_pos1) += 1.0;
+		SM_ELEMENT_D(jacobian, node_pos1, c_offset) += 1.0;
+	}
+
+	if (terminalNotGrounded(0)) {
+		SM_ELEMENT_D(jacobian, c_offset, node_pos0) += -1.0;
+		SM_ELEMENT_D(jacobian, node_pos0, c_offset) += -1.0;
+	}
+
+	off[1] += 1;
+}
+
+void EMT::Ph1::Inductor::daePostStep(double Nexttime, const double state[], 
+	const double dstate_dt[], int& offset) {
+	
+	int Pos1 = matrixNodeIndex(0);
+    int Pos2 = matrixNodeIndex(1);
+	
+	(**mIntfVoltage)(0,0) = 0.0;
+	if (terminalNotGrounded(0))
+		(**mIntfVoltage)(0,0) -= state[Pos1];
+	if (terminalNotGrounded(1)) 
+		(**mIntfVoltage)(0,0) += state[Pos2];
+
+	(**mIntfCurrent)(0,0) = **mInductance * dstate_dt[offset];
+	(**mIntfCurrent)(0,0) = state[offset];
+	(**mIntfDerCurrent)(0,0) = dstate_dt[offset];
+	offset++;
+}

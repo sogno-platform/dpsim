@@ -42,9 +42,7 @@ namespace DPsim {
 		/// Final time of the simulation
 		const CPS::Attribute<Real>::Ptr mFinalTime;
 		/// Simulation timestep
-		const CPS::Attribute<Real>::Ptr mTimeStep;
-		/// Relative Tolerance (DAE Solver)
-		Real mRelTol = 1e-6;
+		const CPS::Attribute<Real>::Ptr mTimeStep;	
 
 		/// Determines if the network should be split
 		/// into subnetworks at decoupling lines.
@@ -148,6 +146,35 @@ namespace DPsim {
 		/// Prepare schedule for simulation
 		void prepSchedule();
 
+	protected:
+		// ### DAE Solver Parameters ###
+		/// Relative tolerance
+		realtype mRelativeTolerance = 1e-4;
+
+		// ### nonlinear solver interface optional input parameters ###
+		/// specifies maximum no. of nonlinear iterations
+		int mIDAMaxNonlinIters = 4;
+		/// specifies the maximum number of nonlinear solver convergence failures in one step
+		int mIDAMaxConvFails = 10;
+		/// Coeff. in the nonlinear convergence test
+		realtype mIDANonlinConvCoef = 0.33;
+			
+		// ### Solver optional input parameters ###
+		/// Maximum order for BDF method (0<mIDAMaxBDFOrder<=5)
+		unsigned int mIDAMaxBDFOrder = 5;
+		/// Maximum number of steps to be taken by the solver in its attempt to reach the next output time (-1 = unlimited)
+		int mIDAMaxNumSteps = -1;
+		/// indicates whether or not to use variable integration step size
+		bool mVariableStepSize = true;
+		/// min integration time
+		realtype mMinStepSize = 1e-6;
+		/// max integration time
+		realtype mMaxStepSize = 1e-3;
+		/// Maximum number of error test failures in attempting one step
+		unsigned int mIDAMaxErrTestFails = 100;
+		/// indicates whether or not to suppress algebraic variables in the local error test
+		bool mIDASetSuppressAlg = true;
+
 	public:
 		/// Simulation logger
 		CPS::Logger::Log mLog;
@@ -186,14 +213,44 @@ namespace DPsim {
 		void setTearingComponents(CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List()) {
 			mTearComponents = tearComponents;
 		}
-		/// Set relative Tolerance (DAE Solver)
-		void setRelativeTolerance(Real relTol) {
-			mRelTol=relTol;
-		}
 		/// Set the scheduling method
 		void setScheduler(const std::shared_ptr<Scheduler> &scheduler) {
 			mScheduler = scheduler;
 		}
+
+		// ### Setters DAE Solver
+		/// Set relative Tolerance
+		void setRelativeTolerance(Real relTol) { mRelativeTolerance = relTol; }
+
+		// ### DAE Solver: Setters for nonlinear solver interface optional input functions ###
+		/// Set maximum no. of convergence failures
+		void setIDAMaxConvFails(int IDAMaxConvFails) { mIDAMaxConvFails = IDAMaxConvFails; }
+		/// Set the safety factor in the nonlinear convergence test
+		void setIDANonlinConvCoef(Real IDANonlinConvCoef) { mIDANonlinConvCoef = IDANonlinConvCoef; }
+		/// Set the maximum number of nonlinear solver iterations in one solve attempt
+		void setIDAMaxNonlinIters(int IDAMaxNonlinIters) { mIDAMaxNonlinIters = IDAMaxNonlinIters; }
+
+		// ### DAE Solver: Setters for main solver optional input functions ###
+		/// Set maximum order for BDF method
+		void setIDAMaxBDFOrder(unsigned int IDAMaxBDFOrder) {
+			if (IDAMaxBDFOrder>5 || IDAMaxBDFOrder==0)
+				IDAMaxBDFOrder = 5;
+			mIDAMaxBDFOrder = IDAMaxBDFOrder;
+		}
+		/// Set maximum no. of internal steps before tout
+		void setIDAMaxNumSteps(int IDAMaxNumSteps) { mIDAMaxNumSteps = IDAMaxNumSteps; }
+		/// Set flag to specifi whether or not to use variable integration step size
+		void setVariableStepSize(bool variableStepSize) { mVariableStepSize = variableStepSize; }
+		/// Set min integration time
+		void setMinStepSize(Real minStepSize) { mMinStepSize = minStepSize; }
+		/// Set max integration time
+		void setMaxStepSize(Real maxStepSize) { mMaxStepSize = maxStepSize; }
+		/// Set max integration time
+		void setMaxErrTestFails(unsigned int IDAMaxErrTestFails) { mIDAMaxErrTestFails = IDAMaxErrTestFails; }
+		/// Set Suppress alg. vars. from error test
+		void setIDASetSuppressAlg(bool IDASetSuppressAlg) { mIDASetSuppressAlg = IDASetSuppressAlg; }
+
+
 		/// Compute phasors of different frequencies in parallel
 		void doFrequencyParallelization(Bool value) { mFreqParallel = value; }
 		///

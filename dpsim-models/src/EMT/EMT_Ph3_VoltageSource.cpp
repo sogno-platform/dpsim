@@ -194,7 +194,3 @@ void EMT::Ph3::VoltageSource::setInitialComplexIntfCurrent(Complex initCurrent) 
 	mIntfDerCurrent(1,0) = -omega * (initCurrent*SHIFT_TO_PHASE_B).imag();
 	mIntfDerCurrent(2,0) = -omega * (initCurrent*SHIFT_TO_PHASE_C).imag();
 }
-
-void EMT::Ph3::VoltageSource::daePreStep(Real time) {
-	updateVoltage(time);
-}

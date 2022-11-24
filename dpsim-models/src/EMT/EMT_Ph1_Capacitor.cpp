@@ -11,11 +11,16 @@
 using namespace CPS;
 
 EMT::Ph1::Capacitor::Capacitor(String uid, String name,	Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), Base::Ph1::Capacitor(mAttributes) {
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), 
+	Base::Ph1::Capacitor(mAttributes) 
+	mIntfDerVoltage(Attribute<Matrix>::create("dv_intf", mAttributes)), {
 	mEquivCurrent = 0;
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);
 	setTerminalNumber(2);
+
+	// initialize dae specific attributes
+	**mIntfDerVoltage = Matrix::Zero(1,1);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph1::Capacitor::clone(String name) {
@@ -106,3 +111,77 @@ void EMT::Ph1::Capacitor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 void EMT::Ph1::Capacitor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = mEquivCond * (**mIntfVoltage)(0,0) + mEquivCurrent;
 }
+
+// #### DAE functions ####
+
+void EMT::Ph1::Capacitor::daeInitialize(double time, double state[], double dstate_dt[],
+	double absoluteTolerances[], double stateVarTypes[], int &offset) {
+	
+	updateMatrixNodeIndices();
+
+	mSLog->info(
+		"\n--- daeInitialize ---"
+		"\nNo state variables are needed"
+		"\n--- daeInitialize finished ---"
+	);
+	mSLog->flush();
+}
+
+void EMT::Ph1::Capacitor::daeResidual(double sim_time, 
+	const double state[], const double dstate_dt[], 
+	double resid[], std::vector<int>& off) {
+
+	int node_pos0 = matrixNodeIndex(0);
+    int node_pos1 = matrixNodeIndex(1);
+	int c_offset = off[0] + off[1]; //current offset for component
+
+	// add currents to node equations
+	if (terminalNotGrounded(0)) {
+		resid[node_pos0] -= **mCapacitance * dstate_dt[node_pos0];
+	}
+	if (terminalNotGrounded(1)) {
+		resid[node_pos1] += **mCapacitance * dstate_dt[node_pos1];
+	}
+}
+
+void EMT::Ph1::Capacitor::daeJacobian(double current_time, const double state[], const double dstate_dt[], 
+			SUNMatrix jacobian, double cj, std::vector<int>& off) {
+
+	int node_pos0 = matrixNodeIndex(0);
+    int node_pos1 = matrixNodeIndex(1);
+
+	if (terminalNotGrounded(1))
+		SM_ELEMENT_D(jacobian, node_pos1, node_pos1) += cj * **mCapacitance;
+
+	if (terminalNotGrounded(0))
+		SM_ELEMENT_D(jacobian, node_pos0, node_pos0) += cj * **mCapacitance;
+	
+	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+		SM_ELEMENT_D(jacobian, node_pos1, node_pos0) += - cj * **mCapacitance;
+		SM_ELEMENT_D(jacobian, node_pos0, node_pos1) += - cj * **mCapacitance;
+	}
+}
+
+void EMT::Ph1::Capacitor::daePostStep(double Nexttime, const double state[], 
+	const double dstate_dt[], int& offset) {
+	
+	int node_pos0 = matrixNodeIndex(0);
+    int node_pos1 = matrixNodeIndex(1);
+
+	(**mIntfCurrent)(0,0) = 0.0;
+	(**mIntfVoltage)(0,0) = 0.0;
+	(**mIntfDerVoltage)(0,0) = 0.0;
+
+	if (terminalNotGrounded(1)) {
+		(**mIntfCurrent)(0,0) += **mCapacitance * dstate_dt[node_pos1];
+		(**mIntfVoltage)(0,0) += state[node_pos1];
+		(**mIntfDerVoltage)(0,0) += dstate_dt[node_pos1]; 
+	}
+	if (terminalNotGrounded(0)) {
+		(**mIntfCurrent)(0,0) -= **mCapacitance * dstate_dt[node_pos0];
+		(**mIntfVoltage)(0,0) -= state[node_pos0];
+		(**mIntfDerVoltage)(0,0) -= dstate_dt[node_pos0]; 
+	}
+}
+
+

@@ -69,8 +69,8 @@ int main(int argc, char* argv[]) {
 		0, 0, load_inductance;
 	
 	// ----- POWERFLOW FOR INITIALIZATION -----
-	Real timeStepPF = 1e-4;
-	Real finalTimePF = 1e-4;
+	Real timeStepPF = 0.5;
+	Real finalTimePF = 1;
 	String simNamePF = "SP_Slack_PiLine_RxLoad_Init";
 	Logger::setLogDir("logs/" + simNamePF);
 
@@ -143,8 +143,8 @@ int main(int argc, char* argv[]) {
 
 
 	// ----- DYNAMIC SIMULATION -----
-	Real timeStepEMT  = timeStepPF;
-	Real finalTimeEMT = 0.04;
+	Real timeStepEMT  = 0.0001;
+	Real finalTimeEMT = 10;
 	String simNameEMT = "DAE_EMT_Slack_PiLine_RXLoad";
 	Logger::setLogDir("logs/" + simNameEMT);
 	Real voltage_absTolerance = Vnom*0.00001;		//0.001% = aprox. 1V

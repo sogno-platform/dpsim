@@ -95,9 +95,18 @@ void Simulation::createSolvers() {
 			break;
 #ifdef WITH_SUNDIALS
 		case Solver::Type::DAE:
-			solver = std::make_shared<DAESolver<VarType>>(**mName, mSystem, 
-				**mTimeStep, 0.0, mLogLevel);
-			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setRelativeTolerance(mRelTol);
+			solver = std::make_shared<DAESolver<VarType>>(**mName, mSystem, **mTimeStep, 0.0, mLogLevel);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setRelativeTolerance(mRelativeTolerance);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setIDAMaxConvFails(mIDAMaxConvFails);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setIDANonlinConvCoef(mIDANonlinConvCoef);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setIDAMaxNonlinIters(mIDAMaxNonlinIters);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setIDAMaxBDFOrder(mIDAMaxBDFOrder);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setIDAMaxNumSteps(mIDAMaxNumSteps);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setVariableStepSize(mVariableStepSize);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setMinStepSize(mMinStepSize);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setMaxStepSize(mMaxStepSize);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setMaxErrTestFails(mIDAMaxErrTestFails);
+			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->setIDASetSuppressAlg(mIDASetSuppressAlg);
 			std::dynamic_pointer_cast<DAESolver<VarType>>(solver)->initialize();
 			mSolvers.push_back(solver);
 			break;
