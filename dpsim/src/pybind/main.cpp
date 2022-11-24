@@ -186,11 +186,11 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("DAE", DPsim::Solver::Type::DAE)
 		.value("NRP", DPsim::Solver::Type::NRP);
 
-	py::enum_<DPsim::DirectSolverImpl>(m, "DirectSolverImpl")
-		.value("Undef", DPsim::DirectSolverImpl::Undef)
-		.value("DenseLU", DPsim::DirectSolverImpl::DenseLU)
-		.value("SparseLU", DPsim::DirectSolverImpl::SparseLU)
-		.value("KLU", DPsim::DirectSolverImpl::KLU);
+	py::enum_<DPsim::DirectLinearSolverImpl>(m, "DirectLinearSolverImpl")
+		.value("Undef", DPsim::DirectLinearSolverImpl::Undef)
+		.value("DenseLU", DPsim::DirectLinearSolverImpl::DenseLU)
+		.value("SparseLU", DPsim::DirectLinearSolverImpl::SparseLU)
+		.value("KLU", DPsim::DirectLinearSolverImpl::KLU);
 
 	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
 		.value("AUTO", CPS::CSVReader::Mode::AUTO)
