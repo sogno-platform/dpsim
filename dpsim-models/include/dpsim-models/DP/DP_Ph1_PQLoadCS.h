@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
 #include <dpsim-models/PowerProfile.h>
@@ -19,8 +19,7 @@ namespace Ph1 {
 	/// TODO: read from CSV files
 	/// \brief PQ-load represented by a current source
 	class PQLoadCS :
-		public SimPowerComp<Complex>,
-		public MNAInterface,
+		public MNASimPowerComp<Complex>,
 		public SharedFactory<PQLoadCS> {
 	protected:
 		/// Internal current source
@@ -56,42 +55,15 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		/// MNA pre and post step operations
+		void mnaParentPreStep(Real time, Int timeStepCount)  override;
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(PQLoadCS& load) :
-				Task(**load.mName + ".MnaPreStep"), mLoad(load) {
-				mLoad.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			PQLoadCS& mLoad;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(PQLoadCS& load, Attribute<Matrix>::Ptr leftVector) :
-				Task(**load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
-				mLoad.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, leftVector);
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			PQLoadCS& mLoad;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 	};
 }
 }

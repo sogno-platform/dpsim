@@ -8,7 +8,7 @@
 #pragma once
 
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
@@ -25,8 +25,7 @@ namespace DP {
 namespace Ph1 {
 	class AvVoltageSourceInverterDQ :
 		public Base::AvVoltageSourceInverterDQ,
-		public SimPowerComp<Complex>,
-		public MNAInterface,
+		public MNASimPowerComp<Complex>,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
 
@@ -130,9 +129,7 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps right side (source) vector
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Updates current through the component
@@ -142,11 +139,11 @@ namespace Ph1 {
 		/// MNA pre step operations
 		void mnaPreStep(Real time, Int timeStepCount);
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		// #### Control section ####
 		/// Control pre step operations
@@ -180,31 +177,6 @@ namespace Ph1 {
 
 		private:
 			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
-		};
-
-		class MnaPreStep : public CPS::Task {
-		public:
-			MnaPreStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(**AvVoltageSourceInverterDQ.mName + ".MnaPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
-					mAvVoltageSourceInverterDQ.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.mnaPreStep(time, timeStepCount); };
-
-		private:
-			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
-		};
-
-		class MnaPostStep : public CPS::Task {
-		public:
-			MnaPostStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ, Attribute<Matrix>::Ptr leftVector) :
-				Task(**AvVoltageSourceInverterDQ.mName + ".MnaPostStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ), mLeftVector(leftVector) {
-				mAvVoltageSourceInverterDQ.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.mnaPostStep(time, timeStepCount, mLeftVector); };
-
-		private:
-			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
-			Attribute<Matrix>::Ptr mLeftVector;
 		};
 
 	};

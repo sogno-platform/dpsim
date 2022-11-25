@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
@@ -24,8 +24,7 @@ namespace Ph1 {
 	/// the frequency, magnitude and phase of the sine wave can be modified through the mVoltageRef and mSrcFreq attributes.
 	/// See DP_Ph1_VoltageSource.h for more details.
 	class NetworkInjection :
-		public SimPowerComp<Complex>,
-		public MNAInterface,
+		public MNASimPowerComp<Complex>,
 		public DAEInterface,
 		public SharedFactory<NetworkInjection> {
 	private:
@@ -39,7 +38,7 @@ namespace Ph1 {
 
 	public:
 		const Attribute<Complex>::Ptr mVoltageRef;
-		const Attribute<Real>::Ptr mSrcFreq; 
+		const Attribute<Real>::Ptr mSrcFreq;
 
 		/// Defines UID, name and logging level
 		NetworkInjection(String uid, String name, Logger::Level loglevel = Logger::Level::off);
@@ -70,9 +69,7 @@ namespace Ph1 {
 
 		// #### MNA Section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps right side (source) vector
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Returns current through the component
@@ -80,38 +77,13 @@ namespace Ph1 {
 		/// Updates voltage across component
 		void mnaUpdateVoltage(const Matrix& leftVector);
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-		class MnaPreStep : public CPS::Task {
-		public:
-			MnaPreStep(NetworkInjection& networkInjection) :
-				Task(**networkInjection.mName + ".MnaPreStep"), mNetworkInjection(networkInjection) {
-					mNetworkInjection.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPreStep(time, timeStepCount); };
-
-		private:
-			NetworkInjection& mNetworkInjection;
-		};
-
-		class MnaPostStep : public CPS::Task {
-		public:
-			MnaPostStep(NetworkInjection& networkInjection, Attribute<Matrix>::Ptr leftVector) :
-				Task(**networkInjection.mName + ".MnaPostStep"), mNetworkInjection(networkInjection), mLeftVector(leftVector) {
-				mNetworkInjection.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPostStep(time, timeStepCount, mLeftVector); };
-
-		private:
-			NetworkInjection& mNetworkInjection;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### DAE Section ####
 		/// Residual function for DAE Solver
