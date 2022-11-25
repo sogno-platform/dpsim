@@ -20,6 +20,7 @@ namespace Ph1 {
 	class Inductor :
 		public Base::Ph1::Inductor,
 		public MNATearInterface,
+		public MNAInterface,
 		public SimPowerComp<Complex>,
 		public SharedFactory<Inductor> {
 	protected:

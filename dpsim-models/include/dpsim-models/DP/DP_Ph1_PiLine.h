@@ -26,6 +26,8 @@ namespace Ph1 {
 		public Base::Ph1::PiLine,
 		public SimPowerComp<Complex>,
 		public MNATearInterface,
+		public MNAInterface,
+		public Base::Ph1::PiLine,
 		public SharedFactory<PiLine> {
 	protected:
 		/// Series Inductance submodel

@@ -17,6 +17,7 @@ namespace Ph1 {
 	/// \brief resistor inductor series element
 	class ResIndSeries :
 		public MNATearInterface,
+		public MNAInterface,
 		public SimPowerComp<Complex>,
 		public SharedFactory<ResIndSeries> {
 	protected:

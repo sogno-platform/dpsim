@@ -21,6 +21,7 @@ namespace CPS {
 			class Resistor :
 				public Base::Ph3::Resistor,
 				public MNATearInterface,
+				public MNAInterface,
 				public SimPowerComp<Complex>,
 				public SharedFactory<Resistor> {
 

@@ -26,6 +26,7 @@ namespace CPS {
 			class Inductor :
 				public Base::Ph3::Inductor,
 				public MNATearInterface,
+				public MNAInterface,
 				public SimPowerComp<Complex>,
 				public SharedFactory<Inductor> {
 			protected:

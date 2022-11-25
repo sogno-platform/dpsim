@@ -22,6 +22,7 @@ namespace Ph1 {
 	class Resistor :
 		public Base::Ph1::Resistor,
 		public MNATearInterface,
+		public MNAInterface,
 		public SimPowerComp<Complex>,
 		public SharedFactory<Resistor>,
 		public PFSolverInterfaceBranch {
