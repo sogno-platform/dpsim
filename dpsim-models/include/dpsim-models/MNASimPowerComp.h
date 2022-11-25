@@ -6,11 +6,19 @@
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
+
+	enum class MNA_SUBCOMP_TASK_ORDER {
+			NO_TASK,
+			TASK_BEFORE_PARENT,
+			TASK_AFTER_PARENT
+	};
+
 	/// Base class for all components that are transmitting power.
 	template <typename VarType>
 	class MNASimPowerComp : public SimPowerComp<VarType>, public MNAInterface {
 
 	protected:
+		MNAInterface::List mSubcomponentsMNA;
 		MNAInterface::List mSubcomponentsBeforePreStep;
 		MNAInterface::List mSubcomponentsAfterPreStep;
 		MNAInterface::List mSubcomponentsBeforePostStep;
@@ -21,14 +29,8 @@ namespace CPS {
 		typedef std::shared_ptr<MNASimPowerComp<VarType>> Ptr;
 		typedef std::vector<Ptr> List;
 
-		enum class MNA_SUBCOMP_TASK_ORDER {
-			NO_TASK,
-			TASK_BEFORE_PARENT,
-			TASK_AFTER_PARENT
-		};
-
 		/// Basic constructor that takes UID, name and log level
-		MNASimPowerComp<VarType>::MNASimPowerComp(String uid, String name, Logger::Level logLevel)
+		MNASimPowerComp(String uid, String name, Logger::Level logLevel)
 			: SimPowerComp<VarType>(uid, name, logLevel) { }
 
 		/// Basic constructor that takes name and log level and sets the UID to name as well
@@ -42,7 +44,10 @@ namespace CPS {
 		/// @param subc The new subcomponent
 		/// @param preStepOrder When to execute the subcomponent's pre-step in relation to the parent
 		/// @param postStepOrder When to execute the subcomponent's post-step in relation to the parent
-		void addMNASubComponent(typename MNASimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder);
+		void addMNASubComponent(typename SimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder);
+
+		//void addMNASubComponent(typename MNASimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder);
+
 
 		// #### MNA Interface Functions ####
 		/// Initializes variables of components
@@ -68,5 +73,31 @@ namespace CPS {
 		virtual void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) { };
 		virtual void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) { };
 		virtual void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) { };
+
+		class MnaPreStep : public CPS::Task {
+		public:
+			MnaPreStep(MNASimPowerComp<VarType>& comp) :
+				Task(**comp.mName + ".MnaPreStep"), mComp(comp) {
+					mComp.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
+			}
+			void execute(Real time, Int timeStepCount) { mComp.mnaPreStep(time, timeStepCount); };
+
+		private:
+			MNASimPowerComp<VarType>& mComp;
+		};
+
+		class MnaPostStep : public CPS::Task {
+		public:
+			MnaPostStep(MNASimPowerComp<VarType>& comp, Attribute<Matrix>::Ptr leftVector) :
+				Task(**comp.mName + ".MnaPostStep"), mComp(comp), mLeftVector(leftVector) {
+				mComp.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
+			}
+			void execute(Real time, Int timeStepCount) { mComp.mnaPostStep(time, timeStepCount, mLeftVector); };
+
+		private:
+			MNASimPowerComp<VarType>& mComp;
+			Attribute<Matrix>::Ptr mLeftVector;
+		};
+
 	};
 }
