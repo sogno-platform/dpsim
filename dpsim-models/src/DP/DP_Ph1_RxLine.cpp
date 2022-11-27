@@ -35,8 +35,7 @@ void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	Complex impedance = { **mSeriesRes, **mSeriesInd * 2.*PI * frequency };
-	/// FIXME: This is always zero, as mVoltage is uninitialized
-	(**mIntfCurrent)(0, 0) = mVoltage / impedance;
+	(**mIntfCurrent)(0, 0) = 0;
 	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(0) + (**mIntfCurrent)(0, 0) * **mSeriesRes );
 
 	// Default model with virtual node in between

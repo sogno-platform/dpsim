@@ -57,13 +57,6 @@ namespace Ph1 {
 		Real mRatioPhase = 0;
 		/// Nominal omega
 		Real mNominalOmega;
-
-		/// Voltage [V]
-		/// FIXME: Not used
-		Real mSvVoltage;
-		/// Conductance [S]
-		/// FIXME: Only set, never read
-		Real mConductance;
 		/// Reactance [Ohm]
 		Real mReactance;
 
@@ -119,9 +112,6 @@ namespace Ph1 {
 		const Attribute<Real>::Ptr mActivePowerInjection;
 		/// nodal reactive power injection
 		const Attribute<Real>::Ptr mReactivePowerInjection;
-		/// whether the total power injection of its from node is stored in this line
-		/// FIXME: This is only written to, but never read
-		const Attribute<Bool>::Ptr mStoreNodalPowerInjection;
 
 		/// Defines UID, name and logging level
 		Transformer(String uid, String name,

@@ -41,16 +41,12 @@ namespace Ph1 {
 		std::vector<const Matrix*> mRightVectorStamps;
 
 		// #### Powerflow section ####
-		/// Apparent Power Injection [VA]
-		/// FIXME: Never used
-		Complex mPowerInjection;
-
 		/// Base voltage [V]
 		Real mBaseVoltage;
 
     public:
 		const Attribute<Complex>::Ptr mVoltageRef;
-		const Attribute<Real>::Ptr mSrcFreq; 
+		const Attribute<Real>::Ptr mSrcFreq;
 
 		// #### Powerflow section ####
 		/// Voltage set point [V]

@@ -23,15 +23,6 @@ namespace Ph1 {
 		public MNAInterface,
 		public SharedFactory<RXLoad> {
 	protected:
-		/// Power [Watt]
-		/// FIXME: This is never read, only written to
-		Complex mPower;
-		/// Actual voltage [V]
-		/// FIXME: This is never used
-		Complex mVoltage;
-		/// Actual voltage [V]
-		/// FIXME: This is never used
-		Complex mCurrent;
 		/// Resistance [Ohm]
 		/// CHECK: This is only used for logging output
 		Real mResistance;

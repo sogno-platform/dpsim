@@ -24,12 +24,6 @@ namespace Ph1 {
 		public Base::Ph1::PiLine,
 		public SharedFactory<RxLine> {
 	protected:
-		/// Voltage across the component [V]
-		/// FIXME: This is only read once, but never written to, so its always zero
-		Complex mVoltage;
-		/// Current through the component [A]
-		/// FIXME: This is never used...
-		Complex mCurrent;
 		/// Inductance submodel
 		std::shared_ptr<Inductor> mSubInductor;
 		/// Resistor submodel

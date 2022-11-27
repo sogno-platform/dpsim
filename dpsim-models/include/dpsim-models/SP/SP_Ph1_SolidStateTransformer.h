@@ -30,9 +30,6 @@ namespace SP { namespace Ph1 {
     ///
     std::shared_ptr<SP::Ph1::Load> mSubLoadSide2;
 
-    /// Rated Apparent Power [VA]
-    /// FIXME: Never used
-    Real mRatedPower = 0;
     /// Active power at secondary side [watt]
     Real mP2 = std::numeric_limits<double>::infinity();
     /// Nominal voltage of primary side [V]
