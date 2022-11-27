@@ -31,7 +31,7 @@ namespace CPS {
 		// 	} else {
 		// 		newAttr = AttributeStatic<T>::make(std::forward<Args>(args)...);
 		// 	}
-			 
+
 		// 	mAttributes[name] = newAttr;
 		// 	return newAttr;
 		// }
@@ -54,7 +54,7 @@ namespace CPS {
 
 		/// Return pointer to an attribute.
 		template<typename T>
-		typename Attribute<T>::Ptr attribute(const String &name) {
+		typename Attribute<T>::Ptr attributeTyped(const String &name) {
 			auto attr = attribute(name);
 			auto attrPtr = std::dynamic_pointer_cast<Attribute<T>>(attr.getPtr());
 

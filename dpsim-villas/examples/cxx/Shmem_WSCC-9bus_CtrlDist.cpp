@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 
 			i--;
 
-			auto v = n->attribute<Complex>("v");
+			auto v = n->attributeTyped<Complex>("v");
 
 			std::cout << "Signal " << (i*2)+0 << ": Mag " << n->name() << std::endl;
 			std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;

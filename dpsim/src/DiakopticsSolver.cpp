@@ -254,7 +254,7 @@ void DiakopticsSolver<VarType>::initComponents() {
 		// Initialize MNA specific parts of components.
 		for (auto comp : mSubnets[net].components) {
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mSubnets[net].leftVector);
-			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
+			const Matrix& stamp = comp->template attributeTyped<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) {
 				mSubnets[net].rightVectorStamps.push_back(&stamp);
 			}
