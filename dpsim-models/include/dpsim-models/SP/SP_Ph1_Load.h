@@ -27,10 +27,6 @@ namespace Ph1 {
 		public SharedFactory<Load>,
 		public PFSolverInterfaceBus,
 		public MNAInterface {
-	private:
-		/// Power [Watt]
-		/// FIXME: This is only written to, but never read
-		Complex mPower;
 	public:
 		/// Nominal voltage [V]
 		const Attribute<Real>::Ptr mNomVoltage;
@@ -48,14 +44,6 @@ namespace Ph1 {
 		Real mBaseApparentPower;
 		///base omega [1/s]
 		Real mBaseOmega;
-
-		/// Actual voltage [V]
-		/// FIXME: This is never used
-		Complex mVoltage;
-		/// Actual voltage [V]
-		/// FIXME: This is never used
-		Complex mCurrent;
-
 		/// Resistance [Ohm]
 		Real mResistance;
 		/// Conductance [S]

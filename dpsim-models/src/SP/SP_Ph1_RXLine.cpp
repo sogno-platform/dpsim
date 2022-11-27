@@ -18,7 +18,6 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
 	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
 	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
 	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
 	mInductance(Attribute<Real>::create("L_series", mAttributes))  {
@@ -46,7 +45,6 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
 	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
 	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
 	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
 	mInductance(Attribute<Real>::create("L_series", mAttributes))  {
@@ -141,7 +139,6 @@ void SP::Ph1::RXLine::updateBranchFlow(VectorComp& current, VectorComp& powerflo
 void SP::Ph1::RXLine::storeNodalInjection(Complex powerInjection) {
 	**mActivePowerInjection = std::real(powerInjection) * mBaseApparentPower;
 	**mReactivePowerInjection = std::imag(powerInjection) * mBaseApparentPower;
-	**mStoreNodalPowerInjection = true;
 }
 
 

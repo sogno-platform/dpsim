@@ -22,21 +22,8 @@ namespace Ph1 {
 			public SharedFactory<SynchronGenerator>,
 			public PFSolverInterfaceBus {
 	    private:
-			/// Rate apparent power [VA]
-			/// FIXME: Only used as local variable
-		    Real mRatedApparentPower;
-			/// Rated voltage [V]
-			/// FIXME: Only used as local variable
-		    Real mRatedVoltage;
-			/// Maximum reactive power [VAr]
-			/// FIXME: Never used
-			Real mMaximumReactivePower;
-
 			/// Base apparent power[VA]
 			Real mBaseApparentPower;
-			/// Base omega [1/s]
-			/// FIXME: Only used as local variable
-			Real mBaseOmega;
 
         public:
 			/// Active power set point of the machine [W]

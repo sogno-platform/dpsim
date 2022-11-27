@@ -16,7 +16,6 @@ SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
 	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
 	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
 	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)) {
 
@@ -145,7 +144,6 @@ void SP::Ph1::PiLine::updateBranchFlow(VectorComp& current, VectorComp& powerflo
 void SP::Ph1::PiLine::storeNodalInjection(Complex powerInjection) {
 	**mActivePowerInjection = std::real(powerInjection)*mBaseApparentPower;
 	**mReactivePowerInjection = std::imag(powerInjection)*mBaseApparentPower;
-	**mStoreNodalPowerInjection = true;
 }
 
 MatrixComp SP::Ph1::PiLine::Y_element() {

@@ -21,25 +21,6 @@ namespace SP {namespace Ph1 {
 		/// Susceptance [S]
 		const Attribute<Real>::Ptr mSusceptance;
 	private:
-		/// Impedance [Ohm]
-		/// FIXME: Never used
-		Complex mImpedance;
-		/// Addmitance [S]
-		/// FIXME: Never used
-		Complex mAdmittance;
-
-        /// Base apparent power [VA]
-		/// FIXME: Only used as local variable
-        Real mBaseApparentPower;
-        /// Base impedance [Ohm]
-		/// FIXME: Only used as local variable
-        Real mBaseImpedance;
-        /// Base admittance [S]
-		/// FIXME: Only used as local variable
-        Real mBaseAdmittance;
-        /// Base omega [1/s]
-		/// FIXME: Only written to once, never read
-        Real mBaseOmega;
         /// Base voltage [V]
         Real mBaseVoltage;
 
@@ -47,12 +28,6 @@ namespace SP {namespace Ph1 {
         Real mConductancePerUnit;
 		/// Susceptance [pu]
         Real mSusceptancePerUnit;
-		/// Impedance [pu]
-		/// FIXME: Never used
-        Complex mImpedancePerUnit;
-		/// Addmitance [pu]
-		/// FIXME: Never used
-        Complex mAdmittancePerUnit;
 
 	public:
 		/// Defines UID, name, component parameters and logging level

@@ -15,13 +15,7 @@ namespace CPS {
 namespace Base {
 namespace Ph3 {
 	class PiLine {
-	protected:
-		/// Conductance along the line [S]
-		/// FIXME: This is never used...
-		Matrix mSeriesCond;
-		/// Resistance in parallel to the line [ohms]
-		/// FIXME: This is never used...
-		Matrix mParallelRes;
+
 	public:
 		/// Resistance along the line [ohms]
 		Attribute<Matrix>::Ptr mSeriesRes;
@@ -35,10 +29,8 @@ namespace Ph3 {
 		void setParameters(Matrix seriesResistance, Matrix seriesInductance,
 			Matrix parallelCapacitance = Matrix::Zero(3,3), Matrix parallelConductance = Matrix::Zero(3,3)) {
 			**mSeriesRes = seriesResistance;
-			mSeriesCond = (**mSeriesRes).inverse();
 			**mSeriesInd = seriesInductance;
 			**mParallelCond = parallelConductance;
-			mParallelRes = (**mParallelCond).inverse();
 			**mParallelCap = parallelCapacitance;
 		}
 	};
