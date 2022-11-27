@@ -25,18 +25,8 @@ namespace CPS {
 				public MNAInterface,
 				public SharedFactory<RXLoad> {
 			protected:
-				/// Conductance [S]
-				/// FIXME: This is never read, only written to
-				Matrix mConductance;
 				/// Power [Watt]
 				MatrixComp mPower;
-				/// Actual voltage [V]
-				/// FIXME: This is never used
-				Matrix mVoltage;
-				/// Actual voltage [V]
-				/// FIXME: This is never used
-				Matrix mCurrent;
-
 				/// Resistance [Ohm]
 				Matrix mResistance;
 				/// Reactance [Ohm]

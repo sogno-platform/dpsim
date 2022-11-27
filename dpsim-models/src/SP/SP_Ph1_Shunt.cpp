@@ -36,16 +36,14 @@ void SP::Ph1::Shunt::setBaseVoltage(Real baseVoltage) {
 
 void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
 	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
-	mBaseApparentPower = baseApparentPower;
-	mBaseOmega = baseOmega;
 	mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
 
-	mBaseImpedance = (mBaseVoltage * mBaseVoltage) / mBaseApparentPower;
-	mBaseAdmittance = 1.0 / mBaseImpedance;
-	mSLog->info("Base Voltage={} [V]  Base Admittance={} [S]", mBaseVoltage, mBaseAdmittance);
+	auto baseImpedance = (mBaseVoltage * mBaseVoltage) / baseApparentPower;
+	auto baseAdmittance = 1.0 / baseImpedance;
+	mSLog->info("Base Voltage={} [V]  Base Admittance={} [S]", mBaseVoltage, baseAdmittance);
 
-	mConductancePerUnit = **mConductance / mBaseAdmittance;
-	mSusceptancePerUnit = **mSusceptance / mBaseAdmittance;
+	mConductancePerUnit = **mConductance / baseAdmittance;
+	mSusceptancePerUnit = **mSusceptance / baseAdmittance;
 	mSLog->info("Susceptance={} [pu] Conductance={} [pu]", mSusceptancePerUnit, mConductancePerUnit);
 };
 

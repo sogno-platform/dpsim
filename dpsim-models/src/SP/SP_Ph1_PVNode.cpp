@@ -23,12 +23,8 @@ SP::Ph1::PVNode::PVNode(String uid, String name, Real power, Real vSetPoint, Rea
 
 	**mPowerSetPoint =  power;
 	**mVoltageSetPoint = vSetPoint;
-	mRatedU = ratedU;
 
 	**mVoltagePerUnit = vSetPoint / ratedU;
-
-	// maxQ=0 means no limit.
-	mQLimit = maxQ;
 
 	mSLog->info("Create PV node for {} P={}, V={}", name, **mPowerSetPoint, **mVoltageSetPoint);
 }

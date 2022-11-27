@@ -32,7 +32,6 @@ SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
 void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
 	**mActivePower = activePower;
 	**mReactivePower = reactivePower;
-	mPower = { **mActivePower, **mReactivePower };
 	**mNomVoltage = nominalVoltage;
 
 	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);

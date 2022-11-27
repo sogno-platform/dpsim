@@ -14,11 +14,6 @@ namespace SP {
 namespace Ph1 {
 
     class PVNode: public SimPowerComp<Complex>, public SharedFactory<PVNode> {
-	private:
-		/// FIXME: Only used once as local variable
-		Real mRatedU;
-		/// FIXME: Only written to, never read
-		Real mQLimit;
     public:
 		const Attribute<Real>::Ptr mVoltageSetPoint;
 		const Attribute<Real>::Ptr mPowerSetPoint;

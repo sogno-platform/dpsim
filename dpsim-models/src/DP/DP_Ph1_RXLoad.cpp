@@ -102,7 +102,6 @@ void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real v
 	mParametersSet = true;
 	**mActivePower = activePower;
 	**mReactivePower = reactivePower;
-	mPower = { **mActivePower, **mReactivePower};
 	**mNomVoltage = volt;
 
 	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);

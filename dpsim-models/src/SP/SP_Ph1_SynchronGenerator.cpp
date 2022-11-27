@@ -27,14 +27,12 @@ SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::L
 };
 
 void SP::Ph1::SynchronGenerator::setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType, Real setPointReactivePower) {
-	mRatedApparentPower = ratedApparentPower;
-    mRatedVoltage = ratedVoltage;
     **mSetPointActivePower = setPointActivePower;
     **mSetPointReactivePower= setPointReactivePower;
     **mSetPointVoltage = setPointVoltage;
     mPowerflowBusType = powerflowBusType;
 
-	mSLog->info("Rated Apparent Power={} [VA] Rated Voltage={} [V]", mRatedApparentPower, mRatedVoltage);
+	mSLog->info("Rated Apparent Power={} [VA] Rated Voltage={} [V]", ratedApparentPower, ratedVoltage);
     mSLog->info("Active Power Set Point={} [W] Voltage Set Point={} [V]", **mSetPointActivePower, **mSetPointVoltage);
 	mSLog->flush();
 }
@@ -47,8 +45,7 @@ void SP::Ph1::SynchronGenerator::setBaseVoltage(Real baseVoltage) {
 void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
 	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
 	mBaseApparentPower = baseApparentPower;
-	mBaseOmega = baseOmega;
-    mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);
+    mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, baseOmega);
 
 	**mSetPointActivePowerPerUnit = **mSetPointActivePower / mBaseApparentPower;
     **mSetPointReactivePowerPerUnit = **mSetPointReactivePower / mBaseApparentPower;

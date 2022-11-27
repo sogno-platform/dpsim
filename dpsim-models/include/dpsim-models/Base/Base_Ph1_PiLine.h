@@ -15,14 +15,7 @@ namespace CPS {
 namespace Base {
 namespace Ph1 {
 	class PiLine {
-	protected:
-		/// Conductance along the line [S]
-		/// FIXME: This is never used...
-		Real mSeriesCond;
-		/// Resistance in parallel to the line [ohms]
-		/// FIXME: This is never used...
-		Real mParallelRes;
-		
+
 	public:
 		/// Resistance along the line [ohms]
 		Attribute<Real>::Ptr mSeriesRes;
@@ -37,10 +30,8 @@ namespace Ph1 {
 		void setParameters(Real seriesResistance, Real seriesInductance,
 			Real parallelCapacitance = 0, Real parallelConductance = 0) {
 			**mSeriesRes = seriesResistance;
-			mSeriesCond = 1. / **mSeriesRes;
 			**mSeriesInd = seriesInductance;
 			**mParallelCond = parallelConductance;
-			mParallelRes = 1. / **mParallelCond;
 			**mParallelCap = parallelCapacitance;
 		}
 	};
