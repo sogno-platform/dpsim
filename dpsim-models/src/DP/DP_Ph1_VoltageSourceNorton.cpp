@@ -11,14 +11,12 @@
 using namespace CPS;
 
 DP::Ph1::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
-	mResistance(Attribute<Real>::create("R", mAttributes)) {
+	: 	Base::Ph1::VoltageSource(mAttributes),
+		SimPowerComp<Complex>(uid, name, logLevel),
+		mResistance(Attribute<Real>::create("R", mAttributes)) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
-
-	mVoltageRef = Attribute<Complex>::create("V_ref", mAttributes);
-	mSrcFreq = Attribute<Real>::create("f_src", mAttributes, -1);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSourceNorton::clone(String name) {

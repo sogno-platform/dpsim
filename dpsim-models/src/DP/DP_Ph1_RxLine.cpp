@@ -11,17 +11,13 @@
 using namespace CPS;
 
 DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::PiLine(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
-
-	mSeriesRes = Attribute<Real>::create("R", mAttributes);
-	mSeriesInd = Attribute<Real>::create("L", mAttributes);
-
 }
 
 ///DEPRECATED: Delete method

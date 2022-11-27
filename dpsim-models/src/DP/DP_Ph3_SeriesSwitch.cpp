@@ -11,14 +11,10 @@
 using namespace CPS;
 
 DP::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::Switch(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	**mIntfCurrent = MatrixComp::Zero(3,1);
-
-	mOpenResistance = Attribute<Real>::create("R_open", mAttributes);
-	mClosedResistance = Attribute<Real>::create("R_closed", mAttributes);
-	mIsClosed = Attribute<Bool>::create("is_closed", mAttributes);
 }
 
 void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {

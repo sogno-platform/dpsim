@@ -11,15 +11,9 @@
 using namespace CPS;
 
 DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::PiLine(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
-
-	///FIXME: Move initialization into base class
-	mSeriesRes = Attribute<Real>::create("R_series", mAttributes);
-	mSeriesInd = Attribute<Real>::create("L_series", mAttributes);
-	mParallelCap = Attribute<Real>::create("C_parallel", mAttributes);
-	mParallelCond = Attribute<Real>::create("G_parallel", mAttributes); 
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
