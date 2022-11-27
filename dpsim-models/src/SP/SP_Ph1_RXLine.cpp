@@ -13,7 +13,7 @@ using namespace CPS;
 SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	Real resistance, Real inductance,
 	Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: Base::Ph1::PiLine(mAttributes), SimPowerComp<Complex>(uid, name, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes, baseVoltage)),
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
@@ -23,10 +23,6 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	mInductance(Attribute<Real>::create("L_series", mAttributes))  {
 
 	setTerminalNumber(2);
-
-	mSeriesRes = Attribute<Real>::create("R_series", mAttributes);
-	mParallelCap = Attribute<Real>::create("C_parallel", mAttributes);
-	mParallelCond = Attribute<Real>::create("G_parallel", mAttributes);
 
 	**mSeriesRes = resistance;
 	**mInductance = inductance;
@@ -40,7 +36,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 }
 
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: Base::Ph1::PiLine(mAttributes), SimPowerComp<Complex>(uid, name, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
@@ -53,10 +49,6 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
-
-	/// FIXME: Why are these attributes defined differently than in the first constructor?
-	mSeriesRes = Attribute<Real>::create("R", mAttributes);
-	mSeriesInd = Attribute<Real>::create("L", mAttributes);
 }
 
 
