@@ -126,7 +126,7 @@ void vsSetAttrDP1ph() {
 
 	// Components
 	auto vs = DP::Ph1::VoltageSource::make("vs1");
-	vs->attribute<Complex>("V_ref")->set(vref);
+	vs->attributeTyped<Complex>("V_ref")->set(vref);
 
 	// Topology
 	vs->connect({ SimNode<Complex>::GND, n1 });
@@ -162,7 +162,7 @@ void vsSetAttrSP1ph() {
 
 	// Components
 	auto vs = SP::Ph1::VoltageSource::make("vs1");
-	vs->attribute<Complex>("V_ref")->set(vref);
+	vs->attributeTyped<Complex>("V_ref")->set(vref);
 
 	// Topology
 	vs->connect({ SimNode<Complex>::GND, n1 });
@@ -198,7 +198,7 @@ void vsSetAttrEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1");
-	vs->attribute<MatrixComp>("V_ref")->set(vref);
+	vs->attributeTyped<MatrixComp>("V_ref")->set(vref);
 
 	// Topology
 	vs->connect({ SimNode<Real>::GND, n1 });
