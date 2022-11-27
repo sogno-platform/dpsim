@@ -287,7 +287,7 @@ namespace Base {
 			mOmMech(Attribute<Real>::create("w_r", attributeList, 0)),
 			mElecActivePower(Attribute<Real>::create("P_elec", attributeList, 0)),
 			mElecReactivePower(Attribute<Real>::create("Q_elec", attributeList, 0)),
-			mMechPower(Attribute<Real>::create("P_m", attributeList, 0)),
+			mMechPower(Attribute<Real>::create("P_mech", attributeList, 0)),
 			mElecTorque(Attribute<Real>::create("T_e", attributeList, 0)) { };
 
 		///
