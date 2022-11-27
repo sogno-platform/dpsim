@@ -49,7 +49,7 @@ void DP::Ph1::PQLoadCS::setParameters(Real activePower, Real reactivePower, Real
 ///DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
 	auto copy = PQLoadCS::make(name, mLogLevel);
-	copy->setParameters(attribute<Real>("P")->get(), attribute<Real>("Q")->get(), attribute<Real>("V_nom")->get());
+	copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage);
 	return copy;
 }
 

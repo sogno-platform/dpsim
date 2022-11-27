@@ -118,7 +118,7 @@ void Simulation::createSolvers() {
 		if (odeComp) {
 			// TODO explicit / implicit integration
 			auto odeSolver = std::make_shared<ODESolver>(
-				odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, **mTimeStep);
+				odeComp->attributeTyped<String>("name")->get() + "_ODE", odeComp, false, **mTimeStep);
 			mSolvers.push_back(odeSolver);
 		}
 	}

@@ -106,13 +106,13 @@ void PFSolver::setBaseApparentPower() {
 	Real maxPower = 0.;
 	if (!mSynchronGenerators.empty()) {
 		for (auto gen : mSynchronGenerators)
-			if (std::abs(gen->attribute<Real>("P_set")->get()) > maxPower)
-				maxPower = std::abs(gen->attribute<Real>("P_set")->get());
+			if (std::abs(gen->attributeTyped<Real>("P_set")->get()) > maxPower)
+				maxPower = std::abs(gen->attributeTyped<Real>("P_set")->get());
 	}
 	else if (!mTransformers.empty()) {
 		for (auto trafo : mTransformers)
-			if (trafo->attribute<Real>("S")->get() > maxPower)
-				maxPower = trafo->attribute<Real>("S")->get();
+			if (trafo->attributeTyped<Real>("S")->get() > maxPower)
+				maxPower = trafo->attributeTyped<Real>("S")->get();
 	}
     if (maxPower != 0.)
         mBaseApparentPower = pow(10, 1 + floor(log10(maxPower)));
@@ -222,42 +222,42 @@ void PFSolver::determinePFBusType() {
 }
 
 void PFSolver::determineNodeBaseVoltages() {
-	
+
     mSLog->info("-- Determine base voltages for each node according to connected components");
-    mSLog->flush();  
-	
+    mSLog->flush();
+
 	for (auto node : mSystem.mNodes) {
 		CPS::Real baseVoltage_ = 0;
 		for (auto comp : mSystem.mComponentsAtNode[node]) {
             if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi = std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
-				baseVoltage_=Math::abs(vsi->attribute<CPS::Complex>("vnom")->get());
+				baseVoltage_=Math::abs(vsi->attributeTyped<CPS::Complex>("vnom")->get());
                 mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, vsi->name(), node->name());
                 break;
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::RXLine> rxline = std::dynamic_pointer_cast<CPS::SP::Ph1::RXLine>(comp)) {
-				baseVoltage_ = rxline->attribute<CPS::Real>("base_Voltage")->get();
+				baseVoltage_ = rxline->attributeTyped<CPS::Real>("base_Voltage")->get();
                 mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, rxline->name(), node->name());
                 break;
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp)) {
-				baseVoltage_ = line->attribute<CPS::Real>("base_Voltage")->get();
+				baseVoltage_ = line->attributeTyped<CPS::Real>("base_Voltage")->get();
                 mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, line->name(), node->name());
                 break;
 			}
 			else if (std::shared_ptr<CPS::SP::Ph1::Transformer> trans = std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp)) {
 				if (trans->terminal(0)->node()->name() == node->name()){
-                    baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end1")->get();
+                    baseVoltage_ = trans->attributeTyped<CPS::Real>("nominal_voltage_end1")->get();
                     mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, trans->name(), node->name());
                     break;
                 }
 				else if (trans->terminal(1)->node()->name() == node->name()){
-                    baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end2")->get();
+                    baseVoltage_ = trans->attributeTyped<CPS::Real>("nominal_voltage_end2")->get();
                     mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, trans->name(), node->name());
                     break;
                 }
             }
             else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
-                    baseVoltage_ = gen->attribute<CPS::Real>("base_Voltage")->get();
+                    baseVoltage_ = gen->attributeTyped<CPS::Real>("base_Voltage")->get();
                     mSLog->info("Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, gen->name(), node->name());
                     break;
                 }

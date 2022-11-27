@@ -120,16 +120,16 @@ void DP::Ph1::SVC::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::P
 		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex());
 
     mSubInductor->mnaInitialize(omega, timeStep, leftVector);
-    mRightVectorStamps.push_back(&mSubInductor->attribute<Matrix>("right_vector")->get());
+    mRightVectorStamps.push_back(&mSubInductor->attributeTyped<Matrix>("right_vector")->get());
 
     mSubInductorSwitch->mnaInitialize(omega, timeStep, leftVector);
-    mRighteVctorStamps.push_back(&mSubInductorSwitch->attribute<Matrix>("right_vector")->get());
+    mRighteVctorStamps.push_back(&mSubInductorSwitch->attributeTyped<Matrix>("right_vector")->get());
 
     mSubCapacitor->mnaInitialize(omega, timeStep, leftVector);
-    mRightVectorStamps.push_back(&mSubCapacitor->attribute<Matrix>("right_vector")->get());
+    mRightVectorStamps.push_back(&mSubCapacitor->attributeTyped<Matrix>("right_vector")->get());
 
     mSubCapacitorSwitch->mnaInitialize(omega, timeStep, leftVector);
-    mRightVectorStamps.push_back(&mSubCapacitorSwitch->attribute<Matrix>("right_vector")->get());
+    mRightVectorStamps.push_back(&mSubCapacitorSwitch->attributeTyped<Matrix>("right_vector")->get());
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));

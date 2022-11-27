@@ -121,15 +121,15 @@ void MnaSolver<Real>::initializeComponents() {
 
 	// Initialize MNA specific parts of components.
 	for (auto comp : allMNAComps) {
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
-		const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attributeTyped<Matrix>("left_vector"));
+		const Matrix& stamp = comp->template attributeTyped<Matrix>("right_vector")->get();
 		if (stamp.size() != 0) {
 			mRightVectorStamps.push_back(&stamp);
 		}
 	}
 
 	for (auto comp : mSwitches)
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attributeTyped<Matrix>("left_vector"));
 }
 
 template <>
@@ -159,7 +159,7 @@ void MnaSolver<Complex>::initializeComponents() {
 		for (auto comp : mMNAComponents) {
 			// Initialize MNA specific parts of components.
 			comp->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep, mLeftSideVectorHarm);
-			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
+			const Matrix& stamp = comp->template attributeTyped<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) mRightVectorStamps.push_back(&stamp);
 		}
 		// Initialize nodes
@@ -170,15 +170,15 @@ void MnaSolver<Complex>::initializeComponents() {
 	else {
 		// Initialize MNA specific parts of components.
 		for (auto comp : allMNAComps) {
-			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
-			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
+			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attributeTyped<Matrix>("left_vector"));
+			const Matrix& stamp = comp->template attributeTyped<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) {
 				mRightVectorStamps.push_back(&stamp);
 			}
 		}
 
 		for (auto comp : mSwitches)
-			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
+			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attributeTyped<Matrix>("left_vector"));
 	}
 }
 

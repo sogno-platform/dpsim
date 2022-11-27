@@ -68,7 +68,7 @@ namespace DPsim {
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
 				for (auto it : solver.mMNAComponents) {
-					if (it->template attribute<Matrix>("right_vector")->get().size() != 0)
+					if (it->template attributeTyped<Matrix>("right_vector")->get().size() != 0)
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
 				}
 				for (auto node : solver.mNodes) {

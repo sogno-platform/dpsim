@@ -120,7 +120,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
 		.def("set_model_flags", &CPS::DP::Ph1::SynchronGeneratorTrStab::setModelFlags, "convert_with_omega_mech"_a)
 		.def("set_reference_omega", [](CPS::DP::Ph1::SynchronGeneratorTrStab &gen, std::string refOmegaName, CPS::IdentifiedObject::Ptr refOmegaComp,
 			std::string refDeltaName, CPS::IdentifiedObject::Ptr refDeltaComp) {
-				gen.setReferenceOmega(refOmegaComp->attribute<CPS::Real>(refOmegaName), refDeltaComp->attribute<CPS::Real>(refDeltaName));
+				gen.setReferenceOmega(refOmegaComp->attributeTyped<CPS::Real>(refOmegaName), refDeltaComp->attributeTyped<CPS::Real>(refDeltaName));
 			}, "ref_omega_name"_a="w_r", "ref_omage_comp"_a, "ref_delta_name"_a="delta_r", "ref_delta_comp"_a);
 
 	py::class_<CPS::DP::Ph1::AvVoltageSourceInverterDQ, std::shared_ptr<CPS::DP::Ph1::AvVoltageSourceInverterDQ>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "AvVoltageSourceInverterDQ", py::multiple_inheritance())

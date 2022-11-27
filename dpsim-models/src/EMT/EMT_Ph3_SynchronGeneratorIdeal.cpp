@@ -57,7 +57,7 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real freq
 	mSubComponents[0]->initializeFromNodesAndTerminals(frequency);
 
 	if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
-		mRefVoltage->setReference(mSubComponents[0]->attribute<MatrixComp>("V_ref"));
+		mRefVoltage->setReference(mSubComponents[0]->attributeTyped<MatrixComp>("V_ref"));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

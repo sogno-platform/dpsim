@@ -308,8 +308,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::addControlStepDependencies(AttributeBas
 void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	Complex vcdq, ircdq;
-	vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
-	ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
+	vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0), mThetaN);
+	ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0), mThetaN);
 	**mVcd = vcdq.real();
 	**mVcq = vcdq.imag();
 	**mIrcd = ircdq.real();
@@ -320,7 +320,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCoun
 	mPowerControllerVSI->signalStep(time, timeStepCount);
 
 	// Transformation interface backward
-	(**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(0, 0), mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(1, 0)), mThetaN, mPLL->attribute<Matrix>("output_prev")->get()(0, 0));
+	(**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mPowerControllerVSI->attributeTyped<Matrix>("output_curr")->get()(0, 0), mPowerControllerVSI->attributeTyped<Matrix>("output_curr")->get()(1, 0)), mThetaN, mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0));
 
 	// Update nominal system angle
 	mThetaN = mThetaN + mTimeStep * **mOmegaN;
@@ -335,8 +335,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase
 	prevStepDependencies.push_back(mVsref);
 	prevStepDependencies.push_back(mIntfCurrent);
 	prevStepDependencies.push_back(mIntfVoltage);
-	attributeDependencies.push_back(mPowerControllerVSI->attribute<Matrix>("output_prev"));
-	attributeDependencies.push_back(mPLL->attribute<Matrix>("output_prev"));
+	attributeDependencies.push_back(mPowerControllerVSI->attributeTyped<Matrix>("output_prev"));
+	attributeDependencies.push_back(mPLL->attributeTyped<Matrix>("output_prev"));
 	modifiedAttributes.push_back(mRightVector);
 }
 

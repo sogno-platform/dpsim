@@ -16,7 +16,7 @@ ODESolver::ODESolver(String name, const CPS::ODEInterface::Ptr &comp, bool impli
 	mComponent(comp),
 	mImplicitIntegration(implicit_integration),
 	mTimestep(timestep) {
-	mProbDim = mComponent->attribute<Matrix>("ode_pre_state")->get().rows();
+	mProbDim = mComponent->attributeTyped<Matrix>("ode_pre_state")->get().rows();
 	initialize();
 }
 
@@ -122,7 +122,7 @@ Real ODESolver::step(Real initial_time) {
 	/// Number of error test fails
 	long int netf;
 
-	mComponent->attribute<Matrix>("ode_post_state")->set(mComponent->attribute<Matrix>("ode_pre_state")->get());
+	mComponent->attributeTyped<Matrix>("ode_post_state")->set(mComponent->attributeTyped<Matrix>("ode_pre_state")->get());
 
 	// Better allocate the arkode memory here to prevent numerical problems
 	mArkode_mem= ARKodeCreate();

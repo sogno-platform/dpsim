@@ -95,9 +95,9 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysV
 	**mQref = Qref;
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, 
+void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 	Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
-	
+
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower,
 	ratioAbs, ratioPhase, resistance, inductance);
 
@@ -268,11 +268,11 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeSte
 	mPLL->setSimulationParameters(timeStep);
 
 	// collect right side vectors of subcomponents
-	mRightVectorStamps.push_back(&mSubCapacitorF->attribute<Matrix>("right_vector")->get());
-	mRightVectorStamps.push_back(&mSubInductorF->attribute<Matrix>("right_vector")->get());
-	mRightVectorStamps.push_back(&mSubCtrledVoltageSource->attribute<Matrix>("right_vector")->get());
+	mRightVectorStamps.push_back(&mSubCapacitorF->attributeTyped<Matrix>("right_vector")->get());
+	mRightVectorStamps.push_back(&mSubInductorF->attributeTyped<Matrix>("right_vector")->get());
+	mRightVectorStamps.push_back(&mSubCtrledVoltageSource->attributeTyped<Matrix>("right_vector")->get());
 	if (mWithConnectionTransformer)
-		mRightVectorStamps.push_back(&mConnectionTransformer->attribute<Matrix>("right_vector")->get());
+		mRightVectorStamps.push_back(&mConnectionTransformer->attributeTyped<Matrix>("right_vector")->get());
 
 	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -363,7 +363,7 @@ Matrix EMT::Ph3::AvVoltageSourceInverterDQ::getInverseParkTransformMatrixPowerIn
 void EMT::Ph3::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	Matrix vcdq, ircdq;
-	Real theta = mPLL->attribute<Matrix>("output_prev")->get()(0, 0);
+	Real theta = mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0);
 	vcdq = parkTransformPowerInvariant(theta, **mVirtualNodes[3]->mVoltage);
 	ircdq = parkTransformPowerInvariant(theta, - **mSubResistorC->mIntfCurrent);
 
@@ -377,7 +377,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCou
 	mPowerControllerVSI->signalStep(time, timeStepCount);
 
 	// Transformation interface backward
-	**mVsref = inverseParkTransformPowerInvariant(mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mPowerControllerVSI->attribute<Matrix>("output_curr")->get());
+	**mVsref = inverseParkTransformPowerInvariant(mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0), mPowerControllerVSI->attributeTyped<Matrix>("output_curr")->get());
 
 	// Update nominal system angle
 	mThetaN = mThetaN + mTimeStep * **mOmegaN;
@@ -392,15 +392,15 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBas
 	prevStepDependencies.push_back(attribute("Vsref"));
 	prevStepDependencies.push_back(attribute("i_intf"));
 	prevStepDependencies.push_back(attribute("v_intf"));
-	attributeDependencies.push_back(mPowerControllerVSI->attribute<Matrix>("output_prev"));
-	attributeDependencies.push_back(mPLL->attribute<Matrix>("output_prev"));
+	attributeDependencies.push_back(mPowerControllerVSI->attributeTyped<Matrix>("output_prev"));
+	attributeDependencies.push_back(mPLL->attributeTyped<Matrix>("output_prev"));
 	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents - controlled source
 	if (mWithControl)
-		mSubCtrledVoltageSource->attribute<MatrixComp>("V_ref")->set(PEAK1PH_TO_RMS3PH * **mVsref);
+		mSubCtrledVoltageSource->attributeTyped<MatrixComp>("V_ref")->set(PEAK1PH_TO_RMS3PH * **mVsref);
 	// pre-step of subcomponents - others
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
@@ -432,9 +432,9 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCou
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {
 	if (mWithConnectionTransformer)
-		**mIntfCurrent = mConnectionTransformer->attribute<Matrix>("i_intf")->get();
+		**mIntfCurrent = mConnectionTransformer->attributeTyped<Matrix>("i_intf")->get();
 	else
-		**mIntfCurrent = mSubResistorC->attribute<Matrix>("i_intf")->get();
+		**mIntfCurrent = mSubResistorC->attributeTyped<Matrix>("i_intf")->get();
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {

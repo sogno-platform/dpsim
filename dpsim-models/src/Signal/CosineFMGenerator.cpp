@@ -20,8 +20,8 @@ void Signal::CosineFMGenerator::setParameters(Complex initialPhasor, Real modula
 	// default value, should implement a way to set it during runtime
 	mZigZag = zigzag;
 
-	attribute<Complex>("sigOut")->set(initialPhasor);
-	attribute<Real>("freq")->set(frequency);
+	attributeTyped<Complex>("sigOut")->set(initialPhasor);
+	attributeTyped<Real>("freq")->set(frequency);
 
 	mSLog->info("Parameters:");
 	mSLog->info("\nInitial Phasor={}"
@@ -38,13 +38,13 @@ void Signal::CosineFMGenerator::step(Real time) {
 		Real tmp = 2*time*mModulationFrequency;
 		Real sign = (((int)floor(tmp)) % 2 == 0) ? -1 : 1;
 		phase += 2 * mModulationAmplitude * (pow(2*(tmp - floor(tmp)) - 1, 2) - 1) / PI * sign;
-		attribute<Real>("freq")->set(mBaseFrequency + mModulationAmplitude * (2 * (tmp - floor(tmp)) - 1) * sign);
+		attributeTyped<Real>("freq")->set(mBaseFrequency + mModulationAmplitude * (2 * (tmp - floor(tmp)) - 1) * sign);
 	} else {
 		phase += mModulationAmplitude / mModulationFrequency * sin(2.*PI*mModulationFrequency*time);
-		attribute<Real>("freq")->set(mBaseFrequency + mModulationAmplitude * cos(2.*PI*mModulationFrequency*time));
+		attributeTyped<Real>("freq")->set(mBaseFrequency + mModulationAmplitude * cos(2.*PI*mModulationFrequency*time));
 	}
 
-	attribute<Complex>("sigOut")->set(Complex(
+	attributeTyped<Complex>("sigOut")->set(Complex(
 		mMagnitude * cos(phase),
 		mMagnitude * sin(phase)));
 }
