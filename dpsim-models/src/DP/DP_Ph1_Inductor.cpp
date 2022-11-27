@@ -11,14 +11,11 @@
 using namespace CPS;
 
 DP::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::Inductor(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
-
-	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
-	mInductance = CPS::Attribute<Real>::create("L", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Inductor::clone(String name) {

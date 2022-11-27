@@ -12,7 +12,7 @@ using namespace CPS;
 
 // #### General ####
 SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel, Bool withResistiveLosses)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: Base::Ph1::Transformer(mAttributes), SimPowerComp<Complex>(uid, name, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
@@ -28,14 +28,6 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
-
-	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
-	mNominalVoltageEnd1 = Attribute<Real>::create("nominal_voltage_end1", mAttributes);
-	mNominalVoltageEnd2 = Attribute<Real>::create("nominal_voltage_end2", mAttributes);
-	mRatedPower = Attribute<Real>::create("S", mAttributes);
-	mRatio = Attribute<Complex>::create("ratio", mAttributes);
-	mResistance = Attribute<Real>::create("R", mAttributes);
-	mInductance = Attribute<Real>::create("L", mAttributes);
 
 	**mCurrent = MatrixComp::Zero(2,1);
 	**mActivePowerBranch = Matrix::Zero(2,1);

@@ -11,14 +11,11 @@
 using namespace CPS;
 
 EMT::Ph3::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: Base::Ph3::Resistor(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
-
-	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
-	mResistance = CPS::Attribute<Matrix>::create("R", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Resistor::clone(String name) {

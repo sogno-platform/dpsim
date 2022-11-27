@@ -15,7 +15,6 @@ namespace CPS {
 namespace Base {
 namespace Ph3 {
 	class VoltageSource {
-	protected:
 	public:
 		/// Sets model specific parameters
 		virtual void setParameters(Complex voltageRef, Real srcFreq = -1) {}=0;

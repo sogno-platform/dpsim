@@ -16,31 +16,11 @@ using namespace CPS;
 using namespace std;
 
 DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::SynchronGenerator(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	**mIntfCurrent = MatrixComp::Zero(3,1);
-
-	/// CHECK: Which of these are actually required in this class or its base classes?
-	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
-	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
-	mLd = Attribute<Real>::create("Ld", mAttributes, 0);
-	mLq = Attribute<Real>::create("Lq", mAttributes, 0);
-	mTd0_t = Attribute<Real>::create("Td0_t", mAttributes, 0);
-	mTd0_s = Attribute<Real>::create("Td0_s", mAttributes, 0);
-	mTq0_t = Attribute<Real>::create("Tq0_t", mAttributes, 0);
-	mTq0_s = Attribute<Real>::create("Tq0_s", mAttributes, 0);
-	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
-	mElecTorque = Attribute<Real>::create("T_e", mAttributes, 0);
-	mMechTorque = Attribute<Real>::create("T_m", mAttributes, 0);
-	mMechPower = Attribute<Real>::create("P_m", mAttributes, 0);
-	mOmMech = Attribute<Real>::create("w_r", mAttributes);
-	mDelta = Attribute<Real>::create("delta_r", mAttributes, 0);
-	mLd_s = Attribute<Real>::create("Ld_s", mAttributes, 0);
-	mLd_t = Attribute<Real>::create("Ld_t", mAttributes, 0);
-	mLq_s = Attribute<Real>::create("Lq_s", mAttributes, 0);
-	mLq_t = Attribute<Real>::create("Lq_t", mAttributes, 0);
 }
 
 DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String name, Logger::Level logLevel)

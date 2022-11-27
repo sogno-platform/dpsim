@@ -18,13 +18,19 @@ namespace Ph1 {
 
 	public:
 		/// Resistance along the line [ohms]
-		Attribute<Real>::Ptr mSeriesRes;
+		const Attribute<Real>::Ptr mSeriesRes;
 		/// Inductance along the line [H]
-		Attribute<Real>::Ptr mSeriesInd;
-		/// Conductance in parallel to the line [S]
-		Attribute<Real>::Ptr mParallelCond;
+		const Attribute<Real>::Ptr mSeriesInd;
 		/// Capacitance in parallel to the line [F]
-		Attribute<Real>::Ptr mParallelCap;
+		const Attribute<Real>::Ptr mParallelCap;
+		/// Conductance in parallel to the line [S]
+		const Attribute<Real>::Ptr mParallelCond;
+
+		PiLine(CPS::AttributeBase::Map &attributeList) :
+			mSeriesRes(Attribute<Real>::create("R_series", attributeList)),
+			mSeriesInd(Attribute<Real>::create("L_series", attributeList)),
+			mParallelCap(Attribute<Real>::create("C_parallel", attributeList)),
+			mParallelCond(Attribute<Real>::create("G_parallel", attributeList)) { };
 
 		///
 		void setParameters(Real seriesResistance, Real seriesInductance,

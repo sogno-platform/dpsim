@@ -12,7 +12,7 @@ using namespace CPS;
 
 DP::Ph1::Transformer::Transformer(String uid, String name,
 	Logger::Level logLevel, Bool withResistiveLosses)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::Transformer(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
 	if (withResistiveLosses)
 		setVirtualNodeNumber(3);
 	else
@@ -23,14 +23,6 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
-
-	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
-	mNominalVoltageEnd1 = Attribute<Real>::create("nominal_voltage_end1", mAttributes);
-	mNominalVoltageEnd2 = Attribute<Real>::create("nominal_voltage_end2", mAttributes);
-	mRatedPower = Attribute<Real>::create("S", mAttributes);
-	mRatio = Attribute<Complex>::create("ratio", mAttributes);
-	mResistance = Attribute<Real>::create("R", mAttributes);
-	mInductance = Attribute<Real>::create("L", mAttributes);
 }
 
 /// DEPRECATED: Delete method
@@ -105,8 +97,8 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	} else {
 		mSubInductor->connect({node(0), mVirtualNodes[0]});
 	}
-	
-	// Create parallel sub components 
+
+	// Create parallel sub components
 	Real pSnub = P_SNUB_TRANSFORMER * **mRatedPower;
 	Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
 
@@ -134,7 +126,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// mSLog->info("Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::realToString(mSnubberCapacitance1));
 	// mSubComponents.push_back(mSubSnubCapacitor1);
 
-	// A snubber capacitance is added to lower voltage side 
+	// A snubber capacitance is added to lower voltage side
 	mSnubberCapacitance2 = qSnub / std::pow(std::abs(**mNominalVoltageEnd2),2) / omega;
 	mSubSnubCapacitor2 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
 	mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
@@ -170,7 +162,7 @@ void DP::Ph1::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Ma
 	updateMatrixNodeIndices();
 
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	
+
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);

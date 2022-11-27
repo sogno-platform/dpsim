@@ -11,15 +11,11 @@
 using namespace CPS;
 
 DP::Ph1::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::Switch(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
     **mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
-
-	mOpenResistance = Attribute<Real>::create("R_open", mAttributes);
-	mClosedResistance = Attribute<Real>::create("R_closed", mAttributes);
-	mIsClosed = Attribute<Bool>::create("is_closed", mAttributes);
-	}
+}
 
 SimPowerComp<Complex>::Ptr DP::Ph1::varResSwitch::clone(String name) {
 	auto copy = varResSwitch::make(name, mLogLevel);
