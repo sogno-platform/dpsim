@@ -21,9 +21,9 @@ Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
 	mVdq0(Attribute<Matrix>::create("Vdq0", mAttributes)),
 	mIdq0(Attribute<Matrix>::create("Idq0", mAttributes)) {
-	
+
 	mSimTime = 0.0;
-	
+
 	// declare state variables
 	**mVdq0 = Matrix::Zero(3,1);
 	**mIdq0 = Matrix::Zero(3,1);
@@ -38,12 +38,11 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	mDelta(Attribute<Real>::create("delta", mAttributes)),
 	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
 	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
-	///FIXME: The mVdq0 and mVdq member variables are mutually exclusive and carry the same attribute name. Maybe they can be unified?
 	mVdq(Attribute<Matrix>::create("Vdq0", mAttributes)),
 	mIdq(Attribute<Matrix>::create("Idq0", mAttributes))  {
-	
+
 	mSimTime = 0.0;
-	
+
 	// declare state variables
 	**mVdq = Matrix::Zero(2,1);
 	**mIdq = Matrix::Zero(2,1);
@@ -54,7 +53,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setBaseParameters(
 	Real nomPower, Real nomVolt, Real nomFreq) {
 
 	/// used p.u. system: Lad-Base reciprocal per unit system (Kundur, p. 84-88)
-	
+
 	// set base nominal values
 	mNomPower = nomPower;
 	mNomVolt = nomVolt;
@@ -73,7 +72,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setBaseParameters(
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower, 
+void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower,
 	Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 	Real Ld_t, Real Td0_t) {
 
@@ -88,7 +87,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower, 
+void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower,
 	Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 	Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t) {
 
@@ -105,7 +104,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower, 
+void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUnit(Real nomPower,
 	Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 	Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t,
 	Real Ld_s, Real Lq_s, Real Td0_s, Real Tq0_s,
@@ -131,22 +130,22 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 template <>
 void Base::ReducedOrderSynchronGenerator<Real>::scaleInertiaConstant(Real scalingFactor) {
 	mH = mH * scalingFactor;
-	mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH); 
+	mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
 }
 
 template <>
 void Base::ReducedOrderSynchronGenerator<Complex>::scaleInertiaConstant(Real scalingFactor) {
 	mH = mH * scalingFactor;
-	mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH); 
+	mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
 }
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 	Complex initComplexElectricalPower, Real initMechanicalPower, Complex initTerminalVoltage) {
-	
+
 	mInitElecPower = initComplexElectricalPower;
 	mInitMechPower = initMechanicalPower;
-	
+
 	mInitVoltage = initTerminalVoltage;
 	mInitVoltageAngle = Math::phase(mInitVoltage);
 
@@ -169,13 +168,13 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 
 	// Initialize mechanical torque
 	**mMechTorque = mInitMechPower / mNomPower;
-		
+
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
 
 	// Load angle
 	**mDelta = Math::phase(Eq0);
-	
+
 	// convert currrents to dq reference frame
 	(**mIdq0)(0,0) = Math::abs(mInitCurrent) * sin(**mDelta - mInitCurrentAngle);
 	(**mIdq0)(1,0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
@@ -189,10 +188,10 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 
 	// initial electrical torque
 	**mElecTorque = (**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0);
-	
+
 	// Initialize omega mech with nominal system frequency
 	**mOmMech = mNomOmega / mBase_OmMech;
-	
+
 	// initialize theta and calculate transform matrix
 	**mThetaMech = **mDelta - PI / 2.;
 
@@ -232,13 +231,13 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 
 	// Initialize mechanical torque
 	**mMechTorque = mInitMechPower / mNomPower;
-		
+
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
-	
+
 	// Load angle
 	**mDelta = Math::phase(Eq0);
-	
+
 	// convert currrents to dq reference frame
 	(**mIdq)(0,0) = Math::abs(mInitCurrent) * sin(**mDelta - mInitCurrentAngle);
 	(**mIdq)(1,0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
@@ -252,10 +251,10 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 
 	// initial electrical torque
 	**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-	
+
 	// Initialize omega mech with nominal system frequency
 	**mOmMech = mNomOmega / mBase_OmMech;
-	
+
 	// initialize theta and calculate transform matrix
 	**mThetaMech = **mDelta - PI / 2.;
 
@@ -286,7 +285,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega, 
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
 		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
 	MNAInterface::mnaInitialize(omega, timeStep);
