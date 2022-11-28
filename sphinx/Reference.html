@@ -16,6 +16,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -41,9 +42,726 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dpsim-python-bindings">DPsim Python bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-dpsimpy.dp">Dynamic Phasor / SFA Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-dpsimpy.emt">Electromagnetic Transient Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-dpsimpy.sp">(Quasi) Static / RMS Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.Attribute"><code class="docutils literal notranslate"><span class="pre">Attribute</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeComplex"><code class="docutils literal notranslate"><span class="pre">AttributeComplex</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeComplex.derive_imag"><code class="docutils literal notranslate"><span class="pre">AttributeComplex.derive_imag()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeComplex.derive_mag"><code class="docutils literal notranslate"><span class="pre">AttributeComplex.derive_mag()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeComplex.derive_phase"><code class="docutils literal notranslate"><span class="pre">AttributeComplex.derive_phase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeComplex.derive_real"><code class="docutils literal notranslate"><span class="pre">AttributeComplex.derive_real()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeComplex.derive_scaled"><code class="docutils literal notranslate"><span class="pre">AttributeComplex.derive_scaled()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeComplex.get"><code class="docutils literal notranslate"><span class="pre">AttributeComplex.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeComplex.set"><code class="docutils literal notranslate"><span class="pre">AttributeComplex.set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeComplexDyn"><code class="docutils literal notranslate"><span class="pre">AttributeComplexDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeComplexDyn.set_reference"><code class="docutils literal notranslate"><span class="pre">AttributeComplexDyn.set_reference()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeComplexStat"><code class="docutils literal notranslate"><span class="pre">AttributeComplexStat</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeMatrix"><code class="docutils literal notranslate"><span class="pre">AttributeMatrix</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeMatrix.derive_coeff"><code class="docutils literal notranslate"><span class="pre">AttributeMatrix.derive_coeff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeMatrix.get"><code class="docutils literal notranslate"><span class="pre">AttributeMatrix.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeMatrix.set"><code class="docutils literal notranslate"><span class="pre">AttributeMatrix.set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeMatrixComp"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixComp</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeMatrixComp.derive_coeff"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixComp.derive_coeff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeMatrixComp.get"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixComp.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeMatrixComp.set"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixComp.set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeMatrixCompDyn"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixCompDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeMatrixCompDyn.set_reference"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixCompDyn.set_reference()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeMatrixCompStat"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixCompStat</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeMatrixDyn"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeMatrixDyn.set_reference"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixDyn.set_reference()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeMatrixStat"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixStat</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeReal"><code class="docutils literal notranslate"><span class="pre">AttributeReal</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeReal.derive_scaled"><code class="docutils literal notranslate"><span class="pre">AttributeReal.derive_scaled()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeReal.get"><code class="docutils literal notranslate"><span class="pre">AttributeReal.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeReal.set"><code class="docutils literal notranslate"><span class="pre">AttributeReal.set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeRealDyn"><code class="docutils literal notranslate"><span class="pre">AttributeRealDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeRealDyn.set_reference"><code class="docutils literal notranslate"><span class="pre">AttributeRealDyn.set_reference()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeRealStat"><code class="docutils literal notranslate"><span class="pre">AttributeRealStat</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeString"><code class="docutils literal notranslate"><span class="pre">AttributeString</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeString.get"><code class="docutils literal notranslate"><span class="pre">AttributeString.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeString.set"><code class="docutils literal notranslate"><span class="pre">AttributeString.set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeStringDyn"><code class="docutils literal notranslate"><span class="pre">AttributeStringDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.AttributeStringDyn.set_reference"><code class="docutils literal notranslate"><span class="pre">AttributeStringDyn.set_reference()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeStringStat"><code class="docutils literal notranslate"><span class="pre">AttributeStringStat</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.CIMReader"><code class="docutils literal notranslate"><span class="pre">CIMReader</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CIMReader.loadCIM"><code class="docutils literal notranslate"><span class="pre">CIMReader.loadCIM()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.CSVReader"><code class="docutils literal notranslate"><span class="pre">CSVReader</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReader.assignLoadProfile"><code class="docutils literal notranslate"><span class="pre">CSVReader.assignLoadProfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.CSVReaderFormat"><code class="docutils literal notranslate"><span class="pre">CSVReaderFormat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderFormat.HHMMSS"><code class="docutils literal notranslate"><span class="pre">CSVReaderFormat.HHMMSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderFormat.HOURS"><code class="docutils literal notranslate"><span class="pre">CSVReaderFormat.HOURS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderFormat.MINUTES"><code class="docutils literal notranslate"><span class="pre">CSVReaderFormat.MINUTES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderFormat.SECONDS"><code class="docutils literal notranslate"><span class="pre">CSVReaderFormat.SECONDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderFormat.name"><code class="docutils literal notranslate"><span class="pre">CSVReaderFormat.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderFormat.value"><code class="docutils literal notranslate"><span class="pre">CSVReaderFormat.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.CSVReaderMode"><code class="docutils literal notranslate"><span class="pre">CSVReaderMode</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderMode.AUTO"><code class="docutils literal notranslate"><span class="pre">CSVReaderMode.AUTO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderMode.MANUAL"><code class="docutils literal notranslate"><span class="pre">CSVReaderMode.MANUAL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderMode.name"><code class="docutils literal notranslate"><span class="pre">CSVReaderMode.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderMode.value"><code class="docutils literal notranslate"><span class="pre">CSVReaderMode.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.Domain"><code class="docutils literal notranslate"><span class="pre">Domain</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Domain.DP"><code class="docutils literal notranslate"><span class="pre">Domain.DP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Domain.EMT"><code class="docutils literal notranslate"><span class="pre">Domain.EMT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Domain.SP"><code class="docutils literal notranslate"><span class="pre">Domain.SP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Domain.name"><code class="docutils literal notranslate"><span class="pre">Domain.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Domain.value"><code class="docutils literal notranslate"><span class="pre">Domain.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.GeneratorType"><code class="docutils literal notranslate"><span class="pre">GeneratorType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.GeneratorType.IdealVoltageSource"><code class="docutils literal notranslate"><span class="pre">GeneratorType.IdealVoltageSource</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.GeneratorType.NONE"><code class="docutils literal notranslate"><span class="pre">GeneratorType.NONE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.GeneratorType.PVNode"><code class="docutils literal notranslate"><span class="pre">GeneratorType.PVNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.GeneratorType.TransientStability"><code class="docutils literal notranslate"><span class="pre">GeneratorType.TransientStability</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.GeneratorType.name"><code class="docutils literal notranslate"><span class="pre">GeneratorType.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.GeneratorType.value"><code class="docutils literal notranslate"><span class="pre">GeneratorType.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.IdentifiedObject"><code class="docutils literal notranslate"><span class="pre">IdentifiedObject</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.IdentifiedObject.attr"><code class="docutils literal notranslate"><span class="pre">IdentifiedObject.attr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.IdentifiedObject.name"><code class="docutils literal notranslate"><span class="pre">IdentifiedObject.name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.IdentifiedObject.print_attribute"><code class="docutils literal notranslate"><span class="pre">IdentifiedObject.print_attribute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.IdentifiedObject.print_attribute_list"><code class="docutils literal notranslate"><span class="pre">IdentifiedObject.print_attribute_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.Interface"><code class="docutils literal notranslate"><span class="pre">Interface</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.LogLevel"><code class="docutils literal notranslate"><span class="pre">LogLevel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.LogLevel.critical"><code class="docutils literal notranslate"><span class="pre">LogLevel.critical</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.LogLevel.debug"><code class="docutils literal notranslate"><span class="pre">LogLevel.debug</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.LogLevel.err"><code class="docutils literal notranslate"><span class="pre">LogLevel.err</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.LogLevel.info"><code class="docutils literal notranslate"><span class="pre">LogLevel.info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.LogLevel.name"><code class="docutils literal notranslate"><span class="pre">LogLevel.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.LogLevel.off"><code class="docutils literal notranslate"><span class="pre">LogLevel.off</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.LogLevel.trace"><code class="docutils literal notranslate"><span class="pre">LogLevel.trace</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.LogLevel.value"><code class="docutils literal notranslate"><span class="pre">LogLevel.value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.LogLevel.warn"><code class="docutils literal notranslate"><span class="pre">LogLevel.warn</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.Logger"><code class="docutils literal notranslate"><span class="pre">Logger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Logger.get_log_dir"><code class="docutils literal notranslate"><span class="pre">Logger.get_log_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Logger.log_attribute"><code class="docutils literal notranslate"><span class="pre">Logger.log_attribute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Logger.set_log_dir"><code class="docutils literal notranslate"><span class="pre">Logger.set_log_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.Math"><code class="docutils literal notranslate"><span class="pre">Math</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Math.single_phase_parameter_to_three_phase"><code class="docutils literal notranslate"><span class="pre">Math.single_phase_parameter_to_three_phase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Math.single_phase_power_to_three_phase"><code class="docutils literal notranslate"><span class="pre">Math.single_phase_power_to_three_phase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Math.single_phase_variable_to_three_phase"><code class="docutils literal notranslate"><span class="pre">Math.single_phase_variable_to_three_phase()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.MnaSolverImpl"><code class="docutils literal notranslate"><span class="pre">MnaSolverImpl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MnaSolverImpl.CUDADense"><code class="docutils literal notranslate"><span class="pre">MnaSolverImpl.CUDADense</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MnaSolverImpl.CUDAMagma"><code class="docutils literal notranslate"><span class="pre">MnaSolverImpl.CUDAMagma</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MnaSolverImpl.CUDASparse"><code class="docutils literal notranslate"><span class="pre">MnaSolverImpl.CUDASparse</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MnaSolverImpl.EigenDense"><code class="docutils literal notranslate"><span class="pre">MnaSolverImpl.EigenDense</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MnaSolverImpl.EigenSparse"><code class="docutils literal notranslate"><span class="pre">MnaSolverImpl.EigenSparse</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MnaSolverImpl.Undef"><code class="docutils literal notranslate"><span class="pre">MnaSolverImpl.Undef</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MnaSolverImpl.name"><code class="docutils literal notranslate"><span class="pre">MnaSolverImpl.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MnaSolverImpl.value"><code class="docutils literal notranslate"><span class="pre">MnaSolverImpl.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.PhaseType"><code class="docutils literal notranslate"><span class="pre">PhaseType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PhaseType.A"><code class="docutils literal notranslate"><span class="pre">PhaseType.A</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PhaseType.ABC"><code class="docutils literal notranslate"><span class="pre">PhaseType.ABC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PhaseType.B"><code class="docutils literal notranslate"><span class="pre">PhaseType.B</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PhaseType.C"><code class="docutils literal notranslate"><span class="pre">PhaseType.C</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PhaseType.Single"><code class="docutils literal notranslate"><span class="pre">PhaseType.Single</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PhaseType.name"><code class="docutils literal notranslate"><span class="pre">PhaseType.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PhaseType.value"><code class="docutils literal notranslate"><span class="pre">PhaseType.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.PowerflowBusType"><code class="docutils literal notranslate"><span class="pre">PowerflowBusType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None"><code class="docutils literal notranslate"><span class="pre">PowerflowBusType.None</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PowerflowBusType.PQ"><code class="docutils literal notranslate"><span class="pre">PowerflowBusType.PQ</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PowerflowBusType.PV"><code class="docutils literal notranslate"><span class="pre">PowerflowBusType.PV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PowerflowBusType.VD"><code class="docutils literal notranslate"><span class="pre">PowerflowBusType.VD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PowerflowBusType.name"><code class="docutils literal notranslate"><span class="pre">PowerflowBusType.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PowerflowBusType.value"><code class="docutils literal notranslate"><span class="pre">PowerflowBusType.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.RealTimeSimulation"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeSimulation.add_logger"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation.add_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeSimulation.name"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation.name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeSimulation.run"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeSimulation.set_domain"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation.set_domain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeSimulation.set_final_time"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation.set_final_time()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeSimulation.set_solver"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation.set_solver()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeSimulation.set_system"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation.set_system()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeSimulation.set_time_step"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation.set_time_step()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.SimPowerCompComplex"><code class="docutils literal notranslate"><span class="pre">SimPowerCompComplex</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SimPowerCompComplex.connect"><code class="docutils literal notranslate"><span class="pre">SimPowerCompComplex.connect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SimPowerCompComplex.get_terminal"><code class="docutils literal notranslate"><span class="pre">SimPowerCompComplex.get_terminal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SimPowerCompComplex.set_intf_current"><code class="docutils literal notranslate"><span class="pre">SimPowerCompComplex.set_intf_current()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SimPowerCompComplex.set_intf_voltage"><code class="docutils literal notranslate"><span class="pre">SimPowerCompComplex.set_intf_voltage()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.SimPowerCompReal"><code class="docutils literal notranslate"><span class="pre">SimPowerCompReal</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SimPowerCompReal.connect"><code class="docutils literal notranslate"><span class="pre">SimPowerCompReal.connect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SimPowerCompReal.get_terminal"><code class="docutils literal notranslate"><span class="pre">SimPowerCompReal.get_terminal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SimPowerCompReal.set_intf_current"><code class="docutils literal notranslate"><span class="pre">SimPowerCompReal.set_intf_current()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SimPowerCompReal.set_intf_voltage"><code class="docutils literal notranslate"><span class="pre">SimPowerCompReal.set_intf_voltage()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.SimTerminalComplex"><code class="docutils literal notranslate"><span class="pre">SimTerminalComplex</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.SimTerminalReal"><code class="docutils literal notranslate"><span class="pre">SimTerminalReal</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.add_event"><code class="docutils literal notranslate"><span class="pre">Simulation.add_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.add_interface"><code class="docutils literal notranslate"><span class="pre">Simulation.add_interface()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.add_logger"><code class="docutils literal notranslate"><span class="pre">Simulation.add_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.do_frequency_parallelization"><code class="docutils literal notranslate"><span class="pre">Simulation.do_frequency_parallelization()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.do_init_from_nodes_and_terminals"><code class="docutils literal notranslate"><span class="pre">Simulation.do_init_from_nodes_and_terminals()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.do_steady_state_init"><code class="docutils literal notranslate"><span class="pre">Simulation.do_steady_state_init()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.do_system_matrix_recomputation"><code class="docutils literal notranslate"><span class="pre">Simulation.do_system_matrix_recomputation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.get_idobj_attr"><code class="docutils literal notranslate"><span class="pre">Simulation.get_idobj_attr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.log_attribute"><code class="docutils literal notranslate"><span class="pre">Simulation.log_attribute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.log_idobj_attribute"><code class="docutils literal notranslate"><span class="pre">Simulation.log_idobj_attribute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.name"><code class="docutils literal notranslate"><span class="pre">Simulation.name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.next"><code class="docutils literal notranslate"><span class="pre">Simulation.next()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.run"><code class="docutils literal notranslate"><span class="pre">Simulation.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_domain"><code class="docutils literal notranslate"><span class="pre">Simulation.set_domain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_final_time"><code class="docutils literal notranslate"><span class="pre">Simulation.set_final_time()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_mna_solver_implementation"><code class="docutils literal notranslate"><span class="pre">Simulation.set_mna_solver_implementation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_solver"><code class="docutils literal notranslate"><span class="pre">Simulation.set_solver()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_solver_component_behaviour"><code class="docutils literal notranslate"><span class="pre">Simulation.set_solver_component_behaviour()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_system"><code class="docutils literal notranslate"><span class="pre">Simulation.set_system()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_tearing_components"><code class="docutils literal notranslate"><span class="pre">Simulation.set_tearing_components()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_time_step"><code class="docutils literal notranslate"><span class="pre">Simulation.set_time_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.start"><code class="docutils literal notranslate"><span class="pre">Simulation.start()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.Solver"><code class="docutils literal notranslate"><span class="pre">Solver</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Solver.DAE"><code class="docutils literal notranslate"><span class="pre">Solver.DAE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Solver.MNA"><code class="docutils literal notranslate"><span class="pre">Solver.MNA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Solver.NRP"><code class="docutils literal notranslate"><span class="pre">Solver.NRP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Solver.name"><code class="docutils literal notranslate"><span class="pre">Solver.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Solver.value"><code class="docutils literal notranslate"><span class="pre">Solver.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.SolverBehaviour"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SolverBehaviour.Initialization"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour.Initialization</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SolverBehaviour.Simulation"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour.Simulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SolverBehaviour.name"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SolverBehaviour.value"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.SystemTopology"><code class="docutils literal notranslate"><span class="pre">SystemTopology</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.add"><code class="docutils literal notranslate"><span class="pre">SystemTopology.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.add_tear_component"><code class="docutils literal notranslate"><span class="pre">SystemTopology.add_tear_component()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.component"><code class="docutils literal notranslate"><span class="pre">SystemTopology.component()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.components"><code class="docutils literal notranslate"><span class="pre">SystemTopology.components</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.connect_component"><code class="docutils literal notranslate"><span class="pre">SystemTopology.connect_component()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.init_with_powerflow"><code class="docutils literal notranslate"><span class="pre">SystemTopology.init_with_powerflow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.list_idobjects"><code class="docutils literal notranslate"><span class="pre">SystemTopology.list_idobjects()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.node"><code class="docutils literal notranslate"><span class="pre">SystemTopology.node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.nodes"><code class="docutils literal notranslate"><span class="pre">SystemTopology.nodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.render_to_file"><code class="docutils literal notranslate"><span class="pre">SystemTopology.render_to_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.tear_components"><code class="docutils literal notranslate"><span class="pre">SystemTopology.tear_components</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.TopologicalNode"><code class="docutils literal notranslate"><span class="pre">TopologicalNode</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.TopologicalNode.initial_single_voltage"><code class="docutils literal notranslate"><span class="pre">TopologicalNode.initial_single_voltage()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.TopologicalPowerComp"><code class="docutils literal notranslate"><span class="pre">TopologicalPowerComp</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.TopologicalTerminal"><code class="docutils literal notranslate"><span class="pre">TopologicalTerminal</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.TopologicalTerminal.set_power"><code class="docutils literal notranslate"><span class="pre">TopologicalTerminal.set_power()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dpsimpy.dp">Dynamic Phasor / SFA Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.SimNode"><code class="docutils literal notranslate"><span class="pre">SimNode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.SimNode.gnd"><code class="docutils literal notranslate"><span class="pre">SimNode.gnd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.SimNode.set_initial_voltage"><code class="docutils literal notranslate"><span class="pre">SimNode.set_initial_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.SimNode.single_voltage"><code class="docutils literal notranslate"><span class="pre">SimNode.single_voltage()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.connect"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_controller_parameters"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_controller_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_filter_parameters"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_filter_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_initial_state_values"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_initial_state_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_parameters"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_transformer_parameters"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_transformer_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.with_control"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.with_control()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.Capacitor"><code class="docutils literal notranslate"><span class="pre">Capacitor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Capacitor.C"><code class="docutils literal notranslate"><span class="pre">Capacitor.C</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Capacitor.connect"><code class="docutils literal notranslate"><span class="pre">Capacitor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Capacitor.set_parameters"><code class="docutils literal notranslate"><span class="pre">Capacitor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.CurrentSource"><code class="docutils literal notranslate"><span class="pre">CurrentSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.CurrentSource.I_ref"><code class="docutils literal notranslate"><span class="pre">CurrentSource.I_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.CurrentSource.connect"><code class="docutils literal notranslate"><span class="pre">CurrentSource.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.CurrentSource.set_parameters"><code class="docutils literal notranslate"><span class="pre">CurrentSource.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.Inductor"><code class="docutils literal notranslate"><span class="pre">Inductor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Inductor.L"><code class="docutils literal notranslate"><span class="pre">Inductor.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Inductor.connect"><code class="docutils literal notranslate"><span class="pre">Inductor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Inductor.set_parameters"><code class="docutils literal notranslate"><span class="pre">Inductor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.Inverter"><code class="docutils literal notranslate"><span class="pre">Inverter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Inverter.connect"><code class="docutils literal notranslate"><span class="pre">Inverter.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Inverter.set_parameters"><code class="docutils literal notranslate"><span class="pre">Inverter.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.NetworkInjection"><code class="docutils literal notranslate"><span class="pre">NetworkInjection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.NetworkInjection.connect"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.NetworkInjection.set_parameters"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.PiLine"><code class="docutils literal notranslate"><span class="pre">PiLine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.PiLine.connect"><code class="docutils literal notranslate"><span class="pre">PiLine.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.PiLine.set_parameters"><code class="docutils literal notranslate"><span class="pre">PiLine.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.RXLoad"><code class="docutils literal notranslate"><span class="pre">RXLoad</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.RXLoad.connect"><code class="docutils literal notranslate"><span class="pre">RXLoad.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.RXLoad.set_parameters"><code class="docutils literal notranslate"><span class="pre">RXLoad.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.Resistor"><code class="docutils literal notranslate"><span class="pre">Resistor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Resistor.R"><code class="docutils literal notranslate"><span class="pre">Resistor.R</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Resistor.connect"><code class="docutils literal notranslate"><span class="pre">Resistor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Resistor.set_parameters"><code class="docutils literal notranslate"><span class="pre">Resistor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.Switch"><code class="docutils literal notranslate"><span class="pre">Switch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Switch.close"><code class="docutils literal notranslate"><span class="pre">Switch.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Switch.connect"><code class="docutils literal notranslate"><span class="pre">Switch.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Switch.open"><code class="docutils literal notranslate"><span class="pre">Switch.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Switch.set_parameters"><code class="docutils literal notranslate"><span class="pre">Switch.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.SynchronGeneratorTrStab"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.SynchronGeneratorTrStab.connect"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.SynchronGeneratorTrStab.set_fundamental_parameters_PU"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_fundamental_parameters_PU()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.SynchronGeneratorTrStab.set_initial_values"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_initial_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.SynchronGeneratorTrStab.set_model_flags"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_model_flags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.SynchronGeneratorTrStab.set_reference_omega"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_reference_omega()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.SynchronGeneratorTrStab.set_standard_parameters_PU"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_standard_parameters_PU()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Transformer.connect"><code class="docutils literal notranslate"><span class="pre">Transformer.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.Transformer.set_parameters"><code class="docutils literal notranslate"><span class="pre">Transformer.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.VoltageSource"><code class="docutils literal notranslate"><span class="pre">VoltageSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.VoltageSource.V_ref"><code class="docutils literal notranslate"><span class="pre">VoltageSource.V_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.VoltageSource.connect"><code class="docutils literal notranslate"><span class="pre">VoltageSource.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.VoltageSource.f_src"><code class="docutils literal notranslate"><span class="pre">VoltageSource.f_src</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.VoltageSource.set_parameters"><code class="docutils literal notranslate"><span class="pre">VoltageSource.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.VoltageSourceNorton"><code class="docutils literal notranslate"><span class="pre">VoltageSourceNorton</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.VoltageSourceNorton.connect"><code class="docutils literal notranslate"><span class="pre">VoltageSourceNorton.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.VoltageSourceNorton.set_parameters"><code class="docutils literal notranslate"><span class="pre">VoltageSourceNorton.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.dp.ph1.varResSwitch"><code class="docutils literal notranslate"><span class="pre">varResSwitch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.varResSwitch.close"><code class="docutils literal notranslate"><span class="pre">varResSwitch.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.varResSwitch.connect"><code class="docutils literal notranslate"><span class="pre">varResSwitch.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.varResSwitch.open"><code class="docutils literal notranslate"><span class="pre">varResSwitch.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.varResSwitch.set_init_parameters"><code class="docutils literal notranslate"><span class="pre">varResSwitch.set_init_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.dp.ph1.varResSwitch.set_parameters"><code class="docutils literal notranslate"><span class="pre">varResSwitch.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_controller_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_filter_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_initial_state_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_transformer_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.with_control()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">Capacitor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">Capacitor.C</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">Capacitor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">Capacitor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">CurrentSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">CurrentSource.I_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">CurrentSource.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">CurrentSource.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">Inductor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">Inductor.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">Inductor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id19"><code class="docutils literal notranslate"><span class="pre">Inductor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id20"><code class="docutils literal notranslate"><span class="pre">Inverter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id21"><code class="docutils literal notranslate"><span class="pre">Inverter.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id22"><code class="docutils literal notranslate"><span class="pre">Inverter.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id23"><code class="docutils literal notranslate"><span class="pre">NetworkInjection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id24"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id25"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id26"><code class="docutils literal notranslate"><span class="pre">PiLine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id27"><code class="docutils literal notranslate"><span class="pre">PiLine.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id28"><code class="docutils literal notranslate"><span class="pre">PiLine.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id29"><code class="docutils literal notranslate"><span class="pre">RXLoad</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id30"><code class="docutils literal notranslate"><span class="pre">RXLoad.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id31"><code class="docutils literal notranslate"><span class="pre">RXLoad.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id32"><code class="docutils literal notranslate"><span class="pre">Resistor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id33"><code class="docutils literal notranslate"><span class="pre">Resistor.R</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id34"><code class="docutils literal notranslate"><span class="pre">Resistor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id35"><code class="docutils literal notranslate"><span class="pre">Resistor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id36"><code class="docutils literal notranslate"><span class="pre">Switch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id37"><code class="docutils literal notranslate"><span class="pre">Switch.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id38"><code class="docutils literal notranslate"><span class="pre">Switch.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id39"><code class="docutils literal notranslate"><span class="pre">Switch.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id40"><code class="docutils literal notranslate"><span class="pre">Switch.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id41"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id42"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id43"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_fundamental_parameters_PU()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id44"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_initial_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id45"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_model_flags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id46"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_reference_omega()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id47"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_standard_parameters_PU()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id48"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id49"><code class="docutils literal notranslate"><span class="pre">Transformer.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id50"><code class="docutils literal notranslate"><span class="pre">Transformer.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id51"><code class="docutils literal notranslate"><span class="pre">VoltageSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id52"><code class="docutils literal notranslate"><span class="pre">VoltageSource.V_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id53"><code class="docutils literal notranslate"><span class="pre">VoltageSource.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id54"><code class="docutils literal notranslate"><span class="pre">VoltageSource.f_src</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id55"><code class="docutils literal notranslate"><span class="pre">VoltageSource.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id56"><code class="docutils literal notranslate"><span class="pre">VoltageSourceNorton</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id57"><code class="docutils literal notranslate"><span class="pre">VoltageSourceNorton.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id58"><code class="docutils literal notranslate"><span class="pre">VoltageSourceNorton.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id59"><code class="docutils literal notranslate"><span class="pre">varResSwitch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id60"><code class="docutils literal notranslate"><span class="pre">varResSwitch.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id61"><code class="docutils literal notranslate"><span class="pre">varResSwitch.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id62"><code class="docutils literal notranslate"><span class="pre">varResSwitch.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id63"><code class="docutils literal notranslate"><span class="pre">varResSwitch.set_init_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id64"><code class="docutils literal notranslate"><span class="pre">varResSwitch.set_parameters()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dpsimpy.emt">Electromagnetic Transient Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.emt.SimNode"><code class="docutils literal notranslate"><span class="pre">SimNode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.SimNode.gnd"><code class="docutils literal notranslate"><span class="pre">SimNode.gnd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.SimNode.set_initial_voltage"><code class="docutils literal notranslate"><span class="pre">SimNode.set_initial_voltage()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.emt.ph1.Capacitor"><code class="docutils literal notranslate"><span class="pre">Capacitor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.Capacitor.C"><code class="docutils literal notranslate"><span class="pre">Capacitor.C</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.Capacitor.connect"><code class="docutils literal notranslate"><span class="pre">Capacitor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.Capacitor.set_parameters"><code class="docutils literal notranslate"><span class="pre">Capacitor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.emt.ph1.CurrentSource"><code class="docutils literal notranslate"><span class="pre">CurrentSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.CurrentSource.I_ref"><code class="docutils literal notranslate"><span class="pre">CurrentSource.I_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.CurrentSource.connect"><code class="docutils literal notranslate"><span class="pre">CurrentSource.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.CurrentSource.f_src"><code class="docutils literal notranslate"><span class="pre">CurrentSource.f_src</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.CurrentSource.set_parameters"><code class="docutils literal notranslate"><span class="pre">CurrentSource.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.emt.ph1.Inductor"><code class="docutils literal notranslate"><span class="pre">Inductor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.Inductor.L"><code class="docutils literal notranslate"><span class="pre">Inductor.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.Inductor.connect"><code class="docutils literal notranslate"><span class="pre">Inductor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.Inductor.set_parameters"><code class="docutils literal notranslate"><span class="pre">Inductor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.emt.ph1.Resistor"><code class="docutils literal notranslate"><span class="pre">Resistor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.Resistor.R"><code class="docutils literal notranslate"><span class="pre">Resistor.R</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.Resistor.connect"><code class="docutils literal notranslate"><span class="pre">Resistor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.Resistor.set_parameters"><code class="docutils literal notranslate"><span class="pre">Resistor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.emt.ph1.VoltageSource"><code class="docutils literal notranslate"><span class="pre">VoltageSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.VoltageSource.V_ref"><code class="docutils literal notranslate"><span class="pre">VoltageSource.V_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.VoltageSource.connect"><code class="docutils literal notranslate"><span class="pre">VoltageSource.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.VoltageSource.f_src"><code class="docutils literal notranslate"><span class="pre">VoltageSource.f_src</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.emt.ph1.VoltageSource.set_parameters"><code class="docutils literal notranslate"><span class="pre">VoltageSource.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id65"><code class="docutils literal notranslate"><span class="pre">Capacitor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id66"><code class="docutils literal notranslate"><span class="pre">Capacitor.C</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id67"><code class="docutils literal notranslate"><span class="pre">Capacitor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id68"><code class="docutils literal notranslate"><span class="pre">Capacitor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id69"><code class="docutils literal notranslate"><span class="pre">CurrentSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id70"><code class="docutils literal notranslate"><span class="pre">CurrentSource.I_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id71"><code class="docutils literal notranslate"><span class="pre">CurrentSource.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id72"><code class="docutils literal notranslate"><span class="pre">CurrentSource.f_src</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id73"><code class="docutils literal notranslate"><span class="pre">CurrentSource.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id74"><code class="docutils literal notranslate"><span class="pre">Inductor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id75"><code class="docutils literal notranslate"><span class="pre">Inductor.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id76"><code class="docutils literal notranslate"><span class="pre">Inductor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id77"><code class="docutils literal notranslate"><span class="pre">Inductor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id78"><code class="docutils literal notranslate"><span class="pre">Resistor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id79"><code class="docutils literal notranslate"><span class="pre">Resistor.R</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id80"><code class="docutils literal notranslate"><span class="pre">Resistor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id81"><code class="docutils literal notranslate"><span class="pre">Resistor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id82"><code class="docutils literal notranslate"><span class="pre">VoltageSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id83"><code class="docutils literal notranslate"><span class="pre">VoltageSource.V_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id84"><code class="docutils literal notranslate"><span class="pre">VoltageSource.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id85"><code class="docutils literal notranslate"><span class="pre">VoltageSource.f_src</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id86"><code class="docutils literal notranslate"><span class="pre">VoltageSource.set_parameters()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dpsimpy.sp">(Quasi) Static / RMS Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.connect"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_controller_parameters"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_controller_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_filter_parameters"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_filter_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_initial_state_values"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_initial_state_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_parameters"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_transformer_parameters"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_transformer_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.with_control"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.with_control()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.Capacitor"><code class="docutils literal notranslate"><span class="pre">Capacitor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Capacitor.C"><code class="docutils literal notranslate"><span class="pre">Capacitor.C</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Capacitor.connect"><code class="docutils literal notranslate"><span class="pre">Capacitor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Capacitor.set_parameters"><code class="docutils literal notranslate"><span class="pre">Capacitor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.Inductor"><code class="docutils literal notranslate"><span class="pre">Inductor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Inductor.L"><code class="docutils literal notranslate"><span class="pre">Inductor.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Inductor.connect"><code class="docutils literal notranslate"><span class="pre">Inductor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Inductor.set_parameters"><code class="docutils literal notranslate"><span class="pre">Inductor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.Load"><code class="docutils literal notranslate"><span class="pre">Load</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Load.connect"><code class="docutils literal notranslate"><span class="pre">Load.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Load.modify_power_flow_bus_type"><code class="docutils literal notranslate"><span class="pre">Load.modify_power_flow_bus_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Load.set_parameters"><code class="docutils literal notranslate"><span class="pre">Load.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.NetworkInjection"><code class="docutils literal notranslate"><span class="pre">NetworkInjection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.NetworkInjection.connect"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.NetworkInjection.modify_power_flow_bus_type"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.modify_power_flow_bus_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.NetworkInjection.set_base_voltage"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.set_base_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.NetworkInjection.set_parameters"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.PiLine"><code class="docutils literal notranslate"><span class="pre">PiLine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.PiLine.connect"><code class="docutils literal notranslate"><span class="pre">PiLine.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.PiLine.set_base_voltage"><code class="docutils literal notranslate"><span class="pre">PiLine.set_base_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.PiLine.set_parameters"><code class="docutils literal notranslate"><span class="pre">PiLine.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.Resistor"><code class="docutils literal notranslate"><span class="pre">Resistor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Resistor.R"><code class="docutils literal notranslate"><span class="pre">Resistor.R</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Resistor.connect"><code class="docutils literal notranslate"><span class="pre">Resistor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Resistor.set_parameters"><code class="docutils literal notranslate"><span class="pre">Resistor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.Shunt"><code class="docutils literal notranslate"><span class="pre">Shunt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Shunt.connect"><code class="docutils literal notranslate"><span class="pre">Shunt.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Shunt.set_base_voltage"><code class="docutils literal notranslate"><span class="pre">Shunt.set_base_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Shunt.set_parameters"><code class="docutils literal notranslate"><span class="pre">Shunt.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.Switch"><code class="docutils literal notranslate"><span class="pre">Switch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Switch.close"><code class="docutils literal notranslate"><span class="pre">Switch.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Switch.connect"><code class="docutils literal notranslate"><span class="pre">Switch.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Switch.open"><code class="docutils literal notranslate"><span class="pre">Switch.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Switch.set_parameters"><code class="docutils literal notranslate"><span class="pre">Switch.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGenerator"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGenerator.connect"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGenerator.get_apparent_power"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator.get_apparent_power()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGenerator.modify_power_flow_bus_type"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator.modify_power_flow_bus_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGenerator.set_base_voltage"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator.set_base_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGenerator.set_parameters"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGeneratorTrStab"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGeneratorTrStab.connect"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGeneratorTrStab.set_initial_values"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_initial_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGeneratorTrStab.set_model_flags"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_model_flags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGeneratorTrStab.set_reference_omega"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_reference_omega()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.SynchronGeneratorTrStab.set_standard_parameters_PU"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_standard_parameters_PU()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.Transformer"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Transformer.connect"><code class="docutils literal notranslate"><span class="pre">Transformer.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Transformer.set_base_voltage"><code class="docutils literal notranslate"><span class="pre">Transformer.set_base_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.Transformer.set_parameters"><code class="docutils literal notranslate"><span class="pre">Transformer.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.VoltageSource"><code class="docutils literal notranslate"><span class="pre">VoltageSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.VoltageSource.V_ref"><code class="docutils literal notranslate"><span class="pre">VoltageSource.V_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.VoltageSource.connect"><code class="docutils literal notranslate"><span class="pre">VoltageSource.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.VoltageSource.f_src"><code class="docutils literal notranslate"><span class="pre">VoltageSource.f_src</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.VoltageSource.set_parameters"><code class="docutils literal notranslate"><span class="pre">VoltageSource.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.sp.ph1.varResSwitch"><code class="docutils literal notranslate"><span class="pre">varResSwitch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.varResSwitch.close"><code class="docutils literal notranslate"><span class="pre">varResSwitch.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.varResSwitch.connect"><code class="docutils literal notranslate"><span class="pre">varResSwitch.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.varResSwitch.open"><code class="docutils literal notranslate"><span class="pre">varResSwitch.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.varResSwitch.set_init_parameters"><code class="docutils literal notranslate"><span class="pre">varResSwitch.set_init_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpsimpy.sp.ph1.varResSwitch.set_parameters"><code class="docutils literal notranslate"><span class="pre">varResSwitch.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id87"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id88"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id89"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_controller_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id90"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_filter_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id91"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_initial_state_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id92"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id93"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.set_transformer_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id94"><code class="docutils literal notranslate"><span class="pre">AvVoltageSourceInverterDQ.with_control()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id95"><code class="docutils literal notranslate"><span class="pre">Capacitor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id96"><code class="docutils literal notranslate"><span class="pre">Capacitor.C</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id97"><code class="docutils literal notranslate"><span class="pre">Capacitor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id98"><code class="docutils literal notranslate"><span class="pre">Capacitor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id99"><code class="docutils literal notranslate"><span class="pre">Inductor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id100"><code class="docutils literal notranslate"><span class="pre">Inductor.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id101"><code class="docutils literal notranslate"><span class="pre">Inductor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id102"><code class="docutils literal notranslate"><span class="pre">Inductor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id103"><code class="docutils literal notranslate"><span class="pre">Load</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id104"><code class="docutils literal notranslate"><span class="pre">Load.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id105"><code class="docutils literal notranslate"><span class="pre">Load.modify_power_flow_bus_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id106"><code class="docutils literal notranslate"><span class="pre">Load.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id107"><code class="docutils literal notranslate"><span class="pre">NetworkInjection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id108"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id109"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.modify_power_flow_bus_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id110"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.set_base_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id111"><code class="docutils literal notranslate"><span class="pre">NetworkInjection.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id112"><code class="docutils literal notranslate"><span class="pre">PiLine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id113"><code class="docutils literal notranslate"><span class="pre">PiLine.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id114"><code class="docutils literal notranslate"><span class="pre">PiLine.set_base_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id115"><code class="docutils literal notranslate"><span class="pre">PiLine.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id116"><code class="docutils literal notranslate"><span class="pre">Resistor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id117"><code class="docutils literal notranslate"><span class="pre">Resistor.R</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id118"><code class="docutils literal notranslate"><span class="pre">Resistor.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id119"><code class="docutils literal notranslate"><span class="pre">Resistor.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id120"><code class="docutils literal notranslate"><span class="pre">Shunt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id121"><code class="docutils literal notranslate"><span class="pre">Shunt.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id122"><code class="docutils literal notranslate"><span class="pre">Shunt.set_base_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id123"><code class="docutils literal notranslate"><span class="pre">Shunt.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id124"><code class="docutils literal notranslate"><span class="pre">Switch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id125"><code class="docutils literal notranslate"><span class="pre">Switch.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id126"><code class="docutils literal notranslate"><span class="pre">Switch.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id127"><code class="docutils literal notranslate"><span class="pre">Switch.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id128"><code class="docutils literal notranslate"><span class="pre">Switch.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id129"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id130"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id131"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator.get_apparent_power()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id132"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator.modify_power_flow_bus_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id133"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator.set_base_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id134"><code class="docutils literal notranslate"><span class="pre">SynchronGenerator.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id135"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id136"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id137"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_initial_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id138"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_model_flags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id139"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_reference_omega()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id140"><code class="docutils literal notranslate"><span class="pre">SynchronGeneratorTrStab.set_standard_parameters_PU()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id141"><code class="docutils literal notranslate"><span class="pre">Transformer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id142"><code class="docutils literal notranslate"><span class="pre">Transformer.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id143"><code class="docutils literal notranslate"><span class="pre">Transformer.set_base_voltage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id144"><code class="docutils literal notranslate"><span class="pre">Transformer.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id145"><code class="docutils literal notranslate"><span class="pre">VoltageSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id146"><code class="docutils literal notranslate"><span class="pre">VoltageSource.V_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id147"><code class="docutils literal notranslate"><span class="pre">VoltageSource.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id148"><code class="docutils literal notranslate"><span class="pre">VoltageSource.f_src</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id149"><code class="docutils literal notranslate"><span class="pre">VoltageSource.set_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id150"><code class="docutils literal notranslate"><span class="pre">varResSwitch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id151"><code class="docutils literal notranslate"><span class="pre">varResSwitch.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id152"><code class="docutils literal notranslate"><span class="pre">varResSwitch.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id153"><code class="docutils literal notranslate"><span class="pre">varResSwitch.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id154"><code class="docutils literal notranslate"><span class="pre">varResSwitch.set_init_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id155"><code class="docutils literal notranslate"><span class="pre">varResSwitch.set_parameters()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -61,8 +779,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="about.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Reference</li>
+      <li><a href="about.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Reference</li>
       <li class="wy-breadcrumbs-aside">
             <a href="https://github.com/sogno-platform/dpsim/docs/Reference.rst">View page source</a>
       </li>
@@ -81,6 +799,7 @@
 <p>The Python bindings provide access to most of the DPsim features implemented in C++.
 It is possible to run powerflow, quasi-static, dynamic phasor and electromagnetic transient simulations
 and to parameterize all components of the network from Python.</p>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="dpsimpy.Attribute">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">Attribute</span></span><a class="headerlink" href="#dpsimpy.Attribute" title="Permalink to this definition"></a></dt>
@@ -1098,7 +1817,6 @@ and to parameterize all components of the network from Python.</p>
 
 </dd></dl>
 
-</section>
 <section id="module-dpsimpy.dp">
 <span id="dynamic-phasor-sfa-models"></span><h2>Dynamic Phasor / SFA Models<a class="headerlink" href="#module-dpsimpy.dp" title="Permalink to this heading"></a></h2>
 <p>dynamic phasor models</p>
