@@ -15,17 +15,17 @@ using namespace CPS;
 
 EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(String uid, String name, Logger::Level logLevel)
 : Base::Ph1::VoltageSource(mAttributes), SimPowerComp<Real>(uid, name, logLevel),
-	mVcabc(Attribute<Matrix>::create("V_cabc", mAttributes, Matrix::Zero(3, 1))),
-	mP(Attribute<Real>::create("p", mAttributes)),
-	mQ(Attribute<Real>::create("q", mAttributes)),
 	mPref(Attribute<Real>::create("P_ref", mAttributes)),
 	mQref(Attribute<Real>::create("Q_ref", mAttributes)),
 	mThetaPLL(Attribute<Real>::create("theta", mAttributes)),
 	mPhiPLL(Attribute<Real>::create("phipll", mAttributes)),
+	mP(Attribute<Real>::create("p", mAttributes)),
+	mQ(Attribute<Real>::create("q", mAttributes)),
 	mPhi_d(Attribute<Real>::create("phid", mAttributes)),
 	mPhi_q(Attribute<Real>::create("phiq", mAttributes)),
 	mGamma_d(Attribute<Real>::create("gammad", mAttributes)),
-	mGamma_q(Attribute<Real>::create("gammaq", mAttributes)) {
+	mGamma_q(Attribute<Real>::create("gammaq", mAttributes)),
+	mVcabc(Attribute<Matrix>::create("V_cabc", mAttributes, Matrix::Zero(3, 1))) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);

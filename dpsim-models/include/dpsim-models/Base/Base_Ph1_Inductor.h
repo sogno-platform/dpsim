@@ -18,7 +18,7 @@ namespace Ph1 {
 		/// Inductance [H]
 		const CPS::Attribute<Real>::Ptr mInductance;
 
-		Inductor(CPS::AttributeBase::Map &attributeList) :
+		explicit Inductor(CPS::AttributeBase::Map &attributeList) :
 			mInductance(CPS::Attribute<Real>::create("L", attributeList)) { };
 
 		/// Sets model specific parameters
