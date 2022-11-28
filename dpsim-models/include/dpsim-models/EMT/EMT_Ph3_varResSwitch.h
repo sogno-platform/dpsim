@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <cps/SimPowerComp.h>
-#include <cps/Solver/MNAVariableCompInterface.h>
-#include <cps/Solver/MNASwitchInterface.h>
-#include <cps/Definitions.h>
-#include <cps/Logger.h>
-#include <cps/Base/Base_Ph3_Switch.h>
+#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/Solver/MNAVariableCompInterface.h>
+#include <dpsim-models/Solver/MNASwitchInterface.h>
+#include <dpsim-models/Definitions.h>
+#include <dpsim-models/Logger.h>
+#include <dpsim-models/Base/Base_Ph3_Switch.h>
 
 namespace CPS {
 namespace EMT {
@@ -91,7 +91,7 @@ namespace Ph3 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(varResSwitch& varresswitch, Attribute<Matrix>::Ptr leftVector) :
-				Task(varresswitch.mName + ".MnaPostStep"), mvarResSwitch(varresswitch), mLeftVector(leftVector) {
+				Task(**varresswitch.mName + ".MnaPostStep"), mvarResSwitch(varresswitch), mLeftVector(leftVector) {
 				mvarResSwitch.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mvarResSwitch.mnaPostStep(time, timeStepCount, mLeftVector); };

@@ -38,7 +38,7 @@ namespace Ph3 {
 		void openSwitch() { **mSwitchClosed = false; }
 		
 		/// Check if switch is closed
-		Bool isClosed() { return mSwitchClosed; }
+		Bool isClosed() { return **mSwitchClosed; }
 	};
 }
 }

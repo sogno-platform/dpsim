@@ -115,6 +115,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 #include <dpsim-models/EMT/EMT_Ph3_NetworkInjection.h>
 #include <dpsim-models/EMT/EMT_Ph3_Switch.h>
+#include <dpsim-models/EMT/EMT_Ph3_varResSwitch.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorTrStab.h>
 
 #include <dpsim-models/Signal/DecouplingLine.h>

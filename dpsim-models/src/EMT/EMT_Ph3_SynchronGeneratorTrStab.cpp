@@ -54,8 +54,7 @@ EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String na
 	mElecActivePower = Attribute<Real>::create("P_elec", mAttributes, 0);
 	mMechPower = Attribute<Real>::create("P_mech", mAttributes, 0);
 	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
-	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);	addAttribute<Real>("w_ref", Flags::read | Flags::write);
-	addAttribute<Real>("delta_ref", Flags::read | Flags::write);
+	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
 
 	mStates = Matrix::Zero(10,1);
 }
@@ -97,7 +96,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower
 				"\nimpedance: {:f}"
 				"\ninductance: {:f}"				
 				"\ninertia: {:f}"
-				"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+				"\ndamping: {:f}", mXpd, mLpd, **mInertia, mKd);
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
@@ -122,7 +121,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, R
 			"\nimpedance: {:f}"
 			"\ninductance: {:f}"
 			"\ninertia: {:f}"
-			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+			"\ndamping: {:f}", mXpd, mLpd, **mInertia, mKd);
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd,
@@ -152,7 +151,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, R
 			"\nimpedance: {:f}"
 			"\ninductance: {:f}"
 			"\ninertia: {:f}"
-			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+			"\ndamping: {:f}", mXpd, mLpd, **mInertia, mKd);
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech) {
@@ -198,7 +197,6 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 
 	mImpedance = Complex(**mRs, mXpd);
 
-	mImpedance = Complex(mRs, mXpd);
 	// Calculate initial emf behind reactance from power flow results
 	**mEp = intfVoltageComplex(0, 0) - mImpedance * intfCurrentComplex(0, 0);
 
@@ -208,7 +206,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	**mDelta_p= Math::phase(**mEp);
 
 	// without DQ transformation
-	mElecActivePower = 3./2. *( intfVoltageComplex(0, 0) *  std::conj( -intfCurrentComplex(0, 0)) ).real();
+	**mElecActivePower = 3./2. *( intfVoltageComplex(0, 0) *  std::conj( -intfCurrentComplex(0, 0)) ).real();
 
 	// // Transform interface quantities to synchronously rotating DQ reference frame
 	// Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, mIntfVoltage);
@@ -226,7 +224,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH* **mEp);
 
 	MatrixComp vref = MatrixComp::Zero(3,1);
-	vref= CPS::Math::singlePhaseVariableToThreePhase(PEAK1PH_TO_RMS3PH*mEp);
+	vref= CPS::Math::singlePhaseVariableToThreePhase(PEAK1PH_TO_RMS3PH* **mEp);
 
 	// Create sub voltage source for emf
 	mSubVoltageSource = EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
@@ -264,14 +262,14 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
 	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
 	// Update electrical power (minus sign to calculate generated power from consumed current)
-	mElecActivePower =  -3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k= 2. / 3.
+	**mElecActivePower =  -3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k= 2. / 3.
 	// mElecActivePower =  -1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k=sqrt(2. / 3.)
 	
 	// Mechanical speed derivative at time step k
 	// convert torque to power with actual rotor angular velocity or nominal omega
 	Real dOmMech;
 	if (mConvertWithOmegaMech)
-		dOmMech = mNomOmega*mNomOmega / (2.*mInertia * mNomPower*mOmMech) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
+		dOmMech = mNomOmega*mNomOmega / (2.* **mInertia * mNomPower * **mOmMech) * (**mMechPower - **mElecActivePower - mKd*(**mOmMech - mNomOmega));
 	else
 		dOmMech = mNomOmega / (2. * **mInertia * mNomPower) * (**mMechPower - **mElecActivePower - mKd*(**mOmMech - mNomOmega));
 
@@ -303,7 +301,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 
 	// Update nominal system angle
 	// mThetaN = mThetaN + mTimeStep * mNomOmega;
-	mThetaN = mThetaN + mTimeStep * mOmMech;
+	mThetaN = mThetaN + mTimeStep * **mOmMech;
 
 	// mStates << Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,
 	// 	mDelta_p, mOmMech, dOmMech, dDelta_p, (**mIntfVoltage)(0,0).real(), (**mIntfVoltage)(0,0).imag();
@@ -360,8 +358,8 @@ void EMT::Ph3::SynchronGeneratorTrStab::mnaCompUpdateCurrent(const Matrix& leftV
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setReferenceOmega(Attribute<Real>::Ptr refOmegaPtr, Attribute<Real>::Ptr refDeltaPtr) {
-	setAttributeRef("w_ref", refOmegaPtr);
-	setAttributeRef("delta_ref", refDeltaPtr);
+	mRefOmega->setReference(refOmegaPtr);
+	mRefDelta->setReference(refDeltaPtr);
 	mUseOmegaRef=true;
 
 	mSLog->info("Use of reference omega.");
