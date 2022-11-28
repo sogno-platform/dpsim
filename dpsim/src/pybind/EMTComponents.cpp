@@ -121,7 +121,21 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 		.def("open", &CPS::EMT::Ph3::Switch::openSwitch)
 		.def("close", &CPS::EMT::Ph3::Switch::closeSwitch)
 		.def("connect", &CPS::EMT::Ph3::Switch::connect);
-
+	
+	py::class_<CPS::EMT::Ph3::SynchronGeneratorTrStab, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorTrStab>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorTrStab", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def("set_standard_parameters_PU", &CPS::EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU,
+				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Xpd"_a, "inertia"_a, "Rs"_a=0, "D"_a=0)
+		.def("set_fundamental_parameters_PU", &CPS::EMT::Ph3::SynchronGeneratorTrStab::setFundamentalParametersPU,
+				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Ll"_a, "Lmd"_a, "Llfd"_a, "H"_a, "D"_a = 0)
+		.def("set_initial_values", &CPS::EMT::Ph3::SynchronGeneratorTrStab::setInitialValues, "elec_power"_a, "mech_power"_a)
+		.def("connect", &CPS::EMT::Ph3::SynchronGeneratorTrStab::connect)
+		.def("set_model_flags", &CPS::EMT::Ph3::SynchronGeneratorTrStab::setModelFlags, "use_omega_ref"_a, "convert_with_omega_mech"_a)
+		.def("set_reference_omega", [](CPS::EMT::Ph3::SynchronGeneratorTrStab &gen, std::string refOmegaName, CPS::IdentifiedObject::Ptr refOmegaComp,
+			std::string refDeltaName, CPS::IdentifiedObject::Ptr refDeltaComp) {
+				gen.setReferenceOmega(refOmegaComp->attribute<CPS::Real>(refOmegaName), refDeltaComp->attribute<CPS::Real>(refDeltaName));
+			}, "ref_omega_name"_a="w_r", "ref_omage_comp"_a, "ref_delta_name"_a="delta_r", "ref_delta_comp"_a);
+	
 	py::class_<CPS::EMT::Ph3::SynchronGeneratorDQTrapez, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQTrapez", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters_operational_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setParametersOperationalPerUnit,
