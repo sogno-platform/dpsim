@@ -17,8 +17,8 @@ namespace CPS {
 			/// \brief Voltage source with Norton equivalent model
 			class VoltageSourceNorton :
 				public MNAInterface,
-				public SimPowerComp<Real>,
 				public Base::Ph1::VoltageSource,
+				public SimPowerComp<Real>,
 				public SharedFactory<VoltageSourceNorton> {
 			protected:
 				void updateState(Real time);

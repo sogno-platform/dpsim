@@ -29,7 +29,7 @@ namespace Ph1 {
 		/// Inductance [H]
 		const Attribute<Real>::Ptr mInductance;
 
-		Transformer(CPS::AttributeBase::Map &attributeList) :
+		explicit Transformer(CPS::AttributeBase::Map &attributeList) :
 			mNominalVoltageEnd1(Attribute<Real>::create("nominal_voltage_end1", attributeList)),
 			mNominalVoltageEnd2(Attribute<Real>::create("nominal_voltage_end2", attributeList)),
 			mRatedPower(Attribute<Real>::create("S", attributeList)),
