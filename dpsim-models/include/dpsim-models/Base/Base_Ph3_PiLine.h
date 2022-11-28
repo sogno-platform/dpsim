@@ -26,7 +26,7 @@ namespace Ph3 {
 		/// Conductance in parallel to the line [S]
 		const Attribute<Matrix>::Ptr mParallelCond;
 
-		PiLine(CPS::AttributeBase::Map &attributeList) :
+		explicit PiLine(CPS::AttributeBase::Map &attributeList) :
 			mSeriesRes(Attribute<Matrix>::create("R_series", attributeList)),
 			mSeriesInd(Attribute<Matrix>::create("L_series", attributeList)),
 			mParallelCap(Attribute<Matrix>::create("C_parallel", attributeList)),
@@ -34,7 +34,7 @@ namespace Ph3 {
 
 		///
 		void setParameters(Matrix seriesResistance, Matrix seriesInductance,
-			Matrix parallelCapacitance = Matrix::Zero(3,3), Matrix parallelConductance = Matrix::Zero(3,3)) {
+			Matrix parallelCapacitance = Matrix::Zero(3,3), Matrix parallelConductance = Matrix::Zero(3,3)) const {
 			**mSeriesRes = seriesResistance;
 			**mSeriesInd = seriesInductance;
 			**mParallelCond = parallelConductance;

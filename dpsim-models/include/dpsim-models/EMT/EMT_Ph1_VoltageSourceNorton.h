@@ -17,9 +17,9 @@ namespace EMT {
 namespace Ph1 {
 	/// Voltage source as Norton equivalent
 	class VoltageSourceNorton :
+		public Base::Ph1::VoltageSource,
 		public SimPowerComp<Real>,
 		public MNAInterface,
-		public Base::Ph1::VoltageSource,
 		public SharedFactory<VoltageSourceNorton> {
 	protected:
 		void updateState(Real time);

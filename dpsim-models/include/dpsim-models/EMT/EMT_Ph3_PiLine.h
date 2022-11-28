@@ -23,9 +23,9 @@ namespace Ph3 {
 	/// This model consists sub components to represent the
 	/// RLC elements of a PI-line.
 	class PiLine :
+		public Base::Ph3::PiLine,
 		public SimPowerComp<Real>,
 		public MNAInterface,
-		public Base::Ph3::PiLine,
 		public SharedFactory<PiLine> {
 	protected:
 		/// Series Inductance submodel

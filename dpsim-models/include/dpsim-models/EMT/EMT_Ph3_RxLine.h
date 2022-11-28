@@ -19,9 +19,9 @@ namespace EMT {
 namespace Ph3 {
 
 	class RxLine :
+		public Base::Ph3::PiLine,
 		public SimPowerComp<Real>,
 		public MNAInterface,
-		public Base::Ph3::PiLine,
 		public SharedFactory<RxLine> {
 	protected:
 		/// Inductance submodel

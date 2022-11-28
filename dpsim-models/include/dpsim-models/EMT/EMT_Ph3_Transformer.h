@@ -20,10 +20,10 @@ namespace CPS {
 		namespace Ph3 {
 			/// Transformer that includes an inductance and resistance
 			class Transformer :
+				public Base::Ph3::Transformer,
 				public SimPowerComp<Real>,
 				public MNAInterface,
-				public SharedFactory<Transformer>,
-				public Base::Ph3::Transformer {
+				public SharedFactory<Transformer> {
 			private:
 				/// Internal resistor to model losses
 				std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;

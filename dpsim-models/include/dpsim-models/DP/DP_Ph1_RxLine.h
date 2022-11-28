@@ -19,9 +19,9 @@ namespace DP {
 namespace Ph1 {
 
 	class RxLine :
+		public Base::Ph1::PiLine,
 		public SimPowerComp<Complex>,
 		public MNAInterface,
-		public Base::Ph1::PiLine,
 		public SharedFactory<RxLine> {
 	protected:
 		/// Inductance submodel

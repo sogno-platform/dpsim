@@ -268,7 +268,7 @@ namespace Base {
 		Real mInitVoltAngle = 0;
 
 		/// Constructor
-		SynchronGenerator(CPS::AttributeBase::Map &attributeList) :
+		explicit SynchronGenerator(CPS::AttributeBase::Map &attributeList) :
 			mRs(Attribute<Real>::create("Rs", attributeList, 0)),
 			mLl(Attribute<Real>::create("Ll", attributeList, 0)),
 			mLd(Attribute<Real>::create("Ld", attributeList, 0)),

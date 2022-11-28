@@ -21,11 +21,11 @@ namespace SP {
 namespace Ph1 {
 	/// Transformer that includes an inductance and resistance
 	class Transformer :
+		public Base::Ph1::Transformer,
 		public SimPowerComp<Complex>,
 		public SharedFactory<Transformer>,
 		public PFSolverInterfaceBranch,
-		public MNAInterface,
-		public Base::Ph1::Transformer {
+		public MNAInterface {
 
 	private:
 		/// Internal resistor to model losses

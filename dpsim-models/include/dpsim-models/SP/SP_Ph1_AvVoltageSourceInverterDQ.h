@@ -100,7 +100,7 @@ namespace Ph1 {
 		const Attribute<Matrix>::Ptr mPowerctrlInputs;
 		const Attribute<Matrix>::Ptr mPowerctrlStates;
 		const Attribute<Matrix>::Ptr mPowerctrlOutputs;
-		
+
 		/// Defines name amd logging level
 		AvVoltageSourceInverterDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: AvVoltageSourceInverterDQ(name, name, logLevel) {}
@@ -150,9 +150,9 @@ namespace Ph1 {
 		/// Perform step of controller
 		void controlStep(Real time, Int timeStepCount);
 		/// Add control step dependencies
-		void addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) const;
 		/// Add control step dependencies
-		void addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) const;
 
 		class ControlPreStep : public CPS::Task {
 		public:

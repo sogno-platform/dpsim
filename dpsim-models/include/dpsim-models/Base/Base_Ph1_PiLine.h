@@ -26,7 +26,7 @@ namespace Ph1 {
 		/// Conductance in parallel to the line [S]
 		const Attribute<Real>::Ptr mParallelCond;
 
-		PiLine(CPS::AttributeBase::Map &attributeList) :
+		explicit PiLine(CPS::AttributeBase::Map &attributeList) :
 			mSeriesRes(Attribute<Real>::create("R_series", attributeList)),
 			mSeriesInd(Attribute<Real>::create("L_series", attributeList)),
 			mParallelCap(Attribute<Real>::create("C_parallel", attributeList)),
@@ -34,7 +34,7 @@ namespace Ph1 {
 
 		///
 		void setParameters(Real seriesResistance, Real seriesInductance,
-			Real parallelCapacitance = 0, Real parallelConductance = 0) {
+			Real parallelCapacitance = 0, Real parallelConductance = 0) const {
 			**mSeriesRes = seriesResistance;
 			**mSeriesInd = seriesInductance;
 			**mParallelCond = parallelConductance;

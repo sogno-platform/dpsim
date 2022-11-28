@@ -36,7 +36,7 @@ namespace CPS {
 		IdentifiedObject(String name) :
 			IdentifiedObject(name, name) { }
 
-		AttributeBase::Ptr attribute(const String &name) {
+		AttributeBase::Ptr attribute(const String &name) override {
 			return AttributeList::attribute(name);
 		}
 

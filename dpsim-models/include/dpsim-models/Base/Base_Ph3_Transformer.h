@@ -31,7 +31,7 @@ namespace Ph3 {
 		///Transformer ratio
 		const Attribute<Complex>::Ptr mRatio;
 
-		Transformer(CPS::AttributeBase::Map &attributeList) :
+		explicit Transformer(CPS::AttributeBase::Map &attributeList) :
 			mRatio(Attribute<Complex>::create("ratio", attributeList)) { };
 
 		///

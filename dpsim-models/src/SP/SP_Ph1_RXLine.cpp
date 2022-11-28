@@ -13,14 +13,16 @@ using namespace CPS;
 SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	Real resistance, Real inductance,
 	Logger::Level logLevel)
-	: Base::Ph1::PiLine(mAttributes), SimPowerComp<Complex>(uid, name, logLevel),
-	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes, baseVoltage)),
-	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
-	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
-	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
-	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
-	mInductance(Attribute<Real>::create("L_series", mAttributes))  {
+	: 	Base::Ph1::PiLine(mAttributes),
+		SimPowerComp<Complex>(uid, name, logLevel),
+		mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes, baseVoltage)),
+		mInductance(Attribute<Real>::create("L_series", mAttributes)),
+		mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
+		mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
+		mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
+		mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
+		mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)) {
+
 
 	setTerminalNumber(2);
 
@@ -36,14 +38,15 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 }
 
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::PiLine(mAttributes), SimPowerComp<Complex>(uid, name, logLevel),
-	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
-	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
-	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
-	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
-	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
-	mInductance(Attribute<Real>::create("L_series", mAttributes))  {
+	: 	Base::Ph1::PiLine(mAttributes),
+		SimPowerComp<Complex>(uid, name, logLevel),
+		mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
+		mInductance(Attribute<Real>::create("L_series", mAttributes)),
+		mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
+		mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
+		mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
+		mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
+		mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)) {
 
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);

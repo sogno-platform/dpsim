@@ -19,7 +19,7 @@ namespace Ph3 {
 		/// Capacitance [F]
 		const CPS::Attribute<Matrix>::Ptr mCapacitance;
 
-		Capacitor(CPS::AttributeBase::Map &attributeList) :
+		explicit Capacitor(CPS::AttributeBase::Map &attributeList) :
 			mCapacitance(CPS::Attribute<Matrix>::create("C", attributeList)) { };
 
 		/// Sets model specific parameters
