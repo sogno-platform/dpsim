@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::PiLine(mAttributes), SimPowerComp<Complex>(uid, name, logLevel),
+	: Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(uid, name, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
@@ -166,14 +166,14 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSeriesResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubSeriesResistor->initialize(mFrequencies);
 	mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
-	mSubComponents.push_back(mSubSeriesResistor);
+	addMNASubComponent(mSubSeriesResistor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 
 	mSubSeriesInductor = std::make_shared<SP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 	mSubSeriesInductor->setParameters(**mSeriesInd);
 	mSubSeriesInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubSeriesInductor->initialize(mFrequencies);
 	mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
-	mSubComponents.push_back(mSubSeriesInductor);
+	addMNASubComponent(mSubSeriesInductor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 
 	// Create parallel sub components
 	if (**mParallelCond >= 0) {
@@ -182,14 +182,14 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelResistor0->initialize(mFrequencies);
 		mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
-		mSubComponents.push_back(mSubParallelResistor0);
+		addMNASubComponent(mSubParallelResistor0, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 
 		mSubParallelResistor1 = std::make_shared<SP::Ph1::Resistor>(**mName + "_con1", mLogLevel);
 		mSubParallelResistor1->setParameters(2. / **mParallelCond);
 		mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelResistor1->initialize(mFrequencies);
 		mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
-		mSubComponents.push_back(mSubParallelResistor1);
+		addMNASubComponent(mSubParallelResistor1, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 	}
 
 	if (**mParallelCap >= 0) {
@@ -198,14 +198,14 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelCapacitor0->initialize(mFrequencies);
 		mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
-		mSubComponents.push_back(mSubParallelCapacitor0);
+		addMNASubComponent(mSubParallelCapacitor0, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 
 		mSubParallelCapacitor1 = std::make_shared<SP::Ph1::Capacitor>(**mName + "_cap1", mLogLevel);
 		mSubParallelCapacitor1->setParameters(**mParallelCap / 2.);
 		mSubParallelCapacitor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelCapacitor1->initialize(mFrequencies);
 		mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
-		mSubComponents.push_back(mSubParallelCapacitor1);
+		addMNASubComponent(mSubParallelCapacitor1, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 	}
 
 	mSLog->info(
@@ -223,14 +223,9 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
 }
 
-void SP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void SP::Ph1::PiLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
-	}
 
 	mRightVectorStamps.push_back(&**mSubSeriesInductor->mRightVector);
 
@@ -243,39 +238,19 @@ void SP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void SP::Ph1::PiLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
-	}
-}
-
 void SP::Ph1::PiLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	rightVector.setZero();
 	for (auto stamp : mRightVectorStamps)
 		rightVector += *stamp;
 }
 
-void SP::Ph1::PiLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
-	// add post-step dependencies of subcomponents
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	}
-	// add post-step dependencies of component itself
+void SP::Ph1::PiLine::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void SP::Ph1::PiLine::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	// post-step of subcomponents
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
-	}
-
-	// post-step of component itself
+void SP::Ph1::PiLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	this->mnaUpdateVoltage(**leftVector);
 	this->mnaUpdateCurrent(**leftVector);
 }

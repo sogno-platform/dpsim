@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: CompositePowerComp<Complex>(uid, name, logLevel),
     mPref(Attribute<Real>::create("P_ref", mAttributes, std::numeric_limits<double>::infinity())),
     mQ1ref(Attribute<Real>::create("Q1_ref", mAttributes)),
     mQ2ref(Attribute<Real>::create("Q2_ref", mAttributes)) {
@@ -53,8 +53,8 @@ void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(Real freque
     mSubLoadSide1->connect({mTerminals[0]->node()});
     mSubLoadSide2->connect({mTerminals[1]->node()});
 
-	mSubComponents.push_back(mSubLoadSide1);
-	mSubComponents.push_back(mSubLoadSide2);
+	addMNASubComponent(mSubLoadSide1, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::NO_TASK);
+	addMNASubComponent(mSubLoadSide2, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::NO_TASK);
 
     mSLog->info(
 		"\n--- Initialization from powerflow ---"

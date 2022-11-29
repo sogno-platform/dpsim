@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 
@@ -16,8 +16,7 @@ namespace CPS {
 namespace DP {
 namespace Ph1 {
 	class VoltageSourceRamp :
-		public SimPowerComp<Complex>,
-		public MNAInterface,
+		public CompositePowerComp<Complex>,
 		public SharedFactory<VoltageSourceRamp> {
 	protected:
 
@@ -57,22 +56,8 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(VoltageSourceRamp& voltageSource) :
-				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			VoltageSourceRamp& mVoltageSource;
-		};
+		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
 	};
 }
 }

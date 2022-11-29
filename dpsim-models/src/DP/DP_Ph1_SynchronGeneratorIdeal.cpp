@@ -13,7 +13,7 @@ using namespace CPS;
 
 DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
 	Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: CompositePowerComp<Complex>(uid, name, logLevel),
 	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
@@ -36,7 +36,7 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequ
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubVoltageSource->initialize(mFrequencies);
 	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
-	mSubComponents.push_back(mSubVoltageSource);
+	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -49,15 +49,9 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequ
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void DP::Ph1::SynchronGeneratorIdeal::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-
-	// initialize subcomponent
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
-	}
 
 	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -66,48 +60,23 @@ void DP::Ph1::SynchronGeneratorIdeal::mnaInitialize(Real omega, Real timeStep, A
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	// add pre-step dependencies of subcomponents
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	}
-
-	// add pre-step dependencies of component itself
+void DP::Ph1::SynchronGeneratorIdeal::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	prevStepDependencies.push_back(mIntfCurrent);
 	prevStepDependencies.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mRightVector);
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::mnaPreStep(Real time, Int timeStepCount) {
-	// pre-step of subcomponents
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaPreStep(time, timeStepCount);
-	}
-	// pre-step of component itself
+void DP::Ph1::SynchronGeneratorIdeal::mnaParentPreStep(Real time, Int timeStepCount) {
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
-	// add post-step dependencies of subcomponents
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	}
-	// add post-step dependencies of component itself
+void DP::Ph1::SynchronGeneratorIdeal::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	// post-step of subcomponents
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
-	}
-	// post-step of component itself
+void DP::Ph1::SynchronGeneratorIdeal::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	mnaUpdateCurrent(**leftVector);
 	mnaUpdateVoltage(**leftVector);
 }
@@ -118,18 +87,4 @@ void DP::Ph1::SynchronGeneratorIdeal::mnaUpdateCurrent(const Matrix& leftvector)
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaUpdateVoltage(const Matrix& leftVector) {
 	**mIntfVoltage = **mSubComponents[0]->mIntfVoltage;
-}
-
-void DP::Ph1::SynchronGeneratorIdeal::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
-	}
-}
-
-void DP::Ph1::SynchronGeneratorIdeal::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaApplyRightSideVectorStamp(rightVector);
-	}
 }
