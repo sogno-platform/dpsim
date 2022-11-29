@@ -12,7 +12,7 @@ using namespace CPS;
 
 DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name,
 	Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel),
+	: CompositePowerComp<Complex>(uid, name, logLevel),
 	mActivePower(Attribute<Real>::create("P", mAttributes, 0)),
 	mReactivePower(Attribute<Real>::create("Q", mAttributes, 0)),
 	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {

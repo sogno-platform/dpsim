@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
-#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 
 using namespace CPS;
 
 template <typename VarType>
-void MNASimPowerComp<VarType>::addMNASubComponent(typename SimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder) {
+void CompositePowerComp<VarType>::addMNASubComponent(typename SimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder) {
 	this->mSubComponents.push_back(subc);
 	if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subc)) {
 		this->mSubcomponentsMNA.push_back(mnasubcomp);
@@ -35,7 +35,7 @@ void MNASimPowerComp<VarType>::addMNASubComponent(typename SimPowerComp<VarType>
 }
 
 // template <typename VarType>
-// void MNASimPowerComp<VarType>::addMNASubComponent(typename MNASimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder) {
+// void CompositePowerComp<VarType>::addMNASubComponent(typename CompositePowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder) {
 // 	this->mSubComponents.push_back(subc);
 // 	this->mSubcomponentsMNA.push_back(subc);
 // 	switch (preStepOrder) {
@@ -63,7 +63,7 @@ void MNASimPowerComp<VarType>::addMNASubComponent(typename SimPowerComp<VarType>
 // }
 
 template <typename VarType>
-void MNASimPowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void CompositePowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	if (this->hasSubComponents()) {
 		for (auto subComp : mSubcomponentsMNA) {
 			subComp->mnaInitialize(omega, timeStep, leftVector);
@@ -73,7 +73,7 @@ void MNASimPowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attribut
 }
 
 template <typename VarType>
-void MNASimPowerComp<VarType>::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void CompositePowerComp<VarType>::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (this->hasSubComponents()) {
 		for (auto subComp : mSubcomponentsMNA) {
 			subComp->mnaApplySystemMatrixStamp(systemMatrix);
@@ -83,7 +83,7 @@ void MNASimPowerComp<VarType>::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 template <typename VarType>
-void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void CompositePowerComp<VarType>::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (this->hasSubComponents()) {
 		for (auto subComp : mSubcomponentsMNA) {
 			subComp->mnaApplyRightSideVectorStamp(rightVector);
@@ -93,7 +93,7 @@ void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStamp(Matrix& rightVector)
 }
 
 template <typename VarType>
-void MNASimPowerComp<VarType>::mnaPreStep(Real time, Int timeStepCount) {
+void CompositePowerComp<VarType>::mnaPreStep(Real time, Int timeStepCount) {
 	if (this->hasSubComponents()) {
 		for (auto subComp : mSubcomponentsBeforePreStep) {
 			subComp->mnaPreStep(time, timeStepCount);
@@ -106,7 +106,7 @@ void MNASimPowerComp<VarType>::mnaPreStep(Real time, Int timeStepCount) {
 }
 
 template <typename VarType>
-void MNASimPowerComp<VarType>::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+void CompositePowerComp<VarType>::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	if (this->hasSubComponents()) {
 		for (auto subComp : mSubcomponentsBeforePostStep) {
 			subComp->mnaPostStep(time, timeStepCount, leftVector);
@@ -119,7 +119,7 @@ void MNASimPowerComp<VarType>::mnaPostStep(Real time, Int timeStepCount, Attribu
 }
 
 template <typename VarType>
-void MNASimPowerComp<VarType>::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void CompositePowerComp<VarType>::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	if (this->hasSubComponents()) {
 		for (auto subComp : mSubcomponentsMNA) {
 			subComp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
@@ -129,7 +129,7 @@ void MNASimPowerComp<VarType>::mnaAddPreStepDependencies(AttributeBase::List &pr
 }
 
 template <typename VarType>
-void MNASimPowerComp<VarType>::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void CompositePowerComp<VarType>::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	if (this->hasSubComponents()) {
 		for (auto subComp : mSubcomponentsMNA) {
 			subComp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
@@ -139,5 +139,5 @@ void MNASimPowerComp<VarType>::mnaAddPostStepDependencies(AttributeBase::List &p
 }
 
 // Declare specializations to move definitions to .cpp
-template class CPS::MNASimPowerComp<Real>;
-template class CPS::MNASimPowerComp<Complex>;
+template class CPS::CompositePowerComp<Real>;
+template class CPS::CompositePowerComp<Complex>;
