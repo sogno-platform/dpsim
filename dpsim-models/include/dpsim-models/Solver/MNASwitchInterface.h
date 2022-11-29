@@ -10,11 +10,10 @@
 
 #include <dpsim-models/Config.h>
 #include <dpsim-models/Definitions.h>
-#include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
 	/// \brief MNA interface to be used by switching devices.
-	class MNASwitchInterface : public MNAInterface {
+	class MNASwitchInterface {
 	public:
 		typedef std::shared_ptr<MNASwitchInterface> Ptr;
 		typedef std::vector<Ptr> List;

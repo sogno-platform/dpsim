@@ -16,7 +16,7 @@ namespace DP {
 namespace Ph1 {
 	/// Constant impedance load model consisting of RLC elements
 	class RXLoadSwitch :
-		public SimPowerComp<Complex>,
+		public CompositePowerComp<Complex>,
 		public MNASwitchInterface,
 		public SharedFactory<RXLoadSwitch> {
 	protected:

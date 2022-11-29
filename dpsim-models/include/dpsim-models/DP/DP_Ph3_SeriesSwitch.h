@@ -10,6 +10,7 @@
 
 #include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
+#include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/Base/Base_Ph1_Switch.h>
@@ -27,7 +28,8 @@ namespace Ph3 {
 		public Base::Ph1::Switch,
 		public SimPowerComp<Complex>,
 		public SharedFactory<SeriesSwitch>,
-		public MNASwitchInterface {
+		public MNASwitchInterface,
+		public MNAInterface {
 	protected:
 	public:
 		/// Defines UID, name and logging level
