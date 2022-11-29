@@ -65,7 +65,7 @@ namespace Ph1 {
 		/// Updates internal voltage variable of the component
 		void mnaUpdateVoltage(const Matrix& leftVector);
 		/// MNA pre and post step operations
-		void mnaParentPreStep(Real time, Int timeStepCount)  override;
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// add MNA pre and post step dependencies
 		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;

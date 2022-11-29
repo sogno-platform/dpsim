@@ -14,7 +14,7 @@ using namespace CPS;
 // please note that P,Q values can not be passed inside constructor since P,Q are currently read from the terminal,
 // and these values are not yet assigned to the terminals when this constructor was called in reader.
 SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: CompositePowerComp<Complex>(uid, name, logLevel),
 	mActivePowerPerUnit(Attribute<Real>::create("P_pu", mAttributes)),
 	mReactivePowerPerUnit(Attribute<Real>::create("Q_pu", mAttributes)),
 	mActivePower(Attribute<Real>::createDynamic("P", mAttributes)), //Made dynamic so it can be imported through InterfaceVillas
@@ -115,7 +115,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
-		mSubComponents.push_back(mSubResistor);
+		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 	}
 
 	if (**mReactivePower != 0)
@@ -131,7 +131,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromNodesAndTerminals(frequency);
-		mSubComponents.push_back(mSubInductor);
+		addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 	} else if (mReactance < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) / mReactance;
 		mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(**mUID + "_res", **mName + "_cap", Logger::Level::off);
@@ -139,7 +139,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-		mSubComponents.push_back(mSubCapacitor);
+		addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 	}
 
 	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
@@ -162,45 +162,27 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 
 
 // #### MNA section ####
-void SP::Ph1::Load::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void SP::Ph1::Load::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
-	}
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-
-void SP::Ph1::Load::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
-	}
-}
-
-void SP::Ph1::Load::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void SP::Ph1::Load::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfCurrent);
 	modifiedAttributes.push_back(mIntfVoltage);
 };
 
-void SP::Ph1::Load::MnaPostStep::execute(Real time, Int timeStepCount) {
-	for (auto subComp : mLoad.mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaPostStep(time, timeStepCount, mLeftVector);
-	}
-	mLoad.mnaUpdateVoltage(**mLeftVector);
-	mLoad.mnaUpdateCurrent(**mLeftVector);
+void SP::Ph1::Load::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
-
 
 void SP::Ph1::Load::mnaUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
-
 
 void SP::Ph1::Load::mnaUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = 0;

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
@@ -21,8 +21,7 @@ namespace CPS {
 			/// TODO: currently modelled as an impedance, which obviously doesn't have a constant power characteristic
 			/// Model as current source and read from CSV files
 			class RXLoad :
-				public SimPowerComp<Real>,
-				public MNAInterface,
+				public CompositePowerComp<Real>,
 				public SharedFactory<RXLoad> {
 			protected:
 				/// Power [Watt]
@@ -71,45 +70,17 @@ namespace CPS {
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component
-				void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-				/// Stamps system matrix
-				void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-				/// Stamps right side (source) vector
-				void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+				void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 
-				void mnaUpdateCurrent(const Matrix& leftVector);
-				void mnaUpdateVoltage(const Matrix& leftVector);
+				void mnaUpdateCurrent(const Matrix& leftVector) override;
+				void mnaUpdateVoltage(const Matrix& leftVector) override;
 
-				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
-				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+				/// MNA pre and post step operations
+				void mnaParentPreStep(Real time, Int timeStepCount) override;
+				void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-				class MnaPreStep : public Task {
-				public:
-					MnaPreStep(RXLoad& load) :
-						Task(**load.mName + ".MnaPreStep"), mLoad(load) {
-						mLoad.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-					}
-
-					void execute(Real time, Int timeStepCount);
-
-				private:
-					RXLoad& mLoad;
-				};
-
-
-				class MnaPostStep : public Task {
-				public:
-					MnaPostStep(RXLoad& load, Attribute<Matrix>::Ptr leftVector) :
-						Task(**load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
-						mLoad.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, leftVector);
-					}
-
-					void execute(Real time, Int timeStepCount);
-
-				private:
-					RXLoad& mLoad;
-					Attribute<Matrix>::Ptr mLeftVector;
-				};
+				void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+				void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 			};
 		}
 	}
