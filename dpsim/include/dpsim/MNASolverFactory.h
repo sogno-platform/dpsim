@@ -11,12 +11,18 @@
 #include <dpsim/MNASolver.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/MNASolverDirect.h>
-//#include <dpsim/DenseLUAdapter.h>
+#include <dpsim/DenseLUAdapter.h>
 #ifdef WITH_SPARSE
 #include <dpsim/SparseLUAdapter.h>
 #endif
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
+#endif
+#ifdef WITH_CUDA
+#include <dpsim/GpuDenseAdapter.h>
+#ifdef WITH_SPARSE
+#include <dpsim/GpuSparseAdapter.h>
+#endif
 #endif
 #ifdef WITH_MNASOLVERPLUGIN
 #include <dpsim/MNASolverPlugin.h>
@@ -83,6 +89,24 @@ class MnaSolverFactory {
 			kluSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::KLU);
 			return kluSolver;
 		}
+#endif
+#ifdef WITH_CUDA
+		case DirectLinearSolverImpl::GpuDense:
+		{
+			log->info("creating GpuDenseAdapter solver implementation");
+			std::shared_ptr<MnaSolverDirect<VarType>> gpuDenseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			gpuDenseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::CUDADense);
+			return gpuDenseSolver;
+		}
+#ifdef WITH_SPARSE
+		case DirectLinearSolverImpl::GpuSparse:
+		{
+			log->info("creating GpuSparseAdapter solver implementation");
+			std::shared_ptr<MnaSolverDirect<VarType>> gpuSparseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			gpuSparseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::CUDASparse);
+			return gpuSparseSolver;
+		}
+#endif
 #endif
 #ifdef WITH_MNASOLVERPLUGIN
 		case DirectLinearSolverImpl::Plugin:
