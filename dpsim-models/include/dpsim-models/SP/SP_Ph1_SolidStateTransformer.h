@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/SP/SP_Ph1_Load.h>
 
@@ -21,9 +21,8 @@ namespace SP { namespace Ph1 {
     * Depends on the actual condition, values can be negative
     */
 	class SolidStateTransformer :
-		public SimPowerComp<Complex>,
-		public SharedFactory<SolidStateTransformer>,
-		public MNAInterface{
+		public CompositePowerComp<Complex>,
+		public SharedFactory<SolidStateTransformer> {
 	private:
     ///
     std::shared_ptr<SP::Ph1::Load> mSubLoadSide1;

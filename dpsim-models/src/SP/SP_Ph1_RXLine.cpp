@@ -14,7 +14,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	Real resistance, Real inductance,
 	Logger::Level logLevel)
 	: 	Base::Ph1::PiLine(mAttributes),
-		SimPowerComp<Complex>(uid, name, logLevel),
+		CompositePowerComp<Complex>(uid, name, logLevel),
 		mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes, baseVoltage)),
 		mInductance(Attribute<Real>::create("L_series", mAttributes)),
 		mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
@@ -39,7 +39,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
 	: 	Base::Ph1::PiLine(mAttributes),
-		SimPowerComp<Complex>(uid, name, logLevel),
+		CompositePowerComp<Complex>(uid, name, logLevel),
 		mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 		mInductance(Attribute<Real>::create("L_series", mAttributes)),
 		mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
@@ -160,19 +160,19 @@ void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubResistor->setParameters(**mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubResistor->initializeFromNodesAndTerminals(frequency);
-	mSubComponents.push_back(mSubResistor);
+	addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 
 	mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(**mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
-	mSubComponents.push_back(mSubInductor);
+	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 
 	mInitialResistor = std::make_shared<SP::Ph1::Resistor>(**mName + "_snubber_res", mLogLevel);
 	mInitialResistor->setParameters(1e6);
 	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromNodesAndTerminals(frequency);
-	mSubComponents.push_back(mInitialResistor);
+	addMNASubComponent(mInitialResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -187,66 +187,32 @@ void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void SP::Ph1::RXLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void SP::Ph1::RXLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
-	}
+
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void SP::Ph1::RXLine::mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix) {
-	mInitialResistor->mnaApplySystemMatrixStamp(systemMatrix);
-}
-
-void SP::Ph1::RXLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
-	}
-}
-
-void SP::Ph1::RXLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	}
-
+void SP::Ph1::RXLine::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	modifiedAttributes.push_back(mRightVector);
 };
 
-void SP::Ph1::RXLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	}
-
+void SP::Ph1::RXLine::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfCurrent);
 	modifiedAttributes.push_back(mIntfVoltage);
 };
 
-void SP::Ph1::RXLine::MnaPreStep::execute(Real time, Int timeStepCount) {
-	for (auto subComp : mLine.mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaPreStep(time, timeStepCount);
-	}
-
-	mLine.mnaApplyRightSideVectorStamp(**mLine.mRightVector);
+void SP::Ph1::RXLine::mnaParentPreStep(Real time, Int timeStepCount) {
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void SP::Ph1::RXLine::MnaPostStep::execute(Real time, Int timeStepCount) {
-	for (auto subComp : mLine.mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaPostStep(time, timeStepCount, mLeftVector);
-	}
-
-	mLine.mnaUpdateVoltage(**mLeftVector);
-	mLine.mnaUpdateCurrent(**mLeftVector);
+void SP::Ph1::RXLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::RXLine::mnaUpdateVoltage(const Matrix& leftVector) {

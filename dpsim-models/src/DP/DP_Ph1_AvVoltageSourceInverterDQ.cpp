@@ -51,7 +51,9 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 	addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 	addMNASubComponent(mSubInductorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
-	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+
+	// Pre-step of the subcontrolled voltage source is handled explicitly in mnaParentPreStep
+	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 
 	mSLog->info("Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)
@@ -325,14 +327,12 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentAddPreStepDependencies(Attribu
 	modifiedAttributes.push_back(mRightVector);
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentPreStep(Real time, Int timeStepCount) {
 	// pre-steo of subcomponents - controlled source
 	if (mWithControl)
 		**mSubCtrledVoltageSource->mVoltageRef = (**mVsref)(0,0);
-	// pre-step of subcomponents - others
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaPreStep(time, timeStepCount);
+
+	std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }

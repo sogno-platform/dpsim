@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
-	SimPowerComp<Complex>(uid, name, logLevel),
+	CompositePowerComp<Complex>(uid, name, logLevel),
 	mOmegaN(Attribute<Real>::create("Omega_nom", mAttributes)),
 	mVnom(Attribute<Real>::create("vnom", mAttributes)),
 	mPref(Attribute<Real>::create("P_ref", mAttributes)),
@@ -29,7 +29,7 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	if (withTrafo) {
 		setVirtualNodeNumber(4);
 		mConnectionTransformer = SP::Ph1::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel, false);
-		mSubComponents.push_back(mConnectionTransformer);
+		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 	} else {
 		setVirtualNodeNumber(3);
 	}
@@ -46,11 +46,13 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	mSubCapacitorF = SP::Ph1::Capacitor::make(**mName + "_capF", mLogLevel);
 	mSubInductorF = SP::Ph1::Inductor::make(**mName + "_indF", mLogLevel);
 	mSubCtrledVoltageSource = SP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
-	mSubComponents.push_back(mSubResistorF);
-	mSubComponents.push_back(mSubResistorC);
-	mSubComponents.push_back(mSubCapacitorF);
-	mSubComponents.push_back(mSubInductorF);
-	mSubComponents.push_back(mSubCtrledVoltageSource);
+	addMNASubComponent(mSubResistorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubInductorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+
+	// Pre-step of the subcontrolled voltage source is handled explicitly in mnaParentPreStep
+	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
 
 	mSLog->info("Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)
@@ -237,15 +239,10 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real fr
 		mSLog->info("\n--- Initialization from powerflow finished ---");
 }
 
-void SP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 	mTimeStep = timeStep;
-
-	// initialize electrical subcomponents with MNA interface
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
 
 	// initialize state space controller
 	mPowerControllerVSI->initializeStateSpaceModel(omega, timeStep, leftVector);
@@ -267,13 +264,6 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep
 	mMnaTasks.push_back(std::make_shared<ControlStep>(*this));
 
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-}
-
-
-void SP::Ph1::AvVoltageSourceInverterDQ::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
@@ -325,12 +315,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCoun
 	mThetaN = mThetaN + mTimeStep * **mOmegaN;
 }
 
-void SP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	// add pre-step dependencies of subcomponents
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	// add pre-step dependencies of component itself
+void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	prevStepDependencies.push_back(attribute("Vsref"));
 	prevStepDependencies.push_back(attribute("i_intf"));
 	prevStepDependencies.push_back(attribute("v_intf"));
@@ -339,35 +324,23 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase
 	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void SP::Ph1::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {
+void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentPreStep(Real time, Int timeStepCount) {
 	// pre-steo of subcomponents - controlled source
 	if (mWithControl)
 		mSubCtrledVoltageSource->mVoltageRef->set((**mVsref)(0,0));
-	// pre-step of subcomponents - others
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaPreStep(time, timeStepCount);
+
+	std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void SP::Ph1::AvVoltageSourceInverterDQ::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
-	// add post-step dependencies of subcomponents
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	// add post-step dependencies of component itself
+void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(attribute("v_intf"));
 	modifiedAttributes.push_back(attribute("i_intf"));
 }
 
-void SP::Ph1::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	// post-step of subcomponents
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
-	// post-step of component itself
+void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	mnaUpdateCurrent(**leftVector);
 	mnaUpdateVoltage(**leftVector);
 }

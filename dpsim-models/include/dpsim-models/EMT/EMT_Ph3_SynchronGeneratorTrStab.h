@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_SynchronGenerator.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
@@ -22,8 +22,7 @@ namespace Ph3 {
 	/// This model is based on Eremia section 2.1.6.
 	class SynchronGeneratorTrStab :
 		public Base::SynchronGenerator,
-		public MNAInterface,
-		public SimPowerComp<Real>,
+		public CompositePowerComp<Real>,
 		public SharedFactory<SynchronGeneratorTrStab> {
 	protected:
 		// #### Model specific variables ####
@@ -92,67 +91,33 @@ namespace Ph3 {
 
 		// #### MNA Functions ####
 		/// Initializes variables of component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Performs with the model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.
-		void mnaStep(Matrix& systemMatrix, Matrix& rightVector, Matrix& leftVector, Real time);
-		///
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		///
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// Retrieves calculated voltage from simulation for next step
-		void mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time);
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		///
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		///
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaUpdateVoltage(const Matrix& leftVector) override;
 
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(SynchronGeneratorTrStab& generator) :
-				Task(**generator.mName + ".MnaPreStep"), mGenerator(generator) {
-				// other attributes generally also influence the pre step,
-				// but aren't marked as writable anyway
-				/// CHECK: Is the upper comment still relevant. Any attribute is writable now...
-				mGenerator.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SynchronGeneratorTrStab& mGenerator;
-		};
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		class AddBStep : public Task {
 		public:
 			AddBStep(SynchronGeneratorTrStab& generator) :
 				Task(**generator.mName + ".AddBStep"), mGenerator(generator) {
+				mAttributeDependencies.push_back(generator.mSubVoltageSource->mRightVector);
+				mAttributeDependencies.push_back(generator.mSubInductor->mRightVector);
+				mModifiedAttributes.push_back(generator.mRightVector);
 			}
 
 			void execute(Real time, Int timeStepCount);
 
 		private:
 			SynchronGeneratorTrStab& mGenerator;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(SynchronGeneratorTrStab& generator, Attribute<Matrix>::Ptr leftVector) :
-				Task(**generator.mName + ".MnaPostStep"), mGenerator(generator), mLeftVector(leftVector) {
-				mGenerator.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, leftVector);
-				mAttributeDependencies.push_back(leftVector);
-				mAttributeDependencies.push_back(generator.mSubInductor->attribute("i_intf"));
-				mModifiedAttributes.push_back(generator.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SynchronGeneratorTrStab& mGenerator;
-			Attribute<Matrix>::Ptr mLeftVector;
 		};
 	};
 }
