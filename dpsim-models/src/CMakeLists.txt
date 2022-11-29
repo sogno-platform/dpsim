@@ -6,7 +6,7 @@ add_library(dpsim-models STATIC
 	TopologicalTerminal.cpp
 	SimNode.cpp
 	SimPowerComp.cpp
-	MNASimPowerComp.cpp
+	CompositePowerComp.cpp
 	SystemTopology.cpp
 	CSVReader.cpp
 )

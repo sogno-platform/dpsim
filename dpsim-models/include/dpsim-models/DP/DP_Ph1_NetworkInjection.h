@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
@@ -24,7 +24,7 @@ namespace Ph1 {
 	/// the frequency, magnitude and phase of the sine wave can be modified through the mVoltageRef and mSrcFreq attributes.
 	/// See DP_Ph1_VoltageSource.h for more details.
 	class NetworkInjection :
-		public MNASimPowerComp<Complex>,
+		public CompositePowerComp<Complex>,
 		public DAEInterface,
 		public SharedFactory<NetworkInjection> {
 	private:

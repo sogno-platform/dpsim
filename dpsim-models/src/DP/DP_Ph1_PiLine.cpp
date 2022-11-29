@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::PiLine(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 

@@ -28,7 +28,9 @@ namespace CPS {
 		UInt mNumFreqs = 0;
 		///
 		PhaseType mPhaseType = PhaseType::Single;
+
 		/// List of subcomponents
+		/// DEPRECATED: Delete or move into CompositePowerComp
 		typename std::vector<std::shared_ptr<SimPowerComp<VarType>>> mSubComponents;
 		/// "Cached" list of simulation nodes (to avoid shared_ptr accesses during simulation)
 		std::vector<UInt> mMatrixNodeIndices;

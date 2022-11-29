@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
 #include <dpsim-models/PowerProfile.h>
@@ -19,7 +19,7 @@ namespace Ph1 {
 	/// TODO: read from CSV files
 	/// \brief PQ-load represented by a current source
 	class PQLoadCS :
-		public MNASimPowerComp<Complex>,
+		public CompositePowerComp<Complex>,
 		public SharedFactory<PQLoadCS> {
 	protected:
 		/// Internal current source

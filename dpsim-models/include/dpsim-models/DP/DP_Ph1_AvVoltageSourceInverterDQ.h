@@ -8,7 +8,7 @@
 #pragma once
 
 
-#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
@@ -25,7 +25,7 @@ namespace DP {
 namespace Ph1 {
 	class AvVoltageSourceInverterDQ :
 		public Base::AvVoltageSourceInverterDQ,
-		public MNASimPowerComp<Complex>,
+		public CompositePowerComp<Complex>,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
 
