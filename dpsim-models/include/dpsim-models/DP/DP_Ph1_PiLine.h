@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Base/Base_Ph1_PiLine.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
@@ -23,7 +23,7 @@ namespace Ph1 {
 	/// This model consists sub components to represent the
 	/// RLC elements of a PI-line.
 	class PiLine :
-		public MNASimPowerComp<Complex>,
+		public CompositePowerComp<Complex>,
 		public MNATearInterface,
 		public Base::Ph1::PiLine,
 		public SharedFactory<PiLine> {
