@@ -25,17 +25,7 @@
 namespace DPsim
 {
 	class GpuSparseAdapter : public DirectLinearSolver
-    {
-		private:
-		///Required shared Variables
-		cuda::Vector<char> pBuffer;
-		cusparseMatDescr_t descr_L = nullptr;
-		cusparseMatDescr_t descr_U = nullptr;
-		csrsv2Info_t info_L = nullptr;
-		csrsv2Info_t info_U = nullptr;
-
-		void checkCusparseStatus(cusparseStatus_t status, std::string additionalInfo="cuSparse Error:");
-		
+    {	
 		protected:
 
 		// #### Attributes required for GPU ####
@@ -54,12 +44,24 @@ namespace DPsim
 		/// Intermediate Vector
 		cuda::Vector<double> mGpuIntermediateVec;
 
-		using Solver::mSLog;
-
 		void iluPreconditioner();
 
+		void performFactorization(SparseMatrix& mVariableSystemMatrix);
+
+		private:
+		///Required shared Variables
+		cuda::Vector<char> pBuffer;
+		cusparseMatDescr_t descr_L = nullptr;
+		cusparseMatDescr_t descr_U = nullptr;
+		csrsv2Info_t info_L = nullptr;
+		csrsv2Info_t info_U = nullptr;
+
+		void checkCusparseStatus(cusparseStatus_t status, std::string additionalInfo="cuSparse Error:");
+
         public:
-		
+		/// Constructor
+		GpuSparseAdapter();
+
 		/// Destructor
 		virtual ~GpuSparseAdapter();
 

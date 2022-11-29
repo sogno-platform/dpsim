@@ -26,6 +26,12 @@
 #ifdef WITH_SPARSE
 #include <dpsim/SparseLUAdapter.h>
 #endif
+#ifdef WITH_CUDA
+#include <dpsim/GpuDenseAdapter.h>
+#ifdef WITH_SPARSE
+#include <dpsim/GpuSparseAdapter.h>
+#endif
+#endif
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
@@ -41,6 +47,9 @@ namespace DPsim {
 		KLU,
 		SparseLU,
 		DenseLU,
+		CUDADense,
+		CUDASparse,
+		CUDAMagma,
 		Plugin
 	};
 

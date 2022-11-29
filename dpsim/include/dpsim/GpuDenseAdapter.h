@@ -55,7 +55,7 @@ namespace DPsim
 
 		void allocateDeviceMemory();
 		
-		void copySystemMatrixToDevice();
+		void copySystemMatrixToDevice(Matrix mVariableSystemMatrix);
 		
 		void LUfactorization();
 

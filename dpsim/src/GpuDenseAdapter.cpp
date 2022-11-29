@@ -44,25 +44,6 @@ namespace DPsim
             std::cerr << cudaGetErrorString(error) << std::endl;
         if((status = cusolverDnSetStream(mCusolverHandle, mStream)) != CUSOLVER_STATUS_SUCCESS)
             std::cerr << "cusolverDnSetStream() failed" << std::endl;
-
-            mDeviceCopy.size = this->mRightSideVector.rows();
-
-        //Allocate Memory on Device
-        allocateDeviceMemory();
-        //Copy Systemmatrix to device
-        copySystemMatrixToDevice();
-
-        // Debug logging, whether LU-factorization and copying was successfull
-        /*DPsim::Matrix mat;
-        mat.resize(mDeviceCopy.size, mDeviceCopy.size);
-        double *buffer = &mat(0);
-        CUDA_ERROR_HANDLER(cudaMemcpy(buffer, mDeviceCopy.matrix, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
-        this->mSLog->info("Systemmatrix Gpu: \n{}", mat);*/
-
-        //LU factorization
-        LUfactorization();
-        /*CUDA_ERROR_HANDLER(cudaMemcpy(buffer, mDeviceCopy.matrix, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
-        this->mSLog->info("LU decomposition Gpu: \n{}", mat);*/
     }
 
     void GpuDenseAdapter::allocateDeviceMemory()
@@ -93,9 +74,9 @@ namespace DPsim
         CUDA_ERROR_HANDLER(cudaMalloc((void**)&mDeviceCopy.workSpace, workSpaceSize))
     }
 
-    void GpuDenseAdapter::copySystemMatrixToDevice()
+    void GpuDenseAdapter::copySystemMatrixToDevice(Matrix mVariableSystemMatrix)
     {
-        auto *data = MnaSolverEigenDense<VarType>::mSwitchedMatrices[MnaSolverEigenDense<VarType>::mCurrentSwitchStatus].data();
+        auto *data = mVariableSystemMatrix.data();
         CUDA_ERROR_HANDLER(cudaMemcpy(mDeviceCopy.matrix, data, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyHostToDevice))
     }
 
@@ -129,22 +110,49 @@ namespace DPsim
 
     void GpuDenseAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
+        mDeviceCopy.size = mVariableSystemMatrix.rows();
 
+        //Allocate Memory on Device
+        allocateDeviceMemory();
+        //Copy Systemmatrix to device
+        copySystemMatrixToDevice(Matrix(mVariableSystemMatrix));
+
+        // Debug logging, whether LU-factorization and copying was successfull
+        /*DPsim::Matrix mat;
+        mat.resize(mDeviceCopy.size, mDeviceCopy.size);
+        double *buffer = &mat(0);
+        CUDA_ERROR_HANDLER(cudaMemcpy(buffer, mDeviceCopy.matrix, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
+        this->mSLog->info("Systemmatrix Gpu: \n{}", mat);*/
     }
 
     void GpuDenseAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
     {
-
+        //Copy Systemmatrix to device
+        copySystemMatrixToDevice(Matrix(mVariableSystemMatrix));
+        //LU factorization
+        LUfactorization();
+        /*CUDA_ERROR_HANDLER(cudaMemcpy(buffer, mDeviceCopy.matrix, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
+        this->mSLog->info("LU decomposition Gpu: \n{}", mat);*/
     }
 
     void GpuDenseAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
     {
-
+        //Copy Systemmatrix to device
+        copySystemMatrixToDevice(Matrix(mVariableSystemMatrix));
+        //LU factorization
+        LUfactorization();
+        /*CUDA_ERROR_HANDLER(cudaMemcpy(buffer, mDeviceCopy.matrix, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
+        this->mSLog->info("LU decomposition Gpu: \n{}", mat);*/
     }
 
     void GpuDenseAdapter::partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
-
+        //Copy Systemmatrix to device
+        copySystemMatrixToDevice(Matrix(mVariableSystemMatrix));
+        //LU factorization
+        LUfactorization();
+        /*CUDA_ERROR_HANDLER(cudaMemcpy(buffer, mDeviceCopy.matrix, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
+        this->mSLog->info("LU decomposition Gpu: \n{}", mat);*/
     }
 
     Matrix GpuDenseAdapter::solve(Matrix& mRightHandSideVector)

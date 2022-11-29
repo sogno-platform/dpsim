@@ -12,6 +12,9 @@ using namespace DPsim;
 
 namespace DPsim
 {
+    GpuSparseAdapter::GpuSparseAdapter() : mCusparsehandle(nullptr), mSysMat(nullptr), mTransp(nullptr), mGpuRhsVec(0), mGpuLhsVec(0), mGpuIntermediateVec(0),
+	pBuffer(0) {}
+
     GpuSparseAdapter::~GpuSparseAdapter()
     {
         if (mCusparsehandle != nullptr) {
@@ -26,7 +29,15 @@ namespace DPsim
         }
     }
 
-    void GpuSparseAdapter::initialize()
+    inline void GpuSparseAdapter::checkCusparseStatus(cusparseStatus_t status, std::string additionalInfo)
+    {
+	    if (status != CUSPARSE_STATUS_SUCCESS) {
+		    //mSLog->error("{} {}", additionalInfo, cusparseGetErrorString(status));
+    		throw SolverException();
+	    }
+    }
+
+    void GpuSparseAdapter::performFactorization(SparseMatrix& mVariableSystemMatrix)
     {
         cusparseStatus_t csp_status;
         cusolverStatus_t cso_status;
@@ -34,12 +45,12 @@ namespace DPsim
         checkCusparseStatus(csp_status, "cuSparse initialization failed:");
 
         if ((cso_status = cusolverSpCreate(&mCusolverhandle)) != CUSOLVER_STATUS_SUCCESS) {
-            mSLog->error("cuSolver initialization failed: Error code {}", cso_status);
+            //mSLog->error("cuSolver initialization failed: Error code {}", cso_status);
             throw SolverException();
         }
 
-        size_t N = this->mRightSideVector.rows();
-        auto hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
+        size_t N = mVariableSystemMatrix.rows();
+        auto hMat = mVariableSystemMatrix;
 
         mGpuRhsVec = cuda::Vector<double>(N);
         mGpuLhsVec = cuda::Vector<double>(N);
@@ -50,7 +61,7 @@ namespace DPsim
         int structural_zero;
         int numerical_zero;
 
-        size_t nnz = hMat[0].nonZeros();
+        size_t nnz = hMat.nonZeros();
 
         // step 1: create a descriptor which contains
         // - matrix M is base-1
@@ -88,13 +99,13 @@ namespace DPsim
 
         cso_status = cusolverSpDcsrzfdHost(
             mCusolverhandle, N,nnz, descr_M,
-            hMat[0].valuePtr(),
-            hMat[0].outerIndexPtr(),
-            hMat[0].innerIndexPtr(),
+            hMat.valuePtr(),
+            hMat.outerIndexPtr(),
+            hMat.innerIndexPtr(),
             p, &p_nnz);
 
         if (cso_status != CUSOLVER_STATUS_SUCCESS) {
-            mSLog->error("cusolverSpDcsrzfdHost returend an error");
+            //mSLog->error("cusolverSpDcsrzfdHost returend an error");
         }
         // create Eigen::PermutationMatrix from the p
         mTransp = std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic> >(
@@ -102,10 +113,10 @@ namespace DPsim
                 Eigen::Map< Eigen::Matrix<int, Eigen::Dynamic, 1> >(p, N, 1)));
 
         // apply permutation
-        hMat[0] = *mTransp * hMat[0];
+        hMat = *mTransp * hMat;
 
         // copy P' to GPU
-        mSysMat = std::unique_ptr<cuda::CudaMatrix<double, int>>(new cuda::CudaMatrix<double, int>(hMat[0], N));
+        mSysMat = std::unique_ptr<cuda::CudaMatrix<double, int>>(new cuda::CudaMatrix<double, int>(hMat, N));
 
         double *d_csrVal = mSysMat->val.data();
         int *d_csrRowPtr = mSysMat->row.data();
@@ -133,7 +144,6 @@ namespace DPsim
         // Buffer
         pBufferSize = std::max({pBufferSize_M, pBufferSize_L, pBufferSize_U});
         pBuffer = cuda::Vector<char>(pBufferSize);
-
         // step 4: perform analysis of incomplete Cholesky on M
         //         perform analysis of triangular solve on L
         //         perform analysis of triangular solve on U
@@ -147,7 +157,7 @@ namespace DPsim
 
         csp_status = cusparseXcsrilu02_zeroPivot(mCusparsehandle, info_M, &structural_zero);
         if (csp_status == CUSPARSE_STATUS_ZERO_PIVOT){
-            mSLog->error("A({},{}) is missing", structural_zero, structural_zero);
+            //mSLog->error("A({},{}) is missing", structural_zero, structural_zero);
             checkCusparseStatus(csp_status);
             throw SolverException();
         }
@@ -173,7 +183,7 @@ namespace DPsim
 
         csp_status = cusparseXcsrilu02_zeroPivot(mCusparsehandle, info_M, &numerical_zero);
         if (csp_status == CUSPARSE_STATUS_ZERO_PIVOT){
-            mSLog->error("U({},{}) is zero\n", numerical_zero, numerical_zero);
+            //mSLog->error("U({},{}) is zero\n", numerical_zero, numerical_zero);
             checkCusparseStatus(csp_status);
             throw SolverException();
         }
@@ -186,6 +196,17 @@ namespace DPsim
         checkCusparseStatus(csp_status, "failed to destroy MatDescr:");
     }
 
+    void GpuSparseAdapter::initialize()
+    {
+        // mCusparsehandle = nullptr;
+        // mSysMat = nullptr;
+        // mTransp = nullptr;
+        // mGpuRhsVec = 0;
+        // mGpuLhsVec = 0;
+        // mGpuIntermediateVec = 0;
+        // pBuffer = 0;
+    }
+
     void GpuSparseAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
 
@@ -193,17 +214,17 @@ namespace DPsim
 
     void GpuSparseAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
     {
-        
+        performFactorization(mVariableSystemMatrix);
     }
 
     void GpuSparseAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
     {
-
+        performFactorization(mVariableSystemMatrix);
     }
 
     void GpuSparseAdapter::partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
-        
+        performFactorization(mVariableSystemMatrix);
     }
 
     Matrix GpuSparseAdapter::solve(Matrix& mRightHandSideVector)
@@ -218,7 +239,7 @@ namespace DPsim
         mRightHandSideVector = *mTransp * mRightHandSideVector;
         status = cudaMemcpy(mGpuRhsVec.data(), &mRightHandSideVector(0), size * sizeof(Real), cudaMemcpyHostToDevice);
         if (status != cudaSuccess) {
-            mSLog->error("Cuda Error: {}", cudaGetErrorString(status));
+            //mSLog->error("Cuda Error: {}", cudaGetErrorString(status));
             throw SolverException();
         }
 
@@ -245,8 +266,9 @@ namespace DPsim
         //Copy Solution back
         status = cudaMemcpy(&(leftSideVector)(0), mGpuLhsVec.data(), size * sizeof(Real), cudaMemcpyDeviceToHost);
         if (status != cudaSuccess) {
-            mSLog->error("Cuda Error: {}", cudaGetErrorString(status));
+            //mSLog->error("Cuda Error: {}", cudaGetErrorString(status));
             throw SolverException();
         }
+        return leftSideVector;
     }
 }
