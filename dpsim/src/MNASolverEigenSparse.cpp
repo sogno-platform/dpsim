@@ -60,13 +60,13 @@ void MnaSolverEigenSparse<VarType>::stampVariableSystemMatrix() {
 		statElem->mnaApplySystemMatrixStamp(mBaseSystemMatrix);
 	mSLog->info("Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
 	mSLog->flush();
-	
+
 	// Use matrix with only static elements as basis for variable system matrix
 	mVariableSystemMatrix = mBaseSystemMatrix;
 
 	// Now stamp switches into matrix
 	mSLog->info("Stamping switches");
-	for (auto sw : mSwitches)
+	for (auto sw : mMNAIntfSwitches)
 		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
 	// Now stamp initial state of variable elements into matrix
@@ -86,7 +86,7 @@ template <typename VarType>
 void MnaSolverEigenSparse<VarType>::solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) {
 	// Reset source vector
 	mRightSideVector.setZero();
-	
+
 	// Add together the right side vector (computed by the components'
 	// pre-step tasks)
 	for (auto stamp : mRightVectorStamps)
@@ -112,7 +112,7 @@ void MnaSolverEigenSparse<VarType>::recomputeSystemMatrix(Real time) {
 	mVariableSystemMatrix = mBaseSystemMatrix;
 
 	// Now stamp switches into matrix
-	for (auto sw : mSwitches)
+	for (auto sw : mMNAIntfSwitches)
 		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
 	// Now stamp variable elements into matrix

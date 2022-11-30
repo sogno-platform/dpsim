@@ -49,7 +49,7 @@ void MnaSolverPlugin<VarType>::recomputeSystemMatrix(Real time) {
 	this->mVariableSystemMatrix = this->mBaseSystemMatrix;
 
 	// Now stamp switches into matrix
-	for (auto sw : this->mSwitches)
+	for (auto sw : this->mMNAIntfSwitches)
 		sw->mnaApplySystemMatrixStamp(this->mVariableSystemMatrix);
 
 	// Now stamp variable elements into matrix
