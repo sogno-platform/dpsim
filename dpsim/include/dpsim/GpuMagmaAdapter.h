@@ -51,6 +51,8 @@ namespace DPsim
 
 		void iluPreconditioner();
 
+		void performFactorization(SparseMatrix& mVariableSystemMatrix);
+
         public:
 		
 		/// Destructor
