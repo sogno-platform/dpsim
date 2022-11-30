@@ -43,9 +43,9 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Build manylinux docker image # Remove this step as soon as the image is published on docker hub
-      shell: bash
-      run: docker build . --file packaging/Docker/Dockerfile.manylinux -t sogno/dpsim:manylinux
+    # - name: Build manylinux docker image # Remove this step as soon as the image is published on docker hub
+    #   shell: bash
+    #   run: docker build . --file packaging/Docker/Dockerfile.manylinux -t sogno/dpsim:manylinux
 
     - name: Build dpsim wheels for all supported python versions
       uses: pypa/cibuildwheel@v2.11.2

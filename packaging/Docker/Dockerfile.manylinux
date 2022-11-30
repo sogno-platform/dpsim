@@ -19,7 +19,7 @@ RUN yum install -y epel-release
 
 # Toolchain
 RUN yum install -y \
-	gcc gcc-c++ clang \
+	gcc-toolset-11 clang \
 	git \
 	rpmdevtools rpm-build \
 	make cmake pkgconfig \
@@ -96,5 +96,7 @@ RUN cd /tmp && \
 	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
 	mkdir -p villasnode/build && cd villasnode/build && \
 	git -c submodule.fpga.update=none checkout b94746effb015aa98791c0e319ef11223d18e8b0 && git -c submodule.fpga.update=none submodule update --recursive && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
+	cmake -DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++ -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
 	rm -rf /tmp/villasnode
+
+ENV CMAKE_OPTS="CMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc CMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++" 
