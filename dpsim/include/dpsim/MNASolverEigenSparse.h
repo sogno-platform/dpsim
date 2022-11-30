@@ -47,6 +47,7 @@ namespace DPsim {
 		CPS::LUFactorizedSparse mLuFactorizationVariableSystemMatrix;
 
 		using MnaSolver<VarType>::mSwitches;
+		using MnaSolver<VarType>::mMNAIntfSwitches;
 		using MnaSolver<VarType>::mMNAComponents;
 		using MnaSolver<VarType>::mVariableComps;
 		using MnaSolver<VarType>::mMNAIntfVariableComps;

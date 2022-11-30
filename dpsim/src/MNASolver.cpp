@@ -128,7 +128,7 @@ void MnaSolver<Real>::initializeComponents() {
 		}
 	}
 
-	for (auto comp : mSwitches)
+	for (auto comp : mMNAIntfSwitches)
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attributeTyped<Matrix>("left_vector"));
 }
 
@@ -177,7 +177,7 @@ void MnaSolver<Complex>::initializeComponents() {
 			}
 		}
 
-		for (auto comp : mSwitches)
+		for (auto comp : mMNAIntfSwitches)
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attributeTyped<Matrix>("left_vector"));
 	}
 }
@@ -544,7 +544,7 @@ Task::List MnaSolver<VarType>::getTasks() {
 			l.push_back(task);
 		}
 	}
-	for (auto comp : mSwitches) {
+	for (auto comp : mMNAIntfSwitches) {
 		for (auto task : comp->mnaTasks()) {
 			l.push_back(task);
 		}
