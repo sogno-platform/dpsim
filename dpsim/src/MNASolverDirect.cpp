@@ -352,6 +352,10 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 		case DirectLinearSolverImpl::CUDASparse:
 			return std::make_shared<GpuSparseAdapter>();
 		#endif
+		#ifdef WITH_MAGMA
+		case DirectLinearSolverImpl::CUDAMagma:
+			return std::make_shared<GpuMagmaAdapter>();
+		#endif
 		#endif
 		default:
 			throw CPS::SystemError("unsupported linear solver implementation.");

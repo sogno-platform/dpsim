@@ -31,6 +31,9 @@
 #ifdef WITH_SPARSE
 #include <dpsim/GpuSparseAdapter.h>
 #endif
+#ifdef WITH_MAGMA
+#include <dpsim/GpuMagmaAdapter.h>
+#endif
 #endif
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>

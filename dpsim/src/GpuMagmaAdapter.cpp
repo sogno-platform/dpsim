@@ -24,50 +24,41 @@ namespace DPsim
         magma_finalize();
     }
 
-    void GpuMagmaAdapter::initialize()
+    void GpuMagmaAdapter::performFactorization(SparseMatrix& mVariableSystemMatrix)
     {
-        magma_init();
-        magma_queue_create(0, &mMagmaQueue);
-        mHostSysMat = {Magma_CSR};
-        mDevSysMat = {Magma_CSR};
-        mHostRhsVec = {Magma_CSR};
-        mDevRhsVec = {Magma_CSR};
-        mHostLhsVec = {Magma_CSR};
-        mDevLhsVec = {Magma_CSR};
-
-        int size = this->mRightSideVector.rows();
+        int size = mVariableSystemMatrix.rows();
         int p_nnz = 0;
         int p[size];
-        auto hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
+        auto hMat = mVariableSystemMatrix;
         size_t nnz = hMat[0].nonZeros();
         cusparseMatDescr_t descr_M = 0;
 
         cusolverSpHandle_t mCusolverhandle;
         if (cusolverSpCreate(&mCusolverhandle) != CUSOLVER_STATUS_SUCCESS) {
-            mSLog->error("cusolverSpCreate returend an error");
+            //mSLog->error("cusolverSpCreate returend an error");
             return;
         }
         if(cusparseCreateMatDescr(&descr_M) != CUSPARSE_STATUS_SUCCESS) {
-            mSLog->error("cusolver returend an error");
+            //mSLog->error("cusolver returend an error");
             return;
         }
 
         if(cusparseSetMatIndexBase(descr_M, CUSPARSE_INDEX_BASE_ZERO) != CUSPARSE_STATUS_SUCCESS) {
-            mSLog->error("cusolver returend an error");
+            //mSLog->error("cusolver returend an error");
             return;
         }
         if(cusparseSetMatType(descr_M, CUSPARSE_MATRIX_TYPE_GENERAL) != CUSPARSE_STATUS_SUCCESS) {
-            mSLog->error("cusolver returend an error");
+            //mSLog->error("cusolver returend an error");
             return;
         }
 
         if (cusolverSpDcsrzfdHost(
             mCusolverhandle, size, nnz, descr_M,
-            hMat[0].valuePtr(),
-            hMat[0].outerIndexPtr(),
-            hMat[0].innerIndexPtr(),
+            hMat.valuePtr(),
+            hMat.outerIndexPtr(),
+            hMat.innerIndexPtr(),
             p, &p_nnz) != CUSOLVER_STATUS_SUCCESS) {
-            mSLog->error("cusolverSpDcsrzfdHost returend an error");
+            //mSLog->error("cusolverSpDcsrzfdHost returend an error");
             return;
         }
 
@@ -83,9 +74,9 @@ namespace DPsim
         //std::cout << "inverse permutation:" << std::endl << mTransp->inverse().toDenseMatrix() << std::endl;
         //std::cout << "System Matrix:" << std::endl << hMat[0] << std::endl;
         magma_dcsrset(size, size,
-                    hMat[0].outerIndexPtr(),
-                    hMat[0].innerIndexPtr(),
-                    hMat[0].valuePtr(),
+                    hMat.outerIndexPtr(),
+                    hMat.innerIndexPtr(),
+                    hMat.valuePtr(),
                     &mHostSysMat,
                     mMagmaQueue);
 
@@ -110,6 +101,18 @@ namespace DPsim
         cusparseDestroyMatDescr(descr_M);
     }
 
+    void GpuMagmaAdapter::initialize()
+    {
+        magma_init();
+        magma_queue_create(0, &mMagmaQueue);
+        mHostSysMat = {Magma_CSR};
+        mDevSysMat = {Magma_CSR};
+        mHostRhsVec = {Magma_CSR};
+        mDevRhsVec = {Magma_CSR};
+        mHostLhsVec = {Magma_CSR};
+        mDevLhsVec = {Magma_CSR};
+    }
+
     void GpuMagmaAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
         
@@ -117,17 +120,17 @@ namespace DPsim
 
     void GpuMagmaAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
     {
-        
+        performFactorization(mVariableSystemMatrix);
     }
 
     void GpuMagmaAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
     {
-        
+        performFactorization(mVariableSystemMatrix);
     }
 
     void GpuMagmaAdapter::partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
-        
+        performFactorization(mVariableSystemMatrix);
     }
 
     Matrix GpuMagmaAdapter::solve(Matrix& mRightHandSideVector)
