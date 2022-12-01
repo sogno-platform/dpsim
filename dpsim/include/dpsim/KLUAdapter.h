@@ -60,6 +60,9 @@ namespace DPsim
 		/// Flag to indicate if preprocessing succeeded
 		bool preprocessing_is_okay;
 
+		/// Temporary value to store the number of nonzeros
+		int nnz;
+
         public:
 		/// Destructor
 		virtual ~KLUAdapter();
