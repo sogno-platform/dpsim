@@ -12,6 +12,10 @@ class Reader:
         self.mpc_raw = scipy.io.loadmat(mpc_file_path)
         self.mpc_name = mpc_name
 
+    # TODO
+    def consider_mapping(self, mapping_file_path):
+        self.mpc_mapping = pd.read_excel(mapping_file_path, sheet_name='bus_mapping', dtype=str)
+
     def process_mpc(self):
 
         version_idx = 0
@@ -92,30 +96,43 @@ class Reader:
         inj = 0
 
         for index, bus in self.mpc_bus_data.iterrows():
-            # create dpsimpy busses
+            # create dpsimpy nodes
             bus = bus + 1
             bus_index = str(self.mpc_bus_data.at[index,'bus_i'])
             bus_name = bus_index
+            bus_map=self.mpc_mapping.loc[self.mpc_mapping['bus_i']==bus_index]
+            # bus_name=bus_map['bus_name'].values[0]
             dpsimpy_busses_dict[bus_name] = dpsimpy.sp.SimNode(bus_name, dpsimpy.PhaseType.Single)
 
             # for each bus type create corresponding dpsimpy component
             # 1 = PQ, 2 = PV, 3 = ref, 4 = isolated
             bus_type = self.mpc_bus_data.at[index,'type']
+            conn_load=bus_map['connected_load'].values[0]
+            conn_gen=bus_map['connected_gen'].values[0]
 
-            # Loads
+            conn_comp=[]
+
+            if str(conn_load) != 'nan':
+                conn_comp.append(conn_load)
+            if str(conn_gen) != 'nan':
+                conn_comp.append(conn_gen)
+
+            # PQ busses
             if bus_type == 1:
-                load = load + 1
-                load_name = "load%s" %load
-                load_p = self.mpc_bus_data.at[index,'Pd'] * mw_w
-                load_q = self.mpc_bus_data.at[index,'Qd'] * mw_w
-                load_baseV = self.mpc_bus_data.at[index,'baseKV'] * kv_v
+                for comp in conn_comp:
+                    load = load + 1
+                    # load_name = "load%s" %bus_index
+                    load_name=comp
+                    load_p = self.mpc_bus_data.at[index,'Pd'] * mw_w
+                    load_q = self.mpc_bus_data.at[index,'Qd'] * mw_w
+                    load_baseV = self.mpc_bus_data.at[index,'baseKV'] * kv_v
 
-                dpsimpy_comp_dict[load_name] = [dpsimpy.sp.ph1.Load(load_name, dpsimpy.LogLevel.info)]
-                dpsimpy_comp_dict[load_name][0].set_parameters(load_p, load_q, load_baseV)
-                dpsimpy_comp_dict[load_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.PQ)
+                    dpsimpy_comp_dict[load_name] = [dpsimpy.sp.ph1.Load(load_name, dpsimpy.LogLevel.info)]
+                    dpsimpy_comp_dict[load_name][0].set_parameters(load_p, load_q, load_baseV)
+                    dpsimpy_comp_dict[load_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.PQ)
 
-                # add connections
-                dpsimpy_comp_dict[load_name].append([dpsimpy_busses_dict[bus_index]]) # [to bus]
+                    # add connections
+                    dpsimpy_comp_dict[load_name].append([dpsimpy_busses_dict[bus_name]]) # [to bus]
 
             # Generators
             elif bus_type == 2:
