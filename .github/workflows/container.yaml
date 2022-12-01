@@ -4,7 +4,7 @@ name: Container
 on: workflow_dispatch
 
 jobs:
-  create-docker-centos:
+  create-docker-rocky:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,12 +17,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_SECRET }}
 
       - name: Build and push
-        id: docker_build_dev_centos
+        id: docker_build_dev_rocky
         uses: docker/build-push-action@v3
         with:
-         file: packaging/Docker/Dockerfile.dev-centos
+         file: packaging/Docker/Dockerfile.dev-rocky
          push: true
-         tags: sogno/dpsim:dev-centos
+         tags: sogno/dpsim:dev-rocky
 
   create-docker-fedora-release:
     runs-on: ubuntu-latest
