@@ -198,13 +198,7 @@ namespace DPsim
 
     void GpuSparseAdapter::initialize()
     {
-        // mCusparsehandle = nullptr;
-        // mSysMat = nullptr;
-        // mTransp = nullptr;
-        // mGpuRhsVec = 0;
-        // mGpuLhsVec = 0;
-        // mGpuIntermediateVec = 0;
-        // pBuffer = 0;
+        
     }
 
     void GpuSparseAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)

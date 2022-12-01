@@ -112,8 +112,8 @@ namespace DPsim
             
             this->changedEntries = mListVariableSystemMatrixEntries;
             int varying_entries = changedEntries.size();
-            int *varying_columns = (int*)calloc(sizeof(int), varying_entries);
-            int *varying_rows = (int*)calloc(sizeof(int), varying_entries);
+            int varying_columns[varying_entries];
+            int varying_rows[varying_entries];
             
             int index = 0;
 
@@ -132,8 +132,7 @@ namespace DPsim
                 preprocessing_is_okay = true;
             }
 
-            free(varying_rows);
-            free(varying_columns);
+            nnz = mVariableSystemMatrix.nonZeros();
         }
 
         void KLUAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
@@ -155,8 +154,8 @@ namespace DPsim
             }
 
             int varying_entries = changedEntries.size();
-            int *varying_columns = (int*)calloc(sizeof(int), varying_entries);
-            int *varying_rows = (int*)calloc(sizeof(int), varying_entries);
+            int varying_columns[varying_entries];
+            int varying_rows[varying_entries];
             int index = 0;
 
             for(std::pair<UInt, UInt> i : changedEntries)
@@ -166,31 +165,45 @@ namespace DPsim
                 index++;
             }
 
-            /*int path_is_okay = */klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, varying_columns, varying_rows, varying_entries);
-
-            free(varying_columns);
-            free(varying_rows);
+            klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, varying_columns, varying_rows, varying_entries);
         }
 
         void KLUAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
         {
-            Int* Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
-            Int* Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
-            Real* Ax = const_cast<Real*>(mVariableSystemMatrix.valuePtr());
-            /*int refactor_is_okay = */klu_refactor(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+            if(mVariableSystemMatrix.nonZeros() != nnz)
+            {
+                preprocessing(mVariableSystemMatrix, this->changedEntries);
+                factorize(mVariableSystemMatrix);
+            }
+            else
+            {
+                Int* Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
+                Int* Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
+                Real* Ax = const_cast<Real*>(mVariableSystemMatrix.valuePtr());
+                klu_refactor(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+            }
         }
 
         void KLUAdapter::partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
         {
-            Int* Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
-            Int* Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
-            Real* Ax = const_cast<Real*>(mVariableSystemMatrix.valuePtr());
-            /*int partial_refactor_is_okay = */klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
-            
-            if(m_common.status == KLU_PIVOT_FAULT)
+            if(mVariableSystemMatrix.nonZeros() != nnz)
             {
-                /* pivot became too small => fully factorize again */
+                preprocessing(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
                 factorize(mVariableSystemMatrix);
+            }
+            else
+            {
+                Int* Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
+                Int* Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
+                Real* Ax = const_cast<Real*>(mVariableSystemMatrix.valuePtr());
+                klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+                //klu_refactor(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+                
+                if(m_common.status == KLU_PIVOT_FAULT)
+                {
+                    /* pivot became too small => fully factorize again */
+                    factorize(mVariableSystemMatrix);
+                }
             }
         }
 
