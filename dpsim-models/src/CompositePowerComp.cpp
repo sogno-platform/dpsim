@@ -43,6 +43,13 @@ void CompositePowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attri
 		subComp->mnaInitialize(omega, timeStep, leftVector);
 	}
 	mnaParentInitialize(omega, timeStep, leftVector);
+
+	if (mHasPreStep) {
+		this->mMnaTasks.push_back(std::make_shared<typename MNASimPowerComp<VarType>::MnaPreStep>(*this));
+	}
+	if (mHasPostStep) {
+		this->mMnaTasks.push_back(std::make_shared<typename MNASimPowerComp<VarType>::MnaPostStep>(*this, leftVector));
+	}
 }
 
 template <typename VarType>

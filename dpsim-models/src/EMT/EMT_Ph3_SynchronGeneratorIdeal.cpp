@@ -12,7 +12,7 @@ using namespace CPS;
 
 
 EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name, Logger::Level logLevel, CPS::GeneratorType sourceType)
-	: CompositePowerComp<Real>(uid, name, logLevel),
+	: CompositePowerComp<Real>(uid, name, true, true, logLevel),
 	mRefVoltage(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	mSourceType = sourceType;
@@ -69,10 +69,6 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real freq
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	// collect tasks
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 

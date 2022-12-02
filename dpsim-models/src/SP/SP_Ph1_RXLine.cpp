@@ -14,7 +14,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	Real resistance, Real inductance,
 	Logger::Level logLevel)
 	: 	Base::Ph1::PiLine(mAttributes),
-		CompositePowerComp<Complex>(uid, name, logLevel),
+		CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 		mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes, baseVoltage)),
 		mInductance(Attribute<Real>::create("L_series", mAttributes)),
 		mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
@@ -39,7 +39,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
 	: 	Base::Ph1::PiLine(mAttributes),
-		CompositePowerComp<Complex>(uid, name, logLevel),
+		CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 		mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 		mInductance(Attribute<Real>::create("L_series", mAttributes)),
 		mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
@@ -188,8 +188,6 @@ void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void SP::Ph1::RXLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
