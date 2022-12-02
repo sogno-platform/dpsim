@@ -99,4 +99,4 @@ RUN cd /tmp && \
 	cmake -DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++ -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
 	rm -rf /tmp/villasnode
 
-ENV CMAKE_OPTS="CMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc CMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++" 
+ENV CMAKE_OPTS="-DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++" 
