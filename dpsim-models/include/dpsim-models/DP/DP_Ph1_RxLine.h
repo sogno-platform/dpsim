@@ -44,10 +44,6 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
-		/// Stamps system matrix
-		void mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix);
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		void mnaUpdateVoltage(const Matrix& leftVector) override;
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;

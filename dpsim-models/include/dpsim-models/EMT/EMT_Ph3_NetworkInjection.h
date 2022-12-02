@@ -55,10 +55,8 @@ namespace CPS {
 				void setParameters(MatrixComp voltageRef, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 50.0, bool zigzag = false);
 
 				// #### MNA Section ####
-				/// Initializes internal variables of the component
-				void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 				/// Stamps right side (source) vector
-				void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+				void mnaParentApplyRightSideVectorStamp(Matrix& rightVector) override;
 				/// Returns current through the component
 				void mnaUpdateCurrent(const Matrix& leftVector) override;
 				/// Updates voltage across component

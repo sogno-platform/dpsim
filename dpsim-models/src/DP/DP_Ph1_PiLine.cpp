@@ -44,14 +44,14 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSeriesResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubSeriesResistor->initialize(mFrequencies);
 	mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubSeriesResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubSeriesResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	mSubSeriesInductor = std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 	mSubSeriesInductor->setParameters(**mSeriesInd);
 	mSubSeriesInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubSeriesInductor->initialize(mFrequencies);
 	mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubSeriesInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubSeriesInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	// By default there is always a small conductance to ground to
 	// avoid problems with floating nodes.
@@ -64,14 +64,14 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 	mSubParallelResistor0->initialize(mFrequencies);
 	mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubParallelResistor0, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubParallelResistor0, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	mSubParallelResistor1 = std::make_shared<DP::Ph1::Resistor>(**mName + "_con1", mLogLevel);
 	mSubParallelResistor1->setParameters(2. / **mParallelCond);
 	mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 	mSubParallelResistor1->initialize(mFrequencies);
 	mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubParallelResistor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubParallelResistor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 
 	if (**mParallelCap >= 0) {
@@ -80,14 +80,14 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelCapacitor0->initialize(mFrequencies);
 		mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubParallelCapacitor0, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+		addMNASubComponent(mSubParallelCapacitor0, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 		mSubParallelCapacitor1 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap1", mLogLevel);
 		mSubParallelCapacitor1->setParameters(**mParallelCap / 2.);
 		mSubParallelCapacitor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelCapacitor1->initialize(mFrequencies);
 		mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubParallelCapacitor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+		addMNASubComponent(mSubParallelCapacitor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
 	mSLog->info(
@@ -103,21 +103,6 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)),
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
-}
-
-void DP::Ph1::PiLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	mRightVectorStamps.push_back(&**mSubSeriesInductor->mRightVector);
-
-	if (**mParallelCap >= 0) {
-		mRightVectorStamps.push_back(&**mSubParallelCapacitor0->mRightVector);
-		mRightVectorStamps.push_back(&**mSubParallelCapacitor1->mRightVector);
-	}
-}
-
-void DP::Ph1::PiLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	rightVector.setZero();
-	for (auto stamp : mRightVectorStamps)
-		rightVector += *stamp;
 }
 
 void DP::Ph1::PiLine::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {

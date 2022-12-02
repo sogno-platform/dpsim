@@ -65,10 +65,6 @@ namespace Ph1 {
 		/// Flag for controller usage
 		Bool mWithControl=true;
 
-		// #### solver ####
-		///
-		std::vector<const Matrix*> mRightVectorStamps;
-
 	public:
 		// ### General Parameters ###
 
@@ -130,8 +126,6 @@ namespace Ph1 {
 		// #### MNA section ####
 		/// Initializes internal variables of the component
 		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// Updates current through the component
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates voltage across component

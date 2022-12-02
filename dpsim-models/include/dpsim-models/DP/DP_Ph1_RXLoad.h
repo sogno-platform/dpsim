@@ -62,8 +62,6 @@ namespace Ph1 {
 		void setParameters(Real activePower, Real ReactivePower, Real volt);
 
 		// #### MNA section ####
-		/// Initializes internal variables of the component
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Update interface current from MNA system result
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Update interface voltage from MNA system result

@@ -23,7 +23,7 @@ DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name, Logger::Lev
 
 	// Create electrical sub components
 	mSubVoltageSource = std::make_shared<DP::Ph1::VoltageSource>(**mName + "_vs", mLogLevel);
-	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mSLog->info("Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)
@@ -85,18 +85,7 @@ void DP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) 
 
 // #### MNA functions ####
 
-void DP::Ph1::NetworkInjection::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	// collect right side vectors of subcomponents
-	/// CHECK: This might be incorrect, depending on if the ** actually returns the reference or copies the object
-	mRightVectorStamps.push_back(&**(mSubVoltageSource->mRightVector));
-}
-
-
-void DP::Ph1::NetworkInjection::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	rightVector.setZero();
-	for (auto stamp : mRightVectorStamps)
-		rightVector += *stamp;
-
+void DP::Ph1::NetworkInjection::mnaParentApplyRightSideVectorStamp(Matrix& rightVector) {
 	mSLog->debug("Right Side Vector: {:s}",
 				Logger::matrixToString(rightVector));
 }
