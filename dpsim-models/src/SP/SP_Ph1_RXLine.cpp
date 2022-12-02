@@ -160,19 +160,19 @@ void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubResistor->setParameters(**mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubResistor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(**mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mInitialResistor = std::make_shared<SP::Ph1::Resistor>(**mName + "_snubber_res", mLogLevel);
 	mInitialResistor->setParameters(1e6);
 	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mInitialResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mInitialResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

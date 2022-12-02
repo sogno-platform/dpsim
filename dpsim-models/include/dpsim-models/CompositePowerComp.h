@@ -22,6 +22,8 @@ namespace CPS {
 		MNAInterface::List mSubcomponentsBeforePostStep;
 		MNAInterface::List mSubcomponentsAfterPostStep;
 
+		std::vector<CPS::Attribute<Matrix>::Ptr> mRightVectorStamps;
+
 		Bool mHasPreStep;
 		Bool mHasPostStep;
 
@@ -48,7 +50,7 @@ namespace CPS {
 		/// @param subc The new subcomponent
 		/// @param preStepOrder When to execute the subcomponent's pre-step in relation to the parent
 		/// @param postStepOrder When to execute the subcomponent's post-step in relation to the parent
-		void addMNASubComponent(typename SimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder);
+		void addMNASubComponent(typename SimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder, Bool contributeToRightVector);
 
 		// #### MNA Interface Functions ####
 		/// Initializes variables of components

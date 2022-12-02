@@ -50,7 +50,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 	}
 	else {
 		mResistance = 0;
@@ -68,7 +68,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+		addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 	else if (mReactance < 0) {
 		mCapacitance = -1. / (2.*PI*frequency) / mReactance;
@@ -77,7 +77,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+		addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
 	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
@@ -106,15 +106,6 @@ void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real v
 
 	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
 	mSLog->info("Nominal Voltage={} [V]", **mNomVoltage);
-}
-
-void DP::Ph1::RXLoad::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	if (mSubInductor) {
-		mRightVectorStamps.push_back(&**mSubInductor->mRightVector);
-	}
-	if (mSubCapacitor) {
-		mRightVectorStamps.push_back(&**mSubCapacitor->mRightVector);
-	}
 }
 
 void DP::Ph1::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {

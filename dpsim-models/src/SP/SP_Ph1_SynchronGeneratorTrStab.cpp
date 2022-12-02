@@ -183,7 +183,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
 	mSubVoltageSource->initialize(mFrequencies);
 	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	// Create sub inductor as Xpd
 	mSubInductor = SP::Ph1::Inductor::make(**mName + "_ind", mLogLevel);
@@ -191,7 +191,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
 	mSubInductor->initialize(mFrequencies);
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	mSLog->info("\n--- Initialize according to powerflow ---"
 				"\nTerminal 0 voltage: {:e}<{:e}"

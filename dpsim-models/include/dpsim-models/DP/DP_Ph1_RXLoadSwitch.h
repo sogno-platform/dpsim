@@ -47,10 +47,6 @@ namespace Ph1 {
 		void updateSwitchState(Real time);
 
 		// #### MNA section ####
-		/// Initializes internal variables of the component
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// MNA pre step operations
 		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations

@@ -5,10 +5,15 @@
 using namespace CPS;
 
 template <typename VarType>
-void CompositePowerComp<VarType>::addMNASubComponent(typename SimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder) {
+void CompositePowerComp<VarType>::addMNASubComponent(typename SimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder, Bool contributeToRightVector) {
 	this->mSubComponents.push_back(subc);
 	if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subc)) {
 		this->mSubcomponentsMNA.push_back(mnasubcomp);
+
+		if (contributeToRightVector) {
+			this->mRightVectorStamps.push_back(mnasubcomp->mRightVector);
+		}
+
 		switch (preStepOrder) {
 			case MNA_SUBCOMP_TASK_ORDER::NO_TASK: break;
 			case MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT: {
@@ -65,8 +70,11 @@ void CompositePowerComp<VarType>::mnaApplySystemMatrixStamp(Matrix& systemMatrix
 
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	for (auto subComp : mSubcomponentsMNA) {
-		subComp->mnaApplyRightSideVectorStamp(rightVector);
+	rightVector.setZero();
+	for (auto stamp : mRightVectorStamps) {
+		if ((**stamp).size() != 0) {
+			rightVector += **stamp;
+		}
 	}
 	mnaParentApplyRightSideVectorStamp(rightVector);
 }

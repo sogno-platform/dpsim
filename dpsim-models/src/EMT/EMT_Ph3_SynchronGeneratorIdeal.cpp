@@ -39,10 +39,10 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real freq
 
 	if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {
 		mSubVoltageSource = EMT::Ph3::VoltageSource::make(**mName + "_vs", mLogLevel);
-		addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+		addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	} else {
 		mSubCurrentSource = EMT::Ph3::CurrentSource::make(**mName + "_cs", mLogLevel);
-		addMNASubComponent(mSubCurrentSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+		addMNASubComponent(mSubCurrentSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
 	mSubComponents[0]->connect({ SimNode::GND, node(0) });
