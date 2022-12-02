@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
-	: Base::Ph3::PiLine(mAttributes), CompositePowerComp<Real>(uid, name, logLevel) {
+	: Base::Ph3::PiLine(mAttributes), CompositePowerComp<Real>(uid, name, true, true, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -97,8 +97,6 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void EMT::Ph3::RxLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 

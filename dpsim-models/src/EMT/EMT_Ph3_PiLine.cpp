@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: Base::Ph3::PiLine(mAttributes), CompositePowerComp<Real>(uid, name, logLevel) {
+	: Base::Ph3::PiLine(mAttributes), CompositePowerComp<Real>(uid, name, true, true, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -147,8 +147,6 @@ void EMT::Ph3::PiLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<
 		mRightVectorStamps.push_back(&mSubParallelCapacitor0->mRightVector->get());
 		mRightVectorStamps.push_back(&mSubParallelCapacitor1->mRightVector->get());
 	}
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 

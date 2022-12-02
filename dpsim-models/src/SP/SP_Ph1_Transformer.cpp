@@ -12,7 +12,7 @@ using namespace CPS;
 
 // #### General ####
 SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel, Bool withResistiveLosses)
-	: Base::Ph1::Transformer(mAttributes), CompositePowerComp<Complex>(uid, name, logLevel),
+	: Base::Ph1::Transformer(mAttributes), CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
@@ -288,8 +288,6 @@ MatrixComp SP::Ph1::Transformer::Y_element() {
 
 void SP::Ph1::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	mSLog->info(
 		"\nTerminal 0 connected to {:s} = sim node {:d}"

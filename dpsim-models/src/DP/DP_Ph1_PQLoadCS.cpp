@@ -12,7 +12,7 @@ using namespace CPS;
 
 DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name,
 	Logger::Level logLevel)
-	: CompositePowerComp<Complex>(uid, name, logLevel),
+	: CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	mActivePower(Attribute<Real>::create("P", mAttributes, 0)),
 	mReactivePower(Attribute<Real>::create("Q", mAttributes, 0)),
 	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
@@ -92,8 +92,6 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 void DP::Ph1::PQLoadCS::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	///CHECK: Can we avoid setting the right_vector attribute to dynamic? Maybe just copy the current source's right_vector somewhere? Or make a new attribute?
 	mRightVector->setReference(mSubCurrentSource->mRightVector);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void DP::Ph1::PQLoadCS::updateSetPoint() {

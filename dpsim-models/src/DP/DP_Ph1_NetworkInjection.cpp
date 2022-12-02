@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
-	: CompositePowerComp<Complex>(uid, name, logLevel),
+	: CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)),
 	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
 	setVirtualNodeNumber(0);
@@ -89,10 +89,6 @@ void DP::Ph1::NetworkInjection::mnaParentInitialize(Real omega, Real timeStep, A
 	// collect right side vectors of subcomponents
 	/// CHECK: This might be incorrect, depending on if the ** actually returns the reference or copies the object
 	mRightVectorStamps.push_back(&**(mSubVoltageSource->mRightVector));
-
-	// collect tasks
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
