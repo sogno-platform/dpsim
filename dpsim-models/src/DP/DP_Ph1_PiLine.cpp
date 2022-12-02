@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 
@@ -112,8 +112,6 @@ void DP::Ph1::PiLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<M
 		mRightVectorStamps.push_back(&**mSubParallelCapacitor0->mRightVector);
 		mRightVectorStamps.push_back(&**mSubParallelCapacitor1->mRightVector);
 	}
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 

@@ -12,7 +12,7 @@ using namespace CPS;
 
 DP::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
 	Logger::Level logLevel)
-	: CompositePowerComp<Complex>(uid, name, logLevel),
+	: CompositePowerComp<Complex>(uid, name, true, false, logLevel),
 	mVoltageRef(Attribute<Complex>::create("V_ref", mAttributes)),
 	mSrcFreq(Attribute<Real>::create("f_src", mAttributes)) {
 	setVirtualNodeNumber(1);
@@ -63,7 +63,6 @@ void DP::Ph1::VoltageSourceRamp::mnaParentInitialize(Real omega, Real timeStep, 
 	// its own tasks then do the rest
 	/// FIXME: Can we avoid setting right_vector to dynamic?
 	mRightVector->setReference(mSubVoltageSource->mRightVector);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 }
 
 void DP::Ph1::VoltageSourceRamp::updateState(Real time) {

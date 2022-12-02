@@ -10,7 +10,7 @@
 using namespace CPS;
 
 SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
-	: Base::SynchronGenerator(mAttributes), CompositePowerComp<Complex>(uid, name, logLevel),
+	: Base::SynchronGenerator(mAttributes), CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	mEp(Attribute<Complex>::create("Ep", mAttributes)),
 	mEp_abs(Attribute<Real>::create("Ep_mag", mAttributes)),
 	mEp_phase(Attribute<Real>::create("Ep_phase", mAttributes)),
@@ -248,9 +248,7 @@ void SP::Ph1::SynchronGeneratorTrStab::mnaParentInitialize(Real omega, Real time
 	mTimeStep = timeStep;
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<AddBStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {

@@ -12,7 +12,7 @@ using namespace CPS;
 
 
 EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
-	CompositePowerComp<Real>(uid, name, logLevel),
+	CompositePowerComp<Real>(uid, name, true, true, logLevel),
 	mOmegaN(Attribute<Real>::create("Omega_nom", mAttributes)),
 	mPref(Attribute<Real>::create("P_ref", mAttributes)),
 	mQref(Attribute<Real>::create("Q_ref", mAttributes)),
@@ -268,10 +268,6 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentInitialize(Real omega, Real t
 	mRightVectorStamps.push_back(&mSubCtrledVoltageSource->mRightVector->get());
 	if (mWithConnectionTransformer)
 		mRightVectorStamps.push_back(&mConnectionTransformer->mRightVector->get());
-
-	// collect tasks
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	// TODO: these are actually no MNA tasks
 	mMnaTasks.push_back(std::make_shared<ControlPreStep>(*this));

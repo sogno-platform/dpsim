@@ -12,7 +12,7 @@ using namespace CPS;
 
 EMT::Ph3::Transformer::Transformer(String uid, String name,
 	Logger::Level logLevel, Bool withResistiveLosses)
-	: Base::Ph3::Transformer(mAttributes), CompositePowerComp<Real>(uid, name, logLevel) {
+	: Base::Ph3::Transformer(mAttributes), CompositePowerComp<Real>(uid, name, true, true, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	if (withResistiveLosses)
 		setVirtualNodeNumber(3);
@@ -169,9 +169,6 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 void EMT::Ph3::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	mSLog->info(
 		"\nTerminal 0 connected to {:s} = sim node {:d}"

@@ -14,7 +14,7 @@ using namespace CPS;
 // please note that P,Q values can not be passed inside constructor since P,Q are currently read from the terminal,
 // and these values are not yet assigned to the terminals when this constructor was called in reader.
 SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
-	: CompositePowerComp<Complex>(uid, name, logLevel),
+	: CompositePowerComp<Complex>(uid, name, false, true, logLevel),
 	mActivePowerPerUnit(Attribute<Real>::create("P_pu", mAttributes)),
 	mReactivePowerPerUnit(Attribute<Real>::create("Q_pu", mAttributes)),
 	mActivePower(Attribute<Real>::createDynamic("P", mAttributes)), //Made dynamic so it can be imported through InterfaceVillas
@@ -164,7 +164,6 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 // #### MNA section ####
 void SP::Ph1::Load::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void SP::Ph1::Load::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

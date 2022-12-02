@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
-	CompositePowerComp<Complex>(uid, name, logLevel),
+	CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	mOmegaN(Attribute<Real>::create("Omega_nom", mAttributes)),
 	mVnom(Attribute<Real>::create("vnom", mAttributes)),
 	mPref(Attribute<Real>::create("P_ref", mAttributes)),
@@ -252,10 +252,6 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentInitialize(Real omega, Real ti
 	mRightVectorStamps.push_back(&mSubCtrledVoltageSource->mRightVector->get());
 	if (mWithConnectionTransformer)
 		mRightVectorStamps.push_back(&mConnectionTransformer->mRightVector->get());
-
-	// collect tasks
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	// TODO: these are actually no MNA tasks
 	mMnaTasks.push_back(std::make_shared<ControlPreStep>(*this));

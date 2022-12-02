@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::RXLoadSwitch::RXLoadSwitch(String uid, String name, Logger::Level logLevel)
-	: CompositePowerComp<Complex>(uid, name, logLevel) {
+	: CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
 	setTerminalNumber(1);
 	setVirtualNodeNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -79,8 +79,6 @@ void DP::Ph1::RXLoadSwitch::mnaParentInitialize(Real omega, Real timeStep, Attri
 	mRightVectorStamps.push_back(&**mSubRXLoad->mRightVector);
 
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void DP::Ph1::RXLoadSwitch::mnaApplyRightSideVectorStamp(Matrix& rightVector) {

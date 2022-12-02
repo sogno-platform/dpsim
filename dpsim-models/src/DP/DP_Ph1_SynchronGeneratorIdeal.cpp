@@ -13,7 +13,7 @@ using namespace CPS;
 
 DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
 	Logger::Level logLevel)
-	: CompositePowerComp<Complex>(uid, name, logLevel),
+	: CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
@@ -50,10 +50,6 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequ
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	// collect tasks
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 

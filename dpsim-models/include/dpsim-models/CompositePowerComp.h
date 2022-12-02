@@ -5,23 +5,25 @@
 #include <dpsim-models/MNASimPowerComp.h>
 
 namespace CPS {
-
 	enum class MNA_SUBCOMP_TASK_ORDER {
-			NO_TASK,
-			TASK_BEFORE_PARENT,
-			TASK_AFTER_PARENT
+		NO_TASK,
+		TASK_BEFORE_PARENT,
+		TASK_AFTER_PARENT
 	};
 
 	/// Base class for composite power components
 	template <typename VarType>
 	class CompositePowerComp : public MNASimPowerComp<VarType> {
 
-	protected:
+	private:
 		MNAInterface::List mSubcomponentsMNA;
 		MNAInterface::List mSubcomponentsBeforePreStep;
 		MNAInterface::List mSubcomponentsAfterPreStep;
 		MNAInterface::List mSubcomponentsBeforePostStep;
 		MNAInterface::List mSubcomponentsAfterPostStep;
+
+		Bool mHasPreStep;
+		Bool mHasPostStep;
 
 	public:
 		typedef VarType Type;
@@ -29,12 +31,15 @@ namespace CPS {
 		typedef std::vector<Ptr> List;
 
 		/// Basic constructor that takes UID, name and log level
-		CompositePowerComp(String uid, String name, Logger::Level logLevel)
-			: MNASimPowerComp<VarType>(uid, name, logLevel) { }
+		CompositePowerComp(String uid, String name, Bool hasPreStep, Bool hasPostStep, Logger::Level logLevel)
+			: MNASimPowerComp<VarType>(uid, name, logLevel) {
+				mHasPreStep = hasPreStep;
+				mHasPostStep = hasPostStep;
+			}
 
 		/// Basic constructor that takes name and log level and sets the UID to name as well
-		CompositePowerComp(String name, Logger::Level logLevel = Logger::Level::off)
-			: MNASimPowerComp<VarType>(name, name, logLevel) { }
+		CompositePowerComp(String name, Bool hasPreStep = true, Bool hasPostStep = true, Logger::Level logLevel = Logger::Level::off)
+			: CompositePowerComp<VarType>(name, name, hasPreStep, hasPostStep, logLevel) { }
 
 		/// Destructor - does not do anything
 		virtual ~CompositePowerComp() = default;

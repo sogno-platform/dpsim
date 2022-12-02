@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
-	: CompositePowerComp<Real>(uid, name, logLevel),
+	: CompositePowerComp<Real>(uid, name, true, true, logLevel),
 	mVoltageRef(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)),
 	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
@@ -88,10 +88,6 @@ void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency)
 void EMT::Ph3::NetworkInjection::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	// collect right side vectors of subcomponents
 	mRightVectorStamps.push_back(&**mSubVoltageSource->mRightVector);
-
-	// collect tasks
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }

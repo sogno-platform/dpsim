@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
-	: CompositePowerComp<Real>(uid, name, logLevel),
+	: CompositePowerComp<Real>(uid, name, true, true, logLevel),
 	mActivePower(Attribute<Matrix>::create("P", mAttributes)),
 	mReactivePower(Attribute<Matrix>::create("Q", mAttributes)),
 	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
@@ -174,9 +174,6 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 void EMT::Ph3::RXLoad::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void EMT::Ph3::RXLoad::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {

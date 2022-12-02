@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(uid, name, logLevel),
+	: Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(uid, name, false, true, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
@@ -230,8 +230,6 @@ void SP::Ph1::PiLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<M
 		mRightVectorStamps.push_back(&**mSubParallelCapacitor0->mRightVector);
 		mRightVectorStamps.push_back(&**mSubParallelCapacitor1->mRightVector);
 	}
-
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
