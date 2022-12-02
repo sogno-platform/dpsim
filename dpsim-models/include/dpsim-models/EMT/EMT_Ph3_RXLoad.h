@@ -69,9 +69,6 @@ namespace CPS {
 				void initializeFromNodesAndTerminals(Real frequency);
 
 				// #### MNA section ####
-				/// Initializes internal variables of the component
-				void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-
 				void mnaUpdateCurrent(const Matrix& leftVector) override;
 				void mnaUpdateVoltage(const Matrix& leftVector) override;
 

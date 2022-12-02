@@ -55,8 +55,6 @@ namespace Ph1 {
 		void initialize(Matrix frequencies);
 
 		// #### MNA section ####
-		/// Initializes internal variables of the component
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		void mnaParentPreStep(Real time, Int timeStepCount) override;
 	};
 }

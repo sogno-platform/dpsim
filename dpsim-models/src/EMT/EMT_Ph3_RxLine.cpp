@@ -64,13 +64,13 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubResistor->setParameters(**mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubResistor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	mSubInductor = std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(**mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mInitialResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_snubber_res", mLogLevel);
 	Matrix defaultSnubRes = Matrix::Zero(3, 1);
@@ -81,7 +81,7 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	mInitialResistor->setParameters(defaultSnubRes);
 	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mInitialResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mInitialResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -94,11 +94,6 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
-}
-
-void EMT::Ph3::RxLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSubResistor->mnaApplyRightSideVectorStamp(rightVector);
-	mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
 }
 
 void EMT::Ph3::RxLine::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {

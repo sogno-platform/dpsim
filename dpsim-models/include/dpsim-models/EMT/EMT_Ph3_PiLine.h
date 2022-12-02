@@ -55,10 +55,6 @@ namespace Ph3 {
 		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
-		/// Initializes internal variables of the component
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// Updates internal current variable of the component
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component

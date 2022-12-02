@@ -20,8 +20,8 @@ DP::Ph1::RXLoadSwitch::RXLoadSwitch(String uid, String name, Logger::Level logLe
 	// Create sub components
 	mSubRXLoad = std::make_shared<DP::Ph1::RXLoad>(**mName + "_rxload", mLogLevel);
 	mSubSwitch = std::make_shared<DP::Ph1::Switch>(**mName + "_switch", mLogLevel);
-	addMNASubComponent(mSubRXLoad, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
-	addMNASubComponent(mSubSwitch, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubRXLoad, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+	addMNASubComponent(mSubSwitch, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 	// Set switch default values
 	mSubSwitch->setParameters(1e9, 1e-9, true);
 }
@@ -72,17 +72,6 @@ void DP::Ph1::RXLoadSwitch::setParameters(Real activePower, Real reactivePower, 
 
 void DP::Ph1::RXLoadSwitch::setSwitchParameters(Real openResistance, Real closedResistance, Bool closed) {
 	mSubSwitch->setParameters(openResistance, closedResistance, closed);
-}
-
-void DP::Ph1::RXLoadSwitch::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	// get sub component right vector
-	mRightVectorStamps.push_back(&**mSubRXLoad->mRightVector);
-}
-
-void DP::Ph1::RXLoadSwitch::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	rightVector.setZero();
-	for (auto stamp : mRightVectorStamps)
-		rightVector += *stamp;
 }
 
 void DP::Ph1::RXLoadSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {

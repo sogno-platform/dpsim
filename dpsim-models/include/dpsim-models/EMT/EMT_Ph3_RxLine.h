@@ -44,8 +44,6 @@ namespace Ph3 {
 		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		void mnaUpdateVoltage(const Matrix& leftVector) override;
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 

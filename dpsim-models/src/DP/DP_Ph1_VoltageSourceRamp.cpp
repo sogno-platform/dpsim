@@ -51,18 +51,11 @@ void DP::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
 	mSubVoltageSource->connect({ node(0), node(1) });
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubVoltageSource->initialize(frequencies);
-	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::NO_TASK);
+	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::NO_TASK, true);
 }
 
 void DP::Ph1::VoltageSourceRamp::initializeFromNodesAndTerminals(Real frequency) {
 	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
-}
-
-void DP::Ph1::VoltageSourceRamp::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	// only need a new MnaPreStep that updates the reference voltage of mSubVoltageSource;
-	// its own tasks then do the rest
-	/// FIXME: Can we avoid setting right_vector to dynamic?
-	mRightVector->setReference(mSubVoltageSource->mRightVector);
 }
 
 void DP::Ph1::VoltageSourceRamp::updateState(Real time) {
@@ -84,4 +77,5 @@ void DP::Ph1::VoltageSourceRamp::updateState(Real time) {
 void DP::Ph1::VoltageSourceRamp::mnaParentPreStep(Real time, Int timeStepCount) {
 	updateState(time);
 	**mSubVoltageSource->mVoltageRef = (**mIntfVoltage)(0, 0);
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }

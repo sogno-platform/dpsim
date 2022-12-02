@@ -73,7 +73,7 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 	// A positive power should result in a positive current to ground.
 	mSubCurrentSource->connect({ mTerminals[0]->node(), SimNode::GND });
 	mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubCurrentSource, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubCurrentSource, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	updateIntfValues();
 
 	mSLog->info(
@@ -87,11 +87,6 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(current));
-}
-
-void DP::Ph1::PQLoadCS::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	///CHECK: Can we avoid setting the right_vector attribute to dynamic? Maybe just copy the current source's right_vector somewhere? Or make a new attribute?
-	mRightVector->setReference(mSubCurrentSource->mRightVector);
 }
 
 void DP::Ph1::PQLoadCS::updateSetPoint() {
@@ -122,6 +117,7 @@ void DP::Ph1::PQLoadCS::mnaParentAddPostStepDependencies(AttributeBase::List &pr
 
 void DP::Ph1::PQLoadCS::mnaParentPreStep(Real time, Int timeStepCount) {
 	updateSetPoint();
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::PQLoadCS::updateIntfValues() {

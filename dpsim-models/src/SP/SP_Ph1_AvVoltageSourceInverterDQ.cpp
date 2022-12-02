@@ -29,7 +29,7 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	if (withTrafo) {
 		setVirtualNodeNumber(4);
 		mConnectionTransformer = SP::Ph1::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel, false);
-		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	} else {
 		setVirtualNodeNumber(3);
 	}
@@ -46,13 +46,13 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	mSubCapacitorF = SP::Ph1::Capacitor::make(**mName + "_capF", mLogLevel);
 	mSubInductorF = SP::Ph1::Inductor::make(**mName + "_indF", mLogLevel);
 	mSubCtrledVoltageSource = SP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
-	addMNASubComponent(mSubResistorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
-	addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
-	addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
-	addMNASubComponent(mSubInductorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubResistorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+	addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+	addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+	addMNASubComponent(mSubInductorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	// Pre-step of the subcontrolled voltage source is handled explicitly in mnaParentPreStep
-	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT);
+	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mSLog->info("Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)
@@ -246,22 +246,9 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentInitialize(Real omega, Real ti
 	mPowerControllerVSI->initializeStateSpaceModel(omega, timeStep, leftVector);
 	mPLL->setSimulationParameters(timeStep);
 
-	// collect right side vectors of subcomponents
-	mRightVectorStamps.push_back(&mSubCapacitorF->mRightVector->get());
-	mRightVectorStamps.push_back(&mSubInductorF->mRightVector->get());
-	mRightVectorStamps.push_back(&mSubCtrledVoltageSource->mRightVector->get());
-	if (mWithConnectionTransformer)
-		mRightVectorStamps.push_back(&mConnectionTransformer->mRightVector->get());
-
 	// TODO: these are actually no MNA tasks
 	mMnaTasks.push_back(std::make_shared<ControlPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<ControlStep>(*this));
-}
-
-void SP::Ph1::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	rightVector.setZero();
-	for (auto stamp : mRightVectorStamps)
-		rightVector += *stamp;
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) const {

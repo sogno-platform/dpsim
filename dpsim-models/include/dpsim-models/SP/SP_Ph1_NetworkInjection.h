@@ -92,10 +92,8 @@ namespace Ph1 {
 		/// This will create a CosineFMGenerator which will not react to external changes to mVoltageRef or mSrcFreq!
 		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 0.0, bool zigzag = false);
 
-		/// Initializes internal variables of the component
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaParentApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// Returns current through the component
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates voltage across component
