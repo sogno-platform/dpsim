@@ -123,6 +123,7 @@
 #include <dpsim-models/Signal/TurbineGovernor.h>
 #include <dpsim-models/Signal/FIRFilter.h>
 #include <dpsim-models/Signal/Integrator.h>
+#include <dpsim-models/Signal/PMUSignalDevice.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>

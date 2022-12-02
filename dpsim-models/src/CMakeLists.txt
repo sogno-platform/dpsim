@@ -131,6 +131,7 @@ list(APPEND MODELS_SOURCES
 	Signal/TurbineGovernor.cpp
 	Signal/PLL.cpp
 	Signal/Integrator.cpp
+	Signal/PMUSignalDevice.cpp
 	Signal/PowerControllerVSI.cpp
 	Signal/SineWaveGenerator.cpp
 	Signal/SignalGenerator.cpp

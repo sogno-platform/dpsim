@@ -20,6 +20,8 @@ void Three_bus_sim(String simName, Real timeStep, Real finalTime, Real cmdInerti
 	auto n2_PF = SimNode<Complex>::make("n2", PhaseType::Single);
 	auto n3_PF = SimNode<Complex>::make("n3", PhaseType::Single);
 
+	auto pmu_1 = PMUSignalDevice<>(,)
+
 	//injection
     //configuration(Synchronous generator 1)
 	auto gen1_PF = SP::Ph1::SynchronGenerator::make("Generator_1", Logger::Level::debug);
@@ -58,17 +60,21 @@ void Three_bus_sim(String simName, Real timeStep, Real finalTime, Real cmdInerti
 	line_pf_1->connect({ n1_PF, n2_PF });
 	line_pf_2->connect({ n1_PF, n3_PF });
 	line_pf_3->connect({ n2_PF, n3_PF });
+	pmu_1-> connect node
+
 	auto systemPF = SystemTopology(50,
 			SystemNodeList{n1_PF, n2_PF, n3_PF},
 			SystemComponentList{gen1_PF, gen2_PF, line_pf_1, line_pf_2, line_pf_3, load_PF});
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
+	///loggerPF->logAttribute("v_bus1", n1_PF->attribute("v"));
+	///loggerPF->logAttribute("v_bus2", n2_PF->attribute("v"));
+	///loggerPF->logAttribute("v_bus3", n3_PF->attribute("v"));
 	loggerPF->logAttribute("v_bus1", n1_PF->attribute("v"));
 	loggerPF->logAttribute("v_bus2", n2_PF->attribute("v"));
 	loggerPF->logAttribute("v_bus3", n3_PF->attribute("v"));
-	//loggerPF->logAttribute("i13",line_pf_1->attribute('i'));
-	//loggerPF->logAttribute("i23",line_pf_3->attribute('i'));
+	loggerPF->                       pmu_1->attribute
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -79,6 +85,7 @@ void Three_bus_sim(String simName, Real timeStep, Real finalTime, Real cmdInerti
 	simPF.setSolverType(Solver::Type::NRP);
 	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(false);
+
 	simPF.addLogger(loggerPF);
 	simPF.run();
 }
