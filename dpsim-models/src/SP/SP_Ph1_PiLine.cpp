@@ -224,9 +224,6 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void SP::Ph1::PiLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
 	mRightVectorStamps.push_back(&**mSubSeriesInductor->mRightVector);
 
 	if (**mParallelCap >= 0) {
