@@ -236,7 +236,6 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	mTimeStep = timeStep;
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<AddBStep>(*this));
 }
 

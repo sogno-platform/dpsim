@@ -88,8 +88,6 @@ void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency)
 void EMT::Ph3::NetworkInjection::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	// collect right side vectors of subcomponents
 	mRightVectorStamps.push_back(&**mSubVoltageSource->mRightVector);
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph3::NetworkInjection::mnaApplyRightSideVectorStamp(Matrix& rightVector) {

@@ -40,7 +40,6 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// MNA pre step operations
 		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations

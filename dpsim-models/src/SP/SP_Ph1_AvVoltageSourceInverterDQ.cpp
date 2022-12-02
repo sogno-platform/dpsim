@@ -256,8 +256,6 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentInitialize(Real omega, Real ti
 	// TODO: these are actually no MNA tasks
 	mMnaTasks.push_back(std::make_shared<ControlPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<ControlStep>(*this));
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& rightVector) {

@@ -87,8 +87,6 @@ namespace Ph1 {
 		void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;
 
 		// #### MNA section ####
-		/// Initializes internal variables of the component
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Updates internal current variable of the component
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component

@@ -68,10 +68,6 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real freq
 		Logger::complexToString(terminal(0)->singlePower()));
 }
 
-void EMT::Ph3::SynchronGeneratorIdeal::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-}
-
 void EMT::Ph3::SynchronGeneratorIdeal::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	prevStepDependencies.push_back(mIntfCurrent);
 	prevStepDependencies.push_back(mIntfVoltage);

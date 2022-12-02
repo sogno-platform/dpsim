@@ -147,7 +147,6 @@ void EMT::Ph3::PiLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<
 		mRightVectorStamps.push_back(&mSubParallelCapacitor0->mRightVector->get());
 		mRightVectorStamps.push_back(&mSubParallelCapacitor1->mRightVector->get());
 	}
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph3::PiLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {

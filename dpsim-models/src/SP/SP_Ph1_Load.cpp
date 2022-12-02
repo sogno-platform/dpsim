@@ -162,9 +162,6 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 
 
 // #### MNA section ####
-void SP::Ph1::Load::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-}
 
 void SP::Ph1::Load::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);

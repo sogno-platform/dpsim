@@ -230,7 +230,6 @@ void SP::Ph1::PiLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<M
 		mRightVectorStamps.push_back(&**mSubParallelCapacitor0->mRightVector);
 		mRightVectorStamps.push_back(&**mSubParallelCapacitor1->mRightVector);
 	}
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void SP::Ph1::PiLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {

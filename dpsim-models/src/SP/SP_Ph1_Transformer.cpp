@@ -287,8 +287,6 @@ MatrixComp SP::Ph1::Transformer::Y_element() {
 // #### MNA Section ####
 
 void SP::Ph1::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
 	mSLog->info(
 		"\nTerminal 0 connected to {:s} = sim node {:d}"
 		"\nTerminal 1 connected to {:s} = sim node {:d}",

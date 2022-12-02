@@ -42,6 +42,9 @@ void CompositePowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attri
 	for (auto subComp : mSubcomponentsMNA) {
 		subComp->mnaInitialize(omega, timeStep, leftVector);
 	}
+
+	**this->mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+
 	mnaParentInitialize(omega, timeStep, leftVector);
 
 	if (mHasPreStep) {

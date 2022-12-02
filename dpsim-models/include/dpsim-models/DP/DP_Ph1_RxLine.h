@@ -44,8 +44,6 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
-		/// Initializes internal variables of the component
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
 		void mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
