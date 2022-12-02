@@ -256,8 +256,6 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
 	mTimeStep = timeStep;
 
 	// initialize state space controller

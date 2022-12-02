@@ -86,9 +86,6 @@ void DP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) 
 // #### MNA functions ####
 
 void DP::Ph1::NetworkInjection::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
 	// collect right side vectors of subcomponents
 	/// CHECK: This might be incorrect, depending on if the ** actually returns the reference or copies the object
 	mRightVectorStamps.push_back(&**(mSubVoltageSource->mRightVector));

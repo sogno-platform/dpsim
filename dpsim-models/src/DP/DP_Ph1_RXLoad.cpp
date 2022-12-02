@@ -109,9 +109,6 @@ void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real v
 }
 
 void DP::Ph1::RXLoad::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
 	if (mSubInductor) {
 		mRightVectorStamps.push_back(&**mSubInductor->mRightVector);
 	}

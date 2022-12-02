@@ -59,9 +59,6 @@ void DP::Ph1::VoltageSourceRamp::initializeFromNodesAndTerminals(Real frequency)
 }
 
 void DP::Ph1::VoltageSourceRamp::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
 	// only need a new MnaPreStep that updates the reference voltage of mSubVoltageSource;
 	// its own tasks then do the rest
 	/// FIXME: Can we avoid setting right_vector to dynamic?

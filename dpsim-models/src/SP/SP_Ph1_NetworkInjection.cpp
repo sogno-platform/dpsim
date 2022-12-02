@@ -128,9 +128,6 @@ void SP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) 
 // #### MNA functions ####
 
 void SP::Ph1::NetworkInjection::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
 	// collect right side vectors of subcomponents
 	mRightVectorStamps.push_back(&**mSubVoltageSource->mRightVector);
 

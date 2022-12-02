@@ -64,6 +64,9 @@ void CompositePowerComp<VarType>::addMNASubComponent(typename SimPowerComp<VarTy
 
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+	MNAInterface::mnaInitialize(omega, timeStep);
+	SimPowerComp<VarType>::updateMatrixNodeIndices();
+
 	if (this->hasSubComponents()) {
 		for (auto subComp : mSubcomponentsMNA) {
 			subComp->mnaInitialize(omega, timeStep, leftVector);

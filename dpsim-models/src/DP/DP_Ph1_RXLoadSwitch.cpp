@@ -75,9 +75,6 @@ void DP::Ph1::RXLoadSwitch::setSwitchParameters(Real openResistance, Real closed
 }
 
 void DP::Ph1::RXLoadSwitch::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
 	// get sub component right vector
 	mRightVectorStamps.push_back(&**mSubRXLoad->mRightVector);
 

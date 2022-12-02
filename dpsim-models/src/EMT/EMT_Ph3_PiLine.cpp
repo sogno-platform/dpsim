@@ -142,9 +142,6 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void EMT::Ph3::PiLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
 	mRightVectorStamps.push_back(&mSubSeriesInductor->mRightVector->get());
 	if ((**mParallelCap)(0,0) > 0) {
 		mRightVectorStamps.push_back(&mSubParallelCapacitor0->mRightVector->get());

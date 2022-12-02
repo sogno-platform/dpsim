@@ -50,9 +50,6 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequ
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
 	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
