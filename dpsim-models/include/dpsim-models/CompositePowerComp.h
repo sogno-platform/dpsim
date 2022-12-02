@@ -45,9 +45,6 @@ namespace CPS {
 		/// @param postStepOrder When to execute the subcomponent's post-step in relation to the parent
 		void addMNASubComponent(typename SimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder);
 
-		//void addMNASubComponent(typename MNASimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder);
-
-
 		// #### MNA Interface Functions ####
 		/// Initializes variables of components
 		virtual void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
