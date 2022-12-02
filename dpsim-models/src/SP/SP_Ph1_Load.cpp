@@ -163,8 +163,6 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 
 // #### MNA section ####
 void SP::Ph1::Load::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
