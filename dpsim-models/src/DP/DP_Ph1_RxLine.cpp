@@ -70,10 +70,6 @@ void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void DP::Ph1::RxLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-}
-
 void DP::Ph1::RxLine::mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix) {
 	mInitialResistor->mnaApplySystemMatrixStamp(systemMatrix);
 }

@@ -77,8 +77,6 @@ void DP::Ph1::RXLoadSwitch::setSwitchParameters(Real openResistance, Real closed
 void DP::Ph1::RXLoadSwitch::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	// get sub component right vector
 	mRightVectorStamps.push_back(&**mSubRXLoad->mRightVector);
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void DP::Ph1::RXLoadSwitch::mnaApplyRightSideVectorStamp(Matrix& rightVector) {

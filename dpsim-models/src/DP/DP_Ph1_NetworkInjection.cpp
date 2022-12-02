@@ -89,8 +89,6 @@ void DP::Ph1::NetworkInjection::mnaParentInitialize(Real omega, Real timeStep, A
 	// collect right side vectors of subcomponents
 	/// CHECK: This might be incorrect, depending on if the ** actually returns the reference or copies the object
 	mRightVectorStamps.push_back(&**(mSubVoltageSource->mRightVector));
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 
