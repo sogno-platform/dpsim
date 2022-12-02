@@ -49,9 +49,6 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequ
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-}
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	prevStepDependencies.push_back(mIntfCurrent);

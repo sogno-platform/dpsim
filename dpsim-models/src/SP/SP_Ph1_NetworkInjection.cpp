@@ -130,8 +130,6 @@ void SP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) 
 void SP::Ph1::NetworkInjection::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	// collect right side vectors of subcomponents
 	mRightVectorStamps.push_back(&**mSubVoltageSource->mRightVector);
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void SP::Ph1::NetworkInjection::mnaApplyRightSideVectorStamp(Matrix& rightVector) {

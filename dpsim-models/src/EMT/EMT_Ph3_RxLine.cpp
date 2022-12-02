@@ -96,10 +96,6 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void EMT::Ph3::RxLine::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-}
-
 void EMT::Ph3::RxLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	mSubResistor->mnaApplyRightSideVectorStamp(rightVector);
 	mSubInductor->mnaApplyRightSideVectorStamp(rightVector);

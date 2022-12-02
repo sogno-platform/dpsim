@@ -115,8 +115,6 @@ void DP::Ph1::RXLoad::mnaParentInitialize(Real omega, Real timeStep, Attribute<M
 	if (mSubCapacitor) {
 		mRightVectorStamps.push_back(&**mSubCapacitor->mRightVector);
 	}
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void DP::Ph1::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
