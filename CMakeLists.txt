@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11...3.23)
+cmake_minimum_required(VERSION 3.12...3.23)
 project(DPsim
 		VERSION 1.1.0
 		DESCRIPTION "C++ Power System Simulation Library"
@@ -126,7 +126,7 @@ find_package(MAGMA)
 
 include(cmake/GetReaderWriterQueue.cmake)
 
-find_package (Python COMPONENTS Interpreter Development)
+find_package (Python3 COMPONENTS Interpreter Development)
 if (WITH_PYBIND_MODULE)
 	include(cmake/GetPybindModule.cmake)
 else()
