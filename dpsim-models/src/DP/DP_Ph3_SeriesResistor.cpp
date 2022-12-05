@@ -11,7 +11,7 @@ using namespace CPS;
 
 DP::Ph3::SeriesResistor::SeriesResistor(String uid, String name,
 	Logger::Level logLevel)
-	: Base::Ph1::Resistor(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::Resistor(mAttributes), MNASimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3,1);

@@ -29,7 +29,7 @@ namespace Ph1 {
 	class SVC :
 		public Base::Ph1::SVC,
 		public MNAVariableCompInterface,
-		public SimPowerComp<Complex>,
+		public MNASimPowerComp<Complex>,
 		public SharedFactory<SVC> {
 	protected:
 

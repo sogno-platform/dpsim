@@ -11,11 +11,11 @@
 using namespace CPS;
 
 DP::Ph3::SynchronGeneratorDQODE::SynchronGeneratorDQODE(String uid, String name, Logger::Level logLevel)
-	: SynchronGeneratorDQ(uid, name, logLevel) {
+	: SynchronGeneratorDQ(uid, name, logLevel), ODEInterface(mAttributes) {
 }
 
 DP::Ph3::SynchronGeneratorDQODE::SynchronGeneratorDQODE(String name, Logger::Level logLevel)
-	: SynchronGeneratorDQ(name, name, logLevel) {
+	: SynchronGeneratorDQ(name, name, logLevel), ODEInterface(mAttributes) {
 }
 
 void DP::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

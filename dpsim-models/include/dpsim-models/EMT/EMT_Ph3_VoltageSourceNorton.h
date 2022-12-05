@@ -8,7 +8,7 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph1_VoltageSource.h>
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -16,9 +16,8 @@ namespace CPS {
 		namespace Ph3 {
 			/// \brief Voltage source with Norton equivalent model
 			class VoltageSourceNorton :
-				public MNAInterface,
-				public Base::Ph1::VoltageSource,
-				public SimPowerComp<Real>,
+								public Base::Ph1::VoltageSource,
+				public MNASimPowerComp<Real>,
 				public SharedFactory<VoltageSourceNorton> {
 			protected:
 				void updateState(Real time);

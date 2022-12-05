@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
 
@@ -20,8 +20,7 @@ namespace Ph1 {
 	/// EMT Resistor
 	class Resistor :
 		public Base::Ph1::Resistor,
-		public MNAInterface,
-		public SimPowerComp<Real>,
+				public MNASimPowerComp<Real>,
 		public SharedFactory<Resistor> {
 	protected:
 	public:

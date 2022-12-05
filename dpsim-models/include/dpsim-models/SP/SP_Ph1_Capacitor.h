@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBranch.h>
 #include <dpsim-models/Base/Base_Ph1_Capacitor.h>
@@ -18,8 +18,7 @@ namespace SP {
 namespace Ph1 {
 	class Capacitor :
 		public Base::Ph1::Capacitor,
-		public MNAInterface,
-		public SimPowerComp<Complex>,
+				public MNASimPowerComp<Complex>,
 		public SharedFactory<Capacitor>,
 		public PFSolverInterfaceBranch {
 

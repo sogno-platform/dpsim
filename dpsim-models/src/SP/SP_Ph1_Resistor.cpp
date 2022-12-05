@@ -13,7 +13,7 @@ using namespace CPS;
 
 SP::Ph1::Resistor::Resistor(String uid, String name,
 	Logger::Level logLevel)
-	: Base::Ph1::Resistor(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::Resistor(mAttributes), MNASimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);

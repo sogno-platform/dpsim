@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph3_Inductor.h>
 
@@ -24,8 +24,7 @@ namespace CPS {
 			/// frequency and the current source changes for each iteration.
 			class Inductor :
 				public Base::Ph3::Inductor,
-				public MNAInterface,
-				public SimPowerComp<Real>,
+								public MNASimPowerComp<Real>,
 				public SharedFactory<Inductor> {
 			protected:
 				/// DC equivalent current source [A]

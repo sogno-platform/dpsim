@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph3_PiLine.h>
 #include <dpsim-models/SP/SP_Ph3_Inductor.h>
@@ -19,9 +19,8 @@ namespace SP {
 namespace Ph3 {
 
 	class RxLine :
-		public SimPowerComp<Real>,
-		public MNAInterface,
-		public Base::Ph3::PiLine,
+		public MNASimPowerComp<Real>,
+				public Base::Ph3::PiLine,
 		public SharedFactory<RxLine> {
 	protected:
 		/// Voltage across the component [V]

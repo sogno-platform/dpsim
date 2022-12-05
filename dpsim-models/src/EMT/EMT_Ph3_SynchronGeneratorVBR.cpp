@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String uid, String name, Logger::Level logLevel)
-	: Base::SynchronGenerator(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
+	: Base::SynchronGenerator(mAttributes), MNASimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3,1);

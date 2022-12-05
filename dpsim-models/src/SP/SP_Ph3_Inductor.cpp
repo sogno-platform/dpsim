@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: Base::Ph3::Inductor(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph3::Inductor(mAttributes), MNASimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);

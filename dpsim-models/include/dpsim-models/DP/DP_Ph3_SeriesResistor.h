@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
@@ -20,8 +20,7 @@ namespace Ph3 {
 	///
 	class SeriesResistor :
 		public Base::Ph1::Resistor,
-		public MNAInterface,
-		public SimPowerComp<Complex>,
+				public MNASimPowerComp<Complex>,
 		public SharedFactory<SeriesResistor> {
 
 	public:
