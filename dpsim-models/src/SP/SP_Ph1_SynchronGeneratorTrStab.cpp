@@ -11,12 +11,12 @@ using namespace CPS;
 
 SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
 	: Base::SynchronGenerator(mAttributes), CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mEp(Attribute<Complex>::create("Ep", mAttributes)),
-	mEp_abs(Attribute<Real>::create("Ep_mag", mAttributes)),
-	mEp_phase(Attribute<Real>::create("Ep_phase", mAttributes)),
-	mDelta_p(Attribute<Real>::create("delta_r", mAttributes)),
-	mRefOmega(Attribute<Real>::createDynamic("w_ref", mAttributes)),
-	mRefDelta(Attribute<Real>::createDynamic("delta_ref", mAttributes)) {
+	mEp(mAttributes->create<Complex>("Ep")),
+	mEp_abs(mAttributes->create<Real>("Ep_mag")),
+	mEp_phase(mAttributes->create<Real>("Ep_phase")),
+	mDelta_p(mAttributes->create<Real>("delta_r")),
+	mRefOmega(mAttributes->createDynamic<Real>("w_ref")),
+	mRefDelta(mAttributes->createDynamic<Real>("delta_ref")) {
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);

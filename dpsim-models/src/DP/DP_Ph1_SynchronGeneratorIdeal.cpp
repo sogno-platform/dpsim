@@ -14,7 +14,7 @@ using namespace CPS;
 DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
 	Logger::Level logLevel)
 	: CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)) {
+	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1,1);

@@ -13,8 +13,8 @@ using namespace CPS;
 
 EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
-	mVoltageRef(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)), // rms-value, phase-to-phase
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
+	mVoltageRef(mAttributes->createDynamic<MatrixComp>("V_ref")), // rms-value, phase-to-phase
+	mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);

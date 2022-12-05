@@ -11,11 +11,11 @@
 
 using namespace CPS;
 
-Signal::Exciter::Exciter(String name, CPS::Logger::Level logLevel) 
+Signal::Exciter::Exciter(String name, CPS::Logger::Level logLevel)
 	: SimSignalComp(name, name, logLevel),
-	mVh(Attribute<Real>::create("Vh", mAttributes, 0)),
-	mVr(Attribute<Real>::create("Vr", mAttributes, 0)),
-	mVf(Attribute<Real>::create("Vf", mAttributes, 0)) { }
+	mVh(attributeList->create<Real>("Vh", 0)),
+	mVr(attributeList->create<Real>("Vr", 0)),
+	mVf(attributeList->create<Real>("Vf", 0)) { }
 
 void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
 	Real Tf, Real Kf, Real Tr) {
@@ -32,14 +32,14 @@ void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
 				"Te: {:e}\nKe: {:e}\n"
 				"Tf: {:e}\nKf: {:e}\n"
 				"Tr: {:e}\n",
-				mTa, mKa, 
+				mTa, mKa,
 				mTe, mKe,
 				mTf, mKf,
 				mTr);
 }
 
 void Signal::Exciter::initialize(Real Vh_init, Real Vf_init) {
-	
+
 	mSLog->info("Initially set excitation system initial values: \n"
 				"Vh_init: {:e}\nVf_init: {:e}\n",
 				Vh_init, Vf_init);
@@ -59,7 +59,7 @@ void Signal::Exciter::initialize(Real Vh_init, Real Vf_init) {
 				"init_Vf: {:e}\ninit_Vse: {:e}\n"
 				"init_Vr: {:e}\ninit_Vf_init: {:e}\n"
 				"init_Vh: {:e}\ninit_Vm: {:e}\ninit_Vis: {:e}\n",
-				**mVf, mVse, 
+				**mVf, mVse,
 				**mVr, mVf_init,
 				**mVh, mVm, mVis);
 }
@@ -67,10 +67,10 @@ void Signal::Exciter::initialize(Real Vh_init, Real Vf_init) {
 Real Signal::Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
 	// Voltage magnitude calculation
 	**mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
-	
+
 	// Voltage Transducer equation
 	mVm = Math::StateSpaceEuler(mVm, -1 / mTr, 1 / mTr, dt, **mVh);
-	
+
 	// Stabilizing feedback equation
 	mVis = Math::StateSpaceEuler(mVis, -1 / mTf, mKf / mTe / mTf, dt, **mVr - mVse - **mVf * mKe);
 
@@ -78,14 +78,14 @@ Real Signal::Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
 	**mVr = Math::StateSpaceEuler(**mVr, -1 / mTa, mKa / mTa, dt, Vref - mVm - mVis + mVf_init);
 
 	// Voltage regulator limiter
-	// Vr,max and Vr,min parameters 
+	// Vr,max and Vr,min parameters
 	// from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96
 	// TODO: fix hard-coded limiter values
 	if (**mVr > 1)
 		**mVr = 1;
 	else if (**mVr < -0.9)
 		**mVr = -0.9;
-	
+
 	// Exciter saturation
 	// Se(Ef1), Ef1, Se(Ef2) and Ef2
 	// from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96

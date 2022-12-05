@@ -13,19 +13,19 @@ using namespace CPS;
 
 DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
 	CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mOmegaN(Attribute<Real>::create("Omega_nom", mAttributes)),
-	mPref(Attribute<Real>::create("P_ref", mAttributes)),
-	mQref(Attribute<Real>::create("Q_ref", mAttributes)),
-	mVcd(Attribute<Real>::create("Vc_d", mAttributes, 0)),
-	mVcq(Attribute<Real>::create("Vc_q", mAttributes, 0)),
-	mIrcd(Attribute<Real>::create("Irc_d", mAttributes, 0)),
-	mIrcq(Attribute<Real>::create("Irc_q", mAttributes, 0)),
-	mVsref(Attribute<MatrixComp>::create("Vsref", mAttributes, MatrixComp::Zero(1,1))),
-	mVs(Attribute<MatrixComp>::createDynamic("Vs", mAttributes)),
-	mPllOutput(Attribute<Matrix>::createDynamic("pll_output", mAttributes)),
-	mPowerctrlInputs(Attribute<Matrix>::createDynamic("powerctrl_inputs", mAttributes)),
-	mPowerctrlOutputs(Attribute<Matrix>::createDynamic("powerctrl_outputs", mAttributes)),
-	mPowerctrlStates(Attribute<Matrix>::createDynamic("powerctrl_states", mAttributes)) {
+	mOmegaN(mAttributes->create<Real>("Omega_nom")),
+	mPref(mAttributes->create<Real>("P_ref")),
+	mQref(mAttributes->create<Real>("Q_ref")),
+	mVcd(attributeList->create<Real>("Vc_d", 0)),
+	mVcq(attributeList->create<Real>("Vc_q", 0)),
+	mIrcd(attributeList->create<Real>("Irc_d", 0)),
+	mIrcq(attributeList->create<Real>("Irc_q", 0)),
+	mVsref(attributeList->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))),
+	mVs(mAttributes->createDynamic<MatrixComp>("Vs")),
+	mPllOutput(mAttributes->createDynamic<Matrix>("pll_output")),
+	mPowerctrlInputs(mAttributes->createDynamic<Matrix>("powerctrl_inputs")),
+	mPowerctrlOutputs(mAttributes->createDynamic<Matrix>("powerctrl_outputs")),
+	mPowerctrlStates(mAttributes->createDynamic<Matrix>("powerctrl_states")) {
 
 	if (withTrafo) {
 		setVirtualNodeNumber(4);

@@ -13,8 +13,8 @@ using namespace CPS;
 EMT::Ph3::SynchronGenerator6bOrderVBR::SynchronGenerator6bOrderVBR
     (String uid, String name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
-	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)),
-	mEdq0_s(Attribute<Matrix>::create("Edq0_s", mAttributes)) {
+	mEdq0_t(mAttributes->create<Matrix>("Edq0_t")),
+	mEdq0_s(mAttributes->create<Matrix>("Edq0_s")) {
 
 	// model specific variables
 	**mEdq0_t = Matrix::Zero(3,1);
@@ -29,21 +29,21 @@ EMT::Ph3::SynchronGenerator6bOrderVBR::SynchronGenerator6bOrderVBR
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator6bOrderVBR::clone(String name) {
-	
+
 	auto copy = SynchronGenerator6bOrderVBR::make(name, mLogLevel);
 	return copy;
 }
 
-void EMT::Ph3::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit(Real nomPower, 
+void EMT::Ph3::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit(Real nomPower,
 		Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 		Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t,
 		Real Ld_s, Real Lq_s, Real Td0_s, Real Tq0_s) {
 
-	Base::ReducedOrderSynchronGenerator<Real>::setOperationalParametersPerUnit(nomPower, 
+	Base::ReducedOrderSynchronGenerator<Real>::setOperationalParametersPerUnit(nomPower,
 		nomVolt, nomFreq, H, Ld, Lq, L0,
 		Ld_t, Lq_t, Td0_t, Tq0_t,
 		Ld_s, Lq_s, Td0_s, Tq0_s);
-	
+
 	mSLog->info("Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				nomPower, nomVolt, nomFreq);
@@ -55,7 +55,7 @@ void EMT::Ph3::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit(Real
 			"Td0_t: {:e}\nTq0_t: {:e}\n"
 			"Ld_s: {:e}\nLq_s: {:e}\n"
 			"Td0_s: {:e}\nTq0_s: {:e}\n",
-			H, Ld, Lq, L0, 
+			H, Ld, Lq, L0,
 			Ld_t, Lq_t,
 			Td0_t, Tq0_t,
 			Ld_s, Lq_s,
@@ -80,7 +80,7 @@ void EMT::Ph3::SynchronGenerator6bOrderVBR::specificInitialization() {
 							mLd_s - mAq_s,	0.0,			0.0,
 					  		0.0,			0.0,			mL0;
 
-	// initialize conductance matrix 
+	// initialize conductance matrix
 	mConductanceMatrix = Matrix::Zero(3,3);
 
 	mSLog->info(

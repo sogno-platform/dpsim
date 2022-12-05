@@ -12,8 +12,8 @@ using namespace CPS;
 
 SP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
-	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
+	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
+	mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);

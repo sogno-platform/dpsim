@@ -12,8 +12,8 @@ using namespace CPS;
 
 EMT::Ph1::CurrentSource::CurrentSource(String uid, String name,	Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
-	mCurrentRef(Attribute<Complex>::create("I_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::create("f_src", mAttributes)) {
+	mCurrentRef(mAttributes->create<Complex>("I_ref")),
+	mSrcFreq(mAttributes->create<Real>("f_src")) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);

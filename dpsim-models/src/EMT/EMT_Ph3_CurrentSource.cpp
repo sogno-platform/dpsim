@@ -13,9 +13,9 @@ using namespace CPS;
 
 EMT::Ph3::CurrentSource::CurrentSource(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
-	mCurrentRef(Attribute<MatrixComp>::create("I_ref", mAttributes)), // rms-value
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
-	mSigOut(Attribute<Complex>::createDynamic("sigOut", mAttributes)) {
+	mCurrentRef(mAttributes->create<MatrixComp>("I_ref")), // rms-value
+	mSrcFreq(mAttributes->createDynamic<Real>("f_src")),
+	mSigOut(mAttributes->createDynamic<Complex>("sigOut")) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(0);
 	setTerminalNumber(2);

@@ -13,11 +13,11 @@ using namespace CPS;
 SP::Ph1::SynchronGeneratorVBR::SynchronGeneratorVBR
     (String uid, String name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
-	Evbr(Attribute<Complex>::create("Evbr", mAttributes)) {
+	Evbr(mAttributes->create<Complex>("Evbr")) {
 
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
-	
+
 	// model variables
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -76,7 +76,7 @@ void SP::Ph1::SynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
 Matrix SP::Ph1::SynchronGeneratorVBR::get_DqToComplexATransformMatrix() {
 	Matrix dqToComplexA(2, 2);
 	dqToComplexA <<
-		cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime), 
+		cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime),
 		sin(**mThetaMech - mBase_OmMech * mSimTime),	cos(**mThetaMech - mBase_OmMech * mSimTime);
 
 	return dqToComplexA;

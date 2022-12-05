@@ -26,11 +26,11 @@ namespace Ph3 {
 		/// Conductance in parallel to the line [S]
 		const Attribute<Matrix>::Ptr mParallelCond;
 
-		explicit PiLine(CPS::AttributeBase::Map &attributeList) :
-			mSeriesRes(Attribute<Matrix>::create("R_series", attributeList)),
-			mSeriesInd(Attribute<Matrix>::create("L_series", attributeList)),
-			mParallelCap(Attribute<Matrix>::create("C_parallel", attributeList)),
-			mParallelCond(Attribute<Matrix>::create("G_parallel", attributeList)) { };
+		explicit PiLine(CPS::AttributeList::Ptr attributeList) :
+			mSeriesRes(attributeList->create<Matrix>("R_series")),
+			mSeriesInd(attributeList->create<Matrix>("L_series")),
+			mParallelCap(attributeList->create<Matrix>("C_parallel")),
+			mParallelCond(attributeList->create<Matrix>("G_parallel")) { };
 
 		///
 		void setParameters(Matrix seriesResistance, Matrix seriesInductance,

@@ -43,12 +43,12 @@ void MnaSolver<VarType>::initialize() {
 		mSLog->info("Computing network harmonics in parallel.");
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mLeftSideVectorHarm.push_back(
-				CPS::Attribute<Matrix>::create("left_vector_"+std::to_string(freq), mAttributes)
+				mAttributes->create<Matrix>("left_vector_"+std::to_string(freq))
 			);
 		}
 	}
 	else {
-		mLeftSideVector = CPS::Attribute<Matrix>::create("left_vector", mAttributes);
+		mLeftSideVector = mAttributes->create<Matrix>("left_vector");
 	}
 
 	mSLog->info("-- Process topology");
@@ -378,7 +378,7 @@ void MnaSolver<Complex>::createEmptyVectors() {
 	if (mFrequencyParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
-			mLeftSideVectorHarm.push_back(Attribute<Matrix>::create("left_vector_harm_" + freq, mAttributes, Matrix::Zero(2*(mNumMatrixNodeIndices), 1)));
+			mLeftSideVectorHarm.push_back(attributeList->create<Matrix>("left_vector_harm_" + freq, Matrix::Zero(2*(mNumMatrixNodeIndices), 1)));
 		}
 	}
 	else {

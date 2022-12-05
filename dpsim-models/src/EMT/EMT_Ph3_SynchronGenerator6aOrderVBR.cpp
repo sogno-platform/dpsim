@@ -13,8 +13,8 @@ using namespace CPS;
 EMT::Ph3::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR
     (String uid, String name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
-	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)),
-	mEdq0_s(Attribute<Matrix>::create("Edq0_s", mAttributes))  {
+	mEdq0_t(mAttributes->create<Matrix>("Edq0_t")),
+	mEdq0_s(mAttributes->create<Matrix>("Edq0_s"))  {
 
 	// model specific variables
 	**mEdq0_t = Matrix::Zero(3,1);
@@ -29,7 +29,7 @@ EMT::Ph3::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator6aOrderVBR::clone(String name) {
-	
+
 	auto copy = SynchronGenerator6aOrderVBR::make(name, mLogLevel);
 	return copy;
 }
@@ -52,7 +52,7 @@ void EMT::Ph3::SynchronGenerator6aOrderVBR::specificInitialization() {
 							mLd_s - mAq_s,	0.0,			0.0,
 					  		0.0,			0.0,			mL0;
 
-	// initialize conductance matrix 
+	// initialize conductance matrix
 	mConductanceMatrix = Matrix::Zero(3,3);
 
 	mSLog->info(

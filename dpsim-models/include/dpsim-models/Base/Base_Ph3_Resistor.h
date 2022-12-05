@@ -18,8 +18,8 @@ namespace Ph3 {
 		///Resistance [ohm]
 		const CPS::Attribute<Matrix>::Ptr mResistance;
 
-		explicit Resistor(CPS::AttributeBase::Map &attributeList) :
-			mResistance(CPS::Attribute<Matrix>::create("R", attributeList)) { };
+		explicit Resistor(CPS::AttributeList::Ptr attributeList) :
+			mResistance(attributeList->create<Matrix>("R")) { };
 
 		/// Sets model specific parameters
 		void setParameters(Matrix resistance) {

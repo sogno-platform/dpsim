@@ -13,8 +13,8 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR
     (String uid, String name, Logger::Level logLevel)
 	: SynchronGeneratorVBR(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)),
-	mEdq_s(Attribute<Matrix>::create("Edq_s", mAttributes)) {
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
+	mEdq_s(mAttributes->create<Matrix>("Edq_s")) {
 
 	// model specific variables
 	**mEdq_t = Matrix::Zero(2,1);
@@ -30,7 +30,7 @@ DP::Ph1::SynchronGenerator6aOrderVBR::SynchronGenerator6aOrderVBR
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator6aOrderVBR::clone(String name) {
 	auto copy = SynchronGenerator6aOrderVBR::make(name, mLogLevel);
-	
+
 	return copy;
 }
 
@@ -119,7 +119,7 @@ void DP::Ph1::SynchronGenerator6aOrderVBR::stepInPerUnit() {
 	// VBR history voltage
 	calculateAuxiliarVariables();
 	calculateConductanceMatrix();
-	
+
 	// calculate history term behind the transient reactance
 	mEh_t(0,0) = mAd_t * (**mIdq)(1,0) + mBd_t * (**mEdq_t)(0,0);
 	mEh_t(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * mEf;

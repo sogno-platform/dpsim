@@ -13,7 +13,7 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
     (String uid, String name, Logger::Level logLevel)
 	: SynchronGeneratorVBR(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq0_t", mAttributes))  {
+	mEdq_t(mAttributes->create<Matrix>("Edq0_t"))  {
 
 	// model variables
 	**mEdq_t = Matrix::Zero(2,1);
@@ -27,18 +27,18 @@ DP::Ph1::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator3OrderVBR::clone(String name) {
 	auto copy = SynchronGenerator3OrderVBR::make(name, mLogLevel);
-	
+
 	return copy;
 }
 
-void DP::Ph1::SynchronGenerator3OrderVBR::setOperationalParametersPerUnit(Real nomPower, 
+void DP::Ph1::SynchronGenerator3OrderVBR::setOperationalParametersPerUnit(Real nomPower,
 			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 			Real Ld_t, Real Td0_t) {
 
-	Base::ReducedOrderSynchronGenerator<Complex>::setOperationalParametersPerUnit(nomPower, 
+	Base::ReducedOrderSynchronGenerator<Complex>::setOperationalParametersPerUnit(nomPower,
 		nomVolt, nomFreq, H, Ld, Lq, L0,
 		Ld_t, Td0_t);
-	
+
 	mSLog->info("Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				nomPower, nomVolt, nomFreq);
@@ -47,7 +47,7 @@ void DP::Ph1::SynchronGenerator3OrderVBR::setOperationalParametersPerUnit(Real n
 			"inertia: {:e}\n"
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nTd0_t: {:e}\n",
-			H, Ld, Lq, L0, 
+			H, Ld, Lq, L0,
 			Ld_t, Td0_t);
 }
 
@@ -100,7 +100,7 @@ void DP::Ph1::SynchronGenerator3OrderVBR::stepInPerUnit() {
 		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
-	
+
 	// VBR history voltage
 	calculateAuxiliarVariables();
 	calculateConductanceMatrix();

@@ -13,11 +13,11 @@ using namespace CPS;
 DP::Ph1::SynchronGeneratorVBR::SynchronGeneratorVBR
     (String uid, String name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
-	mEvbr(Attribute<Complex>::create("Evbr", mAttributes)) {
+	mEvbr(mAttributes->create<Complex>("Evbr")) {
 
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
-	
+
 	// model variables
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -50,12 +50,12 @@ void DP::Ph1::SynchronGeneratorVBR::calculateConductanceMatrix() {
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
-void DP::Ph1::SynchronGeneratorVBR::calculateAuxiliarVariables() {	
-	mKa = Matrix::Zero(1,3);	
+void DP::Ph1::SynchronGeneratorVBR::calculateAuxiliarVariables() {
+	mKa = Matrix::Zero(1,3);
 	mKa = mKc * Complex(cos(2. * **mThetaMech), sin(2. * **mThetaMech));
 	mKa_1ph = (mKa * mShiftVector)(0,0);
 
-	mKb = Matrix::Zero(1,3);	
+	mKb = Matrix::Zero(1,3);
 	Real arg = 2. * **mThetaMech - 2. * mBase_OmMech * mSimTime ;
 	mKb = mKc * Complex(cos(arg), sin(arg));
 	mKb_1ph = (mKb * mShiftVectorConj)(0,0);
@@ -65,7 +65,7 @@ void DP::Ph1::SynchronGeneratorVBR::calculateAuxiliarVariables() {
 	mKvbr(0,1) = -Complex(cos(**mThetaMech - mBase_OmMech * mSimTime - PI/2.), sin(**mThetaMech - mBase_OmMech * mSimTime - PI/2.));
 }
 
-void DP::Ph1::SynchronGeneratorVBR::mnaInitialize(Real omega, 
+void DP::Ph1::SynchronGeneratorVBR::mnaInitialize(Real omega,
 		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
 	Base::ReducedOrderSynchronGenerator<Complex>::mnaInitialize(omega, timeStep, leftVector);
@@ -79,7 +79,7 @@ void DP::Ph1::SynchronGeneratorVBR::mnaInitialize(Real omega,
 	// off diagonal
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0)));
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex()));
-	
+
 	mSLog->info("List of index pairs of varying matrix entries: ");
 	for (auto indexPair : mVariableSystemMatrixEntries)
 		mSLog->info("({}, {})", indexPair.first, indexPair.second);

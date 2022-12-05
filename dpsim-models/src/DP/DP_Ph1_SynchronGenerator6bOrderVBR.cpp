@@ -13,8 +13,8 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator6bOrderVBR::SynchronGenerator6bOrderVBR
     (String uid, String name, Logger::Level logLevel)
 	: SynchronGeneratorVBR(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)),
-	mEdq_s(Attribute<Matrix>::create("Edq_s", mAttributes)) {
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
+	mEdq_s(mAttributes->create<Matrix>("Edq_s")) {
 
 	// model specific variables
 	**mEdq_t = Matrix::Zero(2,1);
@@ -30,20 +30,20 @@ DP::Ph1::SynchronGenerator6bOrderVBR::SynchronGenerator6bOrderVBR
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator6bOrderVBR::clone(String name) {
 	auto copy = SynchronGenerator6bOrderVBR::make(name, mLogLevel);
-	
+
 	return copy;
 }
 
-void DP::Ph1::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit(Real nomPower, 
+void DP::Ph1::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit(Real nomPower,
 		Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 		Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t,
 		Real Ld_s, Real Lq_s, Real Td0_s, Real Tq0_s) {
 
-	Base::ReducedOrderSynchronGenerator<Complex>::setOperationalParametersPerUnit(nomPower, 
+	Base::ReducedOrderSynchronGenerator<Complex>::setOperationalParametersPerUnit(nomPower,
 		nomVolt, nomFreq, H, Ld, Lq, L0,
 		Ld_t, Lq_t, Td0_t, Tq0_t,
 		Ld_s, Lq_s, Td0_s, Tq0_s);
-	
+
 	mSLog->info("Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				nomPower, nomVolt, nomFreq);
@@ -55,7 +55,7 @@ void DP::Ph1::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit(Real 
 			"Td0_t: {:e}\nTq0_t: {:e}\n"
 			"Ld_s: {:e}\nLq_s: {:e}\n"
 			"Td0_s: {:e}\nTq0_s: {:e}\n",
-			H, Ld, Lq, L0, 
+			H, Ld, Lq, L0,
 			Ld_t, Lq_t,
 			Td0_t, Tq0_t,
 			Ld_s, Lq_s,
@@ -140,7 +140,7 @@ void DP::Ph1::SynchronGenerator6bOrderVBR::stepInPerUnit() {
 	// VBR history voltage
 	calculateAuxiliarVariables();
 	calculateConductanceMatrix();
-	
+
 	// calculate history term behind the transient reactance
 	mEh_t(0,0) = mAd_t * (**mIdq)(1,0) + mBd_t * (**mEdq_t)(0,0);
 	mEh_t(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * mEf;

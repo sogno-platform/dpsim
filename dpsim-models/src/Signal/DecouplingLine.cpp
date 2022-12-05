@@ -18,9 +18,9 @@ DecouplingLine::DecouplingLine(String name, SimNode<Complex>::Ptr node1, SimNode
 	SimSignalComp(name, name, logLevel),
 	mResistance(resistance), mInductance(inductance), mCapacitance(capacitance),
 	mNode1(node1), mNode2(node2),
-	mStates(Attribute<Matrix>::create("states", mAttributes)),
-	mSrcCur1Ref(Attribute<Complex>::create("i_src1", mAttributes)),
-	mSrcCur2Ref(Attribute<Complex>::create("i_src2", mAttributes)) {
+	mStates(mAttributes->create<Matrix>("states")),
+	mSrcCur1Ref(mAttributes->create<Complex>("i_src1")),
+	mSrcCur2Ref(mAttributes->create<Complex>("i_src2")) {
 
 	mSurgeImpedance = sqrt(inductance / capacitance);
 	mDelay = sqrt(inductance * capacitance);
@@ -46,9 +46,9 @@ DecouplingLine::DecouplingLine(String name, SimNode<Complex>::Ptr node1, SimNode
 
 DecouplingLine::DecouplingLine(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
-	mStates(Attribute<Matrix>::create("states", mAttributes)),
-	mSrcCur1Ref(Attribute<Complex>::create("i_src1", mAttributes)),
-	mSrcCur2Ref(Attribute<Complex>::create("i_src2", mAttributes))  {
+	mStates(mAttributes->create<Matrix>("states")),
+	mSrcCur1Ref(mAttributes->create<Complex>("i_src1")),
+	mSrcCur2Ref(mAttributes->create<Complex>("i_src2"))  {
 
 	mRes1 = Resistor::make(name + "_r1", logLevel);
 	mRes2 = Resistor::make(name + "_r2", logLevel);

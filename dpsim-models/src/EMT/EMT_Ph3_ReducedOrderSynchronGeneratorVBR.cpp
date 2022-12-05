@@ -13,12 +13,12 @@ using namespace CPS;
 EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
     (String uid, String name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Real>(uid, name, logLevel),
-	mEvbr(Attribute<Matrix>::create("Evbr", mAttributes)) {
-	
+	mEvbr(mAttributes->create<Matrix>("Evbr")) {
+
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
-	
+
 	// model variable
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
@@ -39,7 +39,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
-void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega, 
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega,
 		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
 	Base::ReducedOrderSynchronGenerator<Real>::mnaInitialize(omega, timeStep, leftVector);
@@ -54,7 +54,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega,
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A)));
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B)));
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C)));
-	
+
 	// buttom right block
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 1)));

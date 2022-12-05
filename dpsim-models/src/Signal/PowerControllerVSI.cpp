@@ -14,16 +14,16 @@ using namespace CPS::Signal;
 PowerControllerVSI::PowerControllerVSI(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
 	/// CHECK: Which of these really need to be attributes?
-	mInputPrev(Attribute<Matrix>::create("input_prev", mAttributes, Matrix::Zero(6,1))),
-    mStatePrev(Attribute<Matrix>::create("state_prev", mAttributes, Matrix::Zero(6,1))),
-    mOutputPrev(Attribute<Matrix>::create("output_prev", mAttributes, Matrix::Zero(2,1))),
-    mInputCurr(Attribute<Matrix>::create("input_curr", mAttributes, Matrix::Zero(6,1))),
-    mStateCurr(Attribute<Matrix>::create("state_curr", mAttributes, Matrix::Zero(6,1))),
-    mOutputCurr(Attribute<Matrix>::create("output_curr", mAttributes, Matrix::Zero(2,1))),
-	mVc_d(Attribute<Real>::createDynamic("Vc_d", mAttributes)),
-	mVc_q(Attribute<Real>::createDynamic("Vc_q", mAttributes)),
-	mIrc_d(Attribute<Real>::createDynamic("Irc_d", mAttributes)),
-	mIrc_q(Attribute<Real>::createDynamic("Irc_q", mAttributes)) {
+	mInputPrev(attributeList->create<Matrix>("input_prev", Matrix::Zero(6,1))),
+    mStatePrev(attributeList->create<Matrix>("state_prev", Matrix::Zero(6,1))),
+    mOutputPrev(attributeList->create<Matrix>("output_prev", Matrix::Zero(2,1))),
+    mInputCurr(attributeList->create<Matrix>("input_curr", Matrix::Zero(6,1))),
+    mStateCurr(attributeList->create<Matrix>("state_curr", Matrix::Zero(6,1))),
+    mOutputCurr(attributeList->create<Matrix>("output_curr", Matrix::Zero(2,1))),
+	mVc_d(mAttributes->createDynamic<Real>("Vc_d")),
+	mVc_q(mAttributes->createDynamic<Real>("Vc_q")),
+	mIrc_d(mAttributes->createDynamic<Real>("Irc_d")),
+	mIrc_q(mAttributes->createDynamic<Real>("Irc_q")) {
 
 	mSLog->info("Create {} {}", type(), name);
 }

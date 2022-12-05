@@ -13,8 +13,8 @@ using namespace CPS;
 SP::Ph1::SynchronGenerator6bOrderVBR::SynchronGenerator6bOrderVBR
     (String uid, String name, Logger::Level logLevel)
 	: SynchronGeneratorVBR(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)),
-	mEdq_s(Attribute<Matrix>::create("Edq_s", mAttributes))  {
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
+	mEdq_s(mAttributes->create<Matrix>("Edq_s"))  {
 
 	// model specific variables
 	**mEdq_t = Matrix::Zero(2,1);
@@ -33,16 +33,16 @@ SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGenerator6bOrderVBR::clone(String na
 	return copy;
 }
 
-void SP::Ph1::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit(Real nomPower, 
+void SP::Ph1::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit(Real nomPower,
 		Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 		Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t,
 		Real Ld_s, Real Lq_s, Real Td0_s, Real Tq0_s) {
 
-	Base::ReducedOrderSynchronGenerator<Complex>::setOperationalParametersPerUnit(nomPower, 
+	Base::ReducedOrderSynchronGenerator<Complex>::setOperationalParametersPerUnit(nomPower,
 		nomVolt, nomFreq, H, Ld, Lq, L0,
 		Ld_t, Lq_t, Td0_t, Tq0_t,
 		Ld_s, Lq_s, Td0_s, Tq0_s);
-	
+
 	mSLog->info("Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				nomPower, nomVolt, nomFreq);
@@ -54,7 +54,7 @@ void SP::Ph1::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit(Real 
 			"Td0_t: {:e}\nTq0_t: {:e}\n"
 			"Ld_s: {:e}\nLq_s: {:e}\n"
 			"Td0_s: {:e}\nTq0_s: {:e}\n",
-			H, Ld, Lq, L0, 
+			H, Ld, Lq, L0,
 			Ld_t, Lq_t,
 			Td0_t, Tq0_t,
 			Ld_s, Lq_s,
@@ -71,7 +71,7 @@ void SP::Ph1::SynchronGenerator6bOrderVBR::specificInitialization() {
 	(**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);
 	(**mEdq_s)(1,0) = (**mVdq)(1,0) + mLd_s * (**mIdq)(0,0);
 
-	// initialize conductance matrix 
+	// initialize conductance matrix
 	mConductanceMatrix = Matrix::Zero(2,2);
 
 	// auxiliar VBR constants
@@ -144,7 +144,7 @@ void SP::Ph1::SynchronGenerator6bOrderVBR::stepInPerUnit() {
 	// calculate history term behind the subtransient reactance
 	mEh_s(0,0) = mAd_s * (**mIdq)(1,0) + mBd_s * (**mEdq_t)(0,0) + mCd_s * (**mEdq_s)(0,0);
 	mEh_s(1,0) = mAq_s * (**mIdq)(0,0) + mBq_s * (**mEdq_t)(1,0) + mCq_s * (**mEdq_s)(1,0) + mDq_s * mEf;
-	
+
 	// convert Edq_t into the abc reference frame
 	mEh_s = mDqToComplexA * mEh_s;
 	**Evbr = Complex(mEh_s(0,0), mEh_s(1,0)) * mBase_V_RMS;
