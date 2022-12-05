@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Switch.h>
@@ -24,11 +24,10 @@ namespace Ph3 {
 	/// same for all phases and only in series.
 	class SeriesSwitch :
 		public Base::Ph1::Switch,
-		public SimPowerComp<Real>,
+		public MNASimPowerComp<Real>,
 		public SharedFactory<SeriesSwitch>,
-		public MNASwitchInterface,
-		public MNAInterface {
-	protected:
+		public MNASwitchInterface {
+
 	public:
 		/// Defines UID, name and log level
 		SeriesSwitch(String uid, String name, Logger::Level loglevel = Logger::Level::off);

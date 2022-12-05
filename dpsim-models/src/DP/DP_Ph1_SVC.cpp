@@ -11,17 +11,17 @@
 using namespace CPS;
 
 DP::Ph1::SVC::SVC(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
-	mVpcc(attributeList->create<Real>("Vpcc", 0)),
-	mVmeasPrev(attributeList->create<Real>("Vmeas", 0)) {
+	: MNASimPowerComp<Complex>(uid, name, logLevel),
+	mVpcc(mAttributes->create<Real>("Vpcc", 0)),
+	mVmeasPrev(mAttributes->create<Real>("Vmeas", 0)) {
 	setTerminalNumber(1);
 	setVirtualNodeNumber(2);
     **mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 
-	mDeltaV = attributeList->create<Real>("DeltaV", 0);
+	mDeltaV = mAttributes->create<Real>("DeltaV", 0);
 	mBPrev = mAttributes->create<Real>("B");
-	mViolationCounter = attributeList->create<Real>("ViolationCounter", 0);
+	mViolationCounter = mAttributes->create<Real>("ViolationCounter", 0);
 }
 
 Bool DP::Ph1::SVC::ValueChanged() {

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph1_CurrentSource.h>
 #include <dpsim-models/Task.h>
@@ -22,8 +22,7 @@ namespace Ph1 {
 	/// In case of a dynamic phasor simulation, a frequency different
 	/// from zero is added on top of the system frequency.
 	class CurrentSource :
-		public MNAInterface,
-		public SimPowerComp<Complex>,
+				public MNASimPowerComp<Complex>,
 		public SharedFactory<CurrentSource> {
 	public:
 		const Attribute<Complex>::Ptr mCurrentRef;

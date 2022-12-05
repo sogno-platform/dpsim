@@ -12,7 +12,7 @@
 using namespace CPS;
 
 EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel),
+	: MNASimPowerComp<Real>(uid, name, logLevel),
 	mVoltageRef(mAttributes->createDynamic<MatrixComp>("V_ref")), // rms-value, phase-to-phase
 	mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
 	mPhaseType = PhaseType::ABC;

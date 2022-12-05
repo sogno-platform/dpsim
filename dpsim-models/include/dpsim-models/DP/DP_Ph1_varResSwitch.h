@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
@@ -28,8 +28,7 @@ namespace Ph1 {
 		public Base::Ph1::Switch,
 		public MNAVariableCompInterface,
 		public MNASwitchInterface,
-		public MNAInterface,
-		public SimPowerComp<Complex>,
+				public MNASimPowerComp<Complex>,
 		public SharedFactory<varResSwitch> {
 
 	protected:

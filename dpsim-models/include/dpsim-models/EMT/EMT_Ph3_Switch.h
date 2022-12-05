@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Definitions.h>
@@ -24,11 +24,10 @@ namespace Ph3 {
 	/// Each state has a specific resistance value.
 	class Switch :
 		public Base::Ph3::Switch,
-		public SimPowerComp<Real>,
+		public MNASimPowerComp<Real>,
 		public SharedFactory<Switch>,
-		public MNASwitchInterface,
-		public MNAInterface {
-	protected:
+		public MNASwitchInterface {
+
 	public:
 		/// Defines UID, name, component parameters and logging level
 		Switch(String uid, String name,	Logger::Level loglevel = Logger::Level::off);

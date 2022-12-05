@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::CurrentSource::CurrentSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: MNASimPowerComp<Complex>(uid, name, logLevel),
 	mCurrentRef(mAttributes->createDynamic<Complex>("I_ref")) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);

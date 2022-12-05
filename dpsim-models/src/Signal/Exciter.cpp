@@ -13,12 +13,12 @@ using namespace CPS;
 
 Signal::Exciter::Exciter(const String& name, CPS::Logger::Level logLevel)
 	: SimSignalComp(name, name, logLevel),
-	mVm(attributeList->create<Real>("Vm", mAttributes, 0)),
-	mVh(attributeList->create<Real>("Vh", mAttributes, 0)),
-	mVis(attributeList->create<Real>("Vis", mAttributes, 0)),
-	mVse(attributeList->create<Real>("Vse", mAttributes, 0)),
-	mVr(attributeList->create<Real>("Vr", mAttributes, 0)),
-	mEf(attributeList->create<Real>("Ef", mAttributes, 0)) { }
+	mVm(mAttributes->create<Real>("Vm", 0)),
+	mVh(mAttributes->create<Real>("Vh", 0)),
+	mVis(mAttributes->create<Real>("Vis", 0)),
+	mVse(mAttributes->create<Real>("Vse", 0)),
+	mVr(mAttributes->create<Real>("Vr", 0)),
+	mEf(mAttributes->create<Real>("Ef", 0)) { }
 
 void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
 	Real Tf, Real Kf, Real Tr, Real maxVr, Real minVr) {

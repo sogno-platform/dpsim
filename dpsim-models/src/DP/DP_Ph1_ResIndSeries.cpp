@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::ResIndSeries::ResIndSeries(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: MNASimPowerComp<Complex>(uid, name, logLevel),
 	mInductance(mAttributes->create<Real>("L")),
 	///FIXME: The resistance is never used anywhere...
 	mResistance(mAttributes->create<Real>("R")) {

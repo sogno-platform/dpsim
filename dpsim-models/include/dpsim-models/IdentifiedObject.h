@@ -53,6 +53,8 @@ namespace CPS {
 			return mAttributes->attributeTyped<T>(name);
 		}
 
+		const AttributeBase::Map & attributes() { return mAttributes->attributes(); };
+
 		String name() { return **mName; }
 		/// Returns unique id
 		String uid() { return **mUID; }

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -23,8 +23,7 @@ namespace Ph1 {
 	/// of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
 	class VoltageSource :
-		public MNAInterface,
-		public SimPowerComp<Real>,
+				public MNASimPowerComp<Real>,
 		public SharedFactory<VoltageSource> {
 	protected:
 		void updateVoltage(Real time);

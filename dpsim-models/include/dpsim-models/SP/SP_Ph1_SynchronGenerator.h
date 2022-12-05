@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBus.h>
 
 
@@ -18,7 +18,7 @@ namespace SP {
 namespace Ph1 {
 
         class SynchronGenerator :
-			public SimPowerComp<Complex>,
+			public MNASimPowerComp<Complex>,
 			public SharedFactory<SynchronGenerator>,
 			public PFSolverInterfaceBus {
 	    private:

@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(String uid, String name, Logger::Level logLevel)
-: Base::Ph1::VoltageSource(mAttributes), SimPowerComp<Real>(uid, name, logLevel),
+: Base::Ph1::VoltageSource(mAttributes), MNASimPowerComp<Real>(uid, name, logLevel),
 	mPref(mAttributes->create<Real>("P_ref")),
 	mQref(mAttributes->create<Real>("Q_ref")),
 	mThetaPLL(mAttributes->create<Real>("theta")),
@@ -25,7 +25,7 @@ EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(String 
 	mPhi_q(mAttributes->create<Real>("phiq")),
 	mGamma_d(mAttributes->create<Real>("gammad")),
 	mGamma_q(mAttributes->create<Real>("gammaq")),
-	mVcabc(attributeList->create<Matrix>("V_cabc", Matrix::Zero(3, 1))) {
+	mVcabc(mAttributes->create<Matrix>("V_cabc", Matrix::Zero(3, 1))) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);

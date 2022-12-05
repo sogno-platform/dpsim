@@ -13,8 +13,8 @@ using namespace CPS;
 DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name,
 	Logger::Level logLevel)
 	: CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mActivePower(attributeList->create<Real>("P", 0)),
-	mReactivePower(attributeList->create<Real>("Q", 0)),
+	mActivePower(mAttributes->create<Real>("P", 0)),
+	mReactivePower(mAttributes->create<Real>("Q", 0)),
 	mNomVoltage(mAttributes->create<Real>("V_nom")) {
 	setTerminalNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);

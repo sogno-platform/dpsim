@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Base/Base_Ph3_Inductor.h>
@@ -26,8 +26,7 @@ namespace CPS {
 			class Inductor :
 				public Base::Ph3::Inductor,
 				public MNATearInterface,
-				public MNAInterface,
-				public SimPowerComp<Complex>,
+								public MNASimPowerComp<Complex>,
 				public SharedFactory<Inductor> {
 			protected:
 				/// susceptance [S]

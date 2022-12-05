@@ -15,7 +15,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	Logger::Level logLevel)
 	: 	Base::Ph1::PiLine(mAttributes),
 		CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-		mBaseVoltage(attributeList->create<Real>("base_Voltage", baseVoltage)),
+		mBaseVoltage(mAttributes->create<Real>("base_Voltage", baseVoltage)),
 		mInductance(mAttributes->create<Real>("L_series")),
 		mActivePowerInjection(mAttributes->create<Real>("p_inj")),
 		mReactivePowerInjection(mAttributes->create<Real>("q_inj")),

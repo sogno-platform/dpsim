@@ -16,7 +16,7 @@ SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
 	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
 	mSrcFreq(mAttributes->createDynamic<Real>("f_src")),
 	mVoltageSetPoint(mAttributes->create<Real>("V_set")),
-	mVoltageSetPointPerUnit(attributeList->create<Real>("V_set_pu", 1.0)),
+	mVoltageSetPointPerUnit(mAttributes->create<Real>("V_set_pu", 1.0)),
 	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
 	mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
 

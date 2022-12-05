@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBranch.h>
 #include <dpsim-models/Definitions.h>
@@ -22,8 +22,7 @@ namespace Ph1 {
 	class Resistor :
 		public Base::Ph1::Resistor,
 		public MNATearInterface,
-		public MNAInterface,
-		public SimPowerComp<Complex>,
+				public MNASimPowerComp<Complex>,
 		public SharedFactory<Resistor>,
 		public PFSolverInterfaceBranch {
 

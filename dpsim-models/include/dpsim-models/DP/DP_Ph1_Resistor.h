@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
@@ -20,9 +20,8 @@ namespace Ph1 {
 	class Resistor :
 		public Base::Ph1::Resistor,
 		public MNATearInterface,
-		public MNAInterface,
 		public DAEInterface,
-		public SimPowerComp<Complex>,
+		public MNASimPowerComp<Complex>,
 		public SharedFactory<Resistor> {
 	public:
 		/// Defines UID, name and logging level

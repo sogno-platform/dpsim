@@ -15,7 +15,7 @@ FIRFilter::FIRFilter(String uid, String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
 	mCurrentIdx(0),
 	mOutput(mAttributes->create<Real>("output")),
-	mInitSample(attributeList->create<Real>("init_sample", 0.0)) {
+	mInitSample(mAttributes->create<Real>("init_sample", 0.0)) {
 }
 
 FIRFilter::FIRFilter(String name, std::vector<Real> filterCoefficients, Real initSample, Logger::Level logLevel)

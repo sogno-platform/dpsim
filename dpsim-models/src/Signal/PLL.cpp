@@ -15,12 +15,12 @@ PLL::PLL(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
     mInputRef(mAttributes->createDynamic<Real>("input_ref")),
     /// CHECK: Which of these really need to be attributes?
-    mInputPrev(attributeList->create<Matrix>("input_prev", Matrix::Zero(2,1))),
-    mStatePrev(attributeList->create<Matrix>("state_prev", Matrix::Zero(2,1))),
-    mOutputPrev(attributeList->create<Matrix>("output_prev", Matrix::Zero(2,1))),
-    mInputCurr(attributeList->create<Matrix>("input_curr", Matrix::Zero(2,1))),
-    mStateCurr(attributeList->create<Matrix>("state_curr", Matrix::Zero(2,1))),
-    mOutputCurr(attributeList->create<Matrix>("output_curr", Matrix::Zero(2,1))) { }
+    mInputPrev(mAttributes->create<Matrix>("input_prev", Matrix::Zero(2,1))),
+    mStatePrev(mAttributes->create<Matrix>("state_prev", Matrix::Zero(2,1))),
+    mOutputPrev(mAttributes->create<Matrix>("output_prev", Matrix::Zero(2,1))),
+    mInputCurr(mAttributes->create<Matrix>("input_curr", Matrix::Zero(2,1))),
+    mStateCurr(mAttributes->create<Matrix>("state_curr", Matrix::Zero(2,1))),
+    mOutputCurr(mAttributes->create<Matrix>("output_curr", Matrix::Zero(2,1))) { }
 
 
 void PLL::setParameters(Real kpPLL, Real kiPLL, Real omegaNom) {

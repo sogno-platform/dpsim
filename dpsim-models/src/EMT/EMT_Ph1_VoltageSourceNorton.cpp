@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph1::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::VoltageSource(mAttributes), SimPowerComp<Real>(uid, name, logLevel),
+	: Base::Ph1::VoltageSource(mAttributes), MNASimPowerComp<Real>(uid, name, logLevel),
 	mResistance(mAttributes->create<Real>("R")) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);

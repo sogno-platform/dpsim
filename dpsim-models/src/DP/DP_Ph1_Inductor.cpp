@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::Inductor(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::Inductor(mAttributes), MNASimPowerComp<Complex>(uid, name, logLevel) {
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);

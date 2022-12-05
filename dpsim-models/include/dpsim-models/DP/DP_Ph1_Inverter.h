@@ -10,7 +10,7 @@
 
 #include <map>
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -20,9 +20,8 @@ namespace Ph1 {
 	///
 	/// add more explanation here regarding bessel function model
 	class Inverter :
-		public SimPowerComp<Complex>,
-		public MNAInterface,
-		public SharedFactory<Inverter> {
+		public MNASimPowerComp<Complex>,
+				public SharedFactory<Inverter> {
 	protected:
 		// #### Model specific variables ####
 		/// DC bus voltage

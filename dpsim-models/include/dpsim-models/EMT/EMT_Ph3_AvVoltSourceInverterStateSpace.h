@@ -9,7 +9,7 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph1_VoltageSource.h>
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -18,9 +18,8 @@ namespace Ph3 {
 
 	/// average inverter model with LC filter
 	class AvVoltSourceInverterStateSpace :
-		public MNAInterface,
-		public Base::Ph1::VoltageSource,
-		public SimPowerComp<Real>,
+				public Base::Ph1::VoltageSource,
+		public MNASimPowerComp<Real>,
 		public SharedFactory<AvVoltSourceInverterStateSpace> {
 	protected:
 		Real mTimeStep;

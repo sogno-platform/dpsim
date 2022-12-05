@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_SynchronGenerator.h>
 
@@ -18,8 +18,7 @@ namespace Ph3 {
 	/// Synchronous generator model in dq-reference frame
 	class SynchronGeneratorDQ :
 		public Base::SynchronGenerator,
-		public MNAInterface,
-		public SimPowerComp<Complex> {
+				public MNASimPowerComp<Complex> {
 	protected:
 		/// Compensation current source set point
 		MatrixComp mCompensationCurrent;

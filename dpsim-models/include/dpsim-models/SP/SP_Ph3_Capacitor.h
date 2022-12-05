@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph3_Capacitor.h>
 
@@ -24,8 +24,7 @@ namespace CPS {
 			/// frequency and the current source changes for each iteration.
 			class Capacitor :
 				public Base::Ph3::Capacitor,
-				public MNAInterface,
-				public SimPowerComp<Complex>,
+								public MNASimPowerComp<Complex>,
 				public SharedFactory<Capacitor> {
 			protected:
 				/// Equivalent conductance [S]
