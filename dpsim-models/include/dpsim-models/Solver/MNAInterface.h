@@ -35,7 +35,7 @@ namespace CPS {
 		/// Stamps system matrix
 		virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix) { }
 		/// Stamps (sparse) system matrix
-		virtual void mnaApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
+		virtual void mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 			Matrix mat = Matrix(systemMatrix);
 			mnaApplySystemMatrixStamp(mat);
 			systemMatrix = mat.sparseView();
