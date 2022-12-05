@@ -30,7 +30,7 @@ namespace CPS {
 		UPDATE_ON_SET,
 		UPDATE_ON_SIMULATION_STEP,
 	};
-	
+
 	template<class T>
 	class Attribute;
 
@@ -79,13 +79,13 @@ namespace CPS {
 			AttributePointer& operator=(AttributePointer&& r) {
 				this->mPtr = r.getPtr();
 				return *this;
-			} 
+			}
 
 			template<class U>
 			AttributePointer& operator=(AttributePointer<U>&& r) {
 				this->mPtr = r.getPtr();
 				return *this;
-			} 
+			}
 
 			T& operator*() const noexcept {
 				return *mPtr;
@@ -109,7 +109,7 @@ namespace CPS {
 
 			/*
 			These (implicit) comparison operators are disabled to avoid accidentally comparing pointers instead of attribute values.
-			When a pointer comparison is necessary, this can be done via the `getPtr` method or by using the `AttributeCmp` and `AttributeEq` structs. 
+			When a pointer comparison is necessary, this can be done via the `getPtr` method or by using the `AttributeCmp` and `AttributeEq` structs.
 
 			template<class U>
 			bool operator<(const AttributePointer<U>& rhs) const noexcept {
@@ -169,15 +169,15 @@ namespace CPS {
 		 * Display this attribute's value as a string
 		 * */
 		virtual String toString() = 0;
-		
+
 		/**
 		 * Check whether this is a static or dynamic attribute
-		 * @return true for instances of `AttributeStatic`, false for instances of `AttributeDynamic` 
+		 * @return true for instances of `AttributeStatic`, false for instances of `AttributeDynamic`
 		 * */
 		virtual bool isStatic() const = 0;
 
 		virtual ~AttributeBase() = default;
-		
+
 		/**
 		 * @brief Copy the attribute value of `copyFrom` onto this attribute
 		 * @return true if the copy operation was successful, false otherwise
@@ -186,7 +186,7 @@ namespace CPS {
 
 		/**
 		 * @brief Get the type of this attribute
-		 * @return std::type_info 
+		 * @return std::type_info
 		 */
 		virtual const std::type_info& getType() = 0;
 
@@ -219,7 +219,7 @@ namespace CPS {
 	 * */
 	template<class DependentType>
 	class AttributeUpdateTaskBase {
-		
+
 	public:
 		typedef std::shared_ptr<AttributeUpdateTaskBase<DependentType>> Ptr;
 
@@ -237,7 +237,7 @@ namespace CPS {
 	class AttributeUpdateTask :
 		public AttributeUpdateTaskBase<DependentType>,
 		public SharedFactory<AttributeUpdateTask<DependentType, DependencyTypes...>> {
-	
+
 	public:
 		using Actor = std::function<void(std::shared_ptr<DependentType>&, typename Attribute<DependencyTypes>::Ptr...)>;
 
@@ -284,25 +284,6 @@ namespace CPS {
 			AttributeBase(), mData(std::make_shared<T>()) {
 				*mData = initialValue;
 			}
-
-		/**
-		 * Creates a new static Attribute and enters a pointer to it into the given Attribute Map using the provided name.
-		 * */
-		static Attribute<T>::Ptr create(String name, AttributeBase::Map &attrMap, T intitialValue = T()) {
-			Attribute<T>::Ptr newAttr = AttributePointer<Attribute<T>>(AttributeStatic<T>::make(intitialValue));
-			attrMap[name] = newAttr;
-			return newAttr;
-		}
-
-
-		/**
-		 * Creates a new dynamic Attribute and enters a pointer to it into the given Attribute Map using the provided name.
-		 * */
-		static Attribute<T>::Ptr createDynamic(String name, AttributeBase::Map &attrMap) {
-			Attribute<T>::Ptr newAttr = AttributePointer<Attribute<T>>(AttributeDynamic<T>::make());
-			attrMap[name] = newAttr;
-			return newAttr;
-		}
 
 		/**
 		 * Manually set the attribute to the given value. For dynamic attributes, this will trigger the UPDATE_ON_SET tasks for updating any
@@ -371,7 +352,7 @@ namespace CPS {
 
 		/**
 		 * @brief Get the type of this attribute
-		 * @return std::type_info 
+		 * @return std::type_info
 		 */
 		const std::type_info& getType() override {
 			return typeid(T);
@@ -391,7 +372,7 @@ namespace CPS {
 		 * @param U The type of the newly derived attribute
 		 * @param getter The getter actor function to use for updating the derived attribute
 		 * @param setter The setter actor function for updating `this` when the derived attribute is changed
-		 * @return a newly created attribute of type `U` which will calculate its value using the provided getter and update `this` on changes using the provided setter 
+		 * @return a newly created attribute of type `U` which will calculate its value using the provided getter and update `this` on changes using the provided setter
 		 * */
 		template <class U>
 		typename Attribute<U>::Ptr derive(
@@ -534,7 +515,7 @@ namespace CPS {
 	template<class T>
 	class AttributeStatic :
 		public Attribute<T>,
-		public SharedFactory<AttributeStatic<T>> { 
+		public SharedFactory<AttributeStatic<T>> {
 		friend class SharedFactory<AttributeStatic<T>>;
 
 	public:
@@ -572,7 +553,7 @@ namespace CPS {
 	template<class T>
 	class AttributeDynamic :
 		public Attribute<T>,
-		public SharedFactory<AttributeDynamic<T>> { 
+		public SharedFactory<AttributeDynamic<T>> {
 		friend class SharedFactory<AttributeDynamic<T>>;
 
 	protected:
@@ -680,7 +661,7 @@ namespace CPS {
 		 * */
 		virtual void appendDependencies(AttributeBase::Set *deps) override {
 			deps->insert(this->shared_from_this());
-			
+
 			AttributeBase::Set newDeps = AttributeBase::Set();
 			for (typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnce) {
 				AttributeBase::List taskDeps = task->getDependencies();
