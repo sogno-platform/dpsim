@@ -36,10 +36,10 @@ void MnaSolverEigenSparse<VarType>::switchedMatrixStamp(std::size_t index, std::
 	auto bit = std::bitset<SWITCH_NUM>(index);
 	auto& sys = mSwitchedMatrices[bit][0];
 	for (auto comp : comp) {
-		comp->mnaApplySystemMatrixStamp(sys);
+		comp->mnaApplySparseSystemMatrixStamp(sys);
 	}
 	for (UInt i = 0; i < mSwitches.size(); ++i)
-		mSwitches[i]->mnaApplySwitchSystemMatrixStamp(bit[i], sys, 0);
+		mSwitches[i]->mnaApplySwitchSparseSystemMatrixStamp(bit[i], sys, 0);
 
 	// Compute LU-factorization for system matrix
 	mLuFactorizations[bit][0]->analyzePattern(sys);
@@ -57,7 +57,7 @@ void MnaSolverEigenSparse<VarType>::stampVariableSystemMatrix() {
 	// Build base matrix with only static elements
 	mBaseSystemMatrix.setZero();
 	for (auto statElem : mMNAComponents)
-		statElem->mnaApplySystemMatrixStamp(mBaseSystemMatrix);
+		statElem->mnaApplySparseSystemMatrixStamp(mBaseSystemMatrix);
 	mSLog->info("Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
 	mSLog->flush();
 
@@ -67,12 +67,12 @@ void MnaSolverEigenSparse<VarType>::stampVariableSystemMatrix() {
 	// Now stamp switches into matrix
 	mSLog->info("Stamping switches");
 	for (auto sw : mMNAIntfSwitches)
-		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
+		sw->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
 
 	// Now stamp initial state of variable elements into matrix
 	mSLog->info("Stamping variable elements");
 	for (auto varElem : mMNAIntfVariableComps)
-		varElem->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
+		varElem->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
 
 	mSLog->info("Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
 	mSLog->flush();
@@ -113,11 +113,11 @@ void MnaSolverEigenSparse<VarType>::recomputeSystemMatrix(Real time) {
 
 	// Now stamp switches into matrix
 	for (auto sw : mMNAIntfSwitches)
-		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
+		sw->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
 
 	// Now stamp variable elements into matrix
 	for (auto comp : mMNAIntfVariableComps)
-		comp->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
+		comp->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
 
 	// Refactorization of matrix assuming that structure remained
 	// constant by omitting analyzePattern
