@@ -27,7 +27,7 @@ PhaseType TopologicalNode::phaseType() const { return mPhaseType; }
 TopologicalNode::TopologicalNode(String uid, String name,
 	PhaseType phaseType, const std::vector<Complex> &initialVoltage)
 	: IdentifiedObject(uid, name),
-		mInitialVoltage(Attribute<MatrixComp>::create("voltage_init", mAttributes)) {
+		mInitialVoltage(mAttributes->create<MatrixComp>("voltage_init")) {
 
 	mPhaseType = phaseType;
 	if (phaseType == PhaseType::ABC) {

@@ -12,9 +12,9 @@ using namespace CPS;
 
 SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, Logger::Level logLevel)
 	: CompositePowerComp<Complex>(uid, name, false, false, logLevel),
-    mPref(Attribute<Real>::create("P_ref", mAttributes, std::numeric_limits<double>::infinity())),
-    mQ1ref(Attribute<Real>::create("Q1_ref", mAttributes)),
-    mQ2ref(Attribute<Real>::create("Q2_ref", mAttributes)) {
+    mPref(attributeList->create<Real>("P_ref", std::numeric_limits<double>::infinity())),
+    mQ1ref(mAttributes->create<Real>("Q1_ref")),
+    mQ2ref(mAttributes->create<Real>("Q2_ref")) {
 	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
 	**mIntfVoltage = MatrixComp::Zero(1, 1);

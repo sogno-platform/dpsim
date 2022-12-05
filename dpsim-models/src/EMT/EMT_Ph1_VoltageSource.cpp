@@ -12,8 +12,8 @@ using namespace CPS;
 
 EMT::Ph1::VoltageSource::VoltageSource(String uid, String name,	Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
-	mVoltageRef(Attribute<Complex>::create("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::create("f_src", mAttributes)) {
+	mVoltageRef(mAttributes->create<Complex>("V_ref")),
+	mSrcFreq(mAttributes->create<Real>("f_src")) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);

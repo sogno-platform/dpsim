@@ -13,8 +13,8 @@ using namespace CPS;
 
 SP::Ph1::VDNode::VDNode(String uid, String name,
 	Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel),
-	mDeltaSetPoint(Attribute<Real>::create("Delta_set", mAttributes)),
-	mVoltageSetPointPerUnit(Attribute<Real>::create("V_set_pu", mAttributes)) {
+	mDeltaSetPoint(mAttributes->create<Real>("Delta_set")),
+	mVoltageSetPointPerUnit(mAttributes->create<Real>("V_set_pu")) {
 }
 
 SP::Ph1::VDNode::VDNode(String uid, String name, Real vSetPointPerUnit,

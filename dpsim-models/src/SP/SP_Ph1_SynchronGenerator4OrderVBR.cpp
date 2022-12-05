@@ -12,9 +12,9 @@
 using namespace CPS;
 
 SP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
-    (const String & uid, const String & name, Logger::Level logLevel)
+    (const String& uid, const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)) {
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")) {
 
 	//
 	mSGOrder = SGOrder::SG4Order;
@@ -48,7 +48,7 @@ void SP::Ph1::SynchronGenerator4OrderVBR::specificInitialization() {
 }
 
 void SP::Ph1::SynchronGenerator4OrderVBR::stepInPerUnit() {
-	
+
 	if (mSimTime>0.0) {
 		// calculate Edq_t at t=k
 		(**mEdq_t)(0,0) = -(**mIdq)(1,0) * mLq_t + (**mVdq)(0,0);
@@ -65,7 +65,7 @@ void SP::Ph1::SynchronGenerator4OrderVBR::stepInPerUnit() {
 	// VBR history voltage
 	mEh_vbr(0,0) = mAd_t * (**mIdq)(1,0) + mBd_t * (**mEdq_t)(0,0);
 	mEh_vbr(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * mEf_prev + mDq_t * (**mEf);
-	
+
 	// convert Edq_t into the abc reference frame
 	mEh_vbr = mDqToComplexA * mEh_vbr;
 	mEvbr = Complex(mEh_vbr(0,0), mEh_vbr(1,0)) * mBase_V_RMS;

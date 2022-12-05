@@ -12,9 +12,9 @@ using namespace CPS;
 
 EMT::Ph3::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
 	: CompositePowerComp<Real>(uid, name, true, true, logLevel),
-	mActivePower(Attribute<Matrix>::create("P", mAttributes)),
-	mReactivePower(Attribute<Matrix>::create("Q", mAttributes)),
-	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
+	mActivePower(mAttributes->create<Matrix>("P")),
+	mReactivePower(mAttributes->create<Matrix>("Q")),
+	mNomVoltage(mAttributes->create<Real>("V_nom")) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 

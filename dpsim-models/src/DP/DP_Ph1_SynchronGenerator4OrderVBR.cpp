@@ -13,7 +13,7 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
     (const String & uid, const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq0_t", mAttributes)) {
+	mEdq_t(mAttributes->create<Matrix>("Edq0_t")) {
 
 	//
 	mSGOrder = SGOrder::SG4Order;

@@ -12,8 +12,8 @@ using namespace CPS;
 
 SP::Ph1::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
-	mConductance(Attribute<Real>::create("G", mAttributes)),
-	mSusceptance(Attribute<Real>::create("B", mAttributes)) {
+	mConductance(mAttributes->create<Real>("G")),
+	mSusceptance(mAttributes->create<Real>("B")) {
 
 	mSLog->info("Create {} of type {}", this->type(), name);
 	setTerminalNumber(1);

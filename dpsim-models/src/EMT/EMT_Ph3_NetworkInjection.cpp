@@ -12,8 +12,8 @@ using namespace CPS;
 
 EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
 	: CompositePowerComp<Real>(uid, name, true, true, logLevel),
-	mVoltageRef(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
+	mVoltageRef(mAttributes->createDynamic<MatrixComp>("V_ref")),
+	mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
