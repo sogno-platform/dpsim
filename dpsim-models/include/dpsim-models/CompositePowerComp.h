@@ -69,12 +69,26 @@ namespace CPS {
 		virtual void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### MNA Parent Functions ####
-		virtual void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) { };
-		virtual void mnaParentApplySystemMatrixStamp(Matrix& systemMatrix) { };
-		virtual void mnaParentApplyRightSideVectorStamp(Matrix& rightVector) { };
-		virtual void mnaParentPreStep(Real time, Int timeStepCount) { };
-		virtual void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) { };
-		virtual void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) { };
-		virtual void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) { };
+		virtual void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+			// By default, the parent has no custom initialization beyond what is done in CompositePowerComp::mnaInitialize
+		};
+		virtual void mnaParentApplySystemMatrixStamp(Matrix& systemMatrix) {
+			// By default, the parent has no custom stamp on the system matrix, only the subcomponents are stamped
+		};
+		virtual void mnaParentApplyRightSideVectorStamp(Matrix& rightVector) {
+			// By default, the parent has no custom stamp on the right vector, only the subcomponents are stamped
+		};
+		virtual void mnaParentPreStep(Real time, Int timeStepCount) {
+			// By default, the parent has no custom pre-step, only the subcomponents' pre-steps are executed
+		};
+		virtual void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+			// By default, the parent has no custom post-step, only the subcomponents' post-steps are executed
+		};
+		virtual void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+			// By default, the parent has no custom pre-step-dependencies, only the subcomponents' dependencies are added
+		};
+		virtual void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+			// By default, the parent has no custom post-step-dependencies, only the subcomponents' dependencies are added
+		};
 	};
 }
