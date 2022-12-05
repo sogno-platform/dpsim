@@ -8,16 +8,15 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
 namespace Base {
 
 	template <typename VarType>
-	class ReducedOrderSynchronGenerator : 
-		public SimPowerComp<VarType>,
-		public MNAInterface {
+	class ReducedOrderSynchronGenerator :
+		public MNASimPowerComp<VarType> {
 
 		protected:
 			///
@@ -28,7 +27,7 @@ namespace Base {
 			virtual void specificInitialization()=0;
 			///
         	virtual void stepInPerUnit()=0;
-			
+
 			// ### MNA Section ###
         	///
         	void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
@@ -50,7 +49,7 @@ namespace Base {
 			/// (0,0) = Id
 			/// (1,0) = Iq
 			const Attribute<Matrix>::Ptr mIdq;
-		
+
 			/// dq stator terminal voltage
 			/// (0,0) = Vd
 			/// (1,0) = Vq
@@ -88,7 +87,7 @@ namespace Base {
 			Real mBase_L;
 			/// Base omega mech
 			Real mBase_OmMech;
-			/// Inertia 
+			/// Inertia
 			Real mH;
 
 			// ### Operational Parameters  (p.u.) ###
@@ -101,7 +100,7 @@ namespace Base {
 			/// Subtransient d-axis inductance
 			Real mLd_t = 0;
 			/// Subtransient q-axis inductance
-			Real mLq_t = 0; 
+			Real mLq_t = 0;
 			/// Subtransient d-axis inductance
 			Real mLd_s = 0;
 			/// Subtransient q-axis inductance
@@ -124,7 +123,7 @@ namespace Base {
 			Complex mIntfVoltageComplex;
 			/// initial electrical power
 			Complex mInitElecPower;
-			/// initial mechanical power 
+			/// initial mechanical power
 			Real mInitMechPower;
 			/// initial terminal voltage phase a (p.u.)
 			Complex mInitVoltage;
@@ -150,33 +149,33 @@ namespace Base {
 			/// mechanical system angle (between d-axis and stator a-axis)
 			const Attribute<Real>::Ptr mThetaMech;
 			/// Load angle (between q-axis and stator a-axis)
-			const Attribute<Real>::Ptr mDelta;		
+			const Attribute<Real>::Ptr mDelta;
 
 			/// Destructor - does nothing.
 			virtual ~ReducedOrderSynchronGenerator() { }
 
-			/// 
+			///
 			void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
 			/// Initialization for 3 Order SynGen
-			void setOperationalParametersPerUnit(Real nomPower, 
+			void setOperationalParametersPerUnit(Real nomPower,
 				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 				Real Ld_t, Real Td0_t);
 			/// Initialization for 4 Order SynGen
-			void setOperationalParametersPerUnit(Real nomPower, 
+			void setOperationalParametersPerUnit(Real nomPower,
 				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 				Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t);
 			/// Initialization for 6 Order SynGen
-			void setOperationalParametersPerUnit(Real nomPower, 
+			void setOperationalParametersPerUnit(Real nomPower,
 				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 				Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t,
 				Real Ld_s, Real Lq_s, Real Td0_s, Real Tq0_s,
 				Real Taa=0);
 			///
-			void setInitialValues(Complex initComplexElectricalPower, 
+			void setInitialValues(Complex initComplexElectricalPower,
 				Real initMechanicalPower, Complex initTerminalVoltage);
 
 			/// ### Setters ###
-			void scaleInertiaConstant(Real scalingFactor); 
+			void scaleInertiaConstant(Real scalingFactor);
 
 			/// ### Mna Section ###
 			class MnaPreStep : public Task {
@@ -195,7 +194,7 @@ namespace Base {
 			class MnaPostStep : public Task {
 			public:
 				MnaPostStep(ReducedOrderSynchronGenerator<VarType>& synGen, Attribute<Matrix>::Ptr leftSideVector) :
-					Task(**synGen.mName + ".MnaPostStep"), 
+					Task(**synGen.mName + ".MnaPostStep"),
 					mSynGen(synGen), mLeftVector(leftSideVector) {
 					mAttributeDependencies.push_back(mLeftVector);
 					mModifiedAttributes.push_back(synGen.mIntfVoltage);

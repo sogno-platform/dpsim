@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
 
@@ -25,8 +25,7 @@ namespace Ph1 {
 	class Inductor :
 		public Base::Ph1::Inductor,
 		public MNATearInterface,
-		public MNAInterface,
-		public SimPowerComp<Complex>,
+				public MNASimPowerComp<Complex>,
 		public SharedFactory<Inductor> {
 	protected:
 		/// DC equivalent current source for harmonics [A]

@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph1::CurrentSource::CurrentSource(String uid, String name,	Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel),
+	: MNASimPowerComp<Real>(uid, name, logLevel),
 	mCurrentRef(mAttributes->create<Complex>("I_ref")),
 	mSrcFreq(mAttributes->create<Real>("f_src")) {
 	setTerminalNumber(2);

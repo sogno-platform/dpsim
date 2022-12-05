@@ -15,6 +15,7 @@ namespace CPS {
 		using Type = VarType;
 		using Ptr = std::shared_ptr<MNASimPowerComp<VarType>>;
 		using List = std::vector<Ptr>;
+		using MNAInterface::mRightVector;
 
 		/// Basic constructor that takes UID, name and log level
 		MNASimPowerComp(String uid, String name, Logger::Level logLevel)

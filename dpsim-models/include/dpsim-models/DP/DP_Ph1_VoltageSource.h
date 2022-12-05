@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
@@ -37,9 +37,8 @@ namespace Ph1 {
 	/// positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
 	class VoltageSource :
-		public SimPowerComp<Complex>,
-		public MNAInterface,
-		public DAEInterface,
+		public MNASimPowerComp<Complex>,
+				public DAEInterface,
 		public SharedFactory<VoltageSource> {
 	private:
 		///

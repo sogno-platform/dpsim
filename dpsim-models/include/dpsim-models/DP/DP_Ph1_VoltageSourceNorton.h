@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Base/Base_Ph1_VoltageSource.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
@@ -22,9 +22,8 @@ namespace Ph1 {
 	/// a parallel resistance using the Norton equivalent.
 	class VoltageSourceNorton :
 		public Base::Ph1::VoltageSource,
-		public SimPowerComp<Complex>,
-		public MNAInterface,
-		public SharedFactory<VoltageSourceNorton> {
+		public MNASimPowerComp<Complex>,
+				public SharedFactory<VoltageSourceNorton> {
 	protected:
 		/// Equivalent current source [A]
 		Complex mEquivCurrent;

@@ -14,12 +14,12 @@ using namespace CPS::Signal;
 PowerControllerVSI::PowerControllerVSI(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
 	/// CHECK: Which of these really need to be attributes?
-	mInputPrev(attributeList->create<Matrix>("input_prev", Matrix::Zero(6,1))),
-    mStatePrev(attributeList->create<Matrix>("state_prev", Matrix::Zero(6,1))),
-    mOutputPrev(attributeList->create<Matrix>("output_prev", Matrix::Zero(2,1))),
-    mInputCurr(attributeList->create<Matrix>("input_curr", Matrix::Zero(6,1))),
-    mStateCurr(attributeList->create<Matrix>("state_curr", Matrix::Zero(6,1))),
-    mOutputCurr(attributeList->create<Matrix>("output_curr", Matrix::Zero(2,1))),
+	mInputPrev(mAttributes->create<Matrix>("input_prev", Matrix::Zero(6,1))),
+    mStatePrev(mAttributes->create<Matrix>("state_prev", Matrix::Zero(6,1))),
+    mOutputPrev(mAttributes->create<Matrix>("output_prev", Matrix::Zero(2,1))),
+    mInputCurr(mAttributes->create<Matrix>("input_curr", Matrix::Zero(6,1))),
+    mStateCurr(mAttributes->create<Matrix>("state_curr", Matrix::Zero(6,1))),
+    mOutputCurr(mAttributes->create<Matrix>("output_curr", Matrix::Zero(2,1))),
 	mVc_d(mAttributes->createDynamic<Real>("Vc_d")),
 	mVc_q(mAttributes->createDynamic<Real>("Vc_q")),
 	mIrc_d(mAttributes->createDynamic<Real>("Irc_d")),

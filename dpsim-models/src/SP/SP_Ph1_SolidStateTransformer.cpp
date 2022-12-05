@@ -12,7 +12,7 @@ using namespace CPS;
 
 SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, Logger::Level logLevel)
 	: CompositePowerComp<Complex>(uid, name, false, false, logLevel),
-    mPref(attributeList->create<Real>("P_ref", std::numeric_limits<double>::infinity())),
+    mPref(mAttributes->create<Real>("P_ref", std::numeric_limits<double>::infinity())),
     mQ1ref(mAttributes->create<Real>("Q1_ref")),
     mQ2ref(mAttributes->create<Real>("Q2_ref")) {
 	mSLog->info("Create {} of type {}", **mName, this->type());

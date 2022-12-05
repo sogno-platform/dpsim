@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::Switch::Switch(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::Switch(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::Switch(mAttributes), MNASimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);

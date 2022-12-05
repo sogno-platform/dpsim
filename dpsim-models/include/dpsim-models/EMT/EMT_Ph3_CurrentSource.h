@@ -7,7 +7,7 @@
  *********************************************************************************/
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
@@ -22,8 +22,7 @@ namespace CPS {
 			/// This model uses modified nodal analysis to represent an ideal current source.
 			/// This involves the stamping of the current to the right side vector.
 			class CurrentSource :
-				public MNAInterface,
-				public SimPowerComp<Real>,
+								public MNASimPowerComp<Real>,
 				public SharedFactory<CurrentSource> {
 			private:
 				///
@@ -83,7 +82,7 @@ namespace CPS {
 				class MnaPostStep : public Task {
 				public:
 					MnaPostStep(CurrentSource& currentSource, Attribute<Matrix>::Ptr leftVector) :
-						Task(**currentSource.mName + ".MnaPostStep"),			
+						Task(**currentSource.mName + ".MnaPostStep"),
 						mCurrentSource(currentSource), mLeftVector(leftVector) {
 							mCurrentSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 					}

@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: Base::Ph3::Capacitor(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph3::Capacitor(mAttributes), MNASimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
 
@@ -21,8 +21,7 @@ namespace Ph3 {
 	/// only on the main diagonal. These values are identical.
 	class SeriesResistor :
 		public Base::Ph1::Resistor,
-		public MNAInterface,
-		public SimPowerComp<Real>,
+				public MNASimPowerComp<Real>,
 		public SharedFactory<SeriesResistor> {
 
 	public:

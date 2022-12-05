@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph1_CurrentSource.h>
 
@@ -20,13 +20,12 @@ namespace Ph1 {
 	/// A positive current is flowing out of
 	/// node1 and into node2.
 	class CurrentSource :
-		public MNAInterface,
-		public SimPowerComp<Real>,
+				public MNASimPowerComp<Real>,
 		public SharedFactory<CurrentSource> {
 	public:
 		const Attribute<Complex>::Ptr mCurrentRef;
 		const Attribute<Real>::Ptr mSrcFreq;
-		
+
 		/// Defines UID, name and logging level
 		CurrentSource(String uid, String name,
 			Logger::Level logLevel = Logger::Level::off);

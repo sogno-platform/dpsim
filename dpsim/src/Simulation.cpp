@@ -29,22 +29,22 @@ using namespace CPS;
 using namespace DPsim;
 
 Simulation::Simulation(String name,	Logger::Level logLevel) :
-	mName(attributeList->create<String>("name", name)),
-	mFinalTime(attributeList->create<Real>("final_time", 0.001)),
-	mTimeStep(attributeList->create<Real>("time_step", 0.001)),
-	mSplitSubnets(attributeList->create<Bool>("split_subnets", true)),
-	mSteadyStateInit(attributeList->create<Bool>("steady_state_init", false)),
+	mName(mAttributes->create<String>("name", name)),
+	mFinalTime(mAttributes->create<Real>("final_time", 0.001)),
+	mTimeStep(mAttributes->create<Real>("time_step", 0.001)),
+	mSplitSubnets(mAttributes->create<Bool>("split_subnets", true)),
+	mSteadyStateInit(mAttributes->create<Bool>("steady_state_init", false)),
 	mLogLevel(logLevel)  {
 	create();
 }
 
 Simulation::Simulation(String name, CommandLineArgs& args) :
-	mName(attributeList->create<String>("name", name)),
+	mName(mAttributes->create<String>("name", name)),
 	mSolverPluginName(args.solverPluginName),
-	mFinalTime(attributeList->create<Real>("final_time", args.duration)),
-	mTimeStep(attributeList->create<Real>("time_step", args.timeStep)),
-	mSplitSubnets(attributeList->create<Bool>("split_subnets", true)),
-	mSteadyStateInit(attributeList->create<Bool>("steady_state_init", false)),
+	mFinalTime(mAttributes->create<Real>("final_time", args.duration)),
+	mTimeStep(mAttributes->create<Real>("time_step", args.timeStep)),
+	mSplitSubnets(mAttributes->create<Bool>("split_subnets", true)),
+	mSteadyStateInit(mAttributes->create<Bool>("steady_state_init", false)),
 	mLogLevel(args.logLevel),
 	mDomain(args.solver.domain),
 	mSolverType(args.solver.type),

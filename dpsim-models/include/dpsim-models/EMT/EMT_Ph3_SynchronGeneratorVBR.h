@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
 #include <dpsim-models/Base/Base_SynchronGenerator.h>
@@ -28,9 +28,8 @@ namespace Ph3 {
 	/// descriptive names in order to shorten formulas and increase the readability
 	class SynchronGeneratorVBR :
 		public Base::SynchronGenerator,
-		public SimPowerComp<Real>,
-		public MNAInterface,
-		public MNAVariableCompInterface,
+		public MNASimPowerComp<Real>,
+				public MNAVariableCompInterface,
 		public SharedFactory<SynchronGeneratorVBR> {
 	protected:
 		/// d dynamic inductance

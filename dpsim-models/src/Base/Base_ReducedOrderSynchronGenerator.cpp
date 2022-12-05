@@ -13,7 +13,7 @@ using namespace CPS;
 template <>
 Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel),
+	: MNASimPowerComp<Real>(uid, name, logLevel),
 	mMechTorque(mAttributes->create<Real>("Tm")),
 	mElecTorque(mAttributes->create<Real>("Te")),
 	mDelta(mAttributes->create<Real>("delta")),
@@ -32,7 +32,7 @@ Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 template <>
 Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: MNASimPowerComp<Complex>(uid, name, logLevel),
 	mMechTorque(mAttributes->create<Real>("Tm")),
 	mElecTorque(mAttributes->create<Real>("Te")),
 	mDelta(mAttributes->create<Real>("delta")),
@@ -293,9 +293,9 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
 	mTimeStep = timeStep;
     specificInitialization();
 
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+	**this->mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	this->mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
+	this->mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 template <typename VarType>

@@ -12,7 +12,7 @@
 using namespace CPS;
 
 EMT::Ph3::CurrentSource::CurrentSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel),
+	: MNASimPowerComp<Real>(uid, name, logLevel),
 	mCurrentRef(mAttributes->create<MatrixComp>("I_ref")), // rms-value
 	mSrcFreq(mAttributes->createDynamic<Real>("f_src")),
 	mSigOut(mAttributes->createDynamic<Complex>("sigOut")) {

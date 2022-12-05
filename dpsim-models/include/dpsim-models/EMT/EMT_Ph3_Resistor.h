@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph3_Resistor.h>
 namespace CPS {
@@ -17,8 +17,7 @@ namespace Ph3 {
  /// EMT Resistor
 class Resistor :
 	public Base::Ph3::Resistor,
-	public MNAInterface,
-	public SimPowerComp<Real>,
+		public MNASimPowerComp<Real>,
 	public SharedFactory<Resistor> {
 protected:
 public:

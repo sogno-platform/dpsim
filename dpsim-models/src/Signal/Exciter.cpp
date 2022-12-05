@@ -13,9 +13,9 @@ using namespace CPS;
 
 Signal::Exciter::Exciter(String name, CPS::Logger::Level logLevel)
 	: SimSignalComp(name, name, logLevel),
-	mVh(attributeList->create<Real>("Vh", 0)),
-	mVr(attributeList->create<Real>("Vr", 0)),
-	mVf(attributeList->create<Real>("Vf", 0)) { }
+	mVh(mAttributes->create<Real>("Vh", 0)),
+	mVr(mAttributes->create<Real>("Vr", 0)),
+	mVf(mAttributes->create<Real>("Vf", 0)) { }
 
 void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
 	Real Tf, Real Kf, Real Tr) {

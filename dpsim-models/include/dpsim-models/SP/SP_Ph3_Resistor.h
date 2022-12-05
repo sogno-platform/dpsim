@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
@@ -21,8 +21,7 @@ namespace CPS {
 			class Resistor :
 				public Base::Ph3::Resistor,
 				public MNATearInterface,
-				public MNAInterface,
-				public SimPowerComp<Complex>,
+								public MNASimPowerComp<Complex>,
 				public SharedFactory<Resistor> {
 
 			public:
