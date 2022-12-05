@@ -13,7 +13,7 @@
 #include <dpsim-models/Definitions.h>
 
 namespace CPS {
-	class ODEInterface : virtual public AttributeList {
+	class ODEInterface {
 	public:
 		typedef std::shared_ptr<ODEInterface> Ptr;
 		//typedef std::vector<Ptr> List;
@@ -36,9 +36,9 @@ namespace CPS {
 		                         double tmp1[], double tmp2[], double tmp3[]) = 0;
 
 	protected:
-		ODEInterface() :
-		mOdePreState(CPS::Attribute<Matrix>::create("ode_pre_state", mAttributes)),
-		mOdePostState(CPS::Attribute<Matrix>::create("ode_post_state", mAttributes))
+		explicit ODEInterface(AttributeList::Ptr attrList) :
+		mOdePreState(CPS::Attribute<Matrix>::create("ode_pre_state", attrList)),
+		mOdePostState(CPS::Attribute<Matrix>::create("ode_post_state", attrList))
 		{ }
 	};
 }

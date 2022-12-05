@@ -18,11 +18,11 @@ namespace CPS {
 
 		/// Basic constructor that takes UID, name and log level
 		MNASimPowerComp(String uid, String name, Logger::Level logLevel)
-			: SimPowerComp<VarType>(uid, name, logLevel) { }
+			: SimPowerComp<VarType>(uid, name, logLevel), MNAInterface(SimPowerComp<VarType>::mAttributes) { }
 
 		/// Basic constructor that takes name and log level and sets the UID to name as well
 		explicit MNASimPowerComp(String name, Logger::Level logLevel = Logger::Level::off)
-			: SimPowerComp<VarType>(name, name, logLevel) { }
+			: SimPowerComp<VarType>(name, name, logLevel), MNAInterface(SimPowerComp<VarType>::mAttributes) { }
 
 		/// Destructor - does not do anything
 		virtual ~MNASimPowerComp() = default;

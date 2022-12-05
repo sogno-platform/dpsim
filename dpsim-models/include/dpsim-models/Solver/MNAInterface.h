@@ -15,7 +15,7 @@
 
 namespace CPS {
 	/// Interface to be implemented by all models used by the MNA solver.
-	class MNAInterface : virtual public AttributeList {
+	class MNAInterface {
 	public:
 		typedef std::shared_ptr<MNAInterface> Ptr;
 		typedef std::vector<Ptr> List;
@@ -71,7 +71,7 @@ namespace CPS {
 		}
 	protected:
 		/// Every MNA component modifies its source vector attribute.
-		MNAInterface() : mRightVector(Attribute<Matrix>::createDynamic("right_vector", mAttributes)) { }
+		explicit MNAInterface(AttributeList::Ptr attrList) : mRightVector(attrList->createDynamic<Matrix>("right_vector")) { }
 
 		/// List of tasks that relate to using MNA for this component (usually pre-step and/or post-step)
 		Task::List mMnaTasks;
