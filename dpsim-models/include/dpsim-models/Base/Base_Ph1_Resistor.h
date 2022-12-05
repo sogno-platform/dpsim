@@ -19,8 +19,8 @@ namespace Ph1 {
 		///Resistance [ohm]
 		const CPS::Attribute<Real>::Ptr mResistance;
 
-		explicit Resistor(CPS::AttributeBase::Map &attributeList) :
-			mResistance(CPS::Attribute<Real>::create("R", attributeList)) { };
+		explicit Resistor(CPS::AttributeList::Ptr attributeList) :
+			mResistance(attributeList->create<Real>("R")) { };
 
 
 		///

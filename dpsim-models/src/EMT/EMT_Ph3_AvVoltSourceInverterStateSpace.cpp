@@ -15,17 +15,17 @@ using namespace CPS;
 
 EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(String uid, String name, Logger::Level logLevel)
 : Base::Ph1::VoltageSource(mAttributes), SimPowerComp<Real>(uid, name, logLevel),
-	mPref(Attribute<Real>::create("P_ref", mAttributes)),
-	mQref(Attribute<Real>::create("Q_ref", mAttributes)),
-	mThetaPLL(Attribute<Real>::create("theta", mAttributes)),
-	mPhiPLL(Attribute<Real>::create("phipll", mAttributes)),
-	mP(Attribute<Real>::create("p", mAttributes)),
-	mQ(Attribute<Real>::create("q", mAttributes)),
-	mPhi_d(Attribute<Real>::create("phid", mAttributes)),
-	mPhi_q(Attribute<Real>::create("phiq", mAttributes)),
-	mGamma_d(Attribute<Real>::create("gammad", mAttributes)),
-	mGamma_q(Attribute<Real>::create("gammaq", mAttributes)),
-	mVcabc(Attribute<Matrix>::create("V_cabc", mAttributes, Matrix::Zero(3, 1))) {
+	mPref(mAttributes->create<Real>("P_ref")),
+	mQref(mAttributes->create<Real>("Q_ref")),
+	mThetaPLL(mAttributes->create<Real>("theta")),
+	mPhiPLL(mAttributes->create<Real>("phipll")),
+	mP(mAttributes->create<Real>("p")),
+	mQ(mAttributes->create<Real>("q")),
+	mPhi_d(mAttributes->create<Real>("phid")),
+	mPhi_q(mAttributes->create<Real>("phiq")),
+	mGamma_d(mAttributes->create<Real>("gammad")),
+	mGamma_q(mAttributes->create<Real>("gammaq")),
+	mVcabc(attributeList->create<Matrix>("V_cabc", Matrix::Zero(3, 1))) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);

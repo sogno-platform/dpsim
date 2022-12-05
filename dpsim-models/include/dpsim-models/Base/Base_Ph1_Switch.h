@@ -24,10 +24,10 @@ namespace Ph1 {
 		/// Defines if Switch is open or closed
 		const Attribute<Bool>::Ptr mIsClosed;
 
-		explicit Switch(CPS::AttributeBase::Map &attributeList) :
-			mOpenResistance(Attribute<Real>::create("R_open", attributeList)),
-			mClosedResistance(Attribute<Real>::create("R_closed", attributeList)),
-			mIsClosed(Attribute<Bool>::create("is_closed", attributeList)) { };
+		explicit Switch(CPS::AttributeList::Ptr attributeList) :
+			mOpenResistance(attributeList->create<Real>("R_open")),
+			mClosedResistance(attributeList->create<Real>("R_closed")),
+			mIsClosed(attributeList->create<Bool>("is_closed")) { };
 
 		///
 		void setParameters(Real openResistance, Real closedResistance, Bool closed = false) {

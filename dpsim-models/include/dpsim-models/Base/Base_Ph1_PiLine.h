@@ -26,11 +26,11 @@ namespace Ph1 {
 		/// Conductance in parallel to the line [S]
 		const Attribute<Real>::Ptr mParallelCond;
 
-		explicit PiLine(CPS::AttributeBase::Map &attributeList) :
-			mSeriesRes(Attribute<Real>::create("R_series", attributeList)),
-			mSeriesInd(Attribute<Real>::create("L_series", attributeList)),
-			mParallelCap(Attribute<Real>::create("C_parallel", attributeList)),
-			mParallelCond(Attribute<Real>::create("G_parallel", attributeList)) { };
+		explicit PiLine(CPS::AttributeList::Ptr attributeList) :
+			mSeriesRes(attributeList->create<Real>("R_series")),
+			mSeriesInd(attributeList->create<Real>("L_series")),
+			mParallelCap(attributeList->create<Real>("C_parallel")),
+			mParallelCond(attributeList->create<Real>("G_parallel")) { };
 
 		///
 		void setParameters(Real seriesResistance, Real seriesInductance,

@@ -19,8 +19,8 @@ namespace Ph3 {
 		/// Inductance [H]
 		const CPS::Attribute<Matrix>::Ptr mInductance;
 
-		explicit Inductor(CPS::AttributeBase::Map &attributeList) :
-			mInductance(CPS::Attribute<Matrix>::create("L", attributeList)) { };
+		explicit Inductor(CPS::AttributeList::Ptr attributeList) :
+			mInductance(attributeList->create<Matrix>("L")) { };
 
 		/// Sets model specific parameters
 		void setParameters(Matrix inductance) {

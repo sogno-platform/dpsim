@@ -18,8 +18,8 @@ namespace Ph1 {
 		/// Capacitance [F]
 		const CPS::Attribute<Real>::Ptr mCapacitance;
 
-		explicit Capacitor(CPS::AttributeBase::Map &attributeList) :
-			mCapacitance(CPS::Attribute<Real>::create("C", attributeList)) { };
+		explicit Capacitor(CPS::AttributeList::Ptr attributeList) :
+			mCapacitance(attributeList->create<Real>("C")) { };
 
 		/// Sets model specific parameters
 		void setParameters(Real capacitance) {

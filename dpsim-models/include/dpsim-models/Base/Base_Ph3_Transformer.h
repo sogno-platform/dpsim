@@ -31,8 +31,8 @@ namespace Ph3 {
 		///Transformer ratio
 		const Attribute<Complex>::Ptr mRatio;
 
-		explicit Transformer(CPS::AttributeBase::Map &attributeList) :
-			mRatio(Attribute<Complex>::create("ratio", attributeList)) { };
+		explicit Transformer(CPS::AttributeList::Ptr attributeList) :
+			mRatio(attributeList->create<Complex>("ratio")) { };
 
 		///
 		void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, Real ratioPhase, Matrix resistance, Matrix inductance) {

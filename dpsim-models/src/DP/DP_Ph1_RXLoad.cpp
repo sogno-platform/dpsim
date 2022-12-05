@@ -12,9 +12,9 @@ using namespace CPS;
 
 DP::Ph1::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
 	: CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mActivePower(Attribute<Real>::create("P", mAttributes)),
-	mReactivePower(Attribute<Real>::create("Q", mAttributes)),
-	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
+	mActivePower(mAttributes->create<Real>("P")),
+	mReactivePower(mAttributes->create<Real>("Q")),
+	mNomVoltage(mAttributes->create<Real>("V_nom")) {
 	setTerminalNumber(1);
 
 	mSLog->info("Create {} {}", this->type(), name);

@@ -23,10 +23,10 @@ namespace Ph3 {
 		/// Defines if Switch is open or closed
 		const CPS::Attribute<Bool>::Ptr mSwitchClosed;
 
-		explicit Switch(CPS::AttributeBase::Map &attributeList) :
-			mOpenResistance(Attribute<Matrix>::create("R_open", attributeList)),
-			mClosedResistance(Attribute<Matrix>::create("R_closed", attributeList)),
-			mSwitchClosed(Attribute<Bool>::create("is_closed", attributeList)) { };
+		explicit Switch(CPS::AttributeList::Ptr attributeList) :
+			mOpenResistance(attributeList->create<Matrix>("R_open")),
+			mClosedResistance(attributeList->create<Matrix>("R_closed")),
+			mSwitchClosed(attributeList->create<Bool>("is_closed")) { };
 
 		///
 		void setParameters(Matrix openResistance, Matrix closedResistance, Bool closed = false) {

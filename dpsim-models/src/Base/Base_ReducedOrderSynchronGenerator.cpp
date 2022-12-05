@@ -14,16 +14,15 @@ template <>
 Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
-	mVdq0(Attribute<Matrix>::create("Vdq0", mAttributes)),
-	mIdq0(Attribute<Matrix>::create("Idq0", mAttributes)),
-	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
-	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
-	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
-	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
-	mDelta(Attribute<Real>::create("delta", mAttributes)),
-	mEf(Attribute<Real>::create("Ef", mAttributes)) {
-	
-	//
+	mVdq0(mAttributes->create<Matrix>("Vdq0")),
+	mIdq0(mAttributes->create<Matrix>("Idq0")),
+	mElecTorque(mAttributes->create<Real>("Te")),
+	mMechTorque(mAttributes->create<Real>("Tm")),
+	mOmMech(mAttributes->create<Real>("w_r")),
+	mThetaMech(mAttributes->create<Real>("Theta")),
+	mDelta(mAttributes->create<Real>("delta")),
+	mEf(mAttributes->create<Real>("Ef")) {
+
 	mSimTime = 0.0;
 
 	// declare state variables
@@ -35,16 +34,15 @@ template <>
 Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
-	mVdq(Attribute<Matrix>::create("Vdq0", mAttributes)),
-	mIdq(Attribute<Matrix>::create("Idq0", mAttributes)),
-	mElecTorque(Attribute<Real>::create("Te", mAttributes)),
-	mMechTorque(Attribute<Real>::create("Tm", mAttributes)),
-	mOmMech(Attribute<Real>::create("w_r", mAttributes)),
-	mThetaMech(Attribute<Real>::create("Theta", mAttributes)),
-	mDelta(Attribute<Real>::create("delta", mAttributes)),
-	mEf(Attribute<Real>::create("Ef", mAttributes)) {
-	
-	//
+	mVdq(mAttributes->create<Matrix>("Vdq0")),
+	mIdq(mAttributes->create<Matrix>("Idq0")),
+	mElecTorque(mAttributes->create<Real>("Te")),
+	mMechTorque(mAttributes->create<Real>("Tm")),
+	mOmMech(mAttributes->create<Real>("w_r")),
+	mThetaMech(mAttributes->create<Real>("Theta")),
+	mDelta(mAttributes->create<Real>("delta")),
+	mEf(mAttributes->create<Real>("Ef")) {
+
 	mSimTime = 0.0;
 
 	// declare state variables
@@ -107,7 +105,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 			"inertia: {:e}\n"
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nTd0_t: {:e}\n",
-			mH, mLd, mLq, mL0, 
+			mH, mLd, mLq, mL0,
 			mLd_t, mTd0_t);
 }
 
@@ -136,7 +134,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\n"
 			"Td0_t: {:e}\nTq0_t: {:e}\n",
-			mH, mLd, mLq, mL0, 
+			mH, mLd, mLq, mL0,
 			mLd_t, mLq_t,
 			mTd0_t, mTq0_t);
 }
@@ -176,7 +174,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 			"Ld_s: {:e}\nLq_s: {:e}\n"
 			"Td0_s: {:e}\nTq0_s: {:e}\n"
 			"Taa: {:e}\n",
-			mH, mLd, mLq, mL0, 
+			mH, mLd, mLq, mL0,
 			mLd_t, mLq_t,
 			mTd0_t, mTq0_t,
 			mLd_s, mLq_s,
@@ -187,18 +185,18 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::scaleInertiaConstant(Real scalingFactor) {
 	mH = mH * scalingFactor;
-	this->mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH); 
+	this->mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
 }
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::calculateVBRconstants() {
 
-	Real Tf = 0;	
+	Real Tf = 0;
 	if (mSGOrder == SGOrder::SG6aOrder) {
 		if ((mLd_t!=0) && (mTd0_t!=0))
 			mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);
 
-		if ((mLq_t!=0) && (mTq0_t!=0))	
+		if ((mLq_t!=0) && (mTq0_t!=0))
 			mYq = (mTq0_s / mTq0_t) * (mLq_s / mLq_t) * (mLq - mLq_t);
 
 		if (mTd0_t != 0)
@@ -276,7 +274,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	// Initialize mechanical torque
 	**mMechTorque = mInitMechPower / mNomPower;
 	mMechTorque_prev = **mMechTorque;
-	
+
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
 
@@ -350,7 +348,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	// Initialize mechanical torque
 	**mMechTorque = mInitMechPower / mNomPower;
 	mMechTorque_prev = **mMechTorque;
-		
+
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
 	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
 
@@ -468,7 +466,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::MnaPreStep::execute(Real time, I
 		mSynGen.mMechTorque_prev = **mSynGen.mMechTorque;
 		**mSynGen.mMechTorque = mSynGen.mTurbineGovernor->step(**mSynGen.mOmMech, mSynGen.mTimeStep);
 	}
-	
+
 	// calculate mechanical variables at t=k+1 with forward euler
 	if (mSynGen.mSimTime>0.0) {
 		**mSynGen.mElecTorque = ((**mSynGen.mVdq0)(0,0) * (**mSynGen.mIdq0)(0,0) + (**mSynGen.mVdq0)(1,0) * (**mSynGen.mIdq0)(1,0));
@@ -489,7 +487,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::MnaPostStep::execute(Real tim
 
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(Real Ta, Real Ka, Real Te, Real Ke, 
+void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(Real Ta, Real Ka, Real Te, Real Ke,
 	Real Tf, Real Kf, Real Tr)
 {
 	mExciter = Signal::Exciter::make(**this->mName + "_Exciter", this->mLogLevel);
@@ -506,7 +504,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(Real T3, Real T4, Real T5, Real Tc, 
+void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(Real T3, Real T4, Real T5, Real Tc,
 	Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef, Real TmRef)
 {
 	mTurbineGovernor = Signal::TurbineGovernorType1::make(**this->mName + "_TurbineGovernor", this->mLogLevel);

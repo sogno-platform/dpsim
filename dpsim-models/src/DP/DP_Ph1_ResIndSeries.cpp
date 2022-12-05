@@ -12,9 +12,9 @@ using namespace CPS;
 
 DP::Ph1::ResIndSeries::ResIndSeries(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
-	mInductance(Attribute<Real>::create("L", mAttributes)),
+	mInductance(mAttributes->create<Real>("L")),
 	///FIXME: The resistance is never used anywhere...
-	mResistance(Attribute<Real>::create("R", mAttributes)) { 
+	mResistance(mAttributes->create<Real>("R")) {
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);

@@ -13,14 +13,14 @@ using namespace CPS::Signal;
 
 Integrator::Integrator(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
-    mInputRef(Attribute<Real>::createDynamic("input_ref", mAttributes)),
+    mInputRef(mAttributes->createDynamic<Real>("input_ref")),
     /// CHECK: Which of these really need to be attributes?
-    mInputPrev(Attribute<Real>::create("input_prev", mAttributes)),
-    mStatePrev(Attribute<Real>::create("state_prev", mAttributes)),
-    mOutputPrev(Attribute<Real>::create("output_prev", mAttributes)),
-    mInputCurr(Attribute<Real>::create("input_curr", mAttributes)),
-    mStateCurr(Attribute<Real>::create("state_curr", mAttributes)),
-    mOutputCurr(Attribute<Real>::create("output_curr", mAttributes)) { }
+    mInputPrev(mAttributes->create<Real>("input_prev")),
+    mStatePrev(mAttributes->create<Real>("state_prev")),
+    mOutputPrev(mAttributes->create<Real>("output_prev")),
+    mInputCurr(mAttributes->create<Real>("input_curr")),
+    mStateCurr(mAttributes->create<Real>("state_curr")),
+    mOutputCurr(mAttributes->create<Real>("output_curr")) { }
 
 void Integrator::setParameters(Real timestep) {
     mTimeStep = timestep;

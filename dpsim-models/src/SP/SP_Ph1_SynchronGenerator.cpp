@@ -12,13 +12,13 @@ using namespace CPS;
 
 SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::Level logLevel)
  : SimPowerComp<Complex>(uid, name, logLevel),
-    mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
-    mSetPointActivePower(Attribute<Real>::create("P_set", mAttributes)),
-    mSetPointReactivePower(Attribute<Real>::create("Q_set", mAttributes)),
-    mSetPointVoltage(Attribute<Real>::create("V_set", mAttributes)),
-    mSetPointActivePowerPerUnit(Attribute<Real>::create("P_set_pu", mAttributes)),
-    mSetPointReactivePowerPerUnit(Attribute<Real>::create("Q_set_pu", mAttributes)),
-    mSetPointVoltagePerUnit(Attribute<Real>::create("V_set_pu", mAttributes)) {
+    mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
+    mSetPointActivePower(mAttributes->create<Real>("P_set")),
+    mSetPointReactivePower(mAttributes->create<Real>("Q_set")),
+    mSetPointVoltage(mAttributes->create<Real>("V_set")),
+    mSetPointActivePowerPerUnit(mAttributes->create<Real>("P_set_pu")),
+    mSetPointReactivePowerPerUnit(mAttributes->create<Real>("Q_set_pu")),
+    mSetPointVoltagePerUnit(mAttributes->create<Real>("V_set_pu")) {
 
     mSLog->info("Create {} of type {}", name, this->type());
     mSLog->flush();

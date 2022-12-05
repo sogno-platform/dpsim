@@ -13,7 +13,7 @@ using namespace CPS;
 
 DP::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel),
-	mVoltageRef(Attribute<Complex>::create("V_ref", mAttributes)) {
+	mVoltageRef(mAttributes->create<Complex>("V_ref")) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);

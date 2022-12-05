@@ -13,7 +13,7 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
     (const String & uid, const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq0_t", mAttributes))  {
+	mEdq_t(mAttributes->create<Matrix>("Edq0_t"))  {
 
 	//
 	mSGOrder = SGOrder::SG3Order;
@@ -49,7 +49,6 @@ void DP::Ph1::SynchronGenerator3OrderVBR::stepInPerUnit() {
 
 	// update Edq_t
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
-	
 	// VBR history voltage
 	calculateAuxiliarVariables();
 	calculateConductanceMatrix();

@@ -13,7 +13,7 @@ using namespace CPS;
 
 EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name, Logger::Level logLevel, CPS::GeneratorType sourceType)
 	: CompositePowerComp<Real>(uid, name, true, true, logLevel),
-	mRefVoltage(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)) {
+	mRefVoltage(mAttributes->createDynamic<MatrixComp>("V_ref")) {
 	mPhaseType = PhaseType::ABC;
 	mSourceType = sourceType;
 
