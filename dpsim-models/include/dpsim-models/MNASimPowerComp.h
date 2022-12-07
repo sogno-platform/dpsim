@@ -12,27 +12,29 @@ namespace CPS {
 	class MNASimPowerComp : public SimPowerComp<VarType>, public MNAInterface {
 
 	public:
-		typedef VarType Type;
-		typedef std::shared_ptr<MNASimPowerComp<VarType>> Ptr;
-		typedef std::vector<Ptr> List;
+		using Type = VarType;
+		using Ptr = std::shared_ptr<MNASimPowerComp<VarType>>;
+		using List = std::vector<Ptr>;
 
 		/// Basic constructor that takes UID, name and log level
 		MNASimPowerComp(String uid, String name, Logger::Level logLevel)
 			: SimPowerComp<VarType>(uid, name, logLevel) { }
 
 		/// Basic constructor that takes name and log level and sets the UID to name as well
-		MNASimPowerComp(String name, Logger::Level logLevel = Logger::Level::off)
+		explicit MNASimPowerComp(String name, Logger::Level logLevel = Logger::Level::off)
 			: SimPowerComp<VarType>(name, name, logLevel) { }
 
 		/// Destructor - does not do anything
 		virtual ~MNASimPowerComp() = default;
 		class MnaPreStep : public CPS::Task {
 		public:
-			MnaPreStep(MNASimPowerComp<VarType>& comp) :
+			explicit MnaPreStep(MNASimPowerComp<VarType>& comp) :
 				Task(**comp.mName + ".MnaPreStep"), mComp(comp) {
 					mComp.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
-			void execute(Real time, Int timeStepCount) { mComp.mnaPreStep(time, timeStepCount); };
+			void execute(Real time, Int timeStepCount) override {
+				mComp.mnaPreStep(time, timeStepCount);
+			};
 
 		private:
 			MNASimPowerComp<VarType>& mComp;
@@ -44,7 +46,9 @@ namespace CPS {
 				Task(**comp.mName + ".MnaPostStep"), mComp(comp), mLeftVector(leftVector) {
 				mComp.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
-			void execute(Real time, Int timeStepCount) { mComp.mnaPostStep(time, timeStepCount, mLeftVector); };
+			void execute(Real time, Int timeStepCount) override {
+				mComp.mnaPostStep(time, timeStepCount, mLeftVector);
+			};
 
 		private:
 			MNASimPowerComp<VarType>& mComp;
