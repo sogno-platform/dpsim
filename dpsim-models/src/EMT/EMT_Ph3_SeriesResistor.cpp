@@ -80,9 +80,16 @@ void EMT::Ph3::SeriesResistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void EMT::Ph3::SeriesResistor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResistor.mnaUpdateVoltage(**mLeftVector);
-	mResistor.mnaUpdateCurrent(**mLeftVector);
+void EMT::Ph3::SeriesResistor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void EMT::Ph3::SeriesResistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::SeriesResistor::mnaUpdateVoltage(const Matrix& leftVector) {

@@ -95,9 +95,15 @@ void DP::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix&
 	}
 }
 
-void DP::Ph3::SeriesSwitch::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mSwitch.mnaUpdateVoltage(**mLeftVector);
-	mSwitch.mnaUpdateCurrent(**mLeftVector);
+void DP::Ph3::SeriesSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
+}
+
+void DP::Ph3::SeriesSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {

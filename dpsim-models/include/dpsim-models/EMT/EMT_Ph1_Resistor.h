@@ -47,23 +47,9 @@ namespace Ph1 {
 		void mnaUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
 		void mnaUpdateCurrent(const Matrix& leftVector);
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Resistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**resistor.mName + ".MnaPostStep"), mResistor(resistor), mLeftVector(leftSideVector)
-			{
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mResistor.attribute("v_intf"));
-				mModifiedAttributes.push_back(mResistor.attribute("i_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			Resistor& mResistor;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

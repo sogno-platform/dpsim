@@ -56,37 +56,13 @@ namespace Ph1 {
 		/// Update interface current from MNA system result
 		void mnaUpdateCurrent(const Matrix& leftVector);
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(Capacitor& capacitor)
-				: Task(**capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
-				// actually depends on C, but then we'd have to modify the system matrix anyway
-				mModifiedAttributes.push_back(capacitor.attribute("right_vector"));
-				mPrevStepDependencies.push_back(mCapacitor.attribute("i_intf"));
-				mPrevStepDependencies.push_back(mCapacitor.attribute("v_intf"));
-			}
+		void mnaPreStep(Real time, Int timeStepCount) override;
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			Capacitor& mCapacitor;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Capacitor& capacitor, Attribute<Matrix>::Ptr leftVector)
-				: Task(**capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mCapacitor.attribute("v_intf"));
-				mModifiedAttributes.push_back(mCapacitor.attribute("i_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			Capacitor& mCapacitor;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

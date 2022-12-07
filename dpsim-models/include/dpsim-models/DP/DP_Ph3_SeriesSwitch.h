@@ -57,22 +57,9 @@ namespace Ph3 {
 		/// Stamps system matrix considering the defined switch position
 		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(SeriesSwitch& sSwitch, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**sSwitch.mName + ".MnaPostStep"), mSwitch(sSwitch), mLeftVector(leftSideVector)
-			{
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mSwitch.mIntfVoltage);
-				mModifiedAttributes.push_back(mSwitch.mIntfCurrent);
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SeriesSwitch& mSwitch;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

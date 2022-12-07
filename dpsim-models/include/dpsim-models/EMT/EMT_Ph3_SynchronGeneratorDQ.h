@@ -91,21 +91,10 @@ namespace Ph3 {
 
 		/// Retrieves calculated voltage from simulation for next step
 		virtual void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(SynchronGeneratorDQ& synGen, Attribute<Matrix>::Ptr leftVector)
-			: Task(**synGen.mName + ".MnaPostStep"), mSynGen(synGen), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(synGen.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SynchronGeneratorDQ& mSynGen;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

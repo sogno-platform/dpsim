@@ -25,19 +25,9 @@ namespace Ph3 {
 		// #### MNA Section ####
 		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(SynchronGeneratorDQTrapez& synGen)
-				: Task(**synGen.mName + ".MnaPreStep"), mSynGen(synGen) {
-				mModifiedAttributes.push_back(synGen.attribute("right_vector"));
-				mPrevStepDependencies.push_back(synGen.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SynchronGeneratorDQTrapez& mSynGen;
-		};
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaPreStep(Real time, Int timeStepCount) override;
 
 	protected:
 		///

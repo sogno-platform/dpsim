@@ -52,36 +52,14 @@ namespace Ph1 {
 
 		void updateState(Real time);
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(CurrentSource& currentSource) :
-				Task(**currentSource.mName + ".MnaPreStep"), mCurrentSource(currentSource)
-			{
-				mAttributeDependencies.push_back(currentSource.attribute("I_ref"));
-				mModifiedAttributes.push_back(currentSource.attribute("right_vector"));
-				mModifiedAttributes.push_back(currentSource.attribute("i_intf"));
-			}
+		void mnaPreStep(Real time, Int timeStepCount) override;
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-			void execute(Real time, Int timeStepCount);
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 
-		private:
-			CurrentSource& mCurrentSource;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(CurrentSource& currentSource, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**currentSource.mName + ".MnaPostStep"), mCurrentSource(currentSource), mLeftVector(leftSideVector)
-			{
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mCurrentSource.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-		private:
-			CurrentSource& mCurrentSource;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

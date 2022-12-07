@@ -127,9 +127,15 @@ void SP::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		<< "Add " << -mEquivCond << " to system at " << matrixNodeIndex(1) << "," << matrixNodeIndex(0) << std::endl;*/
 }
 
-void SP::Ph3::Inductor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaUpdateVoltage(**mLeftVector);
-	mInductor.mnaUpdateCurrent(**mLeftVector);
+void SP::Ph3::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void SP::Ph3::Inductor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {

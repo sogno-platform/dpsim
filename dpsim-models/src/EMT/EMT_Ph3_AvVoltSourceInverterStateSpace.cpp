@@ -324,16 +324,26 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaApplyRightSideVectorStamp(Matr
 	}
 }
 
-
-void EMT::Ph3::AvVoltSourceInverterStateSpace::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mAvVoltSourceInverterStateSpace.updateEquivCurrent(time);
-	mAvVoltSourceInverterStateSpace.mnaApplyRightSideVectorStamp(**mAvVoltSourceInverterStateSpace.mRightVector);
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(attribute("P_ref"));
+	modifiedAttributes.push_back(attribute("right_vector"));
+	modifiedAttributes.push_back(attribute("v_intf"));
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mAvVoltSourceInverterStateSpace.mnaUpdateVoltage(**mLeftVector);
-	mAvVoltSourceInverterStateSpace.updateStates();
-	mAvVoltSourceInverterStateSpace.mnaUpdateCurrent(**mLeftVector);
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaPreStep(Real time, Int timeStepCount) {
+	updateEquivCurrent(time);
+	mnaApplyRightSideVectorStamp(**mRightVector);
+}
+
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	updateStates();
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateVoltage(const Matrix& leftVector) {

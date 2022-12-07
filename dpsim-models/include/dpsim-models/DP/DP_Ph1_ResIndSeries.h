@@ -59,34 +59,14 @@ namespace Ph1 {
 		/// Update interface current from MNA system results
 		void mnaUpdateCurrent();
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(Inductor& ResIndSeries) :
-				Task(**inductor.mName + ".MnaPreStep"), mResIndSeries(resIndSeries) {
-				// actually depends on L, but then we'd have to modify the system matrix anyway
-				mModifiedAttributes.push_back(mResIndSeries.attribute("right_vector"));
-				mPrevStepDependencies.push_back(mResIndSeries.attribute("v_intf"));
-				mPrevStepDependencies.push_back(mResIndSeries.attribute("i_intf"));
-			}
-			void execute(Real time, Int timeStepCount);
-		private:
-			ResIndSeries& mResIndSeries;
-		};
+		void mnaPreStep(Real time, Int timeStepCount) override;
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(ResIndSeries& inductor, Attribute<Matrix>::Ptr leftVector) :
-				Task(**inductor.mName + ".MnaPostStep"),
-				mResIndSeries(resIndSeries), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mResIndSeries.attribute("v_intf"));
-				mModifiedAttributes.push_back(mResIndSeries.attribute("i_intf"));
-			}
-			void execute(Real time, Int timeStepCount);
-		private:
-			ResIndSeries& mResIndSeries;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

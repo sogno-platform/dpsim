@@ -58,46 +58,17 @@ namespace Ph3 {
 		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		/// Upgrade values in the source vector and maybe system matrix before MNA solution
-		void mnaStep(Matrix& systemMatrix, Matrix& rightVector, Matrix& leftVector, Real time);
-		/// Upgrade internal variables after MNA solution
-		void mnaMnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time);
 		/// Update interface voltage from MNA system result
 		void mnaUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
 		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaPreStep(Real time, Int timeStepCount) override;
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(Inductor& inductor) :
-				Task(**inductor.mName + ".MnaPreStep"), mInductor(inductor) {
-				// actually depends on L, but then we'd have to modify the system matrix anyway
-				mModifiedAttributes.push_back(inductor.attribute("right_vector"));
-				mPrevStepDependencies.push_back(inductor.attribute("v_intf"));
-				mPrevStepDependencies.push_back(inductor.attribute("i_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			Inductor& mInductor;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Inductor& inductor, Attribute<Matrix>::Ptr leftVector) :
-				Task(**inductor.mName + ".MnaPostStep"), mInductor(inductor), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mInductor.attribute("v_intf"));
-				mModifiedAttributes.push_back(mInductor.attribute("i_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			Inductor& mInductor;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		void mnaTearInitialize(Real omega, Real timestep);
 		void mnaTearApplyMatrixStamp(Matrix& tearMatrix);

@@ -91,18 +91,6 @@ namespace Ph1 {
 		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 
 		Bool hasParameterChanged();
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(varResSwitch& varresswitch, Attribute<Matrix>::Ptr leftVector) :
-				Task(**varresswitch.mName + ".MnaPostStep"), mvarResSwitch(varresswitch), mLeftVector(leftVector) {
-				mvarResSwitch.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mvarResSwitch.mnaPostStep(time, timeStepCount, mLeftVector); };
-		private:
-			varResSwitch& mvarResSwitch;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 	};
 }
 }

@@ -201,17 +201,30 @@ void DP::Ph1::ResIndSeries::mnaApplyRightSideVectorStampHarm(Matrix& rightVector
 	}
 }
 
-void DP::Ph1::ResIndSeries::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mResIndSeries.mnaApplyRightSideVectorStamp(**mResIndSeries.mRightVector);
+void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// actually depends on L, but then we'd have to modify the system matrix anyway
+	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(attribute("v_intf"));
+	prevStepDependencies.push_back(attribute("i_intf"));
+}
+
+void DP::Ph1::ResIndSeries::mnaPreStep(Real time, Int timeStepCount) {
+	mResIndSeries.mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::ResIndSeries::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 	mResIndSeries.mnaApplyRightSideVectorStampHarm(**mResIndSeries.mRightVector);
 }
 
-void DP::Ph1::ResIndSeries::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResIndSeries.mnaUpdateVoltage(**mLeftVector);
-	mResIndSeries.mnaUpdateCurrent(**mLeftVector);
+void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void DP::Ph1::ResIndSeries::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph1::ResIndSeries::MnaPostStepHarm::execute(Real time, Int timeStepCount) {

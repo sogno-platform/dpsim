@@ -60,37 +60,14 @@ namespace Ph1 {
 		/// Update interface current from MNA system result
 		void mnaUpdateCurrent(const Matrix& leftVector);
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(VoltageSourceNorton& voltageSource) :
-				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-				mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
-				mModifiedAttributes.push_back(voltageSource.attribute("right_vector"));
-			}
+		void mnaPreStep(Real time, Int timeStepCount) override;
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-			void execute(Real time, Int timeStepCount);
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 
-		private:
-			VoltageSourceNorton& mVoltageSource;
-		};
-
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(VoltageSourceNorton& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(**voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource),
-				mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(leftVector);
-				mModifiedAttributes.push_back(voltageSource.attribute("i_intf"));
-				mModifiedAttributes.push_back(voltageSource.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			VoltageSourceNorton& mVoltageSource;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

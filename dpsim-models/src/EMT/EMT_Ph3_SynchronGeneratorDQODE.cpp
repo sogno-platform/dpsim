@@ -37,10 +37,16 @@ void EMT::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, 
 	mMnaTasks.push_back(std::make_shared<ODEPreStep>(*this));
 }
 
-void EMT::Ph3::SynchronGeneratorDQODE::MnaPreStep::execute(Real time, Int timeStepCount) {
+void EMT::Ph3::SynchronGeneratorDQODE::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(attribute("ode_post_state"));
+	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(attribute("v_intf"));
+}
+
+void EMT::Ph3::SynchronGeneratorDQODE::mnaPreStep(Real time, Int timeStepCount) {
 	// ODEPreStep and ODESolver.Solve guaranteed to be executed by scheduler
-	mSynGen.odePostStep();
-	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+	odePostStep();
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::SynchronGeneratorDQODE::odePreStep() {

@@ -109,13 +109,24 @@ void DP::Ph3::VoltageSource::updateVoltage(Real time) {
 		Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));
 }
 
-void DP::Ph3::VoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.updateVoltage(time);
-	mVoltageSource.mnaApplyRightSideVectorStamp(**mVoltageSource.mRightVector);
+void DP::Ph3::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(attribute("V_ref"));
+	modifiedAttributes.push_back(attribute("right_vector"));
+	modifiedAttributes.push_back(attribute("v_intf"));
 }
 
-void DP::Ph3::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.mnaUpdateCurrent(**mLeftVector);
+void DP::Ph3::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
+	updateVoltage(time);
+	mnaApplyRightSideVectorStamp(**mRightVector);
+}
+
+void DP::Ph3::VoltageSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void DP::Ph3::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph3::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {

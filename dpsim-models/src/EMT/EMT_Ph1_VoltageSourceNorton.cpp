@@ -71,14 +71,25 @@ void EMT::Ph1::VoltageSourceNorton::updateState(Real time) {
 	mEquivCurrent = (**mIntfVoltage)(0,0) / **mResistance;
 }
 
-void EMT::Ph1::VoltageSourceNorton::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.updateState(time);
-	mVoltageSource.mnaApplyRightSideVectorStamp(**mVoltageSource.mRightVector);
+void EMT::Ph1::VoltageSourceNorton::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(attribute("V_ref"));
+	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void EMT::Ph1::VoltageSourceNorton::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.mnaUpdateVoltage(**mLeftVector);
-	mVoltageSource.mnaUpdateCurrent(**mLeftVector);
+void EMT::Ph1::VoltageSourceNorton::mnaPreStep(Real time, Int timeStepCount) {
+	updateState(time);
+	mnaApplyRightSideVectorStamp(**mRightVector);
+}
+
+void EMT::Ph1::VoltageSourceNorton::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(attribute("v_intf"));
+}
+
+void EMT::Ph1::VoltageSourceNorton::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph1::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {
