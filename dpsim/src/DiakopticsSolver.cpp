@@ -24,8 +24,8 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	SystemTopology system, IdentifiedObject::List tearComponents,
 	Real timeStep, Logger::Level logLevel) :
 	Solver(name, logLevel),
-	mMappedTearCurrents(mAttributes->create<Matrix>("mapped_tear_currents")),
-	mOrigLeftSideVector(mAttributes->create<Matrix>("old_left_vector")) {
+	mMappedTearCurrents(AttributeStatic<Matrix>::make()),
+	mOrigLeftSideVector(AttributeStatic<Matrix>::make()) {
 	mTimeStep = timeStep;
 
 	// Raw source and solution vector logging
@@ -254,7 +254,7 @@ void DiakopticsSolver<VarType>::initComponents() {
 		// Initialize MNA specific parts of components.
 		for (auto comp : mSubnets[net].components) {
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mSubnets[net].leftVector);
-			const Matrix& stamp = comp->template attributeTyped<Matrix>("right_vector")->get();
+			const Matrix& stamp = comp->mRightVector->get();
 			if (stamp.size() != 0) {
 				mSubnets[net].rightVectorStamps.push_back(&stamp);
 			}
