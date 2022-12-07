@@ -29,22 +29,22 @@ using namespace CPS;
 using namespace DPsim;
 
 Simulation::Simulation(String name,	Logger::Level logLevel) :
-	mName(mAttributes->create<String>("name", name)),
-	mFinalTime(mAttributes->create<Real>("final_time", 0.001)),
-	mTimeStep(mAttributes->create<Real>("time_step", 0.001)),
-	mSplitSubnets(mAttributes->create<Bool>("split_subnets", true)),
-	mSteadyStateInit(mAttributes->create<Bool>("steady_state_init", false)),
+	mName(AttributeStatic<String>::make(name)),
+	mFinalTime(AttributeStatic<Real>::make(0.001)),
+	mTimeStep(AttributeStatic<Real>::make(0.001)),
+	mSplitSubnets(AttributeStatic<Bool>::make(true)),
+	mSteadyStateInit(AttributeStatic<Bool>::make(false)),
 	mLogLevel(logLevel)  {
 	create();
 }
 
 Simulation::Simulation(String name, CommandLineArgs& args) :
-	mName(mAttributes->create<String>("name", name)),
+	mName(AttributeStatic<String>::make(name)),
 	mSolverPluginName(args.solverPluginName),
-	mFinalTime(mAttributes->create<Real>("final_time", args.duration)),
-	mTimeStep(mAttributes->create<Real>("time_step", args.timeStep)),
-	mSplitSubnets(mAttributes->create<Bool>("split_subnets", true)),
-	mSteadyStateInit(mAttributes->create<Bool>("steady_state_init", false)),
+	mFinalTime(AttributeStatic<Real>::make(args.duration)),
+	mTimeStep(AttributeStatic<Real>::make(args.timeStep)),
+	mSplitSubnets(AttributeStatic<Bool>::make(true)),
+	mSteadyStateInit(AttributeStatic<Bool>::make(false)),
 	mLogLevel(args.logLevel),
 	mDomain(args.solver.domain),
 	mSolverType(args.solver.type),
@@ -118,7 +118,7 @@ void Simulation::createSolvers() {
 		if (odeComp) {
 			// TODO explicit / implicit integration
 			auto odeSolver = std::make_shared<ODESolver>(
-				odeComp->attributeTyped<String>("name")->get() + "_ODE", odeComp, false, **mTimeStep);
+				odeComp->mAttributeList->attributeTyped<String>("name")->get() + "_ODE", odeComp, false, **mTimeStep);
 			mSolvers.push_back(odeSolver);
 		}
 	}
