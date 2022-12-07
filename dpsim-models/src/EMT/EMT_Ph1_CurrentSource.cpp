@@ -59,9 +59,9 @@ void EMT::Ph1::CurrentSource::updateState(Real time) {
 }
 
 void EMT::Ph1::CurrentSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(attribute("I_ref"));
-	modifiedAttributes.push_back(attribute("right_vector"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	attributeDependencies.push_back(mCurrentRef);
+	modifiedAttributes.push_back(mRightVector);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void EMT::Ph1::CurrentSource::mnaPreStep(Real time, Int timeStepCount) {
@@ -71,7 +71,7 @@ void EMT::Ph1::CurrentSource::mnaPreStep(Real time, Int timeStepCount) {
 
 void EMT::Ph1::CurrentSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
 }
 
 void EMT::Ph1::CurrentSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {

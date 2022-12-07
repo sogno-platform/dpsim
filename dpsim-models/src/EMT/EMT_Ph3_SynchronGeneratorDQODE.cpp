@@ -38,9 +38,9 @@ void EMT::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, 
 }
 
 void EMT::Ph3::SynchronGeneratorDQODE::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(attribute("ode_post_state"));
-	modifiedAttributes.push_back(attribute("right_vector"));
-	prevStepDependencies.push_back(attribute("v_intf"));
+	attributeDependencies.push_back(mOdePostState);
+	modifiedAttributes.push_back(mRightVector);
+	prevStepDependencies.push_back(mIntfVoltage);
 }
 
 void EMT::Ph3::SynchronGeneratorDQODE::mnaPreStep(Real time, Int timeStepCount) {

@@ -198,9 +198,9 @@ void DP::Ph1::Inductor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 
 void DP::Ph1::Inductor::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// actually depends on L, but then we'd have to modify the system matrix anyway
-	prevStepDependencies.push_back(this->attribute("v_intf"));
-	prevStepDependencies.push_back(this->attribute("i_intf"));
-	modifiedAttributes.push_back(this->attribute("right_vector"));
+	prevStepDependencies.push_back(mIntfVoltage);
+	prevStepDependencies.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mRightVector);
 }
 
 void DP::Ph1::Inductor::mnaPreStep(Real time, Int timeStepCount) {
@@ -209,8 +209,8 @@ void DP::Ph1::Inductor::mnaPreStep(Real time, Int timeStepCount) {
 
 void DP::Ph1::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(this->attribute("v_intf"));
-	modifiedAttributes.push_back(this->attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void DP::Ph1::Inductor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {

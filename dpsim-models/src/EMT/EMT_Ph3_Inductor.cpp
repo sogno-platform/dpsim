@@ -158,9 +158,9 @@ void EMT::Ph3::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 
 void EMT::Ph3::Inductor::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// actually depends on L, but then we'd have to modify the system matrix anyway
-	prevStepDependencies.push_back(attribute("v_intf"));
-	prevStepDependencies.push_back(attribute("i_intf"));
-	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(mIntfVoltage);
+	prevStepDependencies.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mRightVector);
 }
 
 void EMT::Ph3::Inductor::mnaPreStep(Real time, Int timeStepCount) {
@@ -169,8 +169,8 @@ void EMT::Ph3::Inductor::mnaPreStep(Real time, Int timeStepCount) {
 
 void EMT::Ph3::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void EMT::Ph3::Inductor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {

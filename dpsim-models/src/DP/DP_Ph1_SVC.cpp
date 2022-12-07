@@ -158,7 +158,7 @@ void DP::Ph1::SVC::mnaAddPreStepDependencies(AttributeBase::List &prevStepDepend
     mSubCapacitorSwitch->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 
 	// add pre-step dependencies of component itself
-	modifiedAttributes.push_back(this->attribute("right_vector"));
+	modifiedAttributes.push_back(mRightVector);
 }
 
 void DP::Ph1::SVC::mnaPreStep(Real time, Int timeStepCount) {
@@ -189,8 +189,8 @@ void DP::Ph1::SVC::mnaAddPostStepDependencies(AttributeBase::List &prevStepDepen
 
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void DP::Ph1::SVC::mnaPostStep(Real time, Int timeStepCount) {
