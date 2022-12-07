@@ -78,51 +78,27 @@ namespace Ph1 {
 
 		// #### MNA Section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// Returns current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### DAE Section ####
 		/// Residual function for DAE Solver
 		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
 		///Voltage Getter
 		Complex daeInitialize();
-
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(VoltageSource& voltageSource) :
-				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-					mVoltageSource.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-				}
-				void execute(Real time, Int timeStepCount) { mVoltageSource.mnaPreStep(time, timeStepCount); };
-		private:
-			VoltageSource& mVoltageSource;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(**voltageSource.mName + ".MnaPostStep"),
-				mVoltageSource(voltageSource), mLeftVector(leftVector) {
-					mVoltageSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount)  { mVoltageSource.mnaPostStep(time, timeStepCount, mLeftVector); };
-		private:
-			VoltageSource& mVoltageSource;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 	};
 }
 }
