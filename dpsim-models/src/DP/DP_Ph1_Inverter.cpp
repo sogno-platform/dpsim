@@ -187,8 +187,8 @@ void DP::Ph1::Inverter::mnaApplyRightSideVectorStampHarm(Matrix& rightVector, In
 }
 
 void DP::Ph1::Inverter::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	modifiedAttributes.push_back(attribute("right_vector"));
-	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(mRightVector);
+	modifiedAttributes.push_back(mIntfVoltage);
 }
 
 void DP::Ph1::Inverter::mnaPreStep(Real time, Int timeStepCount) {
@@ -203,7 +203,7 @@ void DP::Ph1::Inverter::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 
 void DP::Ph1::Inverter::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void DP::Ph1::Inverter::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
