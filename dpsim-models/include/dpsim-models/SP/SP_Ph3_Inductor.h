@@ -61,21 +61,10 @@ namespace CPS {
 				/// Update interface current from MNA system result
 				void mnaUpdateCurrent(const Matrix& leftVector);
 
-				class MnaPostStep : public Task {
-				public:
-					MnaPostStep(Inductor& inductor, Attribute<Matrix>::Ptr leftVector) :
-						Task(**inductor.mName + ".MnaPostStep"), mInductor(inductor), mLeftVector(leftVector) {
-						mAttributeDependencies.push_back(mLeftVector);
-						mModifiedAttributes.push_back(mInductor.attribute("v_intf"));
-						mModifiedAttributes.push_back(mInductor.attribute("i_intf"));
-					}
+				void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-					void execute(Real time, Int timeStepCount);
-
-				private:
-					Inductor& mInductor;
-					Attribute<Matrix>::Ptr mLeftVector;
-				};
+				/// Add MNA post step dependencies
+				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 				void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
 			};

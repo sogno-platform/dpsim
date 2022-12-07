@@ -35,9 +35,14 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::mnaInitialize(Real omega, Real timeSte
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void EMT::Ph3::SynchronGeneratorDQTrapez::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mSynGen.stepInPerUnit(time); //former system solve (trapezoidal)
-	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+void EMT::Ph3::SynchronGeneratorDQTrapez::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(attribute("v_intf"));
+}
+
+void EMT::Ph3::SynchronGeneratorDQTrapez::mnaPreStep(Real time, Int timeStepCount) {
+	stepInPerUnit(time); //former system solve (trapezoidal)
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {

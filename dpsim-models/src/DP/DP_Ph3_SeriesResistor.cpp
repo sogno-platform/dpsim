@@ -104,9 +104,15 @@ void DP::Ph3::SeriesResistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void DP::Ph3::SeriesResistor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResistor.mnaUpdateVoltage(**mLeftVector);
-	mResistor.mnaUpdateCurrent(**mLeftVector);
+void DP::Ph3::SeriesResistor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+		attributeDependencies.push_back(leftVector);
+		modifiedAttributes.push_back(attribute("v_intf"));
+		modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void DP::Ph3::SeriesResistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph3::SeriesResistor::mnaUpdateVoltage(const Matrix& leftVector) {

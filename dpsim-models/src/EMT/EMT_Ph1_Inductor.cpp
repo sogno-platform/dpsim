@@ -77,13 +77,26 @@ void EMT::Ph1::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent);
 }
 
-void EMT::Ph1::Inductor::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaApplyRightSideVectorStamp(**mInductor.mRightVector);
+void EMT::Ph1::Inductor::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// actually depends on L, but then we'd have to modify the system matrix anyway
+	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(attribute("i_intf"));
+	prevStepDependencies.push_back(attribute("v_intf"));
 }
 
-void EMT::Ph1::Inductor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaUpdateVoltage(**mLeftVector);
-	mInductor.mnaUpdateCurrent(**mLeftVector);
+void EMT::Ph1::Inductor::mnaPreStep(Real time, Int timeStepCount) {
+	mnaApplyRightSideVectorStamp(**mRightVector);
+}
+
+void EMT::Ph1::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void EMT::Ph1::Inductor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph1::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {

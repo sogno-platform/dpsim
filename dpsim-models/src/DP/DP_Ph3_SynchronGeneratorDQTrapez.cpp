@@ -36,9 +36,14 @@ void DP::Ph3::SynchronGeneratorDQTrapez::mnaInitialize(Real omega, Real timeStep
 		mVdq0(0,0)/mIdq0(0,0),mVdq0(1,0)/mIdq0(1,0),mVdq0(2,0)/mIdq0(2,0));
 }
 
-void DP::Ph3::SynchronGeneratorDQTrapez::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mSynGen.stepInPerUnit(time); //former system solve (trapezoidal)
-	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+void DP::Ph3::SynchronGeneratorDQTrapez::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(attribute("v_intf"));
+}
+
+void DP::Ph3::SynchronGeneratorDQTrapez::mnaPreStep(Real time, Int timeStepCount) {
+	stepInPerUnit(time); //former system solve (trapezoidal)
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph3::SynchronGeneratorDQTrapez::setMultisamplingRate(Int rate) {

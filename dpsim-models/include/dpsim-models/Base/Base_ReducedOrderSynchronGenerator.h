@@ -20,6 +20,47 @@ namespace Base {
 	class ReducedOrderSynchronGenerator :
 		public MNASimPowerComp<VarType> {
 
+		protected:
+
+			using MNASimPowerComp<VarType>::mRightVector;
+			using MNASimPowerComp<VarType>::mIntfVoltage;
+			using MNASimPowerComp<VarType>::MnaPreStep;
+			using MNASimPowerComp<VarType>::MnaPostStep;
+
+			///
+			ReducedOrderSynchronGenerator(String uid, String name, Logger::Level logLevel);
+			///
+			void calculateVBRconstants();
+			///
+			void calculateResistanceMatrixConstants();
+			///
+			virtual void initializeResistanceMatrix() = 0;
+			///
+			void initializeFromNodesAndTerminals(Real frequency);
+			/// Function to initialize the specific variables of each SG model
+			virtual void specificInitialization() = 0;
+			///
+        	virtual void stepInPerUnit() = 0;
+
+			// ### MNA Section ###
+        	///
+        	void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+        	virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override = 0;
+        	virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector) override = 0;
+        	virtual void mnaPostStep(const Matrix& leftVector) = 0;
+
+			/// ### Mna Section ###
+			/// Add MNA pre step dependencies
+			void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+			void mnaPreStep(Real time, Int timeStepCount) override;
+			/// Add MNA post step dependencies
+			void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+			void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+
+			///
+			Real mTimeStep;
+			Real mSimTime;
+
 		public:
 			// ### State variables [p.u.]###
 			/// dq stator terminal voltage
@@ -226,57 +267,6 @@ namespace Base {
 
 			/// ### Setters ###
 			void scaleInertiaConstant(Real scalingFactor);
-
-			/// ### Mna Section ###
-			class MnaPreStep : public Task {
-				public:
-					MnaPreStep(ReducedOrderSynchronGenerator<VarType>& synGen)
-					: Task(**synGen.mName + ".MnaPreStep"), mSynGen(synGen) {
-				    	mModifiedAttributes.push_back(synGen.mRightVector);
-				    	mPrevStepDependencies.push_back(synGen.mIntfVoltage);
-				}
-				void execute(Real time, Int timeStepCount);
-
-				private:
-				ReducedOrderSynchronGenerator<VarType>& mSynGen;
-			};
-
-			class MnaPostStep : public Task {
-			public:
-				MnaPostStep(ReducedOrderSynchronGenerator<VarType>& synGen, Attribute<Matrix>::Ptr leftSideVector) :
-					Task(**synGen.mName + ".MnaPostStep"),
-					mSynGen(synGen), mLeftVector(leftSideVector) {
-					mAttributeDependencies.push_back(mLeftVector);
-					mModifiedAttributes.push_back(synGen.mIntfVoltage);
-				}
-				void execute(Real time, Int timeStepCount);
-			private:
-				ReducedOrderSynchronGenerator<VarType>& mSynGen;
-				Attribute<Matrix>::Ptr mLeftVector;
-			};
-
-		protected:
-			///
-			ReducedOrderSynchronGenerator(String uid, String name, Logger::Level logLevel);
-			///
-			void calculateVBRconstants();
-			///
-			void calculateResistanceMatrixConstants();
-			///
-			virtual void initializeResistanceMatrix() =0;
-			///
-			void initializeFromNodesAndTerminals(Real frequency);
-			/// Function to initialize the specific variables of each SG model
-			virtual void specificInitialization()=0;
-			///
-        	virtual void stepInPerUnit()=0;
-
-			// ### MNA Section ###
-        	///
-        	void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-        	virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix)=0;
-        	virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector)=0;
-        	virtual void mnaPostStep(const Matrix& leftVector)=0;
 	};
 }
 }

@@ -149,37 +149,13 @@ namespace Ph3 {
 		/// update equivalent current of the equivalent source
 		void updateEquivCurrent(Real time);
 
-		class MnaPreStep : public CPS::Task {
-		public:
-			MnaPreStep(AvVoltSourceInverterStateSpace& avVoltSourceInverterStateSpace) :
-				Task(**avVoltSourceInverterStateSpace.mName + ".MnaPreStep"), mAvVoltSourceInverterStateSpace(avVoltSourceInverterStateSpace) {
-				mAttributeDependencies.push_back(avVoltSourceInverterStateSpace.attribute("P_ref"));
-				mModifiedAttributes.push_back(mAvVoltSourceInverterStateSpace.attribute("right_vector"));
-				mModifiedAttributes.push_back(mAvVoltSourceInverterStateSpace.attribute("v_intf"));
-			}
+		void mnaPreStep(Real time, Int timeStepCount) override;
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			AvVoltSourceInverterStateSpace& mAvVoltSourceInverterStateSpace;
-		};
-
-		class MnaPostStep : public CPS::Task {
-		public:
-			MnaPostStep(AvVoltSourceInverterStateSpace& avVoltSourceInverterStateSpace, Attribute<Matrix>::Ptr leftVector) :
-				Task(**avVoltSourceInverterStateSpace.mName + ".MnaPostStep"), mAvVoltSourceInverterStateSpace(avVoltSourceInverterStateSpace), mLeftVector(leftVector)
-			{
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mAvVoltSourceInverterStateSpace.attribute("i_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			AvVoltSourceInverterStateSpace& mAvVoltSourceInverterStateSpace;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
-
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

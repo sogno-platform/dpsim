@@ -58,36 +58,14 @@ namespace CPS {
 				/// Returns current through the component
 				void mnaUpdateCurrent(const Matrix& leftVector);
 
-				class MnaPreStep : public CPS::Task {
-				public:
-					MnaPreStep(VoltageSourceNorton& VoltageSourceNorton) :
-						Task(**VoltageSourceNorton.mName + ".MnaPreStep"), mVoltageSourceNorton(VoltageSourceNorton) {
-						mAttributeDependencies.push_back(VoltageSourceNorton.attribute("V_ref"));
-						mModifiedAttributes.push_back(mVoltageSourceNorton.attribute("right_vector"));
-						mModifiedAttributes.push_back(mVoltageSourceNorton.attribute("v_intf"));
-					}
+				void mnaPreStep(Real time, Int timeStepCount) override;
+				void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-					void execute(Real time, Int timeStepCount);
+				/// Add MNA pre step dependencies
+				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 
-				private:
-					VoltageSourceNorton& mVoltageSourceNorton;
-				};
-
-				class MnaPostStep : public CPS::Task {
-				public:
-					MnaPostStep(VoltageSourceNorton& VoltageSourceNorton, Attribute<Matrix>::Ptr leftVector) :
-						Task(**VoltageSourceNorton.mName + ".MnaPostStep"), mVoltageSourceNorton(VoltageSourceNorton), mLeftVector(leftVector)
-					{
-						mAttributeDependencies.push_back(mLeftVector);
-						mModifiedAttributes.push_back(mVoltageSourceNorton.attribute("i_intf"));
-					}
-
-					void execute(Real time, Int timeStepCount);
-
-				private:
-					VoltageSourceNorton& mVoltageSourceNorton;
-					Attribute<Matrix>::Ptr mLeftVector;
-				};
+				/// Add MNA post step dependencies
+				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 			};
 		}
 	}

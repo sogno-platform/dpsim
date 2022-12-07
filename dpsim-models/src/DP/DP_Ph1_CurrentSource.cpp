@@ -62,8 +62,14 @@ void DP::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void DP::Ph1::CurrentSource::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mCurrentSource.mnaApplyRightSideVectorStamp(**mCurrentSource.mRightVector);
+void DP::Ph1::CurrentSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(attribute("I_ref"));
+	modifiedAttributes.push_back(attribute("right_vector"));
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void DP::Ph1::CurrentSource::mnaPreStep(Real time, Int timeStepCount) {
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
@@ -75,8 +81,13 @@ void DP::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(1), (**mIntfCurrent)(0,0));
 }
 
-void DP::Ph1::CurrentSource::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mCurrentSource.mnaUpdateVoltage(**mLeftVector);
+void DP::Ph1::CurrentSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+}
+
+void DP::Ph1::CurrentSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
 }
 
 void DP::Ph1::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {
