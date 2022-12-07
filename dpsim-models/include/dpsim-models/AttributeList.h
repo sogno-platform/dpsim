@@ -28,7 +28,7 @@ namespace CPS {
 
 		AttributeList() { };
 
-		virtual ~AttributeList() {};
+		virtual ~AttributeList() = default;
 
 		const AttributeBase::Map & attributes() { return mAttributes; };
 
