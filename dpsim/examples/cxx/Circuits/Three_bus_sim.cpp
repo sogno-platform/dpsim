@@ -20,7 +20,18 @@ void Three_bus_sim(String simName, Real timeStep, Real finalTime, Real cmdInerti
 	auto n2_PF = SimNode<Complex>::make("n2", PhaseType::Single);
 	auto n3_PF = SimNode<Complex>::make("n3", PhaseType::Single);
 
-	auto pmu_1 = PMUSignalDevice<>(,)
+	//signal models
+	auto pmu_1 = Signal::PMUSignalDevice::make("PMU_1", Logger::Level::debug);
+
+	pmu_1->mInput->setReference(n1_PF->mVoltage);    //set the PMU input
+
+	auto pmu_2 = Signal::PMUSignalDevice::make("PMU_2", Logger::Level::debug);
+	pmu_2->mInput->setReference(n2_PF->mVoltage);
+
+	auto pmu_3 = Signal::PMUSignalDevice::make("PMU_3", Logger::Level::debug);
+	pmu_3->mInput->setReference(n3_PF->mVoltage);
+
+	
 
 	//injection
     //configuration(Synchronous generator 1)
@@ -60,21 +71,26 @@ void Three_bus_sim(String simName, Real timeStep, Real finalTime, Real cmdInerti
 	line_pf_1->connect({ n1_PF, n2_PF });
 	line_pf_2->connect({ n1_PF, n3_PF });
 	line_pf_3->connect({ n2_PF, n3_PF });
-	pmu_1-> connect node
 
 	auto systemPF = SystemTopology(50,
 			SystemNodeList{n1_PF, n2_PF, n3_PF},
 			SystemComponentList{gen1_PF, gen2_PF, line_pf_1, line_pf_2, line_pf_3, load_PF});
 
+	//systemPF.mComponents.push_back(pmu_1);
+
+
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	///loggerPF->logAttribute("v_bus1", n1_PF->attribute("v"));
-	///loggerPF->logAttribute("v_bus2", n2_PF->attribute("v"));
-	///loggerPF->logAttribute("v_bus3", n3_PF->attribute("v"));
 	loggerPF->logAttribute("v_bus1", n1_PF->attribute("v"));
 	loggerPF->logAttribute("v_bus2", n2_PF->attribute("v"));
 	loggerPF->logAttribute("v_bus3", n3_PF->attribute("v"));
-	loggerPF->                       pmu_1->attribute
+
+	loggerPF->logAttribute("pmu_input_1", pmu_1->attribute("input"));
+	loggerPF->logAttribute("pmu_output_1", pmu_1->attribute("output"));
+	loggerPF->logAttribute("pmu_input_2", pmu_2->attribute("input"));
+	loggerPF->logAttribute("pmu_output_2", pmu_2->attribute("output"));
+	loggerPF->logAttribute("pmu_input_3", pmu_3->attribute("input"));
+	loggerPF->logAttribute("pmu_output_3", pmu_3->attribute("output"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -85,7 +101,6 @@ void Three_bus_sim(String simName, Real timeStep, Real finalTime, Real cmdInerti
 	simPF.setSolverType(Solver::Type::NRP);
 	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(false);
-
 	simPF.addLogger(loggerPF);
 	simPF.run();
 }
