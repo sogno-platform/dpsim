@@ -108,29 +108,6 @@ namespace Ph1 {
 		void mechanicalModelUpdateSusceptance(Real time);
 		// check protection function
 		void checkProtection(Real time);
-
-
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(SVC& svc) : Task(**svc.mName + ".MnaPreStep"), mSVC(svc) {
-				mSVC.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mSVC.mnaPreStep(time, timeStepCount); }
-		private:
-			SVC& mSVC;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(SVC& svc, Attribute<Matrix>::Ptr leftVector) :
-				Task(**svc.mName + ".MnaPostStep"), mSVC(svc), mLeftVector(leftVector) {
-				mSVC.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mSVC.mnaPostStep(time, timeStepCount, mLeftVector); }
-		private:
-			SVC& mSVC;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 	};
 }
 }

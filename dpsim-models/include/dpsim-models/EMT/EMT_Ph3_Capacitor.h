@@ -46,46 +46,23 @@ namespace CPS {
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component
-				void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+				void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 				/// Stamps system matrix
-				void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+				void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
 				/// Stamps right side (source) vector
-				void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+				void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 				/// Update interface voltage from MNA system result
-				void mnaUpdateVoltage(const Matrix& leftVector);
+				void mnaUpdateVoltage(const Matrix& leftVector) override;
 				/// Update interface current from MNA system result
-				void mnaUpdateCurrent(const Matrix& leftVector);
+				void mnaUpdateCurrent(const Matrix& leftVector) override;
 				/// MNA pre step operations
-				void mnaPreStep(Real time, Int timeStepCount);
+				void mnaPreStep(Real time, Int timeStepCount) override;
 				/// MNA post step operations
-				void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+				void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 				/// Add MNA pre step dependencies
-				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 				/// Add MNA post step dependencies
-				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-				class MnaPreStep : public Task {
-				public:
-					MnaPreStep(Capacitor& capacitor)
-						: Task(**capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
-							mCapacitor.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-					}
-					void execute(Real time, Int timeStepCount) { mCapacitor.mnaPreStep(time, timeStepCount); };
-				private:
-					Capacitor& mCapacitor;
-				};
-
-				class MnaPostStep : public Task {
-				public:
-					MnaPostStep(Capacitor& capacitor, Attribute<Matrix>::Ptr leftVector)
-						: Task(**capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
-							mCapacitor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-					}
-					void execute(Real time, Int timeStepCount) { mCapacitor.mnaPostStep(time, timeStepCount, mLeftVector); };
-				private:
-					Capacitor& mCapacitor;
-					Attribute<Matrix>::Ptr mLeftVector;
-				};
+				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 			};
 		}
 	}

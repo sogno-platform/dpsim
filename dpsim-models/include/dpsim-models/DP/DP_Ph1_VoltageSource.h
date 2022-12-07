@@ -78,48 +78,24 @@ namespace Ph1 {
 
 		// #### MNA Section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		void mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors);
+		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+		void mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-		void mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx);
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		void mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) override;
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaApplyRightSideVectorStampHarm(Matrix& rightVector);
+		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaApplyRightSideVectorStampHarm(Matrix& rightVector) override;
 		/// Returns current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(VoltageSource& voltageSource) :
-				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-					mVoltageSource.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-				}
-				void execute(Real time, Int timeStepCount) { mVoltageSource.mnaPreStep(time, timeStepCount); };
-		private:
-			VoltageSource& mVoltageSource;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(**voltageSource.mName + ".MnaPostStep"),
-				mVoltageSource(voltageSource), mLeftVector(leftVector) {
-					mVoltageSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount)  { mVoltageSource.mnaPostStep(time, timeStepCount, mLeftVector); };
-		private:
-			VoltageSource& mVoltageSource;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		class MnaPreStepHarm : public CPS::Task {
 		public:
