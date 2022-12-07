@@ -34,7 +34,7 @@
 namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
-	class MnaSolver : public Solver, public CPS::AttributeList {
+	class MnaSolver : public Solver {
 	protected:
 		// #### General simulation settings ####
 		/// Simulation domain, which can be dynamic phasor (DP) or EMT
@@ -185,7 +185,7 @@ namespace DPsim {
 		std::vector<CPS::Attribute<Matrix>::Ptr> mLeftSideVectorHarm;
 
 		/// Destructor
-		virtual ~MnaSolver() { 
+		virtual ~MnaSolver() {
 			if (mSystemMatrixRecomputation)
 				mSLog->info("Number of system matrix recomputations: {:}", mNumRecomputations);
 		};

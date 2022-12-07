@@ -15,8 +15,10 @@
 namespace CPS {
 	class ODEInterface {
 	public:
-		typedef std::shared_ptr<ODEInterface> Ptr;
+		using Ptr = std::shared_ptr<ODEInterface>;
 		//typedef std::vector<Ptr> List;
+
+		const CPS::AttributeList::Ptr mAttributeList;
 
 		const CPS::Attribute<Matrix>::Ptr mOdePreState;
 		const CPS::Attribute<Matrix>::Ptr mOdePostState;
@@ -37,6 +39,7 @@ namespace CPS {
 
 	protected:
 		explicit ODEInterface(AttributeList::Ptr attrList) :
+		mAttributeList(attrList),
 		mOdePreState(attrList->create<Matrix>("ode_pre_state")),
 		mOdePostState(attrList->create<Matrix>("ode_post_state"))
 		{ }

@@ -112,11 +112,11 @@ namespace DPsim {
 			SubnetSolveTask(DiakopticsSolver<VarType>& solver, UInt net) :
 				Task(solver.mName + ".SubnetSolve_" + std::to_string(net)), mSolver(solver), mSubnet(solver.mSubnets[net]) {
 				for (auto it : mSubnet.components) {
-					if (it->template attributeTyped<Matrix>("right_vector")->get().size() != 0) {
-						mAttributeDependencies.push_back(it->attribute("right_vector"));
+					if (it->mRightVector->get().size() != 0) {
+						mAttributeDependencies.push_back(it->mRightVector);
 					}
 				}
-				mModifiedAttributes.push_back(solver.attribute("old_left_vector"));
+				mModifiedAttributes.push_back(solver.mOrigLeftSideVector);
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -131,8 +131,8 @@ namespace DPsim {
 		public:
 			PreSolveTask(DiakopticsSolver<VarType>& solver) :
 				Task(solver.mName + ".PreSolve"), mSolver(solver) {
-				mAttributeDependencies.push_back(solver.attribute("old_left_vector"));
-				mModifiedAttributes.push_back(solver.attribute("mapped_tear_currents"));
+				mAttributeDependencies.push_back(solver.mOrigLeftSideVector);
+				mModifiedAttributes.push_back(solver.mMappedTearCurrents);
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -145,7 +145,7 @@ namespace DPsim {
 		public:
 			SolveTask(DiakopticsSolver<VarType>& solver, UInt net) :
 				Task(solver.mName + ".Solve_" + std::to_string(net)), mSolver(solver), mSubnet(solver.mSubnets[net]) {
-				mAttributeDependencies.push_back(solver.attribute("mapped_tear_currents"));
+				mAttributeDependencies.push_back(solver.mMappedTearCurrents);
 				mModifiedAttributes.push_back(mSubnet.leftVector);
 			}
 
