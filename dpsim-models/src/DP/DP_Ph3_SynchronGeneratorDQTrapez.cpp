@@ -37,8 +37,8 @@ void DP::Ph3::SynchronGeneratorDQTrapez::mnaInitialize(Real omega, Real timeStep
 }
 
 void DP::Ph3::SynchronGeneratorDQTrapez::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	modifiedAttributes.push_back(attribute("right_vector"));
-	prevStepDependencies.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(mRightVector);
+	prevStepDependencies.push_back(mIntfVoltage);
 }
 
 void DP::Ph3::SynchronGeneratorDQTrapez::mnaPreStep(Real time, Int timeStepCount) {

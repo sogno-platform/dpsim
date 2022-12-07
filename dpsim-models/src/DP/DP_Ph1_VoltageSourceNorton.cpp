@@ -96,8 +96,8 @@ void DP::Ph1::VoltageSourceNorton::updateState(Real time) {
 	}
 }
 void DP::Ph1::VoltageSourceNorton::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(attribute("V_ref"));
-	modifiedAttributes.push_back(attribute("right_vector"));
+	attributeDependencies.push_back(mVoltageRef);
+	modifiedAttributes.push_back(mRightVector);
 }
 
 
@@ -108,8 +108,8 @@ void DP::Ph1::VoltageSourceNorton::mnaPreStep(Real time, Int timeStepCount) {
 
 void DP::Ph1::VoltageSourceNorton::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("i_intf"));
-	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mIntfVoltage);
 }
 
 void DP::Ph1::VoltageSourceNorton::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {

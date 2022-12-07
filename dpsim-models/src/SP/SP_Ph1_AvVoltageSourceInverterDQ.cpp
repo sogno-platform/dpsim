@@ -295,12 +295,12 @@ void SP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCoun
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	prevStepDependencies.push_back(attribute("Vsref"));
-	prevStepDependencies.push_back(attribute("i_intf"));
-	prevStepDependencies.push_back(attribute("v_intf"));
+	prevStepDependencies.push_back(mVsref);
+	prevStepDependencies.push_back(mIntfCurrent);
+	prevStepDependencies.push_back(mIntfVoltage);
 	attributeDependencies.push_back(mPowerControllerVSI->attributeTyped<Matrix>("output_prev"));
 	attributeDependencies.push_back(mPLL->attributeTyped<Matrix>("output_prev"));
-	modifiedAttributes.push_back(attribute("right_vector"));
+	modifiedAttributes.push_back(mRightVector);
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentPreStep(Real time, Int timeStepCount) {
@@ -315,8 +315,8 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentPreStep(Real time, Int timeSte
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
