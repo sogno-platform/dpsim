@@ -20,7 +20,7 @@ namespace Ph3 {
 
 	class RxLine :
 		public MNASimPowerComp<Real>,
-				public Base::Ph3::PiLine,
+		public Base::Ph3::PiLine,
 		public SharedFactory<RxLine> {
 	protected:
 		/// Voltage across the component [V]

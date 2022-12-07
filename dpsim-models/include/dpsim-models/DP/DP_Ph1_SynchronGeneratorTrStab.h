@@ -21,8 +21,8 @@ namespace Ph1 {
 	///
 	/// This model is based on Eremia section 2.1.6.
 	class SynchronGeneratorTrStab :
-		public Base::SynchronGenerator,
 		public CompositePowerComp<Complex>,
+		public Base::SynchronGenerator,
 		public SharedFactory<SynchronGeneratorTrStab> {
 	protected:
 		// #### Model specific variables ####

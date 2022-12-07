@@ -19,8 +19,8 @@ namespace DP {
 namespace Ph3 {
 	///
 	class SeriesResistor :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Resistor,
-				public MNASimPowerComp<Complex>,
 		public SharedFactory<SeriesResistor> {
 
 	public:

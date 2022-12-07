@@ -23,8 +23,8 @@ namespace Ph1 {
 	/// The resistance is constant for a defined time step and system
 	///frequency and the current source changes for each iteration.
 	class Capacitor :
+		public MNASimPowerComp<Real>,
 		public Base::Ph1::Capacitor,
-				public MNASimPowerComp<Real>,
 		public SharedFactory<Capacitor> {
 	protected:
 		/// DC equivalent current source [A]

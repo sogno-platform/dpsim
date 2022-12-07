@@ -16,8 +16,8 @@ namespace CPS {
 		namespace Ph3 {
 			/// \brief Voltage source with Norton equivalent model
 			class VoltageSourceNorton :
-								public Base::Ph1::VoltageSource,
 				public MNASimPowerComp<Real>,
+				public Base::Ph1::VoltageSource,
 				public SharedFactory<VoltageSourceNorton> {
 			protected:
 				void updateState(Real time);

@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::Resistor(mAttributes), MNASimPowerComp<Real>(uid, name, logLevel) {
+	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph1::Resistor(mAttributes) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);

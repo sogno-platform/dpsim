@@ -20,7 +20,7 @@ namespace Ph1 {
 	/// A positive current is flowing out of
 	/// node1 and into node2.
 	class CurrentSource :
-				public MNASimPowerComp<Real>,
+		public MNASimPowerComp<Real>,
 		public SharedFactory<CurrentSource> {
 	public:
 		const Attribute<Complex>::Ptr mCurrentRef;

@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::Capacitor(mAttributes), MNASimPowerComp<Complex>(uid, name, logLevel) {
+	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph1::Capacitor(mAttributes) {
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);

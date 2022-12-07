@@ -17,8 +17,8 @@ namespace EMT {
 namespace Ph3 {
 	/// Synchronous generator model in dq-reference frame
 	class SynchronGeneratorDQ :
-		public Base::SynchronGenerator,
-				public MNASimPowerComp<Real> {
+		public MNASimPowerComp<Real>,
+		public Base::SynchronGenerator {
 	protected:
 		/// Compensation current source set point
 		Matrix mCompensationCurrent;

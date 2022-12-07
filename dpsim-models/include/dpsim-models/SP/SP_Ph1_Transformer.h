@@ -21,8 +21,8 @@ namespace SP {
 namespace Ph1 {
 	/// Transformer that includes an inductance and resistance
 	class Transformer :
-		public Base::Ph1::Transformer,
 		public CompositePowerComp<Complex>,
+		public Base::Ph1::Transformer,
 		public SharedFactory<Transformer>,
 		public PFSolverInterfaceBranch {
 

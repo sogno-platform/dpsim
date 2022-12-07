@@ -16,8 +16,8 @@ namespace EMT {
 namespace Ph3 {
  /// EMT Resistor
 class Resistor :
+	public MNASimPowerComp<Real>,
 	public Base::Ph3::Resistor,
-		public MNASimPowerComp<Real>,
 	public SharedFactory<Resistor> {
 protected:
 public:

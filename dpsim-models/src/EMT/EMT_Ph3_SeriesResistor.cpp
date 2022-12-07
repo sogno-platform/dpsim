@@ -15,7 +15,7 @@ using namespace CPS;
 
 EMT::Ph3::SeriesResistor::SeriesResistor(String uid, String name,
 	Logger::Level logLevel)
-	: Base::Ph1::Resistor(mAttributes), MNASimPowerComp<Real>(uid, name, logLevel) {
+	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph1::Resistor(mAttributes) {
 
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);

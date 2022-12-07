@@ -23,8 +23,8 @@ namespace Ph3 {
 	/// The switch can be opened and closed.
 	/// Each state has a specific resistance value.
 	class Switch :
-		public Base::Ph3::Switch,
 		public MNASimPowerComp<Real>,
+		public Base::Ph3::Switch,
 		public SharedFactory<Switch>,
 		public MNASwitchInterface {
 

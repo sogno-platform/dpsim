@@ -20,9 +20,9 @@ namespace SP {
 namespace Ph1 {
 	/// Static phasor resistor model
 	class Resistor :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Resistor,
 		public MNATearInterface,
-				public MNASimPowerComp<Complex>,
 		public SharedFactory<Resistor>,
 		public PFSolverInterfaceBranch {
 

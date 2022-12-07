@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::Switch(mAttributes), MNASimPowerComp<Real>(uid, name, logLevel) {
+	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph1::Switch(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 }

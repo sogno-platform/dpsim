@@ -23,8 +23,8 @@ namespace Ph1 {
 	/// The switch can be opened and closed.
 	/// Each state has a specific resistance value.
 	class Switch :
-		public Base::Ph1::Switch,
 		public MNASimPowerComp<Complex>,
+		public Base::Ph1::Switch,
 		public SharedFactory<Switch>,
 		public MNASwitchInterface {
 

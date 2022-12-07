@@ -19,7 +19,9 @@ namespace CPS {
 
 namespace SP { namespace Ph1 {
 	class VoltageSourceInverter :
-		public MNASimPowerComp<Complex>, public SharedFactory<VoltageSourceInverter>, public PFSolverInterfaceBus {
+		public MNASimPowerComp<Complex>,
+		public SharedFactory<VoltageSourceInverter>,
+		public PFSolverInterfaceBus {
 	public:
 
 		VoltageSourceInverter(String uid, String name, Real power, Real reactivePower,

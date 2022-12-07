@@ -23,8 +23,8 @@ namespace CPS {
 namespace EMT {
 namespace Ph3 {
 	class AvVoltageSourceInverterDQ :
-		public Base::AvVoltageSourceInverterDQ,
 		public CompositePowerComp<Real>,
+		public Base::AvVoltageSourceInverterDQ,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
 

@@ -23,7 +23,7 @@ namespace Ph1 {
 	/// of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
 	class VoltageSource :
-				public MNASimPowerComp<Real>,
+		public MNASimPowerComp<Real>,
 		public SharedFactory<VoltageSource> {
 	protected:
 		void updateVoltage(Real time);

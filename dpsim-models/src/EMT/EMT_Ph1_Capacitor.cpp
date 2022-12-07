@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph1::Capacitor::Capacitor(String uid, String name,	Logger::Level logLevel)
-	: Base::Ph1::Capacitor(mAttributes), MNASimPowerComp<Real>(uid, name, logLevel) {
+	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph1::Capacitor(mAttributes) {
 	mEquivCurrent = 0;
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);

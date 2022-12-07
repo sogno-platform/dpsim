@@ -27,9 +27,9 @@ namespace Ph1 {
 	/// The resistance is constant for a defined time step and system
 	/// frequency and the current source changes for each iteration.
 	class SVC :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::SVC,
 		public MNAVariableCompInterface,
-		public MNASimPowerComp<Complex>,
 		public SharedFactory<SVC> {
 	protected:
 
