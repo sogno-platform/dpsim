@@ -115,32 +115,13 @@ namespace Ph1 {
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		void mnaApplyRightSideVectorStampHarm(Matrix& rightVector);
 		void mnaApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx);
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaPreStep(Real time, Int timeStepCount) override;
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-		class MnaPreStep : public CPS::Task {
-		public:
-			MnaPreStep(Inverter& inverter) :
-				Task(**inverter.mName + ".MnaPreStep"), mInverter(inverter) {
-				mModifiedAttributes.push_back(mInverter.attribute("right_vector"));
-				mModifiedAttributes.push_back(mInverter.attribute("v_intf"));
-			}
-			void execute(Real time, Int timeStepCount);
-		private:
-			Inverter& mInverter;
-		};
-
-		class MnaPostStep : public CPS::Task {
-		public:
-			MnaPostStep(Inverter& inverter, Attribute<Matrix>::Ptr leftVector) :
-				Task(**inverter.mName + ".MnaPostStep"),
-				mInverter(inverter), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mInverter.attribute("i_intf"));
-			}
-			void execute(Real time, Int timeStepCount);
-		private:
-			Inverter& mInverter;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 
 		class MnaPreStepHarm : public CPS::Task {
 		public:

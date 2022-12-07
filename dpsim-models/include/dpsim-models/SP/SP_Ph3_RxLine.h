@@ -59,37 +59,22 @@ namespace Ph3 {
 		void mnaUpdateVoltage(const Matrix& leftVector);
 		void mnaUpdateCurrent(const Matrix& leftVector);
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(RxLine& line) :
-				Task(**line.mName + ".MnaPreStep"), mLine(line) {
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 				mAttributeDependencies.push_back(line.mSubResistor->attribute("right_vector"));
 				mAttributeDependencies.push_back(line.mSubInductor->attribute("right_vector"));
 				mModifiedAttributes.push_back(line.attribute("right_vector"));
-			}
+		}
 
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			RxLine& mLine;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(RxLine& line, Attribute<Matrix>::Ptr leftVector) :
-				Task(**line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 				mAttributeDependencies.push_back(leftVector);
 				mAttributeDependencies.push_back(line.mSubInductor->attribute("i_intf"));
 				mModifiedAttributes.push_back(line.attribute("i_intf"));
 				mModifiedAttributes.push_back(line.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			RxLine& mLine;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		}
 	};
 }
 }

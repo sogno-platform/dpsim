@@ -294,21 +294,33 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
     specificInitialization();
 
 	**this->mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	this->mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	this->mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+	this->mMnaTasks.push_back(std::make_shared<typename Base::ReducedOrderSynchronGenerator<VarType>::MnaPreStep>(*this));
+	this->mMnaTasks.push_back(std::make_shared<typename Base::ReducedOrderSynchronGenerator<VarType>::MnaPostStep>(*this, leftVector));
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mSynGen.mSimTime = time;
-	mSynGen.stepInPerUnit();
-	(**mSynGen.mRightVector).setZero();
-	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	modifiedAttributes.push_back(mRightVector);
+	prevStepDependencies.push_back(mIntfVoltage);
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mSynGen.mnaPostStep(**mLeftVector);
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaPreStep(Real time, Int timeStepCount) {
+	mSimTime = time;
+	stepInPerUnit();
+	(**mRightVector).setZero();
+	mnaApplyRightSideVectorStamp(**mRightVector);
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfVoltage);
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaPostStep(**leftVector);
 }
 
 // Declare specializations to move definitions to .cpp

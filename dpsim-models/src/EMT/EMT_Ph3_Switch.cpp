@@ -175,9 +175,15 @@ void EMT::Ph3::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& syst
 
 void EMT::Ph3::Switch::mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
 
-void EMT::Ph3::Switch::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mSwitch.mnaUpdateVoltage(**mLeftVector);
-	mSwitch.mnaUpdateCurrent(**mLeftVector);
+void EMT::Ph3::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
+}
+
+void EMT::Ph3::Switch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::Switch::mnaUpdateVoltage(const Matrix& leftVector) {

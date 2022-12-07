@@ -58,19 +58,6 @@ namespace Ph1 {
 			AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
 			Attribute<Matrix>::Ptr &leftVector);
 
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Switch& switchRef, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**switchRef.mName + ".MnaPostStep"), mSwitch(switchRef), mLeftVector(leftSideVector) {
-				mSwitch.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mSwitch.mnaPostStep(time, timeStepCount, mLeftVector); }
-
-		private:
-			Switch& mSwitch;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
-
 		// #### MNA section for switch ####
 		/// Check if switch is closed
 		Bool mnaIsClosed();

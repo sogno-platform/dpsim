@@ -79,18 +79,6 @@ namespace Ph1 {
 		/// add MNA pre and post step dependencies
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Resistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**resistor.mName + ".MnaPostStep"),
-				mResistor(resistor), mLeftVector(leftSideVector) {
-				mResistor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mResistor.mnaPostStep(time, timeStepCount, mLeftVector); };
-		private:
-			Resistor& mResistor;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 		// #### MNA Tear Section ####
 		void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
 
