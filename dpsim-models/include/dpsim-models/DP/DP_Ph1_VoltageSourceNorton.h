@@ -21,9 +21,9 @@ namespace Ph1 {
 	/// which is transformed to a current source with
 	/// a parallel resistance using the Norton equivalent.
 	class VoltageSourceNorton :
-		public Base::Ph1::VoltageSource,
 		public MNASimPowerComp<Complex>,
-				public SharedFactory<VoltageSourceNorton> {
+		public Base::Ph1::VoltageSource,
+		public SharedFactory<VoltageSourceNorton> {
 	protected:
 		/// Equivalent current source [A]
 		Complex mEquivCurrent;

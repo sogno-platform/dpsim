@@ -27,9 +27,9 @@ namespace Ph3 {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 	class SynchronGeneratorVBR :
-		public Base::SynchronGenerator,
 		public MNASimPowerComp<Real>,
-				public MNAVariableCompInterface,
+		public Base::SynchronGenerator,
+		public MNAVariableCompInterface,
 		public SharedFactory<SynchronGeneratorVBR> {
 	protected:
 		/// d dynamic inductance

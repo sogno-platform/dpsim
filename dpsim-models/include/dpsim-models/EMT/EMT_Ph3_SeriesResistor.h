@@ -20,8 +20,8 @@ namespace Ph3 {
 	/// This resistor has resistance values different from zero
 	/// only on the main diagonal. These values are identical.
 	class SeriesResistor :
+		public MNASimPowerComp<Real>,
 		public Base::Ph1::Resistor,
-				public MNASimPowerComp<Real>,
 		public SharedFactory<SeriesResistor> {
 
 	public:

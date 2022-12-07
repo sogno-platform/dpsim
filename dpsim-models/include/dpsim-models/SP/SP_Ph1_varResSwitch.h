@@ -25,10 +25,10 @@ namespace Ph1 {
 	/// The switch resistance changes at a defined fixed rate by multiplying previous resistance value with a factor for the rate of change
 	/// The MNA variable component interface is used to recompute the system Matrix after each change.
 	class varResSwitch :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Switch,
 		public MNAVariableCompInterface,
 		public MNASwitchInterface,
-				public MNASimPowerComp<Complex>,
 		public SharedFactory<varResSwitch> {
 
 	protected:

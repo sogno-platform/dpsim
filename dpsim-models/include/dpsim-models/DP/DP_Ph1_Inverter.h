@@ -21,7 +21,7 @@ namespace Ph1 {
 	/// add more explanation here regarding bessel function model
 	class Inverter :
 		public MNASimPowerComp<Complex>,
-				public SharedFactory<Inverter> {
+		public SharedFactory<Inverter> {
 	protected:
 		// #### Model specific variables ####
 		/// DC bus voltage

@@ -38,7 +38,7 @@ namespace Ph1 {
 	/// a new equation ej - ek = V is added to the problem.
 	class VoltageSource :
 		public MNASimPowerComp<Complex>,
-				public DAEInterface,
+		public DAEInterface,
 		public SharedFactory<VoltageSource> {
 	private:
 		///

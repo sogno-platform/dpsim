@@ -18,10 +18,10 @@ namespace DP {
 namespace Ph1 {
 	/// \brief Dynamic phasor resistor model
 	class Resistor :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Resistor,
 		public MNATearInterface,
 		public DAEInterface,
-		public MNASimPowerComp<Complex>,
 		public SharedFactory<Resistor> {
 	public:
 		/// Defines UID, name and logging level

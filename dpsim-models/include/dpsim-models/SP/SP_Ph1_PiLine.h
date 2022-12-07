@@ -24,8 +24,8 @@ namespace Ph1 {
 	/// For MNA this model consists sub components to represent the
 	/// RLC elements of a PI-line.
 	class PiLine :
-	 public Base::Ph1::PiLine,
 	 public CompositePowerComp<Complex>,
+	 public Base::Ph1::PiLine,
 	 public MNATearInterface,
 	 public SharedFactory<PiLine>,
 	 public PFSolverInterfaceBranch {

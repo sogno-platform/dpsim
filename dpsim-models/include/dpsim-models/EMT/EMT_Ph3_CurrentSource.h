@@ -22,7 +22,7 @@ namespace CPS {
 			/// This model uses modified nodal analysis to represent an ideal current source.
 			/// This involves the stamping of the current to the right side vector.
 			class CurrentSource :
-								public MNASimPowerComp<Real>,
+				public MNASimPowerComp<Real>,
 				public SharedFactory<CurrentSource> {
 			private:
 				///

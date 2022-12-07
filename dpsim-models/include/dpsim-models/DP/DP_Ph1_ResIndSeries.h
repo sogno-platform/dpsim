@@ -17,7 +17,7 @@ namespace Ph1 {
 	/// \brief resistor inductor series element
 	class ResIndSeries :
 		public MNATearInterface,
-				public MNASimPowerComp<Complex>,
+		public MNASimPowerComp<Complex>,
 		public SharedFactory<ResIndSeries> {
 	protected:
 		/// DC equivalent current source for harmonics [A]

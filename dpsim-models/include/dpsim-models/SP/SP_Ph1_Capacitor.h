@@ -17,8 +17,8 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 	class Capacitor :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Capacitor,
-				public MNASimPowerComp<Complex>,
 		public SharedFactory<Capacitor>,
 		public PFSolverInterfaceBranch {
 

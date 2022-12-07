@@ -23,8 +23,8 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 	class AvVoltageSourceInverterDQ :
-		public Base::AvVoltageSourceInverterDQ,
 		public CompositePowerComp<Complex>,
+		public Base::AvVoltageSourceInverterDQ,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
 

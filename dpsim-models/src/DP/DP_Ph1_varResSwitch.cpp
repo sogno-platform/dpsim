@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLevel)
-	: Base::Ph1::Switch(mAttributes), MNASimPowerComp<Complex>(uid, name, logLevel) {
+	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph1::Switch(mAttributes) {
 	setTerminalNumber(2);
     **mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);

@@ -25,7 +25,7 @@ namespace CPS {
 	public:
 		using Ptr = std::shared_ptr<AttributeList>;
 
-		AttributeList() { };
+		AttributeList() : mAttributeMap() { };
 
 		const AttributeBase::Map & attributes() { return mAttributeMap; };
 
