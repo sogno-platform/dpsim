@@ -18,6 +18,8 @@ namespace CPS {
 		typedef std::shared_ptr<MNASwitchInterface> Ptr;
 		typedef std::vector<Ptr> List;
 
+		virtual ~MNASwitchInterface() = default;
+
 		// #### MNA section ####
 		/// Check if switch is closed
 		virtual Bool mnaIsClosed() = 0;

@@ -28,16 +28,13 @@ namespace CPS {
 		Bool mHasPostStep;
 
 	public:
-		typedef VarType Type;
-		typedef std::shared_ptr<CompositePowerComp<VarType>> Ptr;
-		typedef std::vector<Ptr> List;
+		using Type = VarType;
+		using Ptr = std::shared_ptr<CompositePowerComp<VarType>>;
+		using List = std::vector<Ptr>;
 
 		/// Basic constructor that takes UID, name and log level
 		CompositePowerComp(String uid, String name, Bool hasPreStep, Bool hasPostStep, Logger::Level logLevel)
-			: MNASimPowerComp<VarType>(uid, name, logLevel) {
-				mHasPreStep = hasPreStep;
-				mHasPostStep = hasPostStep;
-			}
+			: MNASimPowerComp<VarType>(uid, name, logLevel), mHasPreStep(hasPreStep), mHasPostStep(hasPostStep) { }
 
 		/// Basic constructor that takes name and log level and sets the UID to name as well
 		CompositePowerComp(String name, Bool hasPreStep = true, Bool hasPostStep = true, Logger::Level logLevel = Logger::Level::off)
@@ -54,19 +51,19 @@ namespace CPS {
 
 		// #### MNA Interface Functions ####
 		/// Initializes variables of components
-		virtual void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
 		/// Stamps right side (source) vector
-		virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// MNA pre step operations
-		virtual void mnaPreStep(Real time, Int timeStepCount) override;
+		void mnaPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		virtual void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		virtual void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		virtual void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### MNA Parent Functions ####
 		virtual void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
