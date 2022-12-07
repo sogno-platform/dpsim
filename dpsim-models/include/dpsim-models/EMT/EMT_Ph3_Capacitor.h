@@ -23,8 +23,8 @@ namespace CPS {
 			/// The resistance is constant for a defined time step and system
 			///frequency and the current source changes for each iteration.
 			class Capacitor :
+				public MNASimPowerComp<Real>,
 				public Base::Ph3::Capacitor,
-								public MNASimPowerComp<Real>,
 				public SharedFactory<Capacitor> {
 			protected:
 				/// DC equivalent current source [A]

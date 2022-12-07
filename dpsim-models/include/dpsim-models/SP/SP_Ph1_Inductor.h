@@ -18,9 +18,9 @@ namespace SP {
 namespace Ph1 {
 	/// Static phasor inductor model
 	class Inductor :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Inductor,
 		public MNATearInterface,
-				public MNASimPowerComp<Complex>,
 		public SharedFactory<Inductor> {
 	protected:
 		/// susceptance [S]

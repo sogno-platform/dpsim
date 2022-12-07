@@ -22,7 +22,7 @@ namespace Ph1 {
 	/// In case of a dynamic phasor simulation, a frequency different
 	/// from zero is added on top of the system frequency.
 	class CurrentSource :
-				public MNASimPowerComp<Complex>,
+		public MNASimPowerComp<Complex>,
 		public SharedFactory<CurrentSource> {
 	public:
 		const Attribute<Complex>::Ptr mCurrentRef;

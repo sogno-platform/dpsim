@@ -25,8 +25,8 @@ namespace Ph3 {
 	/// For this model, the resistance model is the same for all phases and
 	/// only in series.
 	class SeriesSwitch :
-		public Base::Ph1::Switch,
 		public MNASimPowerComp<Complex>,
+		public Base::Ph1::Switch,
 		public SharedFactory<SeriesSwitch>,
 		public MNASwitchInterface {
 

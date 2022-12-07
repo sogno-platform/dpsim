@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: Base::Ph3::Capacitor(mAttributes), MNASimPowerComp<Real>(uid, name, logLevel) {
+	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph3::Capacitor(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = Matrix::Zero(3, 1);

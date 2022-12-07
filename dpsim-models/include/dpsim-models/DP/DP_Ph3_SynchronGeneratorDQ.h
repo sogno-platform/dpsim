@@ -17,8 +17,8 @@ namespace DP {
 namespace Ph3 {
 	/// Synchronous generator model in dq-reference frame
 	class SynchronGeneratorDQ :
-		public Base::SynchronGenerator,
-				public MNASimPowerComp<Complex> {
+		public MNASimPowerComp<Complex>,
+		public Base::SynchronGenerator {
 	protected:
 		/// Compensation current source set point
 		MatrixComp mCompensationCurrent;

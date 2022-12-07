@@ -24,9 +24,9 @@ namespace CPS {
 			/// The resistance is constant for a defined time step and system
 			/// frequency and the current source changes for each iteration.
 			class Inductor :
+				public MNASimPowerComp<Complex>,
 				public Base::Ph3::Inductor,
 				public MNATearInterface,
-								public MNASimPowerComp<Complex>,
 				public SharedFactory<Inductor> {
 			protected:
 				/// susceptance [S]
