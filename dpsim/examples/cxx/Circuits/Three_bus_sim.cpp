@@ -76,7 +76,7 @@ void Three_bus_sim(String simName, Real timeStep, Real finalTime, Real cmdInerti
 			SystemNodeList{n1_PF, n2_PF, n3_PF},
 			SystemComponentList{gen1_PF, gen2_PF, line_pf_1, line_pf_2, line_pf_3, load_PF});
 
-	//systemPF.mComponents.push_back(pmu_1);
+	systemPF.mComponents.push_back(pmu_1);
 
 
 	// Logging
@@ -102,6 +102,7 @@ void Three_bus_sim(String simName, Real timeStep, Real finalTime, Real cmdInerti
 	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
+
 	simPF.run();
 }
 
