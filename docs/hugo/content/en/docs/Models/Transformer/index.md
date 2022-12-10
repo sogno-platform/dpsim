@@ -2,7 +2,6 @@
 title: "Transformer"
 linkTitle: "Transformer"
 date: 2021-07-22
-markup: pandoc
 ---
 
 ## 2-Winding Transformer
@@ -17,24 +16,24 @@ Furthermore, the ideal transformer has an additional equation, which requires an
 The complete matrix stamp for the ideal transformer is 
 
 $$
-  \begin{array}{c|c c c}
-  ~ & j & k & l \\
+\begin{array}{c|c c c}
+  ~ & j & k & l \cr
   \hline
-  j &  &  & -1 \\ 
-  k &  &  & T \\ 
+  j &  &  & -1 \cr
+  k &  &  & T \cr
   l & 1 & -T & 0
-  \end{array}
-  \begin{pmatrix}
-    v_j\\
-    v_k\\
-    i_{l}\\
-  \end{pmatrix}
-  =
-  \begin{pmatrix}
-    \\
-    \\
-    0\\
-  \end{pmatrix}
+\end{array}
+\begin{pmatrix}
+v_j \cr
+v_k \cr
+i_{l} \cr
+\end{pmatrix}
+\=
+\begin{pmatrix}
+  \cr
+  \cr
+  0\cr
+\end{pmatrix} 
 $$
 
 The variable $j$ denotes the high voltage node while $k$ is the low voltage node.

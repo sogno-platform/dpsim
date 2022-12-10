@@ -2,7 +2,6 @@
 title: "Powerflow"
 linkTitle: "Powerflow"
 date: 2020-03-18
-markup: pandoc
 ---
 
 <script>

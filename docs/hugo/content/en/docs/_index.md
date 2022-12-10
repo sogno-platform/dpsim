@@ -17,12 +17,22 @@ DPsim is a solver library for dynamic power system simulation.
 - It can load models in the IEC61970 Common Information Model (CIM) / Common Grid Model Exchange Standard (CGMES) XML format.
 - It can be interfaced to a variety of protocols and interfaces via [VILLASnode](https://fein-aachen.org/projects/villas-node/).
 
-## Contact
 
-For further questions please consider joining the [LF Energy Slack channel](https://slack.lfenergy.org/) and message:
+## Connect
+
+Using or want to use DPsim? Find out more here:
+
+[LF Energy Slack](https://slack.lfenergy.org/) - Chat with other users and get help in the **#sogno** channel
+
+You can also send a direct message to
 - Markus Mirz
 - Jan Dinkelbach
 - Steffen Vogel
+
+
+## Contribute
+
+If you want to get more involved by contributing to DPsim, please send us a Pull Request on [GitHub](https://github.com/sogno-platform/dpsim).
 
 
 ## Publications

@@ -2,7 +2,6 @@
 title: "RLC-Elements"
 linkTitle: "RLC-Elements"
 date: 2020-03-18
-markup: pandoc
 ---
 
 ## EMT Equations and Modified Nodal Analysis
