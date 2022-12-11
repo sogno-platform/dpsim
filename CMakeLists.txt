@@ -203,8 +203,6 @@ if (WITH_VILLAS)
 endif(WITH_VILLAS)
 add_subdirectory(docs)
 
-include(cmake/GetGridData.cmake)
-
 message(VERBOSE "Compiler Release Flags: " 	${CMAKE_CXX_FLAGS_RELEASE})
 message(VERBOSE "Compiler Debug Flags: " 	${CMAKE_CXX_FLAGS_DEBUG})
 
