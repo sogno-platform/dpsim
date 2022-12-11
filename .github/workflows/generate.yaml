@@ -1,4 +1,4 @@
-name: Generate
+name: Build & Deploy Documentation
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  generate-docs:
+  generate-reference:
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
     steps:
@@ -21,15 +21,61 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: cmake $GITHUB_WORKSPACE
 
-    - name: Generate docs
+    - name: Make reference docs
       run: |
         make -j$(nproc) -C build docs
         make -j$(nproc) -C build docs_cxx
 
-    - name: Copy docs
+    - name: Copy reference
       run: |
-        cp -r build/docs/sphinx/html/. public/sphinx
-        cp -r build/docs/doxygen/html/. public/doxygen
+        mkdir reference
+        cp -r build/docs/sphinx/html/. reference/sphinx
+        cp -r build/docs/doxygen/html/. reference/doxygen
+
+    - name: Archive reference directory
+      uses: actions/upload-artifact@v3
+      with:
+        path: ${{ github.workspace }}/reference
+        name: reference-cache
+        retention-days: 1
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [generate-reference]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+        hugo-version: '0.108.0'
+        extended: true
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - run: cd docs/hugo && npm ci
+    - run: cd docs/hugo && hugo --minify
+
+    - name: Restore reference archive
+      uses: actions/download-artifact@v3
+      with:
+       name: reference-cache
+       path: ${{ github.workspace }}/reference
+
+    - name: Copy reference
+      run: |
+        cp -r reference/. public
 
     - name: Deploy page
       uses: peaceiris/actions-gh-pages@v3
