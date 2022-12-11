@@ -6,32 +6,38 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/DP/DP_Ph1_Switch.h>
+#include <dpsim-models/EMT/EMT_Ph1_Switch.h>
 
 using namespace CPS;
 
-DP::Ph1::Switch::Switch(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+// !!! TODO: 	Adaptions to use in EMT_Ph3 models phase-to-ground peak variables
+// !!! 			with initialization from phase-to-phase RMS variables
+
+EMT::Ph1::Switch::Switch(String uid, String name, Logger::Level logLevel)
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
-	**mIntfVoltage = MatrixComp::Zero(1,1);
-	**mIntfCurrent = MatrixComp::Zero(1,1);
+	**mIntfVoltage = Matrix::Zero(1, 1);
+	**mIntfCurrent = Matrix::Zero(1, 1);
+
 
 	mOpenResistance = Attribute<Real>::create("R_open", mAttributes);
 	mClosedResistance = Attribute<Real>::create("R_closed", mAttributes);
 	mSwitchClosed = Attribute<Bool>::create("is_closed", mAttributes);
 }
 
-SimPowerComp<Complex>::Ptr DP::Ph1::Switch::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph1::Switch::clone(String name) {
 	auto copy = Switch::make(name, mLogLevel);
 	copy->setParameters(**mOpenResistance, **mClosedResistance, **mSwitchClosed);
 	return copy;
 }
 
-void DP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
+void EMT::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real impedance = (**mSwitchClosed) ? **mClosedResistance : **mOpenResistance;
-	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
+	 
+
+	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
+	(**mIntfCurrent)(0, 0) = (1/impedance) * (**mIntfVoltage)(0, 0);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -40,22 +46,22 @@ void DP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString((**mIntfVoltage)(0,0)),
-		Logger::phasorToString((**mIntfCurrent)(0,0)),
+		(**mIntfVoltage)(0, 0),
+		(**mIntfCurrent)(0, 0),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void DP::Ph1::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void EMT::Ph1::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void DP::Ph1::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = (**mSwitchClosed) ?
-		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );
+void EMT::Ph1::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+	Real conductance = (**mSwitchClosed) ?
+		1./(**mClosedResistance) : 1./(**mOpenResistance);
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -70,19 +76,18 @@ void DP::Ph1::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	SPDLOG_LOGGER_TRACE(mSLog, "-- Stamp ---");
 	if (terminalNotGrounded(0))
-		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
+		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::realToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
+		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::realToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
-		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
+		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::realToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::realToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
-
-void DP::Ph1::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
-	Complex conductance = (closed) ?
-		Complex( 1. / **mClosedResistance, 0 ) :
-		Complex( 1. / **mOpenResistance, 0 );
+void EMT::Ph1::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
+	Real conductance = (closed) ?
+		(1. / **mClosedResistance) :
+		(1. / **mOpenResistance);
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -98,31 +103,32 @@ void DP::Ph1::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& syste
 
 	SPDLOG_LOGGER_TRACE(mSLog, "-- Stamp ---");
 	if (terminalNotGrounded(0))
-		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
+		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::realToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
+		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::realToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
-		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
+		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::realToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+		SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::realToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
 
-void DP::Ph1::Switch::mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
+void EMT::Ph1::Switch::mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
 
-void DP::Ph1::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
+
+void EMT::Ph1::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	(**mIntfVoltage)(0, 0) = 0;
-	if (terminalNotGrounded(1)) (**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,0));
-	if (terminalNotGrounded(0)) (**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	if (terminalNotGrounded(1)) (**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+	if (terminalNotGrounded(0)) (**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void DP::Ph1::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
-	(**mIntfCurrent)(0,0) = (**mSwitchClosed) ?
-		(**mIntfVoltage)(0,0) / **mClosedResistance :
-		(**mIntfVoltage)(0,0) / **mOpenResistance;
+void EMT::Ph1::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
+	(**mIntfCurrent)(0, 0) = (**mSwitchClosed) ?
+		(**mIntfVoltage)(0, 0) / **mClosedResistance :
+		(**mIntfVoltage)(0, 0) / **mOpenResistance;
 }
 
-void DP::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+void EMT::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
 	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
 	Attribute<Matrix>::Ptr &leftVector) {
 
@@ -131,7 +137,7 @@ void DP::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDe
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void DP::Ph1::Switch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph1::Switch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	mnaUpdateVoltage(**leftVector);
 	mnaUpdateCurrent(**leftVector);
 }

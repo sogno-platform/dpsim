@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 
 	auto fault = Ph3::SeriesSwitch::make("Br_fault");
 	fault->setParameters(BreakerOpen, BreakerClosed);
-	fault->open();
+	fault->openSwitch();
 
 	// Connections
 	gen->connect({n1});

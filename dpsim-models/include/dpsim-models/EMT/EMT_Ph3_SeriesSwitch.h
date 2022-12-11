@@ -52,7 +52,7 @@ namespace Ph3 {
 
 		// #### Switch specific MNA section ####
 		/// Check if switch is closed
-		Bool mnaIsClosed() { return **mIsClosed; }
+		Bool mnaIsClosed() { return **mSwitchClosed; }
 		/// Stamps system matrix considering the defined switch position
 		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 

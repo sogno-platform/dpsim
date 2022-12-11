@@ -18,12 +18,12 @@ DP::Ph1::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLe
 
 	mOpenResistance = Attribute<Real>::create("R_open", mAttributes);
 	mClosedResistance = Attribute<Real>::create("R_closed", mAttributes);
-	mIsClosed = Attribute<Bool>::create("is_closed", mAttributes);
+	mSwitchClosed = Attribute<Bool>::create("is_closed", mAttributes);
 	}
 
 SimPowerComp<Complex>::Ptr DP::Ph1::varResSwitch::clone(String name) {
 	auto copy = varResSwitch::make(name, mLogLevel);
-	copy->setParameters(**mOpenResistance, **mClosedResistance, **mIsClosed);
+	copy->setParameters(**mOpenResistance, **mClosedResistance, **mSwitchClosed);
 	return copy;
 }
 
@@ -32,7 +32,7 @@ void DP::Ph1::varResSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	// // This function is not used!!!!!!
 
 	//Switch Resistance
-	Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
+	Real impedance = (**mSwitchClosed) ? **mClosedResistance : **mOpenResistance;
 
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0)  = (**mIntfVoltage)(0,0) / impedance;
@@ -48,7 +48,7 @@ void DP::Ph1::varResSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 }
 
 void DP::Ph1::varResSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = (**mIsClosed) ?
+	Complex conductance = (**mSwitchClosed) ?
 		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );
 
 	// Set diagonal entries
@@ -115,7 +115,7 @@ void DP::Ph1::varResSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph1::varResSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
-	(**mIntfCurrent)(0,0) = (**mIsClosed) ?
+	(**mIntfCurrent)(0,0) = (**mSwitchClosed) ?
 		(**mIntfVoltage)(0,0) / **mClosedResistance :
 		(**mIntfVoltage)(0,0) / **mOpenResistance;
 }
@@ -161,8 +161,8 @@ void DP::Ph1::varResSwitch::setInitParameters(Real timestep) {
 	mDeltaResClosed= 0;
 	// mDeltaResOpen = 1.5; // assumption for 1ms step size
 	mDeltaResOpen= 0.5*timestep/0.001 + 1;
-	mPrevState= **mIsClosed;
-	mPrevRes= (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
+	mPrevState= **mSwitchClosed;
+	mPrevRes= (**mSwitchClosed) ? **mClosedResistance : **mOpenResistance;
 	mInitClosedRes = **mClosedResistance;
 	mInitOpenRes = **mOpenResistance;
 }

@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 	auto sw = Ph1::Switch::make("StepLoad", Logger::Level::info);
 	sw->setParameters(1e9, 0.1);
 	sw->connect({ SimNode::GND, sys.node<SimNode>("BUS6") });
-	sw->open();
+	sw->openSwitch();
 	sys.addComponent(sw);
 
 	// Logging

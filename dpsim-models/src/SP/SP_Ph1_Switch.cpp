@@ -18,18 +18,18 @@ SP::Ph1::Switch::Switch(String uid, String name, Logger::Level logLevel)
 
 	mOpenResistance = Attribute<Real>::create("R_open", mAttributes);
 	mClosedResistance = Attribute<Real>::create("R_closed", mAttributes);
-	mIsClosed = Attribute<Bool>::create("is_closed", mAttributes);
+	mSwitchClosed = Attribute<Bool>::create("is_closed", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr SP::Ph1::Switch::clone(String name) {
 	auto copy = Switch::make(name, mLogLevel);
-	copy->setParameters(**mOpenResistance, **mClosedResistance, **mIsClosed);
+	copy->setParameters(**mOpenResistance, **mClosedResistance, **mSwitchClosed);
 	return copy;
 }
 
 void SP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
 
-	Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
+	Real impedance = (**mSwitchClosed) ? **mClosedResistance : **mOpenResistance;
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
@@ -54,7 +54,7 @@ void SP::Ph1::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 }
 
 void SP::Ph1::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = (**mIsClosed) ?
+	Complex conductance = (**mSwitchClosed) ?
 		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );
 
 	// Set diagonal entries
@@ -117,7 +117,7 @@ void SP::Ph1::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph1::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
-	(**mIntfCurrent)(0,0) = (**mIsClosed) ?
+	(**mIntfCurrent)(0,0) = (**mSwitchClosed) ?
 		(**mIntfVoltage)(0,0) / **mClosedResistance :
 		(**mIntfVoltage)(0,0) / **mOpenResistance;
 }

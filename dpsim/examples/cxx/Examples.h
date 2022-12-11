@@ -602,7 +602,7 @@ namespace Events {
             auto connectionNode = system.node<CPS::SimNode<Complex>>(nodeName);
             Real resistance = std::abs(connectionNode->initialSingleVoltage())*std::abs(connectionNode->initialSingleVoltage())/additionalActivePower;
             loadSwitch->setParameters(1e9, resistance);
-            loadSwitch->open();
+            loadSwitch->openSwitch();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
             logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
@@ -612,7 +612,7 @@ namespace Events {
             auto connectionNode = system.node<CPS::SimNode<Complex>>(nodeName);
             Real resistance = std::abs(connectionNode->initialSingleVoltage())*std::abs(connectionNode->initialSingleVoltage())/additionalActivePower;
             loadSwitch->setParameters(1e9, resistance);
-            loadSwitch->open();
+            loadSwitch->openSwitch();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
             logger->logAttribute("switchedload_i", loadSwitch->attribute("i_intf"));

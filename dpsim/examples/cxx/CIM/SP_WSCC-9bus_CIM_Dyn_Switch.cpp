@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 	auto sw = Ph1::Switch::make("Fault", Logger::Level::info);
 	sw->setParameters(1e12, 0.1*529);
 	sw->connect({ SimNode::GND, sys.node<SimNode>("BUS7") });
-	sw->open();
+	sw->openSwitch();
 	sys.addComponent(sw);
 
 	// Use omegNom for torque conversion in SG models for validation with PSAT

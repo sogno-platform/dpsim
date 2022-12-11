@@ -8,6 +8,7 @@
 
 
 #include <dpsim-models/CSVReader.h>
+#include <cctype>  // we'll use the non-locale <cctype>'s std::isdigit
 
 using namespace CPS;
 

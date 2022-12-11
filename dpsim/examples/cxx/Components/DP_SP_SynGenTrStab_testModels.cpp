@@ -152,7 +152,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	//Breaker
 	auto fault = CPS::SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	fault->setParameters(BreakerOpen, BreakerClosed);
-	fault->open();
+	fault->openSwitch();
 
 	// Topology
 	gen->connect({ n1 });
@@ -281,7 +281,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	//Breaker
 	auto fault = CPS::DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	fault->setParameters(BreakerOpen, BreakerClosed);
-	fault->open();
+	fault->openSwitch();
 
 	// Topology
 	gen->connect({ n1 });

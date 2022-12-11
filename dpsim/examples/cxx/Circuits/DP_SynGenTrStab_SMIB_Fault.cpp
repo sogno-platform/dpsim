@@ -51,7 +51,7 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	//Switch
 	auto faultPF = CPS::SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	faultPF->setParameters(SwitchOpen, SwitchClosed);
-	faultPF->open();
+	faultPF->openSwitch();
 
 	// Topology
 	genPF->connect({ n1PF });
@@ -111,7 +111,7 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	auto faultDP = DP::Ph1::varResSwitch::make("Br_fault", Logger::Level::debug);
 	faultDP->setParameters(SwitchOpen, SwitchClosed);
 	faultDP->setInitParameters(timeStep);
-	faultDP->open();
+	faultDP->openSwitch();
 
 	// Topology
 	genDP->connect({ n1DP });

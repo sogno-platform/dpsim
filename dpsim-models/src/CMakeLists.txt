@@ -58,6 +58,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph1_CurrentSource.cpp
 	EMT/EMT_Ph1_Inductor.cpp
 	EMT/EMT_Ph1_Resistor.cpp
+	EMT/EMT_Ph1_Switch.cpp
 	EMT/EMT_Ph1_VoltageSource.cpp
 	EMT/EMT_Ph1_VoltageSourceRamp.cpp
 	EMT/EMT_Ph1_VoltageSourceNorton.cpp

@@ -18,12 +18,12 @@ DP::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLe
 
 	mOpenResistance = Attribute<Real>::create("R_open", mAttributes);
 	mClosedResistance = Attribute<Real>::create("R_closed", mAttributes);
-	mIsClosed = Attribute<Bool>::create("is_closed", mAttributes);
+	mSwitchClosed = Attribute<Bool>::create("is_closed", mAttributes);
 }
 
 void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
-	Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
+	Real impedance = (**mSwitchClosed) ? **mClosedResistance : **mOpenResistance;
 	**mIntfVoltage = initialVoltage(1) - initialVoltage(0);
 	**mIntfCurrent = **mIntfVoltage / impedance;
 
@@ -46,7 +46,7 @@ void DP::Ph3::SeriesSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 }
 
 void DP::Ph3::SeriesSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Complex conductance = (**mIsClosed)
+	Complex conductance = (**mSwitchClosed)
 		? Complex( 1. / **mClosedResistance, 0 )
 		: Complex( 1. / **mOpenResistance, 0 );
 
@@ -120,7 +120,7 @@ void DP::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph3::SeriesSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
-	Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
+	Real impedance = (**mSwitchClosed) ? **mClosedResistance : **mOpenResistance;
 	**mIntfCurrent = **mIntfVoltage / impedance;
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs((**mIntfCurrent)(0,0)), std::arg((**mIntfCurrent)(0,0)));

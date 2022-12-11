@@ -114,7 +114,7 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	//Breaker
 	auto fault = CPS::SP::Ph1::Switch::make("Br_fault", logLevel);
 	fault->setParameters(switchOpen, switchClosed);
-	fault->open();
+	fault->openSwitch();
 
 	// Topology
 	genSP->connect({ n1SP });

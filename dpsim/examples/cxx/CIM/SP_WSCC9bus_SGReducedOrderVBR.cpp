@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 	if (withFault) {
 		faultSP->setParameters(1e12,0.02*529);
 		faultSP->connect({ SimNode::GND, sys.node<SimNode>(faultBusName) });
-		faultSP->open();
+		faultSP->openSwitch();
 		sys.addComponent(faultSP);
 	}
 

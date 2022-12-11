@@ -113,7 +113,7 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	//Breaker
 	auto fault = CPS::DP::Ph1::Switch::make("Br_fault", logLevel);
 	fault->setParameters(switchOpen, switchClosed);
-	fault->open();
+	fault->openSwitch();
 
 	// Topology
 	genDP->connect({ n1DP });
