@@ -1,0 +1,73 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Core Tasks</title><link>https://sogno-platform.github.io/dpsim/docs/tasks/</link><description>Recent content in Core Tasks on DPsim</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 05 Jan 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://sogno-platform.github.io/dpsim/docs/tasks/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Add New Model</title><link>https://sogno-platform.github.io/dpsim/docs/tasks/add-model/</link><pubDate>Tue, 17 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/tasks/add-model/</guid><description>
+&lt;h2 id="add-a-component-model">Add a Component Model&lt;/h2>
+&lt;p>In this section we will show the implementation of a new component model by means a three-phase dynamic phasor inductor model.&lt;/p>
+&lt;h3 id="c-oop">C++ OOP&lt;/h3>
+&lt;p>DPsim implements component models in a sub project called CPowerSystems (CPS) that is located in the &lt;em>models&lt;/em> folder.
+This folder is added to the DPsim CMake project.
+Every component in DPsim is represented by a C++ class.&lt;/p>
+&lt;p>DPsim supports different types of solvers (MNA, DAE, NRP).
+Each solver requires certain member functions in the component class to be implemented.
+These functions are specified by the solver interface classes: &lt;code>MNAInterface.h&lt;/code>, &lt;code>DAEInterface.h&lt;/code>, etc.&lt;/p>
+&lt;h3 id="directory--namespace-structure">Directory / Namespace Structure&lt;/h3>
+&lt;p>For the implementation of the new component, we add two new files&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>models/Source/DP/DP_Ph3_Inductor.cpp&lt;/code>&lt;/li>
+&lt;li>&lt;code>models/Include/DP/DP_Ph3_Inductor.h&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>In these files, we will implement a new C++ class with the name &lt;code>CPS::DP::Ph3::Inductor&lt;/code>.
+The general structure looks as follows.&lt;/p>
+&lt;p>Directories:&lt;/p>
+&lt;pre>&lt;code>DPsim
+|
+|- Source
+|- Include
+\ models
+|- Source
+|- DP
+|- EMT
+|- Static
+\ Signal
+|- Include
+|- DP
+|- EMT
+|- Static
+\ Signal
+&lt;/code>&lt;/pre>
+&lt;p>Namespaces:&lt;/p>
+&lt;pre>&lt;code>CPS::{DP,EMT,Static,Signal}::{Ph1,Ph3}::{Name}
+&lt;/code>&lt;/pre>
+&lt;h3 id="attributes">Attributes&lt;/h3>
+&lt;p>Each components has a list of attributes, which has to be specified when creating the components class.&lt;/p>
+&lt;p>TODO: explain attribute system&lt;/p>
+&lt;h3 id="tasks-for-prepost-step-functions">Tasks for Pre/Post-step Functions&lt;/h3>
+&lt;p>TODO: add example task dependency graph&lt;/p>
+&lt;h3 id="adding-the-new-component-to-dpsim">Adding the new Component to DPsim&lt;/h3>
+&lt;p>After finishing the implementation of the new component, it needs to be added to the following files:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>models/Include/cps/Components.h&lt;/code>&lt;/li>
+&lt;li>&lt;code>models/Source/CMakeLists.txt&lt;/code>&lt;/li>
+&lt;li>&lt;code>Sources/Python/Module.cpp&lt;/code>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Create New Simulation</title><link>https://sogno-platform.github.io/dpsim/docs/tasks/create-simulation/</link><pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/tasks/create-simulation/</guid><description>
+&lt;p>Here, we will show the implementation of a new simulation scenario defined in C++, which is using DPsim as a library.&lt;/p>
+&lt;h2 id="directory-structure">Directory Structure&lt;/h2>
+&lt;p>In the end, your directory structure should look like as follows:&lt;/p>
+&lt;pre>&lt;code>my-project
+|- CMakeLists.txt
+|- source
+|- my-scenario.cpp
+|- dpsim (as submodule)
+&lt;/code>&lt;/pre>
+&lt;h2 id="cmake-file">CMake File&lt;/h2>
+&lt;p>Your CMakeLists could look like this:&lt;/p>
+&lt;pre>&lt;code>cmake_minimum_required(VERSION 3.5)
+project(my-project CXX)
+add_subdirectory(dpsim)
+add_executable(my-scenario source/my-scenario.cpp)
+target_link_libraries(my-scenario dpsim)
+&lt;/code>&lt;/pre>
+&lt;h2 id="build-the-project">Build the Project&lt;/h2>
+&lt;p>The build process is similar to the one of DPsim:&lt;/p>
+&lt;pre>&lt;code>$ cd my-project
+$ mkdir build &amp;amp;&amp;amp; cd build
+$ cmake ..
+$ make my-scenario&lt;/code>&lt;/pre></description></item></channel></rss>

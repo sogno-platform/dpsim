@@ -1,0 +1,95 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Overview</title><link>https://sogno-platform.github.io/dpsim/docs/overview/</link><description>Recent content in Overview on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno-platform.github.io/dpsim/docs/overview/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Architecture</title><link>https://sogno-platform.github.io/dpsim/docs/overview/architecture/</link><pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/architecture/</guid><description>
+&lt;h2 id="modules-and-dependencies">Modules and Dependencies&lt;/h2>
+&lt;p>The figure below shows the main components of the DPsim library and their dependencies on other software projects.
+All functionality is implemented in the C++ core, which can be used standalone or together with the Python interface.
+The Python interface is a thin wrapper of the C++ core.
+Jupyter notebooks can either use the DPsim Python interface to run simulations or call executables implemented in C++.
+The data analysis and plotting is always done in Python using common libraries like Matplotlib.
+To collect the simulation results from within Python, one can use the villas-dataprocessing Python package.&lt;/p>
+&lt;p>&lt;img src="dpsim_modules.svg" alt="image">&lt;/p>
+&lt;p>Another approach to get data in or out of DPsim is the VILLAS interface, which does not depend on Python at all.
+The main purpose of the VILLAS interface is to exchange data during the simulation runtime, for example, in real-time simulation experiments.
+The data could be send to other simulators, hardware or other software components like databases.
+Storing the data in databases can be another way of managing (also offline) simulation results if the Python CSV method is not desireable.&lt;/p>
+&lt;p>The CIM reader is based on the CIM++ library and provides a comfortable alternative to defining the grid manually in C++ or Python.
+In principle, it calls the same functions to create elements, which are also used in the C++ defined example scenarios, but automatically.
+DPsim also provides a way to visualize the defined networks before simulation.&lt;/p>
+&lt;p>The main solver of DPsim is currently the MNA solver because it enables a rather deterministic computation time per simulation time step, which is necessary for real-time simulation.
+Apart from that, it is also well established in offline circuit simulation.
+The only dependency of the MNA solver is the linear algebra library Eigen.
+For some component models, it is possible to use the Sundials ODE solver in combination with the MNA solver. In that case, the component is solved by the ODE solver whereas the network is still handled by the MNA solver.
+A DAE solver is currently under development.
+Its main purpose will be offline simulation, for example, to provide reference results where simulation runtime and real-time execution are not relevant.&lt;/p>
+&lt;p>The component models depend mostly on the Eigen library.
+Even if components are used in combination with Sundials ODE / DAE solvers, we try to keep the specific functions required by these solvers independent of the Sundials package.&lt;/p>
+&lt;h2 id="class-hierarchy">Class Hierarchy&lt;/h2>
+&lt;p>The &lt;code>Simulation&lt;/code> class holds references to instances of &lt;code>Interface&lt;/code>, &lt;code>Solver&lt;/code>, &lt;code>Logger&lt;/code> and &lt;code>SystemTopology&lt;/code>.
+For a simulation scenario, the minimum description would include a &lt;code>SystemTopology&lt;/code> and a solver type.
+The &lt;code>Solver&lt;/code> instance is then created by the &lt;code>Simulation&lt;/code>.&lt;/p>
+&lt;p>&lt;img src="dpsim_classes_simulation.svg" alt="image">&lt;/p>
+&lt;p>An important function of the &lt;code>Simulation&lt;/code> is to collect all tasks, which have to be executed during the simulation.
+These tasks include computation steps of the individual power system component models as well as read and write tasks of the interfaces and logging variables etc.
+Before the scheduling is done, &lt;code>Simulation&lt;/code> calls a function, e.g. &lt;code>getTasks()&lt;/code>, in order to retrieve the tasks from instances of the four classes mentioned previously.
+The power system model element tasks are collected by the &lt;code>Solver&lt;/code> instances and relayed to the &lt;code>Simulation&lt;/code>.&lt;/p>
+&lt;p>All power system element classes inherit from the &lt;code>IdentifiedObject&lt;/code> class.
+This class corresponds with the &lt;code>IdentifiedObject&lt;/code> of the IEC61970 CIM and has a &lt;code>uid&lt;/code> and &lt;code>name&lt;/code> attribute as well.&lt;/p>
+&lt;p>&lt;img src="dpsim_classes_identifiedobject.svg" alt="image">&lt;/p>
+&lt;p>The next layer of specialization includes information on the topological connection between network elements.
+An electrical bus and network nodes in general are represented by the &lt;code>TopologiclaNode&lt;/code> class.
+The connection of electrical components, &lt;code>TopologicalPowerComp&lt;/code>, is managed via terminals of type &lt;code>TopologicalTerminal&lt;/code>.
+These three types describe the &lt;em>electrical&lt;/em> connections of the network, which are bidirectional and include voltages and currents.
+The signal type elements, &lt;code>TopologicalSignalComp&lt;/code>, can only have unidirectional components, which are not expressed using node and terminals.
+Instead, the attribute system is used to define signal type connections.&lt;/p></description></item><item><title>Docs: Attributes</title><link>https://sogno-platform.github.io/dpsim/docs/overview/attributes/</link><pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/attributes/</guid><description>
+&lt;p>Attributes, instances of the &lt;code>Attribute&lt;/code> class, serve multiple purposes in DPsim:&lt;/p>
+&lt;ul>
+&lt;li>add meta information about variables, like read and write access&lt;/li>
+&lt;li>in combination with tasks, they are the input required by the scheduler&lt;/li>
+&lt;li>connect components by pointing an attribute of one component to another component&amp;rsquo;s member variable&lt;/li>
+&lt;li>add additional getter / setter lambda functions to variables&lt;/li>
+&lt;li>add reflexion, which is not supported by C++ directly&lt;/li>
+&lt;/ul>
+&lt;p>Let&amp;rsquo;s have a look at some code snippets that use attributes.&lt;/p>
+&lt;p>Classes support attributes by inheriting from &lt;code>AttributeList&lt;/code>:&lt;/p>
+&lt;pre>&lt;code>class IdentifiedObject: virtual public AttributeList {
+...
+}
+&lt;/code>&lt;/pre>
+&lt;p>New attributes are usually registered in the constructor of a class:&lt;/p>
+&lt;pre>&lt;code>DP::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
+...
+addAttribute&amp;lt;Real&amp;gt;(&amp;quot;L&amp;quot;, &amp;amp;mInductance, Flags::read | Flags::write);
+}
+&lt;/code>&lt;/pre>
+&lt;p>Here, the attribute has the name &lt;code>L&lt;/code> and points to the member variable &lt;code>mInductance&lt;/code>.
+Besides, the attribute enables reading and writing this variable.&lt;/p>
+&lt;p>To access an attribute, you need to know its name and the component it belongs to.
+For example, adding the voltage at node &lt;code>n1&lt;/code> to the logger for a simulation can be done as follows:&lt;/p>
+&lt;pre>&lt;code>logger-&amp;gt;addAttribute(&amp;quot;v1&amp;quot;, n1-&amp;gt;attributeMatrixComp(&amp;quot;v&amp;quot;));
+&lt;/code>&lt;/pre>
+&lt;p>Note that the voltage is a complex matrix in this case.
+Since we would like to use Eigen matrix specific methods in the logger, the &lt;code>attributeMatrixComp&lt;/code> function is used to return the attribute already casted to a complex matrix type.&lt;/p>
+&lt;p>Attributes are also used to determine dependencies of tasks on data, which is information required by the scheduler.
+A task describing its dependencies on attributes could look like this.&lt;/p>
+&lt;pre>&lt;code>class MnaPostStep : public Task {
+public:
+MnaPostStep(Inductor&amp;amp; inductor, Attribute&amp;lt;Matrix&amp;gt;::Ptr leftVector) :
+Task(inductor.mName + &amp;quot;.MnaPostStep&amp;quot;),
+mInductor(inductor), mLeftVector(leftVector) {
+mAttributeDependencies.push_back(mLeftVector);
+mModifiedAttributes.push_back(mInductor.attribute(&amp;quot;v_intf&amp;quot;));
+mModifiedAttributes.push_back(mInductor.attribute(&amp;quot;i_intf&amp;quot;));
+}
+void execute(Real time, Int timeStepCount);
+private:
+Inductor&amp;amp; mInductor;
+Attribute&amp;lt;Matrix&amp;gt;::Ptr mLeftVector;
+};
+&lt;/code>&lt;/pre>
+&lt;p>Here, the MNA post step depends on the solution vector of the system, &lt;code>leftVector&lt;/code>, and modifies &lt;code>v_intf&lt;/code> and &lt;code>i_intf&lt;/code>.
+Therefore, this task needs to be scheduled after the system solution that computes &lt;code>leftVector&lt;/code> and before tasks that require the voltage and current interface vectors of the inductance, e.g. the task logging these values.&lt;/p></description></item><item><title>Docs: Scheduling</title><link>https://sogno-platform.github.io/dpsim/docs/overview/scheduling/</link><pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/scheduling/</guid><description>
+&lt;p>DPsim implements level scheduling.
+A task T4 that depends on data modified by task T1 is scheduled to the level following the level of task T1.
+In the simplest case, all tasks of a level have to be finished before tasks of the next level are started.&lt;/p>
+&lt;p>&lt;img src="task_graph_levels.svg" alt="image">&lt;/p>
+&lt;p>The dependencies of tasks on data are determined by referencing the attributes that are read or modified by the task.
+The scheduler computes the schedule prior to the simulation from the task dependency graph resulting from the tasks&amp;rsquo; data dependencies.&lt;/p></description></item></channel></rss>
