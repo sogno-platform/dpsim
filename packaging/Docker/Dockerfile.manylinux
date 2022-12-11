@@ -8,11 +8,11 @@ FROM quay.io/pypa/manylinux_2_28_x86_64
 ENV PLAT=manylinux_2_28_x86_64
 
 LABEL \
-	org.label-schema.schema-version = "1.0.0" \
-	org.label-schema.name = "DPsim" \
-	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
-	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
+	org.opencontainers.image.title = "DPsim" \
+	org.opencontainers.image.licenses = "MPL 2.0" \
+	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
+	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
+
 
 RUN dnf -y update
 RUN yum install -y epel-release
