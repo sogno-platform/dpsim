@@ -24,26 +24,6 @@ jobs:
          push: true
          tags: sogno/dpsim:dev-rocky
 
-  create-docker-fedora-release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_SECRET }}
-
-      - name: Build and push
-        id: docker_build_release
-        uses: docker/build-push-action@v3
-        with:
-         file: packaging/Docker/Dockerfile
-         push: true
-         tags: sogno/dpsim:latest
-
   create-docker-fedora-dev:
     runs-on: ubuntu-latest
     steps:
@@ -63,6 +43,27 @@ jobs:
          file: packaging/Docker/Dockerfile.dev
          push: true
          tags: sogno/dpsim:dev
+
+  create-docker-fedora-release:
+    runs-on: ubuntu-latest
+    needs: [create-docker-fedora-dev]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_SECRET }}
+
+      - name: Build and push
+        id: docker_build_release
+        uses: docker/build-push-action@v3
+        with:
+         file: packaging/Docker/Dockerfile
+         push: true
+         tags: sogno/dpsim:latest
 
   create-docker-fedora-minimal-dev:
     runs-on: ubuntu-latest
