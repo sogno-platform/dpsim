@@ -73,9 +73,10 @@ jobs:
        name: reference-cache
        path: ${{ github.workspace }}/reference
 
-    - name: Copy reference
+    - name: Copy docs
       run: |
         cp -r reference/. public
+        cp -r docs/hugo/public/. public
 
     - name: Deploy page
       uses: peaceiris/actions-gh-pages@v3
