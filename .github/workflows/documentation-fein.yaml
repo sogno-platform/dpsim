@@ -1,0 +1,46 @@
+name: Build & Deploy FEIN Documentation
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:  
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+        hugo-version: '0.108.0'
+        extended: true
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - run: cd docs/hugo && npm ci
+    - run: cd docs/hugo && hugo --minify --baseURL "https://dpsim.fein-aachen.org"
+
+    - name: Deploy dpsim-simulator / FEIN
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        deploy_key: ${{ secrets.HUGO_ACTIONS_DEPLOY_KEY }}  
+        external_repository: dpsim-simulator/dpsim-simulator.github.io
+        publish_dir: ./docs/hugo/public
+        #   keep_files: true
+        user_name: m-mirz
+        user_email: markus.mirz@rwth-aachen.de
+        publish_branch: master
+        cname: dpsim.fein-aachen.org
