@@ -45,8 +45,6 @@ namespace Base {
 			// ### MNA Section ###
         	///
         	void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-        	virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override = 0;
-        	virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector) override = 0;
         	virtual void mnaPostStep(const Matrix& leftVector) = 0;
 
 			/// ### Mna Section ###

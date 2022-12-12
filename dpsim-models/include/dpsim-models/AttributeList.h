@@ -25,15 +25,15 @@ namespace CPS {
 	public:
 		using Ptr = std::shared_ptr<AttributeList>;
 
-		AttributeList() : mAttributeMap() { };
+		AttributeList() { };
 
-		const AttributeBase::Map & attributes() { return mAttributeMap; };
+		const AttributeBase::Map & attributes() const { return mAttributeMap; };
 
 		/**
 		 * Creates a new static Attribute and enters a pointer to it into this Attribute Map using the provided name.
 		 * */
 		template <typename T>
-		typename Attribute<T>::Ptr create(String name, T intitialValue = T()) {
+		typename Attribute<T>::Ptr create(const String &name, T intitialValue = T()) {
 			typename Attribute<T>::Ptr newAttr = AttributePointer<Attribute<T>>(AttributeStatic<T>::make(intitialValue));
 			mAttributeMap[name] = newAttr;
 			return newAttr;
@@ -43,14 +43,14 @@ namespace CPS {
 		 * Creates a new dynamic Attribute and enters a pointer to it into this Attribute Map using the provided name.
 		 * */
 		template <typename T>
-		typename Attribute<T>::Ptr createDynamic(String name) {
+		typename Attribute<T>::Ptr createDynamic(const String &name) {
 			typename Attribute<T>::Ptr newAttr = AttributePointer<Attribute<T>>(AttributeDynamic<T>::make());
 			mAttributeMap[name] = newAttr;
 			return newAttr;
 		}
 
 		/// Return pointer to an attribute.
-		AttributeBase::Ptr attribute(const String &name) {
+		AttributeBase::Ptr attribute(const String &name) const {
 			auto it = mAttributeMap.find(name);
 			if (it == mAttributeMap.end())
 				throw InvalidAttributeException();
@@ -60,7 +60,7 @@ namespace CPS {
 
 		/// Return pointer to an attribute.
 		template<typename T>
-		typename Attribute<T>::Ptr attributeTyped(const String &name) {
+		typename Attribute<T>::Ptr attributeTyped(const String &name) const {
 			auto attr = attribute(name);
 			auto attrPtr = std::dynamic_pointer_cast<Attribute<T>>(attr.getPtr());
 
