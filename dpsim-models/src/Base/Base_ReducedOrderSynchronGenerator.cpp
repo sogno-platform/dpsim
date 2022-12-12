@@ -309,7 +309,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaPreStep(Real time, Int tim
 	mSimTime = time;
 	stepInPerUnit();
 	(**mRightVector).setZero();
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	Base::ReducedOrderSynchronGenerator<VarType>::mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <typename VarType>
