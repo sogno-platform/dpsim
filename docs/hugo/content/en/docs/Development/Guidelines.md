@@ -21,5 +21,6 @@ A new version of DPsim has to be indicated as follows:
 - Update setup.cfg
 - Update CMakeLists.txt
 - Update sonar-project.properties
+
 Due to the creation of a new tag, a new PyPi package will be deployed automatically.
 To release an updated Docker image, the container workflow needs to be triggered manually.
