@@ -221,8 +221,8 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 				}
 
 				if (!pollFds.empty()) {
-					// Manually clear the event file descriptor since Villas does not do that for some reason
-					// See https://git.rwth-aachen.de/acs/public/villas/node/-/issues/347
+					//Manually clear the event file descriptor since Villas does not do that for some reason
+					//See https://github.com/VILLASframework/node/issues/309
 					uint64_t result = 0;
 					ret = (int) ::read(pollFds[0], &result, 8);
 					if (ret < 0) {

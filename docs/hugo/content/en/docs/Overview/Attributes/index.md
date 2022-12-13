@@ -115,7 +115,7 @@ For more complex cases involving dependencies on multiple attributes, the `Attri
 
 ## Using Attributes for Logging and Interfacing
 When setting up a simulation, there are some methods which require an instance of `AttributeBase::Ptr` as a parameter. Examples for this
-are the logger methods (e.g. `DataLogger::logAttribute`) and interface methods (e.g. `InterfaceVillas::exportAttribute`). To obtain the
+are the logger methods (e.g. `DataLogger::logAttribute`) and [interface]({{< ref "../interfaces.md" >}}) methods (e.g. `InterfaceVillas::exportAttribute`). To obtain the
 required attribute pointer, one can either directly access the public member variables of the component the attribute belongs to, or use the component's `attribute(String name)` method which will look up the attribute in the component's `AttributeList`:
 
 ```cpp
