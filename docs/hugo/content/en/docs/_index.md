@@ -43,6 +43,9 @@ If you are using DPsim for your research, please cite the following paper in you
 
 Other publications related to DPsim:
 
+- J. Dinkelbach, L. Razik, M. Mirz, A. Benigni, and A. Monti, “[Template-based generation of programming language specific code for smart grid modelling compliant with CIM and CGMES](https://onlinelibrary.wiley.com/doi/abs/10.1049/tje2.12208),” _The Journal of Engineering_, 2022.
+- G. Nakti, J. Dinkelbach, M. Mirz, and A. Monti, “[Comparative Assessment of Shifted Frequency Modeling in Transient Stability Analysis using the Open Source Simulator DPsim](https://ieeexplore.ieee.org/document/9769135),” in _2022 Open Source Modelling and Simulation of Energy Systems (OSMSES)_, 2022.
+- J. Dinkelbach, L. Schumacher, L. Razik, A. Benigni, and A. Monti, “[Factorisation Path Based Refactorisation for High-Performance LU Decomposition in Real-Time Power System Simulation](https://www.mdpi.com/1996-1073/14/23/7989),” _Energies_, 2021.
 - J. Dinkelbach, G. Nakti, M. Mirz, A. Monti, "[Simulation of Low Inertia Power Systems Based on Shifted Frequency Analysis](https://www.mdpi.com/1996-1073/14/7/1860)," _Energies_, 2021.
 - M. Mirz, A. Monti, and A. Benigni, "[A Dynamic Phasor Real-Time Simulation Based Digital Twin for Power Systems](https://publications.rwth-aachen.de/record/804608/files/804608.pdf)," E.ON Energy Research Center, RWTH Aachen University, 2020.
 - M. Mirz, J. Dinkelbach, A. Monti, "[DPsim — Advancements in Power Electronics Modelling Using Shifted Frequency Analysis and in Real-Time Simulation Capability by Parallelization](https://www.mdpi.com/1996-1073/13/15/3879)," _Energies_, 2020.
