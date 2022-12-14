@@ -10,6 +10,9 @@
 
 using namespace DPsim;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 namespace DPsim
 {
     GpuSparseAdapter::GpuSparseAdapter() : mCusparsehandle(nullptr), mSysMat(nullptr), mTransp(nullptr), mGpuRhsVec(0), mGpuLhsVec(0), mGpuIntermediateVec(0),
@@ -33,6 +36,7 @@ namespace DPsim
     {
 	    if (status != CUSPARSE_STATUS_SUCCESS) {
 		    //mSLog->error("{} {}", additionalInfo, cusparseGetErrorString(status));
+        std::cout << "Status not success: " << status << std::endl;
     		throw SolverException();
 	    }
     }
@@ -46,6 +50,7 @@ namespace DPsim
 
         if ((cso_status = cusolverSpCreate(&mCusolverhandle)) != CUSOLVER_STATUS_SUCCESS) {
             //mSLog->error("cuSolver initialization failed: Error code {}", cso_status);
+            std::cout << "cso_status not success" << std::endl;
             throw SolverException();
         }
 
@@ -159,6 +164,7 @@ namespace DPsim
         if (csp_status == CUSPARSE_STATUS_ZERO_PIVOT){
             //mSLog->error("A({},{}) is missing", structural_zero, structural_zero);
             checkCusparseStatus(csp_status);
+            std::cout << "csp_status zero pivot" << std::endl;
             throw SolverException();
         }
 
@@ -185,6 +191,7 @@ namespace DPsim
         if (csp_status == CUSPARSE_STATUS_ZERO_PIVOT){
             //mSLog->error("U({},{}) is zero\n", numerical_zero, numerical_zero);
             checkCusparseStatus(csp_status);
+            std::cout << "csp_status zero pivot" << std::endl;
             throw SolverException();
         }
 
@@ -198,7 +205,7 @@ namespace DPsim
 
     void GpuSparseAdapter::initialize()
     {
-        
+
     }
 
     void GpuSparseAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
@@ -234,6 +241,7 @@ namespace DPsim
         status = cudaMemcpy(mGpuRhsVec.data(), &mRightHandSideVector(0), size * sizeof(Real), cudaMemcpyHostToDevice);
         if (status != cudaSuccess) {
             //mSLog->error("Cuda Error: {}", cudaGetErrorString(status));
+            std::cout << "status not cudasuccess" << std::endl;
             throw SolverException();
         }
 
@@ -261,6 +269,7 @@ namespace DPsim
         status = cudaMemcpy(&(leftSideVector)(0), mGpuLhsVec.data(), size * sizeof(Real), cudaMemcpyDeviceToHost);
         if (status != cudaSuccess) {
             //mSLog->error("Cuda Error: {}", cudaGetErrorString(status));
+            std::cout << "status not cudasuccess" << std::endl;
             throw SolverException();
         }
         return leftSideVector;
