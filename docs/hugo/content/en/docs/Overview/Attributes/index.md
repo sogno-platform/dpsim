@@ -99,7 +99,35 @@ Real read1 = **attr2; //read1 = 0.001
 Real read2 = **attr2; //read2 = 0.002
 ```
 
-However, it is also possible to completely recompute a dynamic attribute's value every time it is read. This can for example be used to create attributes which reference a single matrix coefficient of another attribute, or which represent the magnitude or phase of a complex attribute.
+When working with references between multiple dynamic attributes, the direction in which the references are defined can be important:
+References should always be set in such a way that the reference relationships form a one-way chain. Only the last attribute in such a reference chain (which itself does not reference anything) should be modified by external code (i.e. through mutable references or the `set`-method). This ensures that changes are always reflected in all attributes in the chain. For example, the following setup might lead to errors because it overwrites an existing reference:
+```cpp
+// Overwriting an existing reference relationship
+AttributeBase::Ptr A = AttributeDynamic<Real>::make();
+AttributeBase::Ptr B = AttributeDynamic<Real>::make();
+AttributeBase::Ptr C = AttributeDynamic<Real>::make();
+
+B->setReference(A); // Current chain: B -> A
+B->setReference(C); // Current chain: B -> C, reference on A is overwritten
+
+**C = 0.1; // Change will not be reflected in A
+```
+
+Correct implementation:
+
+```cpp
+AttributeBase::Ptr A = AttributeDynamic<Real>::make();
+AttributeBase::Ptr B = AttributeDynamic<Real>::make();
+AttributeBase::Ptr C = AttributeDynamic<Real>::make();
+
+B->setReference(A); // Current chain: B -> A
+C->setReference(B); // Current chain: C -> B -> A
+
+**A = 0.1; // Updating the last attribute in the chain will update A, B, and C
+
+```
+
+Aside from setting references, it is also possible to completely recompute a dynamic attribute's value every time it is read. This can for example be used to create attributes which reference a single matrix coefficient of another attribute, or which represent the magnitude or phase of a complex attribute.
 Dynamic attributes which depend on one other attribute in this way are also called **derived** attributes, and they can be created by calling one
 of the various `derive...` methods on the original attribute:
 ```cpp
