@@ -135,6 +135,12 @@ void DP::Ph3::SynchronGeneratorDQ::MnaPostStep::execute(Real time, Int timeStepC
 	mSynGen.mnaUpdateVoltage(**mLeftVector);
 }
 
+Real DP::Ph3::SynchronGeneratorDQ::electricalTorque() const { return **mElecTorque * mBase_T; }
+
+Real DP::Ph3::SynchronGeneratorDQ::rotationalSpeed() const { return **mOmMech * mBase_OmMech; }
+
+Real DP::Ph3::SynchronGeneratorDQ::rotorPosition() const { return mThetaMech; }
+
 Matrix DP::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta, MatrixComp& abcVector) {
 	// Balanced case because we do not return the zero sequence component
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));

@@ -37,6 +37,8 @@ void DP::Ph1::VoltageSourceNorton::setParameters(Complex voltage, Real srcFreq, 
 	mParametersSet = true;
 }
 
+void DP::Ph1::VoltageSourceNorton::setVoltageRef(Complex voltage) const { **mVoltageRef = voltage; }
+
 void DP::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
@@ -71,6 +73,8 @@ void DP::Ph1::VoltageSourceNorton::mnaApplySystemMatrixStamp(Matrix& systemMatri
 			matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
+
+void DP::Ph1::VoltageSourceNorton::initializeFromNodesAndTerminals(Real frequency) { }
 
 void DP::Ph1::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	mEquivCurrent = (**mIntfVoltage)(0, 0) / **mResistance;

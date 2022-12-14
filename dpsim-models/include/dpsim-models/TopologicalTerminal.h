@@ -29,32 +29,26 @@ namespace CPS {
 		/// Returns reference to TopologicalNode
 		virtual TopologicalNode::Ptr topologicalNodes() = 0;
 		/// Returns Power as complex matrix, where the size depends on the number of phases
-		MatrixComp power() { return mPower; }
+		MatrixComp power() const;
 		/// Returns single complex number for power
 		Complex singlePower();
 		///
-		void setPower(Complex power) { mPower(0,0) = power; }
+		void setPower(Complex power);
 		///
-		void setPower(MatrixComp power) { mPower = power; }
+		void setPower(MatrixComp power);
 		///
-		void setPhaseType(PhaseType type) {
-			mPhaseType = type;
-			if (mPhaseType == PhaseType::ABC)
-				mPower = MatrixComp::Zero(3, 1);
-			else
-				mPower = MatrixComp::Zero(1, 1);
-		}
+		void setPhaseType(PhaseType type);
 		///
-		Real singleActivePower() { return singlePower().real(); }
+		Real singleActivePower();
 		///
-		Real singleReactivePower() { return singlePower().imag(); }
+		Real singleReactivePower();
 		///
-		Complex initialSingleVoltage() { return topologicalNodes()->initialSingleVoltage(mPhaseType); }
+		Complex initialSingleVoltage();
 		///
 		MatrixComp initialVoltage();
 		///
-		UInt matrixNodeIndex() { return topologicalNodes()->matrixNodeIndex(mPhaseType); }
+		UInt matrixNodeIndex();
 		///
-		std::vector<UInt> matrixNodeIndices() { return topologicalNodes()->matrixNodeIndices(); }
+		std::vector<UInt> matrixNodeIndices();
 	};
 }

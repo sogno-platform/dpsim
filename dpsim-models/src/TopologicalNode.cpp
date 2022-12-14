@@ -10,6 +10,20 @@
 
 using namespace CPS;
 
+Bool TopologicalNode::isGround() const { return mIsGround; }
+
+MatrixComp TopologicalNode::initialVoltage() const { return **mInitialVoltage; }
+
+void TopologicalNode::setInitialVoltage(MatrixComp voltage) const { **mInitialVoltage = voltage; }
+
+void TopologicalNode::setInitialVoltage(Complex voltage) const { (**mInitialVoltage)(0,0) = voltage; }
+
+void TopologicalNode::setInitialVoltage(Complex voltage, Int phaseIndex) const {
+	(**mInitialVoltage)(phaseIndex, 0) = voltage;
+}
+
+PhaseType TopologicalNode::phaseType() const { return mPhaseType; }
+
 TopologicalNode::TopologicalNode(String uid, String name,
 	PhaseType phaseType, const std::vector<Complex> &initialVoltage)
 	: IdentifiedObject(uid, name),
@@ -36,3 +50,5 @@ Complex TopologicalNode::initialSingleVoltage(PhaseType phaseType) {
 	else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
 		return (**mInitialVoltage)(0,0);
 }
+
+

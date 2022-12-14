@@ -56,6 +56,12 @@ namespace Ph1 {
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
 			AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
 			Attribute<Matrix>::Ptr &leftVector);
+		
+		// #### MNA section for switch ####
+		/// Check if switch is closed
+		Bool mnaIsClosed() override;
+		/// Stamps system matrix considering the defined switch position
+		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 
 		class MnaPostStep : public Task {
 		public:
@@ -69,12 +75,6 @@ namespace Ph1 {
 			Switch& mSwitch;
 			Attribute<Matrix>::Ptr mLeftVector;
 		};
-
-		// #### MNA section for switch ####
-		/// Check if switch is closed
-		Bool mnaIsClosed() { return isClosed(); }
-		/// Stamps system matrix considering the defined switch position
-		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 	};
 }
 }

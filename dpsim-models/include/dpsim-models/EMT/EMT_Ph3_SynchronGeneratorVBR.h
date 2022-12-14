@@ -214,9 +214,7 @@ namespace Ph3 {
 		void setInitialValues(Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower);
 
 		/// Initialize components with correct network frequencies
-		void initialize(Matrix frequencies) override {
-			SimPowerComp<Real>::initialize(frequencies);
-		}
+		void initialize(Matrix frequencies) override;
 
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
@@ -244,11 +242,11 @@ namespace Ph3 {
 		void CalculateAuxiliarVariables();
 
 		//Matrix& rotorFluxes() { return mRotorFlux; }
-		Matrix& dqStatorCurrents() { return mDqStatorCurrents; }
-		Real electricalTorque() { return **mElecTorque * mBase_T; }
-		Real rotationalSpeed() { return **mOmMech * mBase_OmMech; }
-		Real rotorPosition() { return mThetaMech; }
-		Matrix& statorCurrents() { return mIabc; }
+		Matrix& dqStatorCurrents();
+		Real electricalTorque() const;
+		Real rotationalSpeed() const;
+		Real rotorPosition() const;
+		Matrix& statorCurrents();
 
 		// #### MNA section ####
 		/// Stamps system matrix
@@ -264,7 +262,7 @@ namespace Ph3 {
 		/// Add MNA post step dependencies
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 		/// Mark that parameter changes so that system matrix is updated
-		Bool hasParameterChanged() override { return 1; };
+		Bool hasParameterChanged() override;
 
 		class MnaPreStep : public CPS::Task {
 		public:

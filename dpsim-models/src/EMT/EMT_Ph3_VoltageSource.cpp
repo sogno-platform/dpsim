@@ -13,7 +13,7 @@ using namespace CPS;
 
 EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
-	mVoltageRef(Attribute<MatrixComp>::create("V_ref", mAttributes)), // rms-value, phase-to-phase
+	mVoltageRef(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)), // rms-value, phase-to-phase
 	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
@@ -25,11 +25,11 @@ EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level lo
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq) {
 	auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
 	// Complex(1,0) is used as initialPhasor, since magnitude and phase of V_ref are taken into account by updateVoltage
+	srcSigSine->mFreq->setReference(mSrcFreq);
 	srcSigSine->setParameters(Complex(1,0), srcFreq);
 	mSrcSig = srcSigSine;
 
 	**mVoltageRef = voltageRef;
-	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mSLog->info("\nVoltage reference phasor [V]: {:s}"
 				"\nFrequency [Hz]: {:s}",
@@ -46,7 +46,6 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStar
 	mSrcSig = srcSigFreqRamp;
 
 	**mVoltageRef = voltageRef;
-	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mParametersSet = true;
 }
@@ -58,7 +57,6 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real modulati
 	mSrcSig = srcSigFm;
 
 	**mVoltageRef = voltageRef;
-	mSrcFreq->setReference(mSrcSig->mFreq);
 
 	mParametersSet = true;
 }
@@ -68,12 +66,12 @@ void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	// TODO: this approach currently overwrites voltage reference set from outside, when not using setParameters
 	if (!mParametersSet) {
 		auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
+		srcSigSine->mFreq->setReference(mSrcFreq);
 		// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
 		srcSigSine->setParameters(Complex(1,0), frequency);
 		mSrcSig = srcSigSine;
 
 		**mVoltageRef = CPS::Math::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0));
-		mSrcFreq->setReference(mSrcSig->mFreq);
 
 		mSLog->info("\nReference voltage: {:s}"
 					"\nTerminal 0 voltage: {:s}"

@@ -22,9 +22,9 @@ void addEMTComponents(py::module_ mEMT) {
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::PhaseType>())
 		.def(py::init<std::string, CPS::PhaseType, const std::vector<CPS::Complex>>())
-		.def("set_initial_voltage", py::overload_cast<CPS::MatrixComp>(&CPS::EMT::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::overload_cast<CPS::Complex>(&CPS::EMT::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::overload_cast<CPS::Complex, int>(&CPS::EMT::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::MatrixComp>(&CPS::EMT::SimNode::setInitialVoltage, py::const_))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex>(&CPS::EMT::SimNode::setInitialVoltage, py::const_))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex, int>(&CPS::EMT::SimNode::setInitialVoltage, py::const_))
 		.def_readonly_static("gnd", &CPS::EMT::SimNode::GND);
 
 	py::module mEMTPh1 = mEMT.def_submodule("ph1", "single phase electromagnetic-transient models");

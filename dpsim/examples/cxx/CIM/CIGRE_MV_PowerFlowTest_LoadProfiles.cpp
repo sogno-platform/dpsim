@@ -85,32 +85,26 @@ int main(int argc, char** argv){
 			if (std::shared_ptr<CPS::SP::Ph1::PiLine> line =
 				std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp))
 			{
-				String current=(node->name() == line->node(0)->name()) ? ("current") : ("current_1");
-				String p_branch = (node->name() == line->node(0)->name()) ? ("p_branch") : ("p_branch_1");
-				String q_branch = (node->name() == line->node(0)->name()) ? ("q_branch") : ("q_branch_1");
+				Bool isNodeZero = node->name() == line->node(0)->name();
+				logger->logAttribute(line->name() + "." + node->name() + ".I", line->mCurrent->deriveCoeff<Complex>(isNodeZero ? 0 : 1, 0));
+				logger->logAttribute(line->name() + "." + node->name() + ".P", line->mActivePowerBranch->deriveCoeff<Real>(isNodeZero ? 0 : 1, 0));
+				logger->logAttribute(line->name() + "." + node->name() + ".Q", line->mReactivePowerBranch->deriveCoeff<Real>(isNodeZero ? 0 : 1, 0));
 
-				logger->logAttribute(line->name() + "." + node->name() + ".I", line->attribute<Complex>(current));
-				logger->logAttribute(line->name() + "." + node->name() + ".P", line->attribute<Real>(p_branch));
-				logger->logAttribute(line->name() + "." + node->name() + ".Q", line->attribute<Real>(q_branch));
 				lines.push_back(line);
 			}
 			else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet =
 				std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp))
 			{
-				logger->logAttribute(node->name() + ".Pinj", extnet->attribute<Real>("p_inj"));
-				logger->logAttribute(node->name() + ".Qinj", extnet->attribute<Real>("q_inj"));
+				logger->logAttribute(node->name() + ".Pinj", extnet->mActivePowerInjection);
+				logger->logAttribute(node->name() + ".Qinj", extnet->mReactivePowerInjection);
 			}
 			else if (std::shared_ptr<CPS::SP::Ph1::Transformer> trafo =
 				std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp))
 			{
-				String current = (node->name() == trafo->node(0)->name()) ? ("current") : ("current_1");
-				String p_branch = (node->name() == trafo->node(0)->name()) ? ("p_branch") : ("p_branch_1");
-				String q_branch = (node->name() == trafo->node(0)->name()) ? ("q_branch") : ("q_branch_1");
-
-				logger->logAttribute(trafo->name() + "." + node->name() + ".I", trafo->attribute<Complex>(current));
-				logger->logAttribute(trafo->name() + "." + node->name() + ".P", trafo->attribute<Real>(p_branch));
-				logger->logAttribute(trafo->name() + "." + node->name() + ".Q", trafo->attribute<Real>(q_branch));
-
+				Bool isNodeZero = node->name() == trafo->node(0)->name();
+				logger->logAttribute(trafo->name() + "." + node->name() + ".I", trafo->mCurrent->deriveCoeff<Complex>(isNodeZero ? 0 : 1, 0));
+				logger->logAttribute(trafo->name() + "." + node->name() + ".P", trafo->mActivePowerBranch->deriveCoeff<Real>(isNodeZero ? 0 : 1, 0));
+				logger->logAttribute(trafo->name() + "." + node->name() + ".Q", trafo->mReactivePowerBranch->deriveCoeff<Real>(isNodeZero ? 0 : 1, 0));
 			}
 		}
 		// get nodal injection from specific line or transformer
