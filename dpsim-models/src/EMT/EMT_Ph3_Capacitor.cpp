@@ -11,12 +11,17 @@
 using namespace CPS;
 
 EMT::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), Base::Ph3::Capacitor(mAttributes) {
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), 
+	Base::Ph3::Capacitor(mAttributes),
+	mIntfDerVoltage(Attribute<Matrix>::create("dv_intf", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = Matrix::Zero(3, 1);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
+
+	// initialize dae specific attributes
+	**mIntfDerVoltage = Matrix::Zero(3,1);
 }
 
 
@@ -180,4 +185,130 @@ void EMT::Ph3::Capacitor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 		Logger::matrixToString(**mIntfCurrent)
 	);
 }
+
+
+// #### DAE section ####
+
+void EMT::Ph3::Capacitor::daeInitialize(double time, double state[], double dstate_dt[],
+	double absoluteTolerances[], double stateVarTypes[], int &offset) {
+	
+	updateMatrixNodeIndices();
+
+	mSLog->info(
+		"\n--- daeInitialize ---"
+		"\nNo state variables are needed"
+		"\n--- daeInitialize finished ---"
+	);
+	mSLog->flush();
+}
+
+void EMT::Ph3::Capacitor::daeResidual(double sim_time, 
+	const double state[], const double dstate_dt[], 
+	double resid[], std::vector<int>& off) {
+
+	// current offset for component
+	int c_offset = off[0] + off[1]; 
+
+	// add currents to node equations
+	if (terminalNotGrounded(0)) {
+		resid[matrixNodeIndex(0,0)] += (**mCapacitance)(0,0) * dstate_dt[matrixNodeIndex(0,0)] + (**mCapacitance)(0,1) * dstate_dt[matrixNodeIndex(0,1)] + (**mCapacitance)(0,2) * dstate_dt[matrixNodeIndex(0,2)];
+		resid[matrixNodeIndex(0,1)] += (**mCapacitance)(1,0) * dstate_dt[matrixNodeIndex(0,0)] + (**mCapacitance)(1,1) * dstate_dt[matrixNodeIndex(0,1)] + (**mCapacitance)(1,2) * dstate_dt[matrixNodeIndex(0,2)];
+		resid[matrixNodeIndex(0,2)] += (**mCapacitance)(2,0) * dstate_dt[matrixNodeIndex(0,0)] + (**mCapacitance)(2,1) * dstate_dt[matrixNodeIndex(0,1)] + (**mCapacitance)(2,2) * dstate_dt[matrixNodeIndex(0,2)];	
+	}
+	if (terminalNotGrounded(1)) {
+		resid[matrixNodeIndex(1,0)] += (**mCapacitance)(0,0) * dstate_dt[matrixNodeIndex(1,0)] + (**mCapacitance)(0,1) * dstate_dt[matrixNodeIndex(1,1)] + (**mCapacitance)(0,2) * dstate_dt[matrixNodeIndex(1,2)];
+		resid[matrixNodeIndex(1,1)] += (**mCapacitance)(1,0) * dstate_dt[matrixNodeIndex(1,0)] + (**mCapacitance)(1,1) * dstate_dt[matrixNodeIndex(1,1)] + (**mCapacitance)(1,2) * dstate_dt[matrixNodeIndex(1,2)];
+		resid[matrixNodeIndex(1,2)] += (**mCapacitance)(2,0) * dstate_dt[matrixNodeIndex(1,0)] + (**mCapacitance)(2,1) * dstate_dt[matrixNodeIndex(1,1)] + (**mCapacitance)(2,2) * dstate_dt[matrixNodeIndex(1,2)];
+	}
+	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+		resid[matrixNodeIndex(1,0)] -= (**mCapacitance)(0,0) * dstate_dt[matrixNodeIndex(0,0)] + (**mCapacitance)(0,1) * dstate_dt[matrixNodeIndex(0,1)] + (**mCapacitance)(0,2) * dstate_dt[matrixNodeIndex(0,2)];
+		resid[matrixNodeIndex(1,1)] -= (**mCapacitance)(1,0) * dstate_dt[matrixNodeIndex(0,0)] + (**mCapacitance)(1,1) * dstate_dt[matrixNodeIndex(0,1)] + (**mCapacitance)(1,2) * dstate_dt[matrixNodeIndex(0,2)];
+		resid[matrixNodeIndex(1,2)] -= (**mCapacitance)(2,0) * dstate_dt[matrixNodeIndex(0,0)] + (**mCapacitance)(2,1) * dstate_dt[matrixNodeIndex(0,1)] + (**mCapacitance)(2,2) * dstate_dt[matrixNodeIndex(0,2)];
+
+		resid[matrixNodeIndex(0,0)] -= (**mCapacitance)(0,0) * dstate_dt[matrixNodeIndex(1,0)] + (**mCapacitance)(0,1) * dstate_dt[matrixNodeIndex(1,1)] + (**mCapacitance)(0,2) * dstate_dt[matrixNodeIndex(1,2)];
+		resid[matrixNodeIndex(0,1)] -= (**mCapacitance)(1,0) * dstate_dt[matrixNodeIndex(1,0)] + (**mCapacitance)(1,1) * dstate_dt[matrixNodeIndex(1,1)] + (**mCapacitance)(1,2) * dstate_dt[matrixNodeIndex(1,2)];
+		resid[matrixNodeIndex(0,2)] -= (**mCapacitance)(2,0) * dstate_dt[matrixNodeIndex(1,0)] + (**mCapacitance)(2,1) * dstate_dt[matrixNodeIndex(1,1)] + (**mCapacitance)(2,2) * dstate_dt[matrixNodeIndex(1,2)];
+	}
+}
+
+void EMT::Ph3::Capacitor::daeJacobian(double current_time, const double state[], const double dstate_dt[], 
+			SUNMatrix jacobian, double cj, std::vector<int>& off) {
+
+	if (terminalNotGrounded(1)) {
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(1,0)) += cj * (**mCapacitance)(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(1,1)) += cj * (**mCapacitance)(0,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(1,2)) += cj * (**mCapacitance)(0,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(1,0)) += cj * (**mCapacitance)(1,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(1,1)) += cj * (**mCapacitance)(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(1,2)) += cj * (**mCapacitance)(1,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(1,0)) += cj * (**mCapacitance)(2,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(1,1)) += cj * (**mCapacitance)(2,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(1,2)) += cj * (**mCapacitance)(2,2);
+	}
+	if (terminalNotGrounded(0)) {
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), matrixNodeIndex(0,0)) += cj * (**mCapacitance)(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), matrixNodeIndex(0,1)) += cj * (**mCapacitance)(0,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), matrixNodeIndex(0,2)) += cj * (**mCapacitance)(0,2);
+
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), matrixNodeIndex(0,0)) += cj * (**mCapacitance)(1,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), matrixNodeIndex(0,1)) += cj * (**mCapacitance)(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), matrixNodeIndex(0,2)) += cj * (**mCapacitance)(1,2);
+
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), matrixNodeIndex(0,0)) += cj * (**mCapacitance)(2,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), matrixNodeIndex(0,1)) += cj * (**mCapacitance)(2,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), matrixNodeIndex(0,2)) += cj * (**mCapacitance)(2,2);
+	}
+	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(0,0)) -= cj * (**mCapacitance)(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(0,1)) -= cj * (**mCapacitance)(0,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(0,2)) -= cj * (**mCapacitance)(0,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(0,0)) -= cj * (**mCapacitance)(1,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(0,1)) -= cj * (**mCapacitance)(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(0,0)) -= cj * (**mCapacitance)(1,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(0,0)) -= cj * (**mCapacitance)(2,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(0,1)) -= cj * (**mCapacitance)(2,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(0,2)) -= cj * (**mCapacitance)(2,2);
+
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), matrixNodeIndex(1,0)) -= cj * (**mCapacitance)(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), matrixNodeIndex(1,1)) -= cj * (**mCapacitance)(0,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), matrixNodeIndex(1,2)) -= cj * (**mCapacitance)(0,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), matrixNodeIndex(1,0)) -= cj * (**mCapacitance)(1,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), matrixNodeIndex(1,1)) -= cj * (**mCapacitance)(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), matrixNodeIndex(1,2)) -= cj * (**mCapacitance)(1,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), matrixNodeIndex(1,0)) -= cj * (**mCapacitance)(2,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), matrixNodeIndex(1,1)) -= cj * (**mCapacitance)(2,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), matrixNodeIndex(1,2)) -= cj * (**mCapacitance)(2,2);
+	}
+}
+
+void EMT::Ph3::Capacitor::daePostStep(double Nexttime, const double state[], 
+	const double dstate_dt[], int& offset) {
+	
+	**mIntfCurrent = Matrix::Zero(3,1);
+	**mIntfVoltage = Matrix::Zero(3,1);
+	**mIntfDerVoltage = Matrix::Zero(3,1);
+
+	if (terminalNotGrounded(1)) {
+		(**mIntfVoltage)(0,0) += state[matrixNodeIndex(1, 0)];
+		(**mIntfVoltage)(1,0) += state[matrixNodeIndex(1, 1)];
+		(**mIntfVoltage)(2,0) += state[matrixNodeIndex(1, 2)];
+
+		(**mIntfDerVoltage)(0,0) += dstate_dt[matrixNodeIndex(1, 0)];
+		(**mIntfDerVoltage)(1,0) += dstate_dt[matrixNodeIndex(1, 1)]; 
+		(**mIntfDerVoltage)(2,0) += dstate_dt[matrixNodeIndex(1, 2)]; 
+	}
+	if (terminalNotGrounded(0)) {
+		(**mIntfVoltage)(0,0) -= state[matrixNodeIndex(0, 0)];
+		(**mIntfVoltage)(1,0) -= state[matrixNodeIndex(0, 1)];
+		(**mIntfVoltage)(2,0) -= state[matrixNodeIndex(0, 2)];
+
+		(**mIntfDerVoltage)(0,0) -= dstate_dt[matrixNodeIndex(0, 0)];
+		(**mIntfDerVoltage)(1,0) -= dstate_dt[matrixNodeIndex(0, 1)]; 
+		(**mIntfDerVoltage)(2,0) -= dstate_dt[matrixNodeIndex(0, 2)]; 
+	}
+
+	**mIntfCurrent = **mCapacitance * **mIntfDerVoltage;
+}
+
+
 

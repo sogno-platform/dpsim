@@ -160,3 +160,109 @@ void EMT::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "\nCurrent: {:s}", Logger::matrixToString(**mIntfCurrent));
 	mSLog->flush();
 }
+
+
+// #### DAE Section ####
+
+void EMT::Ph3::Resistor::daeInitialize(double time, double state[], double dstate_dt[],
+	double absoluteTolerances[], double stateVarTypes[], int& offset) {
+	updateMatrixNodeIndices();
+	mSLog->info(
+		"\n--- daeInitialize ---"
+		"\nno variable was added by the resistor '{:s}' to the state vector"
+		"\n--- daeInitialize finished ---",
+		this->name());
+	mSLog->flush();
+}
+
+void EMT::Ph3::Resistor::daeResidual(double sim_time,
+	const double state[], const double dstate_dt[],
+	double resid[], std::vector<int>& off) {
+
+	if (terminalNotGrounded(1)) {
+		resid[matrixNodeIndex(1,0)] += state[matrixNodeIndex(1,0)] * mConductance(0,0) + state[matrixNodeIndex(1,1)] * mConductance(0,1) + state[matrixNodeIndex(1,2)] * mConductance(0,2);
+		resid[matrixNodeIndex(1,1)] += state[matrixNodeIndex(1,0)] * mConductance(1,0) + state[matrixNodeIndex(1,1)] * mConductance(1,1) + state[matrixNodeIndex(1,2)] * mConductance(1,2);
+		resid[matrixNodeIndex(1,2)] += state[matrixNodeIndex(1,0)] * mConductance(2,0) + state[matrixNodeIndex(112)] * mConductance(2,1) + state[matrixNodeIndex(1,2)] * mConductance(2,2);
+	}
+	if (terminalNotGrounded(0)) {
+		resid[matrixNodeIndex(0,0)] += state[matrixNodeIndex(0,0)] * mConductance(0,0) + state[matrixNodeIndex(0,1)] * mConductance(0,1) + state[matrixNodeIndex(0,2)] * mConductance(0,2);
+		resid[matrixNodeIndex(0,1)] += state[matrixNodeIndex(0,0)] * mConductance(1,0) + state[matrixNodeIndex(0,1)] * mConductance(1,1) + state[matrixNodeIndex(0,2)] * mConductance(1,2);
+		resid[matrixNodeIndex(0,2)] += state[matrixNodeIndex(0,0)] * mConductance(2,0) + state[matrixNodeIndex(0,1)] * mConductance(2,1) + state[matrixNodeIndex(0,2)] * mConductance(2,2);
+	}
+	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+		resid[matrixNodeIndex(1,0)] -= state[matrixNodeIndex(0,0)] * mConductance(0,0) + state[matrixNodeIndex(0,1)] * mConductance(0,1) + state[matrixNodeIndex(0,2)] * mConductance(0,2);
+		resid[matrixNodeIndex(1,1)] -= state[matrixNodeIndex(0,0)] * mConductance(1,0) + state[matrixNodeIndex(0,1)] * mConductance(1,1) + state[matrixNodeIndex(0,2)] * mConductance(1,2);
+		resid[matrixNodeIndex(1,2)] -= state[matrixNodeIndex(0,0)] * mConductance(2,0) + state[matrixNodeIndex(0,1)] * mConductance(2,1) + state[matrixNodeIndex(0,2)] * mConductance(2,2);
+
+		resid[matrixNodeIndex(0,0)] -= state[matrixNodeIndex(1,0)] * mConductance(0,0) + state[matrixNodeIndex(1,1)] * mConductance(0,1) + state[matrixNodeIndex(1,2)] * mConductance(0,2);
+		resid[matrixNodeIndex(0,1)] -= state[matrixNodeIndex(1,0)] * mConductance(1,0) + state[matrixNodeIndex(1,1)] * mConductance(1,1) + state[matrixNodeIndex(1,2)] * mConductance(1,2); 
+		resid[matrixNodeIndex(0,2)] -= state[matrixNodeIndex(1,0)] * mConductance(2,0) + state[matrixNodeIndex(1,1)] * mConductance(2,1) + state[matrixNodeIndex(1,2)] * mConductance(2,2);
+	}
+}
+
+void EMT::Ph3::Resistor::daeJacobian(double current_time, const double state[], 
+			const double dstate_dt[], SUNMatrix jacobian, double cj, std::vector<int>& off) {
+	
+	if (terminalNotGrounded(1)) {
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(1,0)) += mConductance(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(1,1)) += mConductance(0,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(1,2)) += mConductance(0,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(1,0)) += mConductance(1,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(1,1)) += mConductance(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(1,2)) += mConductance(1,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(1,0)) += mConductance(2,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(1,1)) += mConductance(2,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(1,2)) += mConductance(2,2);
+	}
+	if (terminalNotGrounded(0)) {
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)) += mConductance(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1)) += mConductance(0,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 0), matrixNodeIndex(0, 2)) += mConductance(0,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 1), matrixNodeIndex(0, 0)) += mConductance(1,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1)) += mConductance(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 1), matrixNodeIndex(0, 2)) += mConductance(1,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 2), matrixNodeIndex(0, 0)) += mConductance(2,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1)) += mConductance(2,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2)) += mConductance(2,2);
+	}
+	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(0,0)) -= mConductance(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(0,1)) -= mConductance(0,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(0,2)) -= mConductance(0,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(0,0)) -= mConductance(1,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(0,1)) -= mConductance(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(0,2)) -= mConductance(1,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(0,2)) -= mConductance(2,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(0,2)) -= mConductance(2,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(0,2)) -= mConductance(2,2);
+
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), matrixNodeIndex(1,0)) -= mConductance(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), matrixNodeIndex(1,1)) -= mConductance(0,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), matrixNodeIndex(1,2)) -= mConductance(0,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), matrixNodeIndex(1,0)) -= mConductance(1,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), matrixNodeIndex(1,1)) -= mConductance(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), matrixNodeIndex(1,2)) -= mConductance(1,2);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), matrixNodeIndex(1,0)) -= mConductance(2,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), matrixNodeIndex(1,1)) -= mConductance(2,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), matrixNodeIndex(1,2)) -= mConductance(2,2);
+	}
+}
+
+void EMT::Ph3::Resistor::daePostStep(double Nexttime, const double state[], const double dstate_dt[], 
+	int& offset) {
+
+	**mIntfVoltage = Matrix::Zero(3,1);
+	if (terminalNotGrounded(1)) {
+		(**mIntfVoltage)(0, 0) += state[matrixNodeIndex(1, 0)];
+		(**mIntfVoltage)(1, 0) += state[matrixNodeIndex(1, 1)];
+		(**mIntfVoltage)(2, 0) += state[matrixNodeIndex(1, 2)];
+		
+	}
+	if (terminalNotGrounded(0)) {
+		(**mIntfVoltage)(0, 0) -= state[matrixNodeIndex(0, 0)];
+		(**mIntfVoltage)(1, 0) -= state[matrixNodeIndex(0, 1)];
+		(**mIntfVoltage)(2, 0) -= state[matrixNodeIndex(0, 2)];
+
+	}
+	**mIntfCurrent = mConductance * **mIntfVoltage;
+}

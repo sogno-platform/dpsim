@@ -101,6 +101,8 @@ void EMT::Ph1::CurrentSource::daeResidual(double sim_time,
 	// current source does not has states variables
 	// Only the current flowing out of the component must be added to the node current equations
 
+	this->updateState(sim_time);
+
 	int Pos1 = matrixNodeIndex(0);
     int Pos2 = matrixNodeIndex(1);
 

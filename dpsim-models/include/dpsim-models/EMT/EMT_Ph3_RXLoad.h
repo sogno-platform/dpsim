@@ -92,12 +92,19 @@ namespace CPS {
 					double resid[], std::vector<int>& off) override;
 				/// Calculation of jacobian
 				void daeJacobian(double current_time, const double state[], const double dstate_dt[], 
-					SUNMatrix jacobian, double cj, std::vector<int>& off) override {};
+					SUNMatrix jacobian, double cj, std::vector<int>& off) override;
 				///
 				void daePostStep(double Nexttime, const double state[], 
 					const double dstate_dt[], int& offset) override;
 				///
-				int getNumberOfStateVariables() override {return 3;}
+				int getNumberOfStateVariables() override {
+					if ((**mReactivePower)(0, 0) >= 0)
+						// load is modeled as inductance + Resistance. State variables are the current throw inductor
+						return 3;
+					else
+						// load is modeled as capacitor. Capacitors and resistors dont need state variables
+						return 0;
+				}
 			};
 		}
 	}

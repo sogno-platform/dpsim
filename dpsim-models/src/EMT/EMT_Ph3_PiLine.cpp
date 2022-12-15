@@ -188,12 +188,8 @@ void EMT::Ph3::PiLine::daeInitialize(double time, double state[], double dstate_
 	// state variables are: 3xinductor_current
 
 	updateMatrixNodeIndices();
-	int index_node00 = matrixNodeIndex(0, 0);
-	int index_node01 = matrixNodeIndex(0, 1);
-	int index_node02 = matrixNodeIndex(0, 2);
-	int index_node10 = matrixNodeIndex(1, 0);
-	int index_node11 = matrixNodeIndex(1, 1);
-	int index_node12 = matrixNodeIndex(1, 2);
+	mConductance = **mParallelCond * 1. / 2.;
+	mCapacitance = **mParallelCap * 1. / 2.;
 
 	// initialize inductor variables
 	Matrix inductorVoltage = mSubSeriesInductor->intfVoltage();
@@ -204,12 +200,12 @@ void EMT::Ph3::PiLine::daeInitialize(double time, double state[], double dstate_
 	state[offset+2] = (**mIntfCurrent)(2,0);
 	dstate_dt[offset+2] = inductorVoltage(2,0) / (**mSeriesInd)(2, 2);
 
-	//set inductor state variables as differential variable
+	// set inductor state variables as differential variable
 	stateVarTypes[offset+0] = 0.0;
 	stateVarTypes[offset+1] = 0.0;
 	stateVarTypes[offset+2] = 0.0;
 
-	//set absolute tolerance =
+	// set absolute tolerance
 	absoluteTolerances[offset]   = mAbsTolerance;
 	absoluteTolerances[offset+1] = mAbsTolerance;
 	absoluteTolerances[offset+2] = mAbsTolerance;
@@ -245,83 +241,100 @@ void EMT::Ph3::PiLine::daeResidual(double sim_time,
 	// offset+3, offset+4, offset+5 --> cap0 --> node1	(left node)
 	// offset+3, offset+4, offset+5 --> cap1 --> node0  (right node)
 
-	int c_offset = off[0]+off[1]; //current offset for component
-	int pos_node00 = matrixNodeIndex(0, 0);
-	int pos_node01 = matrixNodeIndex(0, 1);
-	int pos_node02 = matrixNodeIndex(0, 2);
-	int pos_node10 = matrixNodeIndex(1, 0);
-	int pos_node11 = matrixNodeIndex(1, 1);
-	int pos_node12 = matrixNodeIndex(1, 2);
+	// current offset for component
+	int c_offset = off[0]+off[1]; 
 
 	// residual function of inductors: v1-(v0+vr) - L*di(t)/dt = 0
 	resid[c_offset]    = -((**mSeriesInd)(0, 0) * dstate_dt[c_offset+0] + state[c_offset+0] * (**mSeriesRes)(0, 0));
 	resid[c_offset+1]  = -((**mSeriesInd)(1, 1) * dstate_dt[c_offset+1] + state[c_offset+1] * (**mSeriesRes)(1, 1));
 	resid[c_offset+2]  = -((**mSeriesInd)(2, 2) * dstate_dt[c_offset+2] + state[c_offset+2] * (**mSeriesRes)(2, 2));
 	if (terminalNotGrounded(0)) {
-		resid[c_offset]   -= state[pos_node00];
-		resid[c_offset+1] -= state[pos_node01];
-		resid[c_offset+2] -= state[pos_node02];
+		resid[c_offset]   -= state[matrixNodeIndex(0, 0)];
+		resid[c_offset+1] -= state[matrixNodeIndex(0, 1)];
+		resid[c_offset+2] -= state[matrixNodeIndex(0, 2)];
 
 		// update residual equations of nodes
-		resid[pos_node00] -= state[c_offset];
-		resid[pos_node01] -= state[c_offset+1];
-		resid[pos_node02] -= state[c_offset+2];
+		resid[matrixNodeIndex(0, 0)] -= state[c_offset];
+		resid[matrixNodeIndex(0, 1)] -= state[c_offset+1];
+		resid[matrixNodeIndex(0, 2)] -= state[c_offset+2];
 	}
 	if (terminalNotGrounded(1)) {
-		resid[c_offset]   += state[pos_node10];
-		resid[c_offset+1] += state[pos_node11];
-		resid[c_offset+2] += state[pos_node12];
+		resid[c_offset]   += state[matrixNodeIndex(1, 0)];
+		resid[c_offset+1] += state[matrixNodeIndex(1, 1)];
+		resid[c_offset+2] += state[matrixNodeIndex(1, 2)];
 
 		// update residual equations of nodes
-		resid[pos_node10] += state[c_offset];
-		resid[pos_node11] += state[c_offset+1];
-		resid[pos_node12] += state[c_offset+2];
+		resid[matrixNodeIndex(1, 0)] += state[c_offset];
+		resid[matrixNodeIndex(1, 1)] += state[c_offset+1];
+		resid[matrixNodeIndex(1, 2)] += state[c_offset+2];
 	}
 
 	//add cap and cond currents to nodal equations
-	Real conductance = (**mParallelCond)(0,0)/2;
-	Real capacitance = (**mParallelCap)(0,0)/2;
-	resid[pos_node10] += dstate_dt[pos_node10] * capacitance + state[pos_node10] * conductance;
-	resid[pos_node11] += dstate_dt[pos_node11] * capacitance + state[pos_node11] * conductance;
-	resid[pos_node12] += dstate_dt[pos_node12] * capacitance + state[pos_node12] * conductance;
-	resid[pos_node00] += dstate_dt[pos_node00] * capacitance + state[pos_node00] * conductance;
-	resid[pos_node01] += dstate_dt[pos_node01] * capacitance + state[pos_node01] * conductance;
-	resid[pos_node02] += dstate_dt[pos_node02] * capacitance + state[pos_node02] * conductance;
 	
-	mSLog->debug(
-		"\n\n--- daeResidual PiLoad - name: {:s} SimStep = {:f} ---"
-		"\nresid[c_offset]   = v1 - (v0+vr) - v_l(t) = state[pos_node10] - (state[pos_node00]+state[c_offset+0]*mSeriesRes(0, 0)) -mSeriesInd(0, 0)*dstate_dt[c_offset+0] = {:f} - ({:f}+{:f}*{:f}) - {:f}*{:f} = {:f}"
-		"\nresid[c_offset]   = v1 - (v0+vr) - v_l(t) = state[pos_node11] - (state[pos_node01]+state[c_offset+1]*mSeriesRes(1, 1)) -mSeriesInd(1, 1)*dstate_dt[c_offset+1] = {:f} - ({:f}+{:f}*{:f}) - {:f}*{:f} = {:f}"
-		"\nresid[c_offset]   = v1 - (v0+vr) - v_l(t) = state[pos_node12] - (state[pos_node02]+state[c_offset+2]*mSeriesRes(2, 2)) -mSeriesInd(2, 2)*dstate_dt[c_offset+2] = {:f} - ({:f}+{:f}*{:f}) - {:f}*{:f} = {:f}"
+	resid[matrixNodeIndex(1, 0)] += dstate_dt[matrixNodeIndex(1, 0)] * mCapacitance(0,0) + state[matrixNodeIndex(1, 0)] * mConductance(0,0);
+	resid[matrixNodeIndex(1, 1)] += dstate_dt[matrixNodeIndex(1, 1)] * mCapacitance(1,1) + state[matrixNodeIndex(1, 1)] * mConductance(1,1);
+	resid[matrixNodeIndex(1, 2)] += dstate_dt[matrixNodeIndex(1, 2)] * mCapacitance(2,2) + state[matrixNodeIndex(1, 2)] * mConductance(2,2);
+	resid[matrixNodeIndex(0, 0)] += dstate_dt[matrixNodeIndex(0, 0)] * mCapacitance(0,0) + state[matrixNodeIndex(0, 0)] * mConductance(0,0);
+	resid[matrixNodeIndex(0, 1)] += dstate_dt[matrixNodeIndex(0, 1)] * mCapacitance(1,1) + state[matrixNodeIndex(0, 1)] * mConductance(1,1);
+	resid[matrixNodeIndex(0, 2)] += dstate_dt[matrixNodeIndex(0, 2)] * mCapacitance(2,2) + state[matrixNodeIndex(0, 2)] * mConductance(2,2);
+	
+	off[1] += 3;
+}
 
-		"\nupdate nodal equations:"
-		"\nresid[pos_node10] += state[c_offset]   + state[pos_node10]*mConductance(0,0) + dstate_dt[pos_node10]*capacitance = {:f} + {:f}*{:f} + {:f}*{:f} = {:f}"
-		"\nresid[pos_node11] += state[c_offset+1] + state[pos_node11]*mConductance(1,1) + dstate_dt[pos_node11]*capacitance = {:f} + {:f}*{:f} + {:f}*{:f} = {:f}"
-		"\nresid[pos_node12] += state[c_offset+2] + state[pos_node12]*mConductance(2,2) + dstate_dt[pos_node12]*capacitance = {:f} + {:f}*{:f} + {:f}*{:f} = {:f}"
-		"\n*** state[pos_node10]*mConductance(0,0)={:f}"
-		"\n*** state[pos_node10]*capacitance(0,0)={:f}",
+void EMT::Ph3::PiLine::daeJacobian(double current_time, const double state[], 
+	const double dstate_dt[], SUNMatrix jacobian, double cj, std::vector<int>& off) {
 
-		this->name(), sim_time,
-		state[pos_node10], state[pos_node00], state[c_offset],   (**mSeriesRes)(0, 0), (**mSeriesInd)(0,0), dstate_dt[c_offset],  resid[c_offset],
-		state[pos_node11], state[pos_node01], state[c_offset+1], (**mSeriesRes)(1, 1), (**mSeriesInd)(1,1), dstate_dt[c_offset+1], resid[c_offset+1],
-		state[pos_node12], state[pos_node02], state[c_offset+2], (**mSeriesRes)(2, 2), (**mSeriesInd)(2,2), dstate_dt[c_offset+2], resid[c_offset+2],
+	// current offset for component
+	int c_offset = off[0] + off[1]; 
 
-		state[c_offset],   state[pos_node10], conductance, dstate_dt[pos_node10], capacitance, resid[pos_node10],
-		state[c_offset+1], state[pos_node11], conductance, dstate_dt[pos_node11], capacitance, resid[pos_node11],
-		state[c_offset+2], state[pos_node12], conductance, dstate_dt[pos_node12], capacitance, resid[pos_node12],
-		conductance * state[pos_node10],
-		capacitance * dstate_dt[pos_node10]
-	);
-	mSLog->flush();
+	// residual funcion (series part)
+	SM_ELEMENT_D(jacobian, c_offset,   c_offset)   -= (**mSeriesRes)(0, 0) + cj * (**mSeriesInd)(0, 0);
+	SM_ELEMENT_D(jacobian, c_offset+1, c_offset+1) -= (**mSeriesRes)(1, 1) + cj * (**mSeriesInd)(1, 1);
+	SM_ELEMENT_D(jacobian, c_offset+2, c_offset+2) -= (**mSeriesRes)(2, 2) + cj * (**mSeriesInd)(2, 2);
+
+	if (terminalNotGrounded(1)) {
+		// residual funcion (series branch)
+		SM_ELEMENT_D(jacobian, c_offset,   matrixNodeIndex(1,0)) += 1.0;
+		SM_ELEMENT_D(jacobian, c_offset+1, matrixNodeIndex(1,1)) += 1.0;
+		SM_ELEMENT_D(jacobian, c_offset+2, matrixNodeIndex(1,2)) += 1.0;
+
+		// node 1 (series branch)
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), c_offset)   += 1.0;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), c_offset+1) += 1.0;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), c_offset+2) += 1.0;
+
+		// node 1 (parallel branch)
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(1,0)) += mConductance(0,0) + cj * mCapacitance(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,1), matrixNodeIndex(1,1)) += mConductance(1,1) + cj * mCapacitance(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,2), matrixNodeIndex(1,2)) += mConductance(2,2) + cj * mCapacitance(2,2);
+	}
+	if (terminalNotGrounded(0)) {
+		// residual funcion (series branch)
+		SM_ELEMENT_D(jacobian, c_offset,   matrixNodeIndex(0,0)) += -1.0;
+		SM_ELEMENT_D(jacobian, c_offset+1, matrixNodeIndex(0,1)) += -1.0;
+		SM_ELEMENT_D(jacobian, c_offset+2, matrixNodeIndex(0,2)) += -1.0;
+
+		// node 0 (series branch)
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), c_offset)   += -1.0;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), c_offset+1) += -1.0;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), c_offset+2) += -1.0;
+
+		// node 0 (parallel branch)
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,0), matrixNodeIndex(0,0)) += mConductance(0,0) + cj * mCapacitance(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,1), matrixNodeIndex(0,1)) += mConductance(1,1) + cj * mCapacitance(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0,2), matrixNodeIndex(0,2)) += mConductance(2,2) + cj * mCapacitance(2,2);
+	}
 
 	off[1] += 3;
-
 }
 
 void EMT::Ph3::PiLine::daePostStep(double Nexttime, const double state[], const double dstate_dt[], int& offset) {
+	// update voltage
 	(**mIntfVoltage)(0,0) = state[matrixNodeIndex(1, 0)] - state[matrixNodeIndex(0, 0)];
 	(**mIntfVoltage)(1,0) = state[matrixNodeIndex(1, 1)] - state[matrixNodeIndex(0, 1)];
 	(**mIntfVoltage)(2,0) = state[matrixNodeIndex(1, 2)] - state[matrixNodeIndex(0, 2)];
+
+	// update current
 	(**mIntfCurrent)(0, 0) = state[offset];
 	(**mIntfCurrent)(1, 0) = state[offset+1];
 	(**mIntfCurrent)(2, 0) = state[offset+2];

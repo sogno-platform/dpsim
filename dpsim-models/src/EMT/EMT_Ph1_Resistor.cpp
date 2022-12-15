@@ -93,7 +93,7 @@ void EMT::Ph1::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / **mResistance;
 }
 
-// #### DAE functions ####
+// #### DAE Section ####
 
 void EMT::Ph1::Resistor::daeInitialize(double time, double state[], double dstate_dt[],
 	double absoluteTolerances[], double stateVarTypes[], int& offset) {
@@ -109,58 +109,42 @@ void EMT::Ph1::Resistor::daeInitialize(double time, double state[], double dstat
 void EMT::Ph1::Resistor::daeResidual(double sim_time,
 	const double state[], const double dstate_dt[],
 	double resid[], std::vector<int>& off) {
-	// state[Pos2] = voltage of node matrixNodeIndex(1)
-	// state[Pos1] = voltage of node matrixNodeIndex(0)
 	// resid[Pos1] = nodal current equation of node matrixNodeIndex(1) --> add resistor current
 	// resid[Pos2] = nodal current equation of node matrixNodeIndex(0) --> substract resistor current
 
-	int node1 = matrixNodeIndex(0);
-    int node2 = matrixNodeIndex(1);
-
-	double voltageResistor = 0.0;
-	if (terminalNotGrounded(0))
-		voltageResistor -= state[node1];
-	if (terminalNotGrounded(1))
-		voltageResistor +=state[node2];
-	
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		resid[node1] -= (state[node2] - state[node1]) / **mResistance;
-		resid[node2] += (state[node2] - state[node1]) / **mResistance;
+		resid[matrixNodeIndex(0)] -= (state[matrixNodeIndex(1)] - state[matrixNodeIndex(0)]) / **mResistance;
+		resid[matrixNodeIndex(1)] += (state[matrixNodeIndex(1)] - state[matrixNodeIndex(0)]) / **mResistance;
 	} else if (terminalNotGrounded(0)) {
-		resid[node1] -= state[node1] / **mResistance;
+		resid[matrixNodeIndex(0)] += state[matrixNodeIndex(0)] / **mResistance;
 	} else if (terminalNotGrounded(1)) {
-		resid[node2] += state[node2] / **mResistance;
+		resid[matrixNodeIndex(1)] += state[matrixNodeIndex(1)] / **mResistance;
 	}
 }
 
 void EMT::Ph1::Resistor::daeJacobian(double current_time, const double state[], 
 			const double dstate_dt[], SUNMatrix jacobian, double cj, std::vector<int>& off) {
 
-	int node_pos0 = matrixNodeIndex(0);
-    int node_pos1 = matrixNodeIndex(1);
-	int c_offset = off[0] + off[1]; //current offset for component
-
 	if (terminalNotGrounded(1))
-		SM_ELEMENT_D(jacobian, node_pos1, node_pos1) += 1.0 / **mResistance;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1), matrixNodeIndex(1)) += 1.0 / **mResistance;
 
 	if (terminalNotGrounded(0))
-		SM_ELEMENT_D(jacobian, node_pos0, node_pos0) += 1.0 / **mResistance;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0), matrixNodeIndex(0)) += 1.0 / **mResistance;
 
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		SM_ELEMENT_D(jacobian, node_pos1, node_pos0) += -1.0 / **mResistance;
-		SM_ELEMENT_D(jacobian, node_pos0, node_pos1) += -1.0 / **mResistance;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1), matrixNodeIndex(0)) += -1.0 / **mResistance;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0), matrixNodeIndex(1)) += -1.0 / **mResistance;
 	}
 }
 
-void EMT::Ph1::Resistor::daePostStep(double Nexttime, const double state[], const double dstate_dt[], int& offset) {
-	int node1 = matrixNodeIndex(0);
-    int node2 = matrixNodeIndex(1);
+void EMT::Ph1::Resistor::daePostStep(double Nexttime, const double state[], const double dstate_dt[], 
+	int& offset) {
+	
 	(**mIntfVoltage)(0,0) = 0.0;
-	if (terminalNotGrounded(0)) {
-		(**mIntfVoltage)(0,0) -= state[node1];
-	}
-	if (terminalNotGrounded(1)) {
-		(**mIntfVoltage)(0,0) += state[node2];
-	}
+	if (terminalNotGrounded(0))
+		(**mIntfVoltage)(0,0) -= state[matrixNodeIndex(0)];
+	if (terminalNotGrounded(1))
+		(**mIntfVoltage)(0,0) += state[matrixNodeIndex(1)];
+		
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / **mResistance;
 }

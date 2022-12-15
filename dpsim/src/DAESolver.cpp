@@ -13,7 +13,8 @@ using namespace CPS;
 
 static int check_retval(void *returnvalue, const char *funcname, int opt);
 static void get_error_str(int error_code, int IDAMaxNumSteps, int IDAMaxErrTestFails, int IDAMaxConvFails, std::string& ret);
-//static void PrintOutput(void *mem, realtype t, N_Vector y);
+// static void PrintHeader(realtype rtol, N_Vector avtol, N_Vector y);
+// static void PrintOutput(void *mem, realtype t, N_Vector y);
 
 template <typename VarType>
 DAESolver<VarType>::DAESolver(const String& name, CPS::SystemTopology system, 
@@ -248,12 +249,12 @@ void DAESolver<VarType>::initialize() {
     ret = IDAInit(mIDAMemoryBlock, &DAESolver::residualFunctionWrapper, mInitTime, 
         mStateVector, mDerivativeStateVector);
     if (check_retval(&ret, "IDAInit", 1)) throw CPS::Exception();
-
+    
     // Set relative and absolute tolerances
     mSLog->info("Call IDATolerances");
     ret = IDASVtolerances(mIDAMemoryBlock, mRelativeTolerance, mAbsoluteTolerances);
     if (check_retval(&ret, "IDASVtolerances", 1)) throw CPS::Exception();
-        mSLog->info("Set relative tolerance =  {:f}", mRelativeTolerance);
+    mSLog->info("Set relative tolerance =  {:f}", mRelativeTolerance);
 
     // ### Nonlinear solver interface optional input functions ### 
     ///  specifies the maximum number of nonlinear solver iterations in one solve attempt
@@ -322,6 +323,7 @@ void DAESolver<VarType>::initialize() {
     mSLog->info("Call IDASetMaxErrTestFails");
     ret = IDASetMaxErrTestFails(mIDAMemoryBlock, mIDAMaxErrTestFails);
     if (check_retval(&ret, "IDASetMaxErrTestFails", 1)) throw CPS::Exception();
+    mSLog->info("Set IDASetMaxErrTestFails =  {:}", mIDAMaxErrTestFails);
 
     // indicates whether or not to suppress algebraic variables in the local error test.
     /*
@@ -425,15 +427,13 @@ void DAESolver<VarType>::initialize() {
 
     //Initial states of state variables
     mSLog->info("\nInitial values of state variables: ");
-    for (int n=0; n<mNEQ; n++) {
+    for (int n=0; n<mNEQ; n++)
         mSLog->info("Initial state of {:s}= {}", stateVar_names[n], sval[n]);
-    }
 
     //Initial states of derivative of state variables
     mSLog->info("\nInitial values of derivative of state variables: ");
-    for (int n=0; n<mNEQ; n++) {
+    for (int n=0; n<mNEQ; n++)
         mSLog->info("Initial dstate of {:s}= {}", stateVar_names[n], s_dtval[n]);
-    }
 
     // Log type of state variables
     mSLog->info("\nType of state variables: ");
@@ -448,9 +448,8 @@ void DAESolver<VarType>::initialize() {
 
     // Log absolute tolerances of state variables
     mSLog->info("\nAbsolute tolerances of state variables: ");
-    for (int n=0; n<mNEQ; n++) {
+    for (int n=0; n<mNEQ; n++)
         mSLog->info("Absolute tolerance of {:s}: {}", stateVar_names[n], absolute_tolerances[n]);
-    }
 
     mSLog->flush();
 }
@@ -479,28 +478,24 @@ int DAESolver<VarType>::residualFunction(realtype current_time,
     // Reset Offset of nodes
     mOffsets[0]=0;
     for (auto node : mNodes) {
-        if (node->phaseType() == PhaseType::Single) {
+        if (node->phaseType() == PhaseType::Single)
             mOffsets[0] +=1;
-        }
-        else if (node->phaseType() == PhaseType::ABC) {
+        else if (node->phaseType() == PhaseType::ABC)
             mOffsets[0] +=3;
-        }
     }
     mOffsets[1] = 0;    // Reset Offset of componentes
 
     //reset residual functions of nodes (nodal equations)
     realtype *residual = NULL;
     residual  = N_VGetArrayPointer(resid);
-    for (int i=0; i<mOffsets[0]; i++) {
+    for (int i=0; i<mOffsets[0]; i++)
         residual[i] = 0;
-    }
 
     // Call all registered component residual functions
     IDAGetCurrentStep(mIDAMemoryBlock, &mNextIntegrationStep);
     IDAGetCurrentTime(mIDAMemoryBlock, &mCurrentInternalTime);
-    for (auto resFn : mResidualFunctions) {
+    for (auto resFn : mResidualFunctions)
         resFn(mCurrentInternalTime, NV_DATA_S(state), NV_DATA_S(dstate_dt), NV_DATA_S(resid), mOffsets);
-    }
 
     mSLog->flush();
     // If successful; positive value if recoverable error, negative if fatal error
@@ -515,12 +510,10 @@ int DAESolver<VarType>::calculateJacobianMatrix(realtype current_time,
     // Reset Offset of nodes
     mOffsets[0]=0;
     for (auto node : mNodes) {
-        if (node->phaseType() == PhaseType::Single) {
+        if (node->phaseType() == PhaseType::Single)
             mOffsets[0] +=1;
-        }
-        else if (node->phaseType() == PhaseType::ABC) {
+        else if (node->phaseType() == PhaseType::ABC)
             mOffsets[0] +=3;
-        }
     }
     mOffsets[1] = 0;    // Reset Offset of componentes
 
@@ -536,64 +529,23 @@ int DAESolver<VarType>::calculateJacobianMatrix(realtype current_time,
 template <typename VarType>
 Real DAESolver<VarType>::step(Real time) {
     int ret=0;
+
+    //if (mSimTime == mInitTime)
+    //    PrintHeader(mRelativeTolerance, mAbsoluteTolerances, mStateVector);
+    //PrintOutput(mIDAMemoryBlock, mTimeReachedSolver, mStateVector);
+    
+    // update sim time
     mSimTime = time;
 
     // perform 1 ida step
     ret = IDASolve(mIDAMemoryBlock, mSimTime, &mTimeReachedSolver,
-        mStateVector, mDerivativeStateVector, IDA_NORMAL);
+        mStateVector, mDerivativeStateVector, IDA_NORMAL);      
     
-    //PrintOutput(mIDAMemoryBlock, mTimeReachedSolver, mStateVector);
-
-    ///  Log sim statistics
-    IDAGetCurrentTime(mIDAMemoryBlock, &mCurrentInternalTime);
-    IDAGetNumSteps(mIDAMemoryBlock, &mNumberStepsIDA);
-    IDAGetNumResEvals(mIDAMemoryBlock, &mNumberCallsResidualFunctions);
-    IDAGetNumNonlinSolvIters(mIDAMemoryBlock, &mNonLinearIters);
-    IDAGetLastStep(mIDAMemoryBlock, &mLastIntegrationStep);
-    IDAGetCurrentStep(mIDAMemoryBlock, &mNextIntegrationStep);
-    IDAGetLastOrder(mIDAMemoryBlock, &mOrderLastStep);
-    IDAGetCurrentOrder(mIDAMemoryBlock, &mOrderNextStep);
-    IDAGetErrWeights(mIDAMemoryBlock, mErrorWeights);
-    IDAGetEstLocalErrors(mIDAMemoryBlock, mEstLocalErrors);
-    IDAGetNumLinSolvSetups(mIDAMemoryBlock, &mNumLinSolvSetups);
-    IDAGetNumErrTestFails(mIDAMemoryBlock, &mNumErrTestFails);
-    IDAGetNumStepSolveFails(mIDAMemoryBlock, &mNumStepSolveFails);
-    std::string estimatedAndWeightedErrors_str;
-    printEstimatedAndWeightedErrors(estimatedAndWeightedErrors_str);
-
-    mSLog->info(
-            "\n###############Simulation statistics ####################"
-            "\nCurrent internal time reached by the solver: {}"
-            "\nCumulative number of internal steps: {}"
-            "\nCumulative number of calls residual function: {}"
-            "\nCumulative number of nonlinear iterations performed: {}"
-            "\nCumulative number of calls made to the linear solver’s setup function (total so far): {}"
-            "\nCumulative number of local error test failures that have occurred (total so far): {}"
-            "\nNumber of failed steps due to a nonlinear solver failure: {}"
-            "\nTime Reached Solver: {}"
-            "\nOrder used during the last step: {}"
-            "\nOrder to be attempted on the next step: {}"
-            "\nIntegration step size taken on the last internal step: {}"
-            "\nStep size to be attempted on the next step: {}"
-            "{:s}",
-            mCurrentInternalTime, 
-            mNumberStepsIDA, 
-            mNumberCallsResidualFunctions,
-            mNonLinearIters,
-            mNumLinSolvSetups,
-            mNumErrTestFails,
-            mNumStepSolveFails,
-            mTimeReachedSolver,
-            mOrderLastStep,
-            mOrderNextStep,
-            mLastIntegrationStep,
-            mNextIntegrationStep,
-            estimatedAndWeightedErrors_str
-        );
-    mSLog->flush(); 
-    //IDAPrintAllStats(mIDAMemoryBlock);
+    // log statistics
+    logStatistics(Logger::Level::info);
 
     if (ret != IDA_SUCCESS) {
+        logStatistics(Logger::Level::debug);
         std::string error_msg;
         get_error_str(ret, mIDAMaxNumSteps, mIDAMaxErrTestFails, mIDAMaxConvFails, error_msg);
         mSLog->info(
@@ -609,7 +561,7 @@ Real DAESolver<VarType>::step(Real time) {
     
     updateVoltageAndCurrents();
 
-    return mCurrentInternalTime;
+    return mSimTime;
 }
 
 template <typename VarType>
@@ -641,8 +593,60 @@ void DAESolver<VarType>::updateVoltageAndCurrents() {
 
     // update components
     mOffsets[1] = mOffsets[0];      // Reset Offset of componentes
-    for (auto comp : mDAEComponents) { 
+    for (auto comp : mDAEComponents)
         comp->daePostStep(mSimTime, sval, dstate_val, mOffsets[1]);
+}
+
+template <typename VarType>
+void DAESolver<VarType>::logStatistics(Logger::Level minLogLevel) {
+
+    if (mLogLevel >= minLogLevel) {
+        ///  Log sim statistics
+        IDAGetCurrentTime(mIDAMemoryBlock, &mCurrentInternalTime);
+        IDAGetNumSteps(mIDAMemoryBlock, &mNumberStepsIDA);
+        IDAGetNumResEvals(mIDAMemoryBlock, &mNumberCallsResidualFunctions);
+        IDAGetNumNonlinSolvIters(mIDAMemoryBlock, &mNonLinearIters);
+        IDAGetLastStep(mIDAMemoryBlock, &mLastIntegrationStep);
+        IDAGetCurrentStep(mIDAMemoryBlock, &mNextIntegrationStep);
+        IDAGetLastOrder(mIDAMemoryBlock, &mOrderLastStep);
+        IDAGetCurrentOrder(mIDAMemoryBlock, &mOrderNextStep);
+        IDAGetErrWeights(mIDAMemoryBlock, mErrorWeights);
+        IDAGetEstLocalErrors(mIDAMemoryBlock, mEstLocalErrors);
+        IDAGetNumLinSolvSetups(mIDAMemoryBlock, &mNumLinSolvSetups);
+        IDAGetNumErrTestFails(mIDAMemoryBlock, &mNumErrTestFails);
+        IDAGetNumStepSolveFails(mIDAMemoryBlock, &mNumStepSolveFails);
+        std::string estimatedAndWeightedErrors_str;
+        printEstimatedAndWeightedErrors(estimatedAndWeightedErrors_str);
+
+        mSLog->info(
+            "\n###############Simulation statistics ####################"
+            "\nCurrent internal time reached by the solver: {}"
+            "\nCumulative number of internal steps: {}"
+            "\nCumulative number of calls residual function: {}"
+            "\nCumulative number of nonlinear iterations performed: {}"
+            "\nCumulative number of calls made to the linear solver’s setup function (total so far): {}"
+            "\nCumulative number of local error test failures that have occurred (total so far): {}"
+            "\nNumber of failed steps due to a nonlinear solver failure: {}"
+            "\nTime Reached Solver: {}"
+            "\nOrder used during the last step: {}"
+            "\nOrder to be attempted on the next step: {}"
+            "\nIntegration step size taken on the last internal step: {}"
+            "\nStep size to be attempted on the next step: {}"
+            "{:s}",
+            mCurrentInternalTime, 
+            mNumberStepsIDA, 
+            mNumberCallsResidualFunctions,
+            mNonLinearIters,
+            mNumLinSolvSetups,
+            mNumErrTestFails,
+            mNumStepSolveFails,
+            mTimeReachedSolver,
+            mOrderLastStep,
+            mOrderNextStep,
+            mLastIntegrationStep,
+            mNextIntegrationStep,
+            estimatedAndWeightedErrors_str
+        );
     }
 }
 
@@ -656,6 +660,13 @@ Task::List DAESolver<VarType>::getTasks() {
 
 template <typename VarType>
 DAESolver<VarType>::~DAESolver() {
+
+    // Log final statistics to the screen
+    std::cout << "\nFinal Statistics:\n" << std::endl;
+    IDAPrintAllStats(mIDAMemoryBlock, stdout, SUN_OUTPUTFORMAT_TABLE);
+    std::cout << std::flush;
+    logStatistics(Logger::Level::debug);
+    
     // Releasing all memory allocated by IDA
     IDAFree(&mIDAMemoryBlock);
     N_VDestroy(mStateVector);
@@ -666,6 +677,7 @@ DAESolver<VarType>::~DAESolver() {
     N_VDestroy(mEstLocalErrors);
     SUNLinSolFree(mLinearSolver);
     SUNMatDestroy(mJacobianMatrix);
+    SUNContext_Free(&mSunctx);
 }
 
 template <typename VarType>
@@ -709,6 +721,76 @@ void DAESolver<VarType>::printEstimatedAndWeightedErrors(std::string& ret) {
     for (int i=0; i<mNEQ; i++)
         ret += "\t" + nameVariables[i] + ": " + std::to_string(weightedErrors(i,0)) + "\n";
 }
+
+/*
+ *--------------------------------------------------------------------
+ * Private functions
+ *--------------------------------------------------------------------
+ */
+
+/*
+ * Print first lines of output (problem description)
+ */
+
+/*
+static void PrintHeader(realtype rtol, N_Vector avtol, N_Vector y)
+{
+    realtype *atval, *yval;
+
+    atval  = N_VGetArrayPointer(avtol);
+    yval  = N_VGetArrayPointer(y);
+
+    std::cout << "\n\n";
+#if defined(SUNDIALS_EXTENDED_PRECISION)
+    printf("Tolerance parameters:  rtol = %Lg   atol = %Lg %Lg %Lg \n",
+            rtol, atval[0],atval[1],atval[2]);
+    printf("Initial conditions y0 = (%Lg %Lg %Lg)\n",
+            yval[0], yval[1], yval[2]);
+#elif defined(SUNDIALS_DOUBLE_PRECISION)
+    printf("Tolerance parameters:  rtol = %g   atol = %g %g %g \n",
+            rtol, atval[0],atval[1],atval[2]);
+    printf("Initial conditions y0 = (%g %g %g)\n",
+            yval[0], yval[1], yval[2]);
+#else
+    printf("Tolerance parameters:  rtol = %g   atol = %g %g %g \n",
+            rtol, atval[0],atval[1],atval[2]);
+    printf("Initial conditions y0 = (%g %g %g)\n",
+            yval[0], yval[1], yval[2]);
+#endif
+    printf("Constraints and id not used.\n\n");
+    printf("-----------------------------------------------------------------------\n");
+    printf("  t             y1           y2           y3");
+    printf("      | nst  k      h\n");
+    printf("-----------------------------------------------------------------------\n");
+}
+
+static void PrintOutput(void *mem, realtype t, N_Vector y)
+{
+    realtype *yval;
+    int retval, kused;
+    long int nst;
+    realtype hused;
+
+    yval  = N_VGetArrayPointer(y);
+
+    retval = IDAGetLastOrder(mem, &kused);
+    check_retval(&retval, "IDAGetLastOrder", 1);
+    retval = IDAGetNumSteps(mem, &nst);
+    check_retval(&retval, "IDAGetNumSteps", 1);
+    retval = IDAGetLastStep(mem, &hused);
+    check_retval(&retval, "IDAGetLastStep", 1);
+#if defined(SUNDIALS_EXTENDED_PRECISION)
+    printf("%10.4Le %12.4Le %12.4Le %12.4Le | %3ld  %1d %12.4Le\n",
+            t, yval[0], yval[1], yval[2], nst, kused, hused);
+#elif defined(SUNDIALS_DOUBLE_PRECISION)
+    printf("%10.4e %12.4e %12.4e %12.4e | %3ld  %1d %12.4e\n",
+            t, yval[0], yval[1], yval[2], nst, kused, hused);
+#else
+    printf("%10.4e %12.4e %12.4e %12.4e | %3ld  %1d %12.4e\n",
+            t, yval[0], yval[1], yval[2], nst, kused, hused);
+#endif
+}
+*/
 
 static void get_error_str(int error_code, int IDAMaxNumSteps, int IDAMaxErrTestFails, int IDAMaxConvFails, std::string& ret) {
     
@@ -794,35 +876,6 @@ static int check_retval(void *returnvalue, const char *funcname, int opt) {
 
     return (0);
 }
-
-/*
-static void PrintOutput(void *mem, realtype t, N_Vector y)
-{
-  realtype *yval;
-  int retval, kused;
-  long int nst;
-  realtype hused;
-
-  yval  = N_VGetArrayPointer(y);
-
-  retval = IDAGetLastOrder(mem, &kused);
-  check_retval(&retval, "IDAGetLastOrder", 1);
-  retval = IDAGetNumSteps(mem, &nst);
-  check_retval(&retval, "IDAGetNumSteps", 1);
-  retval = IDAGetLastStep(mem, &hused);
-  check_retval(&retval, "IDAGetLastStep", 1);
-#if defined(SUNDIALS_EXTENDED_PRECISION)
-  printf("%10.4Le %12.4Le %12.4Le %12.4Le | %3ld  %1d %12.4Le\n",
-         t, yval[0], yval[1], yval[2], nst, kused, hused);
-#elif defined(SUNDIALS_DOUBLE_PRECISION)
-  printf("%10.4e %12.4e %12.4e %12.4e | %3ld  %1d %12.4e\n",
-         t, yval[0], yval[1], yval[2], nst, kused, hused);
-#else
-  printf("%10.4e %12.4e %12.4e %12.4e | %3ld  %1d %12.4e\n",
-         t, yval[0], yval[1], yval[2], nst, kused, hused);
-#endif
-}
-*/
 
 template class DPsim::DAESolver<Real>;
 template class DPsim::DAESolver<Complex>;

@@ -112,7 +112,7 @@ void EMT::Ph1::Capacitor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = mEquivCond * (**mIntfVoltage)(0,0) + mEquivCurrent;
 }
 
-// #### DAE functions ####
+// #### DAE section ####
 
 void EMT::Ph1::Capacitor::daeInitialize(double time, double state[], double dstate_dt[],
 	double absoluteTolerances[], double stateVarTypes[], int &offset) {
@@ -136,11 +136,13 @@ void EMT::Ph1::Capacitor::daeResidual(double sim_time,
 	int c_offset = off[0] + off[1]; //current offset for component
 
 	// add currents to node equations
-	if (terminalNotGrounded(0)) {
-		resid[node_pos0] -= **mCapacitance * dstate_dt[node_pos0];
-	}
-	if (terminalNotGrounded(1)) {
+	if (terminalNotGrounded(0))
+		resid[node_pos0] += **mCapacitance * dstate_dt[node_pos0];
+	if (terminalNotGrounded(1))
 		resid[node_pos1] += **mCapacitance * dstate_dt[node_pos1];
+	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+		resid[node_pos1] -= **mCapacitance * dstate_dt[node_pos0];
+		resid[node_pos0] -= **mCapacitance * dstate_dt[node_pos1];
 	}
 }
 
@@ -164,24 +166,21 @@ void EMT::Ph1::Capacitor::daeJacobian(double current_time, const double state[],
 
 void EMT::Ph1::Capacitor::daePostStep(double Nexttime, const double state[], 
 	const double dstate_dt[], int& offset) {
-	
-	int node_pos0 = matrixNodeIndex(0);
-    int node_pos1 = matrixNodeIndex(1);
 
 	(**mIntfCurrent)(0,0) = 0.0;
 	(**mIntfVoltage)(0,0) = 0.0;
 	(**mIntfDerVoltage)(0,0) = 0.0;
 
 	if (terminalNotGrounded(1)) {
-		(**mIntfCurrent)(0,0) += **mCapacitance * dstate_dt[node_pos1];
-		(**mIntfVoltage)(0,0) += state[node_pos1];
-		(**mIntfDerVoltage)(0,0) += dstate_dt[node_pos1]; 
+		(**mIntfVoltage)(0,0) += state[matrixNodeIndex(1)];
+		(**mIntfDerVoltage)(0,0) += dstate_dt[matrixNodeIndex(1)]; 
 	}
 	if (terminalNotGrounded(0)) {
-		(**mIntfCurrent)(0,0) -= **mCapacitance * dstate_dt[node_pos0];
-		(**mIntfVoltage)(0,0) -= state[node_pos0];
-		(**mIntfDerVoltage)(0,0) -= dstate_dt[node_pos0]; 
+		(**mIntfVoltage)(0,0) -= state[matrixNodeIndex(0)];
+		(**mIntfDerVoltage)(0,0) -= dstate_dt[matrixNodeIndex(0)]; 
 	}
+
+	**mIntfCurrent = **mCapacitance * **mIntfDerVoltage;
 }
 
 

@@ -170,6 +170,8 @@ namespace DPsim {
 		Real step(Real time);
 		///
 		void updateVoltageAndCurrents();
+		/// log IDA statistics
+		void logStatistics(CPS::Logger::Level minLogLevel = CPS::Logger::Level::debug);
 		
 
 		/// ### Setters ###

@@ -95,7 +95,9 @@ void EMT::Ph1::VoltageSource::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
 }
 
-// #### DAE functions ####
+
+// #### DAE section ####
+
 void EMT::Ph1::VoltageSource::setInitialComplexIntfCurrent(Complex initCurrent) {
 	//set initial current 
     (**mIntfCurrent)(0, 0) = initCurrent.real();
@@ -109,8 +111,7 @@ void EMT::Ph1::VoltageSource::setInitialComplexIntfCurrent(Complex initCurrent) 
 
 void EMT::Ph1::VoltageSource::daeInitialize(double time, double state[], double dstate_dt[], 
 	double absoluteTolerances[], double stateVarTypes[], int& offset) {
-	// offset: number of component in state, dstate_dt
-	// state[offset] = current through voltage source flowing into node matrixNodeIndex(1)
+	// state[c_offset] = current through VoltageSource flowing into the voltage source. Current is positive when it flows into the positive voltage terminal of a voltage source
 	// dstate_dt[offset] = derivative of current through voltage source
 
 	updateMatrixNodeIndices();
@@ -144,26 +145,20 @@ void EMT::Ph1::VoltageSource::daeInitialize(double time, double state[], double 
 void EMT::Ph1::VoltageSource::daeResidual(double sim_time, 
 	const double state[], const double dstate_dt[], 
 	double resid[], std::vector<int>& off) {
-	// state[c_offset] = current through VoltageSource flowing into the voltage source
-	// dstate_dt[offset] = derivative of current through voltage source
-	// resid[c_offset] = v2-v1-v_s = voltage(state[Pos2]) - voltage(state[Pos1]) - mIntfVoltage(0,0)
-	// resid[Pos1] = nodal current equation of node matrixNodeIndex(0)
-	// resid[Pos2] = nodal current equation of node matrixNodeIndex(1)
-
+	
 	updateVoltage(sim_time);
 
-	int Pos1 = matrixNodeIndex(0);
-    int Pos2 = matrixNodeIndex(1);
-	int c_offset = off[0] + off[1]; //current offset for component
+	// current offset for component
+	int c_offset = off[0] + off[1]; 
 
 	resid[c_offset] = -(**mIntfVoltage)(0,0);
 	if (terminalNotGrounded(0)) {
-		resid[c_offset] -= state[Pos1];	
-		resid[Pos1] -= state[c_offset];
+		resid[c_offset] -= state[matrixNodeIndex(0)];	
+		resid[matrixNodeIndex(0)] -= state[c_offset];
 	}
 	if (terminalNotGrounded(1)) {
-		resid[c_offset] += state[Pos2];
-		resid[Pos2] += state[c_offset];
+		resid[c_offset] += state[matrixNodeIndex(1)];
+		resid[matrixNodeIndex(1)] += state[c_offset];
 	}
 	off[1] += 1;
 }
@@ -171,18 +166,17 @@ void EMT::Ph1::VoltageSource::daeResidual(double sim_time,
 void EMT::Ph1::VoltageSource::daeJacobian(double current_time, const double state[], 
 			const double dstate_dt[], SUNMatrix jacobian, double cj, std::vector<int>& off) {
 
-	int node_pos0 = matrixNodeIndex(0);
-    int node_pos1 = matrixNodeIndex(1);
-	int c_offset = off[0] + off[1]; //current offset for component
+	// current offset for component
+	int c_offset = off[0] + off[1]; 
 
 	if (terminalNotGrounded(1)) {
-		SM_ELEMENT_D(jacobian, c_offset, node_pos1) += 1.0;
-		SM_ELEMENT_D(jacobian, node_pos1, c_offset) += 1.0;
+		SM_ELEMENT_D(jacobian, c_offset, matrixNodeIndex(1)) += 1.0;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(1), c_offset) += 1.0;
 	}
 
 	if (terminalNotGrounded(0)) {
-		SM_ELEMENT_D(jacobian, c_offset, node_pos0) += -1.0;
-		SM_ELEMENT_D(jacobian, node_pos0, c_offset) += -1.0;
+		SM_ELEMENT_D(jacobian, c_offset, matrixNodeIndex(0)) += -1.0;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0), c_offset) += -1.0;
 	}
 
 	off[1] += 1;

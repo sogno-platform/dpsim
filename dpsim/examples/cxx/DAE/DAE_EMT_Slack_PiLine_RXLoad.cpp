@@ -144,7 +144,7 @@ int main(int argc, char* argv[]) {
 
 	// ----- DYNAMIC SIMULATION -----
 	Real timeStepEMT  = 0.0001;
-	Real finalTimeEMT = 10;
+	Real finalTimeEMT = 1;
 	String simNameEMT = "DAE_EMT_Slack_PiLine_RXLoad";
 	Logger::setLogDir("logs/" + simNameEMT);
 	Real voltage_absTolerance = Vnom*0.00001;		//0.001% = aprox. 1V
