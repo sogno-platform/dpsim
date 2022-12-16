@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph1::Switch(mAttributes) {
+	: MNASimPowerComp<Real>(uid, name, false, true, logLevel), Base::Ph1::Switch(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 }
@@ -50,9 +50,8 @@ void EMT::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void EMT::Ph3::SeriesSwitch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
-
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+	updateMatrixNodeIndices();
+	**mRightVector = Matrix::Zero(0, 0);
 }
 
 Bool EMT::Ph3::SeriesSwitch::mnaIsClosed() { return **mIsClosed; }

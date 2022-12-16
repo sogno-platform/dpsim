@@ -14,7 +14,7 @@ using namespace CPS;
 using namespace CPS::DP::Ph3;
 
 DP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph3::Capacitor(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel), Base::Ph3::Capacitor(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = MatrixComp::Zero(3,1);
@@ -95,7 +95,7 @@ void DP::Ph3::Capacitor::initVars(Real omega, Real timeStep) {
 	mEquivCurrent = -mPrevVoltCoeff * **mIntfVoltage - **mIntfCurrent;
 }
 
-void DP::Ph3::Capacitor::mnaCompInitializelizelizelizelize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void DP::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
 	initVars(omega, timeStep);
 	//Matrix equivCondReal = 2.0 * mCapacitance / timeStep;
@@ -124,10 +124,6 @@ void DP::Ph3::Capacitor::mnaCompInitializelizelizelizelize(Real omega, Real time
 	// 			<< "Initial current " << Math::abs((**mIntfCurrent)(0,0))
 	// 			<< "<" << Math::phaseDeg((**mIntfCurrent)(0,0)) << std::endl
 	// 			<< "--- MNA initialization finished ---" << std::endl;
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void DP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

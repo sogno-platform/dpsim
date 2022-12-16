@@ -12,7 +12,7 @@ using namespace CPS;
 
 DP::Ph1::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logger::Level logLevel)
 	: 	Base::Ph1::VoltageSource(mAttributes),
-		MNASimPowerComp<Complex>(uid, name, logLevel),
+		MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
 		mResistance(mAttributes->create<Real>("R")) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
@@ -41,9 +41,6 @@ void DP::Ph1::VoltageSourceNorton::mnaCompInitialize(Real omega, Real timeStep, 
 		updateMatrixNodeIndices();
 
 	(**mIntfVoltage)(0, 0) = **mVoltageRef;
-	**mRightVector = Matrix::Zero((**leftVector).rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void DP::Ph1::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

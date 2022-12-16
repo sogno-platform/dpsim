@@ -12,7 +12,7 @@
 using namespace CPS;
 
 EMT::Ph3::CurrentSource::CurrentSource(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel),
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel),
 	mCurrentRef(mAttributes->create<MatrixComp>("I_ref")), // rms-value
 	mSrcFreq(mAttributes->createDynamic<Real>("f_src")),
 	mSigOut(mAttributes->createDynamic<Complex>("sigOut")) {
@@ -73,14 +73,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::CurrentSource::clone(String name) {
 
 
 void EMT::Ph3::CurrentSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-
 	updateMatrixNodeIndices();
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
 }
 
 void EMT::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {

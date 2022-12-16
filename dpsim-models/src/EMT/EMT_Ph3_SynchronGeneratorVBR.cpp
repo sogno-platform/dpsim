@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel), Base::SynchronGenerator(mAttributes) {
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), Base::SynchronGenerator(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3,1);
@@ -125,7 +125,7 @@ void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real freque
 	}
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitializelize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 		updateMatrixNodeIndices();
 
 	for (UInt phase1Idx = 0; phase1Idx < 3; ++phase1Idx)
@@ -240,11 +240,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitializelize(Real omega, Real time
 	CalculateL();
 
 	mSLog->info("Initialize right side vector of size {}", leftVector->get().rows());
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mSLog->info("Component affects right side vector entries {}, {} and {}", matrixNodeIndex(0,0), matrixNodeIndex(0,1), matrixNodeIndex(0,2));
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompPreStep(Real time, Int timeStepCount) {

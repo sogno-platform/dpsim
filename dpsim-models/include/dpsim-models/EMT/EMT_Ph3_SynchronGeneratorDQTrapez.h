@@ -21,7 +21,7 @@ namespace Ph3 {
 		SynchronGeneratorDQTrapez(String name, Logger::Level loglevel = Logger::Level::off);
 
 		// #### MNA Section ####
-		void mnaCompInitializelizelize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		void mnaCompPreStep(Real time, Int timeStepCount) override;
 
 		/// Add MNA pre step dependencies

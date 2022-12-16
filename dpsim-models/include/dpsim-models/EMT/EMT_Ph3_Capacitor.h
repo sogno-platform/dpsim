@@ -46,7 +46,7 @@ namespace CPS {
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component
-				void mnaCompInitializelize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+				void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 				/// Stamps system matrix
 				void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
 				/// Stamps right side (source) vector

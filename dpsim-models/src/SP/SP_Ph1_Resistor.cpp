@@ -13,7 +13,7 @@ using namespace CPS;
 
 SP::Ph1::Resistor::Resistor(String uid, String name,
 	Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph1::Resistor(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, false, true, logLevel), Base::Ph1::Resistor(mAttributes) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -85,9 +85,9 @@ void SP::Ph1::Resistor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 // #### MNA section ####
 
 void SP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
+	updateMatrixNodeIndices();
+	**mRightVector = Matrix::Zero(0, 0);
 
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mSLog->info(
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
@@ -131,8 +131,8 @@ void SP::Ph1::Resistor::mnaCompAddPostStepDependencies(AttributeBase::List &prev
 }
 
 void SP::Ph1::Resistor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaCompUpdateVoltage(**leftVector);
-	this->mnaCompUpdateCurrent(**leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::Resistor::mnaCompUpdateVoltage(const Matrix& leftVector) {

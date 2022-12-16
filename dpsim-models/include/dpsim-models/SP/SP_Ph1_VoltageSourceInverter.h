@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/SimPowerComp.h>
 #include "dpsim-models/Solver/PFSolverInterfaceBus.h"
 #include <dpsim-models/SP/SP_Ph1_PQNode.h>
 #include <dpsim-models/SP/SP_Ph1_PVNode.h>
@@ -19,7 +19,7 @@ namespace CPS {
 
 namespace SP { namespace Ph1 {
 	class VoltageSourceInverter :
-		public MNASimPowerComp<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<VoltageSourceInverter>,
 		public PFSolverInterfaceBus {
 	public:

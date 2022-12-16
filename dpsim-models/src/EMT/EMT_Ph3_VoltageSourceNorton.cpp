@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph1::VoltageSource(mAttributes),
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), Base::Ph1::VoltageSource(mAttributes),
 	mResistance(mAttributes->create<Real>("R")) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
@@ -44,10 +44,6 @@ void EMT::Ph3::VoltageSourceNorton::mnaCompInitialize(Real omega, Real timeStep,
 	(**mIntfVoltage)(0, 0) = voltageRef.real() * cos(Math::phase(voltageRef));
 	(**mIntfVoltage)(1, 0) = voltageRef.real() * cos(Math::phase(voltageRef) - 2. / 3. * M_PI);
 	(**mIntfVoltage)(2, 0) = voltageRef.real() * cos(Math::phase(voltageRef) + 2. / 3. * M_PI);
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph3::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

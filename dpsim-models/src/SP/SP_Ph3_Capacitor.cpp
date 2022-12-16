@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph3::Capacitor(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, false, true, logLevel), Base::Ph3::Capacitor(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3, 1);
@@ -64,9 +64,6 @@ void SP::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 		<< "Initial current " << Math::abs((**mIntfCurrent)(0, 0))
 		<< "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl
 		<< "--- MNA initialization finished ---" << std::endl;*/
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void SP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

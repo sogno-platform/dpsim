@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::CurrentSource::CurrentSource(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel),
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
 	mCurrentRef(mAttributes->createDynamic<Complex>("I_ref")) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
@@ -54,11 +54,7 @@ void DP::Ph1::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 
 void DP::Ph1::CurrentSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 		updateMatrixNodeIndices();
-
 	(**mIntfCurrent)(0,0) = **mCurrentRef;
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void DP::Ph1::CurrentSource::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {

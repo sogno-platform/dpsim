@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph1::Capacitor(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, false, true, logLevel), Base::Ph1::Capacitor(mAttributes) {
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
@@ -55,10 +55,6 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 void SP::Ph1::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-
 	mSLog->info(
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
@@ -103,8 +99,8 @@ void SP::Ph1::Capacitor::mnaCompAddPostStepDependencies(AttributeBase::List &pre
 }
 
 void SP::Ph1::Capacitor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaCompUpdateVoltage(**leftVector);
-	this->mnaCompUpdateCurrent(**leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::Capacitor::mnaCompUpdateVoltage(const Matrix& leftVector) {
