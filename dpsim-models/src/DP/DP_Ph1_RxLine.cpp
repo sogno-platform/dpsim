@@ -71,7 +71,7 @@ void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void DP::Ph1::RxLine::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::RxLine::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -85,11 +85,11 @@ void DP::Ph1::RxLine::mnaParentAddPostStepDependencies(AttributeBase::List &prev
 }
 
 void DP::Ph1::RxLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void DP::Ph1::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph1::RxLine::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = 0;
 	if (terminalNotGrounded(1))
 		(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
@@ -97,6 +97,6 @@ void DP::Ph1::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void DP::Ph1::RxLine::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph1::RxLine::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = mSubInductor->intfCurrent()(0,0);
 }

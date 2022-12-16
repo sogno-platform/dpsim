@@ -37,22 +37,22 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		void mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps system matrix considering the frequency index
-		void mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx);
+		void mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx);
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
-		void mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx);
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
-		void mnaUpdateCurrentHarm();
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrentHarm();
 		/// MNA pre and post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
 		/// add MNA pre and post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		class MnaPostStepHarm : public Task {
 		public:

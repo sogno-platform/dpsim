@@ -24,14 +24,14 @@ namespace Ph1 {
         Complex mEvbr;
 		/// norton equivalent current of mEvbr
 		Complex mIvbr;
-    
+
     private:
         /// Resistance matrix in dq reference frame
-		Matrix mResistanceMatrixDq;      
+		Matrix mResistanceMatrixDq;
 
 		/// Conductance matrix phase A
 		Matrix mConductanceMatrix;
-        
+
     protected:
         /// Park Transformation
 		///
@@ -40,10 +40,10 @@ namespace Ph1 {
 		Matrix mComplexAToDq;
 
     protected:
-        /// Constructor 
+        /// Constructor
         ReducedOrderSynchronGeneratorVBR(const String & uid, const String & name, Logger::Level logLevel);
         ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
-      
+
         ///
         virtual void specificInitialization() override =0;
         ///
@@ -57,11 +57,10 @@ namespace Ph1 {
 
         // ### MNA Section ###
         ///
-        void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;      
-        void mnaPostStep(const Matrix& leftVector) override;
-        
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+        void mnaCompPostStep(const Matrix& leftVector);
+
     public:
         virtual ~ReducedOrderSynchronGeneratorVBR() override = default;
 

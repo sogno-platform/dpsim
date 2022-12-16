@@ -77,5 +77,5 @@ void DP::Ph1::VoltageSourceRamp::updateState(Real time) {
 void DP::Ph1::VoltageSourceRamp::mnaParentPreStep(Real time, Int timeStepCount) {
 	updateState(time);
 	**mSubVoltageSource->mVoltageRef = (**mIntfVoltage)(0, 0);
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }

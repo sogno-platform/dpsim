@@ -75,7 +75,7 @@ void DP::Ph1::RXLoadSwitch::setSwitchParameters(Real openResistance, Real closed
 }
 
 void DP::Ph1::RXLoadSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
-	mSubRXLoad->mnaApplySystemMatrixStamp(systemMatrix);
+	mSubRXLoad->mnaCompApplySystemMatrixStamp(systemMatrix);
 	mSubSwitch->mnaApplySwitchSystemMatrixStamp(closed, systemMatrix, freqIdx);
 }
 
@@ -88,7 +88,7 @@ void DP::Ph1::RXLoadSwitch::mnaParentAddPreStepDependencies(AttributeBase::List 
 
 void DP::Ph1::RXLoadSwitch::mnaParentPreStep(Real time, Int timeStepCount) {
 	updateSwitchState(time);
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::RXLoadSwitch::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies,

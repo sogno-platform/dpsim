@@ -295,7 +295,7 @@ void SP::Ph1::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attrib
 }
 
 
-void SP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Ideal transformer equations
 	if (terminalNotGrounded(0)) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1.0, 0));
@@ -309,7 +309,7 @@ void SP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Add subcomps to system matrix
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
+			mnasubcomp->mnaCompApplySystemMatrixStamp(systemMatrix);
 
 	if (terminalNotGrounded(0)) {
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
@@ -332,7 +332,7 @@ void SP::Ph1::Transformer::mnaParentAddPreStepDependencies(AttributeBase::List &
 }
 
 void SP::Ph1::Transformer::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void SP::Ph1::Transformer::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -342,17 +342,17 @@ void SP::Ph1::Transformer::mnaParentAddPostStepDependencies(AttributeBase::List 
 }
 
 void SP::Ph1::Transformer::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaUpdateVoltage(**leftVector);
-	this->mnaUpdateCurrent(**leftVector);
+	this->mnaCompUpdateVoltage(**leftVector);
+	this->mnaCompUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = mSubInductor->intfCurrent()(0, 0);
 	mSLog->debug("Current {:s}", Logger::phasorToString((**mIntfCurrent)(0, 0)));
 
 }
 
-void SP::Ph1::Transformer::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	(**mIntfVoltage)(0, 0) = 0;
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));

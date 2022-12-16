@@ -53,28 +53,28 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes MNA specific variables
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-		void mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+		void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
-		void mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) override;
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		void mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) override;
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
-		void mnaApplyRightSideVectorStampHarm(Matrix& rightVector) override;
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector) override;
 		/// Update interface voltage from MNA system results
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
-		void mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx);
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx);
 		/// Update interface current from MNA system results
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
-		void mnaUpdateCurrentHarm();
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrentHarm();
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount) override;
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### Tearing methods ####
 		void mnaTearInitialize(Real omega, Real timestep);

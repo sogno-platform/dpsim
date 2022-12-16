@@ -108,7 +108,7 @@ void SimNode<Complex>::setPower(Complex newPower) {
 }
 
 template<>
-void SimNode<Real>::mnaUpdateVoltage(const Matrix& leftVector) {
+void SimNode<Real>::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	if (mMatrixNodeIndex[0] >= 0) (**mVoltage)(0,0) = Math::realFromVectorElement(leftVector, mMatrixNodeIndex[0]);
 	if (mPhaseType == PhaseType::ABC) {
 		if (mMatrixNodeIndex[1] >= 0) (**mVoltage)(1,0) = Math::realFromVectorElement(leftVector, mMatrixNodeIndex[1]);
@@ -117,7 +117,7 @@ void SimNode<Real>::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 template<>
-void SimNode<Complex>::mnaUpdateVoltage(const Matrix& leftVector) {
+void SimNode<Complex>::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 			if (mMatrixNodeIndex[0] >= 0) (**mVoltage)(0,freq) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[0], mNumFreqs, freq);
 		if (mPhaseType == PhaseType::ABC) {
@@ -128,10 +128,10 @@ void SimNode<Complex>::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 template<>
-void SimNode<Real>::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) { }
+void SimNode<Real>::mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) { }
 
 template<>
-void SimNode<Complex>::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) {
+void SimNode<Complex>::mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) {
 	if (mMatrixNodeIndex[0] >= 0) (**mVoltage)(0,freqIdx) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[0]);
 	if (mPhaseType == PhaseType::ABC) {
 		if (mMatrixNodeIndex[1] >= 0) (**mVoltage)(1,freqIdx) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[1]);
@@ -140,10 +140,10 @@ void SimNode<Complex>::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqId
 }
 
 template <>
-void SimNode<Real>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVectors) { }
+void SimNode<Real>::mnaCompInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVectors) { }
 
 template <>
-void SimNode<Complex>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVectors) {
+void SimNode<Complex>::mnaCompInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVectors) {
 	mMnaTasks = {
 		std::make_shared<MnaPostStepHarm>(*this, leftVectors)
 	};
@@ -152,7 +152,7 @@ void SimNode<Complex>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> lef
 template <>
 void SimNode<Complex>::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 	for (UInt freq = 0; freq < mNode.mNumFreqs; freq++)
-		mNode.mnaUpdateVoltageHarm(**mLeftVectors[freq], freq);
+		mNode.mnaCompUpdateVoltageHarm(**mLeftVectors[freq], freq);
 }
 
 template <>
