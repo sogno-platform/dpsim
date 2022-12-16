@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel),
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
 	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
 	mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
 	setVirtualNodeNumber(1);
@@ -91,13 +91,10 @@ void SP::Ph1::VoltageSource::mnaCompAddPostStepDependencies(AttributeBase::List 
 	modifiedAttributes.push_back(mIntfCurrent);
 };
 
-void SP::Ph1::VoltageSource::mnaCompInitializelizelize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void SP::Ph1::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 		updateMatrixNodeIndices();
 
 	(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"

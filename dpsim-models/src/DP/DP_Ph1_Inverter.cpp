@@ -14,7 +14,7 @@ using namespace CPS;
 using namespace std;
 
 DP::Ph1::Inverter::Inverter(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel) {
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel) {
 	setTerminalNumber(1);
 	setVirtualNodeNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
@@ -110,11 +110,6 @@ void DP::Ph1::Inverter::calculatePhasors() {
 
 void DP::Ph1::Inverter::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 		updateMatrixNodeIndices();
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
 	calculatePhasors();
 }
 

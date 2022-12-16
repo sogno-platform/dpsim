@@ -30,9 +30,9 @@ namespace CPS {
 		/// Basic constructor that takes UID, name and log level
 		MNASimPowerComp(String uid, String name, Bool hasPreStep, Bool hasPostStep, Logger::Level logLevel)
 			: 	SimPowerComp<VarType>(uid, name, logLevel),
-				mRightVector(IdentifiedObject::mAttributes->createDynamic<Matrix>("right_vector")),
 				mHasPreStep(hasPreStep),
-				mHasPostStep(hasPostStep) { };
+				mHasPostStep(hasPostStep),
+				mRightVector(IdentifiedObject::mAttributes->createDynamic<Matrix>("right_vector")) { };
 
 		/// Basic constructor that takes name and log level and sets the UID to name as well
 		explicit MNASimPowerComp(String name, Bool hasPreStep = true, Bool hasPostStep = true, Logger::Level logLevel = Logger::Level::off)
@@ -107,3 +107,6 @@ namespace CPS {
 
 	};
 }
+
+
+

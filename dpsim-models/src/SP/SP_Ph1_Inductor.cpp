@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph1::Inductor(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, false, true, logLevel), Base::Ph1::Inductor(mAttributes) {
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
@@ -51,8 +51,6 @@ void SP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 void SP::Ph1::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"
@@ -98,8 +96,8 @@ void SP::Ph1::Inductor::mnaCompAddPostStepDependencies(AttributeBase::List &prev
 }
 
 void SP::Ph1::Inductor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaCompUpdateVoltage(**leftVector);
-	this->mnaCompUpdateCurrent(**leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::Inductor::mnaCompUpdateVoltage(const Matrix& leftVector) {

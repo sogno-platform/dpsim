@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph3::Inductor(mAttributes) {
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), Base::Ph3::Inductor(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = Matrix::Zero(3, 1);
@@ -65,10 +65,6 @@ void EMT::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 	mEquivCond = timeStep / 2. * (**mInductance).inverse();
 	// Update internal state
 	mEquivCurrent = mEquivCond * **mIntfVoltage + **mIntfCurrent;
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"

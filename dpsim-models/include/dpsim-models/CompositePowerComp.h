@@ -31,7 +31,7 @@ namespace CPS {
 
 		/// Basic constructor that takes UID, name and log level
 		CompositePowerComp(String uid, String name, Bool hasPreStep, Bool hasPostStep, Logger::Level logLevel)
-			: MNASimPowerComp<VarType>(uid, name, logLevel) { }
+			: MNASimPowerComp<VarType>(uid, name, hasPreStep, hasPostStep, logLevel) { }
 
 		/// Basic constructor that takes name and log level and sets the UID to name as well
 		CompositePowerComp(String name, Bool hasPreStep = true, Bool hasPostStep = true, Logger::Level logLevel = Logger::Level::off)

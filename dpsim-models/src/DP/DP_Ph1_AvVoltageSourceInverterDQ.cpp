@@ -310,7 +310,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentPreStep(Real time, Int timeSte
 	if (mWithControl)
 		**mSubCtrledVoltageSource->mVoltageRef = (**mVsref)(0,0);
 
-	std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaCompPreStep(time, timeStepCount);
+	std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
 	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
@@ -337,6 +337,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaCompUpdateCurrent(const Matrix& left
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	for (auto virtualNode : mVirtualNodes)
-		virtualNode->mnaCompUpdateVoltage(leftVector);
+		virtualNode->mnaUpdateVoltage(leftVector);
 	(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }

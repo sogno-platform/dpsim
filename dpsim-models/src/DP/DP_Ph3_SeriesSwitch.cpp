@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph1::Switch(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, false, true, logLevel), Base::Ph1::Switch(mAttributes) {
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	**mIntfCurrent = MatrixComp::Zero(3,1);
@@ -37,9 +37,8 @@ void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 Bool DP::Ph3::SeriesSwitch::mnaIsClosed() { return **mIsClosed; }
 
 void DP::Ph3::SeriesSwitch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
-
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+	updateMatrixNodeIndices();
+	**mRightVector = Matrix::Zero(0, 0);
 }
 
 void DP::Ph3::SeriesSwitch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

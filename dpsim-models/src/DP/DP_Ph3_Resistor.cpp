@@ -12,7 +12,7 @@ using namespace CPS;
 
 DP::Ph3::Resistor::Resistor(String uid, String name,
 	Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph3::Resistor(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, false, true, logLevel), Base::Ph3::Resistor(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(3,1);
@@ -50,9 +50,8 @@ void DP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void DP::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
-
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+	updateMatrixNodeIndices();
+	**mRightVector = Matrix::Zero(0, 0);
 }
 
 void DP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
