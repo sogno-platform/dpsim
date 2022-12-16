@@ -5,29 +5,29 @@
 using namespace CPS;
 
 template<typename VarType>
-const Task::List& MNASimPowerComp<VarType>::mnaTasks() const final {
+const Task::List& MNASimPowerComp<VarType>::mnaTasks() const {
 	return mMnaTasks;
 }
 
 template<typename VarType>
-const Attribute<Matrix>::Ptr MNASimPowerComp<VarType>::getRightVector() const final {
+const Attribute<Matrix>::Ptr MNASimPowerComp<VarType>::getRightVector() const {
 	return mRightVector;
 }
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) final {
+void MNASimPowerComp<VarType>::mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	Matrix mat = Matrix(systemMatrix);
 	this->mnaApplySystemMatrixStamp(mat);
 	systemMatrix = mat.sparseView();
 }
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaInitialize(Real omega, Real timeStep) final {
+void MNASimPowerComp<VarType>::mnaInitialize(Real omega, Real timeStep) {
 	mMnaTasks.clear();
 }
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) final {
+void MNASimPowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	mMnaTasks.clear();
 	**this->mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
@@ -42,63 +42,63 @@ void MNASimPowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attribut
 }
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector) final {
+void MNASimPowerComp<VarType>::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector) {
 	mMnaTasks.clear();
 	this->mnaCompInitializeHarm(omega, timeStep, leftVector);
 }
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaApplySystemMatrixStamp(Matrix& systemMatrix) final {
+void MNASimPowerComp<VarType>::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	this->mnaCompApplySystemMatrixStamp(systemMatrix);
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStamp(Matrix& rightVector) final {
+void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	this->mnaCompApplyRightSideVectorStamp(rightVector);
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaUpdateVoltage(const Matrix& leftVector) final {
+void MNASimPowerComp<VarType>::mnaUpdateVoltage(const Matrix& leftVector) {
 	this->mnaCompUpdateVoltage(leftVector);
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaUpdateCurrent(const Matrix& leftVector) final {
+void MNASimPowerComp<VarType>::mnaUpdateCurrent(const Matrix& leftVector) {
 	this->mnaCompUpdateCurrent(leftVector);
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaPreStep(Real time, Int timeStepCount) final {
+void MNASimPowerComp<VarType>::mnaPreStep(Real time, Int timeStepCount) {
 	this->mnaCompPreStep(time, timeStepCount);
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) final {
+void MNASimPowerComp<VarType>::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	this->mnaCompPostStep(time, timeStepCount, leftVector);
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) final {
+void MNASimPowerComp<VarType>::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	this->mnaCompAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) final {
+void MNASimPowerComp<VarType>::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	this->mnaCompAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) final {
+void MNASimPowerComp<VarType>::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
 	this->mnaCompApplySystemMatrixStampHarm(systemMatrix, freqIdx);
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStampHarm(Matrix& sourceVector) final {
+void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStampHarm(Matrix& sourceVector) {
 	this->mnaCompApplyRightSideVectorStampHarm(sourceVector);
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx) final {
+void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx) {
 	this->mnaCompApplyRightSideVectorStampHarm(sourceVector, freqIdx);
 };
 
