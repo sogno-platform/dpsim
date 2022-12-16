@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::ResIndSeries::ResIndSeries(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel),
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
 	mInductance(mAttributes->create<Real>("L")),
 	///FIXME: The resistance is never used anywhere...
 	mResistance(mAttributes->create<Real>("R")) {
@@ -82,13 +82,8 @@ void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
 }
 
 void DP::Ph1::ResIndSeries::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
-
+	updateMatrixNodeIndices();
 	initVars(timeStep);
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"

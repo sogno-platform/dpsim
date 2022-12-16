@@ -12,7 +12,7 @@ using namespace CPS;
 using namespace CPS::DP::Ph1;
 
 DP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph1::Capacitor(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel), Base::Ph1::Capacitor(mAttributes) {
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
@@ -72,10 +72,6 @@ void DP::Ph1::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 		mEquivCurrent(freq,0) = -(**mIntfCurrent)(0,freq) + -mPrevVoltCoeff(freq,0) * (**mIntfVoltage)(0,freq);
 		(**mIntfCurrent)(0, freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 	}
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	mSLog->info(
 		"\n--- MNA initialization ---"
@@ -218,7 +214,7 @@ void DP::Ph1::Capacitor::mnaCompAddPreStepDependencies(AttributeBase::List &prev
 }
 
 void DP::Ph1::Capacitor::mnaCompPreStep(Real time, Int timeStepCount) {
-	this->mnaCompApplyRightSideVectorStamp(**this->mRightVector);
+	this->mnaApplyRightSideVectorStamp(**this->mRightVector);
 }
 
 void DP::Ph1::Capacitor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -228,8 +224,8 @@ void DP::Ph1::Capacitor::mnaCompAddPostStepDependencies(AttributeBase::List &pre
 }
 
 void DP::Ph1::Capacitor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaCompUpdateVoltage(**leftVector);
-	this->mnaCompUpdateCurrent(**leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph1::Capacitor::MnaPreStepHarm::execute(Real time, Int timeStepCount) {

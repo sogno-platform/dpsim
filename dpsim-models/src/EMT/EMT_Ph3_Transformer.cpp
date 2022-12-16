@@ -199,7 +199,7 @@ void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) 
 	// Add subcomps to system matrix
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaCompApplySystemMatrixStamp(systemMatrix);
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 
 	if (terminalNotGrounded(0)) {
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),

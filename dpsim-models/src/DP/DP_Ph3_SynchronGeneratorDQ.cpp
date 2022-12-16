@@ -16,7 +16,7 @@ using namespace CPS;
 using namespace std;
 
 DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::SynchronGenerator(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel), Base::SynchronGenerator(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(3,1);

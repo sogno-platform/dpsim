@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph1::Switch(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, false, true, logLevel), Base::Ph1::Switch(mAttributes) {
 	setTerminalNumber(2);
     **mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
@@ -36,10 +36,7 @@ void DP::Ph1::varResSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
 // #### MNA functions ####
 void DP::Ph1::varResSwitch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
-
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	updateMatrixNodeIndices();
 }
 
 void DP::Ph1::varResSwitch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

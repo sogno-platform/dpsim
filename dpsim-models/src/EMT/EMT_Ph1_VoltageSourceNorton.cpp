@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph1::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph1::VoltageSource(mAttributes),
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), Base::Ph1::VoltageSource(mAttributes),
 	mResistance(mAttributes->create<Real>("R")) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);
@@ -37,9 +37,6 @@ void EMT::Ph1::VoltageSourceNorton::mnaCompInitialize(Real omega, Real timeStep,
 		updateMatrixNodeIndices();
 
 	(**mIntfVoltage)(0, 0) = (**mVoltageRef).real();
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void EMT::Ph1::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

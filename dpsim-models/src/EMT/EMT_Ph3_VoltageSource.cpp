@@ -12,7 +12,7 @@
 using namespace CPS;
 
 EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel),
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel),
 	mVoltageRef(mAttributes->createDynamic<MatrixComp>("V_ref")), // rms-value, phase-to-phase
 	mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
 	mPhaseType = PhaseType::ABC;
@@ -96,14 +96,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::VoltageSource::clone(String name) {
 
 
 void EMT::Ph3::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-
 	updateMatrixNodeIndices();
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
 }
 
 void EMT::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

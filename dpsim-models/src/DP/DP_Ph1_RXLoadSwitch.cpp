@@ -75,7 +75,7 @@ void DP::Ph1::RXLoadSwitch::setSwitchParameters(Real openResistance, Real closed
 }
 
 void DP::Ph1::RXLoadSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
-	mSubRXLoad->mnaCompApplySystemMatrixStamp(systemMatrix);
+	mSubRXLoad->mnaApplySystemMatrixStamp(systemMatrix);
 	mSubSwitch->mnaApplySwitchSystemMatrixStamp(closed, systemMatrix, freqIdx);
 }
 

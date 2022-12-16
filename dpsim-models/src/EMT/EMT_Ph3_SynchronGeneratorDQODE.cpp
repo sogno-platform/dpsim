@@ -29,10 +29,6 @@ void EMT::Ph3::SynchronGeneratorDQODE::mnaCompInitialize(Real omega, Real timeSt
 	mDim = mNumDampingWindings + 7;
 	**mOdePreState = Matrix::Zero(mDim, 1);
 	**mOdePostState = Matrix::Zero(mDim, 1);
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mMnaTasks.push_back(std::make_shared<ODEPreStep>(*this));
 }
 

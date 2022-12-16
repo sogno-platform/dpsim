@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph3::Capacitor(mAttributes) {
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), Base::Ph3::Capacitor(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = Matrix::Zero(3, 1);
@@ -63,11 +63,6 @@ void EMT::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute
 	mEquivCond = (2.0 * **mCapacitance) / timeStep;
 	// Update internal state
 	mEquivCurrent = - **mIntfCurrent + - mEquivCond * **mIntfVoltage;
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-
 }
 
 void EMT::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

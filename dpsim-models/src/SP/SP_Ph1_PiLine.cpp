@@ -230,8 +230,8 @@ void SP::Ph1::PiLine::mnaParentAddPostStepDependencies(AttributeBase::List &prev
 }
 
 void SP::Ph1::PiLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaCompUpdateVoltage(**leftVector);
-	this->mnaCompUpdateCurrent(**leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix& leftVector) {

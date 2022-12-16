@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph1::Resistor(mAttributes) {
+	: MNASimPowerComp<Real>(uid, name, false, true, logLevel), Base::Ph1::Resistor(mAttributes) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);
@@ -41,10 +41,9 @@ void EMT::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		initialSingleVoltage(1).real());
 }
 
-void EMT::Ph1::Resistor::mnaCompInitializelizelize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
-
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+void EMT::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+	updateMatrixNodeIndices();
+	**mRightVector = Matrix::Zero(0, 0);
 }
 
 void EMT::Ph1::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

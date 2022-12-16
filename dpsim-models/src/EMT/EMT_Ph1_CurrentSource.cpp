@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph1::CurrentSource::CurrentSource(String uid, String name,	Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel),
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel),
 	mCurrentRef(mAttributes->create<Complex>("I_ref")),
 	mSrcFreq(mAttributes->create<Real>("f_src")) {
 	setTerminalNumber(2);
@@ -35,9 +35,6 @@ void EMT::Ph1::CurrentSource::setParameters(Complex currentRef, Real srcFreq) {
 void EMT::Ph1::CurrentSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 		updateMatrixNodeIndices();
 	(**mIntfCurrent)(0,0) = Math::abs(**mCurrentRef) * cos(Math::phase(**mCurrentRef));
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph1::CurrentSource::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {

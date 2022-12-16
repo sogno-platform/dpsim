@@ -13,7 +13,7 @@ using namespace CPS;
 
 
 SP::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel),
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
 	mVoltageRef(mAttributes->create<Complex>("V_ref")) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
@@ -54,10 +54,6 @@ void SP::Ph3::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attrib
 		Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));
 	(**mIntfVoltage)(2, 0) = Complex(Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),
 		Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void SP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

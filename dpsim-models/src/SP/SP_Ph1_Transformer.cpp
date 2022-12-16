@@ -309,7 +309,7 @@ void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Add subcomps to system matrix
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaCompApplySystemMatrixStamp(systemMatrix);
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 
 	if (terminalNotGrounded(0)) {
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
@@ -342,8 +342,8 @@ void SP::Ph1::Transformer::mnaParentAddPostStepDependencies(AttributeBase::List 
 }
 
 void SP::Ph1::Transformer::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaCompUpdateVoltage(**leftVector);
-	this->mnaCompUpdateCurrent(**leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {

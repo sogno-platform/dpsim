@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(String uid, String name, Logger::Level logLevel)
-: MNASimPowerComp<Real>(uid, name, logLevel), Base::Ph1::VoltageSource(mAttributes),
+: MNASimPowerComp<Real>(uid, name, true, true, logLevel), Base::Ph1::VoltageSource(mAttributes),
 	mPref(mAttributes->create<Real>("P_ref")),
 	mQref(mAttributes->create<Real>("Q_ref")),
 	mThetaPLL(mAttributes->create<Real>("theta")),
@@ -282,9 +282,6 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompInitialize(Real omega, Rea
 	(**mIntfVoltage)(2, 0) = voltageRef.real() * cos(Math::phase(voltageRef) + 2. / 3. * M_PI);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 	initializeStates(omega, timeStep, leftVector);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Apply matrix stamp for equivalent resistance

@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph1::Resistor(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, false, true, logLevel), Base::Ph1::Resistor(mAttributes) {
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
@@ -47,9 +47,10 @@ void DP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
 // #### MNA functions ####
 void DP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
+	updateMatrixNodeIndices();
 
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+	**mRightVector = Matrix::Zero(0, 0);
+
 	mSLog->info(
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
@@ -123,8 +124,8 @@ void DP::Ph1::Resistor::mnaCompAddPostStepDependencies(AttributeBase::List &prev
 }
 
 void DP::Ph1::Resistor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaCompUpdateVoltage(**leftVector);
-	this->mnaCompUpdateCurrent(**leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph1::Resistor::MnaPostStepHarm::execute(Real time, Int timeStepCount) {

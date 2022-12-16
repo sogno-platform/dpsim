@@ -18,7 +18,7 @@ namespace SP {
 namespace Ph1 {
 
         class SynchronGenerator :
-			public MNASimPowerComp<Complex>,
+			public SimPowerComp<Complex>,
 			public SharedFactory<SynchronGenerator>,
 			public PFSolverInterfaceBus {
 	    private:

@@ -23,15 +23,11 @@ EMT::Ph3::SynchronGeneratorDQTrapez::SynchronGeneratorDQTrapez(String name, Logg
 	: SynchronGeneratorDQTrapez(name, name, logLevel) {
 }
 
-void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompInitializelizelize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 		updateMatrixNodeIndices();
 	mTimeStep = timeStep;
 
 	SynchronGeneratorDQ::initializeMatrixAndStates();
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {

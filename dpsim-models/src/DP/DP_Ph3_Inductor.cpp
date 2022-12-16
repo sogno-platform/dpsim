@@ -12,7 +12,7 @@ using namespace CPS;
 
 
 DP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: MNASimPowerComp<Complex>(uid, name, logLevel), Base::Ph3::Inductor(mAttributes) {
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel), Base::Ph3::Inductor(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = MatrixComp::Zero(3,1);
@@ -94,10 +94,6 @@ void DP::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 				// << "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl
 				// << "Initial current " << Math::abs((**mIntfCurrent)(0,0))
 				// << "<" << Math::phaseDeg((**mIntfCurrent)(0,0)) << std::endl;
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

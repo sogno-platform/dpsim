@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph1::VoltageSource::VoltageSource(String uid, String name,	Logger::Level logLevel)
-	: MNASimPowerComp<Real>(uid, name, logLevel),
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel),
 	mVoltageRef(mAttributes->create<Complex>("V_ref")),
 	mSrcFreq(mAttributes->create<Real>("f_src")) {
 	setVirtualNodeNumber(1);
@@ -36,9 +36,6 @@ SimPowerComp<Real>::Ptr EMT::Ph1::VoltageSource::clone(String name) {
 void EMT::Ph1::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 		updateMatrixNodeIndices();
 	(**mIntfVoltage)(0,0) = Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef));
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {

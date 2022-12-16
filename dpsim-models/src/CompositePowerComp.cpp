@@ -44,7 +44,7 @@ void CompositePowerComp<VarType>::mnaCompInitialize(Real omega, Real timeStep, A
 	SimPowerComp<VarType>::updateMatrixNodeIndices();
 
 	for (auto subComp : mSubcomponentsMNA) {
-		subComp->mnaCompInitialize(omega, timeStep, leftVector);
+		subComp->mnaInitialize(omega, timeStep, leftVector);
 	}
 
 	**this->mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -55,7 +55,7 @@ void CompositePowerComp<VarType>::mnaCompInitialize(Real omega, Real timeStep, A
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	for (auto subComp : mSubcomponentsMNA) {
-		subComp->mnaCompApplySystemMatrixStamp(systemMatrix);
+		subComp->mnaApplySystemMatrixStamp(systemMatrix);
 	}
 	mnaParentApplySystemMatrixStamp(systemMatrix);
 }
@@ -74,29 +74,29 @@ void CompositePowerComp<VarType>::mnaCompApplyRightSideVectorStamp(Matrix& right
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompPreStep(Real time, Int timeStepCount) {
 	for (auto subComp : mSubcomponentsBeforePreStep) {
-		subComp->mnaCompPreStep(time, timeStepCount);
+		subComp->mnaPreStep(time, timeStepCount);
 	}
 	mnaParentPreStep(time, timeStepCount);
 	for (auto subComp : mSubcomponentsAfterPreStep) {
-		subComp->mnaCompPreStep(time, timeStepCount);
+		subComp->mnaPreStep(time, timeStepCount);
 	}
 }
 
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	for (auto subComp : mSubcomponentsBeforePostStep) {
-		subComp->mnaCompPostStep(time, timeStepCount, leftVector);
+		subComp->mnaPostStep(time, timeStepCount, leftVector);
 	}
 	mnaParentPostStep(time, timeStepCount, leftVector);
 	for (auto subComp : mSubcomponentsAfterPostStep) {
-		subComp->mnaCompPostStep(time, timeStepCount, leftVector);
+		subComp->mnaPostStep(time, timeStepCount, leftVector);
 	}
 }
 
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	for (auto subComp : mSubcomponentsMNA) {
-		subComp->mnaCompAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+		subComp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	}
 	mnaParentAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 }
@@ -104,7 +104,7 @@ void CompositePowerComp<VarType>::mnaCompAddPreStepDependencies(AttributeBase::L
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	for (auto subComp : mSubcomponentsMNA) {
-		subComp->mnaCompAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+		subComp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	}
 	mnaParentAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 }

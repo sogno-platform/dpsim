@@ -114,7 +114,7 @@ void DP::Ph1::PiLine::mnaParentAddPreStepDependencies(AttributeBase::List &prevS
 
 void DP::Ph1::PiLine::mnaParentPreStep(Real time, Int timeStepCount) {
 	// pre-step of component itself
-	this->mnaCompApplyRightSideVectorStamp(**mRightVector);
+	this->mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::PiLine::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -126,8 +126,8 @@ void DP::Ph1::PiLine::mnaParentAddPostStepDependencies(AttributeBase::List &prev
 
 void DP::Ph1::PiLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of component itself
-	this->mnaCompUpdateVoltage(**leftVector);
-	this->mnaCompUpdateCurrent(**leftVector);
+	this->mnaUpdateVoltage(**leftVector);
+	this->mnaUpdateCurrent(**leftVector);
 }
 
 void DP::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix& leftVector) {
