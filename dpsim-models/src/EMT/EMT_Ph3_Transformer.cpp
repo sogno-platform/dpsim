@@ -175,7 +175,7 @@ void EMT::Ph3::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attri
 		mTerminals[1]->node()->name(), mTerminals[1]->node()->matrixNodeIndex());
 }
 
-void EMT::Ph3::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Ideal transformer equations
 	if (terminalNotGrounded(0)) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), -1.);
@@ -199,7 +199,7 @@ void EMT::Ph3::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Add subcomps to system matrix
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
+			mnasubcomp->mnaCompApplySystemMatrixStamp(systemMatrix);
 
 	if (terminalNotGrounded(0)) {
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
@@ -240,7 +240,7 @@ void EMT::Ph3::Transformer::mnaParentAddPreStepDependencies(AttributeBase::List 
 }
 
 void EMT::Ph3::Transformer::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::Transformer::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -250,15 +250,15 @@ void EMT::Ph3::Transformer::mnaParentAddPostStepDependencies(AttributeBase::List
 }
 
 void EMT::Ph3::Transformer::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph3::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = mSubInductor->intfCurrent();
 }
 
-void EMT::Ph3::Transformer::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {

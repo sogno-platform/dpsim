@@ -183,22 +183,22 @@ void EMT::Ph3::RXLoad::mnaParentAddPostStepDependencies(AttributeBase::List &pre
 };
 
 void EMT::Ph3::RXLoad::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::RXLoad::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::RXLoad::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 	(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 }
 
-void EMT::Ph3::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::RXLoad::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = Matrix::Zero(3, 1);
 	for (auto& subc : mSubComponents) {
 		**mIntfCurrent += subc->intfCurrent();

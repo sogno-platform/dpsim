@@ -30,7 +30,7 @@ namespace Ph1 {
 		Matrix mA;
 		///
 		Matrix mB;
-		/// 
+		///
 		Matrix mC;
 
 		///
@@ -46,7 +46,7 @@ namespace Ph1 {
 
 		// #### General Functions ####
 		/// Specific component initialization
-        void specificInitialization() override; 
+        void specificInitialization() override;
 		///
 		void initializeResistanceMatrix() override {};
 		///
@@ -54,9 +54,9 @@ namespace Ph1 {
 
 		// ### MNA Section ###
         ///
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
-        void mnaPostStep(const Matrix& leftVector) override;
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+        void mnaCompPostStep(const Matrix& leftVector);
 
 	public:
 		///

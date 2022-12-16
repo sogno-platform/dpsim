@@ -187,7 +187,7 @@ void EMT::Ph3::SynchronGeneratorDQ::initializeMatrixAndStates(){
 	**mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 }
 
-void EMT::Ph3::SynchronGeneratorDQ::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::SynchronGeneratorDQ::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (!mCompensationOn)
 		return;
 
@@ -203,7 +203,7 @@ void EMT::Ph3::SynchronGeneratorDQ::mnaApplySystemMatrixStamp(Matrix& systemMatr
 	}
 }
 
-void EMT::Ph3::SynchronGeneratorDQ::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph3::SynchronGeneratorDQ::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (mCompensationOn)
 		mCompensationCurrent = **mIntfVoltage / mRcomp;
 
@@ -217,19 +217,19 @@ void EMT::Ph3::SynchronGeneratorDQ::mnaApplyRightSideVectorStamp(Matrix& rightVe
 	}
 }
 
-void EMT::Ph3::SynchronGeneratorDQ::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::SynchronGeneratorDQ::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,0));
 	(**mIntfVoltage)(1,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,1));
 	(**mIntfVoltage)(2,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,2));
 }
 
-void EMT::Ph3::SynchronGeneratorDQ::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph3::SynchronGeneratorDQ::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 }
 
-void EMT::Ph3::SynchronGeneratorDQ::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
+void EMT::Ph3::SynchronGeneratorDQ::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
 }
 
 Matrix EMT::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta, Matrix& abcVector) {

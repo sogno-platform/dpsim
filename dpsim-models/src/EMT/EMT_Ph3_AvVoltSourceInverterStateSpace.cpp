@@ -273,7 +273,7 @@ Matrix EMT::Ph3::AvVoltSourceInverterStateSpace::getInverseParkTransformMatrix(R
 	return Tabc;
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaInitialize(Real omega, Real timeStep,
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompInitialize(Real omega, Real timeStep,
 	Attribute<Matrix>::Ptr leftVector){
 	updateMatrixNodeIndices();
 	Complex voltageRef = mVoltageRef->get();
@@ -286,7 +286,7 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaInitialize(Real omega, Real ti
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Apply matrix stamp for equivalent resistance
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mYc);
@@ -310,7 +310,7 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaApplySystemMatrixStamp(Matrix&
 	}
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	// Apply matrix stamp for equivalent current source
 	if (terminalNotGrounded(0)) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), -mEquivCurrent(0, 0));
@@ -324,29 +324,29 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaApplyRightSideVectorStamp(Matr
 	}
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	attributeDependencies.push_back(mPref);
 	modifiedAttributes.push_back(mRightVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaPreStep(Real time, Int timeStepCount) {
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompPreStep(Real time, Int timeStepCount) {
 	updateEquivCurrent(time);
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
 	updateStates();
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	if (terminalNotGrounded(1)) {
 		(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
 		(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
@@ -360,7 +360,7 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateVoltage(const Matrix& le
 }
 
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	// signs are not verified
 	(**mIntfCurrent)(0, 0) = mEquivCurrent(0, 0) - (**mIntfVoltage)(0, 0) / mRc;
 	(**mIntfCurrent)(1, 0) = mEquivCurrent(1, 0) - (**mIntfVoltage)(1, 0) / mRc;

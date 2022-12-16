@@ -138,7 +138,7 @@ void SP::Ph1::NetworkInjection::mnaParentAddPreStepDependencies(AttributeBase::L
 }
 
 void SP::Ph1::NetworkInjection::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void SP::Ph1::NetworkInjection::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -148,15 +148,15 @@ void SP::Ph1::NetworkInjection::mnaParentAddPostStepDependencies(AttributeBase::
 }
 
 void SP::Ph1::NetworkInjection::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateCurrent(**leftVector);
-	mnaUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
 }
 
-void SP::Ph1::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::NetworkInjection::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	**mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
 }
 
-void SP::Ph1::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::NetworkInjection::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
 }
 

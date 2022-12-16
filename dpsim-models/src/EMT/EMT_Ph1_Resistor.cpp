@@ -41,14 +41,13 @@ void EMT::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		initialSingleVoltage(1).real());
 }
 
-void EMT::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void EMT::Ph1::Resistor::mnaCompInitializelizelize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void EMT::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph1::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Real conductance = 1. / **mResistance;
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -71,18 +70,18 @@ void EMT::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void EMT::Ph1::Resistor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph1::Resistor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void EMT::Ph1::Resistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+void EMT::Ph1::Resistor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph1::Resistor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	(**mIntfVoltage)(0,0) = 0;
 	if (terminalNotGrounded(1))
@@ -91,6 +90,6 @@ void EMT::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void EMT::Ph1::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph1::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / **mResistance;
 }

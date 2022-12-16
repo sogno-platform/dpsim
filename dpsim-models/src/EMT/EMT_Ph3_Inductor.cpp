@@ -59,8 +59,7 @@ void EMT::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
 }
 
-void EMT::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
+void EMT::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
 	updateMatrixNodeIndices();
 	mEquivCond = timeStep / 2. * (**mInductance).inverse();
@@ -83,7 +82,7 @@ void EMT::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	mSLog->flush();
 }
 
-void EMT::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mEquivCond(0, 0));
@@ -137,7 +136,7 @@ void EMT::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Logger::matrixToString(mEquivCond));
 }
 
-void EMT::Ph3::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph3::Inductor::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	// Update internal state
 	mEquivCurrent = mEquivCond * **mIntfVoltage + **mIntfCurrent;
 	if (terminalNotGrounded(0)) {
@@ -151,34 +150,34 @@ void EMT::Ph3::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), -mEquivCurrent(2, 0));
 	}
 	mSLog->debug(
-		"\nEquivalent Current (mnaApplyRightSideVectorStamp): {:s}",
+		"\nEquivalent Current (mnaCompApplyRightSideVectorStamp): {:s}",
 		Logger::matrixToString(mEquivCurrent));
 	mSLog->flush();
 }
 
-void EMT::Ph3::Inductor::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void EMT::Ph3::Inductor::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// actually depends on L, but then we'd have to modify the system matrix anyway
 	prevStepDependencies.push_back(mIntfVoltage);
 	prevStepDependencies.push_back(mIntfCurrent);
 	modifiedAttributes.push_back(mRightVector);
 }
 
-void EMT::Ph3::Inductor::mnaPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+void EMT::Ph3::Inductor::mnaCompPreStep(Real time, Int timeStepCount) {
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph3::Inductor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void EMT::Ph3::Inductor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+void EMT::Ph3::Inductor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::Inductor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
@@ -197,7 +196,7 @@ void EMT::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 	);
 }
 
-void EMT::Ph3::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::Inductor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
 	mSLog->debug(
 		"\nUpdate Current: {:s}",

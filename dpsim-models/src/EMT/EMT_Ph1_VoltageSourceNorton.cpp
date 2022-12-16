@@ -33,9 +33,8 @@ void EMT::Ph1::VoltageSourceNorton::setParameters(Complex voltage, Real srcFreq,
 	mParametersSet = true;
 }
 
-void EMT::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void EMT::Ph1::VoltageSourceNorton::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	(**mIntfVoltage)(0, 0) = (**mVoltageRef).real();
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -43,7 +42,7 @@ void EMT::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Att
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void EMT::Ph1::VoltageSourceNorton::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph1::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Apply matrix stamp for equivalent resistance
 	if (terminalNotGrounded(0))
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mConductance);
@@ -55,7 +54,7 @@ void EMT::Ph1::VoltageSourceNorton::mnaApplySystemMatrixStamp(Matrix& systemMatr
 	}
 }
 
-void EMT::Ph1::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph1::VoltageSourceNorton::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	// Apply matrix stamp for equivalent current source
 	if (terminalNotGrounded(0))
 		Math::setVectorElement(rightVector, matrixNodeIndex(0), -mEquivCurrent);
@@ -71,28 +70,28 @@ void EMT::Ph1::VoltageSourceNorton::updateState(Real time) {
 	mEquivCurrent = (**mIntfVoltage)(0,0) / **mResistance;
 }
 
-void EMT::Ph1::VoltageSourceNorton::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void EMT::Ph1::VoltageSourceNorton::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	attributeDependencies.push_back(mVoltageRef);
 	modifiedAttributes.push_back(mRightVector);
 }
 
-void EMT::Ph1::VoltageSourceNorton::mnaPreStep(Real time, Int timeStepCount) {
+void EMT::Ph1::VoltageSourceNorton::mnaCompPreStep(Real time, Int timeStepCount) {
 	updateState(time);
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph1::VoltageSourceNorton::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph1::VoltageSourceNorton::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfCurrent);
 	modifiedAttributes.push_back(mIntfVoltage);
 }
 
-void EMT::Ph1::VoltageSourceNorton::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+void EMT::Ph1::VoltageSourceNorton::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph1::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph1::VoltageSourceNorton::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// Calculate v1 - v0
 	if (terminalNotGrounded(1))
 		(**mIntfVoltage)(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
@@ -100,7 +99,7 @@ void EMT::Ph1::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void EMT::Ph1::VoltageSourceNorton::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph1::VoltageSourceNorton::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	// TODO: verify signs
 	(**mIntfCurrent)(0,0) = mEquivCurrent - (**mIntfVoltage)(0,0) / **mResistance;
 }

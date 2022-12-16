@@ -125,8 +125,8 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency) override;
 
 		// #### MNA section ####
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 
 		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;

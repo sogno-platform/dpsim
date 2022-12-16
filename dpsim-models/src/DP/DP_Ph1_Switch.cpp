@@ -42,14 +42,13 @@ void DP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void DP::Ph1::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void DP::Ph1::Switch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void DP::Ph1::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::Switch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Complex conductance = (**mIsClosed) ?
 		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );
 
@@ -103,24 +102,24 @@ void DP::Ph1::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& syste
 	}
 }
 
-void DP::Ph1::Switch::mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
+void DP::Ph1::Switch::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) { }
 
 Bool DP::Ph1::Switch::mnaIsClosed() { return isClosed(); }
 
-void DP::Ph1::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph1::Switch::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	(**mIntfVoltage)(0, 0) = 0;
 	if (terminalNotGrounded(1)) (**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,0));
 	if (terminalNotGrounded(0)) (**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void DP::Ph1::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph1::Switch::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = (**mIsClosed) ?
 		(**mIntfVoltage)(0,0) / **mClosedResistance :
 		(**mIntfVoltage)(0,0) / **mOpenResistance;
 }
 
-void DP::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+void DP::Ph1::Switch::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
 	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
 	Attribute<Matrix>::Ptr &leftVector) {
 
@@ -129,7 +128,7 @@ void DP::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDe
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void DP::Ph1::Switch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+void DP::Ph1::Switch::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }

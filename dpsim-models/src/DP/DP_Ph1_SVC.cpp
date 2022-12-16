@@ -111,24 +111,23 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 
 // #### MNA functions ####
 
-void DP::Ph1::SVC::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void DP::Ph1::SVC::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	mSLog->info(
 		"\nTerminal 0 connected to {:s} = sim node {:d}",
 		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex());
 
-    mSubInductor->mnaInitialize(omega, timeStep, leftVector);
+    mSubInductor->mnaCompInitialize(omega, timeStep, leftVector);
     mRightVectorStamps.push_back(&mSubInductor->attributeTyped<Matrix>("right_vector")->get());
 
-    mSubInductorSwitch->mnaInitialize(omega, timeStep, leftVector);
+    mSubInductorSwitch->mnaCompInitialize(omega, timeStep, leftVector);
     mRighteVctorStamps.push_back(&mSubInductorSwitch->attributeTyped<Matrix>("right_vector")->get());
 
-    mSubCapacitor->mnaInitialize(omega, timeStep, leftVector);
+    mSubCapacitor->mnaCompInitialize(omega, timeStep, leftVector);
     mRightVectorStamps.push_back(&mSubCapacitor->attributeTyped<Matrix>("right_vector")->get());
 
-    mSubCapacitorSwitch->mnaInitialize(omega, timeStep, leftVector);
+    mSubCapacitorSwitch->mnaCompInitialize(omega, timeStep, leftVector);
     mRightVectorStamps.push_back(&mSubCapacitorSwitch->attributeTyped<Matrix>("right_vector")->get());
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -136,38 +135,38 @@ void DP::Ph1::SVC::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::P
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void DP::Ph1::SVC::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubInductor->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubCapacitor->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubCapacitorSwitch->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubInductorSwitch->mnaApplySystemMatrixStamp(systemMatrix);
+void DP::Ph1::SVC::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+	mSubInductor->mnaCompApplySystemMatrixStamp(systemMatrix);
+	mSubCapacitor->mnaCompApplySystemMatrixStamp(systemMatrix);
+	mSubCapacitorSwitch->mnaCompApplySystemMatrixStamp(systemMatrix);
+	mSubInductorSwitch->mnaCompApplySystemMatrixStamp(systemMatrix);
 }
 
-void DP::Ph1::SVC::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
-	mSubCapacitor->mnaApplyRightSideVectorStamp(rightVector);
-	mSubCapacitorSwitch->mnaApplyRightSideVectorStamp(rightVector);
-	mSubInductorSwitch->mnaApplyRightSideVectorStamp(rightVector);
+void DP::Ph1::SVC::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
+	mSubInductor->mnaCompApplyRightSideVectorStamp(rightVector);
+	mSubCapacitor->mnaCompApplyRightSideVectorStamp(rightVector);
+	mSubCapacitorSwitch->mnaCompApplyRightSideVectorStamp(rightVector);
+	mSubInductorSwitch->mnaCompApplyRightSideVectorStamp(rightVector);
 }
 
-void DP::Ph1::SVC::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void DP::Ph1::SVC::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
-    mSubInductor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-    mSubInductorSwitch->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-    mSubCapacitor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-    mSubCapacitorSwitch->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+    mSubInductor->mnaCompAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+    mSubInductorSwitch->mnaCompAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+    mSubCapacitor->mnaCompAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+    mSubCapacitorSwitch->mnaCompAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 
 	// add pre-step dependencies of component itself
 	modifiedAttributes.push_back(mRightVector);
 }
 
-void DP::Ph1::SVC::mnaPreStep(Real time, Int timeStepCount) {
-    mSubInductor->mnaPreStep(time, timeStepCount);
-    mSubInductorSwitch->mnaPreStep(time, timeStepCount);
-    mSubCapacitor->mnaPreStep(time, timeStepCount);
-    mSubCapacitorSwitch->mnaPreStep(time, timeStepCount);
+void DP::Ph1::SVC::mnaCompPreStep(Real time, Int timeStepCount) {
+    mSubInductor->mnaCompPreStep(time, timeStepCount);
+    mSubInductorSwitch->mnaCompPreStep(time, timeStepCount);
+    mSubCapacitor->mnaCompPreStep(time, timeStepCount);
+    mSubCapacitorSwitch->mnaCompPreStep(time, timeStepCount);
 
-    mnaApplyRightSideVectorStamp(**mRightVector);
+    mnaCompApplyRightSideVectorStamp(**mRightVector);
 
 	if (time > 0.1 && !mDisconnect) {
 		if (mMechMode) {
@@ -180,12 +179,12 @@ void DP::Ph1::SVC::mnaPreStep(Real time, Int timeStepCount) {
 	}
 }
 
-void DP::Ph1::SVC::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void DP::Ph1::SVC::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	// add post-step dependencies of subcomponents
-    mSubInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-    mSubInductorSwitch->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-    mSubCapacitor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-    mSubCapacitorSwitch->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+    mSubInductor->mnaCompAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+    mSubInductorSwitch->mnaCompAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+    mSubCapacitor->mnaCompAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+    mSubCapacitorSwitch->mnaCompAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
@@ -193,26 +192,26 @@ void DP::Ph1::SVC::mnaAddPostStepDependencies(AttributeBase::List &prevStepDepen
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void DP::Ph1::SVC::mnaPostStep(Real time, Int timeStepCount) {
-	mSubInductor->mnaPostStep(time, timeStepCount, leftVector);
-    mSubInductorSwitch->mnaPostStep(time, timeStepCount, leftVector);
-    mSubCapacitor->mnaPostStep(time, timeStepCount, leftVector);
-    mSubCapacitorSwitch->mnaPostStep(time, timeStepCount, leftVector);
+void DP::Ph1::SVC::mnaCompPostStep(Real time, Int timeStepCount) {
+	mSubInductor->mnaCompPostStep(time, timeStepCount, leftVector);
+    mSubInductorSwitch->mnaCompPostStep(time, timeStepCount, leftVector);
+    mSubCapacitor->mnaCompPostStep(time, timeStepCount, leftVector);
+    mSubCapacitorSwitch->mnaCompPostStep(time, timeStepCount, leftVector);
 
-	mnaUpdateVoltage(**mLeftVector);
-	mnaUpdateCurrent(**mLeftVector);
+	mnaCompUpdateVoltage(**mLeftVector);
+	mnaCompUpdateCurrent(**mLeftVector);
 
 	mDeltaT = time - mPrevTimeStep;
 	mPrevTimeStep = time;
 	mValueChange = false;
 }
 
-void DP::Ph1::SVC::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph1::SVC::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	**mVpcc = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, 0).real();
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void DP::Ph1::SVC::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph1::SVC::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = 0;
 	(**mIntfCurrent)(0, 0) += mSubInductor->intfCurrent()(0, 0);
 	(**mIntfCurrent)(0, 0) += mSubCapacitor->intfCurrent()(0, 0);

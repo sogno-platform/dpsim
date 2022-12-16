@@ -75,7 +75,7 @@ void DP::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
 	**mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 }
 
-void DP::Ph3::SynchronGeneratorDQ::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::SynchronGeneratorDQ::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (!mCompensationOn)
 		return;
 
@@ -91,7 +91,7 @@ void DP::Ph3::SynchronGeneratorDQ::mnaApplySystemMatrixStamp(Matrix& systemMatri
 	}
 }
 
-void DP::Ph3::SynchronGeneratorDQ::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph3::SynchronGeneratorDQ::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (mCompensationOn)
 		mCompensationCurrent = **mIntfVoltage / mRcomp;
 
@@ -105,19 +105,19 @@ void DP::Ph3::SynchronGeneratorDQ::mnaApplyRightSideVectorStamp(Matrix& rightVec
 	}
 }
 
-void DP::Ph3::SynchronGeneratorDQ::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph3::SynchronGeneratorDQ::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,0));
 	(**mIntfVoltage)(1,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,1));
 	(**mIntfVoltage)(2,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,2));
 }
 
-void DP::Ph3::SynchronGeneratorDQ::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void DP::Ph3::SynchronGeneratorDQ::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 }
 
-void DP::Ph3::SynchronGeneratorDQ::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
+void DP::Ph3::SynchronGeneratorDQ::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
 }
 
 Real DP::Ph3::SynchronGeneratorDQ::electricalTorque() const { return **mElecTorque * mBase_T; }

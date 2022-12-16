@@ -59,20 +59,20 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-		void mnaPreStep(Real time, Int timeStepCount) override;
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

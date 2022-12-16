@@ -44,9 +44,8 @@ void EMT::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 		initialSingleVoltage(1).real());
 }
 
-void EMT::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void EMT::Ph1::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	mEquivCond = timeStep / (2.0 * **mInductance);
 	// Update internal state
@@ -57,7 +56,7 @@ void EMT::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void EMT::Ph1::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph1::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0))
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond);
 	if (terminalNotGrounded(1))
@@ -68,7 +67,7 @@ void EMT::Ph1::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void EMT::Ph1::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph1::Inductor::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	// Update internal state
 	mEquivCurrent = mEquivCond * (**mIntfVoltage)(0,0) + (**mIntfCurrent)(0,0);
 	if (terminalNotGrounded(0))
@@ -77,29 +76,29 @@ void EMT::Ph1::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent);
 }
 
-void EMT::Ph1::Inductor::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void EMT::Ph1::Inductor::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// actually depends on L, but then we'd have to modify the system matrix anyway
 	modifiedAttributes.push_back(mRightVector);
 	prevStepDependencies.push_back(mIntfCurrent);
 	prevStepDependencies.push_back(mIntfVoltage);
 }
 
-void EMT::Ph1::Inductor::mnaPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+void EMT::Ph1::Inductor::mnaCompPreStep(Real time, Int timeStepCount) {
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph1::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph1::Inductor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void EMT::Ph1::Inductor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+void EMT::Ph1::Inductor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph1::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph1::Inductor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	(**mIntfVoltage)(0,0) = 0;
 	if (terminalNotGrounded(1))
@@ -108,7 +107,7 @@ void EMT::Ph1::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void EMT::Ph1::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph1::Inductor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = mEquivCond * (**mIntfVoltage)(0,0) + mEquivCurrent;
 }
 

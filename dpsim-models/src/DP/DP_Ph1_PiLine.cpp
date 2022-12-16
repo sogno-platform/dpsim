@@ -114,7 +114,7 @@ void DP::Ph1::PiLine::mnaParentAddPreStepDependencies(AttributeBase::List &prevS
 
 void DP::Ph1::PiLine::mnaParentPreStep(Real time, Int timeStepCount) {
 	// pre-step of component itself
-	this->mnaApplyRightSideVectorStamp(**mRightVector);
+	this->mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::PiLine::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -126,11 +126,11 @@ void DP::Ph1::PiLine::mnaParentAddPostStepDependencies(AttributeBase::List &prev
 
 void DP::Ph1::PiLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of component itself
-	this->mnaUpdateVoltage(**leftVector);
-	this->mnaUpdateCurrent(**leftVector);
+	this->mnaCompUpdateVoltage(**leftVector);
+	this->mnaCompUpdateCurrent(**leftVector);
 }
 
-void DP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = 0;
 	if (terminalNotGrounded(1))
 		(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
@@ -138,7 +138,7 @@ void DP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void DP::Ph1::PiLine::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph1::PiLine::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = mSubSeriesInductor->intfCurrent()(0, 0);
 }
 

@@ -54,9 +54,9 @@ namespace Ph3 {
 		/// Add MNA post step dependencies
 		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Updates current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates voltage across component
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 
 	};
 }

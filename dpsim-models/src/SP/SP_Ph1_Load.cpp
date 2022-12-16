@@ -170,15 +170,15 @@ void SP::Ph1::Load::mnaParentAddPostStepDependencies(AttributeBase::List &prevSt
 };
 
 void SP::Ph1::Load::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::Load::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::Load::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void SP::Ph1::Load::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::Load::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = 0;
 
 	for (auto& subc : mSubComponents) {

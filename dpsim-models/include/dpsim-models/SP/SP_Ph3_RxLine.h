@@ -49,27 +49,27 @@ namespace Ph3 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps system matrix
 		void mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaUpdateVoltage(const Matrix& leftVector);
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 				mAttributeDependencies.push_back(line.mSubResistor->attribute("right_vector"));
 				mAttributeDependencies.push_back(line.mSubInductor->attribute("right_vector"));
 				mModifiedAttributes.push_back(line.attribute("right_vector"));
 		}
 
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 				mAttributeDependencies.push_back(leftVector);
 				mAttributeDependencies.push_back(line.mSubInductor->attribute("i_intf"));
 				mModifiedAttributes.push_back(line.attribute("i_intf"));

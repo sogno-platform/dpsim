@@ -108,9 +108,8 @@ void DP::Ph1::Inverter::calculatePhasors() {
 
 // #### MNA functions ####
 
-void DP::Ph1::Inverter::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void DP::Ph1::Inverter::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -119,9 +118,8 @@ void DP::Ph1::Inverter::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 	calculatePhasors();
 }
 
-void DP::Ph1::Inverter::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void DP::Ph1::Inverter::mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
+		updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
@@ -130,7 +128,7 @@ void DP::Ph1::Inverter::mnaInitializeHarm(Real omega, Real timeStep, std::vector
 	calculatePhasors();
 }
 
-void DP::Ph1::Inverter::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::Inverter::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	mSLog->info("--- Stamping into system matrix ---");
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
@@ -148,7 +146,7 @@ void DP::Ph1::Inverter::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	mSLog->info("--- Stamping into system matrix end ---");
 }
 
-void DP::Ph1::Inverter::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
+void DP::Ph1::Inverter::mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
 	mSLog->info("Stamp frequency {:d}", freqIdx);
 	if (terminalNotGrounded(0)) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(1, 0));
@@ -161,7 +159,7 @@ void DP::Ph1::Inverter::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int 
 	}
 }
 
-void DP::Ph1::Inverter::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph1::Inverter::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Stamp harmonics into source vector");
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0)) {
@@ -173,7 +171,7 @@ void DP::Ph1::Inverter::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	}
 }
 
-void DP::Ph1::Inverter::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
+void DP::Ph1::Inverter::mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Stamp harmonics into source vector");
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0)) {
@@ -182,31 +180,31 @@ void DP::Ph1::Inverter::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 	}
 }
 
-void DP::Ph1::Inverter::mnaApplyRightSideVectorStampHarm(Matrix& rightVector, Int freq) {
+void DP::Ph1::Inverter::mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector, Int freq) {
 	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mIntfVoltage)(0,freq));
 }
 
-void DP::Ph1::Inverter::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void DP::Ph1::Inverter::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	modifiedAttributes.push_back(mRightVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 }
 
-void DP::Ph1::Inverter::mnaPreStep(Real time, Int timeStepCount) {
+void DP::Ph1::Inverter::mnaCompPreStep(Real time, Int timeStepCount) {
 	calculatePhasors();
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::Inverter::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 	mInverter.calculatePhasors();
-	mInverter.mnaApplyRightSideVectorStampHarm(**mInverter.mRightVector);
+	mInverter.mnaCompApplyRightSideVectorStampHarm(**mInverter.mRightVector);
 }
 
-void DP::Ph1::Inverter::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void DP::Ph1::Inverter::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void DP::Ph1::Inverter::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+void DP::Ph1::Inverter::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 
 }
 

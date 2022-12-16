@@ -46,23 +46,23 @@ namespace CPS {
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component
-				void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+				void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 				/// Stamps system matrix
-				void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+				void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
 				/// Stamps right side (source) vector
-				void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+				void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 				/// Update interface voltage from MNA system result
-				void mnaUpdateVoltage(const Matrix& leftVector) override;
+				void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 				/// Update interface current from MNA system result
-				void mnaUpdateCurrent(const Matrix& leftVector) override;
+				void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 				/// MNA pre step operations
-				void mnaPreStep(Real time, Int timeStepCount) override;
+				void mnaCompPreStep(Real time, Int timeStepCount) override;
 				/// MNA post step operations
-				void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+				void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 				/// Add MNA pre step dependencies
-				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+				void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 				/// Add MNA post step dependencies
-				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+				void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 			};
 		}
 	}

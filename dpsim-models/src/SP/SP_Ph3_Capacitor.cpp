@@ -55,7 +55,7 @@ void SP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 
-void SP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void SP::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
 	// TODO add updated logger
 	/*mLog.info() << "\n--- MNA Initialization ---" << std::endl
@@ -69,7 +69,7 @@ void SP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void SP::Ph3::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mSusceptance(0, 0));
@@ -138,18 +138,18 @@ void SP::Ph3::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}*/
 }
 
-void SP::Ph3::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void SP::Ph3::Capacitor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void SP::Ph3::Capacitor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+void SP::Ph3::Capacitor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void SP::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph3::Capacitor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
@@ -164,6 +164,6 @@ void SP::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 	}
 }
 
-void SP::Ph3::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph3::Capacitor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 }

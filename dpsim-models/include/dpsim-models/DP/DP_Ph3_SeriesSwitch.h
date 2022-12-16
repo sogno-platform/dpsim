@@ -43,13 +43,13 @@ namespace Ph3 {
 
 		// #### General MNA section ####
 		///
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 
 		// #### MNA section for switches ####
 		/// Check if switch is closed
@@ -58,8 +58,8 @@ namespace Ph3 {
 		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

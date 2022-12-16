@@ -47,10 +47,10 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
-void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega,
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
-	Base::ReducedOrderSynchronGenerator<Real>::mnaInitialize(omega, timeStep, leftVector);
+	Base::ReducedOrderSynchronGenerator<Real>::mnaCompInitialize(omega, timeStep, leftVector);
 
 	if (mModelAsCurrentSource) {
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
@@ -112,7 +112,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega,
 		mSLog->info("({}, {})", indexPair.first, indexPair.second);
 }
 
-void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	if (mModelAsCurrentSource) {
 		// Stamp conductance matrix
@@ -198,7 +198,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Ma
 	}
 }
 
-void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompPostStep(const Matrix& leftVector) {
 	// update armature voltage
 	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));

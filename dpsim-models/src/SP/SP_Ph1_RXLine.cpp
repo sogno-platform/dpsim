@@ -198,15 +198,15 @@ void SP::Ph1::RXLine::mnaParentAddPostStepDependencies(AttributeBase::List &prev
 };
 
 void SP::Ph1::RXLine::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void SP::Ph1::RXLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::RXLine::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::RXLine::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = 0;
 	if (terminalNotGrounded(1))
 		(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
@@ -214,6 +214,6 @@ void SP::Ph1::RXLine::mnaUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void SP::Ph1::RXLine::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::RXLine::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = mSubInductor->intfCurrent()(0, 0);
 }

@@ -364,9 +364,9 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentPreStep(Real time, Int timeSt
 	if (mWithControl)
 		mSubCtrledVoltageSource->mVoltageRef->set(PEAK1PH_TO_RMS3PH * **mVsref);
 
-	std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
+	std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaCompPreStep(time, timeStepCount);
 	// pre-step of component itself
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -376,20 +376,20 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentAddPostStepDependencies(Attri
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateCurrent(**leftVector);
-	mnaUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {
+void EMT::Ph3::AvVoltageSourceInverterDQ::mnaCompUpdateCurrent(const Matrix& leftvector) {
 	if (mWithConnectionTransformer)
 		**mIntfCurrent = mConnectionTransformer->mIntfCurrent->get();
 	else
 		**mIntfCurrent = mSubResistorC->mIntfCurrent->get();
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::AvVoltageSourceInverterDQ::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	for (auto virtualNode : mVirtualNodes)
-		virtualNode->mnaUpdateVoltage(leftVector);
+		virtualNode->mnaCompUpdateVoltage(leftVector);
 	(**mIntfVoltage)(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,0));
 	(**mIntfVoltage)(1,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,1));
 	(**mIntfVoltage)(2,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,2));

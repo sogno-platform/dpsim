@@ -52,8 +52,8 @@ namespace CPS {
 		virtual void mnaApplyRightSideVectorStampHarm(Matrix& sourceVector) = 0;
 		virtual void mnaApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx) = 0;
 		/// Return list of MNA tasks
-		virtual const Task::List& mnaTasks() = 0;
+		virtual const Task::List& mnaTasks() const = 0;
 		// Return right vector attribute
-		virtual const Attribute<Matrix>::Ptr getRightVector() = 0;
+		virtual const Attribute<Matrix>::Ptr getRightVector() const = 0;
 	};
 }

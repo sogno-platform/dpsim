@@ -125,9 +125,8 @@ void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real freque
 	}
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitializelize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	for (UInt phase1Idx = 0; phase1Idx < 3; ++phase1Idx)
 		for (UInt phase2Idx = 0; phase2Idx < 3; ++phase2Idx)
@@ -248,12 +247,12 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, At
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::mnaPreStep(Real time, Int timeStepCount) {
+void EMT::Ph3::SynchronGeneratorVBR::mnaCompPreStep(Real time, Int timeStepCount) {
 	stepInPerUnit();
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::SynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMat(0, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), mConductanceMat(0, 1));
@@ -270,14 +269,14 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMat
 	}
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void EMT::Ph3::SynchronGeneratorVBR::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of component itself
 	prevStepDependencies.push_back(mIntfCurrent);
 	prevStepDependencies.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mRightVector);
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph3::SynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (terminalNotGrounded(0)) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), mISourceEq(0));
 		Math::setVectorElement(rightVector, matrixNodeIndex(0,1), mISourceEq(1));
@@ -327,7 +326,7 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 	mISourceEq = R_eq_vbr.inverse()*E_eq_vbr*mBase_I;
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	if ( terminalNotGrounded(0) ) {
 		mVa = Math::realFromVectorElement(*leftVector, matrixNodeIndex(0,0)) / mBase_V;
 		mVb = Math::realFromVectorElement(*leftVector, matrixNodeIndex(0,1)) / mBase_V;
@@ -424,7 +423,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaPostStep(Real time, Int timeStepCount, A
 	**mIntfCurrent = mIabc*mBase_I;
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph3::SynchronGeneratorVBR::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
