@@ -120,7 +120,7 @@ void MnaSolver<Real>::initializeComponents() {
 	// Initialize MNA specific parts of components.
 	for (auto comp : allMNAComps) {
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mLeftSideVector);
-		const Matrix& stamp = comp->mRightVector->get();
+		const Matrix& stamp = comp->getRightVector()->get();
 		if (stamp.size() != 0) {
 			mRightVectorStamps.push_back(&stamp);
 		}
@@ -157,7 +157,7 @@ void MnaSolver<Complex>::initializeComponents() {
 		for (auto comp : mMNAComponents) {
 			// Initialize MNA specific parts of components.
 			comp->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep, mLeftSideVectorHarm);
-			const Matrix& stamp = comp->mRightVector->get();
+			const Matrix& stamp = comp->getRightVector()->get();
 			if (stamp.size() != 0) mRightVectorStamps.push_back(&stamp);
 		}
 		// Initialize nodes
@@ -169,7 +169,7 @@ void MnaSolver<Complex>::initializeComponents() {
 		// Initialize MNA specific parts of components.
 		for (auto comp : allMNAComps) {
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mLeftSideVector);
-			const Matrix& stamp = comp->mRightVector->get();
+			const Matrix& stamp = comp->getRightVector()->get();
 			if (stamp.size() != 0) {
 				mRightVectorStamps.push_back(&stamp);
 			}

@@ -42,8 +42,8 @@ namespace DPsim {
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
 				for (auto it : solver.mMNAComponents) {
-					if (it->mRightVector->get().size() != 0)
-						mAttributeDependencies.push_back(it->mRightVector);
+					if (it->getRightVector()->get().size() != 0)
+						mAttributeDependencies.push_back(it->getRightVector());
 				}
 				for (auto node : solver.mNodes) {
 					mModifiedAttributes.push_back(node->mVoltage);

@@ -7,7 +7,7 @@ using namespace CPS;
 template <typename VarType>
 void CompositePowerComp<VarType>::addMNASubComponent(typename SimPowerComp<VarType>::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder, Bool contributeToRightVector) {
 	this->mSubComponents.push_back(subc);
-	if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subc)) {
+	if (auto mnasubcomp = std::dynamic_pointer_cast<MNASimPowerComp<VarType>>(subc)) {
 		this->mSubcomponentsMNA.push_back(mnasubcomp);
 
 		if (contributeToRightVector) {
@@ -41,7 +41,7 @@ void CompositePowerComp<VarType>::addMNASubComponent(typename SimPowerComp<VarTy
 
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
+	MNASimPowerComp<VarType>::mnaInitialize(omega, timeStep, leftVector);
 	SimPowerComp<VarType>::updateMatrixNodeIndices();
 
 	for (auto subComp : mSubcomponentsMNA) {
@@ -51,13 +51,6 @@ void CompositePowerComp<VarType>::mnaInitialize(Real omega, Real timeStep, Attri
 	**this->mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mnaParentInitialize(omega, timeStep, leftVector);
-
-	if (mHasPreStep) {
-		this->mMnaTasks.push_back(std::make_shared<typename MNASimPowerComp<VarType>::MnaPreStep>(*this));
-	}
-	if (mHasPostStep) {
-		this->mMnaTasks.push_back(std::make_shared<typename MNASimPowerComp<VarType>::MnaPostStep>(*this, leftVector));
-	}
 }
 
 template <typename VarType>
