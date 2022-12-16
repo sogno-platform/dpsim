@@ -33,10 +33,10 @@ namespace Ph1 {
 		///
 		Matrix mComplexAToDq;
 
-        /// Constructor 
+        /// Constructor
         SynchronGeneratorVBR(String uid, String name, Logger::Level logLevel);
         SynchronGeneratorVBR(String name, Logger::Level logLevel);
-      
+
         ///
         virtual void specificInitialization()=0;
         ///
@@ -48,10 +48,10 @@ namespace Ph1 {
 
         // ### MNA Section ###
         ///
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);      
-        void mnaPostStep(const Matrix& leftVector);
-        
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+        void mnaCompPostStep(const Matrix& leftVector);
+
     public:
         virtual ~SynchronGeneratorVBR();
 

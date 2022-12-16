@@ -37,7 +37,7 @@ void SP::Ph1::SynchronGeneratorVBR::calculateResistanceMatrix() {
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
-void SP::Ph1::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::SynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Stamp voltage source
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1, 0));
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
@@ -55,11 +55,11 @@ void SP::Ph1::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatr
 	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(), -mConductanceMatrix);
 }
 
-void SP::Ph1::SynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void SP::Ph1::SynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), **Evbr);
 }
 
-void SP::Ph1::SynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
+void SP::Ph1::SynchronGeneratorVBR::mnaCompPostStep(const Matrix& leftVector) {
 	// update armature voltage
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	Matrix Vabc = Matrix::Zero(2,1);

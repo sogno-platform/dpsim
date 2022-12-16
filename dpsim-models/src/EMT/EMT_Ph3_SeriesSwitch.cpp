@@ -49,16 +49,15 @@ void EMT::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorMatrixToString(initialVoltage(1)));
 }
 
-void EMT::Ph3::SeriesSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void EMT::Ph3::SeriesSwitch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
 Bool EMT::Ph3::SeriesSwitch::mnaIsClosed() { return **mIsClosed; }
 
-void EMT::Ph3::SeriesSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::SeriesSwitch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Real conductance = (**mIsClosed)
 		? 1. / **mClosedResistance
 		: 1. / **mOpenResistance;
@@ -110,18 +109,18 @@ void EMT::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix
 	}
 }
 
-void EMT::Ph3::SeriesSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph3::SeriesSwitch::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void EMT::Ph3::SeriesSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+void EMT::Ph3::SeriesSwitch::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::SeriesSwitch::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	**mIntfVoltage = Matrix::Zero(3,1);
 	if (terminalNotGrounded(1)) {
@@ -138,7 +137,7 @@ void EMT::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage A: {}", (**mIntfVoltage)(0,0));
 }
 
-void EMT::Ph3::SeriesSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::SeriesSwitch::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	Real impedance = (**mIsClosed)? **mClosedResistance : **mOpenResistance;
 	**mIntfCurrent = **mIntfVoltage / impedance;
 

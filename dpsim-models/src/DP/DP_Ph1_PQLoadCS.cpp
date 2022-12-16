@@ -117,7 +117,7 @@ void DP::Ph1::PQLoadCS::mnaParentAddPostStepDependencies(AttributeBase::List &pr
 
 void DP::Ph1::PQLoadCS::mnaParentPreStep(Real time, Int timeStepCount) {
 	updateSetPoint();
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::PQLoadCS::updateIntfValues() {

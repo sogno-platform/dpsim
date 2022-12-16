@@ -21,11 +21,11 @@ namespace Ph3 {
 		SynchronGeneratorDQTrapez(String name, Logger::Level loglevel = Logger::Level::off);
 
 		// #### MNA Section ####
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		void mnaPreStep(Real time, Int timeStepCount) override;
+		void mnaCompInitializelizelize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
 
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 
 	protected:
 		// #### Trapezoidal Section ####

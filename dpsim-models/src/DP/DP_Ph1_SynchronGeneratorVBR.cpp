@@ -65,10 +65,10 @@ void DP::Ph1::SynchronGeneratorVBR::calculateAuxiliarVariables() {
 	mKvbr(0,1) = -Complex(cos(**mThetaMech - mBase_OmMech * mSimTime - PI/2.), sin(**mThetaMech - mBase_OmMech * mSimTime - PI/2.));
 }
 
-void DP::Ph1::SynchronGeneratorVBR::mnaInitialize(Real omega,
+void DP::Ph1::SynchronGeneratorVBR::mnaCompInitialize(Real omega,
 		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
-	Base::ReducedOrderSynchronGenerator<Complex>::mnaInitialize(omega, timeStep, leftVector);
+	Base::ReducedOrderSynchronGenerator<Complex>::mnaCompInitialize(omega, timeStep, leftVector);
 
 	// upper left
 	mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex()));
@@ -86,7 +86,7 @@ void DP::Ph1::SynchronGeneratorVBR::mnaInitialize(Real omega,
 
 }
 
-void DP::Ph1::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::SynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Stamp voltage source
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1, 0));
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
@@ -104,11 +104,11 @@ void DP::Ph1::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatr
 	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(), -mConductanceMatrix);
 }
 
-void DP::Ph1::SynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph1::SynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), **mEvbr);
 }
 
-void DP::Ph1::SynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
+void DP::Ph1::SynchronGeneratorVBR::mnaCompPostStep(const Matrix& leftVector) {
 	// update armature voltage and current
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());

@@ -28,7 +28,7 @@ namespace Ph1 {
 		Matrix mA;
 		///
 		Matrix mB;
-		/// 
+		///
 		Matrix mC;
 
 		///
@@ -44,15 +44,15 @@ namespace Ph1 {
 
 		// #### General Functions ####
 		/// Specific component initialization
-        void specificInitialization(); 
+        void specificInitialization();
 		///
 		void stepInPerUnit();
 
 		// ### MNA Section ###
         ///
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-        void mnaPostStep(const Matrix& leftVector);
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+        void mnaCompPostStep(const Matrix& leftVector);
 
 	public:
 		///

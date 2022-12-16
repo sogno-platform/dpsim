@@ -27,19 +27,19 @@ namespace Ph3 {
 		Matrix mResistanceMatrixDq0;
 		/// Conductance matrix
 		Matrix mConductanceMatrix;
-        
+
 
 		///
 		Matrix mAbcToDq0;
 		Matrix mDq0ToAbc;
 
-        /// Constructor 
+        /// Constructor
         ReducedOrderSynchronGeneratorVBR(String uid, String name, Logger::Level logLevel);
         ReducedOrderSynchronGeneratorVBR(String name, Logger::Level logLevel);
-      
+
 	  	// #### General Functions ####
         /// Specific component initialization
-        virtual void specificInitialization()=0; 
+        virtual void specificInitialization()=0;
         ///
         virtual void stepInPerUnit()=0;
 		///
@@ -48,16 +48,16 @@ namespace Ph3 {
         Matrix get_parkTransformMatrix();
 		/// Inverse Park Transformation according to Kundur
 		Matrix get_inverseParkTransformMatrix();
-		
+
         // ### MNA Section ###
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaPostStep(const Matrix& leftVector);
-        void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompPostStep(const Matrix& leftVector);
+        void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 
     public:
         virtual ~ReducedOrderSynchronGeneratorVBR();
-    
+
         /// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override { return 1; };
     };

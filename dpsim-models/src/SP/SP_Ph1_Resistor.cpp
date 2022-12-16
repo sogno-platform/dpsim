@@ -84,9 +84,8 @@ void SP::Ph1::Resistor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 
 // #### MNA section ####
 
-void SP::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void SP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mSLog->info(
@@ -98,7 +97,7 @@ void SP::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 		Logger::phasorToString((**mIntfCurrent)(0, 0)));
 }
 
-void SP::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Complex conductance = Complex(1. / **mResistance, 0);
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
@@ -125,18 +124,18 @@ void SP::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void SP::Ph1::Resistor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void SP::Ph1::Resistor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void SP::Ph1::Resistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	this->mnaUpdateVoltage(**leftVector);
-	this->mnaUpdateCurrent(**leftVector);
+void SP::Ph1::Resistor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	this->mnaCompUpdateVoltage(**leftVector);
+	this->mnaCompUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::Resistor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		(**mIntfVoltage)(0,freq) = 0;
@@ -149,7 +148,7 @@ void SP::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 	}
 }
 
-void SP::Ph1::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		(**mIntfCurrent)(0,freq) = (**mIntfVoltage)(0,freq) / **mResistance;
 		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));

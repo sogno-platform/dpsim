@@ -59,14 +59,13 @@ void DP::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorMatrixToString(initialVoltage(1)));
 }
 
-void DP::Ph3::SeriesResistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void DP::Ph3::SeriesResistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void DP::Ph3::SeriesResistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::SeriesResistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Complex conductance = { (1./ **mResistance), 0 };
 
 	//// Set diagonal entries
@@ -104,18 +103,18 @@ void DP::Ph3::SeriesResistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void DP::Ph3::SeriesResistor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void DP::Ph3::SeriesResistor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 		attributeDependencies.push_back(leftVector);
 		modifiedAttributes.push_back(mIntfVoltage);
 		modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void DP::Ph3::SeriesResistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+void DP::Ph3::SeriesResistor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void DP::Ph3::SeriesResistor::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph3::SeriesResistor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	**mIntfVoltage = MatrixComp::Zero(3,1);
 	if (terminalNotGrounded(1)) {
@@ -132,7 +131,7 @@ void DP::Ph3::SeriesResistor::mnaUpdateVoltage(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage A: {} < {}", std::abs((**mIntfVoltage)(0,0)), std::arg((**mIntfVoltage)(0,0)));
 }
 
-void DP::Ph3::SeriesResistor::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph3::SeriesResistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = **mIntfVoltage / **mResistance;
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs((**mIntfCurrent)(0,0)), std::arg((**mIntfCurrent)(0,0)));

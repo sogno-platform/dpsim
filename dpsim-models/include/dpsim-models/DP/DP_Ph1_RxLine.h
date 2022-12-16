@@ -44,8 +44,8 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 

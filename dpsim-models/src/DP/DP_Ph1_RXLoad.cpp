@@ -108,11 +108,11 @@ void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real v
 	mSLog->info("Nominal Voltage={} [V]", **mNomVoltage);
 }
 
-void DP::Ph1::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph1::RXLoad::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void DP::Ph1::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph1::RXLoad::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = 0;
 
 	for (auto subComp : mSubComponents) {
@@ -125,7 +125,7 @@ void DP::Ph1::RXLoad::mnaParentAddPreStepDependencies(AttributeBase::List &prevS
 }
 
 void DP::Ph1::RXLoad::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::RXLoad::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -135,6 +135,6 @@ void DP::Ph1::RXLoad::mnaParentAddPostStepDependencies(AttributeBase::List &prev
 }
 
 void DP::Ph1::RXLoad::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }

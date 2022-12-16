@@ -275,16 +275,16 @@ void SP::Ph1::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeStep
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::SynchronGeneratorTrStab::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
 	(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::SynchronGeneratorTrStab::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
 	//Current flowing out of component
 	**mIntfCurrent = mSubInductor->mIntfCurrent->get();

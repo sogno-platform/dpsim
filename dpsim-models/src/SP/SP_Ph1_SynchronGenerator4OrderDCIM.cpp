@@ -67,7 +67,7 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::calculateStateMatrix() {
 	   		(1. / Td_t) * mEf * (mLd_t / mLd);
 }
 
-void SP::Ph1::SynchronGenerator4OrderDCIM::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::SynchronGenerator4OrderDCIM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
@@ -95,11 +95,11 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	(**mIntfCurrent)(0,0) = Complex(Ia(0,0), Ia(1,0)) * mBase_I_RMS;
 }
 
-void SP::Ph1::SynchronGenerator4OrderDCIM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void SP::Ph1::SynchronGenerator4OrderDCIM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0), (**mIntfCurrent)(0, 0));
 }
 
-void SP::Ph1::SynchronGenerator4OrderDCIM::mnaPostStep(const Matrix& leftVector) {
+void SP::Ph1::SynchronGenerator4OrderDCIM::mnaCompPostStep(const Matrix& leftVector) {
 	// update armature voltage
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	Matrix Vabc = Matrix::Zero(2,1);

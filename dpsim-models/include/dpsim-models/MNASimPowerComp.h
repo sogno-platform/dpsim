@@ -28,33 +28,53 @@ namespace CPS {
 		Task::List mMnaTasks;
 
 		/// Basic constructor that takes UID, name and log level
-		MNASimPowerComp(String uid, String name, Logger::Level logLevel)
-			: SimPowerComp<VarType>(uid, name, logLevel), mRightVector(IdentifiedObject::mAttributes->createDynamic<Matrix>("right_vector")) { };
+		MNASimPowerComp(String uid, String name, Bool hasPreStep, Bool hasPostStep, Logger::Level logLevel)
+			: 	SimPowerComp<VarType>(uid, name, logLevel),
+				mRightVector(IdentifiedObject::mAttributes->createDynamic<Matrix>("right_vector")),
+				mHasPreStep(hasPreStep),
+				mHasPostStep(hasPostStep) { };
 
 		/// Basic constructor that takes name and log level and sets the UID to name as well
-		explicit MNASimPowerComp(String name, Logger::Level logLevel = Logger::Level::off)
-			: MNASimPowerComp<VarType>(name, name, logLevel) { };
+		explicit MNASimPowerComp(String name, Bool hasPreStep = true, Bool hasPostStep = true, Logger::Level logLevel = Logger::Level::off)
+			: MNASimPowerComp<VarType>(name, name, hasPreStep, hasPostStep, logLevel) { };
 
 		/// Destructor - does not do anything
 		virtual ~MNASimPowerComp() = default;
 
+		// Implementation of MNAInterface methods
 		void mnaInitialize(Real omega, Real timeStep) final;
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
-		void mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
-		void mnaPreStep(Real time, Int timeStepCount) override;
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-		void mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector) override;
-		void mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) override;
-		void mnaApplyRightSideVectorStampHarm(Matrix& sourceVector) override;
-		void mnaApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx) override;
-		const Task::List& mnaTasks() final;
-		const Attribute<Matrix>::Ptr getRightVector() final;
+		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) final;
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) final;
+		void mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) final;
+		void mnaApplyRightSideVectorStamp(Matrix& rightVector) final;
+		void mnaUpdateVoltage(const Matrix& leftVector) final;
+		void mnaUpdateCurrent(const Matrix& leftVector) final;
+		void mnaPreStep(Real time, Int timeStepCount) final;
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) final;
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) final;
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) final;
+		void mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector) final;
+		void mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) final;
+		void mnaApplyRightSideVectorStampHarm(Matrix& sourceVector) final;
+		void mnaApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx) final;
+
+		// MNA Interface methods that can be overridden by components
+		virtual void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		virtual void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+		virtual void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+		virtual void mnaCompUpdateVoltage(const Matrix& leftVector);
+		virtual void mnaCompUpdateCurrent(const Matrix& leftVector);
+		virtual void mnaCompPreStep(Real time, Int timeStepCount);
+		virtual void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		virtual void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		virtual void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		virtual void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector);
+		virtual void mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx);
+		virtual void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector);
+		virtual void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx);
+
+		const Task::List& mnaTasks() const final;
+		const Attribute<Matrix>::Ptr getRightVector() const final;
 
 		class MnaPreStep : public CPS::Task {
 		public:

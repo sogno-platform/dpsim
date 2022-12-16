@@ -18,9 +18,8 @@ DP::Ph3::SynchronGeneratorDQODE::SynchronGeneratorDQODE(String name, Logger::Lev
 	: SynchronGeneratorDQ(name, name, logLevel), ODEInterface(mAttributes) {
 }
 
-void DP::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void DP::Ph3::SynchronGeneratorDQODE::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	mDim = mNumDampingWindings + 7;
 	**mOdePreState = Matrix::Zero(mDim, 1);
@@ -32,16 +31,16 @@ void DP::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, A
 	mMnaTasks.push_back(std::make_shared<ODEPreStep>(*this));
 }
 
-void DP::Ph3::SynchronGeneratorDQODE::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void DP::Ph3::SynchronGeneratorDQODE::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	attributeDependencies.push_back(mOdePostState);
 	modifiedAttributes.push_back(mRightVector);
 	prevStepDependencies.push_back(mIntfVoltage);
 }
 
-void DP::Ph3::SynchronGeneratorDQODE::mnaPreStep(Real time, Int timeStepCount) {
+void DP::Ph3::SynchronGeneratorDQODE::mnaCompPreStep(Real time, Int timeStepCount) {
 	// ODEPreStep and ODESolver.Solve guaranteed to be executed by scheduler
 	odePostStep();
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph3::SynchronGeneratorDQODE::odePreStep() {

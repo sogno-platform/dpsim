@@ -285,11 +285,10 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompInitialize(Real omega,
 		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
-	MNAInterface::mnaInitialize(omega, timeStep);
-	this->updateMatrixNodeIndices();
+		this->updateMatrixNodeIndices();
 	mTimeStep = timeStep;
     specificInitialization();
 
@@ -299,28 +298,28 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaInitialize(Real omega,
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	modifiedAttributes.push_back(mRightVector);
 	prevStepDependencies.push_back(mIntfVoltage);
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::mnaPreStep(Real time, Int timeStepCount) {
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPreStep(Real time, Int timeStepCount) {
 	mSimTime = time;
 	stepInPerUnit();
 	(**mRightVector).setZero();
-	this->mnaApplyRightSideVectorStamp(**mRightVector);
+	this->mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaPostStep(**leftVector);
+void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompPostStep(**leftVector);
 }
 
 // Declare specializations to move definitions to .cpp

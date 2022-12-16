@@ -48,10 +48,10 @@ namespace Ph1 {
 		/// Matrix to convert Evbr from dq domain to abc domain (only phase a)
 		MatrixComp mKvbr;
 
-        /// Constructor 
+        /// Constructor
         SynchronGeneratorVBR(String uid, String name, Logger::Level logLevel);
         SynchronGeneratorVBR(String name, Logger::Level logLevel);
-      
+
 	  	// #### General Functions ####
         /// Specific component initialization
         virtual void specificInitialization()=0;
@@ -62,13 +62,13 @@ namespace Ph1 {
 		/// Calculate Ka, Kb and Kvbr
 		void calculateAuxiliarVariables();
 		///
-		Matrix get_parkTransformMatrix();        
+		Matrix get_parkTransformMatrix();
 
 		// ### MNA Section ###
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaPostStep(const Matrix& leftVector);
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompPostStep(const Matrix& leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 
     public:
         virtual ~SynchronGeneratorVBR();
