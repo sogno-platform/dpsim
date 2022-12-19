@@ -74,7 +74,7 @@ namespace CPS {
 		virtual void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx);
 
 		const Task::List& mnaTasks() const final;
-		const Attribute<Matrix>::Ptr getRightVector() const final;
+		Attribute<Matrix>::Ptr getRightVector() const final;
 
 		class MnaPreStep : public CPS::Task {
 		public:

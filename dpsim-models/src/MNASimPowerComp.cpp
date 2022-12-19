@@ -10,13 +10,13 @@ const Task::List& MNASimPowerComp<VarType>::mnaTasks() const {
 }
 
 template<typename VarType>
-const Attribute<Matrix>::Ptr MNASimPowerComp<VarType>::getRightVector() const {
+Attribute<Matrix>::Ptr MNASimPowerComp<VarType>::getRightVector() const {
 	return mRightVector;
 }
 
 template<typename VarType>
 void MNASimPowerComp<VarType>::mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) {
-	Matrix mat = Matrix(systemMatrix);
+	auto mat = Matrix(systemMatrix);
 	this->mnaApplySystemMatrixStamp(mat);
 	systemMatrix = mat.sparseView();
 }
