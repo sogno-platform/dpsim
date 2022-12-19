@@ -54,6 +54,6 @@ namespace CPS {
 		/// Return list of MNA tasks
 		virtual const Task::List& mnaTasks() const = 0;
 		// Return right vector attribute
-		virtual const Attribute<Matrix>::Ptr getRightVector() const = 0;
+		virtual Attribute<Matrix>::Ptr getRightVector() const = 0;
 	};
 }
