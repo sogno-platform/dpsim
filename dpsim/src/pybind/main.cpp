@@ -77,6 +77,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_domain", &DPsim::Simulation::setDomain)
 		.def("start", &DPsim::Simulation::start)
 		.def("next", &DPsim::Simulation::next)
+		.def("stop", &DPsim::Simulation::stop)
 		.def("get_idobj_attr", &DPsim::Simulation::getIdObjAttribute, "comp"_a, "attr"_a)
 		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a)
 		.def("log_idobj_attribute", &DPsim::Simulation::logIdObjAttribute, "comp"_a, "attr"_a)
@@ -121,7 +122,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def_readwrite("components", &DPsim::SystemTopology::mComponents)
 		.def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
 		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
-		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow);
+		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow)
+		.def_readonly("components_at_node", &DPsim::SystemTopology::mComponentsAtNode);
 
 	py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m, "Interface");
 
