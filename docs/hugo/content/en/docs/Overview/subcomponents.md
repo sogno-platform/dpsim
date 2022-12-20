@@ -13,7 +13,7 @@ components called `CompositePowerComp<T>`. This class provides multiple methods 
 handled with respect to the `MNAPreStep` and `MNAPostStep` tasks.
 The main idea here is that the subcomponents do not register their own MNA tasks, but instead their MNA methods like `mnaPreStep` and `mnaPostStep` are called explicitly in the tasks of the composite component.
 In the constructor of `CompositePowerComp<T>`, the parameters `hasPreStep` and `hasPostStep` can
-be set to automatically create and register a `MNAPreStep` or `MNAPostStep` task that will call the `mnaPreStep` or `mnaPostStep` method on execution. Note that for the automatic task registration, the `mnaInitialize`-method must not be overridden by the composite component class.
+be set to automatically create and register a `MNAPreStep` or `MNAPostStep` task that will call the `mnaCompPreStep` or `mnaCompPostStep` method on execution.
 Additionally, all subcomponents should be registered as soon as they are created using the `addMNASubComponent`-method. This method takes
 multiple parameters defining how and in what order the subcomponent's pre- and post- steps should be called, as well as if the subcomponent
 should be stamped into the system `rightVector`:
@@ -57,8 +57,8 @@ These parent methods will usually be called after the respective method has been
 `mnaPostStep` methods, this behavior can be set explicitly in the `addMNASubComponent` method.
 
 If a composite component requires a completely custom implementation of some MNA-method, e.g. for skipping certain subcomponents or for
-calling the subcomponent's methods in a different order, the composite component class can still override the original MNA-method without
-the `mnaParent` prefix. This will prevent the `CompositePowerComp` base class from doing any subcomponent handling in this specific MNA-method,
+calling the subcomponent's methods in a different order, the composite component class can still override the original MNA-method with the `mnaComp` prefix instead of the
+`mnaParent` prefix. This will prevent the `CompositePowerComp` base class from doing any subcomponent handling in this specific MNA-method,
 so the subcomponent method calls have to be performed explicitly if desired. Given this, the following two implementations of the `mnaAddPreStepDependencies` method are equivalent:
 
 ```cpp
@@ -70,7 +70,7 @@ void DP::Ph1::PiLine::mnaParentAddPreStepDependencies(AttributeBase::List &prevS
 }
 ```
 ```cpp
-void DP::Ph1::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void DP::Ph1::PiLine::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// manually add pre-step dependencies of subcomponents
 	for (auto subComp : mSubcomponentsMNA) {
 		subComp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
