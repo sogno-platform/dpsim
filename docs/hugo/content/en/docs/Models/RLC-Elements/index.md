@@ -12,7 +12,7 @@ An inductance is described by
 $$
   v_j(t) - v_k(t) = v_L(t) = L \frac{\mathrm{d} i_L(t)}{\mathrm{d}t}
 $$
-Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$ \eqref{eq:inductance_integrated}.
+Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$.
 $$
   i_L(t) = i_L(t - \Delta t) + \frac{1}{L} \ \int_{t - \Delta t}^{t} v_L(\tau) \ \mathrm{d} \tau
 $$
@@ -25,7 +25,7 @@ Applying the trapezoidal rule to leads to
 $$
 	i_L(t) = i_L(t - \Delta t) + \frac{\Delta t}{2L}(v_L(t) + v_L(t - \Delta t))
 $$
-This can be rewritten in terms of an equivalent conductance \eqref{eq:ind_rc_equiv_r} and current source \eqref{eq:ind_rc_equiv_i} and the number of time steps $k$ with size $\Delta t$.
+This can be rewritten in terms of an equivalent conductance and current source and the number of time steps $k$ with size $\Delta t$.
 $$
 	i_L(k) = g_L v_L(k) + i_{L,equiv}(k-1)
 $$
@@ -42,7 +42,7 @@ Hence, components described by differential equations are transformed into a DC 
 
 ### Capacitance
 
-The same procedure can be applied to \eqref{eq:capacitance} describing a capacitance.
+The same procedure can be applied to a capacitance.
 Integration on both side yields
 $$
 	i_C(t) = C \frac{\mathrm{d}}{\mathrm{d}t} \ v_C(t)
@@ -79,12 +79,13 @@ Therefore, the resistive companion representations of inductances and capacitanc
 
 ### Inductance
 In dynamic phasors the integration of the inductance equation yields
-$$
-\begin{align*}
-  \langle v_L \rangle(t)  &= \Big \langle L \frac{\mathrm{d} i_L}{\mathrm{d}t} \Big \rangle(t) \\
-	                        &= L \frac{\mathrm{d}}{dt} \langle i_L \rangle(t) + j \omega L \ \langle i_L \rangle(t)
-\end{align*}
-$$
+```math
+\begin{align}
+\langle v_L \rangle(t)  &= \Big \langle L \frac{\mathrm{d} i_L}{\mathrm{d}t} \Big \rangle(t) \nonumber \\
+                        &= L \frac{\mathrm{d}}{dt} \langle i_L \rangle(t) + j \omega L \ \langle i_L \rangle(t)
+\end{align}
+```
+
 $$
   \langle i_L \rangle(t) = \langle i_L \rangle(t - \Delta t) + \int_{t - \Delta t}^t \frac{1}{L} \langle v_L \rangle(\tau) - j \omega \ \langle i_L \rangle(\tau) \mathrm{d} \tau
 $$
@@ -120,15 +121,15 @@ $$
 $$
 
 Applying the trapezoidal rule for the capacitance equation leads to the finite difference equation:
-$$
+```math
 \begin{split}
   \langle v_C \rangle(k) = \langle v_C \rangle(k-1)
   + \frac{\Delta t}{2} \bigg[ \frac{1}{C} \ \langle i_C \rangle(k) - j \omega \ \langle v_C \rangle(k) \\
   + \frac{1}{C} \ \langle i_C \rangle(k-1) - j \omega \ \langle v_C \rangle(k-1) \bigg]
  \end{split}
-$$
+```
 
-The \ac{DP} model for the capacitance is defined by
+The DP model for the capacitance is defined by
 $$
   \langle i_C \rangle(k) = \frac{1+jb}{a} \ \langle v_C \rangle(k) + \langle i_{C,equiv} \rangle(k-1)
 $$
