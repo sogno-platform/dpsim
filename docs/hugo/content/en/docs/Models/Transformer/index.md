@@ -15,7 +15,7 @@ If node reduction is not applied, two virtual nodes are created to stamp this mo
 Furthermore, the ideal transformer has an additional equation, which requires an extension of the system matrix.
 The complete matrix stamp for the ideal transformer is 
 
-$$
+```math
 \begin{array}{c|c c c}
   ~ & j & k & l \cr
   \hline
@@ -28,13 +28,13 @@ v_j \cr
 v_k \cr
 i_{l} \cr
 \end{pmatrix}
-\=
+=
 \begin{pmatrix}
   \cr
   \cr
   0\cr
 \end{pmatrix} 
-$$
+```
 
 The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
 $l$ indicates the inserted row and column to accommodate the relation between the two voltages at the ends of the transformer.
