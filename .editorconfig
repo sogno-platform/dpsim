@@ -15,9 +15,13 @@ indent_style = tab
 indent_size = 4
 
 [**.{py}]
-indent_style = spaces
+indent_style = space
 indent_size = 4
 
 [{CMakeLists.txt,Dockerfile,Dockerfile.*,*.cmake}]
 indent_style = tab
+indent_size = 2
+
+[**.{md}]
+indent_style = space
 indent_size = 2
