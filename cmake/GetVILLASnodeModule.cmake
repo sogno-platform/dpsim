@@ -11,7 +11,6 @@ FetchContent_Declare(
 FetchContent_GetProperties(villasnode-module)
 if(NOT villasnode-module_POPULATED)
   FetchContent_Populate(villasnode-module)
-  # set(CMAKE_INSTALL_LIBDIR /usr/local/lib64 CACHE INTERNAL "Specify install directory")
 endif()
 
 FetchContent_GetProperties(villasnode-module)
@@ -24,16 +23,10 @@ endif()
 # When adding VILLASnode via a subdirectory, all the neccessary
 # details about include directories, library name and path
 # are associated with the VILLASnode target 'villas'
-add_subdirectory(${villasnode-module_SOURCE_DIR} ${villasnode-module_BINARY_DIR})
-set(VILLASnode_LIBRARY libvillas)
+add_subdirectory(${villasnode-module_SOURCE_DIR})
+set(VILLASnode_LIBRARY villas)
 set(VILLASnode_LIBRARIES ${VILLASnode_LIBRARY})
-# set(VILLASnode_INCLUDE_DIR "")
-set(VILLASnode_INCLUDE_DIR "${villasnode-module_SOURCE_DIR}/include" "${villasnode-module_SOURCE_DIR}/common/include" "${villasnode-module_BINARY_DIR}/include" "${villasnode-module_BINARY_DIR}/common/include")
+set(VILLASnode_INCLUDE_DIRS "")
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(VILLASnode DEFAULT_MSG VILLASnode_LIBRARY)
-
-set(VILLASnode_LIBRARIES ${VILLASnode_LIBRARY})
-set(VILLASnode_INCLUDE_DIRS ${VILLASnode_INCLUDE_DIR})
-# set(LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:${villasnode-module_SOURCE_DIR}/build/lib")
-# message(STATUS "Path to villasnode library: " ${LD_LIBRARY_PATH})
