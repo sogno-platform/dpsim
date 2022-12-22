@@ -9,6 +9,7 @@
 #pragma once
 
 #include <dpsim-models/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/Solver/DAEInterface.h>
 
 namespace CPS {
 namespace EMT {
@@ -17,6 +18,7 @@ namespace Ph3 {
 	/// of 3rd order synchronous generator model
 	class SynchronGenerator3OrderVBR :
 		public ReducedOrderSynchronGeneratorVBR,
+		public DAEInterface,
 		public SharedFactory<SynchronGenerator3OrderVBR> {
 	
 	public:
@@ -38,6 +40,24 @@ namespace Ph3 {
 		void specificInitialization() final;
 		///
 		void stepInPerUnit() final;
+
+		// #### DAE Section ####
+		/// Derivative of the current
+		MatrixVar<Real> mIntfDerCurrent;
+		///
+		void daeInitialize(double time, double state[], double dstate_dt[], 
+			double absoluteTolerances[], double stateVarTypes[], int& offset) override;
+		/// Residual function for DAE Solver
+		void daeResidual(double time, const double state[], const double dstate_dt[], 
+			double resid[], std::vector<int>& off) override;
+		/// Calculation of jacobian
+		void daeJacobian(double current_time, const double state[], const double dstate_dt[], 
+			SUNMatrix jacobian, double cj, std::vector<int>& off) override;
+		///
+		void daePostStep(double Nexttime, const double state[], 
+			const double dstate_dt[], int& offset) override;
+		///
+		int getNumberOfStateVariables() override { return 5; }
 	};
 }
 }

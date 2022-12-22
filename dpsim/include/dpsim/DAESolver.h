@@ -79,6 +79,8 @@ namespace DPsim {
 		// Solver parameters
 		/// Relative tolerance
 		realtype mRelativeTolerance = 1e-4;
+		///
+		bool mUseUserSuppJacMatrix = false;
 
 		// ### nonlinear solver interface optional input parameters ###
 		/// specifies maximum no. of nonlinear iterations
@@ -177,6 +179,8 @@ namespace DPsim {
 		/// ### Setters ###
 		/// Set relative Tolerance
 		void setRelativeTolerance(Real relTol) { mRelativeTolerance = relTol; }
+		/// use user supplied jacobian matrix
+		void setUseUserSuppliedJacMatrix(bool useUserSuppJacMatrix) { mUseUserSuppJacMatrix = useUserSuppJacMatrix;}
 
 		// ### Setters for nonlinear solver interface optional input functions ###
 		/// Set maximum no. of convergence failures

@@ -375,8 +375,10 @@ void DAESolver<VarType>::initialize() {
     */
 
     // Set the user-supplied Jacobian routine
-    ret = IDASetJacFn(mIDAMemoryBlock, &DAESolver::jacobianFunctionWrapper);
-    if(check_retval(&ret, "IDASetJacFn", 1)) throw CPS::Exception();
+    if (mUseUserSuppJacMatrix) {
+        ret = IDASetJacFn(mIDAMemoryBlock, &DAESolver::jacobianFunctionWrapper);
+        if(check_retval(&ret, "IDASetJacFn", 1)) throw CPS::Exception();
+    }
 
     /*
     // calculates corrected initial conditions
