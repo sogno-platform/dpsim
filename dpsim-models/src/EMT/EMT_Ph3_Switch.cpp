@@ -60,6 +60,8 @@ void EMT::Ph3::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
+Bool EMT::Ph3::Switch::mnaIsClosed() { return **mSwitchClosed; }
+
 void EMT::Ph3::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Matrix conductance = (**mSwitchClosed) ?
 		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();

@@ -45,59 +45,20 @@ namespace CPS {
 		///
 		static Log get(const std::string &name, Level filelevel = Level::info, Level clilevel = Level::off);
 		///
-		static void setLogLevel(std::shared_ptr<spdlog::logger> logger, Logger::Level level) {
-			logger->set_level(level);
-		}
+		static void setLogLevel(std::shared_ptr<spdlog::logger> logger, Logger::Level level);
 		///
-		static void setLogPattern(std::shared_ptr<spdlog::logger> logger, std::string pattern) {
-			logger->set_pattern(pattern);
-		}
+		static void setLogPattern(std::shared_ptr<spdlog::logger> logger, std::string pattern);
 
 		// #### to string methods ####
-		static String matrixToString(const Matrix& mat) {
-			std::stringstream ss;
-			ss << std::scientific << "\n" << mat;
-			return ss.str();
-		}
-
-		static String matrixCompToString(const MatrixComp& mat) {
-			std::stringstream ss;
-			ss << std::scientific << "\n" << mat;
-			return ss.str();
-		}
-
-		static String sparseMatrixToString(const SparseMatrix& mat) {
-			return matrixToString(Matrix(mat));
-		}
-
-		static String sparseMatrixCompToString(const SparseMatrixComp& mat) {
-			return matrixCompToString(MatrixComp(mat));
-		}
-
-		static String phasorMatrixToString(const MatrixComp& mat) {
-			std::stringstream ss;
-			ss << std::scientific << Math::abs(mat) << "\n\n" << Math::phase(mat);
-			return ss.str();
-		}
-
-		static String phasorToString(const Complex& num) {
-			std::stringstream ss;
-			ss << std::defaultfloat << Math::abs(num) << "<" << Math::phaseDeg(num);
-			return ss.str();
-		}
-
-		static String complexToString(const Complex& num) {
-			std::stringstream ss;
-			ss << std::defaultfloat << num.real() << "+j" << num.imag();
-			return ss.str();
-		}
-
-		static String realToString(const Real& num) {
-			std::stringstream ss;
-			ss << std::defaultfloat << num;
-			return ss.str();
-		}
-
+		static String matrixToString(const Matrix& mat);
+		static String matrixCompToString(const MatrixComp& mat);
+		static String sparseMatrixToString(const SparseMatrix& mat);
+		static String sparseMatrixCompToString(const SparseMatrixComp& mat);
+		static String phasorMatrixToString(const MatrixComp& mat);
+		static String phasorToString(const Complex& num);
+		static String complexToString(const Complex& num);
+		static String realToString(const Real& num);
+		
 		static String getCSVColumnNames(std::vector<String> names);
 		static String getCSVLineFromData(Real time, Real data);
 		static String getCSVLineFromData(Real time, const Matrix& data);

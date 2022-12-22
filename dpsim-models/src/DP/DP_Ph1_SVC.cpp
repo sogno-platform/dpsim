@@ -24,6 +24,10 @@ DP::Ph1::SVC::SVC(String uid, String name, Logger::Level logLevel)
 	mViolationCounter = Attribute<Real>::create("ViolationCounter", mAttributes, 0);
 }
 
+Bool DP::Ph1::SVC::ValueChanged() {
+	return mValueChange;
+}
+
 void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 
 	// initial state is both switches are open

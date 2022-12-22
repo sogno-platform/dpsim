@@ -38,6 +38,8 @@ void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfCurrent)(0,0)));
 }
 
+Bool DP::Ph3::SeriesSwitch::mnaIsClosed() { return **mIsClosed; }
+
 void DP::Ph3::SeriesSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();

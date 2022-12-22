@@ -96,3 +96,5 @@ void EMT::Ph1::VoltageSourceNorton::mnaUpdateCurrent(const Matrix& leftVector) {
 	// TODO: verify signs
 	(**mIntfCurrent)(0,0) = mEquivCurrent - (**mIntfVoltage)(0,0) / **mResistance;
 }
+
+void EMT::Ph1::VoltageSourceNorton::setVoltageRef(Complex voltage) const { **mVoltageRef = voltage; }

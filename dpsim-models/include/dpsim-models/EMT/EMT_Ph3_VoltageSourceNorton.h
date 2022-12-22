@@ -41,7 +41,7 @@ namespace CPS {
 				// #### General ####
 				void setParameters(Complex voltageRef, Real srcFreq, Real resistance);
 				///
-				void setVoltageRef(Complex voltage) { **mVoltageRef = voltage; }
+				void setVoltageRef(Complex voltage) const;
 
 				SimPowerComp<Real>::Ptr clone(String name);
 				/// Initializes component from power flow data

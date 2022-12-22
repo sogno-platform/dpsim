@@ -44,7 +44,7 @@ docker:rocky:
   stage: prepare
   needs: []
   script:
-    - docker build
+    - docker build .
         --file packaging/Docker/Dockerfile.dev-rocky
         --tag ${DOCKER_IMAGE_DEV_ROCKY}:${CI_COMMIT_REF_NAME}
   tags:

@@ -55,6 +55,48 @@ VarType SimNode<VarType>::singleVoltage(PhaseType phaseType) {
 		return (**mVoltage)(0,0);
 }
 
+template <typename VarType>
+UInt SimNode<VarType>::matrixNodeIndex(PhaseType phaseType) {
+	if ((phaseType == PhaseType::A || phaseType == PhaseType::Single)
+		&& (mPhaseType == PhaseType::Single
+		|| mPhaseType == PhaseType::A
+		|| mPhaseType == PhaseType::ABC))
+		return mMatrixNodeIndex[0];
+	else if (phaseType == PhaseType::B
+		&& (mPhaseType == PhaseType::B
+		|| mPhaseType == PhaseType::ABC))
+		return mMatrixNodeIndex[1];
+	else if (phaseType == PhaseType::C
+		&& (mPhaseType == PhaseType::C
+		|| mPhaseType == PhaseType::ABC))
+		return mMatrixNodeIndex[2];
+	else
+		return 0;
+}
+
+template <typename VarType>
+std::vector<UInt> SimNode<VarType>::matrixNodeIndices() {
+	if (mPhaseType == PhaseType::B)
+		return { mMatrixNodeIndex[1] };
+	else if (mPhaseType == PhaseType::C)
+		return { mMatrixNodeIndex[2] };
+	else if (mPhaseType == PhaseType::ABC)
+		return mMatrixNodeIndex;
+	else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
+		return { mMatrixNodeIndex[0] };
+}
+
+template <typename VarType>
+MatrixVar<VarType> SimNode<VarType>::voltage() { return **mVoltage; }
+
+template <typename VarType>
+void SimNode<VarType>::setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) { mMatrixNodeIndex[phase] = matrixNodeIndex; }
+
+template <typename VarType>
+const Task::List& SimNode<VarType>::mnaTasks() {
+	return mMnaTasks;
+}
+
 template<>
 void SimNode<Complex>::setVoltage(Complex newVoltage) {
 	(**mVoltage)(0, 0) = newVoltage;

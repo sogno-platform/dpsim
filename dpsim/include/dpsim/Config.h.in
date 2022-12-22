@@ -29,6 +29,5 @@
 #cmakedefine WITH_MAGMA
 #cmakedefine CGMES_BUILD
 
-#cmakedefine HAVE_TIMERFD
-#cmakedefine HAVE_PIPE
 #cmakedefine HAVE_GETOPT
+#cmakedefine HAVE_TIMERFD

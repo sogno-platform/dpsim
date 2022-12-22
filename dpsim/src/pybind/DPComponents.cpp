@@ -22,9 +22,9 @@ void addDPComponents(py::module_ mDP) {
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::PhaseType>())
 		.def(py::init<std::string, CPS::PhaseType, const std::vector<CPS::Complex>>())
-		.def("set_initial_voltage", py::overload_cast<CPS::MatrixComp>(&CPS::DP::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::overload_cast<CPS::Complex>(&CPS::DP::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::overload_cast<CPS::Complex, int>(&CPS::DP::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::MatrixComp>(&CPS::DP::SimNode::setInitialVoltage, py::const_))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex>(&CPS::DP::SimNode::setInitialVoltage, py::const_))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex, int>(&CPS::DP::SimNode::setInitialVoltage, py::const_))
 		.def("single_voltage", &CPS::DP::SimNode::singleVoltage, "phase_type"_a=CPS::PhaseType::Single)
 		.def_readonly_static("gnd", &CPS::DP::SimNode::GND);
 
@@ -117,7 +117,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
 				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Ll"_a, "Lmd"_a, "Llfd"_a, "H"_a, "D"_a = 0)
 		.def("set_initial_values", &CPS::DP::Ph1::SynchronGeneratorTrStab::setInitialValues, "elec_power"_a, "mech_power"_a)
 		.def("connect", &CPS::DP::Ph1::SynchronGeneratorTrStab::connect)
-		.def("set_model_flags", &CPS::DP::Ph1::SynchronGeneratorTrStab::setModelFlags, "use_omega_ref"_a, "convert_with_omega_mech"_a)
+		.def("set_model_flags", &CPS::DP::Ph1::SynchronGeneratorTrStab::setModelFlags, "convert_with_omega_mech"_a)
 		.def("set_reference_omega", [](CPS::DP::Ph1::SynchronGeneratorTrStab &gen, std::string refOmegaName, CPS::IdentifiedObject::Ptr refOmegaComp,
 			std::string refDeltaName, CPS::IdentifiedObject::Ptr refDeltaComp) {
 				gen.setReferenceOmega(refOmegaComp->attribute<CPS::Real>(refOmegaName), refDeltaComp->attribute<CPS::Real>(refDeltaName));

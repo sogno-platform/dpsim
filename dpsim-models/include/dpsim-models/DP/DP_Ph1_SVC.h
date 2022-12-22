@@ -102,8 +102,7 @@ namespace Ph1 {
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		// #### Tearing methods ####
-		Bool ValueChanged() { return mValueChange; };
-
+		Bool ValueChanged();
 		void setSwitchState();
 
 		void updateSusceptance();

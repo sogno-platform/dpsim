@@ -93,6 +93,8 @@ void DP::Ph1::varResSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix&
 
 void DP::Ph1::varResSwitch::mnaApplyRightSideVectorStamp(Matrix& rightVector) {}
 
+Bool DP::Ph1::varResSwitch::mnaIsClosed() { return isClosed(); }
+
 void DP::Ph1::varResSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
 	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
 	Attribute<Matrix>::Ptr &leftVector) {

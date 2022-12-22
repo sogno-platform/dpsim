@@ -56,11 +56,11 @@ namespace CPS {
 		/// Returns a modified copy of the component with the given suffix added to the name and without
 		/// connected nodes / terminals
 		/// DEPRECATED: This method should be removed
-		virtual Ptr clone(String name) { return nullptr; }
+		virtual Ptr clone(String name);
 
 		// #### Terminals ####
 		/// Returns nominal number of Terminals for this component type.
-		UInt terminalNumber() { return mNumTerminals; }
+		UInt terminalNumber();
 		/// Returns the number of connected Terminals
 		UInt terminalNumberConnected();
 		///
@@ -68,7 +68,7 @@ namespace CPS {
 		///
 		void checkForUnconnectedTerminals();
 		/// Return list of Terminal pointers
-		typename SimTerminal<VarType>::List terminals() { return mTerminals; }
+		typename SimTerminal<VarType>::List terminals();
 		/// Get pointer to Terminal
 		typename SimTerminal<VarType>::Ptr terminal(UInt index);
 		/// Returns the list of terminals as TopologicalTerminal pointers
@@ -88,56 +88,49 @@ namespace CPS {
 		/// Returns the actual number of Nodes / Terminals that are already set to valid Nodes.
 		UInt nodeNumber();
 		/// Get pointer to node
-		typename SimNode<VarType>::Ptr node(UInt index) {
-			if (index >= mTerminals.size()) {
-				throw SystemError("Node not available for " + **mUID);
-			}
-			return mTerminals[index]->node();
-		};
-		UInt matrixNodeIndex(UInt nodeIndex) {
-			return mMatrixNodeIndices[nodeIndex * 3];
-		}
-		UInt matrixNodeIndex(UInt nodeIndex, UInt phaseIndex) {
-			return mMatrixNodeIndices[nodeIndex * 3 + phaseIndex];
-		}
+		typename SimNode<VarType>::Ptr node(UInt index);
+
+		UInt matrixNodeIndex(UInt nodeIndex);
+
+		UInt matrixNodeIndex(UInt nodeIndex, UInt phaseIndex);
 		/// TODO replace with access to mMatrixNodeIndices
-		std::vector<UInt> matrixNodeIndices(UInt index) { return node(index)->matrixNodeIndices(); }
+		std::vector<UInt> matrixNodeIndices(UInt index);
 		/// Get nodes as base type TopologicalNode
 		TopologicalNode::List topologicalNodes();
 
 		// #### Virtual Nodes ####
 		/// Returns nominal number of virtual nodes for this component type.
-		UInt virtualNodesNumber() { return mNumVirtualNodes; }
+		UInt virtualNodesNumber();
 		/// Returns true if virtual node number is greater than zero.
-		Bool hasVirtualNodes() { return mNumVirtualNodes > 0; }
+		Bool hasVirtualNodes();
 		/// Returns true if subcomponents included in this component
-		Bool hasSubComponents() { return mSubComponents.size() > 0; }
+		Bool hasSubComponents();
 		/// Get list of subcomponents
-		typename SimPowerComp<VarType>::List subComponents() { return mSubComponents; }
+		typename SimPowerComp<VarType>::List subComponents();
 		///
-		typename SimNode<VarType>::List& virtualNodes() { return mVirtualNodes; }
+		typename SimNode<VarType>::List& virtualNodes();
 		/// Get pointer to virtual node
 		typename SimNode<VarType>::Ptr virtualNode(UInt index);
 		/// Get vector of simulation node numbers from virtual Node
-		std::vector<UInt> virtualMatrixNodeIndices(UInt index) { return virtualNode(index)->matrixNodeIndices(); }
+		std::vector<UInt> virtualMatrixNodeIndices(UInt index);
 		/// Get simulation node number from virtual node
-		UInt virtualSimNode(UInt nodeIndex, UInt phaseIndex = 0) { return virtualMatrixNodeIndices(nodeIndex)[phaseIndex]; }
+		UInt virtualSimNode(UInt nodeIndex, UInt phaseIndex = 0);
 
 		// #### States ####
-		const MatrixVar<VarType>& intfCurrent() { return **mIntfCurrent; }
+		const MatrixVar<VarType>& intfCurrent();
 		///
-		const MatrixVar<VarType>& intfVoltage() { return **mIntfVoltage; }
+		const MatrixVar<VarType>& intfVoltage();
 		///
-		MatrixComp initialVoltage(UInt index) { return mTerminals[index]->initialVoltage(); }
+		MatrixComp initialVoltage(UInt index);
 		///
-		Complex initialSingleVoltage(UInt index) { return mTerminals[index]->initialSingleVoltage(); }
+		Complex initialSingleVoltage(UInt index);
 		///
-		Bool terminalNotGrounded(UInt index) { return !mMatrixNodeIndexIsGround[index]; }
+		Bool terminalNotGrounded(UInt index);
 
 		// #### Setters ####
-		void setIntfCurrent(MatrixVar<VarType> current) { **mIntfCurrent = current; }
+		void setIntfCurrent(MatrixVar<VarType> current);
 		///
-		void setIntfVoltage(MatrixVar<VarType> voltage) { **mIntfVoltage = voltage; }
+		void setIntfVoltage(MatrixVar<VarType> voltage);
 		///
 		void setVirtualNodeNumber(UInt num);
 		/// Sets the virtual node at index nodeNum.

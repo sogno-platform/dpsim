@@ -3,56 +3,100 @@
 #
 # See: https://github.com/pypa/manylinux
 
-FROM quay.io/pypa/manylinux2010_x86_64
+FROM quay.io/pypa/manylinux_2_28_x86_64
 
-ENV VILLAS_VERSION=0.8.0
-ENV PLAT=manylinux2010_x86_64
+ENV PLAT=manylinux_2_28_x86_64
 
 LABEL \
-	org.label-schema.schema-version = "1.0" \
+	org.label-schema.schema-version = "1.0.0" \
 	org.label-schema.name = "DPsim" \
 	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
-	org.label-schema.author.name = "Steffen Vogel" \
-	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
-	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
-	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
+	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
+	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
 
-# Set up DPsim dependencies
-ADD https://packages.fein-aachen.org/redhat/fein.repo /etc/yum.repos.d/
-
-# Enable Extra Packages for Enterprise Linux (EPEL) repo
-RUN yum -y install epel-release
-
-# Uninstall old CMake v2.8
-RUN yum -y remove cmake
+RUN dnf -y update
+RUN yum install -y epel-release
 
 # Toolchain
-RUN yum -y install \
-	devtoolset-7-toolchain \
-	pkgconfig make cmake3 flex \
-	git tar \
-	expat-devel \
-	gsl-devel \
-    libxml2-devel \
-	libpng-devel \
-	freetype-devel
-	# libvillas-devel-${VILLAS_VERSION} \
-	# villas-node-${VILLAS_VERSION}
+RUN yum install -y \
+	gcc-toolset-11 clang \
+	git \
+	rpmdevtools rpm-build \
+	make cmake pkgconfig \
+	python3-pip \
+	cppcheck
 
-RUN update-alternatives --install /usr/bin/cmake cmake /usr/bin/cmake3 1
+# Tools needed for developement
+RUN dnf -y install \
+	doxygen graphviz \
+	gdb \
+	procps-ng
 
-RUN git clone https://gitlab.com/graphviz/graphviz.git && \
-	mkdir -p graphviz/build && cd graphviz/build && \
-	cmake .. && make install -j$(nproc)
+# Dependencies
+RUN dnf --refresh -y install \
+	python3-devel \
+	eigen3-devel \
+	libxml2-devel \
+	graphviz-devel
 
-RUN git clone --branch v3.1.1 https://github.com/LLNL/sundials.git && \
-    mkdir -p sundials/build && \
-    cd  sundials/build && \
-    cmake .. \
-        -DBUILD_SHARED_LIBS=OFF \
-        -DBUILD_STATIC_LIBS=ON \
-        -DEXAMPLES_ENABLE_C=OFF \
-        -DCMAKE_C_FLAGS=-fPIC \
-        -DCMAKE_CXX_FLAGS=-fPIC && \
+RUN yum install -y fmt-devel
+
+# Install some debuginfos
+RUN dnf -y debuginfo-install \
+	python3
+
+# Build & Install sundials
+RUN cd /tmp && \
+	git clone --recursive https://github.com/LLNL/sundials.git && \
+	mkdir -p sundials/build && cd sundials/build && \
+	git checkout v3.2.1 && \
+	cmake -DCMAKE_BUILD_TYPE=Release ..  && \
 	make -j$(nproc) install
+
+# CIMpp and VILLAS are installed here
+ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
+
+# Python dependencies
+ADD requirements-manylinux.txt .
+RUN pip3 install --upgrade wheel build
+RUN pip3 install -r requirements-manylinux.txt
+
+# Install CIMpp from source
+RUN cd /tmp && \
+	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
+	mkdir -p libcimpp/build && cd libcimpp/build && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=CGMES_2.4.15_16FEB2016 -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	rm -rf /tmp/libcimpp
+
+# villas dependencies
+RUN yum install -y \
+    openssl-devel \
+    libuuid-devel \
+    libcurl-devel \
+    jansson-devel \
+    libwebsockets-devel \
+	mosquitto-devel \
+	libconfig-devel \
+  	libnl3-devel
+
+# Install spdlog from source
+RUN cd /tmp && \
+	git clone --recursive https://github.com/gabime/spdlog.git && \
+	cd spdlog && \
+	git checkout tags/v1.6.1 && \
+	mkdir -p build && cd build && \
+	cmake -DCMAKE_POSITION_INDEPENDENT_CODE=True -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
+	rm -rf /tmp/spdlog
+
+# Install VILLAS from source
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
+
+RUN cd /tmp && \
+	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
+	mkdir -p villasnode/build && cd villasnode/build && \
+	git -c submodule.fpga.update=none checkout b94746effb015aa98791c0e319ef11223d18e8b0 && git -c submodule.fpga.update=none submodule update --recursive && \
+	cmake -DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++ -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
+	rm -rf /tmp/villasnode
+
+ENV CMAKE_OPTS="-DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++" 

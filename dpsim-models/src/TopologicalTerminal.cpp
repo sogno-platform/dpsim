@@ -15,6 +15,30 @@ TopologicalTerminal::TopologicalTerminal(String uid, String name, PhaseType phas
 	setPhaseType(phase);
 }
 
+MatrixComp TopologicalTerminal::power() const { return mPower; }
+
+void TopologicalTerminal::setPower(Complex power) { mPower(0,0) = power; }
+
+void TopologicalTerminal::setPower(MatrixComp power) { mPower = power; }
+
+void TopologicalTerminal::setPhaseType(PhaseType type) {
+	mPhaseType = type;
+	if (mPhaseType == PhaseType::ABC)
+		mPower = MatrixComp::Zero(3, 1);
+	else
+		mPower = MatrixComp::Zero(1, 1);
+}
+
+Real TopologicalTerminal::singleActivePower() { return singlePower().real(); }
+
+Real TopologicalTerminal::singleReactivePower() { return singlePower().imag(); }
+
+Complex TopologicalTerminal::initialSingleVoltage() { return topologicalNodes()->initialSingleVoltage(mPhaseType); }
+
+UInt TopologicalTerminal::matrixNodeIndex() { return topologicalNodes()->matrixNodeIndex(mPhaseType); }
+
+std::vector<UInt> TopologicalTerminal::matrixNodeIndices() { return topologicalNodes()->matrixNodeIndices(); }
+
 Complex TopologicalTerminal::singlePower() {
 	if (mPhaseType == PhaseType::B)
 		return mPower(1,0);
