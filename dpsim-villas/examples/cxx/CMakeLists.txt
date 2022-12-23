@@ -16,6 +16,7 @@ set(SHMEM_SOURCES
 	FileExample.cpp
 	MqttExample.cpp
 	SharedMemExample.cpp
+	SocketExample.cpp
 	#ShmemExample.cpp
 	#ShmemDistributedReference.cpp
 	#ShmemDistributedDirect.cpp
