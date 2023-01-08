@@ -20,7 +20,7 @@ namespace Ph1 {
 		public MNAInterface,
 		public SharedFactory<VoltageSourceRamp> {
 	protected:
-		
+
 		///
 		Complex mAddVoltage;
 		///
@@ -62,14 +62,10 @@ namespace Ph1 {
 		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-
-
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(VoltageSourceRamp& voltageSource) :
 				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-				// rampTime etc. aren't attributes (yet), so doesn't really depend on anything
-				mModifiedAttributes.push_back(voltageSource.mSubVoltageSource->attribute("V_ref"));
 			}
 
 			void execute(Real time, Int timeStepCount);
