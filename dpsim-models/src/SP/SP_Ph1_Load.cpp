@@ -32,7 +32,6 @@ SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
 void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
 	**mActivePower = activePower;
 	**mReactivePower = reactivePower;
-	mPower = { **mActivePower, **mReactivePower };
 	**mNomVoltage = nominalVoltage;
 
 	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
@@ -90,8 +89,8 @@ void SP::Ph1::Load::updatePQ(Real time) {
 	} else {
 		Real wf = mLoadProfile.weightingFactors.find(time)->second;
 		///THISISBAD: P_nom and Q_nom do not exist as attributes
-		Real P_new = this->attribute<Real>("P_nom")->get()*wf;
-		Real Q_new = this->attribute<Real>("Q_nom")->get()*wf;
+		Real P_new = this->attributeTyped<Real>("P_nom")->get()*wf;
+		Real Q_new = this->attributeTyped<Real>("Q_nom")->get()*wf;
 		**mActivePower = P_new;
 		**mReactivePower = Q_new;
 	}
@@ -144,7 +143,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
-	(**mIntfCurrent)(0, 0) = std::conj(Complex(attribute<Real>("P")->get(), attribute<Real>("Q")->get()) / (**mIntfVoltage)(0, 0));
+	(**mIntfCurrent)(0, 0) = std::conj(Complex(attributeTyped<Real>("P")->get(), attributeTyped<Real>("Q")->get()) / (**mIntfVoltage)(0, 0));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -157,7 +156,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(0)));
 	mSLog->info(
 		"Updated parameters according to powerflow:\n"
-		"Active Power={} [W] Reactive Power={} [VAr]", attribute<Real>("P")->get(), attribute<Real>("Q")->get());
+		"Active Power={} [W] Reactive Power={} [VAr]", attributeTyped<Real>("P")->get(), attributeTyped<Real>("Q")->get());
 	mSLog->flush();
 }
 
@@ -206,7 +205,7 @@ void SP::Ph1::Load::mnaUpdateVoltage(const Matrix& leftVector) {
 void SP::Ph1::Load::mnaUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = 0;
 
-	for (auto& subc : mSubComponents) {
+	for (auto subc : mSubComponents) {
 		(**mIntfCurrent)(0, 0) += subc->intfCurrent()(0, 0);
 	}
 }

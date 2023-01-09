@@ -18,7 +18,6 @@ namespace Ph1 {
 	class SVC {
 	protected:
 		/// Inductance [H]
-		/// FIXME: This is only ever written to but never read
 		Real mInductance;
 		/// Maximium susceptance [p.u.]
 		Real mBMax;

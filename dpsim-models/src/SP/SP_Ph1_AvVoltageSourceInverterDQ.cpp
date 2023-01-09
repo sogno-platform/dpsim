@@ -64,23 +64,19 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
 
 	// PLL
-	///FIXME: Use attribute member variable
-	mPLL->attribute<Real>("input_ref")->setReference(mVcq);
-	///FIXME: Use attribute member variable
-	mPllOutput->setReference(mPLL->attribute<Matrix>("output_curr"));
+	mPLL->mInputRef->setReference(mVcq);
+	mPllOutput->setReference(mPLL->mOutputCurr);
 
 	// Power controller
 	// input references
-	///FIXME: Use attribute member variables
-	mPowerControllerVSI->attribute<Real>("Vc_d")->setReference(mVcd);
-	mPowerControllerVSI->attribute<Real>("Vc_q")->setReference(mVcq);
-	mPowerControllerVSI->attribute<Real>("Irc_d")->setReference(mIrcd);
-	mPowerControllerVSI->attribute<Real>("Irc_q")->setReference(mIrcq);
+	mPowerControllerVSI->mVc_d->setReference(mVcd);
+	mPowerControllerVSI->mVc_q->setReference(mVcq);
+	mPowerControllerVSI->mIrc_d->setReference(mIrcd);
+	mPowerControllerVSI->mIrc_q->setReference(mIrcq);
 	// input, state and output vector for logging
-	///FIXME: Use attribute member variables
-	mPowerctrlInputs->setReference(mPowerControllerVSI->attribute<Matrix>("input_curr"));
-	mPowerctrlStates->setReference(mPowerControllerVSI->attribute<Matrix>("state_curr"));
-	mPowerctrlOutputs->setReference(mPowerControllerVSI->attribute<Matrix>("output_curr"));
+	mPowerctrlInputs->setReference(mPowerControllerVSI->mInputCurr);
+	mPowerctrlStates->setReference(mPowerControllerVSI->mStateCurr);
+	mPowerctrlOutputs->setReference(mPowerControllerVSI->mOutputCurr);
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {
@@ -210,7 +206,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real fr
 	// current and voltage inputs to PLL and power controller
 	Complex vcdq, ircdq;
 	vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->initialSingleVoltage(), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
-	ircdq = Math::rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
+	ircdq = Math::rotatingFrame2to1(-1. * mSubResistorC->mIntfCurrent->get()(0, 0), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
 	**mVcd = vcdq.real();
 	**mVcq = vcdq.imag();
 	**mIrcd = ircdq.real();
@@ -256,11 +252,11 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep
 	mPLL->setSimulationParameters(timeStep);
 
 	// collect right side vectors of subcomponents
-	mRightVectorStamps.push_back(&mSubCapacitorF->attribute<Matrix>("right_vector")->get());
-	mRightVectorStamps.push_back(&mSubInductorF->attribute<Matrix>("right_vector")->get());
-	mRightVectorStamps.push_back(&mSubCtrledVoltageSource->attribute<Matrix>("right_vector")->get());
+	mRightVectorStamps.push_back(&mSubCapacitorF->mRightVector->get());
+	mRightVectorStamps.push_back(&mSubInductorF->mRightVector->get());
+	mRightVectorStamps.push_back(&mSubCtrledVoltageSource->mRightVector->get());
 	if (mWithConnectionTransformer)
-		mRightVectorStamps.push_back(&mConnectionTransformer->attribute<Matrix>("right_vector")->get());
+		mRightVectorStamps.push_back(&mConnectionTransformer->mRightVector->get());
 
 	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -286,7 +282,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& ri
 		rightVector += *stamp;
 }
 
-void SP::Ph1::AvVoltageSourceInverterDQ::addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void SP::Ph1::AvVoltageSourceInverterDQ::addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) const {
 	// add pre-step dependencies of subcomponents
 	mPLL->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mPowerControllerVSI->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
@@ -298,21 +294,21 @@ void SP::Ph1::AvVoltageSourceInverterDQ::controlPreStep(Real time, Int timeStepC
 	mPowerControllerVSI->signalPreStep(time, timeStepCount);
 }
 
-void SP::Ph1::AvVoltageSourceInverterDQ::addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void SP::Ph1::AvVoltageSourceInverterDQ::addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) const {
 	// add step dependencies of subcomponents
 	mPLL->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mPowerControllerVSI->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	// add step dependencies of component itself
-	attributeDependencies.push_back(attribute("i_intf"));
-	attributeDependencies.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("Vsref"));
+	attributeDependencies.push_back(mIntfCurrent);
+	attributeDependencies.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mVsref);
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	Complex vcdq, ircdq;
-	vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
-	ircdq = Math::rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
+	vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0), mThetaN);
+	ircdq = Math::rotatingFrame2to1(-1. * mSubResistorC->attributeTyped<MatrixComp>("i_intf")->get()(0, 0), mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0), mThetaN);
 	**mVcd = vcdq.real();
 	**mVcq = vcdq.imag();
 	**mIrcd = ircdq.real();
@@ -323,7 +319,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCoun
 	mPowerControllerVSI->signalStep(time, timeStepCount);
 
 	// Transformation interface backward
-	(**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(0, 0), mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(1, 0)), mThetaN, mPLL->attribute<Matrix>("output_prev")->get()(0, 0));
+	(**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mPowerControllerVSI->attributeTyped<Matrix>("output_curr")->get()(0, 0), mPowerControllerVSI->attributeTyped<Matrix>("output_curr")->get()(1, 0)), mThetaN, mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0));
 
 	// Update nominal system angle
 	mThetaN = mThetaN + mTimeStep * **mOmegaN;
@@ -338,8 +334,8 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase
 	prevStepDependencies.push_back(attribute("Vsref"));
 	prevStepDependencies.push_back(attribute("i_intf"));
 	prevStepDependencies.push_back(attribute("v_intf"));
-	attributeDependencies.push_back(mPowerControllerVSI->attribute<Matrix>("output_prev"));
-	attributeDependencies.push_back(mPLL->attribute<Matrix>("output_prev"));
+	attributeDependencies.push_back(mPowerControllerVSI->attributeTyped<Matrix>("output_prev"));
+	attributeDependencies.push_back(mPLL->attributeTyped<Matrix>("output_prev"));
 	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
@@ -378,9 +374,9 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCoun
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {
 	if (mWithConnectionTransformer)
-		**mIntfCurrent = mConnectionTransformer->attribute<MatrixComp>("i_intf")->get();
+		**mIntfCurrent = mConnectionTransformer->attributeTyped<MatrixComp>("i_intf")->get();
 	else
-		**mIntfCurrent = mSubResistorC->attribute<MatrixComp>("i_intf")->get();
+		**mIntfCurrent = mSubResistorC->attributeTyped<MatrixComp>("i_intf")->get();
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {

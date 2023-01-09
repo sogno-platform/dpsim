@@ -66,7 +66,6 @@ namespace Ph1 {
 		Bool mDisconnect = false;
 
 	public:
-		/// FIXME: This is only written once and never read
 		const Attribute<Real>::Ptr mVpcc;
 		const Attribute<Real>::Ptr mVmeasPrev;
 

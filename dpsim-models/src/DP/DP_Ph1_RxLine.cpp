@@ -11,17 +11,13 @@
 using namespace CPS;
 
 DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::PiLine(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
-
-	mSeriesRes = Attribute<Real>::create("R", mAttributes);
-	mSeriesInd = Attribute<Real>::create("L", mAttributes);
-
 }
 
 ///DEPRECATED: Delete method
@@ -35,8 +31,7 @@ void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	Complex impedance = { **mSeriesRes, **mSeriesInd * 2.*PI * frequency };
-	/// FIXME: This is always zero, as mVoltage is uninitialized
-	(**mIntfCurrent)(0, 0) = mVoltage / impedance;
+	(**mIntfCurrent)(0, 0) = 0;
 	mVirtualNodes[0]->setInitialVoltage( initialSingleVoltage(0) + (**mIntfCurrent)(0, 0) * **mSeriesRes );
 
 	// Default model with virtual node in between

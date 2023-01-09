@@ -455,7 +455,7 @@ void DPsim::Utils::applySynchronousGeneratorParametersFromJson(const json config
 		Bool containsSyngenOptions = false;
 		for (String attrName : syngen->attrParamNames) {
 			if (config["options"].contains(attrName)) {
-				syngen->attribute<Real>(attrName)->set(config["options"][attrName].get<double>());
+				syngen->attributeTyped<Real>(attrName)->set(config["options"][attrName].get<double>());
 				containsSyngenOptions = true;
 			}
 		}

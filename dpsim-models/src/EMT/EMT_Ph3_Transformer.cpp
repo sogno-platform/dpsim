@@ -12,7 +12,7 @@ using namespace CPS;
 
 EMT::Ph3::Transformer::Transformer(String uid, String name,
 	Logger::Level logLevel, Bool withResistiveLosses)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: Base::Ph3::Transformer(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	if (withResistiveLosses)
 		setVirtualNodeNumber(3);
@@ -24,8 +24,6 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 	mSLog->info("Create {} {}", this->type(), name);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(1, 1);
-
-	mRatio = Attribute<Complex>::create("ratio", mAttributes);
 }
 
 /// DEPRECATED: Delete method

@@ -13,21 +13,18 @@ using namespace CPS;
 SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	Real resistance, Real inductance,
 	Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
-	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes, baseVoltage)),
-	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
-	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
-	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
-	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
-	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
-	mInductance(Attribute<Real>::create("L_series", mAttributes))  {
+	: 	Base::Ph1::PiLine(mAttributes),
+		SimPowerComp<Complex>(uid, name, logLevel),
+		mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes, baseVoltage)),
+		mInductance(Attribute<Real>::create("L_series", mAttributes)),
+		mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
+		mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
+		mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
+		mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
+		mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)) {
+
 
 	setTerminalNumber(2);
-
-	mSeriesRes = Attribute<Real>::create("R_series", mAttributes);
-	mParallelCap = Attribute<Real>::create("C_parallel", mAttributes);
-	mParallelCond = Attribute<Real>::create("G_parallel", mAttributes);
 
 	**mSeriesRes = resistance;
 	**mInductance = inductance;
@@ -41,24 +38,20 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 }
 
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
-	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
-	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
-	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
-	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
-	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
-	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
-	mInductance(Attribute<Real>::create("L_series", mAttributes))  {
+	: 	Base::Ph1::PiLine(mAttributes),
+		SimPowerComp<Complex>(uid, name, logLevel),
+		mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
+		mInductance(Attribute<Real>::create("L_series", mAttributes)),
+		mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
+		mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
+		mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
+		mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
+		mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)) {
 
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
-
-	/// FIXME: Why are these attributes defined differently than in the first constructor?
-	mSeriesRes = Attribute<Real>::create("R", mAttributes);
-	mSeriesInd = Attribute<Real>::create("L", mAttributes);
 }
 
 
@@ -141,7 +134,6 @@ void SP::Ph1::RXLine::updateBranchFlow(VectorComp& current, VectorComp& powerflo
 void SP::Ph1::RXLine::storeNodalInjection(Complex powerInjection) {
 	**mActivePowerInjection = std::real(powerInjection) * mBaseApparentPower;
 	**mReactivePowerInjection = std::imag(powerInjection) * mBaseApparentPower;
-	**mStoreNodalPowerInjection = true;
 }
 
 

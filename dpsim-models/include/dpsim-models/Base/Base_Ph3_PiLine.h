@@ -15,30 +15,29 @@ namespace CPS {
 namespace Base {
 namespace Ph3 {
 	class PiLine {
-	protected:
-		/// Conductance along the line [S]
-		/// FIXME: This is never used...
-		Matrix mSeriesCond;
-		/// Resistance in parallel to the line [ohms]
-		/// FIXME: This is never used...
-		Matrix mParallelRes;
+
 	public:
 		/// Resistance along the line [ohms]
-		Attribute<Matrix>::Ptr mSeriesRes;
+		const Attribute<Matrix>::Ptr mSeriesRes;
 		/// Inductance along the line [H]
-		Attribute<Matrix>::Ptr mSeriesInd;
-		/// Conductance in parallel to the line [S]
-		Attribute<Matrix>::Ptr mParallelCond;
+		const Attribute<Matrix>::Ptr mSeriesInd;
 		/// Capacitance in parallel to the line [F]
-		Attribute<Matrix>::Ptr mParallelCap;
+		const Attribute<Matrix>::Ptr mParallelCap;
+		/// Conductance in parallel to the line [S]
+		const Attribute<Matrix>::Ptr mParallelCond;
+
+		explicit PiLine(CPS::AttributeBase::Map &attributeList) :
+			mSeriesRes(Attribute<Matrix>::create("R_series", attributeList)),
+			mSeriesInd(Attribute<Matrix>::create("L_series", attributeList)),
+			mParallelCap(Attribute<Matrix>::create("C_parallel", attributeList)),
+			mParallelCond(Attribute<Matrix>::create("G_parallel", attributeList)) { };
+
 		///
 		void setParameters(Matrix seriesResistance, Matrix seriesInductance,
-			Matrix parallelCapacitance = Matrix::Zero(3,3), Matrix parallelConductance = Matrix::Zero(3,3)) {
+			Matrix parallelCapacitance = Matrix::Zero(3,3), Matrix parallelConductance = Matrix::Zero(3,3)) const {
 			**mSeriesRes = seriesResistance;
-			mSeriesCond = (**mSeriesRes).inverse();
 			**mSeriesInd = seriesInductance;
 			**mParallelCond = parallelConductance;
-			mParallelRes = (**mParallelCond).inverse();
 			**mParallelCap = parallelCapacitance;
 		}
 	};

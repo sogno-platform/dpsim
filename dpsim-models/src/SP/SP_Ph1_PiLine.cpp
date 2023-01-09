@@ -11,12 +11,11 @@
 using namespace CPS;
 
 SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: Base::Ph1::PiLine(mAttributes), SimPowerComp<Complex>(uid, name, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
 	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
 	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
 	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)) {
 
@@ -30,11 +29,6 @@ SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	**mCurrent = MatrixComp::Zero(2,1);
 	**mActivePowerBranch = Matrix::Zero(2,1);
 	**mReactivePowerBranch = Matrix::Zero(2,1);
-
-	mSeriesRes = Attribute<Real>::create("R_series", mAttributes);
-	mSeriesInd = Attribute<Real>::create("L_series", mAttributes);
-	mParallelCap = Attribute<Real>::create("C_parallel", mAttributes);
-	mParallelCond = Attribute<Real>::create("G_parallel", mAttributes);
 }
 
 void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capacitance, Real conductance) {
@@ -145,7 +139,6 @@ void SP::Ph1::PiLine::updateBranchFlow(VectorComp& current, VectorComp& powerflo
 void SP::Ph1::PiLine::storeNodalInjection(Complex powerInjection) {
 	**mActivePowerInjection = std::real(powerInjection)*mBaseApparentPower;
 	**mReactivePowerInjection = std::imag(powerInjection)*mBaseApparentPower;
-	**mStoreNodalPowerInjection = true;
 }
 
 MatrixComp SP::Ph1::PiLine::Y_element() {

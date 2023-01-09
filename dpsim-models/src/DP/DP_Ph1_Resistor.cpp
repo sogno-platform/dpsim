@@ -11,13 +11,10 @@
 using namespace CPS;
 
 DP::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::Resistor(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
-
-	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
-	mResistance = CPS::Attribute<Real>::create("R", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Resistor::clone(String name) {

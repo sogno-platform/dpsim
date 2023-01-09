@@ -62,7 +62,7 @@ namespace Signal {
 	public:
 
 		// attributes of input references
-		///FIXME: These are never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
+		/// These are never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
 		const Attribute<Real>::Ptr mVc_d;
 		const Attribute<Real>::Ptr mVc_q;
 		const Attribute<Real>::Ptr mIrc_d;

@@ -31,7 +31,7 @@ namespace Base {
 		enum class StateType { perUnit, statorReferred, rotorReferred };
 		/// \brief Machine parameters type.
 		enum class ParameterType { perUnit, statorReferred, operational };
-		
+
 		/// Add governor and turbine
 		void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
 			Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
@@ -68,8 +68,8 @@ namespace Base {
 		Int mNumDampingWindings = 0;
 		/// mNumber of poles
 		Int mPoleNumber = 0;
-		
-		
+
+
 		/// d-axis mutual inductance Lmd [H]
 		Real mLmd = 0;
 		/// q-axis mutual inductance Lmq [H]
@@ -103,31 +103,31 @@ namespace Base {
 
 	public:
 		/// stator resistance Rs [Ohm]
-		Attribute<Real>::Ptr mRs;
+		const Attribute<Real>::Ptr mRs;
 		/// leakage inductance Ll [H]
-		Attribute<Real>::Ptr mLl;
+		const Attribute<Real>::Ptr mLl;
 		/// d-axis inductance Ld [H]
-		Attribute<Real>::Ptr mLd;
+		const Attribute<Real>::Ptr mLd;
 		/// q-axis inductance Lq [H]
-		Attribute<Real>::Ptr mLq;
-		
+		const Attribute<Real>::Ptr mLq;
+
 		// Operational parameters
 		/// Transient d-axis inductance [H]
-		Attribute<Real>::Ptr mLd_t;
+		const Attribute<Real>::Ptr mLd_t;
 		/// Transient q-axis inductance [H]
-		Attribute<Real>::Ptr mLq_t;
+		const Attribute<Real>::Ptr mLq_t;
 		/// Subtransient d-axis inductance [H]
-		Attribute<Real>::Ptr mLd_s;
+		const Attribute<Real>::Ptr mLd_s;
 		/// Subtransient q-axis inductance [H]
-		Attribute<Real>::Ptr mLq_s;
+		const Attribute<Real>::Ptr mLq_s;
 		/// Transient time constant of d-axis [s]
-		Attribute<Real>::Ptr mTd0_t;
+		const Attribute<Real>::Ptr mTd0_t;
 		/// Transient time constant of q-axis [s]
-		Attribute<Real>::Ptr mTq0_t;
+		const Attribute<Real>::Ptr mTq0_t;
 		/// Subtransient time constant of d-axis [s]
-		Attribute<Real>::Ptr mTd0_s;
+		const Attribute<Real>::Ptr mTd0_s;
 		/// Subtransient time constant of q-axis [s]
-		Attribute<Real>::Ptr mTq0_s;
+		const Attribute<Real>::Ptr mTq0_s;
 
 	protected:
 		// #### Initial Values ####
@@ -179,21 +179,21 @@ namespace Base {
 		Real mThetaMech = 0;
 	public:
 		/// rotor angle delta
-		Attribute<Real>::Ptr mDelta;
+		const Attribute<Real>::Ptr mDelta;
 		/// mechanical torque
-		Attribute<Real>::Ptr mMechTorque;
+		const Attribute<Real>::Ptr mMechTorque;
 		/// inertia constant H [s] for per unit or moment of inertia J [kg*m^2]
-		Attribute<Real>::Ptr mInertia;
+		const Attribute<Real>::Ptr mInertia;
 		/// rotor speed omega_r
-		Attribute<Real>::Ptr mOmMech;
+		const Attribute<Real>::Ptr mOmMech;
 		/// Active part of the electrical power
-		Attribute<Real>::Ptr mElecActivePower;
+		const Attribute<Real>::Ptr mElecActivePower;
 		/// Reactive part of the electrical power
-		Attribute<Real>::Ptr mElecReactivePower;
+		const Attribute<Real>::Ptr mElecReactivePower;
 		/// mechanical Power Pm [W]
-		Attribute<Real>::Ptr mMechPower;
+		const Attribute<Real>::Ptr mMechPower;
 		/// electrical torque
-		Attribute<Real>::Ptr mElecTorque;
+		const Attribute<Real>::Ptr mElecTorque;
 	protected:
 		/// \brief Vector of stator and rotor voltages.
 		///
@@ -267,8 +267,29 @@ namespace Base {
 		Real mInitTerminalVoltage = 0;
 		Real mInitVoltAngle = 0;
 
-		/// Constructor - does nothing.
-		SynchronGenerator() = default;
+		/// Constructor
+		explicit SynchronGenerator(CPS::AttributeBase::Map &attributeList) :
+			mRs(Attribute<Real>::create("Rs", attributeList, 0)),
+			mLl(Attribute<Real>::create("Ll", attributeList, 0)),
+			mLd(Attribute<Real>::create("Ld", attributeList, 0)),
+			mLq(Attribute<Real>::create("Lq", attributeList, 0)),
+			mLd_t(Attribute<Real>::create("Ld_t", attributeList, 0)),
+			mLq_t(Attribute<Real>::create("Lq_t", attributeList, 0)),
+			mLd_s(Attribute<Real>::create("Ld_s", attributeList, 0)),
+			mLq_s(Attribute<Real>::create("Lq_s", attributeList, 0)),
+			mTd0_t(Attribute<Real>::create("Td0_t", attributeList, 0)),
+			mTq0_t(Attribute<Real>::create("Tq0_t", attributeList, 0)),
+			mTd0_s(Attribute<Real>::create("Td0_s", attributeList, 0)),
+			mTq0_s(Attribute<Real>::create("Tq0_s", attributeList, 0)),
+			mDelta(Attribute<Real>::create("delta_r", attributeList, 0)),
+			mMechTorque(Attribute<Real>::create("T_m", attributeList, 0)),
+			mInertia(Attribute<Real>::create("inertia", attributeList, 0)),
+			mOmMech(Attribute<Real>::create("w_r", attributeList, 0)),
+			mElecActivePower(Attribute<Real>::create("P_elec", attributeList, 0)),
+			mElecReactivePower(Attribute<Real>::create("Q_elec", attributeList, 0)),
+			mMechPower(Attribute<Real>::create("P_mech", attributeList, 0)),
+			mElecTorque(Attribute<Real>::create("T_e", attributeList, 0)) { };
+
 		///
 		void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
 		///

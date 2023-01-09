@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: Base::Ph3::PiLine(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -20,11 +20,6 @@ EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	///FIXME: Move initialization into base class
-	mSeriesRes = Attribute<Matrix>::create("R_series", mAttributes);
-	mSeriesInd = Attribute<Matrix>::create("L_series", mAttributes);
-	mParallelCap = Attribute<Matrix>::create("C_parallel", mAttributes);
-	mParallelCond = Attribute<Matrix>::create("G_parallel", mAttributes);
 	mSLog->flush();
 }
 

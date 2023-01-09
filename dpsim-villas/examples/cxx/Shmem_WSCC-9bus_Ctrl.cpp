@@ -101,8 +101,8 @@ int main(int argc, char *argv[]) {
 	filtP->setInput(intf.importReal(0));
 	filtP_profile->setInput(intf.importReal(1));
 
-	intf.exportReal(load->attribute<Real>("P"), o++);
-	intf.exportReal(load_profile->attribute<Real>("P"), o++);
+	intf.exportReal(load->attributeTyped<Real>("P"), o++);
+	intf.exportReal(load_profile->attributeTyped<Real>("P"), o++);
 
 	sim.addInterface(std::shared_ptr<Interface>(&intf));
 	sim.addLogger(logger);

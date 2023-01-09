@@ -17,7 +17,11 @@ namespace Ph3 {
 	class Capacitor {
 	public:
 		/// Capacitance [F]
-		CPS::Attribute<Matrix>::Ptr mCapacitance;
+		const CPS::Attribute<Matrix>::Ptr mCapacitance;
+
+		explicit Capacitor(CPS::AttributeBase::Map &attributeList) :
+			mCapacitance(CPS::Attribute<Matrix>::create("C", attributeList)) { };
+
 		/// Sets model specific parameters
 		void setParameters(Matrix capacitance) {
 			**mCapacitance = capacitance;

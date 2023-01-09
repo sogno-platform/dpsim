@@ -36,12 +36,11 @@ namespace CPS {
 		IdentifiedObject(String name) :
 			IdentifiedObject(name, name) { }
 
-		virtual ~IdentifiedObject() { }
-
-		/// FIXME: Workaround for pybind. The methods that return attributes with and without the full (template) type should not have the same name!
-		AttributeBase::Ptr attributeBase(const String &name) {
-			return attribute(name);
+		AttributeBase::Ptr attribute(const String &name) override {
+			return AttributeList::attribute(name);
 		}
+
+		virtual ~IdentifiedObject() { }
 
 		/// Returns component name
 		String name() { return **mName; }

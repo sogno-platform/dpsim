@@ -24,10 +24,10 @@ namespace Ph1 {
 	/// For MNA this model consists sub components to represent the
 	/// RLC elements of a PI-line.
 	class PiLine :
+	 public Base::Ph1::PiLine,
 	 public SimPowerComp<Complex>,
 	 public MNATearInterface,
 	 public SharedFactory<PiLine>,
-	 public Base::Ph1::PiLine,
 	 public PFSolverInterfaceBranch {
 	public:
 		///base voltage [V]
@@ -90,9 +90,6 @@ namespace Ph1 {
 		const Attribute<Real>::Ptr mActivePowerInjection;
 		/// nodal reactive power injection
 		const Attribute<Real>::Ptr mReactivePowerInjection;
-		/// whether the total power injection of its from node is stored in this line
-		/// FIXME: This is only written to, but never read
-		const Attribute<Bool>::Ptr mStoreNodalPowerInjection;
 
 		// #### General ####
 		/// Defines UID, name and logging level

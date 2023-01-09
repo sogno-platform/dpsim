@@ -118,7 +118,7 @@ void Simulation::createSolvers() {
 		if (odeComp) {
 			// TODO explicit / implicit integration
 			auto odeSolver = std::make_shared<ODESolver>(
-				odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, **mTimeStep);
+				odeComp->attributeTyped<String>("name")->get() + "_ODE", odeComp, false, **mTimeStep);
 			mSolvers.push_back(odeSolver);
 		}
 	}
@@ -441,6 +441,9 @@ void Simulation::logIdObjAttribute(const String &comp, const String &attr) {
 }
 
 void Simulation::logAttribute(String name, CPS::AttributeBase::Ptr attr) {
-	//FIXME: Safety: This will crash when no logger is registered
-	mLoggers[0]->logAttribute(name, attr);
+	if (mLoggers.size() > 0) {
+		mLoggers[0]->logAttribute(name, attr);
+	} else {
+		throw SystemError("Cannot log attributes when no logger is configured for this simulation!");
+	}
 }

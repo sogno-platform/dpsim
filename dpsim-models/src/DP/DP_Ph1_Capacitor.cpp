@@ -12,13 +12,11 @@ using namespace CPS;
 using namespace CPS::DP::Ph1;
 
 DP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel) {
+	: Base::Ph1::Capacitor(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 	setTerminalNumber(2);
-	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
-	mCapacitance = CPS::Attribute<Real>::create("C", mAttributes);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Capacitor::clone(String name) {

@@ -19,17 +19,11 @@ namespace EMT {
 namespace Ph3 {
 
 	class RxLine :
+		public Base::Ph3::PiLine,
 		public SimPowerComp<Real>,
 		public MNAInterface,
-		public Base::Ph3::PiLine,
 		public SharedFactory<RxLine> {
 	protected:
-		/// Voltage across the component [V]
-		/// FIXME: This is never used...
-		Matrix mVoltage;
-		/// Current through the component [A]
-		/// FIXME: This is never used...
-		Matrix mCurrent;
 		/// Inductance submodel
 		std::shared_ptr<Inductor> mSubInductor;
 		/// Resistor submodel

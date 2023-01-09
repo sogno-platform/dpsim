@@ -101,7 +101,6 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 	if ((**mActivePower)(0,0) != 0) {
 		mResistance = std::pow(**mNomVoltage / sqrt(3), 2) * (**mActivePower).inverse();
-		mConductance = mResistance.inverse();
 		mSubResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });

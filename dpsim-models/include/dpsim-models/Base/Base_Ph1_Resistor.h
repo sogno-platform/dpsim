@@ -17,7 +17,12 @@ namespace Ph1 {
 	class Resistor {
 	public:
 		///Resistance [ohm]
-		CPS::Attribute<Real>::Ptr mResistance;
+		const CPS::Attribute<Real>::Ptr mResistance;
+
+		explicit Resistor(CPS::AttributeBase::Map &attributeList) :
+			mResistance(CPS::Attribute<Real>::create("R", attributeList)) { };
+
+
 		///
 		void setParameters(Real resistance) {
 			**mResistance = resistance;

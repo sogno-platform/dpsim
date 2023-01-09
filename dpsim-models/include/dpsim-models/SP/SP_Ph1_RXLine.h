@@ -71,9 +71,6 @@ namespace Ph1 {
 		const Attribute<Real>::Ptr mActivePowerInjection;
 		/// nodal reactive power injection
 		const Attribute<Real>::Ptr mReactivePowerInjection;
-		/// whether the total power injection of its from node is stored in this line
-		/// FIXME: This is only written to, but never read
-		const Attribute<Bool>::Ptr mStoreNodalPowerInjection;
 
 		// #### Power flow results ####
 		/// branch Current flow [A], coef(0) has data from node 0, coef(1) from node 1.

@@ -12,12 +12,11 @@ using namespace CPS;
 
 // #### General ####
 SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel, Bool withResistiveLosses)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: Base::Ph1::Transformer(mAttributes), SimPowerComp<Complex>(uid, name, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
 	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
 	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
 	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)) {
 	if (withResistiveLosses)
@@ -29,14 +28,6 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
-
-	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
-	mNominalVoltageEnd1 = Attribute<Real>::create("nominal_voltage_end1", mAttributes);
-	mNominalVoltageEnd2 = Attribute<Real>::create("nominal_voltage_end2", mAttributes);
-	mRatedPower = Attribute<Real>::create("S", mAttributes);
-	mRatio = Attribute<Complex>::create("ratio", mAttributes);
-	mResistance = Attribute<Real>::create("R", mAttributes);
-	mInductance = Attribute<Real>::create("L", mAttributes);
 
 	**mCurrent = MatrixComp::Zero(2,1);
 	**mActivePowerBranch = Matrix::Zero(2,1);
@@ -57,7 +48,6 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 
 	mRatioAbs = std::abs(**mRatio);
 	mRatioPhase = std::arg(**mRatio);
-	mConductance = 1 / **mResistance;
 
 	mParametersSet = true;
 }
@@ -84,7 +74,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mNominalOmega = 2. * PI * frequency;
 	mReactance = mNominalOmega * **mInductance;
 	mSLog->info("Reactance={} [Ohm] (referred to primary side)", mReactance);
-	
+
 	// Component parameters are referred to higher voltage side.
 	// Switch terminals to have terminal 0 at higher voltage side
 	// if transformer is connected the other way around.
@@ -288,7 +278,6 @@ void SP::Ph1::Transformer::updateBranchFlow(VectorComp& current, VectorComp& pow
 void SP::Ph1::Transformer::storeNodalInjection(Complex powerInjection) {
 	**mActivePowerInjection = std::real(powerInjection)*mBaseApparentPower;
 	**mReactivePowerInjection = std::imag(powerInjection)*mBaseApparentPower;
-	**mStoreNodalPowerInjection = true;
 }
 
 MatrixComp SP::Ph1::Transformer::Y_element() {
@@ -366,7 +355,7 @@ void SP::Ph1::Transformer::mnaAddPreStepDependencies(AttributeBase::List &prevSt
 	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void SP::Ph1::Transformer::mnaPreStep(Real time, Int timeStepCount) {	
+void SP::Ph1::Transformer::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))

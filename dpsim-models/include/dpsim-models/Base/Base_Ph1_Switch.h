@@ -18,11 +18,17 @@ namespace Ph1 {
 	class Switch {
 	public:
 		/// Resistance if switch is open [ohm]
-		Attribute<Real>::Ptr mOpenResistance;
+		const Attribute<Real>::Ptr mOpenResistance;
 		/// Resistance if switch is closed [ohm]
-		Attribute<Real>::Ptr mClosedResistance;
+		const Attribute<Real>::Ptr mClosedResistance;
 		/// Defines if Switch is open or closed
-		Attribute<Bool>::Ptr mIsClosed;
+		const Attribute<Bool>::Ptr mIsClosed;
+
+		explicit Switch(CPS::AttributeBase::Map &attributeList) :
+			mOpenResistance(Attribute<Real>::create("R_open", attributeList)),
+			mClosedResistance(Attribute<Real>::create("R_closed", attributeList)),
+			mIsClosed(Attribute<Bool>::create("is_closed", attributeList)) { };
+
 		///
 		void setParameters(Real openResistance, Real closedResistance, Bool closed = false) {
 			**mOpenResistance = openResistance;

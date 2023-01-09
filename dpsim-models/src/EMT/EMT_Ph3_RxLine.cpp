@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: Base::Ph3::PiLine(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -23,8 +23,6 @@ EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	mSeriesRes = Attribute<Matrix>::create("R", mAttributes);
-	mSeriesInd = Attribute<Matrix>::create("L", mAttributes);
 	mSLog->flush();
 }
 
