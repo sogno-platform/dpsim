@@ -122,7 +122,7 @@ class MnaSolverFactory {
 #ifdef WITH_MAGMA
 		case DirectLinearSolverImpl::CUDAMagma:
 		{
-			log->info("creating GpuSparseAdapter solver implementation");
+			log->info("creating GpuMagmaAdapter solver implementation");
 			std::shared_ptr<MnaSolverDirect<VarType>> gpuMagmaSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
 			gpuMagmaSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::CUDAMagma);
 			return gpuMagmaSolver;

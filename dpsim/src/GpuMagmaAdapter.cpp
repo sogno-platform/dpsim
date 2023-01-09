@@ -30,7 +30,7 @@ namespace DPsim
         int p_nnz = 0;
         int p[size];
         auto hMat = mVariableSystemMatrix;
-        size_t nnz = hMat[0].nonZeros();
+        size_t nnz = hMat.nonZeros();
         cusparseMatDescr_t descr_M = 0;
 
         cusolverSpHandle_t mCusolverhandle;
@@ -69,7 +69,7 @@ namespace DPsim
 
         // apply permutation
         //std::cout << "Before System Matrix:" << std::endl << hMat[0] << std::endl;
-        hMat[0] = *mTransp * hMat[0];
+        hMat = *mTransp * hMat;
         //std::cout << "permutation:" << std::endl << mTransp->toDenseMatrix() << std::endl;
         //std::cout << "inverse permutation:" << std::endl << mTransp->inverse().toDenseMatrix() << std::endl;
         //std::cout << "System Matrix:" << std::endl << hMat[0] << std::endl;
@@ -101,7 +101,7 @@ namespace DPsim
         cusparseDestroyMatDescr(descr_M);
     }
 
-    void GpuMagmaAdapter::initialize()
+    GpuMagmaAdapter::GpuMagmaAdapter()
     {
         magma_init();
         magma_queue_create(0, &mMagmaQueue);
@@ -111,6 +111,10 @@ namespace DPsim
         mDevRhsVec = {Magma_CSR};
         mHostLhsVec = {Magma_CSR};
         mDevLhsVec = {Magma_CSR};
+    }
+
+    void GpuMagmaAdapter::initialize()
+    {
     }
 
     void GpuMagmaAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
@@ -151,7 +155,7 @@ namespace DPsim
 
         //Copy Solution back
         magma_dmtransfer(mDevLhsVec, &mHostLhsVec, Magma_DEV, Magma_CPU, mMagmaQueue);
-        magma_dvcopy(mDevLhsVec, &size, &one, leftSideVector().data(), mMagmaQueue);
+        magma_dvcopy(mDevLhsVec, &size, &one, leftSideVector.data(), mMagmaQueue);
 
         return leftSideVector;
     }
