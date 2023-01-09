@@ -47,7 +47,8 @@ namespace DPsim
 		magma_d_matrix mHostLhsVec;
 		magma_d_matrix mDevLhsVec;
 
-		using Solver::mSLog;
+		// TODO: fix mSLog for solvers (all solvers)
+		// using Solver::mSLog;
 
 		void iluPreconditioner();
 
@@ -57,6 +58,9 @@ namespace DPsim
 		
 		/// Destructor
 		virtual ~GpuMagmaAdapter();
+
+		/// Constructor
+		GpuMagmaAdapter();
 
 		/// initialization function for linear solver
 		virtual void initialize() override;

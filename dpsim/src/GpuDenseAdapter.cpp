@@ -30,7 +30,7 @@ namespace DPsim
         cudaDeviceReset();
     }
 
-    void GpuDenseAdapter::initialize()
+    GpuDenseAdapter::GpuDenseAdapter()
     {
         mCusolverHandle = nullptr;
         mStream = nullptr;
@@ -44,6 +44,11 @@ namespace DPsim
             std::cerr << cudaGetErrorString(error) << std::endl;
         if((status = cusolverDnSetStream(mCusolverHandle, mStream)) != CUSOLVER_STATUS_SUCCESS)
             std::cerr << "cusolverDnSetStream() failed" << std::endl;
+    }
+
+    void GpuDenseAdapter::initialize()
+    {
+
     }
 
     void GpuDenseAdapter::allocateDeviceMemory()

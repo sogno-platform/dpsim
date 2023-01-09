@@ -64,6 +64,9 @@ namespace DPsim
 		/// Destructor
 		virtual ~GpuDenseAdapter();
 
+		/// Constructor
+		GpuDenseAdapter();
+
 		/// initialization function for linear solver
 		virtual void initialize() override;
 

@@ -54,6 +54,8 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 template <typename VarType>
 void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
+	this->mLuFactorizationVariableSystemMatrix = createDirectSolverImplementation();
+
 	mSLog->info("Number of variable Elements: {}"
 				"\nNumber of MNA components: {}",
 				mVariableComps.size(),
@@ -365,7 +367,7 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 template <typename VarType>
 void MnaSolverDirect<VarType>::setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation) {
 	this->implementationInUse = implementation;
-	this->mLuFactorizationVariableSystemMatrix = createDirectSolverImplementation();
+	//this->mLuFactorizationVariableSystemMatrix = createDirectSolverImplementation();
 }
 
 }
