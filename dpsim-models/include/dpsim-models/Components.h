@@ -59,6 +59,7 @@
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator3OrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderIter.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderDCIM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderDCIM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6aOrderVBR.h>
