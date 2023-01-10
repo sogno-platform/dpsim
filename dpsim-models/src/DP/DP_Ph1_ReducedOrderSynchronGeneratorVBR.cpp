@@ -16,9 +16,6 @@ DP::Ph1::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
 
 	mPhaseType = PhaseType::Single;
 	setTerminalNumber(1);
-	if (mModApproach == ModApproach::VoltageSource) {
-		setVirtualNodeNumber(2);
-	}
 	
 	// model variables
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -82,9 +79,9 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega,
 
 	Base::ReducedOrderSynchronGenerator<Complex>::mnaInitialize(omega, timeStep, leftVector);
 
-	if (mModApproach == ModApproach::CurrentSource) {
+	if (mModelAsCurrentSource) {
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
-	} else if (mModApproach == ModApproach::VoltageSource) {
+	} else {
 		// upper left
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex()));
 
@@ -102,12 +99,12 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega,
 }
 
 void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	if (mModApproach == ModApproach::CurrentSource) {
+	if (mModelAsCurrentSource) {
 		// Stamp conductance matrix
 		// set buttom right block
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrix);
 	
-	} else if (mModApproach == ModApproach::VoltageSource) {
+	} else {
 		// Stamp voltage source
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1, 0));
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
@@ -127,15 +124,14 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix
 }
 
 void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	if (mModApproach == ModApproach::CurrentSource) {
+	if (mModelAsCurrentSource) {
 		// compute equivalent northon circuit in abc reference frame
-		Matrix Evbr = Matrix::Zero(2,1);
-		Evbr << mEvbr.real(), mEvbr.imag();
-		mIvbr = mConductanceMatrix * Evbr;
-
-		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), Complex(mIvbr(0,0), mIvbr(1,0)));
+		mIvbr = Complex(mConductanceMatrix(0,0) * mEvbr.real() + mConductanceMatrix(0,1) * mEvbr.imag(), 
+					    mConductanceMatrix(1,0) * mEvbr.real() + mConductanceMatrix(1,1) * mEvbr.imag());
+		
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), mIvbr);
 	
-	} else if (mModApproach == ModApproach::VoltageSource) {
+	} else {
 		Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), mEvbr);
 	}
 }
@@ -152,14 +148,10 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaPostStep(const Matrix& leftVe
 	**mVdq = parkTransform * Vabc / mBase_V_RMS;
 
 	// update armature current
-	if (mModApproach == ModApproach::CurrentSource) {
-		Matrix intfVoltage = Matrix::Zero(2,1);
-		intfVoltage << (**mIntfVoltage)(0, 0).real(), (**mIntfVoltage)(0, 0).imag();
-		Matrix Iconductance = Matrix::Zero(2,1);
-		Iconductance = mConductanceMatrix * intfVoltage;
-		(**mIntfCurrent)(0, 0) = Complex(mIvbr(0,0), mIvbr(1,0)) - Complex(Iconductance(0,0), Iconductance(1,0));
-	}
-	else if (mModApproach == ModApproach::VoltageSource) {
+	if (mModelAsCurrentSource) {
+		(**mIntfCurrent)(0, 0) = mIvbr - Complex(mConductanceMatrix(0,0) * (**mIntfVoltage)(0, 0).real() + mConductanceMatrix(0,1) * (**mIntfVoltage)(0, 0).imag(), 
+					    						 mConductanceMatrix(1,0) * (**mIntfVoltage)(0, 0).real() + mConductanceMatrix(1,1) * (**mIntfVoltage)(0, 0).imag());
+	} else {
 		(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
 	}
 

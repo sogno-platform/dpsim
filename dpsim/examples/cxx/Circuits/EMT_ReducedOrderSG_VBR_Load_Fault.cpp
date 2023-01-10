@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
     genEMT->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower, 
 							 GridParams.initTerminalVolt);
-	genEMT->setModellingApproach(ModApproach::CurrentSource);
+	genEMT->setModelAsCurrentSource(true);
 
 	// Exciter
 	std::shared_ptr<Signal::Exciter> exciterEMT = nullptr;

@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
     genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
-	genSP->setModellingApproach(ModApproach::CurrentSource);
+	genSP->setModelAsCurrentSource(true);
 
 	// Exciter
 	std::shared_ptr<Signal::Exciter> exciterSP = nullptr;

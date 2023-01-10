@@ -28,26 +28,6 @@ EMT::Ph3::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
 	: SynchronGenerator3OrderVBR(name, name, logLevel) {
 }
 
-void EMT::Ph3::SynchronGenerator3OrderVBR::setOperationalParametersPerUnit(Real nomPower, 
-			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
-			Real Ld_t, Real Td0_t) {
-
-	Base::ReducedOrderSynchronGenerator<Real>::setOperationalParametersPerUnit(nomPower, 
-		nomVolt, nomFreq, H, Ld, Lq, L0,
-		Ld_t, Td0_t);
-	
-	mSLog->info("Set base parameters: \n"
-				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
-				nomPower, nomVolt, nomFreq);
-
-	mSLog->info("Set operational parameters in per unit: \n"
-			"inertia: {:e}\n"
-			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
-			"Ld_t: {:e}\nTd0_t: {:e}\n",
-			H, Ld, Lq, L0, 
-			Ld_t, Td0_t);
-}
-
 void EMT::Ph3::SynchronGenerator3OrderVBR::specificInitialization() {
 	// initial voltage behind the transient reactance in the dq0 reference frame
 	(**mEdq0_t)(1,0) = (**mVdq0)(1,0) + (**mIdq0)(0,0) * mLd_t;

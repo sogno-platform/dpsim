@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
     genDP->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower, 
 			Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle), 
 					GridParams.VnomMV * sin(GridParams.initVoltAngle)));
-	genDP->setModellingApproach(ModApproach::CurrentSource);
+	genDP->setModelAsCurrentSource(true);
 
 	// Exciter
 	std::shared_ptr<Signal::Exciter> exciterDP = nullptr;

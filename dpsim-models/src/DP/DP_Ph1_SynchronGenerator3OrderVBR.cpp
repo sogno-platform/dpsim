@@ -28,26 +28,6 @@ DP::Ph1::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
 	: SynchronGenerator3OrderVBR(name, name, logLevel) {
 }
 
-void DP::Ph1::SynchronGenerator3OrderVBR::setOperationalParametersPerUnit(Real nomPower, 
-			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
-			Real Ld_t, Real Td0_t) {
-
-	Base::ReducedOrderSynchronGenerator<Complex>::setOperationalParametersPerUnit(nomPower, 
-		nomVolt, nomFreq, H, Ld, Lq, L0,
-		Ld_t, Td0_t);
-	
-	mSLog->info("Set base parameters: \n"
-				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
-				nomPower, nomVolt, nomFreq);
-
-	mSLog->info("Set operational parameters in per unit: \n"
-			"inertia: {:e}\n"
-			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
-			"Ld_t: {:e}\nTd0_t: {:e}\n",
-			H, Ld, Lq, L0, 
-			Ld_t, Td0_t);
-}
-
 void DP::Ph1::SynchronGenerator3OrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame

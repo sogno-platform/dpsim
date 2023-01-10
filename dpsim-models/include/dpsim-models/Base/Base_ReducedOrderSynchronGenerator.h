@@ -58,10 +58,12 @@ namespace Base {
 			Real mEf_prev;
 
 		protected:
-			//
-			ModApproach mModApproach;
-			//
+			/// Model flag indicating whether the machine is modeled as current or voltage source
+			/// Default: currentsource (recommended)
+			Bool mModelAsCurrentSource = true;
+			// Model flag indicating the SG order to be used
 			SGOrder mSGOrder; 
+
 			// ### Base quantities (stator refered) ###
 			/// Nominal power
 			Real mNomPower;
@@ -190,8 +192,9 @@ namespace Base {
 		public:	
 			/// Destructor - does nothing.
 			virtual ~ReducedOrderSynchronGenerator() { }
-			///
-			void setModellingApproach(ModApproach modApproach);
+			/// modelAsCurrentSource=true --> SG is modeled as current source, otherwise as voltage source
+			/// Both implementations are equivalent, but the current source implementation is more efficient
+			virtual void setModelAsCurrentSource(Bool modelAsCurrentSource);
 			/// 
 			void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
 			/// Initialization for 3 Order SynGen

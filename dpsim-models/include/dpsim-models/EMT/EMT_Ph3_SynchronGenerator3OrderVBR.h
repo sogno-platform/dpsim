@@ -38,10 +38,6 @@ namespace Ph3 {
 		void specificInitialization() override;
 		///
 		void stepInPerUnit() override;
-		/// Setter 3rd order parameters - extending base class setter by logging
-		void setOperationalParametersPerUnit(Real nomPower, 
-			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
-			Real Ld_t, Real Td0_t);
 	};
 }
 }

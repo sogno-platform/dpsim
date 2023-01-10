@@ -24,7 +24,6 @@ Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	mEf(Attribute<Real>::create("Ef", mAttributes)) {
 	
 	//
-	mModApproach = ModApproach::CurrentSource;
 	mSimTime = 0.0;
 
 	// declare state variables
@@ -46,7 +45,6 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	mEf(Attribute<Real>::create("Ef", mAttributes)) {
 	
 	//
-	mModApproach = ModApproach::CurrentSource;
 	mSimTime = 0.0;
 
 	// declare state variables
@@ -56,9 +54,11 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::setModellingApproach(ModApproach modApproach) {
-	mModApproach = modApproach;
-	if (mModApproach == ModApproach::VoltageSource)
+void Base::ReducedOrderSynchronGenerator<VarType>::setModelAsCurrentSource(Bool modelAsCurrentSource) {
+	mModelAsCurrentSource = modelAsCurrentSource;
+
+	if (!mModelAsCurrentSource)
+		// SG is modeled as voltage source
 		this->setVirtualNodeNumber(2);
 }
 
@@ -98,6 +98,17 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mLd_t = Ld_t;
 	mTd0_t = Td0_t;
 	mH = H;
+
+	this->mSLog->info("Set base parameters: \n"
+				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
+				mNomPower, mNomVolt, mNomFreq);
+
+	this->mSLog->info("Set operational parameters in per unit: \n"
+			"inertia: {:e}\n"
+			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
+			"Ld_t: {:e}\nTd0_t: {:e}\n",
+			mH, mLd, mLq, mL0, 
+			mLd_t, mTd0_t);
 }
 
 template <typename VarType>
@@ -115,6 +126,19 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mTd0_t = Td0_t;
 	mTq0_t = Tq0_t;
 	mH = H;
+
+	this->mSLog->info("Set base parameters: \n"
+				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
+				mNomPower, mNomVolt, mNomFreq);
+
+	this->mSLog->info("Set operational parameters in per unit: \n"
+			"inertia: {:e}\n"
+			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
+			"Ld_t: {:e}\nLq_t: {:e}\n"
+			"Td0_t: {:e}\nTq0_t: {:e}\n",
+			mH, mLd, mLq, mL0, 
+			mLd_t, mLq_t,
+			mTd0_t, mTq0_t);
 }
 
 template <typename VarType>
@@ -139,18 +163,31 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mTq0_s = Tq0_s;
 	mTaa = Taa;
 	mH = H;
+
+	this->mSLog->info("Set base parameters: \n"
+				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
+				mNomPower, mNomVolt, mNomFreq);
+
+	this->mSLog->info("Set operational parameters in per unit: \n"
+			"inertia: {:e}\n"
+			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
+			"Ld_t: {:e}\nLq_t: {:e}\n"
+			"Td0_t: {:e}\nTq0_t: {:e}\n"
+			"Ld_s: {:e}\nLq_s: {:e}\n"
+			"Td0_s: {:e}\nTq0_s: {:e}\n"
+			"Taa: {:e}\n",
+			mH, mLd, mLq, mL0, 
+			mLd_t, mLq_t,
+			mTd0_t, mTq0_t,
+			mLd_s, mLq_s,
+			mTd0_s, mTq0_s,
+			mTaa);
 }
 
-template <>
-void Base::ReducedOrderSynchronGenerator<Real>::scaleInertiaConstant(Real scalingFactor) {
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::scaleInertiaConstant(Real scalingFactor) {
 	mH = mH * scalingFactor;
-	mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
-}
-
-template <>
-void Base::ReducedOrderSynchronGenerator<Complex>::scaleInertiaConstant(Real scalingFactor) {
-	mH = mH * scalingFactor;
-	mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
+	this->mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH); 
 }
 
 template <typename VarType>
