@@ -1,6 +1,4 @@
 if(NOT MAGMA_FOUND)
-	include(FindPackageHandleStandardArgs)
-
 	find_path(MAGMA_INCLUDE_DIR
 		NAMES magma_v2.h magmasparse.h
 		PATH_SUFFIXES "include"
@@ -28,5 +26,8 @@ if(NOT MAGMA_FOUND)
 		set(MAGMA_FOUND FALSE)
 	endif()
 
+	include(FindPackageHandleStandardArgs)
 	find_package_handle_standard_args(MAGMA DEFAULT_MSG MAGMA_LIBRARIES MAGMA_INCLUDE_DIR)
-endif(NOT MAGMA_FOUND)
+
+	mark_as_advanced(MAGMA_LIBRARIES MAGMA_INCLUDE_DIR)
+endif()
