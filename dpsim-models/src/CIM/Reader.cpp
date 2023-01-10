@@ -525,8 +525,8 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			|| mGeneratorType == GeneratorType::SG6bOrderVBR
 			|| mGeneratorType == GeneratorType::SG4OrderVBR
 			|| mGeneratorType == GeneratorType::SG3OrderVBR
-			|| mGeneratorType == GeneratorType::SG4OrderIter
-			|| mGeneratorType == GeneratorType::SG6OrderIter) {
+			|| mGeneratorType == GeneratorType::SG4OrderPCM
+			|| mGeneratorType == GeneratorType::SG6OrderPCM) {
 
 			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
 			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
@@ -596,15 +596,15 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								ratedPower, ratedVoltage, mFrequency, H,
 								Ld, Lq, Ll, Ld_t, Td0_t); 
 							return gen;
-						} else if (mGeneratorType == GeneratorType::SG4OrderIter) {
-							mSLog->info("    GeneratorType is SynchronGenerator4OrderIter.");
-							auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderIter>(machine->mRID, machine->name, mComponentLogLevel);
+						} else if (mGeneratorType == GeneratorType::SG4OrderPCM) {
+							mSLog->info("    GeneratorType is SynchronGenerator4OrderPCM.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderPCM>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
 								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t); 
 							return gen;
-						} else if (mGeneratorType == GeneratorType::SG6OrderIter) {
-							mSLog->info("    GeneratorType is SynchronGenerator6OrderIter.");
-							auto gen = std::make_shared<DP::Ph1::SynchronGenerator6OrderIter>(machine->mRID, machine->name, mComponentLogLevel);
+						} else if (mGeneratorType == GeneratorType::SG6OrderPCM) {
+							mSLog->info("    GeneratorType is SynchronGenerator6OrderPCM.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator6OrderPCM>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
 								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s); 
 							return gen;

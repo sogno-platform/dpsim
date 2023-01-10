@@ -6,11 +6,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderIter.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderPCM.h>
 
 using namespace CPS;
 
-EMT::Ph3::SynchronGenerator4OrderIter::SynchronGenerator4OrderIter
+EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
     (const String& uid, const String& name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Real>(uid, name, logLevel),
 	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)) {
@@ -32,18 +32,18 @@ EMT::Ph3::SynchronGenerator4OrderIter::SynchronGenerator4OrderIter
 	mNumIter = Attribute<Int>::create("NIterations", mAttributes, 0);
 }
 
-EMT::Ph3::SynchronGenerator4OrderIter::SynchronGenerator4OrderIter
+EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
 	(const String& name, Logger::Level logLevel)
-	: SynchronGenerator4OrderIter(name, name, logLevel) {
+	: SynchronGenerator4OrderPCM(name, name, logLevel) {
 }
 
-SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator4OrderIter::clone(const String& name) {
-	auto copy = SynchronGenerator4OrderIter::make(name, mLogLevel);
+SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator4OrderPCM::clone(const String& name) {
+	auto copy = SynchronGenerator4OrderPCM::make(name, mLogLevel);
 	
 	return copy;
 }
 
-void EMT::Ph3::SynchronGenerator4OrderIter::specificInitialization() {
+void EMT::Ph3::SynchronGenerator4OrderPCM::specificInitialization() {
 
 	// Initialize matrix of state representation
 	mA = Matrix::Zero(3,3);
@@ -71,7 +71,7 @@ void EMT::Ph3::SynchronGenerator4OrderIter::specificInitialization() {
 	mSLog->flush();
 }
 
-void EMT::Ph3::SynchronGenerator4OrderIter::calculateStateMatrix() {
+void EMT::Ph3::SynchronGenerator4OrderPCM::calculateStateMatrix() {
 	if (mVoltageForm) {
 		Real Td_t =  mTd0_t * (mLd_t / mLd);
 		Real Tq_t =  mTq0_t * (mLq_t / mLq);
@@ -98,7 +98,7 @@ void EMT::Ph3::SynchronGenerator4OrderIter::calculateStateMatrix() {
 	}
 }
 
-void EMT::Ph3::SynchronGenerator4OrderIter::stepInPerUnit() {
+void EMT::Ph3::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	// set number of iteratios equal to zero
 	**mNumIter = **mNumIter + 1;
 
@@ -137,13 +137,13 @@ void EMT::Ph3::SynchronGenerator4OrderIter::stepInPerUnit() {
 	**mIntfCurrent = **mIntfCurrent * mBase_I;
 }
 
-void EMT::Ph3::SynchronGenerator4OrderIter::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph3::SynchronGenerator4OrderPCM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0,0), (**mIntfCurrent)(0, 0));
 	Math::setVectorElement(rightVector, matrixNodeIndex(0,1), (**mIntfCurrent)(1, 0));
 	Math::setVectorElement(rightVector, matrixNodeIndex(0,2), (**mIntfCurrent)(2, 0));
 }
 
-void EMT::Ph3::SynchronGenerator4OrderIter::correctorStep() {
+void EMT::Ph3::SynchronGenerator4OrderPCM::correctorStep() {
 	// corrector step (trapezoidal rule)
 
 	if (**mNumIter == 1)
@@ -185,7 +185,7 @@ void EMT::Ph3::SynchronGenerator4OrderIter::correctorStep() {
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::SynchronGenerator4OrderIter::updateVoltage(const Matrix& leftVector) {	
+void EMT::Ph3::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVector) {	
 	mVdq0_prev = **mVdq0;
 	
 	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
@@ -201,7 +201,7 @@ void EMT::Ph3::SynchronGenerator4OrderIter::updateVoltage(const Matrix& leftVect
 	**mVdq0 = **mVdq0 / mBase_V;
 }
 
-bool EMT::Ph3::SynchronGenerator4OrderIter::checkVoltageDifference() {
+bool EMT::Ph3::SynchronGenerator4OrderPCM::checkVoltageDifference() {
 	if (**mNumIter == 0) {
 		// if no corrector step has been performed yet
 		**mNumIter = 1;
@@ -219,7 +219,7 @@ bool EMT::Ph3::SynchronGenerator4OrderIter::checkVoltageDifference() {
 		return false;
 }
 
-void EMT::Ph3::SynchronGenerator4OrderIter::mnaPostStep(const Matrix& leftVector) {
+void EMT::Ph3::SynchronGenerator4OrderPCM::mnaPostStep(const Matrix& leftVector) {
 	// update variables
 	**mEdq0_t = mEdq0_t_corr;
 	**mOmMech = mOmMech_corr;
@@ -227,7 +227,7 @@ void EMT::Ph3::SynchronGenerator4OrderIter::mnaPostStep(const Matrix& leftVector
 	**mDelta = mDelta_corr;
 }
 
-Matrix EMT::Ph3::SynchronGenerator4OrderIter::parkTransform(Real theta, const Matrix& abcVector) {
+Matrix EMT::Ph3::SynchronGenerator4OrderPCM::parkTransform(Real theta, const Matrix& abcVector) {
 	Matrix dq0Vector(3, 1);
 	Matrix abcToDq0(3, 3);
 
@@ -242,7 +242,7 @@ Matrix EMT::Ph3::SynchronGenerator4OrderIter::parkTransform(Real theta, const Ma
 	return dq0Vector;
 }
 
-Matrix EMT::Ph3::SynchronGenerator4OrderIter::inverseParkTransform(Real theta, const Matrix& dq0Vector) {
+Matrix EMT::Ph3::SynchronGenerator4OrderPCM::inverseParkTransform(Real theta, const Matrix& dq0Vector) {
 	Matrix abcVector(3, 1);
 	Matrix dq0ToAbc(3, 3);
 
