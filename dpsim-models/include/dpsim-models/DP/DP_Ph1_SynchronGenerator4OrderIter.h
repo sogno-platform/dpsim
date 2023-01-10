@@ -17,6 +17,7 @@ namespace Ph1 {
 	/// @brief 4 Order Synchronous generator model for transient stability analysis
 	///
 	/// This model is based on Eremia section 2.1.6.
+	/// Modeling approach: delayed current injection + predictor corrector method
 	class SynchronGenerator4OrderIter :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public MNASyncGenInterface,
