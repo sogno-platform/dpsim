@@ -21,6 +21,7 @@ find_path(CIMPP_INCLUDE_DIR
 		${USE_CIM_VERSION}
 		include/src
 )
+
 find_library(CIMPP_LIBRARY
 	NAMES cimpp${CIM_VERSION} cimpp${USE_CIM_VERSION}
 	PATH_SUFFIXES
