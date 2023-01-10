@@ -18,12 +18,7 @@ set(DPSIM_SOURCES
 	Interface.cpp
 )
 
-set(DPSIM_INCLUDE_DIRS
-	../include
-	${CMAKE_CURRENT_BINARY_DIR}/../include
-)
-
-set(DPSIM_LIBRARIES
+list(APPEND DPSIM_LIBRARIES
 	dpsim-models
 	readerwriterqueue
 	filesystem
