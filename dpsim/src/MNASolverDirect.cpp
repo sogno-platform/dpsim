@@ -17,6 +17,7 @@ namespace DPsim {
 
 template <typename VarType>
 MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :	MnaSolver<VarType>(name, domain, logLevel) {
+	implementationInUse = DirectLinearSolverImpl::SparseLU;
 }
 
 
