@@ -58,13 +58,13 @@
 #include <dpsim-models/DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator3OrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderVBR.h>
-#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderIter.h>
-#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderDCIM.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderPCM.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderDCIM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6aOrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6bOrderVBR.h>
-#include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderIter.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderPCM.h>
 #include <dpsim-models/DP/DP_Ph1_Inverter.h>
 #include <dpsim-models/DP/DP_Ph1_NetworkInjection.h>
 #include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
@@ -102,7 +102,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.h>
-#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderIter.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQ.h>

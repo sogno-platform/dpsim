@@ -6,11 +6,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderIter.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderPCM.h>
 
 using namespace CPS;
 
-DP::Ph1::SynchronGenerator6OrderIter::SynchronGenerator6OrderIter
+DP::Ph1::SynchronGenerator6OrderPCM::SynchronGenerator6OrderPCM
     (const String& uid, const String& name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel) {
 
@@ -27,18 +27,18 @@ DP::Ph1::SynchronGenerator6OrderIter::SynchronGenerator6OrderIter
 	mEdq_corr = Matrix::Zero(4,1);
 }
 
-DP::Ph1::SynchronGenerator6OrderIter::SynchronGenerator6OrderIter
+DP::Ph1::SynchronGenerator6OrderPCM::SynchronGenerator6OrderPCM
 	(const String& name, Logger::Level logLevel)
-	: SynchronGenerator6OrderIter(name, name, logLevel) {
+	: SynchronGenerator6OrderPCM(name, name, logLevel) {
 }
 
-SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator6OrderIter::clone(const String& name) {
-	auto copy = SynchronGenerator6OrderIter::make(name, mLogLevel);
+SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator6OrderPCM::clone(const String& name) {
+	auto copy = SynchronGenerator6OrderPCM::make(name, mLogLevel);
 	
 	return copy;
 }
 
-void DP::Ph1::SynchronGenerator6OrderIter::specificInitialization() {
+void DP::Ph1::SynchronGenerator6OrderPCM::specificInitialization() {
 
 	// calculate state representation matrix
 	calculateStateMatrix();
@@ -72,7 +72,7 @@ void DP::Ph1::SynchronGenerator6OrderIter::specificInitialization() {
 	mSLog->flush();
 }
 
-void DP::Ph1::SynchronGenerator6OrderIter::calculateStateMatrix() {
+void DP::Ph1::SynchronGenerator6OrderPCM::calculateStateMatrix() {
 	// Initialize matrix of state representation of predictor step
 	if (mNumericalMethod == CPS::NumericalMethod::Euler) {
 		mA_euler = Matrix::Zero(4,4);
@@ -157,7 +157,7 @@ void DP::Ph1::SynchronGenerator6OrderIter::calculateStateMatrix() {
 			0.0;
 }
 
-void DP::Ph1::SynchronGenerator6OrderIter::stepInPerUnit() {
+void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	// set number of iteratios equal to zero
 	**mNumIter = 0;
 
@@ -196,11 +196,11 @@ void DP::Ph1::SynchronGenerator6OrderIter::stepInPerUnit() {
 	(**mIntfCurrent)(0,0) = (mDpToDq * mIdq_pred)(0,0) * mBase_I_RMS;
 }
 
-void DP::Ph1::SynchronGenerator6OrderIter::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph1::SynchronGenerator6OrderPCM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0,0), (**mIntfCurrent)(0, 0));
 }
 
-void DP::Ph1::SynchronGenerator6OrderIter::correctorStep() {
+void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 	// corrector step (trapezoidal rule)
 	**mNumIter = **mNumIter + 1;
 
@@ -235,7 +235,7 @@ void DP::Ph1::SynchronGenerator6OrderIter::correctorStep() {
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void DP::Ph1::SynchronGenerator6OrderIter::updateVoltage(const Matrix& leftVector) {
+void DP::Ph1::SynchronGenerator6OrderPCM::updateVoltage(const Matrix& leftVector) {
 	mVdq_prev = **mVdq;
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	
@@ -249,7 +249,7 @@ void DP::Ph1::SynchronGenerator6OrderIter::updateVoltage(const Matrix& leftVecto
 		**mVdq = parkTransform(mThetaMech_corr, Vabc) / mBase_V_RMS;
 }
 
-bool DP::Ph1::SynchronGenerator6OrderIter::checkVoltageDifference() {
+bool DP::Ph1::SynchronGenerator6OrderPCM::checkVoltageDifference() {
 	if (**mNumIter == 0)
 		// if no corrector step has been performed yet
 		return true;
@@ -273,7 +273,7 @@ bool DP::Ph1::SynchronGenerator6OrderIter::checkVoltageDifference() {
 	}
 }
 
-void DP::Ph1::SynchronGenerator6OrderIter::mnaPostStep(const Matrix& leftVector) {
+void DP::Ph1::SynchronGenerator6OrderPCM::mnaPostStep(const Matrix& leftVector) {
 	// update variables
 	**mOmMech = mOmMech_corr;
 	**mThetaMech = mThetaMech_corr;
