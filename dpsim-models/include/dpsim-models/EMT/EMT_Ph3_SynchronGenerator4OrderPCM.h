@@ -17,10 +17,10 @@ namespace Ph3 {
 	/// @brief 4 Order Synchronous generator model for transient stability analysis
 	///
 	/// This model is based on Eremia section 2.1.6.
-	class SynchronGenerator4OrderIter :
+	class SynchronGenerator4OrderPCM :
 		public Base::ReducedOrderSynchronGenerator<Real>,
 		public MNASyncGenInterface,
-		public SharedFactory<SynchronGenerator4OrderIter> {
+		public SharedFactory<SynchronGenerator4OrderPCM> {
 	protected:
 
 
@@ -63,9 +63,9 @@ namespace Ph3 {
 
 	public:
 		///
-		SynchronGenerator4OrderIter(const String& uid, const String& name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderPCM(const String& uid, const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator4OrderIter(const String& name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderPCM(const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
 		SimPowerComp<Real>::Ptr clone(const String& name);
 
