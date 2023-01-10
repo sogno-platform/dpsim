@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.12...3.23)
+# Please keep 3.14 as minimum requirement for building on OPAL-RT targets
+cmake_minimum_required(VERSION 3.14...3.23)
 project(DPsim
 		VERSION 1.1.0
 		DESCRIPTION "C++ Power System Simulation Library"
@@ -67,34 +68,65 @@ check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 include(GetVersion)
 GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 
-option(WITH_EIGEN_MODULE "Build with Eigen as module" OFF)
-option(WITH_SPDLOG_SUBMODULE "Build with Spdlog as module" OFF)
-option(WITH_CIM_SUBMODULE "Build with CIMpp as module" OFF)
-option(WITH_PYBIND_MODULE "Build with pybind11 as module" OFF)
-option(WITH_PROFILING "Add `-pg` profiling flag to compiliation" OFF)
-option(WITH_ASAN "Adds compiler flags to use the address sanitizer" OFF)
-option(WITH_TSAN "Adds compiler flags to use the thread sanitizer" OFF)
-option(CGMES_BUILD "Build with CGMES instead of CIM" OFF)
+# Build options
+option(FETCH_EIGEN          "Fetch Eigen3 as module" OFF)
+option(FETCH_SPDLOG         "Fetch spdlog as module" OFF)
+option(FETCH_CIMPP          "Fetch CIMpp as module" OFF)
+option(FETCH_PYBIND         "Fetch pybind11 as module" OFF)
+option(FETCH_GRID_DATA      "Fetch grid data" ON)
+
+option(WITH_JSON            "Include json library" ON)
+option(WITH_PROFILING       "Add `-pg` profiling flag to compiliation" OFF)
+option(WITH_ASAN            "Adds compiler flags to use the address sanitizer" OFF)
+option(WITH_TSAN            "Adds compiler flags to use the thread sanitizer" OFF)
+option(WITH_SPARSE          "Use sparse matrices in MNA-Solver"	ON)
+
+option(BUILD_SHARED_LIBS    "Build shared library" OFF)
+option(BUILD_EXAMPLES       "Build C++ examples" ON)
+
+option(CGMES_BUILD          "Build with CGMES instead of CIMpp" OFF)
 
 find_package(Threads REQUIRED)
+find_package(Sundials)
+find_package(OpenMP)
+find_package(CUDA)
+find_package(GSL)
+find_package(Graphviz)
+find_package(VILLASnode)
+find_package(MAGMA)
+find_package(Python3 COMPONENTS Interpreter Development)
 
-if(WITH_EIGEN_MODULE OR WIN32)
-	include(cmake/GetEigenModule.cmake)
+if(FETCH_EIGEN OR WIN32)
+	include(FetchEigen)
 else()
 	find_package(Eigen3 3.0 REQUIRED)
 endif()
 
-if(WITH_SPDLOG_SUBMODULE OR WIN32)
-	include(cmake/GetSpdlogModule.cmake)
+if(FETCH_SPDLOG OR WIN32)
+	include(FetchSpdlog)
 else()
-	find_package(spdlog REQUIRED)
-	find_package(fmt REQUIRED)
+	find_package(spdlog 1.5.0 REQUIRED)
+	find_package(fmt 6.1.2 REQUIRED)
 endif()
 
-if(WITH_CIM_SUBMODULE OR WIN32)
-	include(cmake/GetCIMppModule.cmake)
+if(FETCH_CIMPP OR WIN32)
+	include(FetchCIMpp)
 else()
 	find_package(CIMpp)
+endif()
+
+if(FETCH_PYBIND)
+	include(FetchPybind)
+else()
+	find_package(pybind11 CONFIG QUIET)
+endif()
+
+if(FETCH_GRID_DATA)
+	include(FetchGridData)
+endif()
+
+if(WITH_JSON)
+	include(FetchJsonLibrary)
 endif()
 
 if(WITH_PROFILING)
@@ -117,40 +149,13 @@ if(WITH_TSAN)
 	endif()
 endif()
 
-find_package(Sundials)
-find_package(OpenMP)
-find_package(CUDA)
-find_package(GSL)
-find_package(Graphviz)
-find_package(VILLASnode)
-find_package(MAGMA)
-
-include(cmake/GetReaderWriterQueue.cmake)
-
-find_package(Python3 COMPONENTS Interpreter Development)
-if(WITH_PYBIND_MODULE)
-	include(cmake/GetPybindModule.cmake)
-else()
-	find_package(pybind11 CONFIG QUIET)
-endif()
+include(FetchReaderWriterQueue)
 
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
 	set(Linux_FOUND ON)
 elseif("${CMAKE_SYSTEM}" MATCHES "Darwin")
 	set(MacOS_FOUND ON)
 endif()
-
-option(BUILD_SHARED_LIBS    "Build shared library"  OFF)
-option(DPSIM_BUILD_EXAMPLES "Build C++ examples"    ON)
-option(GET_GRID_DATA        "Download grid data"    ON)
-
-option(WITH_JSON            "Include json library"  ON)
-if(WITH_JSON)
-	include(cmake/GetJsonLibrary.cmake)
-endif()
-
-# WITH_SPARSE and WITH_CUDA can be combined
-option(WITH_SPARSE          "Use sparse matrices in MNA-Solver"	ON)
 
 include(CMakeDependentOption)
 cmake_dependent_option(WITH_SUNDIALS        "Enable sundials solver suite"          ON  "Sundials_FOUND"   OFF)
@@ -195,15 +200,13 @@ if(WITH_CUDA)
 	# END OF WORKAROUND
 endif()
 
-add_subdirectory(dpsim)
 add_subdirectory(dpsim-models)
+add_subdirectory(dpsim)
 add_subdirectory(docs)
 
 if(WITH_VILLAS)
 	add_subdirectory(dpsim-villas)
-endif(WITH_VILLAS)
-
-include(cmake/GetGridData.cmake)
+endif()
 
 message(VERBOSE "Compiler Release Flags: " ${CMAKE_CXX_FLAGS_RELEASE})
 message(VERBOSE "Compiler Debug Flags:   " ${CMAKE_CXX_FLAGS_DEBUG})

@@ -6,10 +6,8 @@ find_library(CGRAPH_LIBRARY
 )
 
 find_library(GVC_LIBRARY
-	NAMES
-		gvc
-	PATH_SUFFIXES
-		lib
+	NAMES gvc
+	PATH_SUFFIXES lib
 )
 
 find_path(GRAPHVIZ_INCLUDE_DIR
