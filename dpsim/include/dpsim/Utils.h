@@ -18,7 +18,8 @@
 #include <cstdlib>
 #include <list>
 #include <vector>
-#include <experimental/filesystem>
+
+#include <nlohmann/json.hpp>
 
 #include <dpsim/Timer.h>
 #include <dpsim/Solver.h>
@@ -26,11 +27,16 @@
 #include <dpsim/MNASolverFactory.h>
 #include <dpsim-models/Components.h>
 #include <dpsim/Simulation.h>
-#include <nlohmann/json.hpp>
+
+#ifndef USE_GHC_FS
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <ghc/filesystem.hpp>
+namespace fs = ghc::filesystem;
+#endif
 
 using json = nlohmann::json;
-
-namespace fs = std::experimental::filesystem;
 
 namespace DPsim {
 

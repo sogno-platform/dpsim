@@ -7,14 +7,19 @@
  *********************************************************************************/
 
 #include <memory>
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-
 #include <iomanip>
 
 #include <dpsim-models/Logger.h>
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+
+#ifndef USE_GHC_FS
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <ghc/filesystem.hpp>
+namespace fs = ghc::filesystem;
+#endif
 
 using namespace CPS;
 
