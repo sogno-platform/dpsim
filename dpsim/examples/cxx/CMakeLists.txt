@@ -175,6 +175,7 @@ if(WITH_CIM)
 		CIM/SP_WSCC9bus_SGReducedOrderVBR.cpp
 		CIM/EMT_WSCC9bus_SGReducedOrderVBR.cpp
 		CIM/DP_WSCC9bus_SGReducedOrderVBR.cpp
+		CIM/DP_WSCC9bus_SGReducedOrderIter.cpp
 
 		# PF(Power Flow) example
 		CIM/Slack_Trafo_Load.cpp

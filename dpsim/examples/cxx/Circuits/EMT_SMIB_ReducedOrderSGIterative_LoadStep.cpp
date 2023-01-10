@@ -128,7 +128,7 @@ int main(int argc, char* argv[]) {
 	auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
 
 	// Synchronous generator
-	auto genEMT = EMT::Ph3::SynchronGenerator4OrderIter::make("SynGen", logLevel);
+	auto genEMT = EMT::Ph3::SynchronGenerator4OrderPCM::make("SynGen", logLevel);
 	genEMT->setOperationalParametersPerUnit(
 		syngenKundur.nomPower, syngenKundur.nomVoltage, 
 		syngenKundur.nomFreq, H, 

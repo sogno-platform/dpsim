@@ -105,7 +105,7 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 	auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
 
 	// Components
-	auto genEMT = EMT::Ph3::SynchronGenerator4OrderIter::make("SynGen", logLevel);
+	auto genEMT = EMT::Ph3::SynchronGenerator4OrderPCM::make("SynGen", logLevel);
 	genEMT->setOperationalParametersPerUnit(
 		syngenKundur.nomPower, syngenKundur.nomVoltage,
 		syngenKundur.nomFreq, H,
