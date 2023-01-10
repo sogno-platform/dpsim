@@ -26,6 +26,7 @@ set(DPSIM_INCLUDE_DIRS
 set(DPSIM_LIBRARIES
 	dpsim-models
 	readerwriterqueue
+	filesystem
 )
 
 if(WITH_MNASOLVERPLUGIN)

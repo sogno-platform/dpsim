@@ -67,9 +67,8 @@ cd /tmp && \
 	rm -rf /tmp/libcimpp
 
 cd /tmp && \
-	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
+	git clone --branch dpsim-villas --recursive https://github.com/VILLASframework/node.git villasnode && \
 	mkdir -p villasnode/build && cd villasnode/build && \
-	git -c submodule.fpga.update=none checkout dpsim-villas && git -c submodule.fpga.update=none submodule update --recursive && \
 	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
 	rm -rf /tmp/villasnode
 

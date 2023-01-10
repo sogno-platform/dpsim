@@ -4,6 +4,7 @@ configure_file(
 )
 
 set(MODELS_LIBRARIES
+	filesystem
 	Threads::Threads
 	Eigen3::Eigen
 	spdlog::spdlog

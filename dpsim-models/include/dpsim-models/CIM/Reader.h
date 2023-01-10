@@ -10,7 +10,6 @@
 
 #include <map>
 #include <list>
-#include <experimental/filesystem>
 
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/SimPowerComp.h>
@@ -20,7 +19,13 @@
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/SystemTopology.h>
 
+#ifndef USE_GHC_FS
+#include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
+#else
+#include <ghc/filesystem.hpp>
+namespace fs = ghc::filesystem;
+#endif
 
 /* ====== WARNING =======
  *

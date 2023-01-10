@@ -11,7 +11,6 @@
 #include <map>
 #include <iostream>
 #include <fstream>
-#include <experimental/filesystem>
 
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
@@ -20,7 +19,13 @@
 #include <dpsim-models/SimNode.h>
 #include <dpsim-models/Task.h>
 
+#ifndef USE_GHC_FS
+#include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
+#else
+#include <ghc/filesystem.hpp>
+namespace fs = ghc::filesystem;
+#endif
 
 namespace DPsim {
 
