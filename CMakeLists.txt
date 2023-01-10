@@ -215,8 +215,10 @@ if(WITH_VILLAS)
 	add_subdirectory(dpsim-villas)
 endif()
 
-message(VERBOSE "Compiler Release Flags: " ${CMAKE_CXX_FLAGS_RELEASE})
-message(VERBOSE "Compiler Debug Flags:   " ${CMAKE_CXX_FLAGS_DEBUG})
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16")
+	message(VERBOSE "Compiler Release Flags: " ${CMAKE_CXX_FLAGS_RELEASE})
+	message(VERBOSE "Compiler Debug Flags:   " ${CMAKE_CXX_FLAGS_DEBUG})
+endif()
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	include(FeatureSummary)
