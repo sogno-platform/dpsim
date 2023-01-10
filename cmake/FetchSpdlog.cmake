@@ -1,0 +1,11 @@
+option(SPDLOG_BUILD_TESTING "Build spdlog tests" OFF)
+option(SPDLOG_BUILD_BENCH "Build spdlog benchmarks" OFF)
+option(SPDLOG_BUILD_EXAMPLES "Build spdlog examples" OFF)
+
+include(FetchContent)
+FetchContent_Declare(spdlog-module
+	GIT_REPOSITORY https://github.com/gabime/spdlog.git
+	GIT_TAG        v1.5.0
+)
+
+FetchContent_MakeAvailable(spdlog-module)
