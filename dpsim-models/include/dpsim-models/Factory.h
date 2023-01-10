@@ -4,6 +4,7 @@
 
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderIter.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderIter.h>
 
 #pragma once
@@ -90,6 +91,7 @@ namespace DP {
 namespace Ph1 {
     void registerSynchronGenerators() {
         FactoryRegistration<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>> _4OrderDPIter("4Iter", new DerivedCreator<CPS::DP::Ph1::SynchronGenerator4OrderIter, CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>);
+        FactoryRegistration<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>> _4OrderDPTPM("4TPM", new DerivedCreator<CPS::DP::Ph1::SynchronGenerator4OrderTPM, CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>);
         FactoryRegistration<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>> _6OrderDPIter("6Iter", new DerivedCreator<CPS::DP::Ph1::SynchronGenerator6OrderIter, CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>);
     }
 }

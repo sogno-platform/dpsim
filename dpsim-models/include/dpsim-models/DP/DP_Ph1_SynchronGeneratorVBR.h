@@ -58,7 +58,7 @@ namespace Ph1 {
         ///
         virtual void stepInPerUnit()=0;
 		///
-        void calculateConductanceMatrix();
+        virtual void calculateConductanceMatrix();
 		/// Calculate Ka, Kb and Kvbr
 		void calculateAuxiliarVariables();
 		///
