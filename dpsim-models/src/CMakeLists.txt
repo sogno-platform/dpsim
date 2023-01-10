@@ -166,11 +166,6 @@ if(WITH_GSL)
 	list(APPEND MODELS_LIBRARIES ${GSL_LIBRARIES})
 endif()
 
-list(APPEND MODELS_INCLUDE_DIRS
-	../include
-	${CMAKE_CURRENT_BINARY_DIR}/../include
-)
-
 target_link_libraries(dpsim-models PUBLIC ${MODELS_LIBRARIES})
 target_include_directories(dpsim-models PUBLIC ${MODELS_INCLUDE_DIRS})
 target_sources(dpsim-models PRIVATE ${MODELS_SOURCES})
