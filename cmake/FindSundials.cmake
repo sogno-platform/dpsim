@@ -1,7 +1,5 @@
-include(FindPackageHandleStandardArgs)
-
 if (WIN32)
-	message(STATIS "Sundials is currently not supported in Windows")
+	message(STATUS "Sundials is currently not supported in Windows")
 else()
 	find_path(SUNDIALS_INCLUDE_DIR
 		NAMES sundials_version.h
@@ -41,8 +39,7 @@ else()
 		${SUNDIALS_KINSOL_LIBRARY}
 	)
 
-	# Handle the QUIETLY and REQUIRED arguments and set SUNDIALS_FOUND to TRUE
-	# if all listed variables are TRUE
+	include(FindPackageHandleStandardArgs)
 	find_package_handle_standard_args(Sundials DEFAULT_MSG SUNDIALS_ARKODE_LIBRARY SUNDIALS_INCLUDE_DIR)
 
 	mark_as_advanced(SUNDIALS_INCLUDE_DIR)
