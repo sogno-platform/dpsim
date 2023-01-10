@@ -1,7 +1,7 @@
 set(LIBRARIES "dpsim-villas")
 
-if (NOT WIN32)
-	# needed so CIMParser and arabica (which are first compiled into static libs)
+if(NOT WIN32)
+	# Needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()

@@ -13,11 +13,11 @@ set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 
 # Required for dpsim_python
 if(POLICY CMP0076)
-  cmake_policy(SET CMP0076 NEW)
+	cmake_policy(SET CMP0076 NEW)
 endif()
 # Allow setting Graphviz_ROOT for windows builds
 if(WIN32)
-    cmake_policy(SET CMP0074 NEW)
+	cmake_policy(SET CMP0074 NEW)
 endif()
 
 # Select C++-Version
@@ -26,8 +26,9 @@ endif()
 # replacing all occurences of py::overload_cast with py::detail::overload_cast_impl as specified on
 # https://pybind11.readthedocs.io/en/stable/classes.html#overloaded-methods
 set(CMAKE_CXX_STANDARD 17)
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL Intel)
-	# needed by icc, but for some reason not added by CMake
+	# Needed by icc, but for some reason not added by CMake
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 endif()
 
@@ -48,7 +49,7 @@ if(MSVC)
 
 	check_cxx_compiler_flag("/W4 /WX" CXX_SUPPORTS_WERROR)
 	if(CXX_SUPPORTS_WERROR)
-	# TODO activate this again after fixing warnings
+	# TODO: activate this again after fixing warnings
 	#		set(DPSIM_CXX_FLAGS /W4 /WX)
 	endif()
 else()
@@ -77,39 +78,39 @@ option(CGMES_BUILD "Build with CGMES instead of CIM" OFF)
 
 find_package(Threads REQUIRED)
 
-if (WITH_EIGEN_MODULE OR WIN32)
+if(WITH_EIGEN_MODULE OR WIN32)
 	include(cmake/GetEigenModule.cmake)
 else()
 	find_package(Eigen3 3.0 REQUIRED)
 endif()
 
-if (WITH_SPDLOG_SUBMODULE OR WIN32)
+if(WITH_SPDLOG_SUBMODULE OR WIN32)
 	include(cmake/GetSpdlogModule.cmake)
 else()
 	find_package(spdlog REQUIRED)
 	find_package(fmt REQUIRED)
 endif()
 
-if (WITH_CIM_SUBMODULE OR WIN32)
+if(WITH_CIM_SUBMODULE OR WIN32)
 	include(cmake/GetCIMppModule.cmake)
 else()
 	find_package(CIMpp)
 endif()
 
-if (WITH_PROFILING)
+if(WITH_PROFILING)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
 endif()
 
-if (WITH_ASAN)
-	if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+if(WITH_ASAN)
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize-address-use-after-scope")
 	else()
 		message(WARNING "WITH_ASAN is only supported when using GCC")
 	endif()
 endif()
 
-if (WITH_TSAN)
-	if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+if(WITH_TSAN)
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
 	else()
 		message(WARNING "WITH_TSAN is only supported when using GCC")
@@ -126,13 +127,12 @@ find_package(MAGMA)
 
 include(cmake/GetReaderWriterQueue.cmake)
 
-find_package (Python3 COMPONENTS Interpreter Development)
-if (WITH_PYBIND_MODULE)
+find_package(Python3 COMPONENTS Interpreter Development)
+if(WITH_PYBIND_MODULE)
 	include(cmake/GetPybindModule.cmake)
 else()
 	find_package(pybind11 CONFIG QUIET)
 endif()
-
 
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
 	set(Linux_FOUND ON)
@@ -140,87 +140,87 @@ elseif("${CMAKE_SYSTEM}" MATCHES "Darwin")
 	set(MacOS_FOUND ON)
 endif()
 
-option(BUILD_SHARED_LIBS 	"Build shared library"             	OFF)
-option(DPSIM_BUILD_EXAMPLES    	"Build C++ examples"               	ON )
-option(GET_GRID_DATA     	"Download grid data"               	ON )
+option(BUILD_SHARED_LIBS    "Build shared library"  OFF)
+option(DPSIM_BUILD_EXAMPLES "Build C++ examples"    ON)
+option(GET_GRID_DATA        "Download grid data"    ON)
 
-option(WITH_JSON 			"Include json library" 				ON )
+option(WITH_JSON            "Include json library"  ON)
 if(WITH_JSON)
 	include(cmake/GetJsonLibrary.cmake)
 endif()
 
 # WITH_SPARSE and WITH_CUDA can be combined
-option(WITH_SPARSE       	"Use sparse matrices in MNA-Solver"	ON )
+option(WITH_SPARSE          "Use sparse matrices in MNA-Solver"	ON)
 
 include(CMakeDependentOption)
-cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"       	ON 	"Sundials_FOUND"  	OFF)
-cmake_dependent_option(WITH_VILLAS   	"Enable VILLASnode interface"     		ON 	"VILLASnode_FOUND"	OFF)
-cmake_dependent_option(WITH_RT      	"Enable real-time features"          	ON 	"Linux_FOUND"     	OFF)
-cmake_dependent_option(WITH_CIM     	"Enable support for parsing CIM"     	ON 	"CIMpp_FOUND"     	OFF)
-cmake_dependent_option(WITH_OPENMP  	"Enable OpenMP-based parallelisation"	ON 	"OPENMP_FOUND"    	OFF)
-cmake_dependent_option(WITH_CUDA    	"Enable CUDA-based parallelisation"  	OFF	"CUDA_FOUND"      	OFF)
-cmake_dependent_option(WITH_GRAPHVIZ	"Enable Graphviz Graphs"             	ON 	"GRAPHVIZ_FOUND"  	OFF)
-cmake_dependent_option(WITH_PYBIND     	"Enable PYBIND support"            	ON 	"pybind11_FOUND"   	OFF)
-cmake_dependent_option(WITH_MAGMA     	"Enable MAGMA features"            	ON 	"MAGMA_FOUND"   	OFF)
-cmake_dependent_option(WITH_MNASOLVERPLUGIN "Enable MNASolver Plugins"      ON  "NOT WIN32"       OFF)
+cmake_dependent_option(WITH_SUNDIALS        "Enable sundials solver suite"          ON  "Sundials_FOUND"   OFF)
+cmake_dependent_option(WITH_VILLAS          "Enable VILLASnode interface"           ON  "VILLASnode_FOUND" OFF)
+cmake_dependent_option(WITH_RT              "Enable real-time features"             ON  "Linux_FOUND"      OFF)
+cmake_dependent_option(WITH_CIM             "Enable support for parsing CIM"        ON  "CIMpp_FOUND"      OFF)
+cmake_dependent_option(WITH_OPENMP          "Enable OpenMP-based parallelisation"   ON  "OPENMP_FOUND"     OFF)
+cmake_dependent_option(WITH_CUDA            "Enable CUDA-based parallelisation"     OFF "CUDA_FOUND"       OFF)
+cmake_dependent_option(WITH_GRAPHVIZ        "Enable Graphviz Graphs"                ON  "GRAPHVIZ_FOUND"   OFF)
+cmake_dependent_option(WITH_PYBIND          "Enable PYBIND support"                 ON  "pybind11_FOUND"   OFF)
+cmake_dependent_option(WITH_MAGMA           "Enable MAGMA features"                 ON  "MAGMA_FOUND"      OFF)
+cmake_dependent_option(WITH_MNASOLVERPLUGIN "Enable MNASolver Plugins"              ON  "NOT WIN32"        OFF)
 
 if(WITH_CUDA)
-    # BEGIN OF WORKAROUND - enable cuda dynamic linking.
-    # Starting with Cmake 3.17 we can use
-    # set(CMAKE_CUDA_RUNTIME_LIBRARY_DEFAULT "SHARED") instead
-    set( CMAKE_CUDA_FLAGS "" CACHE STRING "" )
-    if ( CMAKE_CUDA_FLAGS )
-            list(REMOVE_ITEM CMAKE_CUDA_FLAGS "-cudart static")
-    endif()
-    string(APPEND CMAKE_CUDA_FLAGS "-cudart shared")
-    # END OF WORKAROUND
+	# BEGIN OF WORKAROUND - enable cuda dynamic linking.
+	# Starting with Cmake 3.17 we can use
+	# set(CMAKE_CUDA_RUNTIME_LIBRARY_DEFAULT "SHARED") instead
+	set(CMAKE_CUDA_FLAGS "" CACHE STRING "")
+	if(CMAKE_CUDA_FLAGS)
+		list(REMOVE_ITEM CMAKE_CUDA_FLAGS "-cudart static")
+	endif()
+	string(APPEND CMAKE_CUDA_FLAGS "-cudart shared")
+	# END OF WORKAROUND
 
 	enable_language(CUDA)
 
-    # BEGIN OF WORKAROUND - enable cuda dynamic linking.
-    if ( CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES )
-        list( REMOVE_ITEM CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES "cudart_static" )
-        list( REMOVE_ITEM CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES "cudadevrt" )
-        list( APPEND CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES "cudart" )
-    endif()
-    if ( CMAKE_CUDA_IMPLICIT_LINK_LIBRARIES )
-        list( REMOVE_ITEM CMAKE_CUDA_IMPLICIT_LINK_LIBRARIES "cudart_static" )
-        list( REMOVE_ITEM CMAKE_CUDA_IMPLICIT_LINK_LIBRARIES "cudadevrt" )
-        list( APPEND CMAKE_CUDA_IMPLICIT_LINK_LIBRARIES "cudart" )
-    endif()
-    if ( CUDA_LIBRARIES )
-        list ( REMOVE_ITEM CUDA_LIBRARIES "${CUDA_cudart_static_LIBRARY}")
-        list ( APPEND CUDA_LIBRARIES "${CUDA_CUDART_LIBRARY}")
-    endif()
-    # END OF WORKAROUND
+	# BEGIN OF WORKAROUND - enable cuda dynamic linking.
+	if(CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES)
+		list(REMOVE_ITEM CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES "cudart_static")
+		list(REMOVE_ITEM CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES "cudadevrt")
+		list(APPEND CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES "cudart")
+	endif()
+	if(CMAKE_CUDA_IMPLICIT_LINK_LIBRARIES)
+		list(REMOVE_ITEM CMAKE_CUDA_IMPLICIT_LINK_LIBRARIES "cudart_static")
+		list(REMOVE_ITEM CMAKE_CUDA_IMPLICIT_LINK_LIBRARIES "cudadevrt")
+		list(APPEND CMAKE_CUDA_IMPLICIT_LINK_LIBRARIES "cudart")
+	endif()
+	if(CUDA_LIBRARIES)
+		list(REMOVE_ITEM CUDA_LIBRARIES "${CUDA_cudart_static_LIBRARY}")
+		list(APPEND CUDA_LIBRARIES "${CUDA_CUDART_LIBRARY}")
+	endif()
+	# END OF WORKAROUND
 endif()
 
 add_subdirectory(dpsim)
 add_subdirectory(dpsim-models)
+add_subdirectory(docs)
 
-if (WITH_VILLAS)
+if(WITH_VILLAS)
 	add_subdirectory(dpsim-villas)
 endif(WITH_VILLAS)
-add_subdirectory(docs)
 
 include(cmake/GetGridData.cmake)
 
-message(VERBOSE "Compiler Release Flags: " 	${CMAKE_CXX_FLAGS_RELEASE})
-message(VERBOSE "Compiler Debug Flags: " 	${CMAKE_CXX_FLAGS_DEBUG})
+message(VERBOSE "Compiler Release Flags: " ${CMAKE_CXX_FLAGS_RELEASE})
+message(VERBOSE "Compiler Debug Flags:   " ${CMAKE_CXX_FLAGS_DEBUG})
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	include(FeatureSummary)
-	add_feature_info(CIM		WITH_CIM			"Loading Common Information Model Files")
-	add_feature_info(Villas  	WITH_VILLAS  		"Interface DPsim solvers via VILLASnode interfaces")
-	add_feature_info(RT	    	WITH_RT     		"Extended real-time features")
-	add_feature_info(JSON		WITH_JSON  			"Use JSON library")
-	add_feature_info(GSL		WITH_GSL  			"Use GNU Scientific library")
-	add_feature_info(Graphviz  	WITH_GRAPHVIZ  		"Graphviz Graphs")
-	add_feature_info(Sundials  	WITH_SUNDIALS  		"Sundials solvers")
-	add_feature_info(PYBIND 	WITH_PYBIND 		"Use DPsim as a PYBIND module")
+	add_feature_info(CIM         WITH_CIM       "Loading Common Information Model Files")
+	add_feature_info(Villas      WITH_VILLAS    "Interface DPsim solvers via VILLASnode interfaces")
+	add_feature_info(RT          WITH_RT        "Extended real-time features")
+	add_feature_info(JSON        WITH_JSON      "Use JSON library")
+	add_feature_info(GSL         WITH_GSL       "Use GNU Scientific library")
+	add_feature_info(Graphviz    WITH_GRAPHVIZ  "Graphviz Graphs")
+	add_feature_info(Sundials    WITH_SUNDIALS  "Sundials solvers")
+	add_feature_info(PYBIND      WITH_PYBIND    "Use DPsim as a PYBIND module")
 	feature_summary(WHAT ALL VAR enabledFeaturesText)
 
-	if (FOUND_GIT_VERSION)
+	if(FOUND_GIT_VERSION)
 		message(STATUS "Building ${CMAKE_PROJECT_NAME}:")
 		message(STATUS "Feature summary for DPsim")
 		message(STATUS "${enabledFeaturesText}")
