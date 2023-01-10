@@ -1,22 +1,22 @@
 find_library(CGRAPH_LIBRARY
-    NAMES
-        cgraph
-    PATH_SUFFIXES
-        lib
+	NAMES
+		cgraph
+	PATH_SUFFIXES
+		lib
 )
 
 find_library(GVC_LIBRARY
-    NAMES
-        gvc
-    PATH_SUFFIXES
-        lib
+	NAMES
+		gvc
+	PATH_SUFFIXES
+		lib
 )
 
 find_path(GRAPHVIZ_INCLUDE_DIR
-    NAMES
-        graphviz/cgraph.h
-    PATH_SUFFIXES
-        include
+	NAMES
+		graphviz/cgraph.h
+	PATH_SUFFIXES
+		include
 )
 
 include(FindPackageHandleStandardArgs)

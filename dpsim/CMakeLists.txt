@@ -6,10 +6,7 @@ configure_file(
 add_subdirectory(src)
 
 if(WITH_PYBIND)
-	set(DPSIMPY_INCLUDE_DIRS
-		${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/pybind
-	)
-	
+	set(DPSIMPY_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/pybind)
 	add_subdirectory(src/pybind)
 endif()
 
