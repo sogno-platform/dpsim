@@ -32,8 +32,8 @@ int main(int argc, char* argv[]) {
 	Real tolerance = defaultConfig.tolerance;
 	int maxIter = defaultConfig.maxIter;
 	String SGModel = defaultConfig.sgType + "Iter";
-	SGModel = "4Iter";	// options: "4Iter", "4TPM", "6Iter"
-	NumericalMethod numericalMethod = NumericalMethod::Euler;	// only for "4Iter" or "6Iter"
+	SGModel = "4PCM";	// options: "4PCM", "4TPM", "6PCM"
+	NumericalMethod numericalMethod = NumericalMethod::Euler;	// only for "4PCM" or "6PCM"
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);

@@ -38,10 +38,10 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_SynchronGenerator3OrderVBR.cpp
 	DP/DP_Ph1_SynchronGenerator4OrderVBR.cpp
 	DP/DP_Ph1_SynchronGenerator4OrderDCIM.cpp
-	DP/DP_Ph1_SynchronGenerator4OrderIter.cpp
+	DP/DP_Ph1_SynchronGenerator4OrderPCM.cpp
 	DP/DP_Ph1_SynchronGenerator4OrderTPM.cpp
 	DP/DP_Ph1_SynchronGenerator6OrderDCIM.cpp
-	DP/DP_Ph1_SynchronGenerator6OrderIter.cpp
+	DP/DP_Ph1_SynchronGenerator6OrderPCM.cpp
 	DP/DP_Ph1_SynchronGenerator6aOrderVBR.cpp
 	DP/DP_Ph1_SynchronGenerator6bOrderVBR.cpp
 	DP/DP_Ph1_Inverter.cpp
@@ -91,7 +91,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGeneratorDQ.cpp
-	EMT/EMT_Ph3_SynchronGenerator4OrderIter.cpp
+	EMT/EMT_Ph3_SynchronGenerator4OrderPCM.cpp
 	EMT/EMT_Ph3_SynchronGeneratorDQTrapez.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorDQSmpl.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorDQSmplCompSource.cpp

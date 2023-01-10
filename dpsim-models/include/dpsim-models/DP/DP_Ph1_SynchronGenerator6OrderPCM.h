@@ -14,19 +14,18 @@
 namespace CPS {
 namespace DP {
 namespace Ph1 {
-	/// @brief 4 Order Synchronous generator model for transient stability analysis
+	/// @brief 6 Order Synchronous generator model for transient stability analysis
 	///
 	/// This model is based on Eremia section 2.1.6.
-	/// Modeling approach: delayed current injection + predictor corrector method
-	class SynchronGenerator4OrderIter :
+	class SynchronGenerator6OrderPCM :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public MNASyncGenInterface,
-		public SharedFactory<SynchronGenerator4OrderIter> {
+		public SharedFactory<SynchronGenerator6OrderPCM> {
 	public:
 		///
-		SynchronGenerator4OrderIter(const String& uid, const String& name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator6OrderPCM(const String& uid, const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator4OrderIter(const String& name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator6OrderPCM(const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
 		SimPowerComp<Complex>::Ptr clone(const String& name);
 
@@ -44,12 +43,12 @@ namespace Ph1 {
 		///
 		bool checkVoltageDifference() override;
 
-		// #### MNA Functions ####
+		// #### MNA Functions ####		
 		///
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
-		///
+		/// 
 		void mnaPostStep(const Matrix& leftVector) override;
-		///
+		/// 
 		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override {};
 	};
 }
