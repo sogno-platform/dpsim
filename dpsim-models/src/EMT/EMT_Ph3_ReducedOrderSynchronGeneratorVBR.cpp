@@ -52,7 +52,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega,
 
 	Base::ReducedOrderSynchronGenerator<Real>::mnaInitialize(omega, timeStep, leftVector);
 
-	if (mModApproach == ModApproach::CurrentSource) {
+	if (mModelAsCurrentSource) {
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 1)));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 2)));
@@ -62,7 +62,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega,
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 2), matrixNodeIndex(0, 0)));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 2), matrixNodeIndex(0, 1)));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 2), matrixNodeIndex(0, 2)));
-	} else if (mModApproach == ModApproach::VoltageSource) {
+	} else {
 		// upper left block
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A)));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B)));
@@ -114,7 +114,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega,
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
-	if (mModApproach == ModApproach::CurrentSource) {
+	if (mModelAsCurrentSource) {
 		// Stamp conductance matrix
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrix(0, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), mConductanceMatrix(0, 1));
@@ -126,7 +126,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matri
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1), mConductanceMatrix(2, 1));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), mConductanceMatrix(2, 2));
 	}
-	else if (mModApproach == ModApproach::VoltageSource) {
+	else {
 		// Stamp voltage source
 		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), -1);
 		Math::addToMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), 1);
@@ -183,7 +183,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matri
 }
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	if (mModApproach == ModApproach::CurrentSource) {
+	if (mModelAsCurrentSource) {
 		// compute equivalent northon circuit in abc reference frame
 		mIvbr = mConductanceMatrix * mEvbr;
 
@@ -191,7 +191,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Ma
 		Math::setVectorElement(rightVector, matrixNodeIndex(0,1), mIvbr(1, 0));
 		Math::setVectorElement(rightVector, matrixNodeIndex(0,2), mIvbr(2, 0));
 	}
-	else if (mModApproach == ModApproach::VoltageSource) {
+	else {
 		Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), mEvbr(0, 0));
 		Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), mEvbr(1, 0));
 		Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), mEvbr(2, 0));
@@ -208,11 +208,11 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaPostStep(const Matrix& leftV
 	**mVdq0 = mAbcToDq0 * **mIntfVoltage / mBase_V;
 
 	// update armature current
-	if (mModApproach == ModApproach::CurrentSource) {
+	if (mModelAsCurrentSource) {
 		Matrix Iconductance = mConductanceMatrix * **mIntfVoltage;
 		(**mIntfCurrent) = mIvbr - Iconductance;
 	}
-	else if (mModApproach == ModApproach::VoltageSource){
+	else {
 		(**mIntfCurrent)(0, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
 		(**mIntfCurrent)(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
 		(**mIntfCurrent)(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));

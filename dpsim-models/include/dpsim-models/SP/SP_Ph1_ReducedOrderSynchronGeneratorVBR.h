@@ -23,7 +23,7 @@ namespace Ph1 {
 		/// voltage behind reactance phase a
         Complex mEvbr;
 		/// norton equivalent current of mEvbr
-		Matrix mIvbr;
+		Complex mIvbr;
     
     private:
         /// Resistance matrix in dq reference frame

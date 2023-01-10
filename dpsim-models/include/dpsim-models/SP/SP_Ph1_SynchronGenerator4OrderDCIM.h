@@ -63,8 +63,10 @@ namespace Ph1 {
 		SynchronGenerator4OrderDCIM(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
 		SynchronGenerator4OrderDCIM(const String & name, Logger::Level logLevel = Logger::Level::off);
-		 ///
-		void setModellingApproach(ModApproach modApproach) const;
+		/// DCIM is only implmented as current source!
+		void setModelAsCurrentSource(Bool modelAsCurrentSource) const {
+			mSLog->debug("DCIM model can only be used as current source!");
+		}
 	};
 }
 }

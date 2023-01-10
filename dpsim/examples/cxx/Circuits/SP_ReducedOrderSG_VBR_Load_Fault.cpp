@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
     genSP->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower, 
 				Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle), 
 						GridParams.VnomMV * sin(GridParams.initVoltAngle)));
-	genSP->setModellingApproach(ModApproach::CurrentSource);
+	genSP->setModelAsCurrentSource(true);
 
 	// Exciter
 	std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
