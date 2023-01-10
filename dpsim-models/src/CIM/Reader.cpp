@@ -526,6 +526,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			|| mGeneratorType == GeneratorType::SG4OrderVBR
 			|| mGeneratorType == GeneratorType::SG3OrderVBR
 			|| mGeneratorType == GeneratorType::SG4OrderPCM
+			|| mGeneratorType == GeneratorType::SG4OrderTPM
 			|| mGeneratorType == GeneratorType::SG6OrderPCM) {
 
 			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
@@ -599,6 +600,12 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 						} else if (mGeneratorType == GeneratorType::SG4OrderPCM) {
 							mSLog->info("    GeneratorType is SynchronGenerator4OrderPCM.");
 							auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderPCM>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t); 
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG4OrderTPM) {
+							mSLog->info("    GeneratorType is SynchronGenerator4OrderTPM.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderTPM>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
 								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t); 
 							return gen;
