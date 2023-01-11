@@ -48,7 +48,7 @@ namespace DPsim
 
     void GpuDenseAdapter::initialize()
     {
-
+        /* Initialization phase shifted to constructor */
     }
 
     void GpuDenseAdapter::allocateDeviceMemory()

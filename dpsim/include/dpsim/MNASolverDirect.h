@@ -59,6 +59,7 @@ namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
 	class MnaSolverDirect : public MnaSolver<VarType> {
+
 	protected:
 		// #### Data structures for precomputed switch matrices (optionally with parallel frequencies) ####
 		/// Map of system matrices where the key is the bitset describing the switch states
@@ -102,15 +103,15 @@ namespace DPsim {
 
 		// #### General
 		/// Create system matrix
-		virtual void createEmptySystemMatrix() override;
+		void createEmptySystemMatrix() override;
 
 		// #### Methods for precomputed switch matrices (optionally with parallel frequencies) ####
 		/// Sets all entries in the matrix with the given switch index to zero
-		virtual void switchedMatrixEmpty(std::size_t index) override;
+		void switchedMatrixEmpty(std::size_t index) override;
 		/// Sets all entries in the matrix with the given switch index and frequency index to zero
-		virtual void switchedMatrixEmpty(std::size_t swIdx, Int freqIdx) override;
+		void switchedMatrixEmpty(std::size_t swIdx, Int freqIdx) override;
 		/// Applies a component stamp to the matrix with the given switch index
-		virtual void switchedMatrixStamp(std::size_t index, std::vector<std::shared_ptr<CPS::MNAInterface>>& comp) override;
+		void switchedMatrixStamp(std::size_t index, std::vector<std::shared_ptr<CPS::MNAInterface>>& comp) override;
 
 		// #### Methods for system recomputation over time ####
 		/// Stamps components into the variable system matrix
@@ -118,23 +119,23 @@ namespace DPsim {
 		/// Solves the system with variable system matrix
 		void solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) override;
 		/// Create a solve task for recomputation solver
-		virtual std::shared_ptr<CPS::Task> createSolveTaskRecomp() override;
+		std::shared_ptr<CPS::Task> createSolveTaskRecomp() override;
 		/// Recomputes systems matrix
 		virtual void recomputeSystemMatrix(Real time);
 
 		// #### Scheduler Task Methods ####
 		/// Create a solve task for this solver implementation
-		virtual std::shared_ptr<CPS::Task> createSolveTask() override;
+		std::shared_ptr<CPS::Task> createSolveTask() override;
 		/// Create a solve task for this solver implementation
-		virtual std::shared_ptr<CPS::Task> createLogTask() override;
+		std::shared_ptr<CPS::Task> createLogTask() override;
 		/// Create a solve task for this solver implementation
-		virtual std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
+		std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
 		/// Logging of system matrices and source vector
-		virtual void logSystemMatrices() override;
+		void logSystemMatrices() override;
 		/// Solves system for single frequency
-		virtual void solve(Real time, Int timeStepCount) override;
+		void solve(Real time, Int timeStepCount) override;
 		/// Solves system for multiple frequencies
-		virtual void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) override;
+		void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) override;
 
 		/// Logging of the right-hand-side solution time
 		void logSolveTime();
@@ -154,7 +155,7 @@ namespace DPsim {
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		/// Destructor
-		virtual ~MnaSolverDirect() { };
+		virtual ~MnaSolverDirect() = default;
 
 		/// Sets the linear solver to "implementation" and creates an object
 		void setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);

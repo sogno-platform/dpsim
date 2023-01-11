@@ -205,12 +205,12 @@ namespace DPsim
 
     void GpuSparseAdapter::initialize()
     {
-
+        /* No initialization phase */
     }
 
     void GpuSparseAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
-    {
-
+    {       
+        /* No preprocessing phase available yet */
     }
 
     void GpuSparseAdapter::factorize(SparseMatrix& mVariableSystemMatrix)

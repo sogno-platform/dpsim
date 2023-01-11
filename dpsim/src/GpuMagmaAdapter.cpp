@@ -115,11 +115,12 @@ namespace DPsim
 
     void GpuMagmaAdapter::initialize()
     {
+        /* Initialization phase shifted to constructor */
     }
 
     void GpuMagmaAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
-        
+        /* No preprocessing phase available yet */
     }
 
     void GpuMagmaAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
