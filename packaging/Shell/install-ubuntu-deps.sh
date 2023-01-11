@@ -1,3 +1,5 @@
+#!/bin/bash
+
 CIM_VERSION=CGMES_2.4.15_16FEB2016
 
 # run with sudo
