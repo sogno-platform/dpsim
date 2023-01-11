@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Jupyter Extension Matplotlib Widget
 pip3 install nodejs
 pip3 install ipympl
