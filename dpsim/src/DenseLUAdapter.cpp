@@ -13,16 +13,16 @@ using namespace DPsim;
 namespace DPsim
 {
 
-    DenseLUAdapter::~DenseLUAdapter(){}
+    DenseLUAdapter::~DenseLUAdapter() = default;
     
     void DenseLUAdapter::initialize()
     {
-
+        /* No initialization phase needed by PartialPivLU */
     }
     
     void DenseLUAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
-        
+        /* No preprocessing phase needed by PartialPivLU */
     }
     
     void DenseLUAdapter::factorize(SparseMatrix& mVariableSystemMatrix)

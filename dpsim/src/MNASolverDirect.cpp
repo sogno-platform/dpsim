@@ -36,8 +36,8 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 {
 	auto bit = std::bitset<SWITCH_NUM>(index);
 	auto& sys = mSwitchedMatrices[bit][0];
-	for (auto comp : comp) {
-		comp->mnaApplySparseSystemMatrixStamp(sys);
+	for (auto component : comp) {
+		component->mnaApplySparseSystemMatrixStamp(sys);
 	}
 	for (UInt i = 0; i < mSwitches.size(); ++i)
 		mSwitches[i]->mnaApplySwitchSparseSystemMatrixStamp(bit[i], sys, 0);
@@ -87,7 +87,7 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
 	// Calculate factorization of current matrix
 	mLuFactorizationVariableSystemMatrix->preprocessing(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
-	
+
 	auto start = std::chrono::steady_clock::now();
 	mLuFactorizationVariableSystemMatrix->factorize(mVariableSystemMatrix);
 	auto end = std::chrono::steady_clock::now();
@@ -188,41 +188,6 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 	}
 }
 
-// template <>
-// void MnaSolverDirect<Real, Matrix>::createEmptySystemMatrix() {
-// 	if (mSwitches.size() > SWITCH_NUM)
-// 		throw SystemError("Too many Switches.");
-
-// 	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
-// 		auto bit = std::bitset<SWITCH_NUM>(i);
-// 		mSwitchedMatrices[bit].push_back(Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
-// 		mLuFactorizations[bit].push_back(createDirectSolverImplementation());
-// 	}
-// }
-
-// template <>
-// void MnaSolverDirect<Complex, Matrix>::createEmptySystemMatrix() {
-// 	if (mSwitches.size() > SWITCH_NUM)
-// 		throw SystemError("Too many Switches.");
-
-// 	if (mFrequencyParallel) {
-// 		for (UInt i = 0; i < std::pow(2,mSwitches.size()); ++i) {
-// 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
-// 				auto bit = std::bitset<SWITCH_NUM>(i);
-// 				mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
-// 				mLuFactorizations[bit].push_back(createDirectSolverImplementation());
-// 			}
-// 		}
-// 	}
-// 	else {
-// 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
-// 			auto bit = std::bitset<SWITCH_NUM>(i);
-// 			mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
-// 			mLuFactorizations[bit].push_back(createDirectSolverImplementation());
-// 		}
-// 	}
-// }
-
 template <typename VarType>
 std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createSolveTask()
 {
@@ -293,8 +258,6 @@ void MnaSolverDirect<VarType>::logSystemMatrices() {
 		for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
 			mSLog->info("System matrix for frequency: {:d} \n{:s}", i,
 				Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][i]));
-			//mSLog->info("LU decomposition for frequency: {:d} \n{:s}", i,
-			//	Logger::matrixToString(mLuFactorizations[std::bitset<SWITCH_NUM>(0)][i]->matrixLU()));
 		}
 
 		for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i)
@@ -310,16 +273,13 @@ void MnaSolverDirect<VarType>::logSystemMatrices() {
 	} else {
 		if (mSwitches.size() < 1) {
 			mSLog->info("System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
-			//mSLog->info("LU decomposition: \n{}",	mLuFactorizations[std::bitset<SWITCH_NUM>(0)]->matrixLU());
 		}
 		else {
 			mSLog->info("Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
 
 			for (auto sys : mSwitchedMatrices) {
 				mSLog->info("Switching System matrix {:s} \n{:s}",
-					sys.first.to_string(), Logger::matrixToString(sys.second[0]));
-				//mSLog->info("LU Factorization for System Matrix {:s} \n{:s}",
-				//	sys.first.to_string(), Logger::matrixToString(mLuFactorizations[sys.first]->matrixLU()));
+				sys.first.to_string(), Logger::matrixToString(sys.second[0]));
 			}
 		}
 		mSLog->info("Right side vector: \n{}", mRightSideVector);
@@ -336,8 +296,8 @@ void MnaSolverDirect<VarType>::logSolveTime(){
 		if(meas > solveMax)
 			solveMax = meas;
 	}
-    mSLog->info("Cumulative solve times: {:.12f}",solveSum);
-	mSLog->info("Average solve time: {:.12f}", solveSum/mSolveTimes.size());
+  mSLog->info("Cumulative solve times: {:.12f}",solveSum);
+	mSLog->info("Average solve time: {:.12f}", solveSum/((double)mSolveTimes.size()));
 	mSLog->info("Maximum solve time: {:.12f}", solveMax);
 	mSLog->info("Number of solves: {:d}", mSolveTimes.size());
 }
@@ -363,9 +323,9 @@ void MnaSolverDirect<VarType>::logRecomputationTime(){
 	   // Sometimes, refactorization is not used
 	   if(mRecomputationTimes.size() != 0){
 		    mSLog->info("Cumulative refactorization times: {:.12f}",recompSum);
-       		mSLog->info("Average refactorization time: {:.12f}", recompSum/mRecomputationTimes.size());
-			mSLog->info("Maximum refactorization time: {:.12f}", recompMax);
-       		mSLog->info("Number of refactorizations: {:d}", mRecomputationTimes.size());
+       	mSLog->info("Average refactorization time: {:.12f}", recompSum/((double)mRecomputationTimes.size()));
+				mSLog->info("Maximum refactorization time: {:.12f}", recompMax);
+       	mSLog->info("Number of refactorizations: {:d}", mRecomputationTimes.size());
 	   }
 }
 
@@ -403,7 +363,6 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 template <typename VarType>
 void MnaSolverDirect<VarType>::setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation) {
 	this->implementationInUse = implementation;
-	//this->mLuFactorizationVariableSystemMatrix = createDirectSolverImplementation();
 }
 
 }

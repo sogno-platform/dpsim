@@ -20,18 +20,21 @@
 namespace DPsim
 {
 	/// Abstract linear solver class for MNA simulation
-	
+
 	class DirectLinearSolver
 	{
 		public:
 		/// Constructor
-		DirectLinearSolver() {}
+		DirectLinearSolver() = default;
 
 		/// Destructor
-		virtual ~DirectLinearSolver() {}
+		virtual ~DirectLinearSolver() = default;
 
 		/// initialization function for linear solver
-		virtual void initialize() {};
+		virtual void initialize()
+		{
+			/* no default initialization */
+		};
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		virtual void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) = 0;

@@ -27,24 +27,24 @@ namespace DPsim
 
         public:
 		/// Destructor
-		virtual ~DenseLUAdapter();
+		~DenseLUAdapter();
 
 		/// initialization function for linear solver
-		virtual void initialize() override;
+		void initialize() override;
 
 		/// preprocessing function pre-ordering and scaling the matrix
-		virtual void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
+		void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
 
 		/// factorization function with partial pivoting
-		virtual void factorize(SparseMatrix& mVariableSystemMatrix) override;
+		void factorize(SparseMatrix& mVariableSystemMatrix) override;
 
 		/// refactorization without partial pivoting
-		virtual void refactorize(SparseMatrix& mVariableSystemMatrix) override;
+		void refactorize(SparseMatrix& mVariableSystemMatrix) override;
 
 		/// partial refactorization withouth partial pivoting
-		virtual void partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
+		void partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
 
 		/// solution function for a right hand side
-		virtual Matrix solve(Matrix& mRightSideVector) override;
+		Matrix solve(Matrix& mRightSideVector) override;
     };
 }

@@ -35,7 +35,7 @@ namespace DPsim {
 
 class MnaSolverFactory {
 	public:
-	
+
 	/// MNA implementations supported by this compilation
 	static const std::vector<DirectLinearSolverImpl> mSupportedSolverImpls(void) {
 		static std::vector<DirectLinearSolverImpl> ret = {
@@ -77,6 +77,7 @@ class MnaSolverFactory {
 		CPS::Logger::Log log = CPS::Logger::get("MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
 
 		switch(implementation) {
+		case DirectLinearSolverImpl::Undef:
 		case DirectLinearSolverImpl::DenseLU:
 		{
 			log->info("creating DenseLUAdapter solver implementation");
@@ -134,7 +135,6 @@ class MnaSolverFactory {
 			log->info("creating Plugin solver implementation");
 			return std::make_shared<MnaSolverPlugin<VarType>>(pluginName, name, domain, logLevel);
 #endif
-		case DirectLinearSolverImpl::Undef:
 		default:
 			throw CPS::SystemError("unsupported MNA implementation.");
 
