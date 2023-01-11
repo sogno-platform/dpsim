@@ -44,7 +44,7 @@
 
 
 namespace DPsim {
-	
+
 	enum DirectLinearSolverImpl{
 		Undef = 0,
 		KLU,
@@ -164,12 +164,6 @@ namespace DPsim {
 		///
 		class SolveTask : public CPS::Task {
 		public:
-			~SolveTask() {
-				mSolver.logLUTime();
-				mSolver.logSolveTime();
-				mSolver.logRecomputationTime();
-			}
-
 			SolveTask(MnaSolverDirect<VarType>& solver) :
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
@@ -183,7 +177,9 @@ namespace DPsim {
 				mModifiedAttributes.push_back(solver.mLeftSideVector);
 			}
 
-			void execute(Real time, Int timeStepCount) { mSolver.solve(time, timeStepCount); }
+			void execute(Real time, Int timeStepCount) {
+				mSolver.solve(time, timeStepCount);
+			}
 
 		private:
 			MnaSolverDirect<VarType>& mSolver;
@@ -192,12 +188,6 @@ namespace DPsim {
 		///
 		class SolveTaskHarm : public CPS::Task {
 		public:
-			~SolveTaskHarm() {
-				mSolver.logLUTime();
-				mSolver.logSolveTime();
-				mSolver.logRecomputationTime();
-			}
-
 			SolveTaskHarm(MnaSolverDirect<VarType>& solver, UInt freqIdx) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mFreqIdx(freqIdx) {
 
@@ -213,7 +203,9 @@ namespace DPsim {
 				}
 			}
 
-			void execute(Real time, Int timeStepCount) { mSolver.solveWithHarmonics(time, timeStepCount, mFreqIdx); }
+			void execute(Real time, Int timeStepCount) {
+				mSolver.solveWithHarmonics(time, timeStepCount, mFreqIdx);
+			}
 
 		private:
 			MnaSolverDirect<VarType>& mSolver;
@@ -223,12 +215,6 @@ namespace DPsim {
 		///
 		class SolveTaskRecomp : public CPS::Task {
 		public:
-			~SolveTaskRecomp() {
-				mSolver.logLUTime();
-				mSolver.logSolveTime();
-				mSolver.logRecomputationTime();
-			}
-
 			SolveTaskRecomp(MnaSolverDirect<VarType>& solver) :
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
@@ -246,10 +232,10 @@ namespace DPsim {
 				mModifiedAttributes.push_back(solver.mLeftSideVector);
 			}
 
-			void execute(Real time, Int timeStepCount) { 
-				mSolver.solveWithSystemMatrixRecomputation(time, timeStepCount); 
+			void execute(Real time, Int timeStepCount) {
+				mSolver.solveWithSystemMatrixRecomputation(time, timeStepCount);
 				mSolver.log(time, timeStepCount);
-				}
+			}
 
 		private:
 			MnaSolverDirect<VarType>& mSolver;
