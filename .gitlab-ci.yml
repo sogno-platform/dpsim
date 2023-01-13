@@ -1,11 +1,14 @@
 variables:
   GIT_STRATEGY: fetch
   GIT_SUBMODULE_STRATEGY: recursive
+
   RSYNC_OPTS: --recursive --ignore-missing-args --chown ${DEPLOY_USER}:${DEPLOY_USER}
+
   DOCKER_IMAGE: sogno/dpsim
   DOCKER_IMAGE_DEV: sogno/dpsim-dev
   DOCKER_IMAGE_DEV_ROCKY: sogno/dpsim-dev-rocky
 
+  MAKE_OPTS: -j16 # for HYPER buildbots
 
 stages:
   - prepare
@@ -21,6 +24,7 @@ stages:
 #  needs: []
 #  script:
 #    - docker build
+#        --build-arg MAKE_OPTS=${MAKE_OPTS}
 #        --file packaging/Docker/Dockerfile.dev
 #        ${TAGS}
 #        ${BUILD_ARGS} .
@@ -45,6 +49,7 @@ docker:rocky:
   needs: []
   script:
     - docker build .
+        --build-arg MAKE_OPTS=${MAKE_OPTS}
         --file packaging/Docker/Dockerfile.dev-rocky
         --tag ${DOCKER_IMAGE_DEV_ROCKY}:${CI_COMMIT_REF_NAME}
   tags:
@@ -91,7 +96,7 @@ docker:rocky:
 #  script:
 #    - mkdir -p build
 #    - cd build
-#    - cmake -DWITH_PROFILING=ON -DWITH_ASAN=ON -DWITH_CUDA=OFF -DWITH_SPDLOG_SUBMODULE=ON ..
+#    - cmake -DWITH_PROFILING=ON -DWITH_ASAN=ON -DWITH_CUDA=OFF -DFETCH_SPDLOG=ON ..
 #    - make -j 32
 #  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
 #  cache:
@@ -113,8 +118,8 @@ build:linux-cuda:
   script:
     - mkdir -p build
     - cd build
-    - cmake -DWITH_CUDA=ON -DWITH_SPARSE=ON -DWITH_SPDLOG_SUBMODULE=ON -DWITH_MAGMA=ON ..
-    - make -j$(nproc)
+    - cmake -DWITH_CUDA=ON -DWITH_SPARSE=ON -DFETCH_SPDLOG=ON -DWITH_MAGMA=ON ..
+    - make ${MAKE_OPTS}
   cache:
 
 # moved to GitHub actions
@@ -135,10 +140,7 @@ build:linux-cuda:
 #    - docker build
 #        --file packaging/Docker/Dockerfile
 #        --build-arg DOCKER_TAG=${DOCKER_TAG}
-#        --build-arg CI=1
-#        --build-arg CI_COMMIT_SHA=${CI_COMMIT_SHA}
-#        --build-arg CI_COMMIT_REF_NAME=${CI_COMMIT_REF_NAME}
-#        --build-arg CI_COMMIT_TAG=${CI_COMMIT_TAG}
+#        --build-arg MAKE_OPTS=${MAKE_OPTS}
 #        --tag ${DOCKER_IMAGE}:${DOCKER_TAG}
 #        --tag ${DOCKER_IMAGE}:latest .
 #  tags:
@@ -153,7 +155,7 @@ build:linux-cuda:
 #    - cd build
 #    - cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc-9
 #            -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9
-#            -DWITH_CIM_SUBMODULE=ON
+#            -DFETCH_CIMPP=ON
 #            -DWITH_SUNDIALS=OFF ..
 #    - make -j $(sysctl -n hw.ncpu)
 #  cache:
@@ -475,8 +477,8 @@ test:cuda 3/3:
 #  stage: generate
 #  needs: ["build:linux-cgmes"]
 #  script:
-#    - make -j$(nproc) -C build docs
-#    - make -j$(nproc) -C build docs_cxx
+#    - make ${MAKE_OPTS} -C build docs
+#    - make ${MAKE_OPTS} -C build docs_cxx
 #  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
 #  dependencies:
 #    - build:linux-cgmes
@@ -491,7 +493,7 @@ test:cuda 3/3:
 #  stage: generate
 #  needs: ["build:linux-cgmes"]
 #  script:
-#    - make -j$(nproc) -C build package
+#    - make ${MAKE_OPTS} -C build package
 #  only:
 #    - tags
 #  tags:
