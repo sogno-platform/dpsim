@@ -221,8 +221,8 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 				}
 
 				if (!pollFds.empty()) {
-					//Manually clear the event file descriptor since Villas does not do that for some reason
-					//See https://git.rwth-aachen.de/acs/public/villas/node/-/issues/347
+					// Manually clear the event file descriptor since Villas does not do that for some reason
+					// See https://git.rwth-aachen.de/acs/public/villas/node/-/issues/347
 					uint64_t result = 0;
 					ret = (int) ::read(pollFds[0], &result, 8);
 					if (ret < 0) {
@@ -251,7 +251,6 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 }
 
 void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePacket>& updatedAttrs) {
-	
 	//Update export sequence IDs
 	for (const auto& packet : updatedAttrs) {
 		if (std::get<1>(mExports[packet.attributeId]) < packet.sequenceId) {
@@ -264,7 +263,7 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 		return std::get<1>(mExports[packet.attributeId]) > packet.sequenceId;
 	});
 	updatedAttrs.erase(beginOutdated, updatedAttrs.end());
-	
+
 	Sample *sample = nullptr;
 	Int ret = 0;
 	bool done = false;
@@ -355,7 +354,7 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 		if (mLog != nullptr) {
 			mLog->warn("The exports already configured do not match with the given attribute ID! Configuration will remain unchanged.");
 		}
-		return; 
+		return;
 	}
 
 	if (type == typeid(Int)) {
@@ -422,7 +421,7 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 		if (mLog != nullptr) {
 			mLog->warn("Unsupported attribute type! Interface configuration will remain unchanged!");
 		}
-	}	
+	}
 }
 
 void InterfaceWorkerVillas::configureImport(UInt attributeId, const std::type_info& type, UInt idx) {
@@ -436,7 +435,7 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId, const std::type_in
 		if (mLog != nullptr) {
 			mLog->warn("The imports already configured do not match with the given attribute ID! Configuration will remain unchanged.");
 		}
-		return; 
+		return;
 	}
 	const auto& log = mLog;
 
@@ -480,5 +479,5 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId, const std::type_in
 		if (mLog != nullptr) {
 			mLog->warn("Unsupported attribute type! Interface configuration will remain unchanged!");
 		}
-	}	
+	}
 }
