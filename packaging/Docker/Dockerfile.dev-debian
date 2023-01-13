@@ -1,6 +1,18 @@
-FROM debian:10
+FROM debian:11
 
-RUN apt-get update -y
+ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
+ARG VILLAS_VERSION=c976cd62d8c6667a078be0785ca3e623a05f7456
+
+ARG CMAKE_OPTS
+ARG MAKE_OPTS=-j4
+
+LABEL \
+	org.opencontainers.image.title = "DPsim" \
+	org.opencontainers.image.licenses = "MPL 2.0" \
+	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
+	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
+
+RUN apt-get -y update
 
 # Toolchain
 RUN apt-get -y install \
@@ -16,98 +28,87 @@ RUN apt-get -y install \
 	gdb
 
 # Dependencies
-RUN apt-get update -y && apt-get -y install \
+RUN apt-get -y install \
 	python3-dev \
 	libeigen3-dev \
 	libxml2-dev \
 	libgraphviz-dev \
 	libgsl-dev \
 	libspdlog-dev \
-	pybind11-dev
-
-## Build & Install fmtlib
-RUN cd /tmp && \
-	git clone --recursive https://github.com/fmtlib/fmt.git && \
-	mkdir -p fmt/build && cd fmt/build && \
-	git checkout 6.1.2  && \
-	cmake -DBUILD_SHARED_LIBS=ON .. && \
-	make -j$(nproc) install
-
-## Build & Install spdlog
-RUN cd /tmp && \
-	git clone --recursive https://github.com/gabime/spdlog.git && \
-	mkdir -p spdlog/build && cd spdlog/build && \
-	git checkout v1.5.0 && \
-	cmake -DSPDLOG_BUILD_SHARED=ON .. && \
-	make -j$(nproc) install
+	pybind11-dev \
+	libspdlog-dev \
+	libfmt-dev
 
 # Build & Install sundials
 RUN cd /tmp && \
-	git clone --recursive https://github.com/LLNL/sundials.git && \
+	git clone --branch v3.2.1 --recurse-submodules --depth 1 https://github.com/LLNL/sundials.git && \
 	mkdir -p sundials/build && cd sundials/build && \
-	git checkout v3.2.1 && \
-	cmake -DCMAKE_BUILD_TYPE=Release ..  && \
-	make -j$(nproc) install
+	cmake ${CMAKE_OPTS} .. \
+		-DCMAKE_BUILD_TYPE=Release && \
+	make ${MAKE_OPTS} install
 
-# Install some debuginfos
-#RUN dnf -y debuginfo-install \
-#	python3
-
-# CIMpp and VILLAS are installed here
-# ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
-
-# minimal VILLAS dependencies
+## Install minimal VILLASnode dependencies
 RUN apt-get -y install \
-    libssl-dev \
-    uuid-dev \
+	libssl-dev \
+	uuid-dev \
 	libcurl4-gnutls-dev \
-    libjansson-dev
+	libjansson-dev \
+	libwebsockets-dev
 
-# Install libwebsockets-dev from source
-RUN cd /tmp && \
-	git clone https://github.com/warmcat/libwebsockets.git && \
-	cd libwebsockets && git checkout v4.1.6 && \
-	mkdir build && cd build && \
-	cmake .. && make -j$(nproc) install && \
-	rm -rf /tmp/libwebsockets
-
-# optional VILLAS dependencies
+## Install optional VILLASnode dependencies
 RUN apt-get -y install \
-  	libmosquitto-dev \
+	libmosquitto-dev \
 	libconfig-dev \
-  	libnl-3-dev
-	
-# Install libiec61850 from source
+	libnl-3-dev
+
+## Install libiec61850 from source
 RUN cd /tmp && \
-	wget https://libiec61850.com/libiec61850/wp-content/uploads/2019/03/libiec61850-1.3.3.tar.gz && \
+	wget https://libiec61850.com/wp-content/uploads/2019/03/libiec61850-1.3.3.tar.gz && \
 	tar -zxvf libiec61850-1.3.3.tar.gz && rm libiec61850-1.3.3.tar.gz && \
 	cd libiec61850-1.3.3 && \
 	mkdir build && cd build && \
-	cmake -DBUILD_SHARED_LIBS=ON .. && make -j$(nproc) install && \
+	cmake ${CMAKE_OPTS} .. \
+		-DBUILD_SHARED_LIBS=ON && \
+	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/libiec61850-1.3.3
 
-# Python dependencies
+## Python dependencies
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
-# Install CIMpp from source
+## Install CIMpp from source
 RUN cd /tmp && \
-	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
+	git clone --recurse-submodules --depth 1 https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib -DUSE_CIM_VERSION=CGMES_2.4.15_16FEB2016 -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	cmake ${CMAKE_OPTS} .. \
+		-DBUILD_SHARED_LIBS=ON \
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib \
+		-DUSE_CIM_VERSION=${CIM_VERSION} \
+		-DBUILD_ARABICA_EXAMPLES=OFF && \
+	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/libcimpp
 
-# Install VILLAS from source
+## Install VILLASnode from source
 RUN cd /tmp && \
-	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
-	mkdir -p villasnode/build && cd villasnode/build && \
-	git -c submodule.fpga.update=none checkout a98ab9f1726476fdaa8966da63744794b691bf54 && git -c submodule.fpga.update=none submodule update --recursive && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib .. && make install && \
-	rm -rf /tmp/villasnode
+	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
+	mkdir -p villas-node/build && cd villas-node/build && \
+	git checkout ${VILLAS_VERSION} && \
+	cmake ${CMAKE_OPTS} .. \
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib \
+		-DDOWNLOAD_GO=OFF && \
+	make install && \
+	rm -rf /tmp/villas-node
 
-# Remove this part in the future and use dedicated jupyter Dockerfile
+# Remove this part in the future and use dedicated Jupyter Dockerfile
 # Activate Jupyter extensions
-RUN apt-get -y install npm
-RUN pip3 install jupyter jupyterlab jupyter_contrib_nbextensions nbconvert nbformat
+RUN apt-get -y install \
+	npm
+
+RUN pip3 install \
+	jupyter \
+	jupyterlab \
+	jupyter_contrib_nbextensions \
+	nbconvert \
+	nbformat
 
 EXPOSE 8888

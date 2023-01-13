@@ -4,11 +4,10 @@ ARG BASE_IMAGE=sogno/dpsim:dev
 FROM ${BASE_IMAGE}
 
 LABEL \
-	org.label-schema.schema-version = "1.0.0" \
-	org.label-schema.name = "DPsim" \
-	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
-	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
+	org.opencontainers.image.title = "DPsim" \
+	org.opencontainers.image.licenses = "MPL 2.0" \
+	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
+	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
 
 COPY . /dpsim/
 RUN rm -rf /dpsim/build && mkdir /dpsim/build
