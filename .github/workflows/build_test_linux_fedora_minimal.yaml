@@ -24,7 +24,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake -DWITH_SPDLOG_SUBMODULE=ON $GITHUB_WORKSPACE
+      run: cmake -DFETCH_SPDLOG=ON $GITHUB_WORKSPACE
 
     - name: Build every target
       shell: bash
