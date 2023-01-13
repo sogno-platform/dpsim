@@ -11,9 +11,12 @@ elseif(CIM_VERSION STREQUAL "CGMES_2.4.15_16FEB2016")
 	set(CGMES_BUILD ON)
 endif()
 
+set(CIMPP_BUILD_DOC OFF)
+
 include(FetchContent)
 FetchContent_Declare(cimpp-module
-	GIT_REPOSITORY https://github.com/cim-iec/libcimpp.git
+	GIT_REPOSITORY https://github.com/stv0g/libcimpp.git
+	GIT_TAG        disable-doc
 )
 
 FetchContent_MakeAvailable(cimpp-module)

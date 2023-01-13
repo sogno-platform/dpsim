@@ -1,12 +1,9 @@
 include(FetchContent)
 FetchContent_Declare(eigen-module
 	GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-	GIT_TAG        3.3.7
+	GIT_TAG        3fe8c511042ab1af84c2f91015463708f969255e
 )
 
-FetchContent_MakeAvailable(eigen-module)
+set(EIGEN_BUILD_DOC OFF)
 
-# Add missing alias for Eigen 3.3
-# See: https://gitlab.com/libeigen/eigen/-/issues/2440
-# TODO: Remove for Eigen >= 3.4
-add_library(Eigen3::Eigen ALIAS eigen)
+FetchContent_MakeAvailable(eigen-module)
