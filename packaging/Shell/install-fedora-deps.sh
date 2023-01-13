@@ -1,6 +1,10 @@
 #!/bin/bash
 
-CIM_VERSION=CGMES_2.4.15_16FEB2016
+CIM_VERSION=${CIM_VERSION:-CGMES_2.4.15_16FEB2016}
+VILLAS_VERSION=${VILLAS_VERSION:-c976cd62d8c6667a078be0785ca3e623a05f7456}
+
+MAKE_PROCS=${MAKE_PROCS:-$(nproc)}
+MAKE_OPTS+="-j${MAKE_PROCS}"
 
 dnf -y update
 
@@ -52,14 +56,22 @@ sudo ldconfig
 
 # Install CIMpp from source
 cd /tmp && \
-	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
+	git clone --recurse-submodules --depth 1 https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	cmake ${CMAKE_OPTS} .. \
+        -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+        -DUSE_CIM_VERSION=${CIM_VERSION} \
+        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_ARABICA_EXAMPLES=OFF && \
+    make ${MAKE_OPTS} install && \
 	rm -rf /tmp/libcimpp
 
-# Install VILLAS from source
+# Install VILLASnode from source
 cd /tmp && \
-	git clone --branch dpsim-villas --recursive https://github.com/VILLASframework/node.git villasnode && \
-	mkdir -p villasnode/build && cd villasnode/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
-	rm -rf /tmp/villasnode
+	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
+	mkdir -p villas-node/build && cd villas-node/build && \
+    git checkout ${VILLAS_VERSION} && \
+	cmake ${CMAKE_OPTS} .. \
+        -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
+    make ${MAKE_OPTS} install && \
+	rm -rf /tmp/villas-node
