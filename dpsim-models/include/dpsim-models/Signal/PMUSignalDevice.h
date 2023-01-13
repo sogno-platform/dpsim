@@ -18,22 +18,21 @@ namespace Signal {
 	protected:
 	public:
 		///FIXME: This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
-		// Input
-        const  Attribute<MatrixComp>::Ptr mInput;
-		//  Output
+		
+		//***PMUSignalDevice has two attributes:Input and Output***//
+		const  Attribute<MatrixComp>::Ptr mInput;
         const  Attribute<MatrixComp>::Ptr mOutput;
 
+		//Constructor 
 		PMUSignalDevice(String name, Logger::Level logLevel = Logger::Level::off);
 
-		// /// Setter for initial values
-        // void setInitialValues(Real input_init, Real state_init, Real output_init);
-
-		/// Operation for adding measurement error
+		//Operation for adding measurement error
 		void MeasurementError(Real time);
 		
-
+		//***Get task list for the solver***//
 		Task::List getTasks();
 
+		//***The process of the solve is recognized as a PostStep.***//
  		class PostStep : public Task {
 			public:
 				PostStep(PMUSignalDevice& PMU) :
