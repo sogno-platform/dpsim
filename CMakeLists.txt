@@ -21,6 +21,8 @@ if(WIN32)
 	cmake_policy(SET CMP0074 NEW)
 endif()
 
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+
 # Select C++-Version
 # For the pybind11-python interface to compile, a minimum version of C++14 is required
 # If you need to compile using C++11, either disable the python interface or modify the source-files in Source/pybind,
@@ -75,7 +77,6 @@ option(WITH_SPDLOG_SUBMODULE "Fetch spdlog as module (deprecated option)" OFF)
 option(WITH_CIM_SUBMODULE    "Fetch CIMpp as module (deprecated option)" OFF)
 option(WITH_PYBIND_MODULE    "Fetch pybind11 as module (deprecated option)" OFF)
 option(GET_GRID_DATA     	   "Fetch grid data (deprecated option)" ON)
-option(DPSIM_BUILD_EXAMPLES  "Build C++ examples (deprecated option)" ON)
 
 # Build options
 option(FETCH_EIGEN          "Fetch Eigen3 as module" ${WITH_EIGEN_MODULE})
@@ -92,7 +93,8 @@ option(WITH_TSAN            "Adds compiler flags to use the thread sanitizer" OF
 option(WITH_SPARSE          "Use sparse matrices in MNA-Solver"	ON)
 
 option(BUILD_SHARED_LIBS    "Build shared library" OFF)
-option(BUILD_EXAMPLES       "Build C++ examples" ${DPSIM_BUILD_EXAMPLES})
+option(DPSIM_BUILD_EXAMPLES "Build C++ examples" ON)
+option(DPSIM_BUILD_DOC      "Build documentation" ON)
 
 option(CGMES_BUILD          "Build with CGMES instead of CIMpp" OFF)
 
@@ -218,7 +220,10 @@ endif()
 
 add_subdirectory(dpsim-models)
 add_subdirectory(dpsim)
-add_subdirectory(docs)
+
+if(DPSIM_BUILD_DOC)
+	add_subdirectory(docs)
+endif()
 
 if(WITH_VILLAS)
 	add_subdirectory(dpsim-villas)

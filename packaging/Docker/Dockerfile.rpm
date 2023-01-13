@@ -12,7 +12,7 @@ RUN rm -rf /dpsim/build && mkdir /dpsim/build
 WORKDIR /dpsim/build
 
 RUN cmake ${CMAKE_OPTS} .. \
-	-DBUILD_EXAMPLES=OFF
+	-DDPSIM_BUILD_EXAMPLES=OFF
 	-DCPACK_GENERATOR=RPM
 RUN make ${MAKE_OPTS} package
 
