@@ -9,10 +9,6 @@
 #include <memory>
 #include <iomanip>
 
-#include <dpsim-models/Logger.h>
-#include <spdlog/sinks/null_sink.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-
 #ifndef USE_GHC_FS
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
@@ -20,6 +16,10 @@ namespace fs = std::experimental::filesystem;
 #include <ghc/filesystem.hpp>
 namespace fs = ghc::filesystem;
 #endif
+
+#include <dpsim-models/Logger.h>
+#include <spdlog/sinks/null_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 using namespace CPS;
 

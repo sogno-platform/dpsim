@@ -15,13 +15,6 @@
 #include <string>
 #include <vector>
 
-#include <dpsim-models/Logger.h>
-#include <dpsim-models/SystemTopology.h>
-#include <dpsim-models/SP/SP_Ph1_Load.h>
-#include <dpsim-models/DP/DP_Ph1_PQLoadCS.h>
-#include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
-#include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
-
 #ifndef USE_GHC_FS
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
@@ -29,6 +22,13 @@ namespace fs = std::experimental::filesystem;
 #include <ghc/filesystem.hpp>
 namespace fs = ghc::filesystem;
 #endif
+
+#include <dpsim-models/Logger.h>
+#include <dpsim-models/SystemTopology.h>
+#include <dpsim-models/SP/SP_Ph1_Load.h>
+#include <dpsim-models/DP/DP_Ph1_PQLoadCS.h>
+#include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
 
 namespace CPS {
 	/// reads load profiles (csv files only) and assign them to the corresponding load object
