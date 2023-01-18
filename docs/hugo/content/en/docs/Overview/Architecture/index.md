@@ -16,8 +16,8 @@ To collect the simulation results from within Python, one can use the villas-dat
 
 ![image](dpsim_modules.svg)
 
-Another approach to get data in or out of DPsim is the VILLAS interface, which does not depend on Python at all.
-The main purpose of the VILLAS interface is to exchange data during the simulation runtime, for example, in real-time simulation experiments.
+Another approach to get data in or out of DPsim is the VILLASnode interface, which does not depend on Python at all.
+The main purpose of the VILLASnode interface is to exchange data during the simulation runtime, for example, in real-time simulation experiments.
 The data could be send to other simulators, hardware or other software components like databases.
 Storing the data in databases can be another way of managing (also offline) simulation results if the Python CSV method is not desireable.
 
