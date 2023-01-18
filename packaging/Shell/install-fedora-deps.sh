@@ -39,7 +39,7 @@ pip3 install -r requirements.txt
 dnf -y --refresh install npm
 pip3 install jupyterlab jupyter_contrib_nbextensions nbconvert nbformat
 
-# VILLAS dependencies
+# VILLASnode dependencies
 sudo dnf install \
     openssl-devel \
     libuuid-devel \

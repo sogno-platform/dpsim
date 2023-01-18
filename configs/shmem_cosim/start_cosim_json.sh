@@ -5,7 +5,7 @@
 _parseConfig() {
     NUMBER_OF_LOOPS=$(jq -r '.number_of_loops' $CONFIG_FILE)     	        # Number of loops that should be executed
 
-    VILLAS_CONFIG_PATH=$(jq -r '.villas.config_path' $CONFIG_FILE)          # Villas config
+    VILLAS_CONFIG_PATH=$(jq -r '.villas.config_path' $CONFIG_FILE)          # VILLASnode config
 
     DPSIM_USE_DOCKER=$(jq -r '.dpsim | has("docker")' $CONFIG_FILE)         # Indicate if DPsim is executed in Docker
     DPSIM_PATH=$(jq -r '.dpsim.path' $CONFIG_FILE)                          # Path to dpsim main dir
@@ -25,7 +25,7 @@ _parseConfig() {
 
     LOGGING=$(jq -r 'has("logging")' $CONFIG_FILE)                              # "enable"/"disable" logging of results
     LOG_FILES_PATH=$(jq -r '.logging.log_file_destination' $CONFIG_FILE)        # Directory where results should be stored
-    
+
     ###########################################################################################
     # Define simulator executables...
     ###########################################################################################
@@ -45,7 +45,7 @@ _parseConfig() {
         DPSIM_EXEC="./configs/shmem_cosim/start_Shmem_cosim.sh \
             -s $DPSIM_SCENARIO_DIR/$DPSIM_SCENARIO_NAME \
             -v $VILLAS_CONFIG_PATH"
-    
+
         # append arguments if specified
         if [ "$DPSIM_SCENARIO_ARGS" != "null" ]; then
             DPSIM_EXEC="$DPSIM_EXEC -a $DPSIM_SCENARIO_ARGS"
@@ -176,7 +176,7 @@ fi
 
 ###########################################################################################
 # Prepare logging
-# 
+#
 # - Create folder for results of current session
 # - remove whitespaces that are somehow introduced by 'date'...
 ###########################################################################################
@@ -209,7 +209,7 @@ for ((i=1; i<=$NUMBER_OF_LOOPS; i++)); do
             LOG_FILES_PATH_RUN=$LOG_FILES_PATH_SESSION
         fi
 
-        for FILE in ${DPSIM_LOG_FILES}; do 
+        for FILE in ${DPSIM_LOG_FILES}; do
             cp $DPSIM_PATH/$DPSIM_LOG_DIR/$DPSIM_SCENARIO_NAME/$FILE $LOG_FILES_PATH_RUN
         done;
 

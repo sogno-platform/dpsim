@@ -44,10 +44,10 @@ make ${MAKE_OPTS} install
 dnf -y debuginfo-install \
     python3
 
-# CIMpp and VILLAS are installed here
+# CIMpp and VILLASnode are installed here
 LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
-# minimal VILLAS dependencies
+# minimal VILLASnode dependencies
 dnf -y install \
     openssl-devel \
     libuuid-devel \
@@ -55,7 +55,7 @@ dnf -y install \
     jansson-devel \
     libwebsockets-devel
 
-# optional VILLAS dependencies
+# optional VILLASnode dependencies
 dnf -y install \
     mosquitto-devel \
 	libconfig-devel \
