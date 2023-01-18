@@ -7,7 +7,7 @@ project(DPsim
 		HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
 
 set(PROJECT_AUTHOR "The DPsim Authors.")
-set(PROJECT_COPYRIGHT "2017-2021, The DPsim Authors.")
+set(PROJECT_COPYRIGHT "2017-2023, The DPsim Authors.")
 set(PROJECT_DESCRIPTION "C++ Power System Simulation Library")
 set(PROJECT_HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
 set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
