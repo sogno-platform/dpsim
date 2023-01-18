@@ -22,7 +22,7 @@ namespace Base {
 		public MNAInterface {
 				
 		public:
-			// ### State variables [p.u.]###c
+			// ### State variables [p.u.]###
 			/// dq stator terminal voltage
 			/// (0,0) = Vd
 			/// (1,0) = Vq

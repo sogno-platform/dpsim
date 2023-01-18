@@ -124,7 +124,7 @@ namespace TurbineGovernor {
 
     struct TurbineGovernorPSAT2 {
         // Turbine Governor type 1 
-        // Taked from PSAT - example d_anderson_farmer
+        // Taken from PSAT - example d_anderson_farmer
         
         // Reference speed (p.u.)
         Real OmegaRef = 1.0;
