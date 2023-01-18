@@ -1,4 +1,4 @@
-name: Run a villas example using multiple containers
+name: Run a VILLASnode example using multiple containers
 
 on:
   workflow_call:
@@ -19,7 +19,7 @@ on:
 
 jobs:
   run-villas-example:
-    name: Run a villas example across multiple containers
+    name: Run a VILLASnode example across multiple containers
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -43,4 +43,3 @@ jobs:
     - name: Stop containers
       if: ${{ always() }}
       run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose down
-    

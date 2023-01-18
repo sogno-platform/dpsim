@@ -109,7 +109,7 @@ jobs:
       run: |
         cp -r python/src/dpsim build/
         pytest -v examples/Notebooks
-    
+
     - name: Archive notebook outputs
       uses: actions/upload-artifact@v3
       with:
@@ -126,7 +126,7 @@ jobs:
       with:
        name: pytest-output
        path: ${{ github.workspace }}/notebooks-new
-    
+
     - name: Download master notebook results
       uses: actions/cache@v3
       with:
@@ -134,7 +134,7 @@ jobs:
         key: notebook-output-cache-master-${{ github.sha }}
         restore-keys: |
           notebook-output-cache-master-
-    
+
     - name: Download previous commit notebook results
       uses: actions/cache@v3
       with:
@@ -142,7 +142,7 @@ jobs:
         key: notebook-output-cache-commit-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
           notebook-output-cache-commit-${{ github.ref }}-
-    
+
     - name: Compare current results with master
       shell: bash
       run: diff --color -r ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-master
@@ -263,7 +263,7 @@ jobs:
         path: cppcheck-output.log
 
   test-villas-examples-1:
-    name: Run dpsim-mqtt Villas example
+    name: Run dpsim-mqtt VILLASnode example
     needs: [linux-fedora-dpsimpy]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
@@ -275,7 +275,7 @@ jobs:
         docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt.py"
 
   test-villas-examples-2:
-    name: Run dpsim-mqtt-import-export Villas example
+    name: Run dpsim-mqtt-import-export VILLASnode example
     needs: [linux-fedora-dpsimpy]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
@@ -283,9 +283,9 @@ jobs:
       container_commands: |
         docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "#" -u wildcard -v&
         docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-import-export.py"
-  
+
   test-villas-examples-3:
-    name: Run dpsim-mqtt-import-export-MIMO Villas example
+    name: Run dpsim-mqtt-import-export-MIMO VILLASnode example
     needs: [linux-fedora-dpsimpy]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
@@ -296,7 +296,7 @@ jobs:
         docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-import-export-MIMO.py"
 
   test-villas-examples-4:
-    name: Run dpsim-file Villas example
+    name: Run dpsim-file VILLASnode example
     needs: [linux-fedora-dpsimpy]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
@@ -307,7 +307,7 @@ jobs:
         docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-file.py"
 
   test-villas-examples-5:
-    name: Run mqtt-cigre-mv-pf-profiles Villas example
+    name: Run mqtt-cigre-mv-pf-profiles VILLASnode example
     needs: [linux-fedora-dpsimpy]
     uses: ./.github/workflows/run_villas_example.yaml
     with:

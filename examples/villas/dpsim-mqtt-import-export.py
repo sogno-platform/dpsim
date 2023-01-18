@@ -1,4 +1,4 @@
-# This example reads a sine signal from villas that modifies the active power set point
+# This example reads a sine signal from VILLASnode that modifies the active power set point
 # of the PQ load. The n2 voltage is exported to a file via MQTT and VILLASnode.
 
 import sys
@@ -51,7 +51,7 @@ def villas():
             'signal': 'sine',
             'rate': 10,
             'frequency': 0.1,
-            'amplitude': 50000,  
+            'amplitude': 50000,
             'offset': 100000
         },
     }
@@ -118,7 +118,7 @@ def dpsim():
     sim.set_time_step(0.1)
     sim.set_final_time(10)
     sim.do_init_from_nodes_and_terminals(False)
-    
+
     logger = dpsimpy.Logger(name)
     sim.add_logger(logger)
     sim.log_attribute('n1.v', n1.attr('v'))
@@ -141,7 +141,7 @@ def dpsim():
     intf.export_attribute(n1.attr('v').derive_coeff(0,0), 0)
     intf.export_attribute(n2.attr('v').derive_coeff(0,0).derive_mag(), 1)
     sim.add_interface(intf)
-  
+
     return sim, intf
 
 def test_shmem_import_export():
@@ -149,7 +149,7 @@ def test_shmem_import_export():
 
     sim, intf = dpsim() #intf needs to be extracted from the dpsim-function since the interface object gets deleted otherwise leading to SegFault when starting the simulation
     node = villas()
-    
+
     node.start()
     sim.run(1)
     node.stop()

@@ -40,7 +40,7 @@ while getopts "h?ps:a:v:" opt; do
         PIPE=true
         ;;
 	a)
-		DPSIM_ARG_STRING=$OPTARG	
+		DPSIM_ARG_STRING=$OPTARG
 		;;
 	s)
 		DPSIM_SCENARIO_PATH=$OPTARG
@@ -59,7 +59,7 @@ fi
 
 if [ -z "$VILLAS_CONFIG_PATH" ]; then
 	_echo_help
-	echo -e "\033[0;31m Error: \033[0m No Villas config given!"
+	echo -e "\033[0;31m Error: \033[0m No VILLASnode config given!"
 	exit 0
 fi
 
@@ -89,7 +89,7 @@ eval "$DPSIM_SCENARIO_PATH $DPSIM_ARG_STRING"
 
 
 #####################################################
-# Stop villas processes
+# Stop VILLASnode processes
 #####################################################
 
 if [ -z "$PIPE" ]; then

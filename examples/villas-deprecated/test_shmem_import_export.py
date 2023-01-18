@@ -1,4 +1,4 @@
-# This example reads a sine signal from villas that modifies the active power set point
+# This example reads a sine signal from VILLASnode that modifies the active power set point
 # of the PQ load. The n2 voltage is exported to a file via villas.
 
 import sys
@@ -30,7 +30,7 @@ def villas(intf):
             'signal': 'sine',
             'rate': 1,
             'frequency': 0.1,
-            'amplitude': 50000,  
+            'amplitude': 50000,
             'offset': 100000
         },
     }
@@ -96,7 +96,7 @@ def dpsim():
     sim.set_time_step(1)
     sim.set_final_time(10)
     sim.do_init_from_nodes_and_terminals(False)
-    
+
     logger = dpsimpy.Logger(name)
     sim.add_logger(logger)
     sim.log_attribute('n1.v', n1.attr('v'))
