@@ -17,6 +17,8 @@ include(FetchContent)
 FetchContent_Declare(cimpp-module
 	GIT_REPOSITORY https://github.com/stv0g/libcimpp.git
 	GIT_TAG        disable-doc
+	GIT_SHALLOW    TRUE
+	GIT_PROGRESS   TRUE
 )
 
 FetchContent_MakeAvailable(cimpp-module)
