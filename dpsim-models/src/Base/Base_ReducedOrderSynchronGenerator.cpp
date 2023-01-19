@@ -588,6 +588,18 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPostStep(
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
+    CPS::Base::ExciterParameters exciterParameters, ExciterType exciterType) {
+
+  if (exciterType == ExciterType::DC1Simp)
+    mExciter = CPS::Signal::ExciterDC1Simp::make("Exciter_" + this->name(),
+                                                 this->mLogLevel);
+
+  mExciter->setParameters(exciterParameters);
+  mHasExciter = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
     std::shared_ptr<Base::Exciter> exciter) {
   mExciter = exciter;
   mHasExciter = true;
@@ -611,7 +623,8 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
-    std::shared_ptr<Signal::PSSType2> PSS) {
+    Real Kp, Real Kv, Real Kw, Real T1, Real T2, Real T3, Real T4, Real Vs_max,
+    Real Vs_min, Real Tw, Real dt) {
 
   if (!mHasExciter) {
     this->mSLog->error(
@@ -619,8 +632,19 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
     return;
   }
 
-  mPSS = PSS;
+  mPSS = Signal::PSSType2::make(**this->mName + "_PSS", this->mLogLevel);
+  mPSS->setParameters(Kp, Kv, Kw, T1, T2, T3, T4, Vs_max, Vs_min, Tw, dt);
   mHasPSS = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(
+    Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R, Real Pmin, Real Pmax,
+    Real OmRef) {
+  mTurbineGovernor = Signal::TurbineGovernorType1::make(
+      **this->mName + "_TurbineGovernor", this->mLogLevel);
+  mTurbineGovernor->setParameters(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef);
+  mHasTurbineGovernor = true;
 }
 
 template <typename VarType>
