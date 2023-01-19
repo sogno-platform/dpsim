@@ -293,14 +293,6 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	**mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq0)(0,0);
 	mEf_prev = **mEf;
 
-	// Initialize controllers
-	if (mHasExciter){
-		mExciter->initialize(Math::abs(mInitVoltage), **mEf);
-	}
-	if (mHasTurbineGovernor){
-		mTurbineGovernor->initialize(**mMechTorque);
-	}
-
 	// initial electrical torque
 	**mElecTorque = (**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0);
 
@@ -376,14 +368,6 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	// calculate Ef
 	**mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq)(0,0);
 	mEf_prev = **mEf;
-
-	// Initialize controllers
-	if (mHasExciter){
-		mExciter->initialize(Math::abs(mInitVoltage), **mEf);
-	}
-	if (mHasTurbineGovernor){
-		mTurbineGovernor->initialize(**mMechTorque);
-	}
 
 	// initial electrical torque
 	**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
@@ -532,6 +516,17 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPostStep(Real time, In
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
+	CPS::Base::ExciterParameters exciterParameters, ExciterType exciterType) {
+	
+	if (exciterType == ExciterType::DC1Simp) 
+		mExciter = CPS::Signal::ExciterDC1Simp::make("Exciter_" + this->name(), this->mLogLevel);
+	
+	mExciter->setParameters(exciterParameters);
+	mHasExciter = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
 	std::shared_ptr<Base::Exciter> exciter) {
 	mExciter = exciter;
 	mHasExciter = true;
@@ -567,10 +562,9 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(Real T3, Real T4, Real T5, Real Tc, 
-	Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef, Real TmRef) {
+	Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef) {
 	mTurbineGovernor = Signal::TurbineGovernorType1::make(**this->mName + "_TurbineGovernor", this->mLogLevel);
 	mTurbineGovernor->setParameters(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef);
-	mTurbineGovernor->initialize(TmRef);
 	mHasTurbineGovernor = true;
 }
 

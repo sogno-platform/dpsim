@@ -35,6 +35,7 @@ void addSignalComponents(py::module_ mSignal) {
         .def("get_line_components", &CPS::Signal::DecouplingLineEMT::getLineComponents);
 
     py::class_<CPS::Base::ExciterParameters>(mSignal, "ExciterParameters")
+        .def(py::init())
         .def_readwrite("Tr", &CPS::Base::ExciterParameters::Tr)
         .def_readwrite("Tb", &CPS::Base::ExciterParameters::Tb)
         .def_readwrite("Tc", &CPS::Base::ExciterParameters::Tc)
@@ -48,14 +49,4 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("Bef", &CPS::Base::ExciterParameters::Bef)
         .def_readwrite("MaxVr", &CPS::Base::ExciterParameters::MaxVr)
         .def_readwrite("MinVr", &CPS::Base::ExciterParameters::MinVr);
-        
-    py::class_<CPS::Signal::ExciterDC1Simp, std::shared_ptr<CPS::Signal::ExciterDC1Simp>, CPS::SimSignalComp>(mSignal, "Exciter", py::multiple_inheritance())
-        .def(py::init<std::string>())
-        .def(py::init<std::string, CPS::Logger::Level>())
-        .def("set_parameters", &CPS::Signal::ExciterDC1Simp::setParameters, "exciter_parameters"_a);
-
-    py::class_<CPS::Signal::TurbineGovernorType1, std::shared_ptr<CPS::Signal::TurbineGovernorType1>, CPS::SimSignalComp>(mSignal, "TurbineGovernorType1", py::multiple_inheritance())
-        .def(py::init<std::string>())
-        .def(py::init<std::string, CPS::Logger::Level>())
-        .def("set_parameters", &CPS::Signal::TurbineGovernorType1::setParameters, "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Tmin"_a, "Tmax"_a, "OmRef"_a);
 }
