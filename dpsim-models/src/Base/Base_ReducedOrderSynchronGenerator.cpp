@@ -557,6 +557,17 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPostStep(Real time, In
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
+	CPS::Base::ExciterParameters exciterParameters, ExciterType exciterType) {
+	
+	if (exciterType == ExciterType::DC1Simp) 
+		mExciter = CPS::Signal::ExciterDC1Simp::make("Exciter_" + this->name(), this->mLogLevel);
+	
+	mExciter->setParameters(exciterParameters);
+	mHasExciter = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
 	std::shared_ptr<Base::Exciter> exciter) {
 	mExciter = exciter;
 	mHasExciter = true;
@@ -592,10 +603,9 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(Real T3, Real T4, Real T5, Real Tc, 
-	Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef, Real TmRef) {
+	Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef) {
 	mTurbineGovernor = Signal::TurbineGovernorType1::make(**this->mName + "_TurbineGovernor", this->mLogLevel);
 	mTurbineGovernor->setParameters(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef);
-	mTurbineGovernor->initialize(TmRef);
 	mHasTurbineGovernor = true;
 }
 
