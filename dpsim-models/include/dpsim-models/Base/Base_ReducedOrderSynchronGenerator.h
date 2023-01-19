@@ -11,6 +11,7 @@
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Signal/ExciterDC1Simp.h>
 #include <dpsim-models/Signal/PSSType2.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
 
@@ -85,14 +86,17 @@ namespace Base {
 
 			/// Add governor and turbine
 			void addGovernor(Real T3, Real T4, Real T5, Real Tc, 
-				Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef, Real TmRef);
+				Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef);
 			void addGovernor(std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor);
+			/// Add automatic voltage regulator
+			void addExciter(CPS::Base::ExciterParameters exciterParameters, ExciterType exciterType = ExciterType::DC1Simp);
 			/// Add automatic voltage regulator
 			void addExciter(std::shared_ptr<Base::Exciter> exciter);
 			/// Add power system stabilizer
 			void addPSS(Real Kp, Real Kv, Real Kw, Real T1, Real T2, Real T3, Real T4, 
 				Real Vs_max, Real Vs_min, Real Tw, Real dt);
 			void addPSS(std::shared_ptr<Signal::PSSType2> PSS);
+
 
 			/// ### Setters ###
 			void scaleInertiaConstant(Real scalingFactor);
