@@ -88,6 +88,8 @@ namespace Base {
 
 			// ### Controllers ###
 			/// Add automatic voltage regulator
+			void addExciter(CPS::Base::ExciterParameters exciterParameters, ExciterType exciterType = ExciterType::DC1Simp);
+			/// Add automatic voltage regulator
 			void addExciter(std::shared_ptr<Base::Exciter> exciter);
 			/// Add power system stabilizer
 			void addPSS(std::shared_ptr<Base::PSS> PSS);
