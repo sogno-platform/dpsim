@@ -155,7 +155,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::DP::Ph1::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::DP::Ph1::Switch::open)
       .def("close", &CPS::DP::Ph1::Switch::close)
@@ -169,7 +169,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::DP::Ph1::varResSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::DP::Ph1::varResSwitch::open)
       .def("close", &CPS::DP::Ph1::varResSwitch::close)
@@ -215,6 +215,39 @@ void addDPPh1Components(py::module_ mDPPh1) {
              std::shared_ptr<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>,
              CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>(
       mDPPh1, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance());
+  .def("set_base_parameters",
+       &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setBaseParameters,
+       "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
+      .def("set_initial_values",
+           &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setInitialValues,
+           "init_complex_electrical_power"_a, "init_mechanical_power"_a,
+           "init_complex_terminal_voltage"_a)
+      .def(
+          "scale_inertia_constant",
+          &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::scaleInertiaConstant,
+          "scaling_factor"_a)
+      .def("set_model_as_current_source",
+           &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::
+               setModelAsCurrentSource,
+           "model_as_current_source"_a);
+  .def("add_exciter",
+       py::overload_cast<CPS::Base::ExciterParameters, CPS::ExciterType>(
+           &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::addExciter),
+       "exciter_parameters"_a, "exciter_type"_a = CPS::ExciterType::DC1Simp)
+      .def("add_pss",
+           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
+                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
+                             CPS::Real, CPS::Real, CPS::Real>(
+               &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::addPSS),
+           "Kp"_a, "Kv"_a, "Kw"_a, "T1"_a, "T2"_a, "T3"_a, "T4"_a, "Vs_max"_a,
+           "Vs_min"_a, "Tw"_a, "dt"_a)
+      .def("add_governor",
+           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
+                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
+                             CPS::Real>(
+               &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::addGovernor),
+           "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Tmin"_a, "Tmax"_a,
+           "OmRef"_a);
 
   py::class_<CPS::DP::Ph1::SynchronGenerator3OrderVBR,
              std::shared_ptr<CPS::DP::Ph1::SynchronGenerator3OrderVBR>,
@@ -363,7 +396,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "with_trafo"_a = false)
       .def("set_parameters",
            &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setParameters,
@@ -405,9 +438,8 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		   // cppcheck-suppress assignBoolToPointer
-           "with_resistive_losses"_a =
-               false)
+           // cppcheck-suppress assignBoolToPointer
+           "with_resistive_losses"_a = false)
       .def("set_parameters",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real>(
@@ -481,7 +513,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::DP::Ph3::SeriesSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::DP::Ph3::SeriesSwitch::open)
       .def("close", &CPS::DP::Ph3::SeriesSwitch::close)

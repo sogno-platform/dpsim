@@ -15,31 +15,31 @@ namespace Base {
 
 	struct ExciterParameters {
 		/// Transducer time constant (s)
-		Real Tr;
+		Real Tr = 0;
 		/// Pole of the regulator inherent dynamic
-		Real Tb;
+		Real Tb = 0;
 		/// Zero of the regulator inherent dynamic
-		Real Tc;
+		Real Tc = 0;
 		/// Amplifier time constant
-		Real Ta;
+		Real Ta = 0;
 		/// Amplifier gain
-		Real Ka;
+		Real Ka = 0;
 		/// Field circuit time constant
-		Real Tef;
+		Real Tef = 0;
 		/// Field circuit integral deviation
-		Real Kef;
+		Real Kef = 0;
 		/// Stabilizer time constant
-		Real Tf;
+		Real Tf = 0;
 		/// Stabilizer gain
-		Real Kf;
+		Real Kf = 0;
 		/// First ceiling coefficient
-		Real Aef;
+		Real Aef = 0;
 		/// Second ceiling coefficient
-		Real Bef;
+		Real Bef = 0;
 		///
-		Real MaxVr;
+		Real MaxVr = 0;
 		///
-		Real MinVr;
+		Real MinVr = 0;
 	};
 
 	/// @brief Base model for exciters
