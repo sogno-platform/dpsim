@@ -32,7 +32,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_Switch.cpp
 	DP/DP_Ph1_SynchronGeneratorIdeal.cpp
 	DP/DP_Ph1_SynchronGeneratorTrStab.cpp
-	DP/DP_Ph1_SynchronGeneratorVBR.cpp
+	DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.cpp
 	DP/DP_Ph1_SynchronGenerator3OrderVBR.cpp
 	DP/DP_Ph1_SynchronGenerator4OrderVBR.cpp
 	DP/DP_Ph1_SynchronGenerator6aOrderVBR.cpp
@@ -106,7 +106,7 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph1_SolidStateTransformer.cpp
 	SP/SP_Ph1_Shunt.cpp
 	SP/SP_Ph1_SynchronGenerator.cpp
-	SP/SP_Ph1_SynchronGeneratorVBR.cpp
+	SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.cpp
 	SP/SP_Ph1_SynchronGenerator3OrderVBR.cpp
 	SP/SP_Ph1_SynchronGenerator4OrderVBR.cpp
 	SP/SP_Ph1_SynchronGenerator6aOrderVBR.cpp
@@ -129,6 +129,7 @@ list(APPEND MODELS_SOURCES
 	Signal/Exciter.cpp
 	Signal/FIRFilter.cpp
 	Signal/TurbineGovernor.cpp
+	Signal/TurbineGovernorType1.cpp
 	Signal/PLL.cpp
 	Signal/Integrator.cpp
 	Signal/PowerControllerVSI.cpp

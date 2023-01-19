@@ -15,13 +15,17 @@ namespace CPS {
 namespace DP {
 namespace Ph1 {
 	/// @brief Base class for DP VBR synchronous generator model single phase
-	class SynchronGeneratorVBR :
+	class ReducedOrderSynchronGeneratorVBR :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public MNAVariableCompInterface {
+
 	public:
         // Common elements of all VBR models
 		/// voltage behind reactance phase a
-        const Attribute<Complex>::Ptr mEvbr;
+        Complex mEvbr;
+		/// norton equivalent current of mEvbr
+		Complex mIvbr;
+
 	protected:
         /// Resistance matrix in dq reference frame
 		Matrix mResistanceMatrixDq;
@@ -49,33 +53,34 @@ namespace Ph1 {
 		MatrixComp mKvbr;
 
         /// Constructor 
-        SynchronGeneratorVBR(String uid, String name, Logger::Level logLevel);
-        SynchronGeneratorVBR(String name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(const String & uid, const String & name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
       
 	  	// #### General Functions ####
         /// Specific component initialization
-        virtual void specificInitialization()=0;
+        virtual void specificInitialization() override =0;
         ///
-        virtual void stepInPerUnit()=0;
+		void initializeResistanceMatrix() override;
+        ///
+        virtual void stepInPerUnit() override =0;
 		///
         void calculateConductanceMatrix();
 		/// Calculate Ka, Kb and Kvbr
 		void calculateAuxiliarVariables();
 		///
-		Matrix get_parkTransformMatrix();        
+		Matrix get_parkTransformMatrix() const;        
 
 		// ### MNA Section ###
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaPostStep(const Matrix& leftVector);
 		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaPostStep(const Matrix& leftVector) override;
+		
     public:
-        virtual ~SynchronGeneratorVBR();
+        virtual ~ReducedOrderSynchronGeneratorVBR()=default;
 
         /// Mark that parameter changes so that system matrix is updated
-		Bool hasParameterChanged() override;
-
+		Bool hasParameterChanged() override { return true; };
     };
 }
 }

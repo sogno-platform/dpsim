@@ -1,19 +1,72 @@
 #include <DPsim.h>
 #include "../Examples.h"
+#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
 // Grid parameters
-Examples::Grids::SMIB::ScenarioConfig2 GridParams;
+const Examples::Grids::SMIB::ScenarioConfig2 GridParams;
 
 // Generator parameters
-Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
+const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
-void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
-	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
-	Real switchClosed, int SGModel, Logger::Level logLevel) {
+// Excitation system
+const Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
+
+// Turbine Goverour
+const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1 turbineGovernor;
+
+int main(int argc, char* argv[]) {	
+
+	// Simulation parameters
+	Real switchClosed = GridParams.SwitchClosed;
+	Real switchOpen = GridParams.SwitchOpen;
+	Real startTimeFault = 1.0;
+	Real endTimeFault   = 1.1;
+	Real finalTime = 20;
+	Real timeStep = 1e-3;
+	Real H = syngenKundur.H;
+	bool withExciter = false;
+	bool withTurbineGovernor = false;
+	std::string SGModel = "4";
+	std::string stepSize_str = "";
+	std::string inertia_str = "";
+
+	// Command line args processing
+	CommandLineArgs args(argc, argv);
+	if (argc > 1) {
+		if (args.options.find("StepSize") != args.options.end()) {
+			timeStep = args.getOptionReal("StepSize");
+			stepSize_str = "_StepSize_" + std::to_string(timeStep);
+		}
+		if (args.options.find("SGModel") != args.options.end()) {
+			SGModel = args.getOptionString("SGModel");
+		}
+		if (args.options.find("Inertia") != args.options.end())  {
+			H = args.getOptionReal("Inertia");
+			inertia_str = "_Inertia_" + std::to_string(H);
+		}
+		if (args.options.find("WithExciter") != args.options.end())  {
+			withExciter = args.getOptionBool("WithExciter");
+		}
+		if (args.options.find("WithTurbineGovernor") != args.options.end())  {
+			withTurbineGovernor = args.getOptionBool("WithTurbineGovernor");
+		}
+		if (args.options.find("FinalTime") != args.options.end())  {
+			finalTime = args.getOptionReal("FinalTime");
+		}
+	}
+
+	Real logDownSampling;
+	if (timeStep<100e-6)
+		logDownSampling = floor(100e-6 / timeStep);
+	else
+		logDownSampling = 1.0;
+	Logger::Level logLevel = Logger::Level::off;
+	std::string simName = "SP_SynGen" + SGModel + "Order_VBR_SMIB_Fault" + stepSize_str + inertia_str;
+
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
@@ -85,15 +138,7 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	auto n2SP = SimNode<Complex>::make("n2SP", PhaseType::Single, initialVoltage_n2);
 
 	// Synchronous generator
-	std::shared_ptr<SP::Ph1::SynchronGeneratorVBR> genSP = nullptr;
-	if (SGModel==3)
-		genSP = SP::Ph1::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
-	else if (SGModel==4)
-		genSP = SP::Ph1::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
-	else if (SGModel==6)
-		genSP = SP::Ph1::SynchronGenerator6aOrderVBR::make("SynGen", logLevel);
-	else if (SGModel==7)
-		genSP = SP::Ph1::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
+	auto genSP = GeneratorFactory::createGenSP(SGModel, "SynGen", logLevel);
 	genSP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
@@ -101,8 +146,30 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
     genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+	genSP->setModelAsCurrentSource(true);
 
-	//Grid bus as Slack
+	// Exciter
+	std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
+	if (withExciter) {
+		exciterSP = Signal::Exciter::make("SynGen_Exciter", logLevel);
+		exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka, 
+								 excitationEremia.Te, excitationEremia.Ke, 
+								 excitationEremia.Tf, excitationEremia.Kf, 
+								 excitationEremia.Tr);
+		genSP->addExciter(exciterSP);
+	}
+
+	// Turbine Governor
+	std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorSP = nullptr;
+	if (withTurbineGovernor) {
+		turbineGovernorSP = Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
+		turbineGovernorSP->setParameters(turbineGovernor.T3, turbineGovernor.T4, 
+			turbineGovernor.T5, turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R, 
+			turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
+		genSP->addGovernor(turbineGovernorSP);
+	}
+
+	// Grid bus as Slack
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
 	extnetSP->setParameters(GridParams.VnomMV);
 
@@ -122,41 +189,20 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	extnetSP->connect({ n2SP });
 	fault->connect({SP::SimNode::GND, n1SP});
 	
-	SystemTopology systemSP;
-	if (SGModel==3)
-		systemSP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator3OrderVBR>(genSP), 
-								lineSP, extnetSP, fault});
-	else if (SGModel==4)
-		systemSP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator4OrderVBR>(genSP), 
-								lineSP, extnetSP, fault});
-	else if (SGModel==6)
-		systemSP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator6aOrderVBR>(genSP), 
-								lineSP, extnetSP, fault});
-	else if (SGModel==7)
-		systemSP = SystemTopology(GridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator6bOrderVBR>(genSP), 
-								lineSP, extnetSP, fault});
+	auto systemSP = SystemTopology(GridParams.nomFreq,
+			   SystemNodeList{n1SP, n2SP},
+			   SystemComponentList{genSP, lineSP, extnetSP, fault});
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
-	//loggerSP->logAttribute("v_slack", 	 extnetSP->attribute("v_intf"));
-	//loggerSP->logAttribute("i_slack", 	 extnetSP->attribute("i_intf"));
-	//loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
-    //loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
-    loggerSP->logAttribute("Te", 	 genSP->attribute("Te"));
+	loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
+    loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
+    loggerSP->logAttribute("Te", 	 	genSP->attribute("Te"));
     loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
     loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
 	loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Vdq0"));
 	loggerSP->logAttribute("Idq0", 		 genSP->attribute("Idq0"));
-	//loggerSP->logAttribute("Evbr", 		 genSP->attribute("Evbr"));
-	if (SGModel==6 || SGModel==7) {
+	if (SGModel=="6a" || SGModel=="6b") {
 		loggerSP->logAttribute("Edq0_s", 		 genSP->attribute("Edq_s"));
 		loggerSP->logAttribute("Edq0_t", 		 genSP->attribute("Edq_t"));
 	} else {
@@ -164,6 +210,16 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	}
 	loggerSP->logAttribute("v1", n1SP->attribute("v"));
 	loggerSP->logAttribute("v2", n2SP->attribute("v"));
+
+	// Exciter
+	if (withExciter) {
+		loggerSP->logAttribute("Ef", exciterSP->attribute("Ef"));
+	}
+
+	// Turbine Governor
+	if (withTurbineGovernor) {
+		loggerSP->logAttribute("Tm", turbineGovernorSP->attribute("Tm"));
+	}
 
 	Simulation simSP(simNameSP, logLevel);
 	simSP.doInitFromNodesAndTerminals(true);
@@ -183,57 +239,4 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	simSP.addEvent(sw2);
 	
 	simSP.run();
-}
-
-int main(int argc, char* argv[]) {	
-
-	// Simulation parameters
-	Real SwitchClosed = GridParams.SwitchClosed;
-	Real SwitchOpen = GridParams.SwitchOpen;
-	Real startTimeFault = 1.0;
-	Real endTimeFault   = 1.1;
-	Real finalTime = 20;
-	Real timeStep = 1e-3;
-	Real H = syngenKundur.H;
-	int SGModel = 4;
-	std::string SGModel_str = "4Order";
-	std::string stepSize_str = "";
-	std::string inertia_str = "";
-
-	// Command line args processing
-	CommandLineArgs args(argc, argv);
-	if (argc > 1) {
-		if (args.options.find("StepSize") != args.options.end()) {
-			timeStep = args.getOptionReal("StepSize");
-			stepSize_str = "_StepSize_" + std::to_string(timeStep);
-		}
-		if (args.options.find("SGModel") != args.options.end()) {
-			SGModel = args.getOptionReal("SGModel");
-			if (SGModel==3)
-				SGModel_str = "3Order";
-			else if (SGModel==4)
-				SGModel_str = "4Order";
-			else if (SGModel==6)
-				/// 6th order model (Marconato's model)
-				SGModel_str = "6aOrder";
-			else if (SGModel==7)
-				/// 6th order model (Andorson-Fouad's model)
-				SGModel_str = "6bOrder";
-		}
-		if (args.options.find("Inertia") != args.options.end())  {
-			H = args.getOptionReal("Inertia");
-			inertia_str = "_Inertia_" + std::to_string(H);
-		}
-	}
-
-	Real logDownSampling;
-	if (timeStep<100e-6)
-		logDownSampling = floor((100e-6) / timeStep);
-	else
-		logDownSampling = 1.0;
-	Logger::Level logLevel = Logger::Level::off;
-
-	std::string simName = "SP_SynGen" + SGModel_str + "VBR_SMIB_Fault" + stepSize_str + inertia_str;
-	SP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
-			logDownSampling, SwitchOpen, SwitchClosed, SGModel, logLevel);
 }

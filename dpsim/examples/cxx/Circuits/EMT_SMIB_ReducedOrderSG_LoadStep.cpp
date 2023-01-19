@@ -1,10 +1,12 @@
 #include <DPsim.h>
 #include "../Examples.h"
+#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 using namespace Examples::Grids::SMIB::ReducedOrderSynchronGenerator;
+
 
 // Default configuration of scenario
 Scenario6::Config defaultConfig;
@@ -128,31 +130,15 @@ int main(int argc, char* argv[]) {
 	auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
 
 	// Synchronous generator
-	std::shared_ptr<EMT::Ph3::ReducedOrderSynchronGeneratorVBR> genEMT = nullptr;
-	if (sgType=="3") {
-		genEMT = EMT::Ph3::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator3OrderVBR>(genEMT)->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage, 
-			syngenKundur.nomFreq, H, 
-			syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t, syngenKundur.Td0_t);
-	} else if (sgType=="4") {
-		genEMT = EMT::Ph3::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator4OrderVBR>(genEMT)->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage, 
-			syngenKundur.nomFreq, H, 
-			syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
-			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t); 
-	} else if (sgType=="6b") {
-		genEMT = EMT::Ph3::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6bOrderVBR>(genEMT)->setOperationalParametersPerUnit(
+	auto genEMT = GeneratorFactory::createGenEMT(sgType, "SynGen", logLevel);
+	genEMT->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
 	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-	} else 
-		throw CPS::SystemError("Unsupported reduced-order SG type!");	
     genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+	genEMT->setModelAsCurrentSource(true);
 
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", logLevel);
@@ -168,19 +154,9 @@ int main(int argc, char* argv[]) {
 	genEMT->connect({ n1EMT });
 	lineEMT->connect({ n1EMT, n2EMT });
 	extnetEMT->connect({ n2EMT });
-	SystemTopology systemEMT;
-	if (sgType=="3")
-		systemEMT = SystemTopology(gridParams.nomFreq,
+	auto systemEMT = SystemTopology(gridParams.nomFreq,
 			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator3OrderVBR>(genEMT), lineEMT, extnetEMT});
-	else if (sgType=="4")
-		systemEMT = SystemTopology(gridParams.nomFreq,
-			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator4OrderVBR>(genEMT), lineEMT, extnetEMT});
-	else if (sgType=="6b")
-		systemEMT = SystemTopology(gridParams.nomFreq,
-			SystemNodeList{n1EMT, n2EMT},
-			SystemComponentList{std::dynamic_pointer_cast<EMT::Ph3::SynchronGenerator6bOrderVBR>(genEMT), lineEMT, extnetEMT});
+			SystemComponentList{genEMT, lineEMT, extnetEMT});
 
 	// Logging
 	// log node voltage

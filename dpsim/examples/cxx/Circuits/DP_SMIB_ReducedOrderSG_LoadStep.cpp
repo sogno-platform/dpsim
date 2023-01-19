@@ -1,5 +1,6 @@
 #include <DPsim.h>
 #include "../Examples.h"
+#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -18,7 +19,7 @@ Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur
 int main(int argc, char* argv[]) {	
 
 	// Simulation parameters
-	String simName = "DP_SMIB_ReducedOrderSG_LoadStep";
+	String simName = "DP_SMIB_ReducedOrderSG_VBR_LoadStep";
 	Real timeStep = 100e-6;
 	Real finalTime = 35;
 
@@ -30,10 +31,10 @@ int main(int argc, char* argv[]) {
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-		timeStep = args.timeStep;
-		finalTime = args.duration;
-		if (args.name != "dpsim")
-			simName = args.name;
+		if (args.options.find("SimName") != args.options.end())
+			simName = args.getOptionString("SimName");
+		if (args.options.find("TimeStep") != args.options.end())
+			timeStep = args.getOptionReal("TimeStep");
 		if (args.options.find("sgType") != args.options.end())
 			sgType = args.getOptionString("sgType");
 		if (args.options.find("loadStepEventTime") != args.options.end())
@@ -41,6 +42,11 @@ int main(int argc, char* argv[]) {
 		if (args.options.find("inertia") != args.options.end())
 			H = args.getOptionReal("inertia");
 	}
+
+	std::cout << "Simulation Parameters: " << std::endl;
+	std::cout << "SimName: " << simName << std::endl;
+	std::cout << "Time Step: " << timeStep << std::endl;
+	std::cout << "SG: " << sgType << std::endl;
 
 	// Configure logging
 	Logger::Level logLevel = Logger::Level::info;
@@ -122,31 +128,15 @@ int main(int argc, char* argv[]) {
 	auto n2DP = SimNode<Complex>::make("n2DP", PhaseType::Single, initialVoltage_n2);
 
 	// Synchronous generator
-	std::shared_ptr<DP::Ph1::SynchronGeneratorVBR> genDP = nullptr;
-	if (sgType=="3") {
-		genDP = DP::Ph1::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator3OrderVBR>(genDP)->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage, 
-			syngenKundur.nomFreq, H, 
-			syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t, syngenKundur.Td0_t);
-	} else if (sgType=="4") {
-		genDP = DP::Ph1::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator4OrderVBR>(genDP)->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage, 
-			syngenKundur.nomFreq, H, 
-			syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
-			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t); 
-	} else if (sgType=="6b") {
-		genDP = DP::Ph1::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6bOrderVBR>(genDP)->setOperationalParametersPerUnit(
+	auto genDP = GeneratorFactory::createGenDP(sgType, "SynGen", logLevel);
+	genDP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
 	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-	} else 
-		throw CPS::SystemError("Unsupported reduced-order SG type!");	
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+	genDP->setModelAsCurrentSource(true);
 
 	//Grid bus as Slack
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
@@ -161,19 +151,9 @@ int main(int argc, char* argv[]) {
 	genDP->connect({ n1DP });
 	lineDP->connect({ n1DP, n2DP });
 	extnetDP->connect({ n2DP });
-	SystemTopology systemDP;
-	if (sgType=="3")
-		systemDP = SystemTopology(gridParams.nomFreq,
+	auto systemDP = SystemTopology(gridParams.nomFreq,
 			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator3OrderVBR>(genDP), lineDP, extnetDP});
-	else if (sgType=="4")
-		systemDP = SystemTopology(gridParams.nomFreq,
-			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator4OrderVBR>(genDP), lineDP, extnetDP});
-	else if (sgType=="6b")
-		systemDP = SystemTopology(gridParams.nomFreq,
-			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{std::dynamic_pointer_cast<DP::Ph1::SynchronGenerator6bOrderVBR>(genDP), lineDP, extnetDP});
+			SystemComponentList{genDP, lineDP, extnetDP});
 
 	// Logging
 	// log node voltage

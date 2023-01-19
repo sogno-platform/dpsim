@@ -17,49 +17,55 @@ namespace Ph3 {
 	/// @brief Base class for EMT VBR simplefied synchronous generator models
 	class ReducedOrderSynchronGeneratorVBR :
 		public Base::ReducedOrderSynchronGenerator<Real>,
-		public MNAVariableCompInterface {
-        // Common elements of all VBR models
+		public MNAVariableCompInterface { 
+        
     public:
+        // Common elements of all VBR models
         /// voltage behind reactance
-        const Attribute<Matrix>::Ptr mEvbr;
+        Matrix mEvbr;
+		/// norton equivalent current of mEvbr
+		Matrix mIvbr;
+
     protected:
         /// Resistance matrix in dq0 reference frame
 		Matrix mResistanceMatrixDq0;
+
 		/// Conductance matrix
 		Matrix mConductanceMatrix;
-        
 
 		///
 		Matrix mAbcToDq0;
 		Matrix mDq0ToAbc;
 
         /// Constructor 
-        ReducedOrderSynchronGeneratorVBR(String uid, String name, Logger::Level logLevel);
-        ReducedOrderSynchronGeneratorVBR(String name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(const String & uid, const String & name, Logger::Level logLevel);
+        ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
       
 	  	// #### General Functions ####
         /// Specific component initialization
-        virtual void specificInitialization()=0; 
+        virtual void specificInitialization() override =0; 
         ///
-        virtual void stepInPerUnit()=0;
+        void initializeResistanceMatrix() override;
+        ///
+        virtual void stepInPerUnit() override =0;
 		///
         void calculateResistanceMatrix();
         /// Park Transformation according to Kundur
-        Matrix get_parkTransformMatrix();
+        Matrix get_parkTransformMatrix() const;
 		/// Inverse Park Transformation according to Kundur
-		Matrix get_inverseParkTransformMatrix();
+		Matrix get_inverseParkTransformMatrix() const;
 		
         // ### MNA Section ###
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaPostStep(const Matrix& leftVector);
+        void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaPostStep(const Matrix& leftVector) override;
         void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 
     public:
-        virtual ~ReducedOrderSynchronGeneratorVBR();
-    
+        virtual ~ReducedOrderSynchronGeneratorVBR() override =default;
+
         /// Mark that parameter changes so that system matrix is updated
-		Bool hasParameterChanged() override { return 1; };
+		Bool hasParameterChanged() override { return true; };
     };
 }
 }

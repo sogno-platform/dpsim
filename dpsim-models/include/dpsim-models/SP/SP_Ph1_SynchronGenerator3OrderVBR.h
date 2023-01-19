@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SP/SP_Ph1_SynchronGeneratorVBR.h>
+#include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 
 namespace CPS {
 namespace SP {
@@ -16,7 +16,7 @@ namespace Ph1 {
 	/// @brief Voltage-Behind-Reactance (VBR) implementation
 	/// of 3rd order synchronous generator model
 	class SynchronGenerator3OrderVBR :
-		public SynchronGeneratorVBR,
+		public ReducedOrderSynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator3OrderVBR> {
 	public:
 		// #### Model specific variables ####
@@ -25,32 +25,18 @@ namespace Ph1 {
 	protected:
 		/// history term of VBR
 		Matrix mEh_vbr;
-		///
-		Real mAq;
-		/// 
-		Real mBq;
-		///
-		Real mCq;
 
 	public:
 		///
-		SynchronGenerator3OrderVBR(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator3OrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator3OrderVBR(String name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SynchronGenerator3OrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General Functions ####
 		///
-		void specificInitialization();
+		void specificInitialization() override;
 		///
-		void calculateAuxiliarConstants();
-		///
-		void stepInPerUnit();
-		/// Setter 3rd order parameters - extending base class setter by logging
-		void setOperationalParametersPerUnit(Real nomPower, 
-			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
-			Real Ld_t, Real Td0_t);
+		void stepInPerUnit() override;
 	};
 }
 }

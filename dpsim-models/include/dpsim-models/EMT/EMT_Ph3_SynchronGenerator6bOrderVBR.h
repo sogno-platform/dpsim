@@ -30,51 +30,18 @@ namespace Ph3 {
 		Matrix mEh_t;
 		/// history term of voltage behind the subtransient reactance
 		Matrix mEh_s;
-		///
-		Real mAd_t;
-		///
-		Real mBd_t;
-		///
-		Real mAq_t;
-		///
-		Real mBq_t;
-		///
-		Real mDq_t;
-		///
-		Real mAd_s;
-		///
-		Real mAq_s;
-		/// 
-		Real mBd_s;
-		/// 
-		Real mBq_s;
-		///
-		Real mCd_s;
-		///
-		Real mCq_s;
-		///
-		Real mDq_s;
 
 	public:
 		///
-		SynchronGenerator6bOrderVBR(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator6bOrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator6bOrderVBR(String name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SimPowerComp<Real>::Ptr clone(String name);
+		SynchronGenerator6bOrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General Functions ####
 		///
-		void specificInitialization();
+		void specificInitialization() override;
 		///
-		void calculateAuxiliarConstants();
-		///
-		void stepInPerUnit();
-		/// Setter 6th order parameters - extending base class setter by logging
-		void setOperationalParametersPerUnit(Real nomPower, 
-				Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
-				Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t,
-				Real Ld_s, Real Lq_s, Real Td0_s, Real Tq0_s);
+		void stepInPerUnit() override;
 	};
 }
 }

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/DP/DP_Ph1_SynchronGeneratorVBR.h>
+#include <dpsim-models/DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 
 namespace CPS {
 namespace DP {
@@ -16,7 +16,7 @@ namespace Ph1 {
 	/// @brief Voltage-Behind-Reactance (VBR) implementation
 	/// of 3rd order synchronous generator model
 	class SynchronGenerator3OrderVBR :
-		public SynchronGeneratorVBR,
+		public ReducedOrderSynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator3OrderVBR> {
 	public:
 		// #### Model specific variables ####
@@ -26,37 +26,17 @@ namespace Ph1 {
 		/// history term of voltage behind the transient reactance
 		Matrix mEh_vbr;
 
-		/// Auxiliar VBR constants
-		///
-		Real mA;
-		///
-		Real mB;
-		///
-		Real mAq;
-		///
-		Real mBq;
-		///
-		Real mCq;
-
 	public:
 		///
-		SynchronGenerator3OrderVBR(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator3OrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator3OrderVBR(String name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SynchronGenerator3OrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General Functions ####
 		/// Initializes component from power flow data
-		void specificInitialization();
+		void specificInitialization() override;
 		///
-		void calculateAuxiliarConstants();
-		///
-		void stepInPerUnit();
-		/// Setter 3rd order parameters - extending base class setter by logging
-		void setOperationalParametersPerUnit(Real nomPower, 
-			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
-			Real Ld_t, Real Td0_t);
+		void stepInPerUnit() override;
 	};
 }
 }

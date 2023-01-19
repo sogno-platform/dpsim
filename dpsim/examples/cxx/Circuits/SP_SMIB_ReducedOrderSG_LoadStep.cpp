@@ -1,5 +1,6 @@
 #include <DPsim.h>
 #include "../Examples.h"
+#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -122,31 +123,15 @@ int main(int argc, char* argv[]) {
 	auto n2SP = SimNode<Complex>::make("n2SP", PhaseType::Single, initialVoltage_n2);
 
 	// Synchronous generator
-	std::shared_ptr<SP::Ph1::SynchronGeneratorVBR> genSP = nullptr;
-	if (sgType=="3") {
-		genSP = SP::Ph1::SynchronGenerator3OrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator3OrderVBR>(genSP)->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage, 
-			syngenKundur.nomFreq, H, 
-			syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t, syngenKundur.Td0_t);
-	} else if (sgType=="4") {
-		genSP = SP::Ph1::SynchronGenerator4OrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator4OrderVBR>(genSP)->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage, 
-			syngenKundur.nomFreq, H, 
-			syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
-			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t); 
-	} else if (sgType=="6b") {
-		genSP = SP::Ph1::SynchronGenerator6bOrderVBR::make("SynGen", logLevel);
-		std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator6bOrderVBR>(genSP)->setOperationalParametersPerUnit(
+	auto genSP = GeneratorFactory::createGenSP(sgType, "SynGen", logLevel);
+	genSP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
 	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-	} else 
-		throw CPS::SystemError("Unsupported reduced-order SG type!");	
     genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
+	genSP->setModelAsCurrentSource(true);
 
 	//Grid bus as Slack
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
@@ -161,19 +146,9 @@ int main(int argc, char* argv[]) {
 	genSP->connect({ n1SP });
 	lineSP->connect({ n1SP, n2SP });
 	extnetSP->connect({ n2SP });
-	SystemTopology systemSP;
-	if (sgType=="3")
-		systemSP = SystemTopology(gridParams.nomFreq,
+	auto systemSP = SystemTopology(gridParams.nomFreq,
 			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator3OrderVBR>(genSP), lineSP, extnetSP});
-	else if (sgType=="4")
-		systemSP = SystemTopology(gridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator4OrderVBR>(genSP), lineSP, extnetSP});
-	else if (sgType=="6b")
-		systemSP = SystemTopology(gridParams.nomFreq,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{std::dynamic_pointer_cast<SP::Ph1::SynchronGenerator6bOrderVBR>(genSP), lineSP, extnetSP});
+			SystemComponentList{genSP, lineSP, extnetSP});
 
 	// Logging
 	// log node voltage
