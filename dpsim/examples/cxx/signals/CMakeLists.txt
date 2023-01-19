@@ -1,6 +1,5 @@
 set(SIGNALS_SRCS
 	FIRFilter.cpp
-	Exciter.cpp
 	TurbineGovernor.cpp
 )
 
