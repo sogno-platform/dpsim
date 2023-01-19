@@ -186,7 +186,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::EMT::Ph3::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::EMT::Ph3::Switch::openSwitch)
       .def("close", &CPS::EMT::Ph3::Switch::closeSwitch)
@@ -229,6 +229,39 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              std::shared_ptr<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>,
              CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>>(
       mEMTPh3, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance());
+  .def("set_base_parameters",
+       &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::setBaseParameters,
+       "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
+      .def("set_initial_values",
+           &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::setInitialValues,
+           "init_complex_electrical_power"_a, "init_mechanical_power"_a,
+           "init_complex_terminal_voltage"_a)
+      .def("scale_inertia_constant",
+           &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::
+               scaleInertiaConstant,
+           "scaling_factor"_a)
+      .def("set_model_as_current_source",
+           &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::
+               setModelAsCurrentSource,
+           "model_as_current_source"_a);
+  .def("add_exciter",
+       py::overload_cast<CPS::Base::ExciterParameters, CPS::ExciterType>(
+           &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::addExciter),
+       "exciter_parameters"_a, "exciter_type"_a = CPS::ExciterType::DC1Simp)
+      .def("add_pss",
+           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
+                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
+                             CPS::Real, CPS::Real, CPS::Real>(
+               &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::addPSS),
+           "Kp"_a, "Kv"_a, "Kw"_a, "T1"_a, "T2"_a, "T3"_a, "T4"_a, "Vs_max"_a,
+           "Vs_min"_a, "Tw"_a, "dt"_a)
+      .def("add_governor",
+           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
+                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
+                             CPS::Real>(
+               &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::addGovernor),
+           "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Tmin"_a, "Tmax"_a,
+           "OmRef"_a);
 
   py::class_<CPS::EMT::Ph3::SynchronGenerator3OrderVBR,
              std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator3OrderVBR>,
@@ -361,7 +394,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		    // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "with_trafo"_a = false)
       .def("set_parameters",
            &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::setParameters,
@@ -394,9 +427,8 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		   // cppcheck-suppress assignBoolToPointer
-           "with_resistive_losses"_a =
-               false)
+           // cppcheck-suppress assignBoolToPointer
+           "with_resistive_losses"_a = false)
       .def("set_parameters", &CPS::EMT::Ph3::Transformer::setParameters,
            "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a,
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
@@ -420,7 +452,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::EMT::Ph3::SeriesSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		    // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::EMT::Ph3::SeriesSwitch::open)
       .def("close", &CPS::EMT::Ph3::SeriesSwitch::close)
