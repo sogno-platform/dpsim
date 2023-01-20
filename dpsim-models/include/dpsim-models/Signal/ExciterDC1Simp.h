@@ -31,9 +31,9 @@ namespace Signal {
 		/// Ampliﬁer gain (pu/pu)
 		Real mKa;
 		/// Field circuit integral deviation
-		Real mKe;
+		Real mKef;
 		/// Field circuit time constant (s)
-		Real mTe;
+		Real mTef;
 		/// Stabilizer gain (s pu/pu)
 		Real mKf;
 		/// Stabilizer time constant (s)
@@ -44,37 +44,36 @@ namespace Signal {
 		Real mAef;
 		/// Second ceiling coefficient
 		Real mBef;
+		/// Maximum amplifier output (p.u.)
+		Real mMaxVa;
+		/// Minumum amplifier output (p.u.)
+		Real mMinVa;
 
 		/// Reference voltage (with effect of PSS)
 		Real mVref = 0;
 		/// Output of voltage transducer at time k-1
-		Real mVm_prev = 0;
-		/// Output of stablizing feedback at time k-1
-		Real mVis_prev = 0;
-		/// Output of ceiling function at time k-1
-		Real mVse_prev = 0;
-		/// Output of regulator output at time k-1
 		Real mVr_prev = 0;
+		/// Output of stablizing feedback at time k-1
+		Real mVf_prev = 0;
+		/// Output of amplifier output at time k-1
+		Real mVa_prev = 0;
 		/// Exciter output at time k-1
 		Real mEf_prev = 0;
-		/// Maximum regulator voltage (p.u.)
-		Real mMaxVr;
-		/// Minumum regulator voltage (p.u.)
-		Real mMinVr;
-
-	protected:
-		/// Output of voltage transducer at time k-1
-		const Attribute<Real>::Ptr mVm;
+		
 		/// Input of voltage transducer
-		const Attribute<Real>::Ptr mVh;
+		Real mVh;
+		/// Output of voltage transducer at time k-1
+		Real mVr;
 		/// Output of stablizing feedback at time k
-		const Attribute<Real>::Ptr mVis;
-		/// Regulator output at time k
-		const Attribute<Real>::Ptr mVr;
-		/// Output of ceiling function at time k-1
-		const Attribute<Real>::Ptr mVse;
+		Real mVf;
+		/// Input of amplifier at time k
+		Real mVin;
+		/// Output of amplifier at time k
+		Real mVa;
+		/// Amplifier output at time k
+		Real mVsat;
 		/// Exciter output at time k (induced emf by the field current under no-load conditions)
-		const Attribute<Real>::Ptr mEf;
+		Real mEf;
 
 	public:
 		/// Constructor

@@ -103,6 +103,7 @@ class FactoryRegistration {
 
 namespace ExciterFactory {
     void registerExciters() {
+        FactoryRegistration<CPS::Base::Exciter> _ExciterDC1("DC1", new DerivedCreator<CPS::Signal::ExciterDC1, CPS::Base::Exciter>);
         FactoryRegistration<CPS::Base::Exciter> _ExciterDC1Simp("DC1Simp", new DerivedCreator<CPS::Signal::ExciterDC1Simp, CPS::Base::Exciter>);
     }
 }

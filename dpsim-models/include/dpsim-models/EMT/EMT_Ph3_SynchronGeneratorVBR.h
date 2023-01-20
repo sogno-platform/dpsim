@@ -93,10 +93,7 @@ namespace Ph3 {
 		Real mPsimq;
 		/// Magnetizing flux linkage in d axis
 		Real mPsimd;
-
-		/// Voltage excitation
-		Real mVfd;
-		
+	
 		/// Phase currents in pu
 		Matrix mIabc = Matrix::Zero(3, 1);
 		///Phase Voltages in pu

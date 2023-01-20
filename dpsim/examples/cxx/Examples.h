@@ -81,9 +81,14 @@ namespace Exciter{
         // saturation function coefficients
         ExcitationSystemEremia.Aef = 0.33;
         ExcitationSystemEremia.Bef = 0.1;
-        
-        ExcitationSystemEremia.MaxVr = 1.0;
-        ExcitationSystemEremia.MinVr = -0.9;
+
+        //
+        ExcitationSystemEremia.MaxVa = 1.0;
+        ExcitationSystemEremia.MinVa = -0.9;
+
+        //
+        ExcitationSystemEremia.Tb = 10;
+        ExcitationSystemEremia.Tc = 1.0;
 
         return ExcitationSystemEremia;
     }

@@ -11,6 +11,7 @@
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
 #include <dpsim-models/Signal/PSSType2.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
