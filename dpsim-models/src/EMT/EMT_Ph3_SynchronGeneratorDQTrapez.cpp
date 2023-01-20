@@ -58,6 +58,7 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 		// Note: scaled by Rfd/Lmd to transform from exciter pu system
 		// to the synchronous generator pu system
 		mVsr(1,0) = (mRfd / mLmd) * mExciter->step(mVsr(0,0), mVsr(3,0), mTimeStep);
+		**mVfd = mVsr(1,0);
 	}
 
 	// Update of mechanical torque from turbine governor

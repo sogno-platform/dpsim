@@ -47,6 +47,6 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("Kf", &CPS::Base::ExciterParameters::Kf)
         .def_readwrite("Aef", &CPS::Base::ExciterParameters::Aef)
         .def_readwrite("Bef", &CPS::Base::ExciterParameters::Bef)
-        .def_readwrite("MaxVr", &CPS::Base::ExciterParameters::MaxVr)
-        .def_readwrite("MinVr", &CPS::Base::ExciterParameters::MinVr);
+        .def_readwrite("MaxVa", &CPS::Base::ExciterParameters::MaxVa)
+        .def_readwrite("MinVa", &CPS::Base::ExciterParameters::MinVa);
 }
