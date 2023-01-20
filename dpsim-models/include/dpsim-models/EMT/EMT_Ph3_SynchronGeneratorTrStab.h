@@ -78,7 +78,7 @@ namespace Ph3 {
 
 		// #### General Functions ####
 		/// Flags to modify model behavior
-		void setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech);
+		void setModelFlags(Bool convertWithOmegaMech);
 		///
 		void setInitialValues(Complex elecPower, Real mechPower);
 		/// \brief Initializes the machine parameters
