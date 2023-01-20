@@ -197,8 +197,8 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(
   /// Init voltage excitation
   mVfd = mVsr(1, 0);
 
-  // #### VBR Model Dynamic variables #######################################
-  CalculateAuxiliarConstants(mTimeStep * mBase_OmElec);
+  /// Init voltage excitation
+  **mVfd = mVsr(1, 0);
 
   if (mNumDampingWindings == 2)
     mPsimq = mDLmq * (mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
@@ -367,7 +367,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(
     // Get exciter output voltage
     // Note: scaled by Rfd/Lmd to transform from exciter pu system
     // to the synchronous generator pu system
-    mVfd = (mRfd / mLmd) * mExciter->step(mVd, mVq, mTimeStep);
+    **mVfd = (mRfd / mLmd) * mExciter->step(mVd, mVq, mTimeStep);
   }
   mIabc = R_eq_vbr.inverse() * (mVabc - E_eq_vbr);
 
@@ -387,7 +387,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(
     mDqStatorCurrents << mIq, mId;
 
     mPsikq1kq2 = E1 * mIq + E2 * mPsikq1kq2 + E1 * mIq_hist;
-    mPsifdkd = F1 * mId + F2 * mPsifdkd + F1 * mId_hist + F3 * mVfd;
+    mPsifdkd = F1 * mId + F2 * mPsifdkd + F1 * mId_hist + F3 * **mVfd;
 
     mPsikq1 = mPsikq1kq2(0);
     mPsikq2 = mPsikq1kq2(1);
@@ -399,7 +399,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(
     mDqStatorCurrents << mIq, mId;
 
     mPsikq1 = E1_1d * mIq + E2_1d * mPsikq1 + E1_1d * mIq_hist;
-    mPsifdkd = F1 * mId + F2 * mPsifdkd + F1 * mId_hist + F3 * mVfd;
+    mPsifdkd = F1 * mId + F2 * mPsifdkd + F1 * mId_hist + F3 * **mVfd;
 
     mPsifd = mPsifdkd(0);
     mPsikd = mPsifdkd(1);
@@ -554,10 +554,10 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarVariables() {
 
   if (mNumDampingWindings == 2)
     h_qdr = K1a * E2 * mPsikq1kq2 + K1a * E1 * mIq + K2a * F2 * mPsifdkd +
-            K2a * F1 * mId + (K2a * F3 + C26) * mVfd;
+            K2a * F1 * mId + (K2a * F3 + C26) * **mVfd;
   else
     h_qdr = K1a * E2_1d * mPsikq1 + K1a * E1_1d * mIq + K2a * F2 * mPsifdkd +
-            K2a * F1 * mId + (K2a * F3 + C26) * mVfd;
+            K2a * F1 * mId + (K2a * F3 + C26) * **mVfd;
 
   H_qdr << h_qdr, 0;
 

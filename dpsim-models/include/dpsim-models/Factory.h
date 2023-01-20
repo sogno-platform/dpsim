@@ -57,7 +57,6 @@ template <class BaseClass> class Creator {
     }
 
     std::vector<std::string> getItems() {
-
       std::vector<std::string> items;
       for (auto g : functionMap) {
         items.push_back(g.first);
@@ -78,7 +77,6 @@ template <class BaseClass> class Creator {
     }
 
     void registerExciter(const std::string &type, Creator<BaseClass> *Fn) {
-
       functionMap[type] = Fn;
     }
 
@@ -94,6 +92,62 @@ template <class BaseClass> class Creator {
     }
 
     std::map<std::string, Creator<BaseClass> *> functionMap;
+  };
+
+  template <class BaseClass> class FactoryRegistration {
+  public:
+    FactoryRegistration(std::string type, Creator<BaseClass> *Fn) {
+      Factory<BaseClass>::get().registerExciter(type, Fn);
+    }
+  };
+
+  namespace ExciterFactory {
+  void registerExciters() {
+    FactoryRegistration<CPS::Base::Exciter> _ExciterDC1(
+        "DC1", new DerivedCreator<CPS::Signal::ExciterDC1, CPS::Base::Exciter>);
+    FactoryRegistration<CPS::Base::Exciter> _ExciterDC1Simp(
+        "DC1Simp",
+        new DerivedCreator<CPS::Signal::ExciterDC1Simp, CPS::Base::Exciter>);
+  }
+
+  std::vector<std::string> getItems() {
+
+    std::vector<std::string> items;
+    for (auto g : functionMap) {
+      items.push_back(g.first);
+    }
+
+    return items;
+  }
+
+  std::shared_ptr<BaseClass>
+  create(std::string type, const std::string &name,
+         CPS::Logger::Level logLevel = CPS::Logger::Level::debug) {
+
+    auto it = functionMap.find(type);
+    if (it != functionMap.end())
+      return it->second->Create(name, logLevel);
+    else
+      throw CPS::SystemError("Unsupported type '" + type + "'!");
+  }
+
+  void registerExciter(const std::string &type, Creator<BaseClass> *Fn) {
+
+    functionMap[type] = Fn;
+  }
+
+private:
+  Factory() {}
+  Factory(const Factory &);
+  ~Factory() {
+    auto i = functionMap.begin();
+    while (i != functionMap.end()) {
+      delete (*i).second;
+      ++i;
+    }
+  }
+
+  std::map<std::string, Creator<BaseClass> *> functionMap;
   };
 
   template <class BaseClass> class Factory {

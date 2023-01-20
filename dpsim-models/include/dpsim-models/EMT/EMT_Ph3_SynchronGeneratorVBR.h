@@ -90,8 +90,12 @@ protected:
   /// Magnetizing flux linkage in d axis
   Real mPsimd;
 
-  /// Voltage excitation
-  Real mVfd;
+  /// Phase currents in pu
+  Matrix mIabc = Matrix::Zero(3, 1);
+  ///Phase Voltages in pu
+  Matrix mVabc = Matrix::Zero(3, 1);
+  /// Subtransient voltage in pu
+  Matrix mDVabc = Matrix::Zero(3, 1);
 
   /// Phase currents in pu
   Matrix mIabc = Matrix::Zero(3, 1);
