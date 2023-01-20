@@ -15,13 +15,7 @@ using namespace CPS;
 using namespace CPS::Signal;
 
 ExciterDC1Simp::ExciterDC1Simp(const String &name, CPS::Logger::Level logLevel)
-    : SimSignalComp(name, name, logLevel),
-      mVm(Attribute<Real>::create("Vm", mAttributes, 0)),
-      mVh(Attribute<Real>::create("Vh", mAttributes, 0)),
-      mVis(Attribute<Real>::create("Vis", mAttributes, 0)),
-      mVse(Attribute<Real>::create("Vse", mAttributes, 0)),
-      mVr(Attribute<Real>::create("Vr", mAttributes, 0)),
-      mEf(Attribute<Real>::create("Ef", mAttributes, 0)) {
+    : SimSignalComp(name, name, logLevel) {
 
   this->setExciterType(ExciterType::DC1Simp);
 }
@@ -29,121 +23,110 @@ ExciterDC1Simp::ExciterDC1Simp(const String &name, CPS::Logger::Level logLevel)
 void ExciterDC1Simp::setParameters(Base::ExciterParameters parameters) {
 
   mTa = parameters.Ta;
-  mKa = parameters.Ka;
-  mTe = parameters.Tef;
-  mKe = parameters.Kef;
+  mTef = parameters.Tef;
   mTf = parameters.Tf;
-  mKf = parameters.Kf;
   mTr = parameters.Tr;
+  mKa = parameters.Ka;
+  mKef = parameters.Kef;
+  mKf = parameters.Kf;
   mAef = parameters.Aef;
   mBef = parameters.Bef;
-  mMaxVr = parameters.MaxVr;
-  mMinVr = parameters.MinVr;
+  mMaxVa = parameters.MaxVa;
+  mMinVa = parameters.MinVa;
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "ExciterDC1Simp parameters: \n"
                      "Ta: {:e}"
                      "\nKa: {:e}"
-                     "\nTe: {:e}"
-                     "\nKe: {:e}"
+                     "\nTef: {:e}"
+                     "\nKef: {:e}"
                      "\nTf: {:e}"
                      "\nKf: {:e}"
                      "\nTr: {:e}"
                      "\nAef: {:e}"
                      "\nBef: {:e}"
-                     "\nMaximum regulator Voltage: {:e}"
-                     "\nMinimum regulator Voltage: {:e}\n",
-                     mTa, mKa, mTe, mKe, mTf, mKf, mTr, mAef, mBef, mMaxVr,
-                     mMinVr);
+                     "\nMaximum amplifier Voltage: {:e}"
+                     "\nMinimum amplifier Voltage: {:e}\n",
+                     mTa, mKa, mTef, mKef, mTf, mKf, mTr, mAef, mBef, mMaxVa,
+                     mMinVa);
 }
 
 void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {
 
   SPDLOG_LOGGER_INFO(mSLog,
-                     "Initially set excitation system initial values: \n"
-                     "Vh_init: {:e}\nEf_init: {:e}\n",
-                     Vh_init, Ef_init);
+                     "Initially set excitation system initial values:"
+                     "\ninit Vh: {:e}"
+                     "\ninit Ef: {:e}",
+                     mVh, mEf);
 
-  **mVm = Vh_init;
-  **mEf = Ef_init;
+  /// init value of transducer output
+  mVr = mVh;
 
-  // mVse is the ceiling function in PSAT
-  // mVse = mEf * (0.33 * (exp(0.1 * abs(mEf)) - 1.));
-  **mVse = **mEf * (0.33 * exp(0.1 * abs(**mEf)));
+  /// init value of stabilizing feedback output
+  mVf = 0.0;
 
-  // mVis = vr2 in PSAT
-  **mVis = -mKf / mTf * **mEf;
+  /// ceiling function
+  mVsat = mAef * exp(mBef * abs(mEf));
 
-  // mVr = vr1 in PSAT
-  **mVr = mKe * **mEf + **mVse;
-  if (**mVr > mMaxVr)
-    **mVr = mMaxVr;
-  else if (**mVr < mMinVr)
-    **mVr = mMinVr;
+  /// init value of amplifier output
+  mVa = mKef * mEf + mVsat * mEf;
+  if (mVa > mMaxVa)
+    mVa = mMaxVa;
+  if (mVa < mMinVa)
+    mVa = mMinVa;
 
-  mVref = **mVr / mKa + **mVm;
+  /// init value of amplifier input
+  mVin = mVa / mKa;
+
+  ///
+  mVref = mVr + mVin;
+
+  /// check initial conditions
+  if (mEf - mVa / (mVsat + mKef))
+    SPDLOG_LOGGER_WARN(mSLog, "Initial conditions are not consistent!!!");
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "Actually applied excitation system initial values:"
                      "\nVref : {:e}"
-                     "\ninit_Vm: {:e}"
-                     "\ninit_Ef: {:e}"
-                     "\ninit_Vc: {:e}"
                      "\ninit_Vr: {:e}"
-                     "\ninit_Vr2: {:e}",
-                     mVref, **mVm, **mEf, **mVse, **mVr, **mVis);
+                     "\ninit_Ef: {:e}"
+                     "\ninit_Va: {:e}",
+                     mVref, mVr, mEf, mVa);
+  mSLog->flush();
 }
 
 Real ExciterDC1Simp::step(Real mVd, Real mVq, Real dt, Real Vpss) {
   // Voltage magnitude calculation
-  **mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
+  mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
 
   // update state variables at time k-1
-  mVm_prev = **mVm;
-  mVis_prev = **mVis;
-  mVr_prev = **mVr;
-  mEf_prev = **mEf;
+  mVr_prev = mVr;
+  mVa_prev = mVa;
+  mVf_prev = mVf;
+  mEf_prev = mEf;
 
   // compute state variables at time k using euler forward
 
+  // saturation function
+  mVsat = mAef * exp(mBef * abs(mEf_prev));
+
   // Voltage Transducer equation
-  **mVm = Math::StateSpaceEuler(mVm_prev, -1 / mTr, 1 / mTr, dt, **mVh);
+  mVr = mVr_prev + dt / mTr * (mVh - mVr_prev);
 
-  // Stabilizing feedback equation
-  // mVse = mEf * (0.33 * (exp(0.1 * abs(mEf)) - 1.));
-  **mVse = mEf_prev * mAef * (exp(mBef * abs(mEf_prev)));
-  **mVis = Math::StateSpaceEuler(mVis_prev, -1 / mTf, -mKf / mTf / mTf, dt,
-                                 mEf_prev);
+  // Voltage amplifier equation
+  mVin = mVref + Vpss - mVr_prev - mVf_prev;
+  mVa = mVa_prev + dt / mTa * (mVin * mKa - mVa_prev);
+  if (mVa > mMaxVa)
+    mVa = mMaxVa;
+  else if (mVa < mMinVa)
+    mVa = mMinVa;
 
-  // Voltage regulator equation
-  **mVr = Math::StateSpaceEuler(mVr_prev, -1 / mTa, mKa / mTa, dt,
-                                mVref + Vpss - **mVm - mVis_prev -
-                                    mKf / mTf * mEf_prev);
-  if (**mVr > mMaxVr)
-    **mVr = mMaxVr;
-  else if (**mVr < mMinVr)
-    **mVr = mMinVr;
+  // Stabilizing feedback
+  mVf = (1. - dt / mTf) * mVf_prev +
+        dt * mKf / (mTf * mTef) * (mVa_prev - (mVsat + mKef) * mEf_prev);
 
-  // ExciterDC1Simp equation
-  **mEf = Math::StateSpaceEuler(mEf_prev, -mKe / mTe, 1. / mTe, dt,
-                                mVr_prev - **mVse);
+  // Exciter output
+  mEf = mEf_prev + dt / mTef * (mVa_prev - (mVsat + mKef) * mEf_prev);
 
-  return **mEf;
+  return mEf;
 }
-
-/*
-// Saturation function according to Viviane thesis
-Real Signal::Exciter::saturation_fcn1(Real mVd, Real mVq, Real Vref, Real dt) {
-	if (mEf <= 2.3)
-		mVse = (0.1 / 2.3)*mEf;
-	else
-		mVse = (0.33 / 3.1)*mEf;
-	mVse = mVse*mEf;
-}
-
-// Saturation function according to PSAT
-Real Signal::Exciter::saturation_fcn2() {
-	return mA * (exp(mB * abs(mEf)) - 1);
-}
-
-*/

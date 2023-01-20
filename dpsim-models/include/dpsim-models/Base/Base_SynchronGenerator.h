@@ -176,6 +176,10 @@ protected:
   /// theta
   Real mThetaMech = 0;
 
+  // ### State variables ###
+  /// theta
+  Real mThetaMech = 0;
+
 public:
   /// rotor angle delta
   const Attribute<Real>::Ptr mDelta;
@@ -193,6 +197,42 @@ public:
   const Attribute<Real>::Ptr mMechPower;
   /// electrical torque
   const Attribute<Real>::Ptr mElecTorque;
+  /// Voltage excitation
+  const Attribute<Real>::Ptr mVfd;
+
+protected:
+  /// \brief Vector of stator and rotor voltages.
+  ///
+  /// v_d - Stator voltage in d axis \n
+  /// v_fd - Rotor voltage field winding \n
+  /// v_kd - Rotor voltage damping winding in d axis \n
+  /// v_q - Stator voltage in q axis \n
+  /// v_kq1 - Rotor voltage damping winding 1 in q axis \n
+  /// v_kq2 - Rotor voltage damping winding 2 in q axis \n
+  /// v_0 - Stator voltage 0 component \n
+  Matrix mVsr;
+  /// \brief Vector of stator and rotor currents.
+  ///
+  /// i_d - stator current in d axis
+  /// i_fd - Rotor current field winding
+  /// i_kd - Rotor current damping winding in d axis
+  /// i_q - stator current in q axis
+  /// i_kq1 - Rotor current damping winding 1 in q axis
+  /// i_kq2 - Rotor current damping winding 2 in q axis
+  /// i_0 - stator current 0 component
+  Matrix mIsr;
+  /// \brief Vector of stator and rotor fluxes.
+  ///
+  /// psi_d - stator flux linkage in d axis
+  /// psi_fd - rotor flux linkage in field winding
+  /// psi_kd - rotor flux linkage in damping winding from d axis
+  /// psi_q - stator flux linkage in q axis
+  /// psi_kq1 - rotor flux linkage in damping winding 1 from q axis
+  /// psi_kq2 - rotor flux linkage in damping winding 2 from q axis
+  /// psi_0 - stator flux linkage 0 component
+  Matrix mPsisr; //equivalent to Fluxes
+  /// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit.
+  /// The initialization mode depends on the setting of state type.
 
 protected:
   /// \brief Vector of stator and rotor voltages.
@@ -263,9 +303,29 @@ protected:
   /// Determines if Exciter is activated
   Bool mHasExciter = false;
 
-  // Deprecated
-  Real mInitTerminalVoltage = 0;
-  Real mInitVoltAngle = 0;
+  /// Constructor
+  explicit SynchronGenerator(CPS::AttributeBase::Map &attributeList)
+      : mRs(Attribute<Real>::create("Rs", attributeList, 0)),
+        mLl(Attribute<Real>::create("Ll", attributeList, 0)),
+        mLd(Attribute<Real>::create("Ld", attributeList, 0)),
+        mLq(Attribute<Real>::create("Lq", attributeList, 0)),
+        mLd_t(Attribute<Real>::create("Ld_t", attributeList, 0)),
+        mLq_t(Attribute<Real>::create("Lq_t", attributeList, 0)),
+        mLd_s(Attribute<Real>::create("Ld_s", attributeList, 0)),
+        mLq_s(Attribute<Real>::create("Lq_s", attributeList, 0)),
+        mTd0_t(Attribute<Real>::create("Td0_t", attributeList, 0)),
+        mTq0_t(Attribute<Real>::create("Tq0_t", attributeList, 0)),
+        mTd0_s(Attribute<Real>::create("Td0_s", attributeList, 0)),
+        mTq0_s(Attribute<Real>::create("Tq0_s", attributeList, 0)),
+        mDelta(Attribute<Real>::create("delta_r", attributeList, 0)),
+        mMechTorque(Attribute<Real>::create("T_m", attributeList, 0)),
+        mInertia(Attribute<Real>::create("inertia", attributeList, 0)),
+        mOmMech(Attribute<Real>::create("w_r", attributeList, 0)),
+        mElecActivePower(Attribute<Real>::create("P_elec", attributeList, 0)),
+        mElecReactivePower(Attribute<Real>::create("Q_elec", attributeList, 0)),
+        mMechPower(Attribute<Real>::create("P_mech", attributeList, 0)),
+        mElecTorque(Attribute<Real>::create("T_e", attributeList, 0)),
+        mVfd(Attribute<Real>::create("Vfd", attributeList, 0)){};
 
   /// Constructor
   explicit SynchronGenerator(CPS::AttributeList::Ptr attributeList)

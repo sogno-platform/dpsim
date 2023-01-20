@@ -90,6 +90,38 @@ CPS::Base::ExciterParameters getExciterEremia() {
   return ExcitationSystemEremia;
 }
 
+namespace Exciter {
+// Excitation system parameters (IEEE Type DC1 - simplified)
+// from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
+// voltage-regulator
+
+CPS::Base::ExciterParameters getExciterEremia() {
+  CPS::Base::ExciterParameters ExcitationSystemEremia;
+  ExcitationSystemEremia.Ka = 46;
+  ExcitationSystemEremia.Ta = 0.06;
+  // exciter
+  ExcitationSystemEremia.Kef = -0.0435;
+  ExcitationSystemEremia.Tef = 0.46;
+  // stabilizing feedback
+  ExcitationSystemEremia.Kf = 0.1;
+  ExcitationSystemEremia.Tf = 1;
+  // voltage transducer
+  ExcitationSystemEremia.Tr = 0.02;
+  // saturation function coefficients
+  ExcitationSystemEremia.Aef = 0.33;
+  ExcitationSystemEremia.Bef = 0.1;
+
+  //
+  ExcitationSystemEremia.MaxVa = 1.0;
+  ExcitationSystemEremia.MinVa = -0.9;
+
+  //
+  ExcitationSystemEremia.Tb = 10;
+  ExcitationSystemEremia.Tc = 1.0;
+
+  return ExcitationSystemEremia;
+}
+
 struct ExcitationKundur {
   /// Exciter model used in Kundurs. It is a very simplified version of a thyristor
   /// exciter (ST1 type) without transient gain reduction or derivative feedback
@@ -99,7 +131,7 @@ struct ExcitationKundur {
   // voltage transducer
   Real Tr = 0.02;
 };
-}
+} // namespace Exciter
 
 namespace PowerSystemStabilizer {
 struct PSSType2PSAT {
@@ -150,7 +182,7 @@ struct PSSKundur {
   /// Wash-out time constant (s)
   Real Tw = 1.41;
 };
-}
+} // namespace PowerSystemStabilizer
 
 namespace TurbineGovernor {
 struct GovernorKundur {
@@ -212,7 +244,7 @@ Real T3 = 0.0;
 Real T4 = 12.0;
 // Reheat time constant (s)
 Real T5 = 50.0;
-};
+}; // namespace TurbineGovernor
 
 struct TurbineGovernorPSAT2 {
   // Turbine Governor type 1
@@ -237,7 +269,7 @@ struct TurbineGovernorPSAT2 {
   // Reheat time constant (s)
   Real T5 = 0.2;
 };
-} // namespace TurbineGovernor
+} // namespace Exciter
 } // namespace Components
 
 namespace Grids {
@@ -310,7 +342,7 @@ struct Transf1 {
   Real transformerResistance = 0;      // referred to HV side
   Real transformerReactance = 10.8108; // referred to HV side
 };
-}
+} // namespace KundurExample1
 
 namespace SMIB {
 struct ScenarioConfig {
