@@ -193,6 +193,9 @@ namespace Base {
 		const Attribute<Real>::Ptr mMechPower;
 		/// electrical torque
 		const Attribute<Real>::Ptr mElecTorque;
+		/// Voltage excitation
+		const Attribute<Real>::Ptr mVfd;
+
 	protected:
 		/// \brief Vector of stator and rotor voltages.
 		///
@@ -267,27 +270,28 @@ namespace Base {
 		Real mInitVoltAngle = 0;
 
 		/// Constructor
-		explicit SynchronGenerator(CPS::AttributeList::Ptr attributeList) :
-			mRs(attributeList->create<Real>("Rs", 0)),
-			mLl(attributeList->create<Real>("Ll", 0)),
-			mLd(attributeList->create<Real>("Ld", 0)),
-			mLq(attributeList->create<Real>("Lq", 0)),
-			mLd_t(attributeList->create<Real>("Ld_t", 0)),
-			mLq_t(attributeList->create<Real>("Lq_t", 0)),
-			mLd_s(attributeList->create<Real>("Ld_s", 0)),
-			mLq_s(attributeList->create<Real>("Lq_s", 0)),
-			mTd0_t(attributeList->create<Real>("Td0_t", 0)),
-			mTq0_t(attributeList->create<Real>("Tq0_t", 0)),
-			mTd0_s(attributeList->create<Real>("Td0_s", 0)),
-			mTq0_s(attributeList->create<Real>("Tq0_s", 0)),
-			mDelta(attributeList->create<Real>("delta_r", 0)),
-			mMechTorque(attributeList->create<Real>("T_m", 0)),
-			mInertia(attributeList->create<Real>("inertia", 0)),
-			mOmMech(attributeList->create<Real>("w_r", 0)),
-			mElecActivePower(attributeList->create<Real>("P_elec", 0)),
-			mElecReactivePower(attributeList->create<Real>("Q_elec", 0)),
-			mMechPower(attributeList->create<Real>("P_mech", 0)),
-			mElecTorque(attributeList->create<Real>("T_e", 0)) { };
+		explicit SynchronGenerator(CPS::AttributeBase::Map &attributeList) :
+			mRs(Attribute<Real>::create("Rs", attributeList, 0)),
+			mLl(Attribute<Real>::create("Ll", attributeList, 0)),
+			mLd(Attribute<Real>::create("Ld", attributeList, 0)),
+			mLq(Attribute<Real>::create("Lq", attributeList, 0)),
+			mLd_t(Attribute<Real>::create("Ld_t", attributeList, 0)),
+			mLq_t(Attribute<Real>::create("Lq_t", attributeList, 0)),
+			mLd_s(Attribute<Real>::create("Ld_s", attributeList, 0)),
+			mLq_s(Attribute<Real>::create("Lq_s", attributeList, 0)),
+			mTd0_t(Attribute<Real>::create("Td0_t", attributeList, 0)),
+			mTq0_t(Attribute<Real>::create("Tq0_t", attributeList, 0)),
+			mTd0_s(Attribute<Real>::create("Td0_s", attributeList, 0)),
+			mTq0_s(Attribute<Real>::create("Tq0_s", attributeList, 0)),
+			mDelta(Attribute<Real>::create("delta_r", attributeList, 0)),
+			mMechTorque(Attribute<Real>::create("T_m", attributeList, 0)),
+			mInertia(Attribute<Real>::create("inertia", attributeList, 0)),
+			mOmMech(Attribute<Real>::create("w_r", attributeList, 0)),
+			mElecActivePower(Attribute<Real>::create("P_elec", attributeList, 0)),
+			mElecReactivePower(Attribute<Real>::create("Q_elec", attributeList, 0)),
+			mMechPower(Attribute<Real>::create("P_mech", attributeList, 0)),
+			mElecTorque(Attribute<Real>::create("T_e", attributeList, 0)),
+			mVfd(Attribute<Real>::create("Vfd", attributeList, 0)) { };
 
 		///
 		void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);

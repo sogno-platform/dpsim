@@ -159,5 +159,4 @@ int main(int argc, char* argv[]) {
 	simEMT.addEvent(sw2);
 	
 	simEMT.run();
-	simEMT.logStepTimes(simNameEMT + "_step_times");
 }

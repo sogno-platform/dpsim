@@ -261,6 +261,25 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 	mInitCurrent = mInitCurrent / mBase_I_RMS;
 
 	mInitialValuesSet = true;
+
+	this->mSLog->info(
+		"\n--- Set initial values  ---"
+		"\nInitial active power: {:}W = {:} p.u."
+		"\nInitial reactive power W: {:}W = {:} p.u."
+		"\nInitial terminal voltage manitude: {:} p.u."
+		"\nInitial terminal voltage phase: {:} rad = ({:}°)"
+		"\nInitial current manitude: {:} p.u."
+		"\nInitial current phase: {:} rad = ({:}°)"
+		"\n--- Set initial values finished ---",
+
+		mInitElecPower.real(), mInitElecPower.real() / mNomPower,
+		mInitElecPower.imag(), mInitElecPower.imag() / mNomPower,
+		Math::abs(mInitVoltage), 
+		Math::phase(mInitVoltage), Math::phaseDeg(mInitVoltage),
+		Math::abs(mInitCurrent), 
+		Math::phase(mInitCurrent), Math::phaseDeg(mInitCurrent)
+	);
+	this->mSLog->flush();
 }
 
 template <>
@@ -305,10 +324,8 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	// Initialize controllers
 	if (mHasPSS) 
 		mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq0)(0,0), (**mVdq0)(1,0));
-
-	if (mHasExciter) 
+	if (mHasExciter)
 		mExciter->initialize(Math::abs(mInitVoltage), **mEf);
-
 	if (mHasTurbineGovernor)
 		mTurbineGovernor->initialize(**mMechTorque);
 
@@ -481,7 +498,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int ti
 	}
 	if (mSynGen.mHasExciter) {
 		mSynGen.mEf_prev = **(mSynGen.mEf);
-		**(mSynGen.mEf) = mSynGen.mExciter->step((**mSynGen.mVdq)(0,0), (**mSynGen.mVdq)(1,0), mSynGen.mTimeStep, mSynGen.mVpss);		
+		**(mSynGen.mEf) = mSynGen.mExciter->step((**mSynGen.mVdq0)(0,0), (**mSynGen.mVdq0)(1,0), mSynGen.mTimeStep, mSynGen.mVpss);		
 	}
 
 	mSynGen.stepInPerUnit();
@@ -520,6 +537,8 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
 	
 	if (exciterType == ExciterType::DC1Simp) 
 		mExciter = CPS::Signal::ExciterDC1Simp::make("Exciter_" + this->name(), this->mLogLevel);
+	if (exciterType == ExciterType::DC1) 
+		mExciter = CPS::Signal::ExciterDC1::make("Exciter_" + this->name(), this->mLogLevel);
 	
 	mExciter->setParameters(exciterParameters);
 	mHasExciter = true;
