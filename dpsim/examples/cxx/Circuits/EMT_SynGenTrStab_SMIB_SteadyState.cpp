@@ -8,7 +8,7 @@ using namespace CIM::Examples::Grids::SMIB;
 ScenarioConfig smib;
 
 void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTime, Real cmdInertia, Real cmdDamping) {
-	//  // ----- POWERFLOW FOR INITIALIZATION -----
+	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = simName + "_PF";
@@ -79,7 +79,7 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
-
+	extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(smib.Vnom), 60); //frequency must be set to 60 otherwise the subvoltage source will set it to 50 per default
 	// Line
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
 	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(smib.lineResistance), 
