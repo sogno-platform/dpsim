@@ -12,7 +12,7 @@ using namespace CPS;
 
 
 EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name, Logger::Level logLevel, CPS::GeneratorType sourceType)
-	: SimPowerComp<Real>(uid, name, logLevel),
+	: CompositePowerComp<Real>(uid, name, true, true, logLevel),
 	mRefVoltage(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	mSourceType = sourceType;
@@ -39,10 +39,10 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real freq
 
 	if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {
 		mSubVoltageSource = EMT::Ph3::VoltageSource::make(**mName + "_vs", mLogLevel);
-		mSubComponents.push_back(mSubVoltageSource);
+		addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	} else {
 		mSubCurrentSource = EMT::Ph3::CurrentSource::make(**mName + "_cs", mLogLevel);
-		mSubComponents.push_back(mSubCurrentSource);
+		addMNASubComponent(mSubCurrentSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
 	mSubComponents[0]->connect({ SimNode::GND, node(0) });
@@ -68,64 +68,23 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real freq
 		Logger::complexToString(terminal(0)->singlePower()));
 }
 
-void EMT::Ph3::SynchronGeneratorIdeal::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
-	// initialize subcomponent
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
-	}
-
-	// collect tasks
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-}
-
-void EMT::Ph3::SynchronGeneratorIdeal::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	// add pre-step dependencies of subcomponents
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	}
-	// add pre-step dependencies of component itself
+void EMT::Ph3::SynchronGeneratorIdeal::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	prevStepDependencies.push_back(mIntfCurrent);
 	prevStepDependencies.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mRightVector);
 }
 
-void EMT::Ph3::SynchronGeneratorIdeal::mnaPreStep(Real time, Int timeStepCount) {
-	// pre-step of subcomponents
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaPreStep(time, timeStepCount);
-	}
-	// pre-step of component itself
+void EMT::Ph3::SynchronGeneratorIdeal::mnaParentPreStep(Real time, Int timeStepCount) {
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::SynchronGeneratorIdeal::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
-	// add post-step dependencies of subcomponents
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	}
-	// add post-step dependencies of component itself
+void EMT::Ph3::SynchronGeneratorIdeal::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void EMT::Ph3::SynchronGeneratorIdeal::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	// post-step of subcomponents
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
-	}
-	// post-step of component itself
+void EMT::Ph3::SynchronGeneratorIdeal::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	mnaUpdateCurrent(**leftVector);
 	mnaUpdateVoltage(**leftVector);
 }
@@ -136,19 +95,5 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateCurrent(const Matrix& leftvector
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateVoltage(const Matrix& leftVector) {
 	**mIntfVoltage = **mSubComponents[0]->mIntfVoltage;
-}
-
-void EMT::Ph3::SynchronGeneratorIdeal::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
-	}
-}
-
-void EMT::Ph3::SynchronGeneratorIdeal::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaApplyRightSideVectorStamp(rightVector);
-	}
 }
 

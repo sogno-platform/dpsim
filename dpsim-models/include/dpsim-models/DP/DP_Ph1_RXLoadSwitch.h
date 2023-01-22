@@ -16,7 +16,7 @@ namespace DP {
 namespace Ph1 {
 	/// Constant impedance load model consisting of RLC elements
 	class RXLoadSwitch :
-		public SimPowerComp<Complex>,
+		public CompositePowerComp<Complex>,
 		public MNASwitchInterface,
 		public SharedFactory<RXLoadSwitch> {
 	protected:
@@ -47,55 +47,23 @@ namespace Ph1 {
 		void updateSwitchState(Real time);
 
 		// #### MNA section ####
-		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector) { }
-		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector) { }
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
-			AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
+			AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
 			AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
-			Attribute<Matrix>::Ptr &leftVector);
+			Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### MNA section for switch ####
 		/// Check if switch is closed
-		Bool mnaIsClosed();
+		Bool mnaIsClosed() override;
 		/// Stamps system matrix considering the defined switch position
-		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
-
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(RXLoadSwitch& load) : Task(**load.mName + ".MnaPreStep"), mLoad(load) {
-				mLoad.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mLoad.mnaPreStep(time, timeStepCount); }
-		private:
-			RXLoadSwitch& mLoad;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(RXLoadSwitch& load, Attribute<Matrix>::Ptr leftVector) :
-				Task(**load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
-					mLoad.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mLoad.mnaPostStep(time, timeStepCount, mLeftVector); }
-		private:
-			RXLoadSwitch& mLoad;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) override;
 	};
 }
 }

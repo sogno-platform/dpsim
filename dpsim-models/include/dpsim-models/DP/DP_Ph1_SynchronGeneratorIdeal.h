@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 
@@ -17,8 +17,7 @@ namespace DP {
 namespace Ph1 {
 	/// Ideal voltage source representing a synchronous generator
 	class SynchronGeneratorIdeal :
-		public SimPowerComp<Complex>,
-		public MNAInterface,
+		public CompositePowerComp<Complex>,
 		public SharedFactory<SynchronGeneratorIdeal> {
 	private:
 		/// Inner voltage source that represents the generator
@@ -41,48 +40,18 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Updates current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates voltage across component
-		void mnaUpdateVoltage(const Matrix& leftVector);
-
-		class MnaPreStep : public CPS::Task {
-		public:
-			MnaPreStep(SynchronGeneratorIdeal& SynchronGeneratorIdeal) :
-				Task(**SynchronGeneratorIdeal.mName + ".MnaPreStep"), mSynchronGeneratorIdeal(SynchronGeneratorIdeal) {
-					mSynchronGeneratorIdeal.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mSynchronGeneratorIdeal.mnaPreStep(time, timeStepCount); };
-
-		private:
-			SynchronGeneratorIdeal& mSynchronGeneratorIdeal;
-		};
-
-		class MnaPostStep : public CPS::Task {
-		public:
-			MnaPostStep(SynchronGeneratorIdeal& SynchronGeneratorIdeal, Attribute<Matrix>::Ptr leftVector) :
-				Task(**SynchronGeneratorIdeal.mName + ".MnaPostStep"), mSynchronGeneratorIdeal(SynchronGeneratorIdeal), mLeftVector(leftVector) {
-				mSynchronGeneratorIdeal.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mSynchronGeneratorIdeal.mnaPostStep(time, timeStepCount, mLeftVector); };
-
-		private:
-			SynchronGeneratorIdeal& mSynchronGeneratorIdeal;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaUpdateVoltage(const Matrix& leftVector) override;
 	};
 }
 }

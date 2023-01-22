@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
-	: Base::Ph3::PiLine(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
+	: Base::Ph3::PiLine(mAttributes), CompositePowerComp<Real>(uid, name, true, true, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -64,13 +64,13 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubResistor->setParameters(**mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubResistor->initializeFromNodesAndTerminals(frequency);
-	mSubComponents.push_back(mSubResistor);
+	addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	mSubInductor = std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(**mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
-	mSubComponents.push_back(mSubInductor);
+	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mInitialResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_snubber_res", mLogLevel);
 	Matrix defaultSnubRes = Matrix::Zero(3, 1);
@@ -81,7 +81,7 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	mInitialResistor->setParameters(defaultSnubRes);
 	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromNodesAndTerminals(frequency);
-	mSubComponents.push_back(mInitialResistor);
+	addMNASubComponent(mInitialResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -96,59 +96,23 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void EMT::Ph3::RxLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
-	}
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-}
-
-void EMT::Ph3::RxLine::mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix) {
-	mInitialResistor->mnaApplySystemMatrixStamp(systemMatrix);
-}
-
-void EMT::Ph3::RxLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
-	}
-}
-
-void EMT::Ph3::RxLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSubResistor->mnaApplyRightSideVectorStamp(rightVector);
-	mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
-}
-
-void EMT::Ph3::RxLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	}
+void EMT::Ph3::RxLine::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	modifiedAttributes.push_back(mRightVector);
 };
 
-void EMT::Ph3::RxLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
-	for (auto subComp : mSubComponents) {
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subComp))
-			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	}
+void EMT::Ph3::RxLine::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfCurrent);
 	modifiedAttributes.push_back(mIntfVoltage);
 };
 
-void EMT::Ph3::RxLine::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaApplyRightSideVectorStamp(**mLine.mRightVector);
+void EMT::Ph3::RxLine::mnaParentPreStep(Real time, Int timeStepCount) {
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::RxLine::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaUpdateVoltage(**mLeftVector);
-	mLine.mnaUpdateCurrent(**mLeftVector);
+void EMT::Ph3::RxLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {

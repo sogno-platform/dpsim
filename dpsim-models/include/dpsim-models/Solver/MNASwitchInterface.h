@@ -10,14 +10,15 @@
 
 #include <dpsim-models/Config.h>
 #include <dpsim-models/Definitions.h>
-#include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
 	/// \brief MNA interface to be used by switching devices.
-	class MNASwitchInterface : public MNAInterface {
+	class MNASwitchInterface {
 	public:
 		typedef std::shared_ptr<MNASwitchInterface> Ptr;
 		typedef std::vector<Ptr> List;
+
+		virtual ~MNASwitchInterface() = default;
 
 		// #### MNA section ####
 		/// Check if switch is closed
@@ -25,7 +26,7 @@ namespace CPS {
 		/// Stamps system matrix considering the defined switch position
 		virtual void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) { }
 		/// Stamps (sparse) system matrix considering the defined switch position
-		virtual void mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
+		virtual void mnaApplySwitchSparseSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
 			Matrix mat = Matrix(systemMatrix);
 			mnaApplySwitchSystemMatrixStamp(closed, mat, freqIdx);
 			systemMatrix = mat.sparseView();

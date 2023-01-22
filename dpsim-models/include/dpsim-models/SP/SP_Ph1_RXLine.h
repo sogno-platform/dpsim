@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include "dpsim-models/Solver/PFSolverInterfaceBranch.h"
 #include <dpsim-models/Base/Base_Ph1_PiLine.h>
 #include <dpsim-models/SP/SP_Ph1_Inductor.h>
@@ -19,11 +19,10 @@ namespace SP {
 namespace Ph1 {
 
 	class RXLine :
-		public SimPowerComp<Complex>,
+		public CompositePowerComp<Complex>,
 		public SharedFactory<RXLine>,
 		public PFSolverInterfaceBranch,
-		public Base::Ph1::PiLine,
-		public MNAInterface{
+		public Base::Ph1::PiLine {
 	protected:
 		/// CHECK: Which of these really need to be member variables?
 		///Capacitance of the line in [F]
@@ -126,44 +125,15 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency) override;
 
 		// #### MNA section ####
-		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
-		/// Stamps system matrix
-		void mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix);
 		void mnaUpdateVoltage(const Matrix& leftVector) override;
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(RXLine& line) :
-				Task(**line.mName + ".MnaPreStep"), mLine(line) {
-				mLine.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			RXLine& mLine;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(RXLine& line, Attribute<Matrix>::Ptr leftVector) :
-				Task(**line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
-				mLine.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, leftVector);
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			RXLine& mLine;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 	};
 }
 }

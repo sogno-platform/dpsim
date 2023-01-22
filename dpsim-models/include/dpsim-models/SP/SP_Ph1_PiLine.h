@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBranch.h>
 #include <dpsim-models/Base/Base_Ph1_PiLine.h>
@@ -25,7 +25,7 @@ namespace Ph1 {
 	/// RLC elements of a PI-line.
 	class PiLine :
 	 public Base::Ph1::PiLine,
-	 public SimPowerComp<Complex>,
+	 public CompositePowerComp<Complex>,
 	 public MNATearInterface,
 	 public SharedFactory<PiLine>,
 	 public PFSolverInterfaceBranch {
@@ -121,32 +121,14 @@ namespace Ph1 {
 		MatrixComp Y_element();
 
 		// #### MNA section ####
-		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Updates internal current variable of the component
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component
 		void mnaUpdateVoltage(const Matrix& leftVector) override;
 		/// MNA post-step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// add MNA post-step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(PiLine& line, Attribute<Matrix>::Ptr leftVector) :
-				Task(**line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
-					mLine.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mLine.mnaPostStep(time, timeStepCount, mLeftVector); };
-		private:
-			PiLine& mLine;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		MNAInterface::List mnaTearGroundComponents() override;
 		void mnaTearInitialize(Real omega, Real timeStep) override;
