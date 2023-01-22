@@ -29,7 +29,7 @@ void EMT::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2 * PI * frequency;
 	Complex impedance = { 0, omega * **mInductance };
 	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
-	(**mIntfCurrent)(0,0) = ((**mIntfVoltage)(0,0) / impedance).real();
+	(**mIntfCurrent)(0,0) = ((initialSingleVoltage(1) - initialSingleVoltage(0)) / impedance).real();
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
