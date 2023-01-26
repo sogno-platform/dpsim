@@ -7,28 +7,23 @@ PMUSignalDevice::PMUSignalDevice(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
     /// CHECK: Which of these really need to be attributes?
     mInput(Attribute<MatrixComp>::createDynamic("input", mAttributes)),
-    mOutput(Attribute<MatrixComp>::create("output", mAttributes)){ }
 
-// void PMUSignalDevice::setInitialValues(Real input_init, Real State_init, Real output_init){
-//     **mInputCurr = input_init;
-//     **mStateCurr = state_init;
-//     **mOutputCurr = output_init;
-//     mSLog->info("Initial values:");
-//     mSLog->info("inputCurrInit = {}, stateCurrInit = {}, outputCurrInit = {}", **mInputCurr, **mStateCurr, **mOutputCurr);
+    //*** Important: the output attribute is a matrix component, which should be initialized as Zero(1,1)
+    mOutput(Attribute<MatrixComp>::create("output", mAttributes, MatrixComp::Zero(1,1))){ }
+
    
 // }
 
 
 void PMUSignalDevice::MeasurementError(Real time){
-    //**mInput = **mInputRef;
+    
 
     mSLog->info("Input values: input = {}", **mInput);
     
 
     /// adding the measurement error
-    // auto noise=Attribute<Matrixcomp>::create("noise", mAttributes)
-    // **noise=**mInput
-    **mOutput =**mInput;
+    // noise is considered as a 10% error
+    **mOutput =**mInput*1.1;
 
     mSLog->info("Output values: output = {}:", **mOutput);
 }

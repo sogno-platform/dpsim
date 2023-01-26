@@ -36,7 +36,7 @@ namespace Signal {
  		class PostStep : public Task {
 			public:
 				PostStep(PMUSignalDevice& PMU) :
-					Task(**PMU.mName + ".PostStep"), mPMU(PMU) {
+					Task(**PMU.mName + ".Poststep"), mPMU(PMU) {
 						mAttributeDependencies.push_back(PMU.mInput);
 						mModifiedAttributes.push_back(PMU.mOutput);
 					}
