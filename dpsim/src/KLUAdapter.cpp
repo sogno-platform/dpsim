@@ -109,12 +109,12 @@ namespace DPsim
 
             Int* Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
             Int* Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
-            
+
             this->changedEntries = mListVariableSystemMatrixEntries;
             int varying_entries = changedEntries.size();
             int varying_columns[varying_entries];
             int varying_rows[varying_entries];
-            
+
             int index = 0;
 
             for(std::pair<UInt, UInt> i : changedEntries)
@@ -198,7 +198,7 @@ namespace DPsim
                 Real* Ax = const_cast<Real*>(mVariableSystemMatrix.valuePtr());
                 klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
                 //klu_refactor(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
-                
+
                 if(m_common.status == KLU_PIVOT_FAULT)
                 {
                     /* pivot became too small => fully factorize again */
@@ -226,21 +226,17 @@ namespace DPsim
         void KLUAdapter::printMTX(const SparseMatrix& matrix, int counter)
         {
             int i, j;
+            std::string outputName = "A" + std::to_string(counter) + ".mtx";
+
             int n = Eigen::internal::convert_index<int>(matrix.rows());
 
             Int* Ap = const_cast<Int*>(matrix.outerIndexPtr());
-            Int* Ai = const_cast<Int*>(matrix.innerIndexPtr()); 
+            Int* Ai = const_cast<Int*>(matrix.innerIndexPtr());
             Real* Ax = const_cast<Real*>(matrix.valuePtr());
             int nz = Eigen::internal::convert_index<int>(matrix.nonZeros());
 
             std::ofstream ofs;
-            char strA[32];
-            char counterstring[32];
-            sprintf(counterstring, "%d", counter);
-            strcpy(strA, "A");
-            strcat(strA, counterstring);
-            strcat(strA, ".mtx");
-            ofs.open(strA);
+            ofs.open(outputName);
             ofs << "%%MatrixMarket matrix coordinate real general" << std::endl;
             ofs << n << " " << n << " " << nz << std::endl;
             for(i = 0 ; i < n ; i++)
