@@ -48,12 +48,6 @@ namespace DPsim
 		/// Use scaling or not
 		int m_scaling;
 
-		/// Dump the system matrix into a file or not
-		int m_dump;
-
-		/// If so, indicate second matrix to dump (the m_limit-th matrix will be dumped and the first)
-		int m_limit;
-
 		/// Flag to indicate if factorization succeeded
 		bool factorization_is_okay;
 
@@ -61,11 +55,14 @@ namespace DPsim
 		bool preprocessing_is_okay;
 
 		/// Temporary value to store the number of nonzeros
-		int nnz;
+		Int nnz;
 
     public:
 		/// Destructor
-		~KLUAdapter();
+		~KLUAdapter() override;
+
+		/// Constructor
+		KLUAdapter();
 
 		/// initialization function for linear solver
 		void initialize() override;
@@ -87,7 +84,13 @@ namespace DPsim
 
 		protected:
 
+		/// Copy Constructor
+		KLUAdapter(const KLUAdapter&) = delete;
+
+		/// Copy Assignment Operator
+		KLUAdapter& operator=(const KLUAdapter&) = delete;
+
 		/// Function to print matrix
-		void printMTX(const SparseMatrix& matrix, int counter);
+		void printMTX(SparseMatrix& matrix, int counter);
     };
 }

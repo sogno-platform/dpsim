@@ -54,18 +54,22 @@ namespace DPsim
             if(m_numeric)  klu_free_numeric(&m_numeric,&m_common);
         }
 
+		KLUAdapter::KLUAdapter()
+		{
+
+		}
+
         void KLUAdapter::initialize()
         {
             klu_defaults(&m_common);
             m_ordering = KLU_AMD_FP;
             m_scaling = 1;
             m_btf = 1;
-            m_dump = 0;
             factorization_is_okay = false;
             preprocessing_is_okay = false;
 
             char* variable = getenv("KLU_SCALING");
-            if(variable!=NULL)
+            if(variable != nullptr)
             {
                 m_scaling = atoi(variable);
                 /* m_scaling < 0 valid here (evaluates to no scaling) */
@@ -75,7 +79,7 @@ namespace DPsim
                 }
             }
             variable = getenv("KLU_BTF");
-            if(variable!=NULL)
+            if(variable != nullptr)
             {
                 m_btf = atoi(variable);
                 if(m_btf<0 || m_btf>1)
@@ -86,7 +90,7 @@ namespace DPsim
             m_common.btf = m_btf;
             m_common.scale = m_scaling;
             variable = getenv("KLU_METHOD");
-            if(variable != NULL)
+            if(variable != nullptr)
             {
                 m_ordering = atoi(variable);
                 /* might better be a switch-case? */
@@ -107,24 +111,21 @@ namespace DPsim
 
             const int n = Eigen::internal::convert_index<int>(mVariableSystemMatrix.rows());
 
-            Int* Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
-            Int* Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
+            auto Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
+            auto Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
 
             this->changedEntries = mListVariableSystemMatrixEntries;
-            int varying_entries = changedEntries.size();
-            int varying_columns[varying_entries];
-            int varying_rows[varying_entries];
+            auto varying_entries = changedEntries.size();
+			std::vector<int> varying_columns;
+			std::vector<int> varying_rows;
 
-            int index = 0;
-
-            for(std::pair<UInt, UInt> i : changedEntries)
+            for(auto i : changedEntries)
             {
-                varying_rows[index] = i.first;
-                varying_columns[index] = i.second;
-                index++;
+                varying_rows.push_back(i.first);
+                varying_columns.push_back(i.second);
             }
 
-            m_symbolic = klu_analyze_partial(n, Ap, Ai, varying_columns, varying_rows, varying_entries, m_ordering, &m_common);
+            m_symbolic = klu_analyze_partial(n, Ap, Ai, &varying_columns[0], &varying_rows[0], varying_entries, m_ordering, &m_common);
 
             if(m_symbolic)
             {
@@ -193,11 +194,10 @@ namespace DPsim
             }
             else
             {
-                Int* Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
-                Int* Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
-                Real* Ax = const_cast<Real*>(mVariableSystemMatrix.valuePtr());
+                auto Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
+                auto Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
+                auto Ax = const_cast<Real*>(mVariableSystemMatrix.valuePtr());
                 klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
-                //klu_refactor(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
 
                 if(m_common.status == KLU_PIVOT_FAULT)
                 {
@@ -223,20 +223,24 @@ namespace DPsim
             return x;
         }
 
-        void KLUAdapter::printMTX(const SparseMatrix& matrix, int counter)
+        void KLUAdapter::printMTX(SparseMatrix& matrix, int counter)
         {
             int i, j;
-            std::string outputName = "A" + std::to_string(counter) + ".mtx";
-
             int n = Eigen::internal::convert_index<int>(matrix.rows());
 
-            Int* Ap = const_cast<Int*>(matrix.outerIndexPtr());
-            Int* Ai = const_cast<Int*>(matrix.innerIndexPtr());
-            Real* Ax = const_cast<Real*>(matrix.valuePtr());
+            auto Ap = const_cast<Int*>(matrix.outerIndexPtr());
+            auto Ai = const_cast<Int*>(matrix.innerIndexPtr());
+            auto Ax = const_cast<Real*>(matrix.valuePtr());
             int nz = Eigen::internal::convert_index<int>(matrix.nonZeros());
 
             std::ofstream ofs;
-            ofs.open(outputName);
+            char strA[32];
+            char counterstring[32];
+            sprintf(counterstring, "%d", counter);
+            strcpy(strA, "A");
+            strcat(strA, counterstring);
+            strcat(strA, ".mtx");
+            ofs.open(strA);
             ofs << "%%MatrixMarket matrix coordinate real general" << std::endl;
             ofs << n << " " << n << " " << nz << std::endl;
             for(i = 0 ; i < n ; i++)
