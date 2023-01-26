@@ -126,6 +126,11 @@ else()
 	find_package(Eigen3 3.0 REQUIRED)
 endif()
 
+# FIXME: KLU does not work with Windows yet.
+if (NOT WIN32)
+	set(WITH_KLU ON)
+endif()
+
 if (FETCH_KLU)
 	include(cmake/GetKLUModule.cmake)
 else()

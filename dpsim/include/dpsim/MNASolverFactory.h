@@ -73,6 +73,9 @@ class MnaSolverFactory {
 		CPS::Logger::Log log = CPS::Logger::get("MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
 
 		switch(implementation) {
+		/* FIXME: have only one "solver" object of type MnaSolverDirect and only use setDirectLinearSolverImplementation in the switch-case.
+		 * This is not done now, since MnaSolverDirect and MnaSolver are distinct classes - and someone might add another subclass of MnaSolver
+		 * to the project (MnaSolverIterative?). It is planned to merge MnaSolverDirect and MnaSolver anyway, so this won't happen. */
 		case DirectLinearSolverImpl::SparseLU:
 		{
 			log->info("creating SparseLUAdapter solver implementation");
