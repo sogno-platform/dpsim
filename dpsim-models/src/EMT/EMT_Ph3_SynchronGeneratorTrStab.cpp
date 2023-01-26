@@ -33,12 +33,13 @@ Matrix EMT::Ph3::SynchronGeneratorTrStab::getParkTransformMatrixPowerInvariant(R
 
 EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
 	: Base::SynchronGenerator(mAttributes), CompositePowerComp<Real>(uid, name, true, true, logLevel),
-	mEp(mAttributes->create<Complex>("Ep")),
-	mEp_abs(mAttributes->create<Real>("Ep_mag")),
-	mEp_phase(mAttributes->create<Real>("Ep_phase")),
-	mDelta_p(mAttributes->create<Real>("delta_r")),
-	mRefOmega(mAttributes->createDynamic<Real>("w_ref")),
-	mRefDelta(mAttributes->createDynamic<Real>("delta_ref")) {
+	mEp(Attribute<Complex>::create("Ep", mAttributes)),
+	mEp_abs(Attribute<Real>::create("Ep_mag", mAttributes)),
+	mEp_phase(Attribute<Real>::create("Ep_phase", mAttributes)),
+	mDelta_p(Attribute<Real>::create("delta_r", mAttributes)),
+	mRefOmega(Attribute<Real>::createDynamic("w_ref", mAttributes)),
+	mRefDelta(Attribute<Real>::createDynamic("delta_ref", mAttributes)) {
+	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3,1);
@@ -194,17 +195,19 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	// Delta_p is the angular position of mEp with respect to the synchronously rotating reference
 	**mDelta_p= Math::phase(**mEp);
 
-	// without DQ transformation
-	**mElecActivePower = 3./2. *( intfVoltageComplex(0, 0) *  std::conj( -intfCurrentComplex(0, 0)) ).real();
-	**mElecReactivePower = 3./2. *( intfVoltageComplex(0, 0) *  std::conj( -intfCurrentComplex(0, 0)) ).imag();
+	mThetaN = **mDelta_p - PI / 2.;
 
-	// // Transform interface quantities to synchronously rotating DQ reference frame
-	// Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
-	// Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
+	// // without DQ transformation
+	// **mElecActivePower = 3./2. *( intfVoltageComplex(0, 0) *  std::conj( -intfCurrentComplex(0, 0)) ).real();
+	// **mElecReactivePower = 3./2. *( intfVoltageComplex(0, 0) *  std::conj( -intfCurrentComplex(0, 0)) ).imag();
 
-	// // Electric active power from DQ quantities
-	// **mElecActivePower =  -3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k= 2. / 3.
-	// // **mElecActivePower =  -1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k=sqrt(2. / 3.)
+	// Transform interface quantities to synchronously rotating DQ reference frame
+	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
+	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
+
+	// Electric active power from DQ quantities
+	**mElecActivePower =  -3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k= 2. / 3.
+	// **mElecActivePower =  -1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k=sqrt(2. / 3.)
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
