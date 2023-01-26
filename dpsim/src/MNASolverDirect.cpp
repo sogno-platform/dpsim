@@ -335,10 +335,8 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 	{
 		case DirectLinearSolverImpl::DenseLU:
 			return std::make_shared<DenseLUAdapter>();
-		#ifdef WITH_SPARSE
 		case DirectLinearSolverImpl::SparseLU:
 			return std::make_shared<SparseLUAdapter>();
-		#endif
 		#ifdef WITH_KLU
 		case DirectLinearSolverImpl::KLU:
 			return std::make_shared<KLUAdapter>();
@@ -346,7 +344,7 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 		#ifdef WITH_CUDA
 		case DirectLinearSolverImpl::CUDADense:
 			return std::make_shared<GpuDenseAdapter>();
-		#ifdef WITH_SPARSE
+		#ifdef WITH_CUDA_SPARSE
 		case DirectLinearSolverImpl::CUDASparse:
 			return std::make_shared<GpuSparseAdapter>();
 		#endif

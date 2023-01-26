@@ -241,11 +241,11 @@ void CommandLineArgs::parseArguments(int argc, char *argv[])
 				} else if (arg == "KLU") {
 					directImpl = DirectLinearSolverImpl::KLU;
 				} else if (arg == "CUDADense") {
-					directImpl = DirectLinearSolverImpl::Undef;
+					directImpl = DirectLinearSolverImpl::CUDADense;
 				} else if (arg == "CUDASparse") {
-					directImpl = DirectLinearSolverImpl::Undef;
+					directImpl = DirectLinearSolverImpl::CUDASparse;
 				} else if (arg == "CUDAMagma") {
-					directImpl = DirectLinearSolverImpl::Undef;
+					directImpl = DirectLinearSolverImpl::CUDAMagma;
 				} else if (arg == "Plugin") {
 					directImpl = DirectLinearSolverImpl::Plugin;
 				} else {
