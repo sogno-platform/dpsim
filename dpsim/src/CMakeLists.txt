@@ -4,6 +4,7 @@ set(DPSIM_SOURCES
 	MNASolver.cpp
 	MNASolverDirect.cpp
 	DenseLUAdapter.cpp
+	SparseLUAdapter.cpp
 	PFSolver.cpp
 	PFSolverPowerPolar.cpp
 	Utils.cpp
@@ -52,12 +53,6 @@ if(WITH_JSON)
 	list(APPEND DPSIM_LIBRARIES nlohmann_json::nlohmann_json)
 endif()
 
-if(WITH_SPARSE)
-	list(APPEND DPSIM_SOURCES
-		SparseLUAdapter.cpp
-	)
-endif()
-
 if(WITH_KLU)
 	list(APPEND DPSIM_SOURCES
 		KLUAdapter.cpp
@@ -84,8 +79,7 @@ if(WITH_CUDA)
 		list(APPEND DPSIM_LIBRARIES ${MAGMA_LIBRARIES})
 		list(APPEND DPSIM_INCLUDE_DIRS ${MAGMA_INCLUDE_DIR})
 	endif()
-
-	if(WITH_SPARSE)
+	if(WITH_CUDA_SPARSE)
 		list(APPEND DPSIM_SOURCES
 			GpuSparseAdapter.cpp
 		)

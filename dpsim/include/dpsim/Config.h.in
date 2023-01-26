@@ -25,7 +25,7 @@
 #cmakedefine WITH_SUNDIALS
 #cmakedefine WITH_OPENMP
 #cmakedefine WITH_CUDA
-#cmakedefine WITH_SPARSE
+#cmakedefine WITH_CUDA_SPARSE
 #cmakedefine WITH_MAGMA
 #cmakedefine WITH_KLU
 #cmakedefine WITH_MNASOLVERPLUGIN

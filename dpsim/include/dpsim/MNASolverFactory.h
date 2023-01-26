@@ -12,15 +12,13 @@
 #include <dpsim/DataLogger.h>
 #include <dpsim/MNASolverDirect.h>
 #include <dpsim/DenseLUAdapter.h>
-#ifdef WITH_SPARSE
 #include <dpsim/SparseLUAdapter.h>
-#endif
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
 #endif
 #ifdef WITH_CUDA
 #include <dpsim/GpuDenseAdapter.h>
-#ifdef WITH_SPARSE
+#ifdef WITH_CUDA_SPARSE
 #include <dpsim/GpuSparseAdapter.h>
 #endif
 #ifdef WITH_MAGMA
@@ -44,17 +42,15 @@ class MnaSolverFactory {
 #endif //WITH_MNASOLVERPLUGIN
 #ifdef WITH_CUDA
 			DirectLinearSolverImpl::CUDADense,
-	#ifdef WITH_SPARSE
-	#endif // WITH_SPARSE
+	#ifdef WITH_CUDA_SPARSE
+	#endif // WITH_CUDA_SPARSE
 			DirectLinearSolverImpl::CUDASparse,
 	#ifdef WITH_MAGMA
 			DirectLinearSolverImpl::CUDAMagma,
 	#endif // WITH_MAGMA
 #endif // WITH_CUDA
 			DirectLinearSolverImpl::DenseLU,
-#ifdef WITH_SPARSE
 			DirectLinearSolverImpl::SparseLU,
-#endif //WITH_SPARSE
 #ifdef WITH_KLU
 			DirectLinearSolverImpl::KLU
 #endif //WITH_KLU
@@ -67,7 +63,7 @@ class MnaSolverFactory {
 	static std::shared_ptr<MnaSolver<VarType>> factory(String name,
 		CPS::Domain domain = CPS::Domain::DP,
 		CPS::Logger::Level logLevel = CPS::Logger::Level::info,
-		DirectLinearSolverImpl implementation = mSupportedSolverImpls().back(),
+		DirectLinearSolverImpl implementation = DirectLinearSolverImpl::SparseLU,
 		String pluginName = "plugin.so")
 	{
 		//To avoid regression we use EigenDense in case of undefined implementation
@@ -77,15 +73,6 @@ class MnaSolverFactory {
 		CPS::Logger::Log log = CPS::Logger::get("MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
 
 		switch(implementation) {
-		case DirectLinearSolverImpl::Undef:
-		case DirectLinearSolverImpl::DenseLU:
-		{
-			log->info("creating DenseLUAdapter solver implementation");
-			std::shared_ptr<MnaSolverDirect<VarType>> denseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
-			denseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::DenseLU);
-			return denseSolver;
-		}
-#ifdef WITH_SPARSE
 		case DirectLinearSolverImpl::SparseLU:
 		{
 			log->info("creating SparseLUAdapter solver implementation");
@@ -93,7 +80,13 @@ class MnaSolverFactory {
 			sparseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::SparseLU);
 			return sparseSolver;
 		}
-#endif
+		case DirectLinearSolverImpl::DenseLU:
+		{
+			log->info("creating DenseLUAdapter solver implementation");
+			std::shared_ptr<MnaSolverDirect<VarType>> denseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			denseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::DenseLU);
+			return denseSolver;
+		}
 #ifdef WITH_KLU
 		case DirectLinearSolverImpl::KLU:
 		{
@@ -111,7 +104,7 @@ class MnaSolverFactory {
 			gpuDenseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::CUDADense);
 			return gpuDenseSolver;
 		}
-#ifdef WITH_SPARSE
+#ifdef WITH_CUDA_SPARSE
 		case DirectLinearSolverImpl::CUDASparse:
 		{
 			log->info("creating GpuSparseAdapter solver implementation");

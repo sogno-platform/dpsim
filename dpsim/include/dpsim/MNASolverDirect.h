@@ -23,12 +23,10 @@
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
 #endif
-#ifdef WITH_SPARSE
 #include <dpsim/SparseLUAdapter.h>
-#endif
 #ifdef WITH_CUDA
 #include <dpsim/GpuDenseAdapter.h>
-#ifdef WITH_SPARSE
+#ifdef WITH_CUDA_SPARSE
 #include <dpsim/GpuSparseAdapter.h>
 #endif
 #ifdef WITH_MAGMA
