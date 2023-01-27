@@ -129,6 +129,7 @@
 #include <dpsim-models/Signal/FIRFilter.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>
 #include <dpsim-models/Signal/Integrator.h>
+#include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/PSSType2.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>

@@ -11,7 +11,7 @@
 #include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
-#include <dpsim-models/Signal/PSSType2.h>
+#include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
@@ -98,7 +98,7 @@ public:
   /// Add power system stabilizer
   void addPSS(Real Kp, Real Kv, Real Kw, Real T1, Real T2, Real T3, Real T4,
               Real Vs_max, Real Vs_min, Real Tw, Real dt);
-  void addPSS(std::shared_ptr<Signal::PSSType2> PSS);
+  void addPSS(std::shared_ptr<Signal::PSS1A> PSS);
 
   /// ### Setters ###
   void scaleInertiaConstant(Real scalingFactor);
@@ -285,6 +285,22 @@ protected:
   std::shared_ptr<Base::Exciter> mExciter;
   /// Signal component modelling voltage regulator and exciter
   std::shared_ptr<Signal::PSSType2> mPSS;
+  ///
+  Real mVpss = 0;
+
+  // #### Controllers ####
+  /// Determines if Turbine and Governor are activated
+  Bool mHasTurbineGovernor = false;
+  /// Determines if Exciter is activated
+  Bool mHasExciter = false;
+  /// Determines if Exciter is activated
+  Bool mHasPSS = false;
+  /// Signal component modelling governor control and steam turbine
+  std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
+  /// Signal component modelling voltage regulator and exciter
+  std::shared_ptr<Base::Exciter> mExciter;
+  /// Signal component modelling voltage regulator and exciter
+  std::shared_ptr<Signal::PSS1A> mPSS;
   ///
   Real mVpss = 0;
 
