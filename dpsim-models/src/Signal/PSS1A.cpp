@@ -6,19 +6,19 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/Signal/PSSType2.h>
+#include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
 
-Signal::PSSType2::PSSType2(const String & name, CPS::Logger::Level logLevel) 
+Signal::PSS1A::PSS1A(const String & name, CPS::Logger::Level logLevel) 
 	: SimSignalComp(name, name, logLevel),
 	mV1(Attribute<Real>::create("V1", mAttributes, 0)),
 	mV2(Attribute<Real>::create("V2", mAttributes, 0)),
 	mV3(Attribute<Real>::create("V3", mAttributes, 0)),
 	mVs(Attribute<Real>::create("Vs", mAttributes, 0)) { }
 	
-void Signal::PSSType2::setParameters(Real Kp, Real Kv, Real Kw, Real T1, 
+void Signal::PSS1A::setParameters(Real Kp, Real Kv, Real Kw, Real T1, 
 		Real T2, Real T3, Real T4, Real Vs_max, Real Vs_min, Real Tw, Real dt) {
 
 	mKp = Kp;
@@ -54,7 +54,7 @@ void Signal::PSSType2::setParameters(Real Kp, Real Kv, Real Kw, Real T1,
 				mTw, mTimeStep);
 }
 
-void Signal::PSSType2::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
+void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
 
 	// Voltage magnitude calculation
 	Real Vh = sqrt(pow(Vd, 2.) + pow(Vq, 2.));
@@ -74,7 +74,7 @@ void Signal::PSSType2::initialize(Real omega, Real activePower, Real Vd, Real Vq
 				**mV1, **mV2, **mV3, **mVs);
 }
 
-Real Signal::PSSType2::step(Real omega, Real activePower, Real Vd, Real Vq) {
+Real Signal::PSS1A::step(Real omega, Real activePower, Real Vd, Real Vq) {
 
 	// Voltage magnitude calculation
 	Real Vh = sqrt(pow(Vd, 2.) + pow(Vq, 2.));
