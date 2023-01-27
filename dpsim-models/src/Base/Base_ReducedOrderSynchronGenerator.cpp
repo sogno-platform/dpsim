@@ -618,6 +618,27 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
     return;
   }
 
+  mPSS = Signal::PSS1A::make(**this->mName + "_PSS", this->mLogLevel);
+  mPSS->setParameters(Kp, Kv, Kw, T1, T2, T3, T4, Vs_max, Vs_min, Tw, dt);
+  mHasPSS = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
+    std::shared_ptr<Signal::PSS1A> PSS) {
+
+  if (!mHasExciter) {
+    this->mSLog->error(
+        "PSS can not be used without Exciter! PSS will be ignored!");
+    return;
+  }
+
+  if (!mHasExciter) {
+    this->mSLog->error(
+        "PSS can not be used without Exciter! PSS will be ignored!");
+    return;
+  }
+
   mPSS = Signal::PSSType2::make(**this->mName + "_PSS", this->mLogLevel);
   mPSS->setParameters(Kp, Kv, Kw, T1, T2, T3, T4, Vs_max, Vs_min, Tw, dt);
   mHasPSS = true;
