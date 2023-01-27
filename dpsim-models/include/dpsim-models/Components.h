@@ -126,7 +126,7 @@
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
-#include <dpsim-models/Signal/PSSType2.h>
+#include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/FIRFilter.h>
 #include <dpsim-models/Signal/Integrator.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
