@@ -135,8 +135,7 @@ int main(int argc, char* argv[]) {
 	loggerSP->logAttribute("Vdq0", 		genSP->attribute("Vdq0"));
 	loggerSP->logAttribute("Idq0", 		genSP->attribute("Idq0"));
 	loggerSP->logAttribute("Ef", 		genSP->attribute("Ef"));
-	if (withTurbineGovernor)
-		loggerSP->logAttribute("Tm", turbineGovernorSP->attribute("Tm"));
+	loggerSP->logAttribute("Tm",		genSP->attribute("Tm"));
 	if (SGModel=="6a" || SGModel=="6b") {
 		loggerSP->logAttribute("Edq0_s", 	 genSP->attribute("Edq_s"));
 		loggerSP->logAttribute("Edq0_t", 	 genSP->attribute("Edq_t"));
