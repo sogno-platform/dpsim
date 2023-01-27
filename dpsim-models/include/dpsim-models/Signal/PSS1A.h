@@ -15,9 +15,9 @@ namespace CPS {
 namespace Signal {
 	/// Power system stabilizer type 2
 	/// Ref.: Milano - Power system modelling and scripting, page 371
-	class PSSType2 :
+	class PSS1A :
 		public SimSignalComp,
-		public SharedFactory<PSSType2> {
+		public SharedFactory<PSS1A> {
 
 	private: 
 		// ### PSS Parameters ####
@@ -73,9 +73,9 @@ namespace Signal {
 
 	public:
 		///
-		explicit PSSType2(const String & name) : SimSignalComp(name, name) { }
+		explicit PSS1A(const String & name) : SimSignalComp(name, name) { }
 		/// Constructor with log level
-		PSSType2(const String & name, CPS::Logger::Level logLevel);
+		PSS1A(const String & name, CPS::Logger::Level logLevel);
 		/// Initializes PSS parameters
 		void setParameters(Real Kp, Real Kv, Real Kw, Real T1, 
 			Real T2, Real T3, Real T4, Real Vs_max, Real Vs_min, Real Tw, Real dt);

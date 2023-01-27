@@ -18,8 +18,7 @@ const Base::ExciterParameters excitationEremia =
     Examples::Components::Exciter::getExciterEremia();
 
 // PSS
-const Examples::Components::PowerSystemStabilizer::PSSType2PSAT
-    pssAndersonFarmer;
+const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;
 
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1
@@ -198,9 +197,9 @@ int main(int argc, char *argv[]) {
   }
 
   // Power system stabilizer
-  std::shared_ptr<Signal::PSSType2> pssSP = nullptr;
+  std::shared_ptr<Signal::PSS1A> pssSP = nullptr;
   if (withPSS) {
-    pssSP = Signal::PSSType2::make("SynGen_PSS", logLevel);
+    pssSP = Signal::PSS1A::make("SynGen_PSS", logLevel);
     pssSP->setParameters(
         pssAndersonFarmer.Kp, pssAndersonFarmer.Kv, pssAndersonFarmer.Kw,
         pssAndersonFarmer.T1, pssAndersonFarmer.T2, pssAndersonFarmer.T3,
