@@ -105,7 +105,7 @@ namespace Exciter{
 }
 
 namespace PowerSystemStabilizer {
-    struct PSSType2PSAT {
+    struct PSS1APSAT {
         // Power system stabilizer type 2 
         // Taken from from PSAT - example d_anderson_farmer Gen2
 

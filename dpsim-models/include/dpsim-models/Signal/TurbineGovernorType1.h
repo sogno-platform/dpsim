@@ -21,10 +21,10 @@ namespace Signal {
 		public SharedFactory<TurbineGovernorType1> {
 	private:
 		// ### Steam Turbine Parameters ####
-		/// Maximum turbine output
-		Real mTmax;
-		/// Minimum turbine output
-		Real mTmin;
+		/// Maximum turbine power
+		Real mPmax;
+		/// Minimum turbine power
+		Real mPmin;
 		/// Droop
 		Real mR;
 		/// Transient gain time constant (s)
@@ -40,7 +40,7 @@ namespace Signal {
 		/// Speed reference (pu)
 		Real mOmRef;
 		/// Reference torque (pu)
-		Real mTmRef;
+		Real mPmRef;
 
 		// ### Variables ###
 		/// Mechanical speed at time k-1
@@ -52,16 +52,15 @@ namespace Signal {
 		/// Reheat output at time k-1
 		Real mXg3_prev;
 
-	protected:
 		// ### Variables ###
 		/// Governor output at time k
- 		const Attribute<Real>::Ptr mXg1;
+ 		Real mXg1;
 		/// Servo output at time k
- 		const Attribute<Real>::Ptr mXg2;
+ 		Real mXg2;
 		/// Reheat output at time k
-		const Attribute<Real>::Ptr mXg3;
+		Real mXg3;
 		/// Mechanical Torque in pu (output of steam turbine)
-		const Attribute<Real>::Ptr mTm;
+		Real mTm;
 
 	public:
 		/// 
@@ -72,9 +71,9 @@ namespace Signal {
 
 		/// Initializes exciter parameters
 		void setParameters(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R, 
-			Real Tmin, Real Tmax, Real OmRef);
+			Real Pmin, Real Pmax, Real OmRef);
 		///
-		void initialize(Real TmRef) override;
+		void initialize(Real PmRef) override;
 		/// Performs an step to update field voltage value
 		Real step(Real Omega, Real dt);
 	};
