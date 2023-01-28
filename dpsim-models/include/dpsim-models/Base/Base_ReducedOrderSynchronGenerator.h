@@ -119,16 +119,15 @@ namespace Base {
 			// ### MNA Section ###
         	///
         	void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-        	virtual void mnaCompPostStep(const Matrix& leftVector) = 0;
-
-			/// ### Mna Section ###
 			/// Add MNA pre step dependencies
 			void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 			void mnaCompPreStep(Real time, Int timeStepCount) override;
 			/// Add MNA post step dependencies
 			void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-			void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
-
+			void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) final;
+			virtual void mnaCompPostStep(const Matrix& leftVector) = 0;
+			/// Stamps system matrix
+			virtual void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) = 0;
 			/// Model flag indicating whether the machine is modeled as current or voltage source
 			/// Default: currentsource (recommended)
 			Bool mModelAsCurrentSource = true;

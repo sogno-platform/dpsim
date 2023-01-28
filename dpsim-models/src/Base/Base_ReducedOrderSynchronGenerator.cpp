@@ -424,55 +424,55 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompInitialize(Real omega,
 }
 
 template <>
-void Base::ReducedOrderSynchronGenerator<Complex>::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mSynGen.mSimTime = time;
+void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int timeStepCount) {
+	mSimTime = time;
 
 	// update controller variables
-	if (mSynGen.mHasExciter) {
-		mSynGen.mEf_prev = **(mSynGen.mEf);
-		**(mSynGen.mEf) = mSynGen.mExciter->step((**mSynGen.mVdq)(0,0), (**mSynGen.mVdq)(1,0), mSynGen.mTimeStep);
+	if (mHasExciter) {
+		mEf_prev = **mEf;
+		**mEf = mExciter->step((**mVdq)(0,0), (**mVdq)(1,0), mTimeStep);
 	}
-	if (mSynGen.mHasTurbineGovernor) {
-		mSynGen.mMechTorque_prev = **mSynGen.mMechTorque;
-		**mSynGen.mMechTorque = mSynGen.mTurbineGovernor->step(**mSynGen.mOmMech, mSynGen.mTimeStep);
+	if (mHasTurbineGovernor) {
+		mMechTorque_prev = **mMechTorque;
+		**mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
 	}
 
 	// calculate mechanical variables at t=k+1 with forward euler
-	if (mSynGen.mSimTime>0.0) {
-		**mSynGen.mElecTorque = ((**mSynGen.mVdq)(0,0) * (**mSynGen.mIdq)(0,0) + (**mSynGen.mVdq)(1,0) * (**mSynGen.mIdq)(1,0));
-		**mSynGen.mOmMech = **mSynGen.mOmMech + mSynGen.mTimeStep * (1. / (2. * mSynGen.mH) * (mSynGen.mMechTorque_prev - **mSynGen.mElecTorque));
-		**mSynGen.mThetaMech = **mSynGen.mThetaMech + mSynGen.mTimeStep * (**mSynGen.mOmMech * mSynGen.mBase_OmMech);
-		**mSynGen.mDelta = **mSynGen.mDelta + mSynGen.mTimeStep * (**mSynGen.mOmMech - 1.) * mSynGen.mBase_OmMech;
+	if (mSimTime>0.0) {
+		**mElecTorque = ((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0));
+		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
-	mSynGen.stepInPerUnit();
-	(**mSynGen.mRightVector).setZero();
-	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+	stepInPerUnit();
+	(**mRightVector).setZero();
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <>
-void Base::ReducedOrderSynchronGenerator<Real>::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mSynGen.mSimTime = time;
-	if (mSynGen.mHasExciter) {
-		mSynGen.mEf_prev = **mSynGen.mEf;
-		**mSynGen.mEf = mSynGen.mExciter->step((**mSynGen.mVdq0)(0,0), (**mSynGen.mVdq0)(1,0), mSynGen.mTimeStep);
+void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int timeStepCount) {
+	mSimTime = time;
+	if (mHasExciter) {
+		mEf_prev = **mEf;
+		**mEf = mExciter->step((**mVdq0)(0,0), (**mVdq0)(1,0), mTimeStep);
 	}
-	if (mSynGen.mHasTurbineGovernor) {
-		mSynGen.mMechTorque_prev = **mSynGen.mMechTorque;
-		**mSynGen.mMechTorque = mSynGen.mTurbineGovernor->step(**mSynGen.mOmMech, mSynGen.mTimeStep);
+	if (mHasTurbineGovernor) {
+		mMechTorque_prev = **mMechTorque;
+		**mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
 	}
 
 	// calculate mechanical variables at t=k+1 with forward euler
-	if (mSynGen.mSimTime>0.0) {
-		**mSynGen.mElecTorque = ((**mSynGen.mVdq0)(0,0) * (**mSynGen.mIdq0)(0,0) + (**mSynGen.mVdq0)(1,0) * (**mSynGen.mIdq0)(1,0));
-		**mSynGen.mOmMech = **mSynGen.mOmMech + mSynGen.mTimeStep * (1. / (2. * mSynGen.mH) * (mSynGen.mMechTorque_prev - **mSynGen.mElecTorque));
-		**mSynGen.mThetaMech = **mSynGen.mThetaMech + mSynGen.mTimeStep * (**mSynGen.mOmMech * mSynGen.mBase_OmMech);
-		**mSynGen.mDelta = **mSynGen.mDelta + mSynGen.mTimeStep * (**mSynGen.mOmMech - 1.) * mSynGen.mBase_OmMech;
+	if (mSimTime>0.0) {
+		**mElecTorque = ((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0));
+		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
-	mSynGen.stepInPerUnit();
-	(**mSynGen.mRightVector).setZero();
-	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+	stepInPerUnit();
+	(**mRightVector).setZero();
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <typename VarType>
@@ -499,7 +499,6 @@ template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	mnaCompPostStep(**leftVector);
 }
-
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(Real Ta, Real Ka, Real Te, Real Ke,

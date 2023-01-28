@@ -45,11 +45,11 @@ namespace Ph1 {
         ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
 
         ///
-        virtual void specificInitialization() override =0;
+        virtual void specificInitialization() override { };
         ///
         void initializeResistanceMatrix() override;
         ///
-        virtual void stepInPerUnit() override =0;
+        virtual void stepInPerUnit() override { };
 		///
         void calculateResistanceMatrix();
         ///
@@ -57,13 +57,12 @@ namespace Ph1 {
 
         // ### MNA Section ###
         ///
-        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
-        void mnaCompPostStep(const Matrix& leftVector);
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompPostStep(const Matrix& leftVector) override;
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 
     public:
-        virtual ~ReducedOrderSynchronGeneratorVBR() override = default;
-
         /// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override { return true;};
     };

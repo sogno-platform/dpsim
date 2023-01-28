@@ -58,27 +58,25 @@ namespace Ph1 {
 
 	  	// #### General Functions ####
         /// Specific component initialization
-        virtual void specificInitialization() override =0;
+        virtual void specificInitialization() override { };
         ///
 		void initializeResistanceMatrix() override;
         ///
-        virtual void stepInPerUnit() override =0;
+        virtual void stepInPerUnit() override { };
 		///
         void calculateConductanceMatrix();
 		/// Calculate Ka, Kb and Kvbr
 		void calculateAuxiliarVariables();
 		///
-		Matrix get_parkTransformMatrix();
+		Matrix get_parkTransformMatrix() const;
 
 		// ### MNA Section ###
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaCompPostStep(const Matrix& leftVector);
-		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompPostStep(const Matrix& leftVector) override;
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 
     public:
-        virtual ~ReducedOrderSynchronGeneratorVBR()=default;
-
         /// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override { return true; };
     };

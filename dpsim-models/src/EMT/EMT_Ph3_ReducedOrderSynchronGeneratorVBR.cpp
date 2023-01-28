@@ -182,7 +182,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(M
 	}
 }
 
-void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (mModelAsCurrentSource) {
 		// compute equivalent northon circuit in abc reference frame
 		mIvbr = mConductanceMatrix * mEvbr;
