@@ -43,27 +43,25 @@ namespace Ph3 {
 
 	  	// #### General Functions ####
         /// Specific component initialization
-        virtual void specificInitialization()=0;
+        virtual void specificInitialization() { };
         ///
         void initializeResistanceMatrix() override;
         ///
-        virtual void stepInPerUnit() override =0;
+        virtual void stepInPerUnit() override { };
 		///
         void calculateResistanceMatrix();
         /// Park Transformation according to Kundur
         Matrix get_parkTransformMatrix() const;
 		/// Inverse Park Transformation according to Kundur
-		Matrix get_inverseParkTransformMatrix();
+		Matrix get_inverseParkTransformMatrix() const;
 
         // ### MNA Section ###
-        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaCompPostStep(const Matrix& leftVector);
-        void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompPostStep(const Matrix& leftVector) override;
+        void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 
     public:
-        virtual ~ReducedOrderSynchronGeneratorVBR();
-
         /// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override { return true; };
     };

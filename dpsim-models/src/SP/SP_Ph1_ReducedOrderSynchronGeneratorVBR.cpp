@@ -43,10 +43,10 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
-void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega, 
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega, 
 		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
-	Base::ReducedOrderSynchronGenerator<Complex>::mnaInitialize(omega, timeStep, leftVector);
+	Base::ReducedOrderSynchronGenerator<Complex>::mnaCompInitialize(omega, timeStep, leftVector);
 
 	if (mModelAsCurrentSource) {
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
@@ -67,7 +67,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaInitialize(Real omega,
 		mSLog->info("({}, {})", indexPair.first, indexPair.second);
 }
 
-void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 		
 	if (mModelAsCurrentSource) {
 		// Stamp conductance matrix
@@ -93,7 +93,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix
 	}
 }
 
-void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (mModelAsCurrentSource) {
 		// compute equivalent northon circuit in abc reference frame
 		mIvbr = Complex(mConductanceMatrix(0,0) * mEvbr.real() + mConductanceMatrix(0,1) * mEvbr.imag(), 
@@ -106,7 +106,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Mat
 	}
 }
 
-void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaPostStep(const Matrix& leftVector) {
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompPostStep(const Matrix& leftVector) {
 	// update armature voltage
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 
