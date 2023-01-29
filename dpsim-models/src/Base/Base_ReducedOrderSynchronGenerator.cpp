@@ -191,16 +191,16 @@ void Base::ReducedOrderSynchronGenerator<VarType>::scaleInertiaConstant(Real sca
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::calculateVBRconstants() {
 
-	Real Tf = 0;
-	if (mSGOrder == SGOrder::SG6aOrder) {
-		if ((mLd_t!=0) && (mTd0_t!=0))
-			mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);
-
-		if ((mLq_t!=0) && (mTq0_t!=0))
-			mYq = (mTq0_s / mTq0_t) * (mLq_s / mLq_t) * (mLq - mLq_t);
-
-		if (mTd0_t != 0)
-			Tf = mTaa / mTd0_t;
+	Real Tf = 0;	
+	if (mSGOrder == SGOrder::SG5bOrder) {
+		mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);
+		mYq = 0.0;
+		Tf = mTaa / mTd0_t;
+	}
+	else if (mSGOrder == SGOrder::SG6aOrder) {
+		mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);
+		mYq = (mTq0_s / mTq0_t) * (mLq_s / mLq_t) * (mLq - mLq_t);
+		Tf = mTaa / mTd0_t;
 	} else {
 		mYd = 0;
 		mYq = 0;
@@ -217,7 +217,15 @@ void Base::ReducedOrderSynchronGenerator<VarType>::calculateVBRconstants() {
 	mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
 	mDq_t = mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);
 
-	if (mSGOrder == SGOrder::SG6aOrder || mSGOrder == SGOrder::SG6bOrder) {
+	if (mSGOrder == SGOrder::SG5bOrder) {
+		mAd_s = (mTimeStep * (mLq - mLq_s)) / (2 * mTq0_s + mTimeStep);
+		mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
+		mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);
+		mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);
+		mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
+		mDq_s = (mTimeStep * mDq_t + Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);
+	}
+	else if (mSGOrder == SGOrder::SG6aOrder || mSGOrder == SGOrder::SG6bOrder) {
 		mAd_s = (mTimeStep * Zd_s + mTimeStep * mAd_t) / (2 * mTq0_s + mTimeStep);
 		mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * mTq0_s + mTimeStep);
 		mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
@@ -238,7 +246,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::calculateResistanceMatrixCons
 		mA = -mAd_t - mLq_t;
 		mB = mLd_t - mAq_t;
 	}
-	if (mSGOrder == SGOrder::SG6aOrder || mSGOrder == SGOrder::SG6bOrder) {
+	if (mSGOrder == SGOrder::SG5bOrder || mSGOrder == SGOrder::SG6aOrder || mSGOrder == SGOrder::SG6bOrder) {
 		mA = -mLq_s - mAd_s;
 		mB = mLd_s - mAq_s;
 	}
@@ -270,7 +278,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 		"\nInitial terminal voltage phase: {:} rad = ({:}°)"
 		"\nInitial current manitude: {:} p.u."
 		"\nInitial current phase: {:} rad = ({:}°)"
-		"\n--- Set initial values finished ---",
+		"\n--- Set initial values finished ---\n",
 
 		mInitElecPower.real(), mInitElecPower.real() / mNomPower,
 		mInitElecPower.imag(), mInitElecPower.imag() / mNomPower,

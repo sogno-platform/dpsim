@@ -103,7 +103,7 @@ namespace CPS {
 	enum class Domain { SP, DP, EMT };
 	enum class PowerflowBusType { PV, PQ, VD, None };
 	enum class GeneratorType {PVNode, IdealVoltageSource, IdealCurrentSource, TransientStability, FullOrder, FullOrderVBR, SG6aOrderVBR, SG6bOrderVBR, SG4OrderVBR, SG3OrderVBR, None};
-	enum class SGOrder {SG3Order, SG4Order, SG6aOrder, SG6bOrder};
+	enum class SGOrder {SG3Order, SG4Order, SG5bOrder, SG6aOrder, SG6bOrder};
 	enum class ExciterType {Simple, DC1Simp, DC1};
 	
 

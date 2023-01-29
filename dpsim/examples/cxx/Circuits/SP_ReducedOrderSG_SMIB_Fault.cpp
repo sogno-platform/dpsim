@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 	Real switchOpen = GridParams.SwitchOpen;
 	Real startTimeFault = 1.0;
 	Real endTimeFault   = 1.1;
-	Real finalTime = 20;
+	Real finalTime = 10;
 	Real timeStep = 1e-3;
 	Real H = syngenKundur.H;
 	bool withExciter = false;
@@ -151,8 +151,7 @@ int main(int argc, char* argv[]) {
 	// Synchronous generator
 	auto genSP = Factory<SP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(SGModel, "SynGen", logLevel);
 	genSP->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage,
-			syngenKundur.nomFreq, H,
+			syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
 	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
 			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
@@ -221,7 +220,7 @@ int main(int argc, char* argv[]) {
     loggerSP->logAttribute("w_r", 	genSP->attribute("w_r"));
 	loggerSP->logAttribute("Vdq0", 	genSP->attribute("Vdq0"));
 	loggerSP->logAttribute("Idq0",	genSP->attribute("Idq0"));
-	if (SGModel=="6a" || SGModel=="6b") {
+	if (SGModel=="5b" || SGModel=="6a" || SGModel=="6b") {
 		loggerSP->logAttribute("Edq0_s", 		 genSP->attribute("Edq_s"));
 		loggerSP->logAttribute("Edq0_t", 		 genSP->attribute("Edq_t"));
 	} else {
