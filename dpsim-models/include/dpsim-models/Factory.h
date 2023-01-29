@@ -87,6 +87,18 @@ class FactoryRegistration {
 };
 
 namespace SynchronGeneratorFactory {
+namespace SP {
+namespace Ph1 {
+    void registerSynchronGenerators() {
+        FactoryRegistration<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR> _3OrderSP("3", new DerivedCreator<CPS::SP::Ph1::SynchronGenerator3OrderVBR, CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>);
+        FactoryRegistration<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR> _4OrderSP("4", new DerivedCreator<CPS::SP::Ph1::SynchronGenerator4OrderVBR, CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>);
+        FactoryRegistration<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR> _5bOrderSP("5b", new DerivedCreator<CPS::SP::Ph1::SynchronGenerator5bOrderVBR, CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>);
+        FactoryRegistration<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR> _6aOrderSP("6a", new DerivedCreator<CPS::SP::Ph1::SynchronGenerator6aOrderVBR, CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>);
+        FactoryRegistration<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR> _6bOrderSP("6b", new DerivedCreator<CPS::SP::Ph1::SynchronGenerator6bOrderVBR, CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>);
+    }
+}
+}
+
 namespace DP {
 namespace Ph1 {
     void registerSynchronGenerators() {

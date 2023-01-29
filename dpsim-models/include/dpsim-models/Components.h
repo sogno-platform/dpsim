@@ -29,6 +29,7 @@
 #include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGenerator3OrderVBR.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGenerator4OrderVBR.h>
+#include <dpsim-models/SP/SP_Ph1_SynchronGenerator5bOrderVBR.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGenerator6aOrderVBR.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGenerator6bOrderVBR.h>
 #include <dpsim-models/SP/SP_Ph1_varResSwitch.h>
