@@ -116,6 +116,7 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.cpp
 	SP/SP_Ph1_SynchronGenerator3OrderVBR.cpp
 	SP/SP_Ph1_SynchronGenerator4OrderVBR.cpp
+	SP/SP_Ph1_SynchronGenerator5bOrderVBR.cpp
 	SP/SP_Ph1_SynchronGenerator6aOrderVBR.cpp
 	SP/SP_Ph1_SynchronGenerator6bOrderVBR.cpp
 	SP/SP_Ph1_PQNode.cpp
