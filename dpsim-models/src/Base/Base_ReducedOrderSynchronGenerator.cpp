@@ -274,9 +274,9 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 		"\n--- Set initial values  ---"
 		"\nInitial active power: {:}W = {:} p.u."
 		"\nInitial reactive power W: {:}W = {:} p.u."
-		"\nInitial terminal voltage manitude: {:} p.u."
+		"\nInitial terminal voltage magnitude: {:} p.u."
 		"\nInitial terminal voltage phase: {:} rad = ({:}°)"
-		"\nInitial current manitude: {:} p.u."
+		"\nInitial current magnitude: {:} p.u."
 		"\nInitial current phase: {:} rad = ({:}°)"
 		"\n--- Set initial values finished ---\n",
 

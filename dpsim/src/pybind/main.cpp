@@ -184,6 +184,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("IdealVoltageSource", CPS::GeneratorType::IdealVoltageSource)
 		.value("SG3OrderVBR", CPS::GeneratorType::SG3OrderVBR)
 		.value("SG4OrderVBR", CPS::GeneratorType::SG4OrderVBR)
+		.value("SG5bOrderVBR", CPS::GeneratorType::SG5bOrderVBR)
 		.value("SG6aOrderVBR", CPS::GeneratorType::SG6aOrderVBR)
 		.value("SG6bOrderVBR", CPS::GeneratorType::SG6bOrderVBR)
 		.value("FullOrderVBR", CPS::GeneratorType::FullOrderVBR)
@@ -191,7 +192,6 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("NONE", CPS::GeneratorType::None);
 
 	py::enum_<CPS::ExciterType>(m, "ExciterType")
-		.value("Simple", CPS::ExciterType::Simple)
 		.value("DC1Simp", CPS::ExciterType::DC1Simp)
 		.value("DC1", CPS::ExciterType::DC1);
 

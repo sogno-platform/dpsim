@@ -105,6 +105,7 @@ TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass* obj) {
 		return mapExternalNetworkInjection(extnet);
 	if (CIMPP::EquivalentShunt *shunt = dynamic_cast<CIMPP::EquivalentShunt*>(obj))
 		return mapEquivalentShunt(shunt);
+
 	return nullptr;
 }
 
@@ -611,6 +612,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 		if (mGeneratorType == GeneratorType::TransientStability 
 			|| mGeneratorType == GeneratorType::SG6aOrderVBR
 			|| mGeneratorType == GeneratorType::SG6bOrderVBR
+			|| mGeneratorType == GeneratorType::SG5bOrderVBR
 			|| mGeneratorType == GeneratorType::SG4OrderVBR
 			|| mGeneratorType == GeneratorType::SG3OrderVBR) {
 
@@ -667,6 +669,14 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								ratedPower, ratedVoltage, mFrequency, H,
 								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
 								Ld_s, Lq_s, Td0_s, Tq0_s); 
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG5bOrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator5bOrderVBR.");
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator5bOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s, 0.0); 
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
 							mSLog->info("    GeneratorType is SynchronGenerator4OrderVBR.");
