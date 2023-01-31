@@ -1,3 +1,11 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
+
 #include <DPsim.h>
 #include "../Examples.h"
 
@@ -35,7 +43,7 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 	auto loadPF = SP::Ph1::Shunt::make("Load", Logger::Level::debug);
 	loadPF->setParameters(ThreeBus.activePower_L / std::pow(ThreeBus.Vnom, 2), - ThreeBus.reactivePower_L / std::pow(ThreeBus.Vnom, 2));
 	loadPF->setBaseVoltage(ThreeBus.Vnom);
-	
+
 	//Line12
 	auto line12PF = SP::Ph1::PiLine::make("PiLine12", Logger::Level::debug);
 	line12PF->setParameters(ThreeBus.lineResistance12, ThreeBus.lineInductance12, ThreeBus.lineCapacitance12, ThreeBus.lineConductance12);
@@ -62,9 +70,9 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v_bus1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v_bus2", n2PF->attribute("v"));
-	loggerPF->addAttribute("v_bus3", n3PF->attribute("v"));
+	loggerPF->logAttribute("v_bus1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v_bus2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v_bus3", n3PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -73,6 +81,7 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
+	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
@@ -95,7 +104,7 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 	Complex initApparentPower_G1= gen1PF->getApparentPower();
 	gen1EMT->setInitialValues(initApparentPower_G1, ThreeBus.initMechPower_G1);
 
-		//Synchronous generator 1
+	//Synchronous generator 2
 	auto gen2EMT = EMT::Ph3::SynchronGeneratorTrStab::make("SynGen2", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	gen2EMT->setStandardParametersPU(ThreeBus.nomPower_G2, ThreeBus.nomPhPhVoltRMS_G2, ThreeBus.nomFreq_G2, ThreeBus.Xpd_G2*std::pow(ThreeBus.t2_ratio,2), cmdInertia_G2*ThreeBus.H_G2, ThreeBus.Rs_G2, cmdDamping_G2*ThreeBus.D_G2);
@@ -109,22 +118,22 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 
 	// Line12
 	auto line12EMT = EMT::Ph3::PiLine::make("PiLine12", Logger::Level::debug);
-	line12EMT->setParameters(Math::singlePhaseParameterToThreePhase(ThreeBus.lineResistance12), 
-	                      Math::singlePhaseParameterToThreePhase(ThreeBus.lineInductance12), 
+	line12EMT->setParameters(Math::singlePhaseParameterToThreePhase(ThreeBus.lineResistance12),
+	                      Math::singlePhaseParameterToThreePhase(ThreeBus.lineInductance12),
 					      Math::singlePhaseParameterToThreePhase(ThreeBus.lineCapacitance12),
 						  Math::singlePhaseParameterToThreePhase(ThreeBus.lineConductance12));
 
 	// Line13
 	auto line13EMT = EMT::Ph3::PiLine::make("PiLine13", Logger::Level::debug);
-	line13EMT->setParameters(Math::singlePhaseParameterToThreePhase(ThreeBus.lineResistance13), 
-	                      Math::singlePhaseParameterToThreePhase(ThreeBus.lineInductance13), 
+	line13EMT->setParameters(Math::singlePhaseParameterToThreePhase(ThreeBus.lineResistance13),
+	                      Math::singlePhaseParameterToThreePhase(ThreeBus.lineInductance13),
 					      Math::singlePhaseParameterToThreePhase(ThreeBus.lineCapacitance13),
 						  Math::singlePhaseParameterToThreePhase(ThreeBus.lineConductance13));
 
 	// Line23
 	auto line23EMT = EMT::Ph3::PiLine::make("PiLine23", Logger::Level::debug);
-	line23EMT->setParameters(Math::singlePhaseParameterToThreePhase(ThreeBus.lineResistance23), 
-	                      Math::singlePhaseParameterToThreePhase(ThreeBus.lineInductance23), 
+	line23EMT->setParameters(Math::singlePhaseParameterToThreePhase(ThreeBus.lineResistance23),
+	                      Math::singlePhaseParameterToThreePhase(ThreeBus.lineInductance23),
 					      Math::singlePhaseParameterToThreePhase(ThreeBus.lineCapacitance23),
 						  Math::singlePhaseParameterToThreePhase(ThreeBus.lineConductance23));
 
@@ -142,35 +151,34 @@ void EMT_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real final
 	// Initialization of dynamic topology
 	systemEMT.initWithPowerflow(systemPF);
 
-
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);
-	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
-	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
-	loggerEMT->addAttribute("v3", n3EMT->attribute("v"));
-	loggerEMT->addAttribute("v_line12", line12EMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_line12", line12EMT->attribute("i_intf"));
-	loggerEMT->addAttribute("v_line13", line13EMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_line13", line13EMT->attribute("i_intf"));
-	loggerEMT->addAttribute("v_line23", line23EMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_line23", line23EMT->attribute("i_intf"));
-	loggerEMT->addAttribute("Ep_gen1", gen1EMT->attribute("Ep_mag"));
-	loggerEMT->addAttribute("v_gen1", gen1EMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_gen1", gen1EMT->attribute("i_intf"));
-	loggerEMT->addAttribute("wr_gen1", gen1EMT->attribute("w_r"));
-	loggerEMT->addAttribute("delta_gen1", gen1EMT->attribute("delta_r"));
-	loggerEMT->addAttribute("Ep_gen2", gen2EMT->attribute("Ep_mag"));
-	loggerEMT->addAttribute("v_gen2", gen2EMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_gen2", gen2EMT->attribute("i_intf"));
-	loggerEMT->addAttribute("wr_gen2", gen2EMT->attribute("w_r"));	
-	loggerEMT->addAttribute("wref_gen2", gen2EMT->attribute("w_ref"));
-	loggerEMT->addAttribute("delta_gen2", gen2EMT->attribute("delta_r"));	
-	loggerEMT->addAttribute("v_load", loadEMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_load", loadEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("P_mech1", gen1EMT->attribute("P_mech"));
-	loggerEMT->addAttribute("P_mech2", gen2EMT->attribute("P_mech"));
-	loggerEMT->addAttribute("P_elec1", gen1EMT->attribute("P_elec"));
-	loggerEMT->addAttribute("P_elec2", gen2EMT->attribute("P_elec"));
+	loggerEMT->logAttribute("v1", n1EMT->attribute("v"));
+	loggerEMT->logAttribute("v2", n2EMT->attribute("v"));
+	loggerEMT->logAttribute("v3", n3EMT->attribute("v"));
+	loggerEMT->logAttribute("v_line12", line12EMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_line12", line12EMT->attribute("i_intf"));
+	loggerEMT->logAttribute("v_line13", line13EMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_line13", line13EMT->attribute("i_intf"));
+	loggerEMT->logAttribute("v_line23", line23EMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_line23", line23EMT->attribute("i_intf"));
+	loggerEMT->logAttribute("Ep_gen1", gen1EMT->attribute("Ep_mag"));
+	loggerEMT->logAttribute("v_gen1", gen1EMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_gen1", gen1EMT->attribute("i_intf"));
+	loggerEMT->logAttribute("wr_gen1", gen1EMT->attribute("w_r"));
+	loggerEMT->logAttribute("delta_gen1", gen1EMT->attribute("delta_r"));
+	loggerEMT->logAttribute("Ep_gen2", gen2EMT->attribute("Ep_mag"));
+	loggerEMT->logAttribute("v_gen2", gen2EMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_gen2", gen2EMT->attribute("i_intf"));
+	loggerEMT->logAttribute("wr_gen2", gen2EMT->attribute("w_r"));	
+	loggerEMT->logAttribute("wref_gen2", gen2EMT->attribute("w_ref"));
+	loggerEMT->logAttribute("delta_gen2", gen2EMT->attribute("delta_r"));	
+	loggerEMT->logAttribute("v_load", loadEMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_load", loadEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("P_mech1", gen1EMT->attribute("P_mech"));
+	loggerEMT->logAttribute("P_mech2", gen2EMT->attribute("P_mech"));
+	loggerEMT->logAttribute("P_elec1", gen1EMT->attribute("P_elec"));
+	loggerEMT->logAttribute("P_elec2", gen2EMT->attribute("P_elec"));
 
 	Simulation simEMT(simNameEMT, Logger::Level::debug);
 	simEMT.setSystem(systemEMT);
@@ -209,7 +217,6 @@ int main(int argc, char* argv[]) {
 		if (args.options.find("SCALEDAMPING_G2") != args.options.end())
 			cmdDamping_G2 = args.getOptionReal("SCALEDAMPING_G2");
 	}
-
 
 	EMT_SynGenTrStab_3Bus_SteadyState(simName, timeStep, finalTime, cmdInertia_G1, cmdInertia_G2, cmdDamping_G1, cmdDamping_G2);
 }
