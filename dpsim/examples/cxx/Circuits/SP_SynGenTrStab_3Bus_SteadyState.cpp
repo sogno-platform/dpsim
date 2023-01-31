@@ -191,7 +191,7 @@ int main(int argc, char* argv[]) {
 	Real cmdDamping_G1=1.0;
 	Real cmdDamping_G2=1.0;
 
-		CommandLineArgs args(argc, argv);
+	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;

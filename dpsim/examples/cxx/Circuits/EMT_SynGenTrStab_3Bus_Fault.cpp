@@ -1,3 +1,10 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
 #include <DPsim.h>
 #include "../Examples.h"
 
@@ -73,9 +80,9 @@ void EMT_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, 
 
 	// Logging
 	auto loggerPF = DataLogger::make(simNamePF);
-	loggerPF->addAttribute("v_bus1", n1PF->attribute("v"));
-	loggerPF->addAttribute("v_bus2", n2PF->attribute("v"));
-	loggerPF->addAttribute("v_bus3", n3PF->attribute("v"));
+	loggerPF->logAttribute("v_bus1", n1PF->attribute("v"));
+	loggerPF->logAttribute("v_bus2", n2PF->attribute("v"));
+	loggerPF->logAttribute("v_bus3", n3PF->attribute("v"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -114,8 +121,8 @@ void EMT_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, 
 	Complex initApparentPower_G2= gen2PF->getApparentPower();
 	gen2EMT->setInitialValues(initApparentPower_G2, ThreeBus.initMechPower_G2);
 
-	gen2EMT->setModelFlags(true, true);
-	gen2EMT->setReferenceOmega(gen1EMT->attribute<Real>("w_r"), gen1EMT->attribute<Real>("delta_r"));
+	gen2EMT->setModelFlags(true);
+	gen2EMT->setReferenceOmega(gen1EMT->attributeTyped<Real>("w_r"), gen1EMT->attributeTyped<Real>("delta_r"));
 	
 	//Load
 	auto loadEMT = EMT::Ph3::RXLoad::make("Load", Logger::Level::debug);
@@ -176,32 +183,32 @@ void EMT_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, 
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);
-	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
-	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
-	loggerEMT->addAttribute("v3", n3EMT->attribute("v"));
-	loggerEMT->addAttribute("v_line12", line12EMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_line12", line12EMT->attribute("i_intf"));
-	loggerEMT->addAttribute("v_line13", line13EMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_line13", line13EMT->attribute("i_intf"));
-	loggerEMT->addAttribute("v_line23", line23EMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_line23", line23EMT->attribute("i_intf"));
-	loggerEMT->addAttribute("Ep_gen1", gen1EMT->attribute("Ep_mag"));
-	loggerEMT->addAttribute("v_gen1", gen1EMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_gen1", gen1EMT->attribute("i_intf"));
-	loggerEMT->addAttribute("wr_gen1", gen1EMT->attribute("w_r"));
-	loggerEMT->addAttribute("delta_gen1", gen1EMT->attribute("delta_r"));
-	loggerEMT->addAttribute("Ep_gen2", gen2EMT->attribute("Ep_mag"));
-	loggerEMT->addAttribute("v_gen2", gen2EMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_gen2", gen2EMT->attribute("i_intf"));
-	loggerEMT->addAttribute("wr_gen2", gen2EMT->attribute("w_r"));	
-	loggerEMT->addAttribute("wref_gen2", gen2EMT->attribute("w_ref"));
-	loggerEMT->addAttribute("delta_gen2", gen2EMT->attribute("delta_r"));	
-	loggerEMT->addAttribute("v_load", loadEMT->attribute("v_intf"));
-	loggerEMT->addAttribute("i_load", loadEMT->attribute("i_intf"));
-	loggerEMT->addAttribute("P_mech1", gen1EMT->attribute("P_mech"));
-	loggerEMT->addAttribute("P_mech2", gen2EMT->attribute("P_mech"));
-	loggerEMT->addAttribute("P_elec1", gen1EMT->attribute("P_elec"));
-	loggerEMT->addAttribute("P_elec2", gen2EMT->attribute("P_elec"));
+	loggerEMT->logAttribute("v1", n1EMT->attribute("v"));
+	loggerEMT->logAttribute("v2", n2EMT->attribute("v"));
+	loggerEMT->logAttribute("v3", n3EMT->attribute("v"));
+	loggerEMT->logAttribute("v_line12", line12EMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_line12", line12EMT->attribute("i_intf"));
+	loggerEMT->logAttribute("v_line13", line13EMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_line13", line13EMT->attribute("i_intf"));
+	loggerEMT->logAttribute("v_line23", line23EMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_line23", line23EMT->attribute("i_intf"));
+	loggerEMT->logAttribute("Ep_gen1", gen1EMT->attribute("Ep_mag"));
+	loggerEMT->logAttribute("v_gen1", gen1EMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_gen1", gen1EMT->attribute("i_intf"));
+	loggerEMT->logAttribute("wr_gen1", gen1EMT->attribute("w_r"));
+	loggerEMT->logAttribute("delta_gen1", gen1EMT->attribute("delta_r"));
+	loggerEMT->logAttribute("Ep_gen2", gen2EMT->attribute("Ep_mag"));
+	loggerEMT->logAttribute("v_gen2", gen2EMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_gen2", gen2EMT->attribute("i_intf"));
+	loggerEMT->logAttribute("wr_gen2", gen2EMT->attribute("w_r"));	
+	loggerEMT->logAttribute("wref_gen2", gen2EMT->attribute("w_ref"));
+	loggerEMT->logAttribute("delta_gen2", gen2EMT->attribute("delta_r"));	
+	loggerEMT->logAttribute("v_load", loadEMT->attribute("v_intf"));
+	loggerEMT->logAttribute("i_load", loadEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("P_mech1", gen1EMT->attribute("P_mech"));
+	loggerEMT->logAttribute("P_mech2", gen2EMT->attribute("P_mech"));
+	loggerEMT->logAttribute("P_elec1", gen1EMT->attribute("P_elec"));
+	loggerEMT->logAttribute("P_elec2", gen2EMT->attribute("P_elec"));
 
 	Simulation simEMT(simNameEMT, Logger::Level::debug);
 	simEMT.setSystem(systemEMT);
@@ -241,7 +248,7 @@ int main(int argc, char* argv[]) {
 	Bool endFaultEvent=true;
 	Bool useVarResSwitch=false;
 	Real startTimeFault=10;
-	Real endTimeFault=10.2;
+	Real endTimeFault=10.1;
 	Real cmdInertia_G1= 1.0;
 	Real cmdInertia_G2= 1.0;
 	Real cmdDamping_G1=1.0;

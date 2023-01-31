@@ -1,3 +1,11 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
+
 #include <DPsim.h>
 #include "../Examples.h"
 
@@ -12,7 +20,7 @@ Real SwitchOpen = 1e6;
 Real SwitchClosed = 0.1;
 
 void EMT_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia, Real cmdDamping) {
-	//  // ----- POWERFLOW FOR INITIALIZATION -----
+	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = simName + "_PF";
@@ -89,25 +97,25 @@ void EMT_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, b
 
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
+	extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(smib.Vnom), 60); //frequency must be set to 60 otherwise the subvoltage source will set it to 50 per default
 
 	// Line
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(smib.lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(smib.lineInductance), 
+	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(smib.lineResistance),
+	                      Math::singlePhaseParameterToThreePhase(smib.lineInductance),
 					      Math::singlePhaseParameterToThreePhase(smib.lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(smib.lineConductance));
 
-	// // //Switch
+	// //Switch
 	// auto faultEMT = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::debug);
-	// faultEMT->setParameters(Math::singlePhaseParameterToThreePhase(SwitchOpen), 
-	// 					 Math::singlePhaseParameterToThreePhase(SwitchClosed));
+	// faultEMT->setParameters(Math::singlePhaseParameterToThreePhase(SwitchOpen),
+	// 					 	   Math::singlePhaseParameterToThreePhase(SwitchClosed));
 	// faultEMT->openSwitch();
-	
-	// TODO: implement var res switch in EMT
+
 	// Variable resistance Switch
 	auto faultEMT = EMT::Ph3::varResSwitch::make("Br_fault", Logger::Level::debug);
-	faultEMT->setParameters(Math::singlePhaseParameterToThreePhase(SwitchOpen), 
-						 Math::singlePhaseParameterToThreePhase(SwitchClosed));
+	faultEMT->setParameters(Math::singlePhaseParameterToThreePhase(SwitchOpen),
+						    Math::singlePhaseParameterToThreePhase(SwitchClosed));
 	faultEMT->setInitParameters(timeStep);
 	faultEMT->openSwitch();
 
@@ -137,7 +145,7 @@ void EMT_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, b
 	loggerEMT->logAttribute("P_elec", genEMT->attribute("P_elec"));
 	loggerEMT->logAttribute("P_mech", genEMT->attribute("P_mech"));
 	//Switch
-	loggerEMT->addAttribute("i_fault", faultEMT->attribute("i_intf"));
+	loggerEMT->logAttribute("i_fault", faultEMT->attribute("i_intf"));
 	//line
 	loggerEMT->logAttribute("v_line", lineEMT->attribute("v_intf"));
 	loggerEMT->logAttribute("i_line", lineEMT->attribute("i_intf"));
@@ -154,8 +162,9 @@ void EMT_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, b
 	simEMT.setDomain(Domain::EMT);
 	simEMT.addLogger(loggerEMT);
 	simEMT.doSystemMatrixRecomputation(true); //for varres switch
+	simEMT.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
 
-		// Events
+	// Events
 	if (startFaultEvent){
 		auto sw1 = SwitchEvent3Ph::make(startTimeFault, faultEMT, true);
 
@@ -177,8 +186,8 @@ int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	String simName="EMT_SynGenTrStab_SMIB_Fault";
-	Real finalTime = 20;
-	Real timeStep = 0.00005;
+	Real finalTime = 30;
+	Real timeStep = 0.001;
 	Bool startFaultEvent=true;
 	Bool endFaultEvent=true;
 	Real startTimeFault=10;

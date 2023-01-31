@@ -237,7 +237,7 @@ int main(int argc, char* argv[]) {
 	Bool endFaultEvent=true;
 	Bool useVarResSwitch=false;
 	Real startTimeFault=10;
-	Real endTimeFault=10.2;
+	Real endTimeFault=10.1;
 	Real cmdInertia_G1= 1.0;
 	Real cmdInertia_G2= 1.0;
 	Real cmdDamping_G1=1.0;

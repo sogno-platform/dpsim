@@ -1,3 +1,10 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
 #include <DPsim.h>
 #include "../Examples.h"
 
@@ -82,7 +89,7 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(smib.Vnom), 60); //frequency must be set to 60 otherwise the subvoltage source will set it to 50 per default
 	// Line
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(smib.lineResistance), 
+	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(smib.lineResistance),
 	                      Math::singlePhaseParameterToThreePhase(smib.lineInductance), 
 					      Math::singlePhaseParameterToThreePhase(smib.lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(smib.lineConductance));
