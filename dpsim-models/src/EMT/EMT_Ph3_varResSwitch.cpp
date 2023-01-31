@@ -14,14 +14,10 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: Base::Ph3::Switch(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);
-
-	mOpenResistance = Attribute<Matrix>::create("R_open", mAttributes);
-	mClosedResistance = Attribute<Matrix>::create("R_closed", mAttributes);
-	mSwitchClosed = Attribute<Bool>::create("is_closed", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::varResSwitch::clone(String name) {
