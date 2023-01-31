@@ -11,8 +11,7 @@
 #include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
-#include <dpsim-models/Definitions.h>
-#include <dpsim-models/Logger.h>
+#include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph3_Switch.h>
 
 namespace CPS {
@@ -29,6 +28,7 @@ namespace Ph3 {
 		public Base::Ph3::Switch,
 		public MNAVariableCompInterface,
 		public MNASwitchInterface,
+		public MNAInterface,
 		public SimPowerComp<Real>,
 		public SharedFactory<varResSwitch> {
 
