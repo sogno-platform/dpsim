@@ -122,6 +122,14 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 		.def("close", &CPS::EMT::Ph3::Switch::closeSwitch)
 		.def("connect", &CPS::EMT::Ph3::Switch::connect);
 	
+	py::class_<CPS::EMT::Ph3::varResSwitch, std::shared_ptr<CPS::EMT::Ph3::varResSwitch>, CPS::SimPowerComp<CPS::Real>, CPS::Base::Ph3::Switch>(mEMTPh3, "varResSwitch", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+        .def("set_parameters", &CPS::EMT::Ph3::varResSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false) // cppcheck-suppress assignBoolToPointer
+		.def("open", &CPS::EMT::Ph3::varResSwitch::openSwitch)
+		.def("close", &CPS::EMT::Ph3::varResSwitch::closeSwitch)
+		.def("set_init_parameters", &CPS::EMT::Ph3::varResSwitch::setInitParameters, "time_step"_a)
+		.def("connect", &CPS::EMT::Ph3::varResSwitch::connect);
+	
 	py::class_<CPS::EMT::Ph3::SynchronGeneratorTrStab, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorTrStab>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorTrStab", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_standard_parameters_PU", &CPS::EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU,
