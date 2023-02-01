@@ -12,38 +12,38 @@ using namespace DPsim;
 
 namespace DPsim
 {
-        inline int klu_solve(klu_symbolic *Symbolic, klu_numeric *Numeric, Int ldim, Int nrhs, double B [ ], klu_common *Common, double) {
+        inline int klu_solve(klu_symbolic *Symbolic, klu_numeric *Numeric, Int ldim, Int nrhs, Real B [ ], klu_common *Common, Real) {
             return klu_solve(Symbolic, Numeric, ldim, nrhs, B, Common);
         }
 
-        inline int klu_solve(klu_symbolic *Symbolic, klu_numeric *Numeric, Int ldim, Int nrhs, std::complex<double> B [ ], klu_common *Common, std::complex<double>) {
+        inline int klu_solve(klu_symbolic *Symbolic, klu_numeric *Numeric, Int ldim, Int nrhs, std::complex<Real> B [ ], klu_common *Common, std::complex<Real>) {
             return klu_z_solve(Symbolic, Numeric, ldim, nrhs, &Eigen::numext::real_ref(B[0]), Common);
         }
 
-        inline klu_numeric* klu_factor(Int Ap [ ], Int Ai [ ], Real Ax [ ], klu_symbolic *Symbolic, klu_common *Common, double) {
+        inline klu_numeric* klu_factor(Int Ap [ ], Int Ai [ ], Real Ax [ ], klu_symbolic *Symbolic, klu_common *Common, Real) {
             return klu_factor(Ap, Ai, Ax, Symbolic, Common);
         }
 
-        inline klu_numeric* klu_factor(Int Ap [ ], Int Ai [ ], std::complex<double> Ax [ ], klu_symbolic *Symbolic, klu_common *Common, std::complex<double>) {
+        inline klu_numeric* klu_factor(Int Ap [ ], Int Ai [ ], std::complex<Real> Ax [ ], klu_symbolic *Symbolic, klu_common *Common, std::complex<Real>) {
             return klu_z_factor(Ap, Ai, &Eigen::numext::real_ref(Ax[0]), Symbolic, Common);
         }
 
-        inline int klu_refactor(Int Ap [ ], Int Ai [ ], Real Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, double)
+        inline int klu_refactor(Int Ap [ ], Int Ai [ ], Real Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, Real)
         {
             return klu_refactor(Ap, Ai, Ax, Symbolic, Numeric, Common);
         }
 
-        inline int klu_refactor(Int Ap [ ], Int Ai [ ], std::complex<double> Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, std::complex<double>)
+        inline int klu_refactor(Int Ap [ ], Int Ai [ ], std::complex<Real> Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, std::complex<Real>)
         {
             return klu_z_refactor(Ap, Ai, &Eigen::numext::real_ref(Ax[0]), Symbolic, Numeric, Common);
         }
 
-        inline int klu_partial_factorization_path(Int Ap [ ], Int Ai [ ], Real Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, double)
+        inline int klu_partial_factorization_path(Int Ap [ ], Int Ai [ ], Real Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, Real)
         {
             return klu_partial_factorization_path(Ap, Ai, Ax, Symbolic, Numeric, Common);
         }
 
-        inline int klu_partial_factorization_path(Int Ap [ ], Int Ai [ ], std::complex<double> Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, std::complex<double>)
+        inline int klu_partial_factorization_path(Int Ap [ ], Int Ai [ ], std::complex<Real> Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, std::complex<Real>)
         {
             return klu_z_partial_factorization_path(Ap, Ai, &Eigen::numext::real_ref(Ax[0]), Symbolic, Numeric, Common);
         }
@@ -56,12 +56,10 @@ namespace DPsim
 
 		KLUAdapter::KLUAdapter()
 		{
-
-		}
-
-        void KLUAdapter::initialize()
-        {
             klu_defaults(&m_common);
+			m_symbolic = nullptr;
+			m_numeric = nullptr;
+
             m_ordering = KLU_AMD_FP;
             m_scaling = 1;
             m_btf = 1;
@@ -99,6 +97,11 @@ namespace DPsim
                     m_ordering = KLU_AMD_FP;
                 }
             }
+		}
+
+        void KLUAdapter::initialize()
+        {
+			/* no implementation. initialize() can be removed from DirectLinearSolver.h */
         }
 
         void KLUAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
@@ -109,15 +112,15 @@ namespace DPsim
                 klu_free_symbolic(&m_symbolic,&m_common);
             }
 
-            const int n = Eigen::internal::convert_index<int>(mVariableSystemMatrix.rows());
+            const Int n = Eigen::internal::convert_index<Int>(mVariableSystemMatrix.rows());
 
-            auto Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
-            auto Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
+            auto Ap = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.outerIndexPtr());
+            auto Ai = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.innerIndexPtr());
 
             this->changedEntries = mListVariableSystemMatrixEntries;
-            auto varying_entries = changedEntries.size();
-			std::vector<int> varying_columns;
-			std::vector<int> varying_rows;
+            Int varying_entries = Eigen::internal::convert_index<Int>(changedEntries.size());
+			std::vector<Int> varying_columns;
+			std::vector<Int> varying_rows;
 
             for(auto i : changedEntries)
             {
@@ -133,7 +136,7 @@ namespace DPsim
                 preprocessing_is_okay = true;
             }
 
-            nnz = mVariableSystemMatrix.nonZeros();
+            nnz = Eigen::internal::convert_index<Int>(mVariableSystemMatrix.nonZeros());
         }
 
         void KLUAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
@@ -144,9 +147,9 @@ namespace DPsim
                 klu_free_numeric(&m_numeric,&m_common);
             }
 
-            Int* Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
-            Int* Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
-            Real* Ax = const_cast<Real*>(mVariableSystemMatrix.valuePtr());
+            auto Ap = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.outerIndexPtr());
+            auto Ai = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.innerIndexPtr());
+            auto Ax = Eigen::internal::convert_index<Real*>(mVariableSystemMatrix.valuePtr());
             m_numeric = klu_factor(Ap, Ai, Ax, m_symbolic, &m_common);
 
             if(m_numeric)
@@ -154,19 +157,17 @@ namespace DPsim
                 factorization_is_okay = true;
             }
 
-            int varying_entries = changedEntries.size();
-            int varying_columns[varying_entries];
-            int varying_rows[varying_entries];
-            int index = 0;
+            Int varying_entries = Eigen::internal::convert_index<Int>(changedEntries.size());
+			std::vector<Int> varying_columns;
+			std::vector<Int> varying_rows;
 
-            for(std::pair<UInt, UInt> i : changedEntries)
+            for(auto i : changedEntries)
             {
-                varying_rows[index] = i.first;
-                varying_columns[index] = i.second;
-                index++;
+                varying_rows.push_back(i.first);
+                varying_columns.push_back(i.second);
             }
 
-            klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, varying_columns, varying_rows, varying_entries);
+            klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, &varying_columns[0], &varying_rows[0], varying_entries);
         }
 
         void KLUAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
@@ -178,9 +179,9 @@ namespace DPsim
             }
             else
             {
-                Int* Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
-                Int* Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
-                Real* Ax = const_cast<Real*>(mVariableSystemMatrix.valuePtr());
+                auto Ap = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.outerIndexPtr());
+                auto Ai = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.innerIndexPtr());
+                auto Ax = Eigen::internal::convert_index<Real*>(mVariableSystemMatrix.valuePtr());
                 klu_refactor(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
             }
         }
@@ -194,10 +195,10 @@ namespace DPsim
             }
             else
             {
-                auto Ap = const_cast<Int*>(mVariableSystemMatrix.outerIndexPtr());
-                auto Ai = const_cast<Int*>(mVariableSystemMatrix.innerIndexPtr());
-                auto Ax = const_cast<Real*>(mVariableSystemMatrix.valuePtr());
-                klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+                auto Ap = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.outerIndexPtr());
+                auto Ai = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.innerIndexPtr());
+                auto Ax = Eigen::internal::convert_index<Real*>(mVariableSystemMatrix.valuePtr());
+                klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common, 1.0);
 
                 if(m_common.status == KLU_PIVOT_FAULT)
                 {
@@ -225,27 +226,23 @@ namespace DPsim
 
         void KLUAdapter::printMTX(SparseMatrix& matrix, int counter)
         {
-            int i, j;
-            int n = Eigen::internal::convert_index<int>(matrix.rows());
+			std::string outputName = "A" + std::to_string(counter) + ".mtx";
+            Int n = Eigen::internal::convert_index<Int>(matrix.rows());
 
             auto Ap = const_cast<Int*>(matrix.outerIndexPtr());
             auto Ai = const_cast<Int*>(matrix.innerIndexPtr());
             auto Ax = const_cast<Real*>(matrix.valuePtr());
-            int nz = Eigen::internal::convert_index<int>(matrix.nonZeros());
+            Int nz = Eigen::internal::convert_index<Int>(matrix.nonZeros());
 
             std::ofstream ofs;
-            char strA[32];
-            char counterstring[32];
-            sprintf(counterstring, "%d", counter);
-            strcpy(strA, "A");
-            strcat(strA, counterstring);
-            strcat(strA, ".mtx");
-            ofs.open(strA);
+            ofs.open(outputName);
+			// FIXME: determine appropriate precision with respect to datatype chosen (double/float)
+			ofs.precision(14);
             ofs << "%%MatrixMarket matrix coordinate real general" << std::endl;
             ofs << n << " " << n << " " << nz << std::endl;
-            for(i = 0 ; i < n ; i++)
+            for(int i = 0 ; i < n ; i++)
             {
-                for(j = Ap[i] ; j < Ap[i+1] ; j++)
+                for(int j = Ap[i] ; j < Ap[i+1] ; j++)
                 {
                     ofs << i+1 << " " << Ai[j]+1 << " " << Ax[j] << std::endl;
                 }

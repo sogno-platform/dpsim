@@ -33,7 +33,9 @@ namespace DPsim
 		/// initialization function for linear solver
 		virtual void initialize()
 		{
-			/* no default initialization */
+			/* no default initialization
+			   FIXME: removable. initialization can be done by constructor
+			*/
 		};
 
 		/// preprocessing function pre-ordering and scaling the matrix

@@ -27,7 +27,7 @@ namespace DPsim
 
         public:
 		/// Destructor
-		~DenseLUAdapter();
+		~DenseLUAdapter() override;
 
 		/// initialization function for linear solver
 		void initialize() override;
