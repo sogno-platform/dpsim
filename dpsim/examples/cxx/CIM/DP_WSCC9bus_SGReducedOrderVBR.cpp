@@ -35,8 +35,7 @@ int main(int argc, char *argv[]) {
 	std::list<fs::path> filenames;
 	CommandLineArgs args(argc, argv);
 
-	if (argc <= 4) {
-		args.parseArguments(argc, argv);
+	if (argc <= 1) {
 		filenames = Utils::findFiles({
 			"WSCC-09_Dyn_Full_DI.xml",
 			"WSCC-09_Dyn_Full_EQ.xml",
@@ -142,6 +141,7 @@ int main(int argc, char *argv[]) {
 			auto genPF = systemPF.component<CPS::SP::Ph1::SynchronGenerator>(comp->name());
 			genReducedOrder->terminal(0)->setPower(-genPF->getApparentPower());
 			genReducedOrder->scaleInertiaConstant(inertiaScalingFactor);
+			genReducedOrder->setModelAsCurrentSource(false);
 		}
 	}
 
