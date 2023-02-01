@@ -54,43 +54,45 @@ namespace DPsim
             if(m_numeric)  klu_free_numeric(&m_numeric,&m_common);
         }
 
-		KLUAdapter::KLUAdapter()
+		KLUAdapter::KLUAdapter() :
+                                    m_numeric(nullptr),
+                                    m_symbolic(nullptr),
+                                    m_ordering(KLU_AMD_FP),
+                                    m_btf(1),
+                                    m_scaling(1),
+                                    factorization_is_okay(false),
+                                    preprocessing_is_okay(false)
 		{
             klu_defaults(&m_common);
-			m_symbolic = nullptr;
-			m_numeric = nullptr;
 
-            m_ordering = KLU_AMD_FP;
-            m_scaling = 1;
-            m_btf = 1;
-            factorization_is_okay = false;
-            preprocessing_is_okay = false;
-
-            char* variable = getenv("KLU_SCALING");
-            if(variable != nullptr)
+            const char* scaling = std::getenv("KLU_SCALING");
+            if(scaling != nullptr)
             {
-                m_scaling = atoi(variable);
+                m_scaling = atoi(scaling);
                 /* m_scaling < 0 valid here (evaluates to no scaling) */
                 if(m_scaling > 2)
                 {
                     m_scaling = 0;
                 }
             }
-            variable = getenv("KLU_BTF");
-            if(variable != nullptr)
+
+            const char* do_btf = std::getenv("KLU_BTF");
+            if(do_btf != nullptr)
             {
-                m_btf = atoi(variable);
+                m_btf = atoi(do_btf);
                 if(m_btf<0 || m_btf>1)
                 {
                     m_btf = 1;
                 }
             }
+
             m_common.btf = m_btf;
             m_common.scale = m_scaling;
-            variable = getenv("KLU_METHOD");
-            if(variable != nullptr)
+
+            const char* which_preprocessing_method = std::getenv("KLU_METHOD");
+            if(which_preprocessing_method != nullptr)
             {
-                m_ordering = atoi(variable);
+                m_ordering = atoi(which_preprocessing_method);
                 /* might better be a switch-case? */
                 if(m_ordering < KLU_MIN_METHOD || m_ordering>KLU_MAX_METHOD)
                 {
@@ -229,14 +231,18 @@ namespace DPsim
 			std::string outputName = "A" + std::to_string(counter) + ".mtx";
             Int n = Eigen::internal::convert_index<Int>(matrix.rows());
 
-            auto Ap = const_cast<Int*>(matrix.outerIndexPtr());
-            auto Ai = const_cast<Int*>(matrix.innerIndexPtr());
-            auto Ax = const_cast<Real*>(matrix.valuePtr());
+            auto Ap = Eigen::internal::convert_index<Int*>(matrix.outerIndexPtr());
+            auto Ai = Eigen::internal::convert_index<Int*>(matrix.innerIndexPtr());
+            auto Ax = Eigen::internal::convert_index<Real*>(matrix.valuePtr());
             Int nz = Eigen::internal::convert_index<Int>(matrix.nonZeros());
 
             std::ofstream ofs;
             ofs.open(outputName);
-			// FIXME: determine appropriate precision with respect to datatype chosen (double/float)
+			/* FIXME: determine appropriate precision with respect to datatype chosen (double/float/etc.)
+             * Alternatively: add logger to DirectLinearSolver and this type of logging can be done using libfmt.
+             * Additionally, the printing of LU/permutation matrices / factorization path / scaling factors / etc.
+             * in custom SuiteSparse/KLU can be moved here to reduce the modifications made to SuiteSparse and use
+             * C++'s more powerful I/O tools - compared to C-level printing */
 			ofs.precision(14);
             ofs << "%%MatrixMarket matrix coordinate real general" << std::endl;
             ofs << n << " " << n << " " << nz << std::endl;

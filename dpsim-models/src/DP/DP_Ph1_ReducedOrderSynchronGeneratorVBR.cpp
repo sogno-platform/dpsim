@@ -85,7 +85,7 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 	} else {
 		// get matrix dimension to properly set variable entries
 		auto n = leftVector->asRawPointer()->rows();
-		auto complexOffset = n / 2;
+		auto complexOffset = (UInt)(n / 2);
 
 		Base::ReducedOrderSynchronGenerator<Complex>::mnaInitialize(omega, timeStep, leftVector);
 
@@ -121,7 +121,7 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (mModelAsCurrentSource) {
 		// Stamp conductance matrix
-		// set buttom right block
+		// set bottom right block
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrix);
 
 	} else {
@@ -134,7 +134,7 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Ma
 		// set upper left block
 		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), mConductanceMatrix);
 
-		// set buttom right block
+		// set bottom right block
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrix);
 
 		// Set off diagonal blocks
