@@ -179,6 +179,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("PVNode", CPS::GeneratorType::PVNode)
 		.value("TransientStability", CPS::GeneratorType::TransientStability)
 		.value("IdealVoltageSource", CPS::GeneratorType::IdealVoltageSource)
+		.value("SG3OrderVBR", CPS::GeneratorType::SG3OrderVBR)
+		.value("SG4OrderVBR", CPS::GeneratorType::SG4OrderVBR)
+		.value("SG6aOrderVBR", CPS::GeneratorType::SG6aOrderVBR)
+		.value("SG6bOrderVBR", CPS::GeneratorType::SG6bOrderVBR)
+		.value("FullOrderVBR", CPS::GeneratorType::FullOrderVBR)
+		.value("FullOrder", CPS::GeneratorType::FullOrder)
 		.value("NONE", CPS::GeneratorType::None);
 
 	py::enum_<DPsim::Solver::Type>(m, "Solver")
