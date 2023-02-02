@@ -35,24 +35,24 @@ namespace DPsim
 
 		/// KLU-specific structs
         klu_common m_common;
-		klu_numeric* m_numeric;
-		klu_symbolic* m_symbolic;
+		klu_numeric* m_numeric = nullptr;
+		klu_symbolic* m_symbolic = nullptr;
 
 		/// Flags to indicate mode of operation
 		/// Define which ordering to choose in preprocessing
-		int m_ordering;
+		int m_ordering = KLU_AMD_FP;
 
 		/// Use BTF or not
-		int m_btf;
+		int m_btf = 1;
 
 		/// Use scaling or not
-		int m_scaling;
+		int m_scaling = 1;
 
 		/// Flag to indicate if factorization succeeded
-		bool factorization_is_okay;
+		bool factorization_is_okay = false;
 
 		/// Flag to indicate if preprocessing succeeded
-		bool preprocessing_is_okay;
+		bool preprocessing_is_okay = false;
 
 		/// Temporary value to store the number of nonzeros
 		Int nnz;
@@ -84,13 +84,7 @@ namespace DPsim
 
 		protected:
 
-		/// Copy Constructor
-		KLUAdapter(const KLUAdapter&) = delete;
-
-		/// Copy Assignment Operator
-		KLUAdapter& operator=(const KLUAdapter&) = delete;
-
 		/// Function to print matrix
-		void printMTX(SparseMatrix& matrix, int counter);
+		void printMTX(SparseMatrix& matrix, int counter) const;
     };
 }

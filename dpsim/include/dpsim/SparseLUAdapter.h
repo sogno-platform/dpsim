@@ -28,7 +28,7 @@ namespace DPsim
         public:
 
 		/// Destructor
-		~SparseLUAdapter();
+		~SparseLUAdapter() override;
 
 		/// initialization function for linear solver
 		void initialize() override;

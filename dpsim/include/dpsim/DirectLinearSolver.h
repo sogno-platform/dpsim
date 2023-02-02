@@ -23,6 +23,15 @@ namespace DPsim
 
 	class DirectLinearSolver
 	{
+		/* This class follows the rule of three */
+
+		protected:
+		/// Copy Constructor
+		DirectLinearSolver(const DirectLinearSolver&) = default;
+
+		/// Copy Assignment Operator
+		DirectLinearSolver& operator=(const DirectLinearSolver&) = default;
+
 		public:
 		/// Constructor
 		DirectLinearSolver() = default;
