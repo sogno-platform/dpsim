@@ -57,8 +57,8 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
 				sol_Q(pq->matrixNodeIndex()) += vsi->attributeTyped<CPS::Real>("Q_ref")->get() / mBaseApparentPower;
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
-				sol_P(pq->matrixNodeIndex()) += gen->attribute<CPS::Real>("P_set_pu")->get();
-                sol_Q(pq->matrixNodeIndex()) += gen->attribute<CPS::Real>("Q_set_pu")->get();
+				sol_P(pq->matrixNodeIndex()) += gen->attributeTyped<CPS::Real>("P_set_pu")->get();
+                sol_Q(pq->matrixNodeIndex()) += gen->attributeTyped<CPS::Real>("Q_set_pu")->get();
 			}
             sol_S_complex(pq->matrixNodeIndex()) = CPS::Complex(sol_P[pq->matrixNodeIndex()], sol_Q[pq->matrixNodeIndex()]);
 		}
@@ -87,7 +87,7 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
 				std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
 				sol_P(pv->matrixNodeIndex()) += extnet->attributeTyped<CPS::Real>("p_inj")->get() / mBaseApparentPower;
 				sol_V(pv->matrixNodeIndex()) = extnet->attributeTyped<CPS::Real>("V_set_pu")->get();
-                // sol_Q(pv->matrixNodeIndex()) += extnet->attribute<CPS::Real>("q_inj")->get() / mBaseApparentPower; //Todo allow initialisation of p_inj and q_inj in SP_NetworkInjection (use updatePowerInjection?)
+                // sol_Q(pv->matrixNodeIndex()) += extnet->attributeTyped<CPS::Real>("q_inj")->get() / mBaseApparentPower; //Todo allow initialisation of p_inj and q_inj in SP_NetworkInjection (use updatePowerInjection?)
 			}
 			sol_S_complex(pv->matrixNodeIndex()) = CPS::Complex(sol_P[pv->matrixNodeIndex()], sol_Q[pv->matrixNodeIndex()]);
 			sol_V_complex(pv->matrixNodeIndex()) = CPS::Complex(sol_V[pv->matrixNodeIndex()], sol_D[pv->matrixNodeIndex()]);
