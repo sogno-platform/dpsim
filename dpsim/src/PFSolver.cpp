@@ -298,12 +298,12 @@ void PFSolver::determineNodeBaseVoltages() {
                     break;
                 }
 			else if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
-                    baseVoltage_ = load->attribute<CPS::Real>("V_nom")->get();
+                    baseVoltage_ = load->attributeTyped<CPS::Real>("V_nom")->get();
                     mSLog->info("Choose base voltage of {}V to convert pu-solution of {}.", baseVoltage_, load->name(), node->name());
                     break;
                 }
 			else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
-                    baseVoltage_ = extnet->attribute<CPS::Real>("base_Voltage")->get();
+                    baseVoltage_ = extnet->attributeTyped<CPS::Real>("base_Voltage")->get();
                     mSLog->info("Choose base voltage of {}V to convert pu-solution of {}.", baseVoltage_, extnet->name(), node->name());
                     break;
                 }
