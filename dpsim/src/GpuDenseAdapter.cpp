@@ -32,8 +32,6 @@ namespace DPsim
 
     GpuDenseAdapter::GpuDenseAdapter()
     {
-        mCusolverHandle = nullptr;
-        mStream = nullptr;
         mDeviceCopy = {};
 
         cusolverStatus_t status = CUSOLVER_STATUS_SUCCESS;
@@ -44,11 +42,6 @@ namespace DPsim
             std::cerr << cudaGetErrorString(error) << std::endl;
         if((status = cusolverDnSetStream(mCusolverHandle, mStream)) != CUSOLVER_STATUS_SUCCESS)
             std::cerr << "cusolverDnSetStream() failed" << std::endl;
-    }
-
-    void GpuDenseAdapter::initialize()
-    {
-        /* Initialization phase shifted to constructor */
     }
 
     void GpuDenseAdapter::allocateDeviceMemory()
@@ -163,7 +156,7 @@ namespace DPsim
     Matrix GpuDenseAdapter::solve(Matrix& mRightHandSideVector)
     {
         Matrix leftSideVector = mRightHandSideVector;
-            
+
         CUDA_ERROR_HANDLER(cudaMemcpy(mDeviceCopy.vector, &mRightHandSideVector(0), mDeviceCopy.size * sizeof(Real), cudaMemcpyHostToDevice))
 
         cusolverStatus_t status = cusolverDnDgetrs(

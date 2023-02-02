@@ -29,7 +29,7 @@ namespace DPsim
 	class GpuMagmaAdapter : public DirectLinearSolver
     {
 		protected:
-		
+
 		std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic>> mTransp;
 		// #### Attributes required for GPU ####
 		/// Solver-Handle
@@ -55,15 +55,12 @@ namespace DPsim
 		void performFactorization(SparseMatrix& mVariableSystemMatrix);
 
         public:
-		
+
 		/// Destructor
 		virtual ~GpuMagmaAdapter();
 
 		/// Constructor
 		GpuMagmaAdapter();
-
-		/// initialization function for linear solver
-		virtual void initialize() override;
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		virtual void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;

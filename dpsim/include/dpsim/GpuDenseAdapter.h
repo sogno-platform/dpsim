@@ -32,9 +32,9 @@ namespace DPsim
 
 		// #### Attributes required for GPU ####
 		/// Solver-Handle
-		cusolverDnHandle_t mCusolverHandle;
+		cusolverDnHandle_t mCusolverHandle = nullptr;
 		/// Stream
-		cudaStream_t mStream;
+		cudaStream_t mStream = nullptr;
 
 		/// Variables for solving one Equation-system (All pointer are device-pointer)
 		struct GpuData {
@@ -54,21 +54,18 @@ namespace DPsim
 		} mDeviceCopy;
 
 		void allocateDeviceMemory();
-		
+
 		void copySystemMatrixToDevice(Matrix mVariableSystemMatrix);
-		
+
 		void LUfactorization();
 
         public:
-		
+
 		/// Destructor
 		virtual ~GpuDenseAdapter();
 
 		/// Constructor
 		GpuDenseAdapter();
-
-		/// initialization function for linear solver
-		virtual void initialize() override;
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		virtual void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;

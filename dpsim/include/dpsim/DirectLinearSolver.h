@@ -23,14 +23,6 @@ namespace DPsim
 
 	class DirectLinearSolver
 	{
-		/* This class follows the rule of three */
-
-		protected:
-		/// Copy Constructor
-		DirectLinearSolver(const DirectLinearSolver&) = default;
-
-		/// Copy Assignment Operator
-		DirectLinearSolver& operator=(const DirectLinearSolver&) = default;
 
 		public:
 		/// Constructor
@@ -39,13 +31,17 @@ namespace DPsim
 		/// Destructor
 		virtual ~DirectLinearSolver() = default;
 
-		/// initialization function for linear solver
-		virtual void initialize()
-		{
-			/* no default initialization
-			   FIXME: removable. initialization can be done by constructor
-			*/
-		};
+		/// Copy Constructor
+		DirectLinearSolver(const DirectLinearSolver&) = default;
+
+		/// Copy Assignment Operator
+		DirectLinearSolver& operator=(const DirectLinearSolver&) = default;
+
+		/// Move Constructor
+		DirectLinearSolver(DirectLinearSolver&&) = default;
+
+		/// Move Assignment Operator
+		DirectLinearSolver& operator=(DirectLinearSolver&&) = default;
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		virtual void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) = 0;

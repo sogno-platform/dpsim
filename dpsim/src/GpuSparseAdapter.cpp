@@ -15,8 +15,7 @@ using namespace DPsim;
 
 namespace DPsim
 {
-    GpuSparseAdapter::GpuSparseAdapter() : mCusparsehandle(nullptr), mSysMat(nullptr), mTransp(nullptr), mGpuRhsVec(0), mGpuLhsVec(0), mGpuIntermediateVec(0),
-	pBuffer(0) {}
+    GpuSparseAdapter::GpuSparseAdapter() {}
 
     GpuSparseAdapter::~GpuSparseAdapter()
     {
@@ -203,13 +202,8 @@ namespace DPsim
         checkCusparseStatus(csp_status, "failed to destroy MatDescr:");
     }
 
-    void GpuSparseAdapter::initialize()
-    {
-        /* No initialization phase */
-    }
-
     void GpuSparseAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
-    {       
+    {
         /* No preprocessing phase available yet */
     }
 

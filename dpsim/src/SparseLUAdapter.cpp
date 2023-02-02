@@ -14,11 +14,6 @@ namespace DPsim
 {
     SparseLUAdapter::~SparseLUAdapter() = default;
 
-    void SparseLUAdapter::initialize()
-    {
-        /* No initialization phase needed by SparseLU */
-    }
-
     void SparseLUAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
         LUFactorizedSparse.analyzePattern(mVariableSystemMatrix);

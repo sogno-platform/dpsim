@@ -196,7 +196,10 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("Undef", DPsim::DirectLinearSolverImpl::Undef)
 		.value("DenseLU", DPsim::DirectLinearSolverImpl::DenseLU)
 		.value("SparseLU", DPsim::DirectLinearSolverImpl::SparseLU)
-		.value("KLU", DPsim::DirectLinearSolverImpl::KLU);
+		.value("KLU", DPsim::DirectLinearSolverImpl::KLU)
+		.value("CUDADense", DPsim::DirectLinearSolverImpl::CUDADense)
+		.value("CUDASparse", DPsim::DirectLinearSolverImpl::CUDASparse)
+		.value("CUDAMagma", DPsim::DirectLinearSolverImpl::CUDAMagma);
 
 	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
 		.value("AUTO", CPS::CSVReader::Mode::AUTO)
