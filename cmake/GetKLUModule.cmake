@@ -16,7 +16,11 @@ add_subdirectory(${klu-module_SOURCE_DIR} ${klu-module_BINARY_DIR})
 
 set(SS_PATH ${CMAKE_SOURCE_DIR}/build)
 
-set(KLU_LIBRARY ${SS_PATH}/libklu.a ${SS_PATH}/libbtf.a ${SS_PATH}/libamd.a ${SS_PATH}/libcolamd.a ${SS_PATH}/libsuitesparseconfig.a)
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+  set(KLU_LIBRARY ${SS_PATH}/libklu_debug.a ${SS_PATH}/libbtf_debug.a ${SS_PATH}/libamd_debug.a ${SS_PATH}/libcolamd_debug.a ${SS_PATH}/libsuitesparseconfig_debug.a)
+else()
+  set(KLU_LIBRARY ${SS_PATH}/libklu.a ${SS_PATH}/libbtf.a ${SS_PATH}/libamd.a ${SS_PATH}/libcolamd.a ${SS_PATH}/libsuitesparseconfig.a)
+endif(CMAKE_BUILD_TYPE MATCHES Debug)
 
 set(KLU_LIBRARIES ${KLU_LIBRARY})
 set(KLU_INCLUDE_DIR ${klu-module_SOURCE_DIR}/KLU/Include ${klu-module_SOURCE_DIR}/BTF/Include ${klu-module_SOURCE_DIR}/COLAMD/Include ${klu-module_SOURCE_DIR}/AMD/Include ${klu-module_SOURCE_DIR}/SuiteSparse_config/)
