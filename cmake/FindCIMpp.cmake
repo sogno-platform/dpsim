@@ -42,3 +42,7 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CIMpp DEFAULT_MSG CIMPP_LIBRARY CIMPP_INCLUDE_DIR)
 
 mark_as_advanced(CIMPP_LIBRARY CIMPP_INCLUDE_DIR)
+
+add_library(cimpp SHARED IMPORTED)
+target_link_libraries(cimpp INTERFACE ${CIMPP_LIBRARIES})
+target_include_directories(cimpp INTERFACE ${CIMPP_INCLUDE_DIRS})
