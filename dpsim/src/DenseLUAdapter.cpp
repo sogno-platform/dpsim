@@ -14,32 +14,27 @@ namespace DPsim
 {
 
     DenseLUAdapter::~DenseLUAdapter() = default;
-    
-    void DenseLUAdapter::initialize()
-    {
-        /* No initialization phase needed by PartialPivLU */
-    }
-    
+
     void DenseLUAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
         /* No preprocessing phase needed by PartialPivLU */
     }
-    
+
     void DenseLUAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
     {
         LUFactorized.compute(Matrix(mVariableSystemMatrix));
     }
-    
+
     void DenseLUAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
     {
         LUFactorized.compute(Matrix(mVariableSystemMatrix));
     }
-    
+
     void DenseLUAdapter::partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
         LUFactorized.compute(Matrix(mVariableSystemMatrix));
     }
-    
+
     Matrix DenseLUAdapter::solve(Matrix& mRightHandSideVector)
     {
         return LUFactorized.solve(mRightHandSideVector);

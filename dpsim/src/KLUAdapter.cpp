@@ -25,7 +25,8 @@ namespace DPsim
             if(const char* scaling = std::getenv("KLU_SCALING"))
             {
                 m_scaling = atoi(scaling);
-                /* m_scaling < 0 valid here (evaluates to no scaling) */
+
+                /* m_scaling < 0 valid here (evaluates to "no scaling") */
                 if(m_scaling > 2)
                 {
                     m_scaling = 0;
@@ -35,7 +36,9 @@ namespace DPsim
             if(const char* do_btf = std::getenv("KLU_BTF"))
             {
                 m_btf = atoi(do_btf);
-                if(m_btf<0 || m_btf>1)
+
+				/* only 0 or 1 are valid */
+                if(m_btf < 0 || m_btf > 1)
                 {
                     m_btf = 1;
                 }
@@ -47,18 +50,17 @@ namespace DPsim
             if(char* which_preprocessing_method = std::getenv("KLU_METHOD"))
             {
                 m_ordering = atoi(which_preprocessing_method);
-                /* might better be a switch-case? */
+
+				/* "orderings" internally defined in custom KLU module. See klu.h for available
+				 * values and settings. Probably a fix-me at some point - rename "method" appropriately.
+				 * default is KLU_AMD_FP, i.e. KLU+AMD(+factorization path) */
+
                 if(m_ordering < KLU_MIN_METHOD || m_ordering > KLU_MAX_METHOD)
                 {
                     m_ordering = KLU_AMD_FP;
                 }
             }
 		}
-
-        void KLUAdapter::initialize()
-        {
-			/* no implementation. initialize() can be removed from DirectLinearSolver.h */
-        }
 
         void KLUAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
         {
@@ -92,6 +94,8 @@ namespace DPsim
                 preprocessing_is_okay = true;
             }
 
+			/* store non-zero value of current preprocessed matrix. only used until
+			 * to-do in refactorize-function is resolved. Can be removed then. */
             nnz = Eigen::internal::convert_index<Int>(mVariableSystemMatrix.nonZeros());
         }
 
@@ -106,6 +110,7 @@ namespace DPsim
             auto Ap = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.outerIndexPtr());
             auto Ai = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.innerIndexPtr());
             auto Ax = Eigen::internal::convert_index<Real*>(mVariableSystemMatrix.valuePtr());
+
             m_numeric = klu_factor(Ap, Ai, Ax, m_symbolic, &m_common);
 
             if(m_numeric)
@@ -113,21 +118,33 @@ namespace DPsim
                 factorization_is_okay = true;
             }
 
-            Int varying_entries = Eigen::internal::convert_index<Int>(changedEntries.size());
-			std::vector<Int> varying_columns;
-			std::vector<Int> varying_rows;
+			/* make sure that factorization path is not computed if there are no varying entries.
+			 * Doing so should not be a problem, but it is safer to do it this way */
+			if(!(this->changedEntries.empty()))
+			{
+				Int varying_entries = Eigen::internal::convert_index<Int>(changedEntries.size());
+				std::vector<Int> varying_columns;
+				std::vector<Int> varying_rows;
 
-            for(auto& changedEntry : changedEntries)
-            {
-                varying_rows.push_back(changedEntry.first);
-                varying_columns.push_back(changedEntry.second);
-            }
-
-            klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, &varying_columns[0], &varying_rows[0], varying_entries);
+				for(auto& changedEntry : changedEntries)
+				{
+					varying_rows.push_back(changedEntry.first);
+					varying_columns.push_back(changedEntry.second);
+				}
+            	klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, &varying_columns[0], &varying_rows[0], varying_entries);
+			}
         }
 
         void KLUAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
         {
+			/* TODO: in DPsim, the non-zero count between the "first" factorization and the first
+			 * refactorization might vary. This is because during the "stamping" phase of the matrix
+			 * before preprocessing (see stampVariableSystemMatrix() in MnaSolverDirect), some values
+			 * of certain components are not set properly, but in recomputeSystemMatrix, they are set.
+			 * Thus, the matrix pattern changes between first factorization and now, and this function
+			 * needs to re-do preprocessing and factorization (plus factorization path, if necessary).
+			 * This needs to be fixed in MnaSolver(Direct), because it might affect performance.
+			 * Same for partialRefactorize below this function. */
             if(mVariableSystemMatrix.nonZeros() != nnz)
             {
                 preprocessing(mVariableSystemMatrix, this->changedEntries);
@@ -154,6 +171,7 @@ namespace DPsim
                 auto Ap = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.outerIndexPtr());
                 auto Ai = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.innerIndexPtr());
                 auto Ax = Eigen::internal::convert_index<Real*>(mVariableSystemMatrix.valuePtr());
+
                 klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
 
                 if(m_common.status == KLU_PIVOT_FAULT)
@@ -166,6 +184,9 @@ namespace DPsim
 
         Matrix KLUAdapter::solve(Matrix& mRightSideVector)
         {
+			/* TODO: ensure matrix has been factorized properly before calling this function.
+			 * assertions might hurt performance, thus omitted here */
+
             Matrix x = mRightSideVector;
 
             /* number of right hands sides
@@ -175,7 +196,7 @@ namespace DPsim
             /* leading dimension, also called "n" */
             Int rhsRows = Eigen::internal::convert_index<Int>(mRightSideVector.rows());
 
-            /*int solve_is_okay = */klu_tsolve(m_symbolic, m_numeric, rhsRows, rhsCols, x.const_cast_derived().data(), const_cast<klu_common*>(&m_common));
+            klu_tsolve(m_symbolic, m_numeric, rhsRows, rhsCols, x.const_cast_derived().data(), const_cast<klu_common*>(&m_common));
 
             return x;
         }

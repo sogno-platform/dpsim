@@ -113,11 +113,6 @@ namespace DPsim
         mDevLhsVec = {Magma_CSR};
     }
 
-    void GpuMagmaAdapter::initialize()
-    {
-        /* Initialization phase shifted to constructor */
-    }
-
     void GpuMagmaAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
     {
         /* No preprocessing phase available yet */

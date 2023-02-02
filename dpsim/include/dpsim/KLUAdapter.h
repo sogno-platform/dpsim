@@ -64,9 +64,6 @@ namespace DPsim
 		/// Constructor
 		KLUAdapter();
 
-		/// initialization function for linear solver
-		void initialize() override;
-
 		/// preprocessing function pre-ordering and scaling the matrix
 		void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
 

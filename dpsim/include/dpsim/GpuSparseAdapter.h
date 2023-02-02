@@ -25,24 +25,24 @@
 namespace DPsim
 {
 	class GpuSparseAdapter : public DirectLinearSolver
-    {	
+    {
 		protected:
 
 		// #### Attributes required for GPU ####
 		/// Solver-Handle
-		cusparseHandle_t mCusparsehandle;
-		cusolverSpHandle_t mCusolverhandle;
+		cusparseHandle_t mCusparsehandle = nullptr;
+		cusolverSpHandle_t mCusolverhandle = nullptr;
 
 		/// Systemmatrix on Device
-		std::unique_ptr<cuda::CudaMatrix<double, int>> mSysMat;
-		std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic>> mTransp;
+		std::unique_ptr<cuda::CudaMatrix<double, int>> mSysMat = nullptr;
+		std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic>> mTransp = nullptr;
 
 		/// RHS-Vector
-		cuda::Vector<double> mGpuRhsVec;
+		cuda::Vector<double> mGpuRhsVec = 0;
 		/// LHS-Vector
-		cuda::Vector<double> mGpuLhsVec;
+		cuda::Vector<double> mGpuLhsVec = 0;
 		/// Intermediate Vector
-		cuda::Vector<double> mGpuIntermediateVec;
+		cuda::Vector<double> mGpuIntermediateVec = 0;
 
 		void iluPreconditioner();
 
@@ -50,7 +50,7 @@ namespace DPsim
 
 		private:
 		///Required shared Variables
-		cuda::Vector<char> pBuffer;
+		cuda::Vector<char> pBuffer = 0;
 		cusparseMatDescr_t descr_L = nullptr;
 		cusparseMatDescr_t descr_U = nullptr;
 		csrsv2Info_t info_L = nullptr;
@@ -64,9 +64,6 @@ namespace DPsim
 
 		/// Destructor
 		virtual ~GpuSparseAdapter();
-
-		/// initialization function for linear solver
-		virtual void initialize() override;
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		virtual void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
