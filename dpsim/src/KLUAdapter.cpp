@@ -12,61 +12,17 @@ using namespace DPsim;
 
 namespace DPsim
 {
-        inline int klu_solve(klu_symbolic *Symbolic, klu_numeric *Numeric, Int ldim, Int nrhs, Real B [ ], klu_common *Common, Real) {
-            return klu_solve(Symbolic, Numeric, ldim, nrhs, B, Common);
-        }
-
-        inline int klu_solve(klu_symbolic *Symbolic, klu_numeric *Numeric, Int ldim, Int nrhs, std::complex<Real> B [ ], klu_common *Common, std::complex<Real>) {
-            return klu_z_solve(Symbolic, Numeric, ldim, nrhs, &Eigen::numext::real_ref(B[0]), Common);
-        }
-
-        inline klu_numeric* klu_factor(Int Ap [ ], Int Ai [ ], Real Ax [ ], klu_symbolic *Symbolic, klu_common *Common, Real) {
-            return klu_factor(Ap, Ai, Ax, Symbolic, Common);
-        }
-
-        inline klu_numeric* klu_factor(Int Ap [ ], Int Ai [ ], std::complex<Real> Ax [ ], klu_symbolic *Symbolic, klu_common *Common, std::complex<Real>) {
-            return klu_z_factor(Ap, Ai, &Eigen::numext::real_ref(Ax[0]), Symbolic, Common);
-        }
-
-        inline int klu_refactor(Int Ap [ ], Int Ai [ ], Real Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, Real)
-        {
-            return klu_refactor(Ap, Ai, Ax, Symbolic, Numeric, Common);
-        }
-
-        inline int klu_refactor(Int Ap [ ], Int Ai [ ], std::complex<Real> Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, std::complex<Real>)
-        {
-            return klu_z_refactor(Ap, Ai, &Eigen::numext::real_ref(Ax[0]), Symbolic, Numeric, Common);
-        }
-
-        inline int klu_partial_factorization_path(Int Ap [ ], Int Ai [ ], Real Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, Real)
-        {
-            return klu_partial_factorization_path(Ap, Ai, Ax, Symbolic, Numeric, Common);
-        }
-
-        inline int klu_partial_factorization_path(Int Ap [ ], Int Ai [ ], std::complex<Real> Ax [ ], klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, std::complex<Real>)
-        {
-            return klu_z_partial_factorization_path(Ap, Ai, &Eigen::numext::real_ref(Ax[0]), Symbolic, Numeric, Common);
-        }
-
         KLUAdapter::~KLUAdapter()
         {
             if(m_symbolic) klu_free_symbolic(&m_symbolic,&m_common);
             if(m_numeric)  klu_free_numeric(&m_numeric,&m_common);
         }
 
-		KLUAdapter::KLUAdapter() :
-                                    m_numeric(nullptr),
-                                    m_symbolic(nullptr),
-                                    m_ordering(KLU_AMD_FP),
-                                    m_btf(1),
-                                    m_scaling(1),
-                                    factorization_is_okay(false),
-                                    preprocessing_is_okay(false)
+		KLUAdapter::KLUAdapter()
 		{
             klu_defaults(&m_common);
 
-            const char* scaling = std::getenv("KLU_SCALING");
-            if(scaling != nullptr)
+            if(const char* scaling = std::getenv("KLU_SCALING"))
             {
                 m_scaling = atoi(scaling);
                 /* m_scaling < 0 valid here (evaluates to no scaling) */
@@ -76,8 +32,7 @@ namespace DPsim
                 }
             }
 
-            const char* do_btf = std::getenv("KLU_BTF");
-            if(do_btf != nullptr)
+            if(const char* do_btf = std::getenv("KLU_BTF"))
             {
                 m_btf = atoi(do_btf);
                 if(m_btf<0 || m_btf>1)
@@ -89,12 +44,11 @@ namespace DPsim
             m_common.btf = m_btf;
             m_common.scale = m_scaling;
 
-            const char* which_preprocessing_method = std::getenv("KLU_METHOD");
-            if(which_preprocessing_method != nullptr)
+            if(char* which_preprocessing_method = std::getenv("KLU_METHOD"))
             {
                 m_ordering = atoi(which_preprocessing_method);
                 /* might better be a switch-case? */
-                if(m_ordering < KLU_MIN_METHOD || m_ordering>KLU_MAX_METHOD)
+                if(m_ordering < KLU_MIN_METHOD || m_ordering > KLU_MAX_METHOD)
                 {
                     m_ordering = KLU_AMD_FP;
                 }
@@ -124,10 +78,10 @@ namespace DPsim
 			std::vector<Int> varying_columns;
 			std::vector<Int> varying_rows;
 
-            for(auto i : changedEntries)
+            for(auto& changedEntry : changedEntries)
             {
-                varying_rows.push_back(i.first);
-                varying_columns.push_back(i.second);
+                varying_rows.push_back(changedEntry.first);
+                varying_columns.push_back(changedEntry.second);
             }
 
             m_symbolic = klu_analyze_partial(n, Ap, Ai, &varying_columns[0], &varying_rows[0], varying_entries, m_ordering, &m_common);
@@ -163,10 +117,10 @@ namespace DPsim
 			std::vector<Int> varying_columns;
 			std::vector<Int> varying_rows;
 
-            for(auto i : changedEntries)
+            for(auto& changedEntry : changedEntries)
             {
-                varying_rows.push_back(i.first);
-                varying_columns.push_back(i.second);
+                varying_rows.push_back(changedEntry.first);
+                varying_columns.push_back(changedEntry.second);
             }
 
             klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, &varying_columns[0], &varying_rows[0], varying_entries);
@@ -200,7 +154,7 @@ namespace DPsim
                 auto Ap = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.outerIndexPtr());
                 auto Ai = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.innerIndexPtr());
                 auto Ax = Eigen::internal::convert_index<Real*>(mVariableSystemMatrix.valuePtr());
-                klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common, 1.0);
+                klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
 
                 if(m_common.status == KLU_PIVOT_FAULT)
                 {
@@ -226,14 +180,14 @@ namespace DPsim
             return x;
         }
 
-        void KLUAdapter::printMTX(SparseMatrix& matrix, int counter)
+        void KLUAdapter::printMTX(SparseMatrix& matrix, int counter) const
         {
 			std::string outputName = "A" + std::to_string(counter) + ".mtx";
             Int n = Eigen::internal::convert_index<Int>(matrix.rows());
 
-            auto Ap = Eigen::internal::convert_index<Int*>(matrix.outerIndexPtr());
-            auto Ai = Eigen::internal::convert_index<Int*>(matrix.innerIndexPtr());
-            auto Ax = Eigen::internal::convert_index<Real*>(matrix.valuePtr());
+            auto Ap = Eigen::internal::convert_index<const Int*>(matrix.outerIndexPtr());
+            auto Ai = Eigen::internal::convert_index<const Int*>(matrix.innerIndexPtr());
+            auto Ax = Eigen::internal::convert_index<const Real*>(matrix.valuePtr());
             Int nz = Eigen::internal::convert_index<Int>(matrix.nonZeros());
 
             std::ofstream ofs;
