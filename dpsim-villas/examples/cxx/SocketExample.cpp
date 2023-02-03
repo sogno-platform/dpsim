@@ -45,14 +45,16 @@ int main(int argc, char* argv[]) {
 		SystemNodeList{SimNode::GND, n1, n2, n3, n4},
 		SystemComponentList{evs, rs, rl, ll, rL});
 
-	RealTimeSimulation sim(simName);
+	Simulation sim(simName);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(10.0);
 	
+	// Make sure the format is set to json!!
     std::string socketConfig = R"STRING({
         "type": "socket",
         "layer": "udp",
+		"format": "json",
 		"in": {
 			"address": "127.0.0.1:12009",
 			"signals": [
@@ -67,7 +69,7 @@ int main(int argc, char* argv[]) {
         }
     })STRING";
 
-	// Logger
+	// Logger. The logger must be added before the interface!
 	auto logger = DataLogger::make(simName);
 	logger->logAttribute("v1", n1->mVoltage);
 	logger->logAttribute("v2", n2->mVoltage);
@@ -85,7 +87,7 @@ int main(int argc, char* argv[]) {
 	// Interface
 	sim.addInterface(intf);
 
-	sim.run(1);
+	sim.run();
 
 	//std::ofstream of("task_dependencies.svg");
 	//sim.dependencyGraph().render(of);
