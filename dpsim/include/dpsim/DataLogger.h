@@ -12,16 +12,9 @@
 #include <iostream>
 #include <fstream>
 
-#ifndef USE_GHC_FS
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#else
-#include <ghc/filesystem.hpp>
-namespace fs = ghc::filesystem;
-#endif
-
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
+#include <dpsim-models/Filesystem.h>
 #include <dpsim-models/PtrFactory.h>
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/SimNode.h>
