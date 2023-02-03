@@ -58,11 +58,11 @@ namespace Ph1 {
 
 	  	// #### General Functions ####
         /// Specific component initialization
-        virtual void specificInitialization() override { };
+        virtual void specificInitialization() override =0;
         ///
 		void initializeResistanceMatrix() override;
         ///
-        virtual void stepInPerUnit() override { };
+        virtual void stepInPerUnit() override =0;
 		///
         void calculateConductanceMatrix();
 		/// Calculate Ka, Kb and Kvbr

@@ -46,17 +46,17 @@ namespace Ph1 {
 
 		// #### General Functions ####
 		/// Specific component initialization
-        void specificInitialization() override;
+        void specificInitialization() final;
 		///
-		void initializeResistanceMatrix() override {};
+		void initializeResistanceMatrix() final {};
 		///
-		void stepInPerUnit() override;
+		void stepInPerUnit() final;
 
 		// ### MNA Section ###
         ///
-        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
-        void mnaCompPostStep(const Matrix& leftVector);
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
+        void mnaCompPostStep(const Matrix& leftVector) override;
 
 	public:
 		///

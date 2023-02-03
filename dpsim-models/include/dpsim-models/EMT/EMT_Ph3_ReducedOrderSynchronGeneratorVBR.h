@@ -43,11 +43,11 @@ namespace Ph3 {
 
 	  	// #### General Functions ####
         /// Specific component initialization
-        virtual void specificInitialization() { };
+        virtual void specificInitialization() =0;
         ///
         void initializeResistanceMatrix() override;
         ///
-        virtual void stepInPerUnit() override { };
+        virtual void stepInPerUnit() override =0;
 		///
         void calculateResistanceMatrix();
         /// Park Transformation according to Kundur
