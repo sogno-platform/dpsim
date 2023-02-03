@@ -39,9 +39,9 @@ namespace Ph1 {
 
 		// #### General Functions ####
 		/// Initializes component from power flow data
-		void specificInitialization() override;
+		void specificInitialization() final;
 		///
-		void stepInPerUnit() override;
+		void stepInPerUnit() final;
 	};
 }
 }

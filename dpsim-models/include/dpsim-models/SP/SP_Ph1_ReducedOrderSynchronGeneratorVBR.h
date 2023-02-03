@@ -45,11 +45,11 @@ namespace Ph1 {
         ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
 
         ///
-        virtual void specificInitialization() override { };
+        virtual void specificInitialization() override =0;
         ///
         void initializeResistanceMatrix() override;
         ///
-        virtual void stepInPerUnit() override { };
+        virtual void stepInPerUnit() override =0;
 		///
         void calculateResistanceMatrix();
         ///
