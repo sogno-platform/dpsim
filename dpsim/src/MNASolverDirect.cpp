@@ -72,6 +72,21 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	// Use matrix with only static elements as basis for variable system matrix
 	mVariableSystemMatrix = mBaseSystemMatrix;
 
+
+	/* TODO:
+	 * variable matrix stamps are zero and resulting entries in mVariableSystemMatrix are also zero
+	 * In MNAInterface.h, the function mnaApplySparseSystemMatrixStamp is defined to cast the sparse
+	 * input matrix to a dense matrix, add the entries according to MathUtils.cpp and re-cast the
+	 * matrix to sparse (mat.sparseView()). Numerically zero entries are then set zero symbolically,
+	 * even if they are non-zero in the model. This way, a wrong pattern is preprocessed and factorized,
+	 * resulting in a requirement to preprocess and factorize during first refactorization.
+	 * Possible resolves:
+	 * 		1. Set mConductanceMatrix to nonzero during this phase
+	 * 				-> Cons: matrix might become singular, in worst case (undefined behavior?)
+	 * 		2. Re-write matrix stamp for sparse case
+	 * 				-> Cons: re-write hundreds lines of code
+	 */
+
 	// Now stamp switches into matrix
 	mSLog->info("Stamping switches");
 	for (auto sw : mMNAIntfSwitches)
@@ -127,6 +142,15 @@ template <typename VarType>
 void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 	// Start from base matrix
 	mVariableSystemMatrix = mBaseSystemMatrix;
+
+	/* TODO:
+	 * These matrix stamps turn out to be inefficient according to profiling
+	 * possibly because the nonzero pattern of mBaseSystemMatrix differs from the
+	 * final nonzero pattern. Also, during mnaApplySparseSystemMatrixStamp,
+	 * the matrix is cast to dense and back to sparse, which is probably quite inefficient
+	 * Possible resolve:
+	 * 		1. Re-write mnaApplySparseSystemMatrixStamp for sparse case (see to-do above)
+	*/
 
 	// Now stamp switches into matrix
 	for (auto sw : mMNAIntfSwitches)

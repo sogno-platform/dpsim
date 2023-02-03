@@ -47,7 +47,7 @@ namespace DPsim
             m_common.btf = m_btf;
             m_common.scale = m_scaling;
 
-            if(char* which_preprocessing_method = std::getenv("KLU_METHOD"))
+            if(const char* which_preprocessing_method = std::getenv("KLU_METHOD"))
             {
                 m_ordering = atoi(which_preprocessing_method);
 
