@@ -135,7 +135,13 @@ def dpsim0():
         "format": "json",
         "host": "mqtt",
         "in": {
-            "subscribe": "/mqtt0-dpsim0"
+            "subscribe": "/mqtt0-dpsim0",
+            "signals": [
+                {
+                    "name": "v_intf",
+                    "type": "complex"
+                }
+            ]
         },
         "out": {
             "publish": "/dpsim0-mqtt0"
@@ -185,7 +191,13 @@ def dpsim1():
         "format": "json",
         "host": "mqtt",
         "in": {
-            "subscribe": "/mqtt1-dpsim1"
+            "subscribe": "/mqtt1-dpsim1",
+            "signals": [
+                {
+                    "name": "i_intf",
+                    "type": "complex"
+                }
+            ]
         },
         "out": {
             "publish": "/dpsim1-mqtt1"
