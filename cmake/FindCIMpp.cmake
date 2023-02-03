@@ -43,6 +43,6 @@ find_package_handle_standard_args(CIMpp DEFAULT_MSG CIMPP_LIBRARY CIMPP_INCLUDE_
 
 mark_as_advanced(CIMPP_LIBRARY CIMPP_INCLUDE_DIR)
 
-add_library(cimpp SHARED IMPORTED)
-target_link_libraries(cimpp INTERFACE ${CIMPP_LIBRARIES})
-target_include_directories(cimpp INTERFACE ${CIMPP_INCLUDE_DIRS})
+add_library(libcimpp INTERFACE)
+target_link_libraries(libcimpp INTERFACE ${CIMPP_LIBRARIES})
+target_include_directories(libcimpp INTERFACE ${CIMPP_INCLUDE_DIRS})
