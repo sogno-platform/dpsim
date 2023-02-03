@@ -56,6 +56,13 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::calculateConductanceMatrix() {
 	resistanceMatrix(1,0) = mR_const_1ph.imag() + mKa_1ph.imag() + mKb_1ph.imag();
 	resistanceMatrix(1,1) = mR_const_1ph.real() + mKa_1ph.real() - mKb_1ph.real();
 	resistanceMatrix = resistanceMatrix * mBase_Z;
+	/* TODO: Eigen calls PartialPivLU (DenseLU) here and computes an LU decomposition
+	 * for the inverse. Rather use
+	 * A = (a b; c d) => A^{-1} = 1/det(A) * (d -b; -c a) = 1/(ad-cb) * (d -b; -c a)
+	 * which is probably more efficient (DenseLU uses 2.38% in Profiling here).
+	 * Also look if it is done like this in other models!
+	 * (check how it works in complex case also)
+	 */
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
