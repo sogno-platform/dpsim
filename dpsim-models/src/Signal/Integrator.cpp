@@ -57,7 +57,6 @@ void Integrator::signalAddStepDependencies(AttributeBase::List &prevStepDependen
 };
 
 void Integrator::signalStep(Real time, Int timeStepCount) {
-    ///FIXME: There is no guarantee that mInputRef has been set to reference anything. Otherwise its just constantly 0.
     **mInputCurr = **mInputRef;
 
     mSLog->info("Time {}:", time);

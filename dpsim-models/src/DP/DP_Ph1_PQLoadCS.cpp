@@ -12,7 +12,7 @@ using namespace CPS;
 
 DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name,
 	Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	mActivePower(Attribute<Real>::create("P", mAttributes, 0)),
 	mReactivePower(Attribute<Real>::create("Q", mAttributes, 0)),
 	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
@@ -49,7 +49,7 @@ void DP::Ph1::PQLoadCS::setParameters(Real activePower, Real reactivePower, Real
 ///DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
 	auto copy = PQLoadCS::make(name, mLogLevel);
-	copy->setParameters(attribute<Real>("P")->get(), attribute<Real>("Q")->get(), attribute<Real>("V_nom")->get());
+	copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage);
 	return copy;
 }
 
@@ -73,6 +73,7 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 	// A positive power should result in a positive current to ground.
 	mSubCurrentSource->connect({ mTerminals[0]->node(), SimNode::GND });
 	mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
+	addMNASubComponent(mSubCurrentSource, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	updateIntfValues();
 
 	mSLog->info(
@@ -86,26 +87,6 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(current));
-}
-
-void DP::Ph1::PQLoadCS::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-	mSubCurrentSource->mnaInitialize(omega, timeStep, leftVector);
-	///CHECK: Can we avoid setting the right_vector attribute to dynamic? Maybe just copy the current source's right_vector somewhere? Or make a new attribute?
-	mRightVector->setReference(mSubCurrentSource->mRightVector);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this));
-	for (auto task : mSubCurrentSource->mnaTasks())
-		mMnaTasks.push_back(task);
-}
-
-void DP::Ph1::PQLoadCS::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSubCurrentSource->mnaApplyRightSideVectorStamp(rightVector);
-}
-
-void DP::Ph1::PQLoadCS::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubCurrentSource->mnaApplySystemMatrixStamp(systemMatrix);
 }
 
 void DP::Ph1::PQLoadCS::updateSetPoint() {
@@ -123,8 +104,20 @@ void DP::Ph1::PQLoadCS::updateSetPoint() {
 		Logger::phasorToString(std::conj(current)));
 }
 
-void DP::Ph1::PQLoadCS::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mLoad.updateSetPoint();
+void DP::Ph1::PQLoadCS::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(mActivePower);
+	attributeDependencies.push_back(mReactivePower);
+	attributeDependencies.push_back(mNomVoltage);
+}
+
+void DP::Ph1::PQLoadCS::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	modifiedAttributes.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mIntfVoltage);
+}
+
+void DP::Ph1::PQLoadCS::mnaParentPreStep(Real time, Int timeStepCount) {
+	updateSetPoint();
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::PQLoadCS::updateIntfValues() {
@@ -132,7 +125,7 @@ void DP::Ph1::PQLoadCS::updateIntfValues() {
 	**mIntfVoltage = mSubCurrentSource->intfVoltage();
 }
 
-void DP::Ph1::PQLoadCS::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLoad.updateIntfValues();
+void DP::Ph1::PQLoadCS::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	updateIntfValues();
 }
 

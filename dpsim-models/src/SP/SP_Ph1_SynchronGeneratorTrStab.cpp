@@ -10,7 +10,7 @@
 using namespace CPS;
 
 SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: Base::SynchronGenerator(mAttributes), CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	mEp(Attribute<Complex>::create("Ep", mAttributes)),
 	mEp_abs(Attribute<Real>::create("Ep_mag", mAttributes)),
 	mEp_phase(Attribute<Real>::create("Ep_phase", mAttributes)),
@@ -22,18 +22,6 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
-	// Register attributes
-
-	///CHECK: Are all of these used in this class or in subclasses?
-	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
-	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
-	mLd = Attribute<Real>::create("Ld", mAttributes, 0);
-	mLq = Attribute<Real>::create("Lq", mAttributes, 0);
-	mElecActivePower = Attribute<Real>::create("P_elec", mAttributes, 0);
-	mElecReactivePower = Attribute<Real>::create("Q_elec", mAttributes, 0);
-	mMechPower = Attribute<Real>::create("P_mech", mAttributes, 0);
-	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
-	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
 	mStates = Matrix::Zero(10,1);
 }
 
@@ -195,6 +183,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
 	mSubVoltageSource->initialize(mFrequencies);
 	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
+	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	// Create sub inductor as Xpd
 	mSubInductor = SP::Ph1::Inductor::make(**mName + "_ind", mLogLevel);
@@ -202,6 +191,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
 	mSubInductor->initialize(mFrequencies);
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
+	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	mSLog->info("\n--- Initialize according to powerflow ---"
 				"\nTerminal 0 voltage: {:e}<{:e}"
@@ -254,39 +244,28 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "\nStates, time {:f}: \n{:s}", time, Logger::matrixToString(mStates));
 }
 
-void SP::Ph1::SynchronGeneratorTrStab::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
-	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
-	mSubInductor->mnaInitialize(omega, timeStep, leftVector);
+void SP::Ph1::SynchronGeneratorTrStab::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	mTimeStep = timeStep;
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	for (auto task : mSubVoltageSource->mnaTasks()) {
-		mMnaTasks.push_back(task);
-	}
-	for (auto task : mSubInductor->mnaTasks()) {
-		mMnaTasks.push_back(task);
-	}
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
+
 	mMnaTasks.push_back(std::make_shared<AddBStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void SP::Ph1::SynchronGeneratorTrStab::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubVoltageSource->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubInductor->mnaApplySystemMatrixStamp(systemMatrix);
-}
+void SP::Ph1::SynchronGeneratorTrStab::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// other attributes generally also influence the pre step,
+	// but aren't marked as writable anyway
+	/// CHECK: Is the upper comment still relevant. Any attribute is writable now...
+	prevStepDependencies.push_back(mIntfVoltage);
+};
 
-void SP::Ph1::SynchronGeneratorTrStab::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSubVoltageSource->mnaApplyRightSideVectorStamp(rightVector);
-	mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
-}
+void SP::Ph1::SynchronGeneratorTrStab::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfVoltage);
+};
 
-void SP::Ph1::SynchronGeneratorTrStab::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mGenerator.step(time);
+void SP::Ph1::SynchronGeneratorTrStab::mnaParentPreStep(Real time, Int timeStepCount) {
+	step(time);
 	//change V_ref of subvoltage source
-	mGenerator.mSubVoltageSource->mVoltageRef->set(**mGenerator.mEp);
+	mSubVoltageSource->mVoltageRef->set(**mEp);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeStepCount) {
@@ -295,9 +274,9 @@ void SP::Ph1::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeStep
 		+ mGenerator.mSubVoltageSource->mRightVector->get();
 }
 
-void SP::Ph1::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mGenerator.mnaUpdateVoltage(**mLeftVector);
-	mGenerator.mnaUpdateCurrent(**mLeftVector);
+void SP::Ph1::SynchronGeneratorTrStab::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {

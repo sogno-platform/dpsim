@@ -146,7 +146,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		/// CHECK: It would be nicer if all the attributes of an IdObject were bound as properties so they show up in the documentation and auto-completion.
 		/// I don't know if this is possible to do because it depends on if the attribute map is filled before or after the code in this file is run.
 		/// Manually adding the attributes would of course be possible but very tedious to do for all existing components / attributes
-		.def("attr", &CPS::IdentifiedObject::attributeBase, "name"_a)
+		.def("attr", &CPS::IdentifiedObject::attribute, "name"_a)
 		.def("print_attribute_list", &printAttributes)
 		.def("print_attribute", &printAttribute, "attribute_name"_a)
 		.def("__str__", &getAttributeList);

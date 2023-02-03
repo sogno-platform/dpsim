@@ -22,13 +22,6 @@ namespace Ph1 {
 		const Attribute<Real>::Ptr mPower;
 		const Attribute<Real>::Ptr mReactivePower;
 
-	private:
-		/// FIXME: Never used
-		Real mVoltageAbsPerUnit;
-		/// FIXME: Never used
-		Complex mVoltagePerUnit;
-
-	public:
 		PQNode(String uid, String name,
 			Logger::Level logLevel = Logger::Level::off);
 

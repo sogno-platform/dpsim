@@ -11,14 +11,17 @@
 
 using namespace CPS;
 
-Signal::Exciter::Exciter(String name, CPS::Logger::Level logLevel) 
+Signal::Exciter::Exciter(const String & name, CPS::Logger::Level logLevel) 
 	: SimSignalComp(name, name, logLevel),
+	mVm(Attribute<Real>::create("Vm", mAttributes, 0)),
 	mVh(Attribute<Real>::create("Vh", mAttributes, 0)),
+	mVis(Attribute<Real>::create("Vis", mAttributes, 0)),
+	mVse(Attribute<Real>::create("Vse", mAttributes, 0)),
 	mVr(Attribute<Real>::create("Vr", mAttributes, 0)),
-	mVf(Attribute<Real>::create("Vf", mAttributes, 0)) { }
-
+	mEf(Attribute<Real>::create("Ef", mAttributes, 0)) { }
+	
 void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
-	Real Tf, Real Kf, Real Tr) {
+	Real Tf, Real Kf, Real Tr, Real maxVr, Real minVr) {
 	mTa = Ta;
 	mKa = Ka;
 	mTe = Te;
@@ -26,78 +29,112 @@ void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
 	mTf = Tf;
 	mKf = Kf;
 	mTr = Tr;
+	mMaxVr = maxVr;
+	mMinVr = minVr;
 
 	mSLog->info("Exciter parameters: \n"
-				"Ta: {:e}\nKa: {:e}\n"
-				"Te: {:e}\nKe: {:e}\n"
-				"Tf: {:e}\nKf: {:e}\n"
-				"Tr: {:e}\n",
+				"Ta: {:e}"
+				"\nKa: {:e}"
+				"\nTe: {:e}"
+				"\nKe: {:e}"
+				"\nTf: {:e}"
+				"\nKf: {:e}"
+				"\nTr: {:e}"
+				"\nMaximum regulator Voltage: {:e}"
+				"\nMinimum regulator Voltage: {:e}\n",
 				mTa, mKa, 
 				mTe, mKe,
 				mTf, mKf,
-				mTr);
+				mTr,
+				mMaxVr,
+				mMinVr);
 }
 
-void Signal::Exciter::initialize(Real Vh_init, Real Vf_init) {
+void Signal::Exciter::initialize(Real Vh_init, Real Ef_init) {
 	
 	mSLog->info("Initially set excitation system initial values: \n"
-				"Vh_init: {:e}\nVf_init: {:e}\n",
-				Vh_init, Vf_init);
+				"Vh_init: {:e}\nEf_init: {:e}\n",
+				Vh_init, Ef_init);
 
-	**mVf = Vf_init;
-	mVse = **mVf <= 2.3 ? 0.1 / 2.3 : 0.33 / 3.1;
-	mVse *= **mVf;
+	**mVm = Vh_init;
+	**mEf = Ef_init;
 
-	**mVr = mVse + mKe* **mVf;
-	mVf_init = **mVr / mKa;
+	// mVse is the ceiling function in PSAT
+	// mVse = mEf * (0.33 * (exp(0.1 * abs(mEf)) - 1.));
+	**mVse = **mEf * (0.33 * exp(0.1 * abs(**mEf)));
 
-	**mVh = Vh_init;
-	mVm = **mVh;
-	mVis = 0;
+	// mVis = vr2 in PSAT
+	**mVis = - mKf / mTf * **mEf;
 
-	mSLog->info("Actually applied excitation system initial values: \n"
-				"init_Vf: {:e}\ninit_Vse: {:e}\n"
-				"init_Vr: {:e}\ninit_Vf_init: {:e}\n"
-				"init_Vh: {:e}\ninit_Vm: {:e}\ninit_Vis: {:e}\n",
-				**mVf, mVse, 
-				**mVr, mVf_init,
-				**mVh, mVm, mVis);
+	// mVr = vr1 in PSAT
+	**mVr = mKe * **mEf + **mVse;
+	if (**mVr > mMaxVr)
+		**mVr = mMaxVr;
+	else if (**mVr < mMinVr)
+		**mVr = mMinVr;
+
+	mVref = **mVr /  mKa + **mVm;
+	mSLog->info("Actually applied excitation system initial values:"
+				"\nVref : {:e}"
+				"\ninit_Vm: {:e}"
+				"\ninit_Ef: {:e}"
+				"\ninit_Vc: {:e}"
+				"\ninit_Vr: {:e}"				
+				"\ninit_Vr2: {:e}",
+				mVref,
+				**mVm, 
+				**mEf,
+				**mVse, 
+				**mVr,
+				**mVis);
 }
 
-Real Signal::Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
+Real Signal::Exciter::step(Real mVd, Real mVq, Real dt) {
 	// Voltage magnitude calculation
 	**mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
-	
+
+	// update state variables at time k-1
+	mVm_prev = **mVm;
+	mVis_prev = **mVis;
+	mVr_prev = **mVr;
+	mEf_prev = **mEf;
+
+	// compute state variables at time k using euler forward
+
 	// Voltage Transducer equation
-	mVm = Math::StateSpaceEuler(mVm, -1 / mTr, 1 / mTr, dt, **mVh);
-	
+	**mVm = Math::StateSpaceEuler(mVm_prev, -1 / mTr, 1 / mTr, dt, **mVh);
+
 	// Stabilizing feedback equation
-	mVis = Math::StateSpaceEuler(mVis, -1 / mTf, mKf / mTe / mTf, dt, **mVr - mVse - **mVf * mKe);
+	// mVse = mEf * (0.33 * (exp(0.1 * abs(mEf)) - 1.));
+	**mVse = mEf_prev * (0.33 * exp(0.1 * abs(mEf_prev)));
+	**mVis = Math::StateSpaceEuler(mVis_prev, -1 / mTf, -mKf / mTf / mTf, dt, mEf_prev);
 
 	// Voltage regulator equation
-	**mVr = Math::StateSpaceEuler(**mVr, -1 / mTa, mKa / mTa, dt, Vref - mVm - mVis + mVf_init);
-
-	// Voltage regulator limiter
-	// Vr,max and Vr,min parameters 
-	// from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96
-	// TODO: fix hard-coded limiter values
-	if (**mVr > 1)
-		**mVr = 1;
-	else if (**mVr < -0.9)
-		**mVr = -0.9;
-	
-	// Exciter saturation
-	// Se(Ef1), Ef1, Se(Ef2) and Ef2
-	// from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96
-	// TODO: fix hard-coded saturation values
-	if (**mVf <= 2.3)
-		mVse = (0.1 / 2.3) * **mVf;
-	else
-		mVse = (0.33 / 3.1) * **mVf;
-	mVse = mVse * **mVf;
+	**mVr = Math::StateSpaceEuler(mVr_prev, -1 / mTa, mKa / mTa, dt, mVref - **mVm - mVis_prev - mKf / mTf * mEf_prev);
+	if (**mVr > mMaxVr)
+		**mVr = mMaxVr;
+	else if (**mVr < mMinVr)
+		**mVr = mMinVr;
 
 	// Exciter equation
-	**mVf = Math::StateSpaceEuler(**mVf, - mKe / mTe, 1 / mTe, dt, **mVr - mVse);
-
-	return **mVf;
+	**mEf = Math::StateSpaceEuler(mEf_prev, - mKe / mTe, 1. / mTe, dt, mVr_prev - **mVse);
+	
+	return **mEf;
 }
+
+/*
+// Saturation function according to Viviane thesis
+Real Signal::Exciter::saturation_fcn1(Real mVd, Real mVq, Real Vref, Real dt) {
+	if (mEf <= 2.3)
+		mVse = (0.1 / 2.3)*mEf;
+	else
+		mVse = (0.33 / 3.1)*mEf;
+	mVse = mVse*mEf;
+}
+
+// Saturation function according to PSAT
+Real Signal::Exciter::saturation_fcn2() {
+	return mA * (exp(mB * abs(mEf)) - 1);
+}
+
+*/

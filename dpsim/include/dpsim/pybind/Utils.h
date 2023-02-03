@@ -19,14 +19,14 @@ namespace py = pybind11;
 template <typename T>
 py::cpp_function createAttributeSetter(const std::string name) {
 	return [name](CPS::IdentifiedObject &object, T &value) {
-		object.attribute<T>(name)->set(value);
+		object.attributeTyped<T>(name)->set(value);
 	};
 }
 
 template <typename T>
 py::cpp_function createAttributeGetter(const std::string name) {
 	return [name](CPS::IdentifiedObject &object) {
-		return object.attribute<T>(name)->get();
+		return object.attributeTyped<T>(name)->get();
 	};
 }
 

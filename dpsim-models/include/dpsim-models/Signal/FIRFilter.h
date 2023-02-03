@@ -22,16 +22,16 @@ namespace Signal {
 	protected:
 		std::vector<Real> mSignal;
 		std::vector<Real> mFilter;
-		
+
 		Attribute<Real>::Ptr mInput;
 		Int mCurrentIdx;
 		Int mFilterLength;
-		
+
 		void incrementIndex();
 		Int getIndex(Int index);
 	public:
 		const Attribute<Real>::Ptr mOutput;
-		///FIXME: This is never written to, so it is always zero
+		/// This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
 		const Attribute<Real>::Ptr mInitSample;
 
 		FIRFilter(String uid, String name, Logger::Level logLevel = Logger::Level::off);

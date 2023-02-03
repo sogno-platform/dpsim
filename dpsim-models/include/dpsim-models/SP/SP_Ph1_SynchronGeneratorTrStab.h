@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_SynchronGenerator.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSource.h>
@@ -22,8 +22,7 @@ namespace Ph1 {
 	/// This model is based on Eremia section 2.1.6.
 	class SynchronGeneratorTrStab :
 		public Base::SynchronGenerator,
-		public MNAInterface,
-		public SimPowerComp<Complex>,
+		public CompositePowerComp<Complex>,
 		public SharedFactory<SynchronGeneratorTrStab> {
 	protected:
 		// #### Model specific variables ####
@@ -57,9 +56,9 @@ namespace Ph1 {
 		const Attribute<Real>::Ptr mEp_phase;
 		/// Angle by which the emf Ep is leading the terminal voltage
 		const Attribute<Real>::Ptr mDelta_p;
-		/// 
+		///
 		const Attribute<Real>::Ptr mRefOmega;
-		/// 
+		///
 		const Attribute<Real>::Ptr mRefDelta;
 		///
 		SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -90,39 +89,20 @@ namespace Ph1 {
 
 		// #### MNA Functions ####
 		/// Initializes variables of component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Performs with the model of a synchronous generator
-		/// to calculate the flux and current from the voltage vector.
-		void mnaStep(Matrix& systemMatrix, Matrix& rightVector, Matrix& leftVector, Real time);
+		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+
+		/// MNA pre and post step operations
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		///
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		///
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-		/// Retrieves calculated voltage from simulation for next step
-		void mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time);
-		///
-		void mnaUpdateCurrent(const Matrix& leftVector);
-		///
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaUpdateVoltage(const Matrix& leftVector) override;
+
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		void setReferenceOmega(Attribute<Real>::Ptr refOmegaPtr, Attribute<Real>::Ptr refDeltaPtr);
-
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(SynchronGeneratorTrStab& generator) :
-				Task(**generator.mName + ".MnaPreStep"), mGenerator(generator) {
-				// other attributes generally also influence the pre step,
-				// but aren't marked as writable anyway
-				mPrevStepDependencies.push_back(generator.attribute("v_intf"));
-				mModifiedAttributes.push_back(generator.mSubVoltageSource->attribute("V_ref"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SynchronGeneratorTrStab& mGenerator;
-		};
-
 		class AddBStep : public Task {
 		public:
 			AddBStep(SynchronGeneratorTrStab& generator) :
@@ -136,22 +116,6 @@ namespace Ph1 {
 
 		private:
 			SynchronGeneratorTrStab& mGenerator;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(SynchronGeneratorTrStab& generator, Attribute<Matrix>::Ptr leftVector) :
-				Task(**generator.mName + ".MnaPostStep"), mGenerator(generator), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(leftVector);
-				mAttributeDependencies.push_back(generator.mSubInductor->attribute("i_intf"));
-				mModifiedAttributes.push_back(generator.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SynchronGeneratorTrStab& mGenerator;
-			Attribute<Matrix>::Ptr mLeftVector;
 		};
 	};
 }

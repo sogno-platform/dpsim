@@ -21,8 +21,8 @@ namespace Ph1 {
 	/// which is transformed to a current source with
 	/// a parallel resistance using the Norton equivalent.
 	class VoltageSourceNorton :
-		public SimPowerComp<Complex>,
 		public Base::Ph1::VoltageSource,
+		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public SharedFactory<VoltageSourceNorton> {
 	protected:

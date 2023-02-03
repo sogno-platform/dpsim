@@ -23,28 +23,17 @@ namespace CPS {
 		/// Map of all attributes
 		AttributeBase::Map mAttributes;
 
-		// template<typename T, typename... Args>
-		// typename Attribute<T>::Ptr addAttribute(const String &name, bool dynamic, Args&&... args) {
-		// 	typename Attribute<T>::Ptr newAttr;
-		// 	if (dynamic) {
-		// 		newAttr = AttributeDynamic<T>::make(std::forward<Args>(args)...);
-		// 	} else {
-		// 		newAttr = AttributeStatic<T>::make(std::forward<Args>(args)...);
-		// 	}
-			 
-		// 	mAttributes[name] = newAttr;
-		// 	return newAttr;
-		// }
-
 	public:
 		typedef std::shared_ptr<AttributeList> Ptr;
 
 		AttributeList() { };
 
+		virtual ~AttributeList() = default;
+
 		const AttributeBase::Map & attributes() { return mAttributes; };
 
 		/// Return pointer to an attribute.
-		AttributeBase::Ptr attribute(const String &name) {
+		virtual AttributeBase::Ptr attribute(const String &name) {
 			auto it = mAttributes.find(name);
 			if (it == mAttributes.end())
 				throw InvalidAttributeException();
@@ -54,7 +43,7 @@ namespace CPS {
 
 		/// Return pointer to an attribute.
 		template<typename T>
-		typename Attribute<T>::Ptr attribute(const String &name) {
+		typename Attribute<T>::Ptr attributeTyped(const String &name) {
 			auto attr = attribute(name);
 			auto attrPtr = std::dynamic_pointer_cast<Attribute<T>>(attr.getPtr());
 
@@ -64,10 +53,5 @@ namespace CPS {
 			return typename Attribute<T>::Ptr(attrPtr);
 		}
 
-		// void reset() {
-		// 	for (auto a : mAttributes) {
-		// 		a.second->reset();
-		// 	}
-		// }
 	};
 }

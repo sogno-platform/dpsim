@@ -25,55 +25,24 @@ namespace Ph3 {
 		const Attribute<Matrix>::Ptr mEdq0_t;
 		/// voltage behind subtransient reactance
 		const Attribute<Matrix>::Ptr mEdq0_s;
+		
 	protected:
 		/// history term of voltage behind the transient reactance
 		Matrix mEh_t;
 		/// history term of voltage behind the subtransient reactance
 		Matrix mEh_s;
-		///
-		Real mAd_t;
-		///
-		Real mBd_t;
-		///
-		Real mAq_t;
-		///
-		Real mBq_t;
-		///
-		Real mDq_t;
-		///
-		Real mAd_s;
-		///
-		Real mAq_s;
-		/// 
-		Real mBd_s;
-		/// 
-		Real mBq_s;
-		///
-		Real mCd_s;
-		///
-		Real mCq_s;
-		///
-		Real mDq_s;
-		///
-		Real mYd;
-		///
-		Real mYq;
 
 	public:
 		///
-		SynchronGenerator6aOrderVBR(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator6aOrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator6aOrderVBR(String name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SimPowerComp<Real>::Ptr clone(String name);
+		SynchronGenerator6aOrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General Functions ####
 		///
-		void specificInitialization();
+		void specificInitialization() override;
 		///
-		void calculateAuxiliarConstants();
-		///
-		void stepInPerUnit();
+		void stepInPerUnit() override;
 	};
 }
 }

@@ -12,12 +12,11 @@ using namespace CPS;
 
 // #### General ####
 SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel, Bool withResistiveLosses)
-	: SimPowerComp<Complex>(uid, name, logLevel),
+	: Base::Ph1::Transformer(mAttributes), CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
 	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
 	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
 	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
 	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
 	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)) {
 	if (withResistiveLosses)
@@ -29,14 +28,6 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
-
-	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
-	mNominalVoltageEnd1 = Attribute<Real>::create("nominal_voltage_end1", mAttributes);
-	mNominalVoltageEnd2 = Attribute<Real>::create("nominal_voltage_end2", mAttributes);
-	mRatedPower = Attribute<Real>::create("S", mAttributes);
-	mRatio = Attribute<Complex>::create("ratio", mAttributes);
-	mResistance = Attribute<Real>::create("R", mAttributes);
-	mInductance = Attribute<Real>::create("L", mAttributes);
 
 	**mCurrent = MatrixComp::Zero(2,1);
 	**mActivePowerBranch = Matrix::Zero(2,1);
@@ -57,7 +48,6 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 
 	mRatioAbs = std::abs(**mRatio);
 	mRatioPhase = std::arg(**mRatio);
-	mConductance = 1 / **mResistance;
 
 	mParametersSet = true;
 }
@@ -84,7 +74,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mNominalOmega = 2. * PI * frequency;
 	mReactance = mNominalOmega * **mInductance;
 	mSLog->info("Reactance={} [Ohm] (referred to primary side)", mReactance);
-	
+
 	// Component parameters are referred to higher voltage side.
 	// Switch terminals to have terminal 0 at higher voltage side
 	// if transformer is connected the other way around.
@@ -114,7 +104,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// Create series sub components
 	mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mUID + "_ind", **mName + "_ind", Logger::Level::off);
 	mSubInductor->setParameters(**mInductance);
-	mSubComponents.push_back(mSubInductor);
+	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	if (mNumVirtualNodes == 3) {
 		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
@@ -122,7 +112,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor->setParameters(**mResistance);
 		mSubResistor->connect({ node(0), mVirtualNodes[2] });
 		mSubInductor->connect({ mVirtualNodes[2], mVirtualNodes[0] });
-		mSubComponents.push_back(mSubResistor);
+		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	} else {
 		mSubInductor->connect({ node(0), mVirtualNodes[0] });
 	}
@@ -140,7 +130,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		mSubSnubResistor1->connect({ node(0), SP::SimNode::GND });
 		mSLog->info("Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]", node(0)->name(), Logger::realToString(mSnubberResistance1));
 		mSubSnubResistor1->setBaseVoltage(**mNominalVoltageEnd1);
-		mSubComponents.push_back(mSubSnubResistor1);
+		addMNASubComponent(mSubSnubResistor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 		// A snubber conductance is added on the lower voltage side
 		mSnubberResistance2 = std::pow(std::abs(**mNominalVoltageEnd2),2) / pSnub;
@@ -149,7 +139,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		mSubSnubResistor2->connect({ node(1), SP::SimNode::GND });
 		mSLog->info("Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]", node(1)->name(), Logger::realToString(mSnubberResistance2));
 		mSubSnubResistor2->setBaseVoltage(**mNominalVoltageEnd2);
-		mSubComponents.push_back(mSubSnubResistor2);
+		addMNASubComponent(mSubSnubResistor2, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 		// // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
 		// mSnubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltageEnd1),2) / mNominalOmega;
@@ -167,7 +157,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		mSubSnubCapacitor2->connect({ node(1), SP::SimNode::GND });
 		mSLog->info("Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]", node(1)->name(), Logger::realToString(mSnubberCapacitance2));
 		mSubSnubCapacitor2->setBaseVoltage(**mNominalVoltageEnd2);
-		mSubComponents.push_back(mSubSnubCapacitor2);
+		addMNASubComponent(mSubSnubCapacitor2, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
 	// Initialize electrical subcomponents
@@ -288,7 +278,6 @@ void SP::Ph1::Transformer::updateBranchFlow(VectorComp& current, VectorComp& pow
 void SP::Ph1::Transformer::storeNodalInjection(Complex powerInjection) {
 	**mActivePowerInjection = std::real(powerInjection)*mBaseApparentPower;
 	**mReactivePowerInjection = std::imag(powerInjection)*mBaseApparentPower;
-	**mStoreNodalPowerInjection = true;
 }
 
 MatrixComp SP::Ph1::Transformer::Y_element() {
@@ -297,19 +286,7 @@ MatrixComp SP::Ph1::Transformer::Y_element() {
 
 // #### MNA Section ####
 
-void SP::Ph1::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-
+void SP::Ph1::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	mSLog->info(
 		"\nTerminal 0 connected to {:s} = sim node {:d}"
 		"\nTerminal 1 connected to {:s} = sim node {:d}",
@@ -348,50 +325,23 @@ void SP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void SP::Ph1::Transformer::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	// Add subcomps to right side vector
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaApplyRightSideVectorStamp(rightVector);
-}
-
-void SP::Ph1::Transformer::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	// add pre-step dependencies of subcomponents
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	// add pre-step dependencies of component itself
+void SP::Ph1::Transformer::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	prevStepDependencies.push_back(attribute("i_intf"));
 	prevStepDependencies.push_back(attribute("v_intf"));
 	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void SP::Ph1::Transformer::mnaPreStep(Real time, Int timeStepCount) {	
-	// pre-step of subcomponents
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaPreStep(time, timeStepCount);
-	// pre-step of component itself
+void SP::Ph1::Transformer::mnaParentPreStep(Real time, Int timeStepCount) {
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void SP::Ph1::Transformer::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
-	// add post-step dependencies of subcomponents
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	// add post-step dependencies of component itself
+void SP::Ph1::Transformer::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(this->attribute("v_intf"));
 	modifiedAttributes.push_back(this->attribute("i_intf"));
 }
 
-void SP::Ph1::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	// post-step of subcomponents
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
-	// post-step of component itself
+void SP::Ph1::Transformer::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	this->mnaUpdateVoltage(**leftVector);
 	this->mnaUpdateCurrent(**leftVector);
 }

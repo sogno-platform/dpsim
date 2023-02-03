@@ -11,9 +11,31 @@ Examples::Grids::SMIB::ScenarioConfig2 GridParams;
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
-void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
-	Real startTimeFault, Real endTimeFault, Real logDownSampling, Real switchOpen,
-	Real switchClosed, Logger::Level logLevel) {
+int main(int argc, char* argv[]) {	
+
+	// Simulation parameters
+	Real switchClosed = GridParams.SwitchClosed;
+	Real switchOpen = GridParams.SwitchOpen;
+	Real startTimeFault = 1.0;
+	Real endTimeFault   = 1.1;
+	Real timeStep = 1e-6;
+	Real finalTime = 20;
+
+	// Command line args processing
+	CommandLineArgs args(argc, argv);
+	std::string stepSize_str = "";
+	if (argc > 1 && (args.options.find("StepSize") != args.options.end())) {
+			timeStep = args.getOptionReal("StepSize");
+			stepSize_str = "_StepSize_" + std::to_string(timeStep);
+	}
+
+	Real logDownSampling;
+	if (timeStep<100e-6)
+		logDownSampling = floor(100e-6 / timeStep);
+	else
+		logDownSampling = 1.0;
+	Logger::Level logLevel = Logger::Level::off;
+	std::string simName = "SP_SynGen4OrderDCIM_SMIB_Fault" + stepSize_str;
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
@@ -118,16 +140,14 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
-	//loggerSP->logAttribute("v_slack", 	 extnetSP->attribute("v_intf"));
-	//loggerSP->logAttribute("i_slack", 	 extnetSP->attribute("i_intf"));
 	loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
     loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
     loggerSP->logAttribute("Te", 	 genSP->attribute("Te"));
     loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
     loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
 	loggerSP->logAttribute("Edq0", 		 genSP->attribute("Edq_t"));
-	loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Vdq"));
-	loggerSP->logAttribute("Idq0", 		 genSP->attribute("Idq"));
+	loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Idq0"));
+	loggerSP->logAttribute("Idq0", 		 genSP->attribute("Idq0"));
 
 	Simulation simSP(simNameSP, logLevel);
 	simSP.doInitFromNodesAndTerminals(true);
@@ -147,41 +167,4 @@ void SP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	simSP.addEvent(sw2);
 	
 	simSP.run();
-}
-
-int main(int argc, char* argv[]) {	
-
-	// Simulation parameters
-	Real SwitchClosed = GridParams.SwitchClosed;
-	Real SwitchOpen = GridParams.SwitchOpen;
-	Real startTimeFault = 1.0;
-	Real endTimeFault   = 1.1;
-	Real timeStep = 1e-6;
-	Real H = syngenKundur.H;
-	Real finalTime = 20;
-
-	// Command line args processing
-	CommandLineArgs args(argc, argv);
-	std::string stepSize_str = "";
-	std::string inertia_str = "";
-	if (argc > 1) {
-		if (args.options.find("StepSize") != args.options.end()) {
-			timeStep = args.getOptionReal("StepSize");
-			stepSize_str = "_StepSize_" + std::to_string(timeStep);
-		}
-		if (args.options.find("Inertia") != args.options.end())  {
-			H = args.getOptionReal("Inertia");
-			inertia_str = "_Inertia_" + std::to_string(H);
-		}
-	}
-
-	Real logDownSampling;
-	if (timeStep<100e-6)
-		logDownSampling = floor((100e-6) / timeStep);
-	else
-		logDownSampling = 1.0;
-	Logger::Level logLevel = Logger::Level::off;
-	std::string simName = "SP_SynGen4OrderDCIM_SMIB_Fault" + stepSize_str + inertia_str;
-	SP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
-			logDownSampling, SwitchOpen, SwitchClosed, logLevel);
 }

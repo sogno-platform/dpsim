@@ -42,7 +42,7 @@ namespace Signal {
 
 	public:
 
-		///FIXME: This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
+		/// This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
 		const Attribute<Real>::Ptr mInputRef;
 
 		/// Previous Input

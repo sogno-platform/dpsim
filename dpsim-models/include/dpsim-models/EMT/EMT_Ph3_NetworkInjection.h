@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
 
@@ -19,8 +19,7 @@ namespace CPS {
 			///
 			/// This model represents network injections by an ideal voltage source.
 			class NetworkInjection :
-				public SimPowerComp<Real>,
-				public MNAInterface,
+				public CompositePowerComp<Real>,
 				public SharedFactory<NetworkInjection> {
 			private:
 				// ### Electrical Subcomponents ###
@@ -56,49 +55,21 @@ namespace CPS {
 				void setParameters(MatrixComp voltageRef, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 50.0, bool zigzag = false);
 
 				// #### MNA Section ####
-				/// Initializes internal variables of the component
-				void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-				/// Stamps system matrix
-				void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
 				/// Stamps right side (source) vector
-				void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+				void mnaParentApplyRightSideVectorStamp(Matrix& rightVector) override;
 				/// Returns current through the component
-				void mnaUpdateCurrent(const Matrix& leftVector);
+				void mnaUpdateCurrent(const Matrix& leftVector) override;
 				/// Updates voltage across component
-				void mnaUpdateVoltage(const Matrix& leftVector);
+				void mnaUpdateVoltage(const Matrix& leftVector) override;
 				/// MNA pre step operations
-				void mnaPreStep(Real time, Int timeStepCount);
+				void mnaParentPreStep(Real time, Int timeStepCount) override;
 				/// MNA post step operations
-				void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+				void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 				/// Add MNA pre step dependencies
-				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+				void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 				/// Add MNA post step dependencies
-				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+				void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
-				class MnaPreStep : public CPS::Task {
-				public:
-					MnaPreStep(NetworkInjection& networkInjection) :
-						Task(**networkInjection.mName + ".MnaPreStep"), mNetworkInjection(networkInjection) {
-							mNetworkInjection.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-					}
-					void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPreStep(time, timeStepCount); };
-
-				private:
-					NetworkInjection& mNetworkInjection;
-				};
-
-				class MnaPostStep : public CPS::Task {
-				public:
-					MnaPostStep(NetworkInjection& networkInjection, Attribute<Matrix>::Ptr leftVector) :
-						Task(**networkInjection.mName + ".MnaPostStep"), mNetworkInjection(networkInjection), mLeftVector(leftVector) {
-						mNetworkInjection.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-					}
-					void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPostStep(time, timeStepCount, mLeftVector); };
-
-				private:
-					NetworkInjection& mNetworkInjection;
-					Attribute<Matrix>::Ptr mLeftVector;
-				};
 			};
 		}
 	}

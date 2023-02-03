@@ -25,36 +25,18 @@ namespace Ph3 {
 	protected:
 		/// history term of VBR
 		Matrix mEhs_vbr;
-		///
-		Real mAd;
-		///
-		Real mAq;
-		/// 
-		Real mBd;
-		///
-		Real mBq;
-		///
-		Real mCq;
 
 	public:
 		///
-		SynchronGenerator4OrderVBR(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator4OrderVBR(String name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SimPowerComp<Real>::Ptr clone(String name);
+		SynchronGenerator4OrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General Functions ####
 		///
-		void specificInitialization();
+		void specificInitialization() override;
 		///
-		void calculateAuxiliarConstants();
-		///
-		void stepInPerUnit();
-		/// Setter 4th order parameters - extending base class setter by logging
-		void setOperationalParametersPerUnit(Real nomPower, 
-			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
-			Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t);
+		void stepInPerUnit() override;
 	};
 }
 }

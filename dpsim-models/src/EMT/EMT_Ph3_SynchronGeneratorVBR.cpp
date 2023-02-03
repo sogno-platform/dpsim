@@ -14,32 +14,11 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: Base::SynchronGenerator(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3,1);
 	**mIntfCurrent = Matrix::Zero(3,1);
-
-	///CHECK: Are all of these used in this class or in subclasses?
-	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
-	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
-	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
-	mLd = Attribute<Real>::create("Ld", mAttributes, 0);
-	mLq = Attribute<Real>::create("Lq", mAttributes, 0);
-	mTd0_t = Attribute<Real>::create("Td0_t", mAttributes, 0);
-	mTd0_s = Attribute<Real>::create("Td0_s", mAttributes, 0);
-	mTq0_t = Attribute<Real>::create("Tq0_t", mAttributes, 0);
-	mTq0_s = Attribute<Real>::create("Tq0_s", mAttributes, 0);
-	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
-	mDelta = Attribute<Real>::create("delta_r", mAttributes, 0);
-	mElecTorque = Attribute<Real>::create("T_e", mAttributes, 0);
-	mMechTorque = Attribute<Real>::create("T_m", mAttributes, 0);
-	mMechPower = Attribute<Real>::create("P_m", mAttributes, 0);
-	mLd_s = Attribute<Real>::create("Ld_s", mAttributes, 0);
-	mLd_t = Attribute<Real>::create("Ld_t", mAttributes, 0);
-	mLq_s = Attribute<Real>::create("Lq_s", mAttributes, 0);
-	mLq_t = Attribute<Real>::create("Lq_t", mAttributes, 0);
-	
 }
 
 EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Logger::Level logLevel)
@@ -81,7 +60,7 @@ void EMT::Ph3::SynchronGeneratorVBR::setBaseAndOperationalPerUnitParameters(
 			"Ld_t: {:e}\nLq_t: {:e}\nLd_s: {:e}\nLq_s: {:e}\n"
 			"Td0_t: {:e}\nTq0_t: {:e}\nTd0_s: {:e}\nTq0_s: {:e}\n",
 			poleNumber, inertia,
-			Rs, Ld, Lq, Ll, 
+			Rs, Ld, Lq, Ll,
 			Ld_t, Lq_t, Ld_s, Lq_s,
 			Td0_t, Tq0_t, Td0_s, Tq0_s);
 
@@ -117,21 +96,21 @@ void EMT::Ph3::SynchronGeneratorVBR::setInitialValues(Real initActivePower, Real
 	mSLog->info("Set initial values: \n"
 				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
 				"initVoltAngle: {:e} \ninitMechPower: {:e}",
-				initActivePower, initReactivePower, initTerminalVolt, 
+				initActivePower, initReactivePower, initTerminalVolt,
 				initVoltAngle, initMechPower);
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real frequency) {
 	if(!mInitialValuesSet) {
 		mSLog->info("--- Initialization from powerflow ---");
-		
+
 		// terminal powers in consumer system -> convert to generator system
 		Real activePower = -terminal(0)->singlePower().real();
 		Real reactivePower = -terminal(0)->singlePower().imag();
 
-		// 	voltage magnitude in phase-to-phase RMS -> convert to phase-to-ground peak expected by setInitialValues 
+		// 	voltage magnitude in phase-to-phase RMS -> convert to phase-to-ground peak expected by setInitialValues
 		Real voltMagnitude = RMS3PH_TO_PEAK1PH*Math::abs(initialSingleVoltage(0));
-		
+
 		this->setInitialValues(activePower, reactivePower, voltMagnitude, Math::phase(initialSingleVoltage(0)), activePower);
 
 		mSLog->info("\nTerminal 0 voltage: {:s}"
@@ -153,11 +132,11 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, At
 	for (UInt phase1Idx = 0; phase1Idx < 3; ++phase1Idx)
 		for (UInt phase2Idx = 0; phase2Idx < 3; ++phase2Idx)
 			mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, phase1Idx),matrixNodeIndex(0, phase2Idx)));
-	
+
 	mSLog->info("List of index pairs of varying matrix entries: ");
 	for (auto indexPair : mVariableSystemMatrixEntries)
 		mSLog->info("({}, {})", indexPair.first, indexPair.second);
-	
+
 
 	mSystemOmega = omega;
 	mTimeStep = timeStep;
@@ -306,7 +285,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaApplyRightSideVectorStamp(Matrix& rightV
 	}
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {	
+void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 
 	// Update of mechanical torque from turbine governor
 	if (mHasTurbineGovernor)
@@ -373,7 +352,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaPostStep(Real time, Int timeStepCount, A
 		// Get exciter output voltage
 		// Note: scaled by Rfd/Lmd to transform from exciter pu system
 		// to the synchronous generator pu system
-		mVfd = (mRfd / mLmd)*mExciter->step(mVd, mVq, 1.0, mTimeStep);
+		mVfd = (mRfd / mLmd)*mExciter->step(mVd, mVq, mTimeStep);
 	}
 
 	mIabc = R_eq_vbr.inverse()*(mVabc - E_eq_vbr);

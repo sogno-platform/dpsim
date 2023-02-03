@@ -13,22 +13,19 @@ using namespace CPS;
 SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	Real resistance, Real inductance,
 	Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
-	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes, baseVoltage)),
-	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
-	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
-	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
-	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
-	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
-	mInductance(Attribute<Real>::create("L_series", mAttributes))  {
+	: 	Base::Ph1::PiLine(mAttributes),
+		CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+		mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes, baseVoltage)),
+		mInductance(Attribute<Real>::create("L_series", mAttributes)),
+		mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
+		mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
+		mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
+		mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
+		mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)) {
+
 
 	setTerminalNumber(2);
 
-	mSeriesRes = Attribute<Real>::create("R_series", mAttributes);
-	mParallelCap = Attribute<Real>::create("C_parallel", mAttributes);
-	mParallelCond = Attribute<Real>::create("G_parallel", mAttributes);
-	
 	**mSeriesRes = resistance;
 	**mInductance = inductance;
 
@@ -41,24 +38,20 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 }
 
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
-	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
-	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
-	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
-	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mStoreNodalPowerInjection(Attribute<Bool>::create("nodal_injection_stored", mAttributes, false)),
-	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
-	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
-	mInductance(Attribute<Real>::create("L_series", mAttributes))  {
+	: 	Base::Ph1::PiLine(mAttributes),
+		CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+		mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
+		mInductance(Attribute<Real>::create("L_series", mAttributes)),
+		mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
+		mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)),
+		mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
+		mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
+		mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)) {
 
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
-
-	/// FIXME: Why are these attributes defined differently than in the first constructor?
-	mSeriesRes = Attribute<Real>::create("R", mAttributes);
-	mSeriesInd = Attribute<Real>::create("L", mAttributes);
 }
 
 
@@ -141,7 +134,6 @@ void SP::Ph1::RXLine::updateBranchFlow(VectorComp& current, VectorComp& powerflo
 void SP::Ph1::RXLine::storeNodalInjection(Complex powerInjection) {
 	**mActivePowerInjection = std::real(powerInjection) * mBaseApparentPower;
 	**mReactivePowerInjection = std::imag(powerInjection) * mBaseApparentPower;
-	**mStoreNodalPowerInjection = true;
 }
 
 
@@ -168,16 +160,19 @@ void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
 	mSubResistor->setParameters(**mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubResistor->initializeFromNodesAndTerminals(frequency);
+	addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(**mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
+	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mInitialResistor = std::make_shared<SP::Ph1::Resistor>(**mName + "_snubber_res", mLogLevel);
 	mInitialResistor->setParameters(1e6);
 	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromNodesAndTerminals(frequency);
+	addMNASubComponent(mInitialResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -192,41 +187,23 @@ void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void SP::Ph1::RXLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-	mSubInductor->mnaInitialize(omega, timeStep, leftVector);
-	mSubResistor->mnaInitialize(omega, timeStep, leftVector);
-	mInitialResistor->mnaInitialize(omega, timeStep, leftVector);
-	for (auto task : mSubInductor->mnaTasks()) {
-		mMnaTasks.push_back(task);
-	}
-	for (auto task : mSubResistor->mnaTasks()) {
-		mMnaTasks.push_back(task);
-	}
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+void SP::Ph1::RXLine::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	modifiedAttributes.push_back(mRightVector);
+};
+
+void SP::Ph1::RXLine::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mIntfVoltage);
+};
+
+void SP::Ph1::RXLine::mnaParentPreStep(Real time, Int timeStepCount) {
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void SP::Ph1::RXLine::mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix) {
-	mInitialResistor->mnaApplySystemMatrixStamp(systemMatrix);
-}
-
-void SP::Ph1::RXLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubResistor->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubInductor->mnaApplySystemMatrixStamp(systemMatrix);
-	mInitialResistor->mnaApplySystemMatrixStamp(systemMatrix);
-}
-
-
-void SP::Ph1::RXLine::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaApplyRightSideVectorStamp(**mLine.mRightVector);
-}
-
-void SP::Ph1::RXLine::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaUpdateVoltage(**mLeftVector);
-	mLine.mnaUpdateCurrent(**mLeftVector);
+void SP::Ph1::RXLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void SP::Ph1::RXLine::mnaUpdateVoltage(const Matrix& leftVector) {

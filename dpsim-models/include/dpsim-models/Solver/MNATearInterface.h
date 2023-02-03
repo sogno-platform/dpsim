@@ -12,7 +12,7 @@
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
-	class MNATearInterface : public MNAInterface {
+	class MNATearInterface {
 	public:
 		// Returns a list of additional components connected to ground that
 		// need to be considered for the original systems.

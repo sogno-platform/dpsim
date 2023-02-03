@@ -17,9 +17,14 @@ namespace Ph1 {
 	class VoltageSource {
 	public:
 		/// Voltage set point [V]
-		Attribute<Complex>::Ptr mVoltageRef;
+		const Attribute<Complex>::Ptr mVoltageRef;
 		/// Source frequency [Hz]
-		Attribute<Real>::Ptr mSrcFreq;
+		const Attribute<Real>::Ptr mSrcFreq;
+
+		explicit VoltageSource(CPS::AttributeBase::Map &attributeList) :
+			mVoltageRef(Attribute<Complex>::create("V_ref", attributeList)),
+			mSrcFreq(Attribute<Real>::create("f_src", attributeList, -1)) { };
+
 		/// Sets model specific parameters
 		void setParameters(Complex voltageRef, Real srcFreq = -1) {
 			**mVoltageRef = voltageRef;

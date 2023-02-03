@@ -25,12 +25,12 @@ EMT::Ph3::CurrentSource::CurrentSource(String uid, String name, Logger::Level lo
 
 
 void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
-	mSLog->info("\n--- Initialization from node voltages and terminal ---");	
+	mSLog->info("\n--- Initialization from node voltages and terminal ---");
 	if (!mParametersSet) {
 		auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw", Logger::Level::off);
 		// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
 		srcSigSine->setParameters(Complex(1,0), frequency);
-		mSrcSig = srcSigSine; 
+		mSrcSig = srcSigSine;
 
 		Complex v_ref = initialSingleVoltage(1) - initialSingleVoltage(0);
 		Complex s_ref = terminal(1)->singlePower() - terminal(0)->singlePower();
@@ -39,7 +39,7 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 		Complex i_ref = std::conj(s_ref/v_ref/sqrt(3.));
 
 		**mCurrentRef = CPS::Math::singlePhaseVariableToThreePhase(i_ref);
-		mSrcFreq->setReference(mSrcSig->attribute<Real>("freq"));
+		mSrcFreq->setReference(mSrcSig->attributeTyped<Real>("freq"));
 
 		mSLog->info("\nReference current: {:s}"
 					"\nReference voltage: {:s}"
@@ -58,7 +58,7 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 	} else {
 		mSLog->info("\nInitialization from node voltages and terminal omitted (parameter already set)."
 					"\nReference voltage: {:s}",
-					Logger::matrixCompToString(attribute<MatrixComp>("I_ref")->get()));
+					Logger::matrixCompToString(attributeTyped<MatrixComp>("I_ref")->get()));
 	}
 	mSLog->info("\n--- Initialization from node voltages and terminal ---");
 	mSLog->flush();
@@ -67,7 +67,7 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 SimPowerComp<Real>::Ptr EMT::Ph3::CurrentSource::clone(String name) {
 	auto copy = CurrentSource::make(name, mLogLevel);
 	// TODO: implement setParameters
-	// copy->setParameters(attribute<MatrixComp>("I_ref")->get(), attribute<Real>("f_src")->get());
+	// copy->setParameters(attributeTyped<MatrixComp>("I_ref")->get(), attributeTyped<Real>("f_src")->get());
 	return copy;
 }
 
@@ -101,7 +101,7 @@ void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
 	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
 		for(int i = 0; i < 3; i++) {
-			(**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs((**mCurrentRef)(i, 0)) 
+			(**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs((**mCurrentRef)(i, 0))
 				* cos(Math::phase(mSrcSig->getSignal()) + Math::phase((**mCurrentRef)(i, 0)));
 		}
 	} else {

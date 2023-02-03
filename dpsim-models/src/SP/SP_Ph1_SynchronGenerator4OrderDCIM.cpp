@@ -11,10 +11,11 @@
 using namespace CPS;
 
 SP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
-    (String uid, String name, Logger::Level logLevel)
+    (const String & uid, const String & name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
 	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)) {
 
+	//
 	setTerminalNumber(1);
 
 	// model variables
@@ -22,14 +23,8 @@ SP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
 }
 
 SP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
-	(String name, Logger::Level logLevel)
+	(const String & name, Logger::Level logLevel)
 	: SynchronGenerator4OrderDCIM(name, name, logLevel) {
-}
-
-SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGenerator4OrderDCIM::clone(String name) {
-	
-	auto copy = SynchronGenerator4OrderDCIM::make(name, mLogLevel);
-	return copy;
 }
 
 void SP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
@@ -64,21 +59,13 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::calculateStateMatrix() {
 	mB <<	(1. / Tq_t) * (mLq-mLq_t) / mLq,	0.0,
 			0.0, 								(1. / Td_t) * (mLd-mLd_t) / mLd;
 	mC <<	0,
-	   		(1. / Td_t) * mEf * (mLd_t / mLd);
+	   		(1. / Td_t) * **mEf * (mLd_t / mLd);
 }
 
 void SP::Ph1::SynchronGenerator4OrderDCIM::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
-	if (mSimTime>0.0) {
-		// calculate mechanical variables at t=k+1 with forward euler
-		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (**mMechTorque - **mElecTorque));
-		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
-        **mElecTorque = ((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0));
-	}
-
 	// get transformation matrix
 	mDqToComplexA = get_DqToComplexATransformMatrix();
 	mComplexAToDq = mDqToComplexA.transpose();

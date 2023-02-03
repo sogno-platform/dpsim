@@ -17,17 +17,27 @@ namespace Ph1 {
 	class Transformer {
 	public:
 		/// Nominal voltage of primary side
-		Attribute<Real>::Ptr mNominalVoltageEnd1;
+		const Attribute<Real>::Ptr mNominalVoltageEnd1;
 		/// Nominal voltage of secondary side
-		Attribute<Real>::Ptr mNominalVoltageEnd2;
+		const Attribute<Real>::Ptr mNominalVoltageEnd2;
 		/// Rated Apparent Power [VA]
-		Attribute<Real>::Ptr mRatedPower;
+		const Attribute<Real>::Ptr mRatedPower;
 		/// Complex transformer ratio
-		Attribute<Complex>::Ptr mRatio;
+		const Attribute<Complex>::Ptr mRatio;
 		/// Resistance [Ohm]
-		Attribute<Real>::Ptr mResistance;
+		const Attribute<Real>::Ptr mResistance;
 		/// Inductance [H]
-		Attribute<Real>::Ptr mInductance;
+		const Attribute<Real>::Ptr mInductance;
+
+		explicit Transformer(CPS::AttributeBase::Map &attributeList) :
+			mNominalVoltageEnd1(Attribute<Real>::create("nominal_voltage_end1", attributeList)),
+			mNominalVoltageEnd2(Attribute<Real>::create("nominal_voltage_end2", attributeList)),
+			mRatedPower(Attribute<Real>::create("S", attributeList)),
+			mRatio(Attribute<Complex>::create("ratio", attributeList)),
+			mResistance(Attribute<Real>::create("R", attributeList)),
+			mInductance(Attribute<Real>::create("L", attributeList)) { };
+
+
 		///
 		void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance) {
 			**mNominalVoltageEnd1 = nomVoltageEnd1;

@@ -12,7 +12,7 @@ using namespace CPS;
 
 
 EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
-	SimPowerComp<Real>(uid, name, logLevel),
+	CompositePowerComp<Real>(uid, name, true, true, logLevel),
 	mOmegaN(Attribute<Real>::create("Omega_nom", mAttributes)),
 	mPref(Attribute<Real>::create("P_ref", mAttributes)),
 	mQref(Attribute<Real>::create("Q_ref", mAttributes)),
@@ -30,7 +30,7 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 	if (withTrafo) {
 		setVirtualNodeNumber(4);
 		mConnectionTransformer = EMT::Ph3::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel, false);
-		mSubComponents.push_back(mConnectionTransformer);
+		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	} else {
 		setVirtualNodeNumber(3);
 	}
@@ -47,11 +47,13 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 	mSubCapacitorF = EMT::Ph3::Capacitor::make(**mName + "_capF", mLogLevel);
 	mSubInductorF = EMT::Ph3::Inductor::make(**mName + "_indF", mLogLevel);
 	mSubCtrledVoltageSource = EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
-	mSubComponents.push_back(mSubResistorF);
-	mSubComponents.push_back(mSubResistorC);
-	mSubComponents.push_back(mSubCapacitorF);
-	mSubComponents.push_back(mSubInductorF);
-	mSubComponents.push_back(mSubCtrledVoltageSource);
+	addMNASubComponent(mSubResistorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+	addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+	addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+	addMNASubComponent(mSubInductorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+	// Pre-step of the subcontrolled voltage source is handled explicitly in mnaParentPreStep
+	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	mSLog->info("Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)
@@ -95,9 +97,9 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysV
 	**mQref = Qref;
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, 
+void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 	Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
-	
+
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower,
 	ratioAbs, ratioPhase, resistance, inductance);
 
@@ -253,49 +255,16 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 	mSLog->info("\n--- Initialization from powerflow finished ---");
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	mTimeStep = timeStep;
-
-	// initialize electrical subcomponents with MNA interface
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
 
 	// initialize state space controller
 	mPowerControllerVSI->initializeStateSpaceModel(omega, timeStep, leftVector);
 	mPLL->setSimulationParameters(timeStep);
 
-	// collect right side vectors of subcomponents
-	mRightVectorStamps.push_back(&mSubCapacitorF->attribute<Matrix>("right_vector")->get());
-	mRightVectorStamps.push_back(&mSubInductorF->attribute<Matrix>("right_vector")->get());
-	mRightVectorStamps.push_back(&mSubCtrledVoltageSource->attribute<Matrix>("right_vector")->get());
-	if (mWithConnectionTransformer)
-		mRightVectorStamps.push_back(&mConnectionTransformer->attribute<Matrix>("right_vector")->get());
-
-	// collect tasks
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-
 	// TODO: these are actually no MNA tasks
 	mMnaTasks.push_back(std::make_shared<ControlPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<ControlStep>(*this));
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-}
-
-
-void EMT::Ph3::AvVoltageSourceInverterDQ::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
-}
-
-void EMT::Ph3::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	rightVector.setZero();
-	for (auto stamp : mRightVectorStamps)
-		rightVector += *stamp;
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -315,9 +284,9 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::addControlStepDependencies(AttributeBa
 	mPLL->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mPowerControllerVSI->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	// add step dependencies of component itself
-	attributeDependencies.push_back(attribute("i_intf"));
-	attributeDependencies.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("Vsref"));
+	attributeDependencies.push_back(mIntfCurrent);
+	attributeDependencies.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mVsref);
 }
 
 Matrix EMT::Ph3::AvVoltageSourceInverterDQ::parkTransformPowerInvariant(Real theta, const Matrix &fabc) {
@@ -363,7 +332,7 @@ Matrix EMT::Ph3::AvVoltageSourceInverterDQ::getInverseParkTransformMatrixPowerIn
 void EMT::Ph3::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	Matrix vcdq, ircdq;
-	Real theta = mPLL->attribute<Matrix>("output_prev")->get()(0, 0);
+	Real theta = mPLL->mOutputPrev->get()(0, 0);
 	vcdq = parkTransformPowerInvariant(theta, **mVirtualNodes[3]->mVoltage);
 	ircdq = parkTransformPowerInvariant(theta, - **mSubResistorC->mIntfCurrent);
 
@@ -377,64 +346,45 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCou
 	mPowerControllerVSI->signalStep(time, timeStepCount);
 
 	// Transformation interface backward
-	**mVsref = inverseParkTransformPowerInvariant(mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mPowerControllerVSI->attribute<Matrix>("output_curr")->get());
-
-	// Update nominal system angle
+	**mVsref = inverseParkTransformPowerInvariant(mPLL->mOutputPrev->get()(0, 0), mPowerControllerVSI->mOutputCurr->get());
 	mThetaN = mThetaN + mTimeStep * **mOmegaN;
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	// add pre-step dependencies of subcomponents
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	// add pre-step dependencies of component itself
-	prevStepDependencies.push_back(attribute("Vsref"));
-	prevStepDependencies.push_back(attribute("i_intf"));
-	prevStepDependencies.push_back(attribute("v_intf"));
-	attributeDependencies.push_back(mPowerControllerVSI->attribute<Matrix>("output_prev"));
-	attributeDependencies.push_back(mPLL->attribute<Matrix>("output_prev"));
-	modifiedAttributes.push_back(attribute("right_vector"));
+void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	prevStepDependencies.push_back(mVsref);
+	prevStepDependencies.push_back(mIntfCurrent);
+	prevStepDependencies.push_back(mIntfVoltage);
+	attributeDependencies.push_back(mPowerControllerVSI->mOutputPrev);
+	attributeDependencies.push_back(mPLL->mOutputPrev);
+	modifiedAttributes.push_back(mRightVector);
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {
+void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents - controlled source
 	if (mWithControl)
-		mSubCtrledVoltageSource->attribute<MatrixComp>("V_ref")->set(PEAK1PH_TO_RMS3PH * **mVsref);
-	// pre-step of subcomponents - others
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaPreStep(time, timeStepCount);
+		mSubCtrledVoltageSource->mVoltageRef->set(PEAK1PH_TO_RMS3PH * **mVsref);
+
+	std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
-	// add post-step dependencies of subcomponents
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	// add post-step dependencies of component itself
+void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	// post-step of subcomponents
-	for (auto subcomp: mSubComponents)
-		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
-	// post-step of component itself
+void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	mnaUpdateCurrent(**leftVector);
 	mnaUpdateVoltage(**leftVector);
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {
 	if (mWithConnectionTransformer)
-		**mIntfCurrent = mConnectionTransformer->attribute<Matrix>("i_intf")->get();
+		**mIntfCurrent = mConnectionTransformer->mIntfCurrent->get();
 	else
-		**mIntfCurrent = mSubResistorC->attribute<Matrix>("i_intf")->get();
+		**mIntfCurrent = mSubResistorC->mIntfCurrent->get();
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {

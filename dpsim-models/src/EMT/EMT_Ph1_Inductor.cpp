@@ -11,14 +11,11 @@
 using namespace CPS;
 
 EMT::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: Base::Ph1::Inductor(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
 	mEquivCurrent = 0;
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);
 	setTerminalNumber(2);
-
-	///FIXME: Initialization should happen in the base class declaring the attribute. However, this base class is currently not an AttributeList...
-	mInductance = CPS::Attribute<Real>::create("L", mAttributes);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph1::Inductor::clone(String name) {
@@ -32,7 +29,7 @@ void EMT::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	Real omega = 2 * PI * frequency;
 	Complex impedance = { 0, omega * **mInductance };
 	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
-	(**mIntfCurrent)(0,0) = ((**mIntfVoltage)(0,0) / impedance).real();
+	(**mIntfCurrent)(0,0) = ((initialSingleVoltage(1) - initialSingleVoltage(0)) / impedance).real();
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

@@ -18,10 +18,12 @@ namespace Ph1 {
 	class SynchronGenerator4OrderDCIM :
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public SharedFactory<SynchronGenerator4OrderDCIM> {
+
 	public:
 		// ### State variables [p.u.]###
 		/// voltage behing the transient reactance
 		const Attribute<Matrix>::Ptr mEdq_t;
+
 	protected:
 		/// state representation matrix
 		///
@@ -44,23 +46,27 @@ namespace Ph1 {
 
 		// #### General Functions ####
 		/// Specific component initialization
-        void specificInitialization(); 
+        void specificInitialization() override; 
 		///
-		void stepInPerUnit();
+		void initializeResistanceMatrix() override {};
+		///
+		void stepInPerUnit() override;
 
 		// ### MNA Section ###
         ///
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-        void mnaPostStep(const Matrix& leftVector);
+        void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+        void mnaPostStep(const Matrix& leftVector) override;
 
 	public:
 		///
-		SynchronGenerator4OrderDCIM(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SynchronGenerator4OrderDCIM(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SynchronGenerator4OrderDCIM(String name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SynchronGenerator4OrderDCIM(const String & name, Logger::Level logLevel = Logger::Level::off);
+		/// DCIM is only implmented as current source!
+		void setModelAsCurrentSource(Bool modelAsCurrentSource) const {
+			mSLog->debug("DCIM model can only be used as current source!");
+		}
 	};
 }
 }

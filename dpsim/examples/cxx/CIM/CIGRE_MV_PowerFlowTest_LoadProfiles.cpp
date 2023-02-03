@@ -110,8 +110,8 @@ int main(int argc, char** argv){
 		// get nodal injection from specific line or transformer
 		// (the first line obj connected to the node or, if none, the first trafo)
 		if (!lines.empty()) {
-		logger->logAttribute(node->name() + ".Pinj", lines.front()->attribute<Real>("p_inj"));
-		logger->logAttribute(node->name() + ".Qinj", lines.front()->attribute<Real>("q_inj"));
+		logger->logAttribute(node->name() + ".Pinj", lines.front()->attributeTyped<Real>("p_inj"));
+		logger->logAttribute(node->name() + ".Qinj", lines.front()->attributeTyped<Real>("q_inj"));
 		}
 		else
 		{
@@ -119,8 +119,8 @@ int main(int argc, char** argv){
 				if (std::shared_ptr<CPS::SP::Ph1::Transformer> trafo =
 					std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp))
 				{
-					logger->logAttribute(node->name() + ".Pinj", trafo->attribute<Real>("p_inj"));
-					logger->logAttribute(node->name() + ".Qinj", trafo->attribute<Real>("q_inj"));
+					logger->logAttribute(node->name() + ".Pinj", trafo->attributeTyped<Real>("p_inj"));
+					logger->logAttribute(node->name() + ".Qinj", trafo->attributeTyped<Real>("q_inj"));
 					break;
 				}
 

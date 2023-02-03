@@ -8,8 +8,7 @@
 #pragma once
 
 
-#include <dpsim-models/SimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/SP/SP_Ph1_Resistor.h>
 #include <dpsim-models/SP/SP_Ph1_Inductor.h>
@@ -25,8 +24,7 @@ namespace SP {
 namespace Ph1 {
 	class AvVoltageSourceInverterDQ :
 		public Base::AvVoltageSourceInverterDQ,
-		public SimPowerComp<Complex>,
-		public MNAInterface,
+		public CompositePowerComp<Complex>,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
 
@@ -100,7 +98,7 @@ namespace Ph1 {
 		const Attribute<Matrix>::Ptr mPowerctrlInputs;
 		const Attribute<Matrix>::Ptr mPowerctrlStates;
 		const Attribute<Matrix>::Ptr mPowerctrlOutputs;
-		
+
 		/// Defines name amd logging level
 		AvVoltageSourceInverterDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: AvVoltageSourceInverterDQ(name, name, logLevel) {}
@@ -126,23 +124,19 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Updates current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates voltage across component
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaUpdateVoltage(const Matrix& leftVector) override;
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### Control section ####
 		/// Control pre step operations
@@ -150,9 +144,9 @@ namespace Ph1 {
 		/// Perform step of controller
 		void controlStep(Real time, Int timeStepCount);
 		/// Add control step dependencies
-		void addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) const;
 		/// Add control step dependencies
-		void addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) const;
 
 		class ControlPreStep : public CPS::Task {
 		public:
@@ -176,31 +170,6 @@ namespace Ph1 {
 
 		private:
 			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
-		};
-
-		class MnaPreStep : public CPS::Task {
-		public:
-			MnaPreStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(**AvVoltageSourceInverterDQ.mName + ".MnaPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
-					mAvVoltageSourceInverterDQ.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.mnaPreStep(time, timeStepCount); };
-
-		private:
-			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
-		};
-
-		class MnaPostStep : public CPS::Task {
-		public:
-			MnaPostStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ, Attribute<Matrix>::Ptr leftVector) :
-				Task(**AvVoltageSourceInverterDQ.mName + ".MnaPostStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ), mLeftVector(leftVector) {
-				mAvVoltageSourceInverterDQ.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.mnaPostStep(time, timeStepCount, mLeftVector); };
-
-		private:
-			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
-			Attribute<Matrix>::Ptr mLeftVector;
 		};
 
 	};

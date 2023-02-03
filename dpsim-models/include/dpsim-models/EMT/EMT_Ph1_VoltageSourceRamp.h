@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/EMT/EMT_Ph1_VoltageSource.h>
 
@@ -16,8 +16,7 @@ namespace CPS {
 namespace EMT {
 namespace Ph1 {
 	class VoltageSourceRamp :
-		public SimPowerComp<Real>,
-		public MNAInterface,
+		public CompositePowerComp<Real>,
 		public SharedFactory<VoltageSourceRamp> {
 	protected:
 		///
@@ -53,28 +52,8 @@ namespace Ph1 {
 		void initialize(Matrix frequencies);
 
 		// #### MNA section ####
-		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		void updateState(Real time);
-
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(VoltageSourceRamp& voltageSource) :
-				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-				// rampTime etc. aren't attributes (yet), so doesn't really depend on anything
-				mModifiedAttributes.push_back(voltageSource.mSubVoltageSource->attribute("V_ref"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			VoltageSourceRamp& mVoltageSource;
-		};
 	};
 }
 }

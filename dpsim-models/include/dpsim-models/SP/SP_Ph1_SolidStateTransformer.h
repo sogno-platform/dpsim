@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/SP/SP_Ph1_Load.h>
 
@@ -21,18 +21,14 @@ namespace SP { namespace Ph1 {
     * Depends on the actual condition, values can be negative
     */
 	class SolidStateTransformer :
-		public SimPowerComp<Complex>,
-		public SharedFactory<SolidStateTransformer>,
-		public MNAInterface{
+		public CompositePowerComp<Complex>,
+		public SharedFactory<SolidStateTransformer> {
 	private:
     ///
     std::shared_ptr<SP::Ph1::Load> mSubLoadSide1;
     ///
     std::shared_ptr<SP::Ph1::Load> mSubLoadSide2;
 
-    /// Rated Apparent Power [VA]
-    /// FIXME: Never used
-    Real mRatedPower = 0;
     /// Active power at secondary side [watt]
     Real mP2 = std::numeric_limits<double>::infinity();
     /// Nominal voltage of primary side [V]

@@ -17,12 +17,10 @@ namespace Ph1 {
 	/// \brief resistor inductor series element
 	class ResIndSeries :
 		public MNATearInterface,
+		public MNAInterface,
 		public SimPowerComp<Complex>,
 		public SharedFactory<ResIndSeries> {
 	protected:
-		///FIXME: This is never used...
-		///Conductance [S]
-		Real mConductance;
 		/// DC equivalent current source for harmonics [A]
 		MatrixComp mEquivCurrent;
 		/// Equivalent conductance for harmonics [S]

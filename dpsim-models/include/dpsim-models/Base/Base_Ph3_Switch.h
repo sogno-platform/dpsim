@@ -17,11 +17,17 @@ namespace Ph3 {
 	class Switch {
 	public:
 		/// Resistance if switch is open [ohm]
-		CPS::Attribute<Matrix>::Ptr mOpenResistance;
+		const CPS::Attribute<Matrix>::Ptr mOpenResistance;
 		/// Resistance if switch is closed [ohm]
-		CPS::Attribute<Matrix>::Ptr mClosedResistance;
+		const CPS::Attribute<Matrix>::Ptr mClosedResistance;
 		/// Defines if Switch is open or closed
-		CPS::Attribute<Bool>::Ptr mSwitchClosed;
+		const CPS::Attribute<Bool>::Ptr mSwitchClosed;
+
+		explicit Switch(CPS::AttributeBase::Map &attributeList) :
+			mOpenResistance(Attribute<Matrix>::create("R_open", attributeList)),
+			mClosedResistance(Attribute<Matrix>::create("R_closed", attributeList)),
+			mSwitchClosed(Attribute<Bool>::create("is_closed", attributeList)) { };
+
 		///
 		void setParameters(Matrix openResistance, Matrix closedResistance, Bool closed = false) {
 			**mOpenResistance = openResistance;

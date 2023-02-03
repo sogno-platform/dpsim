@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel),
+	: CompositePowerComp<Real>(uid, name, true, true, logLevel),
 	mActivePower(Attribute<Matrix>::create("P", mAttributes)),
 	mReactivePower(Attribute<Matrix>::create("Q", mAttributes)),
 	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
@@ -101,12 +101,12 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 	if ((**mActivePower)(0,0) != 0) {
 		mResistance = std::pow(**mNomVoltage / sqrt(3), 2) * (**mActivePower).inverse();
-		mConductance = mResistance.inverse();
 		mSubResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
+		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
 	if ((**mReactivePower)(0, 0) != 0)
@@ -122,6 +122,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromNodesAndTerminals(frequency);
+		addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 	else if (mReactance(0,0) < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) * mReactance.inverse();
@@ -131,6 +132,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
+		addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
@@ -170,57 +172,23 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 }
 
-void EMT::Ph3::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	if (mSubResistor) {
-		mSubResistor->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : mSubResistor->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
-	if (mSubInductor) {
-		mSubInductor->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : mSubInductor->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
-	if (mSubCapacitor) {
-		mSubCapacitor->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : mSubCapacitor->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+void EMT::Ph3::RXLoad::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	modifiedAttributes.push_back(mRightVector);
+};
+
+void EMT::Ph3::RXLoad::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mIntfVoltage);
+};
+
+void EMT::Ph3::RXLoad::mnaParentPreStep(Real time, Int timeStepCount) {
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::RXLoad::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	if (mSubResistor)
-		mSubResistor->mnaApplyRightSideVectorStamp(rightVector);
-	if (mSubInductor)
-		mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaApplyRightSideVectorStamp(rightVector);
-}
-
-void EMT::Ph3::RXLoad::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	if (mSubResistor)
-		mSubResistor->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mSubInductor)
-		mSubInductor->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mSubCapacitor)
-		mSubCapacitor->mnaApplySystemMatrixStamp(systemMatrix);
-}
-
-void EMT::Ph3::RXLoad::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mLoad.mnaApplyRightSideVectorStamp(**mLoad.mRightVector);
-}
-
-void EMT::Ph3::RXLoad::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLoad.mnaUpdateVoltage(**mLeftVector);
-	mLoad.mnaUpdateCurrent(**mLeftVector);
+void EMT::Ph3::RXLoad::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(**leftVector);
+	mnaUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
@@ -232,10 +200,7 @@ void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
 
 void EMT::Ph3::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = Matrix::Zero(3, 1);
-	if (mSubResistor)
-		**mIntfCurrent += mSubResistor->intfCurrent();
-	if (mSubInductor)
-		**mIntfCurrent += mSubInductor->intfCurrent();
-	if (mSubCapacitor)
-		**mIntfCurrent += mSubCapacitor->intfCurrent();
+	for (auto& subc : mSubComponents) {
+		**mIntfCurrent += subc->intfCurrent();
+	}
 }
