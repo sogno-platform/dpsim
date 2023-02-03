@@ -15,14 +15,7 @@
 #include <string>
 #include <vector>
 
-#ifndef USE_GHC_FS
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#else
-#include <ghc/filesystem.hpp>
-namespace fs = ghc::filesystem;
-#endif
-
+#include <dpsim-models/Filesystem.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/SP/SP_Ph1_Load.h>
