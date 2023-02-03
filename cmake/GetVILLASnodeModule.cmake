@@ -2,9 +2,8 @@
 include(FetchContent)
 FetchContent_Declare(
   villasnode-module
-  # CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64
   GIT_REPOSITORY https://git.rwth-aachen.de/acs/public/villas/node.git
-  GIT_TAG        b94746effb015aa98791c0e319ef11223d18e8b0
+  GIT_TAG        master
   GIT_PROGRESS TRUE
 )
 
