@@ -79,12 +79,11 @@ option(WITH_PYBIND_MODULE    "Fetch pybind11 as module (deprecated option)" OFF)
 option(GET_GRID_DATA     	   "Fetch grid data (deprecated option)" ON)
 
 # Build options
-option(FETCH_EIGEN          "Fetch Eigen3 as module" OFF)
-option(FETCH_SPDLOG         "Fetch spdlog as module" OFF)
-option(FETCH_CIMPP          "Fetch CIMpp as module" OFF)
-option(FETCH_PYBIND         "Fetch pybind11 as module" OFF)
-option(FETCH_VILLAS         "Fetch VILLASnode as module" OFF)
-option(FETCH_GRID_DATA      "Fetch grid data" ON)
+option(FETCH_EIGEN          "Fetch Eigen3 as module" ${WITH_EIGEN_MODULE})
+option(FETCH_SPDLOG         "Fetch spdlog as module" ${WITH_SPDLOG_SUBMODULE})
+option(FETCH_CIMPP          "Fetch CIMpp as module" ${WITH_CIM_SUBMODULE})
+option(FETCH_PYBIND         "Fetch pybind11 as module" ${WITH_PYBIND_MODULE})
+option(FETCH_GRID_DATA      "Fetch grid data" ${GET_GRID_DATA})
 option(FETCH_FILESYSTEM     "Fetch standalone implememtation of std::filesystem" OFF)
 
 option(WITH_JSON            "Include json library" ON)
