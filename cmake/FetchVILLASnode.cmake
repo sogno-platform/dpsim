@@ -15,7 +15,6 @@ endif()
 # When adding VILLASnode via a subdirectory, all the neccessary
 # details about include directories, library name and path
 # are associated with the VILLASnode target 'villas'
-add_subdirectory(${villas-node-module_SOURCE_DIR})
 set(VILLASNODE_LIBRARY villas)
 set(VILLASNODE_LIBRARIES ${VILLASNODE_LIBRARY})
 set(VILLASNODE_INCLUDE_DIRS "")
