@@ -16,17 +16,17 @@ class Reader:
 
         # Process raw mpc data and create corresponding dataframes
         # Version
-        self.mpc_version = self.mpc_raw['mpc']['version']
+        self.mpc_version = self.mpc_raw[self.mpc_name]['version']
 
         # System frequency (not included in mpc but needed for setting dpsimpy component parameters i.e inductances, capacitances ..)
         self.mpc_freq = 50
         self.mpc_omega = 2*np.pi*50
 
         # Base power (MVA)
-        self.mpc_base_power_MVA =  self.mpc_raw['mpc']['baseMVA']
+        self.mpc_base_power_MVA =  self.mpc_raw[self.mpc_name]['baseMVA']
 
         #### Busses
-        mpc_bus_raw = self.mpc_raw['mpc']['bus']
+        mpc_bus_raw = self.mpc_raw[self.mpc_name]['bus']
 
         bus_data_header = ["bus_i", "type", "Pd", "Qd", "Gs", "Bs", "area",
                            "Vm", "Va", "baseKV", "zone", "Vmax", "Vmin"]
@@ -40,7 +40,7 @@ class Reader:
         self.mpc_bus_data['zone'] = self.mpc_bus_data['zone'].astype(int)
 
         #### Generators
-        mpc_gen_raw = self.mpc_raw['mpc']['gen']
+        mpc_gen_raw = self.mpc_raw[self.mpc_name]['gen']
 
         gen_data_header = ["bus", "Pg", "Qg", "Qmax", "Qmin", "Vg", "mBase", "status",
                            "Pmax", "Pmin", "Pc1", "Pc2", "Qc1min", "Qc1max", "Qc2min",
@@ -53,7 +53,7 @@ class Reader:
 
         #### Branches
         # extract only first 13 columns since following columns include results
-        mpc_branch_raw = self.mpc_raw['mpc']['branch'][:, :13]
+        mpc_branch_raw = self.mpc_raw[self.mpc_name]['branch'][:, :13]
 
         branch_data_header = ["fbus", "tbus", "r", "x", "b", "rateA", "rateB",
                             "rateC", "ratio", "angle", "status", "angmin", "angmax"]
@@ -70,11 +70,11 @@ class Reader:
         self.mpc_bus_names_dict=dict()
         self.mpc_bus_assets_dict=dict()
 
-        if 'bus_names' in self.mpc_raw['mpc']:
-            self.mpc_bus_names_dict=dict(zip(self.mpc_bus_data['bus_i'], self.mpc_raw['mpc']['bus_names']))
+        if 'bus_names' in self.mpc_raw[self.mpc_name]:
+            self.mpc_bus_names_dict=dict(zip(self.mpc_bus_data['bus_i'], self.mpc_raw[self.mpc_name]['bus_names']))
 
-        elif 'bus_assets' in self.mpc_raw['mpc']:
-            self.mpc_bus_assets_dict=dict(zip(self.mpc_bus_data['bus_i'],self.mpc_raw['mpc']['bus_assets']))
+        elif 'bus_assets' in self.mpc_raw[self.mpc_name]:
+            self.mpc_bus_assets_dict=dict(zip(self.mpc_bus_data['bus_i'],self.mpc_raw[self.mpc_name]['bus_assets']))
 
     def create_dpsim_objects(self):
 
@@ -102,7 +102,7 @@ class Reader:
             bus_assets= []
             if self.mpc_bus_names_dict:
                 bus_name= self.mpc_bus_names_dict[int(bus_index)]
-            elif self.mpc.bus_assets:
+            elif self.mpc_bus_assets_dict:
                 bus_assets=self.mpc.bus_assets_dict[int(bus_index)]
             
             dpsimpy_busses_dict[bus_index] = dpsimpy.sp.SimNode(bus_name, dpsimpy.PhaseType.Single)
