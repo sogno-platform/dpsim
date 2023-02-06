@@ -116,7 +116,7 @@ class Reader:
                 if not bus_assets: # aggregated load
                         load = load + 1
                         # load_name = "load%s" %bus_index
-                        load_name='aggregated Load'
+                        load_name='aggregated Load %s' %load
                         load_p = self.mpc_bus_data.at[index,'Pd'] * mw_w
                         load_q = self.mpc_bus_data.at[index,'Qd'] * mw_w
                         load_baseV = self.mpc_bus_data.at[index,'baseKV'] * kv_v
