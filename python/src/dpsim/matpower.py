@@ -9,35 +9,24 @@ class Reader:
 
     def __init__(self, mpc_file_path, mpc_name = 'mpc'):
         # read input file (returns multidimensional dict)
-        self.mpc_raw = scipy.io.loadmat(mpc_file_path)
+        self.mpc_raw = scipy.io.loadmat(mpc_file_path, simplify_cells= True)
         self.mpc_name = mpc_name
-
-    # TODO
-    def consider_mapping(self, mapping_file_path):
-        self.mpc_mapping = pd.read_excel(mapping_file_path, sheet_name='bus_mapping', dtype=str)
 
     def process_mpc(self):
 
-        version_idx = 0
-        base_pow_idx = 1
-        bus_data_idx = 2
-        gen_data_idx = 3
-        branch_data_idx = 4
-        # gencost_data_idx= 5
-
         # Process raw mpc data and create corresponding dataframes
         # Version
-        self.mpc_version = self.mpc_raw[self.mpc_name][0][0][version_idx]
+        self.mpc_version = self.mpc_raw['mpc']['version']
 
         # System frequency (not included in mpc but needed for setting dpsimpy component parameters i.e inductances, capacitances ..)
         self.mpc_freq = 50
         self.mpc_omega = 2*np.pi*50
 
         # Base power (MVA)
-        self.mpc_base_power_MVA = self.mpc_raw[self.mpc_name][0][0][base_pow_idx][0][0]
+        self.mpc_base_power_MVA =  self.mpc_raw['mpc']['baseMVA']
 
         #### Busses
-        mpc_bus_raw = self.mpc_raw[self.mpc_name][0][0][bus_data_idx]
+        mpc_bus_raw = self.mpc_raw['mpc']['bus']
 
         bus_data_header = ["bus_i", "type", "Pd", "Qd", "Gs", "Bs", "area",
                            "Vm", "Va", "baseKV", "zone", "Vmax", "Vmin"]
@@ -51,7 +40,7 @@ class Reader:
         self.mpc_bus_data['zone'] = self.mpc_bus_data['zone'].astype(int)
 
         #### Generators
-        mpc_gen_raw = self.mpc_raw[self.mpc_name][0][0][gen_data_idx]
+        mpc_gen_raw = self.mpc_raw['mpc']['gen']
 
         gen_data_header = ["bus", "Pg", "Qg", "Qmax", "Qmin", "Vg", "mBase", "status",
                            "Pmax", "Pmin", "Pc1", "Pc2", "Qc1min", "Qc1max", "Qc2min",
@@ -64,7 +53,7 @@ class Reader:
 
         #### Branches
         # extract only first 13 columns since following columns include results
-        mpc_branch_raw = self.mpc_raw[self.mpc_name][0][0][branch_data_idx][:, :13]
+        mpc_branch_raw = self.mpc_raw['mpc']['branch'][:, :13]
 
         branch_data_header = ["fbus", "tbus", "r", "x", "b", "rateA", "rateB",
                             "rateC", "ratio", "angle", "status", "angmin", "angmax"]
@@ -76,6 +65,16 @@ class Reader:
         self.mpc_branch_data['status'] = self.mpc_branch_data['status'].astype(int)
 
         #### TODO Generator costs
+
+        #### additional fields: bus_names, bus_assets #####
+        self.mpc_bus_names_dict=dict()
+        self.mpc_bus_assets_dict=dict()
+
+        if 'bus_names' in self.mpc_raw['mpc']:
+            self.mpc_bus_names_dict=dict(zip(self.mpc_bus_data['bus_i'], self.mpc_raw['mpc']['bus_names']))
+
+        elif 'bus_assets' in self.mpc_raw['mpc']:
+            self.mpc_bus_assets_dict=dict(zip(self.mpc_bus_data['bus_i'],self.mpc_raw['mpc']['bus_assets']))
 
     def create_dpsim_objects(self):
 
@@ -100,39 +99,49 @@ class Reader:
             bus = bus + 1
             bus_index = str(self.mpc_bus_data.at[index,'bus_i'])
             bus_name = bus_index
-            bus_map=self.mpc_mapping.loc[self.mpc_mapping['bus_i']==bus_index]
-            # bus_name=bus_map['bus_name'].values[0]
-            dpsimpy_busses_dict[bus_name] = dpsimpy.sp.SimNode(bus_name, dpsimpy.PhaseType.Single)
+            bus_assets= []
+            if self.mpc_bus_names_dict:
+                bus_name= self.mpc_bus_names_dict[int(bus_index)]
+            elif self.mpc.bus_assets:
+                bus_assets=self.mpc.bus_assets_dict[int(bus_index)]
+            
+            dpsimpy_busses_dict[bus_index] = dpsimpy.sp.SimNode(bus_name, dpsimpy.PhaseType.Single)
 
             # for each bus type create corresponding dpsimpy component
             # 1 = PQ, 2 = PV, 3 = ref, 4 = isolated
             bus_type = self.mpc_bus_data.at[index,'type']
-            conn_load=bus_map['connected_load'].values[0]
-            conn_gen=bus_map['connected_gen'].values[0]
-
-            conn_comp=[]
-
-            if str(conn_load) != 'nan':
-                conn_comp.append(conn_load)
-            if str(conn_gen) != 'nan':
-                conn_comp.append(conn_gen)
 
             # PQ busses
             if bus_type == 1:
-                for comp in conn_comp:
-                    load = load + 1
-                    # load_name = "load%s" %bus_index
-                    load_name=comp
-                    load_p = self.mpc_bus_data.at[index,'Pd'] * mw_w
-                    load_q = self.mpc_bus_data.at[index,'Qd'] * mw_w
-                    load_baseV = self.mpc_bus_data.at[index,'baseKV'] * kv_v
+                if not bus_assets: # aggregated load
+                        load = load + 1
+                        # load_name = "load%s" %bus_index
+                        load_name='aggregated Load'
+                        load_p = self.mpc_bus_data.at[index,'Pd'] * mw_w
+                        load_q = self.mpc_bus_data.at[index,'Qd'] * mw_w
+                        load_baseV = self.mpc_bus_data.at[index,'baseKV'] * kv_v
 
-                    dpsimpy_comp_dict[load_name] = [dpsimpy.sp.ph1.Load(load_name, dpsimpy.LogLevel.info)]
-                    dpsimpy_comp_dict[load_name][0].set_parameters(load_p, load_q, load_baseV)
-                    dpsimpy_comp_dict[load_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.PQ)
-
-                    # add connections
-                    dpsimpy_comp_dict[load_name].append([dpsimpy_busses_dict[bus_name]]) # [to bus]
+                        dpsimpy_comp_dict[load_name] = [dpsimpy.sp.ph1.Load(load_name, dpsimpy.LogLevel.info)]
+                        dpsimpy_comp_dict[load_name][0].set_parameters(load_p, load_q, load_baseV)
+                        dpsimpy_comp_dict[load_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.PQ)
+                        # add connections
+                        dpsimpy_comp_dict[load_name].append([dpsimpy_busses_dict[bus_index]]) # [to bus]
+                else:
+                    for i, comp in enumerate(bus_assets): # WARN: now the loads are created and the first load is initialized with the total power P_d Q_d!!!!!!!!
+                        load = load + 1
+                        # load_name = "load%s" %bus_index
+                        load_name=comp
+                        load_p = self.mpc_bus_data.at[index,'Pd'] * mw_w
+                        load_q = self.mpc_bus_data.at[index,'Qd'] * mw_w
+                        load_baseV = self.mpc_bus_data.at[index,'baseKV'] * kv_v
+                        dpsimpy_comp_dict[load_name] = [dpsimpy.sp.ph1.Load(load_name, dpsimpy.LogLevel.info)]
+                        dpsimpy_comp_dict[load_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.PQ)
+                        if i==0:
+                            dpsimpy_comp_dict[load_name][0].set_parameters(load_p, load_q, load_baseV)
+                        else:
+                            dpsimpy_comp_dict[load_name][0].set_parameters(0, 0, load_baseV)
+                        # add connections
+                        dpsimpy_comp_dict[load_name].append([dpsimpy_busses_dict[bus_index]]) # [to bus]
 
             # Generators
             elif bus_type == 2:
