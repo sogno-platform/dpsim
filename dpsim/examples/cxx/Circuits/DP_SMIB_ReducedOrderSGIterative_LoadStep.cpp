@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
 
 	// apply downsampling for simulation step sizes lower than 10us
 	Real logDownSampling;
-	if (timeStep < 1e-6)
+	if (timeStep < 10e-6)
 		logDownSampling = floor((10e-6) / timeStep);
 	else
 		logDownSampling = 1.0;
