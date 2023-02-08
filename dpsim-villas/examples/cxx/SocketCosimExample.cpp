@@ -45,16 +45,19 @@ int main(int argc, char* argv[]) {
 			SystemNodeList{SimNode::GND, n1, n2},
 			SystemComponentList{evs, vs1, r12});
 
-		Simulation sim(simName);
+		RealTimeSimulation sim(simName);
 		sim.setSystem(sys);
 		sim.setTimeStep(timeStep);
-		sim.setFinalTime(10.0);
+		sim.setFinalTime(0.1);
 		
 		// Make sure the format is set to json!!
 		std::string socketConfig = R"STRING({
 			"type": "socket",
 			"layer": "udp",
 			"format": "json",
+        	"hooks": [
+            	{"type": "print"}
+        	],
 			"in": {
 				"address": "127.0.0.1:12008",
 				"signals": [
@@ -85,13 +88,18 @@ int main(int argc, char* argv[]) {
 		sim.addLogger(logger);
 
 		auto intf = std::make_shared<InterfaceVillas>(socketConfig);
-		intf->importAttribute(evs->mVoltageRef, 0, true, true);
+
+		Eigen::MatrixXcd intfCurrent0(1,1);
+		intfCurrent0(0,0) = std::complex<double>(5.0,0.0);
+		evs->setIntfCurrent(intfCurrent0);
+
+		intf->importAttribute(evs->mVoltageRef, 0, false, false);
 		intf->exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0, true, "i_intf");
 
 		// Interface
 		sim.addInterface(intf);
 
-		sim.run();
+		sim.run(1);
 	}
 	else if (String(argv[1]) == "1") {
 		String simName = "SocketsCosim_example2";
@@ -114,16 +122,19 @@ int main(int argc, char* argv[]) {
 			SystemNodeList{SimNode::GND, n2},
 			SystemComponentList{ecs, r02});
 
-		Simulation sim(simName);
+		RealTimeSimulation sim(simName);
 		sim.setSystem(sys);
 		sim.setTimeStep(timeStep);
-		sim.setFinalTime(10.0);
+		sim.setFinalTime(0.1);
 		
 		// Make sure the format is set to json!!
 		std::string socketConfig = R"STRING({
 			"type": "socket",
 			"layer": "udp",
 			"format": "json",
+			"hooks": [
+				{"type": "print"}
+			],
 			"in": {
 				"address": "127.0.0.1:12009",
 				"signals": [
@@ -153,12 +164,12 @@ int main(int argc, char* argv[]) {
 		sim.addLogger(logger);
 
 		auto intf = std::make_shared<InterfaceVillas>(socketConfig);
-		intf->importAttribute(ecs->mCurrentRef, 0, true, true);
+		intf->importAttribute(ecs->mCurrentRef, 0, false, false);
 		intf->exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, true, "v_intf");
 
 		// Interface
 		sim.addInterface(intf);
 
-		sim.run();
+		sim.run(1);
 	}
 }
