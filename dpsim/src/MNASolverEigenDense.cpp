@@ -116,56 +116,19 @@ std::shared_ptr<CPS::Task> MnaSolverEigenDense<VarType>::createLogTask()
 
 template <typename VarType>
 void MnaSolverEigenDense<VarType>::solve(Real time, Int timeStepCount) {
-	
-	if 	(mSyncGen.size()==0) {
-		// Reset source vector
-		mRightSideVector.setZero();
+	// Reset source vector
+	mRightSideVector.setZero();
 
-		// Add together the right side vector (computed by the components'
-		// pre-step tasks)
-		for (auto stamp : mRightVectorStamps)
-			mRightSideVector += *stamp;
+	// Add together the right side vector (computed by the components'
+	// pre-step tasks)
+	for (auto stamp : mRightVectorStamps)
+		mRightSideVector += *stamp;
 
-		if (!mIsInInitialization)
-			MnaSolver<VarType>::updateSwitchStatus();
+	if (!mIsInInitialization)
+		MnaSolver<VarType>::updateSwitchStatus();
 
-		if (mSwitchedMatrices.size() > 0)
-			**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0].solve(mRightSideVector);
-	} else {
-		// if there is no syncGen components, then it is not necessary to iterate
-		bool iterate = true;
-		while (iterate) {
-			// Reset source vector
-			mRightSideVector.setZero();
-
-			if (!mIsInInitialization)
-				MnaSolver<VarType>::updateSwitchStatus();
-
-			for (auto syncGen : mSyncGen)
-				syncGen->correctorStep();
-
-			// Add together the right side vector (computed by the components'
-			// pre-step tasks)
-			for (auto stamp : mRightVectorStamps)
-				mRightSideVector += *stamp;
-
-			if (mSwitchedMatrices.size() > 0)
-				**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0].solve(mRightSideVector);
-
-			for (auto syncGen : mSyncGen)
-				//update voltages
-				syncGen->updateVoltage(**mLeftSideVector);
-
-			// check if there is sync generators that need iterate
-			int count=0; 
-			for (auto syncGen : mSyncGen) {
-				if (syncGen->checkVoltageDifference())
-					count = count+1;
-			}
-			if (count==0) 
-				iterate=false;
-		}
-	}
+	if (mSwitchedMatrices.size() > 0)
+		**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0].solve(mRightSideVector);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
