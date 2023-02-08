@@ -21,6 +21,10 @@ if(WIN32)
 	cmake_policy(SET CMP0074 NEW)
 endif()
 
+# Allow shadowing of CMake targets
+# As we include dependencies via add_subdirectory()
+# we import their targets into the DPsim CMake tree
+# which might cause collissions in target names.
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 # Select C++-Version
