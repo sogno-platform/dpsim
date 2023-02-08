@@ -20,23 +20,23 @@ namespace Ph1 {
 		public MNASyncGenInterface  {
 	public:
 	private:
-		
+
 	protected:
-        /// Constructor 
+        /// Constructor
         SynchronGeneratorIter(const String& uid, const String& name, Logger::Level logLevel);
         SynchronGeneratorIter(const String& name, Logger::Level logLevel);
-      
+
 	  	// #### General Functions ####
 		///
 		virtual void specificInitialization() = 0;
 		///
 		virtual void stepInPerUnit() = 0;
-		// 
+		//
 		virtual void correctorStep() = 0;
-		/// 
+		///
 		void updateVoltage(const Matrix& leftVector);
 		///
-		bool checkVoltageDifference();
+		bool requiresIteration();
 		///
 		Matrix parkTransform(Real theta, const Matrix& abcVector);
 

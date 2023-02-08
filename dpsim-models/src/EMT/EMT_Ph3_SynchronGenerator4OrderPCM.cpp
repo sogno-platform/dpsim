@@ -20,7 +20,7 @@ EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
 
 	// model flags
 	mVoltageForm = false;
-	
+
 	// model variables
 	**mEdq0_t = Matrix::Zero(3,1);
 	mEdq0_t_pred = Matrix::Zero(3,1);
@@ -39,7 +39,7 @@ EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
 
 SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator4OrderPCM::clone(const String& name) {
 	auto copy = SynchronGenerator4OrderPCM::make(name, mLogLevel);
-	
+
 	return copy;
 }
 
@@ -86,12 +86,12 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::calculateStateMatrix() {
 				   			0.0;
 	}
 	else {	// Currents form
-		mA << -1./mTq0_t	,    	0.0,		0.0,		
+		mA << -1./mTq0_t	,    	0.0,		0.0,
 		     	   0.0   	,    -1/mTd0_t,		0.0,
 				   0.0		,		0.0,		0.0;
 		mB <<             0.0                  , (1. / mTq0_t) * (mLq-mLq_t),		0.0,
 		  		(-1. / mTd0_t) * (mLd-mLd_t)   ,            0.0             ,		0.0,
-				  		  0.0				   ,			0.0				,		0.0;	
+				  		  0.0				   ,			0.0				,		0.0;
 		mC <<          0.0,
 		 		 (1./mTd0_t) * mEf,
 				  	   0.0;
@@ -120,7 +120,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::stepInPerUnit() {
 		mThetaMech_pred = **mThetaMech;
 	}
 
-	//predict voltage behind transient reactance 
+	//predict voltage behind transient reactance
 	if (mVoltageForm)
 		mdEdq0_t = mA * **mEdq0_t + mB * **mVdq0 + mC;
 	else
@@ -185,9 +185,9 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::correctorStep() {
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVector) {	
+void EMT::Ph3::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVector) {
 	mVdq0_prev = **mVdq0;
-	
+
 	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 	(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
@@ -201,13 +201,13 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVecto
 	**mVdq0 = **mVdq0 / mBase_V;
 }
 
-bool EMT::Ph3::SynchronGenerator4OrderPCM::checkVoltageDifference() {
+bool EMT::Ph3::SynchronGenerator4OrderPCM::requiresIteration() {
 	if (**mNumIter == 0) {
 		// if no corrector step has been performed yet
 		**mNumIter = 1;
 		return true;
 	}
-	
+
 	Matrix voltageDifference = **mVdq0 - mVdq0_prev;
 	if (Math::abs(voltageDifference(0,0)) > mTolerance || Math::abs(voltageDifference(1,0)) > mTolerance) {
 		if (**mNumIter == mMaxIter) {

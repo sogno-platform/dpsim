@@ -37,12 +37,12 @@ namespace Ph1 {
 		void calculateStateMatrix();
 		///
 		void stepInPerUnit() override;
-		// 
+		//
 		void correctorStep() override;
-		/// 
+		///
 		void updateVoltage(const Matrix& leftVector) override;
 		///
-		bool checkVoltageDifference() override;
+		bool requiresIteration() override;
 
 		// #### MNA Functions ####
 		///

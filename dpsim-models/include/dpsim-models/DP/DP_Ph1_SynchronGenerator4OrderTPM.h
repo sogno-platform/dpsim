@@ -70,7 +70,7 @@ namespace Ph1 {
 		Real mAd;
 		///
 		Real mAq;
-		/// 
+		///
 		Real mBd;
 		///
 		Real mBq;
@@ -96,14 +96,14 @@ namespace Ph1 {
 		void stepInPerUnit() override;
 		///
 		void correctorStep() override;
-		/// 
+		///
 		void updateVoltage(const Matrix& leftVector) override;
 		///
-		bool checkVoltageDifference() override;
+		bool requiresIteration() override;
 		/// Calculate Ka, Kb and Kvbr
 		void calculateAuxiliarVariables();
 		///
-		Matrix get_parkTransformMatrix();    
+		Matrix get_parkTransformMatrix();
 
 		// #### MNA Functions ####
 		///
@@ -113,12 +113,12 @@ namespace Ph1 {
 		///
 		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
 
-		void setOperationalParametersPerUnit(Real nomPower, 
+		void setOperationalParametersPerUnit(Real nomPower,
 			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 			Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t);
 
 		//
-		
+
 	};
 }
 }

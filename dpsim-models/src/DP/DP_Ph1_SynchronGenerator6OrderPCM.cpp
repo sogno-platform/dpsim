@@ -34,7 +34,7 @@ DP::Ph1::SynchronGenerator6OrderPCM::SynchronGenerator6OrderPCM
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator6OrderPCM::clone(const String& name) {
 	auto copy = SynchronGenerator6OrderPCM::make(name, mLogLevel);
-	
+
 	return copy;
 }
 
@@ -121,7 +121,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::calculateStateMatrix() {
 					0,		-1,		0,			0,		mLd_s,		0,
 					1,		0,		0,			0,			0,		mLq_s;
 		mA_trap_inv = mA_trap.inverse();
-	
+
 		mB_trap = Matrix::Zero(6,8);
 		mB_trap <<	 Cd_s,		0,		Bd_s,	0,		0,		Ad_s,		0,		0,
 						0,		Cq_s,	0,		Bq_s,	-Aq_s,		0,		0,		0,
@@ -144,7 +144,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::calculateStateMatrix() {
 	       		0.0, 						- mTimeStep / (2 * mTd0_t),		0.0,	0.0,
 		  		mTimeStep / (2 * mTq0_s),			0.0,	- mTimeStep / (2 * mTq0_s), 0.0,
 		  		0.0,	mTimeStep / (2 * mTd0_s),	0.0,		- mTimeStep / (2 * mTd0_s);
-	
+
 	mB_corr = Matrix::Zero(4,2);
 	mB_corr <<  0.0, (mLq - mLq_t) * mTimeStep / (2 * mTq0_t),
 			- (mLd - mLd_t) * mTimeStep / (2 * mTd0_t), 0.0,
@@ -176,7 +176,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	}
 
 	// calculate Edq and Idq at t=k+1. Assumption: Vdq(k) = Vdq(k+1)
-	if (mNumericalMethod == CPS::NumericalMethod::Euler) { 
+	if (mNumericalMethod == CPS::NumericalMethod::Euler) {
 		mEdq_pred = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * mEf;
 
 		// predict armature currents for at t=k+1
@@ -238,18 +238,18 @@ void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 void DP::Ph1::SynchronGenerator6OrderPCM::updateVoltage(const Matrix& leftVector) {
 	mVdq_prev = **mVdq;
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-	
+
 	// convert armature voltage into dq reference frame
 	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
 	Matrix Vabc = Matrix(3,1);
 	Vabc << Vabc_(0,0).real(), Vabc_(1,0).real(), Vabc_(2,0).real();
 	if (**mNumIter == 0)
 		**mVdq = parkTransform(mThetaMech_pred, Vabc) / mBase_V_RMS;
-	else 
+	else
 		**mVdq = parkTransform(mThetaMech_corr, Vabc) / mBase_V_RMS;
 }
 
-bool DP::Ph1::SynchronGenerator6OrderPCM::checkVoltageDifference() {
+bool DP::Ph1::SynchronGenerator6OrderPCM::requiresIteration() {
 	if (**mNumIter == 0)
 		// if no corrector step has been performed yet
 		return true;
@@ -265,7 +265,7 @@ bool DP::Ph1::SynchronGenerator6OrderPCM::checkVoltageDifference() {
 			mThetaMech_pred= mThetaMech_corr;
 			mIdq_pred = mIdq_corr;
 			mEdq_pred = mEdq_corr;
-			
+
 			return true;
 		}
 	} else {
