@@ -80,7 +80,7 @@ option(WITH_EIGEN_MODULE     "Fetch Eigen3 as module (deprecated option)" OFF)
 option(WITH_SPDLOG_SUBMODULE "Fetch spdlog as module (deprecated option)" OFF)
 option(WITH_CIM_SUBMODULE    "Fetch CIMpp as module (deprecated option)" OFF)
 option(WITH_PYBIND_MODULE    "Fetch pybind11 as module (deprecated option)" OFF)
-option(GET_GRID_DATA     	   "Fetch grid data (deprecated option)" ON)
+option(GET_GRID_DATA         "Fetch grid data (deprecated option)" ON)
 
 # Build options
 option(FETCH_EIGEN          "Fetch Eigen3 as module" ${WITH_EIGEN_MODULE})
