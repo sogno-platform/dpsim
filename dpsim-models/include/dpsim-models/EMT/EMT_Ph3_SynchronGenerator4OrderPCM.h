@@ -40,7 +40,7 @@ namespace Ph3 {
 		///
 		Real mElecTorque_corr;
 		///
-		Real mdOmMech = 0; 
+		Real mdOmMech = 0;
 		Real mdOmMech_corr = 0;
 		Real mOmMech_pred;
 		Real mOmMech_corr;
@@ -76,12 +76,12 @@ namespace Ph3 {
 		void calculateStateMatrix();
 		///
 		void stepInPerUnit();
-		// 
+		//
 		void correctorStep();
-		/// 
+		///
 		void updateVoltage(const Matrix& leftVector);
 		///
-		bool checkVoltageDifference();
+		bool requiresIteration();
 		///
 		Matrix parkTransform(Real theta, const Matrix& abcVector);
 		///
@@ -90,9 +90,9 @@ namespace Ph3 {
 
 		/// Setters
 		///
-		void useVoltageForm(bool state) {mVoltageForm = state;}	
+		void useVoltageForm(bool state) {mVoltageForm = state;}
 
-		// #### MNA Functions ####		
+		// #### MNA Functions ####
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		void mnaPostStep(const Matrix& leftVector);
 		void mnaApplySystemMatrixStamp(Matrix& systemMatrix){};

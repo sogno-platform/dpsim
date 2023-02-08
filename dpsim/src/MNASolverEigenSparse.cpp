@@ -60,7 +60,7 @@ void MnaSolverEigenSparse<VarType>::stampVariableSystemMatrix() {
 		statElem->mnaApplySystemMatrixStamp(mBaseSystemMatrix);
 	mSLog->info("Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
 	mSLog->flush();
-	
+
 	// Use matrix with only static elements as basis for variable system matrix
 	mVariableSystemMatrix = mBaseSystemMatrix;
 
@@ -86,7 +86,7 @@ template <typename VarType>
 void MnaSolverEigenSparse<VarType>::solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) {
 	// Reset source vector
 	mRightSideVector.setZero();
-	
+
 	// Add together the right side vector (computed by the components'
 	// pre-step tasks)
 	for (auto stamp : mRightVectorStamps)
@@ -193,92 +193,57 @@ std::shared_ptr<CPS::Task> MnaSolverEigenSparse<VarType>::createLogTask()
 
 template <typename VarType>
 void MnaSolverEigenSparse<VarType>::solve(Real time, Int timeStepCount) {
+	// Reset source vector
+	mRightSideVector.setZero();
+
+	// Add together the right side vector (computed by the components' pre-step tasks)
+	for (auto stamp : mRightVectorStamps)
+		mRightSideVector += *stamp;
+
+	if (!mIsInInitialization)
+		MnaSolver<VarType>::updateSwitchStatus();
+
+	if (mSwitchedMatrices.size() > 0)
+		**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0]->solve(mRightSideVector);
+
+	// Reset number of iterations
 	mIter = 0;
-	if 	(mSyncGen.size()==0) {
-		// Reset source vector
-		mRightSideVector.setZero();
 
-		// Add together the right side vector (computed by the components'
-		// pre-step tasks)
-		for (auto stamp : mRightVectorStamps)
-			mRightSideVector += *stamp;
-
-		if (!mIsInInitialization)
-			MnaSolver<VarType>::updateSwitchStatus();
-
-		if (mSwitchedMatrices.size() > 0)
-			**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0]->solve(mRightSideVector);
-			
-	} else {
-		// if there is iterative syncGens, then it is necessary to iterate
-		bool iterate = true;
-		while (iterate) {
-			// 
-			mIter = mIter + 1;
-
-			// Reset source vector
-			mRightSideVector.setZero();
-
-			if (!mIsInInitialization)
-				MnaSolver<VarType>::updateSwitchStatus();
-
+	// Additional solve steps for iterative models
+	if (mSyncGen.size() > 0) {
+		UInt numCompsRequireIter;
+		do {
+			// count synchronous generators that require iteration
+			numCompsRequireIter = 0;
 			for (auto syncGen : mSyncGen)
-				syncGen->correctorStep();
+				if (syncGen->requiresIteration())
+					numCompsRequireIter++;
 
-			// Add together the right side vector (computed by the components'
-			// pre-step tasks)
-			for (auto stamp : mRightVectorStamps)
-				mRightSideVector += *stamp;
+			// recompute solve step if at least one component demands iteration
+			if (numCompsRequireIter > 0){
+				mIter++;
 
-			if (mSwitchedMatrices.size() > 0)
-				**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0]->solve(mRightSideVector);
+				// Reset source vector
+				mRightSideVector.setZero();
 
-			for (auto syncGen : mSyncGen)
-				//update voltages
-				syncGen->updateVoltage(**mLeftSideVector);
+				if (!mIsInInitialization)
+					MnaSolver<VarType>::updateSwitchStatus();
 
-			// check if there is sync generators that need iterate
-			int count=0; 
-			for (auto syncGen : mSyncGen) {
-				if (syncGen->checkVoltageDifference())
-					count = count+1;
+				for (auto syncGen : mSyncGen)
+					syncGen->correctorStep();
+
+				// Add together the right side vector (computed by the components' pre-step tasks)
+				for (auto stamp : mRightVectorStamps)
+					mRightSideVector += *stamp;
+
+				if (mSwitchedMatrices.size() > 0)
+					**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0]->solve(mRightSideVector);
+
+				for (auto syncGen : mSyncGen)
+					syncGen->updateVoltage(**mLeftSideVector);
 			}
-
-			/*
-			for (auto sys : mSwitchedMatrices) {
-				if (mCurrentSwitchStatus == sys.first) {
-					//std::cout <<  Logger::matrixToString(sys.second[0]) << std::endl;
-					//std::cout << "\n\n\nmRightSideVector: \n" << mRightSideVector << std::endl;
-					//std::cout << "\n\n\nA * **mLeftSideVector: \n" << sys.second[0] *  **mLeftSideVector << std::endl;
-					auto residual = mRightSideVector - sys.second[0] * **mLeftSideVector;
-					auto max_residual = residual.cwiseAbs().maxCoeff();
-					if ( mIter >= mMaxIterations) {
-						iterate=false;
-						if (max_residual > 1e-11)  {
-							// std::cout << "\n\n\nResidual: \n" << mRightSideVector - sys.second[0] * **mLeftSideVector << std::endl;
-							std::cout << "max = " << max_residual << std::endl;
-							std::cout << "Iter: " << mIter << std::endl;
-						}
-						mIter = 0;
-					}
-					else {
-						if (max_residual < 1e-11)  {
-							std::cout << "Iter: " << mIter << std::endl;
-							mIter = 0;
-							iterate = false;
-						}
-						else {
-							iterate = true;
-						}
-					}
-
-				}
-			}
-			*/
-			if (count==0)  {
-				iterate=false;
-			}	
 		}
+		while (numCompsRequireIter > 0);
 	}
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
