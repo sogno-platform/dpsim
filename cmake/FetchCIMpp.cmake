@@ -15,8 +15,7 @@ set(CIMPP_BUILD_DOC OFF)
 
 include(FetchContent)
 FetchContent_Declare(cimpp-module
-	GIT_REPOSITORY https://github.com/stv0g/libcimpp.git
-	GIT_TAG        disable-doc
+	GIT_REPOSITORY https://github.com/sogno-platform/libcimpp.git
 	GIT_SHALLOW    TRUE
 	GIT_PROGRESS   TRUE
 )
