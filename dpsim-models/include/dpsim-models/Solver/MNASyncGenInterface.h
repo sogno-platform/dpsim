@@ -73,7 +73,7 @@ namespace CPS {
 
 		/// Vector to create abc vector from a component
 		MatrixComp mShiftVector;
-		
+
 		///
 		Attribute<Int>::Ptr mNumIter;
 		///
@@ -88,18 +88,18 @@ namespace CPS {
 		typedef std::vector<Ptr> List;
 
 		// Solver functions
-		/// 
+		///
 		virtual void correctorStep()=0;
 		///
 		virtual void updateVoltage(const Matrix& leftVector)=0;
 		///
-		virtual bool checkVoltageDifference() {return false;}
+		virtual bool requiresIteration() {return false;}
 
 		/// Setters
-		/// 
+		///
 		void setMaxIterations(Int maxIterations) {mMaxIter = maxIterations;}
-		/// 
-		void setTolerance(Real Tolerance) {mTolerance = Tolerance;}	
+		///
+		void setTolerance(Real Tolerance) {mTolerance = Tolerance;}
 		///
 		void setNumericalMethod(CPS::NumericalMethod numericalMethod) {mNumericalMethod = numericalMethod;}
 

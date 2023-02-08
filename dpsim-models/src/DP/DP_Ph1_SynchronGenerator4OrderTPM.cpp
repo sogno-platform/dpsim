@@ -15,7 +15,7 @@ DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
 	mEvbr(Attribute<Complex>::create("Evbr", mAttributes)),
 	mEdq_t(Attribute<Matrix>::create("Edq", mAttributes))  {
-	
+
 	mPhaseType = PhaseType::Single;
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
@@ -50,18 +50,18 @@ DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator4OrderTPM::clone(String name) {
 	auto copy = SynchronGenerator4OrderTPM::make(name, mLogLevel);
-	
+
 	return copy;
 }
 
-void DP::Ph1::SynchronGenerator4OrderTPM::setOperationalParametersPerUnit(Real nomPower, 
+void DP::Ph1::SynchronGenerator4OrderTPM::setOperationalParametersPerUnit(Real nomPower,
 			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 			Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t) {
 
-	Base::ReducedOrderSynchronGenerator<Complex>::setOperationalParametersPerUnit(nomPower, 
+	Base::ReducedOrderSynchronGenerator<Complex>::setOperationalParametersPerUnit(nomPower,
 			nomVolt, nomFreq, H, Ld, Lq, L0,
 			Ld_t, Lq_t, Td0_t, Tq0_t);
-	
+
 	mSLog->info("Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				nomPower, nomVolt, nomFreq);
@@ -71,17 +71,17 @@ void DP::Ph1::SynchronGenerator4OrderTPM::setOperationalParametersPerUnit(Real n
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\n"
 			"Td0_t: {:e}\nTq0_t: {:e}\n",
-			H, Ld, Lq, L0, 
+			H, Ld, Lq, L0,
 			Ld_t, Lq_t,
 			Td0_t, Tq0_t);
 };
 
-void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarVariables() {	
-	mKa = Matrix::Zero(1,3);	
+void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarVariables() {
+	mKa = Matrix::Zero(1,3);
 	mKa = mKc * Complex(cos(2. * **mThetaMech), sin(2. * **mThetaMech));
 	mKa_1ph = (mKa * mShiftVector)(0,0);
 
-	mKb = Matrix::Zero(1,3);	
+	mKb = Matrix::Zero(1,3);
 	Real arg = 2. * **mThetaMech - 2. * mBase_OmMech * mSimTime;
 	mKb = mKc * Complex(cos(arg), sin(arg));
 	mKb_1ph = (mKb * mShiftVectorConj)(0,0);
@@ -116,7 +116,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarConstants() {
 	mB_corr = Matrix::Zero(2,2);
 	mB_corr <<	0.0, (mLq - mLq_t) * mTimeStep / (2 * mTq0_t),
 				- (mLd - mLd_t) * mTimeStep / (2 * mTd0_t), 0.0;
-	
+
 	mC_corr = Matrix::Zero(2,1);
 	mC_corr <<   				0.0,
 	  			(mTimeStep / mTd0_t);
@@ -203,12 +203,12 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 		(**mIntfCurrent)(0,0) = std::conj(mInitElecPower / (mInitVoltage * mBase_V_RMS));
 		mIdq_2prev = **mIntfCurrent;
 	}
-	
+
 	Matrix Idq_pred = Matrix::Zero(2,1);
 	Idq_pred(0,0) = 2 * (**mIntfCurrent)(0,0).real() - mIdq_2prev(0,0).real();
 	Idq_pred(1,0) = 2 * (**mIntfCurrent)(0,0).imag() - mIdq_2prev(0,0).imag();
 
-	// 
+	//
 	Matrix resistanceMatrix = Matrix::Zero(2,2);
 	resistanceMatrix(0,0) = mKa_1ph.real() + mKb_1ph.real();
 	resistanceMatrix(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
@@ -261,8 +261,8 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	Matrix Idq_pred = Matrix::Zero(2,1);
 	Idq_pred(0,0) = Idqpred.real();
 	Idq_pred(1,0) = Idqpred.imag();
-	
-	// 
+
+	//
 	Matrix resistanceMatrix = Matrix::Zero(2,2);
 	resistanceMatrix(0,0) = mKa_1ph.real() + mKb_1ph.real();
 	resistanceMatrix(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
@@ -285,7 +285,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::updateVoltage(const Matrix& leftVector
 	mVdq_prev = **mVdq;
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
-	
+
 	//
 	Matrix parkTransform = get_parkTransformMatrix();
 
@@ -302,20 +302,21 @@ void DP::Ph1::SynchronGenerator4OrderTPM::updateVoltage(const Matrix& leftVector
 	mIdq_pred = parkTransform * Iabc / mBase_I_RMS;
 }
 
-bool DP::Ph1::SynchronGenerator4OrderTPM::checkVoltageDifference() {
-	if (**mNumIter == 0)
-		// if no corrector step has been performed yet
-		return true;
-
-	Matrix voltageDifference = **mVdq - mVdq_prev;
-	if (Math::abs(voltageDifference(0,0)) > mTolerance || Math::abs(voltageDifference(1,0)) > mTolerance) {
-		if (**mNumIter >= mMaxIter) {
-			return false;
-		} else {			
-			return true;
-		}
-	} else {
+bool DP::Ph1::SynchronGenerator4OrderTPM::requiresIteration() {
+	if (**mNumIter >= mMaxIter) {
+		// maximum number of iterations reached
 		return false;
+	} else if (**mNumIter == 0) {
+		// no corrector step has been performed yet,
+		// convergence cannot be confirmed
+		return true;
+	} else {
+		// check voltage convergence according to tolerance
+		Matrix voltageDifference = **mVdq - mVdq_prev;
+		if (Math::abs(voltageDifference(0,0)) > mTolerance || Math::abs(voltageDifference(1,0)) > mTolerance)
+			return true;
+		else
+			return false;
 	}
 }
 
