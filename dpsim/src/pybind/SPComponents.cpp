@@ -83,7 +83,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
 
 	py::class_<CPS::SP::Ph1::Load, std::shared_ptr<CPS::SP::Ph1::Load>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Load", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("set_parameters", &CPS::SP::Ph1::Load::setParameters, "active_power"_a, "reactive_power"_a, "nominal_voltage"_a)
+        .def("set_parameters", &CPS::SP::Ph1::Load::setParameters, "active_power"_a, "reactive_power"_a, "nominal_voltage"_a=0)
 		.def("modify_power_flow_bus_type", &CPS::SP::Ph1::Load::modifyPowerFlowBusType, "bus_type"_a)
 		.def("connect", &CPS::SP::Ph1::Load::connect);
 

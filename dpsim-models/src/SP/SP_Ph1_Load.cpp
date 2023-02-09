@@ -28,7 +28,6 @@ SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
     setTerminalNumber(1);
 };
 
-
 void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
 	**mActivePower = activePower;
 	**mReactivePower = reactivePower;
@@ -97,6 +96,10 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 			mTerminals[0]->singleActivePower(),
 			mTerminals[0]->singleReactivePower(),
 			std::abs(mTerminals[0]->initialSingleVoltage()));
+	}
+	if (**mNomVoltage==0) {
+		**mNomVoltage = std::abs(initialSingleVoltage(0));
+		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}
 
 	// instantiate subResistor for active power consumption
