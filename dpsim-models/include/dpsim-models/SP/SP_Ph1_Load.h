@@ -66,7 +66,9 @@ namespace Ph1 {
 		Load(String name, Logger::Level logLevel = Logger::Level::off)
 			: Load(name, name, logLevel) { }
 		///
-		void setParameters(Real activePower, Real reactivePower, Real nominalVoltage);
+		void setParameters(Real activePower, Real reactivePower, Real nominalVoltage=0);
+		///
+		SimPowerComp<Complex>::Ptr clone(String name) override;
 
 		// #### General ####
 		/// Initializes component from power flow data

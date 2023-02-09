@@ -62,7 +62,7 @@ namespace CPS {
 
 				// #### General ####
 				///
-				void setParameters(Matrix activePower, Matrix reactivePower, Real volt);
+				void setParameters(Matrix activePower, Matrix reactivePower, Real volt=0);
 				/// Initializes component from power flow data
 				void initializeFromNodesAndTerminals(Real frequency);
 

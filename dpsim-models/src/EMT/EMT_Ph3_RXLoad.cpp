@@ -85,12 +85,14 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mPower(1, 1) = { (**mActivePower)(1, 1), (**mReactivePower)(1, 1) };
 		mPower(2, 2) = { (**mActivePower)(2, 2), (**mReactivePower)(2, 2) };
 
-		**mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
-
 		SPDLOG_LOGGER_INFO(mSLog, "\nActive Power [W]: {}"
 					"\nReactive Power [VAr]: {}",
 					Logger::matrixToString(**mActivePower),
 					Logger::matrixToString(**mReactivePower));
+		
+	}
+	if (**mNomVoltage==0) {
+		**mNomVoltage = std::abs(initialSingleVoltage(0));
 		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}
 

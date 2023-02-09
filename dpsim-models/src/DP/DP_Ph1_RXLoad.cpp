@@ -31,8 +31,11 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	if(!mParametersSet){
 		setParameters(
 			mTerminals[0]->singleActivePower(),
-			mTerminals[0]->singleReactivePower(),
-			std::abs(mTerminals[0]->initialSingleVoltage()));
+			mTerminals[0]->singleReactivePower());
+	}
+	if (**mNomVoltage==0) {
+		**mNomVoltage = std::abs(initialSingleVoltage(0));
+		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}
 
 	if (**mActivePower != 0) {
