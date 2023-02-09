@@ -36,6 +36,7 @@ void DP::Ph1::SynchronGenerator3OrderVBR::specificInitialization() {
 
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
+		"\nSG model: 3th order"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\n--- Model specific initialization finished ---",

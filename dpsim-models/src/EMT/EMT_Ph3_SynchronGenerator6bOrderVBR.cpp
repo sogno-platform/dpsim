@@ -42,6 +42,7 @@ void EMT::Ph3::SynchronGenerator6bOrderVBR::specificInitialization() {
 
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
+		"\nSG model: 6th order type a (Anderson - Fouad's model)"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\nInitial Ed_s (per unit): {:f}"
