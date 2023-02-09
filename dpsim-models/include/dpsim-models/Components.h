@@ -102,6 +102,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderPCM.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator5bOrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQ.h>

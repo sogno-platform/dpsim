@@ -88,6 +88,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator3OrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator4OrderVBR.cpp
+	EMT/EMT_Ph3_SynchronGenerator5bOrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGeneratorDQ.cpp
