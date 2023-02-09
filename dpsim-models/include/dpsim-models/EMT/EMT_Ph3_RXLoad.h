@@ -56,11 +56,11 @@ public:
   RXLoad(String name, Matrix activePower, Matrix reactivePower, Real volt,
          Logger::Level logLevel = Logger::Level::off);
 
-  // #### General ####
-  ///
-  void setParameters(Matrix activePower, Matrix reactivePower, Real volt);
-  /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+				// #### General ####
+				///
+				void setParameters(Matrix activePower, Matrix reactivePower, Real volt=0);
+				/// Initializes component from power flow data
+				void initializeFromNodesAndTerminals(Real frequency);
 
   // #### MNA section ####
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;

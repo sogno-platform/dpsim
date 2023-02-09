@@ -30,17 +30,10 @@ SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
   setTerminalNumber(1);
 };
 
-void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower,
-                                  Real nominalVoltage) {
-  **mActivePower = activePower;
-  **mReactivePower = reactivePower;
-  **mNomVoltage = nominalVoltage;
-
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Active Power={}[W]\nReactive Power={} [VAr]\nNominal Voltage={} [V]",
-      **mActivePower, **mReactivePower, **mNomVoltage);
-  mSLog->flush();
+void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
+	**mActivePower = activePower;
+	**mReactivePower = reactivePower;
+	**mNomVoltage = nominalVoltage;
 
   mParametersSet = true;
 }
@@ -99,74 +92,69 @@ void SP::Ph1::Load::updatePQ(Real time) {
 
 void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 
-  if (!mParametersSet) {
-    setParameters(mTerminals[0]->singleActivePower(),
-                  mTerminals[0]->singleReactivePower(),
-                  std::abs(mTerminals[0]->initialSingleVoltage()));
-  }
+	if(!mParametersSet){
+		setParameters(
+			mTerminals[0]->singleActivePower(),
+			mTerminals[0]->singleReactivePower(),
+			std::abs(mTerminals[0]->initialSingleVoltage()));
+	}
+	if (**mNomVoltage==0) {
+		**mNomVoltage = std::abs(initialSingleVoltage(0));
+		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
+	}
 
-  // instantiate subResistor for active power consumption
-  if (**mActivePower != 0) {
-    mResistance = std::pow(**mNomVoltage, 2) / **mActivePower;
-    mConductance = 1.0 / mResistance;
-    mSubResistor = std::make_shared<SP::Ph1::Resistor>(
-        **mUID + "_res", **mName + "_res", Logger::Level::off);
-    mSubResistor->setParameters(mResistance);
-    mSubResistor->connect({SimNode::GND, mTerminals[0]->node()});
-    mSubResistor->initialize(mFrequencies);
-    mSubResistor->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-  }
+	// instantiate subResistor for active power consumption
+	if (**mActivePower != 0) {
+		mResistance = std::pow(**mNomVoltage, 2) / **mActivePower;
+		mConductance = 1.0 / mResistance;
+		mSubResistor = std::make_shared<SP::Ph1::Resistor>(**mUID + "_res", **mName + "_res", Logger::Level::off);
+		mSubResistor->setParameters(mResistance);
+		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
+		mSubResistor->initialize(mFrequencies);
+		mSubResistor->initializeFromNodesAndTerminals(frequency);
+		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+	}
 
-  if (**mReactivePower != 0)
-    mReactance = std::pow(**mNomVoltage, 2) / **mReactivePower;
-  else
-    mReactance = 0;
+	if (**mReactivePower != 0)
+		mReactance = std::pow(**mNomVoltage, 2) / **mReactivePower;
+	else
+		mReactance = 0;
 
-  // instantiate subInductor or subCapacitor for reactive power consumption
-  if (mReactance > 0) {
-    mInductance = mReactance / (2 * PI * frequency);
-    mSubInductor = std::make_shared<SP::Ph1::Inductor>(
-        **mUID + "_res", **mName + "_ind", Logger::Level::off);
-    mSubInductor->setParameters(mInductance);
-    mSubInductor->connect({SimNode::GND, mTerminals[0]->node()});
-    mSubInductor->initialize(mFrequencies);
-    mSubInductor->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-  } else if (mReactance < 0) {
-    mCapacitance = -1 / (2 * PI * frequency) / mReactance;
-    mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(
-        **mUID + "_res", **mName + "_cap", Logger::Level::off);
-    mSubCapacitor->setParameters(mCapacitance);
-    mSubCapacitor->connect({SimNode::GND, mTerminals[0]->node()});
-    mSubCapacitor->initialize(mFrequencies);
-    mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-  }
+	// instantiate subInductor or subCapacitor for reactive power consumption
+	if (mReactance > 0) {
+		mInductance = mReactance / (2 * PI * frequency);
+		mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mUID + "_res", **mName + "_ind", Logger::Level::off);
+		mSubInductor->setParameters(mInductance);
+		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
+		mSubInductor->initialize(mFrequencies);
+		mSubInductor->initializeFromNodesAndTerminals(frequency);
+		addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+	} else if (mReactance < 0) {
+		mCapacitance = -1 / (2 * PI * frequency) / mReactance;
+		mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(**mUID + "_res", **mName + "_cap", Logger::Level::off);
+		mSubCapacitor->setParameters(mCapacitance);
+		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
+		mSubCapacitor->initialize(mFrequencies);
+		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
+		addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+	}
 
-  (**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
-  (**mIntfCurrent)(0, 0) = std::conj(Complex(attributeTyped<Real>("P")->get(),
-                                             attributeTyped<Real>("Q")->get()) /
-                                     (**mIntfVoltage)(0, 0));
+	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
+	(**mIntfCurrent)(0, 0) = std::conj(Complex(attributeTyped<Real>("P")->get(), attributeTyped<Real>("Q")->get()) / (**mIntfVoltage)(0, 0));
 
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "\n--- Initialization from powerflow ---"
-                     "\nVoltage across: {:s}"
-                     "\nCurrent: {:s}"
-                     "\nTerminal 0 voltage: {:s}"
-                     "\n--- Initialization from powerflow finished ---",
-                     Logger::phasorToString((**mIntfVoltage)(0, 0)),
-                     Logger::phasorToString((**mIntfCurrent)(0, 0)),
-                     Logger::phasorToString(initialSingleVoltage(0)));
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "Updated parameters according to powerflow:\n"
-                     "Active Power={} [W] Reactive Power={} [VAr]",
-                     attributeTyped<Real>("P")->get(),
-                     attributeTyped<Real>("Q")->get());
-  mSLog->flush();
+	SPDLOG_LOGGER_INFO(mSLog, 
+		"\n--- Initialization from powerflow ---"
+		"\nVoltage across: {:s}"
+		"\nCurrent: {:s}"
+		"\nTerminal 0 voltage: {:s}"
+		"\n--- Initialization from powerflow finished ---",
+		Logger::phasorToString((**mIntfVoltage)(0, 0)),
+		Logger::phasorToString((**mIntfCurrent)(0, 0)),
+		Logger::phasorToString(initialSingleVoltage(0)));
+	SPDLOG_LOGGER_INFO(mSLog, 
+		"Updated parameters according to powerflow:\n"
+		"Active Power={} [W] Reactive Power={} [VAr]", attributeTyped<Real>("P")->get(), attributeTyped<Real>("Q")->get());
+	mSLog->flush();
 }
 
 // #### MNA section ####

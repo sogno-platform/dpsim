@@ -86,6 +86,16 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def_property("L", createAttributeGetter<CPS::Real>("L"),
                     createAttributeSetter<CPS::Real>("L"));
 
+  py::class_<CPS::SP::Ph1::ResIndSeries,
+             std::shared_ptr<CPS::SP::Ph1::ResIndSeries>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "ResInductor",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::SP::Ph1::ResIndSeries::setParameters, "R"_a,
+           "L"_a)
+      .def("connect", &CPS::SP::Ph1::ResIndSeries::connect);
+
   py::class_<CPS::SP::Ph1::NetworkInjection,
              std::shared_ptr<CPS::SP::Ph1::NetworkInjection>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "NetworkInjection",
@@ -134,20 +144,10 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph1::Load::setParameters,
-           "active_power"_a, "reactive_power"_a, "nominal_voltage"_a)
+           "active_power"_a, "reactive_power"_a, "nominal_voltage"_a = 0)
       .def("modify_power_flow_bus_type",
            &CPS::SP::Ph1::Load::modifyPowerFlowBusType, "bus_type"_a)
       .def("connect", &CPS::SP::Ph1::Load::connect);
-
-  py::class_<CPS::SP::Ph1::ResIndSeries,
-             std::shared_ptr<CPS::SP::Ph1::ResIndSeries>,
-             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "ResInductor",
-                                              py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
-      .def("set_parameters", &CPS::SP::Ph1::ResIndSeries::setParameters, "R"_a,
-           "L"_a)
-      .def("connect", &CPS::SP::Ph1::ResIndSeries::connect);
 
   py::class_<CPS::SP::Ph1::Switch, std::shared_ptr<CPS::SP::Ph1::Switch>,
              CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(
@@ -156,8 +156,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph1::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-           // cppcheck-suppress assignBoolToPointer
-           "closed"_a = false)
+           "closed"_a = false) // cppcheck-suppress assignBoolToPointer
       .def("open", &CPS::SP::Ph1::Switch::open)
       .def("close", &CPS::SP::Ph1::Switch::close)
       .def("connect", &CPS::SP::Ph1::Switch::connect);
@@ -189,8 +188,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph1::varResSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-           // cppcheck-suppress assignBoolToPointer
-           "closed"_a = false)
+           "closed"_a = false) // cppcheck-suppress assignBoolToPointer
       .def("open", &CPS::SP::Ph1::varResSwitch::open)
       .def("close", &CPS::SP::Ph1::varResSwitch::close)
       .def("set_init_parameters",

@@ -59,14 +59,22 @@ private:
   /// Internal resistance
   std::shared_ptr<SP::Ph1::Resistor> mSubResistor;
 
-public:
-  /// Defines UID, name and logging level
-  Load(String uid, String name, Logger::Level logLevel = Logger::Level::off);
-  /// Defines name and logging level
-  Load(String name, Logger::Level logLevel = Logger::Level::off)
-      : Load(name, name, logLevel) {}
-  ///
-  void setParameters(Real activePower, Real reactivePower, Real nominalVoltage);
+		/// Internal inductor
+		std::shared_ptr<SP::Ph1::Inductor> mSubInductor;
+		/// Internal capacitor
+		std::shared_ptr<SP::Ph1::Capacitor> mSubCapacitor;
+		/// Internal resistance
+		std::shared_ptr<SP::Ph1::Resistor> mSubResistor;
+	public:
+		/// Defines UID, name and logging level
+		Load(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		/// Defines name and logging level
+		Load(String name, Logger::Level logLevel = Logger::Level::off)
+			: Load(name, name, logLevel) { }
+		///
+		void setParameters(Real activePower, Real reactivePower, Real nominalVoltage=0);
+		///
+		SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
   /// Initializes component from power flow data
