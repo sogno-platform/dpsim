@@ -34,6 +34,7 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::specificInitialization() {
 
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Model specific initialization  ---"
+		"\nSG model: 3th order"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\n--- Model specific initialization finished ---",
 		(**mEdq0_t)(1,0)
