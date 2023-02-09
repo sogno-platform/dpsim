@@ -180,7 +180,7 @@ void addSPPh3Components(py::module_ mSPPh3) {
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::SP::Ph3::Resistor::setParameters, "R"_a)
-		.def("connect", &CPS::SP::Ph3::Resistor::connect);;
+		.def("connect", &CPS::SP::Ph3::Resistor::connect);
 
 	py::class_<CPS::SP::Ph3::Capacitor, std::shared_ptr<CPS::SP::Ph3::Capacitor>, CPS::SimPowerComp<CPS::Complex>>(mSPPh3, "Capacitor", py::multiple_inheritance())
         .def(py::init<std::string>())
