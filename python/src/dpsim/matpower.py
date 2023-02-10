@@ -73,7 +73,7 @@ class Reader:
         if 'bus_names' in self.mpc_raw[self.mpc_name]:
             self.mpc_bus_names_dict=dict(zip(self.mpc_bus_data['bus_i'], self.mpc_raw[self.mpc_name]['bus_names']))
 
-        elif 'bus_assets' in self.mpc_raw[self.mpc_name]:
+        if 'bus_assets' in self.mpc_raw[self.mpc_name]:
             self.mpc_bus_assets_dict=dict(zip(self.mpc_bus_data['bus_i'],self.mpc_raw[self.mpc_name]['bus_assets']))
 
     def create_dpsim_objects(self):
@@ -102,8 +102,11 @@ class Reader:
             bus_assets= []
             if self.mpc_bus_names_dict:
                 bus_name= self.mpc_bus_names_dict[int(bus_index)]
-            elif self.mpc_bus_assets_dict:
-                bus_assets=self.mpc.bus_assets_dict[int(bus_index)]
+            if self.mpc_bus_assets_dict:
+                if isinstance(self.mpc_bus_assets_dict[int(bus_index)], str):
+                    bus_assets.append(self.mpc_bus_assets_dict[int(bus_index)])
+                else:
+                    bus_assets=list(self.mpc_bus_assets_dict[int(bus_index)])
             
             dpsimpy_busses_dict[bus_index] = dpsimpy.sp.SimNode(bus_name, dpsimpy.PhaseType.Single)
 
@@ -113,7 +116,7 @@ class Reader:
 
             # PQ busses
             if bus_type == 1:
-                if not bus_assets: # aggregated load
+                if not bus_assets: #an aggregated load is automatically generated for PQ busses even if P_d and Q_d are equal to zero
                         load = load + 1
                         # load_name = "load%s" %bus_index
                         load_name='aggregated Load %s' %load
