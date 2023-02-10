@@ -193,39 +193,39 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
-	// VBR history voltage
+	// Auxiliar variables for time-varying VBR history voltage and matrix
 	calculateAuxiliarVariables();
-	//mEh_vbr(0,0) = mAd * (**mIdq)(1,0) + mBd * (**mEdq_t)(0,0);
-	//mEh_vbr(1,0) = mAq * (**mIdq)(0,0) + mBq * (**mEdq_t)(1,0) + mCq;
 
-	// predict current
+	// set previous values of current at simulation start
 	if (mSimTime==0.0) {
 		(**mIntfCurrent)(0,0) = std::conj(mInitElecPower / (mInitVoltage * mBase_V_RMS));
 		mIdq_2prev = **mIntfCurrent;
 	}
 
-	Matrix Idq_pred = Matrix::Zero(2,1);
-	Idq_pred(0,0) = 2 * (**mIntfCurrent)(0,0).real() - mIdq_2prev(0,0).real();
-	Idq_pred(1,0) = 2 * (**mIntfCurrent)(0,0).imag() - mIdq_2prev(0,0).imag();
+	// predict current
+	Matrix IdpPrediction = Matrix::Zero(2,1);
+	IdpPrediction(0,0) = 2 * (**mIntfCurrent)(0,0).real() - mIdq_2prev(0,0).real();
+	IdpPrediction(1,0) = 2 * (**mIntfCurrent)(0,0).imag() - mIdq_2prev(0,0).imag();
 
-	//
-	Matrix resistanceMatrix = Matrix::Zero(2,2);
-	resistanceMatrix(0,0) = mKa_1ph.real() + mKb_1ph.real();
-	resistanceMatrix(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
-	resistanceMatrix(1,0) = mKa_1ph.imag() + mKb_1ph.imag();
-	resistanceMatrix(1,1) = mKa_1ph.real() - mKb_1ph.real();
+	// Determine time-varying part of resistance matrix
+	Matrix resistanceMatrixVarying = Matrix::Zero(2,2);
+	resistanceMatrixVarying(0,0) = mKa_1ph.real() + mKb_1ph.real();
+	resistanceMatrixVarying(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
+	resistanceMatrixVarying(1,0) = mKa_1ph.imag() + mKb_1ph.imag();
+	resistanceMatrixVarying(1,1) = mKa_1ph.real() - mKb_1ph.real();
 
 	mEh_vbr(0,0) = mAd * (**mIdq)(1,0) + mBd * (**mEdq_t)(0,0);
 	mEh_vbr(1,0) = mAq * (**mIdq)(0,0) + mBq * (**mEdq_t)(1,0) + mCq;
 
-	// convert Edq_t into the abc reference frame
+	// convert Edq_t to dp domain
 	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
 
-	//
-	**mEvbr += - Complex(mBase_Z * (resistanceMatrix * Idq_pred)(0,0), 0);
-	**mEvbr += - Complex(0, mBase_Z * (resistanceMatrix * Idq_pred)(1,0));
+	// Add current prediction based component to voltage behind reactance
+	**mEvbr += - Complex(mBase_Z * (resistanceMatrixVarying * IdpPrediction)(0,0), 0);
+	**mEvbr += - Complex(0, mBase_Z * (resistanceMatrixVarying * IdpPrediction)(1,0));
 
-	//
+	// Store previous current for later use
+	// FIXME: Rename to dp
 	mIdq_2prev = **mIntfCurrent;
 }
 
@@ -237,17 +237,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	// corrector step (trapezoidal rule)
 	**mNumIter = **mNumIter + 1;
 
-	/*
-	// calculate Edq_t corrected
-	mEdq_corr(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
-	mEdq_corr(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
-
-	// corrected currents at t=k+1
-	mIdq_corr(0,0) = (mEdq_corr(1,0) - (**mVdq)(1,0) ) / mLd_t;
-	mIdq_corr(1,0) = ((**mVdq)(0,0) - mEdq_corr(0,0) ) / mLq_t;
-	*/
-
-	//predict voltage behind transient reactance (with trapezoidal rule)
+	// predict voltage behind transient reactance (with trapezoidal rule)
 	mEdq_pred(0,0) = (**mVdq)(0,0) - mIdq_pred(1,0) * mLq_t;
 	mEdq_pred(1,0) = (**mVdq)(1,0) + mIdq_pred(0,0) * mLd_t;
 	mEdq_corr = mA_prev * **mEdq_t + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * mEf;
@@ -257,24 +247,27 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	mIdq_corr(1,0) = ((**mVdq)(0,0) - mEdq_corr(0,0) ) / mLq_t;
 
 	// convert currents into the abc reference frame
-	Complex Idqpred = (mKvbr * mIdq_corr)(0,0) * mBase_I_RMS;
-	Matrix Idq_pred = Matrix::Zero(2,1);
-	Idq_pred(0,0) = Idqpred.real();
-	Idq_pred(1,0) = Idqpred.imag();
+	Complex IdpPredictionComplex = (mKvbr * mIdq_corr)(0,0) * mBase_I_RMS;
 
-	//
-	Matrix resistanceMatrix = Matrix::Zero(2,2);
-	resistanceMatrix(0,0) = mKa_1ph.real() + mKb_1ph.real();
-	resistanceMatrix(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
-	resistanceMatrix(1,0) = mKa_1ph.imag() + mKb_1ph.imag();
-	resistanceMatrix(1,1) = mKa_1ph.real() - mKb_1ph.real();
+	Matrix IdpPrediction = Matrix::Zero(2,1);
+	IdpPrediction(0,0) = IdpPredictionComplex.real();
+	IdpPrediction(1,0) = IdpPredictionComplex.imag();
+
+	// Determine time-varying part of resistance matrix
+	// FIXME: No recomputation of mechanical vars in corrector step,
+	// so reuse of this save computation time
+	Matrix resistanceMatrixVarying = Matrix::Zero(2,2);
+	resistanceMatrixVarying(0,0) = mKa_1ph.real() + mKb_1ph.real();
+	resistanceMatrixVarying(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
+	resistanceMatrixVarying(1,0) = mKa_1ph.imag() + mKb_1ph.imag();
+	resistanceMatrixVarying(1,1) = mKa_1ph.real() - mKb_1ph.real();
 
 	// convert Edq_t into the abc reference frame
 	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
 
-	//
-	**mEvbr += - Complex(mBase_Z * (resistanceMatrix * Idq_pred)(0,0), 0);
-	**mEvbr += - Complex(0, mBase_Z * (resistanceMatrix * Idq_pred)(1,0));
+	// Add current prediction based component to voltage behind reactance
+	**mEvbr += - Complex(mBase_Z * (resistanceMatrixVarying * IdpPrediction)(0,0), 0);
+	**mEvbr += - Complex(0, mBase_Z * (resistanceMatrixVarying * IdpPrediction)(1,0));
 
 	// stamp currents
 	(**mRightVector).setZero();
