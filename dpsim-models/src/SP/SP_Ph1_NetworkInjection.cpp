@@ -85,7 +85,7 @@ void SP::Ph1::NetworkInjection::setBaseVoltage(Real baseVoltage) {
 
 void SP::Ph1::NetworkInjection::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
     SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
-	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]", mBaseVoltage);
+	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]", **mBaseVoltage);
 
     **mVoltageSetPointPerUnit = **mVoltageSetPoint / **mBaseVoltage;
 
