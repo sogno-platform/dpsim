@@ -7,8 +7,8 @@ Jupyter notebooks can either use the DPsim Python interface to run simulations o
 The data analysis and plotting is always done in Python using common libraries like Matplotlib.
 To collect the simulation results from within Python, one can use the villas-dataprocessing Python package.&lt;/p>
 &lt;p>&lt;img src="dpsim_modules.svg" alt="image">&lt;/p>
-&lt;p>Another approach to get data in or out of DPsim is the VILLAS interface, which does not depend on Python at all.
-The main purpose of the VILLAS interface is to exchange data during the simulation runtime, for example, in real-time simulation experiments.
+&lt;p>Another approach to get data in or out of DPsim is the VILLASnode interface, which does not depend on Python at all.
+The main purpose of the VILLASnode interface is to exchange data during the simulation runtime, for example, in real-time simulation experiments.
 The data could be send to other simulators, hardware or other software components like databases.
 Storing the data in databases can be another way of managing (also offline) simulation results if the Python CSV method is not desireable.&lt;/p>
 &lt;p>The CIM reader is based on the CIM++ library and provides a comfortable alternative to defining the grid manually in C++ or Python.
