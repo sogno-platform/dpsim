@@ -18,21 +18,15 @@ set(DPSIM_SOURCES
 	Interface.cpp
 )
 
-set(DPSIM_INCLUDE_DIRS
-	../include
-	${CMAKE_CURRENT_BINARY_DIR}/../include
-	)
-
-set(DPSIM_LIBRARIES
+list(APPEND DPSIM_LIBRARIES
 	dpsim-models
 	readerwriterqueue
-	)
+	filesystem
+)
 
 if(WITH_MNASOLVERPLUGIN)
 	list(APPEND DPSIM_LIBRARIES ${CMAKE_DL_LIBS})
-	list(APPEND DPSIM_SOURCES
-		MNASolverPlugin.cpp
-	)
+	list(APPEND DPSIM_SOURCES MNASolverPlugin.cpp)
 endif()
 
 if(WITH_RT AND HAVE_TIMERFD)
@@ -41,8 +35,9 @@ endif()
 
 if(WITH_SUNDIALS)
 	list(APPEND DPSIM_SOURCES DAESolver.cpp)
-	#For ODE-Solver class:
-    list(APPEND DPSIM_SOURCES ODESolver.cpp)
+
+	# For ODE-Solver class:
+	list(APPEND DPSIM_SOURCES ODESolver.cpp)
 	list(APPEND DPSIM_INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
 	list(APPEND DPSIM_LIBRARIES ${SUNDIALS_LIBRARIES})
 endif()
@@ -57,47 +52,39 @@ if(WITH_JSON)
 endif()
 
 if(WITH_SPARSE)
-	list(APPEND DPSIM_SOURCES
-		MNASolverEigenSparse.cpp
-	)
+	list(APPEND DPSIM_SOURCES MNASolverEigenSparse.cpp)
 endif()
 
 if(WITH_CUDA)
-	list(APPEND DPSIM_INCLUDE_DIRS ${CUDA_INCLUDE_DIRS} ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+	list(APPEND DPSIM_INCLUDE_DIRS
+		${CUDA_INCLUDE_DIRS}
+		${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}
+	)
 
-		list(APPEND DPSIM_SOURCES
-			MNASolverGpuDense.cpp
-		)
-		
-		list(APPEND DPSIM_LIBRARIES ${CUDA_LIBRARIES} ${CUDA_cusolver_LIBRARY})
+	list(APPEND DPSIM_SOURCES MNASolverGpuDense.cpp)
+
+	list(APPEND DPSIM_LIBRARIES
+		${CUDA_LIBRARIES}
+		${CUDA_cusolver_LIBRARY}
+	)
 
 	if(WITH_MAGMA)
-		list(APPEND DPSIM_SOURCES
-			MNASolverGpuMagma.cpp
-			)
+		list(APPEND DPSIM_SOURCES MNASolverGpuMagma.cpp)
 		list(APPEND DPSIM_LIBRARIES ${MAGMA_LIBRARIES})
 		list(APPEND DPSIM_INCLUDE_DIRS ${MAGMA_INCLUDE_DIR})
 	endif()
+
 	if(WITH_SPARSE)
-		list(APPEND DPSIM_SOURCES
-			MNASolverGpuSparse.cpp
-		)
-
+		list(APPEND DPSIM_SOURCES MNASolverGpuSparse.cpp)
 		list(APPEND DPSIM_LIBRARIES ${CUDA_cusparse_LIBRARY})
-
 	endif()
 endif()
 
 if(WITH_OPENMP)
-	list(APPEND DPSIM_SOURCES
-		OpenMPLevelScheduler.cpp
-	)
-
+	list(APPEND DPSIM_SOURCES OpenMPLevelScheduler.cpp)
 	list(APPEND DPSIM_CXX_FLAGS ${OpenMP_CXX_FLAGS})
 	list(APPEND DPSIM_LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
-
-include(GNUInstallDirs)
 
 add_library(dpsim ${DPSIM_SOURCES})
 target_link_libraries(dpsim PUBLIC ${DPSIM_LIBRARIES})

@@ -5,14 +5,19 @@
 
 FROM quay.io/pypa/manylinux_2_28_x86_64
 
+ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
+ARG VILLAS_VERSION=c976cd62d8c6667a078be0785ca3e623a05f7456
+
+ARG CMAKE_OPTS
+ARG MAKE_OPTS=-j4
+
 ENV PLAT=manylinux_2_28_x86_64
 
 LABEL \
-	org.label-schema.schema-version = "1.0.0" \
-	org.label-schema.name = "DPsim" \
-	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
-	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
+	org.opencontainers.image.title = "DPsim" \
+	org.opencontainers.image.licenses = "MPL 2.0" \
+	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
+	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
 
 RUN dnf -y update
 RUN yum install -y epel-release
@@ -47,13 +52,13 @@ RUN dnf -y debuginfo-install \
 
 # Build & Install sundials
 RUN cd /tmp && \
-	git clone --recursive https://github.com/LLNL/sundials.git && \
+	git clone --branch v3.2.1 --recurse-submodules --depth 1 https://github.com/LLNL/sundials.git && \
 	mkdir -p sundials/build && cd sundials/build && \
-	git checkout v3.2.1 && \
-	cmake -DCMAKE_BUILD_TYPE=Release ..  && \
-	make -j$(nproc) install
+	cmake ${CMAKE_OPTS} .. \
+		-DCMAKE_BUILD_TYPE=Release && \
+	make ${MAKE_OPTS} install
 
-# CIMpp and VILLAS are installed here
+# CIMpp and VILLASnode are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 # Python dependencies
@@ -63,40 +68,48 @@ RUN pip3 install -r requirements-manylinux.txt
 
 # Install CIMpp from source
 RUN cd /tmp && \
-	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
+	git clone --recurse-submodules --depth 1 https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=CGMES_2.4.15_16FEB2016 -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	cmake ${CMAKE_OPTS} .. \
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+		-DUSE_CIM_VERSION=${CIM_VERSION} \
+		-DBUILD_SHARED_LIBS=ON \
+		-DBUILD_ARABICA_EXAMPLES=OFF && \
+	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/libcimpp
 
-# villas dependencies
+# Install VILLASnode dependencies
 RUN yum install -y \
-    openssl-devel \
-    libuuid-devel \
-    libcurl-devel \
-    jansson-devel \
-    libwebsockets-devel \
+	openssl-devel \
+	libuuid-devel \
+	libcurl-devel \
+	jansson-devel \
+	libwebsockets-devel \
 	mosquitto-devel \
 	libconfig-devel \
-  	libnl3-devel
+	libnl3-devel
 
 # Install spdlog from source
 RUN cd /tmp && \
-	git clone --recursive https://github.com/gabime/spdlog.git && \
-	cd spdlog && \
-	git checkout tags/v1.6.1 && \
-	mkdir -p build && cd build && \
-	cmake -DCMAKE_POSITION_INDEPENDENT_CODE=True -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
+	git clone --branch v1.6.1 --recurse-submodules --depth 1 https://github.com/gabime/spdlog.git && \
+	mkdir -p spdlog/build && cd spdlog/build && \
+	cmake ${CMAKE_OPTS} .. \
+		-DCMAKE_POSITION_INDEPENDENT_CODE=True \
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
+	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/spdlog
 
-# Install VILLAS from source
-ENV LC_ALL C.UTF-8
-ENV LANG C.UTF-8
-
+# Install VILLASnode from source
 RUN cd /tmp && \
-	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
-	mkdir -p villasnode/build && cd villasnode/build && \
-	git -c submodule.fpga.update=none checkout b94746effb015aa98791c0e319ef11223d18e8b0 && git -c submodule.fpga.update=none submodule update --recursive && \
-	cmake -DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++ -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
-	rm -rf /tmp/villasnode
+	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
+	mkdir -p villas-node/build && cd villas-node/build && \
+	git checkout ${VILLAS_VERSION} && \
+	cmake ${CMAKE_OPTS} .. \
+		-DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc \
+		-DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++ \
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+		-DDOWNLOAD_GO=OFF && \
+	make ${MAKE_OPTS} install && \
+	rm -rf /tmp/villas-node
 
-ENV CMAKE_OPTS="-DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++" 
+ENV CMAKE_OPTS="-DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++"

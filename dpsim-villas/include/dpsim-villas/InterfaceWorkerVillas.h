@@ -34,8 +34,8 @@ namespace DPsim {
 
 		std::vector<std::tuple<std::function<CPS::AttributeBase::Ptr(Sample*)>, UInt>> mImports;
 		std::vector<std::tuple<std::function<void(CPS::AttributeBase::Ptr, Sample*)>, UInt, Bool>> mExports;
-		
-		//Villas node to send / receive data to / from
+
+		// VILLASnode node to send / receive data to / from
 		String mNodeConfig;
 		node::Node* mNode;
 
@@ -55,13 +55,13 @@ namespace DPsim {
 
 		void open() override;
 		void close() override;
-	
+
 		void readValuesFromEnv(std::vector<Interface::AttributePacket>& updatedAttrs) override;
 		void writeValuesToEnv(std::vector<Interface::AttributePacket>& updatedAttrs) override;
 
         virtual void configureImport(UInt attributeId, const std::type_info& type, UInt idx);
         virtual void configureExport(UInt attributeId, const std::type_info& type, UInt idx, Bool waitForOnWrite, const String& name = "", const String& unit = "");
-	
+
 	private:
 		void prepareNode();
 		void setupNodeSignals();

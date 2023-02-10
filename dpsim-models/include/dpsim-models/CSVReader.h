@@ -14,15 +14,14 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <experimental/filesystem>
+
+#include <dpsim-models/Filesystem.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/SP/SP_Ph1_Load.h>
 #include <dpsim-models/DP/DP_Ph1_PQLoadCS.h>
 #include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
-
-namespace fs = std::experimental::filesystem;
 
 namespace CPS {
 	/// reads load profiles (csv files only) and assign them to the corresponding load object

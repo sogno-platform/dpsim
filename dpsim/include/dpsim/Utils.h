@@ -18,19 +18,17 @@
 #include <cstdlib>
 #include <list>
 #include <vector>
-#include <experimental/filesystem>
 
 #include <dpsim/Timer.h>
 #include <dpsim/Solver.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim/MNASolverFactory.h>
+#include <dpsim-models/Filesystem.h>
 #include <dpsim-models/Components.h>
 #include <dpsim/Simulation.h>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
-
-namespace fs = std::experimental::filesystem;
 
 namespace DPsim {
 

@@ -1,12 +1,12 @@
 set(LIBRARIES "dpsim")
 
-if (NOT WIN32)
-	# needed so CIMParser and arabica (which are first compiled into static libs)
+if(NOT WIN32)
+	# Needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
-# targets
+# Targets
 set(CIRCUIT_SOURCES
 	# DP examples
 	Circuits/DP_VS_RL1.cpp
@@ -21,7 +21,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
 	Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
-	
+
 	# Powerflow examples
 	Circuits/PF_Slack_PiLine_PQLoad.cpp
 
@@ -110,8 +110,8 @@ set(INVERTER_SOURCES
 )
 
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry
-# also has to appear in another list in this file. 
-list(APPEND TEST_SOURCES 
+# also has to appear in another list in this file.
+list(APPEND TEST_SOURCES
 	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp
@@ -153,8 +153,7 @@ if(WITH_RT)
 endif()
 
 if(WITH_CIM)
-	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
-	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
+	list(APPEND LIBRARIES libcimpp)
 
 	set(CIM_SOURCES
 		CIM/WSCC-9bus_CIM.cpp
@@ -169,7 +168,7 @@ if(WITH_CIM)
 
 		# WSCC Reduced Order
 		CIM/SP_WSCC9bus_SGReducedOrderVBR.cpp
-		CIM/EMT_WSCC9bus_SGReducedOrderVBR.cpp	
+		CIM/EMT_WSCC9bus_SGReducedOrderVBR.cpp
 		CIM/DP_WSCC9bus_SGReducedOrderVBR.cpp
 
 		# PF(Power Flow) example

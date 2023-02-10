@@ -1,11 +1,10 @@
-FROM fedora:34
+FROM fedora:36
 
 LABEL \
-	org.label-schema.schema-version = "1.0.0" \
-	org.label-schema.name = "DPsim" \
-	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
-	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
+	org.opencontainers.image.title = "DPsim" \
+	org.opencontainers.image.licenses = "MPL 2.0" \
+	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
+	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
 
 RUN dnf -y update
 
@@ -19,7 +18,8 @@ RUN dnf -y install \
 # Dependencies
 RUN dnf --refresh -y install \
 	python3-devel \
-	eigen3-devel
+	eigen3-devel \
+	spdlog-devel
 
 # Python dependencies
 ADD requirements.txt .

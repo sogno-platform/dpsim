@@ -4,7 +4,7 @@
 root = true
 
 # Unix-style newlines with a newline ending every file
-[**.{c,cpp,h,hpp,py}]
+[*]
 end_of_line = lf
 insert_final_newline = true
 charset = utf-8
@@ -18,6 +18,6 @@ indent_size = 4
 indent_style = spaces
 indent_size = 4
 
-[{CMakeLists.txt,Dockerfile}]
+[{CMakeLists.txt,Dockerfile,Dockerfile.*,*.cmake}]
 indent_style = tab
 indent_size = 2

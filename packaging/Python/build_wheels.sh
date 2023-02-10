@@ -15,9 +15,9 @@ case $(uname -s) in
 		#PYDIRS=(/opt/python/{cp36,cp37}-*)
 		PYDIRS=(/opt/python/cp37-*)
 		CMAKE_OPTS_BASE="-DCMAKE_BUILD_PARALLEL_LEVEL=$(nproc) \
-						 -DWITH_EIGEN_SUBMODULE=ON \
-						 -DWITH_CIM_SUBMODULE=ON \
-                    	 -DWITH_SPDLOG_SUBMODULE=ON"
+						 -DFETCH_EIGEN=ON \
+						 -DFETCH_CIMPP=ON \
+                    	 -DFETCH_SPDLOG=ON"
 		;;
 
 	MINGW*)
@@ -33,9 +33,9 @@ for PYDIR in ${PYDIRS}; do
 
 	# CMAKE_OPTS is used by our setup.py script
 	export CMAKE_OPTS="-DCMAKE_BUILD_PARALLEL_LEVEL=$(nproc) \
-					   -DWITH_EIGEN_SUBMODULE=ON \
-					   -DWITH_CIM_SUBMODULE=ON \
-					   -DWITH_SPDLOG_SUBMODULE=ON \
+					   -DFETCH_EIGEN=ON \
+					   -DFETCH_CIMPP=ON \
+					   -DFETCH_SPDLOG=ON \
 					   -DPYTHON_EXECUTABLE=${EXC} \
 					   -DPYTHON_INCLUDE_DIRS=${INC} \
 					   -DPYTHON_LIBRARY=${LIB}"

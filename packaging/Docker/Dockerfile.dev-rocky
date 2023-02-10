@@ -1,27 +1,26 @@
 FROM rockylinux:9
 
-ARG VILLAS_VERSION=0.8.0
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
 
+ARG CMAKE_OPTS
+ARG MAKE_OPTS=-j4
+
 LABEL \
-	org.label-schema.schema-version = "1.0.0" \
-	org.label-schema.name = "DPsim" \
-	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.author.name = "Niklas Eiling, Steffen Vogel" \
-	org.label-schema.author.email = "niklas.eiling@eonerc.rwth-aachen.de, stvogel@eonerc.rwth-aachen.de" \
-	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
-	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
+	org.opencontainers.image.title = "DPsim" \
+	org.opencontainers.image.licenses = "MPL 2.0" \
+	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
+	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
 
 RUN dnf -y update && \
-    dnf install -y epel-release dnf-plugins-core && \
-    dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
-    dnf config-manager --set-enabled crb && \
-    dnf config-manager --set-enabled remi
+	dnf install -y epel-release dnf-plugins-core && \
+	dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
+	dnf config-manager --set-enabled crb && \
+	dnf config-manager --set-enabled remi
 
 # CUDA dependencies
 RUN dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo && \
-    dnf --refresh -y install cuda-compiler-11-7 cuda-libraries-devel-11-7 cuda-nvprof-11-7 && \
-    ln -s cuda-11.7 /usr/local/cuda
+	dnf --refresh -y install cuda-compiler-11-7 cuda-libraries-devel-11-7 cuda-nvprof-11-7 && \
+	ln -s cuda-11.7 /usr/local/cuda
 
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
@@ -37,10 +36,10 @@ RUN dnf -y install \
 	pandoc \
 	python3-pip \
 	pkg-config \
-    wget \
-    libarchive \
-    openblas-devel \
-    gcc-gfortran
+	wget \
+	libarchive \
+	openblas-devel \
+	gcc-gfortran
 
 # Dependencies
 RUN dnf --refresh -y install \
@@ -50,76 +49,82 @@ RUN dnf --refresh -y install \
 	graphviz-devel \
 	gsl-devel
 
-# VILLAS dependencies
+# VILLASnode dependencies
 RUN dnf -y install \
-    openssl-devel \
-    libuuid-devel \
-    libconfig-devel \
-    libnl3-devel \
-    libcurl-devel \
-    jansson-devel \
-    mosquitto-devel \
-    libjpeg-devel \
-    zlib-devel
+	openssl-devel \
+	libuuid-devel \
+	libconfig-devel \
+	libnl3-devel \
+	libcurl-devel \
+	jansson-devel \
+	mosquitto-devel \
+	libjpeg-devel \
+	zlib-devel
 
 # CUDARPC and dependencies
-RUN dnf install -y make bash git gcc autoconf libtool automake \
-                   ncurses-devel zlib-devel binutils-devel mesa-libGL-devel \
-                   libvdpau-devel mesa-libEGL-devel openssl-devel rpcbind \
-                   rpcgen texinfo bison flex
+RUN dnf install -y \
+	make bash git gcc autoconf libtool automake \
+	ncurses-devel zlib-devel binutils-devel mesa-libGL-devel \
+	libvdpau-devel mesa-libEGL-devel openssl-devel rpcbind \
+	rpcgen texinfo bison flex
 
 ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
-RUN git clone -b 3.0 --depth 1 --recurse-submodules https://git.rwth-aachen.de/acs/public/virtualization/cricket.git && \
-    cd cricket && \
-    make -j16 libtirpc && \
-    make -j16 bin/libtirpc.so && \
-    make -j16 bin/libtirpc.so.3 && \
-    make -j16 bin/cricket-client.so LOG=INFO
+RUN git clone --branch 3.0 --recurse-submodules --depth 1 https://git.rwth-aachen.de/acs/public/virtualization/cricket.git && \
+	cd cricket && \
+	make ${MAKE_OPTS} libtirpc && \
+	make ${MAKE_OPTS} bin/libtirpc.so && \
+	make ${MAKE_OPTS} bin/libtirpc.so.3 && \
+	make ${MAKE_OPTS} bin/cricket-client.so LOG=INFO
 
 ENV PATH="$PWD/cricket/bin:${PATH}"
 ENV LD_LIBRARY_PATH="$PWD/cricket/bin:${LD_LIBRARY_PATH}"
 
 # Install Libwebsockets from source because the repo variant is not suitable
 RUN git clone --branch v4.3-stable --depth 1 https://libwebsockets.org/repo/libwebsockets && \
-    mkdir -p libwebsockets/build && \
-    pushd libwebsockets/build && \
-    cmake -DLWS_WITH_IPV6=ON \
-          -DLWS_WITHOUT_TESTAPPS=ON \
-          -DLWS_WITHOUT_EXTENSIONS=OFF \
-          -DLWS_WITH_SERVER_STATUS=ON \
-          ${CMAKE_OPTS} .. && \
-    make -j$(nproc) ${TARGET} && \
-    popd
-
+	mkdir -p libwebsockets/build && \
+	pushd libwebsockets/build && \
+	cmake ${CMAKE_OPTS} .. \
+		-DLWS_WITH_IPV6=ON \
+		-DLWS_WITHOUT_TESTAPPS=ON \
+		-DLWS_WITHOUT_EXTENSIONS=OFF \
+		-DLWS_WITH_SERVER_STATUS=ON && \
+	make ${MAKE_OPTS} ${TARGET} && \
+	popd
 
 # Profiling dependencies
 RUN dnf -y install \
-    graphviz \
-    libasan \
-    cppcheck \
-    gnuplot \
-	qt5-qtbase \
-    qt5-qtsvg
+	graphviz \
+	libasan \
+	cppcheck \
+	gnuplot \
+	qt5-qtbase qt5-qtsvg
 RUN pip3 install gprof2dot
 
 # Install CIMpp from source
 RUN cd /tmp && \
-	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
+	git clone --recurse-submodules https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	cmake ${CMAKE_OPTS} ..\
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+		-DUSE_CIM_VERSION=${CIM_VERSION} \
+		-DBUILD_SHARED_LIBS=ON \
+		-DBUILD_ARABICA_EXAMPLES=OFF && \
+	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/libcimpp
 
 # Install MAGMA from source
 RUN cd /tmp && \
-    wget http://icl.utk.edu/projectsfiles/magma/downloads/magma-2.6.0.tar.gz && \
-    tar -xvzf magma-2.6.0.tar.gz && \
-    mkdir -p magma-2.6.0/build && cd magma-2.6.0/build && \
-    cmake .. -DMAGMA_ENABLE_CUDA=ON -DCMAKE_INSTALL_PREFIX=/ -DGPU_TARGET='Pascal Turing Ampere' -DBUILD_SHARED_LIBS=on && \
-    make -j$(nproc) install && rm -rf /tmp/magma-2.6.0
+	wget http://icl.utk.edu/projectsfiles/magma/downloads/magma-2.6.0.tar.gz && \
+	tar -xvzf magma-2.6.0.tar.gz && \
+	mkdir -p magma-2.6.0/build && cd magma-2.6.0/build && \
+	cmake ${CMAKE_OPTS} .. \
+		-DMAGMA_ENABLE_CUDA=ON \
+		-DCMAKE_INSTALL_PREFIX=/ \
+		-DGPU_TARGET='Pascal Turing Ampere' \
+		-DBUILD_SHARED_LIBS=on && \
+	make ${MAKE_OPTS} install && rm -rf /tmp/magma-2.6.0
 
-
-
-# CIMpp and VILLAS are installed here
+# CIMpp and VILLASnode are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 # Python dependencies
@@ -128,7 +133,7 @@ RUN pip3 install -U setuptools
 RUN pip3 install -U wheel
 RUN pip3 install -r requirements.txt
 
-# Remove this part in the future and use dedicated jupyter Dockerfile
+# Remove this part in the future and use dedicated Jupyter Dockerfile
 # Activate Jupyter extensions
 RUN dnf -y --refresh install npm
 RUN pip3 install jupyter jupyter_contrib_nbextensions nbconvert nbformat

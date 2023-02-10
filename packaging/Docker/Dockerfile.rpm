@@ -1,28 +1,28 @@
 # sogno/dpsim:dev is built by dpsim-git/packaging/Docker/Dockerfile.dev
 ARG BASE_IMAGE=sogno/dpsim:dev
-ARG CI
-ARG CI_COMMIT_SHA
-ARG CI_COMMIT_REF_NAME
-ARG CI_COMMIT_TAG
 
 FROM ${BASE_IMAGE} AS builder
 
+ARG CMAKE_OPTS
+ARG MAKE_OPTS=-j4
+
 COPY . /dpsim/
 
-RUN rm -rf /dpsim/build && mkdir /dpsim/build 
+RUN rm -rf /dpsim/build && mkdir /dpsim/build
 WORKDIR /dpsim/build
 
-RUN cmake -DBUILD_EXAMPLES=OFF -DCPACK_GENERATOR=RPM ..
-RUN make -j$(nproc) package
+RUN cmake ${CMAKE_OPTS} .. \
+	-DDPSIM_BUILD_EXAMPLES=OFF
+	-DCPACK_GENERATOR=RPM
+RUN make ${MAKE_OPTS} package
 
-FROM fedora:29
+FROM fedora:36
 
 LABEL \
-	org.label-schema.schema-version = "1.0.0" \
-	org.label-schema.name = "DPsim" \
-	org.label-schema.license = "MPL 2.0" \
-	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
-	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
+	org.opencontainers.image.title = "DPsim" \
+	org.opencontainers.image.licenses = "MPL 2.0" \
+	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
+	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
 
 COPY --from=builder /dpsim/build/*.rpm /tmp
 RUN dnf -y install /tmp/*.rpm
@@ -30,7 +30,7 @@ RUN dnf -y install /tmp/*.rpm
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
-# Remove this part in the future and use dedicated jupyter Dockerfile
+# Remove this part in the future and use dedicated Jupyter Dockerfile
 # Activate Jupyter extensions
 ADD requirements-jupyter.txt .
 RUN pip3 install -r requirements-jupyter.txt
@@ -38,7 +38,7 @@ RUN dnf -y --refresh install npm
 RUN jupyter nbextension enable --py widgetsnbextension
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
-# Copy Example materials
+# Copy example materials
 RUN mkdir dpsim
 COPY --from=builder /dpsim/examples /dpsim/
 RUN find /dpsim \

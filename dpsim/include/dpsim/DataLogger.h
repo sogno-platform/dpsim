@@ -11,16 +11,14 @@
 #include <map>
 #include <iostream>
 #include <fstream>
-#include <experimental/filesystem>
 
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
+#include <dpsim-models/Filesystem.h>
 #include <dpsim-models/PtrFactory.h>
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/SimNode.h>
 #include <dpsim-models/Task.h>
-
-namespace fs = std::experimental::filesystem;
 
 namespace DPsim {
 

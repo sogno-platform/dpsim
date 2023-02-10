@@ -1,16 +1,22 @@
-CIM_VERSION=CGMES_2.4.15_16FEB2016
+#!/bin/bash
+
+CIM_VERSION=${CIM_VERSION:-CGMES_2.4.15_16FEB2016}
+VILLAS_VERSION=${VILLAS_VERSION:-c976cd62d8c6667a078be0785ca3e623a05f7456}
+
+MAKE_PROCS=${MAKE_PROCS:-$(nproc)}
+MAKE_OPTS+="-j${MAKE_PROCS}"
 
 # run with sudo
-apt update
+apt-get -y update
 
-apt install \
+apt-get -y install \
     build-essential git clang gdb make cmake \
     doxygen graphviz \
     python3-distutils python3-dev python3-pip \
     pkg-config
 
 # Dependencies
-apt install \
+apt-get -y install \
 	libeigen3-dev \
     libxml2-dev \
 	libfmt-dev \
@@ -20,11 +26,11 @@ apt install \
 
 pip3 install --user -r requirements.txt
 pip3 install --user -r requirements-jupyter.txt
-apt install npm
+apt-get -y install npm
 jupyter nbextension enable --py widgetsnbextension
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
-sudo apt install \
+apt-get -y install \
     libssl-dev \
     uuid-dev \
     libconfig-dev \
@@ -36,15 +42,22 @@ sudo apt install \
 
 # Install CIMpp from source
 cd /tmp && \
-	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
+	git clone --recurse-submodules --depth 1 https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	cmake ${CMAKE_OPTS} .. \
+        -DBUILD_SHARED_LIBS=ON \
+        -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+        -DUSE_CIM_VERSION=${CIM_VERSION} \
+        -DBUILD_ARABICA_EXAMPLES=OFF && \
+    make ${MAKE_OPTS} install && \
 	rm -rf /tmp/libcimpp
 
-# Install VILLAS from source
+# Install VILLASnode from source
 cd /tmp && \
-	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
-	mkdir -p villasnode/build && cd villasnode/build && \
-	git -c submodule.fpga.update=none checkout dpsim-villas && git -c submodule.fpga.update=none submodule update --recursive && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
-	rm -rf /tmp/villasnode
+	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
+	mkdir -p villas-node/build && cd villas-node/build && \
+    git checkout ${VILLAS_VERSION} && \
+	cmake ${CMAKE_OPTS} .. \
+        -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
+    make ${MAKE_OPTS} install && \
+	rm -rf /tmp/villas-node

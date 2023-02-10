@@ -10,8 +10,8 @@
 
 #include <map>
 #include <list>
-#include <experimental/filesystem>
 
+#include <dpsim-models/Filesystem.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/Components.h>
@@ -20,7 +20,6 @@
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/SystemTopology.h>
 
-namespace fs = std::experimental::filesystem;
 
 /* ====== WARNING =======
  *
