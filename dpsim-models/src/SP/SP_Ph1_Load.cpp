@@ -110,7 +110,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 	if (**mActivePower != 0) {
 		mResistance = std::pow(**mNomVoltage, 2) / **mActivePower;
 		mConductance = 1.0 / mResistance;
-		mSubResistor = std::make_shared<SP::Ph1::Resistor>(**mUID + "_res", **mName + "_res", Logger::Level::off);
+		mSubResistor = std::make_shared<SP::Ph1::Resistor>(**mUID + "_res", **mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
@@ -126,7 +126,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 	// instantiate subInductor or subCapacitor for reactive power consumption
 	if (mReactance > 0) {
 		mInductance = mReactance / (2 * PI * frequency);
-		mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mUID + "_res", **mName + "_ind", Logger::Level::off);
+		mSubInductor = std::make_shared<SP::Ph1::Inductor>(**mUID + "_res", **mName + "_ind", mLogLevel);
 		mSubInductor->setParameters(mInductance);
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
@@ -134,7 +134,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 	} else if (mReactance < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) / mReactance;
-		mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(**mUID + "_res", **mName + "_cap", Logger::Level::off);
+		mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(**mUID + "_res", **mName + "_cap", mLogLevel);
 		mSubCapacitor->setParameters(mCapacitance);
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);

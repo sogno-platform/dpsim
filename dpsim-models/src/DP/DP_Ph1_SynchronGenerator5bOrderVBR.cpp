@@ -19,7 +19,7 @@ DP::Ph1::SynchronGenerator5bOrderVBR::SynchronGenerator5bOrderVBR
 	//
 	mSGOrder = SGOrder::SG5bOrder;
 
-	// model DPecific variables
+	// model sPecific variables
 	**mEdq_t = Matrix::Zero(2,1);
 	**mEdq_s = Matrix::Zero(2,1);
 	mEh_s = Matrix::Zero(2,1);
@@ -42,13 +42,13 @@ void DP::Ph1::SynchronGenerator5bOrderVBR::specificInitialization() {
 	(**mEdq_s)(1,0) = (**mVdq)(1,0) + (mLd_s) * (**mIdq)(0,0);
 
 	mSLog->info(
-		"\n--- Model DPecific initialization  ---"
+		"\n--- Model ssecific initialization  ---"
 		"\nSG model: 5th order type 2"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\nInitial Ed_s (per unit): {:f}"
 		"\nInitial Eq_s (per unit): {:f}"
-		"\n--- Model DPecific initialization finished ---",
+		"\n--- Model specific initialization finished ---",
 		(**mEdq_t)(0,0),
 		(**mEdq_t)(1,0),
 		(**mEdq_s)(0,0),

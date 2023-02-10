@@ -29,6 +29,12 @@ SimPowerComp<Complex>::Ptr DP::Ph1::PiLine::clone(String name) {
 
 void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 
+	// Resistance must be bigger than 0 to avoid singular admittance matrix
+	if (**mSeriesRes == 0) {
+		**mSeriesRes = 1e-6;
+       	mSLog->warn("Zero value for resistance, setting default value of R={} [Ohm]", **mSeriesRes);
+	}
+
 	// Static calculation
 	Real omega = 2.*PI * frequency;
 	Complex impedance = { **mSeriesRes, omega * **mSeriesInd };

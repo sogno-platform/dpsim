@@ -32,6 +32,15 @@ SimPowerComp<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
 
 void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 
+	// Diagonal of resistance matrix must be bigger than 0 to avoid singular admittance matrix
+	Matrix defaultResMatrix = Matrix::Zero(3, 3);
+	defaultResMatrix <<
+		1e-6, 0, 0,
+		0, 1e-6, 0,
+		0, 0, 1e-6;
+	**mSeriesRes = ((**mSeriesRes)(0, 0) > 0) ? **mSeriesRes : defaultResMatrix;
+
+
 	// By default there is always a small conductance to ground to
 	// avoid problems with floating nodes.
 	Matrix defaultParallelCond = Matrix::Zero(3, 3);
