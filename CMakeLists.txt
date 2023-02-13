@@ -43,11 +43,6 @@ if(NOT WIN32)
 	set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
-# FIXME: KLU does not work with Windows yet.
-if (NOT WIN32)
-	set(WITH_KLU ON)
-endif()
-
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 include(CheckCXXCompilerFlag)
@@ -82,11 +77,16 @@ GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 # Deprecated build options
 # TODO: Remove deprecated options in future release
 option(WITH_EIGEN_MODULE     "Fetch Eigen3 as module (deprecated option)" OFF)
-option(WITH_KLU       			 "Build with KLU as module (deprecated option)" ON)
+option(WITH_KLU       			 "Build with KLU as module (deprecated option)" OFF)
 option(WITH_SPDLOG_SUBMODULE "Fetch spdlog as module (deprecated option)" OFF)
 option(WITH_CIM_SUBMODULE    "Fetch CIMpp as module (deprecated option)" OFF)
 option(WITH_PYBIND_MODULE    "Fetch pybind11 as module (deprecated option)" OFF)
 option(GET_GRID_DATA         "Fetch grid data (deprecated option)" ON)
+
+# FIXME: KLU does not work with Windows yet.
+if (NOT WIN32)
+	set(WITH_KLU ON)
+endif()
 
 # Build options
 option(FETCH_EIGEN          "Fetch Eigen3 as module" ${WITH_EIGEN_MODULE})
