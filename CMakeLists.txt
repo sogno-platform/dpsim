@@ -43,6 +43,11 @@ if(NOT WIN32)
 	set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
+# FIXME: KLU does not work with Windows yet.
+if (NOT WIN32)
+	set(WITH_KLU ON)
+endif()
+
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 include(CheckCXXCompilerFlag)
@@ -77,7 +82,7 @@ GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 # Deprecated build options
 # TODO: Remove deprecated options in future release
 option(WITH_EIGEN_MODULE     "Fetch Eigen3 as module (deprecated option)" OFF)
-#option(WITH_KLU_MODULE 			 "Build with KLU as module (deprecated option)" OFF)
+option(WITH_KLU       			 "Build with KLU as module (deprecated option)" ON)
 option(WITH_SPDLOG_SUBMODULE "Fetch spdlog as module (deprecated option)" OFF)
 option(WITH_CIM_SUBMODULE    "Fetch CIMpp as module (deprecated option)" OFF)
 option(WITH_PYBIND_MODULE    "Fetch pybind11 as module (deprecated option)" OFF)
@@ -85,7 +90,7 @@ option(GET_GRID_DATA         "Fetch grid data (deprecated option)" ON)
 
 # Build options
 option(FETCH_EIGEN          "Fetch Eigen3 as module" ${WITH_EIGEN_MODULE})
-option(FETCH_KLU						"Fetch KLU as module" ${WITH_KLU_MODULE})
+option(FETCH_KLU						"Fetch KLU as module" ${WITH_KLU})
 option(FETCH_SPDLOG         "Fetch spdlog as module" ${WITH_SPDLOG_SUBMODULE})
 option(FETCH_CIMPP          "Fetch CIMpp as module" ${WITH_CIM_SUBMODULE})
 option(FETCH_PYBIND         "Fetch pybind11 as module" ${WITH_PYBIND_MODULE})
@@ -126,13 +131,8 @@ else()
 	find_package(Eigen3 3.0 REQUIRED)
 endif()
 
-# FIXME: KLU does not work with Windows yet.
-if (NOT WIN32)
-	set(WITH_KLU ON)
-endif()
-
 if (FETCH_KLU)
-	include(cmake/GetKLUModule.cmake)
+	include(FetchKLU)
 else()
 endif()
 
@@ -264,7 +264,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	add_feature_info(RealTime        WITH_RT              "Extended real-time features")
 	add_feature_info(Sundials        WITH_SUNDIALS        "Sundials solvers")
 	add_feature_info(VILLASnode      WITH_VILLAS          "Interface DPsim solvers via VILLASnode interfaces")
-	add_feature_info(GetKLUModule		 WITH_KLU             "Use custom KLU module")
+	add_feature_info(KLU         		 WITH_KLU             "Use custom KLU module")
 
 	feature_summary(WHAT ALL VAR enabledFeaturesText)
 
