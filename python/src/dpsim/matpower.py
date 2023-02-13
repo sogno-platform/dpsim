@@ -12,6 +12,7 @@ class Domain(Enum):
     EMT = 4
     
 # default multiplier for matpower data
+w_mw = 1e-6
 mw_w = 1e6
 kv_v = 1e3
         
@@ -50,7 +51,7 @@ class Reader:
         self.mpc_omega = 2 * np.pi * frequency
 
         # Base power (MVA)
-        self.mpc_base_power_MVA =  self.mpc_raw[self.mpc_name]['baseMVA']
+        self.mpc_base_power_MVA =  self.mpc_raw[self.mpc_name]['baseMVA'] * mw_w
 
         #### Busses #####
         mpc_bus_raw = self.mpc_raw[self.mpc_name]['bus']
@@ -151,7 +152,7 @@ class Reader:
 
         for index, bus in self.mpc_bus_data.iterrows():
             # create dpsimpy nodes
-            bus_index = str(self.mpc_bus_data.at[index,'bus_i'])
+            bus_index = str(self.mpc_bus_data.at[index,'bus_i']) #index: 0....N-1, bus_index: 1...N
             bus_name = "N" + str(bus_index)
             bus_assets= []
             if self.mpc_bus_names_dict:
@@ -180,6 +181,7 @@ class Reader:
                 if not bus_assets: 
                     # aggregated load
                     self.map_energy_consumer(index, bus_index, dpsimpy_components, bus_type=dpsimpy.PowerflowBusType.PQ)
+                    
                 else:
                     for i, comp in enumerate(bus_assets): 
                         # WARN: now the loads are created and the first load is initialized with the total power P_d Q_d!!!!!!!!                       
@@ -191,6 +193,9 @@ class Reader:
                             self.dpsimpy_comp_dict[comp][0].set_parameters(0, 0, load_baseV)
                             self.dpsimpy_comp_dict[comp].append([self.dpsimpy_busses_dict[bus_index]])
 
+                #shunts
+                self.map_shunt(index, bus_index, dpsimpy_components)
+                    
             # Generators
             elif bus_type == 2:
                 # map SG
@@ -198,6 +203,9 @@ class Reader:
                 
                 # check if there is a load connected to PV bus (and create it)
                 self.map_energy_consumer(index, bus_index, dpsimpy_components, bus_type=dpsimpy.PowerflowBusType.PV)
+
+                #shunts
+                self.map_shunt(index, bus_index, dpsimpy_components)
 
             # Slack bus
             elif bus_type == 3:
@@ -214,6 +222,9 @@ class Reader:
                 # check if there is a load connected to slack bus (and create it)
                 self.map_energy_consumer(index, bus_index, dpsimpy_components, bus_type=dpsimpy.PowerflowBusType.VD)
                 
+                #shunts
+                self.map_shunt(index, bus_index, dpsimpy_components)
+                    
             #isolated
             elif bus_type == 4:
                 print("isolated bus type")
@@ -255,7 +266,7 @@ class Reader:
                 line_fbus_baseV = self.mpc_bus_data.at[tmp_fbus.first_valid_index(),'baseKV']*kv_v
                 line_tbus_baseV = self.mpc_bus_data.at[tmp_tbus.first_valid_index(),'baseKV']*kv_v
 
-                line_baseZ = line_tbus_baseV*line_tbus_baseV / (self.mpc_base_power_MVA*mw_w)
+                line_baseZ = line_tbus_baseV*line_tbus_baseV / (self.mpc_base_power_MVA)
                 line_r = self.mpc_branch_data.at[index,'r'] * line_baseZ
                 line_x = self.mpc_branch_data.at[index,'x'] * line_baseZ
                 line_b = self.mpc_branch_data.at[index,'b'] / line_baseZ
@@ -298,7 +309,7 @@ class Reader:
 
                 # From MATPOWER-manual taps at “from”bus,  impedance at “to” bus,  i.e.  ifr=x=b= 0,tap=|Vf|/|Vt|
                 # transform impedances to absolute values
-                transf_baseZ = transf_tbus_baseV*transf_tbus_baseV / (self.mpc_base_power_MVA*mw_w)
+                transf_baseZ = transf_tbus_baseV*transf_tbus_baseV / (self.mpc_base_power_MVA)
                 # transf_baseZ = transf_tbus_baseV*transf_tbus_baseV / (transf_s)
 
                 # DPsim convention: impedance values must be referred to high voltage side (and base voltage set to higher voltage)
@@ -394,7 +405,6 @@ class Reader:
 
         if (bus_type != dpsimpy.PowerflowBusType.PQ or self.domain != Domain.PF):
             if (P_d==0) and (Q_d==0):
-                print('Node: {}'.format(bus_index))
                 # no load must be added
                 return
         
@@ -419,7 +429,50 @@ class Reader:
         
         self.dpsimpy_comp_dict[load_name] = [load]
         self.dpsimpy_comp_dict[load_name].append([self.dpsimpy_busses_dict[bus_index]]) # [to bus]
-               
+    
+    def map_shunt(self, index, bus_index, dpsimpy_components):
+        # Gs: shunt conductance (MW demanded at V = 1.0 p.u.) --> p (MW)= g
+        # Bs: shunt susceptance (MVAr injected at V = 1.0 p.u.) --> q (MW)= b
+        
+        # check if there is a shunt connected to this bus
+        G_s = self.mpc_bus_data.at[index,'Gs']
+        B_s = self.mpc_bus_data.at[index,'Bs']
+
+        if (G_s==0) and (B_s==0):
+            # no shunt connected to this bus
+            return
+        
+        # calculate base impedance
+        bus_baseV = self.mpc_bus_data.at[index,'baseKV'] * kv_v
+        baseZ = bus_baseV * bus_baseV / (self.mpc_base_power_MVA)
+        
+        # get parameters
+        gs = 0
+        bs = 0
+        shunt_name = "shunt_N" + bus_index
+        if (G_s != 0):
+            gs = G_s / (baseZ * self.mpc_base_power_MVA * w_mw)
+        if (B_s!=0):
+            bs = B_s / (baseZ * self.mpc_base_power_MVA * w_mw)
+        
+        # create component
+        shunt = None
+        if (self.domain == Domain.PF):
+            shunt = dpsimpy_components.Shunt(shunt_name, self.log_level)
+            shunt.set_parameters(gs, bs)
+            shunt.set_base_voltage(bus_baseV)
+            print("TEST")
+        elif (self.domain==Domain.SP):
+            shunt = dpsimpy_components.Load(shunt_name, self.log_level)
+            shunt.set_parameters(G_s * mw_w, -bs * mw_w, bus_baseV)
+        else:
+            shunt = dpsimpy_components.RXLoad(shunt_name, self.log_level)
+            shunt.set_parameters(G_s * mw_w, -bs * mw_w, bus_baseV)
+        
+        # connect shunt
+        self.dpsimpy_comp_dict[shunt_name] = [shunt]
+        self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[bus_index]]) # [to bus]
+        
     def map_network_injection(self, index, bus_index, dpsimpy_components):
         
         self.inj = self.inj + 1
@@ -428,7 +481,7 @@ class Reader:
         # # relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
         extnet = self.mpc_gen_data.loc[self.mpc_gen_data['bus'] == self.mpc_bus_data.at[index,'bus_i']]
 
-        # extnet_baseS= extnet['mBase']*mw_w # default is mpc.baseMVA
+        # extnet_baseS= extnet['mBase'] # default is mpc.baseMVA
         extnet_baseV = self.mpc_bus_data.at[index,'baseKV']*kv_v
         extnet_v = extnet['Vg']*extnet_baseV
 
