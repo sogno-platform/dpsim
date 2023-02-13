@@ -51,9 +51,9 @@ namespace Ph3 {
 		/// Initializes internal variables of the component
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 		/// Stamps system matrix
-		void mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix);
+		void mnaApplyInitialSystemMatrixStamp(SparseMatrixRow& systemMatrix);
 		/// Stamps right side (source) vector
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		void mnaCompUpdateVoltage(const Matrix& leftVector);

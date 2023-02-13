@@ -50,7 +50,7 @@ namespace CPS {
 		/// Initializes variables of components
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
 		/// Stamps right side (source) vector
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// MNA pre step operations
@@ -66,7 +66,7 @@ namespace CPS {
 		virtual void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 			// By default, the parent has no custom initialization beyond what is done in CompositePowerComp::mnaCompInitialize
 		};
-		virtual void mnaParentApplySystemMatrixStamp(Matrix& systemMatrix) {
+		virtual void mnaParentApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 			// By default, the parent has no custom stamp on the system matrix, only the subcomponents are stamped
 		};
 		virtual void mnaParentApplyRightSideVectorStamp(Matrix& rightVector) {

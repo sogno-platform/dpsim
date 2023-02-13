@@ -37,18 +37,18 @@ void DP::Ph1::Inverter::initializeFromNodesAndTerminals(Real frequency) { }
 void DP::Ph1::Inverter::generateFrequencies() {
 	for (Int m = 2; m <= mMaxCarrierHarm; m = m+2) {
 		mCarHarms.push_back(m);
-		mSLog->info("Add carrier harmonic {0}", m);
+		SPDLOG_LOGGER_INFO(mSLog, "Add carrier harmonic {0}", m);
 	}
 	for (Int n = -mMaxModulHarm; n <= mMaxModulHarm; n = n+2) {
 		mModHarms.push_back(n);
-		mSLog->info("Add modulation harmonic {0}", n);
+		SPDLOG_LOGGER_INFO(mSLog, "Add modulation harmonic {0}", n);
 	}
 }
 
 void DP::Ph1::Inverter::initialize(Matrix frequencies) {
 	SimPowerComp<Complex>::initialize(frequencies);
 
-	mSLog->info("\n--- Initialization ---");
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization ---");
 
 	// Check that both lists have the same length
 	mCarHarNum = static_cast<UInt>(mCarHarms.size());
@@ -77,7 +77,7 @@ void DP::Ph1::Inverter::initialize(Matrix frequencies) {
 			mMultInvFactorials[f+mModHarms[h]] = multInvFactorial(f+mModHarms[h]);
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\nFrequencies: \n{}"
 		"\nPhases: \n{}"
 		"\n--- End of initialization ---",
@@ -123,34 +123,34 @@ void DP::Ph1::Inverter::mnaCompInitializeHarm(Real omega, Real timeStep, std::ve
 	calculatePhasors();
 }
 
-void DP::Ph1::Inverter::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSLog->info("--- Stamping into system matrix ---");
+void DP::Ph1::Inverter::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
+	SPDLOG_LOGGER_INFO(mSLog, "--- Stamping into system matrix ---");
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mSLog->info("Stamp frequency {:d}", freq);
+		SPDLOG_LOGGER_INFO(mSLog, "Stamp frequency {:d}", freq);
 		if (terminalNotGrounded(0)) {
 			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(1, 0), mNumFreqs, freq);
 			Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0), mNumFreqs, freq);
 		}
 
 		if (terminalNotGrounded(0)) {
-			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
-			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
 		}
 	}
-	mSLog->info("--- Stamping into system matrix end ---");
+	SPDLOG_LOGGER_INFO(mSLog, "--- Stamping into system matrix end ---");
 }
 
-void DP::Ph1::Inverter::mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
-	mSLog->info("Stamp frequency {:d}", freqIdx);
+void DP::Ph1::Inverter::mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx) {
+	SPDLOG_LOGGER_INFO(mSLog, "Stamp frequency {:d}", freqIdx);
 	if (terminalNotGrounded(0)) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(1, 0));
 		Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
 	}
 
 	if (terminalNotGrounded(0)) {
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
 	}
 }
 

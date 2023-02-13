@@ -54,7 +54,7 @@ namespace Ph1 {
 
 		// ### MNA Section ###
         ///
-        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
         void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
         void mnaCompPostStep(const Matrix& leftVector) override;
 
@@ -65,7 +65,7 @@ namespace Ph1 {
 		SynchronGenerator4OrderDCIM(const String & name, Logger::Level logLevel = Logger::Level::off);
 		/// DCIM is only implmented as current source!
 		void setModelAsCurrentSource(Bool modelAsCurrentSource) const {
-			mSLog->debug("DCIM model can only be used as current source!");
+			SPDLOG_LOGGER_DEBUG(mSLog, "DCIM model can only be used as current source!");
 		}
 	};
 }

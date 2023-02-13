@@ -71,7 +71,7 @@ void Timer::sleep() {
 	mTicks += ticks;
 
 	if (overruns > 0) {
-		//mSLog->warn("Timer overrun of {} timesteps at {}", overruns, mTime);
+		//SPDLOG_LOGGER_WARN(mSLog, "Timer overrun of {} timesteps at {}", overruns, mTime);
 		if (mFlags & Flags::fail_on_overrun)
 			throw OverrunException{overruns};
 	}

@@ -25,15 +25,15 @@ PowerControllerVSI::PowerControllerVSI(String name, Logger::Level logLevel) :
 	mIrc_d(mAttributes->createDynamic<Real>("Irc_d")),
 	mIrc_q(mAttributes->createDynamic<Real>("Irc_q")) {
 
-	mSLog->info("Create {} {}", type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
 }
 
 void PowerControllerVSI::setParameters(Real Pref, Real Qref) {
 	mPref = Pref;
 	mQref = Qref;
 
-	mSLog->info("General Parameters:");
-	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mPref, mQref);
+	SPDLOG_LOGGER_INFO(mSLog, "General Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [W] Reactive Power={} [VAr]", mPref, mQref);
 
 	// use Pref and Qref as init values for states P and Q
 	// init values for other states remain zero (if not changed using setInitialStateValues)
@@ -53,10 +53,10 @@ void PowerControllerVSI::setControllerParameters(Real Kp_powerCtrl, Real Ki_powe
 	mKpCurrCtrlq = Kp_currCtrl;
 	mOmegaCutoff = Omega_cutoff;
 
-	mSLog->info("Control Parameters:");
-	mSLog->info("Power Loop: K_i = {}, K_p = {}", Kp_powerCtrl, Ki_powerCtrl);
-	mSLog->info("Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);
-	mSLog->info("Cut-Off Frequency = {}", Omega_cutoff);
+	SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "Power Loop: K_i = {}, K_p = {}", Kp_powerCtrl, Ki_powerCtrl);
+	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);
+	SPDLOG_LOGGER_INFO(mSLog, "Cut-Off Frequency = {}", Omega_cutoff);
 
     // Set state space matrices using controller parameters
 	mA <<
@@ -83,11 +83,11 @@ void PowerControllerVSI::setControllerParameters(Real Kp_powerCtrl, Real Ki_powe
 		mKpCurrCtrld*mKpPowerCtrld, 0, 0, 0, -mKpCurrCtrld, 0,
 		0, -mKpCurrCtrlq * mKpPowerCtrlq, 0, 0, 0, -mKpCurrCtrlq;
 
-	mSLog->info("State space matrices:");
-    mSLog->info("A = \n{}", mA);
-    mSLog->info("B = \n{}", mB);
-    mSLog->info("C = \n{}", mC);
-    mSLog->info("D = \n{}", mD);
+	SPDLOG_LOGGER_INFO(mSLog, "State space matrices:");
+    SPDLOG_LOGGER_INFO(mSLog, "A = \n{}", mA);
+    SPDLOG_LOGGER_INFO(mSLog, "B = \n{}", mB);
+    SPDLOG_LOGGER_INFO(mSLog, "C = \n{}", mC);
+    SPDLOG_LOGGER_INFO(mSLog, "D = \n{}", mD);
 }
 
 void PowerControllerVSI::setInitialStateValues(Real pInit, Real qInit,
@@ -100,10 +100,10 @@ void PowerControllerVSI::setInitialStateValues(Real pInit, Real qInit,
 	mGamma_dInit = gamma_dInit;
 	mGamma_qInit = gamma_qInit;
 
-	mSLog->info("Initial State Value Parameters:");
-	mSLog->info("PInit = {}, QInit = {}", pInit, qInit);
-	mSLog->info("Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
-	mSLog->info("Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
+	SPDLOG_LOGGER_INFO(mSLog, "Initial State Value Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "PInit = {}, QInit = {}", pInit, qInit);
+	SPDLOG_LOGGER_INFO(mSLog, "Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
+	SPDLOG_LOGGER_INFO(mSLog, "Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
 }
 
 void PowerControllerVSI::initializeStateSpaceModel(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -115,15 +115,15 @@ void PowerControllerVSI::initializeStateSpaceModel(Real omega, Real timeStep, At
 
 	// initialization of input
 	**mInputCurr << mPref, mQref, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
-	mSLog->info("Initialization of input: \n" + Logger::matrixToString(**mInputCurr));
+	SPDLOG_LOGGER_INFO(mSLog, "Initialization of input: \n" + Logger::matrixToString(**mInputCurr));
 
 	// initialization of states
 	**mStateCurr << mPInit, mQInit, mPhi_dInit, mPhi_qInit, mGamma_dInit, mGamma_qInit;
-	mSLog->info("Initialization of states: \n" + Logger::matrixToString(**mStateCurr));
+	SPDLOG_LOGGER_INFO(mSLog, "Initialization of states: \n" + Logger::matrixToString(**mStateCurr));
 
 	// initialization of output
 	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	mSLog->info("Initialization of output: \n" + Logger::matrixToString(**mOutputCurr));
+	SPDLOG_LOGGER_INFO(mSLog, "Initialization of output: \n" + Logger::matrixToString(**mOutputCurr));
 }
 
 void PowerControllerVSI::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -154,15 +154,15 @@ void PowerControllerVSI::signalStep(Real time, Int timeStepCount) {
 
 	// get current inputs
 	**mInputCurr << mPref, mQref, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
-    mSLog->debug("Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, **mInputCurr, **mInputPrev, **mStatePrev);
+    SPDLOG_LOGGER_DEBUG(mSLog, "Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, **mInputCurr, **mInputPrev, **mStatePrev);
 
 	// calculate new states
 	**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
-	mSLog->debug("stateCurr = \n {}", **mStateCurr);
+	SPDLOG_LOGGER_DEBUG(mSLog, "stateCurr = \n {}", **mStateCurr);
 
 	// calculate new outputs
 	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	mSLog->debug("Output values: outputCurr = \n{}", **mOutputCurr);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Output values: outputCurr = \n{}", **mOutputCurr);
 }
 
 void PowerControllerVSI::updateBMatrixStateSpaceModel() {

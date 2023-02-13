@@ -29,7 +29,7 @@ namespace Signal {
 
 		SignalGenerator(String name, Logger::Level logLevel = Logger::Level::off)
 			: SignalGenerator(name, name, logLevel) {
-				mSLog->info("Create {} {}", type(), name);
+				SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
 			}
 
 		/// updates current signal

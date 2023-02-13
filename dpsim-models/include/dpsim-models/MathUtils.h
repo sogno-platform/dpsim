@@ -58,18 +58,20 @@ namespace CPS {
 		// | Re-Im(row,col)_harm1 | Im-Im(row,col)_harm1 | Interharmonics harm1-harm2
 		// | Interharmonics harm1-harm2                  | Re(row,col)_harm2 | Re(row,col)_harm2 |
 		// | Interharmonics harm1-harm2                  | Im(row,col)_harm2 | Im(row,col)_harm2 |
-		static void setMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq = 1, Int freqIdx = 0);
+		static void setMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq = 1, Int freqIdx = 0);
 
-		static void addToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq = 1, Int freqIdx = 0);
+		static void addToMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq = 1, Int freqIdx = 0);
 
-		static void addToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Matrix value, Int maxFreq = 1, Int freqIdx = 0);
+		static void addToMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Matrix value, Int maxFreq = 1, Int freqIdx = 0);
 
-		static void setMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Real value);
+		static void setMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Real value);
 
-		static void addToMatrixElement(Matrix& mat, std::vector<UInt> rows, std::vector<UInt> columns, Complex value);
+		static void addToMatrixElement(SparseMatrixRow& mat, std::vector<UInt> rows, std::vector<UInt> columns, Complex value);
 
-		static void addToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Real value);
-		static void addToMatrixElement(Matrix& mat, std::vector<UInt> rows, std::vector<UInt> columns, Real value);
+		static void addToMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Real value);
+		static void addToMatrixElement(SparseMatrixRow& mat, std::vector<UInt> rows, std::vector<UInt> columns, Real value);
+
+		static void invertMatrix(const Matrix& mat, Matrix& matInv);
 
 		// #### Integration Methods ####
 		static Matrix StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_new, Matrix u_old);

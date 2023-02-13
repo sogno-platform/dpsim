@@ -79,11 +79,11 @@ int main(int argc, char *argv[]) {
 	Logger::Level logLevel = Logger::Level::info;
 
 	// apply downsampling for simulation step sizes lower than 10us
-	Real logDownSampling;
-	if (timeStep < 10e-6)
-		logDownSampling = floor((10e-6) / timeStep);
-	else
-		logDownSampling = 1.0;
+	// Real logDownSampling;
+	// if (timeStep < 10e-6)
+	// 	logDownSampling = floor((10e-6) / timeStep);
+	// else
+	// 	logDownSampling = 1.0;
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	// read original network topology
@@ -96,9 +96,9 @@ int main(int argc, char *argv[]) {
 	systemPF.component<CPS::SP::Ph1::SynchronGenerator>("GEN1")->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
 
 	// define logging
-    auto loggerPF = DPsim::DataLogger::make(simNamePF);
-    for (auto node : systemPF.mNodes)
-        loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
+    // auto loggerPF = DPsim::DataLogger::make(simNamePF);
+    // for (auto node : systemPF.mNodes)
+    //     loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
 
 	// run powerflow
     Simulation simPF(simNamePF, logLevel);
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
 	simPF.setSolverType(Solver::Type::NRP);
 	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(true);
-    simPF.addLogger(loggerPF);
+    //simPF.addLogger(loggerPF);
     simPF.run();
 
 	// ----- DYNAMIC SIMULATION -----
@@ -147,19 +147,19 @@ int main(int argc, char *argv[]) {
 
 	// Logging
 	// log node voltage
-	auto logger = DataLogger::make(simName, true, logDownSampling);
-		for (auto node : sys.mNodes)
-			logger->logAttribute(node->name() + ".V", node->attribute("v"));
+	// auto logger = DataLogger::make(simName, true, logDownSampling);
+	// 	for (auto node : sys.mNodes)
+	// 		logger->logAttribute(node->name() + ".V", node->attribute("v"));
 
-	// log generator vars
-	for (auto comp : sys.mComponents) {
-		if (auto genReducedOrder = std::dynamic_pointer_cast<CPS::Base::ReducedOrderSynchronGenerator<Complex>>(comp)){
-			logger->logAttribute(genReducedOrder->name() + ".Tm", genReducedOrder->attribute("Tm"));
-			logger->logAttribute(genReducedOrder->name() + ".Te", genReducedOrder->attribute("Te"));
-			logger->logAttribute(genReducedOrder->name() + ".omega", genReducedOrder->attribute("w_r"));
-			logger->logAttribute(genReducedOrder->name() + ".delta", genReducedOrder->attribute("delta"));
-		}
-	}
+	// // log generator vars
+	// for (auto comp : sys.mComponents) {
+	// 	if (auto genReducedOrder = std::dynamic_pointer_cast<CPS::Base::ReducedOrderSynchronGenerator<Complex>>(comp)){
+	// 		logger->logAttribute(genReducedOrder->name() + ".Tm", genReducedOrder->attribute("Tm"));
+	// 		logger->logAttribute(genReducedOrder->name() + ".Te", genReducedOrder->attribute("Te"));
+	// 		logger->logAttribute(genReducedOrder->name() + ".omega", genReducedOrder->attribute("w_r"));
+	// 		logger->logAttribute(genReducedOrder->name() + ".delta", genReducedOrder->attribute("delta"));
+	// 	}
+	// }
 
 	Simulation sim(simName, logLevel);
 	sim.setSystem(sys);
@@ -169,7 +169,7 @@ int main(int argc, char *argv[]) {
 	sim.setFinalTime(finalTime);
 	sim.doSystemMatrixRecomputation(true);
 	sim.setDirectLinearSolverImplementation(implementation);
-	sim.addLogger(logger);
+	//sim.addLogger(logger);
 
 		// Optionally add switch event
 	if (withFault) {

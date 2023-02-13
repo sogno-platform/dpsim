@@ -39,7 +39,7 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 	mC = Matrix::Zero(2,1);
 	calculateStateMatrix();
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
@@ -62,7 +62,7 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::calculateStateMatrix() {
 	   		(1. / Td_t) * **mEf * (mLd_t / mLd);
 }
 
-void SP::Ph1::SynchronGenerator4OrderDCIM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::SynchronGenerator4OrderDCIM::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 }
 
 void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {

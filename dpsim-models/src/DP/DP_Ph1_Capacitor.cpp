@@ -40,11 +40,11 @@ void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
-	mSLog->info("\nCapacitance [F]: {:s}"
+	SPDLOG_LOGGER_INFO(mSLog, "\nCapacitance [F]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
 				Logger::realToString(**mCapacitance),
 				Logger::complexToString(impedance));
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -73,7 +73,7 @@ void DP::Ph1::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 		(**mIntfCurrent)(0, freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"
@@ -105,7 +105,7 @@ void DP::Ph1::Capacitor::mnaCompInitializeHarm(Real omega, Real timeStep, std::v
 	**mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
-void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0))
 			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond(freq,0), mNumFreqs, freq);
@@ -116,23 +116,23 @@ void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mEquivCond(freq,0), mNumFreqs, freq);
 		}
 
-		mSLog->info("-- Stamp frequency {:d} ---", freq);
+		SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freq);
 		if (terminalNotGrounded(0))
-			mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			mEquivCond(freq,0).real(), mEquivCond(freq,0).imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 		if (terminalNotGrounded(1))
-			mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			mEquivCond(freq,0).real(), mEquivCond(freq,0).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
 		if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-			mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			-mEquivCond(freq,0).real(), -mEquivCond(freq,0).imag(), matrixNodeIndex(0), matrixNodeIndex(1));
-			mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			-mEquivCond(freq,0).real(), -mEquivCond(freq,0).imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 		}
 	}
 }
 
-void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
+void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx) {
 	if (terminalNotGrounded(0))
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond(freqIdx,0));
 	if (terminalNotGrounded(1))
@@ -142,17 +142,17 @@ void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix,
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mEquivCond(freqIdx,0));
 	}
 
-	mSLog->info("-- Stamp frequency {:d} ---", freqIdx);
+	SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freqIdx);
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 		mEquivCond(freqIdx,0).real(), mEquivCond(freqIdx,0).imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 		mEquivCond(freqIdx,0).real(), mEquivCond(freqIdx,0).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 		-mEquivCond(freqIdx,0).real(), -mEquivCond(freqIdx,0).imag(), matrixNodeIndex(0), matrixNodeIndex(1));
-		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 		-mEquivCond(freqIdx,0).real(), -mEquivCond(freqIdx,0).imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }

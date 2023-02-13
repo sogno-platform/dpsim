@@ -75,10 +75,10 @@ void SystemTopology::addComponents(const IdentifiedObject::List& components) {
 void SystemTopology::initWithPowerflow(const SystemTopology& systemPF) {
 	for (auto nodePF : systemPF.mNodes) {
 		if (auto node = this->node<TopologicalNode>(nodePF->name())) {
-			//mSLog->info("Updating initial voltage of {} according to powerflow", node->name());
-			//mSLog->info("Former initial voltage: {}", node->initialSingleVoltage());
+			//SPDLOG_LOGGER_INFO(mSLog, "Updating initial voltage of {} according to powerflow", node->name());
+			//SPDLOG_LOGGER_INFO(mSLog, "Former initial voltage: {}", node->initialSingleVoltage());
 			node->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(nodePF)->singleVoltage());
-			//mSLog->info("Updated initial voltage: {}", node->initialSingleVoltage());
+			//SPDLOG_LOGGER_INFO(mSLog, "Updated initial voltage: {}", node->initialSingleVoltage());
 		}
 	}
 }

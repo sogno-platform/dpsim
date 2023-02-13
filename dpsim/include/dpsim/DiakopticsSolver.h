@@ -67,7 +67,7 @@ namespace DPsim {
 		/// Topology of the network removal
 		Matrix mTearTopology;
 		/// Impedance of the removed network
-		Matrix mTearImpedance;
+		CPS::SparseMatrixRow mTearImpedance;
 		/// (Factorization of the) impedance matrix for the removed network, including
 		/// the influence of other subnets
 		CPS::LUFactorized mTotalTearImpedance;

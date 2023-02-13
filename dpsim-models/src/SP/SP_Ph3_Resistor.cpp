@@ -38,9 +38,9 @@ void SP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		voltMag * sin(voltPhase + 2. / 3. * M_PI));
 	**mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
 
-	mSLog->info("Node 1 : {}", Logger::phasorToString(initialVoltage(0)(0, 0)));
-	mSLog->info("Node 2 : {}", Logger::phasorToString(initialVoltage(1)(0, 0)));
-	mSLog->info("initialize {} {} voltage to {} and current to {}",
+	SPDLOG_LOGGER_INFO(mSLog, "Node 1 : {}", Logger::phasorToString(initialVoltage(0)(0, 0)));
+	SPDLOG_LOGGER_INFO(mSLog, "Node 2 : {}", Logger::phasorToString(initialVoltage(1)(0, 0)));
+	SPDLOG_LOGGER_INFO(mSLog, "initialize {} {} voltage to {} and current to {}",
 		this->type(), this->name(),
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
 		Logger::phasorToString((**mIntfCurrent)(0, 0)));
@@ -51,7 +51,7 @@ void SP::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 	**mRightVector = Matrix::Zero(0, 0);
 }
 
-void SP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 
 	Matrix conductance = (**mResistance).inverse();
 
@@ -150,7 +150,7 @@ void SP::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 }
 
 
-void SP::Ph3::Resistor::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
+void SP::Ph3::Resistor::mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) {
 	// TODO
 	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex((**mResistance)(0, 0), 0));
 	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex((**mResistance)(1, 1), 0));

@@ -25,7 +25,7 @@ namespace CPS {
 		virtual void mnaInitialize(Real omega, Real timeStep) = 0;
 		virtual void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) = 0;
 		/// Stamps system matrix
-		virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix) = 0;
+		virtual void mnaApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) = 0;
 		/// Stamps (sparse) system matrix
 		virtual void mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) = 0;
 		/// Stamps right side (source) vector
@@ -47,7 +47,7 @@ namespace CPS {
 		/// Initializes variables of components
 		virtual void mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector) = 0;
 		/// Stamps system matrix considering the frequency index
-		virtual void mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) = 0;
+		virtual void mnaApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx) = 0;
 		/// Stamps right side (source) vector considering the frequency index
 		virtual void mnaApplyRightSideVectorStampHarm(Matrix& sourceVector) = 0;
 		virtual void mnaApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx) = 0;

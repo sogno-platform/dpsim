@@ -75,7 +75,7 @@ namespace SP { namespace Ph1 {
     // /// Initializes internal variables of the component
     // void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
     // /// Stamps system matrix
-    // void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+    // void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
     // /// Updates internal current variable of the component
     // void mnaCompUpdateCurrent(const Matrix& leftVector);
     // /// Updates internal voltage variable of the component

@@ -30,9 +30,9 @@ void SP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	**mIntfCurrent = (1 / **mResistance) * **mIntfVoltage;
 
-	mSLog->info("\nResistance [Ohm]: {:s}",
+	SPDLOG_LOGGER_INFO(mSLog, "\nResistance [Ohm]: {:s}",
 				Logger::realToString(**mResistance));
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -52,18 +52,18 @@ void SP::Ph1::Resistor::setBaseVoltage(Real baseVoltage){
 }
 
 void SP::Ph1::Resistor::calculatePerUnitParameters(Real baseApparentPower){
-	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
+	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
     mBaseApparentPower = baseApparentPower;
-	mSLog->info("Base Power={} [VA]", baseApparentPower);
+	SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]", baseApparentPower);
 
 	mBaseImpedance = mBaseVoltage * mBaseVoltage / mBaseApparentPower;
 	mBaseAdmittance = 1.0 / mBaseImpedance;
 	mBaseCurrent = baseApparentPower / (mBaseVoltage*sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
-	mSLog->info("Base Voltage={} [V]  Base Impedance={} [Ohm]", mBaseVoltage, mBaseImpedance);
+	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]", mBaseVoltage, mBaseImpedance);
 
 	mResistancePerUnit = **mResistance / mBaseImpedance;
 	mConductancePerUnit = 1. / mResistancePerUnit;
-    mSLog->info("Resistance={} [pu]  Conductance={} [pu]", mResistancePerUnit, mConductancePerUnit);
+    SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [pu]  Conductance={} [pu]", mResistancePerUnit, mConductancePerUnit);
 }
 
 void SP::Ph1::Resistor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
@@ -79,7 +79,7 @@ void SP::Ph1::Resistor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 
 	//set the circuit matrix values
 	Y.coeffRef(bus1, bus1) += Y_element;
-	mSLog->info("#### Y matrix stamping: {}", Y_element);
+	SPDLOG_LOGGER_INFO(mSLog, "#### Y matrix stamping: {}", Y_element);
 }
 
 // #### MNA section ####
@@ -88,7 +88,7 @@ void SP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 	updateMatrixNodeIndices();
 	**mRightVector = Matrix::Zero(0, 0);
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"
@@ -97,7 +97,7 @@ void SP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 		Logger::phasorToString((**mIntfCurrent)(0, 0)));
 }
 
-void SP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	Complex conductance = Complex(1. / **mResistance, 0);
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
@@ -112,14 +112,14 @@ void SP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -conductance, mNumFreqs, freq);
 		}
 
-		mSLog->info("-- Stamp frequency {:d} ---", freq);
+		SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freq);
 		if (terminalNotGrounded(0))
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
 		if (terminalNotGrounded(1))
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
 		if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 		}
 	}
 }
@@ -156,6 +156,6 @@ void SP::Ph1::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 }
 
 
-void SP::Ph1::Resistor::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
+void SP::Ph1::Resistor::mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) {
 	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex(**mResistance, 0));
 }

@@ -33,7 +33,7 @@ void TurbineGovernorType1::setParameters(Real T3, Real T4, Real T5,
 	mTmax = Tmax;
 	mOmRef = OmRef;
 
-	mSLog->info("TurbineGovernorType1 parameters: "
+	SPDLOG_LOGGER_INFO(mSLog, "TurbineGovernorType1 parameters: "
 				"\nT3: {:e}"
 				"\nT4: {:e}"
 				"\nT5: {:e}"
@@ -55,7 +55,7 @@ void TurbineGovernorType1::initialize(Real TmRef) {
 	**mXg3 = (1 - mT4 / mT5) * (**mXg2 + mT3 / mTc * **mXg1);
 	**mTm = **mXg3 + mT4 / mT5 * (**mXg2 + mT3 / mTc * **mXg1);
 
-	mSLog->info("Governor initial values: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Governor initial values: \n"
 				"\nTorder: {:f}"
 				"\nXg1: {:f}"
 				"\nXg2: {:f}"

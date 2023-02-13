@@ -30,11 +30,11 @@ void SP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 
-	mSLog->info("\nInductance [H]: {:s}"
+	SPDLOG_LOGGER_INFO(mSLog, "\nInductance [H]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
 				Logger::realToString(**mInductance),
 				Logger::complexToString(1./mSusceptance));
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -52,7 +52,7 @@ void SP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 void SP::Ph1::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"
@@ -61,7 +61,7 @@ void SP::Ph1::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 		Logger::phasorToString((**mIntfCurrent)(0, 0)));
 }
 
-void SP::Ph1::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::Inductor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mSusceptance);
 	}
@@ -74,17 +74,17 @@ void SP::Ph1::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	}
 
-	mSLog->info("-- Matrix Stamp ---");
+	SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			mSusceptance.real(), mSusceptance.imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			mSusceptance.real(), mSusceptance.imag(), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			-mSusceptance.real(), -mSusceptance.imag(), matrixNodeIndex(0), matrixNodeIndex(1));
-		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			-mSusceptance.real(), -mSusceptance.imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
@@ -117,7 +117,7 @@ void SP::Ph1::Inductor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 
 
 // #### Tear Methods ####
-void SP::Ph1::Inductor::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
+void SP::Ph1::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) {
 	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, 1. / mSusceptance);
 }
 

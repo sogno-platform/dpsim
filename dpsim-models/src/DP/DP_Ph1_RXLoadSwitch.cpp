@@ -52,7 +52,7 @@ void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage = **mSubRXLoad->mIntfVoltage;
 	**mIntfCurrent = **mSubRXLoad->mIntfCurrent;
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -74,7 +74,7 @@ void DP::Ph1::RXLoadSwitch::setSwitchParameters(Real openResistance, Real closed
 	mSubSwitch->setParameters(openResistance, closedResistance, closed);
 }
 
-void DP::Ph1::RXLoadSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
+void DP::Ph1::RXLoadSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
 	mSubRXLoad->mnaApplySystemMatrixStamp(systemMatrix);
 	mSubSwitch->mnaApplySwitchSystemMatrixStamp(closed, systemMatrix, freqIdx);
 }
@@ -113,7 +113,7 @@ void DP::Ph1::RXLoadSwitch::updateSwitchState(Real time) {
 
 		if (deltaV > 0.1) {
 			mSubSwitch->open();
-			mSLog->info("Opened Switch at {}", (float)time);
+			SPDLOG_LOGGER_INFO(mSLog, "Opened Switch at {}", (float)time);
 		}
 	}
 }

@@ -19,7 +19,7 @@ SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
 	mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
 
-	mSLog->info("Create {} {}", this->type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 	mSLog->flush();
 
 	setVirtualNodeNumber(1);
@@ -35,13 +35,13 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capac
 
 	**mSeriesRes = resistance;
 	**mSeriesInd = inductance;
-	mSLog->info("Resistance={} [Ohm] Inductance={} [H]", **mSeriesRes, **mSeriesInd);
+	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]", **mSeriesRes, **mSeriesInd);
 
     if(capacitance > 0){
         **mParallelCap = capacitance;
     }else{
         **mParallelCap = 1e-12;
-        mSLog->warn("Zero value for Capacitance, setting default value of C={} [F]", **mParallelCap);
+        SPDLOG_LOGGER_WARN(mSLog, "Zero value for Capacitance, setting default value of C={} [F]", **mParallelCap);
     }
     if(conductance > 0){
         **mParallelCond = conductance;
@@ -50,9 +50,9 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capac
 			**mParallelCond = (conductance >= 0) ? conductance : 1e-6; // init mode for initFromPowerFlow of mna system components
 		else
 			**mParallelCond = (conductance > 0) ? conductance : 1e-6;
-        mSLog->warn("Zero value for Conductance, setting default value of G={} [S]", **mParallelCond);
+        SPDLOG_LOGGER_WARN(mSLog, "Zero value for Conductance, setting default value of G={} [S]", **mParallelCond);
     }
-    mSLog->info("Capacitance={} [F] Conductance={} [S]", **mParallelCap, **mParallelCond);
+    SPDLOG_LOGGER_INFO(mSLog, "Capacitance={} [F] Conductance={} [S]", **mParallelCap, **mParallelCond);
 	mSLog->flush();
 	mParametersSet = true;
 
@@ -71,25 +71,25 @@ void SP::Ph1::PiLine::setBaseVoltage(Real baseVoltage) {
 }
 
 void SP::Ph1::PiLine::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-    mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
+    SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
-    mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
+    SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
 
 	mBaseImpedance = (**mBaseVoltage * **mBaseVoltage) / mBaseApparentPower;
 	mBaseAdmittance = 1.0 / mBaseImpedance;
 	mBaseInductance = mBaseImpedance / mBaseOmega;
 	mBaseCapacitance = 1.0 / mBaseOmega / mBaseImpedance;
 	mBaseCurrent = baseApparentPower / (**mBaseVoltage * sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
-	mSLog->info("Base Voltage={} [V]  Base Impedance={} [Ohm]", **mBaseVoltage, mBaseImpedance);
+	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]", **mBaseVoltage, mBaseImpedance);
 
     mSeriesResPerUnit = **mSeriesRes / mBaseImpedance;
 	mSeriesIndPerUnit = **mSeriesInd / mBaseInductance;
 	mParallelCapPerUnit = **mParallelCap / mBaseCapacitance;
 	mParallelCondPerUnit = **mParallelCond / mBaseAdmittance;
 
-	mSLog->info("Resistance={} [pu] Reactance={} [pu]", mSeriesResPerUnit, 1. * mSeriesIndPerUnit);
-	mSLog->info("Susceptance={} [pu] Conductance={} [pu]", 1. * mParallelCapPerUnit, mParallelCondPerUnit);
+	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [pu] Reactance={} [pu]", mSeriesResPerUnit, 1. * mSeriesIndPerUnit);
+	SPDLOG_LOGGER_INFO(mSLog, "Susceptance={} [pu] Conductance={} [pu]", 1. * mParallelCapPerUnit, mParallelCondPerUnit);
 	mSLog->flush();
 }
 
@@ -125,8 +125,8 @@ void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 	Y.coeffRef(bus2, bus2) += mY_element.coeff(1, 1);
 	Y.coeffRef(bus2, bus1) += mY_element.coeff(1, 0);
 
-	mSLog->info("#### PF Y matrix stamping #### ");
-	mSLog->info("{}", mY_element);
+	SPDLOG_LOGGER_INFO(mSLog, "#### PF Y matrix stamping #### ");
+	SPDLOG_LOGGER_INFO(mSLog, "{}", mY_element);
 	mSLog->flush();
 }
 
@@ -208,7 +208,7 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		addMNASubComponent(mSubParallelCapacitor1, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -267,7 +267,7 @@ void SP::Ph1::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
 	mSubSeriesInductor->mnaTearInitialize(omega, timeStep);
 }
 
-void SP::Ph1::PiLine::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
+void SP::Ph1::PiLine::mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) {
 	mSubSeriesResistor->mnaTearApplyMatrixStamp(tearMatrix);
 	mSubSeriesInductor->mnaTearApplyMatrixStamp(tearMatrix);
 }

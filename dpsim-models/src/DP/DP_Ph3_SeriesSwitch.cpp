@@ -23,7 +23,7 @@ void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage = initialVoltage(1) - initialVoltage(0);
 	**mIntfCurrent = **mIntfVoltage / impedance;
 
-	mSLog->info("\n--- Initialization from powerflow ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow ---"
 		"\nVoltage across phasor: \n{}"
 		"\nCurrent phasor: \n{}"
 		"\nTerminal 0 voltage phasor: \n{}"
@@ -41,7 +41,7 @@ void DP::Ph3::SeriesSwitch::mnaCompInitialize(Real omega, Real timeStep, Attribu
 	**mRightVector = Matrix::Zero(0, 0);
 }
 
-void DP::Ph3::SeriesSwitch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::SeriesSwitch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	Complex conductance = (**mIsClosed)
 		? Complex( 1. / **mClosedResistance, 0 )
 		: Complex( 1. / **mOpenResistance, 0 );
@@ -58,16 +58,16 @@ void DP::Ph3::SeriesSwitch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) 
 	}
 
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
-		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
 	}
 }
 
-void DP::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
+void DP::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
 	Complex conductance = (closed)
 		? Complex( 1. / **mClosedResistance, 0 )
 		: Complex( 1. / **mOpenResistance, 0 );
@@ -84,12 +84,12 @@ void DP::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix&
 	}
 
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
-		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
 	}
 }
 

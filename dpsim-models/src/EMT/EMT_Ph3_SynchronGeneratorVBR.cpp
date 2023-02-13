@@ -50,11 +50,11 @@ void EMT::Ph3::SynchronGeneratorVBR::setBaseAndOperationalPerUnitParameters(
 	 																Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s,
 	 																Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, inertia);
 
-	mSLog->info("Set base parameters: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n nomFieldCur: {:e}\n",
 				nomPower, nomVolt, nomFreq, nomFieldCur);
 
-	mSLog->info("Set operational parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set operational parameters in per unit: \n"
 			"poleNumber: {:d}\ninertia: {:e}\n"
 			"Rs: {:e}\nLd: {:e}\nLq: {:e}\nLl: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\nLd_s: {:e}\nLq_s: {:e}\n"
@@ -64,7 +64,7 @@ void EMT::Ph3::SynchronGeneratorVBR::setBaseAndOperationalPerUnitParameters(
 			Ld_t, Lq_t, Ld_s, Lq_s,
 			Td0_t, Tq0_t, Td0_s, Tq0_s);
 
-	mSLog->info("Set fundamental parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set fundamental parameters in per unit: \n"
 			"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
 			"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\n",
 			**mRs, **mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
@@ -79,7 +79,7 @@ void EMT::Ph3::SynchronGeneratorVBR::setBaseAndFundamentalPerUnitParameters(
 		nomPower, nomVolt, nomFreq, nomFieldCur,
 		poleNumber, Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 
-	mSLog->info("Set base and fundamental parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set base and fundamental parameters in per unit: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\npoleNumber: {:d}\nnomFieldCur: {:e}\n"
 				"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
 				"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\ninertia: {:e}",
@@ -93,7 +93,7 @@ void EMT::Ph3::SynchronGeneratorVBR::setInitialValues(Real initActivePower, Real
 	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
 		initTerminalVolt, initVoltAngle, initMechPower);
 
-	mSLog->info("Set initial values: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set initial values: \n"
 				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
 				"initVoltAngle: {:e} \ninitMechPower: {:e}",
 				initActivePower, initReactivePower, initTerminalVolt,
@@ -102,7 +102,7 @@ void EMT::Ph3::SynchronGeneratorVBR::setInitialValues(Real initActivePower, Real
 
 void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real frequency) {
 	if(!mInitialValuesSet) {
-		mSLog->info("--- Initialization from powerflow ---");
+		SPDLOG_LOGGER_INFO(mSLog, "--- Initialization from powerflow ---");
 
 		// terminal powers in consumer system -> convert to generator system
 		Real activePower = -terminal(0)->singlePower().real();
@@ -113,14 +113,14 @@ void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real freque
 
 		this->setInitialValues(activePower, reactivePower, voltMagnitude, Math::phase(initialSingleVoltage(0)), activePower);
 
-		mSLog->info("\nTerminal 0 voltage: {:s}"
+		SPDLOG_LOGGER_INFO(mSLog, "\nTerminal 0 voltage: {:s}"
 					"\nTerminal 0 power: {:s}"
 					"\n--- Initialization from powerflow finished ---",
 					Logger::phasorToString(initialSingleVoltage(0)),
 					Logger::complexToString(terminal(0)->singlePower()));
 		mSLog->flush();
 	} else {
-		mSLog->info("Initial values already set, skipping initializeFromNodesAndTerminals.");
+		SPDLOG_LOGGER_INFO(mSLog, "Initial values already set, skipping initializeFromNodesAndTerminals.");
 		mSLog->flush();
 	}
 }
@@ -132,9 +132,9 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep
 		for (UInt phase2Idx = 0; phase2Idx < 3; ++phase2Idx)
 			mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, phase1Idx),matrixNodeIndex(0, phase2Idx)));
 
-	mSLog->info("List of index pairs of varying matrix entries: ");
+	SPDLOG_LOGGER_INFO(mSLog, "List of index pairs of varying matrix entries: ");
 	for (auto indexPair : mVariableSystemMatrixEntries)
-		mSLog->info("({}, {})", indexPair.first, indexPair.second);
+		SPDLOG_LOGGER_INFO(mSLog, "({}, {})", indexPair.first, indexPair.second);
 
 
 	mSystemOmega = omega;
@@ -239,8 +239,8 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep
 
 	CalculateL();
 
-	mSLog->info("Initialize right side vector of size {}", leftVector->get().rows());
-	mSLog->info("Component affects right side vector entries {}, {} and {}", matrixNodeIndex(0,0), matrixNodeIndex(0,1), matrixNodeIndex(0,2));
+	SPDLOG_LOGGER_INFO(mSLog, "Initialize right side vector of size {}", leftVector->get().rows());
+	SPDLOG_LOGGER_INFO(mSLog, "Component affects right side vector entries {}, {} and {}", matrixNodeIndex(0,0), matrixNodeIndex(0,1), matrixNodeIndex(0,2));
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompPreStep(Real time, Int timeStepCount) {
@@ -248,7 +248,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPreStep(Real time, Int timeStepCount
 	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::SynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMat(0, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), mConductanceMat(0, 1));
@@ -259,9 +259,9 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& syste
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 0), mConductanceMat(2, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1), mConductanceMat(2, 1));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), mConductanceMat(2, 2));
-		// mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
-		// mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,1), matrixNodeIndex(0,1));
-		// mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,2), matrixNodeIndex(0,2));
+		// SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
+		// SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,1), matrixNodeIndex(0,1));
+		// SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,2), matrixNodeIndex(0,2));
 	}
 }
 
@@ -318,8 +318,11 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 	R_eq_vbr = mResistanceMat + (2 / (mTimeStep*mBase_OmElec))*mDInductanceMat + K;
 	E_eq_vbr = mEsh_vbr + E_r_vbr;
 
-	mConductanceMat = (R_eq_vbr*mBase_Z).inverse();
-	mISourceEq = R_eq_vbr.inverse()*E_eq_vbr*mBase_I;
+	// mBase_Z always a scalar? CHECK!
+	Matrix R_eq_vbr_inv = Matrix::Zero(3, 3);
+	Math::invertMatrix(R_eq_vbr, R_eq_vbr_inv);
+	mConductanceMat = R_eq_vbr_inv/mBase_Z;
+	mISourceEq = R_eq_vbr_inv*E_eq_vbr*mBase_I;
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
@@ -349,8 +352,9 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Real time, Int timeStepCoun
 		// to the synchronous generator pu system
 		mVfd = (mRfd / mLmd)*mExciter->step(mVd, mVq, mTimeStep);
 	}
-
-	mIabc = R_eq_vbr.inverse()*(mVabc - E_eq_vbr);
+	Matrix R_eq_vbr_inv = Matrix::Zero(3, 3);
+	Math::invertMatrix(R_eq_vbr, R_eq_vbr_inv);
+	mIabc = R_eq_vbr_inv*(mVabc - E_eq_vbr);
 
 	mIa = mIabc(0);
 	mIb = mIabc(1);
@@ -435,6 +439,7 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateL() {
 
 void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarConstants(Real dt) {
 
+	Matrix Fa_inv = Matrix::Zero(2, 2);
 	b11 = (mRkq1 / mLlkq1)*(mDLmq / mLlkq1 - 1);
 	b13 = mRkq1*mDLmq / mLlkq1;
 	b31 = (mRfd / mLlfd)*(mDLmd / mLlfd - 1);
@@ -464,12 +469,15 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarConstants(Real dt) {
 		E1b <<
 			dt*b13,
 			dt*b23;
-		E1 = Ea.inverse() * E1b;
+
+		Matrix Ea_inv = Matrix::Zero(2, 2);
+		Math::invertMatrix(Ea, Ea_inv);
+		E1 = Ea_inv * E1b;
 
 		E2b <<
 			2 + dt*b11, dt*b12,
 			dt*b21, 2 + dt*b22;
-		E2 = Ea.inverse() * E2b;
+		E2 = Ea_inv * E2b;
 	}
 	else {
 		c11 = mDLmq*mRkq1 / (mLlkq1*mLlkq1)*(mDLmq / mLlkq1 - 1);
@@ -482,21 +490,23 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarConstants(Real dt) {
 	Fa <<
 		2 - dt*b31, -dt*b32,
 		-dt*b41, 2 - dt*b42;
+
+	Math::invertMatrix(Fa, Fa_inv);
 	F1b <<
 		dt*b33,
 		dt*b43;
-	F1 = Fa.inverse() * F1b;
+	F1 = Fa_inv * F1b;
 
 	F2b <<
 		2 + dt*b31, dt*b32,
 		dt*b41, 2 + dt*b42;
 
-	F2 = Fa.inverse() * F2b;
+	F2 = Fa_inv * F2b;
 
 	F3b <<
 		2 * dt,
 		0;
-	F3 = Fa.inverse()* F3b;
+	F3 = Fa_inv * F3b;
 
 	C26 <<
 		0,

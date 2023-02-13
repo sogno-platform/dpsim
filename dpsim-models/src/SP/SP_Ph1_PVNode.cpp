@@ -26,7 +26,7 @@ SP::Ph1::PVNode::PVNode(String uid, String name, Real power, Real vSetPoint, Rea
 
 	**mVoltagePerUnit = vSetPoint / ratedU;
 
-	mSLog->info("Create PV node for {} P={}, V={}", name, **mPowerSetPoint, **mVoltageSetPoint);
+	SPDLOG_LOGGER_INFO(mSLog, "Create PV node for {} P={}, V={}", name, **mPowerSetPoint, **mVoltageSetPoint);
 }
 
 

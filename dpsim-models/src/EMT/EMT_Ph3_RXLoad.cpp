@@ -18,7 +18,7 @@ EMT::Ph3::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 
-	mSLog->info("Create {} {}", this->type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 	mSLog->flush();
@@ -57,11 +57,11 @@ void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower, R
 
 	**mNomVoltage = volt;
 
-	mSLog->info("\nActive Power [W]: {}"
+	SPDLOG_LOGGER_INFO(mSLog, "\nActive Power [W]: {}"
 			"\nReactive Power [VAr]: {}",
 			Logger::matrixToString(**mActivePower),
 			Logger::matrixToString(**mReactivePower));
-	mSLog->info("Nominal Voltage={} [V]", **mNomVoltage);
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 
 	initPowerFromTerminal = false;
 }
@@ -92,11 +92,11 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 		**mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
 
-		mSLog->info("\nActive Power [W]: {}"
+		SPDLOG_LOGGER_INFO(mSLog, "\nActive Power [W]: {}"
 					"\nReactive Power [VAr]: {}",
 					Logger::matrixToString(**mActivePower),
 					Logger::matrixToString(**mReactivePower));
-		mSLog->info("Nominal Voltage={} [V]", **mNomVoltage);
+		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}
 
 	if ((**mActivePower)(0,0) != 0) {
@@ -151,7 +151,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	iInitABC = rhs_.conjugate().transpose();
 	**mIntfCurrent = iInitABC.real();
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

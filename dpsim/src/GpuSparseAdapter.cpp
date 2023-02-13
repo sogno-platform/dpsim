@@ -34,7 +34,7 @@ namespace DPsim
     inline void GpuSparseAdapter::checkCusparseStatus(cusparseStatus_t status, std::string additionalInfo)
     {
 	    if (status != CUSPARSE_STATUS_SUCCESS) {
-		    //mSLog->error("{} {}", additionalInfo, cusparseGetErrorString(status));
+		    //SPDLOG_LOGGER_ERROR(mSLog, "{} {}", additionalInfo, cusparseGetErrorString(status));
         std::cout << "Status not success: " << status << std::endl;
     		throw SolverException();
 	    }
@@ -48,7 +48,7 @@ namespace DPsim
         checkCusparseStatus(csp_status, "cuSparse initialization failed:");
 
         if ((cso_status = cusolverSpCreate(&mCusolverhandle)) != CUSOLVER_STATUS_SUCCESS) {
-            //mSLog->error("cuSolver initialization failed: Error code {}", cso_status);
+            //SPDLOG_LOGGER_ERROR(mSLog, "cuSolver initialization failed: Error code {}", cso_status);
             std::cout << "cso_status not success" << std::endl;
             throw SolverException();
         }
@@ -109,7 +109,7 @@ namespace DPsim
             p, &p_nnz);
 
         if (cso_status != CUSOLVER_STATUS_SUCCESS) {
-            //mSLog->error("cusolverSpDcsrzfdHost returend an error");
+            //SPDLOG_LOGGER_ERROR(mSLog, "cusolverSpDcsrzfdHost returend an error");
         }
         // create Eigen::PermutationMatrix from the p
         mTransp = std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic> >(
@@ -161,7 +161,7 @@ namespace DPsim
 
         csp_status = cusparseXcsrilu02_zeroPivot(mCusparsehandle, info_M, &structural_zero);
         if (csp_status == CUSPARSE_STATUS_ZERO_PIVOT){
-            //mSLog->error("A({},{}) is missing", structural_zero, structural_zero);
+            //SPDLOG_LOGGER_ERROR(mSLog, "A({},{}) is missing", structural_zero, structural_zero);
             checkCusparseStatus(csp_status);
             std::cout << "csp_status zero pivot" << std::endl;
             throw SolverException();
@@ -188,7 +188,7 @@ namespace DPsim
 
         csp_status = cusparseXcsrilu02_zeroPivot(mCusparsehandle, info_M, &numerical_zero);
         if (csp_status == CUSPARSE_STATUS_ZERO_PIVOT){
-            //mSLog->error("U({},{}) is zero\n", numerical_zero, numerical_zero);
+            //SPDLOG_LOGGER_ERROR(mSLog, "U({},{}) is zero\n", numerical_zero, numerical_zero);
             checkCusparseStatus(csp_status);
             std::cout << "csp_status zero pivot" << std::endl;
             throw SolverException();
@@ -234,7 +234,7 @@ namespace DPsim
         mRightHandSideVector = *mTransp * mRightHandSideVector;
         status = cudaMemcpy(mGpuRhsVec.data(), &mRightHandSideVector(0), size * sizeof(Real), cudaMemcpyHostToDevice);
         if (status != cudaSuccess) {
-            //mSLog->error("Cuda Error: {}", cudaGetErrorString(status));
+            //SPDLOG_LOGGER_ERROR(mSLog, "Cuda Error: {}", cudaGetErrorString(status));
             std::cout << "status not cudasuccess" << std::endl;
             throw SolverException();
         }
@@ -262,7 +262,7 @@ namespace DPsim
         //Copy Solution back
         status = cudaMemcpy(&(leftSideVector)(0), mGpuLhsVec.data(), size * sizeof(Real), cudaMemcpyDeviceToHost);
         if (status != cudaSuccess) {
-            //mSLog->error("Cuda Error: {}", cudaGetErrorString(status));
+            //SPDLOG_LOGGER_ERROR(mSLog, "Cuda Error: {}", cudaGetErrorString(status));
             std::cout << "status not cudasuccess" << std::endl;
             throw SolverException();
         }

@@ -25,13 +25,13 @@ void TurbineGovernor::setParameters(Real Ta, Real Tb, Real Tc, Real Fa,
 	mTsr = Tsr;
 	mTsm = Tsm;
 
-	mSLog->info("Turbine parameters: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Turbine parameters: \n"
 				"Ta: {:e}\nTb: {:e}\nTc: {:e}\n"
 				"Fa: {:e}\nFb: {:e}\nFc: {:e}\n",
 				mTa, mTb, mTc,
 				mFa, mFb, mFc);
 
-	mSLog->info("Governor parameters: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Governor parameters: \n"
 				"K: {:e}\nTsr: {:e}\nTsm: {:e}\n",
 				mK, mTsr, mTsm);
 }
@@ -41,7 +41,7 @@ void TurbineGovernor::initialize(Real PmRef, Real Tm_init) {
 	T1 = (1 - mFa)*PmRef;
 	T2 = mFa*PmRef;
 
-	mSLog->info("Turbine initial values: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Turbine initial values: \n"
 				"init_Tm: {:e}\ninit_T1: {:e}\ninit_T2: {:e}\n",
 				mTm, T1, T2);
 
@@ -49,7 +49,7 @@ void TurbineGovernor::initialize(Real PmRef, Real Tm_init) {
 	mpVcv = 0;
 	Psm_in = PmRef;
 
-	mSLog->info("Governor initial values: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Governor initial values: \n"
 				"init_Vcv: {:e}\ninit_pVcv: {:e}\ninit_Psm_in: {:e}\n",
 				mVcv, mpVcv, Psm_in);
 }

@@ -44,7 +44,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 		nomPower, nomVolt, nomFreq, nomFieldCur,
 		poleNumber, Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 
-	mSLog->info("Set base and fundamental parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set base and fundamental parameters in per unit: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\npoleNumber: {:d}\nnomFieldCur: {:e}\n"
 				"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
 				"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\ninertia: {:e}",
@@ -54,7 +54,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
 		initTerminalVolt, initVoltAngle, initMechPower);
 
-	mSLog->info("Set initial values: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set initial values: \n"
 					"initActivePower: {:e} [W]\n"
 					"initReactivePower: {:e} [VAr]\n"
 					"initTerminalVolt: {:e} [V] (initTerminalVolt: {:e} [pu])\n"
@@ -70,7 +70,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
 	Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s, Real inertia) {
 
 	setBaseParameters(nomPower, nomVolt, nomFreq, nomFieldCur);
-	mSLog->info("Set base parameters: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n nomFieldCur: {:e}\n",
 				nomPower, nomVolt, nomFreq, nomFieldCur);
 
@@ -78,7 +78,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
 									Rs, Ld, Lq, Ll,
 									Ld_t, Lq_t, Ld_s, Lq_s,
 									Td0_t, Tq0_t, Td0_s, Tq0_s);
-	mSLog->info("Set operational parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set operational parameters in per unit: \n"
 			"poleNumber: {:d}\ninertia: {:e}\n"
 			"Rs: {:e}\nLd: {:e}\nLq: {:e}\nLl: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\nLd_s: {:e}\nLq_s: {:e}\n"
@@ -89,7 +89,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
 			Td0_t, Tq0_t, Td0_s, Tq0_s);
 
 	Base::SynchronGenerator::calculateFundamentalFromOperationalParameters();
-	mSLog->info("Set fundamental parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set fundamental parameters in per unit: \n"
 			"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
 			"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\n",
 			**mRs, **mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
@@ -100,7 +100,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setInitialValues(Real initActivePower, Real 
 	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
 	initTerminalVolt, initVoltAngle, initMechPower);
 
-	mSLog->info("Set initial values: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Set initial values: \n"
 				"initActivePower: {:e} [W]\n"
 				"initReactivePower: {:e} [VAr]\n"
 				"initTerminalVolt: {:e} [V] (initTerminalVolt: {:e} [pu])\n"
@@ -112,7 +112,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setInitialValues(Real initActivePower, Real 
 
 void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
 
-	mSLog->info("Apply operational parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Apply operational parameters in per unit: \n"
 			"poleNumber: {:d}\ninertia: {:e}\n"
 			"Rs: {:e}\nLd: {:e}\nLq: {:e}\nLl: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\nLd_s: {:e}\nLq_s: {:e}\n"
@@ -123,7 +123,7 @@ void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
 			**mTd0_t, **mTq0_t, **mTd0_s, **mTq0_s);
 
 	Base::SynchronGenerator::calculateFundamentalFromOperationalParameters();
-	mSLog->info("Updated fundamental parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Updated fundamental parameters in per unit: \n"
 			"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
 			"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\n",
 			**mRs, **mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
@@ -131,7 +131,7 @@ void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
 
 void EMT::Ph3::SynchronGeneratorDQ::initializeFromNodesAndTerminals(Real frequency) {
 	if(!mInitialValuesSet) {
-		mSLog->info("--- Initialization from powerflow ---");
+		SPDLOG_LOGGER_INFO(mSLog, "--- Initialization from powerflow ---");
 
 		// terminal powers in consumer system -> convert to generator system
 		Real activePower = -terminal(0)->singlePower().real();
@@ -142,14 +142,14 @@ void EMT::Ph3::SynchronGeneratorDQ::initializeFromNodesAndTerminals(Real frequen
 
 		this->setInitialValues(activePower, reactivePower, voltMagnitude, Math::phase(initialSingleVoltage(0)), activePower);
 
-		mSLog->info("\nTerminal 0 voltage: {:s}"
+		SPDLOG_LOGGER_INFO(mSLog, "\nTerminal 0 voltage: {:s}"
 					"\nTerminal 0 power: {:s}"
 					"\n--- Initialization from powerflow finished ---",
 					Logger::phasorToString(initialSingleVoltage(0)),
 					Logger::complexToString(terminal(0)->singlePower()));
 		mSLog->flush();
 	} else {
-		mSLog->info("Initial values already set, skipping initializeFromNodesAndTerminals.");
+		SPDLOG_LOGGER_INFO(mSLog, "Initial values already set, skipping initializeFromNodesAndTerminals.");
 		mSLog->flush();
 	}
 }
@@ -187,7 +187,7 @@ void EMT::Ph3::SynchronGeneratorDQ::initializeMatrixAndStates(){
 	**mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 }
 
-void EMT::Ph3::SynchronGeneratorDQ::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::SynchronGeneratorDQ::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (!mCompensationOn)
 		return;
 
@@ -197,9 +197,9 @@ void EMT::Ph3::SynchronGeneratorDQ::mnaCompApplySystemMatrixStamp(Matrix& system
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0,0), matrixNodeIndex(0,0), conductance);
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0,1), matrixNodeIndex(0,1), conductance);
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0,2), matrixNodeIndex(0,2), conductance);
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,1), matrixNodeIndex(0,1));
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,2), matrixNodeIndex(0,2));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,1), matrixNodeIndex(0,1));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,2), matrixNodeIndex(0,2));
 	}
 }
 
