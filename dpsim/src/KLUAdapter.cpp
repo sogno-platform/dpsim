@@ -75,6 +75,8 @@ namespace DPsim
             auto Ap = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.outerIndexPtr());
             auto Ai = Eigen::internal::convert_index<Int*>(mVariableSystemMatrix.innerIndexPtr());
 
+			/* TODO: possible improvement: don't save variable system matrix entries, but rather the varying rows/cols vector
+			 * i.e. do the computations below only once */
             this->changedEntries = mListVariableSystemMatrixEntries;
             Int varying_entries = Eigen::internal::convert_index<Int>(changedEntries.size());
 			std::vector<Int> varying_columns;
@@ -213,7 +215,7 @@ namespace DPsim
 
             std::ofstream ofs;
             ofs.open(outputName);
-			/* FIXME: determine appropriate precision with respect to datatype chosen (double/float/etc.)
+			/* TODO: determine appropriate precision with respect to datatype chosen (double/float/etc.)
              * Alternatively: add logger to DirectLinearSolver and this type of logging can be done using libfmt.
              * Additionally, the printing of LU/permutation matrices / factorization path / scaling factors / etc.
              * in custom SuiteSparse/KLU can be moved here to reduce the modifications made to SuiteSparse and use

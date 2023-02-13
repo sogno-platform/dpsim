@@ -45,7 +45,8 @@ namespace DPsim
 		/// Use BTF or not
 		int m_btf = 1;
 
-		/// Use scaling or not
+		/// Define scaling method
+		/// Options are: 1: sum-scaling, 2: max scaling, <=0: no scaling
 		int m_scaling = 1;
 
 		/// Flag to indicate if factorization succeeded
