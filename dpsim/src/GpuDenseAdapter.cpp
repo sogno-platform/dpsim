@@ -120,7 +120,7 @@ namespace DPsim
         mat.resize(mDeviceCopy.size, mDeviceCopy.size);
         double *buffer = &mat(0);
         CUDA_ERROR_HANDLER(cudaMemcpy(buffer, mDeviceCopy.matrix, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
-        this->mSLog->info("Systemmatrix Gpu: \n{}", mat);*/
+        this->SPDLOG_LOGGER_INFO(mSLog, "Systemmatrix Gpu: \n{}", mat);*/
     }
 
     void GpuDenseAdapter::factorize(SparseMatrix& systemMatrix)
@@ -130,7 +130,7 @@ namespace DPsim
         //LU factorization
         LUfactorization();
         /*CUDA_ERROR_HANDLER(cudaMemcpy(buffer, mDeviceCopy.matrix, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
-        this->mSLog->info("LU decomposition Gpu: \n{}", mat);*/
+        this->SPDLOG_LOGGER_INFO(mSLog, "LU decomposition Gpu: \n{}", mat);*/
     }
 
     void GpuDenseAdapter::refactorize(SparseMatrix& systemMatrix)
@@ -140,7 +140,7 @@ namespace DPsim
         //LU factorization
         LUfactorization();
         /*CUDA_ERROR_HANDLER(cudaMemcpy(buffer, mDeviceCopy.matrix, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
-        this->mSLog->info("LU decomposition Gpu: \n{}", mat);*/
+        this->SPDLOG_LOGGER_INFO(mSLog, "LU decomposition Gpu: \n{}", mat);*/
     }
 
     void GpuDenseAdapter::partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries)
@@ -150,7 +150,7 @@ namespace DPsim
         //LU factorization
         LUfactorization();
         /*CUDA_ERROR_HANDLER(cudaMemcpy(buffer, mDeviceCopy.matrix, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
-        this->mSLog->info("LU decomposition Gpu: \n{}", mat);*/
+        this->SPDLOG_LOGGER_INFO(mSLog, "LU decomposition Gpu: \n{}", mat);*/
     }
 
     Matrix GpuDenseAdapter::solve(Matrix& mRightHandSideVector)

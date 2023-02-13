@@ -81,8 +81,8 @@ namespace Ph1 {
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
-		void mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) override;
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
+		void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx) override;
 		/// Stamps right side (source) vector
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 		void mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector) override;

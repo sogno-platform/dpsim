@@ -22,7 +22,7 @@ void DP::Ph3::SynchronGeneratorDQTrapez::mnaCompInitialize(Real omega, Real time
 		updateMatrixNodeIndices();
 	mTimeStep = timeStep;
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\nFluxStateSpaceMat: \n{}"
 		"\nOmegaFluxMat: \n{}"
 		"\nResistances: {} {} {}",

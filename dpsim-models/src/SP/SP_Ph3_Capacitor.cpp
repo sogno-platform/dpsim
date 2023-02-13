@@ -66,7 +66,7 @@ void SP::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 		<< "--- MNA initialization finished ---" << std::endl;*/
 }
 
-void SP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mSusceptance(0, 0));

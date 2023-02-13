@@ -31,7 +31,7 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq)
 
 	**mVoltageRef = voltageRef;
 
-	mSLog->info("\nVoltage reference phasor [V]: {:s}"
+	SPDLOG_LOGGER_INFO(mSLog, "\nVoltage reference phasor [V]: {:s}"
 				"\nFrequency [Hz]: {:s}",
 				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(srcFreq));
@@ -62,7 +62,7 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real modulati
 }
 
 void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-	mSLog->info("\n--- Initialization from node voltages ---");
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from node voltages ---");
 	// TODO: this approach currently overwrites voltage reference set from outside, when not using setParameters
 	if (!mParametersSet) {
 		auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
@@ -73,18 +73,18 @@ void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 
 		**mVoltageRef = CPS::Math::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0));
 
-		mSLog->info("\nReference voltage: {:s}"
+		SPDLOG_LOGGER_INFO(mSLog, "\nReference voltage: {:s}"
 					"\nTerminal 0 voltage: {:s}"
 					"\nTerminal 1 voltage: {:s}",
 					Logger::matrixCompToString(**mVoltageRef),
 					Logger::phasorToString(initialSingleVoltage(0)),
 					Logger::phasorToString(initialSingleVoltage(1)));
 	} else {
-		mSLog->info("\nInitialization from node voltages omitted (parameter already set)."
+		SPDLOG_LOGGER_INFO(mSLog, "\nInitialization from node voltages omitted (parameter already set)."
 					"\nReference voltage: {:s}",
 					Logger::matrixCompToString(**mVoltageRef));
 	}
-	mSLog->info("\n--- Initialization from node voltages ---");
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from node voltages ---");
 	mSLog->flush();
 }
 
@@ -99,7 +99,7 @@ void EMT::Ph3::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attri
 	updateMatrixNodeIndices();
 }
 
-void EMT::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), -1);
 		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(0, 0), -1);
@@ -148,7 +148,7 @@ void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
 	} else {
 		**mIntfVoltage = RMS3PH_TO_PEAK1PH * (**mVoltageRef).real();
 	}
-	mSLog->debug(
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\nUpdate Voltage: {:s}",
 		Logger::matrixToString(**mIntfVoltage)
 	);

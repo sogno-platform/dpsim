@@ -61,7 +61,7 @@ namespace DPsim {
 
     void Interface::addImport(CPS::AttributeBase::Ptr attr, bool blockOnRead, bool syncOnSimulationStart) {
         if (mOpened) {
-            mLog->error("Cannot modify interface configuration after simulation start!");
+            SPDLOG_LOGGER_ERROR(mLog, "Cannot modify interface configuration after simulation start!");
             std::exit(1);
         }
 
@@ -70,7 +70,7 @@ namespace DPsim {
 
     void Interface::addExport(CPS::AttributeBase::Ptr attr) {
         if (mOpened) {
-            mLog->error("Cannot modify interface configuration after simulation start!");
+            SPDLOG_LOGGER_ERROR(mLog, "Cannot modify interface configuration after simulation start!");
             std::exit(1);
         }
 
@@ -119,7 +119,7 @@ namespace DPsim {
                 }) != mImportAttrsDpsim.cend()) {
             mQueueInterfaceToDpsim->wait_dequeue(receivedPacket);
             if (!std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value)) {
-                mLog->warn("Failed to copy received value onto attribute in Interface!");
+                SPDLOG_LOGGER_WARN(mLog, "Failed to copy received value onto attribute in Interface!");
             }
             std::get<1>(mImportAttrsDpsim[receivedPacket.attributeId]) = receivedPacket.sequenceId;
             mNextSequenceInterfaceToDpsim = receivedPacket.sequenceId + 1;
@@ -128,7 +128,7 @@ namespace DPsim {
         //Fetch all remaining queue packets
         while (mQueueInterfaceToDpsim->try_dequeue(receivedPacket)) {
             if (!std::get<0>(mImportAttrsDpsim[receivedPacket.attributeId])->copyValue(receivedPacket.value)) {
-                mLog->warn("Failed to copy received value onto attribute in Interface!");
+                SPDLOG_LOGGER_WARN(mLog, "Failed to copy received value onto attribute in Interface!");
             }
             std::get<1>(mImportAttrsDpsim[receivedPacket.attributeId]) = receivedPacket.sequenceId;
             mNextSequenceInterfaceToDpsim = receivedPacket.sequenceId + 1;

@@ -136,7 +136,7 @@ void SimPowerComp<VarType>::setTerminalNumber(UInt num) {
 template <typename VarType>
 void SimPowerComp<VarType>::setTerminals(typename SimTerminal<VarType>::List terminals) {
 	if (mNumTerminals < terminals.size()) {
-		mSLog->error("Number of Terminals is too large for Component {} - Ignoring", **mName);
+		SPDLOG_LOGGER_ERROR(mSLog, "Number of Terminals is too large for Component {} - Ignoring", **mName);
 		return;
 	}
 	mTerminals = terminals;
@@ -145,11 +145,11 @@ void SimPowerComp<VarType>::setTerminals(typename SimTerminal<VarType>::List ter
 template <typename VarType>
 void SimPowerComp<VarType>::setTerminalAt(typename SimTerminal<VarType>::Ptr terminal, UInt terminalPosition) {
 	if (mNumTerminals <= terminalPosition) {
-		mSLog->error("Terminal position number too large for Component {} - Ignoring", **mName);
+		SPDLOG_LOGGER_ERROR(mSLog, "Terminal position number too large for Component {} - Ignoring", **mName);
 		return;
 	}
 	mTerminals[terminalPosition] = terminal;
-	mSLog->info("Set Terminal at position {} to Node {}, simulation node {}", terminalPosition, mTerminals[terminalPosition]->node()->name(), mTerminals[terminalPosition]->matrixNodeIndex());
+	SPDLOG_LOGGER_INFO(mSLog, "Set Terminal at position {} to Node {}, simulation node {}", terminalPosition, mTerminals[terminalPosition]->node()->name(), mTerminals[terminalPosition]->matrixNodeIndex());
 }
 
 template <typename VarType>
@@ -192,10 +192,10 @@ void SimPowerComp<VarType>::setVirtualNodeNumber(UInt num) {
 template <typename VarType>
 void SimPowerComp<VarType>::setVirtualNodeAt(typename SimNode<VarType>::Ptr virtualNode, UInt nodeNum) {
 	if (mNumVirtualNodes <= nodeNum) {
-		mSLog->error("Virtual Node position number too large for Component {} - Ignoring", **mName);
+		SPDLOG_LOGGER_ERROR(mSLog, "Virtual Node position number too large for Component {} - Ignoring", **mName);
 	}
 	mVirtualNodes[nodeNum] = virtualNode;
-	mSLog->info("Set virtual Node at position {} to Node {}, simulation node {}",
+	SPDLOG_LOGGER_INFO(mSLog, "Set virtual Node at position {} to Node {}, simulation node {}",
 		nodeNum, mVirtualNodes[nodeNum]->name(), mVirtualNodes[nodeNum]->matrixNodeIndex());
 }
 
@@ -211,7 +211,7 @@ typename SimNode<VarType>::Ptr SimPowerComp<VarType>::virtualNode(UInt index) {
 template<typename VarType>
 void SimPowerComp<VarType>::connect(typename SimNode<VarType>::List nodes) {
 	if (mNumTerminals < nodes.size()) {
-		mSLog->error("Number of Nodes is too large for Component {} - Ignoring", **mName);
+		SPDLOG_LOGGER_ERROR(mSLog, "Number of Nodes is too large for Component {} - Ignoring", **mName);
 		return;
 	}
 	for (UInt i = 0; i < nodes.size(); i++) {

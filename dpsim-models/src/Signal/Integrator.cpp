@@ -25,7 +25,7 @@ Integrator::Integrator(String name, Logger::Level logLevel) :
 void Integrator::setParameters(Real timestep) {
     mTimeStep = timestep;
 
-    mSLog->info("Integration step = {}", mTimeStep);
+    SPDLOG_LOGGER_INFO(mSLog, "Integration step = {}", mTimeStep);
 }
 
 void Integrator::setInitialValues(Real input_init, Real state_init, Real output_init) {
@@ -33,8 +33,8 @@ void Integrator::setInitialValues(Real input_init, Real state_init, Real output_
     **mStateCurr = state_init;
     **mOutputCurr = output_init;
 
-    mSLog->info("Initial values:");
-    mSLog->info("inputCurrInit = {}, stateCurrInit = {}, outputCurrInit = {}", **mInputCurr, **mStateCurr, **mOutputCurr);
+    SPDLOG_LOGGER_INFO(mSLog, "Initial values:");
+    SPDLOG_LOGGER_INFO(mSLog, "inputCurrInit = {}, stateCurrInit = {}, outputCurrInit = {}", **mInputCurr, **mStateCurr, **mOutputCurr);
 }
 
 void Integrator::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -59,14 +59,14 @@ void Integrator::signalAddStepDependencies(AttributeBase::List &prevStepDependen
 void Integrator::signalStep(Real time, Int timeStepCount) {
     **mInputCurr = **mInputRef;
 
-    mSLog->info("Time {}:", time);
-    mSLog->info("Input values: inputCurr = {}, inputPrev = {}, statePrev = {}", **mInputCurr, **mInputPrev, **mStatePrev);
+    SPDLOG_LOGGER_INFO(mSLog, "Time {}:", time);
+    SPDLOG_LOGGER_INFO(mSLog, "Input values: inputCurr = {}, inputPrev = {}, statePrev = {}", **mInputCurr, **mInputPrev, **mStatePrev);
 
     **mStateCurr =**mStatePrev + mTimeStep/2.0* **mInputCurr + mTimeStep/2.0* **mInputPrev;
     **mOutputCurr = **mStateCurr;
 
-    mSLog->info("State values: stateCurr = {}", **mStateCurr);
-    mSLog->info("Output values: outputCurr = {}:", **mOutputCurr);
+    SPDLOG_LOGGER_INFO(mSLog, "State values: stateCurr = {}", **mStateCurr);
+    SPDLOG_LOGGER_INFO(mSLog, "Output values: outputCurr = {}:", **mOutputCurr);
 }
 
 Task::List Integrator::getTasks() {

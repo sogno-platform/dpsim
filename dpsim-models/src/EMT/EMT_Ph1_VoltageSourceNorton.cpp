@@ -39,7 +39,7 @@ void EMT::Ph1::VoltageSourceNorton::mnaCompInitialize(Real omega, Real timeStep,
 	(**mIntfVoltage)(0, 0) = (**mVoltageRef).real();
 }
 
-void EMT::Ph1::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph1::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	// Apply matrix stamp for equivalent resistance
 	if (terminalNotGrounded(0))
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mConductance);

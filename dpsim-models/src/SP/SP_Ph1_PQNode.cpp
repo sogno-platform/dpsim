@@ -26,7 +26,7 @@ using namespace CPS;
 	 **mReactivePower = reactive_power;
 	 **mReactivePowerNom = reactive_power;
 
-     mSLog->info("Create PQ node for {} P={}, Q={}", name, **mPowerNom, **mReactivePowerNom);
+     SPDLOG_LOGGER_INFO(mSLog, "Create PQ node for {} P={}, Q={}", name, **mPowerNom, **mReactivePowerNom);
 
  }
 

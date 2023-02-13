@@ -40,9 +40,9 @@ namespace Ph1 {
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector);
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 		/// Stamps system matrix considering the frequency index
-		void mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx);
+		void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx);
 		/// Update interface voltage from MNA system result
 		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		void mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx);
@@ -71,7 +71,7 @@ namespace Ph1 {
 		};
 
 		// #### MNA Tear Section ####
-		void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
+		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
 
 		// #### DAE Section ####
 		///Residual Function for DAE Solver

@@ -37,7 +37,7 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 	mWithConnectionTransformer = withTrafo;
 	setTerminalNumber(1);
 
-	mSLog->info("Create {} {}", type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
@@ -55,9 +55,9 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 	// Pre-step of the subcontrolled voltage source is handled explicitly in mnaParentPreStep
 	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-	mSLog->info("Electrical subcomponents: ");
+	SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)
-		mSLog->info("- {}", subcomp->name());
+		SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
 
 	// Create control sub components
 	mPLL = Signal::PLL::make(**mName + "_PLL", mLogLevel);
@@ -85,9 +85,9 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {
 	mParametersSet = true;
 
-	mSLog->info("General Parameters:");
-	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", sysVoltNom, sysOmega);
-	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", Pref, Qref);
+	SPDLOG_LOGGER_INFO(mSLog, "General Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V] Nominal Omega={} [1/s]", sysVoltNom, sysOmega);
+	SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [W] Reactive Power={} [VAr]", Pref, Qref);
 
 	mPowerControllerVSI->setParameters(Pref, Qref);
 
@@ -103,11 +103,11 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVolta
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower,
 	ratioAbs, ratioPhase, resistance, inductance);
 
-	mSLog->info("Connection Transformer Parameters:");
-	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);
-	mSLog->info("Rated Apparent Power = {} [VA]", mTransformerRatedPower);
-	mSLog->info("Resistance={} [Ohm] Inductance={} [H]", mTransformerResistance, mTransformerInductance);
-    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
+	SPDLOG_LOGGER_INFO(mSLog, "Connection Transformer Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);
+	SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power = {} [VA]", mTransformerRatedPower);
+	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]", mTransformerResistance, mTransformerInductance);
+    SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
 
 	if (mWithConnectionTransformer)
 		// TODO: resistive losses neglected so far (mWithResistiveLosses=false)
@@ -117,11 +117,11 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVolta
 void EMT::Ph3::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll,
 	Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff) {
 
-	mSLog->info("Control Parameters:");
-	mSLog->info("PLL: K_p = {}, K_i = {}, Omega_Nom = {}", Kp_pll, Ki_pll, Omega_cutoff);
-	mSLog->info("Power Loop: K_p = {}, K_i = {}", Kp_powerCtrl, Ki_powerCtrl);
-	mSLog->info("Current Loop: K_p = {}, K_i = {}", Kp_currCtrl, Ki_currCtrl);
-	mSLog->info("Cut-Off Frequency = {}", Omega_cutoff);
+	SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "PLL: K_p = {}, K_i = {}, Omega_Nom = {}", Kp_pll, Ki_pll, Omega_cutoff);
+	SPDLOG_LOGGER_INFO(mSLog, "Power Loop: K_p = {}, K_i = {}", Kp_powerCtrl, Ki_powerCtrl);
+	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_p = {}, K_i = {}", Kp_currCtrl, Ki_currCtrl);
+	SPDLOG_LOGGER_INFO(mSLog, "Cut-Off Frequency = {}", Omega_cutoff);
 
 	// TODO: add and use Omega_nominal instead of Omega_cutoff
 	mPLL->setParameters(Kp_pll, Ki_pll, Omega_cutoff);
@@ -132,9 +132,9 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, R
 void EMT::Ph3::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc) {
 	Base::AvVoltageSourceInverterDQ::setFilterParameters(Lf, Cf, Rf, Rc);
 
-	mSLog->info("Filter Parameters:");
-	mSLog->info("Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
-	mSLog->info("Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
+	SPDLOG_LOGGER_INFO(mSLog, "Filter Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
+	SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
 
 	mSubResistorC->setParameters(CPS::Math::singlePhaseParameterToThreePhase(mRc));
 	mSubResistorF->setParameters(CPS::Math::singlePhaseParameterToThreePhase(mRf));
@@ -145,10 +145,10 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setInitialStateValues(Real pInit, Real qInit,
 	Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit) {
 
-	mSLog->info("Initial State Value Parameters:");
-	mSLog->info("PInit = {}, QInit = {}", pInit, qInit);
-	mSLog->info("Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
-	mSLog->info("Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
+	SPDLOG_LOGGER_INFO(mSLog, "Initial State Value Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "PInit = {}, QInit = {}", pInit, qInit);
+	SPDLOG_LOGGER_INFO(mSLog, "Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
+	SPDLOG_LOGGER_INFO(mSLog, "Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
 
 	mPowerControllerVSI->setInitialStateValues(pInit, qInit, phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
 }
@@ -234,7 +234,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 	matrixOutputInit(0,0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
 	mPLL->setInitialValues(**mVcq, matrixStateInit, matrixOutputInit);
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
 		"\nInterface voltage across: {:s}"
 		"\nInterface current: {:s}"
@@ -251,8 +251,8 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 		Logger::phasorToString(mVirtualNodes[1]->initialSingleVoltage()),
 		Logger::phasorToString(mVirtualNodes[2]->initialSingleVoltage()));
 	if (mWithConnectionTransformer)
-		mSLog->info("\nVirtual node 3 initial voltage: {:s}", Logger::phasorToString(mVirtualNodes[3]->initialSingleVoltage()));
-	mSLog->info("\n--- Initialization from powerflow finished ---");
+		SPDLOG_LOGGER_INFO(mSLog, "\nVirtual node 3 initial voltage: {:s}", Logger::phasorToString(mVirtualNodes[3]->initialSingleVoltage()));
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow finished ---");
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

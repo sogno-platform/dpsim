@@ -42,11 +42,11 @@ void EMT::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	MatrixComp admittance = impedance.inverse();
 	**mIntfCurrent = (admittance * vInitABC).real();
 
-	mSLog->info("\nInductance [H]: {:s}"
+	SPDLOG_LOGGER_INFO(mSLog, "\nInductance [H]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
 				Logger::matrixToString(**mInductance),
 				Logger::matrixCompToString(impedance));
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -66,7 +66,7 @@ void EMT::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 	// Update internal state
 	mEquivCurrent = mEquivCond * **mIntfVoltage + **mIntfCurrent;
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"
@@ -78,7 +78,7 @@ void EMT::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 	mSLog->flush();
 }
 
-void EMT::Ph3::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::Inductor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mEquivCond(0, 0));
@@ -127,7 +127,7 @@ void EMT::Ph3::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -mEquivCond(2, 2));
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\nEquivalent Conductance: {:s}",
 		Logger::matrixToString(mEquivCond));
 }
@@ -145,7 +145,7 @@ void EMT::Ph3::Inductor::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), -mEquivCurrent(1, 0));
 		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), -mEquivCurrent(2, 0));
 	}
-	mSLog->debug(
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\nEquivalent Current (mnaCompApplyRightSideVectorStamp): {:s}",
 		Logger::matrixToString(mEquivCurrent));
 	mSLog->flush();
@@ -186,7 +186,7 @@ void EMT::Ph3::Inductor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(1, 0) = (**mIntfVoltage)(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 		(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
-	mSLog->debug(
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\nUpdate Voltage: {:s}",
 		Logger::matrixToString(**mIntfVoltage)
 	);
@@ -194,7 +194,7 @@ void EMT::Ph3::Inductor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 
 void EMT::Ph3::Inductor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
-	mSLog->debug(
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\nUpdate Current: {:s}",
 		Logger::matrixToString(**mIntfCurrent)
 	);

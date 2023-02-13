@@ -59,7 +59,7 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real freq
 	if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
 		mRefVoltage->setReference(mSubComponents[0]->attributeTyped<MatrixComp>("V_ref"));
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 0 power: {:s}"

@@ -21,7 +21,7 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 
 	setTerminalNumber(2);
 
-	mSLog->info("Create {} {}", this->type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(1, 1);
 }
@@ -38,9 +38,9 @@ void EMT::Ph3::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEn
 
 	Base::Ph3::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower, ratioAbs, ratioPhase, resistance, inductance);
 
-	mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
-	mSLog->info("Rated Apparent Power  = {} [VA]", mRatedPower);
-    mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
+	SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power  = {} [VA]", mRatedPower);
+    SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
 
 	mParametersSet = true;
 }
@@ -58,9 +58,9 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		Real tmpVolt = mNominalVoltageEnd1;
 		mNominalVoltageEnd1 = mNominalVoltageEnd2;
 		mNominalVoltageEnd2 = tmpVolt;
-		mSLog->info("Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
-		mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
-		mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
+		SPDLOG_LOGGER_INFO(mSLog, "Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
+		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
+		SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
 	}
 
 	// Set initial voltage of virtual node in between
@@ -74,9 +74,9 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		Complex(mResistance(1, 0), omega * mInductance(1, 0)), Complex(mResistance(1, 1), omega * mInductance(1, 1)), Complex(mResistance(1, 2), omega * mInductance(1, 2)),
 		Complex(mResistance(2, 0), omega * mInductance(2, 0)), Complex(mResistance(2, 1), omega * mInductance(2, 1)), Complex(mResistance(2, 2), omega * mInductance(2, 2));
 
-	mSLog->info("Resistance (referred to higher voltage side) = {} [Ohm]", Logger::matrixToString(mResistance));
-	mSLog->info("Inductance (referred to higher voltage side) = {} [H]", Logger::matrixToString(mInductance));
-	mSLog->info("Reactance (referred to higher voltage side) = {} [Ohm]", Logger::matrixToString(omega * mInductance));
+	SPDLOG_LOGGER_INFO(mSLog, "Resistance (referred to higher voltage side) = {} [Ohm]", Logger::matrixToString(mResistance));
+	SPDLOG_LOGGER_INFO(mSLog, "Inductance (referred to higher voltage side) = {} [H]", Logger::matrixToString(mInductance));
+	SPDLOG_LOGGER_INFO(mSLog, "Reactance (referred to higher voltage side) = {} [Ohm]", Logger::matrixToString(omega * mInductance));
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
 	vInitABC(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
@@ -114,7 +114,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSnubResistor1 = std::make_shared<EMT::Ph3::Resistor>(**mName + "_snub_res1", mLogLevel);
 	mSubSnubResistor1->setParameters(mSnubberResistance1);
 	mSubSnubResistor1->connect({ node(0), EMT::SimNode::GND });
-	mSLog->info("Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]", node(0)->name(), Logger::matrixToString(mSnubberResistance1));
+	SPDLOG_LOGGER_INFO(mSLog, "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]", node(0)->name(), Logger::matrixToString(mSnubberResistance1));
 	addMNASubComponent(mSubSnubResistor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	// A snubber conductance is added on the lower voltage side
@@ -123,7 +123,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSnubResistor2 = std::make_shared<EMT::Ph3::Resistor>(**mName + "_snub_res2", mLogLevel);
 	mSubSnubResistor2->setParameters(mSnubberResistance2);
 	mSubSnubResistor2->connect({ node(1), EMT::SimNode::GND });
-	mSLog->info("Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]", node(1)->name(), Logger::matrixToString(mSnubberResistance2));
+	SPDLOG_LOGGER_INFO(mSLog, "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]", node(1)->name(), Logger::matrixToString(mSnubberResistance2));
 	addMNASubComponent(mSubSnubResistor2, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	// // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
@@ -132,7 +132,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// mSubSnubCapacitor1 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap1", mLogLevel);
 	// mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);
 	// mSubSnubCapacitor1->connect({ node(0), EMT::SimNode::GND });
-	// mSLog->info("Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::matrixToString(mSnubberCapacitance1));
+	// SPDLOG_LOGGER_INFO(mSLog, "Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::matrixToString(mSnubberCapacitance1));
 	// mSubComponents.push_back(mSubSnubCapacitor1);
 
 	// A snubber capacitance is added to lower voltage side
@@ -141,18 +141,18 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSnubCapacitor2 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap2", mLogLevel);
 	mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
 	mSubSnubCapacitor2->connect({ node(1), EMT::SimNode::GND });
-	mSLog->info("Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]", node(1)->name(), Logger::matrixToString(mSnubberCapacitance2));
+	SPDLOG_LOGGER_INFO(mSLog, "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]", node(1)->name(), Logger::matrixToString(mSnubberCapacitance2));
 	addMNASubComponent(mSubSnubCapacitor2, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	// Initialize electrical subcomponents
-	mSLog->info("Electrical subcomponents: ");
+	SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents) {
-		mSLog->info("- {}", subcomp->name());
+		SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
 		subcomp->initialize(mFrequencies);
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -168,14 +168,14 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void EMT::Ph3::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\nTerminal 0 connected to {:s} = sim node {:d}"
 		"\nTerminal 1 connected to {:s} = sim node {:d}",
 		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
 		mTerminals[1]->node()->name(), mTerminals[1]->node()->matrixNodeIndex());
 }
 
-void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	// Ideal transformer equations
 	if (terminalNotGrounded(0)) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), -1.);
@@ -202,33 +202,33 @@ void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) 
 			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 
 	if (terminalNotGrounded(0)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
 			mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
 			mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
 			mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));
 
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
 			mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
 			mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
 			mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
 	}
 	if (terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
 			matrixNodeIndex(1, 0), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
 			matrixNodeIndex(1, 1), mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
 			matrixNodeIndex(1, 2), mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));
 
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(1, 0));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), matrixNodeIndex(1, 1));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(1, 2));
 	}
 }

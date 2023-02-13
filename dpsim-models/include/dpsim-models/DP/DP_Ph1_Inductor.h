@@ -56,8 +56,8 @@ namespace Ph1 {
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
-		void mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) override;
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
+		void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx);
 		/// Stamps right side (source) vector
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 		void mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector) override;
@@ -78,7 +78,7 @@ namespace Ph1 {
 
 		// #### Tearing methods ####
 		void mnaTearInitialize(Real omega, Real timestep);
-		void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
+		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
 		void mnaTearApplyVoltageStamp(Matrix& voltageVector);
 		void mnaTearPostStep(Complex voltage, Complex current);
 

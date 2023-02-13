@@ -34,7 +34,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorTrStab::clone(String name) 
 void DP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
 	Real Ll, Real Lmd, Real Llfd, Real inertia, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
-	mSLog->info("\n--- Base Parameters ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Base Parameters ---"
 	"\nnomPower: {:f}"
 	"\nnomVolt: {:f}"
 	"\nnomFreq: {:f}", mNomPower, mNomVolt, mNomFreq);
@@ -58,7 +58,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower,
 	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
 	mKd= D*mNomPower/mNomOmega;
 
-	mSLog->info("\n--- Parameters ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Parameters ---"
 				"\nimpedance: {:f}"
 				"\ninductance: {:f}"
 				"\ninertia: {:f}"
@@ -68,7 +68,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower,
 void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
 	Real Rs, Real Lpd, Real inertiaJ, Real Kd) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
-	mSLog->info("\n--- Base Parameters ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Base Parameters ---"
 		"\nnomPower: {:f}"
 		"\nnomVolt: {:f}"
 		"\nnomFreq: {:f}", mNomPower, mNomVolt, mNomFreq);
@@ -83,7 +83,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Re
 	mXpd = mNomOmega * Lpd;
 	mLpd = Lpd;
 
-	mSLog->info("\n--- Parameters ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Parameters ---"
 			"\nimpedance: {:f}"
 			"\ninductance: {:f}"
 			"\ninertia: {:f}"
@@ -93,7 +93,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Re
 void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
 	Real Xpd, Real inertia, Real Rs, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
-	mSLog->info("\n--- Base Parameters ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Base Parameters ---"
 	"\nnomPower: {:f}"
 	"\nnomVolt: {:f}"
 	"\nnomFreq: {:f}", mNomPower, mNomVolt, mNomFreq);
@@ -113,7 +113,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
 	mKd= D*mNomPower/mNomOmega;
 
-	mSLog->info("\n--- Parameters ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Parameters ---"
 			"\nimpedance: {:f}"
 			"\ninductance: {:f}"
 			"\ninertia: {:f}"
@@ -123,7 +123,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 void DP::Ph1::SynchronGeneratorTrStab::setModelFlags(Bool convertWithOmegaMech) {
 	mConvertWithOmegaMech = convertWithOmegaMech;
 
-	mSLog->info("\n--- Model flags ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Model flags ---"
 			"\nconvertWithOmegaMech: {:s}", std::to_string(mConvertWithOmegaMech));
 }
 
@@ -186,7 +186,7 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-	mSLog->info("\n--- Initialize according to powerflow ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialize according to powerflow ---"
 				"\nTerminal 0 voltage: {:e}<{:e}"
 				"\nVoltage behind reactance: {:e}<{:e}"
 				"\ninitial electrical power: {:e}+j{:e}"
@@ -284,5 +284,5 @@ void DP::Ph1::SynchronGeneratorTrStab::setReferenceOmega(Attribute<Real>::Ptr re
 	mRefDelta->setReference(refDeltaPtr);
 	mUseOmegaRef=true;
 
-	mSLog->info("Use of reference omega.");
+	SPDLOG_LOGGER_INFO(mSLog, "Use of reference omega.");
 }

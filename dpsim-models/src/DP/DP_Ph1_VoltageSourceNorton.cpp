@@ -43,7 +43,7 @@ void DP::Ph1::VoltageSourceNorton::mnaCompInitialize(Real omega, Real timeStep, 
 	(**mIntfVoltage)(0, 0) = **mVoltageRef;
 }
 
-void DP::Ph1::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	// Apply matrix stamp for equivalent resistance
 	if (terminalNotGrounded(0))
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), Complex(mConductance, 0));
@@ -55,15 +55,15 @@ void DP::Ph1::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(Matrix& systemM
 	}
 
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(mConductance, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(mConductance, 0)),
 			matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(mConductance, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(mConductance, 0)),
 			matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-mConductance, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-mConductance, 0)),
 			matrixNodeIndex(0), matrixNodeIndex(1));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-mConductance, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-mConductance, 0)),
 			matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }

@@ -249,7 +249,7 @@ namespace Ph3 {
 
 		// #### MNA section ####
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 		/// Stamps right side (source) vector
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		/// MNA pre step operations

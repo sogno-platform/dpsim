@@ -29,7 +29,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 	if (!mInitialized)
 		initialize();
 
-	mLog->info("Opening interfaces.");
+	SPDLOG_LOGGER_INFO(mLog, "Opening interfaces.");
 
 	for (auto intf : mInterfaces)
 		intf->open();
@@ -37,7 +37,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 	sync();
 
 	auto now_time = std::chrono::system_clock::to_time_t(startAt);
-	mLog->info("Starting simulation at {} (delta_T = {} seconds)",
+	SPDLOG_LOGGER_INFO(mLog, "Starting simulation at {} (delta_T = {} seconds)",
 			  std::put_time(std::localtime(&now_time), "%F %T"),
 			  std::chrono::duration_cast<std::chrono::seconds>(startAt - Timer::StartClock::now()).count());
 
@@ -51,10 +51,10 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 		step();
 
 		if (mTimer.ticks() == 1)
-			mLog->info("Simulation started.");
+			SPDLOG_LOGGER_INFO(mLog, "Simulation started.");
 	} while (mTime < **mFinalTime);
 
-	mLog->info("Simulation finished.");
+	SPDLOG_LOGGER_INFO(mLog, "Simulation finished.");
 
 	mScheduler->stop();
 

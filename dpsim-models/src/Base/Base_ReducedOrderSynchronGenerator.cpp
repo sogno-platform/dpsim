@@ -97,11 +97,11 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mTd0_t = Td0_t;
 	mH = H;
 
-	this->mSLog->info("Set base parameters: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				mNomPower, mNomVolt, mNomFreq);
 
-	this->mSLog->info("Set operational parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set operational parameters in per unit: \n"
 			"inertia: {:e}\n"
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nTd0_t: {:e}\n",
@@ -125,11 +125,11 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mTq0_t = Tq0_t;
 	mH = H;
 
-	this->mSLog->info("Set base parameters: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				mNomPower, mNomVolt, mNomFreq);
 
-	this->mSLog->info("Set operational parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set operational parameters in per unit: \n"
 			"inertia: {:e}\n"
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\n"
@@ -162,11 +162,11 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mTaa = Taa;
 	mH = H;
 
-	this->mSLog->info("Set base parameters: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				mNomPower, mNomVolt, mNomFreq);
 
-	this->mSLog->info("Set operational parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set operational parameters in per unit: \n"
 			"inertia: {:e}\n"
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\n"
@@ -185,7 +185,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::scaleInertiaConstant(Real scalingFactor) {
 	mH = mH * scalingFactor;
-	this->mSLog->info("Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
+	SPDLOG_LOGGER_INFO(this->mSLog, "Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
 }
 
 template <typename VarType>
@@ -310,7 +310,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	// initialize theta and calculate transform matrix
 	**mThetaMech = **mDelta - PI / 2.;
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(this->mSLog,
 		"\n--- Initialization from power flow  ---"
 		"\nInitial Vd (per unit): {:f}"
 		"\nInitial Vq (per unit): {:f}"
@@ -334,7 +334,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
         **mDelta,
         **mDelta * 180 / PI
 	);
-	mSLog->flush();
+	this->mSLog->flush();
 }
 
 template <>
@@ -384,7 +384,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	// initialize theta and calculate transform matrix
 	**mThetaMech = **mDelta - PI / 2.;
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(this->mSLog,
 		"\n--- Initialization from power flow  ---"
 		"\nInitial Vd (per unit): {:f}"
 		"\nInitial Vq (per unit): {:f}"
@@ -408,7 +408,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
         **mDelta,
 		**mDelta * 180 / PI
 	);
-	mSLog->flush();
+	this->mSLog->flush();
 }
 
 template <typename VarType>

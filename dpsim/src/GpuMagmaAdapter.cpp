@@ -35,20 +35,20 @@ namespace DPsim
 
         cusolverSpHandle_t mCusolverhandle;
         if (cusolverSpCreate(&mCusolverhandle) != CUSOLVER_STATUS_SUCCESS) {
-            //mSLog->error("cusolverSpCreate returend an error");
+            //SPDLOG_LOGGER_ERROR(mSLog, "cusolverSpCreate returend an error");
             return;
         }
         if(cusparseCreateMatDescr(&descr_M) != CUSPARSE_STATUS_SUCCESS) {
-            //mSLog->error("cusolver returend an error");
+            //SPDLOG_LOGGER_ERROR(mSLog, "cusolver returend an error");
             return;
         }
 
         if(cusparseSetMatIndexBase(descr_M, CUSPARSE_INDEX_BASE_ZERO) != CUSPARSE_STATUS_SUCCESS) {
-            //mSLog->error("cusolver returend an error");
+            //SPDLOG_LOGGER_ERROR(mSLog, "cusolver returend an error");
             return;
         }
         if(cusparseSetMatType(descr_M, CUSPARSE_MATRIX_TYPE_GENERAL) != CUSPARSE_STATUS_SUCCESS) {
-            //mSLog->error("cusolver returend an error");
+            //SPDLOG_LOGGER_ERROR(mSLog, "cusolver returend an error");
             return;
         }
 
@@ -58,7 +58,7 @@ namespace DPsim
             hMat.outerIndexPtr(),
             hMat.innerIndexPtr(),
             p, &p_nnz) != CUSOLVER_STATUS_SUCCESS) {
-            //mSLog->error("cusolverSpDcsrzfdHost returend an error");
+            //SPDLOG_LOGGER_ERROR(mSLog, "cusolverSpDcsrzfdHost returend an error");
             return;
         }
 

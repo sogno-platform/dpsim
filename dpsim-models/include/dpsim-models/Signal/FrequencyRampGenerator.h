@@ -48,7 +48,7 @@ namespace Signal {
     public:
         FrequencyRampGenerator(String name, Logger::Level logLevel = Logger::Level::off)
             : SignalGenerator(name, logLevel) {
-				mSLog->info("Create {} {}", type(), name);
+				SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
 			}
         /// set frequency ramp specific parameters
         void setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool smoothRamp = true);

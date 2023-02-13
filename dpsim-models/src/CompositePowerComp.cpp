@@ -53,7 +53,7 @@ void CompositePowerComp<VarType>::mnaCompInitialize(Real omega, Real timeStep, A
 }
 
 template <typename VarType>
-void CompositePowerComp<VarType>::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void CompositePowerComp<VarType>::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	for (auto subComp : mSubcomponentsMNA) {
 		subComp->mnaApplySystemMatrixStamp(systemMatrix);
 	}

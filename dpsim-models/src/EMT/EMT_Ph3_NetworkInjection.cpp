@@ -20,14 +20,14 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 
-	mSLog->info("Create {} {}", this->type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 
 	// Create electrical sub components
 	mSubVoltageSource = std::make_shared<EMT::Ph3::VoltageSource>(**mName + "_vs", mLogLevel);
 	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-	mSLog->info("Electrical subcomponents: ");
+	SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)
-		mSLog->info("- {}", subcomp->name());
+		SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
 
 	mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
 	mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
@@ -44,7 +44,7 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real srcFr
 
 	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
-	mSLog->info("\nVoltage Ref={:s} [V]"
+	SPDLOG_LOGGER_INFO(mSLog, "\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
 				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(srcFreq));
@@ -55,7 +55,7 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real freqS
 
 	mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart, duration, smoothRamp);
 
-	mSLog->info("\nVoltage Ref={:s} [V]"
+	SPDLOG_LOGGER_INFO(mSLog, "\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
 				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(freqStart));
@@ -66,7 +66,7 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real modul
 
 	mSubVoltageSource->setParameters(voltageRef, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 
-	mSLog->info("\nVoltage Ref={:s} [V]"
+	SPDLOG_LOGGER_INFO(mSLog, "\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",
 				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(baseFrequency));
@@ -85,7 +85,7 @@ void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency)
 
 // #### MNA functions ####
 void EMT::Ph3::NetworkInjection::mnaParentApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSLog->debug("Right Side Vector: {:s}",
+	SPDLOG_LOGGER_DEBUG(mSLog, "Right Side Vector: {:s}",
 				Logger::matrixToString(rightVector));
 }
 

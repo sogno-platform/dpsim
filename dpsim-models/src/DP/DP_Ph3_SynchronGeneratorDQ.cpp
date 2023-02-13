@@ -75,7 +75,7 @@ void DP::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
 	**mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 }
 
-void DP::Ph3::SynchronGeneratorDQ::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::SynchronGeneratorDQ::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (!mCompensationOn)
 		return;
 
@@ -85,9 +85,9 @@ void DP::Ph3::SynchronGeneratorDQ::mnaCompApplySystemMatrixStamp(Matrix& systemM
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0], Complex(conductance, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0)[1], matrixNodeIndices(0)[1], Complex(conductance, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0)[2], matrixNodeIndices(0)[2], Complex(conductance, 0));
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[1], matrixNodeIndices(0)[1]);
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[2], matrixNodeIndices(0)[2]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[1], matrixNodeIndices(0)[1]);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[2], matrixNodeIndices(0)[2]);
 	}
 }
 

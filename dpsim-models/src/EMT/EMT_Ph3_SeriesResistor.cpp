@@ -37,7 +37,7 @@ void EMT::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	**mIntfCurrent = **mIntfVoltage / **mResistance;
 
-	mSLog->info("\n--- Initialization from powerflow ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow ---"
 		"\nVoltage across amplitude and phase: \n{}"
 		"\nCurrent amplitude and phase: \n{}"
 		"\nTerminal 0 voltage amplitude and phase: \n{}"
@@ -54,7 +54,7 @@ void EMT::Ph3::SeriesResistor::mnaCompInitialize(Real omega, Real timeStep, Attr
 	**mRightVector = Matrix::Zero(0, 0);
 }
 
-void EMT::Ph3::SeriesResistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::SeriesResistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	Real conductance = 1. / **mResistance;
 
 	// Set diagonal entries
@@ -69,12 +69,12 @@ void EMT::Ph3::SeriesResistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatri
 	}
 
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(1,0), matrixNodeIndex(1,0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(1,0), matrixNodeIndex(1,0));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndex(0,0), matrixNodeIndex(1,0));
-		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndex(1,0), matrixNodeIndex(0,0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndex(0,0), matrixNodeIndex(1,0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndex(1,0), matrixNodeIndex(0,0));
 	}
 }
 

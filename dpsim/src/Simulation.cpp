@@ -167,7 +167,7 @@ void Simulation::createMNASolver() {
 }
 
 void Simulation::sync() const {
-	mLog->info("Start synchronization with remotes on interfaces");
+	SPDLOG_LOGGER_INFO(mLog, "Start synchronization with remotes on interfaces");
 
 	for (auto intf : mInterfaces) {
 		intf->syncExports();
@@ -175,7 +175,7 @@ void Simulation::sync() const {
 		intf->syncExports();
 	}
 
-	mLog->info("Synchronized simulation start with remotes");
+	SPDLOG_LOGGER_INFO(mLog, "Synchronized simulation start with remotes");
 }
 
 void Simulation::prepSchedule() {
@@ -204,10 +204,10 @@ void Simulation::prepSchedule() {
 }
 
 void Simulation::schedule() {
-	mLog->info("Scheduling tasks.");
+	SPDLOG_LOGGER_INFO(mLog, "Scheduling tasks.");
 	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
-	mLog->info("Scheduling done.");
+	SPDLOG_LOGGER_INFO(mLog, "Scheduling done.");
 }
 
 #ifdef WITH_GRAPHVIZ
@@ -310,7 +310,7 @@ Graph::Graph Simulation::dependencyGraph() {
 			if (avgTimeWorst > Scheduler::TaskTime(0)) {
 				auto grad = (float) avgTimes[task].count() / avgTimeWorst.count();
 				n->set("fillcolor", CPS::Utils::Rgb::gradient(grad).hex());
-				mLog->info("{} {}", task->toString(), CPS::Utils::Rgb::gradient(grad).hex());
+				SPDLOG_LOGGER_INFO(mLog, "{} {}", task->toString(), CPS::Utils::Rgb::gradient(grad).hex());
 			}
 		}
 		else {
@@ -330,20 +330,20 @@ Graph::Graph Simulation::dependencyGraph() {
 #endif
 
 void Simulation::start() {
-	mLog->info("Initialize simulation: {}", **mName);
+	SPDLOG_LOGGER_INFO(mLog, "Initialize simulation: {}", **mName);
 	if (!mInitialized)
 		initialize();
 
-	mLog->info("Opening interfaces.");
+	SPDLOG_LOGGER_INFO(mLog, "Opening interfaces.");
 
 	for (auto intf : mInterfaces)
 		intf->open();
 
 	sync();
 
-	mLog->info("Start simulation: {}", **mName);
-	mLog->info("Time step: {:e}", **mTimeStep);
-	mLog->info("Final time: {:e}", **mFinalTime);
+	SPDLOG_LOGGER_INFO(mLog, "Start simulation: {}", **mName);
+	SPDLOG_LOGGER_INFO(mLog, "Time step: {:e}", **mTimeStep);
+	SPDLOG_LOGGER_INFO(mLog, "Final time: {:e}", **mFinalTime);
 
 	mSimulationStartTimePoint = std::chrono::steady_clock::now();
 }
@@ -352,7 +352,7 @@ void Simulation::stop() {
 
 	mSimulationEndTimePoint = std::chrono::steady_clock::now();
 	mSimulationCalculationTime = mSimulationEndTimePoint-mSimulationStartTimePoint;
-	mLog->info("Simulation calculation time: {:.6f}", mSimulationCalculationTime.count());
+	SPDLOG_LOGGER_INFO(mLog, "Simulation calculation time: {:.6f}", mSimulationCalculationTime.count());
 
 	mScheduler->stop();
 
@@ -362,7 +362,7 @@ void Simulation::stop() {
 	for (auto lg : mLoggers)
 		lg->close();
 
-	mLog->info("Simulation finished.");
+	SPDLOG_LOGGER_INFO(mLog, "Simulation finished.");
 	mLog->flush();
 }
 
@@ -411,7 +411,7 @@ void Simulation::logStepTimes(String logName) {
 		stepTimeSum += meas;
 		stepTimeLog->info("{:f}", meas);
 	}
-	mLog->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
+	SPDLOG_LOGGER_INFO(mLog, "Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
 }
 
 CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const String &attr) {
@@ -425,11 +425,11 @@ CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const 
 			CPS::AttributeBase::Ptr attrPtr = idObj->attribute(attr);
 			return attrPtr;
 		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute with name {} not found on component {}", attr, comp);
+			SPDLOG_LOGGER_ERROR(mLog, "Attribute with name {} not found on component {}", attr, comp);
 			throw InvalidAttributeException();
 		}
 	} else {
-		mLog->error("Component or node with name {} not found", comp);
+		SPDLOG_LOGGER_ERROR(mLog, "Component or node with name {} not found", comp);
 		throw InvalidArgumentException();
 	}
 }

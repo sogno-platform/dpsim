@@ -38,7 +38,7 @@ void EMT::Ph1::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attri
 	(**mIntfVoltage)(0,0) = Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef));
 }
 
-void EMT::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), -1);
 		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), -1);
@@ -49,12 +49,12 @@ void EMT::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix
 	}
 
 	if (terminalNotGrounded(0)) {
-		mSLog->info("Add {:f} to system at ({:d},{:d})", -1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
-		mSLog->info("Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
 	}
 	if (terminalNotGrounded(1)) {
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex());
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex());
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1));
 	}
 }
 

@@ -16,7 +16,7 @@ SP::Ph1::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
 
 	mPhaseType = PhaseType::Single;
 	setTerminalNumber(1);
-	
+
 	// model variables
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -32,8 +32,8 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::initializeResistanceMatrix() {
 	mResistanceMatrixDq = Matrix::Zero(2,2);
 	mResistanceMatrixDq <<	0.0,	mA,
 					  		mB,		0.0;
-	
-	// initialize conductance matrix 
+
+	// initialize conductance matrix
 	mConductanceMatrix = Matrix::Zero(2,2);
 }
 
@@ -43,7 +43,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
-void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega, 
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 		Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
 	Base::ReducedOrderSynchronGenerator<Complex>::mnaCompInitialize(omega, timeStep, leftVector);
@@ -61,19 +61,19 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0)));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex()));
 	}
-	
-	mSLog->info("List of index pairs of varying matrix entries: ");
+
+	SPDLOG_LOGGER_INFO(mSLog, "List of index pairs of varying matrix entries: ");
 	for (auto indexPair : mVariableSystemMatrixEntries)
-		mSLog->info("({}, {})", indexPair.first, indexPair.second);
+		SPDLOG_LOGGER_INFO(mSLog, "({}, {})", indexPair.first, indexPair.second);
 }
 
-void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
-		
+void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
+
 	if (mModelAsCurrentSource) {
 		// Stamp conductance matrix
 		// set buttom right block
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrix);
-	} 
+	}
 	else {
 		// Stamp voltage source
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1, 0));
@@ -96,7 +96,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Ma
 void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (mModelAsCurrentSource) {
 		// compute equivalent northon circuit in abc reference frame
-		mIvbr = Complex(mConductanceMatrix(0,0) * mEvbr.real() + mConductanceMatrix(0,1) * mEvbr.imag(), 
+		mIvbr = Complex(mConductanceMatrix(0,0) * mEvbr.real() + mConductanceMatrix(0,1) * mEvbr.imag(),
 					    mConductanceMatrix(1,0) * mEvbr.real() + mConductanceMatrix(1,1) * mEvbr.imag());
 
 		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), mIvbr);
@@ -117,7 +117,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompPostStep(const Matrix& le
 
 	// update armature current
 	if (mModelAsCurrentSource) {
-		(**mIntfCurrent)(0, 0) = mIvbr - Complex(mConductanceMatrix(0,0) * (**mIntfVoltage)(0, 0).real() + mConductanceMatrix(0,1) * (**mIntfVoltage)(0, 0).imag(), 
+		(**mIntfCurrent)(0, 0) = mIvbr - Complex(mConductanceMatrix(0,0) * (**mIntfVoltage)(0, 0).real() + mConductanceMatrix(0,1) * (**mIntfVoltage)(0, 0).imag(),
 					    						 mConductanceMatrix(1,0) * (**mIntfVoltage)(0, 0).real() + mConductanceMatrix(1,1) * (**mIntfVoltage)(0, 0).imag());
 	} else {
 		(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
@@ -133,7 +133,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompPostStep(const Matrix& le
 Matrix SP::Ph1::ReducedOrderSynchronGeneratorVBR::get_DqToComplexATransformMatrix() const {
 	Matrix dqToComplexA(2, 2);
 	dqToComplexA <<
-		cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime), 
+		cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime),
 		sin(**mThetaMech - mBase_OmMech * mSimTime),	cos(**mThetaMech - mBase_OmMech * mSimTime);
 
 	return dqToComplexA;

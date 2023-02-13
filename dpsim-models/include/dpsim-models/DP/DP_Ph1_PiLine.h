@@ -69,7 +69,7 @@ namespace Ph1 {
 
 		MNAInterface::List mnaTearGroundComponents();
 		void mnaTearInitialize(Real omega, Real timeStep);
-		void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
+		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
 		void mnaTearApplyVoltageStamp(Matrix& voltageVector);
 		void mnaTearPostStep(Complex voltage, Complex current);
 

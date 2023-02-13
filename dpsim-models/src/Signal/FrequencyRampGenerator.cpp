@@ -26,8 +26,8 @@ void Signal::FrequencyRampGenerator::setParameters(Complex initialPhasor, Real f
     attributeTyped<Complex>("sigOut")->set(initialPhasor);
 	attributeTyped<Real>("freq")->set(freqStart);
 
-	mSLog->info("Parameters:");
-	mSLog->info("\nInitial Phasor={}"
+	SPDLOG_LOGGER_INFO(mSLog, "Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "\nInitial Phasor={}"
 				"\nStart Frequency={} [Hz]"
 				"\nRoCoF={} [Hz/s]"
 				"\nStart time={} [s]"

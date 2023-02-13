@@ -103,61 +103,91 @@ Real Math::realFromVectorElement(const Matrix& mat, Matrix::Index row) {
 	return mat(row, 0);
 }
 
-void Math::setMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq, Int freqIdx) {
+void Math::setMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq, Int freqIdx) {
 	// Assume square matrix
 	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
 	Eigen::Index complexOffset = harmonicOffset / 2;
 	Eigen::Index harmRow = row + harmonicOffset * freqIdx;
 	Eigen::Index harmCol = column + harmonicOffset * freqIdx;
 
-	mat(harmRow, harmCol) = value.real();
-	mat(harmRow + complexOffset, harmCol + complexOffset) = value.real();
-	mat(harmRow, harmCol + complexOffset) = - value.imag();
-	mat(harmRow + complexOffset, harmCol) = value.imag();
+	mat.coeffRef(harmRow, harmCol) = value.real();
+	mat.coeffRef(harmRow + complexOffset, harmCol + complexOffset) = value.real();
+	mat.coeffRef(harmRow, harmCol + complexOffset) = - value.imag();
+	mat.coeffRef(harmRow + complexOffset, harmCol) = value.imag();
 }
 
-void Math::addToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq, Int freqIdx) {
+void Math::addToMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq, Int freqIdx) {
 	// Assume square matrix
 	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
 	Eigen::Index complexOffset = harmonicOffset / 2;
 	Eigen::Index harmRow = row + harmonicOffset * freqIdx;
 	Eigen::Index harmCol = column + harmonicOffset * freqIdx;
 
-	mat(harmRow, harmCol) = mat(harmRow, harmCol) + value.real();
-	mat(harmRow + complexOffset, harmCol + complexOffset) = mat(harmRow + complexOffset, harmCol + complexOffset) + value.real();
-	mat(harmRow, harmCol + complexOffset) = mat(harmRow, harmCol + complexOffset) - value.imag();
-	mat(harmRow + complexOffset, harmCol) = mat(harmRow + complexOffset, harmCol) + value.imag();
+	mat.coeffRef(harmRow, harmCol) += value.real();
+	mat.coeffRef(harmRow + complexOffset, harmCol + complexOffset) += value.real();
+	mat.coeffRef(harmRow, harmCol + complexOffset) -= value.imag();
+	mat.coeffRef(harmRow + complexOffset, harmCol) += value.imag();
 }
 
-void Math::addToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Matrix value, Int maxFreq, Int freqIdx) {
+void Math::addToMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Matrix value, Int maxFreq, Int freqIdx) {
 	// Assume square matrix
 	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
 	Eigen::Index complexOffset = harmonicOffset / 2;
 	Eigen::Index harmRow = row + harmonicOffset * freqIdx;
 	Eigen::Index harmCol = column + harmonicOffset * freqIdx;
 
-	mat(harmRow, harmCol) = mat(harmRow, harmCol) + value(0,0);
-	mat(harmRow + complexOffset, harmCol + complexOffset) = mat(harmRow + complexOffset, harmCol + complexOffset) + value(1,1);
-	mat(harmRow, harmCol + complexOffset) = mat(harmRow, harmCol + complexOffset) + value(0,1);
-	mat(harmRow + complexOffset, harmCol) = mat(harmRow + complexOffset, harmCol) + value(1,0);
+	mat.coeffRef(harmRow, harmCol) += value(0,0);
+	mat.coeffRef(harmRow + complexOffset, harmCol + complexOffset) += value(1,1);
+	mat.coeffRef(harmRow, harmCol + complexOffset) += value(0,1);
+	mat.coeffRef(harmRow + complexOffset, harmCol) += value(1,0);
 }
 
-void Math::setMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Real value) {
-	mat(row, column) =  value;
+void Math::setMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Real value) {
+	mat.coeffRef(row, column) =  value;
 }
 
-void Math::addToMatrixElement(Matrix& mat, std::vector<UInt> rows, std::vector<UInt> columns, Complex value) {
+void Math::addToMatrixElement(SparseMatrixRow& mat, std::vector<UInt> rows, std::vector<UInt> columns, Complex value) {
 	for (UInt phase = 0; phase < rows.size(); phase++)
 		addToMatrixElement(mat, rows[phase], columns[phase], value);
 }
 
-void Math::addToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Real value) {
-	mat(row, column) = mat(row, column) + value;
+void Math::addToMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Real value) {
+	mat.coeffRef(row, column) = mat.coeff(row, column) + value;
 }
 
-void Math::addToMatrixElement(Matrix& mat, std::vector<UInt> rows, std::vector<UInt> columns, Real value) {
+void Math::addToMatrixElement(SparseMatrixRow& mat, std::vector<UInt> rows, std::vector<UInt> columns, Real value) {
 	for (UInt phase = 0; phase < rows.size(); phase++)
 		addToMatrixElement(mat, rows[phase], columns[phase], value);
+}
+
+void Math::invertMatrix(const Matrix& mat, Matrix& matInv) {
+	const Int n = Eigen::internal::convert_index<Int>(mat.cols());
+	if(n == 2)
+	{
+		const Real determinant = mat(0, 0)*mat(1, 1) - mat(0, 1)*mat(1, 0);
+		matInv(0, 0) = mat(1, 1)/determinant;
+		matInv(0, 1) = -mat(0, 1)/determinant;
+		matInv(1, 0) = -mat(1, 0)/determinant;
+		matInv(1, 1) = mat(0, 0)/determinant;
+	}
+	else if(n == 3)
+	{
+		const Real determinant = (mat(0, 0)*mat(1, 1)*mat(2, 2) + mat(0, 1)*mat(1, 2)*mat(2, 0) + mat(1, 0)*mat(2, 1)*mat(0, 2)) -
+									(mat(2, 0)*mat(1, 1)*mat(0, 2) + mat(1, 0)*mat(0, 1)*mat(2, 2) + mat(2, 1)*mat(1, 2)*mat(0, 0));
+		matInv(0, 0) = (mat(1, 1)*mat(2, 2) - mat(1, 2)*mat(2, 1))/determinant;
+		matInv(0, 1) = (mat(0, 2)*mat(2, 1) - mat(0, 1)*mat(2, 2))/determinant;
+		matInv(0, 2) = (mat(0, 1)*mat(1, 2) - mat(0, 2)*mat(1, 1))/determinant;
+		matInv(1, 0) = (mat(1, 2)*mat(2, 0) - mat(1, 0)*mat(2, 2))/determinant;
+		matInv(1, 1) = (mat(0, 0)*mat(2, 2) - mat(0, 2)*mat(2, 0))/determinant;
+		matInv(1, 2) = (mat(0, 2)*mat(1, 0) - mat(0, 0)*mat(1, 2))/determinant;
+		matInv(2, 0) = (mat(1, 0)*mat(2, 1) - mat(1, 1)*mat(2, 0))/determinant;
+		matInv(2, 1) = (mat(0, 1)*mat(2, 0) - mat(0, 0)*mat(2, 1))/determinant;
+		matInv(2, 2) = (mat(0, 0)*mat(1, 1) - mat(0, 1)*mat(1, 0))/determinant;
+	}
+	else
+	{
+		matInv = mat.inverse();
+	}
 }
 
 MatrixComp Math::singlePhaseVariableToThreePhase(Complex var_1ph) {

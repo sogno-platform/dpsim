@@ -40,7 +40,7 @@ void SP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(0, 0) * Complex(cos(2. / 3. * M_PI), sin(2. / 3. * M_PI));
 	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 
-	mSLog->info("--- Initialize according to power flow ---");
+	SPDLOG_LOGGER_INFO(mSLog, "--- Initialize according to power flow ---");
 /*
 	mLog.info() << "--- Initialize according to power flow ---" << std::endl
 		<< "in phase A: " << std::endl
@@ -67,7 +67,7 @@ void SP::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 */
 }
 
-void SP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mSusceptance(0, 0));
@@ -157,7 +157,7 @@ void SP::Ph3::Inductor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 
 
 // #### Tear Methods ####
-void SP::Ph3::Inductor::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
+void SP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) {
 	// TODO
 	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, 1. / mSusceptance(0, 0));
 	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, 1. / mSusceptance(1, 0));

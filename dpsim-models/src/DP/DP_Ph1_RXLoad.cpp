@@ -17,7 +17,7 @@ DP::Ph1::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
 	mNomVoltage(mAttributes->create<Real>("V_nom")) {
 	setTerminalNumber(1);
 
-	mSLog->info("Create {} {}", this->type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 }
@@ -83,7 +83,7 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
 	(**mIntfCurrent)(0, 0) = std::conj(Complex(**mActivePower, **mReactivePower) / (**mIntfVoltage)(0, 0));
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -104,8 +104,8 @@ void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real v
 	**mReactivePower = reactivePower;
 	**mNomVoltage = volt;
 
-	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
-	mSLog->info("Nominal Voltage={} [V]", **mNomVoltage);
+	SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 }
 
 void DP::Ph1::RXLoad::mnaCompUpdateVoltage(const Matrix& leftVector) {

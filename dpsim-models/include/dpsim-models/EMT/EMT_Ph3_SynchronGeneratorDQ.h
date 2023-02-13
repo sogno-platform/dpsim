@@ -87,7 +87,7 @@ namespace Ph3 {
 		///
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		///
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 
 		/// Retrieves calculated voltage from simulation for next step
 		virtual void mnaCompUpdateVoltage(const Matrix& leftVector);

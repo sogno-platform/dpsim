@@ -41,11 +41,11 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage = vInitABC.real();
 	**mIntfCurrent = (admittance * vInitABC).real();
 
-	mSLog->info("\nCapacitance [F]: {:s}"
+	SPDLOG_LOGGER_INFO(mSLog, "\nCapacitance [F]: {:s}"
 				"\nAdmittance [S]: {:s}",
 				Logger::matrixToString(**mCapacitance),
 				Logger::matrixCompToString(admittance));
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -65,7 +65,7 @@ void EMT::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute
 	mEquivCurrent = - **mIntfCurrent + - mEquivCond * **mIntfVoltage;
 }
 
-void EMT::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mEquivCond(0, 0));
@@ -114,7 +114,7 @@ void EMT::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -mEquivCond(2, 2));
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 			"\nEquivalent Conductance: {:s}",
 			Logger::matrixToString(mEquivCond));
 }
@@ -131,7 +131,7 @@ void EMT::Ph3::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) 
 		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), -mEquivCurrent(1, 0));
 		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), -mEquivCurrent(2, 0));
 	}
-	mSLog->debug(
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\nEquivalent Current: {:s}",
 		Logger::matrixToString(mEquivCurrent));
 }
@@ -175,7 +175,7 @@ void EMT::Ph3::Capacitor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 
 void EMT::Ph3::Capacitor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
-	mSLog->debug(
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\nCurrent: {:s}",
 		Logger::matrixToString(**mIntfCurrent)
 	);

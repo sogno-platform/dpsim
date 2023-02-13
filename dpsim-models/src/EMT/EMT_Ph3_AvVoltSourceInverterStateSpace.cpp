@@ -283,7 +283,7 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompInitialize(Real omega, Rea
 	**mIntfCurrent = Matrix::Zero(3, 1);
 	initializeStates(omega, timeStep, leftVector);
 }
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	// Apply matrix stamp for equivalent resistance
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mYc);

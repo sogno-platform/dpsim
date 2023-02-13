@@ -42,7 +42,7 @@ namespace Ph1 {
 		/// Initializes internal variables of the component
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 		/// Update interface voltage from MNA system results
 		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system results
@@ -51,8 +51,7 @@ namespace Ph1 {
 		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
 		/// Add MNA post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-		void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
+		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
 	};
 }
 }

@@ -52,11 +52,11 @@ int main(int argc, char *argv[]) {
 	systemPF.component<CPS::SP::Ph1::SynchronGenerator>("GEN1")->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
 
 	// define logging
-    auto loggerPF = DPsim::DataLogger::make(simNamePF);
-    for (auto node : systemPF.mNodes)
-    {
-        loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
-    }
+    // auto loggerPF = DPsim::DataLogger::make(simNamePF);
+    // for (auto node : systemPF.mNodes)
+    // {
+    //     loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
+    // }
 
 	// run powerflow
     Simulation simPF(simNamePF, Logger::Level::debug);
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 	simPF.setSolverType(Solver::Type::NRP);
 	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(true);
-    simPF.addLogger(loggerPF);
+    //simPF.addLogger(loggerPF);
     simPF.run();
 
 	// ----- DYNAMIC SIMULATION -----
@@ -85,25 +85,25 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Logging
-	auto logger = DataLogger::make(simName);
-	logger->logAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
-	logger->logAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
-	logger->logAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));
-	logger->logAttribute("v4", sys.node<SimNode>("BUS4")->attribute("v"));
-	logger->logAttribute("v5", sys.node<SimNode>("BUS5")->attribute("v"));
-	logger->logAttribute("v6", sys.node<SimNode>("BUS6")->attribute("v"));
-	logger->logAttribute("v7", sys.node<SimNode>("BUS7")->attribute("v"));
-	logger->logAttribute("v8", sys.node<SimNode>("BUS8")->attribute("v"));
-	logger->logAttribute("v9", sys.node<SimNode>("BUS9")->attribute("v"));
+	// auto logger = DataLogger::make(simName);
+	// logger->logAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
+	// logger->logAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
+	// logger->logAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));
+	// logger->logAttribute("v4", sys.node<SimNode>("BUS4")->attribute("v"));
+	// logger->logAttribute("v5", sys.node<SimNode>("BUS5")->attribute("v"));
+	// logger->logAttribute("v6", sys.node<SimNode>("BUS6")->attribute("v"));
+	// logger->logAttribute("v7", sys.node<SimNode>("BUS7")->attribute("v"));
+	// logger->logAttribute("v8", sys.node<SimNode>("BUS8")->attribute("v"));
+	// logger->logAttribute("v9", sys.node<SimNode>("BUS9")->attribute("v"));
 
 	// log generator's current
-	for (auto comp : sys.mComponents) {
-		if (std::dynamic_pointer_cast<CPS::EMT::Ph3::SynchronGeneratorVBR>(comp)){
-			logger->logAttribute(comp->name() + ".I", comp->attribute("i_intf"));
-			logger->logAttribute(comp->name() + ".omega", comp->attribute("w_r"));
-			logger->logAttribute(comp->name() + ".delta", comp->attribute("delta_r"));
-		}
-	}
+	// for (auto comp : sys.mComponents) {
+	// 	if (std::dynamic_pointer_cast<CPS::EMT::Ph3::SynchronGeneratorVBR>(comp)){
+	// 		logger->logAttribute(comp->name() + ".I", comp->attribute("i_intf"));
+	// 		logger->logAttribute(comp->name() + ".omega", comp->attribute("w_r"));
+	// 		logger->logAttribute(comp->name() + ".delta", comp->attribute("delta_r"));
+	// 	}
+	// }
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
 	sim.setFinalTime(finalTime);
 	sim.doSystemMatrixRecomputation(true);
 	sim.setDirectLinearSolverImplementation(implementation);
-	sim.addLogger(logger);
+	//sim.addLogger(logger);
 	sim.run();
 
 	return 0;

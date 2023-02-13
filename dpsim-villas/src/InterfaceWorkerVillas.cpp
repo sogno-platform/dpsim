@@ -32,10 +32,10 @@ InterfaceWorkerVillas::InterfaceWorkerVillas(const String &nodeConfig, UInt queu
 	{ }
 
 void InterfaceWorkerVillas::open() {
-	mLog->info("Opening InterfaceWorkerVillas...");
+	SPDLOG_LOGGER_INFO(mLog, "Opening InterfaceWorkerVillas...");
 
 	if (!InterfaceWorkerVillas::villasInitialized) {
-		mLog->info("Initializing Villas...");
+		SPDLOG_LOGGER_INFO(mLog, "Initializing Villas...");
 		initVillas();
 		InterfaceWorkerVillas::villasInitialized = true;
 	}
@@ -48,7 +48,7 @@ void InterfaceWorkerVillas::open() {
 
 	const json_t* nodeType = json_object_get(config, "type");
 	if (nodeType == nullptr) {
-		mLog->error("Error: Node config does not contain type-key!");
+		SPDLOG_LOGGER_ERROR(mLog, "Error: Node config does not contain type-key!");
 		std::exit(1);
 	}
 	String nodeTypeString = json_string_value(nodeType);
@@ -60,19 +60,19 @@ void InterfaceWorkerVillas::open() {
 	uuid_generate_random(fakeSuperNodeUUID);
 	ret = mNode->parse(config, fakeSuperNodeUUID);
 	if (ret < 0) {
-		mLog->error("Error: Node in InterfaceVillas failed to parse config. Parse returned code {}", ret);
+		SPDLOG_LOGGER_ERROR(mLog, "Error: Node in InterfaceVillas failed to parse config. Parse returned code {}", ret);
 		std::exit(1);
 	}
 	ret = mNode->check();
 	if (ret < 0) {
-		mLog->error("Error: Node in InterfaceVillas failed check. Check returned code {}", ret);
+		SPDLOG_LOGGER_ERROR(mLog, "Error: Node in InterfaceVillas failed check. Check returned code {}", ret);
 		std::exit(1);
 	}
 
-	mLog->info("Preparing VILLASNode instance...");
+	SPDLOG_LOGGER_INFO(mLog, "Preparing VILLASNode instance...");
 	setupNodeSignals();
 	prepareNode();
-	mLog->info("Node is ready to send / receive data!");
+	SPDLOG_LOGGER_INFO(mLog, "Node is ready to send / receive data!");
 	mOpened = true;
 
 	mSequence = 0;
@@ -89,13 +89,13 @@ void InterfaceWorkerVillas::open() {
 void InterfaceWorkerVillas::prepareNode() {
 	int ret = node::pool_init(&mSamplePool, mQueueLength, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLength));
 	if (ret < 0) {
-		mLog->error("Error: InterfaceVillas failed to init sample pool. pool_init returned code {}", ret);
+		SPDLOG_LOGGER_ERROR(mLog, "Error: InterfaceVillas failed to init sample pool. pool_init returned code {}", ret);
 		std::exit(1);
 	}
 
 	ret = mNode->prepare();
 	if (ret < 0) {
-		mLog->error("Error: Node in InterfaceVillas failed to prepare. Prepare returned code {}", ret);
+		SPDLOG_LOGGER_ERROR(mLog, "Error: Node in InterfaceVillas failed to prepare. Prepare returned code {}", ret);
 		std::exit(1);
 	}
 
@@ -103,7 +103,7 @@ void InterfaceWorkerVillas::prepareNode() {
 
 	ret = mNode->start();
 	if (ret < 0) {
-		mLog->error("Fatal error: failed to start node in InterfaceVillas. Start returned code {}", ret);
+		SPDLOG_LOGGER_ERROR(mLog, "Fatal error: failed to start node in InterfaceVillas. Start returned code {}", ret);
 		close();
 		std::exit(1);
 	}
@@ -138,16 +138,16 @@ void InterfaceWorkerVillas::setupNodeSignals() {
 }
 
 void InterfaceWorkerVillas::close() {
-	mLog->info("Closing InterfaceVillas...");
+	SPDLOG_LOGGER_INFO(mLog, "Closing InterfaceVillas...");
 	int ret = mNode->stop();
 	if (ret < 0) {
-		mLog->error("Error: failed to stop node in InterfaceVillas. Stop returned code {}", ret);
+		SPDLOG_LOGGER_ERROR(mLog, "Error: failed to stop node in InterfaceVillas. Stop returned code {}", ret);
 		std::exit(1);
 	}
 	mOpened = false;
 	ret = node::pool_destroy(&mSamplePool);
 	if (ret < 0) {
-		mLog->error("Error: failed to destroy SamplePool in InterfaceVillas. pool_destroy returned code {}", ret);
+		SPDLOG_LOGGER_ERROR(mLog, "Error: failed to destroy SamplePool in InterfaceVillas. pool_destroy returned code {}", ret);
 		std::exit(1);
 	}
 
@@ -176,7 +176,7 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 			ret = ::poll(pfds.data(), pfds.size(), 0);
 
 			if (ret < 0) {
-				mLog->error("Fatal error: failed to read sample from InterfaceVillas. Poll returned code {}", ret);
+				SPDLOG_LOGGER_ERROR(mLog, "Fatal error: failed to read sample from InterfaceVillas. Poll returned code {}", ret);
 				close();
 				std::exit(1);
 			}
@@ -201,7 +201,7 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 
 			ret = mNode->read(&sample, 1);
 			if (ret < 0) {
-				mLog->error("Fatal error: failed to read sample from InterfaceVillas. Read returned code {}", ret);
+				SPDLOG_LOGGER_ERROR(mLog, "Fatal error: failed to read sample from InterfaceVillas. Read returned code {}", ret);
 				close();
 				std::exit(1);
 			}
@@ -226,13 +226,13 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 					uint64_t result = 0;
 					ret = (int) ::read(pollFds[0], &result, 8);
 					if (ret < 0) {
-						mLog->warn("Could not reset poll file descriptor! Read returned {}", ret);
+						SPDLOG_LOGGER_WARN(mLog, "Could not reset poll file descriptor! Read returned {}", ret);
 					}
 					if (result > 1) {
 						result = result - 1;
 						ret = (int) ::write(pollFds[0], (void*) &result, 8);
 						if (ret < 0) {
-							mLog->warn("Could not decrement poll file descriptor! Write returned {}", ret);
+							SPDLOG_LOGGER_WARN(mLog, "Could not decrement poll file descriptor! Write returned {}", ret);
 						}
 					}
 				}
@@ -271,7 +271,7 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 	try {
 		sample = node::sample_alloc(&mSamplePool);
 		if (sample == nullptr) {
-			mLog->error("InterfaceVillas could not allocate a new sample! Not sending any data!");
+			SPDLOG_LOGGER_ERROR(mLog, "InterfaceVillas could not allocate a new sample! Not sending any data!");
 			return;
 		}
 
@@ -310,7 +310,7 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 				ret = mNode->write(&sample, 1);
 			} while (ret == 0);
 			if (ret < 0)
-				mLog->error("Failed to write samples to InterfaceVillas. Write returned code {}", ret);
+				SPDLOG_LOGGER_ERROR(mLog, "Failed to write samples to InterfaceVillas. Write returned code {}", ret);
 
 			sample_copy(mLastSample, sample);
 		}
@@ -330,7 +330,7 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 		sample_decref(sample);
 
 		if (ret < 0)
-			mLog->error("Failed to write samples to InterfaceVillas. Write returned code {}", ret);
+			SPDLOG_LOGGER_ERROR(mLog, "Failed to write samples to InterfaceVillas. Write returned code {}", ret);
 
 		/* Don't throw here, because we managed to send something */
 	}
@@ -346,13 +346,13 @@ void InterfaceWorkerVillas::initVillas() const {
 void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_info& type, UInt idx, Bool waitForOnWrite, const String& name, const String& unit) {
 	if (mOpened) {
 		if (mLog != nullptr) {
-			mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+			SPDLOG_LOGGER_WARN(mLog, "InterfaceVillas has already been opened! Configuration will remain unchanged.");
 		}
 		return;
 	}
 	if (attributeId != mExports.size()) {
 		if (mLog != nullptr) {
-			mLog->warn("The exports already configured do not match with the given attribute ID! Configuration will remain unchanged.");
+			SPDLOG_LOGGER_WARN(mLog, "The exports already configured do not match with the given attribute ID! Configuration will remain unchanged.");
 		}
 		return;
 	}
@@ -419,7 +419,7 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 		mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::BOOLEAN);
 	} else {
 		if (mLog != nullptr) {
-			mLog->warn("Unsupported attribute type! Interface configuration will remain unchanged!");
+			SPDLOG_LOGGER_WARN(mLog, "Unsupported attribute type! Interface configuration will remain unchanged!");
 		}
 	}
 }
@@ -427,13 +427,13 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 void InterfaceWorkerVillas::configureImport(UInt attributeId, const std::type_info& type, UInt idx) {
 	if (mOpened) {
 		if (mLog != nullptr) {
-			mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+			SPDLOG_LOGGER_WARN(mLog, "InterfaceVillas has already been opened! Configuration will remain unchanged.");
 		}
 		return;
 	}
 	if (attributeId != mImports.size()) {
 		if (mLog != nullptr) {
-			mLog->warn("The imports already configured do not match with the given attribute ID! Configuration will remain unchanged.");
+			SPDLOG_LOGGER_WARN(mLog, "The imports already configured do not match with the given attribute ID! Configuration will remain unchanged.");
 		}
 		return;
 	}
@@ -477,7 +477,7 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId, const std::type_in
 		mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::BOOLEAN);
 	} else {
 		if (mLog != nullptr) {
-			mLog->warn("Unsupported attribute type! Interface configuration will remain unchanged!");
+			SPDLOG_LOGGER_WARN(mLog, "Unsupported attribute type! Interface configuration will remain unchanged!");
 		}
 	}
 }

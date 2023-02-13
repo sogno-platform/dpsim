@@ -31,7 +31,7 @@ void EMT::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
 	(**mIntfCurrent)(0,0) = ((initialSingleVoltage(1) - initialSingleVoltage(0)) / impedance).real();
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:f}"
 		"\nCurrent: {:f}"
@@ -52,7 +52,7 @@ void EMT::Ph1::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 	mEquivCurrent = mEquivCond * (**mIntfVoltage)(0,0) + (**mIntfCurrent)(0,0);
 }
 
-void EMT::Ph1::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph1::Inductor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0))
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond);
 	if (terminalNotGrounded(1))

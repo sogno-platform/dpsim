@@ -132,7 +132,7 @@ namespace Ph1 {
 
 		MNAInterface::List mnaTearGroundComponents() override;
 		void mnaTearInitialize(Real omega, Real timeStep) override;
-		void mnaTearApplyMatrixStamp(Matrix& tearMatrix) override;
+		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) override;
 		void mnaTearApplyVoltageStamp(Matrix& voltageVector) override;
 		void mnaTearPostStep(Complex voltage, Complex current) override;
 	};

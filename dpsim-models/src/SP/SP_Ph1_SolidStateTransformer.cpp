@@ -15,7 +15,7 @@ SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, L
     mPref(mAttributes->create<Real>("P_ref", std::numeric_limits<double>::infinity())),
     mQ1ref(mAttributes->create<Real>("Q1_ref")),
     mQ2ref(mAttributes->create<Real>("Q2_ref")) {
-	mSLog->info("Create {} of type {}", **mName, this->type());
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", **mName, this->type());
 	mSLog->flush();
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -56,7 +56,7 @@ void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(Real freque
 	addMNASubComponent(mSubLoadSide1, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::NO_TASK, false);
 	addMNASubComponent(mSubLoadSide2, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::NO_TASK, false);
 
-    mSLog->info(
+    SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nTerminal 0 power flow: {:s} VA"
 		"\nTerminal 1 power flow: {:s} VA"
@@ -73,7 +73,7 @@ void SP::Ph1::SolidStateTransformer::calculatePerUnitParameters(Real baseApparen
     mQ2ref_perUnit = **mQ2ref / baseApparentPower;
     mSubLoadSide1->calculatePerUnitParameters(baseApparentPower, baseOmega);
     mSubLoadSide2->calculatePerUnitParameters(baseApparentPower, baseOmega);
-    mSLog->info(
+    SPDLOG_LOGGER_INFO(mSLog,
         "\n#### Calculate Per Unit Parameters for {}"
         "\nTerminal 0 power flow: {:s} p.u."
         "\nTerminal 1 power flow: {:s} p.u."
@@ -86,7 +86,7 @@ void SP::Ph1::SolidStateTransformer::calculatePerUnitParameters(Real baseApparen
 Complex SP::Ph1::SolidStateTransformer::getNodalInjection(CPS::TopologicalNode::Ptr node) {
     if (node->name() == mTerminals[0]->node()->name())
     {
-        mSLog->info(
+        SPDLOG_LOGGER_INFO(mSLog,
             "\n#### get nodal injection for primary side"
             "\nreturned {:s} p.u.",
             Logger::complexToString(Complex(mPref_perUnit, mQ1ref_perUnit)));
@@ -94,7 +94,7 @@ Complex SP::Ph1::SolidStateTransformer::getNodalInjection(CPS::TopologicalNode::
     }
     else if (node->name() == mTerminals[1]->node()->name())
     {
-        mSLog->info(
+        SPDLOG_LOGGER_INFO(mSLog,
             "\n#### get nodal injection for secondary side"
             "\nreturned {:s} p.u.",
             Logger::complexToString(Complex(mP2_perUnit, mQ2ref_perUnit)));

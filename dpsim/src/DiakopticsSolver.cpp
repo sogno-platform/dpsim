@@ -139,8 +139,8 @@ void DiakopticsSolver<VarType>::collectVirtualNodes(int net) {
 			}
 		}
 	}
-	mSLog->info("Subnet {} has {} real network nodes.", net, mSubnets[net].mRealNetNodeNum);
-	mSLog->info("Subnet {} has {} virtual nodes.", net, mSubnets[net].mVirtualNodeNum);
+	SPDLOG_LOGGER_INFO(mSLog, "Subnet {} has {} real network nodes.", net, mSubnets[net].mRealNetNodeNum);
+	SPDLOG_LOGGER_INFO(mSLog, "Subnet {} has {} virtual nodes.", net, mSubnets[net].mVirtualNodeNum);
 }
 
 template <typename VarType>
@@ -150,15 +150,15 @@ void DiakopticsSolver<VarType>::assignMatrixNodeIndices(int net) {
 		auto& node = mSubnets[net].nodes[idx];
 
 		node->setMatrixNodeIndex(0, matrixNodeIndexIdx);
-		mSLog->info("Assigned index {} to node {}", matrixNodeIndexIdx, node->name());
+		SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to node {}", matrixNodeIndexIdx, node->name());
 		++matrixNodeIndexIdx;
 
 		if (node->phaseType() == CPS::PhaseType::ABC) {
 			node->setMatrixNodeIndex(1, matrixNodeIndexIdx);
-			mSLog->info("Assigned index {} to node {} phase B", matrixNodeIndexIdx, node->name());
+			SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to node {} phase B", matrixNodeIndexIdx, node->name());
 			++matrixNodeIndexIdx;
 			node->setMatrixNodeIndex(2, matrixNodeIndexIdx);
-			mSLog->info("Assigned index {} to node {} phase C", matrixNodeIndexIdx, node->name());
+			SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to node {} phase C", matrixNodeIndexIdx, node->name());
 			++matrixNodeIndexIdx;
 		}
 	}
@@ -229,7 +229,7 @@ void DiakopticsSolver<VarType>::createMatrices() {
 template <>
 void DiakopticsSolver<Real>::createTearMatrices(UInt totalSize) {
 	mTearTopology = Matrix::Zero(totalSize, mTearComponents.size());
-	mTearImpedance = Matrix::Zero(mTearComponents.size(), mTearComponents.size());
+	mTearImpedance = CPS::SparseMatrixRow(mTearComponents.size(), mTearComponents.size());
 	mTearCurrents = Matrix::Zero(mTearComponents.size(), 1);
 	mTearVoltages = Matrix::Zero(mTearComponents.size(), 1);
 }
@@ -237,7 +237,7 @@ void DiakopticsSolver<Real>::createTearMatrices(UInt totalSize) {
 template <>
 void DiakopticsSolver<Complex>::createTearMatrices(UInt totalSize) {
 	mTearTopology = Matrix::Zero(totalSize, 2*mTearComponents.size());
-	mTearImpedance = Matrix::Zero(2*mTearComponents.size(), 2*mTearComponents.size());
+	mTearImpedance = CPS::SparseMatrixRow(2*mTearComponents.size(), 2*mTearComponents.size());
 	mTearCurrents = Matrix::Zero(2*mTearComponents.size(), 1);
 	mTearVoltages = Matrix::Zero(2*mTearComponents.size(), 1);
 }
@@ -272,30 +272,30 @@ void DiakopticsSolver<VarType>::initMatrices() {
 		// because it expects a concrete Matrix. It can't be changed to accept some common
 		// base class like DenseBase because that would make it a template function (as
 		// Eigen uses CRTP for polymorphism), which is impossible for virtual functions.
-		Matrix partSys = Matrix::Zero(net.sysSize, net.sysSize);
+		CPS::SparseMatrixRow partSys = CPS::SparseMatrixRow(net.sysSize, net.sysSize);
 		for (auto comp : net.components) {
 			comp->mnaApplySystemMatrixStamp(partSys);
 		}
 		auto block = mSystemMatrix.block(net.sysOff, net.sysOff, net.sysSize, net.sysSize);
 		block = partSys;
-		mSLog->info("Block: \n{}", block);
+		SPDLOG_LOGGER_INFO(mSLog, "Block: \n{}", block);
 		net.luFactorization = Eigen::PartialPivLU<Matrix>(partSys);
-		mSLog->info("Factorization: \n{}", net.luFactorization.matrixLU());
+		SPDLOG_LOGGER_INFO(mSLog, "Factorization: \n{}", net.luFactorization.matrixLU());
 	}
-	mSLog->info("Complete system matrix: \n{}", mSystemMatrix);
+	SPDLOG_LOGGER_INFO(mSLog, "Complete system matrix: \n{}", mSystemMatrix);
 
 	// initialize tear topology matrix and impedance matrix of removed network
 	for (UInt compIdx = 0; compIdx < mTearComponents.size(); ++compIdx) {
 		applyTearComponentStamp(compIdx);
 	}
-	mSLog->info("Topology matrix: \n{}", mTearTopology);
-	mSLog->info("Removed impedance matrix: \n{}", mTearImpedance);
+	SPDLOG_LOGGER_INFO(mSLog, "Topology matrix: \n{}", mTearTopology);
+	SPDLOG_LOGGER_INFO(mSLog, "Removed impedance matrix: \n{}", mTearImpedance);
 	// TODO this can be sped up as well by using the block diagonal form of Yinv
 	for (auto& net : mSubnets) {
 		mSystemInverse.block(net.sysOff, net.sysOff, net.sysSize, net.sysSize) = net.luFactorization.inverse();
 	}
 	mTotalTearImpedance = Eigen::PartialPivLU<Matrix>(mTearImpedance + mTearTopology.transpose() * mSystemInverse * mTearTopology);
-	mSLog->info("Total removed impedance matrix LU decomposition: \n{}", mTotalTearImpedance.matrixLU());
+	SPDLOG_LOGGER_INFO(mSLog, "Total removed impedance matrix LU decomposition: \n{}", mTotalTearImpedance.matrixLU());
 
 	// Compute subnet right side (source) vectors for debugging
 	for (auto& net : mSubnets) {
@@ -304,7 +304,7 @@ void DiakopticsSolver<VarType>::initMatrices() {
 		for (auto comp : net.components) {
 			comp->mnaApplyRightSideVectorStamp(rInit);
 		}
-		mSLog->info("Source block: \n{}", rInit);
+		SPDLOG_LOGGER_INFO(mSLog, "Source block: \n{}", rInit);
 	}
 }
 

@@ -20,7 +20,7 @@ SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::L
     mSetPointReactivePowerPerUnit(mAttributes->create<Real>("Q_set_pu")),
     mSetPointVoltagePerUnit(mAttributes->create<Real>("V_set_pu")) {
 
-    mSLog->info("Create {} of type {}", name, this->type());
+    SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", name, this->type());
     mSLog->flush();
 
     setTerminalNumber(1);
@@ -32,8 +32,8 @@ void SP::Ph1::SynchronGenerator::setParameters(Real ratedApparentPower, Real rat
     **mSetPointVoltage = setPointVoltage;
     mPowerflowBusType = powerflowBusType;
 
-	mSLog->info("Rated Apparent Power={} [VA] Rated Voltage={} [V]", ratedApparentPower, ratedVoltage);
-    mSLog->info("Active Power Set Point={} [W] Voltage Set Point={} [V]", **mSetPointActivePower, **mSetPointVoltage);
+	SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power={} [VA] Rated Voltage={} [V]", ratedApparentPower, ratedVoltage);
+    SPDLOG_LOGGER_INFO(mSLog, "Active Power Set Point={} [W] Voltage Set Point={} [V]", **mSetPointActivePower, **mSetPointVoltage);
 	mSLog->flush();
 }
 
@@ -43,14 +43,14 @@ void SP::Ph1::SynchronGenerator::setBaseVoltage(Real baseVoltage) {
 }
 
 void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
+	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
 	mBaseApparentPower = baseApparentPower;
-    mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, baseOmega);
+    SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, baseOmega);
 
 	**mSetPointActivePowerPerUnit = **mSetPointActivePower / mBaseApparentPower;
     **mSetPointReactivePowerPerUnit = **mSetPointReactivePower / mBaseApparentPower;
 	**mSetPointVoltagePerUnit = **mSetPointVoltage / **mBaseVoltage;
-	mSLog->info("Active Power Set Point={} [pu] Voltage Set Point={} [pu]", **mSetPointActivePowerPerUnit, **mSetPointVoltagePerUnit);
+	SPDLOG_LOGGER_INFO(mSLog, "Active Power Set Point={} [pu] Voltage Set Point={} [pu]", **mSetPointActivePowerPerUnit, **mSetPointVoltagePerUnit);
 	mSLog->flush();
 }
 

@@ -41,7 +41,7 @@ namespace CPS {
 				///
 				void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 				/// Stamps system matrix
-				void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+				void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 				///
 				void mnaCompUpdateVoltage(const Matrix& leftVector);
 				///
@@ -51,7 +51,7 @@ namespace CPS {
 				/// Add MNA post step dependencies
 				void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 				// #### MNA Tear Section ####
-				void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
+				void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
 
 			};
 		}

@@ -109,8 +109,8 @@ namespace Ph1 {
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors);
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
-		void mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx);
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
+		void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx);
 		/// Stamps right side (source) vector
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		void mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector);
