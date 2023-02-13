@@ -45,7 +45,6 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
 	Matrix resistanceMatrix =  mDq0ToAbc * mResistanceMatrixDq0 * mAbcToDq0;
 	resistanceMatrix = resistanceMatrix * mBase_Z;
 	Math::invertMatrix(resistanceMatrix, mConductanceMatrix);
-	//mConductanceMatrix = resistanceMatrix.inverse();
 }
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,

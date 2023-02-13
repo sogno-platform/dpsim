@@ -59,8 +59,6 @@ void EMT::Ph3::Switch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Ma
 Bool EMT::Ph3::Switch::mnaIsClosed() { return **mSwitchClosed; }
 
 void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
-	//Matrix conductance = (**mSwitchClosed) ? (**mClosedResistance).inverse() : (**mOpenResistance).inverse();
-
 	Matrix conductance = Matrix::Zero(3, 3);
 	(**mSwitchClosed) ? Math::invertMatrix(**mClosedResistance, conductance) : Math::invertMatrix(**mOpenResistance, conductance);
 
@@ -118,9 +116,8 @@ void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatr
 }
 
 void EMT::Ph3::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
-	//Matrix conductance = (closed) ? (**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 	Matrix conductance = Matrix::Zero(3, 3);
-	(closed) ? Math::invertMatrix(**mClosedResistance, conductance) : Math::invertMatrix(**mOpenResistance, conductance);
+	closed ? Math::invertMatrix(**mClosedResistance, conductance) : Math::invertMatrix(**mOpenResistance, conductance);
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0)) {
@@ -205,7 +202,6 @@ void EMT::Ph3::Switch::mnaCompUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::Switch::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	//**mIntfCurrent = (**mSwitchClosed) ? (**mClosedResistance).inverse() * **mIntfVoltage: (**mOpenResistance).inverse() * **mIntfVoltage;
 	Matrix conductance = Matrix::Zero(3, 3);
 	(**mSwitchClosed) ? Math::invertMatrix(**mClosedResistance, conductance) : Math::invertMatrix(**mOpenResistance, conductance);
 
