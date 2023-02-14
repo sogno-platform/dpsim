@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 	String simName = "DP_WSCC9bus_SGReducedOrderIter";
 	Real timeStep = 1e-9;
 	Real finalTime = 0.01;
-	String sgType = "4PCM";	// 4PCM or 4TPM
+	String SGModel = "4PCM";	// 4PCM or 4TPM
 	Bool withFault = true;
 	Real startTimeFault = 0.2;
 	Real endTimeFault = 0.3;
@@ -52,27 +52,26 @@ int main(int argc, char *argv[]) {
 
 		if (args.name != "dpsim")
 			simName = args.name;
+		if (args.options.find("logDirectory") != args.options.end())
+			logDirectory = args.getOptionString("logDirectory");
 
-		if (args.options.find("sgType") != args.options.end())
-			sgType = args.getOptionString("sgType");
-		
 		if (args.options.find("withFault") != args.options.end())
 			withFault = args.getOptionBool("withFault");
-
 		if (args.options.find("startTimeFault") != args.options.end())
 			startTimeFault = args.getOptionReal("startTimeFault");
-		
 		if (args.options.find("endTimeFault") != args.options.end())
 			endTimeFault = args.getOptionReal("endTimeFault");
-		
 		if (args.options.find("faultBus") != args.options.end())
 			faultBusName = args.getOptionString("faultBus");
 
+		if (args.options.find("SGModel") != args.options.end())
+			SGModel = args.getOptionString("SGModel");
 		if (args.options.find("inertiaScalingFactor") != args.options.end())
 			inertiaScalingFactor = args.getOptionReal("inertiaScalingFactor");
-
-		if (args.options.find("logDirectory") != args.options.end())
-			logDirectory = args.getOptionString("logDirectory");
+		if (args.options.find("Tolerance") != args.options.end())
+			tolerance = args.getOptionReal("Tolerance");
+		if (args.options.find("MaxIter") != args.options.end())
+			maxIter = int(args.getOptionReal("MaxIter"));
 	}
 
 	// Configure logging
@@ -115,9 +114,9 @@ int main(int argc, char *argv[]) {
 
 	CPS::CIM::Reader reader2(simName, logLevel, logLevel);
 	SystemTopology sys;
-	if (sgType=="4PCM")
+	if (SGModel=="4PCM")
 		sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::SG4OrderPCM);
-	else if (sgType=="4TPM") 
+	else if (SGModel=="4TPM")
 		sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::SG4OrderTPM);
 	else
 		throw CPS::SystemError("Unsupported reduced-order SG type!");
@@ -126,7 +125,7 @@ int main(int argc, char *argv[]) {
 
 	for (auto comp : sys.mComponents) {
 		if (std::dynamic_pointer_cast<CPS::Base::ReducedOrderSynchronGenerator<Complex>>(comp)) {
-			std::dynamic_pointer_cast<CPS::MNASyncGenInterface>(comp)->setMaxIterations(maxIter); 
+			std::dynamic_pointer_cast<CPS::MNASyncGenInterface>(comp)->setMaxIterations(maxIter);
 			std::dynamic_pointer_cast<CPS::MNASyncGenInterface>(comp)->setTolerance(tolerance);
 		}
 	}
@@ -162,6 +161,7 @@ int main(int argc, char *argv[]) {
 			logger->logAttribute(genReducedOrder->name() + ".Te", genReducedOrder->attribute("Te"));
 			logger->logAttribute(genReducedOrder->name() + ".omega", genReducedOrder->attribute("w_r"));
 			logger->logAttribute(genReducedOrder->name() + ".delta", genReducedOrder->attribute("delta"));
+			logger->logAttribute(genReducedOrder->name() + ".N", genReducedOrder->attribute("NIterations"));
 		}
 	}
 
