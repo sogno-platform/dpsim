@@ -113,11 +113,11 @@ int main(int argc, char *argv[]) {
   std::shared_ptr<Signal::PSS1A> pssDP = nullptr;
   if (withPSS) {
     pssDP = Signal::PSS1A::make("SynGen_PSS", logLevel);
-    pssDP->setParameters(
-        pssAndersonFarmer.Kp, pssAndersonFarmer.Kv, pssAndersonFarmer.Kw,
-        pssAndersonFarmer.T1, pssAndersonFarmer.T2, pssAndersonFarmer.T3,
-        pssAndersonFarmer.T4, pssAndersonFarmer.Vs_max,
-        pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw, timeStep);
+    pssDP->setParameters(pssAndersonFarmer.Kp, pssAndersonFarmer.Kv,
+                         pssAndersonFarmer.Kw, pssAndersonFarmer.T1,
+                         pssAndersonFarmer.T2, pssAndersonFarmer.T3,
+                         pssAndersonFarmer.T4, pssAndersonFarmer.Vs_max,
+                         pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw);
     genDP->addPSS(pssDP);
   }
 
