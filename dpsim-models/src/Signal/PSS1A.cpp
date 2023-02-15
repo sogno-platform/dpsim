@@ -19,7 +19,7 @@ Signal::PSS1A::PSS1A(const String & name, CPS::Logger::Level logLevel)
 	mVs(mAttributes->create<Real>("Vs")) { }
 	
 void Signal::PSS1A::setParameters(Real Kp, Real Kv, Real Kw, Real T1, 
-		Real T2, Real T3, Real T4, Real Vs_max, Real Vs_min, Real Tw, Real dt) {
+		Real T2, Real T3, Real T4, Real Vs_max, Real Vs_min, Real Tw) {
 
 	mKp = Kp;
 	mKv = Kv;
@@ -31,28 +31,25 @@ void Signal::PSS1A::setParameters(Real Kp, Real Kv, Real Kw, Real T1,
 	mVs_max = Vs_max;
 	mVs_min = Vs_min;
 	mTw = Tw;
-	mTimeStep = dt;
 
 	mA = 1. - mT1 / mT2;
 	mB = 1. - mT3 / mT4;
 
-	SPDLOG_LOGGER_INFO(mSLog,
-		"PSS Type2 parameters: \n"
-		"Kp: {:e}"
-		"\nKv: {:e}"
-		"\nKw: {:e}"
-		"\nT1: {:e}"
-		"\nT2: {:e}"
-		"\nT3: {:e}"
-		"\nT4: {:e}"
-		"\nMaximum stabiliter output signal: {:e}"
-		"\nMinimum stabiliter output signal: {:e}"
-		"\nTw: {:e}"
-		"\nStep size: {:e}\n",
-		Kp, Kv, Kw,
-		mT1, mT2, mT1, mT4,
-		mVs_max, mVs_min,
-		mTw, mTimeStep);
+	mSLog->info("PSS Type2 parameters: \n"
+				"Kp: {:e}"
+				"\nKv: {:e}"
+				"\nKw: {:e}"
+				"\nT1: {:e}"
+				"\nT2: {:e}"
+				"\nT3: {:e}"
+				"\nT4: {:e}"
+				"\nMaximum stabiliter output signal: {:e}"
+				"\nMinimum stabiliter output signal: {:e}"
+				"\nTw: {:e}",
+				Kp, Kv, Kw,
+				mT1, mT2, mT1, mT4,
+				mVs_max, mVs_min,
+				mTw);
 }
 
 void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
@@ -77,7 +74,7 @@ void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
 	mSLog->flush();
 }
 
-Real Signal::PSS1A::step(Real omega, Real activePower, Real Vd, Real Vq) {
+Real Signal::PSS1A::step(Real omega, Real activePower, Real Vd, Real Vq, Real dt) {
 
 	// Voltage magnitude calculation
 	Real Vh = sqrt(pow(Vd, 2.) + pow(Vq, 2.));
@@ -89,9 +86,9 @@ Real Signal::PSS1A::step(Real omega, Real activePower, Real Vd, Real Vq) {
 	mVs_prev = **mVs;
 
 	// compute state variables at time k using euler forward
-	**mV1 = mV1_prev - mTimeStep / mTw * (mKw * mOmega_prev + mKp * activePower + mKv * Vh + mV1_prev);
-	**mV2 = mV2_prev + mTimeStep / mT2 * (mA * (mKw * mOmega_prev + mKp * activePower + mKv * Vh + mV1_prev) - mV2_prev);
-	**mV3 = mV3_prev + mTimeStep / mT4 * (mB * (mV2_prev + (mT1 / mT2) * (mKw * mOmega_prev + mKp * activePower + mKv * Vh + mV1_prev)) - mV3_prev); 	
+	**mV1 = mV1_prev - dt / mTw * (mKw * mOmega_prev + mKp * activePower + mKv * Vh + mV1_prev);
+	**mV2 = mV2_prev + dt / mT2 * (mA * (mKw * mOmega_prev + mKp * activePower + mKv * Vh + mV1_prev) - mV2_prev);
+	**mV3 = mV3_prev + dt / mT4 * (mB * (mV2_prev + (mT1 / mT2) * (mKw * mOmega_prev + mKp * activePower + mKv * Vh + mV1_prev)) - mV3_prev); 	
 
 	//
 	**mVs = **mV3 + (mT3 / mT4) * (**mV2 + (mT1 / mT2)*(mKw * omega + mKp * activePower + mKv * Vh + **mV1));

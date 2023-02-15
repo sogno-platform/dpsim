@@ -484,7 +484,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 
 	// update exciter and PSS variables
 	if (mHasPSS)
-		mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0,0), (**mVdq)(1,0));
+		mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0,0), (**mVdq)(1,0), mTimeStep);
 	if (mHasExciter) {
 		mEf_prev = **mEf;
 		**mEf = mExciter->step((**mVdq)(0,0), (**mVdq)(1,0), mTimeStep, mVpss);		
@@ -518,7 +518,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int ti
 
 	// update exciter and PSS variables
 	if (mHasPSS)
-		mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0,0), (**mVdq)(1,0));
+		mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq0)(0,0), (**mVdq0)(1,0), mTimeStep);
 	if (mHasExciter) {
 		mEf_prev = **mEf;
 		**mEf = mExciter->step((**mVdq0)(0,0), (**mVdq0)(1,0), mTimeStep, mVpss);	
@@ -576,7 +576,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(Real Kp, Real Kv, Real Kw, Real T1, Real T2, 
-	Real T3, Real T4, Real Vs_max, Real Vs_min, Real Tw, Real dt) {
+	Real T3, Real T4, Real Vs_max, Real Vs_min, Real Tw) {
 	
 	if (!mHasExciter) {
 		std::cerr << "PSS can not be used without Exciter! PSS will be ignored!" << std::endl;
@@ -585,7 +585,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(Real Kp, Real Kv, Real
 	}
 
 	mPSS = Signal::PSS1A::make(**this->mName + "_PSS", this->mLogLevel);
-	mPSS->setParameters(Kp, Kv, Kw, T1, T2, T3, T4, Vs_max, Vs_min, Tw, dt);
+	mPSS->setParameters(Kp, Kv, Kw, T1, T2, T3, T4, Vs_max, Vs_min, Tw);
 	mHasPSS = true;
 }
 

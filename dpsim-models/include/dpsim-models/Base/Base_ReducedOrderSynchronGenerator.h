@@ -95,7 +95,7 @@ namespace Base {
 			void addExciter(std::shared_ptr<Base::Exciter> exciter);
 			/// Add power system stabilizer
 			void addPSS(Real Kp, Real Kv, Real Kw, Real T1, Real T2, Real T3, Real T4, 
-				Real Vs_max, Real Vs_min, Real Tw, Real dt);
+				Real Vs_max, Real Vs_min, Real Tw);
 			void addPSS(std::shared_ptr<Signal::PSS1A> PSS);
 
 

@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
 		pssEMT = Signal::PSS1A::make("PSS", logLevel);
 		pssEMT->setParameters(pssAndersonFarmer.Kp, pssAndersonFarmer.Kv, pssAndersonFarmer.Kw, 
 			pssAndersonFarmer.T1, pssAndersonFarmer.T2, pssAndersonFarmer.T3, pssAndersonFarmer.T4, 
-			pssAndersonFarmer.Vs_max, pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw, timeStep);
+			pssAndersonFarmer.Vs_max, pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw);
 		genEMT->addPSS(pssEMT);
 	}
 
