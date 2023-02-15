@@ -41,8 +41,6 @@ namespace Signal {
 		Real mVs_min;
 		/// Wash-out time constant (s)
 		Real mTw;
-		/// Simulation step size
-		Real mTimeStep;
 		///
 		Real mA;
 		///
@@ -78,11 +76,11 @@ namespace Signal {
 		PSS1A(const String & name, CPS::Logger::Level logLevel);
 		/// Initializes PSS parameters
 		void setParameters(Real Kp, Real Kv, Real Kw, Real T1, 
-			Real T2, Real T3, Real T4, Real Vs_max, Real Vs_min, Real Tw, Real dt);
+			Real T2, Real T3, Real T4, Real Vs_max, Real Vs_min, Real Tw);
 		/// Initializes PSS state variables
 		void initialize(Real omega, Real activePower, Real Vd, Real Vq);
 		///
-		Real step(Real omega, Real activePower, Real Vd, Real Vq);
+		Real step(Real omega, Real activePower, Real Vd, Real Vq, Real dt);
 	};
 }
 }
