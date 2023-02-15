@@ -163,11 +163,7 @@ int main(int argc, char* argv[]) {
 	std::shared_ptr<Base::Exciter> exciterSP = nullptr;
 	if (withExciter) {
 		exciterSP = Factory<Base::Exciter>::get().create("DC1Simp", "Exciter", logLevel);
-<<<<<<< HEAD
 		exciterSP->setParameters(excitationParams);
-=======
-		exciterSP->setParameters(excitationEremia);
->>>>>>> 74ca12243 (add PSS type 2 and add base class for exciter)
 		genSP->addExciter(exciterSP);
 	}
 
@@ -183,8 +179,12 @@ int main(int argc, char* argv[]) {
 		pssSP = Signal::PSSType2::make("SynGen_PSS", logLevel);
 		pssSP->setParameters(pssAndersonFarmer.Kp, pssAndersonFarmer.Kv, pssAndersonFarmer.Kw, 
 			pssAndersonFarmer.T1, pssAndersonFarmer.T2, pssAndersonFarmer.T3, pssAndersonFarmer.T4, 
+<<<<<<< HEAD
 			pssAndersonFarmer.Vs_max, pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw, timeStep);
 >>>>>>> 74ca12243 (add PSS type 2 and add base class for exciter)
+=======
+			pssAndersonFarmer.Vs_max, pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw);
+>>>>>>> 19593ac88 (remove parameter dt from setParameters() of PSS)
 		genSP->addPSS(pssSP);
 	}
 
