@@ -227,10 +227,10 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def("add_pss",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real>(
+                             CPS::Real, CPS::Real>(
                &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::addPSS),
            "Kp"_a, "Kv"_a, "Kw"_a, "T1"_a, "T2"_a, "T3"_a, "T4"_a, "Vs_max"_a,
-           "Vs_min"_a, "Tw"_a, "dt"_a)
+           "Vs_min"_a, "Tw"_a)
       .def("add_governor",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
