@@ -455,9 +455,9 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 	mSimTime = time;
 
 	// update governor variables
-	if (mSynGen.mHasTurbineGovernor) {
-		mSynGen.mMechTorque_prev = **mSynGen.mMechTorque;
-		**mSynGen.mMechTorque = mSynGen.mTurbineGovernor->step(**mSynGen.mOmMech, mSynGen.mTimeStep);
+	if (mHasTurbineGovernor) {
+		mMechTorque_prev = **mMechTorque;
+		**mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
 	}
 
 	// calculate mechanical variables at t=k+1 with forward euler
@@ -469,27 +469,27 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 	}
 
 	// update exciter and PSS variables
-	if (mSynGen.mHasPSS ) {
-		mSynGen.mVpss = mSynGen.mPSS->step(**mSynGen.mOmMech, **mSynGen.mElecTorque, (**mSynGen.mVdq)(0,0), (**mSynGen.mVdq)(1,0), mSynGen.mTimeStep);
+	if (mHasPSS) {
+		mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0,0), (**mVdq)(1,0), mTimeStep);
 	}
-	if (mSynGen.mHasExciter) {
-		mSynGen.mEf_prev = **(mSynGen.mEf);
-		**(mSynGen.mEf) = mSynGen.mExciter->step((**mSynGen.mVdq)(0,0), (**mSynGen.mVdq)(1,0), mSynGen.mTimeStep, mSynGen.mVpss);		
+	if (mHasExciter) {
+		mEf_prev = **(mEf);
+		**(mEf) = mExciter->step((**mVdq)(0,0), (**mVdq)(1,0), mTimeStep, mVpss);		
 	}
 	
-	mSynGen.stepInPerUnit();
-	(**mSynGen.mRightVector).setZero();
-	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+	stepInPerUnit();
+	(**mRightVector).setZero();
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <>
 void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int timeStepCount) {
-	mSynGen.mSimTime = time;
+	mSimTime = time;
 	
 	// update governor variables
-	if (mSynGen.mHasTurbineGovernor) {
-		mSynGen.mMechTorque_prev = **mSynGen.mMechTorque;
-		**mSynGen.mMechTorque = mSynGen.mTurbineGovernor->step(**mSynGen.mOmMech, mSynGen.mTimeStep);
+	if (mHasTurbineGovernor) {
+		mMechTorque_prev = **mMechTorque;
+		**mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
 	}
 
 	// calculate mechanical variables at t=k+1 with forward euler
@@ -501,17 +501,17 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int ti
 	}
 
 	// update exciter and PSS variables
-	if (mSynGen.mHasPSS ) {
-		mSynGen.mVpss = mSynGen.mPSS->step(**mSynGen.mOmMech, **mSynGen.mElecTorque, (**mSynGen.mVdq)(0,0), (**mSynGen.mVdq)(1,0), mSynGen.mTimeStep);
+	if (mHasPSS ) {
+		mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0,0), (**mVdq)(1,0), mTimeStep);
 	}
-	if (mSynGen.mHasExciter) {
-		mSynGen.mEf_prev = **(mSynGen.mEf);
-		**(mSynGen.mEf) = mSynGen.mExciter->step((**mSynGen.mVdq0)(0,0), (**mSynGen.mVdq0)(1,0), mSynGen.mTimeStep, mSynGen.mVpss);		
+	if (mHasExciter) {
+		mEf_prev = **(mEf);
+		**(mEf) = mExciter->step((**mVdq0)(0,0), (**mVdq0)(1,0), mTimeStep, mVpss);		
 	}
 
-	mSynGen.stepInPerUnit();
-	(**mSynGen.mRightVector).setZero();
-	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+	stepInPerUnit();
+	(**mRightVector).setZero();
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <typename VarType>

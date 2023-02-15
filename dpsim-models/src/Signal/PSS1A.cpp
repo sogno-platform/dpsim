@@ -13,10 +13,10 @@ using namespace CPS;
 
 Signal::PSS1A::PSS1A(const String & name, CPS::Logger::Level logLevel) 
 	: SimSignalComp(name, name, logLevel),
-	mV1(Attribute<Real>::create("V1", mAttributes, 0)),
-	mV2(Attribute<Real>::create("V2", mAttributes, 0)),
-	mV3(Attribute<Real>::create("V3", mAttributes, 0)),
-	mVs(Attribute<Real>::create("Vs", mAttributes, 0)) { }
+	mV1(mAttributes->create<Real>("V1")),
+	mV2(mAttributes->create<Real>("V2")),
+	mV3(mAttributes->create<Real>("V3")),
+	mVs(mAttributes->create<Real>("Vs")) { }
 	
 void Signal::PSS1A::setParameters(Real Kp, Real Kv, Real Kw, Real T1, 
 		Real T2, Real T3, Real T4, Real Vs_max, Real Vs_min, Real Tw) {
@@ -50,6 +50,7 @@ void Signal::PSS1A::setParameters(Real Kp, Real Kv, Real Kw, Real T1,
 				mT1, mT2, mT1, mT4,
 				mVs_max, mVs_min,
 				mTw);
+	mSLog->flush();
 }
 
 void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
@@ -70,6 +71,7 @@ void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
 				"\nmV3(t=0): {:e}"
 				"\nmVs(t=0): {:e}",
 				**mV1, **mV2, **mV3, **mVs);
+	mSLog->flush();
 }
 
 Real Signal::PSS1A::step(Real omega, Real activePower, Real Vd, Real Vq, Real dt) {

@@ -34,7 +34,7 @@ void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nom
 	**mReactivePower = reactivePower;
 	**mNomVoltage = nominalVoltage;
 
-	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
+	mSLog->info("Active Power={} [W] Reactive Power={} [VAr] Nominal Voltage={} [V]", **mActivePower, **mReactivePower, **mNomVoltage);
 	mSLog->flush();
 
 	mParametersSet = true;

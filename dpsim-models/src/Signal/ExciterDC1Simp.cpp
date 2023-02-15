@@ -51,6 +51,7 @@ void ExciterDC1Simp::setParameters(Base::ExciterParameters parameters) {
 				mTr,
 				mAef, mBef,
 				mMaxVa, mMinVa);
+	mSLog->flush();
 }
 
 void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {

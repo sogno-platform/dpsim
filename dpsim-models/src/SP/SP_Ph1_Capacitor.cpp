@@ -49,6 +49,7 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
+	mSLog->flush();
 }
 
 // #### MNA section ####
@@ -138,6 +139,8 @@ void SP::Ph1::Capacitor::calculatePerUnitParameters(Real baseApparentPower){
 	mImpedancePerUnit = mImpedance / mBaseImpedance;
 	mAdmittancePerUnit = 1. / mImpedancePerUnit;
     mSLog->info("Impedance={} [pu]  Admittance={} [pu]", Logger::complexToString(mImpedancePerUnit), Logger::complexToString(mAdmittancePerUnit));
+
+	mSLog->flush();
 }
 
 void SP::Ph1::Capacitor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
@@ -153,4 +156,6 @@ void SP::Ph1::Capacitor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 	//set the circuit matrix values
 	Y.coeffRef(bus1, bus1) += mAdmittancePerUnit;
 	mSLog->info("#### Y matrix stamping: {}", mAdmittancePerUnit);
+
+	mSLog->flush();
 }
