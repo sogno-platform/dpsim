@@ -50,7 +50,7 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 	 * pruning fixes this, but might not be the most efficient and elegant solution
 	 * (it must be known to developer to prune the matrix after each stamp)
 	 */
-	sys.prune(0.0);
+	sys.makeCompressed();
 
 	// Compute LU-factorization for system matrix
 	mDirectLinearSolvers[bit][0]->preprocessing(sys, mListVariableSystemMatrixEntries);
@@ -74,10 +74,6 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 		statElem->mnaApplySparseSystemMatrixStamp(mBaseSystemMatrix);
 	SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
 	mSLog->flush();
-
-	// Use matrix with only static elements as basis for variable system matrix
-	mVariableSystemMatrix = mBaseSystemMatrix;
-
 	/* TODO: mnaApplySparseSystemMatrixStamp inefficient. It casts the sparse input matrix mVariableSystemMatrix to a dense matrix and back to sparse.
 	 * Also, some of the components have zero entries now - or don't apply any stamps, which results in a different pattern during recomputation.
 	 * This will be fixed in the branch profiling-based-optimisation */
@@ -85,24 +81,24 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	// Now stamp switches into matrix
 	SPDLOG_LOGGER_INFO(mSLog, "Stamping switches");
 	for (auto sw : mMNAIntfSwitches)
-		sw->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
+		sw->mnaApplySparseSystemMatrixStamp(mBaseSystemMatrix);
 
 	// Now stamp initial state of variable elements into matrix
 	SPDLOG_LOGGER_INFO(mSLog, "Stamping variable elements");
 	for (auto varElem : mMNAIntfVariableComps)
-		varElem->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
+		varElem->mnaApplySparseSystemMatrixStamp(mBaseSystemMatrix);
 
 	// get rid of excess zeros
-	mVariableSystemMatrix.prune(0.0);
+	mBaseSystemMatrix.makeCompressed();
 
-	SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
+	SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mBaseSystemMatrix));
 	/* TODO: find replacement for flush() */
 	mSLog->flush();
 
 	// Calculate factorization of current matrix
-	mDirectLinearSolverVariableSystemMatrix->preprocessing(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
+	mDirectLinearSolverVariableSystemMatrix->preprocessing(mBaseSystemMatrix, mListVariableSystemMatrixEntries);
 
-	mDirectLinearSolverVariableSystemMatrix->factorize(mVariableSystemMatrix);
+	mDirectLinearSolverVariableSystemMatrix->factorize(mBaseSystemMatrix);
 }
 
 template <typename VarType>
@@ -144,7 +140,7 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 		comp->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
 
 	// get rid of excess zeros
-	mVariableSystemMatrix.prune(0.0);
+	mVariableSystemMatrix.makeCompressed();
 
 	auto start = std::chrono::steady_clock::now();
 	// Refactorization of matrix assuming that structure remained
