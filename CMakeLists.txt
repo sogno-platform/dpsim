@@ -77,20 +77,15 @@ GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 # Deprecated build options
 # TODO: Remove deprecated options in future release
 option(WITH_EIGEN_MODULE     "Fetch Eigen3 as module (deprecated option)" OFF)
-option(WITH_KLU       			 "Build with KLU as module (deprecated option)" OFF)
+option(WITH_KLU   	     "Build with KLU as module (deprecated option)" ON)
 option(WITH_SPDLOG_SUBMODULE "Fetch spdlog as module (deprecated option)" OFF)
 option(WITH_CIM_SUBMODULE    "Fetch CIMpp as module (deprecated option)" OFF)
 option(WITH_PYBIND_MODULE    "Fetch pybind11 as module (deprecated option)" OFF)
 option(GET_GRID_DATA         "Fetch grid data (deprecated option)" ON)
 
-# FIXME: KLU does not work with Windows yet.
-if (NOT WIN32)
-	set(WITH_KLU ON)
-endif()
-
 # Build options
 option(FETCH_EIGEN          "Fetch Eigen3 as module" ${WITH_EIGEN_MODULE})
-option(FETCH_KLU						"Fetch KLU as module" ${WITH_KLU})
+option(FETCH_KLU            "Fetch KLU as module" ${WITH_KLU})
 option(FETCH_SPDLOG         "Fetch spdlog as module" ${WITH_SPDLOG_SUBMODULE})
 option(FETCH_CIMPP          "Fetch CIMpp as module" ${WITH_CIM_SUBMODULE})
 option(FETCH_PYBIND         "Fetch pybind11 as module" ${WITH_PYBIND_MODULE})
@@ -131,7 +126,7 @@ else()
 	find_package(Eigen3 3.0 REQUIRED)
 endif()
 
-if (FETCH_KLU)
+if (FETCH_KLU OR WIN32)
 	include(FetchKLU)
 else()
 endif()
