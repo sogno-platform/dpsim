@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Base/Base_Ph1_VoltageSource.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
@@ -21,9 +21,8 @@ namespace Ph1 {
 	/// which is transformed to a current source with
 	/// a parallel resistance using the Norton equivalent.
 	class VoltageSourceNorton :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::VoltageSource,
-		public SimPowerComp<Complex>,
-		public MNAInterface,
 		public SharedFactory<VoltageSourceNorton> {
 	protected:
 		/// Equivalent current source [A]
@@ -60,47 +59,20 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(VoltageSourceNorton& voltageSource) :
-				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-				mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
-				mModifiedAttributes.push_back(voltageSource.attribute("right_vector"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			VoltageSourceNorton& mVoltageSource;
-		};
-
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(VoltageSourceNorton& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(**voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource),
-				mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(leftVector);
-				mModifiedAttributes.push_back(voltageSource.attribute("i_intf"));
-				mModifiedAttributes.push_back(voltageSource.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			VoltageSourceNorton& mVoltageSource;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

@@ -13,12 +13,12 @@ using namespace CPS;
 
 SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
     Logger::Level logLevel) : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
-	mVoltageSetPoint(Attribute<Real>::create("V_set", mAttributes)),
-	mVoltageSetPointPerUnit(Attribute<Real>::create("V_set_pu", mAttributes, 1.0)),
-	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
-	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)) {
+	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
+	mSrcFreq(mAttributes->createDynamic<Real>("f_src")),
+	mVoltageSetPoint(mAttributes->create<Real>("V_set")),
+	mVoltageSetPointPerUnit(mAttributes->create<Real>("V_set_pu", 1.0)),
+	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
+	mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
 
 	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
@@ -138,7 +138,7 @@ void SP::Ph1::NetworkInjection::mnaParentAddPreStepDependencies(AttributeBase::L
 }
 
 void SP::Ph1::NetworkInjection::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void SP::Ph1::NetworkInjection::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -148,15 +148,15 @@ void SP::Ph1::NetworkInjection::mnaParentAddPostStepDependencies(AttributeBase::
 }
 
 void SP::Ph1::NetworkInjection::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateCurrent(**leftVector);
-	mnaUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
 }
 
-void SP::Ph1::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::NetworkInjection::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	**mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
 }
 
-void SP::Ph1::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::NetworkInjection::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
 }
 

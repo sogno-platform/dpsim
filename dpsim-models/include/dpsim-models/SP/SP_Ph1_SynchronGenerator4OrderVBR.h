@@ -35,9 +35,9 @@ namespace Ph1 {
 
 		// #### General Functions ####
 		///
-		void specificInitialization() override;
+		void specificInitialization() final;
 		///
-		void stepInPerUnit() override;
+		void stepInPerUnit() final;
 	};
 }
 }

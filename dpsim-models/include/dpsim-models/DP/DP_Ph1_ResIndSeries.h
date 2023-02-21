@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
 
 namespace CPS {
@@ -17,8 +17,7 @@ namespace Ph1 {
 	/// \brief resistor inductor series element
 	class ResIndSeries :
 		public MNATearInterface,
-		public MNAInterface,
-		public SimPowerComp<Complex>,
+		public MNASimPowerComp<Complex>,
 		public SharedFactory<ResIndSeries> {
 	protected:
 		/// DC equivalent current source for harmonics [A]
@@ -50,44 +49,24 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes MNA specific variables
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Update interface voltage from MNA system results
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system results
-		void mnaUpdateCurrent();
+		void mnaCompUpdateCurrent();
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(Inductor& ResIndSeries) :
-				Task(**inductor.mName + ".MnaPreStep"), mResIndSeries(resIndSeries) {
-				// actually depends on L, but then we'd have to modify the system matrix anyway
-				mModifiedAttributes.push_back(mResIndSeries.attribute("right_vector"));
-				mPrevStepDependencies.push_back(mResIndSeries.attribute("v_intf"));
-				mPrevStepDependencies.push_back(mResIndSeries.attribute("i_intf"));
-			}
-			void execute(Real time, Int timeStepCount);
-		private:
-			ResIndSeries& mResIndSeries;
-		};
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(ResIndSeries& inductor, Attribute<Matrix>::Ptr leftVector) :
-				Task(**inductor.mName + ".MnaPostStep"),
-				mResIndSeries(resIndSeries), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mResIndSeries.attribute("v_intf"));
-				mModifiedAttributes.push_back(mResIndSeries.attribute("i_intf"));
-			}
-			void execute(Real time, Int timeStepCount);
-		private:
-			ResIndSeries& mResIndSeries;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA pre step dependencies
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+
+		/// Add MNA post step dependencies
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

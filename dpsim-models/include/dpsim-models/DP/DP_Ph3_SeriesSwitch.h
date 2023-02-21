@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Definitions.h>
@@ -25,12 +25,11 @@ namespace Ph3 {
 	/// For this model, the resistance model is the same for all phases and
 	/// only in series.
 	class SeriesSwitch :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Switch,
-		public SimPowerComp<Complex>,
 		public SharedFactory<SeriesSwitch>,
-		public MNASwitchInterface,
-		public MNAInterface {
-	protected:
+		public MNASwitchInterface {
+
 	public:
 		/// Defines UID, name and logging level
 		SeriesSwitch(String uid, String name, Logger::Level loglevel = Logger::Level::off);
@@ -44,13 +43,13 @@ namespace Ph3 {
 
 		// #### General MNA section ####
 		///
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 
 		// #### MNA section for switches ####
 		/// Check if switch is closed
@@ -58,22 +57,9 @@ namespace Ph3 {
 		/// Stamps system matrix considering the defined switch position
 		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(SeriesSwitch& sSwitch, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**sSwitch.mName + ".MnaPostStep"), mSwitch(sSwitch), mLeftVector(leftSideVector)
-			{
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mSwitch.mIntfVoltage);
-				mModifiedAttributes.push_back(mSwitch.mIntfCurrent);
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SeriesSwitch& mSwitch;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA post step dependencies
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

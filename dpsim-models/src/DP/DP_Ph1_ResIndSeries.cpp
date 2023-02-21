@@ -11,10 +11,10 @@
 using namespace CPS;
 
 DP::Ph1::ResIndSeries::ResIndSeries(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
-	mInductance(Attribute<Real>::create("L", mAttributes)),
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
+	mInductance(mAttributes->create<Real>("L")),
 	///FIXME: The resistance is never used anywhere...
-	mResistance(Attribute<Real>::create("R", mAttributes)) { 
+	mResistance(mAttributes->create<Real>("R")) {
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
@@ -81,15 +81,9 @@ void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
 	}
 }
 
-void DP::Ph1::ResIndSeries::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
+void DP::Ph1::ResIndSeries::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
-
 	initVars(timeStep);
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"
@@ -102,9 +96,8 @@ void DP::Ph1::ResIndSeries::mnaInitialize(Real omega, Real timeStep, Attribute<M
 		Logger::complexToString(mEquivCurrent(0,0)));
 }
 
-void DP::Ph1::ResIndSeries::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void DP::Ph1::ResIndSeries::mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
+		updateMatrixNodeIndices();
 
 	initVars(timeStep);
 
@@ -113,7 +106,7 @@ void DP::Ph1::ResIndSeries::mnaInitializeHarm(Real omega, Real timeStep, std::ve
 	**mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
-void DP::Ph1::ResIndSeries::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::ResIndSeries::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0))
 			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond(freq,0), mNumFreqs, freq);
@@ -140,7 +133,7 @@ void DP::Ph1::ResIndSeries::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void DP::Ph1::ResIndSeries::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
+void DP::Ph1::ResIndSeries::mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
 		if (terminalNotGrounded(0))
 			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond(freqIdx,0));
 		if (terminalNotGrounded(1))
@@ -165,7 +158,7 @@ void DP::Ph1::ResIndSeries::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, 
 		}
 }
 
-void DP::Ph1::ResIndSeries::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
 		// Calculate equivalent current source for next time step
 		mEquivCurrent(freq,0) =
@@ -187,7 +180,7 @@ void DP::Ph1::ResIndSeries::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	}
 }
 
-void DP::Ph1::ResIndSeries::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
+void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector) {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
 		// Calculate equivalent current source for next time step
 		mEquivCurrent(freq,0) =
@@ -201,26 +194,39 @@ void DP::Ph1::ResIndSeries::mnaApplyRightSideVectorStampHarm(Matrix& rightVector
 	}
 }
 
-void DP::Ph1::ResIndSeries::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mResIndSeries.mnaApplyRightSideVectorStamp(**mResIndSeries.mRightVector);
+void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// actually depends on L, but then we'd have to modify the system matrix anyway
+	modifiedAttributes.push_back(mRightVector);
+	prevStepDependencies.push_back(mIntfVoltage);
+	prevStepDependencies.push_back(mIntfCurrent);
+}
+
+void DP::Ph1::ResIndSeries::mnaCompPreStep(Real time, Int timeStepCount) {
+	mResIndSeries.mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::ResIndSeries::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
-	mResIndSeries.mnaApplyRightSideVectorStampHarm(**mResIndSeries.mRightVector);
+	mResIndSeries.mnaCompApplyRightSideVectorStampHarm(**mResIndSeries.mRightVector);
 }
 
-void DP::Ph1::ResIndSeries::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResIndSeries.mnaUpdateVoltage(**mLeftVector);
-	mResIndSeries.mnaUpdateCurrent(**mLeftVector);
+void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
+}
+
+void DP::Ph1::ResIndSeries::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
 void DP::Ph1::ResIndSeries::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 	for (Int freq = 0; freq < mResIndSeries.mNumFreqs; freq++)
-		mResIndSeries.mnaUpdateVoltageHarm(**mLeftVectors[freq], freq);
-	mResIndSeries.mnaUpdateCurrentHarm();
+		mResIndSeries.mnaCompUpdateVoltageHarm(**mLeftVectors[freq], freq);
+	mResIndSeries.mnaCompUpdateCurrentHarm();
 }
 
-void DP::Ph1::ResIndSeries::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph1::ResIndSeries::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
 		(**mIntfVoltage)(0,freq) = 0;
@@ -233,7 +239,7 @@ void DP::Ph1::ResIndSeries::mnaUpdateVoltage(const Matrix& leftVector) {
 	}
 }
 
-void DP::Ph1::ResIndSeries::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) {
+void DP::Ph1::ResIndSeries::mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) {
 	// v1 - v0
 	(**mIntfVoltage)(0,freqIdx) = 0;
 	if (terminalNotGrounded(1))
@@ -244,14 +250,14 @@ void DP::Ph1::ResIndSeries::mnaUpdateVoltageHarm(const Matrix& leftVector, Int f
 	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,freqIdx)));
 }
 
-void DP::Ph1::ResIndSeries::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph1::ResIndSeries::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
 		(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }
 
-void DP::Ph1::ResIndSeries::mnaUpdateCurrentHarm() {
+void DP::Ph1::ResIndSeries::mnaCompUpdateCurrentHarm() {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
 		(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));

@@ -11,9 +11,9 @@
 using namespace CPS;
 
 SP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
-	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
+	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
+	mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -80,25 +80,21 @@ void SP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 
 // #### MNA functions ####
 
-void SP::Ph1::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void SP::Ph1::VoltageSource::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	attributeDependencies.push_back(mVoltageRef);
 	modifiedAttributes.push_back(mRightVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 }
 
-void SP::Ph1::VoltageSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void SP::Ph1::VoltageSource::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfCurrent);
 };
 
-void SP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void SP::Ph1::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
 	mSLog->info(
 		"\n--- MNA initialization ---"
@@ -109,7 +105,7 @@ void SP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 		Logger::phasorToString((**mIntfCurrent)(0,0)));
 }
 
-void SP::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0)) {
 			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(-1, 0), mNumFreqs, freq);
@@ -132,7 +128,7 @@ void SP::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void SP::Ph1::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void SP::Ph1::VoltageSource::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	// TODO: Is this correct with two nodes not gnd?
 	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mIntfVoltage)(0,0), mNumFreqs);
 	SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
@@ -150,16 +146,16 @@ void SP::Ph1::VoltageSource::updateVoltage(Real time) {
 	mSLog->debug("Update Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,0)));
 }
 
-void SP::Ph1::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
+void SP::Ph1::VoltageSource::mnaCompPreStep(Real time, Int timeStepCount) {
 	updateVoltage(time);
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void SP::Ph1::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateCurrent(**leftVector);
+void SP::Ph1::VoltageSource::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::VoltageSource::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		(**mIntfCurrent)(0,freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);
 	}

@@ -12,12 +12,12 @@ using namespace CPS;
 
 SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	: Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(uid, name, false, true, logLevel),
-	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
-	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
-	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
-	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
-	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)) {
+	mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
+	mCurrent(mAttributes->create<MatrixComp>("current_vector")),
+	mActivePowerBranch(mAttributes->create<Matrix>("p_branch_vector")),
+	mReactivePowerBranch(mAttributes->create<Matrix>("q_branch_vector")),
+	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
+	mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
 
 	mSLog->info("Create {} {}", this->type(), name);
 	mSLog->flush();
@@ -234,7 +234,7 @@ void SP::Ph1::PiLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<
 	this->mnaUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = 0;
 	if (terminalNotGrounded(1))
 		(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
@@ -242,7 +242,7 @@ void SP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void SP::Ph1::PiLine::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::PiLine::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = mSubSeriesInductor->intfCurrent()(0, 0);
 }
 

@@ -13,8 +13,8 @@ using namespace CPS;
 DP::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
 	Logger::Level logLevel)
 	: CompositePowerComp<Complex>(uid, name, true, false, logLevel),
-	mVoltageRef(Attribute<Complex>::create("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::create("f_src", mAttributes)) {
+	mVoltageRef(mAttributes->create<Complex>("V_ref")),
+	mSrcFreq(mAttributes->create<Real>("f_src")) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
@@ -77,5 +77,5 @@ void DP::Ph1::VoltageSourceRamp::updateState(Real time) {
 void DP::Ph1::VoltageSourceRamp::mnaParentPreStep(Real time, Int timeStepCount) {
 	updateState(time);
 	**mSubVoltageSource->mVoltageRef = (**mIntfVoltage)(0, 0);
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }

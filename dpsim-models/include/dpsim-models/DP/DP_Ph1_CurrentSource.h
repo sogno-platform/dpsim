@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph1_CurrentSource.h>
 #include <dpsim-models/Task.h>
@@ -22,8 +22,7 @@ namespace Ph1 {
 	/// In case of a dynamic phasor simulation, a frequency different
 	/// from zero is added on top of the system frequency.
 	class CurrentSource :
-		public MNAInterface,
-		public SimPowerComp<Complex>,
+		public MNASimPowerComp<Complex>,
 		public SharedFactory<CurrentSource> {
 	public:
 		const Attribute<Complex>::Ptr mCurrentRef;
@@ -46,44 +45,21 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		///
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) { }
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) { }
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		///
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(CurrentSource& currentSource) :
-				Task(**currentSource.mName + ".MnaPreStep"), mCurrentSource(currentSource)
-			{
-				mAttributeDependencies.push_back(currentSource.attribute("I_ref"));
-				mModifiedAttributes.push_back(currentSource.attribute("right_vector"));
-				mModifiedAttributes.push_back(currentSource.attribute("i_intf"));
-			}
+		/// Add MNA pre step dependencies
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		/// Add MNA post step dependencies
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			CurrentSource& mCurrentSource;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(CurrentSource& currentSource, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**currentSource.mName + ".MnaPostStep"), mCurrentSource(currentSource), mLeftVector(leftSideVector)
-			{
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mCurrentSource.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-		private:
-			CurrentSource& mCurrentSource;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 	};
 }
 }

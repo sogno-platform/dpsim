@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_SynchronGenerator.h>
 
@@ -17,9 +17,8 @@ namespace EMT {
 namespace Ph3 {
 	/// Synchronous generator model in dq-reference frame
 	class SynchronGeneratorDQ :
-		public Base::SynchronGenerator,
-		public MNAInterface,
-		public SimPowerComp<Real> {
+		public MNASimPowerComp<Real>,
+		public Base::SynchronGenerator {
 	protected:
 		/// Compensation current source set point
 		Matrix mCompensationCurrent;
@@ -84,29 +83,18 @@ namespace Ph3 {
 
 		// #### MNA Functions ####
 		/// Initializes variables of component
-		virtual void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr) = 0;
+		virtual void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr) = 0;
 		///
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		///
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 
 		/// Retrieves calculated voltage from simulation for next step
-		virtual void mnaUpdateVoltage(const Matrix& leftVector);
+		virtual void mnaCompUpdateVoltage(const Matrix& leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(SynchronGeneratorDQ& synGen, Attribute<Matrix>::Ptr leftVector)
-			: Task(**synGen.mName + ".MnaPostStep"), mSynGen(synGen), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(synGen.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SynchronGeneratorDQ& mSynGen;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA post step dependencies
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

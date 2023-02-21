@@ -52,10 +52,10 @@ namespace Ph1 {
 		/// Matrix to convert Evbr from dq domain to abc domain (only phase a)
 		MatrixComp mKvbr;
 
-        /// Constructor 
+        /// Constructor
         ReducedOrderSynchronGeneratorVBR(const String & uid, const String & name, Logger::Level logLevel);
         ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
-      
+
 	  	// #### General Functions ####
         /// Specific component initialization
         virtual void specificInitialization() override =0;
@@ -68,17 +68,15 @@ namespace Ph1 {
 		/// Calculate Ka, Kb and Kvbr
 		void calculateAuxiliarVariables();
 		///
-		Matrix get_parkTransformMatrix() const;        
+		Matrix get_parkTransformMatrix() const;
 
 		// ### MNA Section ###
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
-		void mnaPostStep(const Matrix& leftVector) override;
-		
-    public:
-        virtual ~ReducedOrderSynchronGeneratorVBR()=default;
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompPostStep(const Matrix& leftVector) override;
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 
+    public:
         /// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override { return true; };
     };

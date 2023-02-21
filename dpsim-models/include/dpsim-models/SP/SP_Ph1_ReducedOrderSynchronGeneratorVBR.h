@@ -24,14 +24,14 @@ namespace Ph1 {
         Complex mEvbr;
 		/// norton equivalent current of mEvbr
 		Complex mIvbr;
-    
+
     private:
         /// Resistance matrix in dq reference frame
-		Matrix mResistanceMatrixDq;      
+		Matrix mResistanceMatrixDq;
 
 		/// Conductance matrix phase A
 		Matrix mConductanceMatrix;
-        
+
     protected:
         /// Park Transformation
 		///
@@ -40,10 +40,10 @@ namespace Ph1 {
 		Matrix mComplexAToDq;
 
     protected:
-        /// Constructor 
+        /// Constructor
         ReducedOrderSynchronGeneratorVBR(const String & uid, const String & name, Logger::Level logLevel);
         ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
-      
+
         ///
         virtual void specificInitialization() override =0;
         ///
@@ -57,14 +57,12 @@ namespace Ph1 {
 
         // ### MNA Section ###
         ///
-        void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;      
-        void mnaPostStep(const Matrix& leftVector) override;
-        
-    public:
-        virtual ~ReducedOrderSynchronGeneratorVBR() override = default;
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompPostStep(const Matrix& leftVector) override;
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 
+    public:
         /// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override { return true;};
     };

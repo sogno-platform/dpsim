@@ -43,22 +43,11 @@ namespace Ph3 {
 		SynchronGeneratorDQODE(String name, Logger::Level loglevel = Logger::Level::off);
 
 		// #### MNA Section ####
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(SynchronGeneratorDQODE& synGen)
-				: Task(**synGen.mName + ".MnaPreStep"), mSynGen(synGen) {
-				mAttributeDependencies.push_back(synGen.attribute("ode_post_state"));
-				mModifiedAttributes.push_back(synGen.attribute("right_vector"));
-				mPrevStepDependencies.push_back(synGen.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SynchronGeneratorDQODE& mSynGen;
-		};
+		/// Add MNA pre step dependencies
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 
 		class ODEPreStep : public Task {
 		public:

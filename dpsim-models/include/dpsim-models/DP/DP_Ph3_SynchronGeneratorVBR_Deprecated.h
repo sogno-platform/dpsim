@@ -218,7 +218,7 @@ namespace Ph3 {
 		void stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod);
 
 		/// Retrieves calculated voltage from simulation for next step
-		void mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time);
+		void mnaCompPostStep(Matrix& rightVector, Matrix& leftVector, Real time);
 
 		/// abc to dq
 		Matrix abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm);

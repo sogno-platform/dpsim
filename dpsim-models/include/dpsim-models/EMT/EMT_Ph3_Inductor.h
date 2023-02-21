@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph3_Inductor.h>
 
@@ -23,9 +23,8 @@ namespace CPS {
 			/// The resistance is constant for a defined time step and system
 			/// frequency and the current source changes for each iteration.
 			class Inductor :
+				public MNASimPowerComp<Real>,
 				public Base::Ph3::Inductor,
-				public MNAInterface,
-				public SimPowerComp<Real>,
 				public SharedFactory<Inductor> {
 			protected:
 				/// DC equivalent current source [A]
@@ -47,47 +46,23 @@ namespace CPS {
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component
-				void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+				void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 				/// Stamps system matrix
-				void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+				void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
 				/// Stamps right side (source) vector
-				void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+				void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 				/// Update interface voltage from MNA system result
-				void mnaUpdateVoltage(const Matrix& leftVector);
+				void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 				/// Update interface current from MNA system result
-				void mnaUpdateCurrent(const Matrix& leftVector);
+				void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 				/// MNA pre step operations
-				void mnaPreStep(Real time, Int timeStepCount);
+				void mnaCompPreStep(Real time, Int timeStepCount) override;
 				/// MNA post step operations
-				void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+				void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 				/// Add MNA pre step dependencies
-				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+				void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 				/// Add MNA post step dependencies
-				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-				class MnaPreStep : public Task {
-				public:
-					MnaPreStep(Inductor& inductor) :
-						Task(**inductor.mName + ".MnaPreStep"), mInductor(inductor) {
-							mInductor.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-					}
-					void execute(Real time, Int timeStepCount) { mInductor.mnaPreStep(time, timeStepCount); };
-				private:
-					Inductor& mInductor;
-				};
-
-				class MnaPostStep : public Task {
-				public:
-					MnaPostStep(Inductor& inductor, Attribute<Matrix>::Ptr leftVector) :
-						Task(**inductor.mName + ".MnaPostStep"),
-						mInductor(inductor), mLeftVector(leftVector) {
-							mInductor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-					}
-					void execute(Real time, Int timeStepCount) { mInductor.mnaPostStep(time, timeStepCount, mLeftVector); };
-				private:
-					Inductor& mInductor;
-					Attribute<Matrix>::Ptr mLeftVector;
-				};
+				void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 			};
 		}
 	}

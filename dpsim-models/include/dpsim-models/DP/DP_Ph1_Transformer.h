@@ -71,11 +71,11 @@ namespace Ph1 {
 		/// Initializes internal variables of the component
 		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
 		/// Updates internal current variable of the component
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		/// MNA pre step operations
 		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations

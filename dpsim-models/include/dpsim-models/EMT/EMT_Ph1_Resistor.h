@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
 
@@ -19,9 +19,8 @@ namespace EMT {
 namespace Ph1 {
 	/// EMT Resistor
 	class Resistor :
+		public MNASimPowerComp<Real>,
 		public Base::Ph1::Resistor,
-		public MNAInterface,
-		public SimPowerComp<Real>,
 		public SharedFactory<Resistor> {
 	protected:
 	public:
@@ -39,32 +38,18 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftSideVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftSideVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) { }
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Resistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**resistor.mName + ".MnaPostStep"), mResistor(resistor), mLeftVector(leftSideVector)
-			{
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mResistor.attribute("v_intf"));
-				mModifiedAttributes.push_back(mResistor.attribute("i_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			Resistor& mResistor;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+		/// Add MNA post step dependencies
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

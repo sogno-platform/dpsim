@@ -69,8 +69,8 @@ namespace CPS {
 				void initializeFromNodesAndTerminals(Real frequency);
 
 				// #### MNA section ####
-				void mnaUpdateCurrent(const Matrix& leftVector) override;
-				void mnaUpdateVoltage(const Matrix& leftVector) override;
+				void mnaCompUpdateCurrent(const Matrix& leftVector) override;
+				void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 
 				/// MNA pre and post step operations
 				void mnaParentPreStep(Real time, Int timeStepCount) override;

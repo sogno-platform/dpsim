@@ -32,12 +32,12 @@ Matrix EMT::Ph3::SynchronGeneratorTrStab::getParkTransformMatrixPowerInvariant(R
 
 EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
 	: Base::SynchronGenerator(mAttributes), CompositePowerComp<Real>(uid, name, true, true, logLevel),
-	mEp(Attribute<Complex>::create("Ep", mAttributes)),
-	mEp_abs(Attribute<Real>::create("Ep_mag", mAttributes)),
-	mEp_phase(Attribute<Real>::create("Ep_phase", mAttributes)),
-	mDelta_p(Attribute<Real>::create("delta_r", mAttributes)),
-	mRefOmega(Attribute<Real>::createDynamic("w_ref", mAttributes)),
-	mRefDelta(Attribute<Real>::createDynamic("delta_ref", mAttributes)) {
+	mEp(mAttributes->create<Complex>("Ep")),
+	mEp_abs(mAttributes->create<Real>("Ep_mag")),
+	mEp_phase(mAttributes->create<Real>("Ep_phase")),
+	mDelta_p(mAttributes->create<Real>("delta_r")),
+	mRefOmega(mAttributes->createDynamic<Real>("w_ref")),
+	mRefDelta(mAttributes->createDynamic<Real>("delta_ref")) {
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 	**mIntfVoltage = Matrix::Zero(3,1);
@@ -270,18 +270,18 @@ void EMT::Ph3::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeSte
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph3::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::SynchronGeneratorTrStab::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
 	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 	(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 }
 
-void EMT::Ph3::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::SynchronGeneratorTrStab::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
 
 	**mIntfCurrent = **mSubInductor->mIntfCurrent;

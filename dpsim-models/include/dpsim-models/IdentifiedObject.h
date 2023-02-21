@@ -16,33 +16,44 @@
 namespace CPS {
 	/// Common base class of all objects which are
 	/// identified by a name and an unique identifier (UID).
-	class IdentifiedObject: virtual public AttributeList {
+	class IdentifiedObject {
 	protected:
+		/// Attribute List
+		AttributeList::Ptr mAttributes = AttributeList::make();
+	public:
 		/// Human readable name
 		const Attribute<String>::Ptr mName;
 		/// Unique identifier
 		const Attribute<String>::Ptr mUID;
-	public:
+
 		typedef std::shared_ptr<IdentifiedObject> Ptr;
 		typedef std::vector<Ptr> List;
 
 		IdentifiedObject() { }
 
-		IdentifiedObject(String uid, String name)
-			: 	mName(Attribute<String>::create("name", mAttributes, name)),
-				mUID(Attribute<String>::create("uid", mAttributes, uid))
+		IdentifiedObject(const String &uid, const String &name) :
+				mName(mAttributes->create("name", name)),
+				mUID(mAttributes->create("uid", uid))
 			{ }
 
-		IdentifiedObject(String name) :
+		explicit IdentifiedObject(const String &name) :
 			IdentifiedObject(name, name) { }
 
-		AttributeBase::Ptr attribute(const String &name) override {
-			return AttributeList::attribute(name);
+		virtual ~IdentifiedObject() = default;
+
+		/// Return pointer to an attribute.
+		AttributeBase::Ptr attribute(const String &name) const {
+			return mAttributes->attribute(name);
 		}
 
-		virtual ~IdentifiedObject() { }
+		/// Return pointer to an attribute.
+		template<typename T>
+		typename Attribute<T>::Ptr attributeTyped(const String &name) const {
+			return mAttributes->attributeTyped<T>(name);
+		}
 
-		/// Returns component name
+		const AttributeBase::Map & attributes() const { return mAttributes->attributes(); };
+
 		String name() { return **mName; }
 		/// Returns unique id
 		String uid() { return **mUID; }

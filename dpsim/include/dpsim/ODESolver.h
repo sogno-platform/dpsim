@@ -87,8 +87,8 @@ namespace DPsim {
 		public:
 			SolveTask(ODESolver& solver)
 			: Task(solver.mName + ".Solve"), mSolver(solver) {
-				mAttributeDependencies.push_back(solver.mComponent->attribute("ode_pre_state"));
-				mModifiedAttributes.push_back(solver.mComponent->attribute("ode_post_state"));
+				mAttributeDependencies.push_back(solver.mComponent->mOdePreState);
+				mModifiedAttributes.push_back(solver.mComponent->mOdePostState);
 			}
 
 			void execute(Real time, Int timeStepCount);

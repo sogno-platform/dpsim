@@ -15,11 +15,11 @@ using namespace CPS;
 // and these values are not yet assigned to the terminals when this constructor was called in reader.
 SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
 	: CompositePowerComp<Complex>(uid, name, false, true, logLevel),
-	mActivePowerPerUnit(Attribute<Real>::create("P_pu", mAttributes)),
-	mReactivePowerPerUnit(Attribute<Real>::create("Q_pu", mAttributes)),
-	mActivePower(Attribute<Real>::createDynamic("P", mAttributes)), //Made dynamic so it can be imported through InterfaceVillas
-	mReactivePower(Attribute<Real>::createDynamic("Q", mAttributes)), //Made dynamic so it can be imported through InterfaceVillas
-	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
+	mActivePowerPerUnit(mAttributes->create<Real>("P_pu")),
+	mReactivePowerPerUnit(mAttributes->create<Real>("Q_pu")),
+	mActivePower(mAttributes->createDynamic<Real>("P")), //Made dynamic so it can be imported through InterfaceVillas
+	mReactivePower(mAttributes->createDynamic<Real>("Q")), //Made dynamic so it can be imported through InterfaceVillas
+	mNomVoltage(mAttributes->create<Real>("V_nom")) {
 
 	mSLog->info("Create {} of type {}", **mName, this->type());
 	mSLog->flush();
@@ -170,15 +170,15 @@ void SP::Ph1::Load::mnaParentAddPostStepDependencies(AttributeBase::List &prevSt
 };
 
 void SP::Ph1::Load::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::Load::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::Load::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void SP::Ph1::Load::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::Load::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = 0;
 
 	for (auto& subc : mSubComponents) {

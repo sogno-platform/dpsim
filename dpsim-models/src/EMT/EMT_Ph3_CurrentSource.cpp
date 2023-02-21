@@ -12,10 +12,10 @@
 using namespace CPS;
 
 EMT::Ph3::CurrentSource::CurrentSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel),
-	mCurrentRef(Attribute<MatrixComp>::create("I_ref", mAttributes)), // rms-value
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
-	mSigOut(Attribute<Complex>::createDynamic("sigOut", mAttributes)) {
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel),
+	mCurrentRef(mAttributes->create<MatrixComp>("I_ref")), // rms-value
+	mSrcFreq(mAttributes->createDynamic<Real>("f_src")),
+	mSigOut(mAttributes->createDynamic<Complex>("sigOut")) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(0);
 	setTerminalNumber(2);
@@ -72,19 +72,11 @@ SimPowerComp<Real>::Ptr EMT::Ph3::CurrentSource::clone(String name) {
 }
 
 
-void EMT::Ph3::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-
+void EMT::Ph3::CurrentSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
 }
 
-void EMT::Ph3::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (terminalNotGrounded(1)) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), - (**mIntfCurrent)(0, 0));
 		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), - (**mIntfCurrent)(1, 0));
@@ -113,27 +105,27 @@ void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
 	);
 }
 
-void EMT::Ph3::CurrentSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void EMT::Ph3::CurrentSource::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	attributeDependencies.push_back(mCurrentRef);
 	modifiedAttributes.push_back(mRightVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 }
 
-void EMT::Ph3::CurrentSource::mnaPreStep(Real time, Int timeStepCount) {
+void EMT::Ph3::CurrentSource::mnaCompPreStep(Real time, Int timeStepCount) {
 	updateCurrent(time);
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph3::CurrentSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph3::CurrentSource::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 };
 
-void EMT::Ph3::CurrentSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
+void EMT::Ph3::CurrentSource::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
 }
 
-void EMT::Ph3::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::CurrentSource::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3,1);
 	if (terminalNotGrounded(1)) {

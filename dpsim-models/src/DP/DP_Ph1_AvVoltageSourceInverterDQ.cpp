@@ -13,19 +13,19 @@ using namespace CPS;
 
 DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
 	CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mOmegaN(Attribute<Real>::create("Omega_nom", mAttributes)),
-	mPref(Attribute<Real>::create("P_ref", mAttributes)),
-	mQref(Attribute<Real>::create("Q_ref", mAttributes)),
-	mVcd(Attribute<Real>::create("Vc_d", mAttributes, 0)),
-	mVcq(Attribute<Real>::create("Vc_q", mAttributes, 0)),
-	mIrcd(Attribute<Real>::create("Irc_d", mAttributes, 0)),
-	mIrcq(Attribute<Real>::create("Irc_q", mAttributes, 0)),
-	mVsref(Attribute<MatrixComp>::create("Vsref", mAttributes, MatrixComp::Zero(1,1))),
-	mVs(Attribute<MatrixComp>::createDynamic("Vs", mAttributes)),
-	mPllOutput(Attribute<Matrix>::createDynamic("pll_output", mAttributes)),
-	mPowerctrlInputs(Attribute<Matrix>::createDynamic("powerctrl_inputs", mAttributes)),
-	mPowerctrlOutputs(Attribute<Matrix>::createDynamic("powerctrl_outputs", mAttributes)),
-	mPowerctrlStates(Attribute<Matrix>::createDynamic("powerctrl_states", mAttributes)) {
+	mOmegaN(mAttributes->create<Real>("Omega_nom")),
+	mPref(mAttributes->create<Real>("P_ref")),
+	mQref(mAttributes->create<Real>("Q_ref")),
+	mVcd(mAttributes->create<Real>("Vc_d", 0)),
+	mVcq(mAttributes->create<Real>("Vc_q", 0)),
+	mIrcd(mAttributes->create<Real>("Irc_d", 0)),
+	mIrcq(mAttributes->create<Real>("Irc_q", 0)),
+	mVsref(mAttributes->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))),
+	mVs(mAttributes->createDynamic<MatrixComp>("Vs")),
+	mPllOutput(mAttributes->createDynamic<Matrix>("pll_output")),
+	mPowerctrlInputs(mAttributes->createDynamic<Matrix>("powerctrl_inputs")),
+	mPowerctrlOutputs(mAttributes->createDynamic<Matrix>("powerctrl_outputs")),
+	mPowerctrlStates(mAttributes->createDynamic<Matrix>("powerctrl_states")) {
 
 	if (withTrafo) {
 		setVirtualNodeNumber(4);
@@ -312,7 +312,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentPreStep(Real time, Int timeSte
 
 	std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -324,18 +324,18 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentAddPostStepDependencies(Attrib
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of component itself
-	mnaUpdateCurrent(**leftVector);
-	mnaUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaCompUpdateCurrent(const Matrix& leftvector) {
 	if (mWithConnectionTransformer)
 		**mIntfCurrent = **mConnectionTransformer->mIntfCurrent;
 	else
 		**mIntfCurrent = **mSubResistorC->mIntfCurrent;
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	for (auto virtualNode : mVirtualNodes)
 		virtualNode->mnaUpdateVoltage(leftVector);
 	(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));

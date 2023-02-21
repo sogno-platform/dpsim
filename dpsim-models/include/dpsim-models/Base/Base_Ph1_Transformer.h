@@ -29,13 +29,13 @@ namespace Ph1 {
 		/// Inductance [H]
 		const Attribute<Real>::Ptr mInductance;
 
-		explicit Transformer(CPS::AttributeBase::Map &attributeList) :
-			mNominalVoltageEnd1(Attribute<Real>::create("nominal_voltage_end1", attributeList)),
-			mNominalVoltageEnd2(Attribute<Real>::create("nominal_voltage_end2", attributeList)),
-			mRatedPower(Attribute<Real>::create("S", attributeList)),
-			mRatio(Attribute<Complex>::create("ratio", attributeList)),
-			mResistance(Attribute<Real>::create("R", attributeList)),
-			mInductance(Attribute<Real>::create("L", attributeList)) { };
+		explicit Transformer(CPS::AttributeList::Ptr attributeList) :
+			mNominalVoltageEnd1(attributeList->create<Real>("nominal_voltage_end1")),
+			mNominalVoltageEnd2(attributeList->create<Real>("nominal_voltage_end2")),
+			mRatedPower(attributeList->create<Real>("S")),
+			mRatio(attributeList->create<Complex>("ratio")),
+			mResistance(attributeList->create<Real>("R")),
+			mInductance(attributeList->create<Real>("L")) { };
 
 
 		///

@@ -11,9 +11,9 @@
 using namespace CPS;
 
 SP::Ph1::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
-    (const String & uid, const String & name, Logger::Level logLevel)
+    (const String& uid, const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)) {
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")) {
 
 	//
 	mSGOrder = SGOrder::SG3Order;
@@ -59,7 +59,7 @@ void SP::Ph1::SynchronGenerator3OrderVBR::stepInPerUnit() {
 	// VBR history voltage
 	mEh_vbr(0,0) = 0.0;
 	mEh_vbr(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * mEf_prev + mDq_t * (**mEf);
-	
+
 	// convert Edq_t into the abc reference frame
 	mEh_vbr = mDqToComplexA * mEh_vbr;
 	mEvbr = Complex(mEh_vbr(0,0), mEh_vbr(1,0)) * mBase_V_RMS;

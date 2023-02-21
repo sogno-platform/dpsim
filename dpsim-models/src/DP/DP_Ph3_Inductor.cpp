@@ -12,7 +12,7 @@ using namespace CPS;
 
 
 DP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: Base::Ph3::Inductor(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel), Base::Ph3::Inductor(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = MatrixComp::Zero(3,1);
@@ -86,7 +86,7 @@ void DP::Ph3::Inductor::initVars(Real omega, Real timeStep) {
 	//**mIntfCurrent = mEquivCond.cwiseProduct(**mIntfVoltage) + mEquivCurrent;
 }
 
-void DP::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void DP::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
 	initVars(omega, timeStep);
 
@@ -94,13 +94,9 @@ void DP::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 				// << "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl
 				// << "Initial current " << Math::abs((**mIntfCurrent)(0,0))
 				// << "<" << Math::phaseDeg((**mIntfCurrent)(0,0)) << std::endl;
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void DP::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mEquivCond(0, 0));
@@ -156,7 +152,7 @@ void DP::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// 				 << "Add " << -mEquivCond << " to system at " << matrixNodeIndex(1) << "," << matrixNodeIndex(0) << std::endl;
 }
 
-void DP::Ph3::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph3::Inductor::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 
 	// Calculate equivalent current source for next time step
 	mEquivCurrent = mEquivCond * **mIntfVoltage + mPrevCurrFac * **mIntfCurrent;
@@ -173,16 +169,29 @@ void DP::Ph3::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	}
 }
 
-void DP::Ph3::Inductor::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaApplyRightSideVectorStamp(**mInductor.mRightVector);
+void DP::Ph3::Inductor::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// actually depends on L, but then we'd have to modify the system matrix anyway
+	modifiedAttributes.push_back(mRightVector);
+	prevStepDependencies.push_back(mIntfVoltage);
+	prevStepDependencies.push_back(mIntfCurrent);
 }
 
-void DP::Ph3::Inductor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaUpdateVoltage(**mLeftVector);
-	mInductor.mnaUpdateCurrent(**mLeftVector);
+void DP::Ph3::Inductor::mnaCompPreStep(Real time, Int timeStepCount) {
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void DP::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph3::Inductor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
+}
+
+void DP::Ph3::Inductor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+}
+
+void DP::Ph3::Inductor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
@@ -197,7 +206,7 @@ void DP::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 	}
 }
 
-void DP::Ph3::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph3::Inductor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
 }
 

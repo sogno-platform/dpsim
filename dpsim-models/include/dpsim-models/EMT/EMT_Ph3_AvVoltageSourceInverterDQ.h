@@ -23,8 +23,8 @@ namespace CPS {
 namespace EMT {
 namespace Ph3 {
 	class AvVoltageSourceInverterDQ :
-		public Base::AvVoltageSourceInverterDQ,
 		public CompositePowerComp<Real>,
+		public Base::AvVoltageSourceInverterDQ,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
 
@@ -138,9 +138,9 @@ namespace Ph3 {
 		/// Initializes internal variables of the component
 		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Updates current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates voltage across component
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		/// MNA pre step operations
 		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations

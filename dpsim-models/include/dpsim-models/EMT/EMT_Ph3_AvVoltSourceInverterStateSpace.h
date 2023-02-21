@@ -9,7 +9,7 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph1_VoltageSource.h>
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -18,9 +18,8 @@ namespace Ph3 {
 
 	/// average inverter model with LC filter
 	class AvVoltSourceInverterStateSpace :
-		public MNAInterface,
+		public MNASimPowerComp<Real>,
 		public Base::Ph1::VoltageSource,
-		public SimPowerComp<Real>,
 		public SharedFactory<AvVoltSourceInverterStateSpace> {
 	protected:
 		Real mTimeStep;
@@ -138,49 +137,25 @@ namespace Ph3 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Returns current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 		/// update equivalent current of the equivalent source
 		void updateEquivCurrent(Real time);
 
-		class MnaPreStep : public CPS::Task {
-		public:
-			MnaPreStep(AvVoltSourceInverterStateSpace& avVoltSourceInverterStateSpace) :
-				Task(**avVoltSourceInverterStateSpace.mName + ".MnaPreStep"), mAvVoltSourceInverterStateSpace(avVoltSourceInverterStateSpace) {
-				mAttributeDependencies.push_back(avVoltSourceInverterStateSpace.attribute("P_ref"));
-				mModifiedAttributes.push_back(mAvVoltSourceInverterStateSpace.attribute("right_vector"));
-				mModifiedAttributes.push_back(mAvVoltSourceInverterStateSpace.attribute("v_intf"));
-			}
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			AvVoltSourceInverterStateSpace& mAvVoltSourceInverterStateSpace;
-		};
-
-		class MnaPostStep : public CPS::Task {
-		public:
-			MnaPostStep(AvVoltSourceInverterStateSpace& avVoltSourceInverterStateSpace, Attribute<Matrix>::Ptr leftVector) :
-				Task(**avVoltSourceInverterStateSpace.mName + ".MnaPostStep"), mAvVoltSourceInverterStateSpace(avVoltSourceInverterStateSpace), mLeftVector(leftVector)
-			{
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mAvVoltSourceInverterStateSpace.attribute("i_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			AvVoltSourceInverterStateSpace& mAvVoltSourceInverterStateSpace;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
-
+		/// Add MNA pre step dependencies
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		/// Add MNA post step dependencies
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

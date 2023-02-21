@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
@@ -18,10 +18,9 @@ namespace SP {
 namespace Ph1 {
 	/// Static phasor inductor model
 	class Inductor :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Inductor,
 		public MNATearInterface,
-		public MNAInterface,
-		public SimPowerComp<Complex>,
 		public SharedFactory<Inductor> {
 	protected:
 		/// susceptance [S]
@@ -41,30 +40,17 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Update interface voltage from MNA system results
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system results
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Inductor& inductor, Attribute<Matrix>::Ptr leftVector) :
-				Task(**inductor.mName + ".MnaPostStep"),
-				mInductor(inductor), mLeftVector(leftVector) {
-					mInductor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mInductor.mnaPostStep(time, timeStepCount, mLeftVector); };
-		private:
-			Inductor& mInductor;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
 	};

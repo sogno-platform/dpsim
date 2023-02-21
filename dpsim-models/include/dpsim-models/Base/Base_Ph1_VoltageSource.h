@@ -21,9 +21,9 @@ namespace Ph1 {
 		/// Source frequency [Hz]
 		const Attribute<Real>::Ptr mSrcFreq;
 
-		explicit VoltageSource(CPS::AttributeBase::Map &attributeList) :
-			mVoltageRef(Attribute<Complex>::create("V_ref", attributeList)),
-			mSrcFreq(Attribute<Real>::create("f_src", attributeList, -1)) { };
+		explicit VoltageSource(CPS::AttributeList::Ptr attributeList) :
+			mVoltageRef(attributeList->create<Complex>("V_ref")),
+			mSrcFreq(attributeList->create<Real>("f_src", -1)) { };
 
 		/// Sets model specific parameters
 		void setParameters(Complex voltageRef, Real srcFreq = -1) {

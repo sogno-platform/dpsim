@@ -12,8 +12,8 @@ using namespace CPS;
 
 
 DP::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel),
-	mVoltageRef(Attribute<Complex>::create("V_ref", mAttributes)) {
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
+	mVoltageRef(mAttributes->create<Complex>("V_ref")) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -44,20 +44,16 @@ void DP::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	// mLog.info() << "Voltage across: " << std::abs(mVoltageRef->get()) << "<" << std::arg(mVoltageRef->get()) << std::endl;
 }
 
-void DP::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void DP::Ph3::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
 	(**mIntfVoltage)(0, 0) = **mVoltageRef;
 	(**mIntfVoltage)(1, 0) = Complex(Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef) - 2. / 3. * M_PI),
 								 Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));
 	(**mIntfVoltage)(2, 0) = Complex(Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),
 								 Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void DP::Ph3::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), Complex(-1, 0));
 		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(0, 0), Complex(-1, 0));
@@ -92,7 +88,7 @@ void DP::Ph3::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// }
 }
 
-void DP::Ph3::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), (**mIntfVoltage)(0, 0));
 	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), (**mIntfVoltage)(1, 0));
 	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), (**mIntfVoltage)(2, 0));
@@ -109,16 +105,27 @@ void DP::Ph3::VoltageSource::updateVoltage(Real time) {
 		Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));
 }
 
-void DP::Ph3::VoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.updateVoltage(time);
-	mVoltageSource.mnaApplyRightSideVectorStamp(**mVoltageSource.mRightVector);
+void DP::Ph3::VoltageSource::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(mVoltageRef);
+	modifiedAttributes.push_back(mRightVector);
+	modifiedAttributes.push_back(mIntfVoltage);
 }
 
-void DP::Ph3::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.mnaUpdateCurrent(**mLeftVector);
+void DP::Ph3::VoltageSource::mnaCompPreStep(Real time, Int timeStepCount) {
+	updateVoltage(time);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void DP::Ph3::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph3::VoltageSource::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfCurrent);
+}
+
+void DP::Ph3::VoltageSource::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateCurrent(**leftVector);
+}
+
+void DP::Ph3::VoltageSource::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
 	(**mIntfCurrent)(1, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
 	(**mIntfCurrent)(2, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));

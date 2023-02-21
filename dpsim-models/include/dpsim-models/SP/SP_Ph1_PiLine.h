@@ -24,8 +24,8 @@ namespace Ph1 {
 	/// For MNA this model consists sub components to represent the
 	/// RLC elements of a PI-line.
 	class PiLine :
-	 public Base::Ph1::PiLine,
 	 public CompositePowerComp<Complex>,
+	 public Base::Ph1::PiLine,
 	 public MNATearInterface,
 	 public SharedFactory<PiLine>,
 	 public PFSolverInterfaceBranch {
@@ -122,9 +122,9 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Updates internal current variable of the component
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		/// MNA post-step operations
 		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// add MNA post-step dependencies

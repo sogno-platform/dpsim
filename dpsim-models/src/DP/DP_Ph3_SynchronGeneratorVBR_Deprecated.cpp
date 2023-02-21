@@ -227,7 +227,7 @@ void DP::Ph3::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real time, N
 	mISourceEq = R_eq_DP.inverse()*E_eq_DP*mBase_I;
 }
 
-void DP::Ph3::SynchronGeneratorVBR::mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time) {
+void DP::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Matrix& rightVector, Matrix& leftVector, Real time) {
 	Real dt = mSystemTimeStep;
 
 	if ( terminalNotGrounded(0) ) {

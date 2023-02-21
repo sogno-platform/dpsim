@@ -42,13 +42,11 @@ void MnaSolver<VarType>::initialize() {
 	if (mFrequencyParallel) {
 		mSLog->info("Computing network harmonics in parallel.");
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
-			mLeftSideVectorHarm.push_back(
-				CPS::Attribute<Matrix>::create("left_vector_"+std::to_string(freq), mAttributes)
-			);
+			mLeftSideVectorHarm.push_back(AttributeStatic<Matrix>::make());
 		}
 	}
 	else {
-		mLeftSideVector = CPS::Attribute<Matrix>::create("left_vector", mAttributes);
+		mLeftSideVector = AttributeStatic<Matrix>::make();
 	}
 
 	mSLog->info("-- Process topology");
@@ -121,15 +119,15 @@ void MnaSolver<Real>::initializeComponents() {
 
 	// Initialize MNA specific parts of components.
 	for (auto comp : allMNAComps) {
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attributeTyped<Matrix>("left_vector"));
-		const Matrix& stamp = comp->template attributeTyped<Matrix>("right_vector")->get();
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mLeftSideVector);
+		const Matrix& stamp = comp->getRightVector()->get();
 		if (stamp.size() != 0) {
 			mRightVectorStamps.push_back(&stamp);
 		}
 	}
 
 	for (auto comp : mMNAIntfSwitches)
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attributeTyped<Matrix>("left_vector"));
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mLeftSideVector);
 }
 
 template <>
@@ -159,7 +157,7 @@ void MnaSolver<Complex>::initializeComponents() {
 		for (auto comp : mMNAComponents) {
 			// Initialize MNA specific parts of components.
 			comp->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep, mLeftSideVectorHarm);
-			const Matrix& stamp = comp->template attributeTyped<Matrix>("right_vector")->get();
+			const Matrix& stamp = comp->getRightVector()->get();
 			if (stamp.size() != 0) mRightVectorStamps.push_back(&stamp);
 		}
 		// Initialize nodes
@@ -170,15 +168,15 @@ void MnaSolver<Complex>::initializeComponents() {
 	else {
 		// Initialize MNA specific parts of components.
 		for (auto comp : allMNAComps) {
-			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attributeTyped<Matrix>("left_vector"));
-			const Matrix& stamp = comp->template attributeTyped<Matrix>("right_vector")->get();
+			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mLeftSideVector);
+			const Matrix& stamp = comp->getRightVector()->get();
 			if (stamp.size() != 0) {
 				mRightVectorStamps.push_back(&stamp);
 			}
 		}
 
 		for (auto comp : mMNAIntfSwitches)
-			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attributeTyped<Matrix>("left_vector"));
+			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mLeftSideVector);
 	}
 }
 
@@ -378,7 +376,7 @@ void MnaSolver<Complex>::createEmptyVectors() {
 	if (mFrequencyParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
-			mLeftSideVectorHarm.push_back(Attribute<Matrix>::create("left_vector_harm_" + freq, mAttributes, Matrix::Zero(2*(mNumMatrixNodeIndices), 1)));
+			mLeftSideVectorHarm.push_back(AttributeStatic<Matrix>::make(Matrix::Zero(2*(mNumMatrixNodeIndices), 1)));
 		}
 	}
 	else {

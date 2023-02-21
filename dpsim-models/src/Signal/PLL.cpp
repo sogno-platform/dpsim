@@ -13,14 +13,14 @@ using namespace CPS::Signal;
 
 PLL::PLL(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
-    mInputRef(Attribute<Real>::createDynamic("input_ref", mAttributes)),
+    mInputRef(mAttributes->createDynamic<Real>("input_ref")),
     /// CHECK: Which of these really need to be attributes?
-    mInputPrev(Attribute<Matrix>::create("input_prev", mAttributes, Matrix::Zero(2,1))),
-    mStatePrev(Attribute<Matrix>::create("state_prev", mAttributes, Matrix::Zero(2,1))),
-    mOutputPrev(Attribute<Matrix>::create("output_prev", mAttributes, Matrix::Zero(2,1))),
-    mInputCurr(Attribute<Matrix>::create("input_curr", mAttributes, Matrix::Zero(2,1))),
-    mStateCurr(Attribute<Matrix>::create("state_curr", mAttributes, Matrix::Zero(2,1))),
-    mOutputCurr(Attribute<Matrix>::create("output_curr", mAttributes, Matrix::Zero(2,1))) { }
+    mInputPrev(mAttributes->create<Matrix>("input_prev", Matrix::Zero(2,1))),
+    mStatePrev(mAttributes->create<Matrix>("state_prev", Matrix::Zero(2,1))),
+    mOutputPrev(mAttributes->create<Matrix>("output_prev", Matrix::Zero(2,1))),
+    mInputCurr(mAttributes->create<Matrix>("input_curr", Matrix::Zero(2,1))),
+    mStateCurr(mAttributes->create<Matrix>("state_curr", Matrix::Zero(2,1))),
+    mOutputCurr(mAttributes->create<Matrix>("output_curr", Matrix::Zero(2,1))) { }
 
 
 void PLL::setParameters(Real kpPLL, Real kiPLL, Real omegaNom) {

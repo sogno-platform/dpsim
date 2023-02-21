@@ -107,15 +107,15 @@ void EMT::Ph3::RxLine::mnaParentAddPostStepDependencies(AttributeBase::List &pre
 };
 
 void EMT::Ph3::RxLine::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::RxLine::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph3::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::RxLine::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
@@ -130,6 +130,6 @@ void EMT::Ph3::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {
 	}
 }
 
-void EMT::Ph3::RxLine::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::RxLine::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = mSubInductor->intfCurrent();
 }

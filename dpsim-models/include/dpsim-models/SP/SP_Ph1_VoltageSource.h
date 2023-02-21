@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
@@ -37,8 +37,7 @@ namespace Ph1 {
 	/// positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
 	class VoltageSource :
-		public SimPowerComp<Complex>,
-		public MNAInterface,
+		public MNASimPowerComp<Complex>,
 		public DAEInterface,
 		public SharedFactory<VoltageSource> {
 	private:
@@ -79,51 +78,27 @@ namespace Ph1 {
 
 		// #### MNA Section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// Returns current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### DAE Section ####
 		/// Residual function for DAE Solver
 		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
 		///Voltage Getter
 		Complex daeInitialize();
-
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(VoltageSource& voltageSource) :
-				Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-					mVoltageSource.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-				}
-				void execute(Real time, Int timeStepCount) { mVoltageSource.mnaPreStep(time, timeStepCount); };
-		private:
-			VoltageSource& mVoltageSource;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(**voltageSource.mName + ".MnaPostStep"),
-				mVoltageSource(voltageSource), mLeftVector(leftVector) {
-					mVoltageSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount)  { mVoltageSource.mnaPostStep(time, timeStepCount, mLeftVector); };
-		private:
-			VoltageSource& mVoltageSource;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 	};
 }
 }

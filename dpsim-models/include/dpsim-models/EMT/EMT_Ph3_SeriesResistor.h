@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
 
@@ -20,9 +20,8 @@ namespace Ph3 {
 	/// This resistor has resistance values different from zero
 	/// only on the main diagonal. These values are identical.
 	class SeriesResistor :
+		public MNASimPowerComp<Real>,
 		public Base::Ph1::Resistor,
-		public MNAInterface,
-		public SimPowerComp<Real>,
 		public SharedFactory<SeriesResistor> {
 
 	public:
@@ -40,31 +39,18 @@ namespace Ph3 {
 
 		// #### MNA section ####
 		/// Initializes MNA specific variables
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Update interface voltage from MNA system results
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface voltage from MNA system results
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(SeriesResistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**resistor.mName + ".MnaPostStep"),
-				mResistor(resistor), mLeftVector(leftSideVector) {
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mResistor.attribute("v_intf"));
-				mModifiedAttributes.push_back(mResistor.attribute("i_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			SeriesResistor& mResistor;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA post step dependencies
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

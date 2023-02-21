@@ -29,22 +29,22 @@ using namespace CPS;
 using namespace DPsim;
 
 Simulation::Simulation(String name,	Logger::Level logLevel) :
-	mName(Attribute<String>::create("name", mAttributes, name)),
-	mFinalTime(Attribute<Real>::create("final_time", mAttributes, 0.001)),
-	mTimeStep(Attribute<Real>::create("time_step", mAttributes, 0.001)),
-	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true)),
-	mSteadyStateInit(Attribute<Bool>::create("steady_state_init", mAttributes, false)),
+	mName(AttributeStatic<String>::make(name)),
+	mFinalTime(AttributeStatic<Real>::make(0.001)),
+	mTimeStep(AttributeStatic<Real>::make(0.001)),
+	mSplitSubnets(AttributeStatic<Bool>::make(true)),
+	mSteadyStateInit(AttributeStatic<Bool>::make(false)),
 	mLogLevel(logLevel)  {
 	create();
 }
 
 Simulation::Simulation(String name, CommandLineArgs& args) :
-	mName(Attribute<String>::create("name", mAttributes, name)),
+	mName(AttributeStatic<String>::make(name)),
 	mSolverPluginName(args.solverPluginName),
-	mFinalTime(Attribute<Real>::create("final_time", mAttributes, args.duration)),
-	mTimeStep(Attribute<Real>::create("time_step", mAttributes, args.timeStep)),
-	mSplitSubnets(Attribute<Bool>::create("split_subnets", mAttributes, true)),
-	mSteadyStateInit(Attribute<Bool>::create("steady_state_init", mAttributes, false)),
+	mFinalTime(AttributeStatic<Real>::make(args.duration)),
+	mTimeStep(AttributeStatic<Real>::make(args.timeStep)),
+	mSplitSubnets(AttributeStatic<Bool>::make(true)),
+	mSteadyStateInit(AttributeStatic<Bool>::make(false)),
 	mLogLevel(args.logLevel),
 	mDomain(args.solver.domain),
 	mSolverType(args.solver.type),
@@ -118,7 +118,7 @@ void Simulation::createSolvers() {
 		if (odeComp) {
 			// TODO explicit / implicit integration
 			auto odeSolver = std::make_shared<ODESolver>(
-				odeComp->attributeTyped<String>("name")->get() + "_ODE", odeComp, false, **mTimeStep);
+				odeComp->mAttributeList->attributeTyped<String>("name")->get() + "_ODE", odeComp, false, **mTimeStep);
 			mSolvers.push_back(odeSolver);
 		}
 	}

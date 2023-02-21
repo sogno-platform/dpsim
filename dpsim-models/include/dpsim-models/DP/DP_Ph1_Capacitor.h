@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Base/Base_Ph1_Capacitor.h>
 
 namespace CPS {
@@ -23,9 +22,8 @@ namespace Ph1 {
 	/// The resistance is constant for a defined time step and system
 	/// frequency and the current source changes for each iteration.
 	class Capacitor :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Capacitor,
-		public MNAInterface,
-		public SimPowerComp<Complex>,
 		public SharedFactory<Capacitor> {
 	protected:
 		/// DC equivalent current source for harmonics [A]
@@ -51,52 +49,29 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		void mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+		void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-		void mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		void mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) override;
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaApplyRightSideVectorStampHarm(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector) override;
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
-		void mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx);
-		void mnaApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx);
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx);
+		void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx) override;
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
-		void mnaUpdateCurrentHarm();
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrentHarm();
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(Capacitor& capacitor)
-				: Task(**capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
-					mCapacitor.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mCapacitor.mnaPreStep(time, timeStepCount); };
-		private:
-			Capacitor& mCapacitor;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Capacitor& capacitor, Attribute<Matrix>::Ptr leftVector)
-				: Task(**capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
-					mCapacitor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mCapacitor.mnaPostStep(time, timeStepCount, mLeftVector); };
-		private:
-			Capacitor& mCapacitor;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		class MnaPreStepHarm : public CPS::Task {
 		public:

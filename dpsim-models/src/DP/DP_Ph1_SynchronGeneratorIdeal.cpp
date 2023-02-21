@@ -14,7 +14,7 @@ using namespace CPS;
 DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
 	Logger::Level logLevel)
 	: CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)) {
+	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
@@ -57,7 +57,7 @@ void DP::Ph1::SynchronGeneratorIdeal::mnaParentAddPreStepDependencies(AttributeB
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -67,14 +67,14 @@ void DP::Ph1::SynchronGeneratorIdeal::mnaParentAddPostStepDependencies(Attribute
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateCurrent(**leftVector);
-	mnaUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::mnaUpdateCurrent(const Matrix& leftvector) {
+void DP::Ph1::SynchronGeneratorIdeal::mnaCompUpdateCurrent(const Matrix& leftvector) {
 	**mIntfCurrent = **mSubComponents[0]->mIntfCurrent;
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph1::SynchronGeneratorIdeal::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	**mIntfVoltage = **mSubComponents[0]->mIntfVoltage;
 }

@@ -12,8 +12,8 @@ using namespace CPS;
 
 DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
 	: CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mVoltageRef(Attribute<Complex>::createDynamic("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
+	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
+	mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
 	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
 
@@ -99,7 +99,7 @@ void DP::Ph1::NetworkInjection::mnaParentAddPreStepDependencies(AttributeBase::L
 
 void DP::Ph1::NetworkInjection::mnaParentPreStep(Real time, Int timeStepCount) {
 	// pre-step of component itself
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::NetworkInjection::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -111,15 +111,15 @@ void DP::Ph1::NetworkInjection::mnaParentAddPostStepDependencies(AttributeBase::
 
 void DP::Ph1::NetworkInjection::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of component itself
-	mnaUpdateCurrent(**leftVector);
-	mnaUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
 }
 
-void DP::Ph1::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph1::NetworkInjection::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	**mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
 }
 
-void DP::Ph1::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph1::NetworkInjection::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
 }
 

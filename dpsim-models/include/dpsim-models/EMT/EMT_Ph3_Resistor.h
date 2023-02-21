@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph3_Resistor.h>
 namespace CPS {
@@ -16,9 +16,8 @@ namespace EMT {
 namespace Ph3 {
  /// EMT Resistor
 class Resistor :
+	public MNASimPowerComp<Real>,
 	public Base::Ph3::Resistor,
-	public MNAInterface,
-	public SimPowerComp<Real>,
 	public SharedFactory<Resistor> {
 protected:
 public:
@@ -39,32 +38,19 @@ public:
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftSideVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftSideVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) { }
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 		/// MNA pre and post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
 		/// add MNA pre and post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Resistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**resistor.mName + ".MnaPostStep"),
-				mResistor(resistor), mLeftVector(leftSideVector) {
-				mResistor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mResistor.mnaPostStep(time, timeStepCount, mLeftVector); };
-		private:
-			Resistor& mResistor;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 	};
 }
 }

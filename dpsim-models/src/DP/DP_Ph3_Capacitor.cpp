@@ -14,7 +14,7 @@ using namespace CPS;
 using namespace CPS::DP::Ph3;
 
 DP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: Base::Ph3::Capacitor(mAttributes), SimPowerComp<Complex>(uid, name, logLevel) {
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel), Base::Ph3::Capacitor(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = MatrixComp::Zero(3,1);
@@ -95,7 +95,7 @@ void DP::Ph3::Capacitor::initVars(Real omega, Real timeStep) {
 	mEquivCurrent = -mPrevVoltCoeff * **mIntfVoltage - **mIntfCurrent;
 }
 
-void DP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void DP::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
 	initVars(omega, timeStep);
 	//Matrix equivCondReal = 2.0 * mCapacitance / timeStep;
@@ -124,13 +124,9 @@ void DP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	// 			<< "Initial current " << Math::abs((**mIntfCurrent)(0,0))
 	// 			<< "<" << Math::phaseDeg((**mIntfCurrent)(0,0)) << std::endl
 	// 			<< "--- MNA initialization finished ---" << std::endl;
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void DP::Ph3::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mEquivCond(0, 0));
@@ -196,7 +192,7 @@ void DP::Ph3::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}*/
 }
 
-void DP::Ph3::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph3::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	//mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
 	//mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
 
@@ -214,16 +210,29 @@ void DP::Ph3::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	}
 }
 
-void DP::Ph3::Capacitor::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaApplyRightSideVectorStamp(**mCapacitor.mRightVector);
+void DP::Ph3::Capacitor::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// actually depends on C, but then we'd have to modify the system matrix anyway
+	modifiedAttributes.push_back(mRightVector);
+	prevStepDependencies.push_back(mIntfCurrent);
+	prevStepDependencies.push_back(mIntfVoltage);
 }
 
-void DP::Ph3::Capacitor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaUpdateVoltage(**mLeftVector);
-	mCapacitor.mnaUpdateCurrent(**mLeftVector);
+void DP::Ph3::Capacitor::mnaCompPreStep(Real time, Int timeStepCount) {
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void DP::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
+void DP::Ph3::Capacitor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
+}
+
+void DP::Ph3::Capacitor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+}
+
+void DP::Ph3::Capacitor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
@@ -238,6 +247,6 @@ void DP::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 	}
 }
 
-void DP::Ph3::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {
+void DP::Ph3::Capacitor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
 }

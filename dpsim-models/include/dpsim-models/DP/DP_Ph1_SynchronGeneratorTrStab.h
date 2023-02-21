@@ -21,8 +21,8 @@ namespace Ph1 {
 	///
 	/// This model is based on Eremia section 2.1.6.
 	class SynchronGeneratorTrStab :
-		public Base::SynchronGenerator,
 		public CompositePowerComp<Complex>,
+		public Base::SynchronGenerator,
 		public SharedFactory<SynchronGeneratorTrStab> {
 	protected:
 		// #### Model specific variables ####
@@ -96,9 +96,9 @@ namespace Ph1 {
 		/// Retrieves calculated voltage from simulation for next step
 		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		///
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		///
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 
 		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;

@@ -17,25 +17,42 @@
 
 namespace CPS {
 	/// Base class of objects having attributes to access member variables.
-	class AttributeList {
-	protected:
-
+	class AttributeList: public SharedFactory<AttributeList>  {
+	private:
 		/// Map of all attributes
-		AttributeBase::Map mAttributes;
+		AttributeBase::Map mAttributeMap;
 
 	public:
-		typedef std::shared_ptr<AttributeList> Ptr;
+		using Ptr = std::shared_ptr<AttributeList>;
 
 		AttributeList() { };
 
-		virtual ~AttributeList() = default;
+		const AttributeBase::Map & attributes() const { return mAttributeMap; };
 
-		const AttributeBase::Map & attributes() { return mAttributes; };
+		/**
+		 * Creates a new static Attribute and enters a pointer to it into this Attribute Map using the provided name.
+		 * */
+		template <typename T>
+		typename Attribute<T>::Ptr create(const String &name, T intitialValue = T()) {
+			typename Attribute<T>::Ptr newAttr = AttributePointer<Attribute<T>>(AttributeStatic<T>::make(intitialValue));
+			mAttributeMap[name] = newAttr;
+			return newAttr;
+		}
+
+		/**
+		 * Creates a new dynamic Attribute and enters a pointer to it into this Attribute Map using the provided name.
+		 * */
+		template <typename T>
+		typename Attribute<T>::Ptr createDynamic(const String &name) {
+			typename Attribute<T>::Ptr newAttr = AttributePointer<Attribute<T>>(AttributeDynamic<T>::make());
+			mAttributeMap[name] = newAttr;
+			return newAttr;
+		}
 
 		/// Return pointer to an attribute.
-		virtual AttributeBase::Ptr attribute(const String &name) {
-			auto it = mAttributes.find(name);
-			if (it == mAttributes.end())
+		AttributeBase::Ptr attribute(const String &name) const {
+			auto it = mAttributeMap.find(name);
+			if (it == mAttributeMap.end())
 				throw InvalidAttributeException();
 
 			return it->second;
@@ -43,7 +60,7 @@ namespace CPS {
 
 		/// Return pointer to an attribute.
 		template<typename T>
-		typename Attribute<T>::Ptr attributeTyped(const String &name) {
+		typename Attribute<T>::Ptr attributeTyped(const String &name) const {
 			auto attr = attribute(name);
 			auto attrPtr = std::dynamic_pointer_cast<Attribute<T>>(attr.getPtr());
 
@@ -52,6 +69,5 @@ namespace CPS {
 
 			return typename Attribute<T>::Ptr(attrPtr);
 		}
-
 	};
 }

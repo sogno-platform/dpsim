@@ -13,7 +13,7 @@ using namespace CPS;
 SP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
     (const String & uid, const String & name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)) {
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")) {
 
 	//
 	setTerminalNumber(1);
@@ -38,7 +38,7 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 	mB = Matrix::Zero(2,2);
 	mC = Matrix::Zero(2,1);
 	calculateStateMatrix();
-    
+
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
@@ -62,7 +62,7 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::calculateStateMatrix() {
 	   		(1. / Td_t) * **mEf * (mLd_t / mLd);
 }
 
-void SP::Ph1::SynchronGenerator4OrderDCIM::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::SynchronGenerator4OrderDCIM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
@@ -76,17 +76,17 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	// armature currents for at t=k+1
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0) ) / mLq_t;
-	
+
 	// convert currents into the abc domain
 	Matrix Ia = mDqToComplexA * **mIdq;
 	(**mIntfCurrent)(0,0) = Complex(Ia(0,0), Ia(1,0)) * mBase_I_RMS;
 }
 
-void SP::Ph1::SynchronGenerator4OrderDCIM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void SP::Ph1::SynchronGenerator4OrderDCIM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0), (**mIntfCurrent)(0, 0));
 }
 
-void SP::Ph1::SynchronGenerator4OrderDCIM::mnaPostStep(const Matrix& leftVector) {
+void SP::Ph1::SynchronGenerator4OrderDCIM::mnaCompPostStep(const Matrix& leftVector) {
 	// update armature voltage
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	Matrix Vabc = Matrix::Zero(2,1);
@@ -99,7 +99,7 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::mnaPostStep(const Matrix& leftVector)
 Matrix SP::Ph1::SynchronGenerator4OrderDCIM::get_DqToComplexATransformMatrix() {
 	Matrix dqToComplexA(2, 2);
 	dqToComplexA <<
-		cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime), 
+		cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime),
 		sin(**mThetaMech - mBase_OmMech * mSimTime),	cos(**mThetaMech - mBase_OmMech * mSimTime);
 
 	return dqToComplexA;

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Capacitor.h>
 
@@ -23,9 +23,8 @@ namespace Ph1 {
 	/// The resistance is constant for a defined time step and system
 	///frequency and the current source changes for each iteration.
 	class Capacitor :
+		public MNASimPowerComp<Real>,
 		public Base::Ph1::Capacitor,
-		public MNAInterface,
-		public SimPowerComp<Real>,
 		public SharedFactory<Capacitor> {
 	protected:
 		/// DC equivalent current source [A]
@@ -47,47 +46,23 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(Capacitor& capacitor)
-				: Task(**capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
-				// actually depends on C, but then we'd have to modify the system matrix anyway
-				mModifiedAttributes.push_back(capacitor.attribute("right_vector"));
-				mPrevStepDependencies.push_back(mCapacitor.attribute("i_intf"));
-				mPrevStepDependencies.push_back(mCapacitor.attribute("v_intf"));
-			}
+		void mnaCompPreStep(Real time, Int timeStepCount) override;
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			Capacitor& mCapacitor;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Capacitor& capacitor, Attribute<Matrix>::Ptr leftVector)
-				: Task(**capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mCapacitor.attribute("v_intf"));
-				mModifiedAttributes.push_back(mCapacitor.attribute("i_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			Capacitor& mCapacitor;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA pre step dependencies
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		/// Add MNA post step dependencies
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

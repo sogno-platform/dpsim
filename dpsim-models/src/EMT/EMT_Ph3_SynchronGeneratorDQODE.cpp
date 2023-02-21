@@ -14,33 +14,34 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::SynchronGeneratorDQODE::SynchronGeneratorDQODE(String uid, String name, Logger::Level logLevel)
-	: SynchronGeneratorDQ(uid, name, logLevel) {
+	: SynchronGeneratorDQ(uid, name, logLevel), ODEInterface(mAttributes) {
 }
 
 EMT::Ph3::SynchronGeneratorDQODE::SynchronGeneratorDQODE(String name, Logger::Level logLevel)
-	: SynchronGeneratorDQ(name, name, logLevel) {
+	: SynchronGeneratorDQ(name, name, logLevel), ODEInterface(mAttributes) {
 }
 
-void EMT::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void EMT::Ph3::SynchronGeneratorDQODE::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	SynchronGeneratorDQ::initializeMatrixAndStates();
 
 	mDim = mNumDampingWindings + 7;
 	**mOdePreState = Matrix::Zero(mDim, 1);
 	**mOdePostState = Matrix::Zero(mDim, 1);
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mMnaTasks.push_back(std::make_shared<ODEPreStep>(*this));
 }
 
-void EMT::Ph3::SynchronGeneratorDQODE::MnaPreStep::execute(Real time, Int timeStepCount) {
+void EMT::Ph3::SynchronGeneratorDQODE::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(mOdePostState);
+	modifiedAttributes.push_back(mRightVector);
+	prevStepDependencies.push_back(mIntfVoltage);
+}
+
+void EMT::Ph3::SynchronGeneratorDQODE::mnaCompPreStep(Real time, Int timeStepCount) {
 	// ODEPreStep and ODESolver.Solve guaranteed to be executed by scheduler
-	mSynGen.odePostStep();
-	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+	odePostStep();
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::SynchronGeneratorDQODE::odePreStep() {

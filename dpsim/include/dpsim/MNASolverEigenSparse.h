@@ -120,13 +120,13 @@ namespace DPsim {
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
 				for (auto it : solver.mMNAComponents) {
-					if (it->template attributeTyped<Matrix>("right_vector")->get().size() != 0)
-						mAttributeDependencies.push_back(it->attribute("right_vector"));
+					if (it->getRightVector()->get().size() != 0)
+						mAttributeDependencies.push_back(it->getRightVector());
 				}
 				for (auto node : solver.mNodes) {
-					mModifiedAttributes.push_back(node->attribute("v"));
+					mModifiedAttributes.push_back(node->mVoltage);
 				}
-				mModifiedAttributes.push_back(solver.attribute("left_vector"));
+				mModifiedAttributes.push_back(solver.mLeftSideVector);
 			}
 
 			void execute(Real time, Int timeStepCount) { mSolver.solve(time, timeStepCount); }
@@ -142,14 +142,14 @@ namespace DPsim {
 				Task(solver.mName + ".Solve"), mSolver(solver), mFreqIdx(freqIdx) {
 
 				for (auto it : solver.mMNAComponents) {
-					if (it->template attributeTyped<Matrix>("right_vector")->get().size() != 0)
-						mAttributeDependencies.push_back(it->attribute("right_vector"));
+					if (it->getRightVector()->get().size() != 0)
+						mAttributeDependencies.push_back(it->getRightVector());
 				}
 				for (auto node : solver.mNodes) {
-					mModifiedAttributes.push_back(node->attribute("v"));
+					mModifiedAttributes.push_back(node->mVoltage);
 				}
-				for(Int freq = 0; freq < solver.mSystem.mFrequencies.size(); ++freq) {
-					mModifiedAttributes.push_back(solver.attribute("left_vector_"+std::to_string(freq)));
+				for(auto leftVec : solver.mLeftSideVectorHarm) {
+					mModifiedAttributes.push_back(leftVec);
 				}
 			}
 
@@ -167,17 +167,17 @@ namespace DPsim {
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
 				for (auto it : solver.mMNAComponents) {
-					if (it->template attributeTyped<Matrix>("right_vector")->get().size() != 0)
-						mAttributeDependencies.push_back(it->attribute("right_vector"));
+					if (it->getRightVector()->get().size() != 0)
+						mAttributeDependencies.push_back(it->getRightVector());
 				}
 				for (auto it : solver.mMNAIntfVariableComps) {
-					if (it->template attributeTyped<Matrix>("right_vector")->get().size() != 0)
-						mAttributeDependencies.push_back(it->attribute("right_vector"));
+					if (it->getRightVector()->get().size() != 0)
+						mAttributeDependencies.push_back(it->getRightVector());
 				}
 				for (auto node : solver.mNodes) {
-					mModifiedAttributes.push_back(node->attribute("v"));
+					mModifiedAttributes.push_back(node->mVoltage);
 				}
-				mModifiedAttributes.push_back(solver.attribute("left_vector"));
+				mModifiedAttributes.push_back(solver.mLeftSideVector);
 			}
 
 			void execute(Real time, Int timeStepCount) { mSolver.solveWithSystemMatrixRecomputation(time, timeStepCount); }
@@ -191,7 +191,7 @@ namespace DPsim {
 		public:
 			LogTask(MnaSolverEigenSparse<VarType>& solver) :
 				Task(solver.mName + ".Log"), mSolver(solver) {
-				mAttributeDependencies.push_back(solver.attribute("left_vector"));
+				mAttributeDependencies.push_back(solver.mLeftSideVector);
 				mModifiedAttributes.push_back(Scheduler::external);
 			}
 

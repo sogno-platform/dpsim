@@ -88,7 +88,7 @@ void DP::Ph1::RXLoadSwitch::mnaParentAddPreStepDependencies(AttributeBase::List 
 
 void DP::Ph1::RXLoadSwitch::mnaParentPreStep(Real time, Int timeStepCount) {
 	updateSwitchState(time);
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::RXLoadSwitch::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies,

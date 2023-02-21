@@ -7,7 +7,7 @@
  *********************************************************************************/
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
@@ -26,8 +26,7 @@ namespace CPS {
 			/// of node k as negative. Moreover
 			/// a new equation ej - ek = V is added to the problem.
 			class VoltageSource :
-				public MNAInterface,
-				public SimPowerComp<Real>,
+				public MNASimPowerComp<Real>,
 				public SharedFactory<VoltageSource> {
 			private:
 				///
@@ -58,45 +57,21 @@ namespace CPS {
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component
-				void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+				void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 				/// Stamps system matrix
-				void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+				void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
 				/// Stamps right side (source) vector
-				void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+				void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 				/// Returns current through the component
-				void mnaUpdateCurrent(const Matrix& leftVector);
+				void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 				/// MNA pre step operations
-				void mnaPreStep(Real time, Int timeStepCount);
+				void mnaCompPreStep(Real time, Int timeStepCount) override;
 				/// MNA post step operations
-				void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+				void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 				/// Add MNA pre step dependencies
-				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+				void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 				/// Add MNA post step dependencies
-				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-				class MnaPreStep : public Task {
-				public:
-					MnaPreStep(VoltageSource& voltageSource) :
-						Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-							mVoltageSource.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-						}
-						void execute(Real time, Int timeStepCount) { mVoltageSource.mnaPreStep(time, timeStepCount); };
-				private:
-					VoltageSource& mVoltageSource;
-				};
-
-				class MnaPostStep : public Task {
-				public:
-					MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-						Task(**voltageSource.mName + ".MnaPostStep"),
-						mVoltageSource(voltageSource), mLeftVector(leftVector) {
-							mVoltageSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-					}
-					void execute(Real time, Int timeStepCount)  { mVoltageSource.mnaPostStep(time, timeStepCount, mLeftVector); };
-				private:
-					VoltageSource& mVoltageSource;
-					Attribute<Matrix>::Ptr mLeftVector;
-				};
+				void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 			};
 		}
 	}

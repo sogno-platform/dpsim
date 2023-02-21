@@ -12,8 +12,8 @@ using namespace CPS;
 
 EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
 	: CompositePowerComp<Real>(uid, name, true, true, logLevel),
-	mVoltageRef(Attribute<MatrixComp>::createDynamic("V_ref", mAttributes)),
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
+	mVoltageRef(mAttributes->createDynamic<MatrixComp>("V_ref")),
+	mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
@@ -96,7 +96,7 @@ void EMT::Ph3::NetworkInjection::mnaParentAddPreStepDependencies(AttributeBase::
 }
 
 void EMT::Ph3::NetworkInjection::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::NetworkInjection::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -106,14 +106,14 @@ void EMT::Ph3::NetworkInjection::mnaParentAddPostStepDependencies(AttributeBase:
 }
 
 void EMT::Ph3::NetworkInjection::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateCurrent(**leftVector);
-	mnaUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
 }
 
-void EMT::Ph3::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::NetworkInjection::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	**mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
 }
 
-void EMT::Ph3::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::NetworkInjection::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
 }

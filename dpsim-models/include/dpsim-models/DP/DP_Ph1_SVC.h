@@ -27,9 +27,9 @@ namespace Ph1 {
 	/// The resistance is constant for a defined time step and system
 	/// frequency and the current source changes for each iteration.
 	class SVC :
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::SVC,
 		public MNAVariableCompInterface,
-		public SimPowerComp<Complex>,
 		public SharedFactory<SVC> {
 	protected:
 
@@ -81,24 +81,24 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes MNA specific variables
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		//void mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		//void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Update interface voltage from MNA system results
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system results
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaCompPreStep(Real time, Int timeStepCount);
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
 		/// add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 		/// add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		// #### Tearing methods ####
 		Bool ValueChanged();
@@ -108,29 +108,6 @@ namespace Ph1 {
 		void mechanicalModelUpdateSusceptance(Real time);
 		// check protection function
 		void checkProtection(Real time);
-
-
-		class MnaPreStep : public Task {
-		public:
-			MnaPreStep(SVC& svc) : Task(**svc.mName + ".MnaPreStep"), mSVC(svc) {
-				mSVC.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mSVC.mnaPreStep(time, timeStepCount); }
-		private:
-			SVC& mSVC;
-		};
-
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(SVC& svc, Attribute<Matrix>::Ptr leftVector) :
-				Task(**svc.mName + ".MnaPostStep"), mSVC(svc), mLeftVector(leftVector) {
-				mSVC.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mSVC.mnaPostStep(time, timeStepCount, mLeftVector); }
-		private:
-			SVC& mSVC;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 	};
 }
 }

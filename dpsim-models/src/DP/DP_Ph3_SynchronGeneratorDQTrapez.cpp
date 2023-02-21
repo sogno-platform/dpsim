@@ -18,14 +18,9 @@ DP::Ph3::SynchronGeneratorDQTrapez::SynchronGeneratorDQTrapez(String name, Logge
 	: SynchronGeneratorDQ(name, name, logLevel) {
 }
 
-void DP::Ph3::SynchronGeneratorDQTrapez::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void DP::Ph3::SynchronGeneratorDQTrapez::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 	mTimeStep = timeStep;
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	mSLog->info(
 		"\nFluxStateSpaceMat: \n{}"
@@ -36,9 +31,14 @@ void DP::Ph3::SynchronGeneratorDQTrapez::mnaInitialize(Real omega, Real timeStep
 		mVdq0(0,0)/mIdq0(0,0),mVdq0(1,0)/mIdq0(1,0),mVdq0(2,0)/mIdq0(2,0));
 }
 
-void DP::Ph3::SynchronGeneratorDQTrapez::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mSynGen.stepInPerUnit(time); //former system solve (trapezoidal)
-	mSynGen.mnaApplyRightSideVectorStamp(**mSynGen.mRightVector);
+void DP::Ph3::SynchronGeneratorDQTrapez::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	modifiedAttributes.push_back(mRightVector);
+	prevStepDependencies.push_back(mIntfVoltage);
+}
+
+void DP::Ph3::SynchronGeneratorDQTrapez::mnaCompPreStep(Real time, Int timeStepCount) {
+	stepInPerUnit(time); //former system solve (trapezoidal)
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph3::SynchronGeneratorDQTrapez::setMultisamplingRate(Int rate) {

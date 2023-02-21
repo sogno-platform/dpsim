@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
@@ -19,10 +19,9 @@ namespace CPS {
 		namespace Ph3 {
 			///
 			class Resistor :
+				public MNASimPowerComp<Complex>,
 				public Base::Ph3::Resistor,
 				public MNATearInterface,
-				public MNAInterface,
-				public SimPowerComp<Complex>,
 				public SharedFactory<Resistor> {
 
 			public:
@@ -40,30 +39,17 @@ namespace CPS {
 
 				// #### MNA section ####
 				///
-				void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+				void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 				/// Stamps system matrix
-				void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+				void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 				///
-				void mnaUpdateVoltage(const Matrix& leftVector);
+				void mnaCompUpdateVoltage(const Matrix& leftVector);
 				///
-				void mnaUpdateCurrent(const Matrix& leftVector);
+				void mnaCompUpdateCurrent(const Matrix& leftVector);
 
-				class MnaPostStep : public Task {
-				public:
-					MnaPostStep(Resistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
-						Task(**resistor.mName + ".MnaPostStep"), mResistor(resistor), mLeftVector(leftSideVector)
-					{
-						mAttributeDependencies.push_back(mLeftVector);
-						mModifiedAttributes.push_back(mResistor.attribute("v_intf"));
-						mModifiedAttributes.push_back(mResistor.attribute("i_intf"));
-					}
-
-					void execute(Real time, Int timeStepCount);
-
-				private:
-					Resistor& mResistor;
-					Attribute<Matrix>::Ptr mLeftVector;
-				};
+				void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+				/// Add MNA post step dependencies
+				void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 				// #### MNA Tear Section ####
 				void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
 

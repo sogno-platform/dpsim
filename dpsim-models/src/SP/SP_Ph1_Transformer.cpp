@@ -13,12 +13,12 @@ using namespace CPS;
 // #### General ####
 SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel, Bool withResistiveLosses)
 	: Base::Ph1::Transformer(mAttributes), CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mBaseVoltage(Attribute<Real>::create("base_Voltage", mAttributes)),
-	mCurrent(Attribute<MatrixComp>::create("current_vector", mAttributes)),
-	mActivePowerBranch(Attribute<Matrix>::create("p_branch_vector", mAttributes)),
-	mReactivePowerBranch(Attribute<Matrix>::create("q_branch_vector", mAttributes)),
-	mActivePowerInjection(Attribute<Real>::create("p_inj", mAttributes)),
-	mReactivePowerInjection(Attribute<Real>::create("q_inj", mAttributes)) {
+	mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
+	mCurrent(mAttributes->create<MatrixComp>("current_vector")),
+	mActivePowerBranch(mAttributes->create<Matrix>("p_branch_vector")),
+	mReactivePowerBranch(mAttributes->create<Matrix>("q_branch_vector")),
+	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
+	mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
 	if (withResistiveLosses)
 		setVirtualNodeNumber(3);
 	else
@@ -295,7 +295,7 @@ void SP::Ph1::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attrib
 }
 
 
-void SP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Ideal transformer equations
 	if (terminalNotGrounded(0)) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1.0, 0));
@@ -326,19 +326,19 @@ void SP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void SP::Ph1::Transformer::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	prevStepDependencies.push_back(attribute("i_intf"));
-	prevStepDependencies.push_back(attribute("v_intf"));
-	modifiedAttributes.push_back(attribute("right_vector"));
+	prevStepDependencies.push_back(mIntfCurrent);
+	prevStepDependencies.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mRightVector);
 }
 
 void SP::Ph1::Transformer::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void SP::Ph1::Transformer::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
-	modifiedAttributes.push_back(this->attribute("v_intf"));
-	modifiedAttributes.push_back(this->attribute("i_intf"));
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void SP::Ph1::Transformer::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
@@ -346,13 +346,13 @@ void SP::Ph1::Transformer::mnaParentPostStep(Real time, Int timeStepCount, Attri
 	this->mnaUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = mSubInductor->intfCurrent()(0, 0);
 	mSLog->debug("Current {:s}", Logger::phasorToString((**mIntfCurrent)(0, 0)));
 
 }
 
-void SP::Ph1::Transformer::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	(**mIntfVoltage)(0, 0) = 0;
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));

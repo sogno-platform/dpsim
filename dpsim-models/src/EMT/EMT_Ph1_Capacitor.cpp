@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph1::Capacitor::Capacitor(String uid, String name,	Logger::Level logLevel)
-	: Base::Ph1::Capacitor(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), Base::Ph1::Capacitor(mAttributes) {
 	mEquivCurrent = 0;
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);
@@ -44,20 +44,15 @@ void EMT::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		initialSingleVoltage(1).real());
 }
 
-void EMT::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void EMT::Ph1::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+		updateMatrixNodeIndices();
 
 	mEquivCond = (2.0 * **mCapacitance) / timeStep;
 	// Update internal state
 	mEquivCurrent = -(**mIntfCurrent)(0,0) + -mEquivCond * (**mIntfVoltage)(0,0);
-
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
-	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 
-void EMT::Ph1::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph1::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0))
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond);
 	if (terminalNotGrounded(1))
@@ -68,7 +63,7 @@ void EMT::Ph1::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void EMT::Ph1::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph1::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	mEquivCurrent = -(**mIntfCurrent)(0,0) + -mEquivCond * (**mIntfVoltage)(0,0);
 	if (terminalNotGrounded(0))
 		Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent);
@@ -76,16 +71,30 @@ void EMT::Ph1::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent);
 }
 
-void EMT::Ph1::Capacitor::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaApplyRightSideVectorStamp(**mCapacitor.mRightVector);
+void EMT::Ph1::Capacitor::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// actually depends on C, but then we'd have to modify the system matrix anyway
+	modifiedAttributes.push_back(mRightVector);
+	prevStepDependencies.push_back(mIntfCurrent);
+	prevStepDependencies.push_back(mIntfVoltage);
 }
 
-void EMT::Ph1::Capacitor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaUpdateVoltage(**mLeftVector);
-	mCapacitor.mnaUpdateCurrent(**mLeftVector);
+
+void EMT::Ph1::Capacitor::mnaCompPreStep(Real time, Int timeStepCount) {
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void EMT::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph1::Capacitor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mIntfCurrent);
+}
+
+void EMT::Ph1::Capacitor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+}
+
+void EMT::Ph1::Capacitor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	(**mIntfVoltage)(0,0) = 0;
 	if (terminalNotGrounded(1))
@@ -94,6 +103,6 @@ void EMT::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void EMT::Ph1::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph1::Capacitor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0,0) = mEquivCond * (**mIntfVoltage)(0,0) + mEquivCurrent;
 }

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
 #include <dpsim-models/Base/Base_SynchronGenerator.h>
@@ -27,9 +27,8 @@ namespace Ph3 {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 	class SynchronGeneratorVBR :
+		public MNASimPowerComp<Real>,
 		public Base::SynchronGenerator,
-		public SimPowerComp<Real>,
-		public MNAInterface,
 		public MNAVariableCompInterface,
 		public SharedFactory<SynchronGeneratorVBR> {
 	protected:
@@ -224,7 +223,7 @@ namespace Ph3 {
 		void initialize(Real om, Real dt);
 
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector in per unit.
@@ -250,44 +249,19 @@ namespace Ph3 {
 
 		// #### MNA section ####
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaCompPreStep(Real time, Int timeStepCount);
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 		/// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override;
-
-		class MnaPreStep : public CPS::Task {
-		public:
-			MnaPreStep(SynchronGeneratorVBR& SynchronGeneratorVBR) :
-				Task(**SynchronGeneratorVBR.mName + ".MnaPreStep"), mSynchronGeneratorVBR(SynchronGeneratorVBR) {
-					mSynchronGeneratorVBR.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mSynchronGeneratorVBR.mnaPreStep(time, timeStepCount); };
-
-		private:
-			SynchronGeneratorVBR& mSynchronGeneratorVBR;
-		};
-
-		class MnaPostStep : public CPS::Task {
-		public:
-			MnaPostStep(SynchronGeneratorVBR& SynchronGeneratorVBR, Attribute<Matrix>::Ptr leftVector) :
-				Task(**SynchronGeneratorVBR.mName + ".MnaPostStep"), mSynchronGeneratorVBR(SynchronGeneratorVBR), mLeftVector(leftVector) {
-				mSynchronGeneratorVBR.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mSynchronGeneratorVBR.mnaPostStep(time, timeStepCount, mLeftVector); };
-
-		private:
-			SynchronGeneratorVBR& mSynchronGeneratorVBR;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
 	};
 }
 }

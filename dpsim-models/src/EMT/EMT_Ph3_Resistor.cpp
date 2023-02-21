@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: Base::Ph3::Resistor(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
+	: MNASimPowerComp<Real>(uid, name, false, true, logLevel), Base::Ph3::Resistor(mAttributes) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(3, 1);
@@ -51,14 +51,12 @@ void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
 }
 
-void EMT::Ph3::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-
+void EMT::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+	**mRightVector = Matrix::Zero(0, 0);
 }
 
-void EMT::Ph3::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	Matrix conductance = (**mResistance).inverse();
 
@@ -116,19 +114,19 @@ void EMT::Ph3::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Logger::matrixToString(conductance));
 }
 
-void EMT::Ph3::Resistor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void EMT::Ph3::Resistor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void EMT::Ph3::Resistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+void EMT::Ph3::Resistor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
 
-void EMT::Ph3::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3,1);
 	if (terminalNotGrounded(1)) {
@@ -148,7 +146,7 @@ void EMT::Ph3::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 	mSLog->flush();
 }
 
-void EMT::Ph3::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
 	mSLog->debug(
 		"\nCurrent: {:s}",

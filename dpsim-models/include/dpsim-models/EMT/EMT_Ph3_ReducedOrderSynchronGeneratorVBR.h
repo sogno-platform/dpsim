@@ -17,8 +17,8 @@ namespace Ph3 {
 	/// @brief Base class for EMT VBR simplefied synchronous generator models
 	class ReducedOrderSynchronGeneratorVBR :
 		public Base::ReducedOrderSynchronGenerator<Real>,
-		public MNAVariableCompInterface { 
-        
+		public MNAVariableCompInterface {
+
     public:
         // Common elements of all VBR models
         /// voltage behind reactance
@@ -37,13 +37,13 @@ namespace Ph3 {
 		Matrix mAbcToDq0;
 		Matrix mDq0ToAbc;
 
-        /// Constructor 
+        /// Constructor
         ReducedOrderSynchronGeneratorVBR(const String & uid, const String & name, Logger::Level logLevel);
         ReducedOrderSynchronGeneratorVBR(const String & name, Logger::Level logLevel);
-      
+
 	  	// #### General Functions ####
         /// Specific component initialization
-        virtual void specificInitialization() override =0; 
+        virtual void specificInitialization() =0;
         ///
         void initializeResistanceMatrix() override;
         ///
@@ -54,16 +54,14 @@ namespace Ph3 {
         Matrix get_parkTransformMatrix() const;
 		/// Inverse Park Transformation according to Kundur
 		Matrix get_inverseParkTransformMatrix() const;
-		
+
         // ### MNA Section ###
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
-		void mnaPostStep(const Matrix& leftVector) override;
-        void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompPostStep(const Matrix& leftVector) override;
+        void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 
     public:
-        virtual ~ReducedOrderSynchronGeneratorVBR() override =default;
-
         /// Mark that parameter changes so that system matrix is updated
 		Bool hasParameterChanged() override { return true; };
     };

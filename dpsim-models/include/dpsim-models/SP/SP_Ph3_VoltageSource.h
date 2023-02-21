@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/DAEInterface.h>
 
@@ -24,8 +24,7 @@ namespace CPS {
 			/// positve and for the equation of node k as negative. Moreover
 			/// a new equation ej - ek = V is added to the problem.
 			class VoltageSource :
-				public SimPowerComp<Complex>,
-				public MNAInterface,
+				public MNASimPowerComp<Complex>,
 				public DAEInterface,
 				public SharedFactory<VoltageSource> {
 			private:
@@ -52,13 +51,13 @@ namespace CPS {
 
 				// #### MNA Section ####
 				///
-				void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+				void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 				/// Stamps system matrix
-				void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+				void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 				/// Stamps right side (source) vector
-				void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+				void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 				/// Returns current through the component
-				void mnaUpdateCurrent(const Matrix& leftVector);
+				void mnaCompUpdateCurrent(const Matrix& leftVector);
 
 				// #### DAE Section ####
 				/// Residual function for DAE Solver
@@ -66,36 +65,14 @@ namespace CPS {
 				///Voltage Getter
 				Complex daeInitialize();
 
-				class MnaPreStep : public CPS::Task {
-				public:
-					MnaPreStep(VoltageSource& voltageSource) :
-						Task(**voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-						mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
-						mModifiedAttributes.push_back(mVoltageSource.attribute("right_vector"));
-						mModifiedAttributes.push_back(mVoltageSource.attribute("v_intf"));
-					}
+				void mnaCompPreStep(Real time, Int timeStepCount) override;
+				void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-					void execute(Real time, Int timeStepCount);
+				/// Add MNA pre step dependencies
+				void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 
-				private:
-					VoltageSource& mVoltageSource;
-				};
-
-				class MnaPostStep : public CPS::Task {
-				public:
-					MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-						Task(**voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource), mLeftVector(leftVector)
-					{
-						mAttributeDependencies.push_back(mLeftVector);
-						mModifiedAttributes.push_back(mVoltageSource.attribute("i_intf"));
-					}
-
-					void execute(Real time, Int timeStepCount);
-
-				private:
-					VoltageSource& mVoltageSource;
-					Attribute<Matrix>::Ptr mLeftVector;
-				};
+				/// Add MNA post step dependencies
+				void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 			};
 		}
 	}

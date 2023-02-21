@@ -12,9 +12,9 @@ using namespace CPS;
 
 EMT::Ph3::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
 	: CompositePowerComp<Real>(uid, name, true, true, logLevel),
-	mActivePower(Attribute<Matrix>::create("P", mAttributes)),
-	mReactivePower(Attribute<Matrix>::create("Q", mAttributes)),
-	mNomVoltage(Attribute<Real>::create("V_nom", mAttributes)) {
+	mActivePower(mAttributes->create<Matrix>("P")),
+	mReactivePower(mAttributes->create<Matrix>("Q")),
+	mNomVoltage(mAttributes->create<Real>("V_nom")) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 
@@ -183,22 +183,22 @@ void EMT::Ph3::RXLoad::mnaParentAddPostStepDependencies(AttributeBase::List &pre
 };
 
 void EMT::Ph3::RXLoad::mnaParentPreStep(Real time, Int timeStepCount) {
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::RXLoad::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateVoltage(**leftVector);
-	mnaUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
 }
 
-void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::RXLoad::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 	(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 }
 
-void EMT::Ph3::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::RXLoad::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = Matrix::Zero(3, 1);
 	for (auto& subc : mSubComponents) {
 		**mIntfCurrent += subc->intfCurrent();

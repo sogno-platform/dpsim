@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Definitions.h>
@@ -23,12 +23,11 @@ namespace Ph3 {
 	/// The switch can be opened and closed.
 	/// Each state has a specific resistance value.
 	class Switch :
+		public MNASimPowerComp<Real>,
 		public Base::Ph3::Switch,
-		public SimPowerComp<Real>,
 		public SharedFactory<Switch>,
-		public MNASwitchInterface,
-		public MNAInterface {
-	protected:
+		public MNASwitchInterface {
+
 	public:
 		/// Defines UID, name, component parameters and logging level
 		Switch(String uid, String name,	Logger::Level loglevel = Logger::Level::off);
@@ -43,15 +42,15 @@ namespace Ph3 {
 		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### General MNA section ####
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector);
 
 		// #### MNA section for switches ####
 		/// Check if switch is closed
@@ -59,21 +58,10 @@ namespace Ph3 {
 		/// Stamps system matrix considering the defined switch position
 		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Switch& switchRef, Attribute<Matrix>::Ptr leftSideVector) :
-				Task(**switchRef.mName + ".MnaPostStep"), mSwitch(switchRef), mLeftVector(leftSideVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mSwitch.mIntfVoltage);
-				mModifiedAttributes.push_back(mSwitch.mIntfCurrent);
-			}
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			Switch& mSwitch;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		/// Add MNA post step dependencies
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }
