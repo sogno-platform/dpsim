@@ -33,6 +33,8 @@ set(CIRCUIT_SOURCES
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp
+	Circuits/EMT_Slack_PiLine_VSI_VoltageControlled_SteadyState_with_PF_Init.cpp
+	Circuits/EMT_Slack_PiLine_VSI_VoltageControlled_LoadStep_with_PF_Init.cpp
 
 	# EMT examples with PF initialization
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
