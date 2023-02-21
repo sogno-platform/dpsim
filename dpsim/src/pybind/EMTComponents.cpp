@@ -186,7 +186,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::EMT::Ph3::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::EMT::Ph3::Switch::openSwitch)
       .def("close", &CPS::EMT::Ph3::Switch::closeSwitch)
@@ -361,7 +361,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		    // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "with_trafo"_a = false)
       .def("set_parameters",
            &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::setParameters,
@@ -386,6 +386,27 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::withControl)
       .def("connect", &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::connect);
 
+  py::class_<CPS::EMT::Ph3::VSIVoltageControlDQ,
+             std::shared_ptr<CPS::EMT::Ph3::VSIVoltageControlDQ>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "VSIVoltageControl",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
+           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
+           "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
+      /*.def("set_parameters", &CPS::EMT::Ph3::VSIVoltageControlDQ::setParameters, "sys_omega"_a, "sys_volt_nom"_a, "vdref"_a, "vqref"_a)
+		.def("set_filter_parameters", &CPS::EMT::Ph3::VSIVoltageControlDQ::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
+		.def("set_controller_parameters", &CPS::EMT::Ph3::VSIVoltageControlDQ::setControllerParameters,
+			"Kp_pll"_a, "Ki_pll"_a, "Kp_voltage_ctrl"_a, "Ki_voltage_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a)
+		.def("set_transformer_parameters", &CPS::EMT::Ph3::VSIVoltageControlDQ::setTransformerParameters,
+			"nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a, "omega"_a)
+		.def("set_initial_state_values", &CPS::EMT::Ph3::VSIVoltageControlDQ::setInitialStateValues,
+			"phi_d_init"_a, "phi_q_init"_a, "gamma_d_init"_a, "gamma_q_init"_a)
+		.def("with_control", &CPS::EMT::Ph3::VSIVoltageControlDQ::withControl)
+		.def("connect", &CPS::EMT::Ph3::VSIVoltageControlDQ::connect);*/
+      ;
+
   py::class_<CPS::EMT::Ph3::Transformer,
              std::shared_ptr<CPS::EMT::Ph3::Transformer>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Transformer",
@@ -394,9 +415,8 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		   // cppcheck-suppress assignBoolToPointer
-           "with_resistive_losses"_a =
-               false)
+           // cppcheck-suppress assignBoolToPointer
+           "with_resistive_losses"_a = false)
       .def("set_parameters", &CPS::EMT::Ph3::Transformer::setParameters,
            "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a,
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
@@ -420,7 +440,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::EMT::Ph3::SeriesSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		    // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::EMT::Ph3::SeriesSwitch::open)
       .def("close", &CPS::EMT::Ph3::SeriesSwitch::close)
