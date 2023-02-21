@@ -90,10 +90,14 @@
 
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h>
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltageSourceInverterDQ.h>
+<<<<<<< HEAD
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph3_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
+    =======
+#include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlDQ.h>
+    >>>>>>> 0faab5730 (post rebase fixes)
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesSwitch.h>
@@ -127,7 +131,9 @@
 #include <dpsim-models/Signal/FIRFilter.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>
 #include <dpsim-models/Signal/Integrator.h>
+#include <dpsim-models/Signal/PowerControllerVSI.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
+#include <dpsim-models/Signal/VoltageControllerVSI.h>

@@ -7,25 +7,24 @@
  *********************************************************************************/
 #pragma once
 
-#include <cps/SimPowerComp.h>
-#include <cps/Solver/MNAInterface.h>
-#include <cps/Definitions.h>
-#include <cps/EMT/EMT_Ph3_Resistor.h>
-#include <cps/EMT/EMT_Ph3_Inductor.h>
-#include <cps/EMT/EMT_Ph3_Capacitor.h>
-#include <cps/EMT/EMT_Ph3_VoltageSource.h>
-#include <cps/EMT/EMT_Ph3_Transformer.h>
-#include <cps/Base/Base_AvVoltageSourceInverterDQ.h>
-#include <cps/Signal/PLL.h>
-#include <cps/Signal/VoltageControllerVSI.h>
+#include <dpsim-models/CompositePowerComp.h>
+#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Definitions.h>
+#include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
+#include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
+#include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
+#include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
+#include <dpsim-models/Base/Base_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/Signal/PLL.h>
+#include <dpsim-models/Signal/VoltageControllerVSI.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
 	class VSIVoltageControlDQ :
 		public Base::AvVoltageSourceInverterDQ,
-		public SimPowerComp<Real>,
-		public MNAInterface,
+		public CompositePowerComp<Real>,
 		public SharedFactory<VSIVoltageControlDQ> {
 	protected:
 
@@ -39,14 +38,12 @@ namespace Ph3 {
 		/// Active power reference
 
 		// ### Control Subcomponents ###
-
 		/// PLL
 		std::shared_ptr<Signal::PLL> mPLL;
 		/// Power Controller
 		std::shared_ptr<Signal::VoltageControllerVSI> mVoltageControllerVSI;
 
-		// ### Electrical Subcomponents ###
-		
+		// ### Electrical Subcomponents ###	
 		/// Controlled voltage source
 		std::shared_ptr<EMT::Ph3::VoltageSource> mSubCtrledVoltageSource;
 		/// Resistor Rf as part of LCL filter
@@ -81,9 +78,7 @@ namespace Ph3 {
 		const Attribute<Real>::Ptr mVqRef;
 
 		// ### Inverter Interfacing Variables ###
-
 		// Control inputs
-		
 		/// Measured voltage d-axis in local reference frame
 		const Attribute<Real>::Ptr mVcd;
 		/// Measured voltage q-axis in local reference frame
@@ -92,14 +87,9 @@ namespace Ph3 {
 		const Attribute<Real>::Ptr mIrcd;
 		/// Measured current q-axis in local reference frame
 		const Attribute<Real>::Ptr mIrcq;
-
 		const Attribute<Real>::Ptr mElecActivePower;
-
 		const Attribute<Real>::Ptr mElecPassivePower;
-		
-
 		// Control outputs
-
 		/// Voltage as control output after transformation interface
 		const Attribute<Matrix>::Ptr mVsref;
 
@@ -121,7 +111,6 @@ namespace Ph3 {
 		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withTrafo = false);
 
 		// #### General ####
-
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
 		/// Setter for gengit eral parameters of inverter
@@ -131,8 +120,6 @@ namespace Ph3 {
 		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
-
-		void updateBMatrixStateSpaceModel(); 
 		/// Setter for parameters of filter
 		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
 		/// Setter for initial values applied in controllers
@@ -141,7 +128,6 @@ namespace Ph3 {
 		void withControl(Bool controlOn) { mWithControl = controlOn; };
 
 		// #### Mathematical Matrix Transforms ####
-
 		///
 		Matrix getParkTransformMatrixPowerInvariant(Real theta);
 		///
@@ -152,28 +138,22 @@ namespace Ph3 {
 		Matrix inverseParkTransformPowerInvariant(Real theta, const Matrix &fdq);
 
 		// #### MNA section ####
-
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Updates current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates voltage across component
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaUpdateVoltage(const Matrix& leftVector) override;
 		/// MNA pre step operations
-		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Add MNA pre step dependencies
-		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### Control section ####
-		
 		/// Control pre step operations
 		void controlPreStep(Real time, Int timeStepCount);
 		/// Perform step of controller
@@ -182,7 +162,7 @@ namespace Ph3 {
 		void addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 		/// Add control step dependencies
 		void addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
-	
+
 		class ControlPreStep : public CPS::Task {
 		public:
 			ControlPreStep(VSIVoltageControlDQ& VSIVoltageControlDQ) :
@@ -206,32 +186,6 @@ namespace Ph3 {
 		private:
 			VSIVoltageControlDQ& mVSIVoltageControlDQ;
 		};
-
-		class MnaPreStep : public CPS::Task {
-		public:
-			MnaPreStep(VSIVoltageControlDQ& VSIVoltageControlDQ) :
-				Task(**VSIVoltageControlDQ.mName + ".MnaPreStep"), mVSIVoltageControlDQ(VSIVoltageControlDQ) {
-					mVSIVoltageControlDQ.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mVSIVoltageControlDQ.mnaPreStep(time, timeStepCount); };
-
-		private:
-			VSIVoltageControlDQ& mVSIVoltageControlDQ;
-		};
-
-		class MnaPostStep : public CPS::Task {
-		public:
-			MnaPostStep(VSIVoltageControlDQ& VSIVoltageControlDQ, Attribute<Matrix>::Ptr leftVector) :
-				Task(**VSIVoltageControlDQ.mName + ".MnaPostStep"), mVSIVoltageControlDQ(VSIVoltageControlDQ), mLeftVector(leftVector) {
-				mVSIVoltageControlDQ.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mVSIVoltageControlDQ.mnaPostStep(time, timeStepCount, mLeftVector); };
-
-		private:
-			VSIVoltageControlDQ& mVSIVoltageControlDQ;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
-
 	};
 }
 }
