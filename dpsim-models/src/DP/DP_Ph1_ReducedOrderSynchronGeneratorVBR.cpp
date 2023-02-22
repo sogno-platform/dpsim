@@ -94,8 +94,6 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 		auto n = leftVector->asRawPointer()->rows();
 		auto complexOffset = (UInt)(n / 2);
 
-		Base::ReducedOrderSynchronGenerator<Complex>::mnaInitialize(omega, timeStep, leftVector);
-
 		// upper left
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex()));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex() + complexOffset, mVirtualNodes[0]->matrixNodeIndex()));
