@@ -2,8 +2,8 @@
 include(FetchContent)
 FetchContent_Declare(
   klu-module
-  GIT_REPOSITORY https://github.com/LennartSchu/SuiteSparse
-  GIT_TAG        master
+  GIT_REPOSITORY https://github.com/dpsim-simulator/SuiteSparse
+  GIT_TAG        v5.10.2
 )
 
 FetchContent_GetProperties(klu-module)
