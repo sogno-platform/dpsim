@@ -24,12 +24,12 @@ namespace DPsim
         magma_finalize();
     }
 
-    void GpuMagmaAdapter::performFactorization(SparseMatrix& mVariableSystemMatrix)
+    void GpuMagmaAdapter::performFactorization(SparseMatrix& systemMatrix)
     {
-        int size = mVariableSystemMatrix.rows();
+        int size = systemMatrix.rows();
         int p_nnz = 0;
         int p[size];
-        auto hMat = mVariableSystemMatrix;
+        auto hMat = systemMatrix;
         size_t nnz = hMat.nonZeros();
         cusparseMatDescr_t descr_M = 0;
 
@@ -113,24 +113,24 @@ namespace DPsim
         mDevLhsVec = {Magma_CSR};
     }
 
-    void GpuMagmaAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
+    void GpuMagmaAdapter::preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries)
     {
         /* No preprocessing phase available yet */
     }
 
-    void GpuMagmaAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
+    void GpuMagmaAdapter::factorize(SparseMatrix& systemMatrix)
     {
-        performFactorization(mVariableSystemMatrix);
+        performFactorization(systemMatrix);
     }
 
-    void GpuMagmaAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
+    void GpuMagmaAdapter::refactorize(SparseMatrix& systemMatrix)
     {
-        performFactorization(mVariableSystemMatrix);
+        performFactorization(systemMatrix);
     }
 
-    void GpuMagmaAdapter::partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
+    void GpuMagmaAdapter::partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries)
     {
-        performFactorization(mVariableSystemMatrix);
+        performFactorization(systemMatrix);
     }
 
     Matrix GpuMagmaAdapter::solve(Matrix& mRightHandSideVector)

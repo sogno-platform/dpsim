@@ -46,7 +46,7 @@ namespace DPsim
 
 		void iluPreconditioner();
 
-		void performFactorization(SparseMatrix& mVariableSystemMatrix);
+		void performFactorization(SparseMatrix& systemMatrix);
 
 		private:
 		///Required shared Variables
@@ -66,18 +66,18 @@ namespace DPsim
 		virtual ~GpuSparseAdapter();
 
 		/// preprocessing function pre-ordering and scaling the matrix
-		virtual void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
+		virtual void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
 
 		/// factorization function with partial pivoting
-		virtual void factorize(SparseMatrix& mVariableSystemMatrix) override;
+		virtual void factorize(SparseMatrix& systemMatrix) override;
 
 		/// refactorization without partial pivoting
-		virtual void refactorize(SparseMatrix& mVariableSystemMatrix) override;
+		virtual void refactorize(SparseMatrix& systemMatrix) override;
 
 		/// partial refactorization withouth partial pivoting
-		virtual void partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
+		virtual void partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
 
 		/// solution function for a right hand side
-		virtual Matrix solve(Matrix& mRightSideVector) override;
+		virtual Matrix solve(Matrix& rightSideVector) override;
     };
 }

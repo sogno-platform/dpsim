@@ -27,6 +27,11 @@ extern "C"
 
 namespace DPsim
 {
+	enum SCALING_METHOD {
+		NO_SCALING = 0,
+		SUM_SCALING = 1,
+		MAX_SCALING = 2
+	};
 
     class KLUAdapter : public DirectLinearSolver
     {
@@ -40,14 +45,14 @@ namespace DPsim
 
 		/// Flags to indicate mode of operation
 		/// Define which ordering to choose in preprocessing
-		int m_ordering = KLU_AMD_FP;
+		int m_partial_method = KLU_AMD_FP;
 
 		/// Use BTF or not
-		int m_btf = 1;
+		bool m_btf = true;
 
 		/// Define scaling method
 		/// Options are: 1: sum-scaling, 2: max scaling, <=0: no scaling
-		int m_scaling = 1;
+		int m_scaling = SCALING_METHOD::SUM_SCALING;
 
 		/// Flag to indicate if factorization succeeded
 		bool factorization_is_okay = false;
@@ -66,23 +71,23 @@ namespace DPsim
 		KLUAdapter();
 
 		/// preprocessing function pre-ordering and scaling the matrix
-		void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
+		void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
 
 		/// factorization function with partial pivoting
-		void factorize(SparseMatrix& mVariableSystemMatrix) override;
+		void factorize(SparseMatrix& systemMatrix) override;
 
 		/// refactorization without partial pivoting
-		void refactorize(SparseMatrix& mVariableSystemMatrix) override;
+		void refactorize(SparseMatrix& systemMatrix) override;
 
 		/// partial refactorization withouth partial pivoting
-		void partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
+		void partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
 
 		/// solution function for a right hand side
-		Matrix solve(Matrix& mRightSideVector) override;
+		Matrix solve(Matrix& rightSideVector) override;
 
 		protected:
 
-		/// Function to print matrix
-		void printMTX(SparseMatrix& matrix, int counter) const;
+		/// Function to print matrix in MatrixMarket's coo format
+		void printMatrixMarket(SparseMatrix& systemMatrix, int counter) const;
     };
 }

@@ -87,7 +87,7 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 	Base::ReducedOrderSynchronGenerator<Complex>::mnaCompInitialize(omega, timeStep, leftVector);
 
 	if (mModelAsCurrentSource) {
-		// FIXME? set variable matrix entries accordingly as shown below
+		// FIXME set variable matrix entries accordingly as shown below
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
 	} else {
 		// get matrix dimension to properly set variable entries

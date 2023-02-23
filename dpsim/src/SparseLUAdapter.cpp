@@ -14,24 +14,25 @@ namespace DPsim
 {
     SparseLUAdapter::~SparseLUAdapter() = default;
 
-    void SparseLUAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
+    void SparseLUAdapter::preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries)
     {
-        LUFactorizedSparse.analyzePattern(mVariableSystemMatrix);
+        LUFactorizedSparse.analyzePattern(systemMatrix);
     }
 
-    void SparseLUAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
+    void SparseLUAdapter::factorize(SparseMatrix& systemMatrix)
     {
-        LUFactorizedSparse.factorize(mVariableSystemMatrix);
+        LUFactorizedSparse.factorize(systemMatrix);
     }
 
-    void SparseLUAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
+    void SparseLUAdapter::refactorize(SparseMatrix& systemMatrix)
     {
-        LUFactorizedSparse.factorize(mVariableSystemMatrix);
+		/* Eigen's SparseLU does not use refactorization. Use regular factorization (numerical factorization and partial pivoting) here */
+        LUFactorizedSparse.factorize(systemMatrix);
     }
 
-    void SparseLUAdapter::partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
+    void SparseLUAdapter::partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries)
     {
-        LUFactorizedSparse.factorize(mVariableSystemMatrix);
+        LUFactorizedSparse.factorize(systemMatrix);
     }
 
     Matrix SparseLUAdapter::solve(Matrix& mRightHandSideVector)
