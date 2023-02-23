@@ -111,7 +111,7 @@ namespace DPsim {
 		std::shared_ptr<DataLogger> mRightVectorLog;
 
 		/// LU factorization measurements
-		std::vector<Real> mLUTimes;
+		std::vector<Real> mFactorizeTimes;
 		/// Right-hand side solution measurements
 		std::vector<Real> mSolveTimes;
 		/// LU refactorization measurements

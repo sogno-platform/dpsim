@@ -49,7 +49,7 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 	mDirectLinearSolvers[bit][0]->factorize(sys);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
-	mLUTimes.push_back(diff.count());
+	mFactorizeTimes.push_back(diff.count());
 }
 
 template <typename VarType>
@@ -107,7 +107,7 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	mDirectLinearSolverVariableSystemMatrix->factorize(mVariableSystemMatrix);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
-	mLUTimes.push_back(diff.count());
+	mFactorizeTimes.push_back(diff.count());
 }
 
 template <typename VarType>
@@ -330,7 +330,7 @@ void MnaSolverDirect<VarType>::logSolveTime(){
 template <typename VarType>
 void MnaSolverDirect<VarType>::logFactorizationTime()
 {
-	for (auto meas : mLUTimes) {
+	for (auto meas : mFactorizeTimes) {
 		mSLog->info("LU factorization time: {:.12f}", meas);
 	}
 }
