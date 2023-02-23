@@ -15,24 +15,27 @@ namespace DPsim
 
     DenseLUAdapter::~DenseLUAdapter() = default;
 
-    void DenseLUAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
+    void DenseLUAdapter::preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries)
     {
         /* No preprocessing phase needed by PartialPivLU */
     }
 
-    void DenseLUAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
+    void DenseLUAdapter::factorize(SparseMatrix& systemMatrix)
     {
-        LUFactorized.compute(Matrix(mVariableSystemMatrix));
+		/* only a simple dense factorization */
+        LUFactorized.compute(Matrix(systemMatrix));
     }
 
-    void DenseLUAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
+    void DenseLUAdapter::refactorize(SparseMatrix& systemMatrix)
     {
-        LUFactorized.compute(Matrix(mVariableSystemMatrix));
+		/* only a simple dense factorization */
+        LUFactorized.compute(Matrix(systemMatrix));
     }
 
-    void DenseLUAdapter::partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
+    void DenseLUAdapter::partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries)
     {
-        LUFactorized.compute(Matrix(mVariableSystemMatrix));
+		/* only a simple dense factorization */
+        LUFactorized.compute(Matrix(systemMatrix));
     }
 
     Matrix DenseLUAdapter::solve(Matrix& mRightHandSideVector)

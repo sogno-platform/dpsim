@@ -40,7 +40,7 @@ namespace DPsim
 	    }
     }
 
-    void GpuSparseAdapter::performFactorization(SparseMatrix& mVariableSystemMatrix)
+    void GpuSparseAdapter::performFactorization(SparseMatrix& systemMatrix)
     {
         cusparseStatus_t csp_status;
         cusolverStatus_t cso_status;
@@ -53,8 +53,8 @@ namespace DPsim
             throw SolverException();
         }
 
-        size_t N = mVariableSystemMatrix.rows();
-        auto hMat = mVariableSystemMatrix;
+        size_t N = systemMatrix.rows();
+        auto hMat = systemMatrix;
 
         mGpuRhsVec = cuda::Vector<double>(N);
         mGpuLhsVec = cuda::Vector<double>(N);
@@ -202,24 +202,24 @@ namespace DPsim
         checkCusparseStatus(csp_status, "failed to destroy MatDescr:");
     }
 
-    void GpuSparseAdapter::preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
+    void GpuSparseAdapter::preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries)
     {
         /* No preprocessing phase available yet */
     }
 
-    void GpuSparseAdapter::factorize(SparseMatrix& mVariableSystemMatrix)
+    void GpuSparseAdapter::factorize(SparseMatrix& systemMatrix)
     {
-        performFactorization(mVariableSystemMatrix);
+        performFactorization(systemMatrix);
     }
 
-    void GpuSparseAdapter::refactorize(SparseMatrix& mVariableSystemMatrix)
+    void GpuSparseAdapter::refactorize(SparseMatrix& systemMatrix)
     {
-        performFactorization(mVariableSystemMatrix);
+        performFactorization(systemMatrix);
     }
 
-    void GpuSparseAdapter::partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries)
+    void GpuSparseAdapter::partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries)
     {
-        performFactorization(mVariableSystemMatrix);
+        performFactorization(systemMatrix);
     }
 
     Matrix GpuSparseAdapter::solve(Matrix& mRightHandSideVector)

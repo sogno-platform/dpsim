@@ -126,7 +126,7 @@ else()
 	find_package(Eigen3 3.0 REQUIRED)
 endif()
 
-if (FETCH_KLU OR WIN32)
+if (FETCH_KLU)
 	include(FetchKLU)
 else()
 endif()

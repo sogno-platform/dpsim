@@ -43,10 +43,10 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 		mSwitches[i]->mnaApplySwitchSparseSystemMatrixStamp(bit[i], sys, 0);
 
 	// Compute LU-factorization for system matrix
-	mLuFactorizations[bit][0]->preprocessing(sys, mListVariableSystemMatrixEntries);
+	mDirectLinearSolvers[bit][0]->preprocessing(sys, mListVariableSystemMatrixEntries);
 
 	auto start = std::chrono::steady_clock::now();
-	mLuFactorizations[bit][0]->factorize(sys);
+	mDirectLinearSolvers[bit][0]->factorize(sys);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
 	mLUTimes.push_back(diff.count());
@@ -55,7 +55,7 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 template <typename VarType>
 void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
-	this->mLuFactorizationVariableSystemMatrix = createDirectSolverImplementation();
+	this->mDirectLinearSolverVariableSystemMatrix = createDirectSolverImplementation();
 
 	mSLog->info("Number of variable Elements: {}"
 				"\nNumber of MNA components: {}",
@@ -101,10 +101,10 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	mSLog->flush();
 
 	// Calculate factorization of current matrix
-	mLuFactorizationVariableSystemMatrix->preprocessing(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
+	mDirectLinearSolverVariableSystemMatrix->preprocessing(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
 
 	auto start = std::chrono::steady_clock::now();
-	mLuFactorizationVariableSystemMatrix->factorize(mVariableSystemMatrix);
+	mDirectLinearSolverVariableSystemMatrix->factorize(mVariableSystemMatrix);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
 	mLUTimes.push_back(diff.count());
@@ -126,7 +126,7 @@ void MnaSolverDirect<VarType>::solveWithSystemMatrixRecomputation(Real time, Int
 
 	auto start = std::chrono::steady_clock::now();
 	// Calculate new solution vector
-	**mLeftSideVector = mLuFactorizationVariableSystemMatrix->solve(mRightSideVector);
+	**mLeftSideVector = mDirectLinearSolverVariableSystemMatrix->solve(mRightSideVector);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
 	mSolveTimes.push_back(diff.count());
@@ -163,7 +163,7 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 	auto start = std::chrono::steady_clock::now();
 	// Refactorization of matrix assuming that structure remained
 	// constant by omitting analyzePattern
-	mLuFactorizationVariableSystemMatrix->partialRefactorize(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
+	mDirectLinearSolverVariableSystemMatrix->partialRefactorize(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
 	mRecomputationTimes.push_back(diff.count());
@@ -182,7 +182,7 @@ void MnaSolverDirect<Real>::createEmptySystemMatrix() {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++){
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
-			mLuFactorizations[bit].push_back(createDirectSolverImplementation());
+			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation());
 		}
 	}
 }
@@ -197,7 +197,7 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 				auto bit = std::bitset<SWITCH_NUM>(i);
 				mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
-				mLuFactorizations[bit].push_back(createDirectSolverImplementation());
+				mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation());
 			}
 		}
 	} else if (mSystemMatrixRecomputation) {
@@ -207,7 +207,7 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
-			mLuFactorizations[bit].push_back(createDirectSolverImplementation());
+			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation());
 		}
 	}
 }
@@ -251,7 +251,7 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 
 	if (mSwitchedMatrices.size() > 0) {
 		auto start = std::chrono::steady_clock::now();
-		**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0]->solve(mRightSideVector);
+		**mLeftSideVector = mDirectLinearSolvers[mCurrentSwitchStatus][0]->solve(mRightSideVector);
 		auto end = std::chrono::steady_clock::now();
 		std::chrono::duration<double> diff = end-start;
 		mSolveTimes.push_back(diff.count());
@@ -273,7 +273,7 @@ void MnaSolverDirect<VarType>::solveWithHarmonics(Real time, Int timeStepCount, 
 	for (auto stamp : mRightVectorStamps)
 		mRightSideVectorHarm[freqIdx] += stamp->col(freqIdx);
 
-	**mLeftSideVectorHarm[freqIdx] = mLuFactorizations[mCurrentSwitchStatus][freqIdx]->solve(mRightSideVectorHarm[freqIdx]);
+	**mLeftSideVectorHarm[freqIdx] = mDirectLinearSolvers[mCurrentSwitchStatus][freqIdx]->solve(mRightSideVectorHarm[freqIdx]);
 }
 
 template <typename VarType>
@@ -328,7 +328,7 @@ void MnaSolverDirect<VarType>::logSolveTime(){
 
 
 template <typename VarType>
-void MnaSolverDirect<VarType>::logLUTime()
+void MnaSolverDirect<VarType>::logFactorizationTime()
 {
 	for (auto meas : mLUTimes) {
 		mSLog->info("LU factorization time: {:.12f}", meas);

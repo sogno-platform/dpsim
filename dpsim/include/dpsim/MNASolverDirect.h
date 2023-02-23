@@ -62,8 +62,8 @@ namespace DPsim {
 		// #### Data structures for precomputed switch matrices (optionally with parallel frequencies) ####
 		/// Map of system matrices where the key is the bitset describing the switch states
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<SparseMatrix> > mSwitchedMatrices;
-		/// Map of LU factorizations related to the system matrices
-		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector< std::shared_ptr< DirectLinearSolver> > > mLuFactorizations;
+		/// Map of direct linear solvers related to the system matrices
+		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector< std::shared_ptr< DirectLinearSolver> > > mDirectLinearSolvers;
 
 		// #### Data structures for system recomputation over time ####
 		/// System matrix including all static elements
@@ -71,7 +71,7 @@ namespace DPsim {
 		/// System matrix including stamp of static and variable elements
 		SparseMatrix mVariableSystemMatrix;
 		/// LU factorization of variable system matrix
-		std::shared_ptr<DirectLinearSolver> mLuFactorizationVariableSystemMatrix;
+		std::shared_ptr<DirectLinearSolver> mDirectLinearSolverVariableSystemMatrix;
 		/// LU factorization indicator
 		DirectLinearSolverImpl implementationInUse;
 
@@ -138,7 +138,7 @@ namespace DPsim {
 		/// Logging of the right-hand-side solution time
 		void logSolveTime();
 		/// Logging of the LU factorization time
-		void logLUTime();
+		void logFactorizationTime();
 		/// Logging of the LU refactorization time
 		void logRecomputationTime();
 

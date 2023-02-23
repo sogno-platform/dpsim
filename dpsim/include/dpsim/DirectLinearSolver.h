@@ -44,18 +44,18 @@ namespace DPsim
 		DirectLinearSolver& operator=(DirectLinearSolver&&) = default;
 
 		/// preprocessing function pre-ordering and scaling the matrix
-		virtual void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) = 0;
+		virtual void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) = 0;
 
 		/// factorization function with partial pivoting
-		virtual void factorize(SparseMatrix& mVariableSystemMatrix) = 0;
+		virtual void factorize(SparseMatrix& systemMatrix) = 0;
 
 		/// refactorization without partial pivoting
-		virtual void refactorize(SparseMatrix& mVariableSystemMatrix) = 0;
+		virtual void refactorize(SparseMatrix& systemMatrix) = 0;
 
 		/// partial refactorization withouth partial pivoting
-		virtual void partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) = 0;
+		virtual void partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) = 0;
 
 		/// solution function for a right hand side
-		virtual Matrix solve(Matrix& mRightSideVector) = 0;
+		virtual Matrix solve(Matrix& rightSideVector) = 0;
 	};
 }

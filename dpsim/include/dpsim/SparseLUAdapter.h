@@ -31,18 +31,18 @@ namespace DPsim
 		~SparseLUAdapter() override;
 
 		/// preprocessing function pre-ordering and scaling the matrix
-		void preprocessing(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
+		void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
 
 		/// factorization function with partial pivoting
-		void factorize(SparseMatrix& mVariableSystemMatrix) override;
+		void factorize(SparseMatrix& systemMatrix) override;
 
 		/// refactorization without partial pivoting
-		void refactorize(SparseMatrix& mVariableSystemMatrix) override;
+		void refactorize(SparseMatrix& systemMatrix) override;
 
 		/// partial refactorization withouth partial pivoting
-		void partialRefactorize(SparseMatrix& mVariableSystemMatrix, std::vector<std::pair<UInt, UInt>>& mListVariableSystemMatrixEntries) override;
+		void partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
 
 		/// solution function for a right hand side
-		Matrix solve(Matrix& mRightSideVector) override;
+		Matrix solve(Matrix& rightSideVector) override;
     };
 }
