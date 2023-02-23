@@ -95,6 +95,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h>
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlDQ.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_ResIndSeries.h>
@@ -144,3 +145,5 @@
 #include <dpsim-models/Signal/SteamTurbineGovernor.h>
 #include <dpsim-models/Signal/HydroTurbine.h>
 #include <dpsim-models/Signal/HydroTurbineGovernor.h>
+#include <dpsim-models/Signal/PowerControllerVSI.h>
+#include <dpsim-models/Signal/VoltageControllerVSI.h>

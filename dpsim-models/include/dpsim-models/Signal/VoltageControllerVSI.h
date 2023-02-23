@@ -10,9 +10,9 @@
 
 #include <vector>
 
-#include <cps/SimPowerComp.h>
-#include <cps/SimSignalComp.h>
-#include <cps/Task.h>
+#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/SimSignalComp.h>
+#include <dpsim-models/Task.h>
 
 namespace CPS {
 namespace Signal {

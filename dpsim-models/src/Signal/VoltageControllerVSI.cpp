@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Signal/VoltageControllerVSI.h>
+#include <dpsim-models/Signal/VoltageControllerVSI.h>
 
 using namespace CPS;
 using namespace CPS::Signal;
