@@ -1,9 +1,9 @@
 # TODO: clean up this mess.
 include(FetchContent)
+
 FetchContent_Declare(
-  klu-module
-  GIT_REPOSITORY https://github.com/dpsim-simulator/SuiteSparse
-  GIT_TAG        v5.10.2
+	klu-module
+	URL https://github.com/dpsim-simulator/SuiteSparse/releases/download/release-v5.10.5/SuiteSparse-release-v5.10.5.tar.gz
 )
 
 FetchContent_GetProperties(klu-module)
