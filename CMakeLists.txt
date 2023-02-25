@@ -128,7 +128,6 @@ endif()
 
 if (FETCH_KLU)
 	include(FetchKLU)
-else()
 endif()
 
 if(FETCH_SPDLOG OR WIN32)
