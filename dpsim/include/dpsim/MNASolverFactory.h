@@ -66,7 +66,7 @@ class MnaSolverFactory {
 		DirectLinearSolverImpl implementation = DirectLinearSolverImpl::SparseLU,
 		String pluginName = "plugin.so")
 	{
-		//To avoid regression we use EigenDense in case of undefined implementation
+		//To avoid regression we use SparseLU in case of undefined implementation
 		if (implementation == DirectLinearSolverImpl::Undef) {
 			implementation = DirectLinearSolverImpl::SparseLU;
 		}

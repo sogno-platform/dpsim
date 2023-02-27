@@ -32,6 +32,7 @@ namespace DPsim
 
     void SparseLUAdapter::partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries)
     {
+		/* Eigen's SparseLU does not use refactorization. Use regular factorization (numerical factorization and partial pivoting) here */
         LUFactorizedSparse.factorize(systemMatrix);
     }
 
