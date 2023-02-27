@@ -22,7 +22,6 @@ namespace DPsim
 
     void DenseLUAdapter::factorize(SparseMatrix& systemMatrix)
     {
-		/* only a simple dense factorization */
         LUFactorized.compute(Matrix(systemMatrix));
     }
 
