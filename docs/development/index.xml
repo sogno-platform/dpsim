@@ -89,4 +89,16 @@ Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 &lt;p>This is a summary of general guidelines for the development of DPsim.&lt;/p>
 &lt;h2 id="logging">Logging&lt;/h2>
 &lt;p>Debug or trace should be the default log level for information that might be nice to have but not necessary for every simulation case.&lt;/p>
-&lt;p>Calls to the logger that might occur during simulation must use spdlog macros, like SPDLOG_LOGGER_INFO.&lt;/p></description></item></channel></rss>
+&lt;p>Calls to the logger that might occur during simulation must use spdlog macros, like SPDLOG_LOGGER_INFO.&lt;/p>
+&lt;h2 id="creating-new-releases">Creating New Releases&lt;/h2>
+&lt;p>Although DPsim currently does not have any conventions on versioning, the periodic creation of
+new versions can help to mark significant changes and to analyze new portions of code using tools like SonarCloud.&lt;/p>
+&lt;p>A new version of DPsim has to be indicated as follows:&lt;/p>
+&lt;ul>
+&lt;li>Create a new tag with an increased version number&lt;/li>
+&lt;li>Update setup.cfg&lt;/li>
+&lt;li>Update CMakeLists.txt&lt;/li>
+&lt;li>Update sonar-project.properties&lt;/li>
+&lt;/ul>
+&lt;p>Due to the creation of a new tag, a new PyPi package will be deployed automatically.
+To release an updated Docker image, the container workflow needs to be triggered manually.&lt;/p></description></item></channel></rss>
