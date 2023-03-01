@@ -6,10 +6,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <cmath>
 #include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
 
 using namespace CPS;
-using namespace std;
 
 DP::Ph1::ResIndSeries::ResIndSeries(String uid, String name,
                                     Logger::Level logLevel)
@@ -69,14 +69,19 @@ void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
     Real a = timeStep / (2. * **mInductance);
     Real b = timeStep * 2. * PI * mFrequencies(freq, 0) / 2.;
 
-    Real equivCondReal =
-        (a + mResistance * sqrt(a, 2)) / (sqrt((1. + R * a), 2) + sqrt(b, 2));
-    Real equivCondImag = -a * b / (sqrt((1. + R * a), 2) + sqrt(b, 2));
+    Real equivCondReal = (a + **mResistance * std::pow(a, 2)) /
+                         (std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
+    Real equivCondImag =
+        -a * b / (std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
     mEquivCond(freq, 0) = {equivCondReal, equivCondImag};
-    Real preCurrFracReal = (1. - sqrt(b, 2) + 2 * R * a + sqrt((R * a), 2)) /
-                           (sqrt((1. + R * a), 2) + sqrt(b, 2));
+
+    //Real preCurrFracReal = ( 1. - std::pow(b,2) + 2 * **mResistance * a + std::pow(**mResistance * a, 2) ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
+    Real preCurrFracReal =
+        (1. - std::pow(b, 2) + -std::pow(**mResistance * a, 2)) /
+        (std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
+    //Real preCurrFracImag =  ( -2. * b -2. * a * b * **mResistance ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
     Real preCurrFracImag =
-        (-2. * b - 2. * a * b * R) / (sqrt((1. + R * a), 2) + sqrt(b, 2));
+        (-2. * b) / (std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
     mPrevCurrFac(freq, 0) = {preCurrFracReal, preCurrFracImag};
 
     // TODO: check if this is correct or if it should be only computed before the step
