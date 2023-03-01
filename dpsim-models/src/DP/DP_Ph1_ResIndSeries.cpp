@@ -7,9 +7,9 @@
  *********************************************************************************/
 
 #include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
+#include <cmath>
 
 using namespace CPS;
-using namespace std;
 
 DP::Ph1::ResIndSeries::ResIndSeries(String uid, String name, Logger::Level logLevel)
 	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
@@ -44,7 +44,7 @@ void DP::Ph1::ResIndSeries::initialize(Matrix frequencies) {
 void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2. * PI * frequency;
-	Complex impedance = { 0, omega * **mInductance };
+	Complex impedance = { **mResistance, omega * **mInductance };
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
@@ -59,6 +59,7 @@ void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
+	mSLog->flush();
 }
 
 // #### MNA functions ####
@@ -68,11 +69,14 @@ void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
 		Real a = timeStep / (2. * **mInductance);
 		Real b = timeStep * 2.*PI * mFrequencies(freq,0) / 2.;
 
-		Real equivCondReal = ( a + mResistance * sqrt(a,2) ) / ( sqrt((1.+R*a),2) + sqrt(b,2) );
-		Real equivCondImag =  -a*b / ( sqrt((1.+R*a),2) + sqrt(b,2) );
+		Real equivCondReal = ( a + **mResistance * std::pow(a, 2) ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
+		Real equivCondImag =  -a * b / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
 		mEquivCond(freq,0) = { equivCondReal, equivCondImag };
-		Real preCurrFracReal = ( 1. - sqrt(b,2) + 2*R*a + sqrt((R*a),2) ) / ( sqrt((1.+R*a),2) + sqrt(b,2) );
-		Real preCurrFracImag =  ( -2.*b -2.*a*b*R ) / ( sqrt((1.+R*a),2) + sqrt(b,2) );
+
+		//Real preCurrFracReal = ( 1. - std::pow(b,2) + 2 * **mResistance * a + std::pow(**mResistance * a, 2) ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
+		Real preCurrFracReal = ( 1. - std::pow(b,2) + - std::pow(**mResistance * a, 2) ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
+		//Real preCurrFracImag =  ( -2. * b -2. * a * b * **mResistance ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
+		Real preCurrFracImag =  ( -2. * b ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
 		mPrevCurrFac(freq,0) = { preCurrFracReal, preCurrFracImag };
 
 		// TODO: check if this is correct or if it should be only computed before the step
@@ -97,8 +101,7 @@ void DP::Ph1::ResIndSeries::mnaCompInitialize(Real omega, Real timeStep, Attribu
 }
 
 void DP::Ph1::ResIndSeries::mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
-		updateMatrixNodeIndices();
-
+	updateMatrixNodeIndices();
 	initVars(timeStep);
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
@@ -194,7 +197,18 @@ void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStampHarm(Matrix& rightVe
 	}
 }
 
-void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector, Int freqIdx) {
+	mEquivCurrent(freqIdx,0) =
+		mEquivCond(freqIdx,0) * (**mIntfVoltage)(0, freqIdx)
+		+ mPrevCurrFac(freqIdx,0) * (**mIntfCurrent)(0, freqIdx);
+
+	if (terminalNotGrounded(0))
+		Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freqIdx,0));
+	if (terminalNotGrounded(1))
+		Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent(freqIdx,0));
+}
+
+void DP::Ph1::ResIndSeries::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// actually depends on L, but then we'd have to modify the system matrix anyway
 	modifiedAttributes.push_back(mRightVector);
 	prevStepDependencies.push_back(mIntfVoltage);
@@ -202,14 +216,14 @@ void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, At
 }
 
 void DP::Ph1::ResIndSeries::mnaCompPreStep(Real time, Int timeStepCount) {
-	mResIndSeries.mnaCompApplyRightSideVectorStamp(**mRightVector);
+	this->mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::ResIndSeries::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 	mResIndSeries.mnaCompApplyRightSideVectorStampHarm(**mResIndSeries.mRightVector);
 }
 
-void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void DP::Ph1::ResIndSeries::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);

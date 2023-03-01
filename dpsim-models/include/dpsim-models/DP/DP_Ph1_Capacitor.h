@@ -57,10 +57,10 @@ namespace Ph1 {
 		/// Stamps right side (source) vector
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 		void mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector) override;
+		void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx) override;
 		/// Update interface voltage from MNA system result
 		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		void mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx);
-		void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx) override;
 		/// Update interface current from MNA system result
 		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		void mnaCompUpdateCurrentHarm();
