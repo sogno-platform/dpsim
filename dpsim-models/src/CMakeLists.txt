@@ -27,6 +27,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_RXLoadSwitch.cpp
 	DP/DP_Ph1_PQLoadCS.cpp
 	DP/DP_Ph1_Resistor.cpp
+	DP/DP_Ph1_ResIndSeries.cpp
 	DP/DP_Ph1_Transformer.cpp
 	DP/DP_Ph1_VoltageSource.cpp
 	DP/DP_Ph1_VoltageSourceRamp.cpp

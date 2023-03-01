@@ -50,6 +50,7 @@
 #include <dpsim-models/DP/DP_Ph1_RXLoad.h>
 #include <dpsim-models/DP/DP_Ph1_RXLoadSwitch.h>
 #include <dpsim-models/DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
 #include <dpsim-models/DP/DP_Ph1_SVC.h>
