@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include <dpsim/MNASolverEigenSparse.h>
+#include <dpsim/MNASolverDirect.h>
 #include <dpsim/MNASolverDynInterface.h>
 
 namespace DPsim {
 
 	template <typename VarType>
-    class MnaSolverPlugin : public MnaSolverEigenSparse<VarType>{
+    class MnaSolverPlugin : public MnaSolverDirect<VarType>{
 	protected:
 		using Solver::mSLog;
 		String mPluginName;

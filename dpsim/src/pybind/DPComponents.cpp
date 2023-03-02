@@ -125,7 +125,9 @@ void addDPPh1Components(py::module_ mDPPh1) {
 
 	py::class_<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR, std::shared_ptr<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance())
 		.def("set_base_parameters", &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setBaseParameters, "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
-		.def("set_initial_values", &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setInitialValues, "init_complex_electrical_power"_a, "init_mechanical_power"_a, "init_complex_terminal_voltage"_a);
+		.def("set_initial_values", &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setInitialValues, "init_complex_electrical_power"_a, "init_mechanical_power"_a, "init_complex_terminal_voltage"_a)
+		.def("scale_inertia_constant", &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::scaleInertiaConstant, "scaling_factor"_a)
+		.def("set_model_as_current_source", &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setModelAsCurrentSource, "model_as_current_source"_a);
 
 	py::class_<CPS::DP::Ph1::SynchronGenerator3OrderVBR, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator3OrderVBR>, CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>(mDPPh1, "SynchronGenerator3OrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
@@ -135,12 +137,12 @@ void addDPPh1Components(py::module_ mDPPh1) {
 	py::class_<CPS::DP::Ph1::SynchronGenerator4OrderVBR, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator4OrderVBR>, CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>(mDPPh1, "SynchronGenerator4OrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::SynchronGenerator4OrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
-		.def("connect", &CPS::DP::Ph1::SynchronGenerator4OrderVBR::connect);																
+		.def("connect", &CPS::DP::Ph1::SynchronGenerator4OrderVBR::connect);
 
 	py::class_<CPS::DP::Ph1::SynchronGenerator6aOrderVBR, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator6aOrderVBR>, CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>(mDPPh1, "SynchronGenerator6aOrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::SynchronGenerator6aOrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a, "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
-		.def("connect", &CPS::DP::Ph1::SynchronGenerator6aOrderVBR::connect);	
+		.def("connect", &CPS::DP::Ph1::SynchronGenerator6aOrderVBR::connect);
 
 	py::class_<CPS::DP::Ph1::SynchronGenerator6bOrderVBR, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator6bOrderVBR>, CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>(mDPPh1, "SynchronGenerator6bOrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)

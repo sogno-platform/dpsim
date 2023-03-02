@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
 	sim.setSystem(sys);
 	sim.setDomain(Domain::EMT);
 	sim.setSolverType(Solver::Type::MNA);
-	sim.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
+	sim.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.addLogger(logger);

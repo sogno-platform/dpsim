@@ -62,7 +62,7 @@ public:
 		Bool si = false,
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA,
-		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back(),
+		DirectLinearSolverImpl mi = DirectLinearSolverImpl::SparseLU,
 		String spn = "plugin.so",
 		String params = "default.json"
 	);
@@ -80,7 +80,7 @@ public:
 		Bool si = false,
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA,
-		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back(),
+		DirectLinearSolverImpl mi = DirectLinearSolverImpl::SparseLU,
 		String spn = "plugin.so"
 	);
 
@@ -106,7 +106,7 @@ public:
 		CPS::Domain domain;
 		Solver::Type type;
 	} solver;
-	DPsim::MnaSolverFactory::MnaSolverImpl mnaImpl;
+	DPsim::DirectLinearSolverImpl directImpl;
 	String solverPluginName;
 
 	DPsim::Timer::StartClock::time_point startTime;

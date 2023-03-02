@@ -29,10 +29,12 @@ int main(int argc, char *argv[]) {
 	String faultBusName= "BUS6";
 	Real inertiaScalingFactor = 1.0;
 	String logDirectory = "logs";
+	DirectLinearSolverImpl implementation = DirectLinearSolverImpl::SparseLU;
 
 	// Find CIM files
 	std::list<fs::path> filenames;
 	CommandLineArgs args(argc, argv);
+
 	if (argc <= 1) {
 		filenames = Utils::findFiles({
 			"WSCC-09_Dyn_Full_DI.xml",
@@ -57,19 +59,21 @@ int main(int argc, char *argv[]) {
 
 		if (args.options.find("startTimeFault") != args.options.end())
 			startTimeFault = args.getOptionReal("startTimeFault");
-		
+
 		if (args.options.find("endTimeFault") != args.options.end())
 			endTimeFault = args.getOptionReal("endTimeFault");
-		
+
 		if (args.options.find("faultBus") != args.options.end())
 			faultBusName = args.getOptionString("faultBus");
-		
+
 		if (args.options.find("inertiaScalingFactor") != args.options.end())
 			inertiaScalingFactor = args.getOptionReal("inertiaScalingFactor");
-		
+
 		if (args.options.find("logDirectory") != args.options.end())
 			logDirectory = args.getOptionString("logDirectory");
 	}
+
+	implementation = args.directImpl;
 
 	// Configure logging
 	Logger::Level logLevel = Logger::Level::info;
@@ -86,7 +90,9 @@ int main(int argc, char *argv[]) {
 	String simNamePF = simName + "_PF";
 	Logger::setLogDir(logDirectory + "/" + simNamePF);
     CPS::CIM::Reader reader(simNamePF, logLevel, logLevel);
+
     SystemTopology systemPF = reader.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::PVNode);
+
 	systemPF.component<CPS::SP::Ph1::SynchronGenerator>("GEN1")->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
 
 	// define logging
@@ -113,13 +119,13 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys;
 	if (sgType=="3")
 		sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::SG3OrderVBR);
-	else if (sgType=="4") 
+	else if (sgType=="4")
 		sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::SG4OrderVBR);
-	else if (sgType=="6b") 
+	else if (sgType=="6b")
 		sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::SG6bOrderVBR);
-	else 
+	else
 		throw CPS::SystemError("Unsupported reduced-order SG type!");
-	
+
 	// Optionally extend topology with switch
 	auto faultDP = Ph1::Switch::make("Fault", logLevel);
 	if (withFault) {
@@ -135,6 +141,7 @@ int main(int argc, char *argv[]) {
 			auto genPF = systemPF.component<CPS::SP::Ph1::SynchronGenerator>(comp->name());
 			genReducedOrder->terminal(0)->setPower(-genPF->getApparentPower());
 			genReducedOrder->scaleInertiaConstant(inertiaScalingFactor);
+			genReducedOrder->setModelAsCurrentSource(false);
 		}
 	}
 
@@ -161,7 +168,7 @@ int main(int argc, char *argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.doSystemMatrixRecomputation(true);
-	sim.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
+	sim.setDirectLinearSolverImplementation(implementation);
 	sim.addLogger(logger);
 
 		// Optionally add switch event

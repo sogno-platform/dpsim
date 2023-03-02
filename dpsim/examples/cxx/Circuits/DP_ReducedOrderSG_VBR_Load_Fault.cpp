@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
 	simDP.setTimeStep(timeStep);
 	simDP.setFinalTime(finalTime);
 	simDP.setDomain(Domain::DP);
-	simDP.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
+	simDP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	simDP.addLogger(loggerDP);
 	simDP.doSystemMatrixRecomputation(true);
 

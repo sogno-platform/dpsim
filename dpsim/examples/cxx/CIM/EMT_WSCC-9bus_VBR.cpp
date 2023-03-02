@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
 	String simName = "EMT_WSCC-9bus_VBR";
 	Real timeStep;
 	Real finalTime;
+	DirectLinearSolverImpl implementation = DirectLinearSolverImpl::SparseLU;
 
 	// Find CIM files
 	std::list<fs::path> filenames;
@@ -39,6 +40,8 @@ int main(int argc, char *argv[]) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;
 	}
+
+	implementation = args.directImpl;
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	// read original network topology
@@ -109,7 +112,7 @@ int main(int argc, char *argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.doSystemMatrixRecomputation(true);
-	sim.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
+	sim.setDirectLinearSolverImplementation(implementation);
 	sim.addLogger(logger);
 	sim.run();
 

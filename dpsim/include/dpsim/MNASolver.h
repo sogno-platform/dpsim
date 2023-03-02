@@ -110,6 +110,13 @@ namespace DPsim {
 		/// Right side vector logger
 		std::shared_ptr<DataLogger> mRightVectorLog;
 
+		/// LU factorization measurements
+		std::vector<Real> mFactorizeTimes;
+		/// Right-hand side solution measurements
+		std::vector<Real> mSolveTimes;
+		/// LU refactorization measurements
+		std::vector<Real> mRecomputationTimes;
+
 		/// Constructor should not be called by users but by Simulation
 		MnaSolver(String name,
 			CPS::Domain domain = CPS::Domain::DP,

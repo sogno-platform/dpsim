@@ -35,7 +35,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		Bool si,
 		CPS::Domain sd,
 		Solver::Type st,
-		MnaSolverFactory::MnaSolverImpl mi,
+		DirectLinearSolverImpl mi,
 		String spn,
 		String ps
 	) :
@@ -54,7 +54,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		{ "start-in",		required_argument,	0, 'i', "SECS", "" },
 		{ "solver-domain",	required_argument,	0, 'D', "(SP|DP|EMT)", "Domain of solver" },
 		{ "solver-type",	required_argument,	0, 'T', "(NRP|MNA)", "Type of solver" },
-		{ "solver-mna-impl", required_argument, 0, 'U', "(EigenDense|EigenSparse|CUDADense|CUDASparse)", "Type of MNA Solver implementation"},
+		{ "linear-solver-impl", required_argument, 0, 'U', "(DenseLU|SparseLU|KLU|CUDADense|CUDASparse)", "Type of direct linear solver implementation"},
 		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
 		{ "name",		required_argument,	0, 'n', "NAME", "Name of log files" },
 		{ "params",		required_argument,	0, 'p', "PATH", "Json file containing parametrization"},
@@ -72,7 +72,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 	blocking(b),
 	steadyInit(si),
 	solver{sd, st},
-	mnaImpl(mi),
+	directImpl(mi),
 	solverPluginName(spn)
 {
 	parseArguments(argc, argv);
@@ -91,7 +91,7 @@ CommandLineArgs::CommandLineArgs(
 		Bool si,
 		CPS::Domain sd,
 		Solver::Type st,
-		MnaSolverFactory::MnaSolverImpl mi,
+		DirectLinearSolverImpl mi,
 		String spn
 		) :
 	mProgramName("dpsim"),
@@ -109,7 +109,7 @@ CommandLineArgs::CommandLineArgs(
 		{ "start-in",		required_argument,	0, 'i', "SECS", "" },
 		{ "solver-domain",	required_argument,	0, 'D', "(SP|DP|EMT)", "Domain of solver" },
 		{ "solver-type",	required_argument,	0, 'T', "(NRP|MNA)", "Type of solver" },
-		{ "solver-mna-impl", required_argument, 0, 'U', "(EigenDense|EigenSparse|CUDADense|CUDASparse)", "Type of MNA Solver implementation"},
+		{ "linear-solver-impl", required_argument, 0, 'U', "(DenseLU|SparseLU|KLU|CUDADense|CUDASparse)", "Type of direct linear solver implementation"},
 		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
 		{ "name",		required_argument,	0, 'n', "NAME", "Name of log files" },
 		{ 0 }
@@ -125,7 +125,7 @@ CommandLineArgs::CommandLineArgs(
 	blocking(b),
 	steadyInit(si),
 	solver{sd, st},
-	mnaImpl(mi),
+	directImpl(mi),
 	solverPluginName(spn)
 {
 }
@@ -234,18 +234,20 @@ void CommandLineArgs::parseArguments(int argc, char *argv[])
 			}
 			case 'U': {
 				String arg = optarg;
-				if (arg == "EigenDense") {
-					mnaImpl = MnaSolverFactory::EigenDense;
-				} else if (arg == "EigenSparse") {
-					mnaImpl = MnaSolverFactory::EigenSparse;
+				if (arg == "DenseLU") {
+					directImpl = DirectLinearSolverImpl::DenseLU;
+				} else if (arg == "SparseLU") {
+					directImpl = DirectLinearSolverImpl::SparseLU;
+				} else if (arg == "KLU") {
+					directImpl = DirectLinearSolverImpl::KLU;
 				} else if (arg == "CUDADense") {
-					mnaImpl = MnaSolverFactory::CUDADense;
+					directImpl = DirectLinearSolverImpl::CUDADense;
 				} else if (arg == "CUDASparse") {
-					mnaImpl = MnaSolverFactory::CUDASparse;
+					directImpl = DirectLinearSolverImpl::CUDASparse;
 				} else if (arg == "CUDAMagma") {
-					mnaImpl = MnaSolverFactory::CUDAMagma;
+					directImpl = DirectLinearSolverImpl::CUDAMagma;
 				} else if (arg == "Plugin") {
-					mnaImpl = MnaSolverFactory::Plugin;
+					directImpl = DirectLinearSolverImpl::Plugin;
 				} else {
 					throw std::invalid_argument("Invalid value for --solver-mna-impl");
 				}
