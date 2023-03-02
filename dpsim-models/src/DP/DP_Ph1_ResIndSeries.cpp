@@ -75,16 +75,13 @@ void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
         -a * b / (std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
     mEquivCond(freq, 0) = {equivCondReal, equivCondImag};
 
-    //Real preCurrFracReal = ( 1. - std::pow(b,2) + 2 * **mResistance * a + std::pow(**mResistance * a, 2) ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
     Real preCurrFracReal =
         (1. - std::pow(b, 2) + -std::pow(**mResistance * a, 2)) /
         (std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
-    //Real preCurrFracImag =  ( -2. * b -2. * a * b * **mResistance ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
     Real preCurrFracImag =
         (-2. * b) / (std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
     mPrevCurrFac(freq, 0) = {preCurrFracReal, preCurrFracImag};
 
-    // TODO: check if this is correct or if it should be only computed before the step
     mEquivCurrent(freq, 0) = mEquivCond(freq, 0) * (**mIntfVoltage)(0, freq) +
                              mPrevCurrFac(freq, 0) * (**mIntfCurrent)(0, freq);
     (**mIntfCurrent)(0, freq) =
