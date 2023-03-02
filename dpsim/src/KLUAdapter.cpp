@@ -29,9 +29,9 @@ KLUAdapter::KLUAdapter()
         m_scaling = atoi(scaling);
 
         /* m_scaling < 0 valid here (evaluates to "no scaling") */
-        if (m_scaling > 2)
+        if (m_scaling > SCALING_METHOD::MAX_SCALING)
         {
-            m_scaling = 0;
+            m_scaling = SCALING_METHOD::NO_SCALING;
         }
     }
 
@@ -141,14 +141,7 @@ void KLUAdapter::factorize(SparseMatrix &systemMatrix)
 
 void KLUAdapter::refactorize(SparseMatrix &systemMatrix)
 {
-    /* TODO: in DPsim, the non-zero count between the "first" factorization and the first
-     * refactorization might vary. This is because during the "stamping" phase of the matrix
-     * before preprocessing (see stampVariableSystemMatrix() in MnaSolverDirect), some values
-     * of certain components are not set properly, but in recomputeSystemMatrix, they are set.
-     * Thus, the matrix pattern changes between first factorization and now, and this function
-     * needs to re-do preprocessing and factorization (plus factorization path, if necessary).
-     * This needs to be fixed in MnaSolver(Direct), because it might affect performance.
-     * Same for partialRefactorize below this function. */
+    /* TODO: remove if-else when zero<->non-zero issue during matrix stamping has been fixed. Also remove in partialRefactorize then. */
     if (systemMatrix.nonZeros() != nnz)
     {
         preprocessing(systemMatrix, this->changedEntries);
@@ -201,6 +194,9 @@ Matrix KLUAdapter::solve(Matrix &rightSideVector)
     /* leading dimension, also called "n" */
     Int rhsRows = Eigen::internal::convert_index<Int>(rightSideVector.rows());
 
+	/* tsolve refers to transpose solve. Input matrix is stored in compressed row format,
+	 * KLU operates on compressed column format. This way, the transpose of the matrix is factored.
+	 * This has to be taken into account only here during right-hand solving. */
     klu_tsolve(m_symbolic, m_numeric, rhsRows, rhsCols, x.const_cast_derived().data(),
                const_cast<klu_common *>(&m_common));
 
@@ -219,11 +215,8 @@ void KLUAdapter::printMatrixMarket(SparseMatrix &matrix, int counter) const
 
     std::ofstream ofs;
     ofs.open(outputName);
-    /* TODO: determine appropriate precision with respect to datatype chosen (double/float/etc.)
-     * Alternatively: add logger to DirectLinearSolver and this type of logging can be done using libfmt.
-     * Additionally, the printing of LU/permutation matrices / factorization path / scaling factors / etc.
-     * in custom SuiteSparse/KLU can be moved here to reduce the modifications made to SuiteSparse and use
-     * C++'s more powerful I/O tools - compared to C-level printing */
+    /* TODO: add logger to DirectLinearSolver to use libfmt's more powerful logging tools.
+	 * Then also move matrix printing (of LU matrices) here in order to avoid C-level printing. */
     ofs.precision(14);
     ofs << "%%MatrixMarket matrix coordinate real general" << std::endl;
     ofs << n << " " << n << " " << nz << std::endl;

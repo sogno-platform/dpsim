@@ -45,11 +45,7 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 	// Compute LU-factorization for system matrix
 	mDirectLinearSolvers[bit][0]->preprocessing(sys, mListVariableSystemMatrixEntries);
 
-	auto start = std::chrono::steady_clock::now();
 	mDirectLinearSolvers[bit][0]->factorize(sys);
-	auto end = std::chrono::steady_clock::now();
-	std::chrono::duration<double> diff = end-start;
-	mFactorizeTimes.push_back(diff.count());
 }
 
 template <typename VarType>
@@ -72,20 +68,9 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	// Use matrix with only static elements as basis for variable system matrix
 	mVariableSystemMatrix = mBaseSystemMatrix;
 
-
-	/* TODO:
-	 * variable matrix stamps are zero and resulting entries in mVariableSystemMatrix are also zero
-	 * In MNAInterface.h, the function mnaApplySparseSystemMatrixStamp is defined to cast the sparse
-	 * input matrix to a dense matrix, add the entries according to MathUtils.cpp and re-cast the
-	 * matrix to sparse (mat.sparseView()). Numerically zero entries are then set zero symbolically,
-	 * even if they are non-zero in the model. This way, a wrong pattern is preprocessed and factorized,
-	 * resulting in a requirement to preprocess and factorize during first refactorization.
-	 * Possible resolves:
-	 * 		1. Set mConductanceMatrix to nonzero during this phase
-	 * 				-> Cons: matrix might become singular, in worst case (undefined behavior?)
-	 * 		2. Re-write matrix stamp for sparse case
-	 * 				-> Cons: re-write hundreds lines of code
-	 */
+	/* TODO: mnaApplySparseSystemMatrixStamp inefficient. It casts the sparse input matrix mVariableSystemMatrix to a dense matrix and back to sparse.
+	 * Also, some of the components have zero entries now - or don't apply any stamps, which results in a different pattern during recomputation.
+	 * This will be fixed in the branch profiling-based-optimisation */
 
 	// Now stamp switches into matrix
 	mSLog->info("Stamping switches");
@@ -103,11 +88,7 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	// Calculate factorization of current matrix
 	mDirectLinearSolverVariableSystemMatrix->preprocessing(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
 
-	auto start = std::chrono::steady_clock::now();
 	mDirectLinearSolverVariableSystemMatrix->factorize(mVariableSystemMatrix);
-	auto end = std::chrono::steady_clock::now();
-	std::chrono::duration<double> diff = end-start;
-	mFactorizeTimes.push_back(diff.count());
 }
 
 template <typename VarType>
@@ -124,12 +105,8 @@ void MnaSolverDirect<VarType>::solveWithSystemMatrixRecomputation(Real time, Int
 	if (hasVariableComponentChanged())
 		recomputeSystemMatrix(time);
 
-	auto start = std::chrono::steady_clock::now();
 	// Calculate new solution vector
 	**mLeftSideVector = mDirectLinearSolverVariableSystemMatrix->solve(mRightSideVector);
-	auto end = std::chrono::steady_clock::now();
-	std::chrono::duration<double> diff = end-start;
-	mSolveTimes.push_back(diff.count());
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
@@ -143,15 +120,6 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 	// Start from base matrix
 	mVariableSystemMatrix = mBaseSystemMatrix;
 
-	/* TODO:
-	 * These matrix stamps turn out to be inefficient according to profiling
-	 * possibly because the nonzero pattern of mBaseSystemMatrix differs from the
-	 * final nonzero pattern. Also, during mnaApplySparseSystemMatrixStamp,
-	 * the matrix is cast to dense and back to sparse, which is probably quite inefficient
-	 * Possible resolve:
-	 * 		1. Re-write mnaApplySparseSystemMatrixStamp for sparse case (see to-do above)
-	*/
-
 	// Now stamp switches into matrix
 	for (auto sw : mMNAIntfSwitches)
 		sw->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
@@ -160,13 +128,9 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 	for (auto comp : mMNAIntfVariableComps)
 		comp->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
 
-	auto start = std::chrono::steady_clock::now();
 	// Refactorization of matrix assuming that structure remained
 	// constant by omitting analyzePattern
 	mDirectLinearSolverVariableSystemMatrix->partialRefactorize(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
-	auto end = std::chrono::steady_clock::now();
-	std::chrono::duration<double> diff = end-start;
-	mRecomputationTimes.push_back(diff.count());
 	++mNumRecomputations;
 }
 
@@ -250,11 +214,7 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 		MnaSolver<VarType>::updateSwitchStatus();
 
 	if (mSwitchedMatrices.size() > 0) {
-		auto start = std::chrono::steady_clock::now();
 		**mLeftSideVector = mDirectLinearSolvers[mCurrentSwitchStatus][0]->solve(mRightSideVector);
-		auto end = std::chrono::steady_clock::now();
-		std::chrono::duration<double> diff = end-start;
-		mSolveTimes.push_back(diff.count());
 	}
 
 
