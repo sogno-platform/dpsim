@@ -86,7 +86,7 @@ public:
   class MnaPreStepHarm : public CPS::Task {
   public:
     MnaPreStepHarm(ResIndSeries &ResIndSeries)
-        : Task(**mResIndSeries.mName + ".MnaPreStepHarm"),
+        : Task(**ResIndSeries.mName + ".MnaPreStepHarm"),
           mResIndSeries(ResIndSeries) {
       // actually depends on C, but then we'd have to modify the system matrix anyway
       mModifiedAttributes.push_back(mResIndSeries.attribute("right_vector"));
@@ -103,7 +103,7 @@ public:
   public:
     MnaPostStepHarm(ResIndSeries &ResIndSeries,
                     const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
-        : Task(**mResIndSeries.mName + ".MnaPostStepHarm"),
+        : Task(**ResIndSeries.mName + ".MnaPostStepHarm"),
           mResIndSeries(ResIndSeries), mLeftVectors(leftVectors) {
       for (UInt i = 0; i < mLeftVectors.size(); i++)
         mAttributeDependencies.push_back(mLeftVectors[i]);

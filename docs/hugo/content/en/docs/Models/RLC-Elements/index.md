@@ -169,5 +169,5 @@ $$
 	a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2}
 $$
 $$
-	\langle i_{equiv} \rangle(k-1) = \frac{1 - b^2 - j2b + 2Ra + (Ra)^2 - j2Rab}{(1+Ra^2) + b^2} \langle i \rangle(k-1) + \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k-1)
+	\langle i_{equiv} \rangle(k-1) = \frac{1 - b^2 - j2b - (Ra)^2}{(1+Ra)^2 + b^2} \langle i \rangle(k-1) + \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k-1)
 $$
