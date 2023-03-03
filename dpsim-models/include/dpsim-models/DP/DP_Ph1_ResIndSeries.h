@@ -69,10 +69,8 @@ namespace Ph1 {
 		void mnaCompPreStep(Real time, Int timeStepCount) override;
 		/// Add MNA post step dependencies
 		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
-
 		/// Add MNA pre step dependencies
 		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
-
 		/// Add MNA post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 

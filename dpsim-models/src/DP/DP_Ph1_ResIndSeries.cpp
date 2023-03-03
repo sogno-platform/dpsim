@@ -67,7 +67,7 @@ void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
 		Real a = timeStep / (2. * **mInductance);
-		Real b = timeStep * 2.*PI * mFrequencies(freq,0) / 2.;
+		Real b = timeStep * 2. *PI * mFrequencies(freq,0) / 2.;
 
 		Real equivCondReal = ( a + **mResistance * std::pow(a, 2) ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
 		Real equivCondImag =  -a * b / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
@@ -95,6 +95,7 @@ void DP::Ph1::ResIndSeries::mnaCompInitialize(Real omega, Real timeStep, Attribu
 		Logger::phasorToString((**mIntfVoltage)(0,0)),
 		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::complexToString(mEquivCurrent(0,0)));
+	mSLog->flush();
 }
 
 void DP::Ph1::ResIndSeries::mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {

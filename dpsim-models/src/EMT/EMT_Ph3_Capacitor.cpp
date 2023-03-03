@@ -56,6 +56,7 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
+	mSLog->flush();
 }
 
 void EMT::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -102,7 +103,6 @@ void EMT::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemM
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 1), -mEquivCond(2, 1));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), -mEquivCond(2, 2));
 
-
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), -mEquivCond(0, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 1), -mEquivCond(0, 1));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 2), -mEquivCond(0, 2));
@@ -117,6 +117,8 @@ void EMT::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemM
 	SPDLOG_LOGGER_INFO(mSLog,
 			"\nEquivalent Conductance: {:s}",
 			Logger::matrixToString(mEquivCond));
+
+	mSLog->flush();
 }
 
 void EMT::Ph3::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
