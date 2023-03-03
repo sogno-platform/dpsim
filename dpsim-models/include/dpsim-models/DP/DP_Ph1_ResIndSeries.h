@@ -37,6 +37,18 @@ public:
   ResIndSeries(String name, Logger::Level logLevel = Logger::Level::off)
       : ResIndSeries(name, name, logLevel) {}
 
+  // #### General ####
+  /// Sets model specific parameters
+  void setParameters(Real resistance, Real inductance);
+  /// Return new instance with the same parameters
+  SimPowerComp<Complex>::Ptr clone(String name);
+  /// Initializes state variables considering the number of frequencies
+  void initialize(Matrix frequencies);
+  /// Initializes states from power flow data
+  void initializeFromNodesAndTerminals(Real frequency) override;
+  /// Initializes auxiliar variables
+  void initVars(Real timeStep);
+
   // #### MNA section ####
   /// Initializes MNA specific variables
   void mnaCompInitialize(Real omega, Real timeStep,

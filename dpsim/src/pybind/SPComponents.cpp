@@ -127,6 +127,16 @@ void addSPPh1Components(py::module_ mSPPh1) {
            &CPS::SP::Ph1::Load::modifyPowerFlowBusType, "bus_type"_a)
       .def("connect", &CPS::SP::Ph1::Load::connect);
 
+  py::class_<CPS::SP::Ph1::ResIndSeries,
+             std::shared_ptr<CPS::SP::Ph1::ResIndSeries>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "ResInductor",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::SP::Ph1::ResIndSeries::setParameters, "R"_a,
+           "L"_a)
+      .def("connect", &CPS::SP::Ph1::ResIndSeries::connect);
+
   py::class_<CPS::SP::Ph1::Switch, std::shared_ptr<CPS::SP::Ph1::Switch>,
              CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(
       mSPPh1, "Switch", py::multiple_inheritance())
