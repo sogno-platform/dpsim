@@ -131,7 +131,6 @@ class MnaSolverFactory {
 			log->info("creating Plugin solver implementation");
 			return std::make_shared<MnaSolverPlugin<VarType>>(pluginName, name, domain, logLevel);
 #endif
-		case DirectLinearSolverImpl::Undef:
 		default:
 			throw CPS::SystemError("unsupported MNA implementation.");
 
