@@ -9,64 +9,40 @@
 #pragma once
 
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNATearInterface.h>
-#include <dpsim-models/Solver/PFSolverInterfaceBranch.h>
 #include <dpsim-models/Definitions.h>
-#include <dpsim-models/Logger.h>
-#include <dpsim-models/Base/Base_Ph1_Resistor.h>
 
 namespace CPS {
 namespace SP {
 namespace Ph1 {
-	/// Static phasor resistor model
-	class Resistor :
+	/// Static phasor ResIndSeries model (only implemented for dynamic simulations!)
+	class ResIndSeries :
 		public MNASimPowerComp<Complex>,
-		public Base::Ph1::Resistor,
-		public MNATearInterface,
-		public SharedFactory<Resistor>,
-		public PFSolverInterfaceBranch {
-
+		public SharedFactory<ResIndSeries> {
 	private:
-		/// base apparent power[VA]
-		Real mBaseApparentPower;
-		/// base impedance [ohm]
-		Real mBaseImpedance;
-		/// base admittance [S]
-		Real mBaseAdmittance;
-		/// base voltage [V]
-		Real mBaseVoltage;
-		/// base current [A]
-		Real mBaseCurrent;
-
-		/// resistance [pu]
-		Real mResistancePerUnit;
-		/// conductance [pu]
-		Real mConductancePerUnit;
-
-
+		/// Impedance
+		Complex mImpedance;
 	public:
+		/// Inductance [H]
+		const Attribute<Real>::Ptr mInductance;
+		///Resistance [ohm]
+		const Attribute<Real>::Ptr mResistance;
 		/// Defines UID, name and logging level
-		Resistor(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		ResIndSeries(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level
-		Resistor(String name, Logger::Level logLevel = Logger::Level::off)
-			: Resistor(name, name, logLevel) { }
+		ResIndSeries(String name, Logger::Level logLevel = Logger::Level::off)
+			: ResIndSeries(name, name, logLevel) { }
 
 		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
+		/// Sets model specific parameters
+		void setParameters(Real resistance, Real inductance);
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency) override;
 
-		// #### Powerflow section ####
-		/// Set base voltage
-		void setBaseVoltage(Real baseVoltage);
-		/// Initializes component from power flow data
-		void calculatePerUnitParameters(Real baseApparentPower);
-		/// Stamps admittance matrix
-		void pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y);
 
 		// #### MNA section ####
-		///
+		/// Initializes MNA specific variables
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
 		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
@@ -78,9 +54,6 @@ namespace Ph1 {
 		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// add MNA pre and post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-
-		// #### MNA Tear Section ####
-		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
 
 	};
 }

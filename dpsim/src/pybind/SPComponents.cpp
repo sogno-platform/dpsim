@@ -55,6 +55,12 @@ void addSPPh1Components(py::module_ mSPPh1) {
 		.def("connect", &CPS::SP::Ph1::Inductor::connect)
 		.def_property("L", createAttributeGetter<CPS::Real>("L"), createAttributeSetter<CPS::Real>("L"));
 
+	py::class_<CPS::SP::Ph1::ResIndSeries, std::shared_ptr<CPS::SP::Ph1::ResIndSeries>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "ResInductor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::SP::Ph1::ResIndSeries::setParameters, "R"_a, "L"_a)
+		.def("connect", &CPS::SP::Ph1::ResIndSeries::connect);
+
 	py::class_<CPS::SP::Ph1::NetworkInjection, std::shared_ptr<CPS::SP::Ph1::NetworkInjection>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "NetworkInjection", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
         .def("set_parameters", py::overload_cast<CPS::Real>(&CPS::SP::Ph1::NetworkInjection::setParameters), "voltage_set_point"_a)
