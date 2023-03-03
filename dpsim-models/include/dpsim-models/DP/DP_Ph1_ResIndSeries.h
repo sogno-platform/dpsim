@@ -37,18 +37,6 @@ public:
   ResIndSeries(String name, Logger::Level logLevel = Logger::Level::off)
       : ResIndSeries(name, name, logLevel) {}
 
-  // #### General ####
-  /// Sets model specific parameters
-  void setParameters(Real resistance, Real inductance);
-  /// Return new instance with the same parameters
-  SimPowerComp<Complex>::Ptr clone(String name);
-  /// Initializes state variables considering the number of frequencies
-  void initialize(Matrix frequencies);
-  /// Initializes states from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
-  /// Initializes auxiliar variables
-  void initVars(Real timeStep);
-
   // #### MNA section ####
   /// Initializes MNA specific variables
   void mnaCompInitialize(Real omega, Real timeStep,
@@ -76,28 +64,17 @@ public:
   /// Add MNA post step dependencies
   void mnaCompPostStep(Real time, Int timeStepCount,
                        Attribute<Matrix>::Ptr &leftVector) override;
+  /// Add MNA pre step dependencies
+  void mnaCompAddPreStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes) override;
   /// Add MNA post step dependencies
   void
   mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
-
-  class MnaPreStepHarm : public CPS::Task {
-  public:
-    MnaPreStepHarm(ResIndSeries &ResIndSeries)
-        : Task(**ResIndSeries.mName + ".MnaPreStepHarm"),
-          mResIndSeries(ResIndSeries) {
-      // actually depends on C, but then we'd have to modify the system matrix anyway
-      mModifiedAttributes.push_back(mResIndSeries.attribute("right_vector"));
-      mPrevStepDependencies.push_back(mResIndSeries.attribute("i_intf"));
-      mPrevStepDependencies.push_back(mResIndSeries.attribute("v_intf"));
-    }
-    void execute(Real time, Int timeStepCount);
-
-  private:
-    ResIndSeries &mResIndSeries;
-  };
 
   class MnaPostStepHarm : public CPS::Task {
   public:

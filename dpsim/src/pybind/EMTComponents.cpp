@@ -170,6 +170,16 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "parallel_conductance"_a = zeroMatrix(3))
       .def("connect", &CPS::EMT::Ph3::PiLine::connect);
 
+  py::class_<CPS::EMT::Ph3::ResIndSeries,
+             std::shared_ptr<CPS::EMT::Ph3::ResIndSeries>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "ResInductor",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph3::ResIndSeries::setParameters, "R"_a,
+           "L"_a)
+      .def("connect", &CPS::EMT::Ph3::ResIndSeries::connect);
+
   py::class_<CPS::EMT::Ph3::RXLoad, std::shared_ptr<CPS::EMT::Ph3::RXLoad>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "RXLoad",
                                            py::multiple_inheritance())

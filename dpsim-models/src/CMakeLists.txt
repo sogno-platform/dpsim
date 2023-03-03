@@ -78,6 +78,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp
 	EMT/EMT_Ph3_Resistor.cpp
 	EMT/EMT_Ph3_SeriesResistor.cpp
+	EMT/EMT_Ph3_ResIndSeries.cpp
 	EMT/EMT_Ph3_SeriesSwitch.cpp
 	EMT/EMT_Ph3_VoltageSourceNorton.cpp
 	EMT/EMT_Ph3_PiLine.cpp
