@@ -44,7 +44,7 @@ namespace Ph1 {
 		/// Initializes state variables considering the number of frequencies
 		void initialize(Matrix frequencies);
 		/// Initializes states from power flow data
-		void initializeFromNodesAndTerminals(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency) override;
 		/// Initializes auxiliar variables
 		void initVars(Real timeStep);
 
