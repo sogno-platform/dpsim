@@ -127,7 +127,7 @@ namespace Base {
 			void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) final;
 			virtual void mnaCompPostStep(const Matrix& leftVector) = 0;
 			/// Stamps system matrix
-			virtual void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) = 0;
+			virtual void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) = 0;
 			/// Model flag indicating whether the machine is modeled as current or voltage source
 			/// Default: currentsource (recommended)
 			Bool mModelAsCurrentSource = true;

@@ -16,9 +16,7 @@ Attribute<Matrix>::Ptr MNASimPowerComp<VarType>::getRightVector() const {
 
 template<typename VarType>
 void MNASimPowerComp<VarType>::mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) {
-	auto mat = Matrix(systemMatrix);
-	this->mnaApplySystemMatrixStamp(mat);
-	systemMatrix = mat.sparseView();
+	this->mnaApplySystemMatrixStamp(systemMatrix);
 }
 
 template<typename VarType>
@@ -48,7 +46,7 @@ void MNASimPowerComp<VarType>::mnaInitializeHarm(Real omega, Real timeStep, std:
 }
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void MNASimPowerComp<VarType>::mnaApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	this->mnaCompApplySystemMatrixStamp(systemMatrix);
 };
 
@@ -88,7 +86,7 @@ void MNASimPowerComp<VarType>::mnaAddPostStepDependencies(AttributeBase::List &p
 };
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
+void MNASimPowerComp<VarType>::mnaApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx) {
 	this->mnaCompApplySystemMatrixStampHarm(systemMatrix, freqIdx);
 };
 
@@ -108,7 +106,7 @@ void MNASimPowerComp<VarType>::mnaCompInitialize(Real omega, Real timeStep, Attr
 }
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void MNASimPowerComp<VarType>::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	// Empty default implementation. Can be overridden by child classes if desired.
 }
 
@@ -153,7 +151,7 @@ void MNASimPowerComp<VarType>::mnaCompInitializeHarm(Real omega, Real timeStep, 
 }
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
+void MNASimPowerComp<VarType>::mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx) {
 	// Empty default implementation. Can be overridden by child classes if desired.
 }
 
