@@ -38,19 +38,19 @@ public:
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftSideVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftSideVector) override;
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
 		/// Stamps right side (source) vector
-		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) { }
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override { }
 		/// Update interface voltage from MNA system result
-		void mnaCompUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		/// Update interface current from MNA system result
-		void mnaCompUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// MNA pre and post step operations
-		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// add MNA pre and post step dependencies
-		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 	};
 }
 }

@@ -94,6 +94,7 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
+	mSLog->flush();
 }
 
 void EMT::Ph3::RxLine::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {

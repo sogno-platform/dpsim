@@ -100,6 +100,12 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
         .def("set_parameters", &CPS::EMT::Ph3::Inductor::setParameters, "L"_a)
 		.def("connect", &CPS::EMT::Ph3::Inductor::connect);
 
+	py::class_<CPS::EMT::Ph3::ResIndSeries, std::shared_ptr<CPS::EMT::Ph3::ResIndSeries>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "ResInductor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::EMT::Ph3::ResIndSeries::setParameters, "R"_a, "L"_a)
+		.def("connect", &CPS::EMT::Ph3::ResIndSeries::connect);
+
 	py::class_<CPS::EMT::Ph3::NetworkInjection, std::shared_ptr<CPS::EMT::Ph3::NetworkInjection>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "NetworkInjection", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters", py::overload_cast<CPS::MatrixComp, CPS::Real>(&CPS::EMT::Ph3::NetworkInjection::setParameters), "V_ref"_a, "f_src"_a=50)
