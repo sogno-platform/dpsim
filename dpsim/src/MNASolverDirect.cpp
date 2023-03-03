@@ -78,27 +78,29 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	 * Also, some of the components have zero entries now - or don't apply any stamps, which results in a different pattern during recomputation.
 	 * This will be fixed in the branch profiling-based-optimisation */
 
+	// Continue from base matrix
+	mVariableSystemMatrix = mBaseSystemMatrix;
+
 	// Now stamp switches into matrix
 	SPDLOG_LOGGER_INFO(mSLog, "Stamping switches");
 	for (auto sw : mMNAIntfSwitches)
-		sw->mnaApplySparseSystemMatrixStamp(mBaseSystemMatrix);
+		sw->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
 
 	// Now stamp initial state of variable elements into matrix
 	SPDLOG_LOGGER_INFO(mSLog, "Stamping variable elements");
 	for (auto varElem : mMNAIntfVariableComps)
-		varElem->mnaApplySparseSystemMatrixStamp(mBaseSystemMatrix);
+		varElem->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
 
 	// get rid of excess zeros
-	mBaseSystemMatrix.makeCompressed();
+	mVariableSystemMatrix.makeCompressed();
 
-	SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mBaseSystemMatrix));
+	SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
 	/* TODO: find replacement for flush() */
 	mSLog->flush();
 
 	// Calculate factorization of current matrix
-	mDirectLinearSolverVariableSystemMatrix->preprocessing(mBaseSystemMatrix, mListVariableSystemMatrixEntries);
-
-	mDirectLinearSolverVariableSystemMatrix->factorize(mBaseSystemMatrix);
+	mDirectLinearSolverVariableSystemMatrix->preprocessing(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
+	mDirectLinearSolverVariableSystemMatrix->factorize(mVariableSystemMatrix);
 }
 
 template <typename VarType>
@@ -188,41 +190,6 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 		}
 	}
 }
-
-// template <>
-// void MnaSolverDirect<Real, Matrix>::createEmptySystemMatrix() {
-// 	if (mSwitches.size() > SWITCH_NUM)
-// 		throw SystemError("Too many Switches.");
-
-// 	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
-// 		auto bit = std::bitset<SWITCH_NUM>(i);
-// 		mSwitchedMatrices[bit].push_back(Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
-// 		mLuFactorizations[bit].push_back(createDirectSolverImplementation());
-// 	}
-// }
-
-// template <>
-// void MnaSolverDirect<Complex, Matrix>::createEmptySystemMatrix() {
-// 	if (mSwitches.size() > SWITCH_NUM)
-// 		throw SystemError("Too many Switches.");
-
-// 	if (mFrequencyParallel) {
-// 		for (UInt i = 0; i < std::pow(2,mSwitches.size()); ++i) {
-// 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
-// 				auto bit = std::bitset<SWITCH_NUM>(i);
-// 				mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
-// 				mLuFactorizations[bit].push_back(createDirectSolverImplementation());
-// 			}
-// 		}
-// 	}
-// 	else {
-// 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
-// 			auto bit = std::bitset<SWITCH_NUM>(i);
-// 			mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
-// 			mLuFactorizations[bit].push_back(createDirectSolverImplementation());
-// 		}
-// 	}
-// }
 
 template <typename VarType>
 std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createSolveTask()
