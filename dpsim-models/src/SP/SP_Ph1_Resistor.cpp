@@ -43,6 +43,7 @@ void SP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
+	mSLog->flush();
 }
 
 // #### Powerflow section ####
@@ -95,6 +96,7 @@ void SP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 		"\n--- MNA initialization finished ---",
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
 		Logger::phasorToString((**mIntfCurrent)(0, 0)));
+	mSLog->flush();
 }
 
 void SP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
@@ -122,6 +124,7 @@ void SP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMat
 			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 		}
 	}
+	mSLog->flush();
 }
 
 void SP::Ph1::Resistor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

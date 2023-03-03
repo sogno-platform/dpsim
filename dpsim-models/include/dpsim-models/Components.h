@@ -11,6 +11,7 @@
 #include <dpsim-models/Config.h>
 
 #include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/SP/SP_Ph1_ResIndSeries.h>
 #include <dpsim-models/SP/SP_Ph1_RXLine.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSourceInverter.h>
 #include <dpsim-models/SP/SP_Ph1_PiLine.h>
