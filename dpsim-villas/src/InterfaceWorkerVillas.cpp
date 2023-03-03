@@ -35,7 +35,7 @@ void InterfaceWorkerVillas::open() {
 	SPDLOG_LOGGER_INFO(mLog, "Opening InterfaceWorkerVillas...");
 
 	if (!InterfaceWorkerVillas::villasInitialized) {
-		SPDLOG_LOGGER_INFO(mLog, "Initializing Villas...");
+		SPDLOG_LOGGER_INFO(mLog, "Initializing VILLASnode...");
 		initVillas();
 		InterfaceWorkerVillas::villasInitialized = true;
 	}
@@ -43,7 +43,7 @@ void InterfaceWorkerVillas::open() {
 	json_error_t error;
 	json_t* config = json_loads(mNodeConfig.c_str(), 0, &error);
 	if (config == nullptr) {
-		throw JsonError(config, error);
+		throw villas::JsonError(config, error);
 	}
 
 	const json_t* nodeType = json_object_get(config, "type");
@@ -53,7 +53,7 @@ void InterfaceWorkerVillas::open() {
 	}
 	String nodeTypeString = json_string_value(nodeType);
 
-	mNode = node::NodeFactory::make(nodeTypeString);
+	mNode = villas::node::NodeFactory::make(nodeTypeString);
 
 	int ret = 0;
 	uuid_t fakeSuperNodeUUID;
@@ -76,7 +76,7 @@ void InterfaceWorkerVillas::open() {
 	mOpened = true;
 
 	mSequence = 0;
-	mLastSample = node::sample_alloc(&mSamplePool);
+	mLastSample = villas::node::sample_alloc(&mSamplePool);
 	mLastSample->signals = mNode->getInputSignals(false);
 	mLastSample->sequence = 0;
 	mLastSample->ts.origin.tv_sec = 0;
@@ -85,9 +85,8 @@ void InterfaceWorkerVillas::open() {
 	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
 }
 
-
 void InterfaceWorkerVillas::prepareNode() {
-	int ret = node::pool_init(&mSamplePool, mQueueLength, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLength));
+	int ret = villas::node::pool_init(&mSamplePool, mQueueLength, sizeof(villas::node::Sample) + SAMPLE_DATA_LENGTH(mSampleLength));
 	if (ret < 0) {
 		SPDLOG_LOGGER_ERROR(mLog, "Error: InterfaceVillas failed to init sample pool. pool_init returned code {}", ret);
 		std::exit(1);
@@ -99,7 +98,7 @@ void InterfaceWorkerVillas::prepareNode() {
 		std::exit(1);
 	}
 
-	mNode->getFactory()->start(nullptr); //We have no SuperNode, so just hope type_start doesnt use it...
+	mNode->getFactory()->start(nullptr); // We have no SuperNode, so just hope type_start doesnt use it...
 
 	ret = mNode->start();
 	if (ret < 0) {
@@ -110,26 +109,26 @@ void InterfaceWorkerVillas::prepareNode() {
 }
 
 void InterfaceWorkerVillas::setupNodeSignals() {
-	mNode->out.path = new node::Path();
-	mNode->out.path->signals = std::make_shared<node::SignalList>();
-	node::SignalList::Ptr nodeOutputSignals = mNode->out.path->getOutputSignals(false);
+	mNode->out.path = new villas::node::Path();
+	mNode->out.path->signals = std::make_shared<villas::node::SignalList>();
+	villas::node::SignalList::Ptr nodeOutputSignals = mNode->out.path->getOutputSignals(false);
 	nodeOutputSignals->clear();
 	int idx = 0;
 	for (const auto& [id, signal] : mExportSignals) {
 		while (id > idx) {
-			nodeOutputSignals->push_back(std::make_shared<node::Signal>("", "", node::SignalType::INVALID));
+			nodeOutputSignals->push_back(std::make_shared<villas::node::Signal>("", "", villas::node::SignalType::INVALID));
 			idx++;
 		}
 		nodeOutputSignals->push_back(signal);
 		idx++;
 	}
 
-	node::SignalList::Ptr nodeInputSignals = mNode->getInputSignals(false);
+	villas::node::SignalList::Ptr nodeInputSignals = mNode->getInputSignals(false);
 	nodeInputSignals->clear();
 	idx = 0;
 	for (const auto& [id, signal] : mImportSignals) {
 		while (id > idx) {
-			nodeInputSignals->push_back(std::make_shared<node::Signal>("", "", node::SignalType::INVALID));
+			nodeInputSignals->push_back(std::make_shared<villas::node::Signal>("", "", villas::node::SignalType::INVALID));
 			idx++;
 		}
 		nodeInputSignals->push_back(signal);
@@ -145,7 +144,7 @@ void InterfaceWorkerVillas::close() {
 		std::exit(1);
 	}
 	mOpened = false;
-	ret = node::pool_destroy(&mSamplePool);
+	ret = villas::node::pool_destroy(&mSamplePool);
 	if (ret < 0) {
 		SPDLOG_LOGGER_ERROR(mLog, "Error: failed to destroy SamplePool in InterfaceVillas. pool_destroy returned code {}", ret);
 		std::exit(1);
@@ -157,7 +156,7 @@ void InterfaceWorkerVillas::close() {
 }
 
 void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePacket>& updatedAttrs) {
-	Sample *sample = nullptr;
+	villas::node::Sample *sample = nullptr;
 	int ret = 0;
 	bool shouldRead = false;
 	try {
@@ -192,12 +191,12 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 				}
 			}
 		} else  {
-			//If the node does not support pollFds just do a blocking read
+			// If the node does not support pollFds just do a blocking read
 			shouldRead = true;
 		}
 
 		if (shouldRead) {
-			sample = node::sample_alloc(&mSamplePool);
+			sample = villas::node::sample_alloc(&mSamplePool);
 
 			ret = mNode->read(&sample, 1);
 			if (ret < 0) {
@@ -221,8 +220,8 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 				}
 
 				if (!pollFds.empty()) {
-					//Manually clear the event file descriptor since Villas does not do that for some reason
-					//See https://github.com/VILLASframework/node/issues/309
+					// Manually clear the event file descriptor since Villas does not do that for some reason
+					// See https://github.com/VILLASframework/node/issues/309
 					uint64_t result = 0;
 					ret = (int) ::read(pollFds[0], &result, 8);
 					if (ret < 0) {
@@ -251,25 +250,25 @@ void InterfaceWorkerVillas::readValuesFromEnv(std::vector<Interface::AttributePa
 }
 
 void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePacket>& updatedAttrs) {
-	//Update export sequence IDs
+	// Update export sequence IDs
 	for (const auto& packet : updatedAttrs) {
 		if (std::get<1>(mExports[packet.attributeId]) < packet.sequenceId) {
 			std::get<1>(mExports[packet.attributeId]) = packet.sequenceId;
 		}
 	}
 
-	//Remove outdated packets
+	// Remove outdated packets
 	auto beginOutdated = std::remove_if(updatedAttrs.begin(), updatedAttrs.end(), [this](auto packet) {
 		return std::get<1>(mExports[packet.attributeId]) > packet.sequenceId;
 	});
 	updatedAttrs.erase(beginOutdated, updatedAttrs.end());
 
-	Sample *sample = nullptr;
+	villas::node::Sample *sample = nullptr;
 	Int ret = 0;
 	bool done = false;
 	bool sampleFilled = false;
 	try {
-		sample = node::sample_alloc(&mSamplePool);
+		sample = villas::node::sample_alloc(&mSamplePool);
 		if (sample == nullptr) {
 			SPDLOG_LOGGER_ERROR(mLog, "InterfaceVillas could not allocate a new sample! Not sending any data!");
 			return;
@@ -278,7 +277,7 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 		sample->signals = mNode->getOutputSignals(false);
 		auto beginExported = std::remove_if(updatedAttrs.begin(), updatedAttrs.end(), [this, &sampleFilled, &sample](auto packet) {
 			if (!std::get<2>(mExports[packet.attributeId])) {
-				//Write attribute to sample ASAP
+				// Write attribute to sample ASAP
 				std::get<0>(mExports[packet.attributeId])(packet.value, sample);
 				sampleFilled = true;
 				return true;
@@ -287,7 +286,7 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 		});
 		updatedAttrs.erase(beginExported, updatedAttrs.end());
 
-		//Check if the remaining packets form a complete set
+		// Check if the remaining packets form a complete set
 		if (((long) updatedAttrs.size()) == std::count_if(mExports.cbegin(), mExports.cend(), [this](auto x) {
 			return std::get<2>(x);
 		})) {
@@ -332,13 +331,13 @@ void InterfaceWorkerVillas::writeValuesToEnv(std::vector<Interface::AttributePac
 		if (ret < 0)
 			SPDLOG_LOGGER_ERROR(mLog, "Failed to write samples to InterfaceVillas. Write returned code {}", ret);
 
-		/* Don't throw here, because we managed to send something */
+		// Don't throw here, because we managed to send something
 	}
 }
 
 void InterfaceWorkerVillas::initVillas() const {
-	if (int ret = node::memory::init(villasHugePages); ret)
-		throw RuntimeError("Error: VillasNode failed to initialize memory system");
+	if (int ret = villas::node::memory::init(villasHugePages); ret)
+		throw villas::RuntimeError("Error: VILLASnode failed to initialize memory system");
 
 	villas::kernel::rt::init(villasPriority, villasAffinity);
 }
@@ -358,7 +357,7 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 	}
 
 	if (type == typeid(Int)) {
-		mExports.emplace_back([idx](AttributeBase::Ptr attr, Sample *smp) {
+		mExports.emplace_back([idx](AttributeBase::Ptr attr, villas::node::Sample *smp) {
 			if (idx >= smp->capacity)
 				throw std::out_of_range("not enough space in allocated sample");
 			if (idx >= smp->length)
@@ -371,9 +370,9 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 
 			smp->data[idx].i = **attrTyped;
 		}, 0, waitForOnWrite);
-		mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::INTEGER);
+		mExportSignals[idx] = std::make_shared<villas::node::Signal>(name, unit, villas::node::SignalType::INTEGER);
 	} else if (type == typeid(Real)) {
-		mExports.emplace_back([idx](AttributeBase::Ptr attr, Sample *smp) {
+		mExports.emplace_back([idx](AttributeBase::Ptr attr, villas::node::Sample *smp) {
 			if (idx >= smp->capacity)
 				throw std::out_of_range("not enough space in allocated sample");
 			if (idx >= smp->length)
@@ -386,9 +385,9 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 
 			smp->data[idx].f = **attrTyped;
 		}, 0, waitForOnWrite);
-		mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::FLOAT);
+		mExportSignals[idx] = std::make_shared<villas::node::Signal>(name, unit, villas::node::SignalType::FLOAT);
 	} else if (type == typeid(Complex)) {
-		mExports.emplace_back([idx](AttributeBase::Ptr attr, Sample *smp) {
+		mExports.emplace_back([idx](AttributeBase::Ptr attr, villas::node::Sample *smp) {
 			if (idx >= smp->capacity)
 				throw std::out_of_range("not enough space in allocated sample");
 			if (idx >= smp->length)
@@ -401,9 +400,9 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 
 			smp->data[idx].z = **attrTyped;
 		}, 0, waitForOnWrite);
-		mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::COMPLEX);
+		mExportSignals[idx] = std::make_shared<villas::node::Signal>(name, unit, villas::node::SignalType::COMPLEX);
 	} else if (type == typeid(Bool)) {
-		mExports.emplace_back([idx](AttributeBase::Ptr attr, Sample *smp) {
+		mExports.emplace_back([idx](AttributeBase::Ptr attr, villas::node::Sample *smp) {
 			if (idx >= smp->capacity)
 				throw std::out_of_range("not enough space in allocated sample");
 			if (idx >= smp->length)
@@ -416,7 +415,7 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId, const std::type_in
 
 			smp->data[idx].b = **attrTyped;
 		}, 0, waitForOnWrite);
-		mExportSignals[idx] = std::make_shared<node::Signal>(name, unit, node::SignalType::BOOLEAN);
+		mExportSignals[idx] = std::make_shared<villas::node::Signal>(name, unit, villas::node::SignalType::BOOLEAN);
 	} else {
 		if (mLog != nullptr) {
 			SPDLOG_LOGGER_WARN(mLog, "Unsupported attribute type! Interface configuration will remain unchanged!");
@@ -440,41 +439,41 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId, const std::type_in
 	const auto& log = mLog;
 
 	if (type == typeid(Int)) {
-		mImports.emplace_back([idx, log](Sample *smp) -> AttributeBase::Ptr {
+		mImports.emplace_back([idx, log](villas::node::Sample *smp) -> AttributeBase::Ptr {
 			if (idx >= smp->length) {
 				log->error("incomplete data received from InterfaceVillas");
 				return nullptr;
 			}
 			return AttributePointer<AttributeBase>(AttributeStatic<Int>::make(smp->data[idx].i));
 		}, 0);
-		mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::INTEGER);
+		mImportSignals[idx] = std::make_shared<villas::node::Signal>("", "", villas::node::SignalType::INTEGER);
 	} else if (type == typeid(Real)) {
-		mImports.emplace_back([idx, log](Sample *smp) -> AttributeBase::Ptr {
+		mImports.emplace_back([idx, log](villas::node::Sample *smp) -> AttributeBase::Ptr {
 			if (idx >= smp->length) {
 				log->error("incomplete data received from InterfaceVillas");
 				return nullptr;
 			}
 			return AttributePointer<AttributeBase>(AttributeStatic<Real>::make(smp->data[idx].f));
 		}, 0);
-		mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::FLOAT);
+		mImportSignals[idx] = std::make_shared<villas::node::Signal>("", "", villas::node::SignalType::FLOAT);
 	} else if (type == typeid(Complex)) {
-		mImports.emplace_back([idx, log](Sample *smp) -> AttributeBase::Ptr {
+		mImports.emplace_back([idx, log](villas::node::Sample *smp) -> AttributeBase::Ptr {
 			if (idx >= smp->length) {
 				log->error("incomplete data received from InterfaceVillas");
 				return nullptr;
 			}
 			return AttributePointer<AttributeBase>(AttributeStatic<Complex>::make(smp->data[idx].z));
 		}, 0);
-		mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::COMPLEX);
+		mImportSignals[idx] = std::make_shared<villas::node::Signal>("", "", villas::node::SignalType::COMPLEX);
 	} else if (type == typeid(Bool)) {
-		mImports.emplace_back([idx, log](Sample *smp) -> AttributeBase::Ptr {
+		mImports.emplace_back([idx, log](villas::node::Sample *smp) -> AttributeBase::Ptr {
 			if (idx >= smp->length) {
 				log->error("incomplete data received from InterfaceVillas");
 				return nullptr;
 			}
 			return AttributePointer<AttributeBase>(AttributeStatic<Bool>::make(smp->data[idx].b));
 		}, 0);
-		mImportSignals[idx] = std::make_shared<node::Signal>("", "", node::SignalType::BOOLEAN);
+		mImportSignals[idx] = std::make_shared<villas::node::Signal>("", "", villas::node::SignalType::BOOLEAN);
 	} else {
 		if (mLog != nullptr) {
 			SPDLOG_LOGGER_WARN(mLog, "Unsupported attribute type! Interface configuration will remain unchanged!");

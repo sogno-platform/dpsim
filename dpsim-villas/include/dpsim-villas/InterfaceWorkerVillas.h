@@ -14,8 +14,6 @@
 #include <villas/signal.hpp>
 #include <villas/signal_list.hpp>
 
-using namespace villas;
-
 namespace DPsim {
 	class InterfaceWorkerVillas :
 		public InterfaceWorker,
@@ -23,7 +21,6 @@ namespace DPsim {
 
 	public:
 		using Ptr = std::shared_ptr<InterfaceWorkerVillas>;
-		using Sample = struct node::Sample;
 
 		static UInt villasPriority;
 		static UInt villasAffinity;
@@ -32,26 +29,25 @@ namespace DPsim {
 	private:
 		static Bool villasInitialized;
 
-		std::vector<std::tuple<std::function<CPS::AttributeBase::Ptr(Sample*)>, UInt>> mImports;
-		std::vector<std::tuple<std::function<void(CPS::AttributeBase::Ptr, Sample*)>, UInt, Bool>> mExports;
+		std::vector<std::tuple<std::function<CPS::AttributeBase::Ptr(villas::node::Sample*)>, UInt>> mImports;
+		std::vector<std::tuple<std::function<void(CPS::AttributeBase::Ptr, villas::node::Sample*)>, UInt, Bool>> mExports;
 
 		// VILLASnode node to send / receive data to / from
 		String mNodeConfig;
-		node::Node* mNode;
+		villas::node::Node* mNode;
 
 		int mQueueLength;
 		int mSampleLength;
-		node::Pool mSamplePool;
+		villas::node::Pool mSamplePool;
 
-		Sample *mLastSample;
+		villas::node::Sample *mLastSample;
 		int mSequence;
 
-		std::map<int, node::Signal::Ptr> mExportSignals;
-		std::map<int, node::Signal::Ptr> mImportSignals;
+		std::map<int, villas::node::Signal::Ptr> mExportSignals;
+		std::map<int, villas::node::Signal::Ptr> mImportSignals;
 
 	public:
-
-		InterfaceWorkerVillas(const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64);
+		InterfaceWorkerVillas(const String &nodeConfig, UInt queueLength = 512, UInt sampleLength = 64);
 
 		void open() override;
 		void close() override;
