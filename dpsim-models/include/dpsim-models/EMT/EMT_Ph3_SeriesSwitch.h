@@ -55,7 +55,7 @@ namespace Ph3 {
 		/// Check if switch is closed
 		Bool mnaIsClosed();
 		/// Stamps system matrix considering the defined switch position
-		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
+		void mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx);
 		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 
 		/// Add MNA post step dependencies

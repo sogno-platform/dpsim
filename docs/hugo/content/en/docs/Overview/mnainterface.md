@@ -13,7 +13,7 @@ Additionally, `MNASimPowerComp` provides a set of virtual methods prefixed `mnaC
 
 ```cpp
 virtual void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-virtual void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+virtual void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 virtual void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 virtual void mnaCompUpdateVoltage(const Matrix& leftVector);
 virtual void mnaCompUpdateCurrent(const Matrix& leftVector);
@@ -22,7 +22,7 @@ virtual void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Pt
 virtual void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 virtual void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 virtual void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVector);
-virtual void mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx);
+virtual void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx);
 virtual void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector);
 virtual void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx);
 ```

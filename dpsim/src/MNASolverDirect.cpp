@@ -115,7 +115,6 @@ void MnaSolverDirect<VarType>::solveWithSystemMatrixRecomputation(Real time, Int
 	if (hasVariableComponentChanged())
 		recomputeSystemMatrix(time);
 
-	auto start = std::chrono::steady_clock::now();
 	// Calculate new solution vector
 	**mLeftSideVector = mDirectLinearSolverVariableSystemMatrix->solve(mRightSideVector);
 
@@ -142,7 +141,6 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 	// get rid of excess zeros
 	mVariableSystemMatrix.makeCompressed();
 
-	auto start = std::chrono::steady_clock::now();
 	// Refactorization of matrix assuming that structure remained
 	// constant by omitting analyzePattern
 	mDirectLinearSolverVariableSystemMatrix->partialRefactorize(mVariableSystemMatrix, mListVariableSystemMatrixEntries);

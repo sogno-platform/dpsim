@@ -66,7 +66,7 @@ namespace CPS {
 				/// Add MNA post step dependencies
 				void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
-				void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
+				void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
 			};
 		}
 	}
