@@ -108,6 +108,7 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph1_Capacitor.cpp
 	SP/SP_Ph1_Inductor.cpp
 	SP/SP_Ph1_Resistor.cpp
+	SP/SP_Ph1_ResIndSeries.cpp
 	SP/SP_Ph1_AvVoltageSourceInverterDQ.cpp
 	SP/SP_Ph1_RXLine.cpp
 	SP/SP_Ph1_VoltageSourceInverter.cpp
