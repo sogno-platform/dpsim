@@ -144,3 +144,5 @@ namespace CPS {
 		};
 	};
 }
+
+#include <dpsim-models/Formatters.h>
