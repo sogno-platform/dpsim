@@ -39,7 +39,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator4OrderPCM::clone(const Stri
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::specificInitialization() {
-
 	// calculate state representation matrix
 	calculateStateMatrix();
 
@@ -67,7 +66,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::specificInitialization() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::calculateStateMatrix() {
-	// Initialize matrix of state representation of predictor step
+	// Initialize matrices of state representation of predictor step
 	if (mNumericalMethod == CPS::NumericalMethod::Euler) {
 		mA_euler = Matrix::Zero(2,2);
 		mA_euler << 1 - mTimeStep / mTq0_t,		0.0,
@@ -78,8 +77,9 @@ void DP::Ph1::SynchronGenerator4OrderPCM::calculateStateMatrix() {
 		mC_euler = Matrix::Zero(2,1);
 		mC_euler <<   				0.0,
 	  				(mTimeStep / mTd0_t);
-
 	} else if (mNumericalMethod == CPS::NumericalMethod::Trapezoidal) {
+		// TODO: State space model applied here is different than the Euler representation.
+		// This needs harmonisation or further documentation.
 		mC_trap = Matrix::Zero(4,1);
 		mStates_trap_prev = Matrix::Zero(6,1);
 		mStates_trap = Matrix::Zero(4,1);
@@ -125,43 +125,43 @@ void DP::Ph1::SynchronGenerator4OrderPCM::calculateStateMatrix() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
-	// set number of iteratios equal to zero
+	// set number of iterations equal to zero
 	**mNumIter = 0;
 
-	// Predictor step (euler)
-
-	// Predictor step (backward euler)
-	if (mSimTime>0.0) {
-		// calculate electrical torque at t=k-1
+	// prediction of mechanical vars
+	if (mSimTime > 0.0) {
+		// calculate electrical torque at t=k
 		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-		// predict mechanical variables at t=k
+
+		// predict mechanical variables at t=k+1 (forward euler)
 		mOmMech_pred = **mOmMech + mTimeStep / (2 * mH) * (**mMechTorque - **mElecTorque);
 		mDelta_pred = **mDelta + mTimeStep * mBase_OmMech * (**mOmMech - 1);
 		mThetaMech_pred = **mThetaMech + mTimeStep * **mOmMech * mBase_OmMech;
 	} else {
+		// prediction by assuming constant mechanical vars at t=0
+		// TODO: add further explanatory comment why this is required
 		mOmMech_pred = **mOmMech;
 		mDelta_pred = **mDelta;
 		mThetaMech_pred = **mThetaMech;
 	}
 
-	// calculate Edq and Idq at t=k+1. Assumption: Vdq(k) = Vdq(k+1)
+	// prediction of electrical vars
 	if (mNumericalMethod == CPS::NumericalMethod::Euler) {
-		//predict voltage behind transient reactance
+		// predict emf at t=k+1 (forward euler)
 		mEdq_pred = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * mEf;
 
-		// predict armature currents for at t=k+1
+		// calculate stator currents at t=k+1 (assuming Vdq(k+1)=Vdq(k))
 		mIdq_pred(0,0) = (mEdq_pred(1,0) - (**mVdq)(1,0) ) / mLd_t;
 		mIdq_pred(1,0) = ((**mVdq)(0,0) - mEdq_pred(0,0) ) / mLq_t;
-
-	}
-	else if (mNumericalMethod == CPS::NumericalMethod::Trapezoidal) {
+	} else if (mNumericalMethod == CPS::NumericalMethod::Trapezoidal) {
+		// predict emfs and stator currents at t=k+1 (trapezoidal rule)
 		mStates_trap_prev << **mEdq, **mIdq, **mVdq;
 		mStates_trap = mA_trap_inv * mB_trap * mStates_trap_prev + mA_trap_inv * mC_trap * mEf;
 		mEdq_pred << mStates_trap(0,0), mStates_trap(1,0);
 		mIdq_pred << mStates_trap(2,0), mStates_trap(3,0);
 	}
 
-	// convert currents into the abc reference frame
+	// convert currents to dp domain
 	mDpToDq(0,0) = Complex(cos(mThetaMech_pred - mBase_OmMech * mSimTime), sin(mThetaMech_pred - mBase_OmMech * mSimTime));
 	mDpToDq(0,1) = -Complex(cos(mThetaMech_pred - mBase_OmMech * mSimTime - PI/2.), sin(mThetaMech_pred - mBase_OmMech * mSimTime - PI/2.));
 	(**mIntfCurrent)(0,0) = (mDpToDq * mIdq_pred)(0,0) * mBase_I_RMS;
@@ -172,31 +172,41 @@ void DP::Ph1::SynchronGenerator4OrderPCM::mnaApplyRightSideVectorStamp(Matrix& r
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
-	// corrector step (trapezoidal rule)
+	// TODO: The naming of variables becomes confusing.
+	// Probably better to use `PrevIter` and `CurrIter`
+	// variables instead of misusing `_pred` variables or `mVdq`.
+
+	// increase number of iterations
 	**mNumIter = **mNumIter + 1;
+
+	// correction of mechanical vars
 	if (mSimTime>0.0) {
-		// calculate electrical torque at t=k
+		// calculate electrical torque at t=k+1
 		mElecTorque_corr = (**mVdq)(0,0) * (mIdq_pred)(0,0) + (**mVdq)(1,0) * (mIdq_pred)(1,0);
-		// correct mechanical variables at t=k
+
+		// correct mechanical variables at t=k+1 (trapezoidal rule)
 		mOmMech_corr = **mOmMech + mTimeStep / (4. * mH) * (2 * **mMechTorque - **mElecTorque - mElecTorque_corr);
 		mDelta_corr = **mDelta + mTimeStep / 2. * mBase_OmMech * (**mOmMech + mOmMech_pred - 2);
+		// CHECK: For mThetaMech_corr use mOmMech_corr already?
 		mThetaMech_corr = **mThetaMech + mTimeStep / 2. *(**mOmMech + mOmMech_pred) * mBase_OmMech;
-
 	} else {
+		// correction by assuming constant mechanical vars at t=0
+		// TODO: add further explanatory comment why this is required
 		mElecTorque_corr = **mElecTorque;
 		mOmMech_corr = mOmMech_pred;
 		mDelta_corr = mDelta_pred;
 		mThetaMech_corr = mThetaMech_pred;
 	}
 
-	//predict voltage behind transient reactance
+	// correction of electrical vars
+	// correct emf at t=k+1 (trapezoidal rule)
 	mEdq_corr = mA_prev * **mEdq + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * mEf;
 
-	// armature currents for at t=k+1
+	// calculate stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	mIdq_corr(0,0) = (mEdq_corr(1,0) - (**mVdq)(1,0) ) / mLd_t;
 	mIdq_corr(1,0) = ((**mVdq)(0,0) - mEdq_corr(0,0) ) / mLq_t;
 
-	// convert currents into the abc reference frame
+	// convert currents to dp domain
 	mDpToDq(0,0) = Complex(cos(mThetaMech_corr - mBase_OmMech * mSimTime), sin(mThetaMech_corr - mBase_OmMech * mSimTime));
 	mDpToDq(0,1) = -Complex(cos(mThetaMech_corr - mBase_OmMech * mSimTime - PI/2.), sin(mThetaMech_corr - mBase_OmMech * mSimTime - PI/2.));
 	(**mIntfCurrent)(0,0) = (mDpToDq * mIdq_corr)(0,0) * mBase_I_RMS;
@@ -206,6 +216,10 @@ void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVector) {
+	// TODO: The naming of variables becomes confusing.
+	// Probably better to use `PrevIter` and `CurrIter`
+	// variables instead of misusing `_pred` variables or `mVdq`.
+
 	mVdq_prev = **mVdq;
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 
