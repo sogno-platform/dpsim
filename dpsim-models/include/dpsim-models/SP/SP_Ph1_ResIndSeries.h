@@ -9,7 +9,7 @@
 #pragma once
 
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Definitions.h>
+#include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
 namespace SP {
@@ -17,6 +17,7 @@ namespace Ph1 {
 	/// Static phasor ResIndSeries model (only implemented for dynamic simulations!)
 	class ResIndSeries :
 		public MNASimPowerComp<Complex>,
+		public MNATearInterface,
 		public SharedFactory<ResIndSeries> {
 	private:
 		/// Impedance
@@ -55,6 +56,8 @@ namespace Ph1 {
 		/// add MNA pre and post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
+		// #### MNA Tear Section ####
+		void mnaTearApplyMatrixStamp(Matrix& tearMatrix) override;
 	};
 }
 }
