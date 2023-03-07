@@ -136,8 +136,7 @@ int main(int argc, char* argv[]) {
 	loggerDP->logAttribute("Vdq0",	genDP->attribute("Vdq0"));
 	loggerDP->logAttribute("Idq0",	genDP->attribute("Idq0"));
 	loggerDP->logAttribute("Ef",	genDP->attribute("Ef"));
-	if (withTurbineGovernor)
-		loggerDP->logAttribute("Tm", turbineGovernorDP->attribute("Tm"));
+	loggerDP->logAttribute("Tm", 	genDP->attribute("Tm"));
 
 	Simulation simDP(simNameDP, logLevel);
 	simDP.doInitFromNodesAndTerminals(true);

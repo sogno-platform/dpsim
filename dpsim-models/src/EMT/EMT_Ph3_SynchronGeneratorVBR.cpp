@@ -116,7 +116,7 @@ void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real freque
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
+	updateMatrixNodeIndices();
 
 	for (UInt phase1Idx = 0; phase1Idx < 3; ++phase1Idx)
 		for (UInt phase2Idx = 0; phase2Idx < 3; ++phase2Idx)
@@ -178,7 +178,6 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep
 	mPsimq = mPsisr(3,0);
 	mPsimd = mPsisr(0,0);
 
-	/// Init voltage excitation
 	**mVfd = mVsr(1,0);
 
 
