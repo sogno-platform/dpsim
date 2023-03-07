@@ -29,6 +29,12 @@ SimPowerComp<Complex>::Ptr SP::Ph1::ResIndSeries::clone(String name) {
 void SP::Ph1::ResIndSeries::setParameters(Real resistance, Real inductance) {
 	**mResistance = resistance;
 	**mInductance = inductance;
+
+	//check initial value of inductance
+	if (**mInductance==0.0) {
+		std::string err = "Inductance of " + this->name() + " can not be zero!";
+		throw std::invalid_argument(err);
+	}
 }
 
 void SP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
