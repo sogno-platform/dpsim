@@ -18,6 +18,7 @@ Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 int main(int argc, char *argv[]) {
 =======
 int main(int argc, char *argv[]) {
@@ -28,6 +29,12 @@ int main(int argc, char *argv[]) {
   SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
 >>>>>>> 41541d9d (add PSS type 2 and add base class for exciter)
 >>>>>>> 614929412 (add PSS type 2 and add base class for exciter)
+=======
+int main(int argc, char* argv[]) {
+
+	// initiaize factories
+	SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
+>>>>>>> 8f6855f08 (resolve rebase conflicts)
 
   // Simulation parameters
   String simName = "EMT_SMIB_ReducedOrderSG_LoadStep";

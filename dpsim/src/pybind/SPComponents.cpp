@@ -208,26 +208,22 @@ void addSPPh1Components(py::module_ mSPPh1) {
   py::class_<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR,
              std::shared_ptr<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>,
              CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>(
-      mSPPh1, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance());
-  .def("set_base_parameters",
-       &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::setBaseParameters,
-       "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
+      mSPPh1, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance())
+      .def("set_base_parameters",
+           &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::setBaseParameters,
+           "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
       .def("set_initial_values",
            &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::setInitialValues,
            "init_complex_electrical_power"_a, "init_mechanical_power"_a,
            "init_complex_terminal_voltage"_a)
-      .def(
-          "scale_inertia_constant",
-          &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::scaleInertiaConstant,
-          "scaling_factor"_a)
-      .def("set_model_as_current_source",
+      .def("set_model_as_norton_source",
            &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::
-               setModelAsCurrentSource,
-           "model_as_current_source"_a);
-  .def("add_exciter",
-       py::overload_cast<CPS::Base::ExciterParameters, CPS::ExciterType>(
-           &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::addExciter),
-       "exciter_parameters"_a, "exciter_type"_a = CPS::ExciterType::DC1Simp)
+               setModelAsNortonSource,
+           "model_as_norton_source"_a)
+      .def("add_exciter",
+           py::overload_cast<CPS::Base::ExciterParameters, CPS::ExciterType>(
+               &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::addExciter),
+           "exciter_parameters"_a, "exciter_type"_a = CPS::ExciterType::DC1Simp)
       .def("add_pss",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,

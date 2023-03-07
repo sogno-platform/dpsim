@@ -197,7 +197,6 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(
   /// Init voltage excitation
   mVfd = mVsr(1, 0);
 
-  /// Init voltage excitation
   **mVfd = mVsr(1, 0);
 
   if (mNumDampingWindings == 2)
