@@ -30,6 +30,12 @@ SimPowerComp<Real>::Ptr EMT::Ph3::ResIndSeries::clone(String name) {
 void EMT::Ph3::ResIndSeries::setParameters(Matrix resistanceMatrix, Matrix inductanceMatrix) {
 	**mResistance = resistanceMatrix;
 	**mInductance = inductanceMatrix;
+
+	//check initial value of inductance
+	if ((**mInductance)(0,0)==0.0 || (**mInductance)(1,1)==0.0 || (**mInductance)(2,2)==0.0 ) {
+		std::string err = "Inductance of " + this->name() + " can not be zero!";
+		throw std::invalid_argument(err);
+	}
 }
 
 void EMT::Ph3::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
