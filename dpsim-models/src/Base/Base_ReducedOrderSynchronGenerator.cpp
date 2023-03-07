@@ -497,7 +497,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 
 template <>
 void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int timeStepCount) {
-	mSynGen.mSimTime = time;
+	mSimTime = time;
 	
 	// update governor variables
 	if (mHasTurbineGovernor) {
