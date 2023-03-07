@@ -130,3 +130,8 @@ void SP::Ph1::ResIndSeries::mnaCompUpdateCurrent(const Matrix& leftVector) {
 		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }
+
+// #### Tear Methods ####
+void SP::Ph1::ResIndSeries::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
+	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, mImpedance);
+}

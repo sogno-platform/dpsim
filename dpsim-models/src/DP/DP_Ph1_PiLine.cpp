@@ -13,7 +13,6 @@ using namespace CPS;
 DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
     : Base::Ph1::PiLine(mAttributes),
       CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
-  setVirtualNodeNumber(1);
   setTerminalNumber(2);
 
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
@@ -37,28 +36,14 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
 
-  // Initialization of virtual node
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
-                                      (**mIntfCurrent)(0, 0) * **mSeriesRes);
-
-  // Create series sub components
-  mSubSeriesResistor =
-      std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
-  mSubSeriesResistor->setParameters(**mSeriesRes);
-  mSubSeriesResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
-  mSubSeriesResistor->initialize(mFrequencies);
-  mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubSeriesResistor,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
-  mSubSeriesInductor =
-      std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
-  mSubSeriesInductor->setParameters(**mSeriesInd);
-  mSubSeriesInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
-  mSubSeriesInductor->initialize(mFrequencies);
-  mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubSeriesInductor,
+  // Create series rl sub component
+  mSubSeriesElement = std::make_shared<DP::Ph1::ResIndSeries>(
+      **mName + "_ResIndSeries", mLogLevel);
+  mSubSeriesElement->connect({mTerminals[0]->node(), mTerminals[1]->node()});
+  mSubSeriesElement->setParameters(**mSeriesRes, **mSeriesInd);
+  mSubSeriesElement->initialize(mFrequencies);
+  mSubSeriesElement->initializeFromNodesAndTerminals(frequency);
+  addMNASubComponent(mSubSeriesElement,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
@@ -176,7 +161,7 @@ void DP::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void DP::Ph1::PiLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  (**mIntfCurrent)(0, 0) = mSubSeriesInductor->intfCurrent()(0, 0);
+  (**mIntfCurrent)(0, 0) = mSubSeriesElement->intfCurrent()(0, 0);
 }
 
 MNAInterface::List DP::Ph1::PiLine::mnaTearGroundComponents() {
@@ -194,10 +179,8 @@ MNAInterface::List DP::Ph1::PiLine::mnaTearGroundComponents() {
 }
 
 void DP::Ph1::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
-  mSubSeriesResistor->mnaTearSetIdx(mTearIdx);
-  mSubSeriesResistor->mnaTearInitialize(omega, timeStep);
-  mSubSeriesInductor->mnaTearSetIdx(mTearIdx);
-  mSubSeriesInductor->mnaTearInitialize(omega, timeStep);
+  mSubSeriesElement->mnaTearSetIdx(mTearIdx);
+  mSubSeriesElement->mnaTearInitialize(omega, timeStep);
 }
 
 void DP::Ph1::PiLine::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
@@ -206,10 +189,9 @@ void DP::Ph1::PiLine::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
 }
 
 void DP::Ph1::PiLine::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
-  mSubSeriesInductor->mnaTearApplyVoltageStamp(voltageVector);
+  mSubSeriesElement->mnaTearApplyVoltageStamp(voltageVector);
 }
 
 void DP::Ph1::PiLine::mnaTearPostStep(Complex voltage, Complex current) {
-  mSubSeriesInductor->mnaTearPostStep(voltage - current * **mSeriesRes,
-                                      current);
+  mSubSeriesElement->mnaTearPostStep(voltage - current * **mSeriesRes, current);
 }

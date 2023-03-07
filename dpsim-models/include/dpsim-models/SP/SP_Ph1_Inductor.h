@@ -57,7 +57,8 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector);
-  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix);
+
+  void mnaTearApplyMatrixStamp(Matrix &tearMatrix) override;
 };
 } // namespace Ph1
 } // namespace SP

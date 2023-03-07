@@ -23,7 +23,6 @@ SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
   mSLog->flush();
 
-  setVirtualNodeNumber(1);
   setTerminalNumber(2);
   **mIntfVoltage = MatrixComp::Zero(1, 1);
   **mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -181,27 +180,15 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
 
-  // Initialization of virtual node
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
-                                      (**mIntfCurrent)(0, 0) * **mSeriesRes);
-
-  // Create series sub components
-  mSubSeriesResistor =
-      std::make_shared<SP::Ph1::Resistor>(**mName + "_res", mLogLevel);
-  mSubSeriesResistor->setParameters(**mSeriesRes);
-  mSubSeriesResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
-  mSubSeriesResistor->initialize(mFrequencies);
-  mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubSeriesResistor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
-  mSubSeriesInductor =
-      std::make_shared<SP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
-  mSubSeriesInductor->setParameters(**mSeriesInd);
-  mSubSeriesInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
-  mSubSeriesInductor->initialize(mFrequencies);
-  mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubSeriesInductor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+  // Create series rl sub component
+  mSubSeriesElement = std::make_shared<SP::Ph1::ResIndSeries>(
+      **mName + "_ResIndSeries", mLogLevel);
+  mSubSeriesElement->connect({mTerminals[0]->node(), mTerminals[1]->node()});
+  mSubSeriesElement->setParameters(**mSeriesRes, **mSeriesInd);
+  mSubSeriesElement->initialize(mFrequencies);
+  mSubSeriesElement->initializeFromNodesAndTerminals(frequency);
+  addMNASubComponent(mSubSeriesElement,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
   // Create parallel sub components
@@ -249,20 +236,17 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
 
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "\n--- Initialization from powerflow ---"
-      "\nVoltage across: {:s}"
-      "\nCurrent: {:s}"
-      "\nTerminal 0 voltage: {:s}"
-      "\nTerminal 1 voltage: {:s}"
-      "\nVirtual Node 1 voltage: {:s}"
-      "\n--- Initialization from powerflow finished ---",
-      Logger::phasorToString((**mIntfVoltage)(0, 0)),
-      Logger::phasorToString((**mIntfCurrent)(0, 0)),
-      Logger::phasorToString(initialSingleVoltage(0)),
-      Logger::phasorToString(initialSingleVoltage(1)),
-      Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\n--- Initialization from powerflow ---"
+                     "\nVoltage across: {:s}"
+                     "\nCurrent: {:s}"
+                     "\nTerminal 0 voltage: {:s}"
+                     "\nTerminal 1 voltage: {:s}"
+                     "\n--- Initialization from powerflow finished ---",
+                     Logger::phasorToString((**mIntfVoltage)(0, 0)),
+                     Logger::phasorToString((**mIntfCurrent)(0, 0)),
+                     Logger::phasorToString(initialSingleVoltage(0)),
+                     Logger::phasorToString(initialSingleVoltage(1)));
 }
 
 void SP::Ph1::PiLine::mnaParentAddPostStepDependencies(
@@ -293,7 +277,7 @@ void SP::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void SP::Ph1::PiLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  (**mIntfCurrent)(0, 0) = mSubSeriesInductor->intfCurrent()(0, 0);
+  (**mIntfCurrent)(0, 0) = mSubSeriesElement->intfCurrent()(0, 0);
 }
 
 MNAInterface::List SP::Ph1::PiLine::mnaTearGroundComponents() {
@@ -311,22 +295,18 @@ MNAInterface::List SP::Ph1::PiLine::mnaTearGroundComponents() {
 }
 
 void SP::Ph1::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
-  mSubSeriesResistor->mnaTearSetIdx(mTearIdx);
-  mSubSeriesResistor->mnaTearInitialize(omega, timeStep);
-  mSubSeriesInductor->mnaTearSetIdx(mTearIdx);
-  mSubSeriesInductor->mnaTearInitialize(omega, timeStep);
+  mSubSeriesElement->mnaTearSetIdx(mTearIdx);
+  mSubSeriesElement->mnaTearInitialize(omega, timeStep);
 }
 
 void SP::Ph1::PiLine::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
-  mSubSeriesResistor->mnaTearApplyMatrixStamp(tearMatrix);
-  mSubSeriesInductor->mnaTearApplyMatrixStamp(tearMatrix);
+  mSubSeriesElement->mnaTearApplyMatrixStamp(tearMatrix);
 }
 
 void SP::Ph1::PiLine::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
-  mSubSeriesInductor->mnaTearApplyVoltageStamp(voltageVector);
+  mSubSeriesElement->mnaTearApplyVoltageStamp(voltageVector);
 }
 
 void SP::Ph1::PiLine::mnaTearPostStep(Complex voltage, Complex current) {
-  mSubSeriesInductor->mnaTearPostStep(voltage - current * **mSeriesRes,
-                                      current);
+  mSubSeriesElement->mnaTearPostStep(voltage - current * **mSeriesRes, current);
 }

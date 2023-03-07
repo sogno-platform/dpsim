@@ -14,7 +14,6 @@ EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
     : Base::Ph3::PiLine(mAttributes),
       CompositePowerComp<Real>(uid, name, true, true, logLevel) {
   mPhaseType = PhaseType::ABC;
-  setVirtualNodeNumber(1);
   setTerminalNumber(2);
 
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
@@ -63,34 +62,14 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   **mIntfCurrent = iInit.real();
   **mIntfVoltage = vInitABC.real();
 
-  // Initialization of virtual node
-  // Initial voltage of phase B,C is set after A
-  MatrixComp vInitTerm0 = MatrixComp::Zero(3, 1);
-  vInitTerm0(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
-  vInitTerm0(1, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_B;
-  vInitTerm0(2, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_C;
-
-  mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH *
-                                      (vInitTerm0 + **mSeriesRes * iInit));
-
-  // Create series sub components
-  mSubSeriesResistor =
-      std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
-  mSubSeriesResistor->setParameters(**mSeriesRes);
-  mSubSeriesResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
-  mSubSeriesResistor->initialize(mFrequencies);
-  mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubSeriesResistor,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
-  mSubSeriesInductor =
-      std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
-  mSubSeriesInductor->setParameters(**mSeriesInd);
-  mSubSeriesInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
-  mSubSeriesInductor->initialize(mFrequencies);
-  mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubSeriesInductor,
+  // Create series rl sub component
+  mSubSeriesElement = std::make_shared<EMT::Ph3::ResIndSeries>(
+      **mName + "_ResIndSeries", mLogLevel);
+  mSubSeriesElement->connect({mTerminals[0]->node(), mTerminals[1]->node()});
+  mSubSeriesElement->setParameters(**mSeriesRes, **mSeriesInd);
+  mSubSeriesElement->initialize(mFrequencies);
+  mSubSeriesElement->initializeFromNodesAndTerminals(frequency);
+  addMNASubComponent(mSubSeriesElement,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
@@ -161,13 +140,11 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
       "\nCurrent: {:s}"
       "\nTerminal 0 voltage: {:s}"
       "\nTerminal 1 voltage: {:s}"
-      "\nVirtual Node 1 voltage: {:s}"
       "\n--- Initialization from powerflow finished ---",
       Logger::matrixToString(**mIntfVoltage),
       Logger::matrixToString(**mIntfCurrent),
       Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
-      Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)),
-      Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+      Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
   mSLog->flush();
 }
 
@@ -225,5 +202,5 @@ void EMT::Ph3::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void EMT::Ph3::PiLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  **mIntfCurrent = mSubSeriesInductor->intfCurrent();
+  **mIntfCurrent = mSubSeriesElement->intfCurrent();
 }
