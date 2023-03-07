@@ -17,8 +17,11 @@ namespace Ph1 {
 	/// \brief resistor inductor series element
 	class ResIndSeries:
 		public MNASimPowerComp<Complex>,
+		public MNATearInterface,
 		public SharedFactory<ResIndSeries> {
-	protected:
+	private:
+		/// Impedance
+		Complex mImpedance;
 		/// DC equivalent current source for harmonics [A]
 		MatrixComp mEquivCurrent;
 		/// Equivalent conductance for harmonics [S]
@@ -104,6 +107,9 @@ namespace Ph1 {
 			ResIndSeries& mResIndSeries;
 			std::vector< Attribute<Matrix>::Ptr > mLeftVectors;
 		};
+
+		// #### MNA Tear Section ####
+		void mnaTearApplyMatrixStamp(Matrix& tearMatrix) override;
 	};
 }
 }
