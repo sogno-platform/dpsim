@@ -297,11 +297,29 @@ protected:
   /// Function parameters have to be given in real units.
   void initPerUnitStates();
 
-  // #### Controllers ####
-  /// Determines if Turbine and Governor are activated
-  Bool mHasTurbineGovernor = false;
-  /// Determines if Exciter is activated
-  Bool mHasExciter = false;
+  /// Constructor
+  explicit SynchronGenerator(CPS::AttributeList::Ptr attributeList)
+      : mRs(attributeList->create<Real>("Rs", 0)),
+        mLl(attributeList->create<Real>("Ll", 0)),
+        mLd(attributeList->create<Real>("Ld", 0)),
+        mLq(attributeList->create<Real>("Lq", 0)),
+        mLd_t(attributeList->create<Real>("Ld_t", 0)),
+        mLq_t(attributeList->create<Real>("Lq_t", 0)),
+        mLd_s(attributeList->create<Real>("Ld_s", 0)),
+        mLq_s(attributeList->create<Real>("Lq_s", 0)),
+        mTd0_t(attributeList->create<Real>("Td0_t", 0)),
+        mTq0_t(attributeList->create<Real>("Tq0_t", 0)),
+        mTd0_s(attributeList->create<Real>("Td0_s", 0)),
+        mTq0_s(attributeList->create<Real>("Tq0_s", 0)),
+        mDelta(attributeList->create<Real>("delta_r", 0)),
+        mMechTorque(attributeList->create<Real>("T_m", 0)),
+        mInertia(attributeList->create<Real>("inertia", 0)),
+        mOmMech(attributeList->create<Real>("w_r", 0)),
+        mElecActivePower(attributeList->create<Real>("P_elec", 0)),
+        mElecReactivePower(attributeList->create<Real>("Q_elec", 0)),
+        mMechPower(attributeList->create<Real>("P_mech", 0)),
+        mElecTorque(attributeList->create<Real>("T_e", 0)),
+        mVfd(attributeList->create<Real>("Vfd", 0)){};
 
   /// Constructor
   explicit SynchronGenerator(CPS::AttributeBase::Map &attributeList)
