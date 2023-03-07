@@ -158,8 +158,7 @@ int main(int argc, char *argv[]) {
   loggerEMT->logAttribute("Vdq0", genEMT->attribute("Vdq0"));
   loggerEMT->logAttribute("Idq0", genEMT->attribute("Idq0"));
   loggerEMT->logAttribute("Ef", genEMT->attribute("Ef"));
-  if (withTurbineGovernor)
-    loggerEMT->logAttribute("Tm", turbineGovernorEMT->attribute("Tm"));
+  loggerEMT->logAttribute("Tm", genEMT->attribute("Tm"));
 
   // Events
   auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);
