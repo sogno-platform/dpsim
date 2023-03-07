@@ -9,9 +9,9 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph1_PiLine.h>
-#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph1_Inductor.h>
+#include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 
@@ -27,10 +27,8 @@ class PiLine : public CompositePowerComp<Complex>,
                public Base::Ph1::PiLine,
                public SharedFactory<PiLine> {
 protected:
-  /// Series Inductance submodel
-  std::shared_ptr<Inductor> mSubSeriesInductor;
-  /// Series Resistor submodel
-  std::shared_ptr<Resistor> mSubSeriesResistor;
+  /// Series Resistor-Inductance submodel
+  std::shared_ptr<ResIndSeries> mSubSeriesElement;
   /// Parallel Resistor submodel at Terminal 0
   std::shared_ptr<Resistor> mSubParallelResistor0;
   // Parallel Capacitor submodel at Terminal 0
@@ -41,6 +39,13 @@ protected:
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
   /// Right side vectors of subcomponents
   std::vector<const Matrix *> mRightVectorStamps;
+
+public:
+  /// Defines UID, name and logging level
+  PiLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  /// Defines name and logging level
+  PiLine(String name, Logger::Level logLevel = Logger::Level::off)
+      : PiLine(name, name, logLevel) {}
 
 public:
   /// Defines UID, name and logging level

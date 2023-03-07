@@ -12,6 +12,7 @@
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/SP/SP_Ph1_Capacitor.h>
 #include <dpsim-models/SP/SP_Ph1_Inductor.h>
+#include <dpsim-models/SP/SP_Ph1_ResIndSeries.h>
 #include <dpsim-models/SP/SP_Ph1_Resistor.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBranch.h>
@@ -70,10 +71,8 @@ protected:
 
   // #### Admittance matrix stamp ####
   MatrixComp mY_element;
-  /// Series Inductance submodel
-  std::shared_ptr<Inductor> mSubSeriesInductor;
-  /// Series Resistor submodel
-  std::shared_ptr<Resistor> mSubSeriesResistor;
+  /// Series Resistor-Inductance submodel
+  std::shared_ptr<ResIndSeries> mSubSeriesElement;
   /// Parallel Resistor submodel at Terminal 0
   std::shared_ptr<Resistor> mSubParallelResistor0;
   // Parallel Capacitor submodel at Terminal 0
@@ -84,6 +83,12 @@ protected:
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
   /// Right side vectors of subcomponents
   std::vector<const Matrix *> mRightVectorStamps;
+
+public:
+  /// nodal active power injection
+  const Attribute<Real>::Ptr mActivePowerInjection;
+  /// nodal reactive power injection
+  const Attribute<Real>::Ptr mReactivePowerInjection;
 
 public:
   /// nodal active power injection
