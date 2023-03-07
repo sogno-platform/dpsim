@@ -84,7 +84,6 @@ void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
 		mPrevCurrFac(freq,0) = { preCurrFracReal, preCurrFracImag };
 
 		mEquivCurrent(freq,0) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mPrevCurrFac(freq,0) * (**mIntfCurrent)(0,freq);
-		//(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 	}
 }
 

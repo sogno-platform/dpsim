@@ -80,7 +80,7 @@ namespace Ph1 {
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### MNA Tear Section ####
-		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
+		void mnaTearApplyMatrixStamp(Matrix& tearMatrix) override;
 
 	};
 }
