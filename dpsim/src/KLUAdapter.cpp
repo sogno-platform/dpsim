@@ -20,45 +20,80 @@ KLUAdapter::~KLUAdapter()
         klu_free_numeric(&m_numeric, &m_common);
 }
 
+KLUAdapter::KLUAdapter(const DirectLinearSolverConfiguration& configuration)
+{
+	klu_defaults(&m_common);
+
+	switch(configuration.getScalingMethod())
+	{
+		case SCALING_METHOD::NO_SCALING:
+				m_scaling = 0;
+				break;
+		case SCALING_METHOD::SUM_SCALING:
+				m_scaling = 1;
+				break;
+		case SCALING_METHOD::MAX_SCALING:
+				m_scaling = 2;
+				break;
+		default:
+				m_scaling = 1;
+	}
+
+	// TODO: implement support for COLAMD (modifiy SuiteSparse)
+	switch(configuration.getFillInReductionMethod())
+	{
+		case FILL_IN_REDUCTION_METHOD::AMD:
+			m_preordering = AMD_ORDERING;
+			break;
+		case FILL_IN_REDUCTION_METHOD::AMD_NV:
+			m_preordering = AMD_ORDERING_NV;
+			break;
+		case FILL_IN_REDUCTION_METHOD::AMD_RA:
+			m_preordering = AMD_ORDERING_RA;
+			break;
+		default:
+			m_preordering = AMD_ORDERING;
+	}
+
+	// TODO: implement support for partial refactorization method. Use function pointers?
+	switch(configuration.getPartialRefactorizationMethod())
+	{
+		case PARTIAL_REFACTORIZATION_METHOD::NO_PARTIAL_REFACTORIZATION:
+		case PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH:
+		case PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART:
+		default:
+		break;
+	}
+
+	switch(configuration.getBTF())
+	{
+		case USE_BTF::DO_BTF:
+				m_btf = 1;
+				break;
+		case USE_BTF::NO_BTF:
+				m_btf = 0;
+				break;
+		default:
+				m_btf = 1;
+	}
+
+	m_varyingColumns.clear();
+	m_varyingRows.clear();
+}
+
 KLUAdapter::KLUAdapter()
 {
     klu_defaults(&m_common);
 
-    if (const char *scaling = std::getenv("KLU_SCALING"))
-    {
-        m_scaling = atoi(scaling);
+	// NOTE: klu_defaults should already set the preordering methods correctly.
+	// It is repeated here in case this is altered in SuiteSparse at some point
 
-        /* m_scaling < 0 valid here (evaluates to "no scaling") */
-        if (m_scaling > SCALING_METHOD::MAX_SCALING)
-        {
-            m_scaling = SCALING_METHOD::NO_SCALING;
-        }
-    }
+	m_scaling = 1;
+	m_preordering = AMD_ORDERING;
+	m_btf = 1;
 
-    if (const char *do_btf = std::getenv("KLU_BTF"))
-    {
-        if (atoi(do_btf) != 0)
-        {
-            m_btf = true;
-        }
-    }
-
-    m_common.btf = m_btf ? 1 : 0;
-    m_common.scale = m_scaling;
-
-    if (const char *which_preprocessing_method = std::getenv("KLU_METHOD"))
-    {
-        m_partial_method = atoi(which_preprocessing_method);
-
-        /* "orderings" internally defined in custom KLU module. See klu.h for available
-         * values and settings. Probably a fix-me at some point - rename "method" appropriately.
-         * default is KLU_AMD_FP, i.e. KLU+AMD(+factorization path) */
-
-        if (m_partial_method < KLU_MIN_METHOD || m_partial_method > KLU_MAX_METHOD)
-        {
-            m_partial_method = KLU_AMD_FP;
-        }
-    }
+	m_varyingColumns.clear();
+	m_varyingRows.clear();
 }
 
 void KLUAdapter::preprocessing(SparseMatrix &systemMatrix,
@@ -66,7 +101,6 @@ void KLUAdapter::preprocessing(SparseMatrix &systemMatrix,
 {
     if (m_symbolic)
     {
-        preprocessing_is_okay = false;
         klu_free_symbolic(&m_symbolic, &m_common);
     }
 
@@ -75,27 +109,19 @@ void KLUAdapter::preprocessing(SparseMatrix &systemMatrix,
     auto Ap = Eigen::internal::convert_index<Int *>(systemMatrix.outerIndexPtr());
     auto Ai = Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
 
-    /* TODO: possible improvement: don't save variable system matrix entries, but rather the varying rows/cols vector
-     * i.e. do the computations below only once */
-    this->changedEntries = listVariableSystemMatrixEntries;
-    Int varying_entries = Eigen::internal::convert_index<Int>(changedEntries.size());
-    std::vector<Int> varying_columns;
-    std::vector<Int> varying_rows;
+	m_varyingColumns.clear();
+	m_varyingRows.clear();
 
-    for (auto &changedEntry : changedEntries)
+    m_changedEntries = listVariableSystemMatrixEntries;
+    Int varying_entries = Eigen::internal::convert_index<Int>(m_changedEntries.size());
+
+    for (auto &changedEntry : m_changedEntries)
     {
-        varying_rows.push_back(changedEntry.first);
-        varying_columns.push_back(changedEntry.second);
+        m_varyingRows.push_back(changedEntry.first);
+        m_varyingColumns.push_back(changedEntry.second);
     }
 
-    m_symbolic = klu_analyze_partial(n, Ap, Ai, &varying_columns[0], &varying_rows[0], varying_entries,
-                                     m_partial_method, &m_common);
-
-    if (m_symbolic)
-    {
-        /* successful preordering */
-        preprocessing_is_okay = true;
-    }
+    m_symbolic = klu_analyze_partial(n, Ap, Ai, &m_varyingColumns[0], &m_varyingRows[0], varying_entries, m_preordering, &m_common);
 
     /* store non-zero value of current preprocessed matrix. only used until
      * to-do in refactorize-function is resolved. Can be removed then. */
@@ -106,7 +132,6 @@ void KLUAdapter::factorize(SparseMatrix &systemMatrix)
 {
     if (m_numeric)
     {
-        factorization_is_okay = false;
         klu_free_numeric(&m_numeric, &m_common);
     }
 
@@ -116,26 +141,13 @@ void KLUAdapter::factorize(SparseMatrix &systemMatrix)
 
     m_numeric = klu_factor(Ap, Ai, Ax, m_symbolic, &m_common);
 
-    if (m_numeric)
-    {
-        factorization_is_okay = true;
-    }
-
     /* make sure that factorization path is not computed if there are no varying entries.
      * Doing so should not be a problem, but it is safer to do it this way */
-    if (!(this->changedEntries.empty()))
-    {
-        Int varying_entries = Eigen::internal::convert_index<Int>(changedEntries.size());
-        std::vector<Int> varying_columns;
-        std::vector<Int> varying_rows;
+	Int varying_entries = Eigen::internal::convert_index<Int>(m_changedEntries.size());
 
-        for (auto &changedEntry : changedEntries)
-        {
-            varying_rows.push_back(changedEntry.first);
-            varying_columns.push_back(changedEntry.second);
-        }
-        klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, &varying_columns[0], &varying_rows[0],
-                         varying_entries);
+    if (!(m_varyingColumns.empty()) && !(m_varyingRows.empty()))
+    {
+        klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, &m_varyingColumns[0], &m_varyingRows[0], varying_entries);
     }
 }
 
@@ -144,7 +156,7 @@ void KLUAdapter::refactorize(SparseMatrix &systemMatrix)
     /* TODO: remove if-else when zero<->non-zero issue during matrix stamping has been fixed. Also remove in partialRefactorize then. */
     if (systemMatrix.nonZeros() != nnz)
     {
-        preprocessing(systemMatrix, this->changedEntries);
+        preprocessing(systemMatrix, m_changedEntries);
         factorize(systemMatrix);
     }
     else
@@ -182,9 +194,6 @@ void KLUAdapter::partialRefactorize(SparseMatrix &systemMatrix,
 
 Matrix KLUAdapter::solve(Matrix &rightSideVector)
 {
-    /* TODO: ensure matrix has been factorized properly before calling this function.
-     * assertions might hurt performance, thus omitted here */
-
     Matrix x = rightSideVector;
 
     /* number of right hands sides
@@ -197,8 +206,7 @@ Matrix KLUAdapter::solve(Matrix &rightSideVector)
 	/* tsolve refers to transpose solve. Input matrix is stored in compressed row format,
 	 * KLU operates on compressed column format. This way, the transpose of the matrix is factored.
 	 * This has to be taken into account only here during right-hand solving. */
-    klu_tsolve(m_symbolic, m_numeric, rhsRows, rhsCols, x.const_cast_derived().data(),
-               const_cast<klu_common *>(&m_common));
+    klu_tsolve(m_symbolic, m_numeric, rhsRows, rhsCols, x.const_cast_derived().data(), const_cast<klu_common *>(&m_common));
 
     return x;
 }

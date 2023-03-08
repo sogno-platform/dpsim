@@ -173,6 +173,8 @@ namespace DPsim {
 		///
 		void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) { mDirectImpl = directImpl; }
 		///
+		void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration) { }
+		///
 		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
 		///
 		void doSplitSubnets(Bool splitSubnets = true) { **mSplitSubnets = splitSubnets; }

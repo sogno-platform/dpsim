@@ -11,6 +11,7 @@
 #include <dpsim/MNASolver.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/MNASolverDirect.h>
+#include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim/DenseLUAdapter.h>
 #include <dpsim/SparseLUAdapter.h>
 #ifdef WITH_KLU
