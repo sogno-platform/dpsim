@@ -99,7 +99,7 @@ void EMT::Ph3::ResIndSeries::mnaCompInitialize(Real omega, Real timeStep, Attrib
 	mSLog->flush();
 }
 
-void EMT::Ph3::ResIndSeries::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::ResIndSeries::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0)) {

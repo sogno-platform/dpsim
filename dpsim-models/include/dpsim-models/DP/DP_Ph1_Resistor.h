@@ -81,7 +81,7 @@ public:
   };
 
   // #### MNA Tear Section ####
-  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix);
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
 
   // #### DAE Section ####
   ///Residual Function for DAE Solver

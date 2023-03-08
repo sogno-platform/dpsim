@@ -184,8 +184,7 @@ void DP::Ph1::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
 }
 
 void DP::Ph1::PiLine::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
-  mSubSeriesResistor->mnaTearApplyMatrixStamp(tearMatrix);
-  mSubSeriesInductor->mnaTearApplyMatrixStamp(tearMatrix);
+  mSubSeriesElement->mnaTearApplyMatrixStamp(tearMatrix);
 }
 
 void DP::Ph1::PiLine::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
