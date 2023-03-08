@@ -25,9 +25,6 @@ namespace Ph1 {
 		const Attribute<Matrix>::Ptr mEdq_t;
 
 	protected:
-		Matrix mStates;
-		Matrix mStates_prev;
-
 		/// state representation matrix
 		///
 		Real mAd;
