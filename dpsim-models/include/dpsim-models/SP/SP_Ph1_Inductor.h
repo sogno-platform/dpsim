@@ -51,8 +51,8 @@ namespace Ph1 {
 		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
 		/// Add MNA post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-
-		void mnaTearApplyMatrixStamp(Matrix& tearMatrix) override;
+		//
+		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) override;
 	};
 }
 }
