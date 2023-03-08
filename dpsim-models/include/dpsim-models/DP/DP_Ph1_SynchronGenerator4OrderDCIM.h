@@ -65,7 +65,7 @@ namespace Ph1 {
 
 		// ### MNA Section ###
         ///
-        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {};
         void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
         void mnaCompPostStep(const Matrix& leftVector);
 

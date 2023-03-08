@@ -87,9 +87,6 @@ void DP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 	mSLog->flush();
 }
 
-void DP::Ph1::SynchronGenerator4OrderDCIM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
-}
-
 void DP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	if (mSimTime>0.0) {
 		// calculate mechanical variables at t=k+1 with forward euler
