@@ -16,8 +16,6 @@ namespace DPsim
 	{
 		m_scalingMethod = SCALING_METHOD::NO_SCALING;
 		m_partialRefactorizationMethod = PARTIAL_REFACTORIZATION_METHOD::NO_PARTIAL_REFACTORIZATION;
-		// m_fillInReductionMethod = FILL_IN_REDUCTION_METHOD::AMD;
-		// m_preprocessingMethod = PREPROCESSING_METHOD::BTF;
 	}
 
 	void DirectLinearSolverConfiguration::setFillInReductionMethod(FILL_IN_REDUCTION_METHOD fillInReductionMethod)

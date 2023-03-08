@@ -27,16 +27,16 @@ KLUAdapter::KLUAdapter(const DirectLinearSolverConfiguration& configuration)
 	switch(configuration.getScalingMethod())
 	{
 		case SCALING_METHOD::NO_SCALING:
-				m_scaling = 0;
+				m_common.scale = 0;
 				break;
 		case SCALING_METHOD::SUM_SCALING:
-				m_scaling = 1;
+				m_common.scale = 1;
 				break;
 		case SCALING_METHOD::MAX_SCALING:
-				m_scaling = 2;
+				m_common.scale = 2;
 				break;
 		default:
-				m_scaling = 1;
+				m_common.scale = 1;
 	}
 
 	// TODO: implement support for COLAMD (modifiy SuiteSparse)
@@ -56,25 +56,17 @@ KLUAdapter::KLUAdapter(const DirectLinearSolverConfiguration& configuration)
 	}
 
 	// TODO: implement support for partial refactorization method. Use function pointers?
-	switch(configuration.getPartialRefactorizationMethod())
-	{
-		case PARTIAL_REFACTORIZATION_METHOD::NO_PARTIAL_REFACTORIZATION:
-		case PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH:
-		case PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART:
-		default:
-		break;
-	}
 
 	switch(configuration.getBTF())
 	{
 		case USE_BTF::DO_BTF:
-				m_btf = 1;
+				m_common.btf = 1;
 				break;
 		case USE_BTF::NO_BTF:
-				m_btf = 0;
+				m_common.btf = 0;
 				break;
 		default:
-				m_btf = 1;
+				m_common.btf = 1;
 	}
 
 	m_varyingColumns.clear();
@@ -88,9 +80,9 @@ KLUAdapter::KLUAdapter()
 	// NOTE: klu_defaults should already set the preordering methods correctly.
 	// It is repeated here in case this is altered in SuiteSparse at some point
 
-	m_scaling = 1;
+	m_common.scale = 1;
 	m_preordering = AMD_ORDERING;
-	m_btf = 1;
+	m_common.btf = 1;
 
 	m_varyingColumns.clear();
 	m_varyingRows.clear();
@@ -206,7 +198,7 @@ Matrix KLUAdapter::solve(Matrix &rightSideVector)
 	/* tsolve refers to transpose solve. Input matrix is stored in compressed row format,
 	 * KLU operates on compressed column format. This way, the transpose of the matrix is factored.
 	 * This has to be taken into account only here during right-hand solving. */
-    klu_tsolve(m_symbolic, m_numeric, rhsRows, rhsCols, x.const_cast_derived().data(), const_cast<klu_common *>(&m_common));
+    klu_tsolve(m_symbolic, m_numeric, rhsRows, rhsCols, x.const_cast_derived().data(), &m_common);
 
     return x;
 }

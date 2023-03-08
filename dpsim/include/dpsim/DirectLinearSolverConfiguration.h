@@ -11,8 +11,6 @@
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 
-using namespace DPsim;
-
 namespace DPsim
 {
 	// Define method to scale the input matrix
