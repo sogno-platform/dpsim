@@ -9,7 +9,7 @@
 #pragma once
 
 #include <dpsim-models/Solver/MNASyncGenInterface.h>
-#include <dpsim-models/DP/DP_Ph1_SynchronGeneratorVBR.h>
+#include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 
 namespace CPS {
 namespace DP {
@@ -104,14 +104,16 @@ namespace Ph1 {
 		void calculateAuxiliarVariables();
 		///
 		Matrix get_parkTransformMatrix();
+		///
+		void initializeResistanceMatrix() final {};
 
 		// #### MNA Functions ####
 		///
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 		///
-		void mnaPostStep(const Matrix& leftVector) override;
+		void mnaCompPostStep(const Matrix& leftVector) override;
 		///
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
 
 		void setOperationalParametersPerUnit(Real nomPower,
 			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
