@@ -15,7 +15,7 @@ Scenario6::GridParams gridParams;
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Simulation parameters
 	String simName = "EMT_SMIB_ReducedOrderSGIterative_LoadStep";
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", logLevel);
-	genPF->setParameters(syngenKundur.nomPower, gridParams.VnomMV, gridParams.setPointActivePower, 
+	genPF->setParameters(syngenKundur.nomPower, gridParams.VnomMV, gridParams.setPointActivePower,
 						 gridParams.setPointVoltage, PowerflowBusType::PV);
     genPF->setBaseVoltage(gridParams.VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -72,10 +72,10 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(gridParams.VnomMV);
 	extnetPF->setBaseVoltage(gridParams.VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", logLevel);
-	linePF->setParameters(gridParams.lineResistance, gridParams.lineInductance, 
+	linePF->setParameters(gridParams.lineResistance, gridParams.lineInductance,
 						  gridParams.lineCapacitance, gridParams.lineConductance);
 	linePF->setBaseVoltage(gridParams.VnomMV);
 
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
 	// ----- Dynamic simulation ------
 	String simNameEMT = simName;
 	Logger::setLogDir("logs/" + simNameEMT);
-	
+
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initReactivePower = genPF->getApparentPower().imag();
@@ -116,12 +116,12 @@ int main(int argc, char* argv[]) {
 	Real initMechPower = initActivePower;
 
 	// Nodes
-	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0), 
+	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0),
 											n1PF->voltage()(0,0) * SHIFT_TO_PHASE_B,
 											n1PF->voltage()(0,0) * SHIFT_TO_PHASE_C
 										  };
 	auto n1EMT = SimNode<Real>::make("n1EMT", PhaseType::ABC, initialVoltage_n1);
-	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0), 
+	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0),
 											n2PF->voltage()(0,0) * SHIFT_TO_PHASE_B,
 											n2PF->voltage()(0,0) * SHIFT_TO_PHASE_C
 										  };
@@ -130,10 +130,10 @@ int main(int argc, char* argv[]) {
 	// Synchronous generator
 	auto genEMT = EMT::Ph3::SynchronGenerator4OrderPCM::make("SynGen", logLevel);
 	genEMT->setOperationalParametersPerUnit(
-		syngenKundur.nomPower, syngenKundur.nomVoltage, 
-		syngenKundur.nomFreq, H, 
+		syngenKundur.nomPower, syngenKundur.nomVoltage,
+		syngenKundur.nomFreq, H,
 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
-		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t); 
+		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t);
     genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 	genEMT->setMaxIterations(defaultConfig.maxIter);
 	genEMT->setTolerance(defaultConfig.tolerance);
@@ -143,11 +143,11 @@ int main(int argc, char* argv[]) {
 
     // Line
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", logLevel);
-	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(gridParams.lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(gridParams.lineInductance), 
+	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(gridParams.lineResistance),
+	                      Math::singlePhaseParameterToThreePhase(gridParams.lineInductance),
 					      Math::singlePhaseParameterToThreePhase(gridParams.lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(gridParams.lineConductance));
-	
+
 	// Topology
 	genEMT->connect({ n1EMT });
 	lineEMT->connect({ n1EMT, n2EMT });
@@ -179,12 +179,12 @@ int main(int argc, char* argv[]) {
 	simEMT.setTimeStep(timeStep);
 	simEMT.setFinalTime(finalTime);
 	simEMT.setDomain(Domain::EMT);
-	simEMT.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
+	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	simEMT.addLogger(logger);
 	//simEMT.doSystemMatrixRecomputation(true);
 
 	// Events
 	simEMT.addEvent(loadStepEvent);
-	
+
 	simEMT.run();
 }

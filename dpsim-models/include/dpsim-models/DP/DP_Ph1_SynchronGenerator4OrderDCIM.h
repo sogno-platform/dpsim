@@ -22,7 +22,7 @@ namespace Ph1 {
 		// ### State variables [p.u.]###
 		/// voltage behing the transient reactance
 		const Attribute<Matrix>::Ptr mEdq_t;
-		/// 
+		///
 		Matrix mStates;
 		Matrix mStates_prev;
 
@@ -43,7 +43,7 @@ namespace Ph1 {
 		Matrix mA_inv;
 		///
 		Matrix mB;
-		/// 
+		///
 		Matrix mC;
 
 		/// Transformation matrix dp->dq
@@ -57,15 +57,17 @@ namespace Ph1 {
 
 		// #### General Functions ####
 		/// DPecific component initialization
-        void specificInitialization(); 
+        void specificInitialization();
 		///
 		void stepInPerUnit();
+		///
+		void initializeResistanceMatrix() final {};
 
 		// ### MNA Section ###
         ///
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-        void mnaPostStep(const Matrix& leftVector);
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+        void mnaCompPostStep(const Matrix& leftVector);
 
 	public:
 		///

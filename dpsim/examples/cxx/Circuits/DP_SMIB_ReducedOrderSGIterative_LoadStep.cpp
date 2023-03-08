@@ -16,7 +16,7 @@ Scenario6::GridParams gridParams;
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// initiaize gen factory
 	SynchronGeneratorFactory::DP::Ph1::registerSynchronGenerators();
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
 	std::cout << "Tolerance: " << tolerance << std::endl;
 	std::cout << "Max N° of Iterations: " << maxIter << std::endl;
 	std::cout << "SG: " << SGModel << std::endl;
-	
+
 	// Configure logging
 	Logger::Level logLevel = Logger::Level::off;
 
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", logLevel);
-	genPF->setParameters(syngenKundur.nomPower, gridParams.VnomMV, gridParams.setPointActivePower, 
+	genPF->setParameters(syngenKundur.nomPower, gridParams.VnomMV, gridParams.setPointActivePower,
 						 gridParams.setPointVoltage, PowerflowBusType::PV);
     genPF->setBaseVoltage(gridParams.VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -91,10 +91,10 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(gridParams.VnomMV);
 	extnetPF->setBaseVoltage(gridParams.VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", logLevel);
-	linePF->setParameters(gridParams.lineResistance, gridParams.lineInductance, 
+	linePF->setParameters(gridParams.lineResistance, gridParams.lineInductance,
 						  gridParams.lineCapacitance, gridParams.lineConductance);
 	linePF->setBaseVoltage(gridParams.VnomMV);
 
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
 	// ----- Dynamic simulation ------
 	String simNameDP = simName;
 	Logger::setLogDir("logs/" + simNameDP);
-	
+
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initReactivePower = genPF->getApparentPower().imag();
@@ -143,27 +143,27 @@ int main(int argc, char* argv[]) {
 	// Synchronous generator
 	auto genDP = Factory<CPS::Base::ReducedOrderSynchronGenerator<Complex>>::get().create(SGModel, "SynGen", logLevel);
 	genDP->setOperationalParametersPerUnit(
-		syngenKundur.nomPower, syngenKundur.nomVoltage, 
-		syngenKundur.nomFreq, H, 
+		syngenKundur.nomPower, syngenKundur.nomVoltage,
+		syngenKundur.nomFreq, H,
 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-		syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
+		syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
-	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setMaxIterations(maxIter); 
+	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setMaxIterations(maxIter);
 	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setTolerance(tolerance);
 	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setNumericalMethod(numericalMethod);
-	
+
 	//Grid bus as Slack
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
 	extnetDP->setParameters(gridParams.VnomMV);
 
     // Line
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", logLevel);
-	lineDP->setParameters(gridParams.lineResistance, 
-	                      gridParams.lineInductance, 
+	lineDP->setParameters(gridParams.lineResistance,
+	                      gridParams.lineInductance,
 					      gridParams.lineCapacitance,
 						  gridParams.lineConductance);
-	
+
 	// Topology
 	genDP->connect({ n1DP });
 	lineDP->connect({ n1DP, n2DP });
@@ -195,11 +195,11 @@ int main(int argc, char* argv[]) {
 	simDP.setTimeStep(timeStep);
 	simDP.setFinalTime(finalTime);
 	simDP.setDomain(Domain::DP);
-	simDP.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
+	simDP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	simDP.addLogger(logger);
 
 	// Events
 	simDP.addEvent(loadStepEvent);
-	
+
 	simDP.run();
 }

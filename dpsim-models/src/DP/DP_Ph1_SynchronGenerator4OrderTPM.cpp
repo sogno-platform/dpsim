@@ -13,15 +13,15 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
     (String uid, String name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
-	mEvbr(Attribute<Complex>::create("Evbr", mAttributes)),
-	mEdq_t(Attribute<Matrix>::create("Edq", mAttributes))  {
+	mEvbr(mAttributes->create<Complex>("Evbr")),
+	mEdq_t(mAttributes->create<Matrix>("Edq"))  {
 
 	mPhaseType = PhaseType::Single;
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 
 	/// initialize attributes
-	mNumIter = Attribute<Int>::create("NIterations", mAttributes, 0);
+	mNumIter = mAttributes->create<Int>("NIterations", 0);
 
 	// model variables
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -97,7 +97,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarConstants() {
 
 	mAq = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
 	mBq = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mCq = 2 * mTimeStep * mEf / (2 * mTd0_t + mTimeStep);
+	mCq = 2 * mTimeStep * (**mEf) / (2 * mTd0_t + mTimeStep);
 
 	mB = mLd_t - mAq;
 	mA = -mLq_t - mAd;
@@ -157,7 +157,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::calculateConductanceMatrix() {
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
-void DP::Ph1::SynchronGenerator4OrderTPM::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	updateMatrixNodeIndices();
 	calculateConductanceMatrix();
 	// Stamp voltage source
@@ -234,7 +234,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	mIdq_2prev = **mIntfCurrent;
 }
 
-void DP::Ph1::SynchronGenerator4OrderTPM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), **mEvbr);
 }
 
@@ -249,7 +249,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	mEdq_pred(1,0) = (**mVdq)(1,0) + mIdq_pred(0,0) * mLd_t;
 
 	// correct emf at t=k+1 (trapezoidal rule)
-	mEdq_corr = mA_prev * **mEdq_t + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * mEf;
+	mEdq_corr = mA_prev * **mEdq_t + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * (**mEf);
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	mIdq_corr(0,0) = (mEdq_corr(1,0) - (**mVdq)(1,0) ) / mLd_t;
@@ -280,7 +280,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 
 	// stamp currents
 	(**mRightVector).setZero();
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::updateVoltage(const Matrix& leftVector) {
@@ -322,7 +322,7 @@ bool DP::Ph1::SynchronGenerator4OrderTPM::requiresIteration() {
 	}
 }
 
-void DP::Ph1::SynchronGenerator4OrderTPM::mnaPostStep(const Matrix& leftVector) {
+void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompPostStep(const Matrix& leftVector) {
 	// update armature voltage and current
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());

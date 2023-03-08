@@ -171,7 +171,7 @@ int main(int argc, char *argv[]) {
 	sim.setSolverType(Solver::Type::MNA);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
-	sim.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
+	sim.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	sim.addLogger(logger);
 
 	// Optionally add switch event

@@ -41,10 +41,10 @@ namespace Ph1 {
 		Matrix parkTransform(Real theta, const Matrix& abcVector);
 
 		// ### MNA Section ###
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaPostStep(const Matrix& leftVector);
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompPostStep(const Matrix& leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 
     public:
         virtual ~SynchronGeneratorIter();

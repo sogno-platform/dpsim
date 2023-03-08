@@ -13,8 +13,8 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator6OrderDCIM::SynchronGenerator6OrderDCIM
     (String uid, String name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)),
-	mEdq_s(Attribute<Matrix>::create("Edq_s", mAttributes)) {
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
+	mEdq_s(mAttributes->create<Matrix>("Edq_s")) {
 
 	setTerminalNumber(1);
 
@@ -36,7 +36,7 @@ DP::Ph1::SynchronGenerator6OrderDCIM::SynchronGenerator6OrderDCIM
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator6OrderDCIM::clone(String name) {
-	
+
 	auto copy = SynchronGenerator6OrderDCIM::make(name, mLogLevel);
 	return copy;
 }
@@ -45,7 +45,7 @@ void DP::Ph1::SynchronGenerator6OrderDCIM::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
 	(**mEdq_t)(0,0) = (mLq - mLq_t) * (**mIdq)(1,0);
-	(**mEdq_t)(1,0) = mEf - (mLd - mLd_t) * (**mIdq)(0,0);
+	(**mEdq_t)(1,0) = (**mEf) - (mLd - mLd_t) * (**mIdq)(0,0);
 
 	// initial dq behind the subtransient reactance in the dq reference frame
 	(**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);
@@ -80,7 +80,7 @@ void DP::Ph1::SynchronGenerator6OrderDCIM::specificInitialization() {
 			0,		-1,		0,			0,		mLd_s,		0,
 			1,		0,		0,			0,			0,		mLq_s;
 	mA_inv = mA.inverse();
-	
+
 	mB = Matrix::Zero(6,8);
 	mB <<	mCd_s,	0,		mBd_s,		0,		0,		mAd_s,	0,	0,
 			0,		mCq_s,	0,			mBq_s,	-mAq_s,		0,	0,	0,
@@ -91,7 +91,7 @@ void DP::Ph1::SynchronGenerator6OrderDCIM::specificInitialization() {
 
 	mC = Matrix::Zero(6,1);
 	mC <<	0,	0,	0,	mDq_t,	0,	0;
-    
+
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
@@ -108,7 +108,7 @@ void DP::Ph1::SynchronGenerator6OrderDCIM::specificInitialization() {
 	mSLog->flush();
 }
 
-void DP::Ph1::SynchronGenerator6OrderDCIM::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::SynchronGenerator6OrderDCIM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void DP::Ph1::SynchronGenerator6OrderDCIM::stepInPerUnit() {
@@ -122,7 +122,7 @@ void DP::Ph1::SynchronGenerator6OrderDCIM::stepInPerUnit() {
 
 	// calculate Edq and Idq at t=k+1. Assumption: Vdq(k) = Vdq(k+1)
 	mStates_prev << mStates, **mVdq;
-	mStates = mA_inv * mB * mStates_prev + mA_inv * mC * mEf;
+	mStates = mA_inv * mB * mStates_prev + mA_inv * mC * (**mEf);
 	**mEdq_s <<	mStates(0,0), mStates(1,0);
 	**mEdq_t <<	mStates(2,0), mStates(3,0);
 	**mIdq << mStates(4,0), mStates(5,0);
@@ -133,14 +133,14 @@ void DP::Ph1::SynchronGenerator6OrderDCIM::stepInPerUnit() {
 	(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
 }
 
-void DP::Ph1::SynchronGenerator6OrderDCIM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph1::SynchronGenerator6OrderDCIM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0), (**mIntfCurrent)(0, 0));
 }
 
-void DP::Ph1::SynchronGenerator6OrderDCIM::mnaPostStep(const Matrix& leftVector) {
+void DP::Ph1::SynchronGenerator6OrderDCIM::mnaCompPostStep(const Matrix& leftVector) {
 
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-	
+
 	// convert armature voltage into dq reference frame
 	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
 	Matrix Vabc = Matrix(3,1);

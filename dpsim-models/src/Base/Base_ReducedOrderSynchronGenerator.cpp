@@ -447,7 +447,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 
 	stepInPerUnit();
 	(**mRightVector).setZero();
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <>
@@ -472,7 +472,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int ti
 
 	stepInPerUnit();
 	(**mRightVector).setZero();
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <typename VarType>
@@ -486,7 +486,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPreStep(Real time, Int
 	mSimTime = time;
 	stepInPerUnit();
 	(**mRightVector).setZero();
-	this->mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <typename VarType>

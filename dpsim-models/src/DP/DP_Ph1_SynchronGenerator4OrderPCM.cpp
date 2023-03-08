@@ -18,8 +18,8 @@ DP::Ph1::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
 	setTerminalNumber(1);
 
 	/// initialize attributes
-	mEdq = Attribute<Matrix>::create("Edq", mAttributes);
-	mNumIter = Attribute<Int>::create("NIterations", mAttributes, 0);
+	mEdq = mAttributes->create<Matrix>("Edq");
+	mNumIter = mAttributes->create<Int>("NIterations", 0);
 
 	// Initialize matrix
 	**mEdq = Matrix::Zero(2,1);
@@ -148,7 +148,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	// prediction of electrical vars
 	if (mNumericalMethod == CPS::NumericalMethod::Euler) {
 		// predict emf at t=k+1 (forward euler)
-		mEdq_pred = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * mEf;
+		mEdq_pred = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * (**mEf);
 
 		// calculate stator currents at t=k+1 (assuming Vdq(k+1)=Vdq(k))
 		mIdq_pred(0,0) = (mEdq_pred(1,0) - (**mVdq)(1,0) ) / mLd_t;
@@ -156,7 +156,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	} else if (mNumericalMethod == CPS::NumericalMethod::Trapezoidal) {
 		// predict emfs and stator currents at t=k+1 (trapezoidal rule)
 		mStates_trap_prev << **mEdq, **mIdq, **mVdq;
-		mStates_trap = mA_trap_inv * mB_trap * mStates_trap_prev + mA_trap_inv * mC_trap * mEf;
+		mStates_trap = mA_trap_inv * mB_trap * mStates_trap_prev + mA_trap_inv * mC_trap * (**mEf);
 		mEdq_pred << mStates_trap(0,0), mStates_trap(1,0);
 		mIdq_pred << mStates_trap(2,0), mStates_trap(3,0);
 	}
@@ -167,7 +167,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	(**mIntfCurrent)(0,0) = (mDpToDq * mIdq_pred)(0,0) * mBase_I_RMS;
 }
 
-void DP::Ph1::SynchronGenerator4OrderPCM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph1::SynchronGenerator4OrderPCM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0,0), (**mIntfCurrent)(0, 0));
 }
 
@@ -200,7 +200,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
 
 	// correction of electrical vars
 	// correct emf at t=k+1 (trapezoidal rule)
-	mEdq_corr = mA_prev * **mEdq + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * mEf;
+	mEdq_corr = mA_prev * **mEdq + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * (**mEf);
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	mIdq_corr(0,0) = (mEdq_corr(1,0) - (**mVdq)(1,0) ) / mLd_t;
@@ -212,7 +212,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
 	(**mIntfCurrent)(0,0) = (mDpToDq * mIdq_corr)(0,0) * mBase_I_RMS;
 
 	// stamp currents
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVector) {
@@ -256,7 +256,7 @@ bool DP::Ph1::SynchronGenerator4OrderPCM::requiresIteration() {
 	}
 }
 
-void DP::Ph1::SynchronGenerator4OrderPCM::mnaPostStep(const Matrix& leftVector) {
+void DP::Ph1::SynchronGenerator4OrderPCM::mnaCompPostStep(const Matrix& leftVector) {
 	// update variables
 	**mOmMech = mOmMech_corr;
 	**mThetaMech = mThetaMech_corr;

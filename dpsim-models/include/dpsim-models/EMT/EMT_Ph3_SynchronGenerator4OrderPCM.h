@@ -86,6 +86,8 @@ namespace Ph3 {
 		Matrix parkTransform(Real theta, const Matrix& abcVector);
 		///
 		Matrix inverseParkTransform(Real theta, const Matrix& dq0Vector);
+		///
+		void initializeResistanceMatrix() final {};
 
 
 		/// Setters
@@ -93,9 +95,9 @@ namespace Ph3 {
 		void useVoltageForm(bool state) {mVoltageForm = state;}
 
 		// #### MNA Functions ####
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		void mnaPostStep(const Matrix& leftVector);
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix){};
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaCompPostStep(const Matrix& leftVector);
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix){};
 	};
 }
 }

@@ -50,7 +50,7 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 	extnetPF->setParameters(VnomMV);
 	extnetPF->setBaseVoltage(VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
@@ -84,7 +84,7 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 	// ----- Dynamic simulation ------
 	String simNameEMT = simName;
 	Logger::setLogDir("logs/"+simNameEMT);
-	
+
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initReactivePower = genPF->getApparentPower().imag();
@@ -92,13 +92,13 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 	Real initMechPower = initActivePower;
 
 	// Nodes
-	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0), 
+	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0),
 											n1PF->voltage()(0,0) * SHIFT_TO_PHASE_B,
 											n1PF->voltage()(0,0) * SHIFT_TO_PHASE_C
 										  };
 	auto n1EMT = SimNode<Real>::make("n1EMT", PhaseType::ABC, initialVoltage_n1);
 
-	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0), 
+	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0),
 											n2PF->voltage()(0,0) * SHIFT_TO_PHASE_B,
 											n2PF->voltage()(0,0) * SHIFT_TO_PHASE_C
 										  };
@@ -109,27 +109,27 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 	genEMT->setOperationalParametersPerUnit(
 		syngenKundur.nomPower, syngenKundur.nomVoltage,
 		syngenKundur.nomFreq, H,
-	 	syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
+	 	syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t,
-		syngenKundur.Tq0_t); 
+		syngenKundur.Tq0_t);
     genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 	genEMT->setMaxIterations(maxIterations);
 	genEMT->setTolerance(tolerance);
 
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", logLevel);
-	
+
     // Line
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", logLevel);
-	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(lineInductance), 
+	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance),
+	                      Math::singlePhaseParameterToThreePhase(lineInductance),
 					      Math::singlePhaseParameterToThreePhase(lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(lineConductance));
 
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", logLevel);
 	Real switchOpen = 1e6;
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(switchOpen), 
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(switchOpen),
 						 Math::singlePhaseParameterToThreePhase(switchClosed));
 	fault->openSwitch();
 
@@ -162,7 +162,7 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 	simEMT.setFinalTime(finalTime);
 	simEMT.setDomain(Domain::EMT);
 	simEMT.addLogger(loggerEMT);
-	simEMT.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
+	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 	// Events
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);
@@ -170,12 +170,12 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 
 	auto sw2 = SwitchEvent3Ph::make(endTimeFault, fault, false);
 	simEMT.addEvent(sw2);
-	
+
 	simEMT.run();
 	simEMT.logStepTimes(simNameEMT + "_step_times");
 }
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);

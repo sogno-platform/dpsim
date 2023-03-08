@@ -25,7 +25,7 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
-	genPF->setParameters(syngenKundur.nomPower, GridParams.VnomMV, GridParams.setPointActivePower, 
+	genPF->setParameters(syngenKundur.nomPower, GridParams.VnomMV, GridParams.setPointActivePower,
 						 GridParams.setPointVoltage, PowerflowBusType::PV);
     genPF->setBaseVoltage(GridParams.VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -35,10 +35,10 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	extnetPF->setParameters(GridParams.VnomMV);
 	extnetPF->setBaseVoltage(GridParams.VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+	linePF->setParameters(GridParams.lineResistance, GridParams.lineInductance,
 						  GridParams.lineCapacitance, GridParams.lineConductance);
 	linePF->setBaseVoltage(GridParams.VnomMV);
 
@@ -70,7 +70,7 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	// ----- Dynamic simulation ------
 	String simNameDP = simName;
 	Logger::setLogDir("logs/" + simNameDP);
-	
+
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initReactivePower = genPF->getApparentPower().imag();
@@ -88,9 +88,9 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	genDP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, syngenKundur.H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 
 	//Grid bus as Slack
@@ -99,9 +99,9 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
     // Line
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", logLevel);
-	lineDP->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+	lineDP->setParameters(GridParams.lineResistance, GridParams.lineInductance,
 						  GridParams.lineCapacitance, GridParams.lineConductance);
-	
+
 	//Breaker
 	auto fault = DP::Ph1::Switch::make("Br_fault", logLevel);
 	fault->setParameters(switchOpen, switchClosed);
@@ -135,7 +135,7 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 	simDP.setTimeStep(timeStep);
 	simDP.setFinalTime(finalTime);
 	simDP.setDomain(Domain::DP);
-	simDP.setMnaSolverImplementation(DPsim::MnaSolverFactory::EigenSparse);
+	simDP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	simDP.addLogger(loggerDP);
 	//simDP.doSystemMatrixRecomputation(true);
 
@@ -145,11 +145,11 @@ void DP_1ph_SynGen_Fault(String simName, Real timeStep, Real finalTime, Real H,
 
 	auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 	simDP.addEvent(sw2);
-	
+
 	simDP.run();
 }
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Simulation parameters
 	Real SwitchClosed = GridParams.SwitchClosed;
@@ -182,6 +182,6 @@ int main(int argc, char* argv[]) {
 		logDownSampling = 1.0;
 	Logger::Level logLevel = Logger::Level::off;
 	std::string simName = "DP_SynGen4OrderDCIM_SMIB_Fault" + stepSize_str + inertia_str;
-	DP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault, 
+	DP_1ph_SynGen_Fault(simName, timeStep, finalTime, H, startTimeFault, endTimeFault,
 			logDownSampling, SwitchOpen, SwitchClosed, logLevel);
 }

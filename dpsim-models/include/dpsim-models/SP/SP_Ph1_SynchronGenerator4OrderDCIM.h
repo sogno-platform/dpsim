@@ -64,6 +64,8 @@ namespace Ph1 {
 		void initializeResistanceMatrix() final {};
 		///
 		void stepInPerUnit() final;
+		///
+		void calculateStateMatrix();
 
 		// ### MNA Section ###
         ///
