@@ -13,7 +13,7 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
     (String uid, String name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)) {
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")) {
 
 	setTerminalNumber(1);
 
@@ -34,7 +34,7 @@ DP::Ph1::SynchronGenerator4OrderDCIM::SynchronGenerator4OrderDCIM
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator4OrderDCIM::clone(String name) {
-	
+
 	auto copy = SynchronGenerator4OrderDCIM::make(name, mLogLevel);
 	return copy;
 }
@@ -65,7 +65,7 @@ void DP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 			0,	-1,		mLd_t,	0,
 			1,	0,		0,		mLq_t;
 	mA_inv = mA.inverse();
-	
+
 	mB = Matrix::Zero(4,6);
 	mB <<	mBd,	0,		0,		mAd,	0,		0,
 			0,		mBq,	mAq,	0,		0,		0,
@@ -74,7 +74,7 @@ void DP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 
 	mC = Matrix::Zero(4,1);
 	mC <<	0,	mCq,	0,	0;
-    
+
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
@@ -87,7 +87,7 @@ void DP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 	mSLog->flush();
 }
 
-void DP::Ph1::SynchronGenerator4OrderDCIM::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::SynchronGenerator4OrderDCIM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void DP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
@@ -101,7 +101,7 @@ void DP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 
 	// calculate Edq and Idq at t=k+1. Assumption: Vdq(k) = Vdq(k+1)
 	mStates_prev << mStates, **mVdq;
-	mStates = mA_inv * mB * mStates_prev + mA_inv * mC * mEf;
+	mStates = mA_inv * mB * mStates_prev + mA_inv * mC * (**mEf);
 	**mEdq_t <<	mStates(0,0), mStates(1,0);
 	**mIdq << mStates(2,0), mStates(3,0);
 
@@ -111,14 +111,14 @@ void DP::Ph1::SynchronGenerator4OrderDCIM::stepInPerUnit() {
 	(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
 }
 
-void DP::Ph1::SynchronGenerator4OrderDCIM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph1::SynchronGenerator4OrderDCIM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0), (**mIntfCurrent)(0, 0));
 }
 
-void DP::Ph1::SynchronGenerator4OrderDCIM::mnaPostStep(const Matrix& leftVector) {
+void DP::Ph1::SynchronGenerator4OrderDCIM::mnaCompPostStep(const Matrix& leftVector) {
 
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-	
+
 	// convert armature voltage into dq reference frame
 	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
 	Matrix Vabc = Matrix(3,1);

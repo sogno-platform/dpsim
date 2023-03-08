@@ -43,14 +43,16 @@ namespace Ph1 {
 		void updateVoltage(const Matrix& leftVector) override;
 		///
 		bool requiresIteration() override;
+		///
+		void initializeResistanceMatrix() final {};
 
 		// #### MNA Functions ####
 		///
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 		///
-		void mnaPostStep(const Matrix& leftVector) override;
+		void mnaCompPostStep(const Matrix& leftVector) override;
 		///
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override {};
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override {};
 	};
 }
 }
