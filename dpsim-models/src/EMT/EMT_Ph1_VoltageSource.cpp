@@ -39,8 +39,6 @@ void EMT::Ph1::VoltageSource::mnaCompInitialize(
   updateMatrixNodeIndices();
   (**mIntfVoltage)(0, 0) =
       Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef));
-
-  mTimeStep = timeStep;
 }
 
 void EMT::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(
@@ -84,7 +82,7 @@ void EMT::Ph1::VoltageSource::updateVoltage(Real time) {
   if (srcFreq > 0)
     (**mIntfVoltage)(0, 0) =
         Math::abs(voltageRef) *
-        cos((time)*2. * PI * srcFreq + Math::phase(voltageRef));
+        cos(time * 2. * PI * srcFreq + Math::phase(voltageRef));
   else
     (**mIntfVoltage)(0, 0) = voltageRef.real();
 }

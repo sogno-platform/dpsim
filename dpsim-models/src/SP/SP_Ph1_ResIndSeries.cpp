@@ -73,7 +73,7 @@ void SP::Ph1::ResIndSeries::mnaCompInitialize(Real omega, Real timeStep, Attribu
 		Logger::phasorToString((**mIntfCurrent)(0, 0)));
 }
 
-void SP::Ph1::ResIndSeries::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::ResIndSeries::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	Complex conductance = 1. / mImpedance;
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
@@ -132,6 +132,6 @@ void SP::Ph1::ResIndSeries::mnaCompUpdateCurrent(const Matrix& leftVector) {
 }
 
 // #### Tear Methods ####
-void SP::Ph1::ResIndSeries::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
+void SP::Ph1::ResIndSeries::mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) {
 	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, mImpedance);
 }
