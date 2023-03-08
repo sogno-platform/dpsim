@@ -14,7 +14,6 @@ using namespace CPS;
 
 namespace DPsim {
 
-
 template <typename VarType>
 MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :	MnaSolver<VarType>(name, domain, logLevel) {
 	implementationInUse = DirectLinearSolverImpl::SparseLU;
@@ -318,7 +317,7 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 			return std::make_shared<SparseLUAdapter>();
 		#ifdef WITH_KLU
 		case DirectLinearSolverImpl::KLU:
-			return std::make_shared<KLUAdapter>();
+			return std::make_shared<KLUAdapter>(this->configurationInUse);
 		#endif
 		#ifdef WITH_CUDA
 		case DirectLinearSolverImpl::CUDADense:
@@ -340,6 +339,11 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 template <typename VarType>
 void MnaSolverDirect<VarType>::setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation) {
 	this->implementationInUse = implementation;
+}
+
+template <typename VarType>
+void MnaSolverDirect<VarType>::setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration) {
+	this->configurationInUse = configuration;
 }
 
 }

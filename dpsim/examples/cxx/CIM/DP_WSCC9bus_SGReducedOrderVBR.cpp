@@ -161,6 +161,12 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	// create direct linear solver configuration
+	DirectLinearSolverConfiguration configuration;
+	configuration.setBTF(DPsim::USE_BTF::DO_BTF);
+	configuration.setFillInReductionMethod(DPsim::FILL_IN_REDUCTION_METHOD::AMD);
+	configuration.setScalingMethod(DPsim::SCALING_METHOD::MAX_SCALING);
+
 	Simulation sim(simName, logLevel);
 	sim.setSystem(sys);
 	sim.setDomain(Domain::DP);
@@ -169,6 +175,7 @@ int main(int argc, char *argv[]) {
 	sim.setFinalTime(finalTime);
 	sim.doSystemMatrixRecomputation(true);
 	sim.setDirectLinearSolverImplementation(implementation);
+	sim.setDirectLinearSolverConfiguration(configuration);
 	sim.addLogger(logger);
 
 		// Optionally add switch event

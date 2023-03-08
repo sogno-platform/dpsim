@@ -16,6 +16,7 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
+#include <dpsim/DirectLinearSolverConfiguration.h>
 
 namespace DPsim
 {

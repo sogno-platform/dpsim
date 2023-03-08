@@ -27,16 +27,14 @@ extern "C"
 
 namespace DPsim
 {
-	enum SCALING_METHOD {
-		NO_SCALING = 0,
-		SUM_SCALING = 1,
-		MAX_SCALING = 2
-	};
-
     class KLUAdapter : public DirectLinearSolver
     {
-        /// Vector of variable entries in system matrix
-        std::vector<std::pair<UInt, UInt>> changedEntries;
+		/// Vector of variable entries in system matrix
+		std::vector<std::pair<UInt, UInt>> m_changedEntries;
+
+		/// Store variable rows and columns in system matrix
+		std::vector<Int> m_varyingColumns;
+		std::vector<Int> m_varyingRows;
 
 		/// KLU-specific structs
         klu_common m_common;
@@ -45,7 +43,10 @@ namespace DPsim
 
 		/// Flags to indicate mode of operation
 		/// Define which ordering to choose in preprocessing
-		int m_partial_method = KLU_AMD_FP;
+		int m_preordering = AMD_ORDERING;
+
+		/// Define which partial refactorization method is preferred
+		int m_partialMethod = 0;
 
 		/// Use BTF or not
 		bool m_btf = true;
@@ -69,6 +70,9 @@ namespace DPsim
 
 		/// Constructor
 		KLUAdapter();
+
+		/// Constructor with Configuration Class
+		KLUAdapter(const DirectLinearSolverConfiguration& configuration);
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
