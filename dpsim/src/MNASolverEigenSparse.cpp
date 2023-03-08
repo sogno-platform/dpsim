@@ -239,6 +239,8 @@ void MnaSolverEigenSparse<VarType>::solve(Real time, Int timeStepCount) {
 				if (mSwitchedMatrices.size() > 0)
 					**mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0]->solve(mRightSideVector);
 
+				// CHECK: Is this really required? Or can operations actually become part of
+				// correctorStep and mnaPostStep?
 				for (auto syncGen : mSyncGen)
 					syncGen->updateVoltage(**mLeftSideVector);
 			}
