@@ -298,5 +298,4 @@ void DP::Ph1::ResIndSeries::mnaTearApplyVoltageStamp(Matrix& voltageVector) {
 void DP::Ph1::ResIndSeries::mnaTearPostStep(Complex voltage, Complex current) {
 	(**mIntfVoltage)(0, 0) = voltage;
 	(**mIntfCurrent)(0, 0) = mEquivCond(0,0) * voltage + mEquivCurrent(0,0);
-
 }

@@ -69,7 +69,7 @@ namespace Ph1 {
 		///
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
 		/// Update interface voltage from MNA system result
 		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		/// Update interface current from MNA system result
@@ -80,7 +80,7 @@ namespace Ph1 {
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### MNA Tear Section ####
-		void mnaTearApplyMatrixStamp(Matrix& tearMatrix) override;
+		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) override;
 
 	};
 }
