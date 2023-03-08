@@ -34,11 +34,6 @@ void SP::Ph1::SynchronGenerator4OrderDCIM::specificInitialization() {
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
 	//
-	mStates = Matrix::Zero(4,1);
-	mStates << **mEdq_t, **mIdq;
-	mStates_prev = Matrix::Zero(6,1);
-
-	//
 	mAd = mTimeStep * (mLq - mLq_t) / (2 * mTq0_t + mTimeStep);
 	mBd = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
 
