@@ -34,8 +34,10 @@ SimPowerComp<Real>::Ptr EMT::Ph1::VoltageSource::clone(String name) {
 }
 
 void EMT::Ph1::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
+	updateMatrixNodeIndices();
 	(**mIntfVoltage)(0,0) = Math::abs(**mVoltageRef) * cos(Math::phase(**mVoltageRef));
+
+	mTimeStep = timeStep;
 }
 
 void EMT::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
@@ -66,7 +68,7 @@ void EMT::Ph1::VoltageSource::updateVoltage(Real time) {
 	Complex voltageRef = mVoltageRef->get();
 	Real srcFreq = mSrcFreq->get();
 	if (srcFreq > 0)
-		(**mIntfVoltage)(0,0) = Math::abs(voltageRef) * cos(time * 2.*PI*srcFreq + Math::phase(voltageRef));
+		(**mIntfVoltage)(0,0) = Math::abs(voltageRef) * cos((time + mTimeStep) * 2.*PI*srcFreq + Math::phase(voltageRef));
 	else
 		(**mIntfVoltage)(0,0) = voltageRef.real();
 }
