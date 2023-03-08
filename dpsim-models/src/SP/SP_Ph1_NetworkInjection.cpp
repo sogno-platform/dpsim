@@ -15,6 +15,7 @@ SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
     Logger::Level logLevel) : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
 	mSrcFreq(mAttributes->createDynamic<Real>("f_src")),
+	mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
 	mVoltageSetPoint(mAttributes->create<Real>("V_set")),
 	mVoltageSetPointPerUnit(mAttributes->create<Real>("V_set_pu", 1.0)),
 	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
@@ -79,14 +80,14 @@ void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modula
 }
 
 void SP::Ph1::NetworkInjection::setBaseVoltage(Real baseVoltage) {
-    mBaseVoltage = baseVoltage;
+    **mBaseVoltage = baseVoltage;
 }
 
 void SP::Ph1::NetworkInjection::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
     SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
 	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]", mBaseVoltage);
 
-    **mVoltageSetPointPerUnit = **mVoltageSetPoint / mBaseVoltage;
+    **mVoltageSetPointPerUnit = **mVoltageSetPoint / **mBaseVoltage;
 
 	SPDLOG_LOGGER_INFO(mSLog, "Voltage Set-Point ={} [pu]", **mVoltageSetPointPerUnit);
 	mSLog->flush();
