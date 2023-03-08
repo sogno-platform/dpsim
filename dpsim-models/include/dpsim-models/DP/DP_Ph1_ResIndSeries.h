@@ -40,18 +40,6 @@ public:
   ResIndSeries(String name, Logger::Level logLevel = Logger::Level::off)
       : ResIndSeries(name, name, logLevel) {}
 
-public:
-  /// Inductance [H]
-  const Attribute<Real>::Ptr mInductance;
-  ///Resistance [ohm]
-  const Attribute<Real>::Ptr mResistance;
-  /// Defines UID, name and log level
-  ResIndSeries(String uid, String name,
-               Logger::Level logLevel = Logger::Level::off);
-  /// Defines name and log level
-  ResIndSeries(String name, Logger::Level logLevel = Logger::Level::off)
-      : ResIndSeries(name, name, logLevel) {}
-
   // #### General ####
   /// Sets model specific parameters
   void setParameters(Real resistance, Real inductance);
@@ -72,8 +60,8 @@ public:
       Real omega, Real timeStep,
       std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(Matrix &systemMatrix) override;
-  void mnaCompApplySystemMatrixStampHarm(Matrix &systemMatrix,
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
                                          Int freqIdx) override;
   /// Stamps right side (source) vector
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
@@ -103,27 +91,12 @@ public:
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
 
-  class MnaPostStepHarm : public CPS::Task {
-  public:
-    MnaPostStepHarm(ResIndSeries &ResIndSeries,
-                    const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
-        : Task(**ResIndSeries.mName + ".MnaPostStepHarm"),
-          mResIndSeries(ResIndSeries), mLeftVectors(leftVectors) {
-      for (UInt i = 0; i < mLeftVectors.size(); i++)
-        mAttributeDependencies.push_back(mLeftVectors[i]);
-      mModifiedAttributes.push_back(mResIndSeries.attribute("v_intf"));
-      mModifiedAttributes.push_back(mResIndSeries.attribute("i_intf"));
-    }
-    void execute(Real time, Int timeStepCount);
-
-  private:
-    ResIndSeries &mResIndSeries;
-    std::vector<Attribute<Matrix>::Ptr> mLeftVectors;
-  };
-
-  // #### MNA Tear Section ####
-  void mnaTearApplyMatrixStamp(Matrix &tearMatrix) override;
+  // #### Tearing methods ####
+  void mnaTearInitialize(Real omega, Real timestep) override;
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
+  void mnaTearApplyVoltageStamp(Matrix &voltageVector) override;
+  void mnaTearPostStep(Complex voltage, Complex current) override;
 };
-} // namespace Ph1
-} // namespace DP
-} // namespace CPS
+}
+}
+}
