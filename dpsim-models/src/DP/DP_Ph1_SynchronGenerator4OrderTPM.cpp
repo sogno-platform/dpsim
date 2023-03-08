@@ -123,7 +123,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarConstants() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::specificInitialization() {
-	// initial voltage behind the transient reactance in the dq reference frame
+	// initial emf in the dq reference frame
 	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 	calculateAuxiliarConstants();
@@ -181,46 +181,51 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	// set number of iteratios equal to zero
 	**mNumIter = 0;
 
-	// calculate Edq_t at t=k
-	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
-	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
-
-	if (mSimTime>0.0){
-		// 	calculate mechanical variables at t=k+1 using forward euler
+	// predict mechanical vars
+	if (mSimTime > 0.0){
+		// 	predict omega at t=k+1 (forward euler)
 		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
 		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (**mMechTorque - **mElecTorque));
+
+		// 	predict theta and delta at t=k+1 (backward euler)
 		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
-	// Auxiliar variables for time-varying VBR history voltage and matrix
+	// update auxiliar variables for time-varying VBR voltage and matrix depending on mThetaMech
 	calculateAuxiliarVariables();
 
-	// set previous values of current at simulation start
-	if (mSimTime==0.0) {
-		(**mIntfCurrent)(0,0) = std::conj(mInitElecPower / (mInitVoltage * mBase_V_RMS));
-		mIdq_2prev = **mIntfCurrent;
-	}
-
-	// predict current
-	Matrix IdpPrediction = Matrix::Zero(2,1);
-	IdpPrediction(0,0) = 2 * (**mIntfCurrent)(0,0).real() - mIdq_2prev(0,0).real();
-	IdpPrediction(1,0) = 2 * (**mIntfCurrent)(0,0).imag() - mIdq_2prev(0,0).imag();
-
-	// Determine time-varying part of resistance matrix
+	// determine time-varying part of resistance matrix
 	Matrix resistanceMatrixVarying = Matrix::Zero(2,2);
 	resistanceMatrixVarying(0,0) = mKa_1ph.real() + mKb_1ph.real();
 	resistanceMatrixVarying(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
 	resistanceMatrixVarying(1,0) = mKa_1ph.imag() + mKb_1ph.imag();
 	resistanceMatrixVarying(1,1) = mKa_1ph.real() - mKb_1ph.real();
 
+	// predict electrical vars
+	// set previous values of stator current at simulation start
+	if (mSimTime == 0.0) {
+		(**mIntfCurrent)(0,0) = std::conj(mInitElecPower / (mInitVoltage * mBase_V_RMS));
+		mIdq_2prev = **mIntfCurrent;
+	}
+
+	// predict stator current (linear extrapolation)
+	Matrix IdpPrediction = Matrix::Zero(2,1);
+	IdpPrediction(0,0) = 2 * (**mIntfCurrent)(0,0).real() - mIdq_2prev(0,0).real();
+	IdpPrediction(1,0) = 2 * (**mIntfCurrent)(0,0).imag() - mIdq_2prev(0,0).imag();
+
+	// calculate emf at t=k
+	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
+
+	// calculate original VBR voltage (trapezoidal rule)
 	mEh_vbr(0,0) = mAd * (**mIdq)(1,0) + mBd * (**mEdq_t)(0,0);
 	mEh_vbr(1,0) = mAq * (**mIdq)(0,0) + mBq * (**mEdq_t)(1,0) + mCq;
 
-	// convert Edq_t to dp domain
+	// convert original VBR voltage to dp domain
 	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
 
-	// Add current prediction based component to voltage behind reactance
+	// add current prediction based component to VBR voltage in dp domain
 	**mEvbr += - Complex(mBase_Z * (resistanceMatrixVarying * IdpPrediction)(0,0), 0);
 	**mEvbr += - Complex(0, mBase_Z * (resistanceMatrixVarying * IdpPrediction)(1,0));
 
@@ -234,24 +239,28 @@ void DP::Ph1::SynchronGenerator4OrderTPM::mnaApplyRightSideVectorStamp(Matrix& r
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
-	// corrector step (trapezoidal rule)
+	// increase number of iterations
 	**mNumIter = **mNumIter + 1;
 
-	// predict voltage behind transient reactance (with trapezoidal rule)
+	// correct electrical vars
+	// CHECK: Is this computation really required? PCM models does
+	// simply mEdq_pred = mEdq_corr at the end of each iteration
 	mEdq_pred(0,0) = (**mVdq)(0,0) - mIdq_pred(1,0) * mLq_t;
 	mEdq_pred(1,0) = (**mVdq)(1,0) + mIdq_pred(0,0) * mLd_t;
+
+	// correct emf at t=k+1 (trapezoidal rule)
 	mEdq_corr = mA_prev * **mEdq_t + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * mEf;
 
-	// armature currents for at t=k+1
+	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	mIdq_corr(0,0) = (mEdq_corr(1,0) - (**mVdq)(1,0) ) / mLd_t;
 	mIdq_corr(1,0) = ((**mVdq)(0,0) - mEdq_corr(0,0) ) / mLq_t;
 
-	// convert currents into the abc reference frame
-	Complex IdpPredictionComplex = (mKvbr * mIdq_corr)(0,0) * mBase_I_RMS;
+	// convert corrected currents to dp domain
+	Complex IdpCorrectionComplex = (mKvbr * mIdq_corr)(0,0) * mBase_I_RMS;
 
-	Matrix IdpPrediction = Matrix::Zero(2,1);
-	IdpPrediction(0,0) = IdpPredictionComplex.real();
-	IdpPrediction(1,0) = IdpPredictionComplex.imag();
+	Matrix IdpCorrection = Matrix::Zero(2,1);
+	IdpCorrection(0,0) = IdpCorrectionComplex.real();
+	IdpCorrection(1,0) = IdpCorrectionComplex.imag();
 
 	// Determine time-varying part of resistance matrix
 	// FIXME: No recomputation of mechanical vars in corrector step,
@@ -262,12 +271,12 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	resistanceMatrixVarying(1,0) = mKa_1ph.imag() + mKb_1ph.imag();
 	resistanceMatrixVarying(1,1) = mKa_1ph.real() - mKb_1ph.real();
 
-	// convert Edq_t into the abc reference frame
+	// reset original VBR voltage in dp domain
 	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
 
-	// Add current prediction based component to voltage behind reactance
-	**mEvbr += - Complex(mBase_Z * (resistanceMatrixVarying * IdpPrediction)(0,0), 0);
-	**mEvbr += - Complex(0, mBase_Z * (resistanceMatrixVarying * IdpPrediction)(1,0));
+	// add current correction based component to VBR voltage in dp domain
+	**mEvbr += - Complex(mBase_Z * (resistanceMatrixVarying * IdpCorrection)(0,0), 0);
+	**mEvbr += - Complex(0, mBase_Z * (resistanceMatrixVarying * IdpCorrection)(1,0));
 
 	// stamp currents
 	(**mRightVector).setZero();
