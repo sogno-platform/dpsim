@@ -45,22 +45,6 @@ namespace DPsim
 		/// Define which ordering to choose in preprocessing
 		int m_preordering = AMD_ORDERING;
 
-		/// Define which partial refactorization method is preferred
-		int m_partialMethod = 0;
-
-		/// Use BTF or not
-		bool m_btf = true;
-
-		/// Define scaling method
-		/// Options are: 1: sum-scaling, 2: max scaling, <=0: no scaling
-		int m_scaling = SCALING_METHOD::MAX_SCALING;
-
-		/// Flag to indicate if factorization succeeded
-		bool factorization_is_okay = false;
-
-		/// Flag to indicate if preprocessing succeeded
-		bool preprocessing_is_okay = false;
-
 		/// Temporary value to store the number of nonzeros
 		Int nnz;
 

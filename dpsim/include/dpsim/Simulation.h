@@ -173,7 +173,9 @@ namespace DPsim {
 		///
 		void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) { mDirectImpl = directImpl; }
 		///
-		void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration) { }
+		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration&) const {
+			// no default configuration for any linear solver available
+		}
 		///
 		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
 		///
