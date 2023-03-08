@@ -13,7 +13,7 @@ using namespace CPS;
 EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
     (const String& uid, const String& name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Real>(uid, name, logLevel),
-	mEdq0_t(Attribute<Matrix>::create("Edq0_t", mAttributes)) {
+	mEdq0_t(mAttributes->create<Matrix>("Edq0_t")) {
 
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
@@ -29,7 +29,7 @@ EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
 	mdEdq0_t_corr = Matrix::Zero(3,1);
 
 	// Initialize attributes
-	mNumIter = Attribute<Int>::create("NIterations", mAttributes, 0);
+	mNumIter = mAttributes->create<Int>("NIterations", 0);
 }
 
 EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
@@ -82,7 +82,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::calculateStateMatrix() {
 		  					0.0, 					(1. / Td_t) * (mLd-mLd_t) / mLd,	0.0,
 							0.0, 								0.0,					0.0;
 		mC <<               0.0,
-		   		(1. / Td_t) * mEf * (mLd_t / mLd),
+		   		(1. / Td_t) * (**mEf) * (mLd_t / mLd),
 				   			0.0;
 	}
 	else {	// Currents form
@@ -93,7 +93,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::calculateStateMatrix() {
 		  		(-1. / mTd0_t) * (mLd-mLd_t)   ,            0.0             ,		0.0,
 				  		  0.0				   ,			0.0				,		0.0;
 		mC <<          0.0,
-		 		 (1./mTd0_t) * mEf,
+		 		 (1./mTd0_t) * (**mEf),
 				  	   0.0;
 	}
 }
@@ -137,7 +137,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	**mIntfCurrent = **mIntfCurrent * mBase_I;
 }
 
-void EMT::Ph3::SynchronGenerator4OrderPCM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void EMT::Ph3::SynchronGenerator4OrderPCM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0,0), (**mIntfCurrent)(0, 0));
 	Math::setVectorElement(rightVector, matrixNodeIndex(0,1), (**mIntfCurrent)(1, 0));
 	Math::setVectorElement(rightVector, matrixNodeIndex(0,2), (**mIntfCurrent)(2, 0));
@@ -182,7 +182,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::correctorStep() {
 	**mIntfCurrent = **mIntfCurrent * mBase_I;
 
 	// stamp currents
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVector) {
@@ -219,7 +219,7 @@ bool EMT::Ph3::SynchronGenerator4OrderPCM::requiresIteration() {
 		return false;
 }
 
-void EMT::Ph3::SynchronGenerator4OrderPCM::mnaPostStep(const Matrix& leftVector) {
+void EMT::Ph3::SynchronGenerator4OrderPCM::mnaCompPostStep(const Matrix& leftVector) {
 	// update variables
 	**mEdq0_t = mEdq0_t_corr;
 	**mOmMech = mOmMech_corr;

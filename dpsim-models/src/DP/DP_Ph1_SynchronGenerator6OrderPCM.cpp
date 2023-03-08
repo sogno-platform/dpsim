@@ -18,8 +18,8 @@ DP::Ph1::SynchronGenerator6OrderPCM::SynchronGenerator6OrderPCM
 	setTerminalNumber(1);
 
 	/// initialize attributes
-	mEdq = Attribute<Matrix>::create("Edq", mAttributes);
-	mNumIter = Attribute<Int>::create("NIterations", mAttributes, 0);
+	mEdq = mAttributes->create<Matrix>("Edq");
+	mNumIter = mAttributes->create<Int>("NIterations", 0);
 
 	// Initialize matrix
 	**mEdq = Matrix::Zero(4,1);
@@ -45,7 +45,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq0 reference frame
 	(**mEdq)(0,0) = (mLq - mLq_t) * (**mIdq)(1,0);
-	(**mEdq)(1,0) = - (mLd- mLd_t) * (**mIdq)(0,0) + mEf;
+	(**mEdq)(1,0) = - (mLd- mLd_t) * (**mIdq)(0,0) + (**mEf);
 	(**mEdq)(2,0) = (**mEdq)(0,0) + (mLq_t - mLq_s) * (**mIdq)(1,0);
 	(**mEdq)(3,0) = (**mEdq)(1,0) - (mLd_t - mLd_s) * (**mIdq)(0,0);
 
@@ -177,7 +177,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 
 	// calculate Edq and Idq at t=k+1. Assumption: Vdq(k) = Vdq(k+1)
 	if (mNumericalMethod == CPS::NumericalMethod::Euler) {
-		mEdq_pred = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * mEf;
+		mEdq_pred = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * (**mEf);
 
 		// predict armature currents for at t=k+1
 		mIdq_pred(0,0) = (mEdq_pred(3,0) - (**mVdq)(1,0) ) / mLd_s;
@@ -185,7 +185,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 
 	} else if (mNumericalMethod == CPS::NumericalMethod::Trapezoidal) {
 		mStates_trap_prev << **mEdq, **mIdq, **mVdq;
-		mStates_trap = mA_trap_inv * mB_trap * mStates_trap_prev + mA_trap_inv * mC_trap * mEf;
+		mStates_trap = mA_trap_inv * mB_trap * mStates_trap_prev + mA_trap_inv * mC_trap * (**mEf);
 		mEdq_pred << mStates_trap(0,0), mStates_trap(1,0), mStates_trap(2,0), mStates_trap(3,0);
 		mIdq_pred << mStates_trap(4,0), mStates_trap(5,0);
 	}
@@ -196,7 +196,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	(**mIntfCurrent)(0,0) = (mDpToDq * mIdq_pred)(0,0) * mBase_I_RMS;
 }
 
-void DP::Ph1::SynchronGenerator6OrderPCM::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void DP::Ph1::SynchronGenerator6OrderPCM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 	Math::setVectorElement(rightVector, matrixNodeIndex(0,0), (**mIntfCurrent)(0, 0));
 }
 
@@ -219,7 +219,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 	}
 
 	//predict voltage behind transient reactance
-	mEdq_corr = mA_prev * **mEdq + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * mEf;
+	mEdq_corr = mA_prev * **mEdq + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * (**mEf);
 
 	// armature currents for at t=k+1
 	mIdq_corr(0,0) = (mEdq_corr(3,0) - (**mVdq)(1,0) ) / mLd_s;
@@ -232,7 +232,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 	(**mIntfCurrent)(0,0) = (mDpToDq * mIdq_corr)(0,0) * mBase_I_RMS;
 
 	// stamp currents
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::SynchronGenerator6OrderPCM::updateVoltage(const Matrix& leftVector) {
@@ -273,7 +273,7 @@ bool DP::Ph1::SynchronGenerator6OrderPCM::requiresIteration() {
 	}
 }
 
-void DP::Ph1::SynchronGenerator6OrderPCM::mnaPostStep(const Matrix& leftVector) {
+void DP::Ph1::SynchronGenerator6OrderPCM::mnaCompPostStep(const Matrix& leftVector) {
 	// update variables
 	**mOmMech = mOmMech_corr;
 	**mThetaMech = mThetaMech_corr;

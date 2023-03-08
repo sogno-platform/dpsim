@@ -24,7 +24,7 @@ namespace Ph1 {
 		const Attribute<Matrix>::Ptr mEdq_t;
 		/// voltage behind subtransient reactance
 		const Attribute<Matrix>::Ptr mEdq_s;
-		/// 
+		///
 		Matrix mStates;
 		Matrix mStates_prev;
 
@@ -43,9 +43,9 @@ namespace Ph1 {
 		Real mAd_s;
 		///
 		Real mAq_s;
-		/// 
+		///
 		Real mBd_s;
-		/// 
+		///
 		Real mBq_s;
 		///
 		Real mCd_s;
@@ -59,7 +59,7 @@ namespace Ph1 {
 		Matrix mA_inv;
 		///
 		Matrix mB;
-		/// 
+		///
 		Matrix mC;
 
 		/// Transformation matrix dp->dq
@@ -73,15 +73,17 @@ namespace Ph1 {
 
 		// #### General Functions ####
 		/// DPecific component initialization
-        void specificInitialization(); 
+        void specificInitialization();
 		///
 		void stepInPerUnit();
+		///
+		void initializeResistanceMatrix() final {};
 
 		// ### MNA Section ###
         ///
-        void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
-        void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-        void mnaPostStep(const Matrix& leftVector);
+        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
+        void mnaCompPostStep(const Matrix& leftVector);
 
 	public:
 		///
