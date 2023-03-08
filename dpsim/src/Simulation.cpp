@@ -150,7 +150,7 @@ void Simulation::createMNASolver() {
 		} else {
 			// Default case with lu decomposition from mna factory
 			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
-												 mLogLevel, mDirectImpl, mSolverPluginName);
+												 mLogLevel, mDirectImpl, mDirectLinearSolverConfiguration, mSolverPluginName);
 			solver->setTimeStep(**mTimeStep);
 			solver->doSteadyStateInit(**mSteadyStateInit);
 			solver->doFrequencyParallelization(mFreqParallel);

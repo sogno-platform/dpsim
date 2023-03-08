@@ -90,6 +90,8 @@ namespace DPsim {
 		///
 		DirectLinearSolverImpl mDirectImpl = DirectLinearSolverImpl::Undef;
 		///
+		DirectLinearSolverConfiguration mDirectLinearSolverConfiguration;
+		///
 		Bool mInitFromNodesAndTerminals = true;
 		/// Enable recomputation of system matrix during simulation
 		Bool mSystemMatrixRecomputation = false;
@@ -173,9 +175,7 @@ namespace DPsim {
 		///
 		void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) { mDirectImpl = directImpl; }
 		///
-		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration&) const {
-			// no default configuration for any linear solver available
-		}
+		void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration) { mDirectLinearSolverConfiguration = configuration;	}
 		///
 		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
 		///
