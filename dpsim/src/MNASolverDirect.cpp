@@ -342,7 +342,7 @@ void MnaSolverDirect<VarType>::setDirectLinearSolverImplementation(DirectLinearS
 }
 
 template <typename VarType>
-void MnaSolverDirect<VarType>::setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration& configuration) {
+void MnaSolverDirect<VarType>::setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration) {
 	this->configurationInUse = configuration;
 }
 

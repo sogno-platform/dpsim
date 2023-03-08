@@ -164,9 +164,6 @@ namespace DPsim {
 		/// Sets the linear solver configuration
 		void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration);
 
-		/// Sets the linear solver configuration to "configuration"
-		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration& configuration);
-
 		// #### MNA Solver Tasks ####
 		///
 		class SolveTask : public CPS::Task {
