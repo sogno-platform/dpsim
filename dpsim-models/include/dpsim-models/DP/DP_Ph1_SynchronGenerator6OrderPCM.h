@@ -47,11 +47,13 @@ namespace Ph1 {
 
 		// #### MNA Functions ####
 		///
-		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
+		void mnaCompPreStep(Real time, Int timeStepCount) final;
 		///
-		void mnaCompPostStep(const Matrix& leftVector) override;
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) final;
 		///
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override {};
+		void mnaCompPostStep(const Matrix& leftVector) final;
+		///
+		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) final {};
 	};
 }
 }

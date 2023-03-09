@@ -67,51 +67,20 @@ void DP::Ph1::SynchronGenerator4OrderPCM::specificInitialization() {
 
 void DP::Ph1::SynchronGenerator4OrderPCM::calculateStateMatrix() {
 	// Initialize matrices of state representation of predictor step
-	if (mNumericalMethod == CPS::NumericalMethod::Euler) {
-		mA_euler = Matrix::Zero(2,2);
-		mA_euler << 1 - mTimeStep / mTq0_t,		0.0,
-	      							   0.0,		1 - mTimeStep / mTd0_t;
-		mB_euler = Matrix::Zero(2,2);
-		mB_euler << 								0.0,	(mLq - mLq_t) * mTimeStep / mTq0_t,
-		  			- (mLd - mLd_t) * mTimeStep / mTd0_t, 		0.0;
-		mC_euler = Matrix::Zero(2,1);
-		mC_euler <<   				0.0,
-	  				(mTimeStep / mTd0_t);
-	} else if (mNumericalMethod == CPS::NumericalMethod::Trapezoidal) {
-		// TODO: State space model applied here is different than the Euler representation.
-		// This needs harmonisation or further documentation.
-		mC_trap = Matrix::Zero(4,1);
-		mStates_trap_prev = Matrix::Zero(6,1);
-		mStates_trap = Matrix::Zero(4,1);
-
-		Real Ad = mTimeStep * (mLq - mLq_t) / (2 * mTq0_t + mTimeStep);
-		Real Bd = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
-
-		Real Aq = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
-		Real Bq = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-		Real Cq = 2 * mTimeStep / (2 * mTd0_t + mTimeStep);
-
-		mA_trap = Matrix::Zero(4,4);
-		mA_trap <<	1,	0,		0,		-Ad,
-					0,	1,		-Aq,	0,
-					0,	-1,		mLd_t,	0,
-					1,	0,		0,		mLq_t;
-		mA_trap_inv = mA_trap.inverse();
-
-		mB_trap = Matrix::Zero(4,6);
-		mB_trap <<	Bd,		0,		0,		Ad,		0,		0,
-					0,		Bq,		Aq,		0,		0,		0,
-					0,		0,		0,		0,		0,		-1,
-					0,		0,		0,		0,		1,		0;
-
-		mC_trap = Matrix::Zero(4,1);
-		mC_trap <<	0,	Cq,	0,	0;
-	}
+	mA_euler = Matrix::Zero(2,2);
+	mA_euler << 1 - mTimeStep / mTq0_t,		0.0,
+	      		0.0,	 1 - mTimeStep / mTd0_t;
+	mB_euler = Matrix::Zero(2,2);
+	mB_euler << 0.0,	(mLq - mLq_t) * mTimeStep / mTq0_t,
+		  		- (mLd - mLd_t) * mTimeStep / mTd0_t, 		0.0;
+	mC_euler = Matrix::Zero(2,1);
+	mC_euler <<  				0.0,
+	  			(mTimeStep / mTd0_t);
 
 	// Initialize matrix of state representation of corrector step
 	mA_prev = Matrix::Zero(2,2);
 	mA_prev <<  1 - mTimeStep / (2 * mTq0_t),	0.0,
-	       								 0.0,	1 - mTimeStep / (2 * mTd0_t);
+	       		0.0,	1 - mTimeStep / (2 * mTd0_t);
 	mA_corr = Matrix::Zero(2,2);
 	mA_corr << - mTimeStep / (2 * mTq0_t),	0.0,
 	    	   0.0, - mTimeStep / (2 * mTd0_t);
@@ -124,42 +93,42 @@ void DP::Ph1::SynchronGenerator4OrderPCM::calculateStateMatrix() {
 	  			(mTimeStep / mTd0_t);
 }
 
+void DP::Ph1::SynchronGenerator4OrderPCM::mnaCompPreStep(Real time, Int timeStepCount) {
+	mSimTime = time;
+
+	// model specific calculation of electrical vars
+	stepInPerUnit();
+
+	// stamp model specific right side vector after calculation of electrical vars
+	(**mRightVector).setZero();
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
+}
+
 void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	// set number of iterations equal to zero
 	**mNumIter = 0;
 
-	// prediction of mechanical vars
+	// prediction of mechanical variables with forward euler
 	if (mSimTime > 0.0) {
-		// calculate electrical torque at t=k
 		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
+		mOmMech_pred = **mOmMech + mTimeStep * (1. / (2. * mH) * (**mMechTorque - **mElecTorque));
 
-		// predict mechanical variables at t=k+1 (forward euler)
-		mOmMech_pred = **mOmMech + mTimeStep / (2 * mH) * (**mMechTorque - **mElecTorque);
-		mDelta_pred = **mDelta + mTimeStep * mBase_OmMech * (**mOmMech - 1);
-		mThetaMech_pred = **mThetaMech + mTimeStep * **mOmMech * mBase_OmMech;
+		// predict theta and delta at t=k+1 (backward euler)
+		mThetaMech_pred = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+		mDelta_pred = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	} else {
-		// prediction by assuming constant mechanical vars at t=0
-		// TODO: add further explanatory comment why this is required
+		// In step 0 do not update electrical variables to avoid delay with voltage sources
 		mOmMech_pred = **mOmMech;
 		mDelta_pred = **mDelta;
 		mThetaMech_pred = **mThetaMech;
 	}
 
 	// prediction of electrical vars
-	if (mNumericalMethod == CPS::NumericalMethod::Euler) {
-		// predict emf at t=k+1 (forward euler)
-		mEdq_pred = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * (**mEf);
+	mEdq_pred = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * (**mEf);
 
-		// calculate stator currents at t=k+1 (assuming Vdq(k+1)=Vdq(k))
-		mIdq_pred(0,0) = (mEdq_pred(1,0) - (**mVdq)(1,0) ) / mLd_t;
-		mIdq_pred(1,0) = ((**mVdq)(0,0) - mEdq_pred(0,0) ) / mLq_t;
-	} else if (mNumericalMethod == CPS::NumericalMethod::Trapezoidal) {
-		// predict emfs and stator currents at t=k+1 (trapezoidal rule)
-		mStates_trap_prev << **mEdq, **mIdq, **mVdq;
-		mStates_trap = mA_trap_inv * mB_trap * mStates_trap_prev + mA_trap_inv * mC_trap * (**mEf);
-		mEdq_pred << mStates_trap(0,0), mStates_trap(1,0);
-		mIdq_pred << mStates_trap(2,0), mStates_trap(3,0);
-	}
+	// calculate stator currents at t=k+1 (assuming Vdq(k+1)=Vdq(k))
+	mIdq_pred(0,0) = (mEdq_pred(1,0) - (**mVdq)(1,0) ) / mLd_t;
+	mIdq_pred(1,0) = ((**mVdq)(0,0) - mEdq_pred(0,0) ) / mLq_t;
 
 	// convert currents to dp domain
 	mDpToDq(0,0) = Complex(cos(mThetaMech_pred - mBase_OmMech * mSimTime), sin(mThetaMech_pred - mBase_OmMech * mSimTime));
