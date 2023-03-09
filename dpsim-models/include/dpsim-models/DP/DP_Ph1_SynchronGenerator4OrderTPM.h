@@ -28,8 +28,10 @@ namespace Ph1 {
         const Attribute<Complex>::Ptr mEvbr;
 
 	protected:
-		/// Constant part of conductance matrix
+		/// Constant part as conductance matrix
 		Matrix mConductanceMatrixConst = Matrix::Zero(2,2);
+		/// Varying part as resistance matrix
+		Matrix mResistanceMatrixVarying = Matrix::Zero(2,2);
 
 		/// Ka Matrix
 		MatrixComp mKa;

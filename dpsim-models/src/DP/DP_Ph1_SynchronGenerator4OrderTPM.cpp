@@ -177,11 +177,10 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	calculateAuxiliarVariables();
 
 	// determine time-varying part of resistance matrix
-	Matrix resistanceMatrixVarying = Matrix::Zero(2,2);
-	resistanceMatrixVarying(0,0) = mKa_1ph.real() + mKb_1ph.real();
-	resistanceMatrixVarying(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
-	resistanceMatrixVarying(1,0) = mKa_1ph.imag() + mKb_1ph.imag();
-	resistanceMatrixVarying(1,1) = mKa_1ph.real() - mKb_1ph.real();
+	mResistanceMatrixVarying(0,0) = mKa_1ph.real() + mKb_1ph.real();
+	mResistanceMatrixVarying(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
+	mResistanceMatrixVarying(1,0) = mKa_1ph.imag() + mKb_1ph.imag();
+	mResistanceMatrixVarying(1,1) = mKa_1ph.real() - mKb_1ph.real();
 
 	// predict electrical vars
 	// set previous values of stator current at simulation start
@@ -207,8 +206,8 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
 
 	// add current prediction based component to VBR voltage in dp domain
-	**mEvbr += - Complex(mBase_Z * (resistanceMatrixVarying * IdpPrediction)(0,0), 0);
-	**mEvbr += - Complex(0, mBase_Z * (resistanceMatrixVarying * IdpPrediction)(1,0));
+	**mEvbr += - Complex(mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(0,0), 0);
+	**mEvbr += - Complex(0, mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(1,0));
 
 	// Store previous current for later use
 	mIdpTwoPrev = **mIntfCurrent;
@@ -242,21 +241,12 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	IdpCorrection(0,0) = IdpCorrectionComplex.real();
 	IdpCorrection(1,0) = IdpCorrectionComplex.imag();
 
-	// Determine time-varying part of resistance matrix
-	// FIXME: No recomputation of mechanical vars in corrector step,
-	// so reuse of this save computation time
-	Matrix resistanceMatrixVarying = Matrix::Zero(2,2);
-	resistanceMatrixVarying(0,0) = mKa_1ph.real() + mKb_1ph.real();
-	resistanceMatrixVarying(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
-	resistanceMatrixVarying(1,0) = mKa_1ph.imag() + mKb_1ph.imag();
-	resistanceMatrixVarying(1,1) = mKa_1ph.real() - mKb_1ph.real();
-
 	// reset original VBR voltage in dp domain
 	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
 
 	// add current correction based component to VBR voltage in dp domain
-	**mEvbr += - Complex(mBase_Z * (resistanceMatrixVarying * IdpCorrection)(0,0), 0);
-	**mEvbr += - Complex(0, mBase_Z * (resistanceMatrixVarying * IdpCorrection)(1,0));
+	**mEvbr += - Complex(mBase_Z * (mResistanceMatrixVarying * IdpCorrection)(0,0), 0);
+	**mEvbr += - Complex(0, mBase_Z * (mResistanceMatrixVarying * IdpCorrection)(1,0));
 
 	// stamp currents
 	(**mRightVector).setZero();
