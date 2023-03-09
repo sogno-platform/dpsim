@@ -437,15 +437,21 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 		**mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
 	}
 
-	// calculate mechanical variables at t=k+1 with forward euler
-	if (mSimTime>0.0) {
-		**mElecTorque = ((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0));
+	// predict mechanical vars for all reduced-order models in the same manner
+	if (mSimTime > 0.0) {
+		// predict omega at t=k+1 (forward euler)
+		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
 		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+
+		// predict theta and delta at t=k+1 (backward euler)
 		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
+	// model specific calculation of electrical vars
 	stepInPerUnit();
+
+	// stamp model specific right side vector after calculation of electrical vars
 	(**mRightVector).setZero();
 	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
@@ -453,6 +459,8 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 template <>
 void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int timeStepCount) {
 	mSimTime = time;
+
+	// update controller variables
 	if (mHasExciter) {
 		mEf_prev = **mEf;
 		**mEf = mExciter->step((**mVdq0)(0,0), (**mVdq0)(1,0), mTimeStep);
@@ -462,15 +470,21 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int ti
 		**mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
 	}
 
-	// calculate mechanical variables at t=k+1 with forward euler
-	if (mSimTime>0.0) {
-		**mElecTorque = ((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0));
+	// predict mechanical vars for all reduced-order models in the same manner
+	if (mSimTime > 0.0) {
+		// predict omega at t=k+1 (forward euler)
+		**mElecTorque = (**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0);
 		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+
+		// predict theta and delta at t=k+1 (backward euler)
 		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
+	// model specific calculation of electrical vars
 	stepInPerUnit();
+
+	// stamp model specific right side vector after calculation of electrical vars
 	(**mRightVector).setZero();
 	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }

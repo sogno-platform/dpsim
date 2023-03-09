@@ -16,7 +16,7 @@ Scenario6::GridParams gridParams;
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Simulation parameters
 	String simName = "DP_SMIB_ReducedOrderSG_VBR_LoadStep";
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", logLevel);
-	genPF->setParameters(syngenKundur.nomPower, gridParams.VnomMV, gridParams.setPointActivePower, 
+	genPF->setParameters(syngenKundur.nomPower, gridParams.VnomMV, gridParams.setPointActivePower,
 						 gridParams.setPointVoltage, PowerflowBusType::PV);
     genPF->setBaseVoltage(gridParams.VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -78,10 +78,10 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(gridParams.VnomMV);
 	extnetPF->setBaseVoltage(gridParams.VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", logLevel);
-	linePF->setParameters(gridParams.lineResistance, gridParams.lineInductance, 
+	linePF->setParameters(gridParams.lineResistance, gridParams.lineInductance,
 						  gridParams.lineCapacitance, gridParams.lineConductance);
 	linePF->setBaseVoltage(gridParams.VnomMV);
 
@@ -114,7 +114,7 @@ int main(int argc, char* argv[]) {
 	// ----- Dynamic simulation ------
 	String simNameDP = simName;
 	Logger::setLogDir("logs/" + simNameDP);
-	
+
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initReactivePower = genPF->getApparentPower().imag();
@@ -132,9 +132,9 @@ int main(int argc, char* argv[]) {
 	genDP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 	genDP->setModelAsCurrentSource(true);
 
@@ -144,9 +144,9 @@ int main(int argc, char* argv[]) {
 
     // Line
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", logLevel);
-	lineDP->setParameters(gridParams.lineResistance, gridParams.lineInductance, 
+	lineDP->setParameters(gridParams.lineResistance, gridParams.lineInductance,
 						  gridParams.lineCapacitance, gridParams.lineConductance);
-	
+
 	// Topology
 	genDP->connect({ n1DP });
 	lineDP->connect({ n1DP, n2DP });
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
 	// Logging
 	// log node voltage
 	auto logger = DataLogger::make(simName, true, logDownSampling);
-		for (auto node : systemDP.mNodes)			
+		for (auto node : systemDP.mNodes)
 			logger->logAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log generator vars
@@ -166,6 +166,7 @@ int main(int argc, char* argv[]) {
 	logger->logAttribute(genDP->name() + ".Te", genDP->attribute("Te"));
 	logger->logAttribute(genDP->name() + ".omega", genDP->attribute("w_r"));
 	logger->logAttribute(genDP->name() + ".delta", genDP->attribute("delta"));
+	logger->logAttribute(genDP->name() + ".Theta", genDP->attribute("Theta"));
 
 	// load step event
 	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::Events::createEventAddPowerConsumption("n1DP", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemDP, Domain::DP, logger);
@@ -182,6 +183,6 @@ int main(int argc, char* argv[]) {
 
 	// Events
 	simDP.addEvent(loadStepEvent);
-	
+
 	simDP.run();
 }
