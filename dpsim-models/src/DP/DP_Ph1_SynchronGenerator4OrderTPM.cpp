@@ -16,6 +16,7 @@ DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
 	mEvbr(mAttributes->create<Complex>("Evbr")),
 	mEdq_t(mAttributes->create<Matrix>("Edq"))  {
 
+	mSGOrder = SGOrder::SG4Order;
 	mPhaseType = PhaseType::Single;
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
@@ -92,16 +93,6 @@ void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarVariables() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarConstants() {
-	mAd = mTimeStep * (mLq - mLq_t) / (2 * mTq0_t + mTimeStep);
-	mBd = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
-
-	mAq = - mTimeStep * (mLd - mLd_t) / (2 * mTd0_t + mTimeStep);
-	mBq = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mCq = 2 * mTimeStep * (**mEf) / (2 * mTd0_t + mTimeStep);
-
-	mB = mLd_t - mAq;
-	mA = -mLq_t - mAd;
-
 	mKc = Matrix::Zero(1,3);
 	mKc << Complex(cos(PI/2.), -sin(PI/2.)), Complex(cos(7.*PI/6.), -sin(7.*PI/6.)), Complex(cos(PI/6.), sin(PI/6.));
 	mKc = (-1. / 6.) * (mA + mB) * mKc;
@@ -208,8 +199,8 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
 	// calculate original VBR voltage (trapezoidal rule)
-	mEh_vbr(0,0) = mAd * (**mIdq)(1,0) + mBd * (**mEdq_t)(0,0);
-	mEh_vbr(1,0) = mAq * (**mIdq)(0,0) + mBq * (**mEdq_t)(1,0) + mCq;
+	mEh_vbr(0,0) = mAd_t * (**mIdq)(1,0) + mBd_t * (**mEdq_t)(0,0);
+	mEh_vbr(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * mEf_prev + mDq_t * (**mEf);
 
 	// convert original VBR voltage to dp domain
 	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
