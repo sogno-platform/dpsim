@@ -50,17 +50,6 @@ namespace CPS {
 		Matrix mB_euler;
 		Matrix mC_euler;
 
-		/// Matrixes used when numerical method of predictor step = trapezoidal rule
-		/// State Matrix trapezoidal rule: mStates = mA_trap_inv * mB_trap * mStates_prev + mA_trap_inv * mC_trap * Ef
-		/// where mStates_prev << Ed(k-1), Ed(k-1), Id(k-1), Iq(k-1), Vd(k-1), Vq(k-1)
-		/// and mStates << Ed(k), Ed(k), Id(k), Iq(k)
-		Matrix mA_trap;
-		Matrix mA_trap_inv;
-		Matrix mB_trap;
-		Matrix mC_trap;
-		Matrix mStates_trap_prev;
-		Matrix mStates_trap;
-
 		/// Matrixes used when numerical method of corrector step = trapezoidal rule
 		/// State Matrix trapezoidal rule (corrector step): x(k+1) = mA_prev * Edq(k-1) + mA_corr * Edq_corr(k) + B_corr * Idq_corr(k) + mC_corr * Ef
 		Matrix mA_prev;
@@ -80,8 +69,6 @@ namespace CPS {
 		Int mMaxIter = 25;
 		///
 		Real mTolerance = 1e-6;
-		///
-		CPS::NumericalMethod mNumericalMethod = CPS::NumericalMethod::Trapezoidal;
 
 	public:
 		typedef std::shared_ptr<MNASyncGenInterface> Ptr;
@@ -100,8 +87,6 @@ namespace CPS {
 		void setMaxIterations(Int maxIterations) {mMaxIter = maxIterations;}
 		///
 		void setTolerance(Real Tolerance) {mTolerance = Tolerance;}
-		///
-		void setNumericalMethod(CPS::NumericalMethod numericalMethod) {mNumericalMethod = numericalMethod;}
 
 	protected:
 		/// Constructor
