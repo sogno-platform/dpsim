@@ -60,23 +60,6 @@ namespace Ph1 {
 		Matrix mEh_vbr;
 		///
 		MatrixComp mIdq_2prev;
-
-		/// Auxiliar VBR constants
-		///
-		Real mA;
-		///
-		Real mB;
-		///
-		Real mAd;
-		///
-		Real mAq;
-		///
-		Real mBd;
-		///
-		Real mBq;
-		///
-		Real mCq;
-
 	public:
 		///
 		SynchronGenerator4OrderTPM(String uid, String name, Logger::Level logLevel = Logger::Level::off);
