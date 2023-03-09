@@ -28,24 +28,19 @@ namespace Ph1 {
         const Attribute<Complex>::Ptr mEvbr;
 
 	protected:
-		/// Resistance matrix in dq reference frame
-		Matrix mResistanceMatrixDq;
-		/// Conductance matrix phase A
-		Matrix mConductanceMatrix;
+		/// Constant part of conductance matrix
+		Matrix mConductanceMatrixConst = Matrix::Zero(2,2);
+
 		/// Ka Matrix
 		MatrixComp mKa;
 		/// Kb Matrix
 		MatrixComp mKb;
 		/// Kb Matrix
 		MatrixComp mKc;
-		/// Constant part of Resistance matrix in abc reference frame
-		Matrix mResistanceMatrix_const;
 		/// phase a equivalent part of mKa
 		Complex mKa_1ph;
 		/// phase a equivalent part of mKb
 		Complex mKb_1ph;
-		/// phase a equivalent part of mResistanceMatrix_const
-		Complex mR_const_1ph;
 		/// Vector to create abc vector from a component
 		MatrixComp mShiftVector;
 		/// complex conjugate of mShiftVector
@@ -59,7 +54,7 @@ namespace Ph1 {
 		/// history term of voltage behind the transient reactance
 		Matrix mEh_vbr;
 		///
-		MatrixComp mIdq_2prev;
+		MatrixComp mIdpTwoPrev;
 	public:
 		///
 		SynchronGenerator4OrderTPM(String uid, String name, Logger::Level logLevel = Logger::Level::off);
