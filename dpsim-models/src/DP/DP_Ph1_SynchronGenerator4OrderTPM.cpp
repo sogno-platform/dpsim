@@ -28,9 +28,6 @@ DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
-	// initialize conductance Matrix
-    mConductanceMatrix = Matrix::Zero(2,2);
-
 	//
 	mShiftVector = Matrix::Zero(3,1);
 	mShiftVector << Complex(1., 0), SHIFT_TO_PHASE_B, SHIFT_TO_PHASE_C;
@@ -119,12 +116,6 @@ void DP::Ph1::SynchronGenerator4OrderTPM::specificInitialization() {
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 	calculateAuxiliarConstants();
 
-	// constant part of ABC resistance matrix
-	mResistanceMatrix_const = Matrix::Zero(1,3);
-	mResistanceMatrix_const <<	-mL0,	-sqrt(3) / 2. * (mA - mB) - mL0,	sqrt(3) / 2. * (mA - mB) - mL0;
-	mResistanceMatrix_const = (-1. / 3.) * mResistanceMatrix_const;
-	mR_const_1ph = (mResistanceMatrix_const * mShiftVector)(0,0);
-
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
@@ -138,14 +129,24 @@ void DP::Ph1::SynchronGenerator4OrderTPM::specificInitialization() {
 
 void DP::Ph1::SynchronGenerator4OrderTPM::calculateConductanceMatrix() {
 	Matrix resistanceMatrix = Matrix::Zero(2,2);
+	resistanceMatrix(0,0) = 0;
+	resistanceMatrix(0,1) = (mA - mB) / 2.0;
+	resistanceMatrix(1,0) = - (mA - mB) / 2.0;
+	resistanceMatrix(1,1) = 0;
 
-	resistanceMatrix(0,0) = mR_const_1ph.real();
-	resistanceMatrix(0,1) = -mR_const_1ph.imag();
-	resistanceMatrix(1,0) = mR_const_1ph.imag();
-	resistanceMatrix(1,1) = mR_const_1ph.real();
+	SPDLOG_LOGGER_INFO(mSLog, "\nR_const [pu]: {}", Logger::matrixToString(resistanceMatrix));
 
 	resistanceMatrix = resistanceMatrix * mBase_Z;
-	mConductanceMatrix = resistanceMatrix.inverse();
+	SPDLOG_LOGGER_INFO(mSLog, "\nR_const [Ohm]: {}", Logger::matrixToString(resistanceMatrix));
+
+	mConductanceMatrixConst = resistanceMatrix.inverse();
+
+	mSLog->info(
+		"\n--- Model specific initialization  ---",
+		(**mEdq_t)(0,0),
+		(**mEdq_t)(1,0)
+	);
+	mSLog->flush();
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -158,14 +159,14 @@ void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplySystemMatrixStamp(Matrix& 
 	// Stamp conductance
 
 	// set upper left block
-	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), mConductanceMatrix);
+	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), mConductanceMatrixConst);
 
 	// set buttom right block
-	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrix);
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrixConst);
 
 	// Set off diagonal blocks
-	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0), -mConductanceMatrix);
-	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(), -mConductanceMatrix);
+	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0), -mConductanceMatrixConst);
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(), -mConductanceMatrixConst);
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
@@ -186,13 +187,13 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	// set previous values of stator current at simulation start
 	if (mSimTime == 0.0) {
 		(**mIntfCurrent)(0,0) = std::conj(mInitElecPower / (mInitVoltage * mBase_V_RMS));
-		mIdq_2prev = **mIntfCurrent;
+		mIdpTwoPrev = **mIntfCurrent;
 	}
 
 	// predict stator current (linear extrapolation)
 	Matrix IdpPrediction = Matrix::Zero(2,1);
-	IdpPrediction(0,0) = 2 * (**mIntfCurrent)(0,0).real() - mIdq_2prev(0,0).real();
-	IdpPrediction(1,0) = 2 * (**mIntfCurrent)(0,0).imag() - mIdq_2prev(0,0).imag();
+	IdpPrediction(0,0) = 2 * (**mIntfCurrent)(0,0).real() - mIdpTwoPrev(0,0).real();
+	IdpPrediction(1,0) = 2 * (**mIntfCurrent)(0,0).imag() - mIdpTwoPrev(0,0).imag();
 
 	// calculate emf at t=k
 	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
@@ -210,8 +211,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	**mEvbr += - Complex(0, mBase_Z * (resistanceMatrixVarying * IdpPrediction)(1,0));
 
 	// Store previous current for later use
-	// FIXME: Rename to dp
-	mIdq_2prev = **mIntfCurrent;
+	mIdpTwoPrev = **mIntfCurrent;
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
