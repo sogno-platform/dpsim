@@ -33,27 +33,15 @@ namespace Ph1 {
 		/// Varying part as resistance matrix
 		Matrix mResistanceMatrixVarying = Matrix::Zero(2,2);
 
-		/// Ka Matrix
-		MatrixComp mKa;
-		/// Kb Matrix
-		MatrixComp mKb;
-		/// Kb Matrix
-		MatrixComp mKc;
-		/// phase a equivalent part of mKa
-		Complex mKa_1ph;
-		/// phase a equivalent part of mKb
-		Complex mKb_1ph;
 		/// Vector to create abc vector from a component
 		MatrixComp mShiftVector;
-		/// complex conjugate of mShiftVector
-		MatrixComp mShiftVectorConj;
 		/// Matrix to convert Evbr from dq domain to abc domain (only phase a)
 		MatrixComp mKvbr;
 
 		// #### Model specific variables ####
-		/// voltage behind transient reactance
+		/// Transient emf
 		const Attribute<Matrix>::Ptr mEdq_t;
-		/// history term of voltage behind the transient reactance
+		/// VBR voltage
 		Matrix mEh_vbr;
 		///
 		MatrixComp mIdpTwoPrev;
@@ -80,7 +68,7 @@ namespace Ph1 {
 		void updateVoltage(const Matrix& leftVector) override;
 		///
 		bool requiresIteration() override;
-		/// Calculate Ka, Kb and Kvbr
+		///
 		void calculateAuxiliarVariables();
 		///
 		Matrix get_parkTransformMatrix();
@@ -98,9 +86,6 @@ namespace Ph1 {
 		void setOperationalParametersPerUnit(Real nomPower,
 			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
 			Real Ld_t, Real Lq_t, Real Td0_t, Real Tq0_t);
-
-		//
-
 	};
 }
 }

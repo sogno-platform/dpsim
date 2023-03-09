@@ -24,15 +24,9 @@ DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
 	/// initialize attributes
 	mNumIter = mAttributes->create<Int>("NIterations", 0);
 
-	// model variables
-	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	**mIntfCurrent = MatrixComp::Zero(1, 1);
-
-	//
+	// TODO: Remove using MathUtils
 	mShiftVector = Matrix::Zero(3,1);
 	mShiftVector << Complex(1., 0), SHIFT_TO_PHASE_B, SHIFT_TO_PHASE_C;
-	mShiftVectorConj = Matrix::Zero(3,1);
-	mShiftVectorConj << Complex(1., 0), std::conj(SHIFT_TO_PHASE_B), std::conj(SHIFT_TO_PHASE_C);
 
 	// model variables
 	mEh_vbr = Matrix::Zero(2,1);
@@ -75,25 +69,12 @@ void DP::Ph1::SynchronGenerator4OrderTPM::setOperationalParametersPerUnit(Real n
 };
 
 void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarVariables() {
-	mKa = Matrix::Zero(1,3);
-	mKa = mKc * Complex(cos(2. * **mThetaMech), sin(2. * **mThetaMech));
-	mKa_1ph = (mKa * mShiftVector)(0,0);
-
-	mKb = Matrix::Zero(1,3);
-	Real arg = 2. * **mThetaMech - 2. * mBase_OmMech * mSimTime;
-	mKb = mKc * Complex(cos(arg), sin(arg));
-	mKb_1ph = (mKb * mShiftVectorConj)(0,0);
-
 	mKvbr = Matrix::Zero(1,2);
 	mKvbr(0,0) = Complex(cos(**mThetaMech - mBase_OmMech * mSimTime), sin(**mThetaMech - mBase_OmMech * mSimTime));
 	mKvbr(0,1) = -Complex(cos(**mThetaMech - mBase_OmMech * mSimTime - PI/2.), sin(**mThetaMech - mBase_OmMech * mSimTime - PI/2.));
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarConstants() {
-	mKc = Matrix::Zero(1,3);
-	mKc << Complex(cos(PI/2.), -sin(PI/2.)), Complex(cos(7.*PI/6.), -sin(7.*PI/6.)), Complex(cos(PI/6.), sin(PI/6.));
-	mKc = (-1. / 6.) * (mA + mB) * mKc;
-
 	// Initialize matrix of state representation of corrector step
 	mA_prev = Matrix::Zero(2,2);
 	mA_prev <<  1 - mTimeStep / (2 * mTq0_t),	0.0,
@@ -114,6 +95,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::specificInitialization() {
 	// initial emf in the dq reference frame
 	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
+
 	calculateAuxiliarConstants();
 
 	mSLog->info(
@@ -150,14 +132,15 @@ void DP::Ph1::SynchronGenerator4OrderTPM::calculateConductanceMatrix() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+
 	updateMatrixNodeIndices();
 	calculateConductanceMatrix();
+
 	// Stamp voltage source
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1, 0));
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
 
 	// Stamp conductance
-
 	// set upper left block
 	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), mConductanceMatrixConst);
 
@@ -176,11 +159,12 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	// update auxiliar variables for time-varying VBR voltage and matrix depending on mThetaMech
 	calculateAuxiliarVariables();
 
-	// determine time-varying part of resistance matrix
-	mResistanceMatrixVarying(0,0) = mKa_1ph.real() + mKb_1ph.real();
-	mResistanceMatrixVarying(0,1) = - mKa_1ph.imag() + mKb_1ph.imag();
-	mResistanceMatrixVarying(1,0) = mKa_1ph.imag() + mKb_1ph.imag();
-	mResistanceMatrixVarying(1,1) = mKa_1ph.real() - mKb_1ph.real();
+	Real DeltaTheta = **mThetaMech - mBase_OmMech * mSimTime;
+	mResistanceMatrixVarying(0,0) = - (mA + mB) / 2.0 * sin(2*DeltaTheta);
+	mResistanceMatrixVarying(0,1) = (mA + mB) / 2.0 * cos(2*DeltaTheta);
+	mResistanceMatrixVarying(1,0) = (mA + mB) / 2.0 * cos(2*DeltaTheta);
+	mResistanceMatrixVarying(1,1) = (mA + mB) / 2.0 * sin(2*DeltaTheta);;
+	SPDLOG_LOGGER_DEBUG(mSLog, "\nR_var [pu] (t={:f}): {:s}", mSimTime, Logger::matrixToString(mResistanceMatrixVarying));
 
 	// predict electrical vars
 	// set previous values of stator current at simulation start
