@@ -113,7 +113,7 @@ namespace Base {
 			void initializeFromNodesAndTerminals(Real frequency);
 			/// Function to initialize the specific variables of each SG model
 			virtual void specificInitialization() = 0;
-			///
+			/// Model specific step
         	virtual void stepInPerUnit() = 0;
 
 			// ### MNA Section ###

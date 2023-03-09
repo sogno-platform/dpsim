@@ -181,17 +181,6 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	// set number of iteratios equal to zero
 	**mNumIter = 0;
 
-	// predict mechanical vars
-	if (mSimTime > 0.0){
-		// 	predict omega at t=k+1 (forward euler)
-		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (**mMechTorque - **mElecTorque));
-
-		// 	predict theta and delta at t=k+1 (backward euler)
-		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
-	}
-
 	// update auxiliar variables for time-varying VBR voltage and matrix depending on mThetaMech
 	calculateAuxiliarVariables();
 

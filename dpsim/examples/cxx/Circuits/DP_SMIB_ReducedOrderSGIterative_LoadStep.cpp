@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
 	// Simulation parameters
 	String simName = "DP_SMIB_ReducedOrderSGIterative_LoadStep";
-	Real timeStep = 32e-6;
+	Real timeStep = 1e-3;
 	Real finalTime = 35;
 
 	// Default configuration
@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 	Real tolerance = defaultConfig.tolerance;
 	int maxIter = defaultConfig.maxIter;
 	String SGModel = defaultConfig.sgType + "Iter";
-	SGModel = "4PCM";	// options: "4PCM", "4TPM", "6PCM"
+	SGModel = "4TPM";	// options: "4PCM", "4TPM", "6PCM"
 	NumericalMethod numericalMethod = NumericalMethod::Euler;	// only for "4PCM" or "6PCM"
 
 	// Command line args processing
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 	std::cout << "SG: " << SGModel << std::endl;
 
 	// Configure logging
-	Logger::Level logLevel = Logger::Level::off;
+	Logger::Level logLevel = Logger::Level::info;
 
 	// apply downsampling for simulation step sizes lower than 10us
 	Real logDownSampling;
@@ -185,6 +185,9 @@ int main(int argc, char* argv[]) {
 	logger->logAttribute(genDP->name() + ".Edq", genDP->attribute("Edq"));
 	logger->logAttribute(genDP->name() + ".Vdq0", genDP->attribute("Vdq0"));
 	logger->logAttribute(genDP->name() + ".Idq0", genDP->attribute("Idq0"));
+	logger->logAttribute(genDP->name() + ".omega", genDP->attribute("w_r"));
+	logger->logAttribute(genDP->name() + ".delta", genDP->attribute("delta"));
+	logger->logAttribute(genDP->name() + ".Theta", genDP->attribute("Theta"));
 
 	// load step event
 	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::Events::createEventAddPowerConsumption("n1DP", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemDP, Domain::DP, logger);
