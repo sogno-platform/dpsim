@@ -14,7 +14,7 @@ namespace DPsim
 {
 	DirectLinearSolverConfiguration::DirectLinearSolverConfiguration()
 	{
-		m_scalingMethod = SCALING_METHOD::NO_SCALING;
+		m_scalingMethod = SCALING_METHOD::MAX_SCALING;
 		m_partialRefactorizationMethod = PARTIAL_REFACTORIZATION_METHOD::NO_PARTIAL_REFACTORIZATION;
 	}
 

@@ -43,6 +43,7 @@ namespace DPsim
 
 		/// Flags to indicate mode of operation
 		/// Define which ordering to choose in preprocessing
+		/// Macros are defined in SuiteSparse/AMD
 		int m_preordering = AMD_ORDERING;
 
 		/// Temporary value to store the number of nonzeros
