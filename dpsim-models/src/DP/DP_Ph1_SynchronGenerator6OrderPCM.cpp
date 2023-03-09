@@ -114,19 +114,31 @@ void DP::Ph1::SynchronGenerator6OrderPCM::calculateStateMatrix() {
 			0.0;
 }
 
+void DP::Ph1::SynchronGenerator6OrderPCM::mnaCompPreStep(Real time, Int timeStepCount) {
+	mSimTime = time;
+
+	// model specific calculation of electrical vars
+	stepInPerUnit();
+
+	// stamp model specific right side vector after calculation of electrical vars
+	(**mRightVector).setZero();
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
+}
+
 void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	// set number of iteratios equal to zero
 	**mNumIter = 0;
 
-	// Predictor step (backward euler)
-	if (mSimTime>0.0) {
-		// calculate electrical torque at t=k-1
+	// prediction of mechanical variables with forward euler
+	if (mSimTime > 0.0) {
 		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-		// predict mechanical variables at t=k
-		mOmMech_pred = **mOmMech + mTimeStep / (2 * mH) * (**mMechTorque - **mElecTorque);
-		mDelta_pred = **mDelta + mTimeStep * mBase_OmMech * (**mOmMech - 1);
-		mThetaMech_pred = **mThetaMech + mTimeStep * **mOmMech * mBase_OmMech;
+		mOmMech_pred = **mOmMech + mTimeStep * (1. / (2. * mH) * (**mMechTorque - **mElecTorque));
+
+		// predict theta and delta at t=k+1 (backward euler)
+		mThetaMech_pred = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+		mDelta_pred = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	} else {
+		// In step 0 do not update electrical variables to avoid delay with voltage sources
 		mOmMech_pred = **mOmMech;
 		mDelta_pred = **mDelta;
 		mThetaMech_pred = **mThetaMech;
