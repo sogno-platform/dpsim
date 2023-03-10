@@ -206,10 +206,10 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	**mNumIter = **mNumIter + 1;
 
 	// correct electrical vars
-	// calculate emf at j (trapezoidal rule)
+	// calculate emf at j and k+1 (trapezoidal rule)
 	(**mEdq_t) = mA_prev * mEdqtPrevStep + mA_corr * (**mEdq_t) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
 
-	// calculate stator currents at j
+	// calculate stator currents at j and k+1
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0) ) / mLq_t;
 
