@@ -208,12 +208,6 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	**mNumIter = **mNumIter + 1;
 
 	// correct electrical vars
-	// CHECK: Is this computation really required? PCM models does
-	// simply mEdq_pred = mEdq_corr at the end of each iteration
-	// calculate emf at j-1 according to system solution
-	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
-	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
-
 	// calculate emf at j (trapezoidal rule)
 	(**mEdq_t) = mA_prev * mEdqtPrevStep + mA_corr * (**mEdq_t) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
 
