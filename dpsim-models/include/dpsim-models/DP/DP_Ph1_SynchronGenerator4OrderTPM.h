@@ -33,10 +33,10 @@ namespace Ph1 {
 		/// Varying part as resistance matrix
 		Matrix mResistanceMatrixVarying = Matrix::Zero(2,2);
 
-		/// Vector to create abc vector from a component
-		MatrixComp mShiftVector;
-		/// Matrix to convert Evbr from dq domain to abc domain (only phase a)
-		MatrixComp mKvbr;
+		/// Transform from DQ to DP domain
+		Matrix mDQToDPTransform = Matrix::Zero(2,2);
+		/// Transform from DP to DQ domain
+		Matrix mDPToDQTransform = Matrix::Zero(2,2);
 
 		// #### Model specific variables ####
 		/// Transient emf
@@ -77,9 +77,13 @@ namespace Ph1 {
 		///
 		bool requiresIteration() override;
 		///
-		void calculateAuxiliarVariables();
+		void updateDQToDPTransform();
 		///
-		Matrix get_parkTransformMatrix();
+		void updateDPToDQTransform();
+		///
+		Complex applyDQToDPTransform(const Matrix& dqMatrix);
+		///
+		Matrix applyDPToDQTransform(const Complex& dpComplex);
 		///
 		void initializeResistanceMatrix() final {};
 
