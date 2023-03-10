@@ -24,10 +24,6 @@ DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
 	/// initialize attributes
 	mNumIter = mAttributes->create<Int>("NIterations", 0);
 
-	// TODO: Remove using MathUtils
-	mShiftVector = Matrix::Zero(3,1);
-	mShiftVector << Complex(1., 0), SHIFT_TO_PHASE_B, SHIFT_TO_PHASE_C;
-
 	// model variables
 	mEh_vbr = Matrix::Zero(2,1);
 	**mEdq_t = Matrix::Zero(2,1);
@@ -66,10 +62,27 @@ void DP::Ph1::SynchronGenerator4OrderTPM::setOperationalParametersPerUnit(Real n
 			Td0_t, Tq0_t);
 };
 
-void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarVariables() {
-	mKvbr = Matrix::Zero(1,2);
-	mKvbr(0,0) = Complex(cos(**mThetaMech - mBase_OmMech * mSimTime), sin(**mThetaMech - mBase_OmMech * mSimTime));
-	mKvbr(0,1) = -Complex(cos(**mThetaMech - mBase_OmMech * mSimTime - PI/2.), sin(**mThetaMech - mBase_OmMech * mSimTime - PI/2.));
+void DP::Ph1::SynchronGenerator4OrderTPM::updateDQToDPTransform() {
+	mDQToDPTransform << 	cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime),
+							sin(**mThetaMech - mBase_OmMech * mSimTime),	cos(**mThetaMech - mBase_OmMech * mSimTime);
+}
+
+void DP::Ph1::SynchronGenerator4OrderTPM::updateDPToDQTransform() {
+	mDPToDQTransform << 	cos(**mThetaMech - mBase_OmMech * mSimTime),	sin(**mThetaMech - mBase_OmMech * mSimTime),
+							-sin(**mThetaMech - mBase_OmMech * mSimTime),	cos(**mThetaMech - mBase_OmMech * mSimTime);
+}
+
+Complex DP::Ph1::SynchronGenerator4OrderTPM::applyDQToDPTransform(const Matrix& dqMatrix) {
+	Complex dpComplex;
+	dpComplex = Complex((mDQToDPTransform*dqMatrix)(0,0),(mDQToDPTransform*dqMatrix)(1,0));
+	return dpComplex;
+}
+
+Matrix DP::Ph1::SynchronGenerator4OrderTPM::applyDPToDQTransform(const Complex& dpComplex) {
+	Matrix dqMatrix = Matrix::Zero(2,1);
+	dqMatrix(0,0) = mDPToDQTransform(0,0) * dpComplex.real() + mDPToDQTransform(0,1) * dpComplex.imag();
+	dqMatrix(1,0) = mDPToDQTransform(1,0) * dpComplex.real() + mDPToDQTransform(1,1) * dpComplex.imag();
+	return dqMatrix;
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarConstants() {
@@ -154,8 +167,9 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	// set number of iteratios equal to zero
 	**mNumIter = 0;
 
-	// update auxiliar variables for time-varying VBR voltage and matrix depending on mThetaMech
-	calculateAuxiliarVariables();
+	// update DQ-DP transforms according to mThetaMech
+	updateDQToDPTransform();
+	updateDPToDQTransform();
 
 	Real DeltaTheta = **mThetaMech - mBase_OmMech * mSimTime;
 	mResistanceMatrixVarying(0,0) = - (mA + mB) / 2.0 * sin(2*DeltaTheta);
@@ -185,7 +199,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	mEh_vbr(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * mEf_prev + mDq_t * (**mEf);
 
 	// convert original VBR voltage to dp domain
-	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
+	**mEvbr = applyDQToDPTransform(mEh_vbr) * mBase_V_RMS;
 
 	// add current prediction based component to VBR voltage in dp domain
 	**mEvbr += - Complex(mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(0,0), 0);
@@ -214,14 +228,14 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0) ) / mLq_t;
 
 	// convert corrected currents to dp domain
-	Complex IdpCorrectionComplex = (mKvbr * (**mIdq))(0,0) * mBase_I_RMS;
+	Complex IdpCorrectionComplex = applyDQToDPTransform(**mIdq) * mBase_I_RMS;
 
 	Matrix IdpCorrection = Matrix::Zero(2,1);
 	IdpCorrection(0,0) = IdpCorrectionComplex.real();
 	IdpCorrection(1,0) = IdpCorrectionComplex.imag();
 
 	// reset original VBR voltage in dp domain
-	**mEvbr = (mKvbr * mEh_vbr * mBase_V_RMS)(0,0);
+	**mEvbr = applyDQToDPTransform(mEh_vbr) * mBase_V_RMS;
 
 	// add current correction based component to VBR voltage in dp domain
 	**mEvbr += - Complex(mBase_Z * (mResistanceMatrixVarying * IdpCorrection)(0,0), 0);
@@ -262,26 +276,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompPostStep(const Matrix& leftVect
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
 
-	// convert armature voltage into dq reference frame
-	Matrix parkTransform = get_parkTransformMatrix();
-	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
-	Matrix Vabc = Matrix(3,1);
-	Vabc << Vabc_(0,0).real(), Vabc_(1,0).real(), Vabc_(2,0).real();
-	**mVdq = parkTransform * Vabc / mBase_V_RMS;
-
-	// convert armature current into dq reference frame
-	MatrixComp Iabc_ = (**mIntfCurrent)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
-	Matrix Iabc = Matrix(3,1);
-	Iabc << Iabc_(0,0).real(), Iabc_(1,0).real(), Iabc_(2,0).real();
-	**mIdq = parkTransform * Iabc / mBase_I_RMS;
-}
-
-Matrix DP::Ph1::SynchronGenerator4OrderTPM::get_parkTransformMatrix() {
-	Matrix abcToDq0(2, 3);
-
-	abcToDq0 <<
-		2./3.*cos(**mThetaMech),  2./3.*cos(**mThetaMech - 2.*PI/3.),  2./3.*cos(**mThetaMech + 2.*PI/3.),
-		-2./3.*sin(**mThetaMech), -2./3.*sin(**mThetaMech - 2.*PI/3.), -2./3.*sin(**mThetaMech + 2.*PI/3.);
-
-	return abcToDq0;
+	// convert armature voltages and currents to dq reference frame
+	**mVdq = applyDPToDQTransform((**mIntfVoltage)(0, 0)) / mBase_V_RMS;
+	**mIdq = applyDPToDQTransform((**mIntfCurrent)(0, 0)) / mBase_I_RMS;
 }
