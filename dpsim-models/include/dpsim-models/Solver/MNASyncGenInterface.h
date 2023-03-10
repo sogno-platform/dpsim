@@ -17,32 +17,8 @@ namespace CPS {
 	class MNASyncGenInterface {
 	protected:
 		// #### Model specific variables ####
-		/// generator terminal at time k-1
-		Matrix mVdq_prev;
-		/// predicted generator current at time k
-		Matrix mIdq_pred;
-		/// corrected generator current at time k
-		Matrix mIdq_corr;
 		/// voltage behind the transient/subtransiet impedance at time k-1
 		Attribute<Matrix>::Ptr mEdq;
-		/// predicted voltage behind the transient and subtransient impedance at time k+1
-		Matrix mEdq_pred;
-		/// corrected voltage behind the transient and subtransient impedance at time k+1
-		Matrix mEdq_corr;
-		/// corrected electrical torque
-		Real mElecTorque_corr;
-		/// predicted mechanical omega at time k
-		Real mOmMech_pred;
-		/// corrected mechanical omega at time k
-		Real mOmMech_corr;
-		/// prediction mechanical system angle at time k
-		Real mThetaMech_pred;
-		/// corrected mechanical system angle at time k
-		Real mThetaMech_corr;
-		/// predicted delta at time k
-		Real mDelta_pred;
-		/// corrected delta at time k
-		Real mDelta_corr;
 
 		/// Matrix used when numerical method of predictor step = Euler
 		/// State Matrix backward euler: Edq(k) = mA_euler * Edq(k) + mB_euler * Idq + mC_euler * Ef
@@ -51,7 +27,7 @@ namespace CPS {
 		Matrix mC_euler;
 
 		/// Matrixes used when numerical method of corrector step = trapezoidal rule
-		/// State Matrix trapezoidal rule (corrector step): x(k+1) = mA_prev * Edq(k-1) + mA_corr * Edq_corr(k) + B_corr * Idq_corr(k) + mC_corr * Ef
+		/// State Matrix trapezoidal rule (corrector step): x(k+1) = mAPrevIter * Edq(k-1) + mA_corr * Edq_corr(k) + B_corr * Idq_corr(k) + mC_corr * Ef
 		Matrix mA_prev;
 		Matrix mA_corr;
 		Matrix mB_corr;
@@ -91,12 +67,7 @@ namespace CPS {
 	protected:
 		/// Constructor
 		MNASyncGenInterface() {
-			// inizialize matrix that are not model dependent
-			mIdq_pred = Matrix::Zero(2,1);
-			mIdq_corr = Matrix::Zero(2,1);
-
 			// Vector to convert 1phase to 3phase
-
 			mShiftVector = Matrix::Zero(3,1);
 			mShiftVector << Complex(1., 0), SHIFT_TO_PHASE_B, SHIFT_TO_PHASE_C;
 		}
