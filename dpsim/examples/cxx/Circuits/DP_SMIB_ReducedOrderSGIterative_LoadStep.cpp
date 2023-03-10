@@ -33,7 +33,6 @@ int main(int argc, char* argv[]) {
 	int maxIter = defaultConfig.maxIter;
 	String SGModel = defaultConfig.sgType + "Iter";
 	SGModel = "4TPM";	// options: "4PCM", "4TPM", "6PCM"
-	NumericalMethod numericalMethod = NumericalMethod::Euler;	// only for "4PCM" or "6PCM"
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
@@ -151,7 +150,6 @@ int main(int argc, char* argv[]) {
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setMaxIterations(maxIter);
 	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setTolerance(tolerance);
-	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setNumericalMethod(numericalMethod);
 
 	//Grid bus as Slack
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
