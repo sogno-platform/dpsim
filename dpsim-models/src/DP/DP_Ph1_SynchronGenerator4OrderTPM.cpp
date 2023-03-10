@@ -170,13 +170,13 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	// set previous values of stator current at simulation start
 	if (mSimTime == 0.0) {
 		(**mIntfCurrent)(0,0) = std::conj(mInitElecPower / (mInitVoltage * mBase_V_RMS));
-		mIdpTwoPrev = **mIntfCurrent;
+		mIdpTwoPrevStep = **mIntfCurrent;
 	}
 
 	// predict stator current (linear extrapolation)
 	Matrix IdpPrediction = Matrix::Zero(2,1);
-	IdpPrediction(0,0) = 2 * (**mIntfCurrent)(0,0).real() - mIdpTwoPrev(0,0).real();
-	IdpPrediction(1,0) = 2 * (**mIntfCurrent)(0,0).imag() - mIdpTwoPrev(0,0).imag();
+	IdpPrediction(0,0) = 2 * (**mIntfCurrent)(0,0).real() - mIdpTwoPrevStep(0,0).real();
+	IdpPrediction(1,0) = 2 * (**mIntfCurrent)(0,0).imag() - mIdpTwoPrevStep(0,0).imag();
 
 	// calculate emf at t=k
 	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
@@ -193,8 +193,10 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	**mEvbr += - Complex(mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(0,0), 0);
 	**mEvbr += - Complex(0, mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(1,0));
 
-	// Store previous current for later use
-	mIdpTwoPrev = **mIntfCurrent;
+	// store values currently at t=k for later use
+	mIdpTwoPrevStep = **mIntfCurrent;
+	mIdqPrevStep = **mIdq;
+	mEdqtPrevStep = **mEdq_t;
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
@@ -208,18 +210,19 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	// correct electrical vars
 	// CHECK: Is this computation really required? PCM models does
 	// simply mEdq_pred = mEdq_corr at the end of each iteration
-	mEdq_pred(0,0) = (**mVdq)(0,0) - mIdq_pred(1,0) * mLq_t;
-	mEdq_pred(1,0) = (**mVdq)(1,0) + mIdq_pred(0,0) * mLd_t;
+	// calculate emf at j-1 according to system solution
+	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
-	// correct emf at t=k+1 (trapezoidal rule)
-	mEdq_corr = mA_prev * **mEdq_t + mA_corr * mEdq_pred + mB_corr * (**mIdq + mIdq_pred) + mC_corr * (**mEf);
+	// calculate emf at j (trapezoidal rule)
+	(**mEdq_t) = mA_prev * mEdqtPrevStep + mA_corr * (**mEdq_t) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
 
-	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
-	mIdq_corr(0,0) = (mEdq_corr(1,0) - (**mVdq)(1,0) ) / mLd_t;
-	mIdq_corr(1,0) = ((**mVdq)(0,0) - mEdq_corr(0,0) ) / mLq_t;
+	// calculate stator currents at j
+	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
+	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0) ) / mLq_t;
 
 	// convert corrected currents to dp domain
-	Complex IdpCorrectionComplex = (mKvbr * mIdq_corr)(0,0) * mBase_I_RMS;
+	Complex IdpCorrectionComplex = (mKvbr * (**mIdq))(0,0) * mBase_I_RMS;
 
 	Matrix IdpCorrection = Matrix::Zero(2,1);
 	IdpCorrection(0,0) = IdpCorrectionComplex.real();
@@ -235,27 +238,13 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	// stamp currents
 	(**mRightVector).setZero();
 	mnaCompApplyRightSideVectorStamp(**mRightVector);
+
+	// store value currently at j-1 for later use
+	mVdqPrevIter = **mVdq;
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::updateVoltage(const Matrix& leftVector) {
-	mVdq_prev = **mVdq;
-	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
-
-	//
-	Matrix parkTransform = get_parkTransformMatrix();
-
-	// convert armature voltage into dq reference frame
-	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
-	Matrix Vabc = Matrix(3,1);
-	Vabc << Vabc_(0,0).real(), Vabc_(1,0).real(), Vabc_(2,0).real();
-	**mVdq = parkTransform * Vabc / mBase_V_RMS;
-
-	// convert armature current into dq reference frame
-	MatrixComp Iabc_ = (**mIntfCurrent)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
-	Matrix Iabc = Matrix(3,1);
-	Iabc << Iabc_(0,0).real(), Iabc_(1,0).real(), Iabc_(2,0).real();
-	mIdq_pred = parkTransform * Iabc / mBase_I_RMS;
+	mnaCompPostStep(leftVector);
 }
 
 bool DP::Ph1::SynchronGenerator4OrderTPM::requiresIteration() {
@@ -268,7 +257,7 @@ bool DP::Ph1::SynchronGenerator4OrderTPM::requiresIteration() {
 		return true;
 	} else {
 		// check voltage convergence according to tolerance
-		Matrix voltageDifference = **mVdq - mVdq_prev;
+		Matrix voltageDifference = **mVdq - mVdqPrevIter;
 		if (Math::abs(voltageDifference(0,0)) > mTolerance || Math::abs(voltageDifference(1,0)) > mTolerance)
 			return true;
 		else
