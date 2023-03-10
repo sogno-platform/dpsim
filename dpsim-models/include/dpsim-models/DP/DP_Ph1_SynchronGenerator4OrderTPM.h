@@ -43,8 +43,16 @@ namespace Ph1 {
 		const Attribute<Matrix>::Ptr mEdq_t;
 		/// VBR voltage
 		Matrix mEh_vbr;
-		///
-		MatrixComp mIdpTwoPrev;
+
+		// Variables saving values for later use
+		/// Idp at k-1
+		MatrixComp mIdpTwoPrevStep;
+		/// Idq at k
+		Matrix mIdqPrevStep;
+		/// Vdq at j-1
+		Matrix mVdqPrevIter;
+		/// Edq_t at k
+		Matrix mEdqtPrevStep;
 	public:
 		///
 		SynchronGenerator4OrderTPM(String uid, String name, Logger::Level logLevel = Logger::Level::off);
