@@ -86,20 +86,12 @@ Matrix DP::Ph1::SynchronGenerator4OrderTPM::applyDPToDQTransform(const Complex& 
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarConstants() {
-	// Initialize matrix of state representation of corrector step
-	mA_prev = Matrix::Zero(2,2);
-	mA_prev <<  1 - mTimeStep / (2 * mTq0_t),	0.0,
-	       								 0.0,	1 - mTimeStep / (2 * mTd0_t);
-	mA_corr = Matrix::Zero(2,2);
-	mA_corr << - mTimeStep / (2 * mTq0_t),	0.0,
-	    	   0.0, - mTimeStep / (2 * mTd0_t);
-	mB_corr = Matrix::Zero(2,2);
-	mB_corr <<	0.0, (mLq - mLq_t) * mTimeStep / (2 * mTq0_t),
-				- (mLd - mLd_t) * mTimeStep / (2 * mTd0_t), 0.0;
-
-	mC_corr = Matrix::Zero(2,1);
-	mC_corr <<   				0.0,
-	  			(mTimeStep / mTd0_t);
+	mAStateSpace <<	-mLq / mTq0_t / mLq_t,	0,
+              		0,						-mLd / mTd0_t / mLd_t;
+	mBStateSpace <<	(mLq-mLq_t) / mTq0_t / mLq_t,	0.0,
+					0.0,							(mLd-mLd_t) / mTd0_t / mLd_t;
+	mCStateSpace <<	0,
+					**mEf / mTd0_t;
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::specificInitialization() {
@@ -207,7 +199,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 
 	// store values currently at t=k for later use
 	mIdpTwoPrevStep = **mIntfCurrent;
-	mIdqPrevStep = **mIdq;
+	mVdqPrevStep = **mVdq;
 	mEdqtPrevStep = **mEdq_t;
 }
 
@@ -221,7 +213,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 
 	// correct electrical vars
 	// calculate emf at j and k+1 (trapezoidal rule)
-	(**mEdq_t) = mA_prev * mEdqtPrevStep + mA_corr * (**mEdq_t) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
+	(**mEdq_t) = Math::StateSpaceTrapezoidal(mEdqtPrevStep, mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, **mVdq, mVdqPrevStep);
 
 	// calculate stator currents at j and k+1
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
@@ -250,7 +242,11 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::updateVoltage(const Matrix& leftVector) {
-	mnaCompPostStep(leftVector);
+	// update armature voltage
+	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+
+	// convert armature voltage to dq reference frame
+	**mVdq = applyDPToDQTransform((**mIntfVoltage)(0, 0)) / mBase_V_RMS;
 }
 
 bool DP::Ph1::SynchronGenerator4OrderTPM::requiresIteration() {
@@ -272,11 +268,9 @@ bool DP::Ph1::SynchronGenerator4OrderTPM::requiresIteration() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompPostStep(const Matrix& leftVector) {
-	// update armature voltage and current
-	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+	// update armature current
 	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
 
-	// convert armature voltages and currents to dq reference frame
-	**mVdq = applyDPToDQTransform((**mIntfVoltage)(0, 0)) / mBase_V_RMS;
+	// convert armature current to dq reference frame
 	**mIdq = applyDPToDQTransform((**mIntfCurrent)(0, 0)) / mBase_I_RMS;
 }
