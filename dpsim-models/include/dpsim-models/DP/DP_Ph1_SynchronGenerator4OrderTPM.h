@@ -47,12 +47,19 @@ namespace Ph1 {
 		// Variables saving values for later use
 		/// Idp at k-1
 		MatrixComp mIdpTwoPrevStep;
-		/// Idq at k
-		Matrix mIdqPrevStep;
+		/// Vdq at k
+		Matrix mVdqPrevStep;
 		/// Vdq at j-1
 		Matrix mVdqPrevIter;
 		/// Edq_t at k
 		Matrix mEdqtPrevStep;
+
+		/// A matrix of continuous time state space model
+		Matrix mAStateSpace = Matrix::Zero(2,2);
+		/// B matrix of continuous time state space model
+		Matrix mBStateSpace = Matrix::Zero(2,2);
+		/// C matrix of continuous time state space model
+		Matrix mCStateSpace = Matrix::Zero(2,1);
 	public:
 		///
 		SynchronGenerator4OrderTPM(String uid, String name, Logger::Level logLevel = Logger::Level::off);
