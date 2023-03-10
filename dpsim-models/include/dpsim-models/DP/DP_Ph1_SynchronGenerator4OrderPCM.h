@@ -48,13 +48,22 @@ namespace Ph1 {
 
 		// #### MNA Functions ####
 		///
-		void mnaCompPreStep(Real time, Int timeStepCount) final;
-		///
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) final;
 		///
 		void mnaCompPostStep(const Matrix& leftVector) final;
 		///
 		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) final {};
+
+		///
+		Matrix mEdqtPrevStep;
+		Matrix mIdqPrevStep;
+		Real mElecTorquePrevStep;
+		Real mOmMechPrevStep;
+		Real mThetaMechPrevStep;
+		Real mDeltaPrevStep;
+
+		///
+		Matrix mVdqPrevIter;
 	};
 }
 }
