@@ -31,8 +31,6 @@ DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
 	// model variables
 	mEh_vbr = Matrix::Zero(2,1);
 	**mEdq_t = Matrix::Zero(2,1);
-	mEdq_corr = Matrix::Zero(2,1);
-	mEdq_pred = Matrix::Zero(2,1);
 }
 
 DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
