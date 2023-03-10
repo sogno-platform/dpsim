@@ -233,6 +233,11 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 		mSolveTimes.push_back(diff.count());
 	}
 
+	// CHECK: Is this really required? Or can operations actually become part of
+	// correctorStep and mnaPostStep?
+	for (auto syncGen : mSyncGen)
+		syncGen->updateVoltage(**mLeftSideVector);
+
 	// Reset number of iterations
 	mIter = 0;
 
