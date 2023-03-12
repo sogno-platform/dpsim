@@ -12,17 +12,19 @@ using namespace CPS;
 
 DP::Ph1::SynchronGenerator6OrderPCM::SynchronGenerator6OrderPCM
     (const String& uid, const String& name, Logger::Level logLevel)
-	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel) {
+	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
+	mEdq_s(mAttributes->create<Matrix>("Edq_s")) {
 
 	mPhaseType = PhaseType::Single;
 	setTerminalNumber(1);
 
 	/// initialize attributes
-	mEdq = mAttributes->create<Matrix>("Edq");
 	mNumIter = mAttributes->create<Int>("NIterations", 0);
 
-	// Initialize matrix
-	**mEdq = Matrix::Zero(4,1);
+	// model variables
+	**mEdq_t = Matrix::Zero(2,1);
+	**mEdq_s = Matrix::Zero(2,1);
 }
 
 DP::Ph1::SynchronGenerator6OrderPCM::SynchronGenerator6OrderPCM
@@ -42,10 +44,10 @@ void DP::Ph1::SynchronGenerator6OrderPCM::specificInitialization() {
 	calculateStateMatrix();
 
 	// initial voltage behind the transient reactance in the dq0 reference frame
-	(**mEdq)(0,0) = (mLq - mLq_t) * (**mIdq)(1,0);
-	(**mEdq)(1,0) = - (mLd- mLd_t) * (**mIdq)(0,0) + (**mEf);
-	(**mEdq)(2,0) = (**mEdq)(0,0) + (mLq_t - mLq_s) * (**mIdq)(1,0);
-	(**mEdq)(3,0) = (**mEdq)(1,0) - (mLd_t - mLd_s) * (**mIdq)(0,0);
+	(**mEdq_t)(0,0) = (mLq - mLq_t) * (**mIdq)(1,0);
+	(**mEdq_t)(1,0) = - (mLd- mLd_t) * (**mIdq)(0,0) + (**mEf);
+	(**mEdq_s)(0,0) = (**mEdq_t)(0,0) + (mLq_t - mLq_s) * (**mIdq)(1,0);
+	(**mEdq_s)(1,0) = (**mEdq_t)(1,0) - (mLd_t - mLd_s) * (**mIdq)(0,0);
 
 	// initialize transformation matrix dp->dq
 	mDpToDq = Matrix::Zero(1,2);
@@ -60,10 +62,10 @@ void DP::Ph1::SynchronGenerator6OrderPCM::specificInitialization() {
 		"\nTolerance: {:f}"
 		"\n--- Model specific initialization finished ---",
 
-		(**mEdq)(0,0),
-		(**mEdq)(1,0),
-		(**mEdq)(2,0),
-		(**mEdq)(3,0),
+		(**mEdq_t)(0,0),
+		(**mEdq_t)(1,0),
+		(**mEdq_s)(0,0),
+		(**mEdq_s)(1,0),
 		mMaxIter,
 		mTolerance
 	);
@@ -117,7 +119,8 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	**mNumIter = 0;
 
 	// store values currently at t=k-1 for later use
-	mEdqtPrevStep = **mEdq;
+	mEdqsPrevStep = **mEdq_s;
+	mEdqtPrevStep = **mEdq_t;
 	mIdqPrevStep = **mIdq;
 	mElecTorquePrevStep =  **mElecTorque;
 	mOmMechPrevStep = **mOmMech;
@@ -125,11 +128,11 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	mDeltaPrevStep = **mDelta;
 
 	// prediction emf at t=k
-	**mEdq = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * (**mEf);
+	auto mEdq = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * (**mEf);
 
 	// predict armature currents for at t=k+1
-	(**mIdq)(0,0) = ((**mEdq)(3,0) - (**mVdq)(1,0) ) / mLd_s;
-	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq)(2,0) ) / mLq_s;
+	(**mIdq)(0,0) = ((**mEdq_s)(1,0) - (**mVdq)(1,0) ) / mLd_s;
+	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_s)(0,0) ) / mLq_s;
 
 	// convert currents into the abc reference frame
 	mDpToDq(0,0) = Complex(cos(**mThetaMech - mBase_OmMech * mSimTime), sin(**mThetaMech - mBase_OmMech * mSimTime));
@@ -160,11 +163,12 @@ void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 
 	// correction of electrical vars
 	// correct emf at t=k+1 (trapezoidal rule)
+	// TODO
 	(**mEdq) = mA_prev * mEdqtPrevStep + mA_corr * (**mEdq) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
-	(**mIdq)(0,0) = ((**mEdq)(3,0) - (**mVdq)(1,0) ) / mLd_t;
-	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq)(2,0) ) / mLq_t;
+	(**mIdq)(0,0) = ((**mEdq_s)(1,0) - (**mVdq)(1,0) ) / mLd_t;
+	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_s)(0,0) ) / mLq_t;
 
 	// convert corrected currents to dp domain
 	mDpToDq(0,0) = Complex(cos(**mThetaMech - mBase_OmMech * mSimTime), sin(**mThetaMech - mBase_OmMech * mSimTime));
