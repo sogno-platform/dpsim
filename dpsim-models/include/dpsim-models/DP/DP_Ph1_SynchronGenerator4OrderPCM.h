@@ -66,14 +66,6 @@ namespace Ph1 {
 		Matrix mVdqPrevIter;
 		/// Idq at k
 		Matrix mIdqPrevStep;
-		/// Electrica torque at k
-		Real mElecTorquePrevStep;
-		/// Mechanical omega at k
-		Real mOmMechPrevStep;
-		/// Mechanical theta at k
-		Real mThetaMechPrevStep;
-		/// Delta at k
-		Real mDeltaPrevStep;
 	};
 }
 }
