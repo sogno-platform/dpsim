@@ -13,7 +13,7 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
     (const String& uid, const String& name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
-	mEdq_t_t(mAttributes->create<Matrix>("Edq"))  {
+	mEdq_t(mAttributes->create<Matrix>("Edq"))  {
 
 	mPhaseType = PhaseType::Single;
 	setTerminalNumber(1);
@@ -22,7 +22,7 @@ DP::Ph1::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
 	mNumIter = mAttributes->create<Int>("NIterations", 0);
 
 	// model variables
-	**mEdq_t_t = Matrix::Zero(2,1);
+	**mEdq_t = Matrix::Zero(2,1);
 }
 
 DP::Ph1::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
@@ -96,16 +96,12 @@ void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	**mNumIter = 0;
 
 	// store values currently at t=k-1 for later use
-	mEdq_ttPrevStep = **mEdq_t;
+	mEdqtPrevStep = **mEdq_t;
 	mIdqPrevStep = **mIdq;
-	mElecTorquePrevStep =  **mElecTorque;
-	mOmMechPrevStep = **mOmMech;
-	mThetaMechPrevStep = **mThetaMech;
-	mDeltaPrevStep = **mDelta;
 
 	// prediction emf at t=k
 	**mEdq_t = mA_euler * (**mEdq_t) + mB_euler * **mIdq + mC_euler * (**mEf);
-
+	
 	// predict stator currents at t=k (assuming Vdq(k+1)=Vdq(k))
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0)) / mLd_t;
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0)) / mLq_t;
@@ -121,37 +117,19 @@ void DP::Ph1::SynchronGenerator4OrderPCM::mnaCompApplyRightSideVectorStamp(Matri
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
-	// TODO: The naming of variables becomes confusing.
-	// Probably better to use `PrevIter` and `CurrIter`
-	// variables instead of misusing `_pred` variables or `mVdq`.
 
 	// increase number of iterations
 	**mNumIter = **mNumIter + 1;
 
-	// correction of mechanical vars
-	if (mSimTime>0.0) {
-		// In step 0 do not update electrical variables to avoid delay with voltage sources
-		// calculate electrical torque at t=k+1
-		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-
-		// correct mechanical variables at t=k+1 (trapezoidal rule)
-		**mOmMech = mOmMechPrevStep + mTimeStep / (4. * mH) * (2 * **mMechTorque - **mElecTorque - mElecTorquePrevStep);
-		**mDelta = mDeltaPrevStep + mTimeStep / 2. * mBase_OmMech * (**mOmMech + mOmMechPrevStep - 2);
-		// CHECK: For mThetaMech_corr use mOmMech_corr already?
-		**mThetaMech = mThetaMechPrevStep + mTimeStep / 2. * (**mOmMech + mOmMechPrevStep) * mBase_OmMech;
-	}
-
 	// correction of electrical vars
 	// correct emf at t=k+1 (trapezoidal rule)
-	(**mEdq_t) = mA_prev * mEdq_ttPrevStep + mA_corr * (**mEdq_t) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
+	(**mEdq_t) = mA_prev * mEdqtPrevStep + mA_corr * (**mEdq_t) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0) ) / mLq_t;
 
 	// convert corrected currents to dp domain
-	mDpToDq(0,0) = Complex(cos(**mThetaMech - mBase_OmMech * mSimTime), sin(**mThetaMech - mBase_OmMech * mSimTime));
-	mDpToDq(0,1) = -Complex(cos(**mThetaMech - mBase_OmMech * mSimTime - PI/2.), sin(**mThetaMech - mBase_OmMech * mSimTime - PI/2.));
 	(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
 
 	// stamp currents
@@ -159,9 +137,6 @@ void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVector) {
-	// TODO: The naming of variables becomes confusing.
-	// Probably better to use `PrevIter` and `CurrIter`
-	// variables instead of misusing `_pred` variables or `mVdq`.
 
 	// store voltage value currently at j-1 for later use
 	mVdqPrevIter = **mVdq;
@@ -173,10 +148,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVector
 	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
 	Matrix Vabc = Matrix(3,1);
 	Vabc << Vabc_(0,0).real(), Vabc_(1,0).real(), Vabc_(2,0).real();
-	if (**mNumIter == 0)
-		**mVdq = parkTransform(**mOmMech, Vabc) / mBase_V_RMS;
-	else
-		**mVdq = parkTransform(**mOmMech, Vabc) / mBase_V_RMS;
+	**mVdq = parkTransform(**mThetaMech, Vabc) / mBase_V_RMS;
 }
 
 bool DP::Ph1::SynchronGenerator4OrderPCM::requiresIteration() {
