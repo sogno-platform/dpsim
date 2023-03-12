@@ -122,13 +122,10 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	mEdqsPrevStep = **mEdq_s;
 	mEdqtPrevStep = **mEdq_t;
 	mIdqPrevStep = **mIdq;
-	mElecTorquePrevStep =  **mElecTorque;
-	mOmMechPrevStep = **mOmMech;
-	mThetaMechPrevStep = **mThetaMech;
-	mDeltaPrevStep = **mDelta;
 
 	// prediction emf at t=k
-	auto mEdq = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * (**mEf);
+	// TODO
+	//auto mEdq = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * (**mEf);
 
 	// predict armature currents for at t=k+1
 	(**mIdq)(0,0) = ((**mEdq_s)(1,0) - (**mVdq)(1,0) ) / mLd_s;
@@ -148,31 +145,16 @@ void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 	// corrector step (trapezoidal rule)
 	**mNumIter = **mNumIter + 1;
 
-	// correction of mechanical vars
-	if (mSimTime>0.0) {
-		// In step 0 do not update electrical variables to avoid delay with voltage sources
-		// calculate electrical torque at t=k+1
-		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-
-		// correct mechanical variables at t=k+1 (trapezoidal rule)
-		**mOmMech = mOmMechPrevStep + mTimeStep / (4. * mH) * (2 * **mMechTorque - **mElecTorque - mElecTorquePrevStep);
-		**mDelta = mDeltaPrevStep + mTimeStep / 2. * mBase_OmMech * (**mOmMech + mOmMechPrevStep - 2);
-		// CHECK: For mThetaMech_corr use mOmMech_corr already?
-		**mThetaMech = mThetaMechPrevStep + mTimeStep / 2. * (**mOmMech + mOmMechPrevStep) * mBase_OmMech;
-	}
-
 	// correction of electrical vars
 	// correct emf at t=k+1 (trapezoidal rule)
 	// TODO
-	(**mEdq) = mA_prev * mEdqtPrevStep + mA_corr * (**mEdq) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
+	//(**mEdq) = mA_prev * mEdqtPrevStep + mA_corr * (**mEdq) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	(**mIdq)(0,0) = ((**mEdq_s)(1,0) - (**mVdq)(1,0) ) / mLd_t;
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_s)(0,0) ) / mLq_t;
 
 	// convert corrected currents to dp domain
-	mDpToDq(0,0) = Complex(cos(**mThetaMech - mBase_OmMech * mSimTime), sin(**mThetaMech - mBase_OmMech * mSimTime));
-	mDpToDq(0,1) = -Complex(cos(**mThetaMech - mBase_OmMech * mSimTime - PI/2.), sin(**mThetaMech - mBase_OmMech * mSimTime - PI/2.));
 	(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
 
 	// stamp currents
@@ -190,10 +172,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::updateVoltage(const Matrix& leftVector
 	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
 	Matrix Vabc = Matrix(3,1);
 	Vabc << Vabc_(0,0).real(), Vabc_(1,0).real(), Vabc_(2,0).real();
-	if (**mNumIter == 0)
-		**mVdq = parkTransform(**mOmMech, Vabc) / mBase_V_RMS;
-	else
-		**mVdq = parkTransform(**mOmMech, Vabc) / mBase_V_RMS;
+	**mVdq = parkTransform(**mThetaMech, Vabc) / mBase_V_RMS;
 }
 
 bool DP::Ph1::SynchronGenerator6OrderPCM::requiresIteration() {
