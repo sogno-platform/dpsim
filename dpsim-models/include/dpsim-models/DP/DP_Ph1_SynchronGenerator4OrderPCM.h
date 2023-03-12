@@ -54,16 +54,26 @@ namespace Ph1 {
 		///
 		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) final {};
 
-		///
-		Matrix mEdqtPrevStep;
-		Matrix mIdqPrevStep;
-		Real mElecTorquePrevStep;
-		Real mOmMechPrevStep;
-		Real mThetaMechPrevStep;
-		Real mDeltaPrevStep;
+	protected:
+		// #### Model specific variables ####
+		/// Transient emf
+		const Attribute<Matrix>::Ptr mEdq_t;
 
-		///
+		// Variables saving values for later use
+		/// Edqt at k
+		Matrix mEdqtPrevStep;
+		/// Vdq at j-1
 		Matrix mVdqPrevIter;
+		/// Idq at k
+		Matrix mIdqPrevStep;
+		/// Electrica torque at k
+		Real mElecTorquePrevStep;
+		/// Mechanical omega at k
+		Real mOmMechPrevStep;
+		/// Mechanical theta at k
+		Real mThetaMechPrevStep;
+		/// Delta at k
+		Real mDeltaPrevStep;
 	};
 }
 }

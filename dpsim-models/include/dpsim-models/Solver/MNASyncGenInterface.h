@@ -16,10 +16,6 @@ namespace CPS {
 	/// Interface to be used by synchronous generators
 	class MNASyncGenInterface {
 	protected:
-		// #### Model specific variables ####
-		/// voltage behind the transient/subtransiet impedance at time k-1
-		Attribute<Matrix>::Ptr mEdq;
-
 		/// Matrix used when numerical method of predictor step = Euler
 		/// State Matrix backward euler: Edq(k) = mA_euler * Edq(k) + mB_euler * Idq + mC_euler * Ef
 		Matrix mA_euler;
