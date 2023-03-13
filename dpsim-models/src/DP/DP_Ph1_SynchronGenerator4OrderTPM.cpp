@@ -13,8 +13,8 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
     (String uid, String name, Logger::Level logLevel)
 	: Base::ReducedOrderSynchronGenerator<Complex>(uid, name, logLevel),
-	mEvbr(mAttributes->create<Complex>("Evbr")),
-	mEdq_t(mAttributes->create<Matrix>("Edq"))  {
+	mEhMod(mAttributes->create<Complex>("Ehmod")),
+	mEdq_t(mAttributes->create<Matrix>("Edq_t"))  {
 
 	mSGOrder = SGOrder::SG4Order;
 	mPhaseType = PhaseType::Single;
@@ -25,7 +25,6 @@ DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
 	mNumIter = mAttributes->create<Int>("NIterations", 0);
 
 	// model variables
-	mEh_vbr = Matrix::Zero(2,1);
 	**mEdq_t = Matrix::Zero(2,1);
 }
 
@@ -85,7 +84,7 @@ Matrix DP::Ph1::SynchronGenerator4OrderTPM::applyDPToDQTransform(const Complex& 
 	return dqMatrix;
 }
 
-void DP::Ph1::SynchronGenerator4OrderTPM::calculateAuxiliarConstants() {
+void DP::Ph1::SynchronGenerator4OrderTPM::calculateStateSpaceMatrices() {
 	mAStateSpace <<	-mLq / mTq0_t / mLq_t,	0,
               		0,						-mLd / mTd0_t / mLd_t;
 	mBStateSpace <<	(mLq-mLq_t) / mTq0_t / mLq_t,	0.0,
@@ -98,10 +97,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::specificInitialization() {
 	// initial emf in the dq reference frame
 	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
-
-	calculateAuxiliarConstants();
-
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
@@ -109,10 +105,11 @@ void DP::Ph1::SynchronGenerator4OrderTPM::specificInitialization() {
 		(**mEdq_t)(0,0),
 		(**mEdq_t)(1,0)
 	);
-	mSLog->flush();
+
+	calculateStateSpaceMatrices();
 }
 
-void DP::Ph1::SynchronGenerator4OrderTPM::calculateConductanceMatrix() {
+void DP::Ph1::SynchronGenerator4OrderTPM::calculateConstantConductanceMatrix() {
 	Matrix resistanceMatrix = Matrix::Zero(2,2);
 	resistanceMatrix(0,0) = 0;
 	resistanceMatrix(0,1) = (mA - mB) / 2.0;
@@ -125,19 +122,13 @@ void DP::Ph1::SynchronGenerator4OrderTPM::calculateConductanceMatrix() {
 	SPDLOG_LOGGER_INFO(mSLog, "\nR_const [Ohm]: {}", Logger::matrixToString(resistanceMatrix));
 
 	mConductanceMatrixConst = resistanceMatrix.inverse();
-
-	mSLog->info(
-		"\n--- Model specific initialization  ---",
-		(**mEdq_t)(0,0),
-		(**mEdq_t)(1,0)
-	);
-	mSLog->flush();
+	SPDLOG_LOGGER_INFO(mSLog, "\nG_const [S]: {}", Logger::matrixToString(mConductanceMatrixConst));
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
-
 	updateMatrixNodeIndices();
-	calculateConductanceMatrix();
+
+	calculateConstantConductanceMatrix();
 
 	// Stamp voltage source
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1, 0));
@@ -186,16 +177,16 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
-	// calculate original VBR voltage (trapezoidal rule)
-	mEh_vbr(0,0) = mAd_t * (**mIdq)(1,0) + mBd_t * (**mEdq_t)(0,0);
-	mEh_vbr(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * mEf_prev + mDq_t * (**mEf);
+	// calculate original history voltage of VBR model (trapezoidal rule)
+	mEh(0,0) = mAd_t * (**mIdq)(1,0) + mBd_t * (**mEdq_t)(0,0);
+	mEh(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * mEf_prev + mDq_t * (**mEf);
 
-	// convert original VBR voltage to dp domain
-	**mEvbr = applyDQToDPTransform(mEh_vbr) * mBase_V_RMS;
+	// set to original history voltage in dp domain
+	**mEhMod = applyDQToDPTransform(mEh) * mBase_V_RMS;
 
-	// add current prediction based component to VBR voltage in dp domain
-	**mEvbr += - Complex(mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(0,0), 0);
-	**mEvbr += - Complex(0, mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(1,0));
+	// add current prediction based component to modified history voltage of TPM model in dp domain
+	**mEhMod += - Complex(mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(0,0), 0);
+	**mEhMod += - Complex(0, mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(1,0));
 
 	// store values currently at t=k for later use
 	mIdpTwoPrevStep = **mIntfCurrent;
@@ -204,7 +195,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), **mEvbr);
+	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), **mEhMod);
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
@@ -226,12 +217,12 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 	IdpCorrection(0,0) = IdpCorrectionComplex.real();
 	IdpCorrection(1,0) = IdpCorrectionComplex.imag();
 
-	// reset original VBR voltage in dp domain
-	**mEvbr = applyDQToDPTransform(mEh_vbr) * mBase_V_RMS;
+	// reset to original history voltage of VBR model in dp domain
+	**mEhMod = applyDQToDPTransform(mEh) * mBase_V_RMS;
 
-	// add current correction based component to VBR voltage in dp domain
-	**mEvbr += - Complex(mBase_Z * (mResistanceMatrixVarying * IdpCorrection)(0,0), 0);
-	**mEvbr += - Complex(0, mBase_Z * (mResistanceMatrixVarying * IdpCorrection)(1,0));
+	// add current correction based component to modified history voltage of TPM model in dp domain
+	**mEhMod += - Complex(mBase_Z * (mResistanceMatrixVarying * IdpCorrection)(0,0), 0);
+	**mEhMod += - Complex(0, mBase_Z * (mResistanceMatrixVarying * IdpCorrection)(1,0));
 
 	// stamp currents
 	(**mRightVector).setZero();

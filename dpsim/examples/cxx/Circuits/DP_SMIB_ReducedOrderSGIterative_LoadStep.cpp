@@ -180,7 +180,7 @@ int main(int argc, char* argv[]) {
 	// log generator vars
 	logger->logAttribute(genDP->name() + ".Te", genDP->attribute("Te"));
 	logger->logAttribute(genDP->name() + ".NIterations", genDP->attribute("NIterations"));
-	logger->logAttribute(genDP->name() + ".Edq", genDP->attribute("Edq"));
+	logger->logAttribute(genDP->name() + ".Edq_t", genDP->attribute("Edq_t"));
 	logger->logAttribute(genDP->name() + ".Vdq0", genDP->attribute("Vdq0"));
 	logger->logAttribute(genDP->name() + ".Idq0", genDP->attribute("Idq0"));
 	logger->logAttribute(genDP->name() + ".omega", genDP->attribute("w_r"));

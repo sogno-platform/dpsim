@@ -22,11 +22,6 @@ namespace Ph1 {
 		public Base::ReducedOrderSynchronGenerator<Complex>,
 		public MNASyncGenInterface,
 		public SharedFactory<SynchronGenerator4OrderTPM> {
-	public:
-		// Common elements of all VBR models
-		/// voltage behind reactance phase a
-        const Attribute<Complex>::Ptr mEvbr;
-
 	protected:
 		/// Constant part as conductance matrix
 		Matrix mConductanceMatrixConst = Matrix::Zero(2,2);
@@ -41,8 +36,10 @@ namespace Ph1 {
 		// #### Model specific variables ####
 		/// Transient emf
 		const Attribute<Matrix>::Ptr mEdq_t;
-		/// VBR voltage
-		Matrix mEh_vbr;
+		/// Original history voltage of VBR model
+		Matrix mEh = Matrix::Zero(2,1);
+		/// Modified history voltage of TPM model
+        const Attribute<Complex>::Ptr mEhMod;
 
 		// Variables saving values for later use
 		/// Idp at k-1
@@ -72,9 +69,9 @@ namespace Ph1 {
 		/// Initializes component from power flow data
 		void specificInitialization() override;
 		///
-		void calculateAuxiliarConstants();
+		void calculateStateSpaceMatrices();
 		///
-		void calculateConductanceMatrix();
+		void calculateConstantConductanceMatrix();
 		///
 		void stepInPerUnit() override;
 		///
