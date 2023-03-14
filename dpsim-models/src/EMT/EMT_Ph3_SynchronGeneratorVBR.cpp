@@ -140,7 +140,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep
 	mSystemOmega = omega;
 	mTimeStep = timeStep;
 
-	mResistanceMat = Matrix::Zero(3, 3);
+	mResistanceMat = Matrix3x3Real::Zero(3, 3);
 	mResistanceMat <<
 		**mRs, 0, 0,
 		0, **mRs, 0,
@@ -318,11 +318,13 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 	R_eq_vbr = mResistanceMat + (2 / (mTimeStep*mBase_OmElec))*mDInductanceMat + K;
 	E_eq_vbr = mEsh_vbr + E_r_vbr;
 
-	// mBase_Z always a scalar? CHECK!
-	Matrix R_eq_vbr_inv = Matrix::Zero(3, 3);
-	Math::invertMatrix(R_eq_vbr, R_eq_vbr_inv);
-	mConductanceMat = R_eq_vbr_inv/mBase_Z;
-	mISourceEq = R_eq_vbr_inv*E_eq_vbr*mBase_I;
+	// TODO: check if this is necessary.
+	// mResistanceMat is dynamic matrix by default so inversion might not be the efficient variant for 3x3-matrices
+	// therefore, explicit definitions are used here. Might not be necessary.
+	Matrix3x3Real R_eq_vbr_mBase_Z = R_eq_vbr*mBase_Z;
+
+	mConductanceMat = (R_eq_vbr_mBase_Z).inverse();
+	mISourceEq = R_eq_vbr.inverse()*E_eq_vbr*mBase_I;
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
@@ -352,9 +354,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Real time, Int timeStepCoun
 		// to the synchronous generator pu system
 		mVfd = (mRfd / mLmd)*mExciter->step(mVd, mVq, mTimeStep);
 	}
-	Matrix R_eq_vbr_inv = Matrix::Zero(3, 3);
-	Math::invertMatrix(R_eq_vbr, R_eq_vbr_inv);
-	mIabc = R_eq_vbr_inv*(mVabc - E_eq_vbr);
+	mIabc = R_eq_vbr.inverse()*(mVabc - E_eq_vbr);
 
 	mIa = mIabc(0);
 	mIb = mIabc(1);
@@ -439,7 +439,6 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateL() {
 
 void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarConstants(Real dt) {
 
-	Matrix Fa_inv = Matrix::Zero(2, 2);
 	b11 = (mRkq1 / mLlkq1)*(mDLmq / mLlkq1 - 1);
 	b13 = mRkq1*mDLmq / mLlkq1;
 	b31 = (mRfd / mLlfd)*(mDLmd / mLlfd - 1);
@@ -470,8 +469,8 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarConstants(Real dt) {
 			dt*b13,
 			dt*b23;
 
-		Matrix Ea_inv = Matrix::Zero(2, 2);
-		Math::invertMatrix(Ea, Ea_inv);
+		Matrix Ea_inv = Ea.inverse();
+
 		E1 = Ea_inv * E1b;
 
 		E2b <<
@@ -491,22 +490,21 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarConstants(Real dt) {
 		2 - dt*b31, -dt*b32,
 		-dt*b41, 2 - dt*b42;
 
-	Math::invertMatrix(Fa, Fa_inv);
 	F1b <<
 		dt*b33,
 		dt*b43;
-	F1 = Fa_inv * F1b;
+	F1 = Fa.inverse() * F1b;
 
 	F2b <<
 		2 + dt*b31, dt*b32,
 		dt*b41, 2 + dt*b42;
 
-	F2 = Fa_inv * F2b;
+	F2 = Fa.inverse() * F2b;
 
 	F3b <<
 		2 * dt,
 		0;
-	F3 = Fa_inv * F3b;
+	F3 = Fa.inverse() * F3b;
 
 	C26 <<
 		0,
