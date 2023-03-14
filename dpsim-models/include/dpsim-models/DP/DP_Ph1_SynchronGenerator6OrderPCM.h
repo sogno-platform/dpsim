@@ -43,6 +43,14 @@ namespace Ph1 {
 		///
 		bool requiresIteration() override;
 		///
+		void updateDQToDPTransform();
+		///
+		void updateDPToDQTransform();
+		///
+		Complex applyDQToDPTransform(const Matrix& dqMatrix);
+		///
+		Matrix applyDPToDQTransform(const Complex& dpComplex);
+		///
 		void initializeResistanceMatrix() final {};
 
 		// #### MNA Functions ####
@@ -54,6 +62,11 @@ namespace Ph1 {
 		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) final {};
 
 		protected:
+		/// Transform from DQ to DP domain
+		Matrix mDQToDPTransform = Matrix::Zero(2,2);
+		/// Transform from DP to DQ domain
+		Matrix mDPToDQTransform = Matrix::Zero(2,2);
+		
 		// #### Model specific variables ####
 		/// Subransient emf
 		const Attribute<Matrix>::Ptr mEdq_s;
