@@ -16,6 +16,7 @@ DP::Ph1::SynchronGenerator6OrderPCM::SynchronGenerator6OrderPCM
 	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
 	mEdq_s(mAttributes->create<Matrix>("Edq_s")) {
 
+	mSGOrder = SGOrder::SG6bOrder;
 	mPhaseType = PhaseType::Single;
 	setTerminalNumber(1);
 
@@ -49,9 +50,6 @@ void DP::Ph1::SynchronGenerator6OrderPCM::specificInitialization() {
 	(**mEdq_s)(0,0) = (**mEdq_t)(0,0) + (mLq_t - mLq_s) * (**mIdq)(1,0);
 	(**mEdq_s)(1,0) = (**mEdq_t)(1,0) - (mLd_t - mLd_s) * (**mIdq)(0,0);
 
-	// initialize transformation matrix dp->dq
-	mDpToDq = Matrix::Zero(1,2);
-
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
@@ -70,6 +68,29 @@ void DP::Ph1::SynchronGenerator6OrderPCM::specificInitialization() {
 		mTolerance
 	);
 	mSLog->flush();
+}
+
+void DP::Ph1::SynchronGenerator6OrderPCM::updateDQToDPTransform() {
+	mDQToDPTransform << 	cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime),
+							sin(**mThetaMech - mBase_OmMech * mSimTime),	cos(**mThetaMech - mBase_OmMech * mSimTime);
+}
+
+void DP::Ph1::SynchronGenerator6OrderPCM::updateDPToDQTransform() {
+	mDPToDQTransform << 	cos(**mThetaMech - mBase_OmMech * mSimTime),	sin(**mThetaMech - mBase_OmMech * mSimTime),
+							-sin(**mThetaMech - mBase_OmMech * mSimTime),	cos(**mThetaMech - mBase_OmMech * mSimTime);
+}
+
+Complex DP::Ph1::SynchronGenerator6OrderPCM::applyDQToDPTransform(const Matrix& dqMatrix) {
+	Complex dpComplex;
+	dpComplex = Complex((mDQToDPTransform*dqMatrix)(0,0),(mDQToDPTransform*dqMatrix)(1,0));
+	return dpComplex;
+}
+
+Matrix DP::Ph1::SynchronGenerator6OrderPCM::applyDPToDQTransform(const Complex& dpComplex) {
+	Matrix dqMatrix = Matrix::Zero(2,1);
+	dqMatrix(0,0) = mDPToDQTransform(0,0) * dpComplex.real() + mDPToDQTransform(0,1) * dpComplex.imag();
+	dqMatrix(1,0) = mDPToDQTransform(1,0) * dpComplex.real() + mDPToDQTransform(1,1) * dpComplex.imag();
+	return dqMatrix;
 }
 
 void DP::Ph1::SynchronGenerator6OrderPCM::calculateStateMatrix() {
@@ -131,10 +152,8 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	(**mIdq)(0,0) = ((**mEdq_s)(1,0) - (**mVdq)(1,0) ) / mLd_s;
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_s)(0,0) ) / mLq_s;
 
-	// convert currents into the abc reference frame
-	mDpToDq(0,0) = Complex(cos(**mThetaMech - mBase_OmMech * mSimTime), sin(**mThetaMech - mBase_OmMech * mSimTime));
-	mDpToDq(0,1) = -Complex(cos(**mThetaMech - mBase_OmMech * mSimTime - PI/2.), sin(**mThetaMech - mBase_OmMech * mSimTime - PI/2.));
-	(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
+	// convert currents to dp domain
+	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;
 }
 
 void DP::Ph1::SynchronGenerator6OrderPCM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
@@ -144,6 +163,10 @@ void DP::Ph1::SynchronGenerator6OrderPCM::mnaCompApplyRightSideVectorStamp(Matri
 void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 	// corrector step (trapezoidal rule)
 	**mNumIter = **mNumIter + 1;
+
+	// update DQ-DP transforms according to mThetaMech
+	updateDQToDPTransform();
+	updateDPToDQTransform();
 
 	// correction of electrical vars
 	// correct emf at t=k+1 (trapezoidal rule)
@@ -155,7 +178,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_s)(0,0) ) / mLq_t;
 
 	// convert corrected currents to dp domain
-	(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
+	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;
 
 	// stamp currents
 	mnaCompApplyRightSideVectorStamp(**mRightVector);
@@ -169,10 +192,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::updateVoltage(const Matrix& leftVector
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 
 	// convert armature voltage into dq reference frame
-	MatrixComp Vabc_ = (**mIntfVoltage)(0, 0) * mShiftVector * Complex(cos(mNomOmega * mSimTime), sin(mNomOmega * mSimTime));
-	Matrix Vabc = Matrix(3,1);
-	Vabc << Vabc_(0,0).real(), Vabc_(1,0).real(), Vabc_(2,0).real();
-	**mVdq = parkTransform(**mThetaMech, Vabc) / mBase_V_RMS;
+	**mVdq = applyDPToDQTransform((**mIntfVoltage)(0, 0)) / mBase_V_RMS;
 }
 
 bool DP::Ph1::SynchronGenerator6OrderPCM::requiresIteration() {

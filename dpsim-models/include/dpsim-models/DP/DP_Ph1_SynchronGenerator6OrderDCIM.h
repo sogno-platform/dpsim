@@ -62,9 +62,6 @@ namespace Ph1 {
 		///
 		Matrix mC;
 
-		/// Transformation matrix dp->dq
-		MatrixComp mDpToDq;
-
 		/// Vector to create abc vector from a component
 		MatrixComp mShiftVector;
 

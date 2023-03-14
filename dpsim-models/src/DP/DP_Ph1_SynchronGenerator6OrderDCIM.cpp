@@ -25,9 +25,6 @@ DP::Ph1::SynchronGenerator6OrderDCIM::SynchronGenerator6OrderDCIM
 	//
 	mShiftVector = Matrix::Zero(3,1);
 	mShiftVector << Complex(1., 0), SHIFT_TO_PHASE_B, SHIFT_TO_PHASE_C;
-
-	// initialize transformation matrix dp->dq
-	mDpToDq = Matrix::Zero(1,2);
 }
 
 DP::Ph1::SynchronGenerator6OrderDCIM::SynchronGenerator6OrderDCIM
@@ -128,9 +125,10 @@ void DP::Ph1::SynchronGenerator6OrderDCIM::stepInPerUnit() {
 	**mIdq << mStates(4,0), mStates(5,0);
 
 	// convert currents into the abc reference frame
-	mDpToDq(0,0) = Complex(cos(**mThetaMech - mBase_OmMech * mSimTime), sin(**mThetaMech - mBase_OmMech * mSimTime));
-	mDpToDq(0,1) = -Complex(cos(**mThetaMech - mBase_OmMech * mSimTime - PI/2.), sin(**mThetaMech - mBase_OmMech * mSimTime - PI/2.));
-	(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
+	// TODO
+	//mDpToDq(0,0) = Complex(cos(**mThetaMech - mBase_OmMech * mSimTime), sin(**mThetaMech - mBase_OmMech * mSimTime));
+	//mDpToDq(0,1) = -Complex(cos(**mThetaMech - mBase_OmMech * mSimTime - PI/2.), sin(**mThetaMech - mBase_OmMech * mSimTime - PI/2.));
+	//(**mIntfCurrent)(0,0) = (mDpToDq * **mIdq)(0,0) * mBase_I_RMS;
 }
 
 void DP::Ph1::SynchronGenerator6OrderDCIM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
