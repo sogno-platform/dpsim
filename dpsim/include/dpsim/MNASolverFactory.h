@@ -17,6 +17,9 @@
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
 #endif
+#ifdef WITH_NICSLU
+#include <dpsim/NICSLUAdapter.h>
+#endif
 #ifdef WITH_CUDA
 #include <dpsim/GpuDenseAdapter.h>
 #ifdef WITH_CUDA_SPARSE
@@ -52,9 +55,12 @@ class MnaSolverFactory {
 #endif // WITH_CUDA
 			DirectLinearSolverImpl::DenseLU,
 			DirectLinearSolverImpl::SparseLU,
+#ifdef WITH_NICSLU
+			DirectLinearSolverImpl::NICSLU,
+#endif // WITH_NICSLU
 #ifdef WITH_KLU
 			DirectLinearSolverImpl::KLU
-#endif //WITH_KLU
+#endif // WITH_KLU
 		};
 		return ret;
 	}
@@ -98,6 +104,15 @@ class MnaSolverFactory {
 			std::shared_ptr<MnaSolverDirect<VarType>> kluSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
 			kluSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::KLU);
 			return kluSolver;
+		}
+#endif
+#ifdef WITH_NICSLU
+		case DirectLinearSolverImpl::NICSLU:
+		{
+			log->info("creating NICSLUAdapter solver implementation");
+			std::shared_ptr<MnaSolverDirect<VarType>> nicsluSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			nicsluSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::NICSLU);
+			return nicsluSolver;
 		}
 #endif
 #ifdef WITH_CUDA

@@ -348,6 +348,10 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 		case DirectLinearSolverImpl::KLU:
 			return std::make_shared<KLUAdapter>(mSLog);
 		#endif
+		#ifdef WITH_NICSLU
+		case DirectLinearSolverImpl::NICSLU:
+			return std::make_shared<NICSLUAdapter>();
+		#endif
 		#ifdef WITH_CUDA
 		case DirectLinearSolverImpl::CUDADense:
 			return std::make_shared<GpuDenseAdapter>(mSLog);

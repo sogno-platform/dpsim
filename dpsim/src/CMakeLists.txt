@@ -60,6 +60,12 @@ if(WITH_KLU)
 	)
 endif()
 
+if(WITH_NICSLU)
+	list(APPEND DPSIM_SOURCES
+		NICSLUAdapter.cpp
+	)
+endif()
+
 if(WITH_CUDA)
 	list(APPEND DPSIM_INCLUDE_DIRS
 		${CUDA_INCLUDE_DIRS}
