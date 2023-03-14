@@ -28,10 +28,10 @@ namespace Ph3 {
 
     protected:
         /// Resistance matrix in dq0 reference frame
-		Matrix mResistanceMatrixDq0;
+		Matrix3x3Real mResistanceMatrixDq0;
 
 		/// Conductance matrix
-		Matrix mConductanceMatrix;
+		Matrix3x3Real mConductanceMatrix;
 
 		///
 		Matrix mAbcToDq0;

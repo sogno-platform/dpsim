@@ -34,9 +34,7 @@ void EMT::Ph3::Switch::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	**mIntfVoltage = vInitABC.real();
-	Matrix impedance_inv = Matrix::Zero(3, 3);
-	Math::invertMatrix(impedance, impedance_inv);
-	**mIntfCurrent = (impedance_inv * vInitABC).real();
+	**mIntfCurrent = (impedance.inverse() * vInitABC).real();
 
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
@@ -59,8 +57,8 @@ void EMT::Ph3::Switch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Ma
 Bool EMT::Ph3::Switch::mnaIsClosed() { return **mSwitchClosed; }
 
 void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
-	Matrix conductance = Matrix::Zero(3, 3);
-	(**mSwitchClosed) ? Math::invertMatrix(**mClosedResistance, conductance) : Math::invertMatrix(**mOpenResistance, conductance);
+	Matrix3x3Real conductance = (**mSwitchClosed) ?
+		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0)) {
@@ -116,8 +114,8 @@ void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatr
 }
 
 void EMT::Ph3::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
-	Matrix conductance = Matrix::Zero(3, 3);
-	closed ? Math::invertMatrix(**mClosedResistance, conductance) : Math::invertMatrix(**mOpenResistance, conductance);
+	Matrix3x3Real conductance = (closed) ?
+		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0)) {

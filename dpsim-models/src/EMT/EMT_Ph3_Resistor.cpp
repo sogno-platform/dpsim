@@ -33,6 +33,9 @@ void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	**mIntfVoltage = vInitABC.real();
 
+	// TODO: here, the custom implementation for matrix inversion is still used, because mResistance is still a generic matrix.
+	// Change the definition in future, if valid. The author currently doesn't know if this is allowed (mResistance is defined in Base)
+	// This is also done in the following
 	Matrix mResistanceInv = Matrix::Zero(3, 3);
 	Math::invertMatrix(**mResistance, mResistanceInv);
 	**mIntfCurrent = (mResistanceInv * vInitABC).real();
@@ -152,9 +155,9 @@ void EMT::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 
 void EMT::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	// better use buffers?
-	Matrix matInv = Matrix::Zero(3, 3);
-	Math::invertMatrix(**mResistance, matInv);
-	**mIntfCurrent = matInv * **mIntfVoltage;
+	Matrix mResistanceInv = Matrix::Zero(3, 3);
+	Math::invertMatrix(**mResistance, mResistanceInv);
+	**mIntfCurrent = mResistanceInv * **mIntfVoltage;
 	SPDLOG_LOGGER_DEBUG(mSLog, "\nCurrent: {:s}", Logger::matrixToString(**mIntfCurrent));
 	mSLog->flush();
 }
