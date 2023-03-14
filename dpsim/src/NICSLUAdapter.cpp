@@ -60,8 +60,8 @@ namespace DPsim
 
 		this->changedEntries = listVariableSystemMatrixEntries;
     	Int varying_entries = Eigen::internal::convert_index<Int>(changedEntries.size());
-    	std::vector<Int> varying_columns;
-    	std::vector<Int> varying_rows;
+    	std::vector<uint__t> varying_columns;
+    	std::vector<uint__t> varying_rows;
 
 		for (auto &changedEntry : changedEntries)
 		{
@@ -122,9 +122,6 @@ namespace DPsim
 		}
 		else
 		{
-			auto Ap = Eigen::internal::convert_index<uint__t *>(systemMatrix.outerIndexPtr());
-			auto Ai = Eigen::internal::convert_index<uint__t *>(systemMatrix.innerIndexPtr());
-			auto Ax = Eigen::internal::convert_index<real__t *>(systemMatrix.valuePtr());
 			if(nicslu->cfgi[10] == 0 || nicslu->cfgi[10] == 1)
 				{
 					/* factorization path mode */

@@ -77,8 +77,8 @@ GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 # Deprecated build options
 # TODO: Remove deprecated options in future release
 option(WITH_EIGEN_MODULE     "Fetch Eigen3 as module (deprecated option)" OFF)
-option(WITH_KLU   	    		 "Build with KLU as module (deprecated option)" ON)
-option(WITH_NICSLU					 "Build with NICSLU as module (deprecated option)" OFF)
+option(WITH_KLU		           "Build with KLU as module (deprecated option)" ON)
+option(WITH_NICSLU	         "Build with NICSLU as module (deprecated option)" ON)
 option(WITH_SPDLOG_SUBMODULE "Fetch spdlog as module (deprecated option)" OFF)
 option(WITH_CIM_SUBMODULE    "Fetch CIMpp as module (deprecated option)" OFF)
 option(WITH_PYBIND_MODULE    "Fetch pybind11 as module (deprecated option)" OFF)

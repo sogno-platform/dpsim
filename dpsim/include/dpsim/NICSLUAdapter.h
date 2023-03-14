@@ -27,12 +27,6 @@ extern "C"
 
 namespace DPsim
 {
-	enum SCALING_METHOD {
-		NO_SCALING = 0,
-		SUM_SCALING = 1,
-		MAX_SCALING = 2
-	};
-
     class NICSLUAdapter : public DirectLinearSolver
     {
         /// Vector of variable entries in system matrix
@@ -43,11 +37,10 @@ namespace DPsim
 
 		/// Flags to indicate mode of operation
 		/// Define which ordering to choose in preprocessing
-		int m_partial_method = NICSLU_AMD_FP;
+		int m_partial_method = 1;
 
 		/// Define scaling method
-		/// Options are: 1: sum-scaling, 2: max scaling, <=0: no scaling
-		int m_scaling = SCALING_METHOD::SUM_SCALING;
+		int m_scaling = 1;
 
 		/// Flag to indicate if factorization succeeded
 		bool factorization_is_okay = false;
