@@ -42,21 +42,6 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 	for (UInt i = 0; i < mSwitches.size(); ++i)
 		mSwitches[i]->mnaApplySwitchSystemMatrixStamp(bit[i], sys, 0);
 
-	/* TODO: FIX!!
-	 * in matrix stamping, there are unnecessary nonzeros introduced. They need to be removed,
-	 * otherwise the linear solver can't solve the system - for unknown reasons for now. Probably because
-	 * the matrix indices are not sorted - at least that's where KLU fails
-	 *
-	 * pruning fixes this, but might not be the most efficient and elegant solution
-	 * (it must be known to developer to prune the matrix after applying all stamps)
-	 *
-	 * another way to fix this is to apply makeCompressed in the mnaApply*SystemMatrixStamp-functions. This way,
-	 * it is ensured that the matrix is safe for the solvers. This might cause performance degradations, depending
-	 * on the efficiency of makeCompressed - since it is then executed after each stamp, and not once after applying
-	 * all stamps
-	 */
-	sys.makeCompressed();
-
 	// Compute LU-factorization for system matrix
 	mDirectLinearSolvers[bit][0]->preprocessing(sys, mListVariableSystemMatrixEntries);
 
@@ -92,9 +77,6 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	SPDLOG_LOGGER_INFO(mSLog, "Stamping variable elements");
 	for (auto varElem : mMNAIntfVariableComps)
 		varElem->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
-
-	// get rid of excess zeros
-	mVariableSystemMatrix.makeCompressed();
 
 	SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
 	/* TODO: find replacement for flush() */
@@ -141,9 +123,6 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 	// Now stamp variable elements into matrix
 	for (auto comp : mMNAIntfVariableComps)
 		comp->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
-
-	// get rid of excess zeros
-	mVariableSystemMatrix.makeCompressed();
 
 	// Refactorization of matrix assuming that structure remained
 	// constant by omitting analyzePattern

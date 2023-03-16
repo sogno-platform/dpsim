@@ -74,9 +74,9 @@ void DP::Ph1::RXLoadSwitch::setSwitchParameters(Real openResistance, Real closed
 	mSubSwitch->setParameters(openResistance, closedResistance, closed);
 }
 
-void DP::Ph1::RXLoadSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
+void DP::Ph1::RXLoadSwitch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
 	mSubRXLoad->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubSwitch->mnaApplySwitchSystemMatrixStamp(closed, systemMatrix, freqIdx);
+	mSubSwitch->mnaCompApplySwitchSystemMatrixStamp(closed, systemMatrix, freqIdx);
 }
 
 void DP::Ph1::RXLoadSwitch::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
