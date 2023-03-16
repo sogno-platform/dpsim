@@ -82,7 +82,7 @@ void EMT::Ph3::SeriesSwitch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& syst
 	}
 }
 
-void EMT::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
+void EMT::Ph3::SeriesSwitch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
 	Real conductance = (closed)
 		? 1. / **mClosedResistance
 		: 1. / **mOpenResistance;

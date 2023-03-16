@@ -67,7 +67,7 @@ void DP::Ph3::SeriesSwitch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& syste
 	}
 }
 
-void DP::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
+void DP::Ph3::SeriesSwitch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
 	Complex conductance = (closed)
 		? Complex( 1. / **mClosedResistance, 0 )
 		: Complex( 1. / **mOpenResistance, 0 );

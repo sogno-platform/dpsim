@@ -113,7 +113,7 @@ void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatr
 		Logger::matrixToString(conductance));
 }
 
-void EMT::Ph3::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
+void EMT::Ph3::Switch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
 	MatrixFixedSize<3, 3> conductance = (closed) ?
 		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
