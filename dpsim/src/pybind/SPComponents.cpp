@@ -117,11 +117,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
 				gen.setReferenceOmega(refOmegaComp->attributeTyped<CPS::Real>(refOmegaName), refDeltaComp->attributeTyped<CPS::Real>(refDeltaName));
 			}, "ref_omega_name"_a="w_r", "ref_omage_comp"_a, "ref_delta_name"_a="delta_r", "ref_delta_comp"_a);
 
-	py::class_<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR, std::shared_ptr<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance())
-		.def("set_base_parameters", &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::setBaseParameters, "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
-		.def("set_initial_values", &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::setInitialValues, "init_complex_electrical_power"_a, "init_mechanical_power"_a, "init_complex_terminal_voltage"_a)
-		.def("scale_inertia_constant", &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::scaleInertiaConstant, "scaling_factor"_a)
-		.def("set_model_as_current_source", &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::setModelAsCurrentSource, "model_as_current_source"_a);
+	py::class_<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR, std::shared_ptr<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>, CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>(mSPPh1, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance());
 
 	py::class_<CPS::SP::Ph1::SynchronGenerator3OrderVBR, std::shared_ptr<CPS::SP::Ph1::SynchronGenerator3OrderVBR>, CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>(mSPPh1, "SynchronGenerator3OrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
