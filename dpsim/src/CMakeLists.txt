@@ -64,6 +64,9 @@ if(WITH_NICSLU)
 	list(APPEND DPSIM_SOURCES
 		NICSLUAdapter.cpp
 	)
+	list(APPEND DPSIM_LIBRARIES
+			nicslu
+			)
 endif()
 
 if(WITH_CUDA)
