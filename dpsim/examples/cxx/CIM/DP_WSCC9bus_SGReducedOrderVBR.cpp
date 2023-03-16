@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
 	simPF.setSolverType(Solver::Type::NRP);
 	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(true);
-    //simPF.addLogger(loggerPF);
+    simPF.addLogger(loggerPF);
     simPF.run();
 
 	// ----- DYNAMIC SIMULATION -----

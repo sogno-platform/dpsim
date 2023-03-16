@@ -323,7 +323,7 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 	// therefore, explicit definitions are used here. Might not be necessary.
 	Matrix3x3Real R_eq_vbr_mBase_Z = R_eq_vbr*mBase_Z;
 
-	mConductanceMat = (R_eq_vbr_mBase_Z).inverse();
+	mConductanceMat = R_eq_vbr_mBase_Z.inverse();
 	mISourceEq = R_eq_vbr.inverse()*E_eq_vbr*mBase_I;
 }
 
