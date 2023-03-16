@@ -43,6 +43,7 @@ void MNASimPowerComp<VarType>::mnaInitializeHarm(Real omega, Real timeStep, std:
 template<typename VarType>
 void MNASimPowerComp<VarType>::mnaApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	this->mnaCompApplySystemMatrixStamp(systemMatrix);
+	systemMatrix.makeCompressed();
 };
 
 template<typename VarType>
