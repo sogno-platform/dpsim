@@ -65,7 +65,6 @@ class MnaSolverFactory {
 		CPS::Domain domain = CPS::Domain::DP,
 		CPS::Logger::Level logLevel = CPS::Logger::Level::info,
 		DirectLinearSolverImpl implementation = DirectLinearSolverImpl::SparseLU,
-		DirectLinearSolverConfiguration configuration = DirectLinearSolverConfiguration(),
 		String pluginName = "plugin.so")
 	{
 		//To avoid regression we use SparseLU in case of undefined implementation
@@ -83,7 +82,6 @@ class MnaSolverFactory {
 			log->info("creating SparseLUAdapter solver implementation");
 			std::shared_ptr<MnaSolverDirect<VarType>> sparseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
 			sparseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::SparseLU);
-			sparseSolver->setDirectLinearSolverConfiguration(configuration);
 			return sparseSolver;
 		}
 		case DirectLinearSolverImpl::DenseLU:
@@ -91,7 +89,6 @@ class MnaSolverFactory {
 			log->info("creating DenseLUAdapter solver implementation");
 			std::shared_ptr<MnaSolverDirect<VarType>> denseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
 			denseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::DenseLU);
-			denseSolver->setDirectLinearSolverConfiguration(configuration);
 			return denseSolver;
 		}
 #ifdef WITH_KLU
@@ -100,7 +97,6 @@ class MnaSolverFactory {
 			log->info("creating KLUAdapter solver implementation");
 			std::shared_ptr<MnaSolverDirect<VarType>> kluSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
 			kluSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::KLU);
-			kluSolver->setDirectLinearSolverConfiguration(configuration);
 			return kluSolver;
 		}
 #endif

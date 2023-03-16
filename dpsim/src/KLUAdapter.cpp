@@ -20,59 +20,6 @@ KLUAdapter::~KLUAdapter()
         klu_free_numeric(&m_numeric, &m_common);
 }
 
-KLUAdapter::KLUAdapter(const DirectLinearSolverConfiguration& configuration)
-{
-	klu_defaults(&m_common);
-
-	switch(configuration.getScalingMethod())
-	{
-		case SCALING_METHOD::NO_SCALING:
-				m_common.scale = 0;
-				break;
-		case SCALING_METHOD::SUM_SCALING:
-				m_common.scale = 1;
-				break;
-		case SCALING_METHOD::MAX_SCALING:
-				m_common.scale = 2;
-				break;
-		default:
-				m_common.scale = 1;
-	}
-
-	// TODO: implement support for COLAMD (modifiy SuiteSparse)
-	switch(configuration.getFillInReductionMethod())
-	{
-		case FILL_IN_REDUCTION_METHOD::AMD:
-			m_preordering = AMD_ORDERING;
-			break;
-		case FILL_IN_REDUCTION_METHOD::AMD_NV:
-			m_preordering = AMD_ORDERING_NV;
-			break;
-		case FILL_IN_REDUCTION_METHOD::AMD_RA:
-			m_preordering = AMD_ORDERING_RA;
-			break;
-		default:
-			m_preordering = AMD_ORDERING;
-	}
-
-	// TODO: implement support for partial refactorization method. Use function pointers?
-
-	switch(configuration.getBTF())
-	{
-		case USE_BTF::DO_BTF:
-				m_common.btf = 1;
-				break;
-		case USE_BTF::NO_BTF:
-				m_common.btf = 0;
-				break;
-		default:
-				m_common.btf = 1;
-	}
-
-	m_varyingColumns.clear();
-	m_varyingRows.clear();
-}
-
 KLUAdapter::KLUAdapter()
 {
     klu_defaults(&m_common);
@@ -174,7 +121,18 @@ void KLUAdapter::partialRefactorize(SparseMatrix &systemMatrix,
         auto Ai = Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
         auto Ax = Eigen::internal::convert_index<Real *>(systemMatrix.valuePtr());
 
-        klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+		if(mConfiguration.getPartialRefactorizationMethod() == PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH)
+		{
+	        klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+		}
+		else if(mConfiguration.getPartialRefactorizationMethod() == PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART)
+		{
+			klu_partial_refactorization_restart(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+		}
+		else
+		{
+			klu_refactor(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+		}
 
         if (m_common.status == KLU_PIVOT_FAULT)
         {
@@ -228,5 +186,51 @@ void KLUAdapter::printMatrixMarket(SparseMatrix &matrix, int counter) const
         }
     }
     ofs.close();
+}
+
+void KLUAdapter::parseConfiguration()
+{
+	switch(mConfiguration.getScalingMethod())
+	{
+		case SCALING_METHOD::NO_SCALING:
+				m_common.scale = 0;
+				break;
+		case SCALING_METHOD::SUM_SCALING:
+				m_common.scale = 1;
+				break;
+		case SCALING_METHOD::MAX_SCALING:
+				m_common.scale = 2;
+				break;
+		default:
+				m_common.scale = 1;
+	}
+
+	// TODO: implement support for COLAMD (modifiy SuiteSparse)
+	switch(mConfiguration.getFillInReductionMethod())
+	{
+		case FILL_IN_REDUCTION_METHOD::AMD:
+			m_preordering = AMD_ORDERING;
+			break;
+		case FILL_IN_REDUCTION_METHOD::AMD_NV:
+			m_preordering = AMD_ORDERING_NV;
+			break;
+		case FILL_IN_REDUCTION_METHOD::AMD_RA:
+			m_preordering = AMD_ORDERING_RA;
+			break;
+		default:
+			m_preordering = AMD_ORDERING;
+	}
+
+	switch(mConfiguration.getBTF())
+	{
+		case USE_BTF::DO_BTF:
+				m_common.btf = 1;
+				break;
+		case USE_BTF::NO_BTF:
+				m_common.btf = 0;
+				break;
+		default:
+				m_common.btf = 1;
+	}
 }
 } // namespace DPsim

@@ -51,6 +51,7 @@ template <typename VarType>
 void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
 	this->mDirectLinearSolverVariableSystemMatrix = createDirectSolverImplementation();
+	this->mDirectLinearSolverVariableSystemMatrix->setConfiguration(configurationInUse);
 
 	SPDLOG_LOGGER_INFO(mSLog, "Number of variable Elements: {}"
 				"\nNumber of MNA components: {}",
@@ -317,7 +318,7 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 			return std::make_shared<SparseLUAdapter>();
 		#ifdef WITH_KLU
 		case DirectLinearSolverImpl::KLU:
-			return std::make_shared<KLUAdapter>(this->configurationInUse);
+			return std::make_shared<KLUAdapter>();
 		#endif
 		#ifdef WITH_CUDA
 		case DirectLinearSolverImpl::CUDADense:

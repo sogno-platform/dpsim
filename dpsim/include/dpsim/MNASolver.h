@@ -184,7 +184,6 @@ namespace DPsim {
 		virtual void log(Real time, Int timeStepCount) override;
 
 	public:
-
 		/// Solution vector of unknown quantities
 		CPS::Attribute<Matrix>::Ptr mLeftSideVector;
 
