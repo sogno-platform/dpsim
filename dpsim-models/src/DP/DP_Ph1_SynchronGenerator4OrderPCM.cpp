@@ -39,7 +39,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator4OrderPCM::clone(const Stri
 
 void DP::Ph1::SynchronGenerator4OrderPCM::specificInitialization() {
 	// calculate state representation matrix
-	calculateStateMatrix();
+	calculateStateSpaceMatrices();
 
 	// initial voltage behind the transient reactance in the dq0 reference frame
 	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
@@ -51,6 +51,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::specificInitialization() {
 		"\nInitial Eq_t (per unit): {:f}"
 		"\nMax number of iterations: {:d}"
 		"\nTolerance: {:f}"
+		"\nSG Model: 4 Order PCM"
 		"\n--- Model specific initialization finished ---",
 
 		(**mEdq_t)(0,0),
@@ -84,56 +85,41 @@ Matrix DP::Ph1::SynchronGenerator4OrderPCM::applyDPToDQTransform(const Complex& 
 	return dqMatrix;
 }
 
-void DP::Ph1::SynchronGenerator4OrderPCM::calculateStateMatrix() {
+void DP::Ph1::SynchronGenerator4OrderPCM::calculateStateSpaceMatrices() {
 	// Initialize matrices of state representation of predictor step
-	mA_euler = Matrix::Zero(2,2);
-	mA_euler << 1 - mTimeStep / mTq0_t,		0.0,
-	      		0.0,	 1 - mTimeStep / mTd0_t;
-	mB_euler = Matrix::Zero(2,2);
-	mB_euler << 0.0,	(mLq - mLq_t) * mTimeStep / mTq0_t,
-		  		- (mLd - mLd_t) * mTimeStep / mTd0_t, 		0.0;
-	mC_euler = Matrix::Zero(2,1);
-	mC_euler <<  				0.0,
-	  			(mTimeStep / mTd0_t);
-
-	// Initialize matrix of state representation of corrector step
-	mA_prev = Matrix::Zero(2,2);
-	mA_prev <<  1 - mTimeStep / (2 * mTq0_t),	0.0,
-	       		0.0,	1 - mTimeStep / (2 * mTd0_t);
-	mA_corr = Matrix::Zero(2,2);
-	mA_corr << - mTimeStep / (2 * mTq0_t),	0.0,
-	    	   0.0, - mTimeStep / (2 * mTd0_t);
-	mB_corr = Matrix::Zero(2,2);
-	mB_corr <<	0.0, (mLq - mLq_t) * mTimeStep / (2 * mTq0_t),
-				- (mLd - mLd_t) * mTimeStep / (2 * mTd0_t), 0.0;
-
-	mC_corr = Matrix::Zero(2,1);
-	mC_corr <<   				0.0,
-	  			(mTimeStep / mTd0_t);
+	mAStateSpace <<	-mLq / mTq0_t / mLq_t,	0,
+              		0,						-mLd / mTd0_t / mLd_t;
+	mBStateSpace <<	(mLq-mLq_t) / mTq0_t / mLq_t,	0.0,
+					0.0,							(mLd-mLd_t) / mTd0_t / mLd_t;
+	mCStateSpace <<	0,
+					**mEf / mTd0_t;
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	// set number of iterations equal to zero
 	**mNumIter = 0;
 
+	// store values currently at t=k for later use
+	mEdqtPrevStep = **mEdq_t;
+	mIdqPrevStep = **mIdq;
+
 	// update DQ-DP transforms according to mThetaMech
 	updateDQToDPTransform();
 	updateDPToDQTransform();
 
-	// store values currently at t=k-1 for later use
-	mEdqtPrevStep = **mEdq_t;
-	mIdqPrevStep = **mIdq;
-
-	// prediction emf at t=k
-	**mEdq_t = mA_euler * (**mEdq_t) + mB_euler * **mIdq + mC_euler * (**mEf);
+	// predict emf at t=k+1 (euler) using 
+	(**mEdq_t) = Math::StateSpaceEuler(**mEdq_t, mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, **mVdq);
 	
-	// predict stator currents at t=k (assuming Vdq(k+1)=Vdq(k))
+	// predict stator currents at t=k+1 (assuming Vdq(k+1)=Vdq(k))
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0)) / mLd_t;
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0)) / mLq_t;
 
 	// convert currents to dp domain
 	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;
 
+	// store values currently at t=k for later use
+	mVdqPrevStep = **mVdq;
+	mEdqtPrevStep = **mEdq_t;
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
@@ -145,16 +131,17 @@ void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
 	// increase number of iterations
 	**mNumIter = **mNumIter + 1;
 
-	// correction of electrical vars
-	// correct emf at t=k+1 (trapezoidal rule)
-	(**mEdq_t) = mA_prev * mEdqtPrevStep + mA_corr * (**mEdq_t) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
+	// correct electrical vars
+	// calculate emf at j and k+1 (trapezoidal rule)
+	(**mEdq_t) = Math::StateSpaceTrapezoidal(mEdqtPrevStep, mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, **mVdq, mVdqPrevStep);
+
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0) ) / mLq_t;
 
 	// convert corrected currents to dp domain
-	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;
+	(**mIntfCurrent)(0,0) = applyDQToDPTransform(**mIdq) * mBase_I_RMS;
 
 	// stamp currents
 	mnaCompApplyRightSideVectorStamp(**mRightVector);
