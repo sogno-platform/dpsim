@@ -56,9 +56,6 @@ namespace DPsim
 		/// Constructor
 		KLUAdapter();
 
-		/// Constructor with Configuration Class
-		KLUAdapter(const DirectLinearSolverConfiguration& configuration);
-
 		/// preprocessing function pre-ordering and scaling the matrix
 		void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
 
@@ -78,5 +75,8 @@ namespace DPsim
 
 		/// Function to print matrix in MatrixMarket's coo format
 		void printMatrixMarket(SparseMatrix& systemMatrix, int counter) const;
+
+		/// Parse configuration
+		void parseConfiguration() override;
     };
 }

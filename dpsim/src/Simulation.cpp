@@ -127,7 +127,7 @@ void Simulation::createSolvers() {
 
 template <typename VarType>
 void Simulation::createMNASolver() {
-	Solver::Ptr solver;
+	Solver::Ptr	 solver;
 	std::vector<SystemTopology> subnets;
 	// The Diakoptics solver splits the system at a later point.
 	// That is why the system is not split here if tear components exist.
@@ -150,7 +150,7 @@ void Simulation::createMNASolver() {
 		} else {
 			// Default case with lu decomposition from mna factory
 			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
-												 mLogLevel, mDirectImpl, mDirectLinearSolverConfiguration, mSolverPluginName);
+												 mLogLevel, mDirectImpl, mSolverPluginName);
 			solver->setTimeStep(**mTimeStep);
 			solver->doSteadyStateInit(**mSteadyStateInit);
 			solver->doFrequencyParallelization(mFreqParallel);
@@ -160,6 +160,7 @@ void Simulation::createMNASolver() {
 			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
 			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
+			solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
 			solver->initialize();
 		}
 		mSolvers.push_back(solver);

@@ -20,11 +20,8 @@
 
 namespace DPsim
 {
-	/// Abstract linear solver class for MNA simulation
-
 	class DirectLinearSolver
 	{
-
 		public:
 		/// Constructor
 		DirectLinearSolver() = default;
@@ -58,5 +55,17 @@ namespace DPsim
 
 		/// solution function for a right hand side
 		virtual Matrix solve(Matrix& rightSideVector) = 0;
+
+		virtual void setConfiguration(DirectLinearSolverConfiguration& configuration)
+		{
+			mConfiguration = configuration;
+			this->parseConfiguration();
+		}
+
+		protected:
+		/// Abstract linear solver class for MNA simulation
+		DirectLinearSolverConfiguration mConfiguration;
+
+		virtual void parseConfiguration() {}
 	};
 }
