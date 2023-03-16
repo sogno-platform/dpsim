@@ -50,11 +50,11 @@ void MnaSolverPlugin<VarType>::recomputeSystemMatrix(Real time) {
 
 	// Now stamp switches into matrix
 	for (auto sw : this->mMNAIntfSwitches)
-		sw->mnaApplySparseSystemMatrixStamp(this->mVariableSystemMatrix);
+		sw->mnaApplySystemMatrixStamp(this->mVariableSystemMatrix);
 
 	// Now stamp variable elements into matrix
 	for (auto comp : this->mMNAIntfVariableComps)
-		comp->mnaApplySparseSystemMatrixStamp(this->mVariableSystemMatrix);
+		comp->mnaApplySystemMatrixStamp(this->mVariableSystemMatrix);
 
     int size = this->mRightSideVector.rows();
 	int nnz = this->mVariableSystemMatrix.nonZeros();

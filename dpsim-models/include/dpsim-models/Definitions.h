@@ -84,7 +84,7 @@ namespace CPS {
 	typedef Eigen::Matrix<Complex, 2, 2, Eigen::ColMajor> Matrix2x2Comp;
 	/// @brief Dense 3-by-3 matrix for real numbers.
 	typedef Eigen::Matrix<Real, 3, 3, Eigen::ColMajor> Matrix3x3Real;
-	/// @brief Dense 2-by-2 matrix for real numbers.
+	/// @brief Dense 2-by-2 matrix for complex numbers.
 	typedef Eigen::Matrix<Complex, 3, 3, Eigen::ColMajor> Matrix3x3Comp;
 	/// @brief Dense matrix for integers.
 	typedef Eigen::Matrix<Int, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> MatrixInt;
