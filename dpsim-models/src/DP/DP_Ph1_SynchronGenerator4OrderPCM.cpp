@@ -102,6 +102,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	// store values currently at t=k for later use
 	mEdqtPrevStep = **mEdq_t;
 	mIdqPrevStep = **mIdq;
+	mVdqPrevStep = **mVdq;
 
 	// update DQ-DP transforms according to mThetaMech
 	updateDQToDPTransform();
@@ -115,11 +116,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0)) / mLq_t;
 
 	// convert currents to dp domain
-	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;
-
-	// store values currently at t=k for later use
-	mVdqPrevStep = **mVdq;
-	mEdqtPrevStep = **mEdq_t;
+	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;	
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
@@ -134,7 +131,6 @@ void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
 	// correct electrical vars
 	// calculate emf at j and k+1 (trapezoidal rule)
 	(**mEdq_t) = Math::StateSpaceTrapezoidal(mEdqtPrevStep, mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, **mVdq, mVdqPrevStep);
-
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
