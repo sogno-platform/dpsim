@@ -140,7 +140,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep
 	mSystemOmega = omega;
 	mTimeStep = timeStep;
 
-	mResistanceMat = Matrix3x3Real::Zero(3, 3);
+	mResistanceMat = MatrixFixedSize<3, 3>::Zero(3, 3);
 	mResistanceMat <<
 		**mRs, 0, 0,
 		0, **mRs, 0,
@@ -321,7 +321,7 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 	// TODO: check if this is necessary.
 	// mResistanceMat is dynamic matrix by default so inversion might not be the efficient variant for 3x3-matrices
 	// therefore, explicit definitions are used here. Might not be necessary.
-	Matrix3x3Real R_eq_vbr_mBase_Z = R_eq_vbr*mBase_Z;
+	MatrixFixedSize<3, 3> R_eq_vbr_mBase_Z = R_eq_vbr*mBase_Z;
 
 	mConductanceMat = R_eq_vbr_mBase_Z.inverse();
 	mISourceEq = R_eq_vbr.inverse()*E_eq_vbr*mBase_I;

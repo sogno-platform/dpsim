@@ -126,31 +126,31 @@ namespace Ph3 {
 		/// Dynamic Voltage Vector
 		Matrix mDVqd = Matrix::Zero(2, 1);
 		/// Equivalent VBR Stator Resistance
-		Matrix3x3Real R_eq_vbr = Matrix3x3Real::Zero(3, 3);
+		MatrixFixedSize<3, 3> R_eq_vbr = MatrixFixedSize<3, 3>::Zero(3, 3);
 		/// Equivalent VBR Stator Voltage Source
 		Matrix E_eq_vbr = Matrix::Zero(3, 1);
 		/// Park Transformation Matrix
-		Matrix3x3Real mKrs_teta = Matrix3x3Real::Zero(3, 3);
+		MatrixFixedSize<3, 3> mKrs_teta = MatrixFixedSize<3, 3>::Zero(3, 3);
 		/// Inverse Park Transformation Matrix
-		Matrix3x3Real mKrs_teta_inv = Matrix3x3Real::Zero(3, 3);
+		MatrixFixedSize<3, 3> mKrs_teta_inv = MatrixFixedSize<3, 3>::Zero(3, 3);
 
 		/// Auxiliar variables
 		Real c21_omega;
 		Real c22_omega;
 		Real c13_omega;
 		Real c14_omega;
-		Matrix2x2Real K1a = Matrix2x2Real::Zero(2, 2);
+		MatrixFixedSize<2, 2> K1a = MatrixFixedSize<2, 2>::Zero(2, 2);
 		Matrix K1b = Matrix::Zero(2, 1);
 		Matrix K1 = Matrix::Zero(2, 1);
-		Matrix2x2Real K2a = Matrix2x2Real::Zero(2, 2);
+		MatrixFixedSize<2, 2> K2a = MatrixFixedSize<2, 2>::Zero(2, 2);
 		Matrix K2b = Matrix::Zero(2, 1);
 		Matrix K2 = Matrix::Zero(2, 1);
 		Matrix H_qdr = Matrix::Zero(3, 1);
 		Matrix h_qdr;
-		Matrix3x3Real K = Matrix3x3Real::Zero(3, 3);
+		MatrixFixedSize<3, 3> K = MatrixFixedSize<3, 3>::Zero(3, 3);
 		Matrix mEsh_vbr = Matrix::Zero(3, 1);
 		Matrix E_r_vbr = Matrix::Zero(3, 1);
-		Matrix2x2Real K1K2 = Matrix2x2Real::Zero(2, 2);
+		MatrixFixedSize<2, 2> K1K2 = MatrixFixedSize<2, 2>::Zero(2, 2);
 
 		/// Auxiliar constants
 		Real c11;
@@ -177,17 +177,17 @@ namespace Ph3 {
 		Real E1_1d;
 		Real E2_1d;
 
-		Matrix2x2Real Ea = Matrix2x2Real::Zero(2, 2);
+		MatrixFixedSize<2, 2> Ea = MatrixFixedSize<2, 2>::Zero(2, 2);
 		Matrix E1b = Matrix::Zero(2, 1);
 		// annotation: E1 and F1 seem to be vectors (Zero(2, 1)) and not matrices
 		Matrix E1 = Matrix::Zero(2, 2);
-		Matrix2x2Real Fa = Matrix2x2Real::Zero(2, 2);
+		MatrixFixedSize<2, 2> Fa = MatrixFixedSize<2, 2>::Zero(2, 2);
 		Matrix F1b = Matrix::Zero(2, 1);
 		Matrix F1 = Matrix::Zero(2, 2);
-		Matrix2x2Real E2b = Matrix2x2Real::Zero(2, 2);
-		Matrix2x2Real E2 = Matrix2x2Real::Zero(2, 2);
-		Matrix2x2Real F2b = Matrix2x2Real::Zero(2, 2);
-		Matrix2x2Real F2 = Matrix2x2Real::Zero(2, 2);
+		MatrixFixedSize<2, 2> E2b = MatrixFixedSize<2, 2>::Zero(2, 2);
+		MatrixFixedSize<2, 2> E2 = MatrixFixedSize<2, 2>::Zero(2, 2);
+		MatrixFixedSize<2, 2> F2b = MatrixFixedSize<2, 2>::Zero(2, 2);
+		MatrixFixedSize<2, 2> F2 = MatrixFixedSize<2, 2>::Zero(2, 2);
 		Matrix F3b = Matrix::Zero(2, 1);
 		Matrix F3 = Matrix::Zero(2, 2);
 		Matrix C26 = Matrix::Zero(2, 1);
