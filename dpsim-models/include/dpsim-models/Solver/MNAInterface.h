@@ -26,10 +26,6 @@ namespace CPS {
 		virtual void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) = 0;
 		/// Stamps system matrix
 		virtual void mnaApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) = 0;
-		/// Stamps (sparse) system matrix
-		virtual void mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) {
-			mnaApplySystemMatrixStamp(systemMatrix);
-		}
 		/// Stamps right side (source) vector
 		virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector) = 0;
 		/// Update interface voltage from MNA system result

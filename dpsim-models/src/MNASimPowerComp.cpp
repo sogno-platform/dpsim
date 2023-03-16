@@ -15,11 +15,6 @@ Attribute<Matrix>::Ptr MNASimPowerComp<VarType>::getRightVector() const {
 }
 
 template<typename VarType>
-void MNASimPowerComp<VarType>::mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) {
-	this->mnaApplySystemMatrixStamp(systemMatrix);
-}
-
-template<typename VarType>
 void MNASimPowerComp<VarType>::mnaInitialize(Real omega, Real timeStep) {
 	mMnaTasks.clear();
 }

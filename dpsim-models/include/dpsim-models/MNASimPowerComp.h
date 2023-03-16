@@ -45,7 +45,6 @@ namespace CPS {
 		void mnaInitialize(Real omega, Real timeStep) final;
 		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) final;
 		void mnaApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) final;
-		void mnaApplySparseSystemMatrixStamp(SparseMatrixRow& systemMatrix) final;
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector) final;
 		void mnaUpdateVoltage(const Matrix& leftVector) final;
 		void mnaUpdateCurrent(const Matrix& leftVector) final;

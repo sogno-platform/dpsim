@@ -37,10 +37,10 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 	auto bit = std::bitset<SWITCH_NUM>(index);
 	auto& sys = mSwitchedMatrices[bit][0];
 	for (auto component : comp) {
-		component->mnaApplySparseSystemMatrixStamp(sys);
+		component->mnaApplySystemMatrixStamp(sys);
 	}
 	for (UInt i = 0; i < mSwitches.size(); ++i)
-		mSwitches[i]->mnaApplySwitchSparseSystemMatrixStamp(bit[i], sys, 0);
+		mSwitches[i]->mnaApplySwitchSystemMatrixStamp(bit[i], sys, 0);
 
 	/* TODO: FIX!!
 	 * in matrix stamping, there are unnecessary nonzeros introduced. They need to be removed,
@@ -48,7 +48,7 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 	 * the matrix indices are not sorted - at least that's where KLU fails
 	 *
 	 * pruning fixes this, but might not be the most efficient and elegant solution
-	 * (it must be known to developer to prune the matrix after each stamp)
+	 * (it must be known to developer to prune the matrix after applying all stamps)
 	 */
 	sys.makeCompressed();
 
@@ -71,12 +71,9 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	// Build base matrix with only static elements
 	mBaseSystemMatrix.setZero();
 	for (auto statElem : mMNAComponents)
-		statElem->mnaApplySparseSystemMatrixStamp(mBaseSystemMatrix);
+		statElem->mnaApplySystemMatrixStamp(mBaseSystemMatrix);
 	SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
 	mSLog->flush();
-	/* TODO: mnaApplySparseSystemMatrixStamp inefficient. It casts the sparse input matrix mVariableSystemMatrix to a dense matrix and back to sparse.
-	 * Also, some of the components have zero entries now - or don't apply any stamps, which results in a different pattern during recomputation.
-	 * This will be fixed in the branch profiling-based-optimisation */
 
 	// Continue from base matrix
 	mVariableSystemMatrix = mBaseSystemMatrix;
@@ -84,12 +81,12 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	// Now stamp switches into matrix
 	SPDLOG_LOGGER_INFO(mSLog, "Stamping switches");
 	for (auto sw : mMNAIntfSwitches)
-		sw->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
+		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
 	// Now stamp initial state of variable elements into matrix
 	SPDLOG_LOGGER_INFO(mSLog, "Stamping variable elements");
 	for (auto varElem : mMNAIntfVariableComps)
-		varElem->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
+		varElem->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
 	// get rid of excess zeros
 	mVariableSystemMatrix.makeCompressed();
@@ -134,11 +131,11 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 
 	// Now stamp switches into matrix
 	for (auto sw : mMNAIntfSwitches)
-		sw->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
+		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
 	// Now stamp variable elements into matrix
 	for (auto comp : mMNAIntfVariableComps)
-		comp->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
+		comp->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
 	// get rid of excess zeros
 	mVariableSystemMatrix.makeCompressed();

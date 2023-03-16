@@ -166,7 +166,7 @@ int main(int argc, char *argv[]) {
 	sim.setFinalTime(finalTime);
 	sim.doSystemMatrixRecomputation(true);
 	sim.setDirectLinearSolverImplementation(implementation);
-	//sim.addLogger(logger);
+	sim.addLogger(logger);
 
 	// Optionally add switch event
 	if (withFault) {

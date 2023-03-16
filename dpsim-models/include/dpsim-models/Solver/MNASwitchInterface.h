@@ -25,9 +25,5 @@ namespace CPS {
 		virtual Bool mnaIsClosed() = 0;
 		/// Stamps system matrix considering the defined switch position
 		virtual void mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) { }
-		/// Stamps (sparse) system matrix considering the defined switch position
-		virtual void mnaApplySwitchSparseSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
-			mnaApplySwitchSystemMatrixStamp(closed, systemMatrix, freqIdx);
-		}
 	};
 }

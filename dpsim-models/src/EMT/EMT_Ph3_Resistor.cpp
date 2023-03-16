@@ -154,10 +154,9 @@ void EMT::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	// better use buffers?
-	Matrix mResistanceInv = Matrix::Zero(3, 3);
-	Math::invertMatrix(**mResistance, mResistanceInv);
-	**mIntfCurrent = mResistanceInv * **mIntfVoltage;
+	Matrix resistanceInv = Matrix::Zero(3, 3);
+	Math::invertMatrix(**mResistance, resistanceInv);
+	**mIntfCurrent = resistanceInv * **mIntfVoltage;
 	SPDLOG_LOGGER_DEBUG(mSLog, "\nCurrent: {:s}", Logger::matrixToString(**mIntfCurrent));
 	mSLog->flush();
 }
