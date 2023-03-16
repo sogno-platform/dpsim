@@ -27,9 +27,11 @@ namespace DPsim
 		NicsLU_Initialize(nicslu);
 		 /* here: NICSLU parameters are set */
 		/* scaling modes, etc. */
-		nicslu->cfgi[0] = 0;
+		nicslu->cfgi[0] = NICSLU_CSR_STORAGE;
+		/* use mc64? */
 		nicslu->cfgi[1] = 1;
-		nicslu->cfgi[10] = 0;
+		/* (Partial) Ordering */
+		nicslu->cfgi[10] = NICSLU_AMD_ORDERING;
 
 		/* setting pivoting tolerance for refatorization */
 		nicslu->cfgf[31] = 1e-8;
@@ -78,7 +80,10 @@ namespace DPsim
 		real__t* Az = Eigen::internal::convert_index<real__t *>(systemMatrix.valuePtr());
 		NicsLU_ResetMatrixValues(nicslu, Az);
 		NicsLU_Factorize(nicslu);
-		if(nicslu->cfgi[10] == 0 || nicslu->cfgi[10] == 1)
+
+		// FIXME: The mode of partial refactorization shall be determined by the user using the configuration class and not the ordering method
+		// also fix down below
+		if(nicslu->cfgi[10] ==  NICSLU_AMD_ORDERING || nicslu->cfgi[10] == NICSLU_AMD_NV_ORDERING)
 		{
 			/* factorization path required here */
 			NicsLU_compute_path(nicslu);
@@ -122,7 +127,7 @@ namespace DPsim
 		}
 		else
 		{
-			if(nicslu->cfgi[10] == 0 || nicslu->cfgi[10] == 1)
+			if(nicslu->cfgi[10] == NICSLU_AMD_ORDERING || nicslu->cfgi[10] == NICSLU_AMD_NV_ORDERING)
 				{
 					/* factorization path mode */
 
@@ -130,7 +135,7 @@ namespace DPsim
 					real__t* Ax = Eigen::internal::convert_index<real__t *>(systemMatrix.valuePtr());
 
 					/* Refactorize partially with new values */
-					int numOk = NicsLU_PartialReFactorize(nicslu, Ax);
+					int numOk = NicsLU_Partial_Factorization_Path(nicslu, Ax);
 
 					/* check whether a pivot became too large or too small */
 					if (numOk == NICSLU_NUMERIC_OVERFLOW)
@@ -151,7 +156,7 @@ namespace DPsim
 					real__t* Ax = Eigen::internal::convert_index<real__t *>(systemMatrix.valuePtr());
 
 					// Refactorize with new values
-					int numOk = NicsLU_FPartialReFactorize(nicslu, Ax);
+					int numOk = NicsLU_Partial_Refactorization_Restart(nicslu, Ax);
 
 					// check whether a pivot became too large or too small
 					if (numOk == NICSLU_NUMERIC_OVERFLOW)
