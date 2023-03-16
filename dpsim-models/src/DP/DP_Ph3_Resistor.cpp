@@ -56,7 +56,7 @@ void DP::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 
 void DP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 
-	Matrix3x3Real conductance = (**mResistance).inverse();
+	MatrixFixedSize<3, 3> conductance = (**mResistance).inverse();
 
 	//// Set diagonal entries
 	//if (terminalNotGrounded(0))

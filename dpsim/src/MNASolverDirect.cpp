@@ -49,6 +49,11 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 	 *
 	 * pruning fixes this, but might not be the most efficient and elegant solution
 	 * (it must be known to developer to prune the matrix after applying all stamps)
+	 *
+	 * another way to fix this is to apply makeCompressed in the mnaApply*SystemMatrixStamp-functions. This way,
+	 * it is ensured that the matrix is safe for the solvers. This might cause performance degradations, depending
+	 * on the efficiency of makeCompressed - since it is then executed after each stamp, and not once after applying
+	 * all stamps
 	 */
 	sys.makeCompressed();
 

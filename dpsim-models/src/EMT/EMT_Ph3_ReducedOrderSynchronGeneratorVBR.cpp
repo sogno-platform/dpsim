@@ -29,17 +29,17 @@ EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::initializeResistanceMatrix() {
 	// dq0 resistance matrix
-	mResistanceMatrixDq0 = Matrix3x3Real::Zero(3,3);
+	mResistanceMatrixDq0 = MatrixFixedSize<3, 3>::Zero(3,3);
 	mResistanceMatrixDq0 <<	0.0,	mA,		0.0,
 							mB,		0.0,	0.0,
 					  		0.0,	0.0,	mL0;
 
 	// initialize conductance matrix
-	mConductanceMatrix = Matrix3x3Real::Zero(3,3);
+	mConductanceMatrix = MatrixFixedSize<3, 3>::Zero(3,3);
 }
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
-	Matrix3x3Real resistanceMatrix =  mDq0ToAbc * mResistanceMatrixDq0 * mAbcToDq0;
+	MatrixFixedSize<3, 3> resistanceMatrix =  mDq0ToAbc * mResistanceMatrixDq0 * mAbcToDq0;
 	resistanceMatrix = resistanceMatrix * mBase_Z;
 	mConductanceMatrix = resistanceMatrix.inverse();
 }

@@ -57,7 +57,7 @@ void EMT::Ph3::Switch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Ma
 Bool EMT::Ph3::Switch::mnaIsClosed() { return **mSwitchClosed; }
 
 void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
-	Matrix3x3Real conductance = (**mSwitchClosed) ?
+	MatrixFixedSize<3, 3> conductance = (**mSwitchClosed) ?
 		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
 	// Set diagonal entries
@@ -114,7 +114,7 @@ void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatr
 }
 
 void EMT::Ph3::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
-	Matrix3x3Real conductance = (closed) ?
+	MatrixFixedSize<3, 3> conductance = (closed) ?
 		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
 	// Set diagonal entries

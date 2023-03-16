@@ -30,7 +30,7 @@ namespace Ph1 {
         /// Resistance matrix in dq reference frame
 		Matrix mResistanceMatrixDq;
 		/// Conductance matrix phase A
-		Matrix2x2Real mConductanceMatrix;
+		MatrixFixedSize<2, 2> mConductanceMatrix;
 		/// Ka Matrix
 		MatrixComp mKa;
 		/// Kb Matrix

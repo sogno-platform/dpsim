@@ -50,7 +50,7 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::initializeResistanceMatrix() {
 }
 
 void DP::Ph1::ReducedOrderSynchronGeneratorVBR::calculateConductanceMatrix() {
-	Matrix2x2Real resistanceMatrix = Matrix2x2Real::Zero(2,2);
+	MatrixFixedSize<2, 2> resistanceMatrix = MatrixFixedSize<2, 2>::Zero(2,2);
 	resistanceMatrix(0,0) = mR_const_1ph.real() + mKa_1ph.real() + mKb_1ph.real();
 	resistanceMatrix(0,1) = -mR_const_1ph.imag() - mKa_1ph.imag() + mKb_1ph.imag();
 	resistanceMatrix(1,0) = mR_const_1ph.imag() + mKa_1ph.imag() + mKb_1ph.imag();
