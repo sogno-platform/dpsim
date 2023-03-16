@@ -42,13 +42,16 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGenerator6OrderPCM::clone(const Stri
 void DP::Ph1::SynchronGenerator6OrderPCM::specificInitialization() {
 
 	// calculate state representation matrix
-	calculateStateMatrix();
+	calculateStateSpaceMatrices();
 
 	// initial voltage behind the transient reactance in the dq0 reference frame
 	(**mEdq_t)(0,0) = (mLq - mLq_t) * (**mIdq)(1,0);
 	(**mEdq_t)(1,0) = - (mLd- mLd_t) * (**mIdq)(0,0) + (**mEf);
 	(**mEdq_s)(0,0) = (**mEdq_t)(0,0) + (mLq_t - mLq_s) * (**mIdq)(1,0);
 	(**mEdq_s)(1,0) = (**mEdq_t)(1,0) - (mLd_t - mLd_s) * (**mIdq)(0,0);
+
+	//
+	mEdqts << **mEdq_t, **mEdq_s;
 
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
@@ -58,6 +61,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::specificInitialization() {
 		"\nInitial Eq_s (per unit): {:f}"
 		"\nMax number of iterations: {:d}"
 		"\nTolerance: {:f}"
+		"\nSG Model: 6 Order (Anderson-Fouad) PCM"
 		"\n--- Model specific initialization finished ---",
 
 		(**mEdq_t)(0,0),
@@ -93,64 +97,46 @@ Matrix DP::Ph1::SynchronGenerator6OrderPCM::applyDPToDQTransform(const Complex& 
 	return dqMatrix;
 }
 
-void DP::Ph1::SynchronGenerator6OrderPCM::calculateStateMatrix() {
-	// Initialize matrix of state representation of predictor step
-	mA_euler = Matrix::Zero(4,4);
-	mA_euler << 1 - mTimeStep / mTq0_t, 0.0,	0.0,	0.0,
-    	  		0.0, 1 - mTimeStep / mTd0_t,	0.0,	0.0,
-	  	 		mTimeStep / mTq0_s, 0.0, 1 - mTimeStep / mTq0_s, 0.0,
-	  	  		0.0, mTimeStep / mTd0_s, 0.0,	1 - mTimeStep / mTd0_s;
-	mB_euler = Matrix::Zero(4,2);
-	mB_euler << 0.0, (mLq - mLq_t) * mTimeStep / mTq0_t,
-	  			- (mLd - mLd_t) * mTimeStep / mTd0_t, 0.0,
-	  			0.0, (mLq_t - mLq_s) * mTimeStep / mTq0_s,
-	  			- (mLd_t - mLd_s) * mTimeStep / mTd0_s, 0.0;
-	mC_euler = Matrix::Zero(4,1);
-	mC_euler << 0.0,
-  				(mTimeStep / mTd0_t),
-				0.0,
-				0.0;
+void DP::Ph1::SynchronGenerator6OrderPCM::calculateStateSpaceMatrices() {
+	// auxiliar constants
+	Real Bd_t = 1. / mTq0_t * (mLq - mLq_t);
+	Real Bq_t = 1. / mTd0_t * (mLd - mLd_t);
+	Real Bd_s = 1. / mTq0_s * (mLq_t - mLq_s);
+	Real Bq_s = 1. / mTd0_s * (mLd_t - mLd_s);
 
-	// Initialize matrix of state representation of corrector step
-	mA_prev = Matrix::Zero(4, 4);
-	mA_prev <<  1 - mTimeStep / (2 * mTq0_t),		0.0,				 0.0,	  	 0.0,
-	       		0.0,		1 - mTimeStep / (2 * mTd0_t),				 0.0,	  	 0.0,
-		  		mTimeStep / (2 * mTq0_s),	0.0,	1 - mTimeStep / (2 * mTq0_s), 	 0.0,
-		  		0.0,	mTimeStep / (2 * mTd0_s),	0.0,	1 - mTimeStep / (2 * mTd0_s);
-	mA_corr = Matrix::Zero(4,4);
-	mA_corr << 	- mTimeStep / (2 * mTq0_t),	0.0,							0.0,	0.0,
-	       		0.0, 						- mTimeStep / (2 * mTd0_t),		0.0,	0.0,
-		  		mTimeStep / (2 * mTq0_s),			0.0,	- mTimeStep / (2 * mTq0_s), 0.0,
-		  		0.0,	mTimeStep / (2 * mTd0_s),	0.0,		- mTimeStep / (2 * mTd0_s);
-
-	mB_corr = Matrix::Zero(4,2);
-	mB_corr <<  0.0, (mLq - mLq_t) * mTimeStep / (2 * mTq0_t),
-			- (mLd - mLd_t) * mTimeStep / (2 * mTd0_t), 0.0,
-	  		0.0, (mLq_t - mLq_s) * mTimeStep / (2 * mTq0_s),
-	  		- (mLd_t - mLd_s) * mTimeStep / (2 * mTd0_s), 0.0;
-	mC_corr = Matrix::Zero(4,1);
-	mC_corr <<   0.0,
-	  		(mTimeStep / mTd0_t),
-			0.0,
-			0.0;
+	// Initialize matrices of state representation of predictor step
+	mAStateSpace <<	-1. / mTq0_t, 0., 0., 0.,
+              		0., -1. / mTd0_t, 0., 0.,
+					1. / mTq0_s, 0., -1. / mTq0_s, 0.,
+					0., 1. / mTd0_s, 0., -1. / mTd0_s;
+	mBStateSpace <<	0., Bd_t,
+					-Bq_t, 0.,
+					0., Bd_s,
+					-Bq_s, 0.;
+	mCStateSpace <<	0.,
+					**mEf / mTd0_t,
+					0.,
+					0.;
 }
 
 void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	// set number of iteratios equal to zero
 	**mNumIter = 0;
 
-	// store values currently at t=k-1 for later use
-	mEdqsPrevStep = **mEdq_s;
-	mEdqtPrevStep = **mEdq_t;
+	// store values currently at t=k for later use
 	mIdqPrevStep = **mIdq;
+	mEdqtsPrevStep = mEdqts;
 
-	// prediction emf at t=k
-	// TODO
-	//auto mEdq = mA_euler * (**mEdq) + mB_euler * **mIdq + mC_euler * (**mEf);
+	// update DQ-DP transforms according to mThetaMech
+	updateDQToDPTransform();
+	updateDPToDQTransform();
+
+	// predict emf at t=k+1 (euler) using 
+	mEdqts = Math::StateSpaceEuler(mEdqts, mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, **mIdq);
 
 	// predict armature currents for at t=k+1
-	(**mIdq)(0,0) = ((**mEdq_s)(1,0) - (**mVdq)(1,0) ) / mLd_s;
-	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_s)(0,0) ) / mLq_s;
+	(**mIdq)(0,0) = (mEdqts(3,0) - (**mVdq)(1,0) ) / mLd_s;
+	(**mIdq)(1,0) = ((**mVdq)(0,0) - mEdqts(2,0) ) / mLq_s;
 
 	// convert currents to dp domain
 	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;
@@ -164,18 +150,12 @@ void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 	// corrector step (trapezoidal rule)
 	**mNumIter = **mNumIter + 1;
 
-	// update DQ-DP transforms according to mThetaMech
-	updateDQToDPTransform();
-	updateDPToDQTransform();
-
-	// correction of electrical vars
 	// correct emf at t=k+1 (trapezoidal rule)
-	// TODO
-	//(**mEdq) = mA_prev * mEdqtPrevStep + mA_corr * (**mEdq) + mB_corr * (mIdqPrevStep + **mIdq) + mC_corr * (**mEf);
+	mEdqts = Math::StateSpaceTrapezoidal(mEdqtsPrevStep, mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, **mIdq, mIdqPrevStep);
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
-	(**mIdq)(0,0) = ((**mEdq_s)(1,0) - (**mVdq)(1,0) ) / mLd_t;
-	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_s)(0,0) ) / mLq_t;
+	(**mIdq)(0,0) = (mEdqts(3,0) - (**mVdq)(1,0) ) / mLd_s;
+	(**mIdq)(1,0) = ((**mVdq)(0,0) - mEdqts(2,0) ) / mLq_s;
 
 	// convert corrected currents to dp domain
 	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;
@@ -213,5 +193,7 @@ bool DP::Ph1::SynchronGenerator6OrderPCM::requiresIteration() {
 }
 
 void DP::Ph1::SynchronGenerator6OrderPCM::mnaCompPostStep(const Matrix& leftVector) {
+	**mEdq_t << mEdqts(0,0), mEdqts(1,0);
+	**mEdq_s << mEdqts(2,0), mEdqts(3,0);
 }
 

@@ -101,6 +101,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::specificInitialization() {
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
+		"\nSG Model: 4 Order TPM"
 		"\n--- Model specific initialization finished ---",
 		(**mEdq_t)(0,0),
 		(**mEdq_t)(1,0)

@@ -34,7 +34,7 @@ namespace Ph1 {
 		///
 		void specificInitialization() override;
 		///
-		void calculateStateMatrix();
+		void calculateStateSpaceMatrices();
 		///
 		void stepInPerUnit() override;
 		//
@@ -67,7 +67,7 @@ namespace Ph1 {
 		Matrix mDQToDPTransform = Matrix::Zero(2,2);
 		/// Transform from DP to DQ domain
 		Matrix mDPToDQTransform = Matrix::Zero(2,2);
-		
+
 		// #### Model specific variables ####
 		/// Transient emf
 		const Attribute<Matrix>::Ptr mEdq_t;
@@ -75,10 +75,19 @@ namespace Ph1 {
 		// Variables saving values for later use
 		/// Edqt at k
 		Matrix mEdqtPrevStep;
-		/// Vdq at j-1
-		Matrix mVdqPrevIter;
 		/// Idq at k
 		Matrix mIdqPrevStep;
+		/// Vdq at k
+		Matrix mVdqPrevStep;
+		/// Vdq at j-1
+		Matrix mVdqPrevIter;
+
+		/// A matrix of continuous time state space model
+		Matrix mAStateSpace = Matrix::Zero(2,2);
+		/// B matrix of continuous time state space model
+		Matrix mBStateSpace = Matrix::Zero(2,2);
+		/// C matrix of continuous time state space model
+		Matrix mCStateSpace = Matrix::Zero(2,1);
 	};
 }
 }

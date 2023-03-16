@@ -181,6 +181,8 @@ int main(int argc, char* argv[]) {
 	logger->logAttribute(genDP->name() + ".Te", genDP->attribute("Te"));
 	logger->logAttribute(genDP->name() + ".NIterations", genDP->attribute("NIterations"));
 	logger->logAttribute(genDP->name() + ".Edq_t", genDP->attribute("Edq_t"));
+	if (SGModel=="6PCM")
+		logger->logAttribute(genDP->name() + ".Edq_s", genDP->attribute("Edq_s"));
 	logger->logAttribute(genDP->name() + ".Vdq0", genDP->attribute("Vdq0"));
 	logger->logAttribute(genDP->name() + ".Idq0", genDP->attribute("Idq0"));
 	logger->logAttribute(genDP->name() + ".omega", genDP->attribute("w_r"));
