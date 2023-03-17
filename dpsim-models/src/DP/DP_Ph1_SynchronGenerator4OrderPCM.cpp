@@ -92,7 +92,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::calculateStateSpaceMatrices() {
 	mBStateSpace <<	(mLq-mLq_t) / mTq0_t / mLq_t,	0.0,
 					0.0,							(mLd-mLd_t) / mTd0_t / mLd_t;
 	mCStateSpace <<	0,
-					**mEf / mTd0_t;
+					1 / mTd0_t;
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
@@ -109,7 +109,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	updateDPToDQTransform();
 
 	// predict emf at t=k+1 (euler) using 
-	(**mEdq_t) = Math::StateSpaceEuler(**mEdq_t, mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, **mVdq);
+	(**mEdq_t) = Math::StateSpaceEuler(**mEdq_t, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mVdq);
 	
 	// predict stator currents at t=k+1 (assuming Vdq(k+1)=Vdq(k))
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0)) / mLd_t;
@@ -130,7 +130,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
 
 	// correct electrical vars
 	// calculate emf at j and k+1 (trapezoidal rule)
-	(**mEdq_t) = Math::StateSpaceTrapezoidal(mEdqtPrevStep, mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, **mVdq, mVdqPrevStep);
+	(**mEdq_t) = Math::StateSpaceTrapezoidal(mEdqtPrevStep, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mVdq, mVdqPrevStep);
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
