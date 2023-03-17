@@ -108,15 +108,15 @@ void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	updateDQToDPTransform();
 	updateDPToDQTransform();
 
-	// predict emf at t=k+1 (euler) using 
+	// predict emf at t=k+1 (euler) using
 	(**mEdq_t) = Math::StateSpaceEuler(**mEdq_t, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mVdq);
-	
+
 	// predict stator currents at t=k+1 (assuming Vdq(k+1)=Vdq(k))
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0)) / mLd_t;
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0)) / mLq_t;
 
 	// convert currents to dp domain
-	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;	
+	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
@@ -156,19 +156,20 @@ void DP::Ph1::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVector
 }
 
 bool DP::Ph1::SynchronGenerator4OrderPCM::requiresIteration() {
-	if (**mNumIter == 0)
-		// if no corrector step has been performed yet
-		return true;
-
-	Matrix voltageDifference = **mVdq - mVdqPrevIter;
-	if (Math::abs(voltageDifference(0,0)) > mTolerance || Math::abs(voltageDifference(1,0)) > mTolerance) {
-		if (**mNumIter >= mMaxIter) {
-			return false;
-		} else {
-			return true;
-		}
-	} else {
+	if (**mNumIter >= mMaxIter) {
+		// maximum number of iterations reached
 		return false;
+	} else if (**mNumIter == 0) {
+		// no corrector step has been performed yet,
+		// convergence cannot be confirmed
+		return true;
+	} else {
+		// check voltage convergence according to tolerance
+		Matrix voltageDifference = **mVdq - mVdqPrevIter;
+		if (Math::abs(voltageDifference(0,0)) > mTolerance || Math::abs(voltageDifference(1,0)) > mTolerance)
+			return true;
+		else
+			return false;
 	}
 }
 
