@@ -114,7 +114,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::calculateStateSpaceMatrices() {
 					0., Bd_s,
 					-Bq_s, 0.;
 	mCStateSpace <<	0.,
-					**mEf / mTd0_t,
+					1 / mTd0_t,
 					0.,
 					0.;
 }
@@ -132,7 +132,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	updateDPToDQTransform();
 
 	// predict emf at t=k+1 (euler) using 
-	mEdqts = Math::StateSpaceEuler(mEdqts, mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, **mIdq);
+	mEdqts = Math::StateSpaceEuler(mEdqts, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mIdq);
 
 	// predict armature currents for at t=k+1
 	(**mIdq)(0,0) = (mEdqts(3,0) - (**mVdq)(1,0) ) / mLd_s;
@@ -151,7 +151,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 	**mNumIter = **mNumIter + 1;
 
 	// correct emf at t=k+1 (trapezoidal rule)
-	mEdqts = Math::StateSpaceTrapezoidal(mEdqtsPrevStep, mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, **mIdq, mIdqPrevStep);
+	mEdqts = Math::StateSpaceTrapezoidal(mEdqtsPrevStep, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mIdq, mIdqPrevStep);
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	(**mIdq)(0,0) = (mEdqts(3,0) - (**mVdq)(1,0) ) / mLd_s;
