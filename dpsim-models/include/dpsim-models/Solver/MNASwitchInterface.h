@@ -24,7 +24,7 @@ namespace CPS {
 		/// Check if switch is closed
 		virtual Bool mnaIsClosed() = 0;
 		/// Stamps system matrix considering the defined switch position
-		virtual void mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx)
+		virtual void mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) final
 		{
 			this->mnaCompApplySwitchSystemMatrixStamp(closed, systemMatrix, freqIdx);
 			systemMatrix.makeCompressed();
