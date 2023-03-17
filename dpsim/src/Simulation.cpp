@@ -415,6 +415,13 @@ void Simulation::logStepTimes(String logName) {
 	SPDLOG_LOGGER_INFO(mLog, "Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
 }
 
+void Simulation::logLUTimes() {
+	for(auto solver : mSolvers)
+	{
+		solver->logLUTimes();
+	}
+}
+
 CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const String &attr) {
 	IdentifiedObject::Ptr idObj = mSystem.component<IdentifiedObject>(comp);
 	if (!idObj) {

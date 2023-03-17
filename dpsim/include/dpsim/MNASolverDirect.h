@@ -164,6 +164,9 @@ namespace DPsim {
 		/// Sets the linear solver configuration
 		void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration);
 
+		/// log LU decomposition times
+		void logLUTimes() override;
+
 		// #### MNA Solver Tasks ####
 		///
 		class SolveTask : public CPS::Task {

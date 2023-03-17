@@ -51,13 +51,13 @@ namespace DPsim
 		public:
 		DirectLinearSolverConfiguration();
 
-		void setFillInReductionMethod(FILL_IN_REDUCTION_METHOD);
+		void setFillInReductionMethod(FILL_IN_REDUCTION_METHOD fillInReductionMethod);
 
-		void setScalingMethod(SCALING_METHOD);
+		void setScalingMethod(SCALING_METHOD scalingMethod);
 
-		void setPartialRefactorizationMethod(PARTIAL_REFACTORIZATION_METHOD);
+		void setPartialRefactorizationMethod(PARTIAL_REFACTORIZATION_METHOD partialRefactorizationMethod);
 
-		void setBTF(USE_BTF);
+		void setBTF(USE_BTF useBTF);
 
 		SCALING_METHOD getScalingMethod() const;
 

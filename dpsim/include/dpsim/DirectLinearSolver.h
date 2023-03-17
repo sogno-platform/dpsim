@@ -58,13 +58,13 @@ namespace DPsim
 
 		virtual void setConfiguration(DirectLinearSolverConfiguration& configuration)
 		{
-			mConfiguration = configuration;
+			m_configuration = configuration;
 			this->parseConfiguration();
 		}
 
 		protected:
 		/// Abstract linear solver class for MNA simulation
-		DirectLinearSolverConfiguration mConfiguration;
+		DirectLinearSolverConfiguration m_configuration;
 
 		virtual void parseConfiguration() {}
 	};

@@ -86,7 +86,14 @@ void KLUAdapter::factorize(SparseMatrix &systemMatrix)
 
     if (!(m_varyingColumns.empty()) && !(m_varyingRows.empty()))
     {
-        klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, &m_varyingColumns[0], &m_varyingRows[0], varying_entries);
+		if(m_configuration.getPartialRefactorizationMethod() == DPsim::PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH)
+		{
+        	klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, &m_varyingColumns[0], &m_varyingRows[0], varying_entries);
+		}
+		else if(m_configuration.getPartialRefactorizationMethod() == DPsim::PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART)
+		{
+			klu_determine_start(m_symbolic, m_numeric, &m_common, Ap, Ai, &m_varyingColumns[0], &m_varyingRows[0], varying_entries);
+		}
     }
 }
 
@@ -121,11 +128,11 @@ void KLUAdapter::partialRefactorize(SparseMatrix &systemMatrix,
         auto Ai = Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
         auto Ax = Eigen::internal::convert_index<Real *>(systemMatrix.valuePtr());
 
-		if(mConfiguration.getPartialRefactorizationMethod() == PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH)
+		if(m_configuration.getPartialRefactorizationMethod() == PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH)
 		{
 	        klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
 		}
-		else if(mConfiguration.getPartialRefactorizationMethod() == PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART)
+		else if(m_configuration.getPartialRefactorizationMethod() == PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART)
 		{
 			klu_partial_refactorization_restart(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
 		}
@@ -190,7 +197,7 @@ void KLUAdapter::printMatrixMarket(SparseMatrix &matrix, int counter) const
 
 void KLUAdapter::parseConfiguration()
 {
-	switch(mConfiguration.getScalingMethod())
+	switch(m_configuration.getScalingMethod())
 	{
 		case SCALING_METHOD::NO_SCALING:
 				m_common.scale = 0;
@@ -206,7 +213,7 @@ void KLUAdapter::parseConfiguration()
 	}
 
 	// TODO: implement support for COLAMD (modifiy SuiteSparse)
-	switch(mConfiguration.getFillInReductionMethod())
+	switch(m_configuration.getFillInReductionMethod())
 	{
 		case FILL_IN_REDUCTION_METHOD::AMD:
 			m_preordering = AMD_ORDERING;
@@ -221,7 +228,7 @@ void KLUAdapter::parseConfiguration()
 			m_preordering = AMD_ORDERING;
 	}
 
-	switch(mConfiguration.getBTF())
+	switch(m_configuration.getBTF())
 	{
 		case USE_BTF::DO_BTF:
 				m_common.btf = 1;
