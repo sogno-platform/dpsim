@@ -318,9 +318,6 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 	R_eq_vbr = mResistanceMat + (2 / (mTimeStep*mBase_OmElec))*mDInductanceMat + K;
 	E_eq_vbr = mEsh_vbr + E_r_vbr;
 
-	// TODO: check if this is necessary.
-	// mResistanceMat is dynamic matrix by default so inversion might not be the efficient variant for 3x3-matrices
-	// therefore, explicit definitions are used here. Might not be necessary.
 	MatrixFixedSize<3, 3> R_eq_vbr_mBase_Z = R_eq_vbr*mBase_Z;
 
 	mConductanceMat = R_eq_vbr_mBase_Z.inverse();

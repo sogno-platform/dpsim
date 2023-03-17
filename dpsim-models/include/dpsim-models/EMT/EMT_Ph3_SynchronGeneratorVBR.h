@@ -179,7 +179,7 @@ namespace Ph3 {
 
 		MatrixFixedSize<2, 2> Ea = MatrixFixedSize<2, 2>::Zero(2, 2);
 		Matrix E1b = Matrix::Zero(2, 1);
-		// annotation: E1 and F1 seem to be vectors (Zero(2, 1)) and not matrices
+		// CHECK: E1 and F1 seem to be vectors (Zero(2, 1)) and not matrices
 		Matrix E1 = Matrix::Zero(2, 2);
 		MatrixFixedSize<2, 2> Fa = MatrixFixedSize<2, 2>::Zero(2, 2);
 		Matrix F1b = Matrix::Zero(2, 1);
