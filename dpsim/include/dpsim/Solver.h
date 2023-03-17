@@ -106,6 +106,8 @@ namespace DPsim {
 		void doInitFromNodesAndTerminals(Bool f) { mInitFromNodesAndTerminals = f; }
 		/// set direct linear solver configuration (only available in MNA for now)
 		virtual void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration&) { }
+		/// log LU decomposition times, if applicable
+		virtual void logLUTimes() { }
 
 		// #### Simulation ####
 		/// Get tasks for scheduler

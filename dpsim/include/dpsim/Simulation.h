@@ -230,6 +230,9 @@ namespace DPsim {
 		/// Write step time measurements to log file
 		void logStepTimes(String logName);
 
+		/// Write LU decomposition times measurements to log file
+		void logLUTimes();
+
 		///
 		void addInterface(Interface::Ptr eint) {
 			eint->setLogger(mLog);
