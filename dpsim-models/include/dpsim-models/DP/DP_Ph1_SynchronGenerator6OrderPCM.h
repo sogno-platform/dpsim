@@ -59,14 +59,14 @@ namespace Ph1 {
 		///
 		void mnaCompPostStep(const Matrix& leftVector) final;
 		///
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) final {};
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) final {};
 
 		protected:
 		/// Transform from DQ to DP domain
 		Matrix mDQToDPTransform = Matrix::Zero(2,2);
 		/// Transform from DP to DQ domain
 		Matrix mDPToDQTransform = Matrix::Zero(2,2);
-		
+
 		// #### Model specific variables ####
 		/// Subransient emf
 		const Attribute<Matrix>::Ptr mEdq_s;

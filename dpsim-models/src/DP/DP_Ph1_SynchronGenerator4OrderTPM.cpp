@@ -126,7 +126,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::calculateConstantConductanceMatrix() {
 	SPDLOG_LOGGER_INFO(mSLog, "\nG_const [S]: {}", Logger::matrixToString(mConductanceMatrixConst));
 }
 
-void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	updateMatrixNodeIndices();
 
 	calculateConstantConductanceMatrix();
