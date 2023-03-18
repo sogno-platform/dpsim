@@ -41,7 +41,7 @@ namespace Ph1 {
 		Matrix parkTransform(Real theta, const Matrix& abcVector);
 
 		// ### MNA Section ###
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
         void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		void mnaCompPostStep(const Matrix& leftVector);
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);

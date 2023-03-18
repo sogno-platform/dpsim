@@ -97,7 +97,7 @@ namespace Ph3 {
 		// #### MNA Functions ####
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector);
 		void mnaCompPostStep(const Matrix& leftVector);
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix){};
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix){};
 	};
 }
 }
