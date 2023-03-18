@@ -60,7 +60,7 @@ namespace Ph1 {
 		///
 		void mnaCompPostStep(const Matrix& leftVector) final;
 		///
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) final {};
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) final {};
 
 	protected:
 		/// Transform from DQ to DP domain

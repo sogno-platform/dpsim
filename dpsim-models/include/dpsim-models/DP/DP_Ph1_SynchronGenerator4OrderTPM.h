@@ -97,7 +97,7 @@ namespace Ph1 {
 		///
 		void mnaCompPostStep(const Matrix& leftVector) override;
 		///
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
 
 		void setOperationalParametersPerUnit(Real nomPower,
 			Real nomVolt, Real nomFreq, Real H, Real Ld, Real Lq, Real L0,
