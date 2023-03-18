@@ -41,7 +41,7 @@ namespace Ph3 {
 		/// Initializes MNA specific variables
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 		/// Update interface voltage from MNA system results
 		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		/// Update interface voltage from MNA system results

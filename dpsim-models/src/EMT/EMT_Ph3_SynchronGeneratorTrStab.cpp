@@ -71,7 +71,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower
 	mXpd = mNomOmega * (**mLd - mLmd*mLmd / mLfd) * mBase_L;
 	mLpd = (**mLd - mLmd*mLmd / mLfd) * mBase_L;
 
-	mSLog->info("\n--- Parameters ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Parameters ---"
 				"\nimpedance: {:f}"
 				"\ninductance: {:f}", mXpd, mLpd);
 }
@@ -90,7 +90,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, R
 	mXpd = mNomOmega * Lpd;
 	mLpd = Lpd;
 
-	mSLog->info("\n--- Parameters ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Parameters ---"
 				"\nimpedance: {:f}"
 				"\ninductance: {:f}", mXpd, mLpd);
 }
@@ -114,7 +114,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, R
 	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
 	mKd= D*mNomPower/mNomOmega;
 
-	mSLog->info("\n--- Parameters ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Parameters ---"
 				"\nimpedance: {:f}"
 				"\ninductance: {:f}", mXpd, mLpd);
 }
@@ -195,7 +195,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-	mSLog->info("\n--- Initialize according to powerflow ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialize according to powerflow ---"
 				"\nTerminal 0 voltage: {:e}<{:e}"
 				"\nVoltage behind reactance: {:e}<{:e}"
 				"\ninitial electrical power: {:e}+j{:e}"

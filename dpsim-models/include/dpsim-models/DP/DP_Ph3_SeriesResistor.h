@@ -39,7 +39,7 @@ namespace Ph3 {
 		///
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 		///
 		void mnaCompUpdateVoltage(const Matrix& leftVector);
 		///

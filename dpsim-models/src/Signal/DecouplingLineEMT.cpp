@@ -38,8 +38,8 @@ void DecouplingLineEMT::setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::P
 
 	mSurgeImpedance = sqrt(inductance / capacitance);
 	mDelay = sqrt(inductance * capacitance);
-	mSLog->info("surge impedance: {}", mSurgeImpedance);
-	mSLog->info("delay: {}", mDelay);
+	SPDLOG_LOGGER_INFO(mSLog, "surge impedance: {}", mSurgeImpedance);
+	SPDLOG_LOGGER_INFO(mSLog, "delay: {}", mDelay);
 
 	mRes1->setParameters(mSurgeImpedance + mResistance / 4);
 	mRes1->connect({node1, SimNode<Real>::GND});
@@ -57,7 +57,7 @@ void DecouplingLineEMT::initialize(Real omega, Real timeStep) {
 
 	mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
 	mAlpha = 1 - (mBufSize - mDelay / timeStep);
-	mSLog->info("bufsize {} alpha {}", mBufSize, mAlpha);
+	SPDLOG_LOGGER_INFO(mSLog, "bufsize {} alpha {}", mBufSize, mAlpha);
 
 	// Initialization based on static PI-line model
 	Complex volt1 = mNode1->initialSingleVoltage();
@@ -65,8 +65,8 @@ void DecouplingLineEMT::initialize(Real omega, Real timeStep) {
 	Complex initAdmittance = 1. / Complex(mResistance, omega * mInductance) + Complex(0, omega * mCapacitance / 2);
 	Complex cur1 = volt1 * initAdmittance - volt2 / Complex(mResistance, omega * mInductance);
 	Complex cur2 = volt2 * initAdmittance - volt1 / Complex(mResistance, omega * mInductance);
-	mSLog->info("initial voltages: v_k {} v_m {}", volt1, volt2);
-	mSLog->info("initial currents: i_km {} i_mk {}", cur1, cur2);
+	SPDLOG_LOGGER_INFO(mSLog, "initial voltages: v_k {} v_m {}", volt1, volt2);
+	SPDLOG_LOGGER_INFO(mSLog, "initial currents: i_km {} i_mk {}", cur1, cur2);
 
 	// Resize ring buffers and initialize
 	mVolt1.resize(mBufSize, volt1.real());

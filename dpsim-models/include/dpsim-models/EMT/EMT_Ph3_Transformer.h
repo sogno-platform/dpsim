@@ -69,7 +69,7 @@ namespace CPS {
 				/// Initializes internal variables of the component
 				void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 				/// Stamps system matrix
-				void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+				void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
 				/// Updates internal current variable of the component
 				void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 				/// Updates internal voltage variable of the component

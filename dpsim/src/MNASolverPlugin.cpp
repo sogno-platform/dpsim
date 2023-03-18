@@ -50,11 +50,11 @@ void MnaSolverPlugin<VarType>::recomputeSystemMatrix(Real time) {
 
 	// Now stamp switches into matrix
 	for (auto sw : this->mMNAIntfSwitches)
-		sw->mnaApplySparseSystemMatrixStamp(this->mVariableSystemMatrix);
+		sw->mnaApplySystemMatrixStamp(this->mVariableSystemMatrix);
 
 	// Now stamp variable elements into matrix
 	for (auto comp : this->mMNAIntfVariableComps)
-		comp->mnaApplySparseSystemMatrixStamp(this->mVariableSystemMatrix);
+		comp->mnaApplySystemMatrixStamp(this->mVariableSystemMatrix);
 
     int size = this->mRightSideVector.rows();
 	int nnz = this->mVariableSystemMatrix.nonZeros();
@@ -68,7 +68,7 @@ void MnaSolverPlugin<VarType>::recomputeSystemMatrix(Real time) {
 	// Refactorization of matrix assuming that structure remained
 	// constant by omitting analyzePattern
 	if (mPlugin->lu_decomp(&matrix) != 0) {
-		mSLog->error("error recomputing decomposition");
+		SPDLOG_LOGGER_ERROR(mSLog, "error recomputing decomposition");
 		return;
 	}
 	++this->mNumRecomputations;
@@ -86,18 +86,18 @@ void MnaSolverPlugin<VarType>::initialize() {
 	String pluginFileName = mPluginName + ".so";
 
 	if ((mDlHandle = dlopen(pluginFileName.c_str(), RTLD_NOW)) == nullptr) {
-		mSLog->error("error opening dynamic library {}: {}", mPluginName, dlerror());
+		SPDLOG_LOGGER_ERROR(mSLog, "error opening dynamic library {}: {}", mPluginName, dlerror());
 		throw CPS::SystemError("error opening dynamic library.");
 	}
 
 	get_mna_plugin = (struct dpsim_mna_plugin* (*)(const char *)) dlsym(mDlHandle, "get_mna_plugin");
 	if (get_mna_plugin == NULL) {
-		mSLog->error("error reading symbol from library {}: {}", mPluginName, dlerror());
+		SPDLOG_LOGGER_ERROR(mSLog, "error reading symbol from library {}: {}", mPluginName, dlerror());
 		throw CPS::SystemError("error reading symbol from library.");
 	}
 
 	if ((mPlugin = get_mna_plugin(mPluginName.c_str())) == nullptr) {
-		mSLog->error("error getting plugin class");
+		SPDLOG_LOGGER_ERROR(mSLog, "error getting plugin class");
 		throw CPS::SystemError("error getting plugin class.");
 	}
 
@@ -112,7 +112,7 @@ void MnaSolverPlugin<VarType>::initialize() {
 	};
 
 	if (mPlugin->init(&matrix) != 0) {
-		mSLog->error("error initializing plugin");
+		SPDLOG_LOGGER_ERROR(mSLog, "error initializing plugin");
 		return;
 	}
 }

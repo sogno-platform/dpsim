@@ -15,7 +15,7 @@ SP::Ph1::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
 	mConductance(mAttributes->create<Real>("G")),
 	mSusceptance(mAttributes->create<Real>("B")) {
 
-	mSLog->info("Create {} of type {}", this->type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", this->type(), name);
 	setTerminalNumber(1);
 }
 
@@ -23,7 +23,7 @@ SP::Ph1::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
 void SP::Ph1::Shunt::setParameters(Real conductance, Real susceptance){
 	**mConductance = conductance;
 	**mSusceptance = susceptance;
-	mSLog->info("Conductance={} [S] Susceptance={} [Ohm] ", conductance, susceptance);
+	SPDLOG_LOGGER_INFO(mSLog, "Conductance={} [S] Susceptance={} [Ohm] ", conductance, susceptance);
 	mParametersSet = true;
 }
 
@@ -35,16 +35,16 @@ void SP::Ph1::Shunt::setBaseVoltage(Real baseVoltage) {
 
 
 void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	mSLog->info("#### Calculate Per Unit Parameters for {}", **mName);
-	mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
+	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
+	SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
 
 	auto baseImpedance = (mBaseVoltage * mBaseVoltage) / baseApparentPower;
 	auto baseAdmittance = 1.0 / baseImpedance;
-	mSLog->info("Base Voltage={} [V]  Base Admittance={} [S]", mBaseVoltage, baseAdmittance);
+	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Admittance={} [S]", mBaseVoltage, baseAdmittance);
 
 	mConductancePerUnit = **mConductance / baseAdmittance;
 	mSusceptancePerUnit = **mSusceptance / baseAdmittance;
-	mSLog->info("Susceptance={} [pu] Conductance={} [pu]", mSusceptancePerUnit, mConductancePerUnit);
+	SPDLOG_LOGGER_INFO(mSLog, "Susceptance={} [pu] Conductance={} [pu]", mSusceptancePerUnit, mConductancePerUnit);
 };
 
 
@@ -61,6 +61,6 @@ void SP::Ph1::Shunt::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 
 	//set the circuit matrix values
 	Y.coeffRef(bus1, bus1) += Y_element;
-	mSLog->info("#### Y matrix stamping: {}", Y_element);
+	SPDLOG_LOGGER_INFO(mSLog, "#### Y matrix stamping: {}", Y_element);
 
 }

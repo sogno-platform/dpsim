@@ -27,7 +27,7 @@ void PLL::setParameters(Real kpPLL, Real kiPLL, Real omegaNom) {
     mKp = kpPLL;
     mKi = kiPLL;
     mOmegaNom = omegaNom;
-    mSLog->info("Kp = {}, Ki = {}", mKp, mKi);
+    SPDLOG_LOGGER_INFO(mSLog, "Kp = {}, Ki = {}", mKp, mKi);
 
     // First entry of input vector is constant omega
     (**mInputCurr)(0,0) = mOmegaNom;
@@ -35,7 +35,7 @@ void PLL::setParameters(Real kpPLL, Real kiPLL, Real omegaNom) {
 
 void PLL::setSimulationParameters(Real timestep) {
     mTimeStep = timestep;
-    mSLog->info("Integration step = {}", mTimeStep);
+    SPDLOG_LOGGER_INFO(mSLog, "Integration step = {}", mTimeStep);
 }
 
 void PLL::setInitialValues(Real input_init, Matrix state_init, Matrix output_init) {
@@ -43,8 +43,8 @@ void PLL::setInitialValues(Real input_init, Matrix state_init, Matrix output_ini
     **mStateCurr = state_init;
     **mOutputCurr = output_init;
 
-    mSLog->info("Initial values:");
-    mSLog->info("inputCurrInit = ({}, {}), stateCurrInit = ({}, {}), outputCurrInit = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
+    SPDLOG_LOGGER_INFO(mSLog, "Initial values:");
+    SPDLOG_LOGGER_INFO(mSLog, "inputCurrInit = ({}, {}), stateCurrInit = ({}, {}), outputCurrInit = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
 }
 
 void PLL::composeStateSpaceMatrices() {
@@ -57,11 +57,11 @@ void PLL::composeStateSpaceMatrices() {
     mD <<   0,  0,
             0,  0;
 
-    mSLog->info("State space matrices:");
-    mSLog->info("A = \n{}", mA);
-    mSLog->info("B = \n{}", mB);
-    mSLog->info("C = \n{}", mC);
-    mSLog->info("D = \n{}", mD);
+    SPDLOG_LOGGER_INFO(mSLog, "State space matrices:");
+    SPDLOG_LOGGER_INFO(mSLog, "A = \n{}", mA);
+    SPDLOG_LOGGER_INFO(mSLog, "B = \n{}", mB);
+    SPDLOG_LOGGER_INFO(mSLog, "C = \n{}", mC);
+    SPDLOG_LOGGER_INFO(mSLog, "D = \n{}", mD);
 }
 
 void PLL::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -86,14 +86,14 @@ void PLL::signalAddStepDependencies(AttributeBase::List &prevStepDependencies, A
 void PLL::signalStep(Real time, Int timeStepCount) {
     (**mInputCurr)(1,0) = **mInputRef;
 
-    mSLog->info("Time {}:", time);
-    mSLog->info("Input values: inputCurr = ({}, {}), inputPrev = ({}, {}), stateCurr = ({}, {}), statePrev = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
+    SPDLOG_LOGGER_INFO(mSLog, "Time {}:", time);
+    SPDLOG_LOGGER_INFO(mSLog, "Input values: inputCurr = ({}, {}), inputPrev = ({}, {}), stateCurr = ({}, {}), statePrev = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
 
     **mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
     **mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
 
-    mSLog->info("State values: stateCurr = ({}, {})", (**mStateCurr)(0,0), (**mStateCurr)(1,0));
-    mSLog->info("Output values: outputCurr = ({}, {}):", (**mOutputCurr)(0,0), (**mOutputCurr)(1,0));
+    SPDLOG_LOGGER_INFO(mSLog, "State values: stateCurr = ({}, {})", (**mStateCurr)(0,0), (**mStateCurr)(1,0));
+    SPDLOG_LOGGER_INFO(mSLog, "Output values: outputCurr = ({}, {}):", (**mOutputCurr)(0,0), (**mOutputCurr)(1,0));
 }
 
 Task::List PLL::getTasks() {

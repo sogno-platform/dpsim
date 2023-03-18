@@ -67,7 +67,7 @@ void SP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		mSrcSig = srcSigSine;
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from node voltages ---"
 		"\nVoltage across: {:s}"
 		"\nTerminal 0 voltage: {:s}"
@@ -96,7 +96,7 @@ void SP::Ph1::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attrib
 
 	(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"
@@ -105,7 +105,7 @@ void SP::Ph1::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attrib
 		Logger::phasorToString((**mIntfCurrent)(0,0)));
 }
 
-void SP::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0)) {
 			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(-1, 0), mNumFreqs, freq);
@@ -116,14 +116,14 @@ void SP::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix)
 			Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0), mNumFreqs, freq);
 		}
 
-		mSLog->info("-- Stamp frequency {:d} ---", freq);
+		SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freq);
 		if (terminalNotGrounded(0)) {
-			mSLog->info("Add {:f} to system at ({:d},{:d})", -1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
-			mSLog->info("Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
 		}
 		if (terminalNotGrounded(1)) {
-			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1));
-			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex());
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex());
 		}
 	}
 }
@@ -143,7 +143,7 @@ void SP::Ph1::VoltageSource::updateVoltage(Real time) {
 		(**mIntfVoltage)(0,0) = **mVoltageRef;
 	}
 
-	mSLog->debug("Update Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,0)));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Update Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,0)));
 }
 
 void SP::Ph1::VoltageSource::mnaCompPreStep(Real time, Int timeStepCount) {

@@ -57,7 +57,7 @@ namespace Ph1 {
 
         // ### MNA Section ###
         ///
-        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
         void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 		void mnaCompPostStep(const Matrix& leftVector) override;
 		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;

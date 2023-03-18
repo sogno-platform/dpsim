@@ -46,7 +46,7 @@ namespace CPS {
 				/// Initializes internal variables of the component
 				void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 				/// Stamps system matrix
-				void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+				void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 				/// Update interface voltage from MNA system result
 				void mnaCompUpdateVoltage(const Matrix& leftVector);
 				/// Update interface current from MNA system result

@@ -50,7 +50,7 @@ void DP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	 **mIntfCurrent = susceptance * **mIntfVoltage;
 
 	//TODO
-	 mSLog->info( "--- Initialize according to power flow ---" );
+	 SPDLOG_LOGGER_INFO(mSLog,  "--- Initialize according to power flow ---" );
 				// << "in phase A: " << std::endl
 				// << "Voltage across: " << std::abs((**mIntfVoltage)(0,0))
 				// << "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl
@@ -90,13 +90,13 @@ void DP::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 	updateMatrixNodeIndices();
 	initVars(omega, timeStep);
 
-	mSLog->info(  "Initial voltage {}",  Math::abs((**mIntfVoltage)(0,0)));
+	SPDLOG_LOGGER_INFO(mSLog,   "Initial voltage {}",  Math::abs((**mIntfVoltage)(0,0)));
 				// << "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl
 				// << "Initial current " << Math::abs((**mIntfCurrent)(0,0))
 				// << "<" << Math::phaseDeg((**mIntfCurrent)(0,0)) << std::endl;
 }
 
-void DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mEquivCond(0, 0));
@@ -214,7 +214,7 @@ void DP::Ph3::Inductor::mnaTearInitialize(Real omega, Real timeStep) {
 	initVars(omega, timeStep);
 }
 
-void DP::Ph3::Inductor::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
+void DP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) {
 	/*
 	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, mEquivCond.cwiseInverse()(0,0));
 	*/

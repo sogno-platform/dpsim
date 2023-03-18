@@ -52,7 +52,7 @@ void DP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	**mIntfCurrent = susceptance * **mIntfVoltage;
 
-	mSLog->info( "\n--- Initialize from power flow ---" );
+	SPDLOG_LOGGER_INFO(mSLog,  "\n--- Initialize from power flow ---" );
 				// << "Impedance: " << impedance << std::endl
 				// << "Voltage across: " << std::abs((**mIntfVoltage)(0,0))
 				// << "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl
@@ -126,7 +126,7 @@ void DP::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 	// 			<< "--- MNA initialization finished ---" << std::endl;
 }
 
-void DP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mEquivCond(0, 0));

@@ -50,19 +50,12 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::initializeResistanceMatrix() {
 }
 
 void DP::Ph1::ReducedOrderSynchronGeneratorVBR::calculateConductanceMatrix() {
-	Matrix resistanceMatrix = Matrix::Zero(2,2);
+	MatrixFixedSize<2, 2> resistanceMatrix = MatrixFixedSize<2, 2>::Zero(2,2);
 	resistanceMatrix(0,0) = mR_const_1ph.real() + mKa_1ph.real() + mKb_1ph.real();
 	resistanceMatrix(0,1) = -mR_const_1ph.imag() - mKa_1ph.imag() + mKb_1ph.imag();
 	resistanceMatrix(1,0) = mR_const_1ph.imag() + mKa_1ph.imag() + mKb_1ph.imag();
 	resistanceMatrix(1,1) = mR_const_1ph.real() + mKa_1ph.real() - mKb_1ph.real();
 	resistanceMatrix = resistanceMatrix * mBase_Z;
-	/* TODO: Eigen calls PartialPivLU (DenseLU) here and computes an LU decomposition
-	 * for the inverse. Rather use
-	 * A = (a b; c d) => A^{-1} = 1/det(A) * (d -b; -c a) = 1/(ad-cb) * (d -b; -c a)
-	 * which is probably more efficient (DenseLU uses 2.38% in Profiling here).
-	 * Also look if it is done like this in other models!
-	 * (check how it works in complex case also)
-	 */
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
 
@@ -118,12 +111,12 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0) + complexOffset, mVirtualNodes[0]->matrixNodeIndex() + complexOffset));
 	}
 
-	mSLog->info("List of index pairs of varying matrix entries: ");
+	SPDLOG_LOGGER_INFO(mSLog, "List of index pairs of varying matrix entries: ");
 	for (auto indexPair : mVariableSystemMatrixEntries)
-		mSLog->info("({}, {})", indexPair.first, indexPair.second);
+		SPDLOG_LOGGER_INFO(mSLog, "({}, {})", indexPair.first, indexPair.second);
 }
 
-void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (mModelAsCurrentSource) {
 		// Stamp conductance matrix
 		// set bottom right block

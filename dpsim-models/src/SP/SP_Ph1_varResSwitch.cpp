@@ -41,7 +41,7 @@ void SP::Ph1::varResSwitch::mnaCompInitialize(Real omega, Real timeStep, Attribu
 
 Bool SP::Ph1::varResSwitch::mnaIsClosed() { return isClosed(); }
 
-void SP::Ph1::varResSwitch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::varResSwitch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	Complex conductance = (**mIsClosed) ?
 		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );
 
@@ -57,7 +57,7 @@ void SP::Ph1::varResSwitch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) 
 	}
 }
 
-void SP::Ph1::varResSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
+void SP::Ph1::varResSwitch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
 	Complex conductance = (closed) ?
 		Complex( 1. / **mClosedResistance, 0 ) :
 		Complex( 1. / **mOpenResistance, 0 );
@@ -74,14 +74,14 @@ void SP::Ph1::varResSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix&
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -conductance);
 	}
 
-	mSLog->info("-- Stamp ---");
+	SPDLOG_LOGGER_INFO(mSLog, "-- Stamp ---");
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
 

@@ -52,7 +52,7 @@ namespace DPsim
 
 		/// Define scaling method
 		/// Options are: 1: sum-scaling, 2: max scaling, <=0: no scaling
-		int m_scaling = SCALING_METHOD::SUM_SCALING;
+		int m_scaling = SCALING_METHOD::MAX_SCALING;
 
 		/// Flag to indicate if factorization succeeded
 		bool factorization_is_okay = false;

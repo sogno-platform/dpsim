@@ -24,12 +24,11 @@ namespace CPS {
 		/// Check if switch is closed
 		virtual Bool mnaIsClosed() = 0;
 		/// Stamps system matrix considering the defined switch position
-		virtual void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) { }
-		/// Stamps (sparse) system matrix considering the defined switch position
-		virtual void mnaApplySwitchSparseSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
-			Matrix mat = Matrix(systemMatrix);
-			mnaApplySwitchSystemMatrixStamp(closed, mat, freqIdx);
-			systemMatrix = mat.sparseView();
+		virtual void mnaApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) final
+		{
+			this->mnaCompApplySwitchSystemMatrixStamp(closed, systemMatrix, freqIdx);
+			systemMatrix.makeCompressed();
 		}
+		virtual void mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) { }
 	};
 }

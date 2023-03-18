@@ -37,10 +37,10 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 	auto bit = std::bitset<SWITCH_NUM>(index);
 	auto& sys = mSwitchedMatrices[bit][0];
 	for (auto component : comp) {
-		component->mnaApplySparseSystemMatrixStamp(sys);
+		component->mnaApplySystemMatrixStamp(sys);
 	}
 	for (UInt i = 0; i < mSwitches.size(); ++i)
-		mSwitches[i]->mnaApplySwitchSparseSystemMatrixStamp(bit[i], sys, 0);
+		mSwitches[i]->mnaApplySwitchSystemMatrixStamp(bit[i], sys, 0);
 
 	// Compute LU-factorization for system matrix
 	mDirectLinearSolvers[bit][0]->preprocessing(sys, mListVariableSystemMatrixEntries);
@@ -53,7 +53,7 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
 	this->mDirectLinearSolverVariableSystemMatrix = createDirectSolverImplementation();
 
-	mSLog->info("Number of variable Elements: {}"
+	SPDLOG_LOGGER_INFO(mSLog, "Number of variable Elements: {}"
 				"\nNumber of MNA components: {}",
 				mVariableComps.size(),
 				mMNAComponents.size());
@@ -61,33 +61,29 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	// Build base matrix with only static elements
 	mBaseSystemMatrix.setZero();
 	for (auto statElem : mMNAComponents)
-		statElem->mnaApplySparseSystemMatrixStamp(mBaseSystemMatrix);
-	mSLog->info("Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
+		statElem->mnaApplySystemMatrixStamp(mBaseSystemMatrix);
+	SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
 	mSLog->flush();
 
-	// Use matrix with only static elements as basis for variable system matrix
+	// Continue from base matrix
 	mVariableSystemMatrix = mBaseSystemMatrix;
 
-	/* TODO: mnaApplySparseSystemMatrixStamp inefficient. It casts the sparse input matrix mVariableSystemMatrix to a dense matrix and back to sparse.
-	 * Also, some of the components have zero entries now - or don't apply any stamps, which results in a different pattern during recomputation.
-	 * This will be fixed in the branch profiling-based-optimisation */
-
 	// Now stamp switches into matrix
-	mSLog->info("Stamping switches");
+	SPDLOG_LOGGER_INFO(mSLog, "Stamping switches");
 	for (auto sw : mMNAIntfSwitches)
-		sw->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
+		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
 	// Now stamp initial state of variable elements into matrix
-	mSLog->info("Stamping variable elements");
+	SPDLOG_LOGGER_INFO(mSLog, "Stamping variable elements");
 	for (auto varElem : mMNAIntfVariableComps)
-		varElem->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
+		varElem->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
-	mSLog->info("Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
+	SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
+	/* TODO: find replacement for flush() */
 	mSLog->flush();
 
 	// Calculate factorization of current matrix
 	mDirectLinearSolverVariableSystemMatrix->preprocessing(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
-
 	mDirectLinearSolverVariableSystemMatrix->factorize(mVariableSystemMatrix);
 }
 
@@ -122,11 +118,11 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 
 	// Now stamp switches into matrix
 	for (auto sw : mMNAIntfSwitches)
-		sw->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
+		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
 	// Now stamp variable elements into matrix
 	for (auto comp : mMNAIntfVariableComps)
-		comp->mnaApplySparseSystemMatrixStamp(mVariableSystemMatrix);
+		comp->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
 	// Refactorization of matrix assuming that structure remained
 	// constant by omitting analyzePattern
@@ -240,33 +236,32 @@ template <typename VarType>
 void MnaSolverDirect<VarType>::logSystemMatrices() {
 	if (mFrequencyParallel) {
 		for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
-			mSLog->info("System matrix for frequency: {:d} \n{:s}", i,
-				Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][i]));
+			SPDLOG_LOGGER_INFO(mSLog, "System matrix for frequency: {:d} \n{:s}", i, Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][i]));
 		}
 
-		for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i)
-			mSLog->info("Right side vector for frequency: {:d} \n{:s}", i,
-				Logger::matrixToString(mRightSideVectorHarm[i]));
+		for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i) {
+			SPDLOG_LOGGER_INFO(mSLog, "Right side vector for frequency: {:d} \n{:s}", i, Logger::matrixToString(mRightSideVectorHarm[i]));
+		}
 
 	}
 	else if (mSystemMatrixRecomputation) {
-		mSLog->info("Summarizing matrices: ");
-		mSLog->info("Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
-		mSLog->info("Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
-		mSLog->info("Right side vector: {}", Logger::matrixToString(mRightSideVector));
+		SPDLOG_LOGGER_INFO(mSLog, "Summarizing matrices: ");
+		SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
+		SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
+		SPDLOG_LOGGER_INFO(mSLog, "Right side vector: {}", Logger::matrixToString(mRightSideVector));
 	} else {
 		if (mSwitches.size() < 1) {
-			mSLog->info("System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
+			SPDLOG_LOGGER_INFO(mSLog, "System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
 		}
 		else {
-			mSLog->info("Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
+			SPDLOG_LOGGER_INFO(mSLog, "Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
 
 			for (auto sys : mSwitchedMatrices) {
-				mSLog->info("Switching System matrix {:s} \n{:s}",
+				SPDLOG_LOGGER_INFO(mSLog, "Switching System matrix {:s} \n{:s}",
 				sys.first.to_string(), Logger::matrixToString(sys.second[0]));
 			}
 		}
-		mSLog->info("Right side vector: \n{}", mRightSideVector);
+		SPDLOG_LOGGER_INFO(mSLog, "Right side vector: \n{}", mRightSideVector);
 	}
 }
 
@@ -280,10 +275,10 @@ void MnaSolverDirect<VarType>::logSolveTime(){
 		if(meas > solveMax)
 			solveMax = meas;
 	}
-  mSLog->info("Cumulative solve times: {:.12f}",solveSum);
-	mSLog->info("Average solve time: {:.12f}", solveSum/((double)mSolveTimes.size()));
-	mSLog->info("Maximum solve time: {:.12f}", solveMax);
-	mSLog->info("Number of solves: {:d}", mSolveTimes.size());
+  	SPDLOG_LOGGER_INFO(mSLog, "Cumulative solve times: {:.12f}",solveSum);
+	SPDLOG_LOGGER_INFO(mSLog, "Average solve time: {:.12f}", solveSum/((double)mSolveTimes.size()));
+	SPDLOG_LOGGER_INFO(mSLog, "Maximum solve time: {:.12f}", solveMax);
+	SPDLOG_LOGGER_INFO(mSLog, "Number of solves: {:d}", mSolveTimes.size());
 }
 
 
@@ -291,7 +286,7 @@ template <typename VarType>
 void MnaSolverDirect<VarType>::logFactorizationTime()
 {
 	for (auto meas : mFactorizeTimes) {
-		mSLog->info("LU factorization time: {:.12f}", meas);
+		SPDLOG_LOGGER_INFO(mSLog, "LU factorization time: {:.12f}", meas);
 	}
 }
 
@@ -306,10 +301,10 @@ void MnaSolverDirect<VarType>::logRecomputationTime(){
        }
 	   // Sometimes, refactorization is not used
 	   if(mRecomputationTimes.size() != 0){
-		    mSLog->info("Cumulative refactorization times: {:.12f}",recompSum);
-       	mSLog->info("Average refactorization time: {:.12f}", recompSum/((double)mRecomputationTimes.size()));
-				mSLog->info("Maximum refactorization time: {:.12f}", recompMax);
-       	mSLog->info("Number of refactorizations: {:d}", mRecomputationTimes.size());
+		    SPDLOG_LOGGER_INFO(mSLog, "Cumulative refactorization times: {:.12f}",recompSum);
+       		SPDLOG_LOGGER_INFO(mSLog, "Average refactorization time: {:.12f}", recompSum/((double)mRecomputationTimes.size()));
+			SPDLOG_LOGGER_INFO(mSLog, "Maximum refactorization time: {:.12f}", recompMax);
+       		SPDLOG_LOGGER_INFO(mSLog, "Number of refactorizations: {:d}", mRecomputationTimes.size());
 	   }
 }
 

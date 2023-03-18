@@ -53,7 +53,7 @@ void DP::Ph3::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attrib
 								 Math::abs(**mVoltageRef) * sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));
 }
 
-void DP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), Complex(-1, 0));
 		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(0, 0), Complex(-1, 0));

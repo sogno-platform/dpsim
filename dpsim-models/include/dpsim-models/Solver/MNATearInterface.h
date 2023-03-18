@@ -20,7 +20,7 @@ namespace CPS {
 		// Initialize the internal state of the component
 		virtual void mnaTearInitialize(Real omega, Real timeStep) {}
 		// Apply the stamp to the impedance matrix of the removed network
-		virtual void mnaTearApplyMatrixStamp(Matrix& tearMatrix) = 0;
+		virtual void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) = 0;
 		// TODO: if we're consequent, these should be implemented as tasks
 		// Apply the stamp to the vector of additional voltages in the removed network
 		virtual void mnaTearApplyVoltageStamp(Matrix& currentVector) {}

@@ -29,11 +29,11 @@ void DP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
-	mSLog->info("\nResistance [Ohm]: {:s}"
+	SPDLOG_LOGGER_INFO(mSLog, "\nResistance [Ohm]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
 				Logger::realToString(**mResistance),
 				Logger::complexToString(impedance));
-	mSLog->info("\n--- Initialization from powerflow ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
@@ -51,7 +51,7 @@ void DP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 
 	**mRightVector = Matrix::Zero(0, 0);
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"
@@ -66,7 +66,7 @@ void DP::Ph1::Resistor::mnaCompInitializeHarm(Real omega, Real timeStep, std::ve
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
 }
 
-void DP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	Complex conductance = Complex(1. / **mResistance, 0);
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
@@ -81,19 +81,19 @@ void DP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -conductance, mNumFreqs, freq);
 		}
 
-		mSLog->info("-- Stamp frequency {:d} ---", freq);
+		SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freq);
 		if (terminalNotGrounded(0))
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
 		if (terminalNotGrounded(1))
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
 		if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 		}
 	}
 }
 
-void DP::Ph1::Resistor::mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
+void DP::Ph1::Resistor::mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx) {
 	Complex conductance = Complex(1. / **mResistance, 0);
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
@@ -106,14 +106,14 @@ void DP::Ph1::Resistor::mnaCompApplySystemMatrixStampHarm(Matrix& systemMatrix, 
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -conductance);
 	}
 
-	mSLog->info("-- Stamp for frequency {:f} ---", mFrequencies(freqIdx,0));
+	SPDLOG_LOGGER_INFO(mSLog, "-- Stamp for frequency {:f} ---", mFrequencies(freqIdx,0));
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0)  &&  terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
 
@@ -172,7 +172,7 @@ void DP::Ph1::Resistor::mnaCompUpdateCurrentHarm() {
 	}
 }
 
-void DP::Ph1::Resistor::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
+void DP::Ph1::Resistor::mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) {
 	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, Complex(**mResistance, 0));
 }
 

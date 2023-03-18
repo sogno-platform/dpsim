@@ -32,7 +32,7 @@ void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
 	mMaxVr = maxVr;
 	mMinVr = minVr;
 
-	mSLog->info("Exciter parameters: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Exciter parameters: \n"
 				"Ta: {:e}"
 				"\nKa: {:e}"
 				"\nTe: {:e}"
@@ -52,7 +52,7 @@ void Signal::Exciter::setParameters(Real Ta, Real Ka, Real Te, Real Ke,
 
 void Signal::Exciter::initialize(Real Vh_init, Real Ef_init) {
 
-	mSLog->info("Initially set excitation system initial values: \n"
+	SPDLOG_LOGGER_INFO(mSLog, "Initially set excitation system initial values: \n"
 				"Vh_init: {:e}\nEf_init: {:e}\n",
 				Vh_init, Ef_init);
 
@@ -74,7 +74,7 @@ void Signal::Exciter::initialize(Real Vh_init, Real Ef_init) {
 		**mVr = mMinVr;
 
 	mVref = **mVr /  mKa + **mVm;
-	mSLog->info("Actually applied excitation system initial values:"
+	SPDLOG_LOGGER_INFO(mSLog, "Actually applied excitation system initial values:"
 				"\nVref : {:e}"
 				"\ninit_Vm: {:e}"
 				"\ninit_Ef: {:e}"

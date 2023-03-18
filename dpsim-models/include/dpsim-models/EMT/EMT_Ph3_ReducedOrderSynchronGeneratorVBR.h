@@ -28,10 +28,10 @@ namespace Ph3 {
 
     protected:
         /// Resistance matrix in dq0 reference frame
-		Matrix mResistanceMatrixDq0;
+		MatrixFixedSize<3, 3> mResistanceMatrixDq0;
 
 		/// Conductance matrix
-		Matrix mConductanceMatrix;
+		MatrixFixedSize<3, 3> mConductanceMatrix;
 
 		///
 		Matrix mAbcToDq0;
@@ -56,7 +56,7 @@ namespace Ph3 {
 		Matrix get_inverseParkTransformMatrix() const;
 
         // ### MNA Section ###
-        void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) override;
+        void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
         void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 		void mnaCompPostStep(const Matrix& leftVector) override;
         void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;

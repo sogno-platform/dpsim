@@ -32,13 +32,19 @@ void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	**mIntfVoltage = vInitABC.real();
-	**mIntfCurrent = ((**mResistance).inverse() * vInitABC).real();
 
-	mSLog->info("\nResistance [Ohm]: {:s}"
+	// TODO: here, the custom implementation for matrix inversion is still used, because mResistance is still a generic matrix.
+	// Change the definition in future, if valid. The author currently doesn't know if this is allowed (mResistance is defined in Base)
+	// This is also done in the following
+	Matrix mResistanceInv = Matrix::Zero(3, 3);
+	Math::invertMatrix(**mResistance, mResistanceInv);
+	**mIntfCurrent = (mResistanceInv * vInitABC).real();
+
+	SPDLOG_LOGGER_INFO(mSLog, "\nResistance [Ohm]: {:s}"
 				"\nConductance [S]: {:s}",
 				Logger::matrixToString(**mResistance),
-				Logger::matrixToString((**mResistance).inverse()));
-	mSLog->info(
+				Logger::matrixToString(mResistanceInv));
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -56,9 +62,10 @@ void EMT::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 	**mRightVector = Matrix::Zero(0, 0);
 }
 
-void EMT::Ph3::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 
-	Matrix conductance = (**mResistance).inverse();
+	Matrix conductance = Matrix::Zero(3, 3);
+	Math::invertMatrix(**mResistance, conductance);
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0)) {
@@ -109,7 +116,7 @@ void EMT::Ph3::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -conductance(2, 2));
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\nConductance matrix: {:s}",
 		Logger::matrixToString(conductance));
 }
@@ -139,7 +146,7 @@ void EMT::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(1, 0) = (**mIntfVoltage)(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 		(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
-	mSLog->debug(
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\nVoltage: {:s}",
 		Logger::matrixToString(**mIntfVoltage)
 	);
@@ -147,10 +154,9 @@ void EMT::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
-	mSLog->debug(
-		"\nCurrent: {:s}",
-		Logger::matrixToString(**mIntfCurrent)
-	);
+	Matrix resistanceInv = Matrix::Zero(3, 3);
+	Math::invertMatrix(**mResistance, resistanceInv);
+	**mIntfCurrent = resistanceInv * **mIntfVoltage;
+	SPDLOG_LOGGER_DEBUG(mSLog, "\nCurrent: {:s}", Logger::matrixToString(**mIntfCurrent));
 	mSLog->flush();
 }

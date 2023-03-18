@@ -29,7 +29,7 @@ void DP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -47,7 +47,7 @@ void DP::Ph1::Switch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Mat
 	**mRightVector = Matrix::Zero(0, 0);
 }
 
-void DP::Ph1::Switch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::Switch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	Complex conductance = (**mIsClosed) ?
 		Complex( 1. / **mClosedResistance, 0 ) : Complex( 1. / **mOpenResistance, 0 );
 
@@ -73,7 +73,7 @@ void DP::Ph1::Switch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void DP::Ph1::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
+void DP::Ph1::Switch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
 	Complex conductance = (closed) ?
 		Complex( 1. / **mClosedResistance, 0 ) :
 		Complex( 1. / **mOpenResistance, 0 );

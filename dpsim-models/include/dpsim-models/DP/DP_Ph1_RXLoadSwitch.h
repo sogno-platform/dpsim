@@ -63,7 +63,7 @@ namespace Ph1 {
 		/// Check if switch is closed
 		Bool mnaIsClosed() override;
 		/// Stamps system matrix considering the defined switch position
-		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) override;
+		void mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) override;
 	};
 }
 }

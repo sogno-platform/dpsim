@@ -15,7 +15,7 @@ DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 
-	mSLog->info("Create {} {}", this->type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 }
@@ -57,7 +57,7 @@ void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	mInitialResistor->initializeFromNodesAndTerminals(frequency);
 	addMNASubComponent(mInitialResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

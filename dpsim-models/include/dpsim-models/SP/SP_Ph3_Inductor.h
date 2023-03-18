@@ -51,7 +51,7 @@ namespace CPS {
 				/// Initializes internal variables of the component
 				void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 				/// Stamps system matrix
-				void mnaCompApplySystemMatrixStamp(Matrix& systemMatrix);
+				void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
 				/// Upgrade values in the source vector and maybe system matrix before MNA solution
 				void mnaStep(Matrix& systemMatrix, Matrix& rightVector, Matrix& leftVector, Real time);
 				/// Upgrade internal variables after MNA solution
@@ -66,7 +66,7 @@ namespace CPS {
 				/// Add MNA post step dependencies
 				void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
-				void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
+				void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
 			};
 		}
 	}

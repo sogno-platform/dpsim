@@ -20,7 +20,7 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 
 	setTerminalNumber(2);
 
-	mSLog->info("Create {} {}", this->type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1,1);
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 }
@@ -37,10 +37,10 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 
 	Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
 
-	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
-	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", **mResistance, **mInductance);
-    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(**mRatio), std::arg(**mRatio));
-	mSLog->info("Rated Power ={} [W]", **mRatedPower);
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", **mResistance, **mInductance);
+    SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(**mRatio), std::arg(**mRatio));
+	SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
 
 	mParametersSet = true;
 }
@@ -49,7 +49,7 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 	Real ratioPhase, Real resistance, Real inductance) {
 
 	**mRatedPower = ratedPower;
-	mSLog->info("Rated Power ={} [W]", **mRatedPower);
+	SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
 
 	DP::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
 }
@@ -67,9 +67,9 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		Real tmpVolt = **mNominalVoltageEnd1;
 		**mNominalVoltageEnd1 = **mNominalVoltageEnd2;
 		**mNominalVoltageEnd2 = tmpVolt;
-		mSLog->info("Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
-		mSLog->info("Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
-		mSLog->info("Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
+		SPDLOG_LOGGER_INFO(mSLog, "Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
+		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+		SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
 	}
 
 	// Set initial voltage of virtual node in between
@@ -78,7 +78,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// Static calculations from load flow data
 	Real omega = 2.*PI* frequency;
 	Complex impedance = { **mResistance, omega * **mInductance };
-	mSLog->info("Reactance={} [Ohm] (referred to primary side)", omega * **mInductance );
+	SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)", omega * **mInductance );
 	(**mIntfVoltage)(0,0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
@@ -107,7 +107,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSnubResistor1 = std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
 	mSubSnubResistor1->setParameters(mSnubberResistance1);
 	mSubSnubResistor1->connect({ node(0), DP::SimNode::GND });
-	mSLog->info("Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]", node(0)->name(), Logger::realToString(mSnubberResistance1));
+	SPDLOG_LOGGER_INFO(mSLog, "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]", node(0)->name(), Logger::realToString(mSnubberResistance1));
 	addMNASubComponent(mSubSnubResistor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 
@@ -116,7 +116,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSnubResistor2 = std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
 	mSubSnubResistor2->setParameters(mSnubberResistance2);
 	mSubSnubResistor2->connect({ node(1), DP::SimNode::GND });
-	mSLog->info("Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]", node(1)->name(), Logger::realToString(mSnubberResistance2));
+	SPDLOG_LOGGER_INFO(mSLog, "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]", node(1)->name(), Logger::realToString(mSnubberResistance2));
 	addMNASubComponent(mSubSnubResistor2, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	// // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
@@ -124,7 +124,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// mSubSnubCapacitor1 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap1", mLogLevel);
 	// mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);
 	// mSubSnubCapacitor1->connect({ node(0), DP::SimNode::GND });
-	// mSLog->info("Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::realToString(mSnubberCapacitance1));
+	// SPDLOG_LOGGER_INFO(mSLog, "Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::realToString(mSnubberCapacitance1));
 	// mSubComponents.push_back(mSubSnubCapacitor1);
 
 	// A snubber capacitance is added to lower voltage side
@@ -132,18 +132,18 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSnubCapacitor2 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
 	mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
 	mSubSnubCapacitor2->connect({ node(1), DP::SimNode::GND });
-	mSLog->info("Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]", node(1)->name(), Logger::realToString(mSnubberCapacitance2));
+	SPDLOG_LOGGER_INFO(mSLog, "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]", node(1)->name(), Logger::realToString(mSnubberCapacitance2));
 	addMNASubComponent(mSubSnubCapacitor2, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	// Initialize electrical subcomponents
-	mSLog->info("Electrical subcomponents: ");
+	SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents) {
-		mSLog->info("- {}", subcomp->name());
+		SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
 		subcomp->initialize(mFrequencies);
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -159,14 +159,14 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void DP::Ph1::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\nTerminal 0 connected to {:s} = sim node {:d}"
 		"\nTerminal 1 connected to {:s} = sim node {:d}",
 		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
 		mTerminals[1]->node()->name(), mTerminals[1]->node()->matrixNodeIndex());
 }
 
-void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	// Ideal transformer equations
 	if (terminalNotGrounded(0)) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1.0, 0));
@@ -183,15 +183,15 @@ void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 
 	if (terminalNotGrounded(0)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
 			mVirtualNodes[0]->matrixNodeIndex(),  mVirtualNodes[1]->matrixNodeIndex());
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
 			mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex());
 	}
 	if (terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
 			matrixNodeIndex(1), mVirtualNodes[1]->matrixNodeIndex());
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1));
 	}
 }
@@ -226,6 +226,6 @@ void DP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = 0;
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	(**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) - Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
-	mSLog->debug("Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0, 0)));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0, 0)));
 }
 

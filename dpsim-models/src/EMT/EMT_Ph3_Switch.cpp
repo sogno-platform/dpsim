@@ -36,7 +36,7 @@ void EMT::Ph3::Switch::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage = vInitABC.real();
 	**mIntfCurrent = (impedance.inverse() * vInitABC).real();
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -56,8 +56,8 @@ void EMT::Ph3::Switch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Ma
 
 Bool EMT::Ph3::Switch::mnaIsClosed() { return **mSwitchClosed; }
 
-void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Matrix conductance = (**mSwitchClosed) ?
+void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
+	MatrixFixedSize<3, 3> conductance = (**mSwitchClosed) ?
 		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
 	// Set diagonal entries
@@ -113,8 +113,8 @@ void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Logger::matrixToString(conductance));
 }
 
-void EMT::Ph3::Switch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
-	Matrix conductance = (closed) ?
+void EMT::Ph3::Switch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
+	MatrixFixedSize<3, 3> conductance = (closed) ?
 		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
 	// Set diagonal entries
@@ -200,7 +200,8 @@ void EMT::Ph3::Switch::mnaCompUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::Switch::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = (**mSwitchClosed) ?
-		(**mClosedResistance).inverse() * **mIntfVoltage:
-		(**mOpenResistance).inverse() * **mIntfVoltage;
+	Matrix conductance = Matrix::Zero(3, 3);
+	(**mSwitchClosed) ? Math::invertMatrix(**mClosedResistance, conductance) : Math::invertMatrix(**mOpenResistance, conductance);
+
+	**mIntfCurrent = conductance * **mIntfVoltage;
 }

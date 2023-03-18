@@ -13,7 +13,7 @@ using namespace CPS;
 Signal::SineWaveGenerator::SineWaveGenerator(String name, Logger::Level logLevel)
 			: SignalGenerator(name, logLevel),
 			mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")) {
-				mSLog->info("Create {} {}", type(), name);
+				SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
 			}
 
 void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real frequency /*= -1*/) {
@@ -23,7 +23,7 @@ void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real freque
 	**mFreq = frequency;
 	**mSigOut = initialPhasor;
 
-	mSLog->info(	"Parameters: \n"
+	SPDLOG_LOGGER_INFO(mSLog, 	"Parameters: \n"
 					 "Sine wave magnitude: {} [V] \n"
 					 "Sine wave initial phase: {} [rad] \n"
 					 "Sine wave frequency: {} [Hz] \n",

@@ -37,7 +37,7 @@ void DP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		voltMag * sin(voltPhase + 2. / 3. * M_PI));
 	**mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
 
-	mSLog->info("\n--- Initialization from powerflow ---"
+	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow ---"
 		"\nVoltage across amplitude and phase: \n{:s}"
 		"\nCurrent amplitude and phase: \n{:s}"
 		"\nTerminal 0 voltage amplitude and phase: \n{:s}"
@@ -54,9 +54,9 @@ void DP::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 	**mRightVector = Matrix::Zero(0, 0);
 }
 
-void DP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void DP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 
-	Matrix conductance = (**mResistance).inverse();
+	MatrixFixedSize<3, 3> conductance = (**mResistance).inverse();
 
 	//// Set diagonal entries
 	//if (terminalNotGrounded(0))
@@ -118,12 +118,12 @@ void DP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 
 	//if (terminalNotGrounded(0))
-	//	mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
+	//	SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
 	//if (terminalNotGrounded(1))
-	//	mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(1,0), matrixNodeIndex(1,0));
+	//	SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(1,0), matrixNodeIndex(1,0));
 	//if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-	//	mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndex(0,0), matrixNodeIndex(1,0));
-	//	mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndex(1,0), matrixNodeIndex(0,0));
+	//	SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndex(0,0), matrixNodeIndex(1,0));
+	//	SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndex(1,0), matrixNodeIndex(0,0));
 	//}
 }
 

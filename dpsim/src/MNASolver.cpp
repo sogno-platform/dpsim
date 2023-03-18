@@ -34,13 +34,13 @@ void MnaSolver<VarType>::setSystem(const CPS::SystemTopology &system) {
 template <typename VarType>
 void MnaSolver<VarType>::initialize() {
 	// TODO: check that every system matrix has the same dimensions
-	mSLog->info("---- Start initialization ----");
+	SPDLOG_LOGGER_INFO(mSLog, "---- Start initialization ----");
 
 	// Register attribute for solution vector
 	///FIXME: This is kinda ugly... At least we should somehow unify mLeftSideVector and mLeftSideVectorHarm.
 	// Best case we have some kind of sub-attributes for attribute vectors / tensor attributes...
 	if (mFrequencyParallel) {
-		mSLog->info("Computing network harmonics in parallel.");
+		SPDLOG_LOGGER_INFO(mSLog, "Computing network harmonics in parallel.");
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mLeftSideVectorHarm.push_back(AttributeStatic<Matrix>::make());
 		}
@@ -49,9 +49,9 @@ void MnaSolver<VarType>::initialize() {
 		mLeftSideVector = AttributeStatic<Matrix>::make();
 	}
 
-	mSLog->info("-- Process topology");
+	SPDLOG_LOGGER_INFO(mSLog, "-- Process topology");
 	for (auto comp : mSystem.mComponents)
-		mSLog->info("Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
+		SPDLOG_LOGGER_INFO(mSLog, "Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
 
 	// Otherwise LU decomposition will fail
 	if (mSystem.mComponents.size() == 0)
@@ -64,7 +64,7 @@ void MnaSolver<VarType>::initialize() {
 	collectVirtualNodes();
 	assignMatrixNodeIndices();
 
-	mSLog->info("-- Create empty MNA system matrices and vectors");
+	SPDLOG_LOGGER_INFO(mSLog, "-- Create empty MNA system matrices and vectors");
 	createEmptyVectors();
 	createEmptySystemMatrix();
 
@@ -90,8 +90,8 @@ void MnaSolver<VarType>::initialize() {
 	// Initialize system matrices and source vector.
 	initializeSystem();
 
-	mSLog->info("--- Initialization finished ---");
-	mSLog->info("--- Initial system matrices and vectors ---");
+	SPDLOG_LOGGER_INFO(mSLog, "--- Initialization finished ---");
+	SPDLOG_LOGGER_INFO(mSLog, "--- Initial system matrices and vectors ---");
 	logSystemMatrices();
 
 	mSLog->flush();
@@ -99,7 +99,7 @@ void MnaSolver<VarType>::initialize() {
 
 template <>
 void MnaSolver<Real>::initializeComponents() {
-	mSLog->info("-- Initialize components from power flow");
+	SPDLOG_LOGGER_INFO(mSLog, "-- Initialize components from power flow");
 
 	CPS::MNAInterface::List allMNAComps;
 	allMNAComps.insert(allMNAComps.end(), mMNAComponents.begin(), mMNAComponents.end());
@@ -132,7 +132,7 @@ void MnaSolver<Real>::initializeComponents() {
 
 template <>
 void MnaSolver<Complex>::initializeComponents() {
-	mSLog->info("-- Initialize components from power flow");
+	SPDLOG_LOGGER_INFO(mSLog, "-- Initialize components from power flow");
 
 	CPS::MNAInterface::List allMNAComps;
 	allMNAComps.insert(allMNAComps.end(), mMNAComponents.begin(), mMNAComponents.end());
@@ -151,7 +151,7 @@ void MnaSolver<Complex>::initializeComponents() {
 	for (auto comp : mSimSignalComps)
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 
-	mSLog->info("-- Initialize MNA properties of components");
+	SPDLOG_LOGGER_INFO(mSLog, "-- Initialize MNA properties of components");
 	if (mFrequencyParallel) {
 		// Initialize MNA specific parts of components.
 		for (auto comp : mMNAComponents) {
@@ -182,7 +182,7 @@ void MnaSolver<Complex>::initializeComponents() {
 
 template <typename VarType>
 void MnaSolver<VarType>::initializeSystem() {
-	mSLog->info("-- Initialize MNA system matrices and source vector");
+	SPDLOG_LOGGER_INFO(mSLog, "-- Initialize MNA system matrices and source vector");
 	mRightSideVector.setZero();
 
 	// just a sanity check in case we change the static
@@ -244,7 +244,7 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 	for (auto comp : mMNAComponents) {
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-		mSLog->debug("Stamping {:s} {:s} into source vector",
+		SPDLOG_LOGGER_DEBUG(mSLog, "Stamping {:s} {:s} into source vector",
 			idObj->type(), idObj->name());
 		if (mSLog->should_log(spdlog::level::trace))
 			mSLog->trace("\n{:s}", Logger::matrixToString(mRightSideVector));
@@ -258,9 +258,9 @@ void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
 	for (auto varElem : mVariableComps)
 		for (auto varEntry : varElem->mVariableSystemMatrixEntries)
 			mListVariableSystemMatrixEntries.push_back(varEntry);
-	mSLog->info("List of index pairs of varying matrix entries: ");
+	SPDLOG_LOGGER_INFO(mSLog, "List of index pairs of varying matrix entries: ");
 	for (auto indexPair : mListVariableSystemMatrixEntries)
-		mSLog->info("({}, {})", indexPair.first, indexPair.second);
+		SPDLOG_LOGGER_INFO(mSLog, "({}, {})", indexPair.first, indexPair.second);
 
 	stampVariableSystemMatrix();
 
@@ -271,7 +271,7 @@ void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
 	for (auto comp : mMNAComponents) {
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-		mSLog->debug("Stamping {:s} {:s} into source vector",
+		SPDLOG_LOGGER_DEBUG(mSLog, "Stamping {:s} {:s} into source vector",
 			idObj->type(), idObj->name());
 		if (mSLog->should_log(spdlog::level::trace))
 			mSLog->trace("\n{:s}", Logger::matrixToString(mRightSideVector));
@@ -283,7 +283,7 @@ Bool MnaSolver<VarType>::hasVariableComponentChanged() {
 	for (auto varElem : mVariableComps) {
 		if (varElem->hasParameterChanged()) {
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(varElem);
-			this->mSLog->debug("Component ({:s} {:s}) value changed -> Update System Matrix",
+			SPDLOG_LOGGER_DEBUG(mSLog, "Component ({:s} {:s}) value changed -> Update System Matrix",
 				idObj->type(), idObj->name());
 			return true;
 		}
@@ -305,7 +305,7 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 		if (!baseNode->isGround()) {
 			auto node = std::dynamic_pointer_cast< CPS::SimNode<VarType> >(baseNode);
 			mNodes.push_back(node);
-			mSLog->info("Added node {:s}", node->name());
+			SPDLOG_LOGGER_INFO(mSLog, "Added node {:s}", node->name());
 		}
 	}
 
@@ -340,14 +340,14 @@ void MnaSolver<VarType>::assignMatrixNodeIndices() {
 	UInt matrixNodeIndexIdx = 0;
 	for (UInt idx = 0; idx < mNodes.size(); ++idx) {
 		mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
-		mSLog->info("Assigned index {} to phase A of node {}", matrixNodeIndexIdx, idx);
+		SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase A of node {}", matrixNodeIndexIdx, idx);
 		++matrixNodeIndexIdx;
 		if (mNodes[idx]->phaseType() == CPS::PhaseType::ABC) {
 			mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
-			mSLog->info("Assigned index {} to phase B of node {}", matrixNodeIndexIdx, idx);
+			SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase B of node {}", matrixNodeIndexIdx, idx);
 			++matrixNodeIndexIdx;
 			mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
-			mSLog->info("Assigned index {} to phase C of node {}", matrixNodeIndexIdx, idx);
+			SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase C of node {}", matrixNodeIndexIdx, idx);
 			++matrixNodeIndexIdx;
 		}
 		// This should be true when the final network node is reached, not considering virtual nodes
@@ -359,10 +359,10 @@ void MnaSolver<VarType>::assignMatrixNodeIndices() {
 	mNumHarmMatrixNodeIndices = static_cast<UInt>(mSystem.mFrequencies.size()-1) * mNumMatrixNodeIndices;
 	mNumTotalMatrixNodeIndices = static_cast<UInt>(mSystem.mFrequencies.size()) * mNumMatrixNodeIndices;
 
-	mSLog->info("Assigned simulation nodes to topology nodes:");
-	mSLog->info("Number of network simulation nodes: {:d}", mNumNetMatrixNodeIndices);
-	mSLog->info("Number of simulation nodes: {:d}", mNumMatrixNodeIndices);
-	mSLog->info("Number of harmonic simulation nodes: {:d}", mNumHarmMatrixNodeIndices);
+	SPDLOG_LOGGER_INFO(mSLog, "Assigned simulation nodes to topology nodes:");
+	SPDLOG_LOGGER_INFO(mSLog, "Number of network simulation nodes: {:d}", mNumNetMatrixNodeIndices);
+	SPDLOG_LOGGER_INFO(mSLog, "Number of simulation nodes: {:d}", mNumMatrixNodeIndices);
+	SPDLOG_LOGGER_INFO(mSLog, "Number of harmonic simulation nodes: {:d}", mNumHarmMatrixNodeIndices);
 }
 
 template<>
@@ -400,7 +400,7 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 		if (pComp->hasVirtualNodes()) {
 			for (UInt node = 0; node < pComp->virtualNodesNumber(); ++node) {
 				mNodes.push_back(pComp->virtualNode(node));
-				mSLog->info("Collected virtual node {} of {}", virtualNode, node, pComp->name());
+				SPDLOG_LOGGER_INFO(mSLog, "Collected virtual node {} of {}", virtualNode, node, pComp->name());
 			}
 		}
 
@@ -410,7 +410,7 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 			for (auto pSubComp : pComp->subComponents()) {
 				for (UInt node = 0; node < pSubComp->virtualNodesNumber(); ++node) {
 					mNodes.push_back(pSubComp->virtualNode(node));
-					mSLog->info("Collected virtual node {} of {}", virtualNode, node, pComp->name());
+					SPDLOG_LOGGER_INFO(mSLog, "Collected virtual node {} of {}", virtualNode, node, pComp->name());
 				}
 			}
 		}
@@ -425,7 +425,7 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 		if (pComp->hasVirtualNodes()) {
 			for (UInt node = 0; node < pComp->virtualNodesNumber(); ++node) {
 				mNodes.push_back(pComp->virtualNode(node));
-				mSLog->info("Collected virtual node {} of Varible Comp {}", node, pComp->name());
+				SPDLOG_LOGGER_INFO(mSLog, "Collected virtual node {} of Varible Comp {}", node, pComp->name());
 			}
 		}
 	}
@@ -433,14 +433,14 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 	// Update node number to create matrices and vectors
 	mNumNodes = (UInt) mNodes.size();
 	mNumVirtualNodes = mNumNodes - mNumNetNodes;
-	mSLog->info("Created virtual nodes:");
-	mSLog->info("Number of network nodes: {:d}", mNumNetNodes);
-	mSLog->info("Number of network and virtual nodes: {:d}", mNumNodes);
+	SPDLOG_LOGGER_INFO(mSLog, "Created virtual nodes:");
+	SPDLOG_LOGGER_INFO(mSLog, "Number of network nodes: {:d}", mNumNetNodes);
+	SPDLOG_LOGGER_INFO(mSLog, "Number of network and virtual nodes: {:d}", mNumNodes);
 }
 
 template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
-	mSLog->info("--- Run steady-state initialization ---");
+	SPDLOG_LOGGER_INFO(mSLog, "--- Run steady-state initialization ---");
 
 	DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::off);
 	DataLogger initRightVectorLog(mName + "_InitRightVector", mLogLevel != CPS::Logger::Level::off);
@@ -458,7 +458,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	Matrix diff = Matrix::Zero(2 * mNumNodes, 1);
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 
-	mSLog->info("Time step is {:f}s for steady-state initialization", initTimeStep);
+	SPDLOG_LOGGER_INFO(mSLog, "Time step is {:f}s for steady-state initialization", initTimeStep);
 
 	for (auto comp : mSystem.mComponents) {
 		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
@@ -525,12 +525,12 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 			break;
 	}
 
-	mSLog->info("Max difference: {:f} or {:f}% at time {:f}", maxDiff, maxDiff / max, time);
+	SPDLOG_LOGGER_INFO(mSLog, "Max difference: {:f} or {:f}% at time {:f}", maxDiff, maxDiff / max, time);
 
 	// Reset system for actual simulation
 	mRightSideVector.setZero();
 
-	mSLog->info("--- Finished steady-state initialization ---");
+	SPDLOG_LOGGER_INFO(mSLog, "--- Finished steady-state initialization ---");
 }
 
 template <typename VarType>

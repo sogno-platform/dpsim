@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     SystemTopology systemPF = reader.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::PVNode);
 	systemPF.component<CPS::SP::Ph1::SynchronGenerator>("GEN1")->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
 
-	// define logging
+	// // define logging
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
     for (auto node : systemPF.mNodes)
         loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));

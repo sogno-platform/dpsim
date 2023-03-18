@@ -91,6 +91,12 @@ namespace CPS {
 	///
 	template<typename VarType>
 	using MatrixVar = Eigen::Matrix<VarType, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>;
+	/// @brief Dense matrix for real numbers with fixed dimension.
+	template<int rows, int cols>
+	using MatrixFixedSize = Eigen::Matrix<Real, rows, cols, Eigen::ColMajor>;
+	/// @brief Dense matrix for complex numbers with fixed dimension.
+	template<int rows, int cols>
+	using MatrixFixedSizeComp = Eigen::Matrix<Complex, rows, cols, Eigen::ColMajor>;
 
 	// ### Constants ###
 	/// @cond WORKAROUND (Otherwise this code breaks Breathe / Doxygen)

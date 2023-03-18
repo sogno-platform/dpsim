@@ -29,20 +29,17 @@ EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::initializeResistanceMatrix() {
 	// dq0 resistance matrix
-	mResistanceMatrixDq0 = Matrix::Zero(3,3);
-
-	// dq0 resistance matrix
-	mResistanceMatrixDq0 = Matrix::Zero(3,3);
+	mResistanceMatrixDq0 = MatrixFixedSize<3, 3>::Zero(3,3);
 	mResistanceMatrixDq0 <<	0.0,	mA,		0.0,
 							mB,		0.0,	0.0,
 					  		0.0,	0.0,	mL0;
 
 	// initialize conductance matrix
-	mConductanceMatrix = Matrix::Zero(3,3);
+	mConductanceMatrix = MatrixFixedSize<3, 3>::Zero(3,3);
 }
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
-	Matrix resistanceMatrix =  mDq0ToAbc * mResistanceMatrixDq0 * mAbcToDq0;
+	MatrixFixedSize<3, 3> resistanceMatrix =  mDq0ToAbc * mResistanceMatrixDq0 * mAbcToDq0;
 	resistanceMatrix = resistanceMatrix * mBase_Z;
 	mConductanceMatrix = resistanceMatrix.inverse();
 }
@@ -107,12 +104,12 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 2), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C)));
 	}
 
-	mSLog->info("List of index pairs of varying matrix entries: ");
+	SPDLOG_LOGGER_INFO(mSLog, "List of index pairs of varying matrix entries: ");
 	for (auto indexPair : mVariableSystemMatrixEntries)
-		mSLog->info("({}, {})", indexPair.first, indexPair.second);
+		SPDLOG_LOGGER_INFO(mSLog, "({}, {})", indexPair.first, indexPair.second);
 }
 
-void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 
 	if (mModelAsCurrentSource) {
 		// Stamp conductance matrix

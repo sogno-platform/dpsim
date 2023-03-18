@@ -23,8 +23,8 @@ void Signal::CosineFMGenerator::setParameters(Complex initialPhasor, Real modula
 	attributeTyped<Complex>("sigOut")->set(initialPhasor);
 	attributeTyped<Real>("freq")->set(frequency);
 
-	mSLog->info("Parameters:");
-	mSLog->info("\nInitial Phasor={}"
+	SPDLOG_LOGGER_INFO(mSLog, "Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "\nInitial Phasor={}"
 				"\nModulation Frequency={} [Hz]"
 				"\nModulation Amplitude={}"
 				"\nBase Frequency={} [Hz]",
