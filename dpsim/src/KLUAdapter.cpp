@@ -27,7 +27,7 @@ KLUAdapter::KLUAdapter()
 	// NOTE: klu_defaults should already set the preordering methods correctly.
 	// It is repeated here in case this is altered in SuiteSparse at some point
 
-	m_common.scale = 1;
+	m_common.scale = 2;
 	m_preordering = AMD_ORDERING;
 	m_common.btf = 1;
 
