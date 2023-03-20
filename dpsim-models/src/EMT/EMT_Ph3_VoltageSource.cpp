@@ -144,7 +144,7 @@ void EMT::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp(Matrix& rightVect
 
 void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
 	if(mSrcSig != nullptr) {
-		mSrcSig->step(time + mTimeStep);
+		mSrcSig->step(time);
 		for(int i = 0; i < 3; i++) {
 			(**mIntfVoltage)(i, 0) = RMS3PH_TO_PEAK1PH * Math::abs((**mVoltageRef)(i, 0))
 				* cos(Math::phase(mSrcSig->getSignal()) + Math::phase((**mVoltageRef)(i, 0)));

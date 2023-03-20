@@ -349,6 +349,11 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	// initialize theta and calculate transform matrix
 	**mThetaMech = **mDelta - PI / 2.;
 
+	// set initial value of current
+	(**mIntfCurrent)(0,0) = (mInitCurrent * mBase_I).real();
+	(**mIntfCurrent)(1,0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_B).real();
+	(**mIntfCurrent)(2,0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_C).real();
+
 	SPDLOG_LOGGER_DEBUG(this->mSLog,
 		"\n--- Initialization from power flow  ---"
 		"\nInitial Vd (per unit): {:f}"
@@ -423,6 +428,9 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	// initialize theta and calculate transform matrix
 	**mThetaMech = **mDelta - PI / 2.;
 
+	// set initial value of current
+	(**mIntfCurrent)(0,0) = mInitCurrent * mBase_I_RMS;
+	
 	SPDLOG_LOGGER_DEBUG(this->mSLog,
 		"\n--- Initialization from power flow  ---"
 		"\nInitial Vd (per unit): {:f}"
@@ -476,16 +484,11 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 		**mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
 	}
 
-	// predict mechanical vars for all reduced-order models in the same manner
-	if (mSimTime > 0.0) {
-		// predict omega at t=k+1 (forward euler)
-		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
-
-		// predict theta and delta at t=k+1 (backward euler)
-		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
-	}
+	// calculate mechanical variables at t=k+1 with forward euler
+	**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
+	**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+	**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+	**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 
 	// model specific calculation of electrical vars
 	stepInPerUnit();
@@ -509,16 +512,11 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int ti
 		**mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
 	}
 
-	// predict mechanical vars for all reduced-order models in the same manner
-	if (mSimTime > 0.0) {
-		// predict omega at t=k+1 (forward euler)
-		**mElecTorque = (**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0);
-		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
-
-		// predict theta and delta at t=k+1 (backward euler)
-		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
-	}
+	// calculate mechanical variables at t=k+1 with forward euler
+	**mElecTorque = ((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0));
+	**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+	**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+	**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 
 	// model specific calculation of electrical vars
 	stepInPerUnit();
