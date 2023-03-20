@@ -361,6 +361,11 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	}
 	if (mHasGovernor)
 		mGovernor->initialize(**mMechTorque);
+		
+	// set initial value of current
+	(**mIntfCurrent)(0,0) = (mInitCurrent * mBase_I).real();
+	(**mIntfCurrent)(1,0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_B).real();
+	(**mIntfCurrent)(2,0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_C).real();
 
 	// set initial interface current
 	(**mIntfCurrent)(0,0) = (mInitCurrent * mBase_I).real();
@@ -469,6 +474,9 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	// set initial interface voltage
 	(**mIntfVoltage)(0,0) = mInitVoltage * mBase_V_RMS;
 
+	// set initial value of current
+	(**mIntfCurrent)(0,0) = mInitCurrent * mBase_I_RMS;
+	
 	SPDLOG_LOGGER_DEBUG(this->mSLog,
 		"\n--- Initialization from power flow  ---"
 		"\nInitial Vd (per unit): {:f}"
@@ -517,7 +525,11 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 		mMechTorque_prev = **mMechTorque;
 		**mMechTorque = mTurbine->step(mGovernor->step(**mOmMech, mTimeStep), mTimeStep);
 	}
-
+	if (!mHasTurbine && mHasGovernor) {
+		mMechTorque_prev = **mMechTorque;
+		**mMechTorque = mGovernor->step(**mOmMech, mTimeStep);
+	}
+	
 	// calculate mechanical variables at t=k+1 with forward euler
 	**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
 	**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
