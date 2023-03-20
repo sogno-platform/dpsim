@@ -10,6 +10,7 @@
 
 #include <dpsim-models/Solver/MNASyncGenInterface.h>
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
+#include <dpsim-models/DP/DP_Ph1_DPDQInterface.h>
 
 namespace CPS {
 namespace DP {
@@ -23,15 +24,13 @@ namespace Ph1 {
 		public MNASyncGenInterface,
 		public SharedFactory<SynchronGenerator4OrderTPM> {
 	protected:
+		/// Interface used to transform between DP and DQ vars
+		DPDQInterface mDomainInterface;
+
 		/// Constant part as conductance matrix
 		Matrix mConductanceMatrixConst = Matrix::Zero(2,2);
 		/// Varying part as resistance matrix
 		Matrix mResistanceMatrixVarying = Matrix::Zero(2,2);
-
-		/// Transform from DQ to DP domain
-		Matrix mDQToDPTransform = Matrix::Zero(2,2);
-		/// Transform from DP to DQ domain
-		Matrix mDPToDQTransform = Matrix::Zero(2,2);
 
 		// #### Model specific variables ####
 		/// Transient emf
@@ -80,14 +79,7 @@ namespace Ph1 {
 		void updateVoltage(const Matrix& leftVector) override;
 		///
 		bool requiresIteration() override;
-		///
-		void updateDQToDPTransform();
-		///
-		void updateDPToDQTransform();
-		///
-		Complex applyDQToDPTransform(const Matrix& dqMatrix);
-		///
-		Matrix applyDPToDQTransform(const Complex& dpComplex);
+
 		///
 		void initializeResistanceMatrix() final {};
 
