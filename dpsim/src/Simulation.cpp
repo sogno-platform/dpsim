@@ -395,12 +395,12 @@ void Simulation::run() {
 
 Real Simulation::step() {
 	auto start = std::chrono::steady_clock::now();
-	mEvents.handleEvents(mTime);
-
-	mScheduler->step(mTime, mTimeStepCount);
-
+	
 	mTime += **mTimeStep;
 	++mTimeStepCount;
+	
+	mEvents.handleEvents(mTime);
+	mScheduler->step(mTime, mTimeStepCount);
 
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
