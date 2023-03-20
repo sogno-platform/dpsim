@@ -110,7 +110,10 @@ namespace DPsim {
 			// not every derived class has a linear solver configuration option
 		}
 		/// log LU decomposition times, if applicable
-		virtual void logLUTimes();
+		virtual void logLUTimes()
+		{
+			// no default implementation for all types of solvers
+		}
 
 		// #### Simulation ####
 		/// Get tasks for scheduler
