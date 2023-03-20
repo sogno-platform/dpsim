@@ -46,6 +46,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_AvVoltageSourceInverterDQ.cpp
 	DP/DP_Ph1_NetworkInjection.cpp
 	DP/DP_Ph1_varResSwitch.cpp
+	DP/DP_Ph1_DPDQInterface.cpp
 
 	DP/DP_Ph3_VoltageSource.cpp
 	DP/DP_Ph3_Capacitor.cpp
