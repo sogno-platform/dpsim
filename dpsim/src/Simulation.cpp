@@ -347,6 +347,11 @@ void Simulation::start() {
 	SPDLOG_LOGGER_INFO(mLog, "Time step: {:e}", **mTimeStep);
 	SPDLOG_LOGGER_INFO(mLog, "Final time: {:e}", **mFinalTime);
 
+	// log initial values of attributes
+	if (mLoggers.size() > 0) {
+		mLoggers[0]->log(0, 0);
+	}
+	
 	mSimulationStartTimePoint = std::chrono::steady_clock::now();
 }
 

@@ -58,6 +58,8 @@ namespace CPS {
 		SimNode(UInt matrixNodeIndex, PhaseType phaseType = PhaseType::Single)
 			: SimNode("N" + std::to_string(matrixNodeIndex), "N" + std::to_string(matrixNodeIndex), matrixNodeIndex, phaseType) { }
 
+		/// Initialize mVoltage according to mInitialVoltage
+		void initialize();
 		/// Initialize state matrices with size according to phase type and frequency number
 		void initialize(Matrix frequencies);
 		/// Returns matrix index for specified phase
