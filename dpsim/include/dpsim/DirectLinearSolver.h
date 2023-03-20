@@ -66,6 +66,9 @@ namespace DPsim
 		/// Abstract linear solver class for MNA simulation
 		DirectLinearSolverConfiguration m_configuration;
 
-		virtual void parseConfiguration() {}
+		virtual void parseConfiguration()
+		{
+			// no default parsing, configuration options vary for each solver
+		}
 	};
 }

@@ -105,9 +105,12 @@ namespace DPsim {
 		/// activate powerflow initialization
 		void doInitFromNodesAndTerminals(Bool f) { mInitFromNodesAndTerminals = f; }
 		/// set direct linear solver configuration (only available in MNA for now)
-		virtual void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration&) { }
+		virtual void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration&)
+		{
+			// not every derived class has a linear solver configuration option
+		}
 		/// log LU decomposition times, if applicable
-		virtual void logLUTimes() { }
+		virtual void logLUTimes();
 
 		// #### Simulation ####
 		/// Get tasks for scheduler
