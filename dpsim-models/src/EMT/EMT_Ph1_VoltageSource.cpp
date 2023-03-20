@@ -68,7 +68,7 @@ void EMT::Ph1::VoltageSource::updateVoltage(Real time) {
 	Complex voltageRef = mVoltageRef->get();
 	Real srcFreq = mSrcFreq->get();
 	if (srcFreq > 0)
-		(**mIntfVoltage)(0,0) = Math::abs(voltageRef) * cos((time + mTimeStep) * 2.*PI*srcFreq + Math::phase(voltageRef));
+		(**mIntfVoltage)(0,0) = Math::abs(voltageRef) * cos((time) * 2.*PI*srcFreq + Math::phase(voltageRef));
 	else
 		(**mIntfVoltage)(0,0) = voltageRef.real();
 }
