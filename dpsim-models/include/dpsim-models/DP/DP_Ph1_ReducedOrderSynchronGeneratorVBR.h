@@ -10,6 +10,7 @@
 
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
+#include <dpsim-models/DP/DP_Ph1_DPDQInterface.h>
 
 namespace CPS {
 namespace DP {
@@ -27,30 +28,12 @@ namespace Ph1 {
 		Complex mIvbr;
 
 	protected:
+		/// Interface used to transform between DP and DQ vars
+		DPDQInterface mDomainInterface;
         /// Resistance matrix in dq reference frame
 		Matrix mResistanceMatrixDq;
 		/// Conductance matrix phase A
 		MatrixFixedSize<2, 2> mConductanceMatrix;
-		/// Ka Matrix
-		MatrixComp mKa;
-		/// Kb Matrix
-		MatrixComp mKb;
-		/// Kb Matrix
-		MatrixComp mKc;
-		/// Constant part of Resistance matrix in abc reference frame
-		Matrix mResistanceMatrix_const;
-		/// phase a equivalent part of mKa
-		Complex mKa_1ph;
-		/// phase a equivalent part of mKb
-		Complex mKb_1ph;
-		/// phase a equivalent part of mResistanceMatrix_const
-		Complex mR_const_1ph;
-		/// Vector to create abc vector from a component
-		MatrixComp mShiftVector;
-		/// complex conjugate of mShiftVector
-		MatrixComp mShiftVectorConj;
-		/// Matrix to convert Evbr from dq domain to abc domain (only phase a)
-		MatrixComp mKvbr;
 
         /// Constructor
         ReducedOrderSynchronGeneratorVBR(const String & uid, const String & name, Logger::Level logLevel);
@@ -60,15 +43,11 @@ namespace Ph1 {
         /// Specific component initialization
         virtual void specificInitialization() override =0;
         ///
-		void initializeResistanceMatrix() override;
-        ///
         virtual void stepInPerUnit() override =0;
 		///
         virtual void calculateConductanceMatrix();
-		/// Calculate Ka, Kb and Kvbr
-		void calculateAuxiliarVariables();
 		///
-		Matrix get_parkTransformMatrix() const;
+		void initializeResistanceMatrix() final {};
 
 		// ### MNA Section ###
 		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;

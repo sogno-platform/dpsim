@@ -139,7 +139,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 	mResistanceMatrixVarying(0,0) = - (mA + mB) / 2.0 * sin(2*DeltaTheta);
 	mResistanceMatrixVarying(0,1) = (mA + mB) / 2.0 * cos(2*DeltaTheta);
 	mResistanceMatrixVarying(1,0) = (mA + mB) / 2.0 * cos(2*DeltaTheta);
-	mResistanceMatrixVarying(1,1) = (mA + mB) / 2.0 * sin(2*DeltaTheta);;
+	mResistanceMatrixVarying(1,1) = (mA + mB) / 2.0 * sin(2*DeltaTheta);
 	SPDLOG_LOGGER_DEBUG(mSLog, "\nR_var [pu] (t={:f}): {:s}", mSimTime, Logger::matrixToString(mResistanceMatrixVarying));
 
 	// predict electrical vars
