@@ -10,7 +10,7 @@
 
 #include <dpsim-models/Solver/MNASyncGenInterface.h>
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
-
+#include <dpsim-models/DP/DP_Ph1_DPDQInterface.h>
 namespace CPS {
 namespace DP {
 namespace Ph1 {
@@ -43,14 +43,6 @@ namespace Ph1 {
 		///
 		bool requiresIteration() override;
 		///
-		void updateDQToDPTransform();
-		///
-		void updateDPToDQTransform();
-		///
-		Complex applyDQToDPTransform(const Matrix& dqMatrix);
-		///
-		Matrix applyDPToDQTransform(const Complex& dpComplex);
-		///
 		void initializeResistanceMatrix() final {};
 
 		// #### MNA Functions ####
@@ -61,11 +53,9 @@ namespace Ph1 {
 		///
 		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) final {};
 
-		protected:
-		/// Transform from DQ to DP domain
-		Matrix mDQToDPTransform = Matrix::Zero(2,2);
-		/// Transform from DP to DQ domain
-		Matrix mDPToDQTransform = Matrix::Zero(2,2);
+	protected:
+		/// Interface used to transform between DP and DQ vars
+		DPDQInterface mDomainInterface;
 
 		// #### Model specific variables ####
 		/// Subransient emf

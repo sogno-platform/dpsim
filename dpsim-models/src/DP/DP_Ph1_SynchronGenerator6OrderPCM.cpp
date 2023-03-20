@@ -72,29 +72,8 @@ void DP::Ph1::SynchronGenerator6OrderPCM::specificInitialization() {
 		mTolerance
 	);
 	mSLog->flush();
-}
 
-void DP::Ph1::SynchronGenerator6OrderPCM::updateDQToDPTransform() {
-	mDQToDPTransform << 	cos(**mThetaMech - mBase_OmMech * mSimTime),	-sin(**mThetaMech - mBase_OmMech * mSimTime),
-							sin(**mThetaMech - mBase_OmMech * mSimTime),	cos(**mThetaMech - mBase_OmMech * mSimTime);
-}
-
-void DP::Ph1::SynchronGenerator6OrderPCM::updateDPToDQTransform() {
-	mDPToDQTransform << 	cos(**mThetaMech - mBase_OmMech * mSimTime),	sin(**mThetaMech - mBase_OmMech * mSimTime),
-							-sin(**mThetaMech - mBase_OmMech * mSimTime),	cos(**mThetaMech - mBase_OmMech * mSimTime);
-}
-
-Complex DP::Ph1::SynchronGenerator6OrderPCM::applyDQToDPTransform(const Matrix& dqMatrix) {
-	Complex dpComplex;
-	dpComplex = Complex((mDQToDPTransform*dqMatrix)(0,0),(mDQToDPTransform*dqMatrix)(1,0));
-	return dpComplex;
-}
-
-Matrix DP::Ph1::SynchronGenerator6OrderPCM::applyDPToDQTransform(const Complex& dpComplex) {
-	Matrix dqMatrix = Matrix::Zero(2,1);
-	dqMatrix(0,0) = mDPToDQTransform(0,0) * dpComplex.real() + mDPToDQTransform(0,1) * dpComplex.imag();
-	dqMatrix(1,0) = mDPToDQTransform(1,0) * dpComplex.real() + mDPToDQTransform(1,1) * dpComplex.imag();
-	return dqMatrix;
+	mDomainInterface.setDPShiftFrequency(mBase_OmMech);
 }
 
 void DP::Ph1::SynchronGenerator6OrderPCM::calculateStateSpaceMatrices() {
@@ -128,10 +107,10 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	mEdqtsPrevStep = mEdqts;
 
 	// update DQ-DP transforms according to mThetaMech
-	updateDQToDPTransform();
-	updateDPToDQTransform();
+	mDomainInterface.updateDQToDPTransform(**mThetaMech, mSimTime);
+	mDomainInterface.updateDPToDQTransform(**mThetaMech, mSimTime);
 
-	// predict emf at t=k+1 (euler) using 
+	// predict emf at t=k+1 (euler) using
 	mEdqts = Math::StateSpaceEuler(mEdqts, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mIdq);
 
 	// predict armature currents for at t=k+1
@@ -139,7 +118,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - mEdqts(2,0) ) / mLq_s;
 
 	// convert currents to dp domain
-	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;
+	(**mIntfCurrent)(0,0) =  mDomainInterface.applyDQToDPTransform(**mIdq) * mBase_I_RMS;
 }
 
 void DP::Ph1::SynchronGenerator6OrderPCM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
@@ -158,7 +137,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::correctorStep() {
 	(**mIdq)(1,0) = ((**mVdq)(0,0) - mEdqts(2,0) ) / mLq_s;
 
 	// convert corrected currents to dp domain
-	(**mIntfCurrent)(0,0) =  applyDQToDPTransform(**mIdq) * mBase_I_RMS;
+	(**mIntfCurrent)(0,0) = mDomainInterface.applyDQToDPTransform(**mIdq) * mBase_I_RMS;
 
 	// stamp currents
 	mnaCompApplyRightSideVectorStamp(**mRightVector);
@@ -172,7 +151,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::updateVoltage(const Matrix& leftVector
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 
 	// convert armature voltage into dq reference frame
-	**mVdq = applyDPToDQTransform((**mIntfVoltage)(0, 0)) / mBase_V_RMS;
+	**mVdq = mDomainInterface.applyDPToDQTransform((**mIntfVoltage)(0, 0)) / mBase_V_RMS;
 }
 
 bool DP::Ph1::SynchronGenerator6OrderPCM::requiresIteration() {
