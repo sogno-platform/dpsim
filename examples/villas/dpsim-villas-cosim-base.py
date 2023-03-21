@@ -26,7 +26,7 @@ r02.connect([dpsimpy.dp.SimNode.gnd, n2])
 
 sys = dpsimpy.SystemTopology(50, [n1, n2], [vs1, r12, r02])
 
-sim = dpsimpy.RealTimeSimulation(sim_name)
+sim = dpsimpy.Simulation(sim_name)
 sim.set_system(sys)
 sim.set_time_step(time_step)
 sim.set_final_time(final_time)
@@ -41,4 +41,9 @@ logger.log_attribute('r02', 'v_intf', r02)
 
 sim.add_logger(logger)
 
-sim.run(1)
+sim.start()
+
+k_i = sim.next()
+
+while(k_i <= final_time):
+    k_i = sim.next()

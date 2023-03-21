@@ -41,7 +41,7 @@ def dpsim0():
 
     sys = dpsimpy.SystemTopology(50, [n1, n2], [evs, r_1, c_1, r_line])
 
-    sim = dpsimpy.RealTimeSimulation(sim_name)
+    sim = dpsimpy.Simulation(sim_name)
     sim.set_system(sys)
     sim.set_time_step(time_step)
     sim.set_final_time(final_time)
@@ -89,10 +89,10 @@ def dpsim0():
 
     evs.set_intf_current([[complex(3, 0)]])
 
-    intf.import_attribute(evs.attr('V_ref'), 0, False, False)
-    intf.export_attribute(evs.attr('i_intf').derive_coeff(0,0), 0, True)
+    intf.import_attribute(evs.attr('V_ref'), 0, block_on_read=False, sync_on_start=False)
+    intf.export_attribute(evs.attr('i_intf').derive_coeff(0,0), 0, wait_for_on_write=True)
   
-    sim.run(1)
+    sim.run()
 
 def dpsim1():
     sim_name = "WeaklyCoupledCosim1"
@@ -115,7 +115,7 @@ def dpsim1():
 
     sys = dpsimpy.SystemTopology(50, [n2], [ecs, c_2, r_load])
 
-    sim = dpsimpy.RealTimeSimulation(sim_name)
+    sim = dpsimpy.Simulation(sim_name)
     sim.set_system(sys)
     sim.set_time_step(time_step)
     sim.set_final_time(final_time)
@@ -159,10 +159,10 @@ def dpsim1():
 
     sim.add_interface(intf)
     sim.add_logger(logger)
-    intf.import_attribute(ecs.attr('I_ref'), 0, False, False)
-    intf.export_attribute(ecs.attr('v_intf').derive_coeff(0,0).derive_scaled(complex(-1,0)), 0, True)
+    intf.import_attribute(ecs.attr('I_ref'), 0, block_on_read=False, sync_on_start=False)
+    intf.export_attribute(ecs.attr('v_intf').derive_coeff(0,0).derive_scaled(complex(-1,0)), 0, wait_for_on_write=True)
   
-    sim.run(1)
+    sim.run()
 
 if __name__ == '__main__':
     logging.basicConfig(format='[%(asctime)s %(name)s %(levelname)s] %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)

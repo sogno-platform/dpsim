@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 			SystemNodeList{SimNode::GND, n1, n2},
 			SystemComponentList{evs, vs1, r12});
 
-		RealTimeSimulation sim(simName);
+		Simulation sim(simName);
 		sim.setSystem(sys);
 		sim.setTimeStep(timeStep);
 		sim.setFinalTime(0.1);
@@ -93,13 +93,13 @@ int main(int argc, char* argv[]) {
 		intfCurrent0(0,0) = std::complex<double>(5.0,0.0);
 		evs->setIntfCurrent(intfCurrent0);
 
-		intf->importAttribute(evs->mVoltageRef, 0, false, false);
+		intf->importAttribute(evs->mVoltageRef, 0, false, true);
 		intf->exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0, true, "i_intf");
 
 		// Interface
 		sim.addInterface(intf);
 
-		sim.run(1);
+		sim.run();
 	}
 	else if (String(argv[1]) == "1") {
 		String simName = "SocketsCosim_example2";
@@ -122,7 +122,7 @@ int main(int argc, char* argv[]) {
 			SystemNodeList{SimNode::GND, n2},
 			SystemComponentList{ecs, r02});
 
-		RealTimeSimulation sim(simName);
+		Simulation sim(simName);
 		sim.setSystem(sys);
 		sim.setTimeStep(timeStep);
 		sim.setFinalTime(0.1);
@@ -164,12 +164,12 @@ int main(int argc, char* argv[]) {
 		sim.addLogger(logger);
 
 		auto intf = std::make_shared<InterfaceVillas>(socketConfig);
-		intf->importAttribute(ecs->mCurrentRef, 0, false, false);
+		intf->importAttribute(ecs->mCurrentRef, 0, false, true);
 		intf->exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0, true, "v_intf");
 
 		// Interface
 		sim.addInterface(intf);
 
-		sim.run(1);
+		sim.run();
 	}
 }
