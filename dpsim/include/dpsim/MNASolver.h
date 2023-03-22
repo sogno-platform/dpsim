@@ -87,7 +87,7 @@ namespace DPsim {
 
 		// #### MNA specific attributes related to system recomputation
 		/// Number of system matrix recomputations
-		Int mNumRecomputations;
+		Int mNumRecomputations = 0;
 		/// List of components that indicate the solver to recompute the system matrix
 		/// depending on their state
 		CPS::MNAVariableCompInterface::List mVariableComps;

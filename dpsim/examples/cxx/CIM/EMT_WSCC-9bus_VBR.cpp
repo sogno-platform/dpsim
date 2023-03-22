@@ -113,7 +113,6 @@ int main(int argc, char *argv[]) {
 	sim.setFinalTime(finalTime);
 	sim.doSystemMatrixRecomputation(true);
 	sim.setDirectLinearSolverImplementation(implementation);
-	sim.setDirectLinearSolverConfiguration(configuration);
 	sim.addLogger(logger);
 	sim.run();
 

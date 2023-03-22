@@ -77,7 +77,9 @@ namespace DPsim
 
 		virtual void applyConfiguration()
 		{
-			// no default parsing, configuration options vary for each solver
+			// no default application, configuration options vary for each solver
+			// warn user that no configuration setting is used
+			mSLog->info("Linear solver configuration is not used!");
 		}
 	};
 }
