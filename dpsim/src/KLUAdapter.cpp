@@ -35,6 +35,22 @@ KLUAdapter::KLUAdapter()
 	mVaryingRows.clear();
 }
 
+KLUAdapter::KLUAdapter(CPS::Logger::Log mSLog)
+{
+	this->mSLog = mSLog;
+    klu_defaults(&mCommon);
+
+	// NOTE: klu_defaults should already set the preordering methods correctly.
+	// It is repeated here in case this is altered in SuiteSparse at some point
+
+	mCommon.scale = 2;
+	mPreordering = AMD_ORDERING;
+	mCommon.btf = 1;
+
+	mVaryingColumns.clear();
+	mVaryingRows.clear();
+}
+
 void KLUAdapter::preprocessing(SparseMatrix &systemMatrix,
                                std::vector<std::pair<UInt, UInt>> &listVariableSystemMatrixEntries)
 {
