@@ -39,7 +39,8 @@ namespace DPsim {
         Interface(std::shared_ptr<InterfaceWorker> intf, const String& name = "", UInt downsampling = 1) : 
 			mInterfaceWorker(intf),
 			mName(name),
-			mDownsampling(downsampling) {
+			mDownsampling(downsampling),
+			mOpened(false) {
 				mQueueDpsimToInterface = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
 				mQueueInterfaceToDpsim = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
 			};

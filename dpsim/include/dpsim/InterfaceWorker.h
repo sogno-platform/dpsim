@@ -18,14 +18,17 @@ namespace DPsim {
 
     protected:
         bool mOpened;
-        UInt mCurrentSequenceInterfaceToDpsim = 1;
+        UInt mCurrentSequenceInterfaceToDpsim;
     
     public:
         using Ptr = std::shared_ptr<InterfaceWorker>;
 
         CPS::Logger::Log mLog;
 
-        InterfaceWorker() = default;
+        InterfaceWorker() :
+            mOpened(false),
+            mCurrentSequenceInterfaceToDpsim(1)
+        { }
         virtual ~InterfaceWorker() = default;
 
         /**
