@@ -75,10 +75,6 @@ void DP::Ph1::SynchronGenerator6aOrderVBR::stepInPerUnit() {
 	(**mEdq_s)(0,0) = -(**mIdq)(1,0) * mLq_s + (**mVdq)(0,0);
 	(**mEdq_s)(1,0) = (**mIdq)(0,0) * mLd_s + (**mVdq)(1,0);
 
-	// calculate Edq_s at t=k
-	(**mEdq_s)(0,0) = -(**mIdq)(1,0) * mLq_s + (**mVdq)(0,0);
-	(**mEdq_s)(1,0) = (**mIdq)(0,0) * mLd_s + (**mVdq)(1,0);
-
 	// Update time-varying reactance matrix
 	calculateConductanceMatrix();
 
