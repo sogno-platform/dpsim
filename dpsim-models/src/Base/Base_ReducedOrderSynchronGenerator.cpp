@@ -362,11 +362,6 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	if (mHasGovernor)
 		mGovernor->initialize(**mMechTorque);
 		
-	// set initial value of current
-	(**mIntfCurrent)(0,0) = (mInitCurrent * mBase_I).real();
-	(**mIntfCurrent)(1,0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_B).real();
-	(**mIntfCurrent)(2,0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_C).real();
-
 	// set initial interface current
 	(**mIntfCurrent)(0,0) = (mInitCurrent * mBase_I).real();
 	(**mIntfCurrent)(1,0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_B).real();
@@ -477,6 +472,9 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	// set initial value of current
 	(**mIntfCurrent)(0,0) = mInitCurrent * mBase_I_RMS;
 	
+	// set initial interface voltage
+	(**mIntfVoltage)(0,0) = mInitVoltage * mBase_V_RMS;
+
 	SPDLOG_LOGGER_DEBUG(this->mSLog,
 		"\n--- Initialization from power flow  ---"
 		"\nInitial Vd (per unit): {:f}"

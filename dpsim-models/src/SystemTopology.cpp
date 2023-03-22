@@ -77,6 +77,7 @@ void SystemTopology::initWithPowerflow(const SystemTopology& systemPF, CPS::Doma
 
 	for (auto nodePF : systemPF.mNodes) {
 		if (auto node = this->node<TopologicalNode>(nodePF->name())) {
+			// Initiation of phase B and C in 3 Phase systems ? 
 			//SPDLOG_LOGGER_INFO(mSLog, "Updating initial voltage of {} according to powerflow", node->name());
 			//SPDLOG_LOGGER_INFO(mSLog, "Former initial voltage: {}", node->initialSingleVoltage());
 			node->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(nodePF)->singleVoltage());
