@@ -241,12 +241,13 @@ namespace Ph3 {
 		void CalculateAuxiliarConstants(Real dt);
 		void CalculateAuxiliarVariables();
 
+		/// Getters
 		//Matrix& rotorFluxes() { return mRotorFlux; }
-		Matrix& dqStatorCurrents();
-		Real electricalTorque() const;
-		Real rotationalSpeed() const;
-		Real rotorPosition() const;
-		Matrix& statorCurrents();
+		Matrix& dqStatorCurrents() { return mDqStatorCurrents; }
+		Real electricalTorque() const { return **mElecTorque * mBase_T; }
+		Real rotationalSpeed() const { return **mOmMech * mBase_OmMech; }
+		Real rotorPosition() const { return mThetaMech; }
+		Matrix& statorCurrents() { return mIabc; }
 
 		// #### MNA section ####
 		/// Stamps system matrix
@@ -262,7 +263,7 @@ namespace Ph3 {
 		/// Add MNA post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 		/// Mark that parameter changes so that system matrix is updated
-		Bool hasParameterChanged() override;
+		Bool hasParameterChanged() override { return true; }
 	};
 }
 }

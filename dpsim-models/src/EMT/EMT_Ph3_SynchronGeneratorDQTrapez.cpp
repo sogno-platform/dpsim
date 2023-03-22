@@ -24,7 +24,7 @@ EMT::Ph3::SynchronGeneratorDQTrapez::SynchronGeneratorDQTrapez(String name, Logg
 }
 
 void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
+	updateMatrixNodeIndices();
 	mTimeStep = timeStep;
 
 	SynchronGeneratorDQ::initializeMatrixAndStates();

@@ -32,6 +32,7 @@ EMT::Ph3::SynchronGenerator6bOrderVBR::SynchronGenerator6bOrderVBR
 }
 
 void EMT::Ph3::SynchronGenerator6bOrderVBR::specificInitialization() {
+	
 	// initial voltage behind the transient reactance in the dq reference frame
 	(**mEdq0_t)(0,0) = (mLq - mLq_t) * (**mIdq0)(1,0);
 	(**mEdq0_t)(1,0) = **mEf - (mLd - mLd_t) * (**mIdq0)(0,0);
@@ -40,7 +41,12 @@ void EMT::Ph3::SynchronGenerator6bOrderVBR::specificInitialization() {
 	(**mEdq0_s)(0,0) = (**mVdq0)(0,0) - mLq_s * (**mIdq0)(1,0);
 	(**mEdq0_s)(1,0) = (**mVdq0)(1,0) + mLd_s * (**mIdq0)(0,0);
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	// initialize history term behind the transient reactance
+	mEh_t(0,0) = mAd_t * (**mIdq0)(1,0) + mBd_t * (**mEdq0_t)(0,0);
+	mEh_t(1,0) = mAq_t * (**mIdq0)(0,0) + mBq_t * (**mEdq0_t)(1,0) + mDq_t * (**mEf) + mDq_t * mEf_prev;
+	mEh_t(2,0) = 0.0;
+
+	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Model specific initialization  ---"
 		"\nSG model: 6th order type b (Anderson - Fouad's model)"
 		"\nInitial Ed_t (per unit): {:f}"
@@ -59,16 +65,14 @@ void EMT::Ph3::SynchronGenerator6bOrderVBR::specificInitialization() {
 
 void EMT::Ph3::SynchronGenerator6bOrderVBR::stepInPerUnit() {
 
-	if (mSimTime>0.0) {
-		// calculate Edq_t at t=k
-		(**mEdq0_t)(0,0) = mAd_t * (**mIdq0)(1,0) + mEh_t(0,0);
-		(**mEdq0_t)(1,0) = mAq_t * (**mIdq0)(0,0) + mEh_t(1,0);
-		(**mEdq0_t)(2,0) = 0.0;
+	// calculate Edq_t at t=k
+	(**mEdq0_t)(0,0) = mAd_t * (**mIdq0)(1,0) + mEh_t(0,0);
+	(**mEdq0_t)(1,0) = mAq_t * (**mIdq0)(0,0) + mEh_t(1,0);
+	(**mEdq0_t)(2,0) = 0.0;
 
-		// calculate Edq_s at t=k
-		(**mEdq0_s)(0,0) = -(**mIdq0)(1,0) * mLq_s + (**mVdq0)(0,0);
-		(**mEdq0_s)(1,0) = (**mIdq0)(0,0) * mLd_s + (**mVdq0)(1,0);
-	}
+	// calculate Edq_s at t=k
+	(**mEdq0_s)(0,0) = -(**mIdq0)(1,0) * mLq_s + (**mVdq0)(0,0);
+	(**mEdq0_s)(1,0) = (**mIdq0)(0,0) * mLd_s + (**mVdq0)(1,0);
 
 	// get transformation matrix
 	mAbcToDq0 = get_parkTransformMatrix();

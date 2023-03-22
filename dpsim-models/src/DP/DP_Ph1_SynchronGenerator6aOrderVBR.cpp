@@ -41,6 +41,10 @@ void DP::Ph1::SynchronGenerator6aOrderVBR::specificInitialization() {
 	(**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);
 	(**mEdq_s)(1,0) = (**mVdq)(1,0) + mLd_s * (**mIdq)(0,0);
 
+	// initialize history term behind the transient reactance
+	mEh_t(0,0) = mAd_t * (**mIdq)(1,0) + mBd_t * (**mEdq_t)(0,0);
+	mEh_t(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * (**mEf) + mDq_t * mEf_prev;
+
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Model specific initialization  ---"
 		"\nSG model: 6th order type a (Marconato's model)"
@@ -63,15 +67,13 @@ void DP::Ph1::SynchronGenerator6aOrderVBR::stepInPerUnit() {
 	mDomainInterface.updateDQToDPTransform(**mThetaMech, mSimTime);
 	mDomainInterface.updateDPToDQTransform(**mThetaMech, mSimTime);
 
-	if (mSimTime>0.0){
-		// calculate Edq_t at t=k
-		(**mEdq_t)(0,0) = mAd_t * (**mIdq)(1,0) + mEh_t(0,0);
-		(**mEdq_t)(1,0) = mAq_t * (**mIdq)(0,0) + mEh_t(1,0);
+	// calculate Edq_t at t=k
+	(**mEdq_t)(0,0) = mAd_t * (**mIdq)(1,0) + mEh_t(0,0);
+	(**mEdq_t)(1,0) = mAq_t * (**mIdq)(0,0) + mEh_t(1,0);
 
-		// calculate Edq_s at t=k
-		(**mEdq_s)(0,0) = -(**mIdq)(1,0) * mLq_s + (**mVdq)(0,0);
-		(**mEdq_s)(1,0) = (**mIdq)(0,0) * mLd_s + (**mVdq)(1,0);
-	}
+	// calculate Edq_s at t=k
+	(**mEdq_s)(0,0) = -(**mIdq)(1,0) * mLq_s + (**mVdq)(0,0);
+	(**mEdq_s)(1,0) = (**mIdq)(0,0) * mLd_s + (**mVdq)(1,0);
 
 	// Update time-varying reactance matrix
 	calculateConductanceMatrix();
