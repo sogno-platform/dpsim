@@ -55,6 +55,8 @@ namespace DPsim
 		void performFactorization(SparseMatrix& systemMatrix);
 
         public:
+		/// Constructor with logging
+		using DirectLinearSolver::DirectLinearSolver;
 
 		/// Destructor
 		virtual ~GpuMagmaAdapter();

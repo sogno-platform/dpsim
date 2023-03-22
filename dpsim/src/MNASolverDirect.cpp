@@ -53,7 +53,7 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 template <typename VarType>
 void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
-	this->mDirectLinearSolverVariableSystemMatrix = createDirectSolverImplementation();
+	this->mDirectLinearSolverVariableSystemMatrix = createDirectSolverImplementation(mSLog);
 	this->mDirectLinearSolverVariableSystemMatrix->setConfiguration(configurationInUse);
 
 	SPDLOG_LOGGER_INFO(mSLog, "Number of variable Elements: {}"
@@ -158,7 +158,7 @@ void MnaSolverDirect<Real>::createEmptySystemMatrix() {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++){
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
-			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation());
+			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
 		}
 	}
 }
@@ -173,7 +173,7 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 				auto bit = std::bitset<SWITCH_NUM>(i);
 				mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
-				mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation());
+				mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
 			}
 		}
 	} else if (mSystemMatrixRecomputation) {
@@ -183,7 +183,7 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
-			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation());
+			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
 		}
 	}
 }
@@ -336,27 +336,27 @@ void MnaSolverDirect<VarType>::logRecomputationTime(){
 }
 
 template<typename VarType>
-std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolverImplementation() {
+std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolverImplementation(CPS::Logger::Log mSLog) {
 	switch(this->implementationInUse)
 	{
 		case DirectLinearSolverImpl::DenseLU:
-			return std::make_shared<DenseLUAdapter>();
+			return std::make_shared<DenseLUAdapter>(mSLog);
 		case DirectLinearSolverImpl::SparseLU:
-			return std::make_shared<SparseLUAdapter>();
+			return std::make_shared<SparseLUAdapter>(mSLog);
 		#ifdef WITH_KLU
 		case DirectLinearSolverImpl::KLU:
-			return std::make_shared<KLUAdapter>();
+			return std::make_shared<KLUAdapter>(mSLog);
 		#endif
 		#ifdef WITH_CUDA
 		case DirectLinearSolverImpl::CUDADense:
-			return std::make_shared<GpuDenseAdapter>();
+			return std::make_shared<GpuDenseAdapter>(mSLog);
 		#ifdef WITH_CUDA_SPARSE
 		case DirectLinearSolverImpl::CUDASparse:
-			return std::make_shared<GpuSparseAdapter>();
+			return std::make_shared<GpuSparseAdapter>(mSLog);
 		#endif
 		#ifdef WITH_MAGMA
 		case DirectLinearSolverImpl::CUDAMagma:
-			return std::make_shared<GpuMagmaAdapter>();
+			return std::make_shared<GpuMagmaAdapter>(mSLog);
 		#endif
 		#endif
 		default:

@@ -14,33 +14,33 @@ namespace DPsim
 {
 KLUAdapter::~KLUAdapter()
 {
-    if (m_symbolic)
-        klu_free_symbolic(&m_symbolic, &m_common);
-    if (m_numeric)
-        klu_free_numeric(&m_numeric, &m_common);
+    if (mSymbolic)
+        klu_free_symbolic(&mSymbolic, &mCommon);
+    if (mNumeric)
+        klu_free_numeric(&mNumeric, &mCommon);
 }
 
 KLUAdapter::KLUAdapter()
 {
-    klu_defaults(&m_common);
+    klu_defaults(&mCommon);
 
 	// NOTE: klu_defaults should already set the preordering methods correctly.
 	// It is repeated here in case this is altered in SuiteSparse at some point
 
-	m_common.scale = 2;
-	m_preordering = AMD_ORDERING;
-	m_common.btf = 1;
+	mCommon.scale = 2;
+	mPreordering = AMD_ORDERING;
+	mCommon.btf = 1;
 
-	m_varyingColumns.clear();
-	m_varyingRows.clear();
+	mVaryingColumns.clear();
+	mVaryingRows.clear();
 }
 
 void KLUAdapter::preprocessing(SparseMatrix &systemMatrix,
                                std::vector<std::pair<UInt, UInt>> &listVariableSystemMatrixEntries)
 {
-    if (m_symbolic)
+    if (mSymbolic)
     {
-        klu_free_symbolic(&m_symbolic, &m_common);
+        klu_free_symbolic(&mSymbolic, &mCommon);
     }
 
     const Int n = Eigen::internal::convert_index<Int>(systemMatrix.rows());
@@ -48,19 +48,19 @@ void KLUAdapter::preprocessing(SparseMatrix &systemMatrix,
     auto Ap = Eigen::internal::convert_index<Int *>(systemMatrix.outerIndexPtr());
     auto Ai = Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
 
-	m_varyingColumns.clear();
-	m_varyingRows.clear();
+	mVaryingColumns.clear();
+	mVaryingRows.clear();
 
-    m_changedEntries = listVariableSystemMatrixEntries;
-    Int varying_entries = Eigen::internal::convert_index<Int>(m_changedEntries.size());
+    mChangedEntries = listVariableSystemMatrixEntries;
+    Int varying_entries = Eigen::internal::convert_index<Int>(mChangedEntries.size());
 
-    for (auto &changedEntry : m_changedEntries)
+    for (auto &changedEntry : mChangedEntries)
     {
-        m_varyingRows.push_back(changedEntry.first);
-        m_varyingColumns.push_back(changedEntry.second);
+        mVaryingRows.push_back(changedEntry.first);
+        mVaryingColumns.push_back(changedEntry.second);
     }
 
-    m_symbolic = klu_analyze_partial(n, Ap, Ai, &m_varyingColumns[0], &m_varyingRows[0], varying_entries, m_preordering, &m_common);
+    mSymbolic = klu_analyze_partial(n, Ap, Ai, &mVaryingColumns[0], &mVaryingRows[0], varying_entries, mPreordering, &mCommon);
 
     /* store non-zero value of current preprocessed matrix. only used until
      * to-do in refactorize-function is resolved. Can be removed then. */
@@ -69,30 +69,30 @@ void KLUAdapter::preprocessing(SparseMatrix &systemMatrix,
 
 void KLUAdapter::factorize(SparseMatrix &systemMatrix)
 {
-    if (m_numeric)
+    if (mNumeric)
     {
-        klu_free_numeric(&m_numeric, &m_common);
+        klu_free_numeric(&mNumeric, &mCommon);
     }
 
     auto Ap = Eigen::internal::convert_index<Int *>(systemMatrix.outerIndexPtr());
     auto Ai = Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
     auto Ax = Eigen::internal::convert_index<Real *>(systemMatrix.valuePtr());
 
-    m_numeric = klu_factor(Ap, Ai, Ax, m_symbolic, &m_common);
+    mNumeric = klu_factor(Ap, Ai, Ax, mSymbolic, &mCommon);
+
+	Int varying_entries = Eigen::internal::convert_index<Int>(mChangedEntries.size());
 
     /* make sure that factorization path is not computed if there are no varying entries.
      * Doing so should not be a problem, but it is safer to do it this way */
-	Int varying_entries = Eigen::internal::convert_index<Int>(m_changedEntries.size());
-
-    if (!(m_varyingColumns.empty()) && !(m_varyingRows.empty()))
+    if (!(mVaryingColumns.empty()) && !(mVaryingRows.empty()))
     {
-		if(m_configuration.getPartialRefactorizationMethod() == DPsim::PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH)
+		if(mPartialRefactorizationMethod == DPsim::PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH)
 		{
-        	klu_compute_path(m_symbolic, m_numeric, &m_common, Ap, Ai, &m_varyingColumns[0], &m_varyingRows[0], varying_entries);
+        	klu_compute_path(mSymbolic, mNumeric, &mCommon, Ap, Ai, &mVaryingColumns[0], &mVaryingRows[0], varying_entries);
 		}
-		else if(m_configuration.getPartialRefactorizationMethod() == DPsim::PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART)
+		else if(mPartialRefactorizationMethod == DPsim::PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART)
 		{
-			klu_determine_start(m_symbolic, m_numeric, &m_common, Ap, Ai, &m_varyingColumns[0], &m_varyingRows[0], varying_entries);
+			klu_determine_start(mSymbolic, mNumeric, &mCommon, Ap, Ai, &mVaryingColumns[0], &mVaryingRows[0], varying_entries);
 		}
     }
 }
@@ -102,7 +102,7 @@ void KLUAdapter::refactorize(SparseMatrix &systemMatrix)
     /* TODO: remove if-else when zero<->non-zero issue during matrix stamping has been fixed. Also remove in partialRefactorize then. */
     if (systemMatrix.nonZeros() != nnz)
     {
-        preprocessing(systemMatrix, m_changedEntries);
+        preprocessing(systemMatrix, mChangedEntries);
         factorize(systemMatrix);
     }
     else
@@ -110,7 +110,7 @@ void KLUAdapter::refactorize(SparseMatrix &systemMatrix)
         auto Ap = Eigen::internal::convert_index<Int *>(systemMatrix.outerIndexPtr());
         auto Ai = Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
         auto Ax = Eigen::internal::convert_index<Real *>(systemMatrix.valuePtr());
-        klu_refactor(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+        klu_refactor(Ap, Ai, Ax, mSymbolic, mNumeric, &mCommon);
     }
 }
 
@@ -128,20 +128,20 @@ void KLUAdapter::partialRefactorize(SparseMatrix &systemMatrix,
         auto Ai = Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
         auto Ax = Eigen::internal::convert_index<Real *>(systemMatrix.valuePtr());
 
-		if(m_configuration.getPartialRefactorizationMethod() == PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH)
+		if(mPartialRefactorizationMethod == PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH)
 		{
-	        klu_partial_factorization_path(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+	        klu_partial_factorization_path(Ap, Ai, Ax, mSymbolic, mNumeric, &mCommon);
 		}
-		else if(m_configuration.getPartialRefactorizationMethod() == PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART)
+		else if(mPartialRefactorizationMethod == PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART)
 		{
-			klu_partial_refactorization_restart(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+			klu_partial_refactorization_restart(Ap, Ai, Ax, mSymbolic, mNumeric, &mCommon);
 		}
 		else
 		{
-			klu_refactor(Ap, Ai, Ax, m_symbolic, m_numeric, &m_common);
+			klu_refactor(Ap, Ai, Ax, mSymbolic, mNumeric, &mCommon);
 		}
 
-        if (m_common.status == KLU_PIVOT_FAULT)
+        if (mCommon.status == KLU_PIVOT_FAULT)
         {
             /* pivot became too small => fully factorize again */
             factorize(systemMatrix);
@@ -163,7 +163,7 @@ Matrix KLUAdapter::solve(Matrix &rightSideVector)
 	/* tsolve refers to transpose solve. Input matrix is stored in compressed row format,
 	 * KLU operates on compressed column format. This way, the transpose of the matrix is factored.
 	 * This has to be taken into account only here during right-hand solving. */
-    klu_tsolve(m_symbolic, m_numeric, rhsRows, rhsCols, x.const_cast_derived().data(), &m_common);
+    klu_tsolve(mSymbolic, mNumeric, rhsRows, rhsCols, x.const_cast_derived().data(), &mCommon);
 
     return x;
 }
@@ -195,49 +195,52 @@ void KLUAdapter::printMatrixMarket(SparseMatrix &matrix, int counter) const
     ofs.close();
 }
 
-void KLUAdapter::parseConfiguration()
+void KLUAdapter::applyConfiguration()
 {
-	switch(m_configuration.getScalingMethod())
+	switch(mConfiguration.getScalingMethod())
 	{
 		case SCALING_METHOD::NO_SCALING:
-				m_common.scale = 0;
-				break;
+			mCommon.scale = 0;
+			break;
 		case SCALING_METHOD::SUM_SCALING:
-				m_common.scale = 1;
-				break;
+			mCommon.scale = 1;
+			break;
 		case SCALING_METHOD::MAX_SCALING:
-				m_common.scale = 2;
-				break;
+			mCommon.scale = 2;
+			break;
 		default:
-				m_common.scale = 1;
+			mCommon.scale = 1;
 	}
 
 	// TODO: implement support for COLAMD (modifiy SuiteSparse)
-	switch(m_configuration.getFillInReductionMethod())
+	switch(mConfiguration.getFillInReductionMethod())
 	{
 		case FILL_IN_REDUCTION_METHOD::AMD:
-			m_preordering = AMD_ORDERING;
+			mPreordering = AMD_ORDERING;
 			break;
 		case FILL_IN_REDUCTION_METHOD::AMD_NV:
-			m_preordering = AMD_ORDERING_NV;
+			mPreordering = AMD_ORDERING_NV;
 			break;
 		case FILL_IN_REDUCTION_METHOD::AMD_RA:
-			m_preordering = AMD_ORDERING_RA;
+			mPreordering = AMD_ORDERING_RA;
 			break;
 		default:
-			m_preordering = AMD_ORDERING;
+			mPreordering = AMD_ORDERING;
 	}
 
-	switch(m_configuration.getBTF())
+	// NOTE: in case more partial refactorization methods are defined/developed, that are not implemented in KLU, this assigment would be invalid
+	mPartialRefactorizationMethod = mConfiguration.getPartialRefactorizationMethod();
+
+	switch(mConfiguration.getBTF())
 	{
 		case USE_BTF::DO_BTF:
-				m_common.btf = 1;
-				break;
+			mCommon.btf = 1;
+			break;
 		case USE_BTF::NO_BTF:
-				m_common.btf = 0;
-				break;
+			mCommon.btf = 0;
+			break;
 		default:
-				m_common.btf = 1;
+			mCommon.btf = 1;
 	}
 }
 } // namespace DPsim

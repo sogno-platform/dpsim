@@ -59,6 +59,9 @@ namespace DPsim
 		void checkCusparseStatus(cusparseStatus_t status, std::string additionalInfo="cuSparse Error:");
 
         public:
+		/// Constructor with logging
+		using DirectLinearSolver::DirectLinearSolver;
+
 		/// Constructor
 		GpuSparseAdapter();
 

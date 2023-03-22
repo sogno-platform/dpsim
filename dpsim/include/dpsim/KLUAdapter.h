@@ -30,21 +30,23 @@ namespace DPsim
     class KLUAdapter : public DirectLinearSolver
     {
 		/// Vector of variable entries in system matrix
-		std::vector<std::pair<UInt, UInt>> m_changedEntries;
+		std::vector<std::pair<UInt, UInt>> mChangedEntries;
 
 		/// Store variable rows and columns in system matrix
-		std::vector<Int> m_varyingColumns;
-		std::vector<Int> m_varyingRows;
+		std::vector<Int> mVaryingColumns;
+		std::vector<Int> mVaryingRows;
 
 		/// KLU-specific structs
-        klu_common m_common;
-		klu_numeric* m_numeric = nullptr;
-		klu_symbolic* m_symbolic = nullptr;
+        klu_common mCommon;
+		klu_numeric* mNumeric = nullptr;
+		klu_symbolic* mSymbolic = nullptr;
 
 		/// Flags to indicate mode of operation
 		/// Define which ordering to choose in preprocessing
 		/// Macros are defined in SuiteSparse/AMD
-		int m_preordering = AMD_ORDERING;
+		int mPreordering = AMD_ORDERING;
+
+		PARTIAL_REFACTORIZATION_METHOD mPartialRefactorizationMethod = PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH;
 
 		/// Temporary value to store the number of nonzeros
 		Int nnz;
@@ -55,6 +57,9 @@ namespace DPsim
 
 		/// Constructor
 		KLUAdapter();
+
+		/// Constructor with logging
+		using DirectLinearSolver::DirectLinearSolver;
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
@@ -77,6 +82,6 @@ namespace DPsim
 		void printMatrixMarket(SparseMatrix& systemMatrix, int counter) const;
 
 		/// Parse configuration
-		void parseConfiguration() override;
+		void applyConfiguration() override;
     };
 }

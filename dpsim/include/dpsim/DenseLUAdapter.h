@@ -26,6 +26,9 @@ namespace DPsim
         Eigen::PartialPivLU<Matrix> LUFactorized;
 
         public:
+		/// Constructor with logging
+		using DirectLinearSolver::DirectLinearSolver;
+
 		/// Destructor
 		~DenseLUAdapter() override;
 

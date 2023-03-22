@@ -60,6 +60,8 @@ namespace DPsim
 		void LUfactorization();
 
         public:
+		/// Constructor with logging
+		using DirectLinearSolver::DirectLinearSolver;
 
 		/// Destructor
 		virtual ~GpuDenseAdapter();

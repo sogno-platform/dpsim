@@ -17,6 +17,7 @@
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
+#include <dpsim-models/Logger.h>
 
 namespace DPsim
 {
@@ -41,6 +42,12 @@ namespace DPsim
 		/// Move Assignment Operator
 		DirectLinearSolver& operator=(DirectLinearSolver&&) = default;
 
+		/// Constructor with Logger
+		DirectLinearSolver(CPS::Logger::Log mSLog) : mSLog(mSLog)
+		{
+			// no further configuration needed
+		}
+
 		/// preprocessing function pre-ordering and scaling the matrix
 		virtual void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) = 0;
 
@@ -58,15 +65,17 @@ namespace DPsim
 
 		virtual void setConfiguration(DirectLinearSolverConfiguration& configuration)
 		{
-			m_configuration = configuration;
-			this->parseConfiguration();
+			mConfiguration = configuration;
+			this->applyConfiguration();
 		}
 
 		protected:
-		/// Abstract linear solver class for MNA simulation
-		DirectLinearSolverConfiguration m_configuration;
 
-		virtual void parseConfiguration()
+		CPS::Logger::Log mSLog;
+		/// Abstract linear solver class for MNA simulation
+		DirectLinearSolverConfiguration mConfiguration;
+
+		virtual void applyConfiguration()
 		{
 			// no default parsing, configuration options vary for each solver
 		}
