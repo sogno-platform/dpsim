@@ -59,7 +59,7 @@ namespace DPsim
 		KLUAdapter();
 
 		/// Constructor with logging
-		using DirectLinearSolver::DirectLinearSolver;
+		KLUAdapter(CPS::Logger::Log mSLog);
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
