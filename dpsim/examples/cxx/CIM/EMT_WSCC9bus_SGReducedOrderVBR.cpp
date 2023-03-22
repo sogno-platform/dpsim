@@ -158,12 +158,6 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	// create direct linear solver configuration
-	DirectLinearSolverConfiguration configuration;
-	configuration.setBTF(DPsim::USE_BTF::DO_BTF);
-	configuration.setFillInReductionMethod(DPsim::FILL_IN_REDUCTION_METHOD::AMD);
-	configuration.setScalingMethod(DPsim::SCALING_METHOD::NO_SCALING);
-
 	Simulation sim(simName, logLevel);
 	sim.setSystem(sys);
 	sim.setDomain(Domain::EMT);

@@ -146,7 +146,7 @@ namespace DPsim {
 		void logRecomputationTime();
 
 		/// Returns a pointer to an object of type DirectLinearSolver
-		std::shared_ptr<DirectLinearSolver> createDirectSolverImplementation();
+		std::shared_ptr<DirectLinearSolver> createDirectSolverImplementation(CPS::Logger::Log mSLog);
 
 	public:
 		/// Constructor should not be called by users but by Simulation
