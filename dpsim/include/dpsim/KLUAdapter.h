@@ -81,7 +81,7 @@ namespace DPsim
 		/// Function to print matrix in MatrixMarket's coo format
 		void printMatrixMarket(SparseMatrix& systemMatrix, int counter) const;
 
-		/// Parse configuration
+		/// Apply configuration
 		void applyConfiguration() override;
     };
 }

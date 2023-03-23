@@ -228,6 +228,8 @@ void KLUAdapter::applyConfiguration()
 			mCommon.scale = 1;
 	}
 
+	SPDLOG_LOGGER_INFO(mSLog, "Matrix is scaled using " + mConfiguration.getScalingMethodString());
+
 	// TODO: implement support for COLAMD (modifiy SuiteSparse)
 	switch(mConfiguration.getFillInReductionMethod())
 	{
@@ -244,8 +246,12 @@ void KLUAdapter::applyConfiguration()
 			mPreordering = AMD_ORDERING;
 	}
 
+	SPDLOG_LOGGER_INFO(mSLog, "Matrix is fill reduced with " + mConfiguration.getFillInReductionMethodString());
+
 	// NOTE: in case more partial refactorization methods are defined/developed, that are not implemented in KLU, this assigment would be invalid
 	mPartialRefactorizationMethod = mConfiguration.getPartialRefactorizationMethod();
+
+	SPDLOG_LOGGER_INFO(mSLog, "Matrix is refactored " + mConfiguration.getPartialRefactorizationMethodString());
 
 	switch(mConfiguration.getBTF())
 	{
@@ -258,5 +264,7 @@ void KLUAdapter::applyConfiguration()
 		default:
 			mCommon.btf = 1;
 	}
+
+	SPDLOG_LOGGER_INFO(mSLog, "Matrix is permuted " + mConfiguration.getBTFString());
 }
 } // namespace DPsim

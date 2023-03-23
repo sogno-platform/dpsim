@@ -43,10 +43,10 @@ namespace DPsim
 
 	class DirectLinearSolverConfiguration
 	{
-		SCALING_METHOD m_scalingMethod;
-		FILL_IN_REDUCTION_METHOD m_fillInReductionMethod;
-		PARTIAL_REFACTORIZATION_METHOD m_partialRefactorizationMethod;
-		USE_BTF m_useBTF;
+		SCALING_METHOD mScalingMethod;
+		FILL_IN_REDUCTION_METHOD mFillInReductionMethod;
+		PARTIAL_REFACTORIZATION_METHOD mPartialRefactorizationMethod;
+		USE_BTF mUseBTF;
 
 		public:
 		DirectLinearSolverConfiguration();
@@ -66,5 +66,13 @@ namespace DPsim
 		PARTIAL_REFACTORIZATION_METHOD getPartialRefactorizationMethod() const;
 
 		USE_BTF getBTF() const;
+
+		std::string getScalingMethodString() const;
+
+		std::string getFillInReductionMethodString() const;
+
+		std::string getPartialRefactorizationMethodString() const;
+
+		std::string getBTFString() const;
 	};
 }
