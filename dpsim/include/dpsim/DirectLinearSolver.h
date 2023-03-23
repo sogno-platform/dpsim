@@ -79,7 +79,7 @@ namespace DPsim
 		{
 			// no default application, configuration options vary for each solver
 			// warn user that no configuration setting is used
-			mSLog->info("Linear solver configuration is not used!");
+			SPDLOG_LOGGER_WARN(mSLog, "Linear solver configuration is not used!");
 		}
 	};
 }
