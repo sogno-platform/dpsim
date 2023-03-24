@@ -23,8 +23,8 @@ namespace DPsim
 	// Define preordering to reduce fill-in
 	enum class FILL_IN_REDUCTION_METHOD {
 		AMD,
-		AMD_NV,
-		AMD_RA,
+		AMD_NV,	// AMD ordering with non-varying preference
+		AMD_RA, // AMD ordering with right arranging of varying entries
 		COLAMD
 	};
 
@@ -35,7 +35,7 @@ namespace DPsim
 		REFACTORIZATION_RESTART
 	};
 
-	// Define BTF usage
+	// Define BTF usage, if applicable
 	enum class USE_BTF {
 		NO_BTF,
 		DO_BTF
@@ -67,12 +67,12 @@ namespace DPsim
 
 		USE_BTF getBTF() const;
 
-		std::string getScalingMethodString() const;
+		String getScalingMethodString() const;
 
-		std::string getFillInReductionMethodString() const;
+		String getFillInReductionMethodString() const;
 
-		std::string getPartialRefactorizationMethodString() const;
+		String getPartialRefactorizationMethodString() const;
 
-		std::string getBTFString() const;
+		String getBTFString() const;
 	};
 }

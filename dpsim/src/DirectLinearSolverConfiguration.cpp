@@ -60,7 +60,7 @@ namespace DPsim
 		return mUseBTF;
 	}
 
-	std::string DirectLinearSolverConfiguration::getScalingMethodString() const
+	String DirectLinearSolverConfiguration::getScalingMethodString() const
 	{
 		switch(mScalingMethod)
 		{
@@ -75,14 +75,14 @@ namespace DPsim
 		}
 	}
 
-	std::string DirectLinearSolverConfiguration::getFillInReductionMethodString() const
+	String DirectLinearSolverConfiguration::getFillInReductionMethodString() const
 	{
 		switch(mFillInReductionMethod)
 		{
 			case FILL_IN_REDUCTION_METHOD::AMD_NV:
-				return "AMD_NV";
+				return "AMD using a preference for non-varying entries";
 			case FILL_IN_REDUCTION_METHOD::AMD_RA:
-				return "AMD_RA";
+				return "AMD using a right-arranging of varying entries";
 			case FILL_IN_REDUCTION_METHOD::COLAMD:
 				return "COLAMD";
 			case FILL_IN_REDUCTION_METHOD::AMD:
@@ -92,7 +92,7 @@ namespace DPsim
 		}
 	}
 
-	std::string DirectLinearSolverConfiguration::getPartialRefactorizationMethodString() const
+	String DirectLinearSolverConfiguration::getPartialRefactorizationMethodString() const
 	{
 		switch(mPartialRefactorizationMethod)
 		{
@@ -107,7 +107,7 @@ namespace DPsim
 		}
 	}
 
-	std::string DirectLinearSolverConfiguration::getBTFString() const
+	String DirectLinearSolverConfiguration::getBTFString() const
 	{
 		switch(mUseBTF)
 		{

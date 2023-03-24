@@ -74,9 +74,9 @@ namespace DPsim {
 		/// LU factorization of variable system matrix
 		std::shared_ptr<DirectLinearSolver> mDirectLinearSolverVariableSystemMatrix;
 		/// LU factorization indicator
-		DirectLinearSolverImpl implementationInUse;
+		DirectLinearSolverImpl mImplementationInUse;
 		/// LU factorization configuration
-		DirectLinearSolverConfiguration configurationInUse;
+		DirectLinearSolverConfiguration mConfigurationInUse;
 
 		using MnaSolver<VarType>::mSwitches;
 		using MnaSolver<VarType>::mMNAIntfSwitches;

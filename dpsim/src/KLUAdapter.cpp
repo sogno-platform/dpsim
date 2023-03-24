@@ -35,20 +35,10 @@ KLUAdapter::KLUAdapter()
 	mVaryingRows.clear();
 }
 
-KLUAdapter::KLUAdapter(CPS::Logger::Log mSLog)
+KLUAdapter::KLUAdapter(CPS::Logger::Log log)
 {
-	this->mSLog = mSLog;
-    klu_defaults(&mCommon);
-
-	// NOTE: klu_defaults should already set the preordering methods correctly.
-	// It is repeated here in case this is altered in SuiteSparse at some point
-
-	mCommon.scale = 2;
-	mPreordering = AMD_ORDERING;
-	mCommon.btf = 1;
-
-	mVaryingColumns.clear();
-	mVaryingRows.clear();
+	this->mSLog = log;
+    KLUAdapter();
 }
 
 void KLUAdapter::preprocessing(SparseMatrix &systemMatrix,
@@ -76,6 +66,7 @@ void KLUAdapter::preprocessing(SparseMatrix &systemMatrix,
         mVaryingColumns.push_back(changedEntry.second);
     }
 
+    // this call also works if mVaryingColumns, mVaryingRows are empty
     mSymbolic = klu_analyze_partial(n, Ap, Ai, &mVaryingColumns[0], &mVaryingRows[0], varying_entries, mPreordering, &mCommon);
 
     /* store non-zero value of current preprocessed matrix. only used until
