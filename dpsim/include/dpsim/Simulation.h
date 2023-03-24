@@ -90,6 +90,8 @@ namespace DPsim {
 		///
 		DirectLinearSolverImpl mDirectImpl = DirectLinearSolverImpl::Undef;
 		///
+		DirectLinearSolverConfiguration mDirectLinearSolverConfiguration;
+		///
 		Bool mInitFromNodesAndTerminals = true;
 		/// Enable recomputation of system matrix during simulation
 		Bool mSystemMatrixRecomputation = false;
@@ -173,6 +175,8 @@ namespace DPsim {
 		///
 		void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) { mDirectImpl = directImpl; }
 		///
+		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration& configuration) { mDirectLinearSolverConfiguration = configuration;	}
+		///
 		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
 		///
 		void doSplitSubnets(Bool splitSubnets = true) { **mSplitSubnets = splitSubnets; }
@@ -225,6 +229,9 @@ namespace DPsim {
 		}
 		/// Write step time measurements to log file
 		void logStepTimes(String logName);
+
+		/// Write LU decomposition times measurements to log file
+		void logLUTimes();
 
 		///
 		void addInterface(Interface::Ptr eint) {

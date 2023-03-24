@@ -14,10 +14,9 @@ using namespace CPS;
 
 namespace DPsim {
 
-
 template <typename VarType>
 MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :	MnaSolver<VarType>(name, domain, logLevel) {
-	implementationInUse = DirectLinearSolverImpl::SparseLU;
+	mImplementationInUse = DirectLinearSolverImpl::SparseLU;
 }
 
 
@@ -44,14 +43,19 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(std::size_t index, std::vecto
 
 	// Compute LU-factorization for system matrix
 	mDirectLinearSolvers[bit][0]->preprocessing(sys, mListVariableSystemMatrixEntries);
-
+	auto start = std::chrono::steady_clock::now();
 	mDirectLinearSolvers[bit][0]->factorize(sys);
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<Real> diff = end-start;
+	mFactorizeTimes.push_back(diff.count());
 }
 
 template <typename VarType>
 void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
-	this->mDirectLinearSolverVariableSystemMatrix = createDirectSolverImplementation();
+	this->mDirectLinearSolverVariableSystemMatrix = createDirectSolverImplementation(mSLog);
+	// TODO: a direct linear solver configuration is only applied if system matrix recomputation is used
+	this->mDirectLinearSolverVariableSystemMatrix->setConfiguration(mConfigurationInUse);
 
 	SPDLOG_LOGGER_INFO(mSLog, "Number of variable Elements: {}"
 				"\nNumber of MNA components: {}",
@@ -84,7 +88,12 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
 	// Calculate factorization of current matrix
 	mDirectLinearSolverVariableSystemMatrix->preprocessing(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
+
+	auto start = std::chrono::steady_clock::now();
 	mDirectLinearSolverVariableSystemMatrix->factorize(mVariableSystemMatrix);
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<Real> diff = end-start;
+	mFactorizeTimes.push_back(diff.count());
 }
 
 template <typename VarType>
@@ -102,7 +111,11 @@ void MnaSolverDirect<VarType>::solveWithSystemMatrixRecomputation(Real time, Int
 		recomputeSystemMatrix(time);
 
 	// Calculate new solution vector
+	auto start = std::chrono::steady_clock::now();
 	**mLeftSideVector = mDirectLinearSolverVariableSystemMatrix->solve(mRightSideVector);
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<Real> diff = end-start;
+	mSolveTimes.push_back(diff.count());
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
@@ -126,7 +139,11 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 
 	// Refactorization of matrix assuming that structure remained
 	// constant by omitting analyzePattern
+	auto start = std::chrono::steady_clock::now();
 	mDirectLinearSolverVariableSystemMatrix->partialRefactorize(mVariableSystemMatrix, mListVariableSystemMatrixEntries);
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<Real> diff = end-start;
+	mRecomputationTimes.push_back(diff.count());
 	++mNumRecomputations;
 }
 
@@ -142,7 +159,7 @@ void MnaSolverDirect<Real>::createEmptySystemMatrix() {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++){
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
-			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation());
+			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
 		}
 	}
 }
@@ -157,7 +174,7 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 				auto bit = std::bitset<SWITCH_NUM>(i);
 				mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
-				mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation());
+				mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
 			}
 		}
 	} else if (mSystemMatrixRecomputation) {
@@ -167,7 +184,7 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
-			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation());
+			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
 		}
 	}
 }
@@ -210,7 +227,11 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 		MnaSolver<VarType>::updateSwitchStatus();
 
 	if (mSwitchedMatrices.size() > 0) {
+		auto start = std::chrono::steady_clock::now();
 		**mLeftSideVector = mDirectLinearSolvers[mCurrentSwitchStatus][0]->solve(mRightSideVector);
+		auto end = std::chrono::steady_clock::now();
+		std::chrono::duration<Real> diff = end-start;
+		mSolveTimes.push_back(diff.count());
 	}
 
 
@@ -266,6 +287,13 @@ void MnaSolverDirect<VarType>::logSystemMatrices() {
 }
 
 template<typename VarType>
+void MnaSolverDirect<VarType>::logLUTimes() {
+	logFactorizationTime();
+	logRecomputationTime();
+	logSolveTime();
+}
+
+template<typename VarType>
 void MnaSolverDirect<VarType>::logSolveTime(){
 	Real solveSum = 0.0;
 	Real solveMax = 0.0;
@@ -275,8 +303,8 @@ void MnaSolverDirect<VarType>::logSolveTime(){
 		if(meas > solveMax)
 			solveMax = meas;
 	}
-  	SPDLOG_LOGGER_INFO(mSLog, "Cumulative solve times: {:.12f}",solveSum);
-	SPDLOG_LOGGER_INFO(mSLog, "Average solve time: {:.12f}", solveSum/((double)mSolveTimes.size()));
+  	SPDLOG_LOGGER_INFO(mSLog, "Cumulative solve times: {:.12f}", solveSum);
+	SPDLOG_LOGGER_INFO(mSLog, "Average solve time: {:.12f}", solveSum/static_cast<double>(mSolveTimes.size()));
 	SPDLOG_LOGGER_INFO(mSLog, "Maximum solve time: {:.12f}", solveMax);
 	SPDLOG_LOGGER_INFO(mSLog, "Number of solves: {:d}", mSolveTimes.size());
 }
@@ -309,27 +337,27 @@ void MnaSolverDirect<VarType>::logRecomputationTime(){
 }
 
 template<typename VarType>
-std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolverImplementation() {
-	switch(this->implementationInUse)
+std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolverImplementation(CPS::Logger::Log mSLog) {
+	switch(this->mImplementationInUse)
 	{
 		case DirectLinearSolverImpl::DenseLU:
-			return std::make_shared<DenseLUAdapter>();
+			return std::make_shared<DenseLUAdapter>(mSLog);
 		case DirectLinearSolverImpl::SparseLU:
-			return std::make_shared<SparseLUAdapter>();
+			return std::make_shared<SparseLUAdapter>(mSLog);
 		#ifdef WITH_KLU
 		case DirectLinearSolverImpl::KLU:
-			return std::make_shared<KLUAdapter>();
+			return std::make_shared<KLUAdapter>(mSLog);
 		#endif
 		#ifdef WITH_CUDA
 		case DirectLinearSolverImpl::CUDADense:
-			return std::make_shared<GpuDenseAdapter>();
+			return std::make_shared<GpuDenseAdapter>(mSLog);
 		#ifdef WITH_CUDA_SPARSE
 		case DirectLinearSolverImpl::CUDASparse:
-			return std::make_shared<GpuSparseAdapter>();
+			return std::make_shared<GpuSparseAdapter>(mSLog);
 		#endif
 		#ifdef WITH_MAGMA
 		case DirectLinearSolverImpl::CUDAMagma:
-			return std::make_shared<GpuMagmaAdapter>();
+			return std::make_shared<GpuMagmaAdapter>(mSLog);
 		#endif
 		#endif
 		default:
@@ -339,7 +367,12 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 
 template <typename VarType>
 void MnaSolverDirect<VarType>::setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation) {
-	this->implementationInUse = implementation;
+	this->mImplementationInUse = implementation;
+}
+
+template <typename VarType>
+void MnaSolverDirect<VarType>::setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration) {
+	this->mConfigurationInUse = configuration;
 }
 
 }

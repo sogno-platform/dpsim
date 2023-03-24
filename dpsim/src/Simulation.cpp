@@ -127,7 +127,7 @@ void Simulation::createSolvers() {
 
 template <typename VarType>
 void Simulation::createMNASolver() {
-	Solver::Ptr solver;
+	Solver::Ptr	 solver;
 	std::vector<SystemTopology> subnets;
 	// The Diakoptics solver splits the system at a later point.
 	// That is why the system is not split here if tear components exist.
@@ -160,6 +160,7 @@ void Simulation::createMNASolver() {
 			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
 			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
+			solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
 			solver->initialize();
 		}
 		mSolvers.push_back(solver);
@@ -412,6 +413,13 @@ void Simulation::logStepTimes(String logName) {
 		stepTimeLog->info("{:f}", meas);
 	}
 	SPDLOG_LOGGER_INFO(mLog, "Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
+}
+
+void Simulation::logLUTimes() {
+	for(auto solver : mSolvers)
+	{
+		solver->logLUTimes();
+	}
 }
 
 CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp, const String &attr) {

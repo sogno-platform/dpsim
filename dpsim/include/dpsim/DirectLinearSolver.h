@@ -16,14 +16,13 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
+#include <dpsim/DirectLinearSolverConfiguration.h>
+#include <dpsim-models/Logger.h>
 
 namespace DPsim
 {
-	/// Abstract linear solver class for MNA simulation
-
 	class DirectLinearSolver
 	{
-
 		public:
 		/// Constructor
 		DirectLinearSolver() = default;
@@ -43,6 +42,12 @@ namespace DPsim
 		/// Move Assignment Operator
 		DirectLinearSolver& operator=(DirectLinearSolver&&) = default;
 
+		/// Constructor with Logger
+		DirectLinearSolver(CPS::Logger::Log log) : mSLog(log)
+		{
+			// no further default configuration of DirectLinearSolver or logger
+		}
+
 		/// preprocessing function pre-ordering and scaling the matrix
 		virtual void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) = 0;
 
@@ -57,5 +62,25 @@ namespace DPsim
 
 		/// solution function for a right hand side
 		virtual Matrix solve(Matrix& rightSideVector) = 0;
+
+		virtual void setConfiguration(DirectLinearSolverConfiguration& configuration)
+		{
+			mConfiguration = configuration;
+			this->applyConfiguration();
+		}
+
+		protected:
+		/// Stores logger of solver class
+		CPS::Logger::Log mSLog;
+
+		/// Object that carries configuration options
+		DirectLinearSolverConfiguration mConfiguration;
+
+		virtual void applyConfiguration()
+		{
+			// no default application, configuration options vary for each solver
+			// warn user that no configuration setting is used
+			SPDLOG_LOGGER_WARN(mSLog, "Linear solver configuration is not used!");
+		}
 	};
 }

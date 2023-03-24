@@ -27,38 +27,27 @@ extern "C"
 
 namespace DPsim
 {
-	enum SCALING_METHOD {
-		NO_SCALING = 0,
-		SUM_SCALING = 1,
-		MAX_SCALING = 2
-	};
-
     class KLUAdapter : public DirectLinearSolver
     {
-        /// Vector of variable entries in system matrix
-        std::vector<std::pair<UInt, UInt>> changedEntries;
+		/// Vector of variable entries in system matrix
+		std::vector<std::pair<UInt, UInt>> mChangedEntries;
+
+		/// Store variable columns in system matrix
+		std::vector<Int> mVaryingColumns;
+		/// Store variable rows in system matrix
+		std::vector<Int> mVaryingRows;
 
 		/// KLU-specific structs
-        klu_common m_common;
-		klu_numeric* m_numeric = nullptr;
-		klu_symbolic* m_symbolic = nullptr;
+        klu_common mCommon;
+		klu_numeric* mNumeric = nullptr;
+		klu_symbolic* mSymbolic = nullptr;
 
 		/// Flags to indicate mode of operation
 		/// Define which ordering to choose in preprocessing
-		int m_partial_method = KLU_AMD_FP;
+		/// AMD_ORDERING is defined in SuiteSparse/AMD
+		int mPreordering = AMD_ORDERING;
 
-		/// Use BTF or not
-		bool m_btf = true;
-
-		/// Define scaling method
-		/// Options are: 1: sum-scaling, 2: max scaling, <=0: no scaling
-		int m_scaling = SCALING_METHOD::MAX_SCALING;
-
-		/// Flag to indicate if factorization succeeded
-		bool factorization_is_okay = false;
-
-		/// Flag to indicate if preprocessing succeeded
-		bool preprocessing_is_okay = false;
+		PARTIAL_REFACTORIZATION_METHOD mPartialRefactorizationMethod = PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH;
 
 		/// Temporary value to store the number of nonzeros
 		Int nnz;
@@ -69,6 +58,9 @@ namespace DPsim
 
 		/// Constructor
 		KLUAdapter();
+
+		/// Constructor with logging
+		KLUAdapter(CPS::Logger::Log log);
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
@@ -89,5 +81,8 @@ namespace DPsim
 
 		/// Function to print matrix in MatrixMarket's coo format
 		void printMatrixMarket(SparseMatrix& systemMatrix, int counter) const;
+
+		/// Apply configuration
+		void applyConfiguration() override;
     };
 }

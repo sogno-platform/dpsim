@@ -5,6 +5,7 @@ set(DPSIM_SOURCES
 	MNASolverDirect.cpp
 	DenseLUAdapter.cpp
 	SparseLUAdapter.cpp
+	DirectLinearSolverConfiguration.cpp
 	PFSolver.cpp
 	PFSolverPowerPolar.cpp
 	Utils.cpp

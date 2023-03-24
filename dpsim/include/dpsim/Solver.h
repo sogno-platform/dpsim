@@ -14,6 +14,7 @@
 
 #include <dpsim/Definitions.h>
 #include <dpsim/Config.h>
+#include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/Task.h>
@@ -103,6 +104,16 @@ namespace DPsim {
 		virtual void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) {}
 		/// activate powerflow initialization
 		void doInitFromNodesAndTerminals(Bool f) { mInitFromNodesAndTerminals = f; }
+		/// set direct linear solver configuration (only available in MNA for now)
+		virtual void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration&)
+		{
+			// not every derived class has a linear solver configuration option
+		}
+		/// log LU decomposition times, if applicable
+		virtual void logLUTimes()
+		{
+			// no default implementation for all types of solvers
+		}
 
 		// #### Simulation ####
 		/// Get tasks for scheduler

@@ -26,6 +26,8 @@ namespace DPsim
         Eigen::SparseLU<CPS::SparseMatrixRow, Eigen::COLAMDOrdering<int> > LUFactorizedSparse;
 
         public:
+		/// Constructor with logging
+		using DirectLinearSolver::DirectLinearSolver;
 
 		/// Destructor
 		~SparseLUAdapter() override;

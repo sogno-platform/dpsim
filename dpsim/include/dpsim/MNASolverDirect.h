@@ -19,6 +19,7 @@
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/DirectLinearSolver.h>
+#include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim/DenseLUAdapter.h>
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
@@ -73,7 +74,9 @@ namespace DPsim {
 		/// LU factorization of variable system matrix
 		std::shared_ptr<DirectLinearSolver> mDirectLinearSolverVariableSystemMatrix;
 		/// LU factorization indicator
-		DirectLinearSolverImpl implementationInUse;
+		DirectLinearSolverImpl mImplementationInUse;
+		/// LU factorization configuration
+		DirectLinearSolverConfiguration mConfigurationInUse;
 
 		using MnaSolver<VarType>::mSwitches;
 		using MnaSolver<VarType>::mMNAIntfSwitches;
@@ -143,7 +146,7 @@ namespace DPsim {
 		void logRecomputationTime();
 
 		/// Returns a pointer to an object of type DirectLinearSolver
-		std::shared_ptr<DirectLinearSolver> createDirectSolverImplementation();
+		std::shared_ptr<DirectLinearSolver> createDirectSolverImplementation(CPS::Logger::Log mSLog);
 
 	public:
 		/// Constructor should not be called by users but by Simulation
@@ -157,6 +160,12 @@ namespace DPsim {
 
 		/// Sets the linear solver to "implementation" and creates an object
 		void setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);
+
+		/// Sets the linear solver configuration
+		void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration);
+
+		/// log LU decomposition times
+		void logLUTimes() override;
 
 		// #### MNA Solver Tasks ####
 		///
