@@ -125,6 +125,17 @@
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderMode.value"><code class="docutils literal notranslate"><span class="pre">CSVReaderMode.value</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration.get_btf"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration.get_btf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration.get_fill_in_reduction_method"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration.get_fill_in_reduction_method()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration.get_partial_refactorization_method"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration.get_partial_refactorization_method()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration.get_scaling_method"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration.get_scaling_method()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration.set_btf"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration.set_btf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration.set_fill_in_reduction_method"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration.set_fill_in_reduction_method()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration.set_partial_refactorization_method"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration.set_partial_refactorization_method()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration.set_scaling_method"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration.set_scaling_method()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.DirectLinearSolverImpl"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverImpl</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DirectLinearSolverImpl.CUDADense"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverImpl.CUDADense</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DirectLinearSolverImpl.CUDAMagma"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverImpl.CUDAMagma</span></code></a></li>
@@ -249,9 +260,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.get_idobj_attr"><code class="docutils literal notranslate"><span class="pre">Simulation.get_idobj_attr()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.log_attribute"><code class="docutils literal notranslate"><span class="pre">Simulation.log_attribute()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.log_idobj_attribute"><code class="docutils literal notranslate"><span class="pre">Simulation.log_idobj_attribute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.log_lu_times"><code class="docutils literal notranslate"><span class="pre">Simulation.log_lu_times()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.name"><code class="docutils literal notranslate"><span class="pre">Simulation.name()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.next"><code class="docutils literal notranslate"><span class="pre">Simulation.next()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.run"><code class="docutils literal notranslate"><span class="pre">Simulation.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_direct_linear_solver_configuration"><code class="docutils literal notranslate"><span class="pre">Simulation.set_direct_linear_solver_configuration()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_direct_solver_implementation"><code class="docutils literal notranslate"><span class="pre">Simulation.set_direct_solver_implementation()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_domain"><code class="docutils literal notranslate"><span class="pre">Simulation.set_domain()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_final_time"><code class="docutils literal notranslate"><span class="pre">Simulation.set_final_time()</span></code></a></li>
@@ -299,6 +312,38 @@
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.TopologicalPowerComp"><code class="docutils literal notranslate"><span class="pre">TopologicalPowerComp</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.TopologicalTerminal"><code class="docutils literal notranslate"><span class="pre">TopologicalTerminal</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.TopologicalTerminal.set_power"><code class="docutils literal notranslate"><span class="pre">TopologicalTerminal.set_power()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.fill_in_reduction_method"><code class="docutils literal notranslate"><span class="pre">fill_in_reduction_method</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.fill_in_reduction_method.amd"><code class="docutils literal notranslate"><span class="pre">fill_in_reduction_method.amd</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.fill_in_reduction_method.amd_nv"><code class="docutils literal notranslate"><span class="pre">fill_in_reduction_method.amd_nv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.fill_in_reduction_method.amd_ra"><code class="docutils literal notranslate"><span class="pre">fill_in_reduction_method.amd_ra</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.fill_in_reduction_method.colamd"><code class="docutils literal notranslate"><span class="pre">fill_in_reduction_method.colamd</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.fill_in_reduction_method.name"><code class="docutils literal notranslate"><span class="pre">fill_in_reduction_method.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.fill_in_reduction_method.value"><code class="docutils literal notranslate"><span class="pre">fill_in_reduction_method.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.partial_refactorization_method"><code class="docutils literal notranslate"><span class="pre">partial_refactorization_method</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.partial_refactorization_method.factorization_path"><code class="docutils literal notranslate"><span class="pre">partial_refactorization_method.factorization_path</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.partial_refactorization_method.name"><code class="docutils literal notranslate"><span class="pre">partial_refactorization_method.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.partial_refactorization_method.no_partial_refactorization"><code class="docutils literal notranslate"><span class="pre">partial_refactorization_method.no_partial_refactorization</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.partial_refactorization_method.refactorization_restart"><code class="docutils literal notranslate"><span class="pre">partial_refactorization_method.refactorization_restart</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.partial_refactorization_method.value"><code class="docutils literal notranslate"><span class="pre">partial_refactorization_method.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.scaling_method"><code class="docutils literal notranslate"><span class="pre">scaling_method</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.scaling_method.max_scaling"><code class="docutils literal notranslate"><span class="pre">scaling_method.max_scaling</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.scaling_method.name"><code class="docutils literal notranslate"><span class="pre">scaling_method.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.scaling_method.no_scaling"><code class="docutils literal notranslate"><span class="pre">scaling_method.no_scaling</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.scaling_method.sum_scaling"><code class="docutils literal notranslate"><span class="pre">scaling_method.sum_scaling</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.scaling_method.value"><code class="docutils literal notranslate"><span class="pre">scaling_method.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.use_btf"><code class="docutils literal notranslate"><span class="pre">use_btf</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.use_btf.do_btf"><code class="docutils literal notranslate"><span class="pre">use_btf.do_btf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.use_btf.name"><code class="docutils literal notranslate"><span class="pre">use_btf.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.use_btf.no_btf"><code class="docutils literal notranslate"><span class="pre">use_btf.no_btf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.use_btf.value"><code class="docutils literal notranslate"><span class="pre">use_btf.value</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dpsimpy.dp">Dynamic Phasor / SFA Models</a><ul>
@@ -1199,6 +1244,51 @@ and to parameterize all components of the network from Python.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.DirectLinearSolverConfiguration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">DirectLinearSolverConfiguration</span></span><a class="headerlink" href="#dpsimpy.DirectLinearSolverConfiguration" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.DirectLinearSolverConfiguration.get_btf">
+<span class="sig-name descname"><span class="pre">get_btf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration" title="dpsimpy.DirectLinearSolverConfiguration"><span class="pre">dpsimpy.DirectLinearSolverConfiguration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DPsim::USE_BTF</span></span></span><a class="headerlink" href="#dpsimpy.DirectLinearSolverConfiguration.get_btf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.DirectLinearSolverConfiguration.get_fill_in_reduction_method">
+<span class="sig-name descname"><span class="pre">get_fill_in_reduction_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration" title="dpsimpy.DirectLinearSolverConfiguration"><span class="pre">dpsimpy.DirectLinearSolverConfiguration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DPsim::FILL_IN_REDUCTION_METHOD</span></span></span><a class="headerlink" href="#dpsimpy.DirectLinearSolverConfiguration.get_fill_in_reduction_method" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.DirectLinearSolverConfiguration.get_partial_refactorization_method">
+<span class="sig-name descname"><span class="pre">get_partial_refactorization_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration" title="dpsimpy.DirectLinearSolverConfiguration"><span class="pre">dpsimpy.DirectLinearSolverConfiguration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DPsim::PARTIAL_REFACTORIZATION_METHOD</span></span></span><a class="headerlink" href="#dpsimpy.DirectLinearSolverConfiguration.get_partial_refactorization_method" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.DirectLinearSolverConfiguration.get_scaling_method">
+<span class="sig-name descname"><span class="pre">get_scaling_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration" title="dpsimpy.DirectLinearSolverConfiguration"><span class="pre">dpsimpy.DirectLinearSolverConfiguration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DPsim::SCALING_METHOD</span></span></span><a class="headerlink" href="#dpsimpy.DirectLinearSolverConfiguration.get_scaling_method" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.DirectLinearSolverConfiguration.set_btf">
+<span class="sig-name descname"><span class="pre">set_btf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.DirectLinearSolverConfiguration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0:</span> <span class="pre">DPsim::USE_BTF</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.DirectLinearSolverConfiguration.set_btf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.DirectLinearSolverConfiguration.set_fill_in_reduction_method">
+<span class="sig-name descname"><span class="pre">set_fill_in_reduction_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.DirectLinearSolverConfiguration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0:</span> <span class="pre">DPsim::FILL_IN_REDUCTION_METHOD</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.DirectLinearSolverConfiguration.set_fill_in_reduction_method" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.DirectLinearSolverConfiguration.set_partial_refactorization_method">
+<span class="sig-name descname"><span class="pre">set_partial_refactorization_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.DirectLinearSolverConfiguration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0:</span> <span class="pre">DPsim::PARTIAL_REFACTORIZATION_METHOD</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.DirectLinearSolverConfiguration.set_partial_refactorization_method" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.DirectLinearSolverConfiguration.set_scaling_method">
+<span class="sig-name descname"><span class="pre">set_scaling_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">dpsimpy.DirectLinearSolverConfiguration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0:</span> <span class="pre">DPsim::SCALING_METHOD</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.DirectLinearSolverConfiguration.set_scaling_method" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="dpsimpy.DirectLinearSolverImpl">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">DirectLinearSolverImpl</span></span><a class="headerlink" href="#dpsimpy.DirectLinearSolverImpl" title="Permalink to this definition"></a></dt>
 <dd><p>Members:</p>
@@ -1746,6 +1836,11 @@ and to parameterize all components of the network from Python.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.Simulation.log_lu_times">
+<span class="sig-name descname"><span class="pre">log_lu_times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.log_lu_times" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.Simulation.name">
 <span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#dpsimpy.Simulation.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -1758,6 +1853,11 @@ and to parameterize all components of the network from Python.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.Simulation.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.Simulation.set_direct_linear_solver_configuration">
+<span class="sig-name descname"><span class="pre">set_direct_linear_solver_configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.DirectLinearSolverConfiguration" title="dpsimpy.DirectLinearSolverConfiguration"><span class="pre">dpsimpy.DirectLinearSolverConfiguration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.set_direct_linear_solver_configuration" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1971,6 +2071,142 @@ and to parameterize all components of the network from Python.</p>
 <li><p>set_power(self: dpsimpy.TopologicalTerminal, arg0: numpy.ndarray[numpy.complex128[m, n]]) -&gt; None</p></li>
 </ol>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.fill_in_reduction_method">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">fill_in_reduction_method</span></span><a class="headerlink" href="#dpsimpy.fill_in_reduction_method" title="Permalink to this definition"></a></dt>
+<dd><p>Members:</p>
+<p>amd</p>
+<p>amd_nv</p>
+<p>amd_ra</p>
+<p>colamd</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.fill_in_reduction_method.amd">
+<span class="sig-name descname"><span class="pre">amd</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;fill_in_reduction_method.amd:</span> <span class="pre">0&gt;</span></em><a class="headerlink" href="#dpsimpy.fill_in_reduction_method.amd" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.fill_in_reduction_method.amd_nv">
+<span class="sig-name descname"><span class="pre">amd_nv</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;fill_in_reduction_method.amd_nv:</span> <span class="pre">1&gt;</span></em><a class="headerlink" href="#dpsimpy.fill_in_reduction_method.amd_nv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.fill_in_reduction_method.amd_ra">
+<span class="sig-name descname"><span class="pre">amd_ra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;fill_in_reduction_method.amd_ra:</span> <span class="pre">2&gt;</span></em><a class="headerlink" href="#dpsimpy.fill_in_reduction_method.amd_ra" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.fill_in_reduction_method.colamd">
+<span class="sig-name descname"><span class="pre">colamd</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;fill_in_reduction_method.colamd:</span> <span class="pre">3&gt;</span></em><a class="headerlink" href="#dpsimpy.fill_in_reduction_method.colamd" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.fill_in_reduction_method.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#dpsimpy.fill_in_reduction_method.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.fill_in_reduction_method.value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.fill_in_reduction_method.value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.partial_refactorization_method">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">partial_refactorization_method</span></span><a class="headerlink" href="#dpsimpy.partial_refactorization_method" title="Permalink to this definition"></a></dt>
+<dd><p>Members:</p>
+<p>no_partial_refactorization</p>
+<p>factorization_path</p>
+<p>refactorization_restart</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.partial_refactorization_method.factorization_path">
+<span class="sig-name descname"><span class="pre">factorization_path</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;partial_refactorization_method.factorization_path:</span> <span class="pre">1&gt;</span></em><a class="headerlink" href="#dpsimpy.partial_refactorization_method.factorization_path" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.partial_refactorization_method.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#dpsimpy.partial_refactorization_method.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.partial_refactorization_method.no_partial_refactorization">
+<span class="sig-name descname"><span class="pre">no_partial_refactorization</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;partial_refactorization_method.no_partial_refactorization:</span> <span class="pre">0&gt;</span></em><a class="headerlink" href="#dpsimpy.partial_refactorization_method.no_partial_refactorization" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.partial_refactorization_method.refactorization_restart">
+<span class="sig-name descname"><span class="pre">refactorization_restart</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;partial_refactorization_method.refactorization_restart:</span> <span class="pre">2&gt;</span></em><a class="headerlink" href="#dpsimpy.partial_refactorization_method.refactorization_restart" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.partial_refactorization_method.value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.partial_refactorization_method.value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.scaling_method">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">scaling_method</span></span><a class="headerlink" href="#dpsimpy.scaling_method" title="Permalink to this definition"></a></dt>
+<dd><p>Members:</p>
+<p>no_scaling</p>
+<p>sum_scaling</p>
+<p>max_scaling</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.scaling_method.max_scaling">
+<span class="sig-name descname"><span class="pre">max_scaling</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;scaling_method.max_scaling:</span> <span class="pre">2&gt;</span></em><a class="headerlink" href="#dpsimpy.scaling_method.max_scaling" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.scaling_method.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#dpsimpy.scaling_method.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.scaling_method.no_scaling">
+<span class="sig-name descname"><span class="pre">no_scaling</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;scaling_method.no_scaling:</span> <span class="pre">0&gt;</span></em><a class="headerlink" href="#dpsimpy.scaling_method.no_scaling" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.scaling_method.sum_scaling">
+<span class="sig-name descname"><span class="pre">sum_scaling</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;scaling_method.sum_scaling:</span> <span class="pre">1&gt;</span></em><a class="headerlink" href="#dpsimpy.scaling_method.sum_scaling" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.scaling_method.value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.scaling_method.value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.use_btf">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">use_btf</span></span><a class="headerlink" href="#dpsimpy.use_btf" title="Permalink to this definition"></a></dt>
+<dd><p>Members:</p>
+<p>no_btf</p>
+<p>do_btf</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.use_btf.do_btf">
+<span class="sig-name descname"><span class="pre">do_btf</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;use_btf.do_btf:</span> <span class="pre">1&gt;</span></em><a class="headerlink" href="#dpsimpy.use_btf.do_btf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.use_btf.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#dpsimpy.use_btf.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.use_btf.no_btf">
+<span class="sig-name descname"><span class="pre">no_btf</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;use_btf.no_btf:</span> <span class="pre">0&gt;</span></em><a class="headerlink" href="#dpsimpy.use_btf.no_btf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.use_btf.value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.use_btf.value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
