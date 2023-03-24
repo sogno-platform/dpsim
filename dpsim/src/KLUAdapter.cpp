@@ -35,10 +35,9 @@ KLUAdapter::KLUAdapter()
 	mVaryingRows.clear();
 }
 
-KLUAdapter::KLUAdapter(CPS::Logger::Log log)
+KLUAdapter::KLUAdapter(CPS::Logger::Log log) : KLUAdapter()
 {
 	this->mSLog = log;
-    KLUAdapter();
 }
 
 void KLUAdapter::preprocessing(SparseMatrix &systemMatrix,
