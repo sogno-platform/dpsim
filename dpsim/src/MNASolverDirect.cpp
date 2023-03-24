@@ -16,7 +16,7 @@ namespace DPsim {
 
 template <typename VarType>
 MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :	MnaSolver<VarType>(name, domain, logLevel) {
-	implementationInUse = DirectLinearSolverImpl::SparseLU;
+	mImplementationInUse = DirectLinearSolverImpl::SparseLU;
 }
 
 
@@ -54,7 +54,8 @@ template <typename VarType>
 void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
 	this->mDirectLinearSolverVariableSystemMatrix = createDirectSolverImplementation(mSLog);
-	this->mDirectLinearSolverVariableSystemMatrix->setConfiguration(configurationInUse);
+	// TODO: a direct linear solver configuration is only applied if system matrix recomputation is used
+	this->mDirectLinearSolverVariableSystemMatrix->setConfiguration(mConfigurationInUse);
 
 	SPDLOG_LOGGER_INFO(mSLog, "Number of variable Elements: {}"
 				"\nNumber of MNA components: {}",
@@ -337,7 +338,7 @@ void MnaSolverDirect<VarType>::logRecomputationTime(){
 
 template<typename VarType>
 std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolverImplementation(CPS::Logger::Log mSLog) {
-	switch(this->implementationInUse)
+	switch(this->mImplementationInUse)
 	{
 		case DirectLinearSolverImpl::DenseLU:
 			return std::make_shared<DenseLUAdapter>(mSLog);
@@ -366,12 +367,12 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 
 template <typename VarType>
 void MnaSolverDirect<VarType>::setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation) {
-	this->implementationInUse = implementation;
+	this->mImplementationInUse = implementation;
 }
 
 template <typename VarType>
 void MnaSolverDirect<VarType>::setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration) {
-	this->configurationInUse = configuration;
+	this->mConfigurationInUse = configuration;
 }
 
 }

@@ -32,8 +32,9 @@ namespace DPsim
 		/// Vector of variable entries in system matrix
 		std::vector<std::pair<UInt, UInt>> mChangedEntries;
 
-		/// Store variable rows and columns in system matrix
+		/// Store variable columns in system matrix
 		std::vector<Int> mVaryingColumns;
+		/// Store variable rows in system matrix
 		std::vector<Int> mVaryingRows;
 
 		/// KLU-specific structs
@@ -43,7 +44,7 @@ namespace DPsim
 
 		/// Flags to indicate mode of operation
 		/// Define which ordering to choose in preprocessing
-		/// Macros are defined in SuiteSparse/AMD
+		/// AMD_ORDERING is defined in SuiteSparse/AMD
 		int mPreordering = AMD_ORDERING;
 
 		PARTIAL_REFACTORIZATION_METHOD mPartialRefactorizationMethod = PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH;
@@ -59,7 +60,7 @@ namespace DPsim
 		KLUAdapter();
 
 		/// Constructor with logging
-		KLUAdapter(CPS::Logger::Log mSLog);
+		KLUAdapter(CPS::Logger::Log log);
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;

@@ -43,9 +43,9 @@ namespace DPsim
 		DirectLinearSolver& operator=(DirectLinearSolver&&) = default;
 
 		/// Constructor with Logger
-		DirectLinearSolver(CPS::Logger::Log mSLog) : mSLog(mSLog)
+		DirectLinearSolver(CPS::Logger::Log log) : mSLog(log)
 		{
-			// no further configuration needed
+			// no further default configuration of DirectLinearSolver or logger
 		}
 
 		/// preprocessing function pre-ordering and scaling the matrix
@@ -70,9 +70,10 @@ namespace DPsim
 		}
 
 		protected:
-
+		/// Stores logger of solver class
 		CPS::Logger::Log mSLog;
-		/// Abstract linear solver class for MNA simulation
+
+		/// Object that carries configuration options
 		DirectLinearSolverConfiguration mConfiguration;
 
 		virtual void applyConfiguration()
