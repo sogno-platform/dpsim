@@ -41,12 +41,19 @@ namespace DPsim
 		DO_BTF
 	};
 
+	// Define MC64 usage, if applicable
+	enum class USE_MC64 {
+		NO_MC64,
+		DO_MC64
+	};
+
 	class DirectLinearSolverConfiguration
 	{
 		SCALING_METHOD mScalingMethod;
 		FILL_IN_REDUCTION_METHOD mFillInReductionMethod;
 		PARTIAL_REFACTORIZATION_METHOD mPartialRefactorizationMethod;
 		USE_BTF mUseBTF;
+		USE_MC64 mUseMC64;
 
 		public:
 		DirectLinearSolverConfiguration();
@@ -59,6 +66,8 @@ namespace DPsim
 
 		void setBTF(USE_BTF useBTF);
 
+		void setMC64(USE_MC64 useMC64);
+
 		SCALING_METHOD getScalingMethod() const;
 
 		FILL_IN_REDUCTION_METHOD getFillInReductionMethod() const;
@@ -67,6 +76,8 @@ namespace DPsim
 
 		USE_BTF getBTF() const;
 
+		USE_MC64 getMC64() const;
+
 		String getScalingMethodString() const;
 
 		String getFillInReductionMethodString() const;
@@ -74,5 +85,7 @@ namespace DPsim
 		String getPartialRefactorizationMethodString() const;
 
 		String getBTFString() const;
+
+		String getMC64String() const;
 	};
 }

@@ -37,16 +37,7 @@ namespace DPsim
 
 		/// Flags to indicate mode of operation
 		/// Define which ordering to choose in preprocessing
-		int m_partial_method = 1;
-
-		/// Define scaling method
-		int m_scaling = 1;
-
-		/// Flag to indicate if factorization succeeded
-		bool factorization_is_okay = false;
-
-		/// Flag to indicate if preprocessing succeeded
-		bool preprocessing_is_okay = false;
+		PARTIAL_REFACTORIZATION_METHOD mPartialRefactorizationMethod = PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH;
 
 		/// Temporary value to store the number of nonzeros
 		Int nnz;
@@ -57,6 +48,9 @@ namespace DPsim
 
 		/// Constructor
 		NICSLUAdapter();
+
+		/// Constructor with logging
+		NICSLUAdapter(CPS::Logger::Log log);
 
 		/// preprocessing function pre-ordering and scaling the matrix
 		void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
@@ -75,7 +69,7 @@ namespace DPsim
 
 		protected:
 
-		/// Function to print matrix in MatrixMarket's coo format
-		void printMatrixMarket(SparseMatrix& systemMatrix, int counter) const;
+		/// Apply configuration
+		void applyConfiguration() override;
     };
 }

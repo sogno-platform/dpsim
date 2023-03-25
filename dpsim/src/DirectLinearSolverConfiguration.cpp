@@ -40,6 +40,11 @@ namespace DPsim
 		mUseBTF = useBTF;
 	}
 
+	void DirectLinearSolverConfiguration::setMC64(USE_MC64 useMC64)
+	{
+		mUseMC64 = useMC64;
+	}
+
 	SCALING_METHOD DirectLinearSolverConfiguration::getScalingMethod() const
 	{
 		return mScalingMethod;
@@ -55,9 +60,14 @@ namespace DPsim
 		return mPartialRefactorizationMethod;
 	}
 
-	USE_BTF DirectLinearSolverConfiguration::DirectLinearSolverConfiguration::getBTF() const
+	USE_BTF DirectLinearSolverConfiguration::getBTF() const
 	{
 		return mUseBTF;
+	}
+
+	USE_MC64 DirectLinearSolverConfiguration::getMC64() const
+	{
+		return mUseMC64;
 	}
 
 	String DirectLinearSolverConfiguration::getScalingMethodString() const
@@ -116,6 +126,19 @@ namespace DPsim
 			case USE_BTF::NO_BTF:
 			default:
 				return "without BTF";
+		}
+	}
+
+	String DirectLinearSolverConfiguration::getMC64String() const
+	{
+		switch(mUseMC64)
+		{
+			case USE_MC64::DO_MC64:
+				return "with MC64";
+			case USE_MC64::NO_MC64:
+				return "without MC64";
+			default:
+				return "without MC64";
 		}
 	}
 }

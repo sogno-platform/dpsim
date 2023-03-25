@@ -71,10 +71,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_scaling_method", &DPsim::DirectLinearSolverConfiguration::setScalingMethod)
 		.def("set_partial_refactorization_method", &DPsim::DirectLinearSolverConfiguration::setPartialRefactorizationMethod)
 		.def("set_btf", &DPsim::DirectLinearSolverConfiguration::setBTF)
+		.def("set_mc64", &DPsim::DirectLinearSolverConfiguration::setMC64)
 		.def("get_scaling_method", &DPsim::DirectLinearSolverConfiguration::getScalingMethod)
 		.def("get_fill_in_reduction_method", &DPsim::DirectLinearSolverConfiguration::getFillInReductionMethod)
 		.def("get_partial_refactorization_method", &DPsim::DirectLinearSolverConfiguration::getPartialRefactorizationMethod)
-		.def("get_btf", &DPsim::DirectLinearSolverConfiguration::getBTF);
+		.def("get_btf", &DPsim::DirectLinearSolverConfiguration::getBTF)
+		.def("get_mc64", &DPsim::DirectLinearSolverConfiguration::getMC64);
 
     py::class_<DPsim::Simulation>(m, "Simulation")
 	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
@@ -233,6 +235,10 @@ PYBIND11_MODULE(dpsimpy, m) {
 	py::enum_<DPsim::USE_BTF>(m, "use_btf")
 		.value("no_btf", DPsim::USE_BTF::NO_BTF)
 		.value("do_btf", DPsim::USE_BTF::DO_BTF);
+
+	py::enum_<DPsim::USE_MC64>(m, "use_mc64")
+		.value("no_mc64", DPsim::USE_MC64::NO_MC64)
+		.value("do_mc64", DPsim::USE_MC64::DO_MC64);
 
 	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
 		.value("AUTO", CPS::CSVReader::Mode::AUTO)
