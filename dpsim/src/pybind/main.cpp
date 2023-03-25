@@ -212,6 +212,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("DenseLU", DPsim::DirectLinearSolverImpl::DenseLU)
 		.value("SparseLU", DPsim::DirectLinearSolverImpl::SparseLU)
 		.value("KLU", DPsim::DirectLinearSolverImpl::KLU)
+		.value("NICSLU", DPsim::DirectLinearSolverImpl::NICSLU)
 		.value("CUDADense", DPsim::DirectLinearSolverImpl::CUDADense)
 		.value("CUDASparse", DPsim::DirectLinearSolverImpl::CUDASparse)
 		.value("CUDAMagma", DPsim::DirectLinearSolverImpl::CUDAMagma);

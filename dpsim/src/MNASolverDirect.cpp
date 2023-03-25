@@ -350,7 +350,7 @@ std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolver
 		#endif
 		#ifdef WITH_NICSLU
 		case DirectLinearSolverImpl::NICSLU:
-			return std::make_shared<NICSLUAdapter>();
+			return std::make_shared<NICSLUAdapter>(mSLog);
 		#endif
 		#ifdef WITH_CUDA
 		case DirectLinearSolverImpl::CUDADense:
