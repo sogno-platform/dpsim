@@ -109,20 +109,25 @@ void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplySystemMatrixStamp(SparseMa
 
 	calculateConstantConductanceMatrix();
 
-	// Stamp voltage source
-	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1, 0));
-	Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
+	if (mModelAsNortonSource) {
+		// Stamp conductance matrix
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrixConst);
+	} else {
+		// Stamp voltage source
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1, 0));
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
 
-	// Stamp conductance
-	// set upper left block
-	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), mConductanceMatrixConst);
+		// Stamp conductance
+		// set upper left block
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex(), mConductanceMatrixConst);
 
-	// set buttom right block
-	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrixConst);
+		// set buttom right block
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrixConst);
 
-	// Set off diagonal blocks
-	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0), -mConductanceMatrixConst);
-	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(), -mConductanceMatrixConst);
+		// Set off diagonal blocks
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0), -mConductanceMatrixConst);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(), -mConductanceMatrixConst);
+	}
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
@@ -175,7 +180,16 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), **mEhMod);
+	if (mModelAsNortonSource) {
+		// Determine equivalent Norton current
+		mIhMod = Complex(mConductanceMatrixConst(0,0) * (**mEhMod).real() + mConductanceMatrixConst(0,1) * (**mEhMod).imag(),
+					    mConductanceMatrixConst(1,0) * (**mEhMod).real() + mConductanceMatrixConst(1,1) * (**mEhMod).imag());
+		// Stamp Norton current
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), mIhMod);
+	} else {
+		// Stamp modified history voltage
+		Math::setVectorElement(rightVector, mVirtualNodes[1]->matrixNodeIndex(), **mEhMod);
+	}
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
@@ -240,7 +254,12 @@ bool DP::Ph1::SynchronGenerator4OrderTPM::requiresIteration() {
 
 void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompPostStep(const Matrix& leftVector) {
 	// update armature current
-	(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
+	if (mModelAsNortonSource) {
+		(**mIntfCurrent)(0, 0) = mIhMod - Complex(mConductanceMatrixConst(0,0) * (**mIntfVoltage)(0, 0).real() + mConductanceMatrixConst(0,1) * (**mIntfVoltage)(0, 0).imag(),
+					    						 mConductanceMatrixConst(1,0) * (**mIntfVoltage)(0, 0).real() + mConductanceMatrixConst(1,1) * (**mIntfVoltage)(0, 0).imag());
+	} else {
+		(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[1]->matrixNodeIndex());
+	}
 
 	// convert armature current to dq reference frame
 	**mIdq = mDomainInterface.applyDPToDQTransform((**mIntfCurrent)(0, 0)) / mBase_I_RMS;
