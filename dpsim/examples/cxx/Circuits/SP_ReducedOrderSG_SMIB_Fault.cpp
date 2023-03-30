@@ -18,7 +18,7 @@ const Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1 turbineGovernor;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Simulation parameters
 	Real switchClosed = GridParams.SwitchClosed;
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
-	genPF->setParameters(syngenKundur.nomPower, GridParams.VnomMV, 
+	genPF->setParameters(syngenKundur.nomPower, GridParams.VnomMV,
 						 GridParams.setPointActivePower, GridParams.setPointVoltage,
 						 PowerflowBusType::PV);
     genPF->setBaseVoltage(GridParams.VnomMV);
@@ -89,10 +89,10 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(GridParams.VnomMV);
 	extnetPF->setBaseVoltage(GridParams.VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+	linePF->setParameters(GridParams.lineResistance, GridParams.lineInductance,
 						  GridParams.lineCapacitance, GridParams.lineConductance);
 	linePF->setBaseVoltage(GridParams.VnomMV);
 
@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
 	// ----- Dynamic simulation ------
 	String simNameSP = simName;
 	Logger::setLogDir("logs/" + simNameSP);
-	
+
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initReactivePower = genPF->getApparentPower().imag();
@@ -142,19 +142,19 @@ int main(int argc, char* argv[]) {
 	genSP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
     genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
-	genSP->setModelAsCurrentSource(true);
+	genSP->setModelAsNortonSource(true);
 
 	// Exciter
 	std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
 	if (withExciter) {
 		exciterSP = Signal::Exciter::make("SynGen_Exciter", logLevel);
-		exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka, 
-								 excitationEremia.Te, excitationEremia.Ke, 
-								 excitationEremia.Tf, excitationEremia.Kf, 
+		exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka,
+								 excitationEremia.Te, excitationEremia.Ke,
+								 excitationEremia.Tf, excitationEremia.Kf,
 								 excitationEremia.Tr);
 		genSP->addExciter(exciterSP);
 	}
@@ -163,8 +163,8 @@ int main(int argc, char* argv[]) {
 	std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorSP = nullptr;
 	if (withTurbineGovernor) {
 		turbineGovernorSP = Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
-		turbineGovernorSP->setParameters(turbineGovernor.T3, turbineGovernor.T4, 
-			turbineGovernor.T5, turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R, 
+		turbineGovernorSP->setParameters(turbineGovernor.T3, turbineGovernor.T4,
+			turbineGovernor.T5, turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R,
 			turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
 		genSP->addGovernor(turbineGovernorSP);
 	}
@@ -175,9 +175,9 @@ int main(int argc, char* argv[]) {
 
     // Line
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", logLevel);
-	lineSP->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+	lineSP->setParameters(GridParams.lineResistance, GridParams.lineInductance,
 						  GridParams.lineCapacitance, GridParams.lineConductance);
-	
+
 	//Breaker
 	auto fault = CPS::SP::Ph1::Switch::make("Br_fault", logLevel);
 	fault->setParameters(switchOpen, switchClosed);
@@ -188,7 +188,7 @@ int main(int argc, char* argv[]) {
 	lineSP->connect({ n1SP, n2SP });
 	extnetSP->connect({ n2SP });
 	fault->connect({SP::SimNode::GND, n1SP});
-	
+
 	auto systemSP = SystemTopology(GridParams.nomFreq,
 			   SystemNodeList{n1SP, n2SP},
 			   SystemComponentList{genSP, lineSP, extnetSP, fault});
@@ -237,6 +237,6 @@ int main(int argc, char* argv[]) {
 
 	auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 	simSP.addEvent(sw2);
-	
+
 	simSP.run();
 }

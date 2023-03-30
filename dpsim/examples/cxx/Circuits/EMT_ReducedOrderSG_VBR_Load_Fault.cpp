@@ -18,7 +18,7 @@ const Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1 turbineGovernor;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Simultion parameters
 	Real switchClosed = GridParams.SwitchClosed;
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-		if (args.options.find("SGModel") != args.options.end()) 
+		if (args.options.find("SGModel") != args.options.end())
 			SGModel = args.getOptionString("SGModel");
 		if (args.options.find("WITHEXCITER") != args.options.end())
 			withExciter = args.getOptionBool("WITHEXCITER");
@@ -60,14 +60,14 @@ int main(int argc, char* argv[]) {
 		logDownSampling = 1.0;
 	Logger::Level logLevel = Logger::Level::off;
 	std::string simName ="EMT_SynGen" + SGModel + "Order_VBR_Load_Fault" + stepSize_str + inertia_str;
-	
-	
+
+
 	// ----- Dynamic simulation ------
 	String simNameEMT = simName;
 	Logger::setLogDir("logs/"+simNameEMT);
-	
+
 	// Nodes
-	std::vector<Complex> initialVoltage_n1{ GridParams.initTerminalVolt, 
+	std::vector<Complex> initialVoltage_n1{ GridParams.initTerminalVolt,
 											GridParams.initTerminalVolt * SHIFT_TO_PHASE_B,
 											GridParams.initTerminalVolt * SHIFT_TO_PHASE_C
 										  };
@@ -79,20 +79,20 @@ int main(int argc, char* argv[]) {
 	genEMT->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-    genEMT->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower, 
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
+    genEMT->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower,
 							 GridParams.initTerminalVolt);
-	genEMT->setModelAsCurrentSource(true);
+	genEMT->setModelAsNortonSource(true);
 
 	// Exciter
 	std::shared_ptr<Signal::Exciter> exciterEMT = nullptr;
 	if (withExciter) {
 		exciterEMT = Signal::Exciter::make("SynGen_Exciter", logLevel);
-		exciterEMT->setParameters(excitationEremia.Ta, excitationEremia.Ka, 
-								 excitationEremia.Te, excitationEremia.Ke, 
-								 excitationEremia.Tf, excitationEremia.Kf, 
+		exciterEMT->setParameters(excitationEremia.Ta, excitationEremia.Ka,
+								 excitationEremia.Te, excitationEremia.Ke,
+								 excitationEremia.Tf, excitationEremia.Kf,
 								 excitationEremia.Tr);
 		genEMT->addExciter(exciterEMT);
 	}
@@ -101,21 +101,21 @@ int main(int argc, char* argv[]) {
 	std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorEMT = nullptr;
 	if (withTurbineGovernor) {
 		turbineGovernorEMT = Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
-		turbineGovernorEMT->setParameters(turbineGovernor.T3, turbineGovernor.T4, 
-			turbineGovernor.T5, turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R, 
+		turbineGovernorEMT->setParameters(turbineGovernor.T3, turbineGovernor.T4,
+			turbineGovernor.T5, turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R,
 			turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
 		genEMT->addGovernor(turbineGovernorEMT);
 	}
 
 	// Load
 	auto load = CPS::EMT::Ph3::RXLoad::make("Load", logLevel);
-	load->setParameters(Math::singlePhaseParameterToThreePhase(GridParams.initActivePower/3), 
+	load->setParameters(Math::singlePhaseParameterToThreePhase(GridParams.initActivePower/3),
 						Math::singlePhaseParameterToThreePhase(GridParams.initReactivePower/3),
 						GridParams.VnomMV);
 
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", logLevel);
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(switchOpen), 
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(switchOpen),
 						 Math::singlePhaseParameterToThreePhase(switchClosed));
 	fault->openSwitch();
 
@@ -137,8 +137,8 @@ int main(int argc, char* argv[]) {
     loggerEMT->logAttribute("w_r", 		genEMT->attribute("w_r"));
 	loggerEMT->logAttribute("Vdq0", 	genEMT->attribute("Vdq0"));
 	loggerEMT->logAttribute("Idq0", 	genEMT->attribute("Idq0"));
-	
-	// Exciter	
+
+	// Exciter
 	if (withExciter) {
 		loggerEMT->logAttribute("Ef",   exciterEMT->attribute("Ef"));
 	}
@@ -163,7 +163,7 @@ int main(int argc, char* argv[]) {
 	simEMT.addEvent(sw1);
 	auto sw2 = SwitchEvent3Ph::make(endTimeFault, fault, false);
 	simEMT.addEvent(sw2);
-	
+
 	simEMT.run();
 	simEMT.logStepTimes(simNameEMT + "_step_times");
 }

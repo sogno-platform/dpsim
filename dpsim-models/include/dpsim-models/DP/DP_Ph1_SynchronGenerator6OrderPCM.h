@@ -45,6 +45,11 @@ namespace Ph1 {
 		///
 		void initializeResistanceMatrix() final {};
 
+		/// Warning if this method is applied: the model is exclusively implemented as current source and this setter will have no impact!
+		void setModelAsNortonSource(Bool modelAsCurrentSource) override {
+			SPDLOG_LOGGER_WARN(mSLog, "This model can exclusively be used as current source. The setter setModelAsNortonSource will have no impact on the model!");
+		}
+
 		// #### MNA Functions ####
 		///
 		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) final;

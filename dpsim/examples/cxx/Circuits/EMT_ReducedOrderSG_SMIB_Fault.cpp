@@ -12,7 +12,7 @@ const Examples::Grids::SMIB::ReducedOrderSynchronGenerator::Scenario4::GridParam
 // Generator parameters
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Simultion parameters
 	Real switchClosed = GridParams.SwitchClosed;
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	
+
 	Real logDownSampling;
 	if (timeStep<100e-6)
 		logDownSampling = floor(100e-6 / timeStep);
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 
 	// Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
-	genPF->setParameters(syngenKundur.nomPower, GridParams.VnomMV, GridParams.setPointActivePower, 
+	genPF->setParameters(syngenKundur.nomPower, GridParams.VnomMV, GridParams.setPointActivePower,
 						 GridParams.setPointVoltage, PowerflowBusType::PV);
     genPF->setBaseVoltage(GridParams.VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -73,10 +73,10 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(GridParams.VnomMV);
 	extnetPF->setBaseVoltage(GridParams.VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	// Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(GridParams.lineResistance, GridParams.lineInductance, 
+	linePF->setParameters(GridParams.lineResistance, GridParams.lineInductance,
 						  GridParams.lineCapacitance, GridParams.lineConductance);
 	linePF->setBaseVoltage(GridParams.VnomMV);
 
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
 	// ----- Dynamic simulation ------
 	String simNameEMT = simName;
 	Logger::setLogDir("logs/"+simNameEMT);
-	
+
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initReactivePower = genPF->getApparentPower().imag();
@@ -116,13 +116,13 @@ int main(int argc, char* argv[]) {
 	Real initMechPower = initActivePower;
 
 	// Nodes
-	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0), 
+	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0),
 											n1PF->voltage()(0,0) * SHIFT_TO_PHASE_B,
 											n1PF->voltage()(0,0) * SHIFT_TO_PHASE_C
 										  };
 	auto n1EMT = SimNode<Real>::make("n1EMT", PhaseType::ABC, initialVoltage_n1);
 
-	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0), 
+	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0),
 											n2PF->voltage()(0,0) * SHIFT_TO_PHASE_B,
 											n2PF->voltage()(0,0) * SHIFT_TO_PHASE_C
 										  };
@@ -133,25 +133,25 @@ int main(int argc, char* argv[]) {
 	genEMT->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
     genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
-	genEMT->setModelAsCurrentSource(true);
-	
+	genEMT->setModelAsNortonSource(true);
+
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", logLevel);
-	
+
     // Line
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", logLevel);
-	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(GridParams.lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(GridParams.lineInductance), 
+	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(GridParams.lineResistance),
+	                      Math::singlePhaseParameterToThreePhase(GridParams.lineInductance),
 					      Math::singlePhaseParameterToThreePhase(GridParams.lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(GridParams.lineConductance));
 
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", logLevel);
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(switchOpen), 
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(switchOpen),
 						 Math::singlePhaseParameterToThreePhase(switchClosed));
 	fault->openSwitch();
 
@@ -164,7 +164,7 @@ int main(int argc, char* argv[]) {
 	auto systemEMT = SystemTopology(GridParams.nomFreq,
 			SystemNodeList{n1EMT, n2EMT},
 			SystemComponentList{genEMT, lineEMT, fault, extnetEMT});
-			
+
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT, true, logDownSampling);
 	loggerEMT->logAttribute("v_gen", 	genEMT->attribute("v_intf"));
@@ -192,6 +192,6 @@ int main(int argc, char* argv[]) {
 	simEMT.addEvent(sw1);
 	auto sw2 = SwitchEvent3Ph::make(endTimeFault, fault, false);
 	simEMT.addEvent(sw2);
-	
+
 	simEMT.run();
 }
