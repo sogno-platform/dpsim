@@ -16,7 +16,7 @@ Scenario6::GridParams gridParams;
 // Generator parameters
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Simulation parameters
 	String simName = "SP_SMIB_ReducedOrderSG_LoadStep";
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", logLevel);
-	genPF->setParameters(syngenKundur.nomPower, gridParams.VnomMV, gridParams.setPointActivePower, 
+	genPF->setParameters(syngenKundur.nomPower, gridParams.VnomMV, gridParams.setPointActivePower,
 						 gridParams.setPointVoltage, PowerflowBusType::PV);
     genPF->setBaseVoltage(gridParams.VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -73,10 +73,10 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(gridParams.VnomMV);
 	extnetPF->setBaseVoltage(gridParams.VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", logLevel);
-	linePF->setParameters(gridParams.lineResistance, gridParams.lineInductance, 
+	linePF->setParameters(gridParams.lineResistance, gridParams.lineInductance,
 						  gridParams.lineCapacitance, gridParams.lineConductance);
 	linePF->setBaseVoltage(gridParams.VnomMV);
 
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
 	// ----- Dynamic simulation ------
 	String simNameSP = simName;
 	Logger::setLogDir("logs/" + simNameSP);
-	
+
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initReactivePower = genPF->getApparentPower().imag();
@@ -127,11 +127,11 @@ int main(int argc, char* argv[]) {
 	genSP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
     genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
-	genSP->setModelAsCurrentSource(true);
+	genSP->setModelAsNortonSource(true);
 
 	//Grid bus as Slack
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
@@ -139,9 +139,9 @@ int main(int argc, char* argv[]) {
 
     // Line
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", logLevel);
-	lineSP->setParameters(gridParams.lineResistance, gridParams.lineInductance, 
+	lineSP->setParameters(gridParams.lineResistance, gridParams.lineInductance,
 						  gridParams.lineCapacitance, gridParams.lineConductance);
-	
+
 	// Topology
 	genSP->connect({ n1SP });
 	lineSP->connect({ n1SP, n2SP });
@@ -177,6 +177,6 @@ int main(int argc, char* argv[]) {
 
 	// Events
 	simSP.addEvent(loadStepEvent);
-	
+
 	simSP.run();
 }

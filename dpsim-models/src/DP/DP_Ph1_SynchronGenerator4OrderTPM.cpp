@@ -18,7 +18,6 @@ DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
 
 	mSGOrder = SGOrder::SG4Order;
 	mPhaseType = PhaseType::Single;
-	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 
 	/// initialize attributes
