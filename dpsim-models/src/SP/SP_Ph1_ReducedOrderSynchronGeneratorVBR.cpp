@@ -48,7 +48,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 
 	Base::ReducedOrderSynchronGenerator<Complex>::mnaCompInitialize(omega, timeStep, leftVector);
 
-	if (mModelAsCurrentSource) {
+	if (mModelAsNortonSource) {
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
 	} else {
 		// upper left
@@ -69,7 +69,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 
 void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 
-	if (mModelAsCurrentSource) {
+	if (mModelAsNortonSource) {
 		// Stamp conductance matrix
 		// set buttom right block
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrix);
@@ -94,7 +94,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(Sp
 }
 
 void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
-	if (mModelAsCurrentSource) {
+	if (mModelAsNortonSource) {
 		// compute equivalent northon circuit in abc reference frame
 		mIvbr = Complex(mConductanceMatrix(0,0) * mEvbr.real() + mConductanceMatrix(0,1) * mEvbr.imag(),
 					    mConductanceMatrix(1,0) * mEvbr.real() + mConductanceMatrix(1,1) * mEvbr.imag());
@@ -116,7 +116,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompPostStep(const Matrix& le
 	**mVdq = mComplexAToDq * Vabc / mBase_V_RMS;
 
 	// update armature current
-	if (mModelAsCurrentSource) {
+	if (mModelAsNortonSource) {
 		(**mIntfCurrent)(0, 0) = mIvbr - Complex(mConductanceMatrix(0,0) * (**mIntfVoltage)(0, 0).real() + mConductanceMatrix(0,1) * (**mIntfVoltage)(0, 0).imag(),
 					    						 mConductanceMatrix(1,0) * (**mIntfVoltage)(0, 0).real() + mConductanceMatrix(1,1) * (**mIntfVoltage)(0, 0).imag());
 	} else {

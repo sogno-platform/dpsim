@@ -18,7 +18,7 @@ const Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1 turbineGovernor;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	Real switchClosed = GridParams.SwitchClosed;
@@ -66,10 +66,10 @@ int main(int argc, char* argv[]) {
 	// ----- Dynamic simulation ------
 	String simNameDP = simName;
 	Logger::setLogDir("logs/" + simNameDP);
-	
+
 	// Nodes
 	auto initVoltN1 = std::vector<Complex>({
-		Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle), 
+		Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle),
 				GridParams.VnomMV * sin(GridParams.initVoltAngle))});
 	auto n1DP = SimNode<Complex>::make("n1DP", PhaseType::Single, initVoltN1);
 
@@ -78,21 +78,21 @@ int main(int argc, char* argv[]) {
 	genDP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-    genDP->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower, 
-			Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle), 
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
+    genDP->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower,
+			Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle),
 					GridParams.VnomMV * sin(GridParams.initVoltAngle)));
-	genDP->setModelAsCurrentSource(true);
+	genDP->setModelAsNortonSource(true);
 
 	// Exciter
 	std::shared_ptr<Signal::Exciter> exciterDP = nullptr;
 	if (withExciter) {
 		exciterDP = Signal::Exciter::make("SynGen_Exciter", logLevel);
-		exciterDP->setParameters(excitationEremia.Ta, excitationEremia.Ka, 
-								 excitationEremia.Te, excitationEremia.Ke, 
-								 excitationEremia.Tf, excitationEremia.Kf, 
+		exciterDP->setParameters(excitationEremia.Ta, excitationEremia.Ka,
+								 excitationEremia.Te, excitationEremia.Ke,
+								 excitationEremia.Tf, excitationEremia.Kf,
 								 excitationEremia.Tr);
 		genDP->addExciter(exciterDP);
 	}
@@ -101,15 +101,15 @@ int main(int argc, char* argv[]) {
 	std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorDP = nullptr;
 	if (withTurbineGovernor) {
 		turbineGovernorDP = Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
-		turbineGovernorDP->setParameters(turbineGovernor.T3, turbineGovernor.T4, 
-			turbineGovernor.T5, turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R, 
+		turbineGovernorDP->setParameters(turbineGovernor.T3, turbineGovernor.T4,
+			turbineGovernor.T5, turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R,
 			turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
 		genDP->addGovernor(turbineGovernorDP);
 	}
 
 	// Load
 	auto load = CPS::DP::Ph1::RXLoad::make("Load", logLevel);
-	load->setParameters(GridParams.initActivePower, GridParams.initReactivePower, 
+	load->setParameters(GridParams.initActivePower, GridParams.initReactivePower,
 						GridParams.VnomMV);
 
 	//Breaker
@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
     loggerDP->logAttribute("w_r", 		 genDP->attribute("w_r"));
 	loggerDP->logAttribute("Vdq0", 		 genDP->attribute("Vdq0"));
 	loggerDP->logAttribute("Idq0", 		 genDP->attribute("Idq0"));
-	
+
 	// Exciter
 	if (withExciter) {
 		loggerDP->logAttribute("Ef", 	 exciterDP->attribute("Ef"));
@@ -161,6 +161,6 @@ int main(int argc, char* argv[]) {
 
 	auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 	simDP.addEvent(sw2);
-	
+
 	simDP.run();
 }

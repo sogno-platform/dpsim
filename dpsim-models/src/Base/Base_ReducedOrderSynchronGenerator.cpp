@@ -28,6 +28,10 @@ Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	// declare state variables
 	**mVdq0 = Matrix::Zero(3,1);
 	**mIdq0 = Matrix::Zero(3,1);
+
+	// default model is Norton equivalent
+	mModelAsNortonSource = true;
+	SPDLOG_LOGGER_INFO(this->mSLog, "SG per default modelled as Norton equivalent");
 }
 
 template <>
@@ -49,15 +53,23 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	///FIXME: The mVdq0 and mVdq member variables are mutually exclusive and carry the same attribute name. Maybe they can be unified?
 	**mVdq = Matrix::Zero(2,1);
 	**mIdq = Matrix::Zero(2,1);
+
+	// default model is Norton equivalent
+	mModelAsNortonSource = true;
+	SPDLOG_LOGGER_INFO(this->mSLog, "SG per default modelled as Norton equivalent");
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::setModelAsCurrentSource(Bool modelAsCurrentSource) {
-	mModelAsCurrentSource = modelAsCurrentSource;
+void Base::ReducedOrderSynchronGenerator<VarType>::setModelAsNortonSource(Bool modelAsCurrentSource) {
+	mModelAsNortonSource = modelAsCurrentSource;
 
-	if (!mModelAsCurrentSource)
-		// SG is modeled as voltage source
+	if (mModelAsNortonSource) {
+		this->setVirtualNodeNumber(0);
+		SPDLOG_LOGGER_INFO(this->mSLog, "Setting SG model to Norton equivalent");
+	} else {
 		this->setVirtualNodeNumber(2);
+		SPDLOG_LOGGER_INFO(this->mSLog, "Setting SG model to Thevenin equivalent");
+	}
 }
 
 template <typename VarType>

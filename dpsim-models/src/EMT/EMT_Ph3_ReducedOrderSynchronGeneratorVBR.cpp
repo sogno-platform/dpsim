@@ -49,7 +49,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 
 	Base::ReducedOrderSynchronGenerator<Real>::mnaCompInitialize(omega, timeStep, leftVector);
 
-	if (mModelAsCurrentSource) {
+	if (mModelAsNortonSource) {
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 1)));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 2)));
@@ -111,7 +111,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 
-	if (mModelAsCurrentSource) {
+	if (mModelAsNortonSource) {
 		// Stamp conductance matrix
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMatrix(0, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), mConductanceMatrix(0, 1));
@@ -180,7 +180,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(S
 }
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
-	if (mModelAsCurrentSource) {
+	if (mModelAsNortonSource) {
 		// compute equivalent northon circuit in abc reference frame
 		mIvbr = mConductanceMatrix * mEvbr;
 
@@ -205,7 +205,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompPostStep(const Matrix& l
 	**mVdq0 = mAbcToDq0 * **mIntfVoltage / mBase_V;
 
 	// update armature current
-	if (mModelAsCurrentSource) {
+	if (mModelAsNortonSource) {
 		Matrix Iconductance = mConductanceMatrix * **mIntfVoltage;
 		(**mIntfCurrent) = mIvbr - Iconductance;
 	}

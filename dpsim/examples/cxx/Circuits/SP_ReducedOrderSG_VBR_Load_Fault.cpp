@@ -18,7 +18,7 @@ const Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1 turbineGovernor;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Simulation parameters
 	Real switchClosed = GridParams.SwitchClosed;
@@ -65,10 +65,10 @@ int main(int argc, char* argv[]) {
 	// ----- Dynamic simulation ------
 	String simNameSP = simName;
 	Logger::setLogDir("logs/" + simNameSP);
-	
+
 	// Nodes
 	auto initVoltN1 = std::vector<Complex>({
-		Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle), 
+		Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle),
 				GridParams.VnomMV * sin(GridParams.initVoltAngle))});
 	auto n1SP = SimNode<Complex>::make("n1SP", PhaseType::Single, initVoltN1);
 
@@ -77,21 +77,21 @@ int main(int argc, char* argv[]) {
 	genSP->setOperationalParametersPerUnit(
 			syngenKundur.nomPower, syngenKundur.nomVoltage,
 			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, 
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
 			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s); 
-    genSP->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower, 
-				Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle), 
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
+    genSP->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower,
+				Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle),
 						GridParams.VnomMV * sin(GridParams.initVoltAngle)));
-	genSP->setModelAsCurrentSource(true);
+	genSP->setModelAsNortonSource(true);
 
 	// Exciter
 	std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
 	if (withExciter) {
 		exciterSP = Signal::Exciter::make("SynGen_Exciter", logLevel);
-		exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka, 
-								 excitationEremia.Te, excitationEremia.Ke, 
-								 excitationEremia.Tf, excitationEremia.Kf, 
+		exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka,
+								 excitationEremia.Te, excitationEremia.Ke,
+								 excitationEremia.Tf, excitationEremia.Kf,
 								 excitationEremia.Tr);
 		genSP->addExciter(exciterSP);
 	}
@@ -100,17 +100,17 @@ int main(int argc, char* argv[]) {
 	std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorSP = nullptr;
 	if (withTurbineGovernor) {
 		turbineGovernorSP = Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
-		turbineGovernorSP->setParameters(turbineGovernor.T3, turbineGovernor.T4, 
-			turbineGovernor.T5, turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R, 
+		turbineGovernorSP->setParameters(turbineGovernor.T3, turbineGovernor.T4,
+			turbineGovernor.T5, turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R,
 			turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
 		genSP->addGovernor(turbineGovernorSP);
 	}
 
 	// Load
 	auto load = CPS::SP::Ph1::Load::make("Load", logLevel);
-	load->setParameters(GridParams.initActivePower, GridParams.initReactivePower, 
+	load->setParameters(GridParams.initActivePower, GridParams.initReactivePower,
 						GridParams.VnomMV);
-	
+
 	//Breaker
 	auto fault = CPS::SP::Ph1::Switch::make("Br_fault", logLevel);
 	fault->setParameters(switchOpen, switchClosed);
@@ -139,7 +139,7 @@ int main(int argc, char* argv[]) {
 	} else {
 		loggerSP->logAttribute("Edq0", 		 genSP->attribute("Edq_t"));
 	}
-	
+
 	// Exciter
 	if (withExciter) {
 		loggerSP->logAttribute("Ef", exciterSP->attribute("Ef"));
@@ -166,6 +166,6 @@ int main(int argc, char* argv[]) {
 
 	auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 	simSP.addEvent(sw2);
-	
+
 	simSP.run();
 }
