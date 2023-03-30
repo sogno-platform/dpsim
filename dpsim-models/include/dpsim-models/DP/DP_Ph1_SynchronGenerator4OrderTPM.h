@@ -39,6 +39,8 @@ namespace Ph1 {
 		Matrix mEh = Matrix::Zero(2,1);
 		/// Modified history voltage of TPM model
         const Attribute<Complex>::Ptr mEhMod;
+		/// Norton equivalent current of EhMod
+		Complex mIhMod;
 
 		// Variables saving values for later use
 		/// Idp at k-1
