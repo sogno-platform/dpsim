@@ -20,7 +20,7 @@ DP::Ph1::SynchronGenerator4OrderTPM::SynchronGenerator4OrderTPM
 	mPhaseType = PhaseType::Single;
 	setTerminalNumber(1);
 
-	/// initialize attributes
+	// initialize attributes
 	mNumIter = mAttributes->create<Int>("NIterations", 0);
 
 	// model variables
@@ -67,6 +67,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::calculateStateSpaceMatrices() {
 					0.0,							(mLd-mLd_t) / mTd0_t / mLd_t;
 	mCStateSpace <<	0,
 					1 / mTd0_t;
+	Math::calculateStateSpaceTrapezoidalMatrices(mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, mAdStateSpace, mBdStateSpace, mCdStateSpace);
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::specificInitialization() {
@@ -198,7 +199,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
 
 	// correct electrical vars
 	// calculate emf at j and k+1 (trapezoidal rule)
-	(**mEdq_t) = Math::StateSpaceTrapezoidal(mEdqtPrevStep, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mVdq, mVdqPrevStep);
+	(**mEdq_t) = Math::applyStateSpaceTrapezoidalMatrices(mAdStateSpace, mBdStateSpace, mCdStateSpace * **mEf, mEdqtPrevStep, **mVdq, mVdqPrevStep);
 
 	// calculate stator currents at j and k+1
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;

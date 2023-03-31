@@ -308,6 +308,23 @@ Matrix Math::StateSpaceEuler(Matrix states, Matrix A, Matrix input, Real dt) {
 	return states + dt * ( A*states + input );
 }
 
+void Math::calculateStateSpaceTrapezoidalMatrices(const Matrix & A, const Matrix & B, const Matrix & C, const Real & dt, Matrix & Ad, Matrix & Bd, Matrix & Cd) {
+	Matrix::Index n = A.rows();
+	Matrix I = Matrix::Identity(n, n);
+
+	Matrix F1 = I + (dt/2.) * A;
+	Matrix F2 = I - (dt/2.) * A;
+	Matrix F2inv = F2.inverse();
+
+	Ad = F2inv*F1;
+	Bd = F2inv*(dt/2.)*B;
+	Cd = F2inv*dt*C;
+}
+
+Matrix Math::applyStateSpaceTrapezoidalMatrices(const Matrix & Ad, const Matrix & Bd, const Matrix & Cd, const Matrix & statesPrevStep, const Matrix & inputCurrStep, const Matrix & inputPrevStep) {
+	return Ad*statesPrevStep + Bd*(inputCurrStep + inputPrevStep) + Cd;
+}
+
 void Math::FFT(std::vector<Complex>& samples) {
 	// DFT
 	size_t N = samples.size();
