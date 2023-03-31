@@ -43,6 +43,12 @@ namespace Ph1 {
 		Complex mIhMod;
 
 		// Variables saving values for later use
+		/// Trapedzoidal based state space matrix Ad
+		Matrix mAdStateSpace;
+		/// Trapedzoidal based state space matrix Bd
+		Matrix mBdStateSpace;
+		/// Trapedzoidal based state space matrix Cd
+		Matrix mCdStateSpace;
 		/// Idp at k-1
 		MatrixComp mIdpTwoPrevStep;
 		/// Vdq at k
