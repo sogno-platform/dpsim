@@ -71,6 +71,12 @@ namespace Ph1 {
 		Matrix mEdqts = Matrix::Zero(4,1);
 
 		// Variables saving values for later use
+		/// Trapedzoidal based state space matrix Ad
+		Matrix mAdTrapezoidal;
+		/// Trapedzoidal based state space matrix Bd
+		Matrix mBdTrapezoidal;
+		/// Trapedzoidal based state space matrix Cd
+		Matrix mCdTrapezoidal;
 		/// Edqts at k
 		Matrix mEdqtsPrevStep;
 		/// Vdq at j-1

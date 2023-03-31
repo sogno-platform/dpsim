@@ -69,6 +69,12 @@ namespace Ph1 {
 		const Attribute<Matrix>::Ptr mEdq_t;
 
 		// Variables saving values for later use
+		/// Trapedzoidal based state space matrix Ad
+		Matrix mAdTrapezoidal;
+		/// Trapedzoidal based state space matrix Bd
+		Matrix mBdTrapezoidal;
+		/// Trapedzoidal based state space matrix Cd
+		Matrix mCdTrapezoidal;
 		/// Edqt at k
 		Matrix mEdqtPrevStep;
 		/// Idq at k
