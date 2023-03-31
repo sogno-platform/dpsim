@@ -65,13 +65,16 @@ void DP::Ph1::SynchronGenerator4OrderPCM::specificInitialization() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::calculateStateSpaceMatrices() {
-	// Initialize matrices of state representation of predictor step
+	// Initialize matrices of state representation
 	mAStateSpace <<	-mLq / mTq0_t / mLq_t,	0,
               		0,						-mLd / mTd0_t / mLd_t;
 	mBStateSpace <<	(mLq-mLq_t) / mTq0_t / mLq_t,	0.0,
 					0.0,							(mLd-mLd_t) / mTd0_t / mLd_t;
 	mCStateSpace <<	0,
 					1 / mTd0_t;
+
+	// Precalculate trapezoidal based matrices (avoids redundant matrix inversions in correction steps)
+	Math::calculateStateSpaceTrapezoidalMatrices(mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, mAdTrapezoidal, mBdTrapezoidal, mCdTrapezoidal);
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
@@ -109,7 +112,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
 
 	// correct electrical vars
 	// calculate emf at j and k+1 (trapezoidal rule)
-	(**mEdq_t) = Math::StateSpaceTrapezoidal(mEdqtPrevStep, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mVdq, mVdqPrevStep);
+	(**mEdq_t) = Math::applyStateSpaceTrapezoidalMatrices(mAdTrapezoidal, mBdTrapezoidal, mCdTrapezoidal * **mEf, mEdqtPrevStep, **mVdq, mVdqPrevStep);
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
 	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
