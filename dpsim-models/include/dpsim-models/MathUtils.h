@@ -88,6 +88,11 @@ namespace CPS {
 		static Real StateSpaceEuler(Real states, Real A, Real B, Real dt, Real u);
 		static Real StateSpaceEuler(Real states, Real A, Real B, Real C, Real dt, Real u);
 
+		/// Calculate the discretized state space matrices Ad, Bd, Cd using trapezoidal rule
+		static void calculateStateSpaceTrapezoidalMatrices(const Matrix & A, const Matrix & B, const Matrix & C, const Real & dt, Matrix & Ad, Matrix & Bd, Matrix & Cd);
+		/// Apply the trapezoidal based state space matrices Ad, Bd, Cd to get the states at the current time step
+		static Matrix applyStateSpaceTrapezoidalMatrices(const Matrix & Ad, const Matrix & Bd, const Matrix & Cd, const Matrix & statesPrevStep, const Matrix & inputCurrStep, const Matrix & inputPrevStep);
+
 		static void FFT(std::vector<Complex>& samples);
 
 		static Complex rotatingFrame2to1(Complex f2, Real theta1, Real theta2);
