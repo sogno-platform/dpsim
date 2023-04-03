@@ -68,7 +68,7 @@ void MnaSolverPlugin<VarType>::recomputeSystemMatrix(Real time) {
 	// Refactorization of matrix assuming that structure remained
 	// constant by omitting analyzePattern
 	if (mPlugin->lu_decomp(&matrix) != 0) {
-		SPDLOG_LOGGER_ERROR(mSLog, "error recomputing decomposition");
+		SPDLOG_LOGGER_ERROR(this->mSLog, "error recomputing decomposition");
 		return;
 	}
 	++this->mNumRecomputations;
@@ -86,18 +86,18 @@ void MnaSolverPlugin<VarType>::initialize() {
 	String pluginFileName = mPluginName + ".so";
 
 	if ((mDlHandle = dlopen(pluginFileName.c_str(), RTLD_NOW)) == nullptr) {
-		SPDLOG_LOGGER_ERROR(mSLog, "error opening dynamic library {}: {}", mPluginName, dlerror());
+		SPDLOG_LOGGER_ERROR(this->mSLog, "error opening dynamic library {}: {}", mPluginName, dlerror());
 		throw CPS::SystemError("error opening dynamic library.");
 	}
 
 	get_mna_plugin = (struct dpsim_mna_plugin* (*)(const char *)) dlsym(mDlHandle, "get_mna_plugin");
 	if (get_mna_plugin == NULL) {
-		SPDLOG_LOGGER_ERROR(mSLog, "error reading symbol from library {}: {}", mPluginName, dlerror());
+		SPDLOG_LOGGER_ERROR(this->mSLog, "error reading symbol from library {}: {}", mPluginName, dlerror());
 		throw CPS::SystemError("error reading symbol from library.");
 	}
 
 	if ((mPlugin = get_mna_plugin(mPluginName.c_str())) == nullptr) {
-		SPDLOG_LOGGER_ERROR(mSLog, "error getting plugin class");
+		SPDLOG_LOGGER_ERROR(this->mSLog, "error getting plugin class");
 		throw CPS::SystemError("error getting plugin class.");
 	}
 
@@ -112,7 +112,7 @@ void MnaSolverPlugin<VarType>::initialize() {
 	};
 
 	if (mPlugin->init(&matrix) != 0) {
-		SPDLOG_LOGGER_ERROR(mSLog, "error initializing plugin");
+		SPDLOG_LOGGER_ERROR(this->mSLog, "error initializing plugin");
 		return;
 	}
 }
