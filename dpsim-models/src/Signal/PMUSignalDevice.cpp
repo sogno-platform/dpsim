@@ -8,10 +8,10 @@ using namespace CPS::Signal;
 PMUSignalDevice::PMUSignalDevice(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
     /// CHECK: Which of these really need to be attributes?
-    mInput(Attribute<MatrixComp>::createDynamic("input", mAttributes)),
+    mInput(mAttributes->createDynamic<MatrixComp>("input")), 
 
     //*** Important: the output attribute is a matrix component, which should be initialized as Zero(1,1)
-    mOutput(Attribute<MatrixComp>::create("output", mAttributes, MatrixComp::Zero(1,1))){ }
+    mOutput(mAttributes->create<MatrixComp>("output", MatrixComp::Zero(1,1))){ }
 
    
 // }
