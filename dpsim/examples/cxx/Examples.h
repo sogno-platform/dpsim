@@ -472,6 +472,52 @@ namespace ThreeBus {
     };
 }
 
+namespace Three_bus_cfg{
+    struct ScenarioConfig {
+
+        //-----------Network-----------//
+        Real Vnom = 6.9e3;
+        Real nomFreq = 50;
+        Real nomOmega= nomFreq* 2*PI;
+
+        //-----------Generator 1 (bus1)-----------//
+        Real nomPower_G1 = 100e6;
+        Real nomPhPhVoltRMS_G1 = 6.9e3;
+        Real nomFreq_G1 = 50;
+       
+        // Initialization parameters
+        Real initActivePower_G1 = 0.3386e6;
+        Real initReactivePower_G1= 0.3222e6;
+        Real setPointVoltage_G1=nomPhPhVoltRMS_G1;
+
+        //-----------Generator 2 (bus2)-----------//
+        Real nomPower_G2 = 100e6;
+        Real nomPhPhVoltRMS_G2 = 6.9e3;
+        Real nomFreq_G2 = 50;
+       
+        // Initialization parameters
+        Real initActivePower_G2 = 0.2222e6;
+        Real initReactivePower_G2=(-1)*0.0285e6;
+        Real setPointVoltage_G2=nomPhPhVoltRMS_G2;
+
+        //-----------Transformers-----------//
+        Real t1_ratio=1;
+        Real t2_ratio=1;
+
+        //-----------Load (bus3)-----------
+        Real activePower_L= 0.5556e6;
+        Real reactivePower_L= 0.2778e6;
+
+        // -----------Transmission Lines-----------//
+        
+        Real lineResistance = 0.025;
+        Real lineInductance = 0.075/(2*PI*50);
+        Real lineCapacitance = 0;
+       
+    };
+
+}
+
 namespace SGIB {
 
     struct ScenarioConfig {

@@ -131,3 +131,4 @@
 #include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>
 #include <dpsim-models/Signal/CosineFMGenerator.h>
+#include <dpsim-models/Signal/PMUSignalDevice.h>

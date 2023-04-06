@@ -89,6 +89,8 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
 	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
 
+	Circuits/Three_bus_sim.cpp
+
 )
 
 set(SYNCGEN_SOURCES
