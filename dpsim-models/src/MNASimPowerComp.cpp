@@ -84,6 +84,7 @@ void MNASimPowerComp<VarType>::mnaAddPostStepDependencies(AttributeBase::List &p
 template<typename VarType>
 void MNASimPowerComp<VarType>::mnaApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx) {
 	this->mnaCompApplySystemMatrixStampHarm(systemMatrix, freqIdx);
+	systemMatrix.makeCompressed();
 };
 
 template<typename VarType>

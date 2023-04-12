@@ -46,7 +46,7 @@ namespace DPsim
 		auto Ap = Eigen::internal::convert_index<uint__t *>(systemMatrix.outerIndexPtr());
 		auto Ai = Eigen::internal::convert_index<uint__t *>(systemMatrix.innerIndexPtr());
 		real__t* Ax = Eigen::internal::convert_index<real__t *>(systemMatrix.valuePtr());
-	    uint__t nnz = Eigen::internal::convert_index<uint__t>(systemMatrix.nonZeros());
+	    uint__t _nnz = Eigen::internal::convert_index<uint__t>(systemMatrix.nonZeros());
 
 
 		this->changedEntries = listVariableSystemMatrixEntries;
@@ -60,8 +60,12 @@ namespace DPsim
 			varying_columns.push_back(changedEntry.second);
 		}
 
-		NicsLU_CreateMatrix(nicslu, n, nnz, Ax, Ai, Ap);
+		NicsLU_CreateMatrix(nicslu, n, _nnz, Ax, Ai, Ap);
 		NicsLU_Analyze(nicslu, &varying_rows[0], &varying_columns[0], varying_entries);
+
+		/* store non-zero value of current preprocessed matrix. only used until
+			* to-do in refactorize-function is resolved. Can be removed then. */
+		nnz = Eigen::internal::convert_index<Int>(systemMatrix.nonZeros());
 	}
 
 	void NICSLUAdapter::factorize(SparseMatrix &systemMatrix)
@@ -87,10 +91,13 @@ namespace DPsim
 
 	void NICSLUAdapter::refactorize(SparseMatrix &systemMatrix)
 	{
-		if (systemMatrix.nonZeros() != nicslu->nnz) {
+		if (Eigen::internal::convert_index<Int>(systemMatrix.nonZeros()) != nnz)
+		{
 			preprocessing(systemMatrix, this->changedEntries);
         	factorize(systemMatrix);
-		} else {
+		}
+		else
+		{
 			// get new matrix values
 			real__t* Ax = Eigen::internal::convert_index<real__t *>(systemMatrix.valuePtr());
 
@@ -109,59 +116,47 @@ namespace DPsim
 
 	void NICSLUAdapter::partialRefactorize(SparseMatrix &systemMatrix, std::vector<std::pair<UInt, UInt>> &listVariableSystemMatrixEntries)
 	{
-		if (systemMatrix.nonZeros() != nnz)
+		if (Eigen::internal::convert_index<Int>(systemMatrix.nonZeros()) != nnz)
 		{
 			preprocessing(systemMatrix, listVariableSystemMatrixEntries);
 			factorize(systemMatrix);
 		}
 		else
 		{
+			/* get new matrix values */
+			real__t* Ax = Eigen::internal::convert_index<real__t *>(systemMatrix.valuePtr());
+
+			int numOk = NICS_OK;
+
 			if(mPartialRefactorizationMethod == PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH)
 			{
-				/* factorization path mode */
+				// factorization path mode
 
-				/* get new matrix values */
-				real__t* Ax = Eigen::internal::convert_index<real__t *>(systemMatrix.valuePtr());
-
-				/* Refactorize partially with new values */
-				int numOk = NicsLU_Partial_Factorization_Path(nicslu, Ax);
-
-				/* check whether a pivot became too large or too small */
-				if (numOk == NICSLU_NUMERIC_OVERFLOW)
-				{
-					/* if so, reset matrix values and re-do factorization
-					* only needs to Reset Matrix Values, if analyze_pattern is not called
-					*/
-					numOk = NicsLU_ResetMatrixValues(nicslu, Ax);
-					numOk = NicsLU_Factorize(nicslu);
-				}
+				// Refactorize partially with new values
+				numOk = NicsLU_Partial_Factorization_Path(nicslu, Ax);
 			}
 			else if(mPartialRefactorizationMethod == PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART)
 			{
 				// restarting partial refactorisation
-				// either BRA or AMD ordering ("canadian method")
-
-				// get new matrix values
-				real__t* Ax = Eigen::internal::convert_index<real__t *>(systemMatrix.valuePtr());
 
 				// Refactorize with new values
-				int numOk = NicsLU_Partial_Refactorization_Restart(nicslu, Ax);
-
-				// check whether a pivot became too large or too small
-				if (numOk == NICSLU_NUMERIC_OVERFLOW)
-				{
-					// if so, reset matrix values and re-do computation
-					// only needs to Reset Matrix Values, if analyze_pattern is not called
-					numOk = NicsLU_ResetMatrixValues(nicslu, Ax);
-					numOk = NicsLU_Factorize(nicslu);
-				}
+				numOk = NicsLU_Partial_Refactorization_Restart(nicslu, Ax);
 			}
 			else
 			{
 				// no partial refactorization requested
 				// NOTE: now the check whether the nnz(A) match is executed twice
 				// this will be removed when the issue of matrix nonzeros is fixed.
-				refactorize(systemMatrix); 
+				refactorize(systemMatrix);
+			}
+
+			// check whether a pivot became too large or too small
+			if (numOk == NICSLU_NUMERIC_OVERFLOW)
+			{
+				// if so, reset matrix values and re-do computation
+				// only needs to Reset Matrix Values, if analyze_pattern is not called
+				numOk = NicsLU_ResetMatrixValues(nicslu, Ax);
+				numOk = NicsLU_Factorize(nicslu);
 			}
 		}
 	}
@@ -194,7 +189,7 @@ namespace DPsim
 		}
 
 		SPDLOG_LOGGER_INFO(mSLog, "Matrix is permuted and scaled " + mConfiguration.getMC64String());
-		
+
 		// decide whether to use additional scaling during factorization. default is 0
 		// according to NICSLU doc: different scaling methods may have effect in frequency domain simulation
 		// but no effect in time-domain transient simulation
@@ -210,7 +205,7 @@ namespace DPsim
 			default:
 				nicslu->cfgi[2] = 0;
 		}
-		
+
 		if(nicslu->cfgi[2] != 0)
 		{
 			SPDLOG_LOGGER_INFO(mSLog, "Matrix is additionally scaled using " + mConfiguration.getScalingMethodString());
