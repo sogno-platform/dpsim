@@ -351,8 +351,10 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment* line) {
 
 	// By default there is always a small conductance to ground to
 	// avoid problems with floating nodes.
-	Real capacitance = mShuntCapacitorValue;
-	Real conductance = mShuntConductanceValue;
+	//Real capacitance = mShuntCapacitorValue;
+	//Real conductance = mShuntConductanceValue;
+	Real capacitance=0;
+	Real conductance=0;
 
 	if(line->bch.value > 1e-9 && !mSetShuntCapacitor)
 		capacitance = Real(line->bch.value / mOmega);
