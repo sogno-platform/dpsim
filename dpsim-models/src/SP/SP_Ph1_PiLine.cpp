@@ -36,8 +36,15 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance,
 
   **mSeriesRes = resistance;
   **mSeriesInd = inductance;
+  **mParallelCap = capacitance;
+  **mParallelCond = conductance;
+
   SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]",
                      **mSeriesRes, **mSeriesInd);
+  SPDLOG_LOGGER_INFO(mSLog, "Capacitance={} [F] Conductance={} [S]",
+                     **mParallelCap, **mParallelCond);
+  mSLog->flush();
+  mParametersSet = true;
 
   if (capacitance > 0) {
     **mParallelCap = capacitance;
@@ -110,8 +117,12 @@ void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
   //create the element admittance matrix
   Complex y =
       Complex(1, 0) / Complex(mSeriesResPerUnit, 1. * mSeriesIndPerUnit);
-  Complex ys =
-      Complex(mParallelCondPerUnit, 1. * mParallelCapPerUnit) / Complex(2, 0);
+  Complex ys;
+  if (mParallelCondPerUnit == 0 && mParallelCapPerUnit == 0)
+    ys = Complex(0, 0);
+  else
+    ys =
+        Complex(mParallelCondPerUnit, 1. * mParallelCapPerUnit) / Complex(2, 0);
 
   //Fill the internal matrix
   mY_element = MatrixComp(2, 2);
@@ -130,9 +141,6 @@ void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
         ss << "Line>>" << this->name()
            << ": infinite or nan values in the element Y at: " << i << "," << j;
         throw std::invalid_argument(ss.str());
-        std::cout << "Line>>" << this->name()
-                  << ": infinite or nan values in the element Y at: " << i
-                  << "," << j << std::endl;
       }
 
   //set the circuit matrix values
