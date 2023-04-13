@@ -34,23 +34,10 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capac
 
 	**mSeriesRes = resistance;
 	**mSeriesInd = inductance;
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]", **mSeriesRes, **mSeriesInd);
+	**mParallelCap = capacitance;
+	**mParallelCond = conductance;
 
-    if(capacitance > 0){
-        **mParallelCap = capacitance;
-    }else{
-        **mParallelCap = 1e-12;
-        SPDLOG_LOGGER_WARN(mSLog, "Zero value for Capacitance, setting default value of C={} [F]", **mParallelCap);
-    }
-    if(conductance > 0){
-        **mParallelCond = conductance;
-    }else{
-        if (mBehaviour == Behaviour::Initialization)
-			**mParallelCond = (conductance >= 0) ? conductance : 1e-6; // init mode for initFromPowerFlow of mna system components
-		else
-			**mParallelCond = (conductance > 0) ? conductance : 1e-6;
-        SPDLOG_LOGGER_WARN(mSLog, "Zero value for Conductance, setting default value of G={} [S]", **mParallelCond);
-    }
+	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]", **mSeriesRes, **mSeriesInd);
     SPDLOG_LOGGER_INFO(mSLog, "Capacitance={} [F] Conductance={} [S]", **mParallelCap, **mParallelCond);
 	mSLog->flush();
 	mParametersSet = true;
@@ -91,7 +78,11 @@ void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 
 	//create the element admittance matrix
 	Complex y = Complex(1, 0) / Complex(mSeriesResPerUnit, 1. * mSeriesIndPerUnit);
-	Complex ys = Complex(mParallelCondPerUnit, 1. * mParallelCapPerUnit) / Complex(2, 0);
+	Complex ys;
+	if (mParallelCondPerUnit==0 && mParallelCapPerUnit == 0)
+		ys = Complex(0,0);
+	else
+		ys = Complex(mParallelCondPerUnit, 1. * mParallelCapPerUnit) / Complex(2, 0);
 
 	//Fill the internal matrix
 	mY_element = MatrixComp(2, 2);
@@ -108,7 +99,6 @@ void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 				std::stringstream ss;
 				ss << "Line>>" << this->name() << ": infinite or nan values in the element Y at: " << i << "," << j;
 				throw std::invalid_argument(ss.str());
-				std::cout << "Line>>" << this->name() << ": infinite or nan values in the element Y at: " << i << "," << j << std::endl;
 			}
 
 	//set the circuit matrix values

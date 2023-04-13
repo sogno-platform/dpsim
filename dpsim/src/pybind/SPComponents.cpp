@@ -71,7 +71,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
 
 	py::class_<CPS::SP::Ph1::PiLine, std::shared_ptr<CPS::SP::Ph1::PiLine>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "PiLine", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("set_parameters", &CPS::SP::Ph1::PiLine::setParameters, "R"_a, "L"_a, "C"_a=-1, "G"_a=-1)
+        .def("set_parameters", &CPS::SP::Ph1::PiLine::setParameters, "R"_a, "L"_a, "C"_a=0, "G"_a=0)
 		.def("set_base_voltage", &CPS::SP::Ph1::PiLine::setBaseVoltage, "base_voltage"_a)
 		.def("connect", &CPS::SP::Ph1::PiLine::connect);
 
