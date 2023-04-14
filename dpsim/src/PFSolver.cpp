@@ -182,79 +182,88 @@ void PFSolver::determinePFBusType() {
       }
     }
 
-    // determine powerflow bus types according connected type of connected components
-    // only PQ type component connected -> set as PQ bus
-    if (!connectedPV && connectedPQ && !connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
-          mSLog, "{}: only PQ type component connected -> set as PQ bus",
-          node->name());
-      mPQBusIndices.push_back(node->matrixNodeIndex());
-      mPQBuses.push_back(node);
-    } // no component connected -> set as PQ bus (P & Q will be zero)
-    else if (!connectedPV && !connectedPQ && !connectedVD) {
-      SPDLOG_LOGGER_DEBUG(mSLog, "{}: no component connected -> set as PQ bus",
-                          node->name());
-      mPQBusIndices.push_back(node->matrixNodeIndex());
-      mPQBuses.push_back(node);
-    } // only PV type component connected -> set as PV bus
-    else if (connectedPV && !connectedPQ && !connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
-          mSLog, "{}: only PV type component connected -> set as PV bus",
-          node->name());
-      mPVBusIndices.push_back(node->matrixNodeIndex());
-      mPVBuses.push_back(node);
-    } // PV and PQ type component connected -> set as PV bus (TODO: bus type should be modifiable by user afterwards)
-    else if (connectedPV && connectedPQ && !connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
-          mSLog, "{}: PV and PQ type component connected -> set as PV bus",
-          node->name());
-      mPVBusIndices.push_back(node->matrixNodeIndex());
-      mPVBuses.push_back(node);
-    } // only VD type component connected -> set as VD bus
-    else if (!connectedPV && !connectedPQ && connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
-          mSLog, "{}: only VD type component connected -> set as VD bus",
-          node->name());
-      mVDBusIndices.push_back(node->matrixNodeIndex());
-      mVDBuses.push_back(node);
-    } // VD and PV type component connect -> set as VD bus
-    else if (connectedPV && !connectedPQ && connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
-          mSLog, "{}: VD and PV type component connect -> set as VD bus",
-          node->name());
-      mVDBusIndices.push_back(node->matrixNodeIndex());
-      mVDBuses.push_back(node);
-    } // VD, PV and PQ type component connect -> set as VD bus
-    else if (connectedPV && connectedPQ && connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
-          mSLog, "{}: VD, PV and PQ type component connect -> set as VD bus",
-          node->name());
-      mVDBusIndices.push_back(node->matrixNodeIndex());
-      mVDBuses.push_back(node);
-    } else {
-      std::stringstream ss;
-      ss << "Node>>" << node->name()
-         << ": combination of connected components is invalid";
-      throw std::invalid_argument(ss.str());
-    }
-  }
+		for (auto comp : mSystem.mComponentsAtNode[node]) {
+			if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
+				if (load->mPowerflowBusType == CPS::PowerflowBusType::PQ) {
+					connectedPQ = true;
+				}
+			}
+			else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
+				if (gen->mPowerflowBusType == CPS::PowerflowBusType::PV) {
+					connectedPV = true;
+				}
+				else if (gen->mPowerflowBusType == CPS::PowerflowBusType::VD) {
+					connectedVD = true;
+				}
+			}
+			else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
+				if (extnet->mPowerflowBusType == CPS::PowerflowBusType::VD) {
+					connectedVD = true;
+				}
+				else if (extnet->mPowerflowBusType == CPS::PowerflowBusType::PV) {
+					connectedPV = true;
+				}
+			}
+		}
 
-  mNumPQBuses = mPQBusIndices.size();
-  mNumPVBuses = mPVBusIndices.size();
-  mNumVDBuses = mVDBusIndices.size();
-  mNumUnknowns = 2 * mNumPQBuses + mNumPVBuses;
+		// determine powerflow bus types according connected type of connected components
+		// only PQ type component connected -> set as PQ bus
+		if (!connectedPV && connectedPQ && !connectedVD) {
+			SPDLOG_LOGGER_INFO(mSLog, "{}: only PQ type component connected -> set as PQ bus", node->name());
+			mPQBusIndices.push_back(node->matrixNodeIndex());
+			mPQBuses.push_back(node);
+		} // no component connected -> set as PQ bus (P & Q will be zero)
+		else if (!connectedPV && !connectedPQ && !connectedVD) {
+			SPDLOG_LOGGER_INFO(mSLog, "{}: no component connected -> set as PQ bus", node->name());
+			mPQBusIndices.push_back(node->matrixNodeIndex());
+			mPQBuses.push_back(node);
+		} // only PV type component connected -> set as PV bus
+		else if (connectedPV && !connectedPQ && !connectedVD) {
+			SPDLOG_LOGGER_INFO(mSLog, "{}: only PV type component connected -> set as PV bus", node->name());
+			mPVBusIndices.push_back(node->matrixNodeIndex());
+			mPVBuses.push_back(node);
+		} // PV and PQ type component connected -> set as PV bus (TODO: bus type should be modifiable by user afterwards)
+		else if (connectedPV && connectedPQ && !connectedVD) {
+			SPDLOG_LOGGER_INFO(mSLog, "{}: PV and PQ type component connected -> set as PV bus", node->name());
+			mPVBusIndices.push_back(node->matrixNodeIndex());
+			mPVBuses.push_back(node);
+		} // only VD type component connected -> set as VD bus
+		else if (!connectedPV && !connectedPQ && connectedVD) {
+			SPDLOG_LOGGER_INFO(mSLog, "{}: only VD type component connected -> set as VD bus", node->name());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
+			mVDBuses.push_back(node);
+		} // VD and PV type component connect -> set as VD bus
+		else if (connectedPV && !connectedPQ && connectedVD) {
+			SPDLOG_LOGGER_INFO(mSLog, "{}: VD and PV type component connect -> set as VD bus", node->name());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
+			mVDBuses.push_back(node);
+		} // VD, PV and PQ type component connect -> set as VD bus
+		else if (connectedPV && connectedPQ && connectedVD) {
+			SPDLOG_LOGGER_INFO(mSLog, "{}: VD, PV and PQ type component connect -> set as VD bus", node->name());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
+			mVDBuses.push_back(node);
+		}
+		else {
+			std::stringstream ss;
+			ss << "Node>>" << node->name() << ": combination of connected components is invalid";
+			throw std::invalid_argument(ss.str());
+		}
+	}
 
-  // Aggregate PQ bus and PV bus index vectors for easy handling in solver
-  mPQPVBusIndices.reserve(mNumPQBuses + mNumPVBuses);
-  mPQPVBusIndices.insert(mPQPVBusIndices.end(), mPQBusIndices.begin(),
-                         mPQBusIndices.end());
-  mPQPVBusIndices.insert(mPQPVBusIndices.end(), mPVBusIndices.begin(),
-                         mPVBusIndices.end());
+    mNumPQBuses = mPQBusIndices.size();
+	mNumPVBuses = mPVBusIndices.size();
+    mNumVDBuses = mVDBusIndices.size();
+    mNumUnknowns = 2*mNumPQBuses + mNumPVBuses;
 
-  SPDLOG_LOGGER_INFO(mSLog, "#### Create index vectors for power flow solver:");
-  SPDLOG_LOGGER_INFO(mSLog, "PQ Buses: {}", logVector(mPQBusIndices));
-  SPDLOG_LOGGER_INFO(mSLog, "PV Buses: {}", logVector(mPVBusIndices));
-  SPDLOG_LOGGER_INFO(mSLog, "VD Buses: {}", logVector(mVDBusIndices));
+	// Aggregate PQ bus and PV bus index vectors for easy handling in solver
+	mPQPVBusIndices.reserve(mNumPQBuses + mNumPVBuses);
+    mPQPVBusIndices.insert(mPQPVBusIndices.end(), mPQBusIndices.begin(), mPQBusIndices.end());
+    mPQPVBusIndices.insert(mPQPVBusIndices.end(), mPVBusIndices.begin(), mPVBusIndices.end());
+
+	SPDLOG_LOGGER_INFO(mSLog, "#### Create index vectors for power flow solver:");
+    SPDLOG_LOGGER_INFO(mSLog, "PQ Buses: {}", logVector(mPQBusIndices));
+    SPDLOG_LOGGER_INFO(mSLog, "PV Buses: {}", logVector(mPVBusIndices));
+    SPDLOG_LOGGER_INFO(mSLog, "VD Buses: {}", logVector(mVDBusIndices));
 }
 
 void PFSolver::determineNodeBaseVoltages() {
@@ -293,23 +302,24 @@ void PFSolver::determineNodeBaseVoltages() {
                 }
             }
             else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
-                    baseVoltage_ = gen->attributeTyped<CPS::Real>("base_Voltage")->get();
-                    SPDLOG_LOGGER_INFO(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, gen->name(), node->name());
-                    break;
-                }
-			else if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
-                    baseVoltage_ = load->attributeTyped<CPS::Real>("V_nom")->get();
-                    mSLog->info("Choose base voltage of {}V to convert pu-solution of {}.", baseVoltage_, load->name(), node->name());
-                    break;
-                }
+                baseVoltage_ = gen->attributeTyped<CPS::Real>("base_Voltage")->get();
+                SPDLOG_LOGGER_INFO(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, gen->name(), node->name());
+                break;
+            }
+			/*else if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
+                baseVoltage_ = load->attributeTyped<CPS::Real>("V_nom")->get();
+                mSLog->info("Choose base voltage of {}V to convert pu-solution of {}.", baseVoltage_, load->name(), node->name());
+                break;
+            }
+			*/
 			else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
-                    baseVoltage_ = extnet->attributeTyped<CPS::Real>("base_Voltage")->get();
-                    mSLog->info("Choose base voltage of {}V to convert pu-solution of {}.", baseVoltage_, extnet->name(), node->name());
-                    break;
-                }
+                baseVoltage_ = extnet->attributeTyped<CPS::Real>("base_Voltage")->get();
+                mSLog->info("Choose base voltage of {}V to convert pu-solution of {}.", baseVoltage_, extnet->name(), node->name());
+                break;
+            }
             else {
                 SPDLOG_LOGGER_WARN(mSLog, "Unable to get base voltage at {}", node->name());
-                }
+            }
         }
       } else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen =
                      std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(
