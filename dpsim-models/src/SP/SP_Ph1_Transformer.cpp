@@ -14,8 +14,8 @@ using namespace CPS;
 SP::Ph1::Transformer::Transformer(String uid, String name,
                                   Logger::Level logLevel,
                                   Bool withResistiveLosses)
-    : Base::Ph1::Transformer(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+    : Base::Ph1::Transformer(mAttributes), CompositePowerComp<Complex>(
+                                               uid, name, true, true, logLevel),
       mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
       mCurrent(mAttributes->create<MatrixComp>("current_vector")),
       mActivePowerBranch(mAttributes->create<Matrix>("p_branch_vector")),

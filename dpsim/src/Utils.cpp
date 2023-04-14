@@ -98,8 +98,8 @@ CommandLineArgs::CommandLineArgs(String nm, Real dt, Real d, Real sf, Int s,
           {"name", required_argument, 0, 'n', "NAME", "Name of log files"},
           {0}},
       timeStep(dt), duration(d), sysFreq(sf), scenario(s), logLevel(ll),
-      cliLogLevel(clill), name(nm), startSynch(ss), blocking(b), steadyInit(si),
-      solver{sd, st}, directImpl(mi), solverPluginName(spn) {}
+      cliLogLevel(clill), name(nm), startSynch(ss), blocking(b),
+      steadyInit(si), solver{sd, st}, directImpl(mi), solverPluginName(spn) {}
 
 void CommandLineArgs::parseArguments(int argc, char *argv[]) {
   mProgramName = argv[0];

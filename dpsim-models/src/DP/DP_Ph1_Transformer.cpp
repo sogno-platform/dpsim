@@ -13,8 +13,9 @@ using namespace CPS;
 DP::Ph1::Transformer::Transformer(String uid, String name,
                                   Logger::Level logLevel,
                                   Bool withResistiveLosses)
-    : Base::Ph1::Transformer(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
+    : Base::Ph1::Transformer(mAttributes), CompositePowerComp<Complex>(
+                                               uid, name, true, true,
+                                               logLevel) {
   if (withResistiveLosses)
     setVirtualNodeNumber(3);
   else
