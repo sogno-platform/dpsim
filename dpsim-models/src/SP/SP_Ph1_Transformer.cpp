@@ -194,11 +194,16 @@ void SP::Ph1::Transformer::mnaCompInitialize(Real omega, Real timeStep, Attribut
 void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
 	if (terminalNotGrounded(0)) {
+<<<<<<< HEAD
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), 1. / mImpedance);
+=======
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), 1. / mImpedance);
+>>>>>>> b615f3a4 (delete virtual nodes of SP Transformer)
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			(Complex(1, 0) / mImpedance).real(), (Complex(1, 0) / mImpedance).imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 	}
 	if (terminalNotGrounded(1)) {
+<<<<<<< HEAD
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), std::pow(**mRatio,2) / mImpedance );
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			(std::pow(**mRatio,2) / mImpedance).real(), (std::pow(**mRatio,2) / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
@@ -213,6 +218,20 @@ void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& system
 	}
 
 	mSLog->flush();
+=======
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), std::pow(**mRatio,2) / mImpedance );
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+			(std::pow(**mRatio,2) / mImpedance).real(), (std::pow(**mRatio,2) / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
+	}
+	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -**mRatio / mImpedance );
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+			(-**mRatio / mImpedance).real(), (-**mRatio / mImpedance).imag(), matrixNodeIndex(0), matrixNodeIndex(1));
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -**mRatio / mImpedance );
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+			(-**mRatio / mImpedance).real(), (-**mRatio / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(0));
+	}
+>>>>>>> b615f3a4 (delete virtual nodes of SP Transformer)
 }
 
 void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, 
@@ -231,6 +250,7 @@ void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount, Attribu
 void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v0 - v1
 	(**mIntfVoltage)(0, 0) = 0.0;
+<<<<<<< HEAD
 	if (terminalNotGrounded(0))
 		(**mIntfVoltage)(0, 0) += Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	if (terminalNotGrounded(1)) 
@@ -240,4 +260,23 @@ void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	// primary side current flowing into node 0
 	(**mIntfCurrent)(0, 0) = -(**mIntfVoltage)(0, 0) / mImpedance;
+=======
+	if (terminalNotGrounded(0)) {
+		(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	}
+	if (terminalNotGrounded(0)) {
+		(**mIntfVoltage)(0, 0) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+	}
+	
+}
+
+void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
+	(**mIntfCurrent)(0, 0) = 0.0;
+	if (terminalNotGrounded(0)) {
+		(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)) / mImpedance;
+	}
+	if (terminalNotGrounded(1)) {
+		(**mIntfCurrent)(0, 0) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) * (**mRatio / mImpedance);
+	}
+>>>>>>> b615f3a4 (delete virtual nodes of SP Transformer)
 }
