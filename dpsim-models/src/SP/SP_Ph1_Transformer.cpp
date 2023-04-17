@@ -64,6 +64,8 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mReactance = mNominalOmega * **mInductance;
 	mImpedance = { **mResistance, mReactance };
 	SPDLOG_LOGGER_INFO(mSLog, "Impedance={} [Ohm] (referred to primary side)", mImpedance);
+	SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)", mReactance);
+	mSLog->flush();
 
 	// Component parameters are referred to higher voltage side.
 	// Switch terminals to have terminal 0 at higher voltage side
