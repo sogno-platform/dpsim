@@ -8,12 +8,9 @@
 
 #pragma once
 
-#include <dpsim-models/CompositePowerComp.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBranch.h>
 #include <dpsim-models/Solver/MNAInterface.h>
-#include <dpsim-models/SP/SP_Ph1_Resistor.h>
-#include <dpsim-models/SP/SP_Ph1_Inductor.h>
-#include <dpsim-models/SP/SP_Ph1_Capacitor.h>
 #include <dpsim-models/Base/Base_Ph1_Transformer.h>
 
 namespace CPS {
@@ -21,35 +18,12 @@ namespace SP {
 namespace Ph1 {
 	/// Transformer that includes an inductance and resistance
 	class Transformer :
-		public CompositePowerComp<Complex>,
+		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Transformer,
 		public SharedFactory<Transformer>,
 		public PFSolverInterfaceBranch {
 
 	private:
-		/// Internal resistor to model losses
-		std::shared_ptr<SP::Ph1::Resistor> mSubResistor;
-		/// Internal inductor to model losses
-		std::shared_ptr<SP::Ph1::Inductor> mSubInductor;
-
-		/// Internal parallel resistance 1 as snubber
-		std::shared_ptr<SP::Ph1::Resistor> mSubSnubResistor1;
-		/// Internal parallel resistance 2 as snubber
-		std::shared_ptr<SP::Ph1::Resistor> mSubSnubResistor2;
-		/// Internal parallel capacitance 1 as snubber
-		std::shared_ptr<SP::Ph1::Capacitor> mSubSnubCapacitor1;
-		/// Internal parallel capacitance 2 as snubber
-		std::shared_ptr<SP::Ph1::Capacitor> mSubSnubCapacitor2;
-
-		/// Snubber resistance 1 [Ohm]
-		Real mSnubberResistance1;
-		/// Snubber resistance 2 [Ohm]
-		Real mSnubberResistance2;
-		/// Snubber capacitance 1 [F]
-		Real mSnubberCapacitance1;
-		/// Snubber capacitance 2 [F]
-		Real mSnubberCapacitance2;
-
         /// Transformer ratio magnitude
 		Real mRatioAbs = 1;
         /// Transformer ratio pase [deg]
@@ -59,8 +33,8 @@ namespace Ph1 {
 		/// Reactance [Ohm]
 		Real mReactance;
 
-		/// Leakage
-		Complex mLeakage;
+		/// Series impedance
+		Complex mImpedance;
 
 		/// base apparent power[VA]
 		Real mBaseApparentPower;
@@ -92,8 +66,6 @@ namespace Ph1 {
 		// #### Admittance matrix stamp ####
 		MatrixComp mY_element;
 
-		/// Boolean for considering resistive losses with sub resistor
-		Bool mWithResistiveLosses;
 	public:
 		/// base voltage [V]
 		const Attribute<Real>::Ptr mBaseVoltage;
@@ -114,12 +86,10 @@ namespace Ph1 {
 
 		/// Defines UID, name and logging level
 		Transformer(String uid, String name,
-			Logger::Level logLevel = Logger::Level::off, Bool withResistiveLosses = false);
+			Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level
 		Transformer(String name, Logger::Level logLevel = Logger::Level::off)
 			: Transformer(name, name, logLevel) { }
-
-		SimPowerComp<Complex>::Ptr clone(String name) override;
 
 		// #### General ####
 		/// Set transformer specific parameters (without rated power)
@@ -147,22 +117,19 @@ namespace Ph1 {
 
 		// #### MNA Section ####
 		/// Initializes internal variables of the component
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
 		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
-		/// Updates internal current variable of the component
-		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
+		///
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, 
+			AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, 
+			Attribute<Matrix>::Ptr &leftVector) override;
+		/// MNA post step operations
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// Updates internal voltage variable of the component
 		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
-		/// MNA pre step operations
-		void mnaParentPreStep(Real time, Int timeStepCount) override;
-		/// MNA post step operations
-		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
-		/// Add MNA pre step dependencies
-		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
-		/// Add MNA post step dependencies
-		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-
+		/// Updates internal current variable of the component
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
     };
 }
 }

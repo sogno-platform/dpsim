@@ -9,7 +9,6 @@
 #pragma once
 
 #include <dpsim-models/MNASimPowerComp.h>
-
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
 
@@ -50,7 +49,9 @@ namespace Ph1 {
 		/// MNA post step operations
 		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
 		/// Add MNA post step dependencies
-		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, 
+			AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, 
+			Attribute<Matrix>::Ptr &leftVector);
 		//
 		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) override;
 	};
