@@ -96,8 +96,6 @@ namespace Ph1 {
 		PiLine(String name, Logger::Level logLevel = Logger::Level::off)
 			: PiLine(name, name, logLevel) { }
 		///
-		SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
-		///
 		void setParameters(Real resistance, Real inductance, Real capacitance = -1, Real conductance = -1);
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency) override;

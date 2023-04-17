@@ -57,13 +57,6 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capac
 
 }
 
-/// DEPRECATED: Delete method
-SimPowerComp<Complex>::Ptr SP::Ph1::PiLine::clone(String name) {
-	auto copy = PiLine::make(name, mLogLevel);
-	copy->setParameters(**mSeriesRes, **mSeriesInd, **mParallelCap, **mParallelCond);
-	return copy;
-}
-
 // #### Powerflow section ####
 void SP::Ph1::PiLine::setBaseVoltage(Real baseVoltage) {
     **mBaseVoltage = baseVoltage;
@@ -145,10 +138,6 @@ MatrixComp SP::Ph1::PiLine::Y_element() {
 }
 
 void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
-
-	// By default there is always a small conductance to ground to
-	// avoid problems with floating nodes.
-	**mParallelCond = (**mParallelCond >= 0) ? **mParallelCond : 1e-6;
 
 	// Static calculation
 	Real omega = 2. * PI * frequency;

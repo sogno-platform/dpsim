@@ -78,7 +78,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
 
 	// Transformer
-	auto trafoPF = CPS::SP::Ph1::Transformer::make("trafo", "trafo", Logger::Level::debug, true);
+	auto trafoPF = CPS::SP::Ph1::Transformer::make("trafo", "trafo", Logger::Level::debug);
 	trafoPF->setParameters(transformerNomVoltageHV, transformerNomVoltageMV, transformerRatio, 0, transformerResistance, transformerInductance);
 	trafoPF->setBaseVoltage(nomVoltNetwork);
 
@@ -144,7 +144,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	genSP->setModelFlags(false);
 
 	// Transformer
-	auto trafoSP = CPS::SP::Ph1::Transformer::make("trafo", "trafo", Logger::Level::debug, false);
+	auto trafoSP = CPS::SP::Ph1::Transformer::make("trafo", "trafo", Logger::Level::debug);
 	trafoSP->setParameters(transformerNomVoltageHV, transformerNomVoltageMV, transformerRatio, 0, transformerResistance, transformerInductance);
 
 	// Slack
