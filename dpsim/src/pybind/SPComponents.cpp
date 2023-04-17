@@ -344,10 +344,10 @@ void addSPPh1Components(py::module_ mSPPh1) {
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off)
-      .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
-           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-           // cppcheck-suppress assignBoolToPointer
-           "with_resistive_losses"_a = false)
+      .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
+           "name"_a,
+           "loglevel"_a =
+               CPS::Logger::Level::off) // cppcheck-suppress assignBoolToPointer
       .def("set_parameters",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real>(
