@@ -90,12 +90,6 @@ public:
   /// nodal reactive power injection
   const Attribute<Real>::Ptr mReactivePowerInjection;
 
-public:
-  /// nodal active power injection
-  const Attribute<Real>::Ptr mActivePowerInjection;
-  /// nodal reactive power injection
-  const Attribute<Real>::Ptr mReactivePowerInjection;
-
   // #### General ####
   /// Defines UID, name and logging level
   PiLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);

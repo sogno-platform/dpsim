@@ -8,9 +8,8 @@
 
 #pragma once
 
-#include <dpsim-models/MNASimPowerComp.h>
-
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
