@@ -14,6 +14,8 @@ using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
+	
+	SolverParametersMNA S_MNA;
 	Real timeStep = 1e-4;
 	Real finalTime = 1e-3;
 	String simName = "EMT_CS_RL1";
@@ -50,6 +52,7 @@ int main(int argc, char* argv[]) {
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
+	sim.setSolverParameters(Domain::EMT, Solver::Type::MNA, S_MNA);
 
 	sim.run();
 

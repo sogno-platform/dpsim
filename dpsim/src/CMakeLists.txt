@@ -19,6 +19,8 @@ set(DPSIM_SOURCES
 	ThreadListScheduler.cpp
 	DiakopticsSolver.cpp
 	Interface.cpp
+	SolverParameters.cpp
+	SolverParametersMNA.cpp
 )
 
 list(APPEND DPSIM_LIBRARIES

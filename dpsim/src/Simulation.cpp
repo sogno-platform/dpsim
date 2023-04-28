@@ -6,6 +6,10 @@
 #include <typeindex>
 
 #include <dpsim/SequentialScheduler.h>
+#include <dpsim/SolverParameters.h>
+#include <dpsim/SolverParametersMNA.h>
+#include <dpsim/SolverParametersNRP.h>
+#include <dpsim/SolverParametersDAE.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/Utils.h>
 #include <dpsim-models/Utils.h>
@@ -32,8 +36,6 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mName(AttributeStatic<String>::make(name)),
 	mFinalTime(AttributeStatic<Real>::make(0.001)),
 	mTimeStep(AttributeStatic<Real>::make(0.001)),
-	mSplitSubnets(AttributeStatic<Bool>::make(true)),
-	mSteadyStateInit(AttributeStatic<Bool>::make(false)),
 	mLogLevel(logLevel)  {
 	create();
 }
@@ -43,13 +45,34 @@ Simulation::Simulation(String name, CommandLineArgs& args) :
 	mSolverPluginName(args.solverPluginName),
 	mFinalTime(AttributeStatic<Real>::make(args.duration)),
 	mTimeStep(AttributeStatic<Real>::make(args.timeStep)),
-	mSplitSubnets(AttributeStatic<Bool>::make(true)),
-	mSteadyStateInit(AttributeStatic<Bool>::make(false)),
 	mLogLevel(args.logLevel),
 	mDomain(args.solver.domain),
-	mSolverType(args.solver.type),
-	mDirectImpl(args.directImpl) {
+	mSolverType(args.solver.type) {
 	create();
+}
+
+void Simulation::setSolverParameters(CPS::Domain domain, Solver::Type type, SolverParameters& solverParameters)
+{
+	mDomain = domain;
+	if ((typeid(solverParameters) == typeid(SolverParametersMNA)) && (type == Solver::Type::MNA)) {
+		cout << "Object is of type SolverParametersMNA" << endl;
+		mSolverParams = &solverParameters;
+		mSolverType = Solver::Type::MNA;
+	}
+	else if ((typeid(solverParameters) == typeid(SolverParametersDAE)) && (type == Solver::Type::DAE)) {
+		cout << "Object is of type SolverParametersMNA" << endl;
+		mSolverParams = &solverParameters;
+		mSolverType = Solver::Type::DAE;
+	}
+	else if ((typeid(solverParameters) == typeid(SolverParametersNRP)) && (type == Solver::Type::NRP)) {
+		cout << "Object is of type SolverParametersMNA" << endl;
+		mSolverParams = &solverParameters;
+		mSolverType = Solver::Type::NRP;
+	}
+	else {
+		cout << "Object is of unknown type" << endl;
+		mSolverParams = &solverParameters;
+	}		
 }
 
 void Simulation::create() {
@@ -131,7 +154,7 @@ void Simulation::createMNASolver() {
 	std::vector<SystemTopology> subnets;
 	// The Diakoptics solver splits the system at a later point.
 	// That is why the system is not split here if tear components exist.
-	if (**mSplitSubnets && mTearComponents.size() == 0)
+	if (**(*mSolverParams.mSplitSubnets) && mTearComponents.size() == 0)
 		mSystem.splitSubnets<VarType>(subnets);
 	else
 		subnets.push_back(mSystem);
@@ -151,16 +174,17 @@ void Simulation::createMNASolver() {
 			// Default case with lu decomposition from mna factory
 			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
 												 mLogLevel, mDirectImpl, mSolverPluginName);
-			solver->setTimeStep(**mTimeStep);
-			solver->doSteadyStateInit(**mSteadyStateInit);
-			solver->doFrequencyParallelization(mFreqParallel);
-			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
-			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
+			//solver->setTimeStep(**mTimeStep);
+			solver->setSolverParameters(*mSolverParams);
+			//solver->doSteadyStateInit(**mSteadyStateInit);
+			//solver->doFrequencyParallelization(mFreqParallel);
+			//solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
+			//solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
 			solver->setSystem(subnets[net]);
-			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
-			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
-			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
-			solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
+			//solver->setSolverAndComponentBehaviour(mSolverBehaviour);
+			//solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
+			//solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
+			//solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
 			solver->initialize();
 			solver->setMaxNumberOfIterations(mMaxIterations);
 		}

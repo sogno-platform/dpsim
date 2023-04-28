@@ -9,15 +9,19 @@
 #pragma once
 
 #include <iostream>
+#include <typeinfo>
 #include <vector>
 #include <list>
 
 #include <dpsim/Definitions.h>
+#include <dpsim/SolverParameters.h> 
 #include <dpsim/Config.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/Task.h>
+
+using namespace std;
 
 namespace DPsim {
 	/// Holds switching time and which system should be activated.
@@ -41,28 +45,16 @@ namespace DPsim {
 		CPS::Logger::Level mLogLevel;
 		/// Logger
 		CPS::Logger::Log mSLog;
+		/// Solver Parameters
+		SolverParameters* mSolverParams;
 		/// Time step for fixed step solvers
 		Real mTimeStep;
-		/// Activates parallelized computation of frequencies
-		Bool mFrequencyParallel = false;
-
+		
 		// #### Initialization ####
-		/// steady state initialization time limit
-		Real mSteadStIniTimeLimit = 10;
-		/// steady state initialization accuracy limit
-		Real mSteadStIniAccLimit = 0.0001;
-		/// Activates steady state initialization
-		Bool mSteadyStateInit = false;
-		/// Determines if solver is in initialization phase, which requires different behavior
-		Bool mIsInInitialization = false;
-		/// Activates powerflow initialization
-		/// If this is false, all voltages are initialized with zero
-		Bool mInitFromNodesAndTerminals = true;
 		/// Enable recomputation of system matrix during simulation
 		Bool mSystemMatrixRecomputation = false;
-
-		/// Solver behaviour initialization or simulation
-        Behaviour mBehaviour = Solver::Behaviour::Simulation;
+		/// Determines if solver is in initialization phase, which requires different behavior
+		Bool mIsInInitialization = false;
 
 	public:
 
@@ -74,41 +66,26 @@ namespace DPsim {
 
 		virtual ~Solver() { }
 
+		
 		// #### Solver settings ####
 		/// Solver types:
 		/// Modified Nodal Analysis, Differential Algebraic, Newton Raphson
 		enum class Type { MNA, DAE, NRP };
 		///
-		void setTimeStep(Real timeStep) {
-			mTimeStep = timeStep;
-		}
-		///
-		void doFrequencyParallelization(Bool freqParallel) {
-			mFrequencyParallel = freqParallel;
-		}
 		///
 		virtual void setSystem(const CPS::SystemTopology &system) {}
 		///
+		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
+		///
 		void doSystemMatrixRecomputation(Bool value) { mSystemMatrixRecomputation = value; }
 
+		void setSolverParameters(SolverParameters& solverParameters){ mSolverParams = &solverParameters; }
+		
 		// #### Initialization ####
 		///
 		virtual void initialize() {}
 		/// activate steady state initialization
-		void doSteadyStateInit(Bool f) { mSteadyStateInit = f; }
-		/// set steady state initialization time limit
-		void setSteadStIniTimeLimit(Real v) { mSteadStIniTimeLimit = v; }
-		/// set steady state initialization accuracy limit
-		void setSteadStIniAccLimit(Real v) { mSteadStIniAccLimit = v; }
-		/// set solver and component to initialization or simulation behaviour
-		virtual void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) {}
-		/// activate powerflow initialization
-		void doInitFromNodesAndTerminals(Bool f) { mInitFromNodesAndTerminals = f; }
-		/// set direct linear solver configuration (only available in MNA for now)
-		virtual void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration&)
-		{
-			// not every derived class has a linear solver configuration option
-		}
+		
 		/// log LU decomposition times, if applicable
 		virtual void logLUTimes()
 		{

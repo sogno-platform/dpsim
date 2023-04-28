@@ -16,6 +16,8 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Solver.h>
+#include <dpsim/SolverParametersMNA.h>
+#include <dpsim/SolverParameters.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
@@ -58,6 +60,10 @@ namespace DPsim {
 		UInt mNumTotalMatrixNodeIndices = 0;
 		/// List of index pairs of varying matrix entries
 		std::vector<std::pair<UInt, UInt>> mListVariableSystemMatrixEntries;
+
+
+		using Solver::mSolverParams;
+	
 
 		/// System topology
 		CPS::SystemTopology mSystem;
@@ -211,6 +217,8 @@ namespace DPsim {
 		Matrix& rightSideVector() { return mRightSideVector; }
 		///
 		virtual CPS::Task::List getTasks() override;
+		///
+		SolverParametersMNA* getMNAParameters() { return std::dynamic_pointer_cast<SolverParametersMNA*>(mSolverParams); }
 
 	};
 }

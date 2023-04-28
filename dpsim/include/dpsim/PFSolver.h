@@ -146,7 +146,7 @@ namespace DPsim {
         /// Allows to modify the powerflow bus type of a specific component
         void modifyPowerFlowBusComponent(CPS::String name, CPS::PowerflowBusType powerFlowBusType);
         /// set solver and component to initialization or simulation behaviour
-		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) override;
+		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour);
 
         class SolveTask : public CPS::Task {
 		public:
