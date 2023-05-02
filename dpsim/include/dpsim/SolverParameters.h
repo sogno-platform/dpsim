@@ -8,17 +8,8 @@
  *********************************************************************************/
 
 #pragma once
-
-#include <iostream>
-#include <vector>
-#include <list>
-
 #include <dpsim/Definitions.h>
-#include <dpsim/Config.h>
-#include <dpsim/DirectLinearSolverConfiguration.h>
-#include <dpsim-models/Logger.h>
-#include <dpsim-models/SystemTopology.h>
-#include <dpsim-models/Task.h>
+#include <dpsim-models/Attribute.h>
 
 namespace DPsim {
 	

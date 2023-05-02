@@ -390,23 +390,23 @@ template<typename VarType>
 std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolverImplementation(CPS::Logger::Log mSLog) {
 	switch(this->mImplementationInUse)
 	{
-		case DirectLinearSolverImpl::DenseLU:
+		case CPS::DirectLinearSolverImpl::DenseLU:
 			return std::make_shared<DenseLUAdapter>(mSLog);
-		case DirectLinearSolverImpl::SparseLU:
+		case CPS::DirectLinearSolverImpl::SparseLU:
 			return std::make_shared<SparseLUAdapter>(mSLog);
 		#ifdef WITH_KLU
-		case DirectLinearSolverImpl::KLU:
+		case CPS::DirectLinearSolverImpl::KLU:
 			return std::make_shared<KLUAdapter>(mSLog);
 		#endif
 		#ifdef WITH_CUDA
-		case DirectLinearSolverImpl::CUDADense:
+		case CPS::DirectLinearSolverImpl::CUDADense:
 			return std::make_shared<GpuDenseAdapter>(mSLog);
 		#ifdef WITH_CUDA_SPARSE
-		case DirectLinearSolverImpl::CUDASparse:
+		case CPS::DirectLinearSolverImpl::CUDASparse:
 			return std::make_shared<GpuSparseAdapter>(mSLog);
 		#endif
 		#ifdef WITH_MAGMA
-		case DirectLinearSolverImpl::CUDAMagma:
+		case CPS::DirectLinearSolverImpl::CUDAMagma:
 			return std::make_shared<GpuMagmaAdapter>(mSLog);
 		#endif
 		#endif

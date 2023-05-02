@@ -16,6 +16,7 @@
 #include <memory>
 
 #include <dpsim/Config.h>
+#include <dpsim/Definitions.h>
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/DirectLinearSolver.h>
@@ -44,17 +45,6 @@
 
 namespace DPsim {
 
-	enum DirectLinearSolverImpl{
-		Undef = 0,
-		KLU,
-		SparseLU,
-		DenseLU,
-		CUDADense,
-		CUDASparse,
-		CUDAMagma,
-		Plugin
-	};
-
 	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
 	class MnaSolverDirect : public MnaSolver<VarType> {
@@ -74,7 +64,7 @@ namespace DPsim {
 		/// LU factorization of variable system matrix
 		std::shared_ptr<DirectLinearSolver> mDirectLinearSolverVariableSystemMatrix;
 		/// LU factorization indicator
-		DirectLinearSolverImpl mImplementationInUse;
+		CPS::DirectLinearSolverImpl mImplementationInUse;
 		/// LU factorization configuration
 		DirectLinearSolverConfiguration mConfigurationInUse;
 
@@ -160,7 +150,7 @@ namespace DPsim {
 		virtual ~MnaSolverDirect() = default;
 
 		/// Sets the linear solver to "implementation" and creates an object
-		void setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);
+		void setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl implementation);
 
 		/// Sets the linear solver configuration
 		void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration);

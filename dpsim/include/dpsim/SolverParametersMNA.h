@@ -1,30 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <list>
-#include <unordered_map>
-#include <bitset>
-
-#include <DPsim.h>
-
-#include <dpsim/Config.h>
+#include <dpsim/Definitions.h>
+#include <dpsim-models/Attribute.h>
 #include <dpsim/Solver.h>
-#include <dpsim/SolverParameters.h>
-#include <dpsim/DataLogger.h>
-#include <dpsim-models/AttributeList.h>
-#include <dpsim-models/Solver/MNASwitchInterface.h>
-#include <dpsim-models/Solver/MNAVariableCompInterface.h>
-#include <dpsim-models/SimSignalComp.h>
-#include <dpsim-models/SimPowerComp.h>
-
-/* std::size_t is the largest data type. No container can store
- * more than std::size_t elements. Define the number of switches
- * as the log_2 of this value so that we end up with maximally
- * std::size_t matrices. The overhead of statically defining this
- * value should be minimal.
- **/
-#define SWITCH_NUM sizeof(std::size_t)*8
 
 namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
@@ -63,7 +41,7 @@ namespace DPsim {
 		/// steady state initialization accuracy limit
 		Real mSteadStIniAccLimit = 0.0001;
 
-        DirectLinearSolverImpl mDirectImpl = DirectLinearSolverImpl::Undef;
+        CPS::DirectLinearSolverImpl mDirectImpl = CPS::DirectLinearSolverImpl::Undef;
 
 
 
@@ -88,7 +66,7 @@ namespace DPsim {
 		///
         void doSystemMatrixRecomputation(Bool value) { mSystemMatrixRecomputation = value; }
         ///
-        void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) { mDirectImpl = directImpl; }     
+        void setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl directImpl) { mDirectImpl = directImpl; }     
 
 
         // #### Initialization ####

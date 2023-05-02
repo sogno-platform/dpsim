@@ -35,7 +35,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		Bool si,
 		CPS::Domain sd,
 		Solver::Type st,
-		DirectLinearSolverImpl mi,
+		CPS::DirectLinearSolverImpl mi,
 		String spn,
 		String ps
 	) :
@@ -91,7 +91,7 @@ CommandLineArgs::CommandLineArgs(
 		Bool si,
 		CPS::Domain sd,
 		Solver::Type st,
-		DirectLinearSolverImpl mi,
+		CPS::DirectLinearSolverImpl mi,
 		String spn
 		) :
 	mProgramName("dpsim"),
@@ -235,19 +235,19 @@ void CommandLineArgs::parseArguments(int argc, char *argv[])
 			case 'U': {
 				String arg = optarg;
 				if (arg == "DenseLU") {
-					directImpl = DirectLinearSolverImpl::DenseLU;
+					directImpl = CPS::DirectLinearSolverImpl::DenseLU;
 				} else if (arg == "SparseLU") {
-					directImpl = DirectLinearSolverImpl::SparseLU;
+					directImpl = CPS::DirectLinearSolverImpl::SparseLU;
 				} else if (arg == "KLU") {
-					directImpl = DirectLinearSolverImpl::KLU;
+					directImpl = CPS::DirectLinearSolverImpl::KLU;
 				} else if (arg == "CUDADense") {
-					directImpl = DirectLinearSolverImpl::CUDADense;
+					directImpl = CPS::DirectLinearSolverImpl::CUDADense;
 				} else if (arg == "CUDASparse") {
-					directImpl = DirectLinearSolverImpl::CUDASparse;
+					directImpl = CPS::DirectLinearSolverImpl::CUDASparse;
 				} else if (arg == "CUDAMagma") {
-					directImpl = DirectLinearSolverImpl::CUDAMagma;
+					directImpl = CPS::DirectLinearSolverImpl::CUDAMagma;
 				} else if (arg == "Plugin") {
-					directImpl = DirectLinearSolverImpl::Plugin;
+					directImpl = CPS::DirectLinearSolverImpl::Plugin;
 				} else {
 					throw std::invalid_argument("Invalid value for --solver-mna-impl");
 				}
