@@ -31,7 +31,7 @@ void PMUSignalDevice::MeasurementError(Real time){
     Attribute<MatrixComp>::Eye()
 */
 
-    mSLog->info("Input values: input = {}", **mInput);
+    SPDLOG_LOGGER_INFO(mSLog,"Input values: input = {}", **mInput);
     
 
     /// adding the measurement error
@@ -39,7 +39,7 @@ void PMUSignalDevice::MeasurementError(Real time){
      **mOutput =**mInput*1.1;
     // **mOutput=gsl_ran_gaussian(r,sigma)+**mInput;
 
-    mSLog->info("Output values: output = {}:", **mOutput);
+    SPDLOG_LOGGER_INFO(mSLog,"Output values: output = {}:", **mOutput);
 }
 
 void PMUSignalDevice::PostStep::execute(Real time, Int timeStepCount) {

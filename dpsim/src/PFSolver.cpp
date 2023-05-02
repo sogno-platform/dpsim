@@ -65,10 +65,12 @@ void PFSolver::assignMatrixNodeIndices() {
 }
 
 void PFSolver::initializeComponents(){
-    for (auto comp : mSystem.mComponents) {
-        std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp)->updateMatrixNodeIndices();
+   for (auto comp : mSystem.mComponents) {
+		auto sComp = std::dynamic_pointer_cast<SimSignalComp>(comp);
+		if (!sComp)	{
+		std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp)->updateMatrixNodeIndices();
+		}
     }
-
 	SPDLOG_LOGGER_INFO(mSLog, "-- Initialize components from terminals or nodes of topology");
 	for (auto comp : mSystem.mComponents) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
@@ -404,5 +406,18 @@ void PFSolver::SolveTask::execute(Real time, Int timeStepCount) {
 }
 
 Task::List PFSolver::getTasks() {
-	return Task::List{std::make_shared<SolveTask>(*this)};
+	Task::List l;
+
+	for (auto comp : mSystem.mComponents) {
+	auto sComp = std::dynamic_pointer_cast<SimSignalComp>(comp);
+		if (sComp)	{
+		for (auto task : sComp->getTasks()) {
+			l.push_back(task);
+		}
+	}
+	}
+
+	l.push_back(std::make_shared<SolveTask>(*this));
+	
+	return l;
 }
