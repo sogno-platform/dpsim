@@ -18,18 +18,18 @@ PMUSignalDevice::PMUSignalDevice(String name, Logger::Level logLevel) :
 
 
 void PMUSignalDevice::MeasurementError(Real time){
-/*
+
     // GSL random number generator
     const gsl_rng_type *T;
-    gsl_rng*r;
-    gsl_rng_env_setup();
-    T = gsl_rng_default;
-    r = gsl_rng_alloc (T);
+    const gsl_rng *r;
+    double val;
 
-    // standard deviation of normal destribution
-    double sigma=0.01;
-    Attribute<MatrixComp>::Eye()
-*/
+    // Setup environment
+    T = gsl_rng_taus;
+    r = gsl_rng_alloc (T);
+    val = gsl_ran_gaussian (r, 2.0);
+
+    SPDLOG_LOGGER_INFO(mSLog, "GSL value: gsl= {}", val);
 
     SPDLOG_LOGGER_INFO(mSLog,"Input values: input = {}", **mInput);
     
