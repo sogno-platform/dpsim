@@ -1,6 +1,12 @@
 # Roadmap
 
-Things to be done regarding the Python interface (not exhaustive):
+## Do you want to know what we are doing currently? 
+
+The best way is to check the [DPSim Project Board](https://github.com/orgs/sogno-platform/projects/1/views/4) , the [Issues List](https://github.com/sogno-platform/dpsim/issues) or the [Pull Requests](https://github.com/sogno-platform/dpsim/pulls) on github.
+
+## Things to be done 
+
+Regarding the Python interface (not exhaustive):
 
 * "constructors" for more component types
 * more error checking etc. (module should only throw Python exceptions, never crash)
