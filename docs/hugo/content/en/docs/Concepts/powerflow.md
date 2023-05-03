@@ -85,54 +85,56 @@ The current injection into any bus $k$ may be expressed as:
 $$I_{k} = \sum_{j=1}^{N} Y_{kj} V_{j}$$
 
 Substitution yields:
-\begin{align}
+
+$$\begin{align}
   S_{k} =& V_{k} \left ( \sum_{j=1}^{N} Y_{kj} V_{j} \right )^{*}
         =& V_{k} \sum_{j=1}^{N} Y_{kj}^{*} V_{j} ^{*}
-\end{align}
+\end{align}$$
 
 We may define $G_{kj}$ and $B_{kj}$ as the real and imaginary parts of the admittance matrix element $Y_{kj}$ respectively, so that $Y_{kj} = G_{kj} + jB_{kj}$.
 Then we may rewrite the last equation:
-\begin{align}
+$$\begin{align}
   S_{k} &= V_{k} \sum_{j=1}^{N} Y_{kj}^{*} V_{j}^{*} \nonumber \\
    			&= \vert V_{k} \vert \angle \theta_{k} \sum_{j=1}^{N} (G_{kj} + jB_{kj})^{*} ( \vert V_{j} \vert \angle \theta_{j})^{*} \nonumber \\
    			&= \vert V_{k} \vert \angle \theta_{k} \sum_{j=1}^{N} (G_{kj} - jB_{kj}) ( \vert V_{j} \vert \angle - \theta_{j}) \nonumber \\
    			&= \sum_{j=1} ^{N} \vert V_{k} \vert \angle \theta_{k} ( \vert V_{j} \vert \angle - \theta_{j}) (G_{kj} - jB_{kj}) \nonumber \\
    			&= \sum_{j=1} ^{N} \left ( \vert V_{k} \vert \vert V_{j} \vert \angle (\theta_{k} - \theta_{j}) \right ) (G_{kj} - jB_{kj}) \nonumber \\
    			&= \sum_{j=1} ^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( cos(\theta_{k} - \theta_{j}) + jsin(\theta_{k} - \theta_{j}) \right ) (G_{kj} - jB_{kj})
-	\label{eq:compl_power}
 \end{align}
+$$
 
-If we now perform the algebraic multiplication of the two terms inside the parentheses, and collect real and imaginary parts, and recall that $S_{k} = P_{k} + jQ_{k}$, we can express $\eqref{eq:compl_power}$ as two equations: one for the real part, $P_{k}$, and one for the imaginary part, $Q_{k}$, according to:
+If we now perform the algebraic multiplication of the two terms inside the parentheses, and collect real and imaginary parts, and recall that $S_{k} = P_{k} + jQ_{k}$, we can express the complex power as two equations: one for the real part, $P_{k}$, and one for the imaginary part, $Q_{k}$, according to:
 
-\begin{align}
-	{P}_{k} = \sum_{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}cos(\theta_{k} - \theta_{j}) + B_{kj} sin(\theta_{k} - \theta_{j}) \right ) \label{eq:active_power}\\
-	{Q}_{k} = \sum_{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}sin(\theta_{k} - \theta_{j}) - B_{kj} cos(\theta_{k} - \theta_{j}) \right ) \label{eq:reactive_power}
-\end{align}
+$$\begin{align}
+	{P}_{k} = \sum_{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}cos(\theta_{k} - \theta_{j}) + B_{kj} sin(\theta_{k} - \theta_{j}) \right ) \\
+	{Q}_{k} = \sum_{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}sin(\theta_{k} - \theta_{j}) - B_{kj} cos(\theta_{k} - \theta_{j}) \right ) 
+\end{align}$$
 
 These equations are called the power flow equations, and they form the fundamental building block from which we solve the power flow problem.
 
 We consider a power system network having $N$ buses. We assume one VD bus, $N_{PV}-1$ PV buses and $N-N_{PV}$ PQ buses.
 We assume that the VD bus is numbered bus $1$, the PV buses are numbered $2,...,N_{PV}$, and the PQ buses are numbered $N_{PV}+1,...,N$.
 We define the vector of unknown as the composite vector of unknown angles $\vec{\theta}$ and voltage magnitudes $\vert \vec{V} \vert$:
-\begin{align}
+
+$$\begin{align}
 	\vec{x} = \left[ \begin{array}{c} \vec{\theta} \\ \vert \vec{V} \vert \\ \end{array} \right ]
 			 		= \left[ \begin{array}{c} \theta_{2} \\ \theta_{3} \\ \vdots \\ \theta_{N} \\ \vert V_{N_{PV+1}} \vert \\ \vert V_{N_{PV+2}} \vert \\ \vdots \\ \vert V_{N} \vert \end{array} \right]
-\end{align}
+\end{align}$$
 
-The right-hand sides of equations $\eqref{eq:active_power}$ and $\eqref{eq:reactive_power}$ depend on the elements of the unknown vector $\vec{x}$.
+The right-hand sides of equations for the active power and reactive power depend on the elements of the unknown vector $\vec{x}$.
 Expressing this dependency more explicitly, we rewrite these equations as:
-\begin{align}
+$$\begin{align}
 	P_{k} = P_{k} (\vec{x}) \Rightarrow P_{k}(\vec{x}) - P_{k} &= 0 \quad \quad k = 2,...,N \\
 	Q_{k} = Q_{k} (\vec{x}) \Rightarrow Q_{k} (\vec{x}) - Q_{k} &= 0 \quad \quad k = N_{PV}+1,...,N
-\end{align}
+\end{align}$$
 
 We now define the mismatch vector $\vec{f} (\vec{x})$ as:
-\begin{align*}
+$$\begin{align*}
 \vec{f} (\vec{x}) = \left [ \begin{array}{c} f_{1}(\vec{x}) \\ \vdots \\ f_{N-1}(\vec{x}) \\ ------ \\ f_{N}(\vec{x}) \\ \vdots \\ f_{2N-N_{PV} -1}(\vec{x}) \end{array} \right ]
 	= \left [ \begin{array}{c} P_{2}(\vec{x}) - P_{2} \\ \vdots \\ P_{N}(\vec{x}) - P_{N} \\ --------- \\ Q_{N_{PV}+1}(\vec{x}) - Q_{N_{PV}+1} \\ \vdots \\ Q_{N}(\vec{x}) - Q_{N} \end{array} \right]
 	= \left [ \begin{array}{c} \Delta P_{2} \\ \vdots \\ \Delta P_{N} \\ ------ \\ \Delta Q_{N_{PV}+1} \\ \vdots \\ \Delta Q_{N} \end{array} \right ]
 	= \vec{0}
-\end{align*}
+\end{align*}$$
 
 That is a system of nonlinear equations.
 This nonlinearity comes from the fact that $P_{k}$ and $Q_{k}$ have terms containing products of some of the unknowns and also terms containing trigonometric functions of some the unknowns.
@@ -140,7 +142,7 @@ This nonlinearity comes from the fact that $P_{k}$ and $Q_{k}$ have terms contai
 #### Formulation of Jacobian
 
 As discussed in the previous section, the power flow problem will be solved using the Newton-Raphson method. Here, the Jacobian matrix is obtained by taking all first-order partial derivates of the power mismatch functions with respect to the voltage angles $\theta_{k}$ and magnitudes $\vert V_{k} \vert$ as:
-\begin{align}
+$$\begin{align}
 	J_{jk}^{P \theta} &= \frac{\partial P_{j} (\vec{x} ) } {\partial \theta_{k}} = \vert V_{j} \vert \vert V_{k} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) - 																B_{jk} cos(\theta_{j} - \theta_{k} ) \right ) \\
 	J_{jj}^{P \theta} &= \frac{\partial P_{j}(\vec{x})}{\partial \theta_{j}} = -Q_{j} (\vec{x} ) - B_{jj} \vert V_{j} \vert ^{2} \\
 	J_{jk}^{Q \theta} &= \frac{\partial Q_{j}(\vec{x})}{\partial \theta_{k}} = - \vert V_{j} \vert \vert V_{k} \vert \left ( G_{jk} cos(\theta_{j} - \theta_{k}) + 																B_{jk} sin(\theta_{j} - \theta_{k}) \right ) \\
@@ -149,10 +151,10 @@ As discussed in the previous section, the power flow problem will be solved usin
 	 J_{jj}^{PV} &= \frac{\partial P_{j}(\vec{x})}{\partial \vert V_{j} \vert } = \frac{P_{j} (\vec{x} )}{\vert V_{j} \vert} + G_{jj} \vert V_{j} \vert \\
 	 J_{jk}^{QV} &= \frac{\partial Q_{j} (\vec{x} ) } {\partial \vert V_{k} \vert } = \vert V_{j} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) + 																B_{jk} cos(\theta_{j} - \theta_{k}) \right ) \\
 	 J_{jj}^{QV} &= \frac{\partial Q_{j}(\vec{x})}{\partial \vert V_{j} \vert } = \frac{Q_{j} (\vec{x} )}{\vert V_{j} \vert} - B_{jj} \vert V_{j} \vert \\
-\end{align}
+\end{align}$$
 
 The linear system of equations that is solved in every Newton iteration can be written in matrix form as follows:
-\begin{align}
+$$\begin{align}
 	-\left [ \begin{array}{cccccc} \frac{\partial \Delta P_{2} }{\partial \theta_{2}} & \cdots & \frac{\partial \Delta P_{2} }{\partial \theta_{N}} &
 			\frac{\partial \Delta P_{2} }{\partial \vert V_{N_{G+1}} \vert} & \cdots & \frac{\partial \Delta P_{2} }{\partial \vert V_{N} \vert}	\\
 			\vdots & \ddots & \vdots & \vdots & \ddots & \vdots	\\
@@ -166,7 +168,7 @@ The linear system of equations that is solved in every Newton iteration can be w
 			\end{array} \right ]
 	\left [ \begin{array}{c} \Delta \theta_{2} \\ \vdots \\ \Delta \theta_{N} \\ \Delta \vert V_{N_{G+1}} \vert \\ \vdots \\ \Delta \vert V_{N} \vert \end{array} \right ]
 	= \left [ \begin{array}{c} \Delta P_{2} \\ \vdots \\ \Delta P_{N} \\ \Delta Q_{N_{G+1}} \\ \vdots \\ \Delta Q_{N} \end{array} \right ]
-\end{align}
+\end{align}$$
 
 ## Solution of the Problem
 
