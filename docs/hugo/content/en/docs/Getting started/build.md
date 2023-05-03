@@ -1,7 +1,7 @@
 ---
 title: "Build"
 linkTitle: "Build"
-date: 2017-01-05
+date: 2023-05-03
 ---
 
 ## Docker based
@@ -45,15 +45,28 @@ The DPsim C++ and Python library without C++ examples or documentation can be bu
     $ cmake ..
     $ cmake --build . --target dpsimpy
 
+If you need other libraries that are not built by default, you need to target them specifically, for example if you need `dpsimpy´ and ´dpsimpyvillas´:
+
+    $ cmake --build . --target dpsimpy dpsimpyvillas
+
 To build everything run
 
     $ cmake --build .
+
+To use other libraries that are installed, use the relevant option defined in the CMakeList.txt files, for example for GSL below, and then build as usual:
+    
+    $ cmake .. -DWITH_GSL=ON
 
 If you would like to use the Python package, it has to be added to the path.
 The following command adds the dpsimpy C++/Python package as well as the dpsim pure Python package.
 
     $ cd /dpsim/build
     $ export PYTHONPATH=$(pwd):$(pwd)/../python/src/
+
+If you are using `conda` or other ways to develop with environments, please keep in mind that this will become specific for your setup. For this case, from within the environment already active:
+
+    $ cd /dpsim/build
+    $ conda develop $(pwd) && conda develop $(pwd)/Source/Python && conda develop $(pwd)/../Source/Python
 
 To run jupyter lab
 
@@ -71,7 +84,7 @@ To install dpsim run
 The most recent list of requirements can be found in the Dockerfiles.
 
 Make sure that the required dependencies are installed.
-The [fedora installation script](https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/-/blob/master/Packaging/install-fedora-deps.sh) in the DPsim repository is a good place to start from.
+The [fedora installation script](https://github.com/sogno-platform/dpsim/blob/c40e283338574e0ba7cd9861c70f1e41aa3399ba/packaging/Shell/install-fedora-deps.sh) in the DPsim repository is a good place to start from.
 
 **Note:** There are currently no Debian packages for `villas-node` and `libcimpp16v29a`.
 If you want to use these optional feature, you have to build them manually.
