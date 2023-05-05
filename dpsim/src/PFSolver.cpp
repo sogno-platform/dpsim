@@ -65,6 +65,7 @@ void PFSolver::assignMatrixNodeIndices() {
 }
 
 void PFSolver::initializeComponents(){
+	std::shared_ptr<SolverParametersMNA> mSolverParamsMNA = getMNAParameters(); 
     for (auto comp : mSystem.mComponents) {
         std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp)->updateMatrixNodeIndices();
     }
@@ -73,7 +74,7 @@ void PFSolver::initializeComponents(){
 	for (auto comp : mSystem.mComponents) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
-		if (mInitFromNodesAndTerminals)
+		if (mSolverParamsMNA->mInitFromNodesAndTerminals)
 			pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 
@@ -298,8 +299,9 @@ void PFSolver::modifyPowerFlowBusComponent(CPS::String name, CPS::PowerflowBusTy
 }
 
 void PFSolver::setSolverAndComponentBehaviour(Solver::Behaviour behaviour) {
-	mBehaviour = behaviour;
-	if (mBehaviour == Behaviour::Initialization) {
+	std::shared_ptr<SolverParametersMNA> mSolverParamsMNA = getMNAParameters();
+	mSolverParamsMNA->mSolverBehaviour = behaviour;
+	if (mSolverParamsMNA->mSolverBehaviour == Behaviour::Initialization) {
 		SPDLOG_LOGGER_INFO(mSLog, "-- Set solver behaviour to Initialization");
 		// TODO: solver setting specific to initialization (e.g. one single PF run)
 

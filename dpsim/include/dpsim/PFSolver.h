@@ -13,6 +13,7 @@
 
 #include <dpsim/Solver.h>
 #include <dpsim/Scheduler.h>
+#include <dpsim/SolverParametersMNA.h>
 #include "dpsim-models/SystemTopology.h"
 #include "dpsim-models/Components.h"
 
@@ -147,6 +148,8 @@ namespace DPsim {
         void modifyPowerFlowBusComponent(CPS::String name, CPS::PowerflowBusType powerFlowBusType);
         /// set solver and component to initialization or simulation behaviour
 		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour);
+        /// Gets Solver Parameters for Modified Nodal Analysis (MNA) 
+        std::shared_ptr<SolverParametersMNA> getMNAParameters() { return std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams); }
 
         class SolveTask : public CPS::Task {
 		public:

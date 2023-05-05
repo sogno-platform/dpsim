@@ -15,22 +15,22 @@ namespace DPsim {
 	
 	/// Base class for more specific solvers such as MNA, ODE or IDA.
 	class SolverParameters{
-	protected:
+	public:
 		/// Time step for fixed step solvers
-        const CPS::Attribute<Real>::Ptr mTimeStep;
+        Real mTimeStep;
 
 		// #### Initialization ####
 		
 		/// If this is false, all voltages are initialized with zero
 		Bool mInitFromNodesAndTerminals = true;
-
-	public:
+	
+	
 
 		SolverParameters() {}
 
 		virtual ~SolverParameters() { }
 
-		void setTimeStep(Real timeStep) { **mTimeStep = timeStep; }
+		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		
 		// #### Initialization ####
 		/// activate powerflow initialization
@@ -38,7 +38,7 @@ namespace DPsim {
 		
 
 		// #### Getter ####
-        Bool getTimeStep() {return **mTimeStep;}
+        Real getTimeStep() {return mTimeStep;}
 
 		Bool getInitFromNodesAndTerminals() {return mInitFromNodesAndTerminals;}
  		

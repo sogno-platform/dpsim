@@ -51,27 +51,27 @@ Simulation::Simulation(String name, CommandLineArgs& args) :
 	create();
 }
 
-void Simulation::setSolverParameters(CPS::Domain domain, Solver::Type type, SolverParameters& solverParameters)
+void Simulation::setSolverParameters(CPS::Domain domain, Solver::Type type, std::shared_ptr<SolverParameters> &solverParameters)
 {
 	mDomain = domain;
 	if ((typeid(solverParameters) == typeid(SolverParametersMNA)) && (type == Solver::Type::MNA)) {
 		cout << "Object is of type SolverParametersMNA" << endl;
-		mSolverParams = &solverParameters;
+		mSolverParams = solverParameters;
 		mSolverType = Solver::Type::MNA;
 	}
 	else if ((typeid(solverParameters) == typeid(SolverParametersDAE)) && (type == Solver::Type::DAE)) {
 		cout << "Object is of type SolverParametersMNA" << endl;
-		mSolverParams = &solverParameters;
+		mSolverParams = solverParameters;
 		mSolverType = Solver::Type::DAE;
 	}
 	else if ((typeid(solverParameters) == typeid(SolverParametersNRP)) && (type == Solver::Type::NRP)) {
 		cout << "Object is of type SolverParametersMNA" << endl;
-		mSolverParams = &solverParameters;
+		mSolverParams = solverParameters;
 		mSolverType = Solver::Type::NRP;
 	}
 	else {
 		cout << "Object is of unknown type" << endl;
-		mSolverParams = &solverParameters;
+		mSolverParams = solverParameters;
 	}		
 }
 
@@ -124,8 +124,9 @@ void Simulation::createSolvers() {
 #endif /* WITH_SUNDIALS */
 		case Solver::Type::NRP:
 			solver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem, **mTimeStep, mLogLevel);
-			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
-			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
+			solver->setSolverParameters(mSolverParams);
+			//solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
+			//solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->initialize();
 			mSolvers.push_back(solver);
 			break;
@@ -154,41 +155,44 @@ void Simulation::createMNASolver() {
 	std::vector<SystemTopology> subnets;
 	// The Diakoptics solver splits the system at a later point.
 	// That is why the system is not split here if tear components exist.
-	if (**(*mSolverParams.mSplitSubnets) && mTearComponents.size() == 0)
-		mSystem.splitSubnets<VarType>(subnets);
-	else
-		subnets.push_back(mSystem);
+	std::shared_ptr<SolverParametersMNA> mSolverParamsMNA = std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams);
+	if (mSolverParamsMNA != nullptr) {
+		if ( mSolverParamsMNA->getSplitSubnets() && mTearComponents.size() == 0)
+			mSystem.splitSubnets<VarType>(subnets);
+		else
+			subnets.push_back(mSystem);
 
-	for (UInt net = 0; net < subnets.size(); ++net) {
-		String copySuffix;
-	   	if (subnets.size() > 1)
-			copySuffix = "_" + std::to_string(net);
+		for (UInt net = 0; net < subnets.size(); ++net) {
+			String copySuffix;
+			if (subnets.size() > 1)
+				copySuffix = "_" + std::to_string(net);
 
-		// TODO: In the future, here we could possibly even use different
-		// solvers for different subnets if deemed useful
-		if (mTearComponents.size() > 0) {
-			// Tear components available, use diakoptics
-			solver = std::make_shared<DiakopticsSolver<VarType>>(**mName,
-				subnets[net], mTearComponents, **mTimeStep, mLogLevel);
-		} else {
-			// Default case with lu decomposition from mna factory
-			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
-												 mLogLevel, mDirectImpl, mSolverPluginName);
-			//solver->setTimeStep(**mTimeStep);
-			solver->setSolverParameters(*mSolverParams);
-			//solver->doSteadyStateInit(**mSteadyStateInit);
-			//solver->doFrequencyParallelization(mFreqParallel);
-			//solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
-			//solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
-			solver->setSystem(subnets[net]);
-			//solver->setSolverAndComponentBehaviour(mSolverBehaviour);
-			//solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
-			//solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
-			//solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
-			solver->initialize();
-			solver->setMaxNumberOfIterations(mMaxIterations);
+			// TODO: In the future, here we could possibly even use different
+			// solvers for different subnets if deemed useful
+			if (mTearComponents.size() > 0) {
+				// Tear components available, use diakoptics
+				solver = std::make_shared<DiakopticsSolver<VarType>>(**mName,
+					subnets[net], mTearComponents, **mTimeStep, mLogLevel);
+			} else {
+				// Default case with lu decomposition from mna factory
+				solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
+													mLogLevel, mSolverParamsMNA->mDirectImpl, mSolverPluginName);
+				solver->setTimeStep(**mTimeStep);
+				solver->setSolverParameters(mSolverParams);
+				//solver->doSteadyStateInit(**mSteadyStateInit);
+				//solver->doFrequencyParallelization(mFreqParallel);
+				//solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
+				//solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
+				solver->setSystem(subnets[net]);
+				//solver->setSolverAndComponentBehaviour(mSolverBehaviour);
+				//solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
+				//solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
+				//solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
+				solver->initialize();
+				solver->setMaxNumberOfIterations(mMaxIterations);
+			}
+			mSolvers.push_back(solver);
 		}
-		mSolvers.push_back(solver);
 	}
 }
 

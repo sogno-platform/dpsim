@@ -217,8 +217,9 @@ namespace DPsim {
 		Matrix& rightSideVector() { return mRightSideVector; }
 		///
 		virtual CPS::Task::List getTasks() override;
-		///
-		SolverParametersMNA* getMNAParameters() { return std::dynamic_pointer_cast<SolverParametersMNA*>(mSolverParams); }
+		/// Gets Solver Parameters for Modified Nodal Analysis (MNA) 
+        std::shared_ptr<SolverParametersMNA> getMNAParameters() { return std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams); }
+
 
 	};
 }

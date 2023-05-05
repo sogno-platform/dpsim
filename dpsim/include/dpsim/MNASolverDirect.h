@@ -18,6 +18,7 @@
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/Solver.h>
+#include <dpsim/SolverParametersMNA.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/DirectLinearSolver.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
@@ -68,6 +69,7 @@ namespace DPsim {
 		/// LU factorization configuration
 		DirectLinearSolverConfiguration mConfigurationInUse;
 
+		using Solver::mSolverParams;
 		using MnaSolver<VarType>::mSwitches;
 		using MnaSolver<VarType>::mMNAIntfSwitches;
 		using MnaSolver<VarType>::mMNAComponents;
@@ -82,9 +84,7 @@ namespace DPsim {
 		using MnaSolver<VarType>::mIsInInitialization;
 		using MnaSolver<VarType>::mRightSideVectorHarm;
 		using MnaSolver<VarType>::mLeftSideVectorHarm;
-		using MnaSolver<VarType>::mFrequencyParallel;
 		using MnaSolver<VarType>::mSLog;
-		using MnaSolver<VarType>::mSystemMatrixRecomputation;
 		using MnaSolver<VarType>::hasVariableComponentChanged;
 		using MnaSolver<VarType>::mNumRecomputations;
 		using MnaSolver<VarType>::mSyncGen;
@@ -160,6 +160,10 @@ namespace DPsim {
 
 		/// ### SynGen Interface ###
 		int mIter = 0;
+		
+		/// Gets Solver Parameters for Modified Nodal Analysis (MNA) 
+        std::shared_ptr<SolverParametersMNA> getMNAParameters() { return std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams); }
+
 
 		// #### MNA Solver Tasks ####
 		///

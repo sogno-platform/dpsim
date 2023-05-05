@@ -4,10 +4,13 @@
 #include <dpsim-models/Attribute.h>
 #include <dpsim/Solver.h>
 
+// using namespace CPS;
+
+
 namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
 	class SolverParametersMNA : public SolverParameters {
-	protected: 
+	public: 
 		// #### General simulation settings ####
 		/// Simulation domain, which can be dynamic phasor (DP) or EMT
 		CPS::Domain mDomain;
@@ -46,9 +49,12 @@ namespace DPsim {
 
 
 
-	public:
+	
 
-		SolverParametersMNA() {}
+		SolverParametersMNA():
+			mSplitSubnets(CPS::AttributeStatic<Bool>::make(true)),
+			mSteadyStateInit(CPS::AttributeStatic<Bool>::make(false)) {
+		}
 		
 		/// Destructor
 		virtual ~SolverParametersMNA() {};

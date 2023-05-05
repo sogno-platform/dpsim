@@ -26,7 +26,7 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	Solver(name, logLevel),
 	mMappedTearCurrents(AttributeStatic<Matrix>::make()),
 	mOrigLeftSideVector(AttributeStatic<Matrix>::make()) {
-	mSolverParams->mTimeStep= timeStep;
+	mTimeStep= timeStep;
 
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);

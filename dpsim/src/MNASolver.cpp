@@ -47,8 +47,8 @@ template <typename VarType>
 void MnaSolver<VarType>::initialize() {
 	// TODO: check that every system matrix has the same dimensions
 	SPDLOG_LOGGER_INFO(mSLog, "---- Start initialization ----");
-	SolverParametersMNA* mSolverParamsMNA = getMNAParameters(); 
-	
+	auto mSolverParamsMNA = getMNAParameters(); 
+
 	if (mSolverParamsMNA != nullptr) {
 		// Register attribute for solution vector
 		///FIXME: This is kinda ugly... At least we should somehow unify mLeftSideVector and mLeftSideVectorHarm.
@@ -86,7 +86,7 @@ void MnaSolver<VarType>::initialize() {
 		// calculate MNA specific initialization values.
 		initializeComponents();
 
-		if (mSteadyStateInit) {
+		if (mSolverParamsMNA->getSteadyStateInit()) {
 			mIsInInitialization = true;
 			steadyStateInitialization();
 		}
@@ -119,7 +119,7 @@ void MnaSolver<Real>::initializeComponents() {
 	CPS::MNAInterface::List allMNAComps;
 	allMNAComps.insert(allMNAComps.end(), mMNAComponents.begin(), mMNAComponents.end());
 	allMNAComps.insert(allMNAComps.end(), mMNAIntfVariableComps.begin(), mMNAIntfVariableComps.end());
-	SolverParametersMNA* mSolverParamsMNA = getMNAParameters(); 
+	auto mSolverParamsMNA = getMNAParameters(); 
 	
 	if (mSolverParamsMNA != nullptr) { 
 		for (auto comp : allMNAComps) {
@@ -155,7 +155,7 @@ void MnaSolver<Complex>::initializeComponents() {
 	CPS::MNAInterface::List allMNAComps;
 	allMNAComps.insert(allMNAComps.end(), mMNAComponents.begin(), mMNAComponents.end());
 	allMNAComps.insert(allMNAComps.end(), mMNAIntfVariableComps.begin(), mMNAIntfVariableComps.end());
-	SolverParametersMNA* mSolverParamsMNA = getMNAParameters(); 
+	auto mSolverParamsMNA = getMNAParameters(); 
 	
 	if (mSolverParamsMNA != nullptr) {
 		// Initialize power components with frequencies and from powerflow results
@@ -205,7 +205,7 @@ template <typename VarType>
 void MnaSolver<VarType>::initializeSystem() {
 	SPDLOG_LOGGER_INFO(mSLog, "-- Initialize MNA system matrices and source vector");
 	mRightSideVector.setZero();
-	SolverParametersMNA* mSolverParamsMNA = getMNAParameters(); 
+	auto mSolverParamsMNA = getMNAParameters(); 
 	if (mSolverParamsMNA != nullptr) {
 		// just a sanity check in case we change the static
 		// initialization of the switch number in the future
@@ -401,8 +401,8 @@ void MnaSolver<Real>::createEmptyVectors() {
 
 template<>
 void MnaSolver<Complex>::createEmptyVectors() {
-	SolverParametersMNA* mSolverParamsMNA = getMNAParameters(); 
-	
+	auto mSolverParamsMNA = getMNAParameters(); 
+
 	if (mSolverParamsMNA != nullptr) {
 		if (mSolverParamsMNA->getFreqParallel()) {
 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
@@ -473,7 +473,7 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
 	SPDLOG_LOGGER_INFO(mSLog, "--- Run steady-state initialization ---");
-	SolverParametersMNA* mSolverParamsMNA = getMNAParameters(); 
+	auto mSolverParamsMNA = getMNAParameters(); 
 	
 	if (mSolverParamsMNA != nullptr) {
 		DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::off);
@@ -570,7 +570,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 template <typename VarType>
 Task::List MnaSolver<VarType>::getTasks() {
 	Task::List l;
-	SolverParametersMNA* mSolverParamsMNA = getMNAParameters(); 
+	auto mSolverParamsMNA = getMNAParameters(); 
 
 	if (mSolverParamsMNA != nullptr) {
 		for (auto comp : mMNAComponents) {

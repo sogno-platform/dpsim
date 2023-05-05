@@ -46,7 +46,7 @@ namespace DPsim {
 		/// Logger
 		CPS::Logger::Log mSLog;
 		/// Solver Parameters
-		SolverParameters* mSolverParams;
+		std::shared_ptr<SolverParameters> mSolverParams;
 		/// Time step for fixed step solvers
 		Real mTimeStep;
 		
@@ -79,7 +79,7 @@ namespace DPsim {
 		///
 		void doSystemMatrixRecomputation(Bool value) { mSystemMatrixRecomputation = value; }
 
-		void setSolverParameters(SolverParameters& solverParameters){ mSolverParams = &solverParameters; }
+		void setSolverParameters(std::shared_ptr<SolverParameters> &solverParameters){ mSolverParams = solverParameters; }
 		
 		// #### Initialization ####
 		///
