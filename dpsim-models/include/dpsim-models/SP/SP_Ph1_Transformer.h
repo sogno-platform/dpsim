@@ -58,8 +58,6 @@ namespace Ph1 {
         Real mInductancePerUnit;
 		/// leakage impedance
 		Complex mLeakagePerUnit;
-		/// magnetizing impedance
-		Complex mMagnetizingPerUnit;
         /// transformer ratio
         Real mRatioAbsPerUnit;
 
@@ -73,6 +71,10 @@ namespace Ph1 {
 		// #### Power flow results ####
 		/// branch Current flow [A], coef(0) has data from node 0, coef(1) from node 1.
 		const Attribute<MatrixComp>::Ptr mCurrent;
+		const Attribute<Complex>::Ptr mPrimaryCurrent;
+		const Attribute<Complex>::Ptr mSecondaryCurrent;
+		const Attribute<Complex>::Ptr mPrimaryLV;
+		const Attribute<Complex>::Ptr mSecondaryLV;
 
 		/// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
 		const Attribute<Matrix>::Ptr mActivePowerBranch;
