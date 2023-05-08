@@ -79,7 +79,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	SPDLOG_LOGGER_INFO(mSLog, "Reactance (referred to higher voltage side) = {} [Ohm]", Logger::matrixToString(omega * mInductance));
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
-	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * (mVirtualNodes[0]->initialSingleVoltage() -  initialSingleVoltage(0));
+	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * (mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0));
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 
@@ -165,6 +165,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * mVirtualNodes[0]->initialSingleVoltage()));
+	mSLog->flush();
 }
 
 void EMT::Ph3::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
