@@ -24,14 +24,20 @@ void Three_bus_sim(String simName, Real timeStep, Real finalTime, Real cmdInerti
 	//***Applying the new signal model: PMUSignalDevice
 	//***Tonstruction a PMU
 	auto pmu_1 = Signal::PMUSignalDevice::make("PMU_1", Logger::Level::debug);
-	// //***The attribute mInput of PMU is set by the mVoltage of the SimNode
-	 pmu_1->mInput->setReference(n1_PF->mVoltage);
+	//***The attribute mInput of PMU is set by the mVoltage of the SimNode
+	pmu_1->mInput->setReference(n1_PF->mVoltage);
+
+	//*** PMU signal deveice produces a Gaussian distributed measurement error rate***//
+	//*** K * Sigma = real value * errorRate                                       ***//
+	pmu_1->setParameters(0.01);
 
 	auto pmu_2 = Signal::PMUSignalDevice::make("PMU_2", Logger::Level::debug);
 	pmu_2->mInput->setReference(n2_PF->mVoltage);
+	pmu_2->setParameters(0.001);
 
 	auto pmu_3 = Signal::PMUSignalDevice::make("PMU_3", Logger::Level::debug);
 	pmu_3->mInput->setReference(n3_PF->mVoltage);
+	pmu_3->setParameters(0.001);
 
 	// injection
 	// configuration(Synchronous generator 1)

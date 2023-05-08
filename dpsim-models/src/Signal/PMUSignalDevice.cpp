@@ -1,7 +1,7 @@
 #include <dpsim-models/Signal/PMUSignalDevice.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
-
+#include <time.h>
 using namespace CPS;
 using namespace CPS::Signal;
 
@@ -16,29 +16,33 @@ PMUSignalDevice::PMUSignalDevice(String name, Logger::Level logLevel) :
    
 // }
 
+void PMUSignalDevice::setParameters(Real Sigma){
+    mSigma=Sigma;
+}
 
 void PMUSignalDevice::MeasurementError(Real time){
 
-    // GSL random number generator
-    const gsl_rng_type *T;
-    const gsl_rng *r;
-    double val;
-
-    // Setup environment
-    T = gsl_rng_taus;
-    r = gsl_rng_alloc (T);
-    val = gsl_ran_gaussian (r, 2.0);
-
-    SPDLOG_LOGGER_INFO(mSLog, "GSL value: gsl= {}", val);
-
-    SPDLOG_LOGGER_INFO(mSLog,"Input values: input = {}", **mInput);
+    // Measurement error
+    double randomErrorRate;
     
+    // GSL random number generator
+    gsl_rng *r=gsl_rng_alloc(gsl_rng_default);
 
-    /// adding the measurement error
-    // noise is considered as a 10% error
-     **mOutput =**mInput*1.1;
-    // **mOutput=gsl_ran_gaussian(r,sigma)+**mInput;
+    // To avoid the seed of random number always selected as the same, we use the UTC time to generate the seed.
+    // Time consumption of the calculations betweens elements is small, here the "tv_nsec" can distinct the time difference within nano second.
+    struct timespec ts;
+    timespec_get(&ts,TIME_UTC);
+    gsl_rng_set(r,ts.tv_nsec);
 
+    // The measurement error rate is gaussian distributed, mean value 0, standard deviation mSigma.
+    randomErrorRate = gsl_ran_gaussian (r, mSigma);
+
+    // Output = Input + Error = Input + Input*errorRate
+     **mOutput =**mInput*(1+randomErrorRate);
+
+    // To log the GSL random number, mInput and mOutput.
+    SPDLOG_LOGGER_INFO(mSLog, "GSL value: gsl= {}", randomErrorRate);
+    SPDLOG_LOGGER_INFO(mSLog,"Input values: input = {}", **mInput);
     SPDLOG_LOGGER_INFO(mSLog,"Output values: output = {}:", **mOutput);
 }
 

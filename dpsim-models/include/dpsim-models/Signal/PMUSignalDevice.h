@@ -22,12 +22,15 @@ namespace Signal {
 		//***PMUSignalDevice has two attributes:Input and Output***//
 		const  Attribute<MatrixComp>::Ptr mInput;
         const  Attribute<MatrixComp>::Ptr mOutput;
+		Real mSigma;
 
 		//Constructor 
 		PMUSignalDevice(String name, Logger::Level logLevel = Logger::Level::off);
 
 		//Operation for adding measurement error
 		void MeasurementError(Real time);
+
+	    void setParameters(Real Sigma);
 		
 		//***Get task list for the solver***//
 		Task::List getTasks();
