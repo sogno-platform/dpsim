@@ -18,12 +18,17 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 	mActivePowerBranch(mAttributes->create<Matrix>("p_branch_vector")),
 	mReactivePowerBranch(mAttributes->create<Matrix>("q_branch_vector")),
 	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
-	mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
+	mReactivePowerInjection(mAttributes->create<Real>("q_inj")),
+	mPrimaryCurrent(mAttributes->create<Complex>("primary_current")),
+	mSecondaryCurrent(mAttributes->create<Complex>("secondary_current")),
+	mPrimaryLV(mAttributes->create<Complex>("primary_voltage_LVside")),
+	mSecondaryLV(mAttributes->create<Complex>("secondary_voltage_LVside")) {
+
+	setTerminalNumber(2);
 
 	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
-	setTerminalNumber(2);
 
 	**mCurrent = MatrixComp::Zero(2,1);
 	**mActivePowerBranch = Matrix::Zero(2,1);
@@ -40,7 +45,7 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
 	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H] (referred to primary side)", **mResistance, **mInductance);
     SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [/] Phase Shift={} [deg]", std::abs(**mRatio), std::arg(**mRatio));
-	SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
+	SPDLOG_LOGGER_INFO(mSLog, "Rated Power={} [W]", **mRatedPower);
 
 	mRatioAbs = std::abs(**mRatio);
 	mRatioPhase = std::arg(**mRatio);
@@ -52,7 +57,7 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 	Real ratioPhase, Real resistance, Real inductance) {
 
 	**mRatedPower = ratedPower;
-	SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
+	SPDLOG_LOGGER_INFO(mSLog, "Rated Power={} [W]", **mRatedPower);
 
 	SP::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
 	mSLog->flush();
@@ -61,8 +66,8 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mNominalOmega = 2. * PI * frequency;
 	mReactance = mNominalOmega * **mInductance;
-	SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)", mReactance);
-	mSLog->flush();
+	mImpedance = { **mResistance, mReactance };
+	SPDLOG_LOGGER_INFO(mSLog, "Impedance={} [Ohm] (referred to primary side)", mImpedance);
 
 	// Component parameters are referred to higher voltage side.
 	// Switch terminals to have terminal 0 at higher voltage side
@@ -81,22 +86,29 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
 		SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]", mRatioAbs, mRatioPhase);
 	}
-	mSLog->flush();
 
 	// Static calculations from load flow data
-	mImpedance = { **mResistance, mReactance };
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0) - initialSingleVoltage(1);
-	(**mIntfCurrent)(0, 0) =(initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) / mImpedance;	// TODO: check formel
+	(**mIntfCurrent)(0, 0) = (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) / mImpedance;
+
+	//
+	**mPrimaryLV = initialSingleVoltage(1) * **mRatio;
+	**mSecondaryLV = initialSingleVoltage(1);
+	**mPrimaryCurrent = (**mIntfCurrent)(0, 0);
+	**mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
 
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
-		"\nCurrent: {:s}"
-		"\nTerminal 0 voltage: {:s}"
-		"\nTerminal 1 voltage: {:s}"
+		"\nHV side Current: {:s} (= {:s})"
+		"\nLow side Current: {:s}"
+		"\nTerminal 0 voltage (HV side voltage): {:s}"
+		"\nTerminal 1 voltage (LV side voltage): {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
-		Logger::phasorToString((**mIntfCurrent)(0, 0)),
+		Logger::phasorToString(**mPrimaryCurrent),
+		Logger::complexToString(**mPrimaryCurrent),
+		Logger::phasorToString(**mSecondaryCurrent),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 	mSLog->flush();
@@ -193,23 +205,25 @@ void SP::Ph1::Transformer::mnaCompInitialize(Real omega, Real timeStep, Attribut
 void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
 	if (terminalNotGrounded(0)) {
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), 1. / mImpedance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), 1. / mImpedance);
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			(Complex(1, 0) / mImpedance).real(), (Complex(1, 0) / mImpedance).imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), std::pow(**mRatio,2) / mImpedance );
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), std::pow(**mRatio,2) / mImpedance );
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			(std::pow(**mRatio,2) / mImpedance).real(), (std::pow(**mRatio,2) / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
 	}
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -**mRatio / mImpedance );
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -**mRatio / mImpedance );
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			(-**mRatio / mImpedance).real(), (-**mRatio / mImpedance).imag(), matrixNodeIndex(0), matrixNodeIndex(1));
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -**mRatio / mImpedance );
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -**mRatio / mImpedance );
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			(-**mRatio / mImpedance).real(), (-**mRatio / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
+
+	mSLog->flush();
 }
 
 void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, 
@@ -217,7 +231,11 @@ void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(AttributeBase::List &p
 	Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mPrimaryLV);
+	modifiedAttributes.push_back(mSecondaryLV);
 	modifiedAttributes.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mSecondaryCurrent);
+	modifiedAttributes.push_back(mSecondaryCurrent);
 }
 
 void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
@@ -231,9 +249,12 @@ void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	if (terminalNotGrounded(0)) {
 		(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	}
-	if (terminalNotGrounded(0)) {
-		(**mIntfVoltage)(0, 0) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+	if (terminalNotGrounded(1)) {
+		**mSecondaryLV = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+		**mPrimaryLV = **mSecondaryLV * **mRatio;
+		(**mIntfVoltage)(0, 0) -= **mSecondaryLV;
 	}
+
 	
 }
 
@@ -245,4 +266,7 @@ void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	if (terminalNotGrounded(1)) {
 		(**mIntfCurrent)(0, 0) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) * (**mRatio / mImpedance);
 	}
+
+	**mPrimaryCurrent = (**mIntfCurrent)(0, 0);
+	**mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
 }

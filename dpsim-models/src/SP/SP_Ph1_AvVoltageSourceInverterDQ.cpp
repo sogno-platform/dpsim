@@ -29,7 +29,7 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	if (withTrafo) {
 		setVirtualNodeNumber(4);
 		mConnectionTransformer = SP::Ph1::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel);
-		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 	} else {
 		setVirtualNodeNumber(3);
 	}
@@ -97,7 +97,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVo
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
-	Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance) {
+	Real ratioAbs, Real ratioPhase, Real resistance, Real inductance) {
 
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower,
 		ratioAbs, ratioPhase, resistance, inductance);
@@ -109,8 +109,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltag
     SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
 
 	if (mWithConnectionTransformer)
-		// TODO: resistive losses neglected so far (mWithResistiveLosses=false)
-		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance, mTransformerInductance);
+		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance, mTransformerInductance);
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll,
