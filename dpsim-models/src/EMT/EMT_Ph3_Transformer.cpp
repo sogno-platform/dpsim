@@ -221,6 +221,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
       Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)),
       Logger::phasorToString(RMS3PH_TO_PEAK1PH *
                              mVirtualNodes[0]->initialSingleVoltage()));
+  mSLog->flush();
 }
 
 void EMT::Ph3::Transformer::mnaParentInitialize(
