@@ -11,6 +11,7 @@
 using namespace CPS;
 
 // #### General ####
+<<<<<<< HEAD
 SP::Ph1::Transformer::Transformer(String uid, String name,
                                   Logger::Level logLevel)
     : Base::Ph1::Transformer(mAttributes),
@@ -26,6 +27,26 @@ SP::Ph1::Transformer::Transformer(String uid, String name,
   **mIntfVoltage = MatrixComp::Zero(1, 1);
   **mIntfCurrent = MatrixComp::Zero(1, 1);
   setTerminalNumber(2);
+=======
+SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel)
+	: Base::Ph1::Transformer(mAttributes), MNASimPowerComp<Complex>(uid, name, false, true, logLevel),
+	mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
+	mCurrent(mAttributes->create<MatrixComp>("current_vector")),
+	mActivePowerBranch(mAttributes->create<Matrix>("p_branch_vector")),
+	mReactivePowerBranch(mAttributes->create<Matrix>("q_branch_vector")),
+	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
+	mReactivePowerInjection(mAttributes->create<Real>("q_inj")),
+	mPrimaryCurrent(mAttributes->create<Complex>("primary_current")),
+	mSecondaryCurrent(mAttributes->create<Complex>("secondary_current")),
+	mPrimaryLV(mAttributes->create<Complex>("primary_voltage_LVside")),
+	mSecondaryLV(mAttributes->create<Complex>("secondary_voltage_LVside")) {
+
+	setTerminalNumber(2);
+
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
+>>>>>>> cb8aa51d8 (set initial voltages in validation notebook of power transformer)
 
   **mCurrent = MatrixComp::Zero(2, 1);
   **mActivePowerBranch = Matrix::Zero(2, 1);
@@ -52,8 +73,15 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
                      std::abs(**mRatio), std::arg(**mRatio));
   SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
 
+<<<<<<< HEAD
   mRatioAbs = std::abs(**mRatio);
   mRatioPhase = std::arg(**mRatio);
+=======
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H] (referred to primary side)", **mResistance, **mInductance);
+    SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [/] Phase Shift={} [deg]", std::abs(**mRatio), std::arg(**mRatio));
+	SPDLOG_LOGGER_INFO(mSLog, "Rated Power={} [W]", **mRatedPower);
+>>>>>>> cb8aa51d8 (set initial voltages in validation notebook of power transformer)
 
   mParametersSet = true;
 }
@@ -63,8 +91,13 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
                                          Real ratioAbs, Real ratioPhase,
                                          Real resistance, Real inductance) {
 
+<<<<<<< HEAD
   **mRatedPower = ratedPower;
   SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
+=======
+	**mRatedPower = ratedPower;
+	SPDLOG_LOGGER_INFO(mSLog, "Rated Power={} [W]", **mRatedPower);
+>>>>>>> cb8aa51d8 (set initial voltages in validation notebook of power transformer)
 
   SP::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs,
                                       ratioPhase, resistance, inductance);
@@ -72,6 +105,7 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
 }
 
 void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
+<<<<<<< HEAD
   mNominalOmega = 2. * PI * frequency;
   mReactance = mNominalOmega * **mInductance;
   SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
@@ -120,6 +154,56 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
                      Logger::phasorToString(initialSingleVoltage(0)),
                      Logger::phasorToString(initialSingleVoltage(1)));
   mSLog->flush();
+=======
+	mNominalOmega = 2. * PI * frequency;
+	mReactance = mNominalOmega * **mInductance;
+	mImpedance = { **mResistance, mReactance };
+	SPDLOG_LOGGER_INFO(mSLog, "Impedance={} [Ohm] (referred to primary side)", mImpedance);
+
+	// Component parameters are referred to higher voltage side.
+	// Switch terminals to have terminal 0 at higher voltage side
+	// if transformer is connected the other way around.
+	if (Math::abs(**mRatio) < 1.) {
+		**mRatio = 1. / **mRatio;
+		mRatioAbs = std::abs(**mRatio);
+		mRatioPhase = std::arg(**mRatio);
+		std::shared_ptr<SimTerminal<Complex>> tmp = mTerminals[0];
+		mTerminals[0] = mTerminals[1];
+		mTerminals[1] = tmp;
+		Real tmpVolt = **mNominalVoltageEnd1;
+		**mNominalVoltageEnd1 = **mNominalVoltageEnd2;
+		**mNominalVoltageEnd2 = tmpVolt;
+		SPDLOG_LOGGER_INFO(mSLog, "Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
+		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+		SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]", mRatioAbs, mRatioPhase);
+	}
+
+	// Static calculations from load flow data
+	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0) - initialSingleVoltage(1);
+	(**mIntfCurrent)(0, 0) = (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) / mImpedance;
+
+	//
+	**mPrimaryLV = initialSingleVoltage(1) * **mRatio;
+	**mSecondaryLV = initialSingleVoltage(1);
+	**mPrimaryCurrent = (**mIntfCurrent)(0, 0);
+	**mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
+
+	SPDLOG_LOGGER_INFO(mSLog,
+		"\n--- Initialization from powerflow ---"
+		"\nVoltage across: {:s}"
+		"\nHV side Current: {:s} (= {:s})"
+		"\nLow side Current: {:s}"
+		"\nTerminal 0 voltage (HV side voltage): {:s}"
+		"\nTerminal 1 voltage (LV side voltage): {:s}"
+		"\n--- Initialization from powerflow finished ---",
+		Logger::phasorToString((**mIntfVoltage)(0, 0)),
+		Logger::phasorToString(**mPrimaryCurrent),
+		Logger::complexToString(**mPrimaryCurrent),
+		Logger::phasorToString(**mSecondaryCurrent),
+		Logger::phasorToString(initialSingleVoltage(0)),
+		Logger::phasorToString(initialSingleVoltage(1)));
+	mSLog->flush();
+>>>>>>> cb8aa51d8 (set initial voltages in validation notebook of power transformer)
 }
 
 // #### Powerflow section ####
@@ -220,6 +304,7 @@ void SP::Ph1::Transformer::mnaCompInitialize(
   updateMatrixNodeIndices();
 }
 
+<<<<<<< HEAD
 void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
@@ -263,6 +348,42 @@ void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mIntfCurrent);
+=======
+void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
+	SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
+	if (terminalNotGrounded(0)) {
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), 1. / mImpedance);
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+			(Complex(1, 0) / mImpedance).real(), (Complex(1, 0) / mImpedance).imag(), matrixNodeIndex(0), matrixNodeIndex(0));
+	}
+	if (terminalNotGrounded(1)) {
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), std::pow(**mRatio,2) / mImpedance );
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+			(std::pow(**mRatio,2) / mImpedance).real(), (std::pow(**mRatio,2) / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
+	}
+	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -**mRatio / mImpedance );
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+			(-**mRatio / mImpedance).real(), (-**mRatio / mImpedance).imag(), matrixNodeIndex(0), matrixNodeIndex(1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -**mRatio / mImpedance );
+		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+			(-**mRatio / mImpedance).real(), (-**mRatio / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(0));
+	}
+
+	mSLog->flush();
+}
+
+void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, 
+	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
+	Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(mIntfVoltage);
+	modifiedAttributes.push_back(mPrimaryLV);
+	modifiedAttributes.push_back(mSecondaryLV);
+	modifiedAttributes.push_back(mIntfCurrent);
+	modifiedAttributes.push_back(mSecondaryCurrent);
+	modifiedAttributes.push_back(mSecondaryCurrent);
+>>>>>>> cb8aa51d8 (set initial voltages in validation notebook of power transformer)
 }
 
 void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount,
@@ -271,6 +392,7 @@ void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount,
   this->mnaUpdateCurrent(**leftVector);
 }
 
+<<<<<<< HEAD
 void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // v0 - v1
   (**mIntfVoltage)(0, 0) = 0.0;
@@ -296,4 +418,32 @@ void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) *
         (**mRatio / mImpedance);
   }
+=======
+void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
+	// v0 - v1
+	(**mIntfVoltage)(0, 0) = 0.0;
+	if (terminalNotGrounded(0)) {
+		(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	}
+	if (terminalNotGrounded(1)) {
+		**mSecondaryLV = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+		**mPrimaryLV = **mSecondaryLV * **mRatio;
+		(**mIntfVoltage)(0, 0) -= **mSecondaryLV;
+	}
+
+	
+}
+
+void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
+	(**mIntfCurrent)(0, 0) = 0.0;
+	if (terminalNotGrounded(0)) {
+		(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)) / mImpedance;
+	}
+	if (terminalNotGrounded(1)) {
+		(**mIntfCurrent)(0, 0) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) * (**mRatio / mImpedance);
+	}
+
+	**mPrimaryCurrent = (**mIntfCurrent)(0, 0);
+	**mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
+>>>>>>> cb8aa51d8 (set initial voltages in validation notebook of power transformer)
 }

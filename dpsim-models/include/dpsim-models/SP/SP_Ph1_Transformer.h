@@ -61,8 +61,6 @@ private:
   Real mInductancePerUnit;
   /// leakage impedance
   Complex mLeakagePerUnit;
-  /// magnetizing impedance
-  Complex mMagnetizingPerUnit;
   /// transformer ratio
   Real mRatioAbsPerUnit;
 
@@ -73,9 +71,13 @@ public:
   /// base voltage [V]
   const Attribute<Real>::Ptr mBaseVoltage;
 
-public:
-  /// base voltage [V]
-  const Attribute<Real>::Ptr mBaseVoltage;
+  // #### Power flow results ####
+  /// branch Current flow [A], coef(0) has data from node 0, coef(1) from node 1.
+  const Attribute<MatrixComp>::Ptr mCurrent;
+  const Attribute<Complex>::Ptr mPrimaryCurrent;
+  const Attribute<Complex>::Ptr mSecondaryCurrent;
+  const Attribute<Complex>::Ptr mPrimaryLV;
+  const Attribute<Complex>::Ptr mSecondaryLV;
 
   // #### Power flow results ####
   /// branch Current flow [A], coef(0) has data from node 0, coef(1) from node 1.
