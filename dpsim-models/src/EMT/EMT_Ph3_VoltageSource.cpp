@@ -41,6 +41,7 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq)
 
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp) {
 	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(**mName + "_fr");
+	srcSigFreqRamp->mFreq->setReference(mSrcFreq);
 	// Complex(1,0) is used as initialPhasor, since magnitude and phase of V_ref are taken into account by updateVoltage
 	srcSigFreqRamp->setParameters(Complex(1,0), freqStart, rocof, timeStart, duration, smoothRamp);
 	mSrcSig = srcSigFreqRamp;
@@ -53,6 +54,7 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStar
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {
     auto srcSigFm = Signal::CosineFMGenerator::make(**mName + "_fm");
 	// Complex(1,0) is used as initialPhasor, since magnitude and phase of V_ref are taken into account by updateVoltage
+	srcSigFm->mFreq->setReference(mSrcFreq);
 	srcSigFm->setParameters(Complex(1,0), modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 	mSrcSig = srcSigFm;
 
