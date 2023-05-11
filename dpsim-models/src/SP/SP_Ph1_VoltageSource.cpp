@@ -40,6 +40,7 @@ void SP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 
 void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool smoothRamp) {
 	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(**mName + "_fr");
+	srcSigFreqRamp->mFreq->setReference(mSrcFreq);
 	srcSigFreqRamp->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, smoothRamp);
 	mSrcSig = srcSigFreqRamp;
 
@@ -48,6 +49,7 @@ void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart
 
 void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency, bool zigzag) {
     auto srcSigFm = Signal::CosineFMGenerator::make(**mName + "_fm");
+	srcSigFm->mFreq->setReference(mSrcFreq);
 	srcSigFm->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 	mSrcSig = srcSigFm;
 

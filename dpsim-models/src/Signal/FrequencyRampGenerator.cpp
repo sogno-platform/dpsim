@@ -23,8 +23,8 @@ void Signal::FrequencyRampGenerator::setParameters(Complex initialPhasor, Real f
 
     mSmoothRamp = smoothRamp;
 
-    attributeTyped<Complex>("sigOut")->set(initialPhasor);
-	attributeTyped<Real>("freq")->set(freqStart);
+	**mSigOut = initialPhasor;
+	**mFreq = freqStart;
 
 	SPDLOG_LOGGER_INFO(mSLog, "Parameters:");
 	SPDLOG_LOGGER_INFO(mSLog, "\nInitial Phasor={}"
@@ -57,8 +57,8 @@ void Signal::FrequencyRampGenerator::step(Real time) {
     }
     currPhase += 2. * PI * currFreq * timestep;
 
-    attributeTyped<Complex>("sigOut")->set(mMagnitude * Complex(cos(currPhase), sin(currPhase)));
-    attributeTyped<Real>("freq")->set(currFreq);
+	**mSigOut = mMagnitude * Complex(cos(currPhase), sin(currPhase));
+	**mFreq = currFreq;
 }
 
 void Signal::FrequencyRampGenerator::stepAbsolute(Real time) {
@@ -80,6 +80,6 @@ void Signal::FrequencyRampGenerator::stepAbsolute(Real time) {
         }
     }
 
-    attributeTyped<Complex>("sigOut")->set(mMagnitude * Complex(cos(currPhase), sin(currPhase)));
-    attributeTyped<Real>("freq")->set(currFreq);
+    **mSigOut = mMagnitude * Complex(cos(currPhase), sin(currPhase));
+	**mFreq = currFreq;
 }
