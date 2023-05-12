@@ -1,4 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Getting Started</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/</link><description>Recent content in Getting Started on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno-platform.github.io/dpsim/docs/getting-started/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Build</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</link><pubDate>Thu, 05 Jan 2017 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Getting Started</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/</link><description>Recent content in Getting Started on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno-platform.github.io/dpsim/docs/getting-started/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Build</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</link><pubDate>Wed, 03 May 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</guid><description>
 &lt;h2 id="docker-based">Docker based&lt;/h2>
 &lt;p>Clone the repository&lt;/p>
 &lt;pre>&lt;code>$ git clone git@github.com:sogno-platform/dpsim.git
@@ -29,13 +29,23 @@ $ mkdir build &amp;amp;&amp;amp; cd build
 $ cmake ..
 $ cmake --build . --target dpsimpy
 &lt;/code>&lt;/pre>
+&lt;p>If you need other libraries that are not built by default, you need to target them specifically, for example if you need `dpsimpy´ and ´dpsimpyvillas´:&lt;/p>
+&lt;pre>&lt;code>$ cmake --build . --target dpsimpy dpsimpyvillas
+&lt;/code>&lt;/pre>
 &lt;p>To build everything run&lt;/p>
 &lt;pre>&lt;code>$ cmake --build .
+&lt;/code>&lt;/pre>
+&lt;p>To use other libraries that are installed, use the relevant option defined in the CMakeList.txt files, for example for GSL below, and then build as usual:&lt;/p>
+&lt;pre>&lt;code>$ cmake .. -DWITH_GSL=ON
 &lt;/code>&lt;/pre>
 &lt;p>If you would like to use the Python package, it has to be added to the path.
 The following command adds the dpsimpy C++/Python package as well as the dpsim pure Python package.&lt;/p>
 &lt;pre>&lt;code>$ cd /dpsim/build
 $ export PYTHONPATH=$(pwd):$(pwd)/../python/src/
+&lt;/code>&lt;/pre>
+&lt;p>If you are using &lt;code>conda&lt;/code> or other ways to develop with environments, please keep in mind that this will become specific for your setup. For this case, from within the environment already active:&lt;/p>
+&lt;pre>&lt;code>$ cd /dpsim/build
+$ conda develop $(pwd) &amp;amp;&amp;amp; conda develop $(pwd)/Source/Python &amp;amp;&amp;amp; conda develop $(pwd)/../Source/Python
 &lt;/code>&lt;/pre>
 &lt;p>To run jupyter lab&lt;/p>
 &lt;pre>&lt;code>$ cd /dpsim
@@ -48,7 +58,7 @@ $ sudo make install
 &lt;h2 id="cmake-for-linux">CMake for Linux&lt;/h2>
 &lt;p>The most recent list of requirements can be found in the Dockerfiles.&lt;/p>
 &lt;p>Make sure that the required dependencies are installed.
-The &lt;a href="https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/-/blob/master/Packaging/install-fedora-deps.sh">fedora installation script&lt;/a> in the DPsim repository is a good place to start from.&lt;/p>
+The &lt;a href="https://github.com/sogno-platform/dpsim/blob/c40e283338574e0ba7cd9861c70f1e41aa3399ba/packaging/Shell/install-fedora-deps.sh">fedora installation script&lt;/a> in the DPsim repository is a good place to start from.&lt;/p>
 &lt;p>&lt;strong>Note:&lt;/strong> There are currently no Debian packages for &lt;code>villas-node&lt;/code> and &lt;code>libcimpp16v29a&lt;/code>.
 If you want to use these optional feature, you have to build them manually.&lt;/p>
 &lt;p>Install Sundials&lt;/p>

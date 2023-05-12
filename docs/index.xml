@@ -234,6 +234,7 @@ The general structure looks as follows.&lt;/p>
 &lt;li>&lt;code>Sources/Python/Module.cpp&lt;/code>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: Roadmap</title><link>https://sogno-platform.github.io/dpsim/docs/roadmap/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/roadmap/</guid><description>
 &lt;p>Short-term planning for new features is done on the GitHub &lt;a href="https://github.com/orgs/sogno-platform/projects/1">Project board&lt;/a>.&lt;/p>
+&lt;p>You can also check the &lt;a href="https://github.com/sogno-platform/dpsim/issues">Issues List&lt;/a> or the &lt;a href="https://github.com/sogno-platform/dpsim/pulls">Pull Requests&lt;/a> on GitHub.&lt;/p>
 &lt;h3 id="under-development">Under Development&lt;/h3>
 &lt;ul>
 &lt;li>Solver
@@ -280,9 +281,140 @@ The general structure looks as follows.&lt;/p>
 &lt;/ul></description></item><item><title>Docs: Reference</title><link>https://sogno-platform.github.io/dpsim/docs/reference/</link><pubDate>Tue, 17 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/reference/</guid><description>
 &lt;p>The &lt;a href="https://sogno-platform.github.io/dpsim/sphinx/about.html">Sphinx documentation&lt;/a> describes the Python API.&lt;/p>
 &lt;p>The &lt;a href="https://sogno-platform.github.io/dpsim/doxygen/index.html">Doxygen documentation&lt;/a> is automatically generated from the C++ code using Doxygen.
-It is helpful to understand the general structure of the C++ DPsim core components.&lt;/p></description></item><item><title>Docs: Contribution Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/contribution-guidelines/</link><pubDate>Tue, 17 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/contribution-guidelines/</guid><description>
+It is helpful to understand the general structure of the C++ DPsim core components.&lt;/p></description></item><item><title>Docs: Contribution Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/contribution-guidelines/</link><pubDate>Wed, 03 May 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/contribution-guidelines/</guid><description>
 &lt;p>We&amp;rsquo;d love to accept your patches and contributions to this project.
-Please send us a pull request or get in touch with us via mail or slack if you would like to contribute.&lt;/p></description></item><item><title>Docs: Interfacing with the MNA Solver</title><link>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</link><pubDate>Mon, 19 Dec 2022 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</guid><description>
+Please send us a &lt;a href="https://github.com/sogno-platform/dpsim/pulls">pull request&lt;/a> or get in touch with us via mail or &lt;a href="https://lfenergy.slack.com/archives/C054GB551TL">slack&lt;/a> if you would like to contribute.&lt;/p></description></item><item><title>Docs: Build</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</link><pubDate>Wed, 03 May 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</guid><description>
+&lt;h2 id="docker-based">Docker based&lt;/h2>
+&lt;p>Clone the repository&lt;/p>
+&lt;pre>&lt;code>$ git clone git@github.com:sogno-platform/dpsim.git
+&lt;/code>&lt;/pre>
+&lt;p>or using https if you do not have an account&lt;/p>
+&lt;pre>&lt;code>$ git clone https://github.com/sogno-platform/dpsim.git
+&lt;/code>&lt;/pre>
+&lt;p>In the repository, there is a Docker file with all required dependencies&lt;/p>
+&lt;pre>&lt;code>$ cd dpsim
+$ docker build -t sogno/dpsim:dev -f Packaging/Docker/Dockerfile.dev .
+&lt;/code>&lt;/pre>
+&lt;p>Alternatively, the image can be pulled from DockerHub like so&lt;/p>
+&lt;pre>&lt;code>$ docker pull sogno/dpsim:dev
+&lt;/code>&lt;/pre>
+&lt;p>For OS specific instructions on how to install requirements, see the sections below.&lt;/p>
+&lt;p>Next, run a Docker container&lt;/p>
+&lt;pre>&lt;code>$ cd dpsim
+$ docker run -it -p 8888:8888 -v $(pwd):/dpsim --privileged sogno/dpsim:dev bash
+&lt;/code>&lt;/pre>
+&lt;p>The option &lt;code>-p&lt;/code> maps the port 8888 of the container to the docker host. This is required to access the jupyter lab instance inside the container. The option &lt;code>--privileged&lt;/code> is required for debug builds.&lt;/p>
+&lt;p>For Windows, you might need to specify the current directory with curly brackets&lt;/p>
+&lt;pre>&lt;code>$ docker run -it -p 8888:8888 -v ${pwd}:/dpsim --privileged sogno/dpsim:dev bash
+&lt;/code>&lt;/pre>
+&lt;p>Now, you should be in an interactive session inside the docker container.&lt;/p>
+&lt;p>The DPsim C++ and Python library without C++ examples or documentation can be built as follows&lt;/p>
+&lt;pre>&lt;code>$ cd /dpsim
+$ mkdir build &amp;amp;&amp;amp; cd build
+$ cmake ..
+$ cmake --build . --target dpsimpy
+&lt;/code>&lt;/pre>
+&lt;p>If you need other libraries that are not built by default, you need to target them specifically, for example if you need `dpsimpy´ and ´dpsimpyvillas´:&lt;/p>
+&lt;pre>&lt;code>$ cmake --build . --target dpsimpy dpsimpyvillas
+&lt;/code>&lt;/pre>
+&lt;p>To build everything run&lt;/p>
+&lt;pre>&lt;code>$ cmake --build .
+&lt;/code>&lt;/pre>
+&lt;p>To use other libraries that are installed, use the relevant option defined in the CMakeList.txt files, for example for GSL below, and then build as usual:&lt;/p>
+&lt;pre>&lt;code>$ cmake .. -DWITH_GSL=ON
+&lt;/code>&lt;/pre>
+&lt;p>If you would like to use the Python package, it has to be added to the path.
+The following command adds the dpsimpy C++/Python package as well as the dpsim pure Python package.&lt;/p>
+&lt;pre>&lt;code>$ cd /dpsim/build
+$ export PYTHONPATH=$(pwd):$(pwd)/../python/src/
+&lt;/code>&lt;/pre>
+&lt;p>If you are using &lt;code>conda&lt;/code> or other ways to develop with environments, please keep in mind that this will become specific for your setup. For this case, from within the environment already active:&lt;/p>
+&lt;pre>&lt;code>$ cd /dpsim/build
+$ conda develop $(pwd) &amp;amp;&amp;amp; conda develop $(pwd)/Source/Python &amp;amp;&amp;amp; conda develop $(pwd)/../Source/Python
+&lt;/code>&lt;/pre>
+&lt;p>To run jupyter lab&lt;/p>
+&lt;pre>&lt;code>$ cd /dpsim
+$ jupyter lab --ip=&amp;quot;0.0.0.0&amp;quot; --allow-root --no-browser
+&lt;/code>&lt;/pre>
+&lt;p>To install dpsim run&lt;/p>
+&lt;pre>&lt;code>$ cd /dpsim/build
+$ sudo make install
+&lt;/code>&lt;/pre>
+&lt;h2 id="cmake-for-linux">CMake for Linux&lt;/h2>
+&lt;p>The most recent list of requirements can be found in the Dockerfiles.&lt;/p>
+&lt;p>Make sure that the required dependencies are installed.
+The &lt;a href="https://github.com/sogno-platform/dpsim/blob/c40e283338574e0ba7cd9861c70f1e41aa3399ba/packaging/Shell/install-fedora-deps.sh">fedora installation script&lt;/a> in the DPsim repository is a good place to start from.&lt;/p>
+&lt;p>&lt;strong>Note:&lt;/strong> There are currently no Debian packages for &lt;code>villas-node&lt;/code> and &lt;code>libcimpp16v29a&lt;/code>.
+If you want to use these optional feature, you have to build them manually.&lt;/p>
+&lt;p>Install Sundials&lt;/p>
+&lt;pre>&lt;code>$ git clone --branch v3.1.1 https://github.com/LLNL/sundials.git
+$ mkdir sundials/build
+$ pushd sundials/build
+$ cmake .. \
+-DBUILD_SHARED_LIBS=ON \
+-DBUILD_STATIC_LIBS=OFF \
+-DEXAMPLES_ENABLE_C=OFF
+$ make -j$(nproc) install
+$ popd
+&lt;/code>&lt;/pre>
+&lt;p>The following steps to clone, build and install are the same as for the Docker setup.&lt;/p>
+&lt;h2 id="cmake-for-windows">CMake for Windows&lt;/h2>
+&lt;p>Make sure that the required dependecies are installed:&lt;/p>
+&lt;ul>
+&lt;li>Visual Studio 2017 with C++ Desktop development package&lt;/li>
+&lt;li>&lt;a href="https://cmake.org/">CMake&lt;/a> for Windows&lt;/li>
+&lt;li>&lt;a href="https://git-scm.com/download/win">Git for Windows&lt;/a>&lt;/li>
+&lt;li>For Python support, install Python3, for example, Anaconda, and add Python to your PATH.&lt;/li>
+&lt;/ul>
+&lt;p>Clone the project as explained for Docker.&lt;/p>
+&lt;p>Open a windows command prompt and navigate into the new DPsim folder.
+Generate a Visual Studio project with CMake and use it to build the project&lt;/p>
+&lt;pre>&lt;code>$ mkdir build
+$ cd build
+$ cmake -G &amp;quot;Visual Studio 15 2017 Win64&amp;quot; ..
+&lt;/code>&lt;/pre>
+&lt;p>Open Visual Studio and load the Visual Studio project from the build directory within the DPsim folder.&lt;/p>
+&lt;p>You can either build the project from within Visual Studio or from the command line by running the following command in the windows command prompt&lt;/p>
+&lt;pre>&lt;code>$ cmake --build .
+&lt;/code>&lt;/pre>
+&lt;p>To install the Python package use Visual Studio and the Release configuration to build the DPsim Python module and then build the INSTALL project.&lt;/p>
+&lt;h2 id="cmake-for-macos">CMake for macOS&lt;/h2>
+&lt;p>Make sure that the required dependecies are installed&lt;/p>
+&lt;pre>&lt;code>$ /usr/bin/ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&amp;quot;
+$ brew install gcc9 git cmake graphviz python3 gsl eigen spdlog
+$ sudo pip3 install numpy
+&lt;/code>&lt;/pre>
+&lt;p>Clone the source as explained for the Docker setup.&lt;/p>
+&lt;p>Compile&lt;/p>
+&lt;pre>&lt;code>$ mkdir build
+$ cmake ..
+$ make -j$(sysctl -n hw.ncpu)
+&lt;/code>&lt;/pre>
+&lt;p>To install the generated Python module to your system&lt;/p>
+&lt;pre>&lt;code>$ sudo make install
+&lt;/code>&lt;/pre>
+&lt;h2 id="python-package-for-pypi">Python Package for pypi&lt;/h2>
+&lt;p>Follow the previous steps to set up the Docker container.&lt;/p>
+&lt;p>To build the Python package run&lt;/p>
+&lt;pre>&lt;code>$ python3 setup.py bdist_wheel
+&lt;/code>&lt;/pre>
+&lt;h2 id="documentation">Documentation&lt;/h2>
+&lt;h3 id="python">Python&lt;/h3>
+&lt;p>Install &lt;a href="https://www.sphinx-doc.org/en/master/">Sphinx&lt;/a> or use the Docker image.&lt;/p>
+&lt;p>Generate the Python documentation by running Sphinx via CMake:&lt;/p>
+&lt;pre>&lt;code>$ mkdir -p build &amp;amp;&amp;amp; cd build
+$ cmake ..
+$ make docs
+&lt;/code>&lt;/pre>
+&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/&lt;/code>.&lt;/p>
+&lt;h3 id="c">C++&lt;/h3>
+&lt;p>Install &lt;a href="http://www.doxygen.nl/">Doxygen&lt;/a> or use the Docker image.&lt;/p>
+&lt;p>Generate the C++ documentation by running Doxygen via CMake:&lt;/p>
+&lt;pre>&lt;code>$ mkdir -p build &amp;amp;&amp;amp; cd build
+$ cmake ..
+$ make docs_cxx
+&lt;/code>&lt;/pre>
+&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/Cxx&lt;/code>.&lt;/p></description></item><item><title>Docs: Interfacing with the MNA Solver</title><link>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</link><pubDate>Mon, 19 Dec 2022 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</guid><description>
 &lt;p>The various solver classes based on &lt;code>MNASolver&lt;/code> are used to perform &lt;a href="https://sogno-platform.github.io/dpsim/docs/concepts/nodal-analysis/">Nodal Analysis&lt;/a> during a DPsim simulation. For components to be able to influence the input variables of the MNA, they have to implement certain methods defined in the &lt;code>MNAInterface&lt;/code> interface class. While it is possible to individually implement &lt;code>MNAInterface&lt;/code> for every
 component, the behavior of many components can be unified in a common base class. This base class is called &lt;code>MNASimPowerComp&amp;lt;T&amp;gt;&lt;/code>.
 Currently, it is the only class which directly implements &lt;code>MNAInterface&lt;/code> and in turn all MNA components inherit from this class.
@@ -479,13 +611,12 @@ The single line diagram is depicted in the figure below.&lt;/p>
 &lt;p>If node reduction is not applied, two virtual nodes are created to stamp this model into the system matrix.&lt;/p>
 &lt;p>Furthermore, the ideal transformer has an additional equation, which requires an extension of the system matrix.
 The complete matrix stamp for the ideal transformer is&lt;/p>
-&lt;p>$$
-\begin{array}{c|c c c}
-~ &amp;amp; j &amp;amp; k &amp;amp; l \cr
+&lt;div class="math">$$\begin{array}{c|c c c}
+~ &amp; j &amp; k &amp; l \cr
 \hline
-j &amp;amp; &amp;amp; &amp;amp; -1 \cr
-k &amp;amp; &amp;amp; &amp;amp; T \cr
-l &amp;amp; 1 &amp;amp; -T &amp;amp; 0
+j &amp; &amp; &amp; -1 \cr
+k &amp; &amp; &amp; T \cr
+l &amp; 1 &amp; -T &amp; 0
 \end{array}
 \begin{pmatrix}
 v_j \cr
@@ -497,9 +628,7 @@ i_{l} \cr
 \cr
 \cr
 0\cr
-\end{pmatrix}
-$$&lt;/p>
-&lt;p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
+\end{pmatrix} $$&lt;/div>&lt;p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
 $l$ indicates the inserted row and column to accommodate the relation between the two voltages at the ends of the transformer.
 The transformer ratio is defined as $T = V_{j} / V_{k}$.
 A phase shift can be introduced if $T$ is considered as a complex number.&lt;/p></description></item><item><title>Docs: Create New Simulation</title><link>https://sogno-platform.github.io/dpsim/docs/tasks/create-simulation/</link><pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/tasks/create-simulation/</guid><description>
@@ -564,15 +693,6 @@ A circuit can be solved using Nodal Analysis as follows&lt;/p>
 &lt;/ul>
 &lt;p>The resulting equations can be written in matrix form and have to be solved for $v$.
 $$\boldsymbol{Y} \boldsymbol{v} = \boldsymbol{i}$$&lt;/p></description></item><item><title>Docs: Powerflow</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</guid><description>
-&lt;script>
-MathJax = {
-tex: {
-tags: 'all'
-}
-};
-&lt;/script>
-&lt;script src="https://polyfill.io/v3/polyfill.min.js?features=es6">&lt;/script>
-&lt;script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">&lt;/script>
 &lt;p>The power flow problem is about the calculation of voltage magnitudes and angles for one set of buses.
 The solution is obtained from a given set of voltage magnitudes and power levels for a specific model of the network configuration.
 The power flow solution exhibits the voltages and angles at all buses and real and reactive flows can be deduced from the same.&lt;/p>
@@ -644,85 +764,78 @@ Futhermore, the solution vector $\vec{x}$ will represent $\vec{V}$ either by pol
 &lt;p>The injected power at a node $k$ is given by:
 $$S_{k} = V_{k} I _{k}^{*}$$&lt;/p>
 &lt;p>The current injection into any bus $k$ may be expressed as:
-$$I_{k} = \sum_{j=1}^{N} Y_{kj} V_{j}$$&lt;/p>
-&lt;p>Substitution yields:
-\begin{align}
-S_{k} =&amp;amp; V_{k} \left ( \sum_{j=1}^{N} Y_{kj} V_{j} \right )^{&lt;em>}
-=&amp;amp; V_{k} \sum_{j=1}^{N} Y_{kj}^{&lt;/em>} V_{j} ^{*}
-\end{align}&lt;/p>
-&lt;p>We may define $G_{kj}$ and $B_{kj}$ as the real and imaginary parts of the admittance matrix element $Y_{kj}$ respectively, so that $Y_{kj} = G_{kj} + jB_{kj}$.
-Then we may rewrite the last equation:
-\begin{align}
-S_{k} &amp;amp;= V_{k} \sum_{j=1}^{N} Y_{kj}^{&lt;em>} V_{j}^{&lt;/em>} \nonumber \
-&amp;amp;= \vert V_{k} \vert \angle \theta_{k} \sum_{j=1}^{N} (G_{kj} + jB_{kj})^{&lt;em>} ( \vert V_{j} \vert \angle \theta_{j})^{&lt;/em>} \nonumber \
-&amp;amp;= \vert V_{k} \vert \angle \theta_{k} \sum_{j=1}^{N} (G_{kj} - jB_{kj}) ( \vert V_{j} \vert \angle - \theta_{j}) \nonumber \
-&amp;amp;= \sum_{j=1} ^{N} \vert V_{k} \vert \angle \theta_{k} ( \vert V_{j} \vert \angle - \theta_{j}) (G_{kj} - jB_{kj}) \nonumber \
-&amp;amp;= \sum_{j=1} ^{N} \left ( \vert V_{k} \vert \vert V_{j} \vert \angle (\theta_{k} - \theta_{j}) \right ) (G_{kj} - jB_{kj}) \nonumber \
-&amp;amp;= \sum_{j=1} ^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( cos(\theta_{k} - \theta_{j}) + jsin(\theta_{k} - \theta_{j}) \right ) (G_{kj} - jB_{kj})
-\label{eq:compl_power}
-\end{align}&lt;/p>
-&lt;p>If we now perform the algebraic multiplication of the two terms inside the parentheses, and collect real and imaginary parts, and recall that $S_{k} = P_{k} + jQ_{k}$, we can express $\eqref{eq:compl_power}$ as two equations: one for the real part, $P_{k}$, and one for the imaginary part, $Q_{k}$, according to:&lt;/p>
-&lt;p>\begin{align}
-{P}&lt;em>{k} = \sum&lt;/em>{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}cos(\theta_{k} - \theta_{j}) + B_{kj} sin(\theta_{k} - \theta_{j}) \right ) \label{eq:active_power}\
-{Q}&lt;em>{k} = \sum&lt;/em>{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}sin(\theta_{k} - \theta_{j}) - B_{kj} cos(\theta_{k} - \theta_{j}) \right ) \label{eq:reactive_power}
-\end{align}&lt;/p>
-&lt;p>These equations are called the power flow equations, and they form the fundamental building block from which we solve the power flow problem.&lt;/p>
+$$
+I_{k} = \sum_{j=1}^{N} Y_{kj} V_{j}
+$$&lt;/p>
+&lt;p>Substitution yields:&lt;/p>
+&lt;div class="math">$$\begin{align}
+S_{k} &amp;= V_{k} \left ( \sum_{j=1}^{N} Y_{kj} V_{j} \right )^{*} \nonumber \\
+&amp;= V_{k} \sum_{j=1}^{N} Y_{kj}^{*} V_{j} ^{*} \nonumber
+\end{align}$$&lt;/div>&lt;p>We may define $G_{kj}$ and $B_{kj}$ as the real and imaginary parts of the admittance matrix element $Y_{kj}$ respectively, so that $Y_{kj} = G_{kj} + jB_{kj}$.
+Then we may rewrite the last equation:&lt;/p>
+&lt;div class="math">$$\begin{align}
+S_{k} &amp;= V_{k} \sum_{j=1}^{N} Y_{kj}^{*} V_{j}^{*} \nonumber \\
+&amp;= \vert V_{k} \vert \angle \theta_{k} \sum_{j=1}^{N} (G_{kj} + jB_{kj})^{*} ( \vert V_{j} \vert \angle \theta_{j})^{*} \nonumber \\
+&amp;= \vert V_{k} \vert \angle \theta_{k} \sum_{j=1}^{N} (G_{kj} - jB_{kj}) ( \vert V_{j} \vert \angle - \theta_{j}) \nonumber \\
+&amp;= \sum_{j=1} ^{N} \vert V_{k} \vert \angle \theta_{k} ( \vert V_{j} \vert \angle - \theta_{j}) (G_{kj} - jB_{kj}) \nonumber \\
+&amp;= \sum_{j=1} ^{N} \left ( \vert V_{k} \vert \vert V_{j} \vert \angle (\theta_{k} - \theta_{j}) \right ) (G_{kj} - jB_{kj}) \nonumber \\
+&amp;= \sum_{j=1} ^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( cos(\theta_{k} - \theta_{j}) + jsin(\theta_{k} - \theta_{j}) \right ) (G_{kj} - jB_{kj})
+\end{align}$$&lt;/div>&lt;p>If we now perform the algebraic multiplication of the two terms inside the parentheses, and collect real and imaginary parts, and recall that $S_{k} = P_{k} + jQ_{k}$, we can express (1) as two equations: one for the real part, $P_{k}$, and one for the imaginary part, $Q_{k}$, according to:&lt;/p>
+&lt;div class="math">$$\begin{align}
+{P}_{k} = \sum_{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}cos(\theta_{k} - \theta_{j}) + B_{kj} sin(\theta_{k} - \theta_{j}) \right ) \\
+{Q}_{k} = \sum_{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}sin(\theta_{k} - \theta_{j}) - B_{kj} cos(\theta_{k} - \theta_{j}) \right )
+\end{align}$$&lt;/div>&lt;p>These equations are called the power flow equations, and they form the fundamental building block from which we solve the power flow problem.&lt;/p>
 &lt;p>We consider a power system network having $N$ buses. We assume one VD bus, $N_{PV}-1$ PV buses and $N-N_{PV}$ PQ buses.
 We assume that the VD bus is numbered bus $1$, the PV buses are numbered $2,&amp;hellip;,N_{PV}$, and the PQ buses are numbered $N_{PV}+1,&amp;hellip;,N$.
-We define the vector of unknown as the composite vector of unknown angles $\vec{\theta}$ and voltage magnitudes $\vert \vec{V} \vert$:
-\begin{align}
-\vec{x} = \left[ \begin{array}{c} \vec{\theta} \ \vert \vec{V} \vert \ \end{array} \right ]
-= \left[ \begin{array}{c} \theta_{2} \ \theta_{3} \ \vdots \ \theta_{N} \ \vert V_{N_{PV+1}} \vert \ \vert V_{N_{PV+2}} \vert \ \vdots \ \vert V_{N} \vert \end{array} \right]
-\end{align}&lt;/p>
-&lt;p>The right-hand sides of equations $\eqref{eq:active_power}$ and $\eqref{eq:reactive_power}$ depend on the elements of the unknown vector $\vec{x}$.
-Expressing this dependency more explicitly, we rewrite these equations as:
-\begin{align}
-P_{k} = P_{k} (\vec{x}) \Rightarrow P_{k}(\vec{x}) - P_{k} &amp;amp;= 0 \quad \quad k = 2,&amp;hellip;,N \
-Q_{k} = Q_{k} (\vec{x}) \Rightarrow Q_{k} (\vec{x}) - Q_{k} &amp;amp;= 0 \quad \quad k = N_{PV}+1,&amp;hellip;,N
-\end{align}&lt;/p>
-&lt;p>We now define the mismatch vector $\vec{f} (\vec{x})$ as:
-\begin{align*}
-\vec{f} (\vec{x}) = \left [ \begin{array}{c} f_{1}(\vec{x}) \ \vdots \ f_{N-1}(\vec{x}) \ &amp;mdash;&amp;mdash; \ f_{N}(\vec{x}) \ \vdots \ f_{2N-N_{PV} -1}(\vec{x}) \end{array} \right ]
-= \left [ \begin{array}{c} P_{2}(\vec{x}) - P_{2} \ \vdots \ P_{N}(\vec{x}) - P_{N} \ &amp;mdash;&amp;mdash;&amp;mdash; \ Q_{N_{PV}+1}(\vec{x}) - Q_{N_{PV}+1} \ \vdots \ Q_{N}(\vec{x}) - Q_{N} \end{array} \right]
-= \left [ \begin{array}{c} \Delta P_{2} \ \vdots \ \Delta P_{N} \ &amp;mdash;&amp;mdash; \ \Delta Q_{N_{PV}+1} \ \vdots \ \Delta Q_{N} \end{array} \right ]
+We define the vector of unknown as the composite vector of unknown angles $\vec{\theta}$ and voltage magnitudes $\vert \vec{V} \vert$:&lt;/p>
+&lt;div class="math">$$\begin{align}
+\vec{x} = \left[ \begin{array}{c} \vec{\theta} \\ \vert \vec{V} \vert \\ \end{array} \right ]
+= \left[ \begin{array}{c} \theta_{2} \\ \theta_{3} \\ \vdots \\ \theta_{N} \\ \vert V_{N_{PV+1}} \vert \\ \vert V_{N_{PV+2}} \vert \\ \vdots \\ \vert V_{N} \vert \end{array} \right]
+\end{align}$$&lt;/div>&lt;p>The right-hand sides of equations (2) and (3) depend on the elements of the unknown vector $\vec{x}$.
+Expressing this dependency more explicitly, we rewrite these equations as:&lt;/p>
+&lt;div class="math">$$\begin{align}
+P_{k} = P_{k} (\vec{x}) \Rightarrow P_{k}(\vec{x}) - P_{k} &amp;= 0 \quad \quad k = 2,...,N \\
+Q_{k} = Q_{k} (\vec{x}) \Rightarrow Q_{k} (\vec{x}) - Q_{k} &amp;= 0 \quad \quad k = N_{PV}+1,...,N
+\end{align}$$&lt;/div>&lt;p>We now define the mismatch vector $\vec{f} (\vec{x})$ as:&lt;/p>
+&lt;div class="math">$$\begin{align}
+\vec{f} (\vec{x}) = \left [ \begin{array}{c} f_{1}(\vec{x}) \\ \vdots \\ f_{N-1}(\vec{x}) \\ ------ \\ f_{N}(\vec{x}) \\ \vdots \\ f_{2N-N_{PV} -1}(\vec{x}) \end{array} \right ]
+= \left [ \begin{array}{c} P_{2}(\vec{x}) - P_{2} \\ \vdots \\ P_{N}(\vec{x}) - P_{N} \\ --------- \\ Q_{N_{PV}+1}(\vec{x}) - Q_{N_{PV}+1} \\ \vdots \\ Q_{N}(\vec{x}) - Q_{N} \end{array} \right]
+= \left [ \begin{array}{c} \Delta P_{2} \\ \vdots \\ \Delta P_{N} \\ ------ \\ \Delta Q_{N_{PV}+1} \\ \vdots \\ \Delta Q_{N} \end{array} \right ]
 = \vec{0}
-\end{align*}&lt;/p>
-&lt;p>That is a system of nonlinear equations.
+\end{align}$$&lt;/div>&lt;p>That is a system of nonlinear equations.
 This nonlinearity comes from the fact that $P_{k}$ and $Q_{k}$ have terms containing products of some of the unknowns and also terms containing trigonometric functions of some the unknowns.&lt;/p>
 &lt;h4 id="formulation-of-jacobian">Formulation of Jacobian&lt;/h4>
-&lt;p>As discussed in the previous section, the power flow problem will be solved using the Newton-Raphson method. Here, the Jacobian matrix is obtained by taking all first-order partial derivates of the power mismatch functions with respect to the voltage angles $\theta_{k}$ and magnitudes $\vert V_{k} \vert$ as:
-\begin{align}
-J_{jk}^{P \theta} &amp;amp;= \frac{\partial P_{j} (\vec{x} ) } {\partial \theta_{k}} = \vert V_{j} \vert \vert V_{k} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) - B_{jk} cos(\theta_{j} - \theta_{k} ) \right ) \
-J_{jj}^{P \theta} &amp;amp;= \frac{\partial P_{j}(\vec{x})}{\partial \theta_{j}} = -Q_{j} (\vec{x} ) - B_{jj} \vert V_{j} \vert ^{2} \
-J_{jk}^{Q \theta} &amp;amp;= \frac{\partial Q_{j}(\vec{x})}{\partial \theta_{k}} = - \vert V_{j} \vert \vert V_{k} \vert \left ( G_{jk} cos(\theta_{j} - \theta_{k}) + B_{jk} sin(\theta_{j} - \theta_{k}) \right ) \
-J_{jj}^{Q \theta} &amp;amp;= \frac{\partial Q_{j}(\vec{x})}{\partial \theta_{k}} = P_{j} (\vec{x} ) - G_{jj} \vert V_{j} \vert ^{2} \
-J_{jk}^{PV} &amp;amp;= \frac{\partial P_{j} (\vec{x} ) } {\partial \vert V_{k} \vert } = \vert V_{j} \vert \left ( G_{jk} cos(\theta_{j} - \theta_{k}) + B_{jk} sin(\theta_{j} - \theta_{k}) \right ) \
-J_{jj}^{PV} &amp;amp;= \frac{\partial P_{j}(\vec{x})}{\partial \vert V_{j} \vert } = \frac{P_{j} (\vec{x} )}{\vert V_{j} \vert} + G_{jj} \vert V_{j} \vert \
-J_{jk}^{QV} &amp;amp;= \frac{\partial Q_{j} (\vec{x} ) } {\partial \vert V_{k} \vert } = \vert V_{j} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) + B_{jk} cos(\theta_{j} - \theta_{k}) \right ) \
-J_{jj}^{QV} &amp;amp;= \frac{\partial Q_{j}(\vec{x})}{\partial \vert V_{j} \vert } = \frac{Q_{j} (\vec{x} )}{\vert V_{j} \vert} - B_{jj} \vert V_{j} \vert \
-\end{align}&lt;/p>
-&lt;p>The linear system of equations that is solved in every Newton iteration can be written in matrix form as follows:
-\begin{align}
--\left [ \begin{array}{cccccc} \frac{\partial \Delta P_{2} }{\partial \theta_{2}} &amp;amp; \cdots &amp;amp; \frac{\partial \Delta P_{2} }{\partial \theta_{N}} &amp;amp;
-\frac{\partial \Delta P_{2} }{\partial \vert V_{N_{G+1}} \vert} &amp;amp; \cdots &amp;amp; \frac{\partial \Delta P_{2} }{\partial \vert V_{N} \vert} \
-\vdots &amp;amp; \ddots &amp;amp; \vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots \
-\frac{\partial \Delta P_{N} }{\partial \theta_{2}} &amp;amp; \cdots &amp;amp; \frac{\partial \Delta P_{N}}{\partial \theta_{N}} &amp;amp;
-\frac{\partial \Delta P_{N}}{\partial \vert V_{N_{G+1}} \vert } &amp;amp; \cdots &amp;amp; \frac{\partial \Delta P_{N}}{\partial \vert V_{N} \vert} \
-\frac{\partial \Delta Q_{N_{G+1}} }{\partial \theta_{2}} &amp;amp; \cdots &amp;amp; \frac{\partial \Delta Q_{N_{G+1}} }{\partial \theta_{N}} &amp;amp;
-\frac{\partial \Delta Q_{N_{G+1}} }{\partial \vert V_{N_{G+1}} \vert } &amp;amp; \cdots &amp;amp; \frac{\partial \Delta Q_{N_{G+1}} }{\partial \vert V_{N} \vert} \
-\vdots &amp;amp; \ddots &amp;amp; \vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots \
-\frac{\partial \Delta Q_{N}}{\partial \theta_{2}} &amp;amp; \cdots &amp;amp; \frac{\partial \Delta Q_{N}}{\partial \theta_{N}} &amp;amp;
-\frac{\partial \Delta Q_{N}}{\partial \vert V_{N_{G+1}} \vert } &amp;amp; \cdots &amp;amp; \frac{\partial \Delta Q_{N}}{\partial \vert V_{N} \vert}
+&lt;p>As discussed in the previous section, the power flow problem will be solved using the Newton-Raphson method. Here, the Jacobian matrix is obtained by taking all first-order partial derivates of the power mismatch functions with respect to the voltage angles $\theta_{k}$ and magnitudes $\vert V_{k} \vert$ as:&lt;/p>
+&lt;div class="math">$$\begin{align}
+J_{jk}^{P \theta} &amp;= \frac{\partial P_{j} (\vec{x} ) } {\partial \theta_{k}} = \vert V_{j} \vert \vert V_{k} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) - B_{jk} cos(\theta_{j} - \theta_{k} ) \right ) \\
+J_{jj}^{P \theta} &amp;= \frac{\partial P_{j}(\vec{x})}{\partial \theta_{j}} = -Q_{j} (\vec{x} ) - B_{jj} \vert V_{j} \vert ^{2} \\
+J_{jk}^{Q \theta} &amp;= \frac{\partial Q_{j}(\vec{x})}{\partial \theta_{k}} = - \vert V_{j} \vert \vert V_{k} \vert \left ( G_{jk} cos(\theta_{j} - \theta_{k}) + B_{jk} sin(\theta_{j} - \theta_{k}) \right ) \\
+J_{jj}^{Q \theta} &amp;= \frac{\partial Q_{j}(\vec{x})}{\partial \theta_{k}} = P_{j} (\vec{x} ) - G_{jj} \vert V_{j} \vert ^{2} \\
+J_{jk}^{PV} &amp;= \frac{\partial P_{j} (\vec{x} ) } {\partial \vert V_{k} \vert } = \vert V_{j} \vert \left ( G_{jk} cos(\theta_{j} - \theta_{k}) + B_{jk} sin(\theta_{j} - \theta_{k}) \right ) \\
+J_{jj}^{PV} &amp;= \frac{\partial P_{j}(\vec{x})}{\partial \vert V_{j} \vert } = \frac{P_{j} (\vec{x} )}{\vert V_{j} \vert} + G_{jj} \vert V_{j} \vert \\
+J_{jk}^{QV} &amp;= \frac{\partial Q_{j} (\vec{x} ) } {\partial \vert V_{k} \vert } = \vert V_{j} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) + B_{jk} cos(\theta_{j} - \theta_{k}) \right ) \\
+J_{jj}^{QV} &amp;= \frac{\partial Q_{j}(\vec{x})}{\partial \vert V_{j} \vert } = \frac{Q_{j} (\vec{x} )}{\vert V_{j} \vert} - B_{jj} \vert V_{j} \vert \\
+\end{align}$$&lt;/div>&lt;p>The linear system of equations that is solved in every Newton iteration can be written in matrix form as follows:&lt;/p>
+&lt;div class="math">$$\begin{align}
+-\left [ \begin{array}{cccccc}
+\frac{\partial \Delta P_{2} }{\partial \theta_{2}} &amp; \cdots &amp; \frac{\partial \Delta P_{2} }{\partial \theta_{N}} &amp;
+\frac{\partial \Delta P_{2} }{\partial \vert V_{N_{G+1}} \vert} &amp; \cdots &amp; \frac{\partial \Delta P_{2} }{\partial \vert V_{N} \vert} \\
+\vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial \Delta P_{N} }{\partial \theta_{2}} &amp; \cdots &amp; \frac{\partial \Delta P_{N}}{\partial \theta_{N}} &amp;
+\frac{\partial \Delta P_{N}}{\partial \vert V_{N_{G+1}} \vert } &amp; \cdots &amp; \frac{\partial \Delta P_{N}}{\partial \vert V_{N} \vert} \\
+\frac{\partial \Delta Q_{N_{G+1}} }{\partial \theta_{2}} &amp; \cdots &amp; \frac{\partial \Delta Q_{N_{G+1}} }{\partial \theta_{N}} &amp;
+\frac{\partial \Delta Q_{N_{G+1}} }{\partial \vert V_{N_{G+1}} \vert } &amp; \cdots &amp; \frac{\partial \Delta Q_{N_{G+1}} }{\partial \vert V_{N} \vert} \\
+\vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial \Delta Q_{N}}{\partial \theta_{2}} &amp; \cdots &amp; \frac{\partial \Delta Q_{N}}{\partial \theta_{N}} &amp;
+\frac{\partial \Delta Q_{N}}{\partial \vert V_{N_{G+1}} \vert } &amp; \cdots &amp; \frac{\partial \Delta Q_{N}}{\partial \vert V_{N} \vert}
 \end{array} \right ]
-\left [ \begin{array}{c} \Delta \theta_{2} \ \vdots \ \Delta \theta_{N} \ \Delta \vert V_{N_{G+1}} \vert \ \vdots \ \Delta \vert V_{N} \vert \end{array} \right ]
-= \left [ \begin{array}{c} \Delta P_{2} \ \vdots \ \Delta P_{N} \ \Delta Q_{N_{G+1}} \ \vdots \ \Delta Q_{N} \end{array} \right ]
-\end{align}&lt;/p>
-&lt;h2 id="solution-of-the-problem">Solution of the Problem&lt;/h2>
-&lt;p>The solution update formula is given by:
-\begin{align}
+\left [ \begin{array}{c} \Delta \theta_{2} \\ \vdots \\ \Delta \theta_{N} \\ \Delta \vert V_{N_{G+1}} \vert \\ \vdots \\ \Delta \vert V_{N} \vert \end{array} \right ]
+= \left [ \begin{array}{c} \Delta P_{2} \\ \vdots \\ \Delta P_{N} \\ \Delta Q_{N_{G+1}} \\ \vdots \\ \Delta Q_{N} \end{array} \right ]
+\end{align}$$&lt;/div>&lt;h2 id="solution-of-the-problem">Solution of the Problem&lt;/h2>
+&lt;p>The solution update formula is given by:&lt;/p>
+&lt;div class="math">$$\begin{align}
 \vec{x}^{(i+1)} = \vec{x}^{(i)} + \Delta \vec{x}^{(i)} = \vec{x}^{(i)} - \textbf{J}^{-1} \vec{f} (\vec{x}^{(i)})
-\end{align}&lt;/p>
-&lt;p>To sum up, the NR algorithm, for application to the power flow problem is:&lt;/p>
+\end{align}$$&lt;/div>&lt;p>To sum up, the NR algorithm, for application to the power flow problem is:&lt;/p>
 &lt;ol>
 &lt;li>Set the iteration counter to $i=1$. Use the initial solution $V_{i} = 1 \angle 0^{\circ}$&lt;/li>
 &lt;li>Compute the mismatch vector $\vec{f}({\vec{x}})$ using the power flow equations&lt;/li>
@@ -744,7 +857,7 @@ J_{jj}^{QV} &amp;amp;= \frac{\partial Q_{j}(\vec{x})}{\partial \vert V_{j} \vert
 $$
 v_j(t) - v_k(t) = v_L(t) = L \frac{\mathrm{d} i_L(t)}{\mathrm{d}t}
 $$
-Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$ \eqref{eq:inductance_integrated}.
+Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$.
 $$
 i_L(t) = i_L(t - \Delta t) + \frac{1}{L} \ \int_{t - \Delta t}^{t} v_L(\tau) \ \mathrm{d} \tau
 $$
@@ -757,7 +870,7 @@ Applying the trapezoidal rule to leads to
 $$
 i_L(t) = i_L(t - \Delta t) + \frac{\Delta t}{2L}(v_L(t) + v_L(t - \Delta t))
 $$
-This can be rewritten in terms of an equivalent conductance \eqref{eq:ind_rc_equiv_r} and current source \eqref{eq:ind_rc_equiv_i} and the number of time steps $k$ with size $\Delta t$.
+This can be rewritten in terms of an equivalent conductance and current source and the number of time steps $k$ with size $\Delta t$.
 $$
 i_L(k) = g_L v_L(k) + i_{L,equiv}(k-1)
 $$
@@ -770,7 +883,7 @@ $$&lt;/p>
 &lt;p>Hence, components described by differential equations are transformed into a DC equivalent circuit as depicted in the figure below.&lt;/p>
 &lt;p>&lt;img src="electrical_resistive_companion_inductance.svg" alt="inductance resistive companion">&lt;/p>
 &lt;h3 id="capacitance">Capacitance&lt;/h3>
-&lt;p>The same procedure can be applied to \eqref{eq:capacitance} describing a capacitance.
+&lt;p>The same procedure can be applied to a capacitance.
 Integration on both side yields
 $$
 i_C(t) = C \frac{\mathrm{d}}{\mathrm{d}t} \ v_C(t)
@@ -801,14 +914,11 @@ As long as the system topology and the time step is fixed, the system matrix is 
 The overall procedure does not change but the system equations are rewritten using complex numbers and all variables need to be expressed in terms of dynamic phasors.
 Therefore, the resistive companion representations of inductances and capacitances have to be adapted as well.&lt;/p>
 &lt;h3 id="inductance-1">Inductance&lt;/h3>
-&lt;p>In dynamic phasors the integration of the inductance equation yields
-$$
-\begin{align*}
-\langle v_L \rangle(t) &amp;amp;= \Big \langle L \frac{\mathrm{d} i_L}{\mathrm{d}t} \Big \rangle(t) \
-&amp;amp;= L \frac{\mathrm{d}}{dt} \langle i_L \rangle(t) + j \omega L \ \langle i_L \rangle(t)
-\end{align*}
-$$
-$$
+&lt;p>In dynamic phasors the integration of the inductance equation yields&lt;/p>
+&lt;div class="math">$$\begin{align}
+\langle v_L \rangle(t) &amp;= \Big \langle L \frac{\mathrm{d} i_L}{\mathrm{d}t} \Big \rangle(t) \nonumber \\
+&amp;= L \frac{\mathrm{d}}{dt} \langle i_L \rangle(t) + j \omega L \ \langle i_L \rangle(t)
+\end{align}$$&lt;/div>&lt;p>$$
 \langle i_L \rangle(t) = \langle i_L \rangle(t - \Delta t) + \int_{t - \Delta t}^t \frac{1}{L} \langle v_L \rangle(\tau) - j \omega \ \langle i_L \rangle(\tau) \mathrm{d} \tau
 $$&lt;/p>
 &lt;p>Applying the trapezoidal method leads to the finite difference equation:
@@ -837,17 +947,12 @@ $$
 $$
 v_C(t) = v_C(t- \Delta t) + \int_{t- \Delta t}^{t} \frac{1}{C} \ i_C(\tau) -j \omega \ v_C(\tau) \ \mathrm{d} \tau
 $$&lt;/p>
-&lt;p>Applying the trapezoidal rule for the capacitance equation leads to the finite difference equation:
-$$
-\begin{split}
-\langle v_C \rangle(k) = \langle v_C \rangle(k-1)&lt;/p>
-&lt;ul>
-&lt;li>\frac{\Delta t}{2} \bigg[ \frac{1}{C} \ \langle i_C \rangle(k) - j \omega \ \langle v_C \rangle(k) \&lt;/li>
-&lt;li>\frac{1}{C} \ \langle i_C \rangle(k-1) - j \omega \ \langle v_C \rangle(k-1) \bigg]
-\end{split}
-$$&lt;/li>
-&lt;/ul>
-&lt;p>The \ac{DP} model for the capacitance is defined by
+&lt;p>Applying the trapezoidal rule for the capacitance equation leads to the finite difference equation:&lt;/p>
+&lt;div class="math">$$\begin{split}
+\langle v_C \rangle(k) = \langle v_C \rangle(k-1)
++ \frac{\Delta t}{2} \bigg[ \frac{1}{C} \ \langle i_C \rangle(k) - j \omega \ \langle v_C \rangle(k) \\
++ \frac{1}{C} \ \langle i_C \rangle(k-1) - j \omega \ \langle v_C \rangle(k-1) \bigg]
+\end{split}$$&lt;/div>&lt;p>The DP model for the capacitance is defined by
 $$
 \langle i_C \rangle(k) = \frac{1+jb}{a} \ \langle v_C \rangle(k) + \langle i_{C,equiv} \rangle(k-1)
 $$
@@ -885,8 +990,6 @@ $$
 $$
 \langle i_{equiv} \rangle(k-1) = \frac{1 - b^2 - j2b + 2Ra + (Ra)^2 - j2Rab}{(1+Ra^2) + b^2} \langle i \rangle(k-1) + \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k-1)
 $$&lt;/p></description></item><item><title>Docs: Synchronous Generator</title><link>https://sogno-platform.github.io/dpsim/docs/models/synchronous-generator/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/synchronous-generator/</guid><description>
-&lt;script src="https://polyfill.io/v3/polyfill.min.js?features=es6">&lt;/script>
-&lt;script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">&lt;/script>
 &lt;p>Two different synchronous machine models are currently available:&lt;/p>
 &lt;ul>
 &lt;li>the full order dq0 reference frame model (EMT, DP) [Kundur, Power system stability and control, 1994]&lt;/li>
@@ -895,75 +998,71 @@ $$&lt;/p></description></item><item><title>Docs: Synchronous Generator</title><l
 &lt;p>The machine model is interfaced to the nodal analysis network solver through a current source, which only affects the source vector and not the system matrix &lt;a href="https://ieeexplore.ieee.org/document/5411963">Wang2010&lt;/a>.&lt;/p>
 &lt;h2 id="basic-equations">Basic Equations&lt;/h2>
 &lt;p>The equations of the stator and rotor voltages are&lt;/p>
-&lt;p>\begin{align}
-\mathbf{v}&lt;em>{abcs} &amp;amp;= \mathbf{R}&lt;em>s \mathbf{i}&lt;/em>{abcs} + \frac{d}{dt} \boldsymbol{\lambda}&lt;/em>{abcs} \
-\mathbf{v}&lt;em>{dqr} &amp;amp;= \mathbf{R}&lt;em>r \mathbf{i}&lt;/em>{dqr} + \frac{d}{dt} \boldsymbol{\lambda}&lt;/em>{dqr}
-\end{align}&lt;/p>
-&lt;p>where&lt;/p>
-&lt;p>\begin{align}
-\mathbf{v}&lt;em>{abcs} &amp;amp;=
+&lt;div class="math">$$\begin{align}
+\mathbf{v}_{abcs} &amp;= \mathbf{R}_s \mathbf{i}_{abcs} + \frac{d}{dt} \boldsymbol{\lambda}_{abcs} \\
+\mathbf{v}_{dqr} &amp;= \mathbf{R}_r \mathbf{i}_{dqr} + \frac{d}{dt} \boldsymbol{\lambda}_{dqr}
+\end{align}$$&lt;/div>&lt;p>where&lt;/p>
+&lt;div class="math">$$\begin{align}
+\mathbf{v}_{abcs} &amp;=
 \begin{pmatrix}
-v&lt;/em>{as} &amp;amp; v_{bs} &amp;amp; v_{cs}
-\end{pmatrix}^T \
+v_{as} &amp; v_{bs} &amp; v_{cs}
+\end{pmatrix}^T \\
 %
-\mathbf{v}&lt;em>{dqr} &amp;amp;=
+\mathbf{v}_{dqr} &amp;=
 \begin{pmatrix}
-v&lt;/em>{fd} &amp;amp; v_{kd} &amp;amp; v_{kq1} &amp;amp; v_{kq2}
-\end{pmatrix}^T \
+v_{fd} &amp; v_{kd} &amp; v_{kq1} &amp; v_{kq2}
+\end{pmatrix}^T \\
 %
-\mathbf{i}&lt;em>{abcs} &amp;amp;=
+\mathbf{i}_{abcs} &amp;=
 \begin{pmatrix}
-i&lt;/em>{as} &amp;amp; i_{bs} &amp;amp; i_{cs}
-\end{pmatrix}^T \
+i_{as} &amp; i_{bs} &amp; i_{cs}
+\end{pmatrix}^T \\
 %
-\mathbf{i}&lt;em>{dqr} &amp;amp;=
+\mathbf{i}_{dqr} &amp;=
 \begin{pmatrix}
-i&lt;/em>{fd} &amp;amp; i_{kd} &amp;amp; i_{kq1} &amp;amp; i_{kq2}
-\end{pmatrix}^T \
+i_{fd} &amp; i_{kd} &amp; i_{kq1} &amp; i_{kq2}
+\end{pmatrix}^T \\
 %
-\boldsymbol{\lambda}&lt;em>{abcs} &amp;amp;=
+\boldsymbol{\lambda}_{abcs} &amp;=
 \begin{pmatrix}
-\lambda&lt;/em>{as} &amp;amp; \lambda_{bs} &amp;amp; \lambda_{cs}
-\end{pmatrix}^T \
+\lambda_{as} &amp; \lambda_{bs} &amp; \lambda_{cs}
+\end{pmatrix}^T \\
 %
-\boldsymbol{\lambda}&lt;em>{dqr} &amp;amp;=
+\boldsymbol{\lambda}_{dqr} &amp;=
 \begin{pmatrix}
-\lambda&lt;/em>{fd} &amp;amp; \lambda_{kd} &amp;amp; \lambda_{kq1} &amp;amp; \lambda_{kq2}
-\end{pmatrix}^T \
+\lambda_{fd} &amp; \lambda_{kd} &amp; \lambda_{kq1} &amp; \lambda_{kq2}
+\end{pmatrix}^T \\
 %
-\mathbf{R}&lt;em>s &amp;amp;= diag
+\mathbf{R}_s &amp;= diag
 \begin{bmatrix}
-R_s &amp;amp; R_s &amp;amp; R_s
-\end{bmatrix} \
+R_s &amp; R_s &amp; R_s
+\end{bmatrix} \\
 %
-\mathbf{R}&lt;em>r &amp;amp;= diag
+\mathbf{R}_r &amp;= diag
 \begin{bmatrix}
-R&lt;/em>{fd} &amp;amp; R&lt;/em>{kd} &amp;amp; R_{kq1} &amp;amp; R_{kq2}
+R_{fd} &amp; R_{kd} &amp; R_{kq1} &amp; R_{kq2}
 \end{bmatrix}
-\end{align}&lt;/p>
-&lt;p>The flux linkage equations are defined as&lt;/p>
-&lt;p>\begin{equation}
+\end{align}$$&lt;/div>&lt;p>The flux linkage equations are defined as&lt;/p>
+&lt;div class="math">$$\begin{equation}
 \begin{bmatrix}
-\boldsymbol{\lambda}&lt;em>{abcs} \
-\boldsymbol{\lambda}&lt;/em>{dqr}
+\boldsymbol{\lambda}_{abcs} \\
+\boldsymbol{\lambda}_{dqr}
 \end{bmatrix}
 =
 \begin{bmatrix}
-\mathbf{L}&lt;em>s &amp;amp; \mathbf{L}&lt;/em>{rs} \
-{(\mathbf{L}&lt;em>{rs})}^{T} &amp;amp; \mathbf{L}&lt;em>r
+\mathbf{L}_s &amp; \mathbf{L}_{rs} \\
+{(\mathbf{L}_{rs})}^{T} &amp; \mathbf{L}_r
 \end{bmatrix}
 \begin{bmatrix}
-\mathbf{i}&lt;/em>{abcs} \
-\mathbf{i}&lt;/em>{dqr}
+\mathbf{i}_{abcs} \\
+\mathbf{i}_{dqr}
 \end{bmatrix}
-\end{equation}&lt;/p>
-&lt;p>The inductance matrices are varying with the rotor position $\theta_r$ which varies with time.&lt;/p>
+\end{equation}$$&lt;/div>&lt;p>The inductance matrices are varying with the rotor position $\theta_r$ which varies with time.&lt;/p>
 &lt;p>The mechanical equations are:&lt;/p>
-&lt;p>\begin{align}
-\frac{d\theta_r}{dt} &amp;amp;= \omega_r \
-\frac{d\omega_r}{dt} &amp;amp;= \frac{P}{2J} (T_e-T_m)
-\end{align}&lt;/p>
-&lt;p>$\theta_r$ is the rotor position, $\omega_r$ is the angular electrical speed, $P$ is the number of poles, $J$ is the moment of inertia, $T_m$ and $T_e$ are the mechanical and electrical torque, respectively.
+&lt;div class="math">$$\begin{align}
+\frac{d\theta_r}{dt} &amp;= \omega_r \\
+\frac{d\omega_r}{dt} &amp;= \frac{P}{2J} (T_e-T_m)
+\end{align}$$&lt;/div>&lt;p>$\theta_r$ is the rotor position, $\omega_r$ is the angular electrical speed, $P$ is the number of poles, $J$ is the moment of inertia, $T_m$ and $T_e$ are the mechanical and electrical torque, respectively.
 Motor convention is used for all models.&lt;/p>
 &lt;h2 id="dq0-reference-frame-9th-order-model">dq0 Reference Frame 9th Order Model&lt;/h2>
 &lt;p>For stator referred variables, the base quantities for per unit are chosen as follows:&lt;/p>
@@ -973,318 +1072,177 @@ Motor convention is used for all models.&lt;/p>
 &lt;li>$f_{base}$ rated frequency in Hz&lt;/li>
 &lt;/ul>
 &lt;p>The synchronous generator equations in terms of per unit values in the rotor reference frame become:&lt;/p>
-&lt;h1 id="endbmatrix">\begin{equation}
+&lt;div class="math">$$\begin{equation}
 \begin{bmatrix}
-\mathbf{v}&lt;em>{dq0s} \
-\mathbf{v}&lt;/em>{dqr}
-\end{bmatrix}&lt;/h1>
-&lt;p>\mathbf{R}&lt;em>{sr}
+\mathbf{v}_{dq0s} \\
+\mathbf{v}_{dqr}
+\end{bmatrix}
+=
+\mathbf{R}_{sr}
 \begin{bmatrix}
-\mathbf{i}&lt;/em>{dq0s} \
-\mathbf{i}&lt;em>{dqr}
+\mathbf{i}_{dq0s} \\
+\mathbf{i}_{dqr}
 \end{bmatrix}
 +
 \frac{d}{dt}
 \begin{bmatrix}
-\boldsymbol{\lambda}&lt;/em>{dq0s} \
+\boldsymbol{\lambda}_{dq0s} \\
 \boldsymbol{\lambda}_{dqr}
-\end{bmatrix}&lt;/p>
-&lt;ul>
-&lt;li>\omega_r
+\end{bmatrix}
++ \omega_r
 \begin{bmatrix}
-\boldsymbol{\lambda}_{qds} \
+\boldsymbol{\lambda}_{qds} \\
 0
 \end{bmatrix}
-\label{eq:rotor_reference}
-\end{equation}&lt;/li>
-&lt;/ul>
-&lt;p>where&lt;/p>
-&lt;p>\begin{align}
-\mathbf{v}&lt;em>{dq0s} &amp;amp;=
+\end{equation}$$&lt;/div>&lt;p>where&lt;/p>
+&lt;div class="math">$$\begin{align}
+\mathbf{v}_{dq0s} &amp;=
 \begin{pmatrix}
-v&lt;/em>{ds} &amp;amp; v_{qs} &amp;amp; v_{0s}
-\end{pmatrix}^T \nonumber \
+v_{ds} &amp; v_{qs} &amp; v_{0s}
+\end{pmatrix}^T \nonumber \\
 %
-\mathbf{i}&lt;em>{dq0s} &amp;amp;=
+\mathbf{i}_{dq0s} &amp;=
 \begin{pmatrix}
-i&lt;/em>{ds} &amp;amp; i_{qs} &amp;amp; i_{0s}
-\end{pmatrix}^T \nonumber \
+i_{ds} &amp; i_{qs} &amp; i_{0s}
+\end{pmatrix}^T \nonumber \\
 %
-\boldsymbol{\lambda}&lt;em>{dq0s} &amp;amp;=
+\boldsymbol{\lambda}_{dq0s} &amp;=
 \begin{pmatrix}
-\lambda&lt;/em>{ds} &amp;amp; \lambda_{qs} &amp;amp; \lambda_{0s}
-\end{pmatrix}^T \nonumber \
+\lambda_{ds} &amp; \lambda_{qs} &amp; \lambda_{0s}
+\end{pmatrix}^T \nonumber \\
 %
-\mathbf{R}&lt;em>{sr} &amp;amp;= diag
+\mathbf{R}_{sr} &amp;= diag
 \begin{bmatrix}
-R_s &amp;amp; R_s &amp;amp; R_s &amp;amp; R&lt;/em>{fd} &amp;amp; R_{kd} &amp;amp; R_{kq1} &amp;amp; R_{kq2}
-\end{bmatrix} \nonumber \
+R_s &amp; R_s &amp; R_s &amp; R_{fd} &amp; R_{kd} &amp; R_{kq1} &amp; R_{kq2}
+\end{bmatrix} \nonumber \\
 %
-\boldsymbol{\lambda}&lt;em>{dqs} &amp;amp;=
+\boldsymbol{\lambda}_{dqs} &amp;=
 \begin{pmatrix}
--\lambda&lt;/em>{qs} &amp;amp; \lambda_{ds} &amp;amp; 0
+-\lambda_{qs} &amp; \lambda_{ds} &amp; 0
 \end{pmatrix}^T.
-\end{align}&lt;/p>
-&lt;p>The flux linkages are:&lt;/p>
-&lt;h1 id="endpmatrix">\begin{equation}
+\end{align}$$&lt;/div>&lt;p>The flux linkages are:&lt;/p>
+&lt;div class="math">$$\begin{equation}
 \begin{pmatrix}
-\boldsymbol{\lambda}&lt;em>{dq0s} \
-\boldsymbol{\lambda}&lt;/em>{dqr}
-\end{pmatrix}&lt;/h1>
-&lt;p>\begin{bmatrix}
-\mathbf{L}&lt;em>{dqss} &amp;amp; \mathbf{L}&lt;/em>{dqsr} \
-\mathbf{L}&lt;em>{dqrs} &amp;amp; \mathbf{L}&lt;/em>{dqrr}
+\boldsymbol{\lambda}_{dq0s} \\
+\boldsymbol{\lambda}_{dqr}
+\end{pmatrix}
+=
+\begin{bmatrix}
+\mathbf{L}_{dqss} &amp; \mathbf{L}_{dqsr} \\
+\mathbf{L}_{dqrs} &amp; \mathbf{L}_{dqrr}
 \end{bmatrix}
 \begin{pmatrix}
-\mathbf{i}&lt;em>{dq0s} \
-\mathbf{i}&lt;/em>{dqr}
+\mathbf{i}_{dq0s} \\
+\mathbf{i}_{dqr}
 \end{pmatrix}
-\label{eq:flux_linkages}
-\end{equation}&lt;/p>
-&lt;p>where&lt;/p>
-&lt;p>\begin{align}
-\mathbf{L}&lt;em>{dqss} &amp;amp;=
+\end{equation}$$&lt;/div>&lt;p>where&lt;/p>
+&lt;div class="math">$$\begin{align}
+\mathbf{L}_{dqss} &amp;=
 \begin{bmatrix}
-L&lt;/em>{d} &amp;amp; 0 &amp;amp; 0 \
-0 &amp;amp; L_{q} &amp;amp; 0 \
-0 &amp;amp; 0 &amp;amp; L_{ls}
-\end{bmatrix} \nonumber \&lt;/p>
-&lt;p>\mathbf{L}&lt;em>{dqsr} &amp;amp;=
+L_{d} &amp; 0 &amp; 0 \\
+0 &amp; L_{q} &amp; 0 \\
+0 &amp; 0 &amp; L_{ls}
+\end{bmatrix} \nonumber \\
+\mathbf{L}_{dqsr} &amp;=
 \begin{bmatrix}
-L&lt;/em>{md} &amp;amp; L_{md} &amp;amp; 0 &amp;amp; 0 \
-0 &amp;amp; 0 &amp;amp; L_{mq} &amp;amp; L_{mq} \
-0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0
-\end{bmatrix} \nonumber \&lt;/p>
-&lt;p>\mathbf{L}&lt;em>{dqrs} &amp;amp;=
+L_{md} &amp; L_{md} &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; L_{mq} &amp; L_{mq} \\
+0 &amp; 0 &amp; 0 &amp; 0
+\end{bmatrix} \nonumber \\
+\mathbf{L}_{dqrs} &amp;=
 \begin{bmatrix}
-L&lt;/em>{md} &amp;amp; 0 &amp;amp; 0 \
-L_{md} &amp;amp; 0 &amp;amp; 0 \
-0 &amp;amp; L_{mq} &amp;amp; 0 \
-0 &amp;amp; L_{mq} &amp;amp; 0
-\end{bmatrix} \nonumber \&lt;/p>
-&lt;p>\mathbf{L}&lt;em>{rr} &amp;amp;=
+L_{md} &amp; 0 &amp; 0 \\
+L_{md} &amp; 0 &amp; 0 \\
+0 &amp; L_{mq} &amp; 0 \\
+0 &amp; L_{mq} &amp; 0
+\end{bmatrix} \nonumber \\
+\mathbf{L}_{rr} &amp;=
 \begin{bmatrix}
-L&lt;/em>{fd} &amp;amp; L_{md} &amp;amp; 0 &amp;amp; 0 \
-L_{md} &amp;amp; L_{kd} &amp;amp; 0 &amp;amp; 0 \
-0 &amp;amp; 0 &amp;amp; L_{kq1} &amp;amp; L_{mq} \
-0 &amp;amp; 0 &amp;amp; L_{mq} &amp;amp; L_{kq2}
-\end{bmatrix} \nonumber \&lt;/p>
-&lt;p>\end{align}&lt;/p>
-&lt;p>with&lt;/p>
-&lt;p>\begin{align}
-L_{d} &amp;amp;= L_{ls} + L_{md} \nonumber \
-L_{q} &amp;amp;= L_{ls} + L_{mq} \nonumber \
-L_{fd} &amp;amp;= L_{lfd} + L_{md} \nonumber \
-L_{kd} &amp;amp;= L_{lkd} + L_{md} \nonumber \
-L_{kq1} &amp;amp;= L_{lkq1} + L_{mq} \nonumber \
-L_{kq2} &amp;amp;= L_{lkq2} + L_{mq}.
-\end{align}&lt;/p>
-&lt;p>The mechanical equations in per unit become:&lt;/p>
-&lt;p>\begin{align}
-T_e &amp;amp;= \lambda_{qs} i_{ds} - \lambda_{ds} i_{qs} \
-\frac{d \omega_r}{dt} &amp;amp;= \omega_r \
-\frac{1}{\omega_b} \frac{d \omega_r}{dt} &amp;amp;= \frac{1}{2H} (T_m - T_e).
-\end{align}&lt;/p>
-&lt;p>For the simulation, fluxes are chosen as state variables.
+L_{fd} &amp; L_{md} &amp; 0 &amp; 0 \\
+L_{md} &amp; L_{kd} &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; L_{kq1} &amp; L_{mq} \\
+0 &amp; 0 &amp; L_{mq} &amp; L_{kq2}
+\end{bmatrix} \nonumber \\
+\end{align}$$&lt;/div>&lt;p>with&lt;/p>
+&lt;div class="math">$$\begin{align}
+L_{d} &amp;= L_{ls} + L_{md} \nonumber \\
+L_{q} &amp;= L_{ls} + L_{mq} \nonumber \\
+L_{fd} &amp;= L_{lfd} + L_{md} \nonumber \\
+L_{kd} &amp;= L_{lkd} + L_{md} \nonumber \\
+L_{kq1} &amp;= L_{lkq1} + L_{mq} \nonumber \\
+L_{kq2} &amp;= L_{lkq2} + L_{mq}.
+\end{align}$$&lt;/div>&lt;p>The mechanical equations in per unit become:&lt;/p>
+&lt;div class="math">$$\begin{align}
+T_e &amp;= \lambda_{qs} i_{ds} - \lambda_{ds} i_{qs} \\
+\frac{d \omega_r}{dt} &amp;= \omega_r \\
+\frac{1}{\omega_b} \frac{d \omega_r}{dt} &amp;= \frac{1}{2H} (T_m - T_e).
+\end{align}$$&lt;/div>&lt;p>For the simulation, fluxes are chosen as state variables.
 To avoid the calculation of currents from fluxes using the inverse of the inductance matrix, the equation set needs to be solved for the fluxes analytically.
 To simplify the calculations, dq axis magnetizing flux linkages are defined [Krause, Analysis of electric machinery and drive systems, 2002]:&lt;/p>
-&lt;p>\begin{align}
-\lambda_{md} &amp;amp;= L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \
-\lambda_{mq} &amp;amp;= L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right).
-\label{eq:magnetizing_flux_linkage}
-\end{align}&lt;/p>
-&lt;p>Using the flux linkages results in a simpler equation set for the fluxes:&lt;/p>
-&lt;p>\begin{align}
-\lambda_{ds} &amp;amp;= L_{ls} i_{ds} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \
-\lambda_{qs} &amp;amp;= L_{ls} i_{qs} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \nonumber \
-\lambda_{0s} &amp;amp;= L_{ls} i_{0s} \nonumber \
-\lambda_{fd} &amp;amp;= L_{ls} i_{fd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \
-\lambda_{kd} &amp;amp;= L_{ls} i_{kd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \
-\lambda_{kq1} &amp;amp;= L_{ls} i_{kq1} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \nonumber \
-\lambda_{kq2} &amp;amp;= L_{ls} i_{kq2} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right)
-\label{eq:syngen_lambda}
-\end{align}&lt;/p>
-&lt;p>\begin{align}
-\lambda_{ds} &amp;amp;= L_{ls} i_{ds} + \lambda_{md} \nonumber \
-\lambda_{qs} &amp;amp;= L_{ls} i_{qs} + \lambda_{mq} \nonumber \
-\lambda_{0s} &amp;amp;= L_{ls} i_{0s} \nonumber \
-\lambda_{fd} &amp;amp;= L_{lfd} i_{fd} + \lambda_{md} \nonumber \
-\lambda_{kd} &amp;amp;= L_{lkd} i_{kd} + \lambda_{md} \nonumber \
-\lambda_{kq1} &amp;amp;= L_{lkq1} i_{kq1} + \lambda_{mq} \nonumber \
-\lambda_{kq2} &amp;amp;= L_{lkq2} i_{kq2} + \lambda_{mq}
-\label{eq:flux_currents_flux_linkage}
-\end{align}&lt;/p>
-&lt;h3 id="dynamic-phasor-model">Dynamic Phasor Model&lt;/h3>
+&lt;div class="math">$$\begin{align}
+\lambda_{md} &amp;= L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{mq} &amp;= L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right)
+\end{align}$$&lt;/div>&lt;p>Using the flux linkages results in a simpler equation set for the fluxes:&lt;/p>
+&lt;div class="math">$$\begin{align}
+\lambda_{ds} &amp;= L_{ls} i_{ds} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{qs} &amp;= L_{ls} i_{qs} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \nonumber \\
+\lambda_{0s} &amp;= L_{ls} i_{0s} \nonumber \\
+\lambda_{fd} &amp;= L_{ls} i_{fd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{kd} &amp;= L_{ls} i_{kd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{kq1} &amp;= L_{ls} i_{kq1} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \nonumber \\
+\lambda_{kq2} &amp;= L_{ls} i_{kq2} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right)
+\end{align}$$&lt;/div>
+&lt;div class="math">$$\begin{align}
+\lambda_{ds} &amp;= L_{ls} i_{ds} + \lambda_{md} \nonumber \\
+\lambda_{qs} &amp;= L_{ls} i_{qs} + \lambda_{mq} \nonumber \\
+\lambda_{0s} &amp;= L_{ls} i_{0s} \nonumber \\
+\lambda_{fd} &amp;= L_{lfd} i_{fd} + \lambda_{md} \nonumber \\
+\lambda_{kd} &amp;= L_{lkd} i_{kd} + \lambda_{md} \nonumber \\
+\lambda_{kq1} &amp;= L_{lkq1} i_{kq1} + \lambda_{mq} \nonumber \\
+\lambda_{kq2} &amp;= L_{lkq2} i_{kq2} + \lambda_{mq}
+\end{align}$$&lt;/div>&lt;h3 id="dynamic-phasor-model">Dynamic Phasor Model&lt;/h3>
 &lt;p>The fundamental dynamic phasors are similar to the dq0 quantities for symmetrical conditions since both yield DC quantities in a rotating reference frame.
 The network abc dynamic phasor quantities can be converted to dq0 dynamic phasors by applying the symmetrical components transformation and a rotation.&lt;/p>
 &lt;p>The angle $\delta$ is the orientation of the dq0 reference frame relative to the abc frame.&lt;/p>
-&lt;p>\begin{align}
-\langle i_{ds} \rangle_{0} &amp;amp;= \mathbf{Re} \left{ \langle i_{p} \rangle_1 \ \mathrm{e}^{-j \delta} \right} \nonumber \
-\langle i_{qs} \rangle_{0} &amp;amp;= \mathbf{Im} \left{ \langle i_{p} \rangle_1 \ \mathrm{e}^{-j \delta} \right} \nonumber \
-\langle i_{ds} \rangle_{2} &amp;amp;= \mathbf{Re} \left{ \langle i_{n} \rangle_{1}^* \ \mathrm{e}^{-j \delta} \right} \nonumber \
-\langle i_{qs} \rangle_{2} &amp;amp;= \mathbf{Im} \left{ \langle i_{n} \rangle_{1}^* \ \mathrm{e}^{-j \delta} \right} \nonumber \
-\langle i_{0s} \rangle_{1} &amp;amp;= \mathbf{Re} \left{ \langle i_{z} \rangle_1 \right}
-\label{eq:syngen_abc_dq0_conversion}
-\end{align}&lt;/p>
-&lt;p>The winding currents for positive and zero sequence components can be expressed as:&lt;/p>
-&lt;p>\begin{align}
-\langle i_{ds} \rangle_0 &amp;amp;= \frac{\langle \lambda_{ds} \rangle_0 - \langle \lambda_{md} \rangle_0 }{L_{ls}} \nonumber \
-\langle i_{qs} \rangle_0 &amp;amp;= \frac{\langle \lambda_{qs} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{ls}} \nonumber \
-\langle i_{0s} \rangle_1 &amp;amp;= \frac{\langle \lambda_{0s} \rangle_1}{L_{ls}} \nonumber \
-\langle i_{fd} \rangle_0 &amp;amp;= \frac{\langle \lambda_{fd} \rangle_0 - \langle \lambda_{md} \rangle_0}{L_{lfd}} \nonumber \
-\langle i_{kd} \rangle_0 &amp;amp;= \frac{\langle \lambda_{kd} \rangle_0 - \langle \lambda_{md} \rangle_0}{L_{lkd}} \nonumber \
-\langle i_{kq1} \rangle_0 &amp;amp;= \frac{\langle \lambda_{kq1} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{lkq1}} \nonumber \
-\langle i_{kq2} \rangle_0 &amp;amp;= \frac{\langle \lambda_{kq2} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{lkq2}}.
-\end{align}&lt;/p>
-&lt;p>\begin{align}
-\frac{d}{dt} \langle \lambda_{ds} \rangle_0 &amp;amp;= \langle v_{ds} \rangle_0 + \langle \omega_r \rangle_0 \langle \lambda_{qs} \rangle_0 + \frac{R_s}{L_{ls}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{ds} \rangle_0 \right) \nonumber \
-\frac{d}{dt} \langle \lambda_{qs} \rangle_0 &amp;amp;= \langle v_{qs} \rangle_0 - \langle \omega_r \rangle_0 \langle \lambda_{ds} \rangle_0 + \frac{R_s}{L_{ls}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{qs} \rangle_0 \right) \nonumber \
-\frac{d}{dt} \langle \lambda_{0s} \rangle_1 &amp;amp;= \langle v_{0s} \rangle_1 - \frac{R_s}{L_{ls}} \langle \lambda_{0s} \rangle_1 -j \omega_s \langle \lambda_{0s} \rangle_1 \nonumber \
-\frac{d}{dt} \langle \lambda_{fd} \rangle_0 &amp;amp;= \langle v_{fd} \rangle_0 + \frac{R_{fd}}{L_{lfd}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{fd} \rangle_0 \right) \nonumber \
-\frac{d}{dt} \langle \lambda_{kd} \rangle_0 &amp;amp;= \frac{R_{kd}}{L_{lkd}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{kd} \rangle_0 \right) \nonumber \
-\frac{d}{dt} \langle \lambda_{kq1} \rangle_0 &amp;amp;= \frac{R_{kq1}}{L_{lkq1}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{kq1} \rangle_0 \right) \nonumber \
-\frac{d}{dt} \langle \lambda_{kq2} \rangle_0 &amp;amp;= \frac{R_{kq2}}{L_{lkq2}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{kq2} \rangle_0 \right).
-\end{align}&lt;/p>
-&lt;p>In the dynamic phasor case, the equation for $\frac{d}{dt} \langle \lambda_{0s} \rangle_1$ has a frequency shift.
+&lt;div class="math">$$\begin{align}
+\langle i_{ds} \rangle_{0} &amp;= \mathbf{Re} \left\{ \langle i_{p} \rangle_1 \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{qs} \rangle_{0} &amp;= \mathbf{Im} \left\{ \langle i_{p} \rangle_1 \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{ds} \rangle_{2} &amp;= \mathbf{Re} \left\{ \langle i_{n} \rangle_{1}^* \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{qs} \rangle_{2} &amp;= \mathbf{Im} \left\{ \langle i_{n} \rangle_{1}^* \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{0s} \rangle_{1} &amp;= \mathbf{Re} \left\{ \langle i_{z} \rangle_1 \right\}
+\end{align}$$&lt;/div>&lt;p>The winding currents for positive and zero sequence components can be expressed as&lt;/p>
+&lt;div class="math">$$\begin{align}
+\langle i_{ds} \rangle_0 &amp;= \frac{\langle \lambda_{ds} \rangle_0 - \langle \lambda_{md} \rangle_0 }{L_{ls}} \nonumber \\
+\langle i_{qs} \rangle_0 &amp;= \frac{\langle \lambda_{qs} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{ls}} \nonumber \\
+\langle i_{0s} \rangle_1 &amp;= \frac{\langle \lambda_{0s} \rangle_1}{L_{ls}} \nonumber \\
+\langle i_{fd} \rangle_0 &amp;= \frac{\langle \lambda_{fd} \rangle_0 - \langle \lambda_{md} \rangle_0}{L_{lfd}} \nonumber \\
+\langle i_{kd} \rangle_0 &amp;= \frac{\langle \lambda_{kd} \rangle_0 - \langle \lambda_{md} \rangle_0}{L_{lkd}} \nonumber \\
+\langle i_{kq1} \rangle_0 &amp;= \frac{\langle \lambda_{kq1} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{lkq1}} \nonumber \\
+\langle i_{kq2} \rangle_0 &amp;= \frac{\langle \lambda_{kq2} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{lkq2}}.
+\end{align}$$&lt;/div>
+&lt;div class="math">$$\begin{align}
+\frac{d}{dt} \langle \lambda_{ds} \rangle_0 &amp;= \langle v_{ds} \rangle_0 + \langle \omega_r \rangle_0 \langle \lambda_{qs} \rangle_0 + \frac{R_s}{L_{ls}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{ds} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{qs} \rangle_0 &amp;= \langle v_{qs} \rangle_0 - \langle \omega_r \rangle_0 \langle \lambda_{ds} \rangle_0 + \frac{R_s}{L_{ls}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{qs} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{0s} \rangle_1 &amp;= \langle v_{0s} \rangle_1 - \frac{R_s}{L_{ls}} \langle \lambda_{0s} \rangle_1 -j \omega_s \langle \lambda_{0s} \rangle_1 \nonumber \\
+\frac{d}{dt} \langle \lambda_{fd} \rangle_0 &amp;= \langle v_{fd} \rangle_0 + \frac{R_{fd}}{L_{lfd}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{fd} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{kd} \rangle_0 &amp;= \frac{R_{kd}}{L_{lkd}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{kd} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{kq1} \rangle_0 &amp;= \frac{R_{kq1}}{L_{lkq1}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{kq1} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{kq2} \rangle_0 &amp;= \frac{R_{kq2}}{L_{lkq2}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{kq2} \rangle_0 \right).
+\end{align}$$&lt;/div>&lt;p>In the dynamic phasor case, the equation for $\frac{d}{dt} \langle \lambda_{0s} \rangle_1$ has a frequency shift.
 To complete the state model, the magnetizing flux linkages are expressed as:&lt;/p>
-&lt;p>\begin{align}
-\langle \lambda_{md} \rangle_0 &amp;amp;= L_{ad} \left( \frac{\langle \lambda_{ds} \rangle_0}{L_{ls}} + \frac{\langle \lambda_{fd} \rangle_0}{L_{lfd}} + \frac{\langle \lambda_{kd} \rangle_0}{L_{lkd}} \right) \nonumber \
-\langle \lambda_{mq} \rangle_0 &amp;amp;= L_{aq} \left( \frac{\langle \lambda_{qs} \rangle_0}{L_{ls}} + \frac{\langle \lambda_{kq1} \rangle_0}{L_{lkq1}} + \frac{\langle \lambda_{kq2} \rangle_0}{L_{lkq2}} \right)
-\label{eq:winding_flux_linkages}
-\end{align}&lt;/p>
-&lt;p>where&lt;/p>
-&lt;p>\begin{align}
-L_{ad} &amp;amp;= \left( \frac{1}{L_{md}} + \frac{1}{L_{ls}} + \frac{1}{L_{lfd}} + \frac{1}{L_{lkd}} \right) \nonumber \
-L_{aq} &amp;amp;= \left( \frac{1}{L_{mq}} + \frac{1}{L_{ls}} + \frac{1}{L_{lkq1}} + \frac{1}{L_{lkq2}} \right).
-\end{align}&lt;/p>
-&lt;p>The mechanical equations in dynamic phasors are:&lt;/p>
-&lt;p>\begin{align}
-T_e &amp;amp;= \langle \lambda_{qs} \rangle_0 \langle i_{ds} \rangle_0 - \langle \lambda_{ds} \rangle_0 \langle i_{qs} \rangle_0 \
-\frac{1}{\omega_s} \frac{d \delta_r}{dt} &amp;amp;= \omega_r - 1 \
-\frac{d \omega_r}{dt} &amp;amp;= \frac{1}{2H} (T_m - T_e).
-\end{align}&lt;/p>
-&lt;h2 id="transient-stability-model">Transient Stability Model&lt;/h2></description></item><item><title>Docs: VS-Inverter</title><link>https://sogno-platform.github.io/dpsim/docs/models/power-electronics/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/power-electronics/</guid><description/></item><item><title>Docs: Build</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</link><pubDate>Thu, 05 Jan 2017 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</guid><description>
-&lt;h2 id="docker-based">Docker based&lt;/h2>
-&lt;p>Clone the repository&lt;/p>
-&lt;pre>&lt;code>$ git clone git@github.com:sogno-platform/dpsim.git
-&lt;/code>&lt;/pre>
-&lt;p>or using https if you do not have an account&lt;/p>
-&lt;pre>&lt;code>$ git clone https://github.com/sogno-platform/dpsim.git
-&lt;/code>&lt;/pre>
-&lt;p>In the repository, there is a Docker file with all required dependencies&lt;/p>
-&lt;pre>&lt;code>$ cd dpsim
-$ docker build -t sogno/dpsim:dev -f Packaging/Docker/Dockerfile.dev .
-&lt;/code>&lt;/pre>
-&lt;p>Alternatively, the image can be pulled from DockerHub like so&lt;/p>
-&lt;pre>&lt;code>$ docker pull sogno/dpsim:dev
-&lt;/code>&lt;/pre>
-&lt;p>For OS specific instructions on how to install requirements, see the sections below.&lt;/p>
-&lt;p>Next, run a Docker container&lt;/p>
-&lt;pre>&lt;code>$ cd dpsim
-$ docker run -it -p 8888:8888 -v $(pwd):/dpsim --privileged sogno/dpsim:dev bash
-&lt;/code>&lt;/pre>
-&lt;p>The option &lt;code>-p&lt;/code> maps the port 8888 of the container to the docker host. This is required to access the jupyter lab instance inside the container. The option &lt;code>--privileged&lt;/code> is required for debug builds.&lt;/p>
-&lt;p>For Windows, you might need to specify the current directory with curly brackets&lt;/p>
-&lt;pre>&lt;code>$ docker run -it -p 8888:8888 -v ${pwd}:/dpsim --privileged sogno/dpsim:dev bash
-&lt;/code>&lt;/pre>
-&lt;p>Now, you should be in an interactive session inside the docker container.&lt;/p>
-&lt;p>The DPsim C++ and Python library without C++ examples or documentation can be built as follows&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim
-$ mkdir build &amp;amp;&amp;amp; cd build
-$ cmake ..
-$ cmake --build . --target dpsimpy
-&lt;/code>&lt;/pre>
-&lt;p>To build everything run&lt;/p>
-&lt;pre>&lt;code>$ cmake --build .
-&lt;/code>&lt;/pre>
-&lt;p>If you would like to use the Python package, it has to be added to the path.
-The following command adds the dpsimpy C++/Python package as well as the dpsim pure Python package.&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim/build
-$ export PYTHONPATH=$(pwd):$(pwd)/../python/src/
-&lt;/code>&lt;/pre>
-&lt;p>To run jupyter lab&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim
-$ jupyter lab --ip=&amp;quot;0.0.0.0&amp;quot; --allow-root --no-browser
-&lt;/code>&lt;/pre>
-&lt;p>To install dpsim run&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim/build
-$ sudo make install
-&lt;/code>&lt;/pre>
-&lt;h2 id="cmake-for-linux">CMake for Linux&lt;/h2>
-&lt;p>The most recent list of requirements can be found in the Dockerfiles.&lt;/p>
-&lt;p>Make sure that the required dependencies are installed.
-The &lt;a href="https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/-/blob/master/Packaging/install-fedora-deps.sh">fedora installation script&lt;/a> in the DPsim repository is a good place to start from.&lt;/p>
-&lt;p>&lt;strong>Note:&lt;/strong> There are currently no Debian packages for &lt;code>villas-node&lt;/code> and &lt;code>libcimpp16v29a&lt;/code>.
-If you want to use these optional feature, you have to build them manually.&lt;/p>
-&lt;p>Install Sundials&lt;/p>
-&lt;pre>&lt;code>$ git clone --branch v3.1.1 https://github.com/LLNL/sundials.git
-$ mkdir sundials/build
-$ pushd sundials/build
-$ cmake .. \
--DBUILD_SHARED_LIBS=ON \
--DBUILD_STATIC_LIBS=OFF \
--DEXAMPLES_ENABLE_C=OFF
-$ make -j$(nproc) install
-$ popd
-&lt;/code>&lt;/pre>
-&lt;p>The following steps to clone, build and install are the same as for the Docker setup.&lt;/p>
-&lt;h2 id="cmake-for-windows">CMake for Windows&lt;/h2>
-&lt;p>Make sure that the required dependecies are installed:&lt;/p>
-&lt;ul>
-&lt;li>Visual Studio 2017 with C++ Desktop development package&lt;/li>
-&lt;li>&lt;a href="https://cmake.org/">CMake&lt;/a> for Windows&lt;/li>
-&lt;li>&lt;a href="https://git-scm.com/download/win">Git for Windows&lt;/a>&lt;/li>
-&lt;li>For Python support, install Python3, for example, Anaconda, and add Python to your PATH.&lt;/li>
-&lt;/ul>
-&lt;p>Clone the project as explained for Docker.&lt;/p>
-&lt;p>Open a windows command prompt and navigate into the new DPsim folder.
-Generate a Visual Studio project with CMake and use it to build the project&lt;/p>
-&lt;pre>&lt;code>$ mkdir build
-$ cd build
-$ cmake -G &amp;quot;Visual Studio 15 2017 Win64&amp;quot; ..
-&lt;/code>&lt;/pre>
-&lt;p>Open Visual Studio and load the Visual Studio project from the build directory within the DPsim folder.&lt;/p>
-&lt;p>You can either build the project from within Visual Studio or from the command line by running the following command in the windows command prompt&lt;/p>
-&lt;pre>&lt;code>$ cmake --build .
-&lt;/code>&lt;/pre>
-&lt;p>To install the Python package use Visual Studio and the Release configuration to build the DPsim Python module and then build the INSTALL project.&lt;/p>
-&lt;h2 id="cmake-for-macos">CMake for macOS&lt;/h2>
-&lt;p>Make sure that the required dependecies are installed&lt;/p>
-&lt;pre>&lt;code>$ /usr/bin/ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&amp;quot;
-$ brew install gcc9 git cmake graphviz python3 gsl eigen spdlog
-$ sudo pip3 install numpy
-&lt;/code>&lt;/pre>
-&lt;p>Clone the source as explained for the Docker setup.&lt;/p>
-&lt;p>Compile&lt;/p>
-&lt;pre>&lt;code>$ mkdir build
-$ cmake ..
-$ make -j$(sysctl -n hw.ncpu)
-&lt;/code>&lt;/pre>
-&lt;p>To install the generated Python module to your system&lt;/p>
-&lt;pre>&lt;code>$ sudo make install
-&lt;/code>&lt;/pre>
-&lt;h2 id="python-package-for-pypi">Python Package for pypi&lt;/h2>
-&lt;p>Follow the previous steps to set up the Docker container.&lt;/p>
-&lt;p>To build the Python package run&lt;/p>
-&lt;pre>&lt;code>$ python3 setup.py bdist_wheel
-&lt;/code>&lt;/pre>
-&lt;h2 id="documentation">Documentation&lt;/h2>
-&lt;h3 id="python">Python&lt;/h3>
-&lt;p>Install &lt;a href="https://www.sphinx-doc.org/en/master/">Sphinx&lt;/a> or use the Docker image.&lt;/p>
-&lt;p>Generate the Python documentation by running Sphinx via CMake:&lt;/p>
-&lt;pre>&lt;code>$ mkdir -p build &amp;amp;&amp;amp; cd build
-$ cmake ..
-$ make docs
-&lt;/code>&lt;/pre>
-&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/&lt;/code>.&lt;/p>
-&lt;h3 id="c">C++&lt;/h3>
-&lt;p>Install &lt;a href="http://www.doxygen.nl/">Doxygen&lt;/a> or use the Docker image.&lt;/p>
-&lt;p>Generate the C++ documentation by running Doxygen via CMake:&lt;/p>
-&lt;pre>&lt;code>$ mkdir -p build &amp;amp;&amp;amp; cd build
-$ cmake ..
-$ make docs_cxx
-&lt;/code>&lt;/pre>
-&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/Cxx&lt;/code>.&lt;/p></description></item><item><title>Docs: Install</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/install/</link><pubDate>Thu, 05 Jan 2017 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/install/</guid><description>
+&lt;div class="math">$$\begin{align}
+\langle \lambda_{md} \rangle_0 &amp;= L_{ad} \left( \frac{\langle \lambda_{ds} \rangle_0}{L_{ls}} + \frac{\langle \lambda_{fd} \rangle_0}{L_{lfd}} + \frac{\langle \lambda_{kd} \rangle_0}{L_{lkd}} \right) \nonumber \\
+\langle \lambda_{mq} \rangle_0 &amp;= L_{aq} \left( \frac{\langle \lambda_{qs} \rangle_0}{L_{ls}} + \frac{\langle \lambda_{kq1} \rangle_0}{L_{lkq1}} + \frac{\langle \lambda_{kq2} \rangle_0}{L_{lkq2}} \right)
+\end{align}$$&lt;/div>&lt;p>where&lt;/p>
+&lt;div class="math">$$\begin{align}
+L_{ad} &amp;= \left( \frac{1}{L_{md}} + \frac{1}{L_{ls}} + \frac{1}{L_{lfd}} + \frac{1}{L_{lkd}} \right) \nonumber \\
+L_{aq} &amp;= \left( \frac{1}{L_{mq}} + \frac{1}{L_{ls}} + \frac{1}{L_{lkq1}} + \frac{1}{L_{lkq2}} \right).
+\end{align}$$&lt;/div>&lt;p>The mechanical equations in dynamic phasors are:&lt;/p>
+&lt;div class="math">$$\begin{align}
+T_e &amp;= \langle \lambda_{qs} \rangle_0 \langle i_{ds} \rangle_0 - \langle \lambda_{ds} \rangle_0 \langle i_{qs} \rangle_0 \\
+\frac{1}{\omega_s} \frac{d \delta_r}{dt} &amp;= \omega_r - 1 \\
+\frac{d \omega_r}{dt} &amp;= \frac{1}{2H} (T_m - T_e).
+\end{align}$$&lt;/div>&lt;h2 id="transient-stability-model">Transient Stability Model&lt;/h2></description></item><item><title>Docs: VS-Inverter</title><link>https://sogno-platform.github.io/dpsim/docs/models/power-electronics/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/power-electronics/</guid><description/></item><item><title>Docs: Install</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/install/</link><pubDate>Thu, 05 Jan 2017 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/install/</guid><description>
 &lt;p>DPsim is a Python module / C++ library for complex power system
 simulation. As a Python module, the easiest way to get to know DPsim is
 via &lt;a href="https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/">Jupyter Notebooks&lt;/a>.&lt;/p>

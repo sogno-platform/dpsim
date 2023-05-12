@@ -3,16 +3,15 @@
 "><meta property="og:type" content="website"><meta property="og:url" content="https://sogno-platform.github.io/dpsim/docs/models/"><meta property="og:site_name" content="DPsim"><meta itemprop=name content="Models"><meta itemprop=description content="Mathematical description of the models implemented in DPsim.
 "><meta name=twitter:card content="summary"><meta name=twitter:title content="Models"><meta name=twitter:description content="Mathematical description of the models implemented in DPsim.
 "><link rel=preload href=/dpsim/scss/main.min.73bc65c1e18bb0cbd02b071f40b73b018bed23b1835e915c0f4f73a772a6713b.css as=style><link href=/dpsim/scss/main.min.73bc65c1e18bb0cbd02b071f40b73b018bed23b1835e915c0f4f73a772a6713b.css rel=stylesheet integrity><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
-<script defer src=https://unpkg.com/lunr@2.3.9/lunr.min.js integrity=sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar"><a class=navbar-brand href=/dpsim/><span class="navbar-brand__logo navbar-logo"></span><span class=navbar-brand__name>DPsim</span></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link active" href=/dpsim/docs/><span class=active>Documentation</span></a></li></ul></div><div class="navbar-nav d-none d-lg-block"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/dpsim/offline-search-index.20bec4fc8d7bd25b988b7b11133bb6fb.json data-offline-search-base-href=/ data-offline-search-max-results=10></div></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
+<script defer src=https://unpkg.com/lunr@2.3.9/lunr.min.js integrity=sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar"><a class=navbar-brand href=/dpsim/><span class="navbar-brand__logo navbar-logo"></span><span class=navbar-brand__name>DPsim</span></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link active" href=/dpsim/docs/><span class=active>Documentation</span></a></li></ul></div><div class="navbar-nav d-none d-lg-block"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/dpsim/offline-search-index.c0abea0f4f5a4e4b9c969385249a5505.json data-offline-search-base-href=/ data-offline-search-max-results=10></div></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
 <a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/dpsim/docs/models/>Return to the regular view of this page</a>.</p></div><h1 class=title>Models</h1><div class=lead>Mathematical description of the models implemented in DPsim.</div><ul><li>1: <a href=#pg-4f0ffdeda8dbe1beb970d2ea3deea516>Transformer</a></li><li>2: <a href=#pg-e3f09e4f60e4251806fdb99a72cfdeb8>Branches</a></li><li>3: <a href=#pg-20dcbabac73548c157ffb4d9db6558a3>Induction Machine</a></li><li>4: <a href=#pg-de0ddf83de229c547755bc41e95768fd>RLC-Elements</a></li><li>5: <a href=#pg-6057766faa04ada82c116a6e9f46c38d>Synchronous Generator</a></li><li>6: <a href=#pg-ebd94d945756297966939d812b33d0b4>VS-Inverter</a></li></ul><div class=content><p>The following models are currently available:</p><ul><li>Dynamic phasors<ul><li>inductor, capacitor, resistor</li><li>current and voltage source</li><li>load (PQ and Z type)</li><li>pi-line</li><li>transmission line (Bergeron)</li><li>synchronous generator dq-frame full order (Kundur, Krause)</li><li>inverter averaged</li><li>inverter with harmonics (comparable to switched model)</li><li>switch</li></ul></li><li>EMT<ul><li>inductor, capacitor, resistor</li><li>current and voltage source</li><li>load (Z type)</li><li>pi-line</li><li>transmission line (Bergeron)</li><li>synchronous generator dq-frame full order (Kundur, Krause)</li><li>inverter averaged</li><li>switch</li></ul></li></ul></div></div><div class=td-content style=page-break-before:always><h1 id=pg-4f0ffdeda8dbe1beb970d2ea3deea516>1 - Transformer</h1><h2 id=2-winding-transformer>2-Winding Transformer</h2><p>The transformer model is composed of an RL-segment and an ideal transformer.
 The single line diagram is depicted in the figure below.</p><p><img src=electrical_transformer.svg alt=Transformer></p><p>If node reduction is not applied, two virtual nodes are created to stamp this model into the system matrix.</p><p>Furthermore, the ideal transformer has an additional equation, which requires an extension of the system matrix.
-The complete matrix stamp for the ideal transformer is</p><p>$$
-\begin{array}{c|c c c}
+The complete matrix stamp for the ideal transformer is</p><div class=math>$$\begin{array}{c|c c c}
 ~ & j & k & l \cr
-\hline
-j & & & -1 \cr
-k & & & T \cr
-l & 1 & -T & 0
+  \hline
+  j &  &  & -1 \cr
+  k &  &  & T \cr
+  l & 1 & -T & 0
 \end{array}
 \begin{pmatrix}
 v_j \cr
@@ -24,15 +23,14 @@ i_{l} \cr
 \cr
 \cr
 0\cr
-\end{pmatrix}
-$$</p><p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
+\end{pmatrix} $$</div><p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
 $l$ indicates the inserted row and column to accommodate the relation between the two voltages at the ends of the transformer.
 The transformer ratio is defined as $T = V_{j} / V_{k}$.
 A phase shift can be introduced if $T$ is considered as a complex number.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-e3f09e4f60e4251806fdb99a72cfdeb8>2 - Branches</h1><h2 id=rx-line>RX-Line</h2><h2 id=pi-line>PI-Line</h2><h2 id=transformer>Transformer</h2></div><div class=td-content style=page-break-before:always><h1 id=pg-20dcbabac73548c157ffb4d9db6558a3>3 - Induction Machine</h1></div><div class=td-content style=page-break-before:always><h1 id=pg-de0ddf83de229c547755bc41e95768fd>4 - RLC-Elements</h1><h2 id=emt-equations-and-modified-nodal-analysis>EMT Equations and Modified Nodal Analysis</h2><h3 id=inductance>Inductance</h3><p>An inductance is described by
 $$
 v_j(t) - v_k(t) = v_L(t) = L \frac{\mathrm{d} i_L(t)}{\mathrm{d}t}
 $$
-Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$ \eqref{eq:inductance_integrated}.
+Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$.
 $$
 i_L(t) = i_L(t - \Delta t) + \frac{1}{L} \ \int_{t - \Delta t}^{t} v_L(\tau) \ \mathrm{d} \tau
 $$
@@ -45,7 +43,7 @@ Applying the trapezoidal rule to leads to
 $$
 i_L(t) = i_L(t - \Delta t) + \frac{\Delta t}{2L}(v_L(t) + v_L(t - \Delta t))
 $$
-This can be rewritten in terms of an equivalent conductance \eqref{eq:ind_rc_equiv_r} and current source \eqref{eq:ind_rc_equiv_i} and the number of time steps $k$ with size $\Delta t$.
+This can be rewritten in terms of an equivalent conductance and current source and the number of time steps $k$ with size $\Delta t$.
 $$
 i_L(k) = g_L v_L(k) + i_{L,equiv}(k-1)
 $$
@@ -54,7 +52,7 @@ i_{L,equiv}(k-1) = i_L(k-1) + \frac{\Delta t}{2L} v_L(k-1)
 $$
 $$
 g_L = \frac{\Delta t}{2L}
-$$</p><p>Hence, components described by differential equations are transformed into a DC equivalent circuit as depicted in the figure below.</p><p><img src=electrical_resistive_companion_inductance.svg alt="inductance resistive companion"></p><h3 id=capacitance>Capacitance</h3><p>The same procedure can be applied to \eqref{eq:capacitance} describing a capacitance.
+$$</p><p>Hence, components described by differential equations are transformed into a DC equivalent circuit as depicted in the figure below.</p><p><img src=electrical_resistive_companion_inductance.svg alt="inductance resistive companion"></p><h3 id=capacitance>Capacitance</h3><p>The same procedure can be applied to a capacitance.
 Integration on both side yields
 $$
 i_C(t) = C \frac{\mathrm{d}}{\mathrm{d}t} \ v_C(t)
@@ -79,14 +77,10 @@ $$
 To simulate the transient behavior of circuits, this linear equation has to be solved repeatedly.
 As long as the system topology and the time step is fixed, the system matrix is constant.</p><h2 id=extension-with-dynamic-phasors>Extension with Dynamic Phasors</h2><p>The dynamic phasor concept can be integrated with nodal analysis.
 The overall procedure does not change but the system equations are rewritten using complex numbers and all variables need to be expressed in terms of dynamic phasors.
-Therefore, the resistive companion representations of inductances and capacitances have to be adapted as well.</p><h3 id=inductance-1>Inductance</h3><p>In dynamic phasors the integration of the inductance equation yields
-$$
-\begin{align*}
-\langle v_L \rangle(t) &= \Big \langle L \frac{\mathrm{d} i_L}{\mathrm{d}t} \Big \rangle(t) \
+Therefore, the resistive companion representations of inductances and capacitances have to be adapted as well.</p><h3 id=inductance-1>Inductance</h3><p>In dynamic phasors the integration of the inductance equation yields</p><div class=math>$$\begin{align}
+\langle v_L \rangle(t) &= \Big \langle L \frac{\mathrm{d} i_L}{\mathrm{d}t} \Big \rangle(t) \nonumber \\
 &= L \frac{\mathrm{d}}{dt} \langle i_L \rangle(t) + j \omega L \ \langle i_L \rangle(t)
-\end{align*}
-$$
-$$
+\end{align}$$</div><p>$$
 \langle i_L \rangle(t) = \langle i_L \rangle(t - \Delta t) + \int_{t - \Delta t}^t \frac{1}{L} \langle v_L \rangle(\tau) - j \omega \ \langle i_L \rangle(\tau) \mathrm{d} \tau
 $$</p><p>Applying the trapezoidal method leads to the finite difference equation:
 $$
@@ -110,12 +104,11 @@ $$
 $$
 $$
 v_C(t) = v_C(t- \Delta t) + \int_{t- \Delta t}^{t} \frac{1}{C} \ i_C(\tau) -j \omega \ v_C(\tau) \ \mathrm{d} \tau
-$$</p><p>Applying the trapezoidal rule for the capacitance equation leads to the finite difference equation:
-$$
-\begin{split}
-\langle v_C \rangle(k) = \langle v_C \rangle(k-1)</p><ul><li>\frac{\Delta t}{2} \bigg[ \frac{1}{C} \ \langle i_C \rangle(k) - j \omega \ \langle v_C \rangle(k) \</li><li>\frac{1}{C} \ \langle i_C \rangle(k-1) - j \omega \ \langle v_C \rangle(k-1) \bigg]
-\end{split}
-$$</li></ul><p>The \ac{DP} model for the capacitance is defined by
+$$</p><p>Applying the trapezoidal rule for the capacitance equation leads to the finite difference equation:</p><div class=math>$$\begin{split}
+\langle v_C \rangle(k) = \langle v_C \rangle(k-1)
++ \frac{\Delta t}{2} \bigg[ \frac{1}{C} \ \langle i_C \rangle(k) - j \omega \ \langle v_C \rangle(k) \\
++ \frac{1}{C} \ \langle i_C \rangle(k-1) - j \omega \ \langle v_C \rangle(k-1) \bigg]
+\end{split}$$</div><p>The DP model for the capacitance is defined by
 $$
 \langle i_C \rangle(k) = \frac{1+jb}{a} \ \langle v_C \rangle(k) + \langle i_{C,equiv} \rangle(k-1)
 $$
@@ -148,219 +141,220 @@ a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2}
 $$
 $$
 \langle i_{equiv} \rangle(k-1) = \frac{1 - b^2 - j2b + 2Ra + (Ra)^2 - j2Rab}{(1+Ra^2) + b^2} \langle i \rangle(k-1) + \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k-1)
-$$</p></div><div class=td-content style=page-break-before:always><h1 id=pg-6057766faa04ada82c116a6e9f46c38d>5 - Synchronous Generator</h1><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><p>Two different synchronous machine models are currently available:</p><ul><li>the full order dq0 reference frame model (EMT, DP) [Kundur, Power system stability and control, 1994]</li><li>and the much simpler transient stability model (DP) [Eremia, Handbook of Electrical Power System Dynamics, 2003]</li></ul><p>The machine model is interfaced to the nodal analysis network solver through a current source, which only affects the source vector and not the system matrix <a href=https://ieeexplore.ieee.org/document/5411963>Wang2010</a>.</p><h2 id=basic-equations>Basic Equations</h2><p>The equations of the stator and rotor voltages are</p><p>\begin{align}
-\mathbf{v}<em>{abcs} &= \mathbf{R}<em>s \mathbf{i}</em>{abcs} + \frac{d}{dt} \boldsymbol{\lambda}</em>{abcs} \
-\mathbf{v}<em>{dqr} &= \mathbf{R}<em>r \mathbf{i}</em>{dqr} + \frac{d}{dt} \boldsymbol{\lambda}</em>{dqr}
-\end{align}</p><p>where</p><p>\begin{align}
-\mathbf{v}<em>{abcs} &=
-\begin{pmatrix}
-v</em>{as} & v_{bs} & v_{cs}
-\end{pmatrix}^T \
+$$</p></div><div class=td-content style=page-break-before:always><h1 id=pg-6057766faa04ada82c116a6e9f46c38d>5 - Synchronous Generator</h1><p>Two different synchronous machine models are currently available:</p><ul><li>the full order dq0 reference frame model (EMT, DP) [Kundur, Power system stability and control, 1994]</li><li>and the much simpler transient stability model (DP) [Eremia, Handbook of Electrical Power System Dynamics, 2003]</li></ul><p>The machine model is interfaced to the nodal analysis network solver through a current source, which only affects the source vector and not the system matrix <a href=https://ieeexplore.ieee.org/document/5411963>Wang2010</a>.</p><h2 id=basic-equations>Basic Equations</h2><p>The equations of the stator and rotor voltages are</p><div class=math>$$\begin{align}
+\mathbf{v}_{abcs} &= \mathbf{R}_s \mathbf{i}_{abcs} + \frac{d}{dt} \boldsymbol{\lambda}_{abcs} \\
+\mathbf{v}_{dqr} &= \mathbf{R}_r \mathbf{i}_{dqr} + \frac{d}{dt} \boldsymbol{\lambda}_{dqr}
+\end{align}$$</div><p>where</p><div class=math>$$\begin{align}
+\mathbf{v}_{abcs} &=
+  \begin{pmatrix}
+    v_{as} & v_{bs} & v_{cs}
+  \end{pmatrix}^T \\
+  %
+ \mathbf{v}_{dqr} &=
+  \begin{pmatrix}
+    v_{fd} & v_{kd} & v_{kq1} & v_{kq2}
+  \end{pmatrix}^T \\
 %
-\mathbf{v}<em>{dqr} &=
-\begin{pmatrix}
-v</em>{fd} & v_{kd} & v_{kq1} & v_{kq2}
-\end{pmatrix}^T \
+\mathbf{i}_{abcs} &=
+  \begin{pmatrix}
+    i_{as} & i_{bs} & i_{cs}
+  \end{pmatrix}^T \\
+  %
+ \mathbf{i}_{dqr} &=
+  \begin{pmatrix}
+    i_{fd} & i_{kd} & i_{kq1} & i_{kq2}
+  \end{pmatrix}^T \\
 %
-\mathbf{i}<em>{abcs} &=
-\begin{pmatrix}
-i</em>{as} & i_{bs} & i_{cs}
-\end{pmatrix}^T \
+\boldsymbol{\lambda}_{abcs} &=
+  \begin{pmatrix}
+    \lambda_{as} & \lambda_{bs} & \lambda_{cs}
+  \end{pmatrix}^T \\
 %
-\mathbf{i}<em>{dqr} &=
-\begin{pmatrix}
-i</em>{fd} & i_{kd} & i_{kq1} & i_{kq2}
-\end{pmatrix}^T \
+\boldsymbol{\lambda}_{dqr} &=
+  \begin{pmatrix}
+    \lambda_{fd} & \lambda_{kd} & \lambda_{kq1} & \lambda_{kq2}
+\end{pmatrix}^T \\
 %
-\boldsymbol{\lambda}<em>{abcs} &=
-\begin{pmatrix}
-\lambda</em>{as} & \lambda_{bs} & \lambda_{cs}
-\end{pmatrix}^T \
-%
-\boldsymbol{\lambda}<em>{dqr} &=
-\begin{pmatrix}
-\lambda</em>{fd} & \lambda_{kd} & \lambda_{kq1} & \lambda_{kq2}
-\end{pmatrix}^T \
-%
-\mathbf{R}<em>s &= diag
+\mathbf{R}_s &= diag
+  \begin{bmatrix}
+    R_s & R_s & R_s
+  \end{bmatrix} \\
+  %
+\mathbf{R}_r &= diag
+  \begin{bmatrix}
+    R_{fd} & R_{kd} & R_{kq1} & R_{kq2}
+  \end{bmatrix}
+\end{align}$$</div><p>The flux linkage equations are defined as</p><div class=math>$$\begin{equation}
 \begin{bmatrix}
-R_s & R_s & R_s
-\end{bmatrix} \
-%
-\mathbf{R}<em>r &= diag
-\begin{bmatrix}
-R</em>{fd} & R</em>{kd} & R_{kq1} & R_{kq2}
-\end{bmatrix}
-\end{align}</p><p>The flux linkage equations are defined as</p><p>\begin{equation}
-\begin{bmatrix}
-\boldsymbol{\lambda}<em>{abcs} \
-\boldsymbol{\lambda}</em>{dqr}
+\boldsymbol{\lambda}_{abcs} \\
+\boldsymbol{\lambda}_{dqr}
 \end{bmatrix}
 =
 \begin{bmatrix}
-\mathbf{L}<em>s & \mathbf{L}</em>{rs} \
-{(\mathbf{L}<em>{rs})}^{T} & \mathbf{L}<em>r
+\mathbf{L}_s & \mathbf{L}_{rs} \\
+		{(\mathbf{L}_{rs})}^{T} & \mathbf{L}_r
+	\end{bmatrix}
+	\begin{bmatrix}
+\mathbf{i}_{abcs} \\
+\mathbf{i}_{dqr}
 \end{bmatrix}
+\end{equation}$$</div><p>The inductance matrices are varying with the rotor position $\theta_r$ which varies with time.</p><p>The mechanical equations are:</p><div class=math>$$\begin{align}
+\frac{d\theta_r}{dt} &= \omega_r \\
+  \frac{d\omega_r}{dt} &= \frac{P}{2J} (T_e-T_m)
+\end{align}$$</div><p>$\theta_r$ is the rotor position, $\omega_r$ is the angular electrical speed, $P$ is the number of poles, $J$ is the moment of inertia, $T_m$ and $T_e$ are the mechanical and electrical torque, respectively.
+Motor convention is used for all models.</p><h2 id=dq0-reference-frame-9th-order-model>dq0 Reference Frame 9th Order Model</h2><p>For stator referred variables, the base quantities for per unit are chosen as follows:</p><ul><li>$v_{s base}$ peak value of rated line-to-neutral voltage in V</li><li>$i_{s base}$ peak value of rated line current in A</li><li>$f_{base}$ rated frequency in Hz</li></ul><p>The synchronous generator equations in terms of per unit values in the rotor reference frame become:</p><div class=math>$$\begin{equation}
 \begin{bmatrix}
-\mathbf{i}</em>{abcs} \
-\mathbf{i}</em>{dqr}
+\mathbf{v}_{dq0s} \\
+\mathbf{v}_{dqr}
 \end{bmatrix}
-\end{equation}</p><p>The inductance matrices are varying with the rotor position $\theta_r$ which varies with time.</p><p>The mechanical equations are:</p><p>\begin{align}
-\frac{d\theta_r}{dt} &= \omega_r \
-\frac{d\omega_r}{dt} &= \frac{P}{2J} (T_e-T_m)
-\end{align}</p><p>$\theta_r$ is the rotor position, $\omega_r$ is the angular electrical speed, $P$ is the number of poles, $J$ is the moment of inertia, $T_m$ and $T_e$ are the mechanical and electrical torque, respectively.
-Motor convention is used for all models.</p><h2 id=dq0-reference-frame-9th-order-model>dq0 Reference Frame 9th Order Model</h2><p>For stator referred variables, the base quantities for per unit are chosen as follows:</p><ul><li>$v_{s base}$ peak value of rated line-to-neutral voltage in V</li><li>$i_{s base}$ peak value of rated line current in A</li><li>$f_{base}$ rated frequency in Hz</li></ul><p>The synchronous generator equations in terms of per unit values in the rotor reference frame become:</p><h1 id=endbmatrix>\begin{equation}
+=
+\mathbf{R}_{sr}
 \begin{bmatrix}
-\mathbf{v}<em>{dq0s} \
-\mathbf{v}</em>{dqr}
-\end{bmatrix}</h1><p>\mathbf{R}<em>{sr}
-\begin{bmatrix}
-\mathbf{i}</em>{dq0s} \
-\mathbf{i}<em>{dqr}
+\mathbf{i}_{dq0s} \\
+\mathbf{i}_{dqr}
 \end{bmatrix}
 +
 \frac{d}{dt}
 \begin{bmatrix}
-\boldsymbol{\lambda}</em>{dq0s} \
+\boldsymbol{\lambda}_{dq0s} \\
 \boldsymbol{\lambda}_{dqr}
-\end{bmatrix}</p><ul><li>\omega_r
+\end{bmatrix}
++ \omega_r
 \begin{bmatrix}
-\boldsymbol{\lambda}_{qds} \
+\boldsymbol{\lambda}_{qds} \\
 0
 \end{bmatrix}
-\label{eq:rotor_reference}
-\end{equation}</li></ul><p>where</p><p>\begin{align}
-\mathbf{v}<em>{dq0s} &=
-\begin{pmatrix}
-v</em>{ds} & v_{qs} & v_{0s}
-\end{pmatrix}^T \nonumber \
+\end{equation}$$</div><p>where</p><div class=math>$$\begin{align}
+\mathbf{v}_{dq0s} &=
+  \begin{pmatrix}
+    v_{ds} & v_{qs} & v_{0s}
+  \end{pmatrix}^T \nonumber \\
 %
-\mathbf{i}<em>{dq0s} &=
-\begin{pmatrix}
-i</em>{ds} & i_{qs} & i_{0s}
-\end{pmatrix}^T \nonumber \
+\mathbf{i}_{dq0s} &=
+  \begin{pmatrix}
+    i_{ds} & i_{qs} & i_{0s}
+  \end{pmatrix}^T \nonumber \\
 %
-\boldsymbol{\lambda}<em>{dq0s} &=
-\begin{pmatrix}
-\lambda</em>{ds} & \lambda_{qs} & \lambda_{0s}
-\end{pmatrix}^T \nonumber \
+\boldsymbol{\lambda}_{dq0s} &=
+  \begin{pmatrix}
+    \lambda_{ds} & \lambda_{qs} & \lambda_{0s}
+  \end{pmatrix}^T \nonumber \\
 %
-\mathbf{R}<em>{sr} &= diag
-\begin{bmatrix}
-R_s & R_s & R_s & R</em>{fd} & R_{kd} & R_{kq1} & R_{kq2}
-\end{bmatrix} \nonumber \
+\mathbf{R}_{sr} &= diag
+  \begin{bmatrix}
+    R_s & R_s & R_s & R_{fd} & R_{kd} & R_{kq1} & R_{kq2}
+  \end{bmatrix} \nonumber \\
 %
-\boldsymbol{\lambda}<em>{dqs} &=
+\boldsymbol{\lambda}_{dqs} &=
+  \begin{pmatrix}
+    -\lambda_{qs} & \lambda_{ds} & 0
+  \end{pmatrix}^T.
+\end{align}$$</div><p>The flux linkages are:</p><div class=math>$$\begin{equation}
 \begin{pmatrix}
--\lambda</em>{qs} & \lambda_{ds} & 0
-\end{pmatrix}^T.
-\end{align}</p><p>The flux linkages are:</p><h1 id=endpmatrix>\begin{equation}
-\begin{pmatrix}
-\boldsymbol{\lambda}<em>{dq0s} \
-\boldsymbol{\lambda}</em>{dqr}
-\end{pmatrix}</h1><p>\begin{bmatrix}
-\mathbf{L}<em>{dqss} & \mathbf{L}</em>{dqsr} \
-\mathbf{L}<em>{dqrs} & \mathbf{L}</em>{dqrr}
-\end{bmatrix}
-\begin{pmatrix}
-\mathbf{i}<em>{dq0s} \
-\mathbf{i}</em>{dqr}
+\boldsymbol{\lambda}_{dq0s} \\
+\boldsymbol{\lambda}_{dqr}
 \end{pmatrix}
-\label{eq:flux_linkages}
-\end{equation}</p><p>where</p><p>\begin{align}
-\mathbf{L}<em>{dqss} &=
+=
 \begin{bmatrix}
-L</em>{d} & 0 & 0 \
-0 & L_{q} & 0 \
-0 & 0 & L_{ls}
-\end{bmatrix} \nonumber \</p><p>\mathbf{L}<em>{dqsr} &=
-\begin{bmatrix}
-L</em>{md} & L_{md} & 0 & 0 \
-0 & 0 & L_{mq} & L_{mq} \
+\mathbf{L}_{dqss} & \mathbf{L}_{dqsr} \\
+    \mathbf{L}_{dqrs} & \mathbf{L}_{dqrr}
+  \end{bmatrix}
+\begin{pmatrix}
+\mathbf{i}_{dq0s} \\
+\mathbf{i}_{dqr}
+\end{pmatrix}
+\end{equation}$$</div><p>where</p><div class=math>$$\begin{align}
+\mathbf{L}_{dqss} &=
+  \begin{bmatrix}
+    L_{d} & 0 & 0 \\
+    0 & L_{q} & 0 \\
+    0 & 0 & L_{ls}
+  \end{bmatrix} \nonumber \\
+\mathbf{L}_{dqsr} &=
+  \begin{bmatrix}
+    L_{md} & L_{md} & 0 & 0 \\
+    0 & 0 & L_{mq} & L_{mq} \\
 0 & 0 & 0 & 0
-\end{bmatrix} \nonumber \</p><p>\mathbf{L}<em>{dqrs} &=
-\begin{bmatrix}
-L</em>{md} & 0 & 0 \
-L_{md} & 0 & 0 \
-0 & L_{mq} & 0 \
-0 & L_{mq} & 0
-\end{bmatrix} \nonumber \</p><p>\mathbf{L}<em>{rr} &=
-\begin{bmatrix}
-L</em>{fd} & L_{md} & 0 & 0 \
-L_{md} & L_{kd} & 0 & 0 \
-0 & 0 & L_{kq1} & L_{mq} \
+  \end{bmatrix} \nonumber \\
+\mathbf{L}_{dqrs} &=
+  \begin{bmatrix}
+    L_{md} & 0 & 0 \\
+    L_{md} & 0 & 0 \\
+    0 & L_{mq} & 0 \\
+    0 & L_{mq} & 0
+\end{bmatrix} \nonumber \\
+\mathbf{L}_{rr} &=
+  \begin{bmatrix}
+    L_{fd} & L_{md} & 0 & 0  \\
+    L_{md} & L_{kd} & 0 & 0  \\
+    0 & 0 & L_{kq1} & L_{mq} \\
 0 & 0 & L_{mq} & L_{kq2}
-\end{bmatrix} \nonumber \</p><p>\end{align}</p><p>with</p><p>\begin{align}
-L_{d} &= L_{ls} + L_{md} \nonumber \
-L_{q} &= L_{ls} + L_{mq} \nonumber \
-L_{fd} &= L_{lfd} + L_{md} \nonumber \
-L_{kd} &= L_{lkd} + L_{md} \nonumber \
-L_{kq1} &= L_{lkq1} + L_{mq} \nonumber \
-L_{kq2} &= L_{lkq2} + L_{mq}.
-\end{align}</p><p>The mechanical equations in per unit become:</p><p>\begin{align}
-T_e &= \lambda_{qs} i_{ds} - \lambda_{ds} i_{qs} \
-\frac{d \omega_r}{dt} &= \omega_r \
-\frac{1}{\omega_b} \frac{d \omega_r}{dt} &= \frac{1}{2H} (T_m - T_e).
-\end{align}</p><p>For the simulation, fluxes are chosen as state variables.
+  \end{bmatrix} \nonumber \\
+\end{align}$$</div><p>with</p><div class=math>$$\begin{align}
+L_{d} &= L_{ls} + L_{md} \nonumber \\
+  L_{q} &= L_{ls} + L_{mq} \nonumber \\
+  L_{fd} &= L_{lfd} + L_{md} \nonumber \\
+  L_{kd} &= L_{lkd} + L_{md} \nonumber \\
+  L_{kq1} &= L_{lkq1} + L_{mq} \nonumber \\
+ L_{kq2} &= L_{lkq2} + L_{mq}.
+\end{align}$$</div><p>The mechanical equations in per unit become:</p><div class=math>$$\begin{align}
+T_e &= \lambda_{qs} i_{ds} - \lambda_{ds} i_{qs} \\
+\frac{d \omega_r}{dt} &= \omega_r \\
+  \frac{1}{\omega_b} \frac{d \omega_r}{dt} &= \frac{1}{2H} (T_m - T_e).
+\end{align}$$</div><p>For the simulation, fluxes are chosen as state variables.
 To avoid the calculation of currents from fluxes using the inverse of the inductance matrix, the equation set needs to be solved for the fluxes analytically.
-To simplify the calculations, dq axis magnetizing flux linkages are defined [Krause, Analysis of electric machinery and drive systems, 2002]:</p><p>\begin{align}
-\lambda_{md} &= L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \
-\lambda_{mq} &= L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right).
-\label{eq:magnetizing_flux_linkage}
-\end{align}</p><p>Using the flux linkages results in a simpler equation set for the fluxes:</p><p>\begin{align}
-\lambda_{ds} &= L_{ls} i_{ds} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \
-\lambda_{qs} &= L_{ls} i_{qs} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \nonumber \
-\lambda_{0s} &= L_{ls} i_{0s} \nonumber \
-\lambda_{fd} &= L_{ls} i_{fd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \
-\lambda_{kd} &= L_{ls} i_{kd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \
-\lambda_{kq1} &= L_{ls} i_{kq1} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \nonumber \
+To simplify the calculations, dq axis magnetizing flux linkages are defined [Krause, Analysis of electric machinery and drive systems, 2002]:</p><div class=math>$$\begin{align}
+\lambda_{md} &= L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{mq} &= L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right)
+\end{align}$$</div><p>Using the flux linkages results in a simpler equation set for the fluxes:</p><div class=math>$$\begin{align}
+\lambda_{ds} &= L_{ls} i_{ds} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{qs} &= L_{ls} i_{qs} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \nonumber \\
+\lambda_{0s} &= L_{ls} i_{0s} \nonumber \\
+  \lambda_{fd} &= L_{ls} i_{fd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{kd} &= L_{ls} i_{kd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{kq1} &= L_{ls} i_{kq1} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \nonumber \\
 \lambda_{kq2} &= L_{ls} i_{kq2} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right)
-\label{eq:syngen_lambda}
-\end{align}</p><p>\begin{align}
-\lambda_{ds} &= L_{ls} i_{ds} + \lambda_{md} \nonumber \
-\lambda_{qs} &= L_{ls} i_{qs} + \lambda_{mq} \nonumber \
-\lambda_{0s} &= L_{ls} i_{0s} \nonumber \
-\lambda_{fd} &= L_{lfd} i_{fd} + \lambda_{md} \nonumber \
-\lambda_{kd} &= L_{lkd} i_{kd} + \lambda_{md} \nonumber \
-\lambda_{kq1} &= L_{lkq1} i_{kq1} + \lambda_{mq} \nonumber \
+\end{align}$$</div><div class=math>$$\begin{align}
+\lambda_{ds} &= L_{ls} i_{ds} + \lambda_{md} \nonumber \\
+\lambda_{qs} &= L_{ls} i_{qs} + \lambda_{mq} \nonumber \\
+\lambda_{0s} &= L_{ls} i_{0s} \nonumber \\
+  \lambda_{fd} &= L_{lfd} i_{fd} + \lambda_{md} \nonumber \\
+\lambda_{kd} &= L_{lkd} i_{kd} + \lambda_{md} \nonumber \\
+\lambda_{kq1} &= L_{lkq1} i_{kq1} + \lambda_{mq} \nonumber \\
 \lambda_{kq2} &= L_{lkq2} i_{kq2} + \lambda_{mq}
-\label{eq:flux_currents_flux_linkage}
-\end{align}</p><h3 id=dynamic-phasor-model>Dynamic Phasor Model</h3><p>The fundamental dynamic phasors are similar to the dq0 quantities for symmetrical conditions since both yield DC quantities in a rotating reference frame.
-The network abc dynamic phasor quantities can be converted to dq0 dynamic phasors by applying the symmetrical components transformation and a rotation.</p><p>The angle $\delta$ is the orientation of the dq0 reference frame relative to the abc frame.</p><p>\begin{align}
-\langle i_{ds} \rangle_{0} &= \mathbf{Re} \left{ \langle i_{p} \rangle_1 \ \mathrm{e}^{-j \delta} \right} \nonumber \
-\langle i_{qs} \rangle_{0} &= \mathbf{Im} \left{ \langle i_{p} \rangle_1 \ \mathrm{e}^{-j \delta} \right} \nonumber \
-\langle i_{ds} \rangle_{2} &= \mathbf{Re} \left{ \langle i_{n} \rangle_{1}^* \ \mathrm{e}^{-j \delta} \right} \nonumber \
-\langle i_{qs} \rangle_{2} &= \mathbf{Im} \left{ \langle i_{n} \rangle_{1}^* \ \mathrm{e}^{-j \delta} \right} \nonumber \
-\langle i_{0s} \rangle_{1} &= \mathbf{Re} \left{ \langle i_{z} \rangle_1 \right}
-\label{eq:syngen_abc_dq0_conversion}
-\end{align}</p><p>The winding currents for positive and zero sequence components can be expressed as:</p><p>\begin{align}
-\langle i_{ds} \rangle_0 &= \frac{\langle \lambda_{ds} \rangle_0 - \langle \lambda_{md} \rangle_0 }{L_{ls}} \nonumber \
-\langle i_{qs} \rangle_0 &= \frac{\langle \lambda_{qs} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{ls}} \nonumber \
-\langle i_{0s} \rangle_1 &= \frac{\langle \lambda_{0s} \rangle_1}{L_{ls}} \nonumber \
-\langle i_{fd} \rangle_0 &= \frac{\langle \lambda_{fd} \rangle_0 - \langle \lambda_{md} \rangle_0}{L_{lfd}} \nonumber \
-\langle i_{kd} \rangle_0 &= \frac{\langle \lambda_{kd} \rangle_0 - \langle \lambda_{md} \rangle_0}{L_{lkd}} \nonumber \
-\langle i_{kq1} \rangle_0 &= \frac{\langle \lambda_{kq1} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{lkq1}} \nonumber \
+\end{align}$$</div><h3 id=dynamic-phasor-model>Dynamic Phasor Model</h3><p>The fundamental dynamic phasors are similar to the dq0 quantities for symmetrical conditions since both yield DC quantities in a rotating reference frame.
+The network abc dynamic phasor quantities can be converted to dq0 dynamic phasors by applying the symmetrical components transformation and a rotation.</p><p>The angle $\delta$ is the orientation of the dq0 reference frame relative to the abc frame.</p><div class=math>$$\begin{align}
+\langle i_{ds} \rangle_{0} &= \mathbf{Re} \left\{ \langle i_{p} \rangle_1 \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{qs} \rangle_{0} &= \mathbf{Im} \left\{ \langle i_{p} \rangle_1 \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{ds} \rangle_{2} &= \mathbf{Re} \left\{ \langle i_{n} \rangle_{1}^* \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{qs} \rangle_{2} &= \mathbf{Im} \left\{ \langle i_{n} \rangle_{1}^* \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{0s} \rangle_{1} &= \mathbf{Re} \left\{ \langle i_{z} \rangle_1 \right\}
+\end{align}$$</div><p>The winding currents for positive and zero sequence components can be expressed as</p><div class=math>$$\begin{align}
+\langle i_{ds} \rangle_0 &= \frac{\langle \lambda_{ds} \rangle_0 - \langle \lambda_{md} \rangle_0 }{L_{ls}} \nonumber \\
+\langle i_{qs} \rangle_0 &= \frac{\langle \lambda_{qs} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{ls}} \nonumber \\
+\langle i_{0s} \rangle_1 &= \frac{\langle \lambda_{0s} \rangle_1}{L_{ls}} \nonumber \\
+\langle i_{fd} \rangle_0 &= \frac{\langle \lambda_{fd} \rangle_0 - \langle \lambda_{md} \rangle_0}{L_{lfd}} \nonumber \\
+\langle i_{kd} \rangle_0 &= \frac{\langle \lambda_{kd} \rangle_0 - \langle \lambda_{md} \rangle_0}{L_{lkd}} \nonumber \\
+\langle i_{kq1} \rangle_0 &= \frac{\langle \lambda_{kq1} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{lkq1}} \nonumber \\
 \langle i_{kq2} \rangle_0 &= \frac{\langle \lambda_{kq2} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{lkq2}}.
-\end{align}</p><p>\begin{align}
-\frac{d}{dt} \langle \lambda_{ds} \rangle_0 &= \langle v_{ds} \rangle_0 + \langle \omega_r \rangle_0 \langle \lambda_{qs} \rangle_0 + \frac{R_s}{L_{ls}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{ds} \rangle_0 \right) \nonumber \
-\frac{d}{dt} \langle \lambda_{qs} \rangle_0 &= \langle v_{qs} \rangle_0 - \langle \omega_r \rangle_0 \langle \lambda_{ds} \rangle_0 + \frac{R_s}{L_{ls}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{qs} \rangle_0 \right) \nonumber \
-\frac{d}{dt} \langle \lambda_{0s} \rangle_1 &= \langle v_{0s} \rangle_1 - \frac{R_s}{L_{ls}} \langle \lambda_{0s} \rangle_1 -j \omega_s \langle \lambda_{0s} \rangle_1 \nonumber \
-\frac{d}{dt} \langle \lambda_{fd} \rangle_0 &= \langle v_{fd} \rangle_0 + \frac{R_{fd}}{L_{lfd}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{fd} \rangle_0 \right) \nonumber \
-\frac{d}{dt} \langle \lambda_{kd} \rangle_0 &= \frac{R_{kd}}{L_{lkd}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{kd} \rangle_0 \right) \nonumber \
-\frac{d}{dt} \langle \lambda_{kq1} \rangle_0 &= \frac{R_{kq1}}{L_{lkq1}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{kq1} \rangle_0 \right) \nonumber \
+\end{align}$$</div><div class=math>$$\begin{align}
+\frac{d}{dt} \langle \lambda_{ds} \rangle_0 &= \langle v_{ds} \rangle_0 + \langle \omega_r \rangle_0 \langle \lambda_{qs} \rangle_0 + \frac{R_s}{L_{ls}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{ds} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{qs} \rangle_0 &= \langle v_{qs} \rangle_0 - \langle \omega_r \rangle_0 \langle \lambda_{ds} \rangle_0 + \frac{R_s}{L_{ls}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{qs} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{0s} \rangle_1 &= \langle v_{0s} \rangle_1 - \frac{R_s}{L_{ls}} \langle \lambda_{0s} \rangle_1 -j \omega_s \langle \lambda_{0s} \rangle_1 \nonumber \\
+\frac{d}{dt} \langle \lambda_{fd} \rangle_0 &= \langle v_{fd} \rangle_0 + \frac{R_{fd}}{L_{lfd}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{fd} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{kd} \rangle_0 &= \frac{R_{kd}}{L_{lkd}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{kd} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{kq1} \rangle_0 &= \frac{R_{kq1}}{L_{lkq1}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{kq1} \rangle_0 \right) \nonumber \\
 \frac{d}{dt} \langle \lambda_{kq2} \rangle_0 &= \frac{R_{kq2}}{L_{lkq2}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{kq2} \rangle_0 \right).
-\end{align}</p><p>In the dynamic phasor case, the equation for $\frac{d}{dt} \langle \lambda_{0s} \rangle_1$ has a frequency shift.
-To complete the state model, the magnetizing flux linkages are expressed as:</p><p>\begin{align}
-\langle \lambda_{md} \rangle_0 &= L_{ad} \left( \frac{\langle \lambda_{ds} \rangle_0}{L_{ls}} + \frac{\langle \lambda_{fd} \rangle_0}{L_{lfd}} + \frac{\langle \lambda_{kd} \rangle_0}{L_{lkd}} \right) \nonumber \
-\langle \lambda_{mq} \rangle_0 &= L_{aq} \left( \frac{\langle \lambda_{qs} \rangle_0}{L_{ls}} + \frac{\langle \lambda_{kq1} \rangle_0}{L_{lkq1}} + \frac{\langle \lambda_{kq2} \rangle_0}{L_{lkq2}} \right)
-\label{eq:winding_flux_linkages}
-\end{align}</p><p>where</p><p>\begin{align}
-L_{ad} &= \left( \frac{1}{L_{md}} + \frac{1}{L_{ls}} + \frac{1}{L_{lfd}} + \frac{1}{L_{lkd}} \right) \nonumber \
-L_{aq} &= \left( \frac{1}{L_{mq}} + \frac{1}{L_{ls}} + \frac{1}{L_{lkq1}} + \frac{1}{L_{lkq2}} \right).
-\end{align}</p><p>The mechanical equations in dynamic phasors are:</p><p>\begin{align}
-T_e &= \langle \lambda_{qs} \rangle_0 \langle i_{ds} \rangle_0 - \langle \lambda_{ds} \rangle_0 \langle i_{qs} \rangle_0 \
-\frac{1}{\omega_s} \frac{d \delta_r}{dt} &= \omega_r - 1 \
-\frac{d \omega_r}{dt} &= \frac{1}{2H} (T_m - T_e).
-\end{align}</p><h2 id=transient-stability-model>Transient Stability Model</h2></div><div class=td-content style=page-break-before:always><h1 id=pg-ebd94d945756297966939d812b33d0b4>6 - VS-Inverter</h1></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class="container-fluid mx-sm-5"><div class=row><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank rel=noopener href=https://slack.lfenergy.org/ aria-label=Slack><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="GitHub Discussions" aria-label="GitHub Discussions"><a class=text-white target=_blank rel=noopener href=https://github.com/sogno-platform/dpsim/discussions aria-label="GitHub Discussions"><i class="fab fa-github"></i></a></li></ul></div><div class="col-6 col-sm-4 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/sogno-platform/dpsim aria-label=GitHub><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="RWTH GitLab" aria-label="RWTH GitLab"><a class=text-white target=_blank rel=noopener href=https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim aria-label="RWTH GitLab"><i class="fab fa-gitlab"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2023 The DPsim Authors All Rights Reserved</small></div></div></div></footer></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css integrity="sha512-6VMVcy7XQNyarhVuiL50FzpgCFKsyTd6YO93aaQEyET+BNaWvj0IgKR86Bf6+AmWczxAcSnL+JGjo+iStgO1gQ==" crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js integrity="sha512-b9IKj4LCNrtCPBhceRcoYOHWW/S2q9fpl7iAJlyxYpykRj1SKM7FE9+E0NEnJ8g8ni47LBr2GuX9qzg/xeuwzQ==" crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js integrity="sha512-iWiuBS5nt6r60fCz26Nd0Zqe0nbk1ZTIQbl3Kv7kYsX+yKMUFHzjaH2+AnM6vp2Xs+gNmaBAVWJjSmuPw76Efg==" crossorigin=anonymous onload='renderMathInElement(document.body,{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"},{display:!0,left:"\\[",right:"\\]"}]})'></script><script src=/dpsim/js/main.min.2aff983e9d0d8ecff9ed53e14b657216e2d8d2aff059bf4a5651283020995f1b.js integrity="sha256-Kv+YPp0Njs/57VPhS2VyFuLY0q/wWb9KVlEoMCCZXxs=" crossorigin=anonymous></script>
+\end{align}$$</div><p>In the dynamic phasor case, the equation for $\frac{d}{dt} \langle \lambda_{0s} \rangle_1$ has a frequency shift.
+To complete the state model, the magnetizing flux linkages are expressed as:</p><div class=math>$$\begin{align}
+\langle \lambda_{md} \rangle_0 &=  L_{ad} \left( \frac{\langle \lambda_{ds} \rangle_0}{L_{ls}} + \frac{\langle \lambda_{fd} \rangle_0}{L_{lfd}} + \frac{\langle \lambda_{kd} \rangle_0}{L_{lkd}} \right) \nonumber \\
+\langle \lambda_{mq} \rangle_0 &=  L_{aq} \left( \frac{\langle \lambda_{qs} \rangle_0}{L_{ls}} + \frac{\langle \lambda_{kq1} \rangle_0}{L_{lkq1}} + \frac{\langle \lambda_{kq2} \rangle_0}{L_{lkq2}} \right)
+\end{align}$$</div><p>where</p><div class=math>$$\begin{align}
+L_{ad} &=  \left( \frac{1}{L_{md}} + \frac{1}{L_{ls}} + \frac{1}{L_{lfd}} + \frac{1}{L_{lkd}} \right) \nonumber \\
+L_{aq} &=  \left( \frac{1}{L_{mq}} + \frac{1}{L_{ls}} + \frac{1}{L_{lkq1}} + \frac{1}{L_{lkq2}} \right).
+\end{align}$$</div><p>The mechanical equations in dynamic phasors are:</p><div class=math>$$\begin{align}
+T_e &= \langle \lambda_{qs} \rangle_0 \langle i_{ds} \rangle_0 - \langle \lambda_{ds} \rangle_0 \langle i_{qs} \rangle_0 \\
+\frac{1}{\omega_s} \frac{d \delta_r}{dt} &= \omega_r - 1 \\
+  \frac{d \omega_r}{dt} &= \frac{1}{2H} (T_m - T_e).
+\end{align}$$</div><h2 id=transient-stability-model>Transient Stability Model</h2></div><div class=td-content style=page-break-before:always><h1 id=pg-ebd94d945756297966939d812b33d0b4>6 - VS-Inverter</h1></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class="container-fluid mx-sm-5"><div class=row><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank rel=noopener href=https://slack.lfenergy.org/ aria-label=Slack><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="GitHub Discussions" aria-label="GitHub Discussions"><a class=text-white target=_blank rel=noopener href=https://github.com/sogno-platform/dpsim/discussions aria-label="GitHub Discussions"><i class="fab fa-github"></i></a></li></ul></div><div class="col-6 col-sm-4 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/sogno-platform/dpsim aria-label=GitHub><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="RWTH GitLab" aria-label="RWTH GitLab"><a class=text-white target=_blank rel=noopener href=https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim aria-label="RWTH GitLab"><i class="fab fa-gitlab"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2023 The DPsim Authors All Rights Reserved</small></div></div></div></footer></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css integrity="sha512-6VMVcy7XQNyarhVuiL50FzpgCFKsyTd6YO93aaQEyET+BNaWvj0IgKR86Bf6+AmWczxAcSnL+JGjo+iStgO1gQ==" crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js integrity="sha512-b9IKj4LCNrtCPBhceRcoYOHWW/S2q9fpl7iAJlyxYpykRj1SKM7FE9+E0NEnJ8g8ni47LBr2GuX9qzg/xeuwzQ==" crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js integrity="sha512-iWiuBS5nt6r60fCz26Nd0Zqe0nbk1ZTIQbl3Kv7kYsX+yKMUFHzjaH2+AnM6vp2Xs+gNmaBAVWJjSmuPw76Efg==" crossorigin=anonymous onload='renderMathInElement(document.body,{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"},{display:!0,left:"\\[",right:"\\]"}]})'></script><script src=/dpsim/js/main.min.2aff983e9d0d8ecff9ed53e14b657216e2d8d2aff059bf4a5651283020995f1b.js integrity="sha256-Kv+YPp0Njs/57VPhS2VyFuLY0q/wWb9KVlEoMCCZXxs=" crossorigin=anonymous></script>
 <script src=/dpsim/js/tabpane-persist.js></script></body></html>
