@@ -23,6 +23,11 @@ int main(int argc, char* argv[]) {
 	Real cmdScaleP = 1.0;
 	Real cmdScaleI = 1.0;
 
+	Real rampRocof = -6.25;
+	Real rampDuration = 0.4;
+
+	String logDirectory = "logs";
+
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
@@ -36,13 +41,19 @@ int main(int argc, char* argv[]) {
 			cmdScaleI = args.getOptionReal("scale_kp");
 		if (args.options.find("scale_ki") != args.options.end())
 			cmdScaleI = args.getOptionReal("scale_ki");
+		if (args.options.find("ramp_rocof") != args.options.end())
+			rampRocof = args.getOptionReal("ramp_rocof");
+		if (args.options.find("ramp_duration") != args.options.end())
+			rampDuration = args.getOptionReal("ramp_duration");
+		if (args.options.find("logDirectory") != args.options.end())
+			logDirectory = args.getOptionString("logDirectory");
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = simName + "_PF";
-	Logger::setLogDir("logs/" + simNamePF);
+	Logger::setLogDir(logDirectory + "/" + simNamePF);
 
 	// Components
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -89,15 +100,14 @@ int main(int argc, char* argv[]) {
 	// ----- DYNAMIC SIMULATION -----
 	Real timeStepEMT = timeStep;
 	Real finalTimeEMT = finalTime+timeStepEMT;
-	String simNameEMT = simName + "_EMT";
-	Logger::setLogDir("logs/" + simNameEMT);
+	Logger::setLogDir(logDirectory + "/" + simName);
 
 	// Components
 	auto n1EMT = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2EMT = SimNode<Real>::make("n2", PhaseType::ABC);
 
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(scenario.systemNominalVoltage), 50, -6.25, 5.0, 0.4);
+	extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(scenario.systemNominalVoltage), 50, rampRocof, 5.0, rampDuration);
 
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
 	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(scenario.lineResistance), CPS::Math::singlePhaseParameterToThreePhase(scenario.lineInductance), CPS::Math::singlePhaseParameterToThreePhase(scenario.lineCapacitance));
@@ -122,7 +132,7 @@ int main(int argc, char* argv[]) {
 	systemEMT.initWithPowerflow(systemPF);
 
 	// Logging
-	auto loggerEMT = DataLogger::make(simNameEMT);
+	auto loggerEMT = DataLogger::make(simName);
 	loggerEMT->logAttribute("v1", n1EMT->attribute("v"));
 	loggerEMT->logAttribute("v2", n2EMT->attribute("v"));
 	loggerEMT->logAttribute("i12", lineEMT->attribute("i_intf"));
@@ -134,7 +144,7 @@ int main(int argc, char* argv[]) {
 	// std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::Events::createEventAddPowerConsumption3Ph("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemEMT, Domain::EMT, loggerEMT);
 
 	// Simulation
-	Simulation sim(simNameEMT, Logger::Level::debug);
+	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(systemEMT);
 	sim.setTimeStep(timeStepEMT);
 	sim.setFinalTime(finalTimeEMT);
