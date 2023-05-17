@@ -23,6 +23,11 @@ int main(int argc, char* argv[]) {
 	Real cmdScaleP = 1.0;
 	Real cmdScaleI = 1.0;
 
+	Real rampRocof = -6.25;
+	Real rampDuration = 0.4;
+
+	String logDirectory = "logs";
+
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
@@ -36,13 +41,19 @@ int main(int argc, char* argv[]) {
 			cmdScaleI = args.getOptionReal("scale_kp");
 		if (args.options.find("scale_ki") != args.options.end())
 			cmdScaleI = args.getOptionReal("scale_ki");
+		if (args.options.find("ramp_rocof") != args.options.end())
+			rampRocof = args.getOptionReal("ramp_rocof");
+		if (args.options.find("ramp_duration") != args.options.end())
+			rampDuration = args.getOptionReal("ramp_duration");
+		if (args.options.find("logDirectory") != args.options.end())
+			logDirectory = args.getOptionString("logDirectory");
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = simName+"_PF";
-	Logger::setLogDir("logs/" + simNamePF);
+	Logger::setLogDir(logDirectory + "/" + simNamePF);
 
 	// Components
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -89,15 +100,14 @@ int main(int argc, char* argv[]) {
 	// ----- DYNAMIC SIMULATION -----
 	Real timeStepDP = timeStep;
 	Real finalTimeDP = finalTime+timeStepDP;
-	String simNameDP = simName+"_DP";
-	Logger::setLogDir("logs/" + simNameDP);
+	Logger::setLogDir(logDirectory + "/" + simName);
 
 	// Components
 	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetDP->setParameters(Complex(scenario.systemNominalVoltage, 0), 0, -6.25, 5.0, 0.4);
+	extnetDP->setParameters(Complex(scenario.systemNominalVoltage, 0), 0, rampRocof, 5.0, rampDuration);
 
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineDP->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
@@ -123,7 +133,7 @@ int main(int argc, char* argv[]) {
 	systemDP.initWithPowerflow(systemPF);
 
 	// Logging
-	auto loggerDP = DataLogger::make(simNameDP);
+	auto loggerDP = DataLogger::make(simName);
 	loggerDP->logAttribute("v1", n1DP->attribute("v"));
 	loggerDP->logAttribute("v2", n2DP->attribute("v"));
 	loggerDP->logAttribute("i12", lineDP->attribute("i_intf"));
@@ -135,7 +145,7 @@ int main(int argc, char* argv[]) {
 	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::Events::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
-	Simulation sim(simNameDP, Logger::Level::debug);
+	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(systemDP);
 	sim.setTimeStep(timeStepDP);
 	sim.setFinalTime(finalTimeDP);
