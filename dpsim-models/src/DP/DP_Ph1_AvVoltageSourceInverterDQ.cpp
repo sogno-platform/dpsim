@@ -28,10 +28,14 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
           mAttributes->createDynamic<Matrix>("powerctrl_outputs")),
       mPowerctrlStates(mAttributes->createDynamic<Matrix>("powerctrl_states")) {
 
+  SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
+  **mIntfVoltage = MatrixComp::Zero(1, 1);
+  **mIntfCurrent = MatrixComp::Zero(1, 1);
+
   if (withTrafo) {
     setVirtualNodeNumber(4);
     mConnectionTransformer = DP::Ph1::Transformer::make(
-        **mName + "_trans", **mName + "_trans", mLogLevel, false);
+        **mName + "_trans", **mName + "_trans", mLogLevel);
     addMNASubComponent(mConnectionTransformer,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -40,10 +44,6 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
   }
   mWithConnectionTransformer = withTrafo;
   setTerminalNumber(1);
-
-  SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
-  **mIntfVoltage = MatrixComp::Zero(1, 1);
-  **mIntfCurrent = MatrixComp::Zero(1, 1);
 
   // Create electrical sub components
   mSubResistorF = DP::Ph1::Resistor::make(**mName + "_resF", mLogLevel);

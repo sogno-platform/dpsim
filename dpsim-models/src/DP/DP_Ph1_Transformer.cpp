@@ -11,29 +11,14 @@
 using namespace CPS;
 
 DP::Ph1::Transformer::Transformer(String uid, String name,
-                                  Logger::Level logLevel,
-                                  Bool withResistiveLosses)
+                                  Logger::Level logLevel)
     : Base::Ph1::Transformer(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
-  if (withResistiveLosses)
-    setVirtualNodeNumber(3);
-  else
-    setVirtualNodeNumber(2);
-
+      MNASimPowerComp<Complex>(uid, name, true, true, logLevel) {
   setTerminalNumber(2);
 
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
   **mIntfVoltage = MatrixComp::Zero(1, 1);
   **mIntfCurrent = MatrixComp::Zero(1, 1);
-}
-
-/// DEPRECATED: Delete method
-SimPowerComp<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
-  auto copy = Transformer::make(name, mLogLevel);
-  copy->setParameters(**mNominalVoltageEnd1, **mNominalVoltageEnd2,
-                      std::abs(**mRatio), std::arg(**mRatio), **mResistance,
-                      **mInductance);
-  return copy;
 }
 
 void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
@@ -54,21 +39,16 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
       **mResistance, **mInductance);
   SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [ ] Phase Shift={} [deg]",
                      std::abs(**mRatio), std::arg(**mRatio));
-  SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
 
   mParametersSet = true;
 }
 
-void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
-                                         Real nomVoltageEnd2, Real ratedPower,
-                                         Real ratioAbs, Real ratioPhase,
-                                         Real resistance, Real inductance) {
+void DP::Ph1::Transformer::initialize(Matrix frequencies) {
+  SimPowerComp<Complex>::initialize(frequencies);
 
-  **mRatedPower = ratedPower;
-  SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
-
-  DP::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs,
-                                      ratioPhase, resistance, inductance);
+  mEquivCurrent = MatrixComp::Zero(mNumFreqs, 1);
+  mEquivCond = MatrixComp::Zero(mNumFreqs, 1);
+  mPrevCurrFac = MatrixComp::Zero(mNumFreqs, 1);
 }
 
 void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
@@ -93,184 +73,238 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
                        std::abs(**mRatio), std::arg(**mRatio));
   }
 
-  // Set initial voltage of virtual node in between
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
-
   // Static calculations from load flow data
   Real omega = 2. * PI * frequency;
-  Complex impedance = {**mResistance, omega * **mInductance};
-  SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
-                     omega * **mInductance);
-  (**mIntfVoltage)(0, 0) =
-      mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
-  (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
+  Complex mImpedance = {0, omega * **mInductance};
+  mImpedance += Complex(**mResistance, 0);
+  (**mIntfVoltage)(0, 0) = initialSingleVoltage(0) - initialSingleVoltage(1);
+  (**mIntfCurrent)(0, 0) =
+      (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) /
+      mImpedance;
 
-  // Create series sub components
-  mSubInductor =
-      std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
-  mSubInductor->setParameters(**mInductance);
-  addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  if (mNumVirtualNodes == 3) {
-    mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
-    mSubResistor =
-        std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
-    mSubResistor->setParameters(**mResistance);
-    mSubResistor->connect({node(0), mVirtualNodes[2]});
-    mSubInductor->connect({mVirtualNodes[2], mVirtualNodes[0]});
-    addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-  } else {
-    mSubInductor->connect({node(0), mVirtualNodes[0]});
-  }
-
-  // Create parallel sub components
-  Real pSnub = P_SNUB_TRANSFORMER * **mRatedPower;
-  Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
-
-  // A snubber conductance is added on the higher voltage side
-  mSnubberResistance1 = std::pow(std::abs(**mNominalVoltageEnd1), 2) / pSnub;
-  mSubSnubResistor1 =
-      std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
-  mSubSnubResistor1->setParameters(mSnubberResistance1);
-  mSubSnubResistor1->connect({node(0), DP::SimNode::GND});
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]",
-      node(0)->name(), Logger::realToString(mSnubberResistance1));
-  addMNASubComponent(mSubSnubResistor1,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  // A snubber conductance is added on the lower voltage side
-  mSnubberResistance2 = std::pow(std::abs(**mNominalVoltageEnd2), 2) / pSnub;
-  mSubSnubResistor2 =
-      std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
-  mSubSnubResistor2->setParameters(mSnubberResistance2);
-  mSubSnubResistor2->connect({node(1), DP::SimNode::GND});
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]",
-      node(1)->name(), Logger::realToString(mSnubberResistance2));
-  addMNASubComponent(mSubSnubResistor2,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  // // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
-  // mSnubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltageEnd1),2) / omega;
-  // mSubSnubCapacitor1 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap1", mLogLevel);
-  // mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);
-  // mSubSnubCapacitor1->connect({ node(0), DP::SimNode::GND });
-  // SPDLOG_LOGGER_INFO(mSLog, "Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::realToString(mSnubberCapacitance1));
-  // mSubComponents.push_back(mSubSnubCapacitor1);
-
-  // A snubber capacitance is added to lower voltage side
-  mSnubberCapacitance2 =
-      qSnub / std::pow(std::abs(**mNominalVoltageEnd2), 2) / omega;
-  mSubSnubCapacitor2 =
-      std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
-  mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
-  mSubSnubCapacitor2->connect({node(1), DP::SimNode::GND});
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
-      node(1)->name(), Logger::realToString(mSnubberCapacitance2));
-  addMNASubComponent(mSubSnubCapacitor2,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  // Initialize electrical subcomponents
-  SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
-  for (auto subcomp : mSubComponents) {
-    SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
-    subcomp->initialize(mFrequencies);
-    subcomp->initializeFromNodesAndTerminals(frequency);
-  }
-
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "\n--- Initialization from powerflow ---"
-      "\nVoltage across: {:s}"
-      "\nCurrent: {:s}"
-      "\nTerminal 0 voltage: {:s}"
-      "\nTerminal 1 voltage: {:s}"
-      "\nVirtual Node 1 voltage: {:s}"
-      "\n--- Initialization from powerflow finished ---",
-      Logger::phasorToString((**mIntfVoltage)(0, 0)),
-      Logger::phasorToString((**mIntfCurrent)(0, 0)),
-      Logger::phasorToString(initialSingleVoltage(0)),
-      Logger::phasorToString(initialSingleVoltage(1)),
-      Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\n--- Initialization from powerflow ---"
+                     "\nVoltage across: {:s}"
+                     "\nCurrent: {:s}"
+                     "\nTerminal 0 voltage: {:s}"
+                     "\nTerminal 1 voltage: {:s}"
+                     "\nVirtual Node 1 voltage: {:s}"
+                     "\n--- Initialization from powerflow finished ---",
+                     Logger::phasorToString((**mIntfVoltage)(0, 0)),
+                     Logger::phasorToString((**mIntfCurrent)(0, 0)),
+                     Logger::phasorToString(initialSingleVoltage(0)),
+                     Logger::phasorToString(initialSingleVoltage(1)));
+  mSLog->flush();
 }
 
-void DP::Ph1::Transformer::mnaParentInitialize(
+void DP::Ph1::Transformer::initVars(Real timeStep) {
+  for (Int freq = 0; freq < mNumFreqs; freq++) {
+    Real a = timeStep / (2. * **mInductance);
+    Real b = (timeStep * 2. * PI * mFrequencies(freq, 0)) / 2.;
+    Real c = (1 + a * **mResistance) * (1 + a * **mResistance);
+
+    Real equivCondReal = (a + (a * a * **mResistance)) / c + (b * b);
+    Real equivCondImag =
+        -(a * b) / (pow((1. + a * **mResistance), 2) + (b * b));
+    mEquivCond(freq, 0) = {equivCondReal, equivCondImag};
+    Real preCurrFracReal =
+        ((1. - b * b) - pow((a * **mResistance), 2)) / (c + (b * b));
+    Real preCurrFracImag = (-2. * b) / (c + (b * b));
+    mPrevCurrFac(freq, 0) = {preCurrFracReal, preCurrFracImag};
+
+    //
+    mEquivCurrent(freq, 0) =
+        mEquivCond(freq, 0) *
+            (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) +
+        mPrevCurrFac(freq, 0) * (**mIntfCurrent)(0, freq);
+    (**mIntfCurrent)(0, freq) =
+        mEquivCond(freq, 0) *
+            (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) +
+        mEquivCurrent(freq, 0);
+  }
+}
+
+void DP::Ph1::Transformer::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "\nTerminal 0 connected to {:s} = sim node {:d}"
-      "\nTerminal 1 connected to {:s} = sim node {:d}",
-      mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
-      mTerminals[1]->node()->name(), mTerminals[1]->node()->matrixNodeIndex());
+  updateMatrixNodeIndices();
+  initVars(timeStep);
+
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\n--- MNA initialization ---"
+                     "\nInitial voltage {:s}"
+                     "\nInitial current {:s}"
+                     "\nEquiv. current {:s}"
+                     "\n--- MNA initialization finished ---",
+                     Logger::phasorToString((**mIntfVoltage)(0, 0)),
+                     Logger::phasorToString((**mIntfCurrent)(0, 0)),
+                     Logger::complexToString(mEquivCurrent(0, 0)));
+}
+
+void DP::Ph1::Transformer::mnaCompInitializeHarm(
+    Real omega, Real timeStep,
+    std::vector<Attribute<Matrix>::Ptr> leftVectors) {
+  updateMatrixNodeIndices();
+
+  initVars(timeStep);
+
+  mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
+  mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
+  **mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  // Ideal transformer equations
-  if (terminalNotGrounded(0)) {
-    Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
-                           mVirtualNodes[1]->matrixNodeIndex(),
-                           Complex(-1.0, 0));
-    Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(),
-                           mVirtualNodes[0]->matrixNodeIndex(),
-                           Complex(1.0, 0));
-  }
-  if (terminalNotGrounded(1)) {
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1),
-                           mVirtualNodes[1]->matrixNodeIndex(), **mRatio);
-    Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(),
-                           matrixNodeIndex(1), -**mRatio);
-  }
+  for (Int freq = 0; freq < mNumFreqs; freq++) {
+    if (terminalNotGrounded(0))
+      Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
+                               matrixNodeIndex(0), mEquivCond(freq, 0),
+                               mNumFreqs, freq);
+    if (terminalNotGrounded(1))
+      Math::addToMatrixElement(
+          systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1),
+          std::pow(**mRatio, 2) * mEquivCond(freq, 0), mNumFreqs, freq);
+    if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+      Math::addToMatrixElement(
+          systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
+          -**mRatio * mEquivCond(freq, 0), mNumFreqs, freq);
+      Math::addToMatrixElement(
+          systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0),
+          -**mRatio * mEquivCond(freq, 0), mNumFreqs, freq);
+    }
 
-  // Add subcomps to system matrix
-  for (auto subcomp : mSubComponents)
-    if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-      mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
-
-  if (terminalNotGrounded(0)) {
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(Complex(-1.0, 0)),
-                       mVirtualNodes[0]->matrixNodeIndex(),
-                       mVirtualNodes[1]->matrixNodeIndex());
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(Complex(1.0, 0)),
-                       mVirtualNodes[1]->matrixNodeIndex(),
-                       mVirtualNodes[0]->matrixNodeIndex());
-  }
-  if (terminalNotGrounded(1)) {
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(**mRatio), matrixNodeIndex(1),
-                       mVirtualNodes[1]->matrixNodeIndex());
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(-**mRatio),
-                       mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1));
+    SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freq);
+    if (terminalNotGrounded(0))
+      SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
+                         Logger::complexToString(mEquivCond(freq, 0)),
+                         matrixNodeIndex(0), matrixNodeIndex(0));
+    if (terminalNotGrounded(1))
+      SPDLOG_LOGGER_INFO(
+          mSLog, "Add {:s} to system at ({:d},{:d})",
+          Logger::complexToString(std::pow(**mRatio, 2) * mEquivCond(freq, 0)),
+          matrixNodeIndex(1), matrixNodeIndex(1));
+    if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+      SPDLOG_LOGGER_INFO(
+          mSLog, "Add {:s} to system at ({:d},{:d})",
+          Logger::complexToString(-**mRatio * mEquivCond(freq, 0)),
+          matrixNodeIndex(0), matrixNodeIndex(1));
+      SPDLOG_LOGGER_INFO(
+          mSLog, "Add {:s} to system at ({:d},{:d})",
+          Logger::complexToString(-**mRatio * mEquivCond(freq, 0)),
+          matrixNodeIndex(1), matrixNodeIndex(0));
+    }
   }
 }
 
-void DP::Ph1::Transformer::mnaParentAddPreStepDependencies(
+void DP::Ph1::Transformer::mnaCompApplySystemMatrixStampHarm(
+    SparseMatrixRow &systemMatrix, Int freqIdx) {
+  if (terminalNotGrounded(0))
+    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
+                             matrixNodeIndex(0), mEquivCond(freqIdx, 0));
+  if (terminalNotGrounded(1))
+    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
+                             matrixNodeIndex(1),
+                             std::pow(**mRatio, 2) * mEquivCond(freqIdx, 0));
+  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
+                             matrixNodeIndex(1),
+                             -**mRatio * mEquivCond(freqIdx, 0));
+    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
+                             matrixNodeIndex(0),
+                             -**mRatio * mEquivCond(freqIdx, 0));
+  }
+
+  SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freqIdx);
+  if (terminalNotGrounded(0))
+    SPDLOG_LOGGER_INFO(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
+                       mEquivCond(freqIdx, 0).real(),
+                       mEquivCond(freqIdx, 0).imag(), matrixNodeIndex(0),
+                       matrixNodeIndex(0));
+  if (terminalNotGrounded(1))
+    SPDLOG_LOGGER_INFO(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
+                       **mRatio * **mRatio * mEquivCond(freqIdx, 0).real(),
+                       std::pow(**mRatio, 2) * mEquivCond(freqIdx, 0).imag(),
+                       matrixNodeIndex(1), matrixNodeIndex(1));
+  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+    SPDLOG_LOGGER_INFO(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
+                       -**mRatio * mEquivCond(freqIdx, 0).real(),
+                       -**mRatio * mEquivCond(freqIdx, 0).imag(),
+                       matrixNodeIndex(0), matrixNodeIndex(1));
+    SPDLOG_LOGGER_INFO(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
+                       -**mRatio * mEquivCond(freqIdx, 0).real(),
+                       -**mRatio * mEquivCond(freqIdx, 0).imag(),
+                       matrixNodeIndex(1), matrixNodeIndex(0));
+  }
+}
+
+void DP::Ph1::Transformer::mnaCompApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  for (Int freq = 0; freq < mNumFreqs; freq++) {
+    // Calculate equivalent current source for next time step
+    mEquivCurrent(freq, 0) =
+        mEquivCond(freq, 0) *
+            (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) +
+        mPrevCurrFac(freq, 0) * (**mIntfCurrent)(0, freq);
+
+    if (terminalNotGrounded(0))
+      Math::setVectorElement(rightVector, matrixNodeIndex(0),
+                             mEquivCurrent(freq, 0), mNumFreqs, freq);
+    if (terminalNotGrounded(1))
+      Math::setVectorElement(rightVector, matrixNodeIndex(1),
+                             -**mRatio * mEquivCurrent(freq, 0), mNumFreqs,
+                             freq);
+
+    SPDLOG_LOGGER_DEBUG(mSLog, "MNA EquivCurrent {:s}",
+                        Logger::complexToString(mEquivCurrent(freq, 0)));
+    if (terminalNotGrounded(0))
+      SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
+                          Logger::complexToString(mEquivCurrent(freq, 0)),
+                          matrixNodeIndex(0));
+    if (terminalNotGrounded(1))
+      SPDLOG_LOGGER_DEBUG(
+          mSLog, "Add {:s} to source vector at {:d}",
+          Logger::complexToString(-**mRatio * mEquivCurrent(freq, 0)),
+          matrixNodeIndex(1));
+  }
+}
+
+void DP::Ph1::Transformer::mnaCompApplyRightSideVectorStampHarm(
+    Matrix &rightVector) {
+  for (Int freq = 0; freq < mNumFreqs; freq++) {
+    // Calculate equivalent current source for next time step
+    mEquivCurrent(freq, 0) =
+        mEquivCond(freq, 0) *
+            (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) +
+        mPrevCurrFac(freq, 0) * (**mIntfCurrent)(0, freq);
+
+    if (terminalNotGrounded(0))
+      Math::setVectorElement(rightVector, matrixNodeIndex(0),
+                             mEquivCurrent(freq, 0), 1, 0, freq);
+    if (terminalNotGrounded(1))
+      Math::setVectorElement(rightVector, matrixNodeIndex(1),
+                             -**mRatio * mEquivCurrent(freq, 0), 1, 0, freq);
+  }
+}
+
+void DP::Ph1::Transformer::mnaCompAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
-  prevStepDependencies.push_back(mIntfCurrent);
-  prevStepDependencies.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mRightVector);
+  prevStepDependencies.push_back(mIntfVoltage);
+  prevStepDependencies.push_back(mIntfCurrent);
 }
 
-void DP::Ph1::Transformer::mnaParentPreStep(Real time, Int timeStepCount) {
-  this->mnaApplyRightSideVectorStamp(**this->mRightVector);
+void DP::Ph1::Transformer::mnaCompPreStep(Real time, Int timeStepCount) {
+  this->mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void DP::Ph1::Transformer::mnaParentAddPostStepDependencies(
+void DP::Ph1::Transformer::MnaPreStepHarm::execute(Real time,
+                                                   Int timeStepCount) {
+  mTransformer.mnaCompApplyRightSideVectorStampHarm(
+      **mTransformer.mRightVector);
+}
+
+void DP::Ph1::Transformer::mnaCompAddPostStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes,
@@ -280,24 +314,73 @@ void DP::Ph1::Transformer::mnaParentAddPostStepDependencies(
   modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void DP::Ph1::Transformer::mnaParentPostStep(
-    Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-  this->mnaUpdateVoltage(**leftVector);
-  this->mnaUpdateCurrent(**leftVector);
+void DP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount,
+                                           Attribute<Matrix>::Ptr &leftVector) {
+  mnaCompUpdateVoltage(**leftVector);
+  mnaCompUpdateCurrent(**leftVector);
 }
 
-void DP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  (**mIntfCurrent)(0, 0) = mSubInductor->intfCurrent()(0, 0);
+void DP::Ph1::Transformer::MnaPostStepHarm::execute(Real time,
+                                                    Int timeStepCount) {
+  for (Int freq = 0; freq < mTransformer.mNumFreqs; freq++) {
+    mTransformer.mnaCompUpdateVoltageHarm(**mLeftVectors[freq], freq);
+    mTransformer.mnaCompUpdateCurrentHarm(**mLeftVectors[freq], freq);
+  }
 }
 
 void DP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  // v1 - v0
-  (**mIntfVoltage)(0, 0) = 0;
-  (**mIntfVoltage)(0, 0) =
-      Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
-  (**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) -
-                           Math::complexFromVectorElement(
-                               leftVector, mVirtualNodes[0]->matrixNodeIndex());
+  // v0 - v1
+  for (Int freq = 0; freq < mNumFreqs; freq++) {
+    (**mIntfVoltage)(0, freq) = 0;
+    if (terminalNotGrounded(1))
+      (**mIntfVoltage)(0, freq) = Math::complexFromVectorElement(
+          leftVector, matrixNodeIndex(0), mNumFreqs, freq);
+    if (terminalNotGrounded(0))
+      (**mIntfVoltage)(0, freq) =
+          (**mIntfVoltage)(0, freq) -
+          Math::complexFromVectorElement(leftVector, matrixNodeIndex(1),
+                                         mNumFreqs, freq);
+
+    SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}",
+                        Logger::phasorToString((**mIntfVoltage)(0, freq)));
+  }
+}
+
+void DP::Ph1::Transformer::mnaCompUpdateVoltageHarm(const Matrix &leftVector,
+                                                    Int freqIdx) {
+  // v0 - v1
+  (**mIntfVoltage)(0, freqIdx) = 0;
+  if (terminalNotGrounded(1))
+    (**mIntfVoltage)(0, freqIdx) =
+        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+  if (terminalNotGrounded(0))
+    (**mIntfVoltage)(0, freqIdx) =
+        (**mIntfVoltage)(0, freqIdx) -
+        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+
   SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}",
-                      Logger::phasorToString((**mIntfVoltage)(0, 0)));
+                      Logger::phasorToString((**mIntfVoltage)(0, freqIdx)));
+}
+
+void DP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
+  for (Int freq = 0; freq < mNumFreqs; freq++) {
+    (**mIntfCurrent)(0, freq) =
+        mEquivCond(freq, 0) *
+            Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)) +
+        mEquivCurrent(freq, 0);
+    SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}",
+                        Logger::phasorToString((**mIntfCurrent)(0, freq)));
+  }
+}
+
+void DP::Ph1::Transformer::mnaCompUpdateCurrentHarm(const Matrix &leftVector,
+                                                    Int freqIdx) {
+  for (Int freq = 0; freq < mNumFreqs; freq++) {
+    (**mIntfCurrent)(0, freq) =
+        mEquivCond(freq, 0) *
+            Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)) +
+        mEquivCurrent(freq, 0);
+    SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}",
+                        Logger::phasorToString((**mIntfCurrent)(0, freq)));
+  }
 }
