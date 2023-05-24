@@ -572,11 +572,10 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
     transformer->setBaseVoltage(baseVolt);
     return transformer;
   } else {
-    Bool withResistiveLosses = resistance > 0;
     auto transformer = std::make_shared<DP::Ph1::Transformer>(
-        trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-    transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs,
-                               ratioPhase, resistance, inductance);
+        trans->mRID, trans->name, mComponentLogLevel);
+    transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase,
+                               resistance, inductance);
     return transformer;
   }
 }
