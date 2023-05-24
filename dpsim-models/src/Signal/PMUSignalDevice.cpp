@@ -22,8 +22,8 @@ void PMUSignalDevice::setParameters(Real Sigma){
 
 void PMUSignalDevice::MeasurementError(Real time){
 
-    // Measurement error
-    double randomErrorRate;
+    // Relative standard measurement uncertainty
+    double relMeasUncertainty;
     
     // GSL random number generator
     gsl_rng *r=gsl_rng_alloc(gsl_rng_default);
@@ -34,14 +34,16 @@ void PMUSignalDevice::MeasurementError(Real time){
     timespec_get(&ts,TIME_UTC);
     gsl_rng_set(r,ts.tv_nsec);
 
-    // The measurement error rate is gaussian distributed, mean value 0, standard deviation mSigma.
-    randomErrorRate = gsl_ran_gaussian (r, mSigma);
+    // The relative measurement uncertainty is gaussian distributed, mean value 0, standard deviation mSigma.
+    relMeasUncertainty = gsl_ran_gaussian (r, mSigma);
 
-    // Output = Input + Error = Input + Input*errorRate
-     **mOutput =**mInput*(1+randomErrorRate);
+    // Output = Input + error 
+    //        = Input + k*Sigma 
+    //        = Input + Input*relMeasUncertainty
+     **mOutput =**mInput*(1+relMeasUncertainty);
 
     // To log the GSL random number, mInput and mOutput.
-    SPDLOG_LOGGER_INFO(mSLog, "GSL value: gsl= {}", randomErrorRate);
+    SPDLOG_LOGGER_INFO(mSLog, "GSL value: gsl= {}", relMeasUncertainty);
     SPDLOG_LOGGER_INFO(mSLog,"Input values: input = {}", **mInput);
     SPDLOG_LOGGER_INFO(mSLog,"Output values: output = {}:", **mOutput);
 }

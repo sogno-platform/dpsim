@@ -30,6 +30,7 @@ namespace Signal {
 		//Operation for adding measurement error
 		void MeasurementError(Real time);
 
+		//Set the gaussian standard deviation for this PMU
 	    void setParameters(Real Sigma);
 		
 		//***Get task list for the solver***//
