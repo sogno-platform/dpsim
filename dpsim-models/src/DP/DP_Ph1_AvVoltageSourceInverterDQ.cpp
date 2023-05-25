@@ -111,7 +111,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltag
 
 	if (mWithConnectionTransformer)
 		// TODO: resistive losses neglected so far (mWithResistiveLosses=false)
-		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance, mTransformerInductance);
+		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance, mTransformerInductance);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll,
@@ -219,7 +219,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real fr
 	matrixStateInit(0,0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
 	mPLL->setInitialValues(**mVcq, matrixStateInit, Matrix::Zero(2,1));
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nInterface voltage across: {:s}"
 		"\nInterface current: {:s}"
