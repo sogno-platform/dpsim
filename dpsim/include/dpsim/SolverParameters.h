@@ -17,7 +17,7 @@ namespace DPsim {
 	class SolverParameters{
 	public:
 		/// Time step for fixed step solvers
-        Real mTimeStep;
+        Real mTimeStep = 0.001;
 
 		// #### Initialization ####
 		
@@ -25,22 +25,17 @@ namespace DPsim {
 		Bool mInitFromNodesAndTerminals = true;
 	
 	
-
+	public:
 		SolverParameters() {}
 
 		virtual ~SolverParameters() { }
 
-		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
-		
-		// #### Initialization ####
+		// #### Setters ####
 		/// activate powerflow initialization
 		void setInitFromNodesAndTerminals(Bool f) { mInitFromNodesAndTerminals = f; }
 		
-
 		// #### Getter ####
-        Real getTimeStep() {return mTimeStep;}
-
+		/// 
 		Bool getInitFromNodesAndTerminals() {return mInitFromNodesAndTerminals;}
- 		
 	};
 }

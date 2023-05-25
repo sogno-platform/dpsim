@@ -10,6 +10,8 @@
 
 #include <dpsim/MNASolverDirect.h>
 #include <dpsim/MNASolverDynInterface.h>
+#include <dpsim/SolverParametersMNA.h>
+
 
 namespace DPsim {
 
@@ -30,6 +32,7 @@ namespace DPsim {
 		MnaSolverPlugin(String pluginName,
 			String name,
 			CPS::Domain domain = CPS::Domain::DP,
+			std::shared_ptr<SolverParametersMNA> solverParams = SolverParametersMNA(),
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		virtual ~MnaSolverPlugin();

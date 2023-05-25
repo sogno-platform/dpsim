@@ -38,13 +38,8 @@ namespace DPsim {
 		// #### General simulation settings ####
 		/// Simulation domain, which can be dynamic phasor (DP) or EMT
 	
-
-
 	public:
-		
 		/// Destructor
 		virtual ~SolverParametersNRP() {};
-
-    
     };
 }

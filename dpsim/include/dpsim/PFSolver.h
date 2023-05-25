@@ -21,6 +21,9 @@ namespace DPsim {
     /// Solver class using the nonlinear powerflow (PF) formulation.
     class PFSolver: public Solver {
     protected:
+        /// ### Solver Parameters
+		std::shared_ptr<SolverParametersMNA> mSolverParams;
+
         /// Number of PQ nodes
         UInt mNumPQBuses = 0;
         /// Number of PV nodes
@@ -138,6 +141,7 @@ namespace DPsim {
 		PFSolver(CPS::String name,
 			CPS::SystemTopology system,
 			Real timeStep,
+		    std::shared_ptr<SolverParametersMNA> solverParams,
 			CPS::Logger::Level logLevel);
 		///
 		virtual ~PFSolver() { };
@@ -149,7 +153,7 @@ namespace DPsim {
         /// set solver and component to initialization or simulation behaviour
 		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour);
         /// Gets Solver Parameters for Modified Nodal Analysis (MNA) 
-        std::shared_ptr<SolverParametersMNA> getMNAParameters() { return std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams); }
+        //std::shared_ptr<SolverParametersMNA> getMNAParameters() { return std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams); }
 
         class SolveTask : public CPS::Task {
 		public:

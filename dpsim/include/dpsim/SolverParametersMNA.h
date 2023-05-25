@@ -1,11 +1,7 @@
 #pragma once
 
-#include <dpsim/Definitions.h>
-#include <dpsim-models/Attribute.h>
 #include <dpsim/Solver.h>
-
-// using namespace CPS;
-
+#include <dpsim/SolverParameters.h>
 
 namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
@@ -15,13 +11,14 @@ namespace DPsim {
 		/// Simulation domain, which can be dynamic phasor (DP) or EMT
 		CPS::Domain mDomain;
 		
+		//
         Solver::Behaviour mSolverBehaviour = Solver::Behaviour::Simulation;
 
 		/// Determines if the network should be split
 		/// into subnetworks at decoupling lines.
 		/// If the system is split, each subsystem is
 		/// solved by a dedicated MNA solver.
-		const CPS::Attribute<Bool>::Ptr mSplitSubnets;
+		Bool mSplitSubnets = false;
 
         /// Determines if the system matrix is split into
 		/// several smaller matrices, one for each frequency.
@@ -33,28 +30,21 @@ namespace DPsim {
         /// Enable recomputation of system matrix during simulation
 		Bool mSystemMatrixRecomputation = false;
 
+		// #### Initialization ####
 		/// Determines if steady-state initialization
 		/// should be executed prior to the simulation.
 		/// By default the initialization is disabled.
-		const CPS::Attribute<Bool>::Ptr mSteadyStateInit;
-
-        	// #### Initialization ####
+		Bool mSteadyStateInit = false;
 		/// steady state initialization time limit
 		Real mSteadStIniTimeLimit = 10;
 		/// steady state initialization accuracy limit
 		Real mSteadStIniAccLimit = 0.0001;
 
+        ///
         CPS::DirectLinearSolverImpl mDirectImpl = CPS::DirectLinearSolverImpl::Undef;
 
-
-
-
-	
-
-		SolverParametersMNA():
-			mSplitSubnets(CPS::AttributeStatic<Bool>::make(true)),
-			mSteadyStateInit(CPS::AttributeStatic<Bool>::make(false)) {
-		}
+	public:
+		SolverParametersMNA() { }
 		
 		/// Destructor
 		virtual ~SolverParametersMNA() {};
@@ -65,7 +55,7 @@ namespace DPsim {
 
         void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) { mSolverBehaviour = behaviour; } 
 		///
-        void doSplitSubnets(Bool splitSubnets = true) { **mSplitSubnets = splitSubnets; }
+        void doSplitSubnets(Bool splitSubnets = true) { mSplitSubnets = splitSubnets; }
 		///
         /// Compute phasors of different frequencies in parallel
 		void doFrequencyParallelization(Bool value) { mFreqParallel = value; }
@@ -77,17 +67,17 @@ namespace DPsim {
 
         // #### Initialization ####
 		/// activate steady state initialization
-		void doSteadyStateInit(Bool f) { **mSteadyStateInit = f; }
+		void doSteadyStateInit(Bool f) { mSteadyStateInit = f; }
 		/// set steady state initialization time limit
 		void setSteadStIniTimeLimit(Real v) { mSteadStIniTimeLimit = v; }
 		/// set steady state initialization accuracy limit
 		void setSteadStIniAccLimit(Real v) { mSteadStIniAccLimit = v; }
 
         // #### Getter ####
-        CPS::Bool getSplitSubnets() const { return **mSplitSubnets; }
+        CPS::Bool getSplitSubnets() const { return mSplitSubnets; }
         CPS::Bool getFreqParallel() const { return mFreqParallel; }
         CPS::Bool getSystemMatrixRecomputation() const { return mSystemMatrixRecomputation; }
-        CPS::Bool getSteadyStateInit() const { return **mSteadyStateInit; }
+        CPS::Bool getSteadyStateInit() const { return mSteadyStateInit; }
         CPS::Real getSteadyStateInitTimeLimit() const { return mSteadStIniTimeLimit; }
         CPS::Real getSteadyStateInitAccLimit() const { return mSteadStIniAccLimit; }
     };

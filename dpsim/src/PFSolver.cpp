@@ -13,10 +13,11 @@
 using namespace DPsim;
 using namespace CPS;
 
-PFSolver::PFSolver(CPS::String name, CPS::SystemTopology system, CPS::Real timeStep, CPS::Logger::Level logLevel) :
+PFSolver::PFSolver(CPS::String name, CPS::SystemTopology system, CPS::Real timeStep, std::shared_ptr<SolverParametersMNA> solverParams, CPS::Logger::Level logLevel) :
 	Solver(name + "_PF", logLevel) {
 	mSystem = system;
 	mTimeStep = timeStep;
+	mSolverParams = solverParams;
 }
 
 void PFSolver::initialize(){
@@ -65,7 +66,6 @@ void PFSolver::assignMatrixNodeIndices() {
 }
 
 void PFSolver::initializeComponents(){
-	std::shared_ptr<SolverParametersMNA> mSolverParamsMNA = getMNAParameters(); 
     for (auto comp : mSystem.mComponents) {
         std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp)->updateMatrixNodeIndices();
     }
@@ -74,7 +74,7 @@ void PFSolver::initializeComponents(){
 	for (auto comp : mSystem.mComponents) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
-		if (mSolverParamsMNA->mInitFromNodesAndTerminals)
+		if (mSolverParams->mInitFromNodesAndTerminals)
 			pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 
@@ -299,9 +299,8 @@ void PFSolver::modifyPowerFlowBusComponent(CPS::String name, CPS::PowerflowBusTy
 }
 
 void PFSolver::setSolverAndComponentBehaviour(Solver::Behaviour behaviour) {
-	std::shared_ptr<SolverParametersMNA> mSolverParamsMNA = getMNAParameters();
-	mSolverParamsMNA->mSolverBehaviour = behaviour;
-	if (mSolverParamsMNA->mSolverBehaviour == Behaviour::Initialization) {
+	mSolverParams->mSolverBehaviour = behaviour;
+	if (mSolverParams->mSolverBehaviour == Behaviour::Initialization) {
 		SPDLOG_LOGGER_INFO(mSLog, "-- Set solver behaviour to Initialization");
 		// TODO: solver setting specific to initialization (e.g. one single PF run)
 

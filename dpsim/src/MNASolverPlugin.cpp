@@ -18,9 +18,9 @@ namespace DPsim {
 
 template <typename VarType>
 MnaSolverPlugin<VarType>::MnaSolverPlugin(String pluginName,
-	String name,
-	CPS::Domain domain, CPS::Logger::Level logLevel) :
-    MnaSolverDirect<VarType>(name, domain, logLevel),
+	String name, CPS::Domain domain, 
+	std::shared_ptr<SolverParametersMNA> solverParams, CPS::Logger::Level logLevel) :
+    MnaSolverDirect<VarType>(name, domain, solverParams, logLevel),
 	mPluginName(pluginName),
 	mPlugin(nullptr),
 	mDlHandle(nullptr)

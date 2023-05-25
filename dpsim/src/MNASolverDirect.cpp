@@ -15,7 +15,10 @@ using namespace CPS;
 namespace DPsim {
 
 template <typename VarType>
-MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :	MnaSolver<VarType>(name, domain, logLevel) {
+MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, 
+	std::shared_ptr<SolverParametersMNA> solverParams, CPS::Logger::Level logLevel) :	
+	MnaSolver<VarType>(name, domain, solverParams, logLevel) {
+
 	mImplementationInUse = DirectLinearSolverImpl::SparseLU;
 }
 
@@ -149,48 +152,42 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
 
 template<>
 void MnaSolverDirect<Real>::createEmptySystemMatrix() {
-	auto mSolverParamsMNA = getMNAParameters(); 
-	if (mSolverParamsMNA != nullptr) {
-		if (mSwitches.size() > SWITCH_NUM)
-			throw SystemError("Too many Switches.");
+	if (mSwitches.size() > SWITCH_NUM)
+		throw SystemError("Too many Switches.");
 
-		if (mSolverParamsMNA->mSystemMatrixRecomputation) {
-			mBaseSystemMatrix = SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
-			mVariableSystemMatrix = SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
-		} else {
-			for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++){
-				auto bit = std::bitset<SWITCH_NUM>(i);
-				mSwitchedMatrices[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
-				mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
-			}
+	if (std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams)->mSystemMatrixRecomputation) {
+		mBaseSystemMatrix = SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+		mVariableSystemMatrix = SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+	} else {
+		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++){
+			auto bit = std::bitset<SWITCH_NUM>(i);
+			mSwitchedMatrices[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
+			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
 		}
 	}
 }
 
 template<>
 void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
-	auto mSolverParamsMNA = getMNAParameters(); 
-	if (mSolverParamsMNA != nullptr) {
-		if (mSwitches.size() > SWITCH_NUM)
-			throw SystemError("Too many Switches.");
+	if (mSwitches.size() > SWITCH_NUM)
+		throw SystemError("Too many Switches.");
 
-		if (mSolverParamsMNA->mFreqParallel) {
-			for (UInt i = 0; i < std::pow(2,mSwitches.size()); ++i) {
-				for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
-					auto bit = std::bitset<SWITCH_NUM>(i);
-					mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
-					mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
-				}
-			}
-		} else if (mSolverParamsMNA->mSystemMatrixRecomputation) {
-			mBaseSystemMatrix = SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices));
-			mVariableSystemMatrix = SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices));
-		} else {
-			for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
+	if (mSolverParams->mFreqParallel) {
+		for (UInt i = 0; i < std::pow(2,mSwitches.size()); ++i) {
+			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 				auto bit = std::bitset<SWITCH_NUM>(i);
-				mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
+				mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
 				mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
 			}
+		}
+	} else if (std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams)->mSystemMatrixRecomputation) {
+		mBaseSystemMatrix = SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices));
+		mVariableSystemMatrix = SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices));
+	} else {
+		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
+			auto bit = std::bitset<SWITCH_NUM>(i);
+			mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
+			mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
 		}
 	}
 }
@@ -311,37 +308,33 @@ void MnaSolverDirect<VarType>::solveWithHarmonics(Real time, Int timeStepCount, 
 
 template <typename VarType>
 void MnaSolverDirect<VarType>::logSystemMatrices() {
-	auto mSolverParamsMNA = getMNAParameters(); 
-	if (mSolverParamsMNA != nullptr) {
-		if (mSolverParamsMNA->mFreqParallel) {
-			for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
-				SPDLOG_LOGGER_INFO(mSLog, "System matrix for frequency: {:d} \n{:s}", i, Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][i]));
-			}
-
-			for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i) {
-				SPDLOG_LOGGER_INFO(mSLog, "Right side vector for frequency: {:d} \n{:s}", i, Logger::matrixToString(mRightSideVectorHarm[i]));
-			}
-
+	if (mSolverParams->mFreqParallel) {
+		for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
+			SPDLOG_LOGGER_INFO(mSLog, "System matrix for frequency: {:d} \n{:s}", i, Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][i]));
 		}
-		else if (mSolverParamsMNA->mSystemMatrixRecomputation) {
-			SPDLOG_LOGGER_INFO(mSLog, "Summarizing matrices: ");
-			SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
-			SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
-			SPDLOG_LOGGER_INFO(mSLog, "Right side vector: {}", Logger::matrixToString(mRightSideVector));
-		} else {
-			if (mSwitches.size() < 1) {
-				SPDLOG_LOGGER_INFO(mSLog, "System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
-			}
-			else {
-				SPDLOG_LOGGER_INFO(mSLog, "Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
 
-				for (auto sys : mSwitchedMatrices) {
-					SPDLOG_LOGGER_INFO(mSLog, "Switching System matrix {:s} \n{:s}",
-					sys.first.to_string(), Logger::matrixToString(sys.second[0]));
-				}
-			}
-			SPDLOG_LOGGER_INFO(mSLog, "Right side vector: \n{}", mRightSideVector);
+		for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i) {
+			SPDLOG_LOGGER_INFO(mSLog, "Right side vector for frequency: {:d} \n{:s}", i, Logger::matrixToString(mRightSideVectorHarm[i]));
 		}
+	}
+	else if (mSolverParams->mSystemMatrixRecomputation) {
+		SPDLOG_LOGGER_INFO(mSLog, "Summarizing matrices: ");
+		SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
+		SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
+		SPDLOG_LOGGER_INFO(mSLog, "Right side vector: {}", Logger::matrixToString(mRightSideVector));
+	} else {
+		if (mSwitches.size() < 1) {
+			SPDLOG_LOGGER_INFO(mSLog, "System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
+		}
+		else {
+			SPDLOG_LOGGER_INFO(mSLog, "Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
+
+			for (auto sys : mSwitchedMatrices) {
+				SPDLOG_LOGGER_INFO(mSLog, "Switching System matrix {:s} \n{:s}",
+				sys.first.to_string(), Logger::matrixToString(sys.second[0]));
+			}
+		}
+		SPDLOG_LOGGER_INFO(mSLog, "Right side vector: \n{}", mRightSideVector);
 	}
 }
 

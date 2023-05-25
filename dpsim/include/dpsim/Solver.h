@@ -14,7 +14,6 @@
 #include <list>
 
 #include <dpsim/Definitions.h>
-#include <dpsim/SolverParameters.h> 
 #include <dpsim/Config.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim-models/Logger.h>
@@ -45,8 +44,6 @@ namespace DPsim {
 		CPS::Logger::Level mLogLevel;
 		/// Logger
 		CPS::Logger::Log mSLog;
-		/// Solver Parameters
-		std::shared_ptr<SolverParameters> mSolverParams;
 		/// Time step for fixed step solvers
 		Real mTimeStep;
 		
@@ -78,8 +75,6 @@ namespace DPsim {
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		///
 		void doSystemMatrixRecomputation(Bool value) { mSystemMatrixRecomputation = value; }
-
-		void setSolverParameters(std::shared_ptr<SolverParameters> &solverParameters){ mSolverParams = solverParameters; }
 		
 		// #### Initialization ####
 		///

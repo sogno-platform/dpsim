@@ -2,21 +2,22 @@
 
 #pragma once
 
-#include "dpsim/MNASolverFactory.h"
 #include <vector>
 
 #include <dpsim/Config.h>
 #include <dpsim/DataLogger.h>
+#include <dpsim/MNASolverFactory.h>
 #include <dpsim/Solver.h>
 #include <dpsim/SolverParameters.h>
 #include <dpsim/Scheduler.h>
 #include <dpsim/Event.h>
+#include <dpsim-models/Attribute.h>
 #include <dpsim-models/Definitions.h>
+#include <dpsim/Interface.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/SimNode.h>
-#include <dpsim-models/Attribute.h>
-#include <dpsim/Interface.h>
+
 #include <nlohmann/json.hpp>
 
 #ifdef WITH_GRAPHVIZ
@@ -146,27 +147,28 @@ namespace DPsim {
 		///
 		void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
 		///
+		void setSimulationParameters(CPS::Real timeStep, CPS::Real finalTime) {
+			**mTimeStep = timeStep;
+			**mFinalTime = finalTime;
+		}
+		///
 		void setDomain(CPS::Domain domain = CPS::Domain::DP) { mDomain = domain; }
 		///
 		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
 		///
-		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration& configuration) { mDirectLinearSolverConfiguration = configuration;	}
+		void setSolverParameters(CPS::Domain domain = CPS::Domain::DP, Solver::Type type = Solver::Type::MNA, 
+			std::shared_ptr<SolverParameters> solverParameters = nullptr);
+		///
+		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration& configuration) { mDirectLinearSolverConfiguration = configuration; }
 		///
 		void setTearingComponents(CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List()) {
 			mTearComponents = tearComponents;
 		}
-		///
-		void setSimulationParameters(CPS::Real a, CPS::Real b) {}
-		///
-		void setSolverParameters(CPS::Domain domain, Solver::Type type, std::shared_ptr<SolverParameters> &solverParameters);
-
-
+		
 		/// Set the scheduling method
 		void setScheduler(const std::shared_ptr<Scheduler> &scheduler) {
 			mScheduler = scheduler;
 		}
-
-
 		
 
 		// #### Simulation Control ####

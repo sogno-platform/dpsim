@@ -69,7 +69,7 @@ namespace DPsim {
 		/// LU factorization configuration
 		DirectLinearSolverConfiguration mConfigurationInUse;
 
-		using Solver::mSolverParams;
+		using MnaSolver<VarType>::mSolverParams;
 		using MnaSolver<VarType>::mSwitches;
 		using MnaSolver<VarType>::mMNAIntfSwitches;
 		using MnaSolver<VarType>::mMNAComponents;
@@ -144,6 +144,7 @@ namespace DPsim {
 		/// sovlerImpl: choose the most advanced solver implementation available by default
 		MnaSolverDirect(String name,
 			CPS::Domain domain = CPS::Domain::DP,
+			std::shared_ptr<SolverParametersMNA> solverParams = SolverParametersMNA(),
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		/// Destructor

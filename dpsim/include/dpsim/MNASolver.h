@@ -15,10 +15,9 @@
 #include <bitset>
 
 #include <dpsim/Config.h>
+#include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
 #include <dpsim/SolverParametersMNA.h>
-#include <dpsim/SolverParameters.h>
-#include <dpsim/DataLogger.h>
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
@@ -39,6 +38,9 @@ namespace DPsim {
 	template <typename VarType>
 	class MnaSolver : public Solver {
 	protected:
+		/// ### Solver Parameters
+		std::shared_ptr<SolverParametersMNA> mSolverParams;
+
 		// #### General simulation settings ####
 		/// Simulation domain, which can be dynamic phasor (DP) or EMT
 		CPS::Domain mDomain;
@@ -60,10 +62,6 @@ namespace DPsim {
 		UInt mNumTotalMatrixNodeIndices = 0;
 		/// List of index pairs of varying matrix entries
 		std::vector<std::pair<UInt, UInt>> mListVariableSystemMatrixEntries;
-
-
-		using Solver::mSolverParams;
-	
 
 		/// System topology
 		CPS::SystemTopology mSystem;
@@ -129,6 +127,7 @@ namespace DPsim {
 		/// Constructor should not be called by users but by Simulation
 		MnaSolver(String name,
 			CPS::Domain domain = CPS::Domain::DP,
+			std::shared_ptr<SolverParametersMNA> solverParams = SolverParametersMNA(),
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		/// Initialization of individual components
@@ -217,9 +216,5 @@ namespace DPsim {
 		Matrix& rightSideVector() { return mRightSideVector; }
 		///
 		virtual CPS::Task::List getTasks() override;
-		/// Gets Solver Parameters for Modified Nodal Analysis (MNA) 
-        std::shared_ptr<SolverParametersMNA> getMNAParameters() { return std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams); }
-
-
 	};
 }
