@@ -24,6 +24,9 @@
 
 using json = nlohmann::json;
 
+// TODO: where is realtype defined?
+using realtype = CPS::Real;
+
 namespace DPsim {
 	/// Forward declaration of CommandLineArgs from Utils
 	class CommandLineArgs;

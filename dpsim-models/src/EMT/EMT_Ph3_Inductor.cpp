@@ -13,7 +13,7 @@ using namespace CPS;
 EMT::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), 
 	Base::Ph3::Inductor(mAttributes),
-	mIntfDerCurrent(Attribute<Matrix>::create("di_intf", mAttributes))  {
+	mIntfDerCurrent(mAttributes->create<Matrix>("di_intf")) {
 
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);

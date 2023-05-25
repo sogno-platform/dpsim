@@ -101,7 +101,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_solver_component_behaviour", &DPsim::Simulation::setSolverAndComponentBehaviour)
 		.def("set_direct_solver_implementation", &DPsim::Simulation::setDirectLinearSolverImplementation)
 		.def("set_direct_linear_solver_configuration", &DPsim::Simulation::setDirectLinearSolverConfiguration)
-		.def("log_lu_times", &DPsim::Simulation::logLUTimes);
+		.def("log_lu_times", &DPsim::Simulation::logLUTimes)
 		.def("set_relative_rolerance", &DPsim::Simulation::setRelativeTolerance, "rel_tol"_a)
 		.def("set_ida_max_conv_fails", &DPsim::Simulation::setIDAMaxConvFails,   "ida_max_conv_fails"_a)
 		.def("set_ida_non_lin_conv_coef", &DPsim::Simulation::setIDANonlinConvCoef, "ida_non_lin_conv_coef"_a)

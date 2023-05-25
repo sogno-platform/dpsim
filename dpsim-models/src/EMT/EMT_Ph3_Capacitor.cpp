@@ -13,7 +13,8 @@ using namespace CPS;
 EMT::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), 
 	Base::Ph3::Capacitor(mAttributes),
-	mIntfDerVoltage(Attribute<Matrix>::create("dv_intf", mAttributes)) {
+	mIntfDerVoltage(mAttributes->create<Matrix>("dv_intf")) {
+		
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = Matrix::Zero(3, 1);

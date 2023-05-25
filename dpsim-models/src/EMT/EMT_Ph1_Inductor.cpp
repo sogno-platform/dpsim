@@ -13,7 +13,7 @@ using namespace CPS;
 EMT::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	: MNASimPowerComp<Real>(uid, name, true, true, logLevel), 
 	Base::Ph1::Inductor(mAttributes),
-	mIntfDerCurrent(Attribute<Matrix>::create("di_intf", mAttributes)) {
+	mIntfDerCurrent(mAttributes->create<Matrix>("di_intf")) {
 
 	mEquivCurrent = 0;
 	**mIntfVoltage = Matrix::Zero(1,1);

@@ -262,6 +262,10 @@ void EMT::Ph3::RXLoad::daeInitialize(double time, double state[], double dstate_
 		absoluteTolerances[offset+1] = mAbsTolerance;
 		absoluteTolerances[offset+2] = mAbsTolerance;
 
+		// TODO: MAKE mConductance a member variable
+		Matrix mConductance = Matrix::Zero(3, 3);
+		Math::invertMatrix(mResistance, mConductance);
+
 		mSLog->info(
 			"\n--- daeInitialize ---"
 			"\nmReactance(0,0) > 0  --> state variable are inductor currents"
@@ -317,6 +321,10 @@ void EMT::Ph3::RXLoad::daeResidual(double sim_time,
 	// current offset for component	
 	int c_offset = off[0] + off[1]; 
 
+	// TODO: MAKE mConductance a member variable
+	Matrix mConductance = Matrix::Zero(3, 3);
+	Math::invertMatrix(mResistance, mConductance);
+
 	if ((**mActivePower)(0, 0) != 0) {
 		// add currents through resistor to nodal equations
 		resid[matrixNodeIndex(0, 0)] += state[matrixNodeIndex(0, 0)] * mConductance(0,0);
@@ -345,6 +353,10 @@ void EMT::Ph3::RXLoad::daeJacobian(double current_time, const double state[],
 
 	// current offset for component
 	int c_offset = off[0] + off[1]; 
+
+	// TODO: MAKE mConductance a member variable
+	Matrix mConductance = Matrix::Zero(3, 3);
+	Math::invertMatrix(mResistance, mConductance);
 
 	if ((**mActivePower)(0, 0) != 0) {
 		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)) += mConductance(0,0);
@@ -376,6 +388,10 @@ void EMT::Ph3::RXLoad::daeJacobian(double current_time, const double state[],
 void EMT::Ph3::RXLoad::daePostStep(double Nexttime, const double state[], 
 	const double dstate_dt[], int& offset) {
 	
+	// TODO: MAKE mConductance a member variable
+	Matrix mConductance = Matrix::Zero(3, 3);
+	Math::invertMatrix(mResistance, mConductance);
+
 	(**mIntfVoltage)(0, 0) = state[matrixNodeIndex(0, 0)];
 	(**mIntfVoltage)(1, 0) = state[matrixNodeIndex(0, 1)];
 	(**mIntfVoltage)(2, 0) = state[matrixNodeIndex(0, 2)];

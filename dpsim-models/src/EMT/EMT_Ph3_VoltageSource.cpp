@@ -188,7 +188,7 @@ void EMT::Ph3::VoltageSource::setInitialComplexIntfCurrent(Complex initCurrent) 
 	(**mIntfCurrent)(2, 0) = (initCurrent*SHIFT_TO_PHASE_C).real();	
 	
 	// Calculate initial derivative of current = -omega*Imag(Complex_voltage)
-	Real omega = 2 * PI * attribute<Real>("f_src")->get();
+	Real omega = 2 * PI * **mSrcFreq;
 	
 	mIntfDerCurrent = Matrix::Zero(3,1);
 	mIntfDerCurrent(0,0) = -omega * initCurrent.imag();

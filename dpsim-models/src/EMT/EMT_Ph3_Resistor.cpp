@@ -179,6 +179,9 @@ void EMT::Ph3::Resistor::daeResidual(double sim_time,
 	const double state[], const double dstate_dt[],
 	double resid[], std::vector<int>& off) {
 
+	// TODO: MAKE mConductance a member variable
+	Matrix mConductance = Matrix::Zero(3, 3);
+	Math::invertMatrix(**mResistance, mConductance);
 	if (terminalNotGrounded(1)) {
 		resid[matrixNodeIndex(1,0)] += state[matrixNodeIndex(1,0)] * mConductance(0,0) + state[matrixNodeIndex(1,1)] * mConductance(0,1) + state[matrixNodeIndex(1,2)] * mConductance(0,2);
 		resid[matrixNodeIndex(1,1)] += state[matrixNodeIndex(1,0)] * mConductance(1,0) + state[matrixNodeIndex(1,1)] * mConductance(1,1) + state[matrixNodeIndex(1,2)] * mConductance(1,2);
@@ -203,6 +206,9 @@ void EMT::Ph3::Resistor::daeResidual(double sim_time,
 void EMT::Ph3::Resistor::daeJacobian(double current_time, const double state[], 
 			const double dstate_dt[], SUNMatrix jacobian, double cj, std::vector<int>& off) {
 	
+	// TODO: MAKE mConductance a member variable
+	Matrix mConductance = Matrix::Zero(3, 3);
+	Math::invertMatrix(**mResistance, mConductance);
 	if (terminalNotGrounded(1)) {
 		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(1,0)) += mConductance(0,0);
 		SM_ELEMENT_D(jacobian, matrixNodeIndex(1,0), matrixNodeIndex(1,1)) += mConductance(0,1);
@@ -264,5 +270,9 @@ void EMT::Ph3::Resistor::daePostStep(double Nexttime, const double state[], cons
 		(**mIntfVoltage)(2, 0) -= state[matrixNodeIndex(0, 2)];
 
 	}
+
+	// TODO: MAKE mConductance a member variable
+	Matrix mConductance = Matrix::Zero(3, 3);
+	Math::invertMatrix(**mResistance, mConductance);
 	**mIntfCurrent = mConductance * **mIntfVoltage;
 }

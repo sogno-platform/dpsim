@@ -144,7 +144,7 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::daeResidual(double sim_time,
 	**mIntfCurrent = mBase_I * mDq0ToAbc * **mIdq0;
 	
 	// residual function for Eq_t
-	resid[c_offset] = mTd0_t * dstate_dt[c_offset] + state[c_offset] - mEf + (mLd - mLd_t) * (**mIdq0)(0,0);
+	resid[c_offset] = mTd0_t * dstate_dt[c_offset] + state[c_offset] - **mEf + (mLd - mLd_t) * (**mIdq0)(0,0);
 
 	// residual function for omega
 	**mElecTorque = ((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0));

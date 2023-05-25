@@ -33,7 +33,10 @@ namespace CPS {
 			private:
 				///
 				CPS::Signal::SignalGenerator::Ptr mSrcSig;
-				
+			public:
+				// TODO: MAKE THIS FUNCTION PRIVATE (BUT NETWORKINJECTION NEED THIS FUNCTION...)
+				// Updates voltage according to reference phasor and frequency
+				void updateVoltage(Real time);
 			public:
 				const CPS::Attribute<MatrixComp>::Ptr mVoltageRef;
 				const CPS::Attribute<Real>::Ptr mSrcFreq;
