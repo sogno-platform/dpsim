@@ -135,8 +135,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(
     // TODO: resistive losses neglected so far (mWithResistiveLosses=false)
     mConnectionTransformer->setParameters(
         mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2,
-        mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase,
-        mTransformerResistance, mTransformerInductance);
+        mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance,
+        mTransformerInductance);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters(

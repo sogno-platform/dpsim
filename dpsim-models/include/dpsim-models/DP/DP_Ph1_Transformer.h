@@ -35,6 +35,13 @@ public:
   /// Coefficient in front of previous current value for harmonics
   MatrixComp mPrevCurrFac;
 
+  //
+  const Attribute<Complex>::Ptr mPrimaryCurrent;
+  const Attribute<Complex>::Ptr mSecondaryCurrent;
+  const Attribute<Complex>::Ptr mPrimaryLV;
+  const Attribute<Complex>::Ptr mSecondaryLV;
+
+public:
   // #### General ####
   /// Defines component parameters
   void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
@@ -62,7 +69,7 @@ public:
   /// Updates internal current variable of the component
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// Updates internal current variable of the component
-  void mnaCompUpdateCurrentHarm(const Matrix &leftVector, Int freqIdx);
+  void mnaCompUpdateCurrentHarm();
   /// Updates internal voltage variable of the component
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// Updates internal voltage variable of the component for harmonics
@@ -92,6 +99,7 @@ public:
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
 
+  //
   class MnaPreStepHarm : public Task {
   public:
     MnaPreStepHarm(Transformer &transformer)
@@ -108,6 +116,7 @@ public:
     Transformer &mTransformer;
   };
 
+  //
   class MnaPostStepHarm : public Task {
   public:
     MnaPostStepHarm(Transformer &transformer,
