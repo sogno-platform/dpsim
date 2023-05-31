@@ -139,3 +139,22 @@ void EMT::Ph3::CurrentSource::mnaCompUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
+
+
+void EMT::Ph3::CurrentSource::setParameters(MatrixComp CurrentRef, Real SrcFreq)
+{
+	auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
+	// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
+	srcSigSine->setParameters(Complex(1,0), SrcFreq);
+	mSrcSig = srcSigSine;
+
+	**mCurrentRef = CurrentRef;
+	mSrcFreq->setReference(mSrcSig->mFreq);
+
+	mSLog->info("\nCurrent reference phasor [I]: {:s}"
+				"\nFrequency [Hz]: {:s}",
+				Logger::matrixCompToString(CurrentRef),
+				Logger::realToString(SrcFreq));
+				
+	mParametersSet = true;
+}

@@ -83,6 +83,8 @@
 #include <dpsim-models/EMT/EMT_Ph1_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph1_VoltageSourceRamp.h>
 #include <dpsim-models/EMT/EMT_Ph1_VoltageSourceNorton.h>
+#include <dpsim-models/EMT/EMT_Ph1_SSN_Full_Serial_RLC.h>
+#include <dpsim-models/EMT/EMT_Ph1_Switch.h>
 
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
@@ -101,6 +103,9 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQ.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQTrapez.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_Capacitor.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_Full_Serial_RLC.h>
 #ifdef WITH_SUNDIALS
   #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQODE.h>
 #endif
