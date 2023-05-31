@@ -21,7 +21,6 @@ namespace Ph1 {
 		public SharedFactory<Transformer>,
 		public Base::Ph1::Transformer {
 
-			
 	public:
 		/// Defines UID, name and logging level
 		Transformer(String uid, String name,
@@ -37,6 +36,13 @@ namespace Ph1 {
 		/// Coefficient in front of previous current value for harmonics
 		MatrixComp mPrevCurrFac;
 
+		//
+		const Attribute<Complex>::Ptr mPrimaryCurrent;
+		const Attribute<Complex>::Ptr mSecondaryCurrent;
+		const Attribute<Complex>::Ptr mPrimaryLV;
+		const Attribute<Complex>::Ptr mSecondaryLV;
+
+	public:
 		// #### General ####
 		/// Defines component parameters
 		void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance);
@@ -60,7 +66,7 @@ namespace Ph1 {
 		/// Updates internal current variable of the component
 		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal current variable of the component
-		void mnaCompUpdateCurrentHarm(const Matrix& leftVector, Int freqIdx);
+		void mnaCompUpdateCurrentHarm();
 		/// Updates internal voltage variable of the component
 		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component for harmonics
@@ -82,7 +88,7 @@ namespace Ph1 {
 		/// Add MNA post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
-
+		//
 		class MnaPreStepHarm : public Task {
 		public:
 			MnaPreStepHarm(Transformer& transformer)
@@ -98,6 +104,7 @@ namespace Ph1 {
 			Transformer& mTransformer;
 		};
 
+		//
 		class MnaPostStepHarm : public Task {
 		public:
 			MnaPostStepHarm(Transformer& transformer, const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
