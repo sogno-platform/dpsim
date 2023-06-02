@@ -28,6 +28,8 @@ int main(int argc, char* argv[]) {
 
 	String logDirectory = "logs";
 
+	Logger::Level logLevel = Logger::Level::info;
+
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
@@ -59,16 +61,16 @@ int main(int argc, char* argv[]) {
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
-	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
+	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", logLevel);
 	extnetPF->setParameters(scenario.systemNominalVoltage);
 	extnetPF->setBaseVoltage(scenario.systemNominalVoltage);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 
-	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
+	auto linePF = SP::Ph1::PiLine::make("PiLine", logLevel);
 	linePF->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
 	linePF->setBaseVoltage(scenario.systemNominalVoltage);
 
-	auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
+	auto loadPF = SP::Ph1::Load::make("Load", logLevel);
 	loadPF->setParameters(-scenario.pvNominalActivePower, -scenario.pvNominalReactivePower, scenario.systemNominalVoltage);
 	loadPF->modifyPowerFlowBusType(PowerflowBusType::PQ);
 
@@ -86,7 +88,7 @@ int main(int argc, char* argv[]) {
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
-	Simulation simPF(simNamePF, Logger::Level::debug);
+	Simulation simPF(simNamePF, logLevel);
 	simPF.setSystem(systemPF);
 	simPF.setTimeStep(timeStepPF);
 	simPF.setFinalTime(finalTimePF);
@@ -105,14 +107,14 @@ int main(int argc, char* argv[]) {
 	auto n1SP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
 
-	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
+	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
 	extnetSP->setParameters(Complex(scenario.systemNominalVoltage, 0), 0, rampRocof, 5.0, rampDuration);
 
-	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
+	auto lineSP = SP::Ph1::PiLine::make("PiLine", logLevel);
 	lineSP->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
 
 
-	auto pv = SP::Ph1::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
+	auto pv = SP::Ph1::AvVoltageSourceInverterDQ::make("pv", "pv", logLevel, true);
 	pv->setParameters(scenario.systemOmega, scenario.pvNominalVoltage, scenario.pvNominalActivePower, scenario.pvNominalReactivePower);
 	pv->setControllerParameters(cmdScaleP*scenario.KpPLL, cmdScaleI*scenario.KiPLL, cmdScaleP*scenario.KpPowerCtrl, cmdScaleI*scenario.KiPowerCtrl, cmdScaleP*scenario.KpCurrCtrl, cmdScaleI*scenario.KiCurrCtrl, scenario.OmegaCutoff);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
@@ -137,11 +139,13 @@ int main(int argc, char* argv[]) {
 	loggerSP->logAttribute("v2", n2SP->attribute("v"));
 	loggerSP->logAttribute("i12", lineSP->attribute("i_intf"));
 	loggerSP->logAttribute("f_src", extnetSP->attribute("f_src"));
+	loggerSP->logAttribute("pv_v_intf", pv->attribute("v_intf"));
+	loggerSP->logAttribute("pv_i_intf", pv->attribute("i_intf"));
 
-	CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerSP, pv);
+	// CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerSP, pv);
 
 	// Simulation
-	Simulation sim(simName, Logger::Level::debug);
+	Simulation sim(simName, logLevel);
 	sim.setSystem(systemSP);
 	sim.setTimeStep(timeStepSP);
 	sim.setFinalTime(finalTimeSP);

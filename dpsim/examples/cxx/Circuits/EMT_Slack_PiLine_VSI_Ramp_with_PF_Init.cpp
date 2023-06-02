@@ -28,6 +28,8 @@ int main(int argc, char* argv[]) {
 
 	String logDirectory = "logs";
 
+	Logger::Level logLevel = Logger::Level::info;
+
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
@@ -59,16 +61,16 @@ int main(int argc, char* argv[]) {
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
-	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
+	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", logLevel);
 	extnetPF->setParameters(scenario.systemNominalVoltage);
 	extnetPF->setBaseVoltage(scenario.systemNominalVoltage);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 
-	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
+	auto linePF = SP::Ph1::PiLine::make("PiLine", logLevel);
 	linePF->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
 	linePF->setBaseVoltage(scenario.systemNominalVoltage);
 
-	auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
+	auto loadPF = SP::Ph1::Load::make("Load", logLevel);
 	loadPF->setParameters(-scenario.pvNominalActivePower, -scenario.pvNominalReactivePower, scenario.systemNominalVoltage);
 	loadPF->modifyPowerFlowBusType(PowerflowBusType::PQ);
 
@@ -86,7 +88,7 @@ int main(int argc, char* argv[]) {
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
 	// Simulation
-	Simulation simPF(simNamePF, Logger::Level::debug);
+	Simulation simPF(simNamePF, logLevel);
 	simPF.setSystem(systemPF);
 	simPF.setTimeStep(timeStepPF);
 	simPF.setFinalTime(finalTimePF);
@@ -106,13 +108,13 @@ int main(int argc, char* argv[]) {
 	auto n1EMT = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2EMT = SimNode<Real>::make("n2", PhaseType::ABC);
 
-	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
+	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", logLevel);
 	extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(scenario.systemNominalVoltage), 50, rampRocof, 5.0, rampDuration);
 
-	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
+	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", logLevel);
 	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(scenario.lineResistance), CPS::Math::singlePhaseParameterToThreePhase(scenario.lineInductance), CPS::Math::singlePhaseParameterToThreePhase(scenario.lineCapacitance));
 
-	auto pv = EMT::Ph3::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
+	auto pv = EMT::Ph3::AvVoltageSourceInverterDQ::make("pv", "pv", logLevel, true);
 	pv->setParameters(scenario.systemOmega, scenario.pvNominalVoltage, scenario.pvNominalActivePower, scenario.pvNominalReactivePower);
 	pv->setControllerParameters(cmdScaleP*scenario.KpPLL, cmdScaleI*scenario.KiPLL, cmdScaleP*scenario.KpPowerCtrl, cmdScaleI*scenario.KiPowerCtrl, cmdScaleP*scenario.KpCurrCtrl, cmdScaleI*scenario.KiCurrCtrl, scenario.OmegaCutoff);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
@@ -137,19 +139,17 @@ int main(int argc, char* argv[]) {
 	loggerEMT->logAttribute("v2", n2EMT->attribute("v"));
 	loggerEMT->logAttribute("i12", lineEMT->attribute("i_intf"));
 	loggerEMT->logAttribute("f_src", extnetEMT->attribute("f_src"));
+	loggerEMT->logAttribute("pv_v_intf", pv->attribute("v_intf"));
+    loggerEMT->logAttribute("pv_i_intf", pv->attribute("i_intf"));
 
-	CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerEMT, pv);
-
-	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::Events::createEventAddPowerConsumption3Ph("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemEMT, Domain::EMT, loggerEMT);
+	// CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerEMT, pv);
 
 	// Simulation
-	Simulation sim(simName, Logger::Level::debug);
+	Simulation sim(simName, logLevel);
 	sim.setSystem(systemEMT);
 	sim.setTimeStep(timeStepEMT);
 	sim.setFinalTime(finalTimeEMT);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(loggerEMT);
-	// sim.addEvent(loadStepEvent);
 	sim.run();
 }

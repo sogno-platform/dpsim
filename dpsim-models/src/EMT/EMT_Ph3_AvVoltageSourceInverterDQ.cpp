@@ -134,7 +134,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, 
 
 	SPDLOG_LOGGER_INFO(mSLog, "Filter Parameters:");
 	SPDLOG_LOGGER_INFO(mSLog, "Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
+	SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [Ohm] Resistance Rc={} [Ohm]", mRf, mRc);
 
 	mSubResistorC->setParameters(CPS::Math::singlePhaseParameterToThreePhase(mRc));
 	mSubResistorF->setParameters(CPS::Math::singlePhaseParameterToThreePhase(mRf));
@@ -234,7 +234,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 	matrixOutputInit(0,0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
 	mPLL->setInitialValues(**mVcq, matrixStateInit, matrixOutputInit);
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nInterface voltage across: {:s}"
 		"\nInterface current: {:s}"
