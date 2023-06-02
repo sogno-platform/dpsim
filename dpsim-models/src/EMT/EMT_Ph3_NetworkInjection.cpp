@@ -56,9 +56,15 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real freqS
 	mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart, duration, smoothRamp);
 
 	SPDLOG_LOGGER_INFO(mSLog, "\nVoltage Ref={:s} [V]"
-				"\nFrequency={:s} [Hz]",
+				"\nInitial frequency={:s} [Hz]"
+				"\nRamp ROCOF={:s} [Hz/s]"
+				"\nRamp duration={:s} [s]"
+				"\nRamp nadir={:s} [Hz]",
 				Logger::matrixCompToString(voltageRef),
-				Logger::realToString(freqStart));
+				Logger::realToString(freqStart),
+				Logger::realToString(rocof),
+				Logger::realToString(duration),
+				Logger::realToString(freqStart + rocof * duration));
 }
 
 void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {

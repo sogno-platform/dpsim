@@ -133,7 +133,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, R
 
 	SPDLOG_LOGGER_INFO(mSLog, "Filter Parameters:");
 	SPDLOG_LOGGER_INFO(mSLog, "Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
+	SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [Ohm] Resistance Rc={} [Ohm]", mRf, mRc);
 
 	mSubResistorC->setParameters(mRc);
 	mSubResistorF->setParameters(mRf);

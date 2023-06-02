@@ -86,14 +86,14 @@ void PLL::signalAddStepDependencies(AttributeBase::List &prevStepDependencies, A
 void PLL::signalStep(Real time, Int timeStepCount) {
     (**mInputCurr)(1,0) = **mInputRef;
 
-    SPDLOG_LOGGER_INFO(mSLog, "Time {}:", time);
-    SPDLOG_LOGGER_INFO(mSLog, "Input values: inputCurr = ({}, {}), inputPrev = ({}, {}), stateCurr = ({}, {}), statePrev = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
+    SPDLOG_LOGGER_TRACE(mSLog, "Time {}:", time);
+    SPDLOG_LOGGER_TRACE(mSLog, "Input values: inputCurr = ({}, {}), inputPrev = ({}, {}), stateCurr = ({}, {}), statePrev = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
 
     **mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
     **mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
 
-    SPDLOG_LOGGER_INFO(mSLog, "State values: stateCurr = ({}, {})", (**mStateCurr)(0,0), (**mStateCurr)(1,0));
-    SPDLOG_LOGGER_INFO(mSLog, "Output values: outputCurr = ({}, {}):", (**mOutputCurr)(0,0), (**mOutputCurr)(1,0));
+    SPDLOG_LOGGER_TRACE(mSLog, "State values: stateCurr = ({}, {})", (**mStateCurr)(0,0), (**mStateCurr)(1,0));
+    SPDLOG_LOGGER_TRACE(mSLog, "Output values: outputCurr = ({}, {}):", (**mOutputCurr)(0,0), (**mOutputCurr)(1,0));
 }
 
 Task::List PLL::getTasks() {
