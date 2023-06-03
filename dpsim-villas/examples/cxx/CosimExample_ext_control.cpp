@@ -78,7 +78,7 @@ Simulation setDPsim1(float ts, float tf, float u10) {
 	r1->connect({ n1, EMT::SimNode::GND });
 	rLine->connect({ n1, n2 });
 	c1->connect({ n1, EMT::SimNode::GND });
-	evs->connect({ EMT::SimNode::GND, n2 });
+	evs->connect({ n2, EMT::SimNode::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{EMT::SimNode::GND, n1, n2},
@@ -96,7 +96,7 @@ Simulation setDPsim1(float ts, float tf, float u10) {
 	sim.addLogger(logger);
 	sim.setSystem(sys);
 	sim.setTimeStep(ts);
-	sim.setFinalTime(0.1);
+	sim.setFinalTime(tf);
 	// sim.doSteadyStateInit(true);
 	sim.doInitFromNodesAndTerminals(false);
 
@@ -104,10 +104,11 @@ Simulation setDPsim1(float ts, float tf, float u10) {
 	// Eigen::VectorXd n_v0(2);
 	// n_v0 << 5, 5;
 
+	// Initial conditions, given by the problem
 	Eigen::MatrixXd n1_v0(1,1);
-	n1_v0(0,0) = 5;
+	n1_v0(0,0) = 5.0;
 	Eigen::MatrixXd n2_v0(1,1);
-	n2_v0(0,0) = 2;
+	n2_v0(0,0) = u10;
 
 	Eigen::MatrixXd ir1_0(1,1);
 	ir1_0(0,0) = n1_v0(0,0) / r1_r;
@@ -142,22 +143,194 @@ Simulation setDPsim1(float ts, float tf, float u10) {
 	return sim;
 }
 
+Simulation setDPsim2(float ts, float tf, float u20) {
+	float r3_r = 1;
+	float c2_c = 1;
+	
+	// ----- POWERFLOW FOR INITIALIZATION -----
+	// String simNamePF = "Cosim_example1";
+	// CPS::Logger::setLogDir("logs/"+simNamePF);
+
+	// auto n1PF = SP::SimNode::make("n1");
+	// auto n2PF = SP::SimNode::make("n2");
+
+	// auto evsPF = SP::Ph1::VoltageSource::make("v_intf");
+	// evsPF->setParameters(u10);
+
+	// auto r1PF =  SP::Ph1::Resistor::make("r_1");
+	// r1PF->setParameters(r1_r);
+	// auto c1PF = SP::Ph1::Capacitor::make("c_1");
+	// c1PF->setParameters(c1_c);
+	// auto rLinePF = SP::Ph1::Resistor::make("r_line");
+	// rLinePF->setParameters(rLine_r);
+
+	// r1PF->connect({ n1PF, SP::SimNode::GND });
+	// rLinePF->connect({ n1PF, n2PF });
+	// c1PF->connect({ n1PF, SP::SimNode::GND });
+	// evsPF->connect({ SP::SimNode::GND, n2PF });
+	// auto systemPF = SystemTopology(50,
+	// 	SystemNodeList{n1PF, n2PF},
+	// 	SystemComponentList{c1PF, r1PF, rLinePF, evsPF});
+
+	// auto loggerPF = DataLogger::make(simNamePF);
+	// loggerPF->logAttribute("1_v_1", n1PF->mVoltage);
+	// loggerPF->logAttribute("2_v_2", n2PF->mVoltage);
+
+	// Simulation simPF(simNamePF, CPS::Logger::Level::debug);
+	// simPF.setSystem(systemPF);
+	// simPF.setTimeStep(0.1);
+	// simPF.setFinalTime(0.1);
+	// simPF.setDomain(Domain::SP);
+	// simPF.setSolverType(Solver::Type::NRP);
+	// simPF.doInitFromNodesAndTerminals(false);
+	// simPF.addLogger(loggerPF);
+	// simPF.run();
+	
+	
+	// ----- DYNAMIC SIMULATION -----
+	String simName = "Cosim_example2";
+	CPS::Logger::setLogDir("logs/"+simName);
+
+	// Nodes
+	auto n2 = EMT::SimNode::make("n2");
+
+	// Components
+	auto is = EMT::Ph1::CurrentSource::make("i_intf");
+	is->setParameters(u20);
+
+	auto r3 =  EMT::Ph1::Resistor::make("r_3");
+	r3->setParameters(r3_r);
+	auto c2 = EMT::Ph1::Capacitor::make("c_2");
+	c2->setParameters(c2_c);
+
+	// Topology
+	r3->connect({ n2, EMT::SimNode::GND });
+	c2->connect({ n2, EMT::SimNode::GND });
+	is->connect({ EMT::SimNode::GND, n2 });
+
+	auto sys = SystemTopology(50,
+		SystemNodeList{EMT::SimNode::GND, n2},
+		SystemComponentList{r3, c2, is});
+
+	auto logger = DataLogger::make(simName);
+	logger->logAttribute("2_v_2", n2->mVoltage);
+	logger->logAttribute("4_i_evs", is->mIntfCurrent, 1, 1);
+	logger->logAttribute("5_v_evs", is->mIntfVoltage, 1, 1);
+	
+	Simulation sim(simName);
+	sim.setDomain(CPS::Domain::EMT);
+	sim.addLogger(logger);
+	sim.setSystem(sys);
+	sim.setTimeStep(ts);
+	sim.setFinalTime(tf);
+	// sim.doSteadyStateInit(true);
+	sim.doInitFromNodesAndTerminals(false);
+
+	// initialize currents and voltages
+	// Eigen::VectorXd n_v0(2);
+	// n_v0 << 5, 5;
+
+	// Initial conditions, given by the problem
+	Eigen::MatrixXd n2_v0(1,1);
+	n2_v0(0,0) = 2.0;
+	Eigen::MatrixXd i_rLine0(1,1);
+	i_rLine0(0,0) = u20; 
+
+	Eigen::MatrixXd ir3_0(1,1);
+	ir3_0(0,0) = n2_v0(0,0) / r3_r;
+
+	r3->setIntfVoltage(n2_v0);
+	r3->setIntfCurrent(ir3_0);
+	c2->setIntfVoltage(n2_v0);
+	c2->setIntfCurrent(i_rLine0 - ir3_0);
+	// cout << "rLine voltage: " << rLine->mIntfVoltage->toString() << endl;
+	// cout << "r1 current: " << r1->mIntfCurrent->toString() << endl;
+	// cout << "c1 current: " << c1->mIntfCurrent->toString() << endl;
+
+	is->setIntfVoltage(n2_v0);
+	is->setIntfCurrent(i_rLine0);
+	cout << "is current: " << is->mIntfCurrent->toString() << endl;
+
+	// Eigen::MatrixXd r1_i(1,1);
+	// r1_i(0,0) = n1_v0(0,0) / r1_r;
+	// r1->setIntfCurrent(r1_i);
+	// c1->setIntfCurrent(Eigen::MatrixXd(20));
+	// rLine->setIntfVoltage(Eigen::MatrixXd(3));
+	// rLine->setIntfCurrent(Eigen::MatrixXd(30));
+
+	// Eigen::MatrixXcd intfCurrent0(1,1);
+	// intfCurrent0(0,0) = std::complex<double>(5.0,0.0);
+	// evs->setIntfCurrent(intfCurrent0);
+
+	return sim;
+}
+
 int main(int argc, char* argv[]) {
 
 	float timeStep = 0.01;
-	float finalTime = 1.0;
+	float finalTime = 0.02;
 
+	// ** Initialization **
 	// Communication y20 -> S_1 and initialization of S_1
 	float y20 = 2.0;
+	
+	// Set up subsytem 1
 	Simulation sim1 = setDPsim1(timeStep, finalTime, y20);
 	sim1.start();
-	CPS::AttributeBase *y10 = sim1.getIdObjAttribute("v_intf", "i_intf").get();
-	cout << "Output value: " << y10->toString() << endl;
-	float ki1 = sim1.next();
-	y10 = sim1.getIdObjAttribute("v_intf", "i_intf").get();
-	cout << "Step: " << ki1 << ", Output value: " << y10->toString() << endl;
+
+	CPS::AttributeBase::Ptr y10_base = sim1.getIdObjAttribute("v_intf", "i_intf");	
+	// try {
+	auto y10_matrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(y10_base.getPtr());
+	Attribute<Real>::Ptr y10 = y10_matrix->deriveCoeff<Real>(0,0);
+	cout << "Output value from S1: " << y10->toString() << endl;
+	// } catch(...) {
+	// 	throw CPS::InvalidAttributeException();
+	// }
+
+	// "Communication" y10 -> S_2 and initialization of S_2
+	CPS::AttributeBase::Ptr u20_base = y10->cloneValueOntoNewAttribute();
+	auto u20Attr = std::dynamic_pointer_cast<CPS::Attribute<Real>>(u20_base.getPtr());
+	cout << "Input value to S2: " << u20Attr->toString() << endl;
+
+	float u20 = u20Attr->get();
+
+	Simulation sim2 = setDPsim2(timeStep, finalTime, u20);
+	sim2.start();
+	
+	// Main loop
+	float t = 0.0;
+
+	while (t < finalTime) {
+		t = sim1.next();
+
+		cout << "t = " << t << endl;
+		
+		y10_base = sim1.getIdObjAttribute("v_intf", "i_intf");	
+		y10_matrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(y10_base.getPtr());
+		y10 = y10_matrix->deriveCoeff<Real>(0,0);
+		cout << "Output value from S1: " << y10->toString() << endl;
+
+		// "Communication" y10 -> S_2 and initialization of S_2
+		CPS::AttributeBase::Ptr u20_base = y10->cloneValueOntoNewAttribute();
+		auto u20Attr = std::dynamic_pointer_cast<CPS::Attribute<Real>>(u20_base.getPtr());
+		cout << "Input value to S2: " << u20Attr->toString() << endl;
+
+		float u20 = u20Attr->get();
+	}
+
+	// Get only works for the typed ones
+	// AttributeBase::Ptr attr = AttributeStatic<Real>::make(0.001);
+	
+	// Attribute<Real>::Ptr attr = AttributeStatic<Real>::make(0.001);
+	// Real read1 = attr->get();
+	// cout << read1 << endl;
+
+	// Set up subsystem 2
+	// Simulation sim1 = setDPsim1(timeStep, finalTime, y20);
+	// sim1.start();
 
 	sim1.stop();
+	sim2.stop();
 
 	// if (String(argv[1]) == "0") {
 
