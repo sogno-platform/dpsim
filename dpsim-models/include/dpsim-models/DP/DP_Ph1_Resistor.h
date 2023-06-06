@@ -10,7 +10,6 @@
 
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
-#include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
 
 namespace CPS {
@@ -21,7 +20,6 @@ namespace Ph1 {
 		public MNASimPowerComp<Complex>,
 		public Base::Ph1::Resistor,
 		public MNATearInterface,
-		public DAEInterface,
 		public SharedFactory<Resistor> {
 	public:
 		/// Defines UID, name and logging level
@@ -72,12 +70,6 @@ namespace Ph1 {
 
 		// #### MNA Tear Section ####
 		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
-
-		// #### DAE Section ####
-		///Residual Function for DAE Solver
-		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
-		///Voltage Getter
-		Complex daeInitialize();
 	};
 }
 }

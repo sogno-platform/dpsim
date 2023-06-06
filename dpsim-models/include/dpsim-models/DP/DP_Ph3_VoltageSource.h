@@ -10,7 +10,6 @@
 
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
-#include <dpsim-models/Solver/DAEInterface.h>
 
 namespace CPS {
 namespace DP {
@@ -25,7 +24,6 @@ namespace Ph3 {
 	/// a new equation ej - ek = V is added to the problem.
 	class VoltageSource :
 		public MNASimPowerComp<Complex>,
-		public DAEInterface,
 		public SharedFactory<VoltageSource> {
 	private:
 		void updateVoltage(Real time);
@@ -67,12 +65,6 @@ namespace Ph3 {
 
 		/// Add MNA post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-
-		// #### DAE Section ####
-		/// Residual function for DAE Solver
-		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
-		///Voltage Getter
-		Complex daeInitialize();
 	};
 }
 }

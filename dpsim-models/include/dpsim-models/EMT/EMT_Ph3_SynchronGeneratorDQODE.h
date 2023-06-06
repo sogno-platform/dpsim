@@ -10,25 +10,21 @@
 
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQ.h>
 
-#ifdef WITH_SUNDIALS
-  #include <arkode/arkode.h> // Prototypes for ARKode fcts., consts
-  #include <nvector/nvector_serial.h> // Serial N_Vector types, fcts., macros
-  #include <sundials/sundials_types.h>		/* def. of type 'realtype' */
-  #include <sunmatrix/sunmatrix_dense.h>  /* access to dense SUNMatrix						*/
-  #include <sunlinsol/sunlinsol_dense.h>  /* access to dense SUNLinearSolver		  */
-  #include <arkode/arkode_direct.h>		   /* access to ARKDls interface				   */
 
-  #include <dpsim-models/Solver/ODEInterface.h>
-  // Needed to print the computed to the console
-  #if defined(SUNDIALS_EXTENDED_PRECISION)
+#ifdef WITH_SUNDIALS
+	#include <sundials/sundials_types.h>		/* def. of type 'realtype' */
+	#include <dpsim-models/Solver/ODEInterface.h>
+	
+	// Needed to print the computed to the console
+	#if defined(SUNDIALS_EXTENDED_PRECISION)
 		#define GSYM "Lg"
 		#define ESYM "Le"
 		#define FSYM "Lf"
-  #else
+	#else
 		#define GSYM "g"
 		#define ESYM "e"
 		#define FSYM "f"
-  #endif
+	#endif
 #endif
 
 namespace CPS {

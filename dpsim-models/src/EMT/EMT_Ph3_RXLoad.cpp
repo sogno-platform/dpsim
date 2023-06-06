@@ -22,6 +22,9 @@ EMT::Ph3::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
 	mSLog->flush();
+
+	//DAE Solver
+	mIntfDerCurrent = Matrix::Zero(3, 1);
 }
 
 EMT::Ph3::RXLoad::RXLoad(String name,
@@ -73,7 +76,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
 
 void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
-		if (initPowerFromTerminal) {
+	if (initPowerFromTerminal) {
 		**mActivePower = Matrix::Zero(3, 3);
 		(**mActivePower)(0, 0) = mTerminals[0]->singleActivePower() / 3.;
 		(**mActivePower)(1, 1) = mTerminals[0]->singleActivePower() / 3.;
@@ -204,3 +207,213 @@ void EMT::Ph3::RXLoad::mnaCompUpdateCurrent(const Matrix& leftVector) {
 		**mIntfCurrent += subc->intfCurrent();
 	}
 }
+
+// #### DAE functions ####
+
+void EMT::Ph3::RXLoad::daeInitialize(double time, double state[], double dstate_dt[], 
+	double absoluteTolerances[], double stateVarTypes[], int& offset) {
+
+	updateMatrixNodeIndices();
+
+	// initial current
+	**mIntfCurrent = Matrix::Zero(3,1);
+	if ((**mActivePower)(0, 0) != 0)
+		**mIntfCurrent += mSubResistor->intfCurrent();
+	if ((**mReactivePower)(0, 0) == 0){
+		// no state variable
+
+		mSLog->info(
+			"\n--- daeInitialize ---"
+			"\nmReactivePower = 0  --> no state variables are needed"
+			"\nInitial current through the resistor-ph1 of RXLoad '{:s}'={:f}A"
+			"\nInitial current through the resistor-ph2 of RXLoad '{:s}'={:f}A"
+			"\nInitial current through the resistor-ph3 of RXLoad '{:s}'={:f}A"
+			"\n--- daeInitialize finished ---",
+			this->name(), (**mIntfCurrent)(0,0),
+			this->name(), (**mIntfCurrent)(1,0),
+			this->name(), (**mIntfCurrent)(2,0)
+		);
+		mSLog->flush();
+	
+	} else if (mReactance(0,0) > 0) {
+		// state variables are inductor currents
+		**mIntfCurrent += mSubInductor->intfCurrent();
+
+		// init current throw inductor: i_L = i-i_r
+		state[offset] = (mSubInductor->intfCurrent())(0,0);
+		dstate_dt[offset]   = (**mIntfVoltage)(0,0) / mInductance(0,0);
+		state[offset+1] = (mSubInductor->intfCurrent())(1,0);
+		dstate_dt[offset+1] = (**mIntfVoltage)(1,0) / mInductance(1,1);
+		state[offset+2] = (mSubInductor->intfCurrent())(2,0);
+		dstate_dt[offset+2] = (**mIntfVoltage)(2,0) / mInductance(2, 2);
+
+		// init derivative current throw inductor:
+		mIntfDerCurrent(0, 0) = dstate_dt[offset];
+		mIntfDerCurrent(1, 0) = dstate_dt[offset+1];
+		mIntfDerCurrent(2, 0) = dstate_dt[offset+2];
+
+		//set state variable as differential variable
+		stateVarTypes[offset]   = 0.0;
+		stateVarTypes[offset+1] = 0.0;
+		stateVarTypes[offset+2] = 0.0;
+
+		//set absolute tolerance
+		absoluteTolerances[offset] = mAbsTolerance;
+		absoluteTolerances[offset+1] = mAbsTolerance;
+		absoluteTolerances[offset+2] = mAbsTolerance;
+
+		// TODO: MAKE mConductance a member variable
+		Matrix mConductance = Matrix::Zero(3, 3);
+		Math::invertMatrix(mResistance, mConductance);
+
+		mSLog->info(
+			"\n--- daeInitialize ---"
+			"\nmReactance(0,0) > 0  --> state variable are inductor currents"
+			"\nAdded current-phase1 through the inductor of RXLoad '{:s}' to state vector, initial value={:f}A"
+			"\nAdded current-phase2 through the inductor of RXLoad '{:s}' to state vector, initial value={:f}A"
+			"\nAdded current-phase3 through the inductor of RXLoad '{:s}' to state vector, initial value={:f}A"
+			"\nAdded derivative of current-phase1 through the inductor of RXLoad '{:s}' to derivative state vector, initial value={:f}"
+			"\nAdded derivative of current-phase2 through the inductor of RXLoad '{:s}' to derivative state vector, initial value={:f}"
+			"\nAdded derivative of current-phase3 through the inductor of RXLoad '{:s}' to derivative state vector, initial value={:f}"
+			"\nInitial current through the resistor-ph1 of RXLoad '{:s}'={:f}A"
+			"\nInitial current through the resistor-ph2 of RXLoad '{:s}'={:f}A"
+			"\nInitial current through the resistor-ph3 of RXLoadd '{:s}'={:f}A"
+			"\nState variables set as differential"
+			"\nAbsolute tolerances={:f}"
+			"\n--- daeInitialize finished ---",
+			this->name(), state[offset],
+			this->name(), state[offset+1],
+			this->name(), state[offset+2],
+			this->name(), dstate_dt[offset],
+			this->name(), dstate_dt[offset+1],
+			this->name(), dstate_dt[offset+2],
+			this->name(), (**mIntfVoltage)(0,0) * mConductance(0,0),
+			this->name(), (**mIntfVoltage)(1,0) * mConductance(1,1),
+			this->name(), (**mIntfVoltage)(2,0) * mConductance(2,2),
+			absoluteTolerances[offset]
+		);
+		mSLog->flush();
+		offset+=3;
+
+	} else if (mReactance(0,0) < 0) {
+		// no state variable are needed
+		**mIntfCurrent += mSubCapacitor->intfCurrent();
+
+		mSLog->info(
+		"\n--- daeInitialize ---"
+		"\nmReactance(0,0) < 0  --> no state variable are needed"
+		"\nInitial current through RXLoad '{:s}'-ph1={:f}A"
+		"\nInitial current through RXLoad '{:s}'-ph2={:f}A"
+		"\nInitial current through RXLoad '{:s}'-ph3={:f}A"
+		"\n--- daeInitialize finished ---",
+		this->name(), (**mIntfCurrent)(0,0),
+		this->name(), (**mIntfCurrent)(1,0),
+		this->name(), (**mIntfCurrent)(2,0)
+		);
+		mSLog->flush();
+	}
+}
+
+void EMT::Ph3::RXLoad::daeResidual(double sim_time, 
+	const double state[], const double dstate_dt[], 
+	double resid[], std::vector<int>& off) {
+
+	// current offset for component	
+	int c_offset = off[0] + off[1]; 
+
+	// TODO: MAKE mConductance a member variable
+	Matrix mConductance = Matrix::Zero(3, 3);
+	Math::invertMatrix(mResistance, mConductance);
+
+	if ((**mActivePower)(0, 0) != 0) {
+		// add currents through resistor to nodal equations
+		resid[matrixNodeIndex(0, 0)] += state[matrixNodeIndex(0, 0)] * mConductance(0,0);
+		resid[matrixNodeIndex(0, 1)] += state[matrixNodeIndex(0, 1)] * mConductance(1,1);
+		resid[matrixNodeIndex(0, 2)] += state[matrixNodeIndex(0, 2)] * mConductance(2,2);
+	}
+	if (mReactance(0,0) > 0) {
+		// state variables are inductor currents
+		resid[c_offset]   = state[matrixNodeIndex(0, 0)] - mInductance(0,0) * dstate_dt[c_offset];
+		resid[c_offset+1] = state[matrixNodeIndex(0, 1)] - mInductance(1,1) * dstate_dt[c_offset+1];
+		resid[c_offset+2] = state[matrixNodeIndex(0, 2)] - mInductance(2,2) * dstate_dt[c_offset+2];
+		resid[matrixNodeIndex(0, 0)] += state[c_offset];
+		resid[matrixNodeIndex(0, 1)] += state[c_offset+1];
+		resid[matrixNodeIndex(0, 2)] += state[c_offset+2];
+		off[1] += 3;
+	}
+	else if (mReactance(0,0) < 0) {
+		resid[matrixNodeIndex(0, 0)] += mCapacitance(0,0)*dstate_dt[c_offset];
+		resid[matrixNodeIndex(0, 1)] += mCapacitance(1,1)*dstate_dt[c_offset+1];
+		resid[matrixNodeIndex(0, 2)] += mCapacitance(2,2)*dstate_dt[c_offset+2];
+	}
+}
+
+void EMT::Ph3::RXLoad::daeJacobian(double current_time, const double state[], 
+	const double dstate_dt[], SUNMatrix jacobian, double cj, std::vector<int>& off) {
+
+	// current offset for component
+	int c_offset = off[0] + off[1]; 
+
+	// TODO: MAKE mConductance a member variable
+	Matrix mConductance = Matrix::Zero(3, 3);
+	Math::invertMatrix(mResistance, mConductance);
+
+	if ((**mActivePower)(0, 0) != 0) {
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)) += mConductance(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1)) += mConductance(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2)) += mConductance(2,2);
+	}
+	if (mReactance(0,0) > 0) {
+		SM_ELEMENT_D(jacobian, c_offset,   c_offset)   += - cj * mInductance(0,0);
+		SM_ELEMENT_D(jacobian, c_offset+1, c_offset+1) += - cj * mInductance(1,1);
+		SM_ELEMENT_D(jacobian, c_offset+2, c_offset+2) += - cj * mInductance(2,2);
+
+		SM_ELEMENT_D(jacobian, c_offset,   matrixNodeIndex(0, 0)) += 1.0;
+		SM_ELEMENT_D(jacobian, c_offset+1, matrixNodeIndex(0, 1)) += 1.0;
+		SM_ELEMENT_D(jacobian, c_offset+2, matrixNodeIndex(0, 2)) += 1.0;
+
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 0), c_offset)   += 1.0;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 1), c_offset+1) += 1.0;
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 2), c_offset+2) += 1.0;
+
+		off[1] += 3;
+	}
+	else if (mReactance(0,0) < 0) {
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)) += cj * mConductance(0,0);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1)) += cj * mConductance(1,1);
+		SM_ELEMENT_D(jacobian, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2)) += cj * mConductance(2,2);
+	}
+}
+
+void EMT::Ph3::RXLoad::daePostStep(double Nexttime, const double state[], 
+	const double dstate_dt[], int& offset) {
+	
+	// TODO: MAKE mConductance a member variable
+	Matrix mConductance = Matrix::Zero(3, 3);
+	Math::invertMatrix(mResistance, mConductance);
+
+	(**mIntfVoltage)(0, 0) = state[matrixNodeIndex(0, 0)];
+	(**mIntfVoltage)(1, 0) = state[matrixNodeIndex(0, 1)];
+	(**mIntfVoltage)(2, 0) = state[matrixNodeIndex(0, 2)];
+
+	**mIntfCurrent = Matrix::Zero(3,1);
+	if ((**mActivePower)(0, 0) != 0) 
+		**mIntfCurrent += mConductance * **mIntfVoltage;
+	if (mReactance(0,0) > 0) {
+		(**mIntfCurrent)(0, 0) += state[offset];
+		(**mIntfCurrent)(1, 0) += state[offset+1];
+		(**mIntfCurrent)(2, 0) += state[offset+2];
+		mIntfDerCurrent(0, 0) = dstate_dt[offset];
+		mIntfDerCurrent(1, 0) = dstate_dt[offset+1];
+		mIntfDerCurrent(2, 0) = dstate_dt[offset+2];
+
+		offset+=3;
+	}
+	else if (mReactance(0,0) < 0) {
+		(**mIntfCurrent)(0, 0) = mCapacitance(0,0) * dstate_dt[matrixNodeIndex(0, 0)];
+		(**mIntfCurrent)(1, 0) = mCapacitance(1,1) * dstate_dt[matrixNodeIndex(0, 1)];
+		(**mIntfCurrent)(2, 0) = mCapacitance(2,2) * dstate_dt[matrixNodeIndex(0, 2)];
+	}
+}
+
+

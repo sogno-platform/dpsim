@@ -10,6 +10,7 @@
 
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/Base/Base_Ph1_CurrentSource.h>
 
 namespace CPS {
@@ -21,6 +22,7 @@ namespace Ph1 {
 	/// node1 and into node2.
 	class CurrentSource :
 		public MNASimPowerComp<Real>,
+		public DAEInterface,
 		public SharedFactory<CurrentSource> {
 	public:
 		const Attribute<Complex>::Ptr mCurrentRef;
@@ -60,6 +62,21 @@ namespace Ph1 {
 
 		/// Add MNA post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+
+		///
+		void daeInitialize(double time, double state[], double dstate_dt[],
+			double absoluteTolerances[], double stateVarTypes[], int& offset) override;
+		/// Residual function for DAE Solver
+		void daeResidual(double time, const double state[], const double dstate_dt[], 
+			double resid[], std::vector<int>& off) override;
+		/// Calculation of jacobian
+		void daeJacobian(double current_time, const double state[], const double dstate_dt[], 
+			SUNMatrix jacobian, double cj, std::vector<int>& off) override {};
+		///
+		void daePostStep(double Nexttime, const double state[], 
+			const double dstate_dt[], int& offset) override;
+		///
+		int getNumberOfStateVariables() override {return 0;}
 	};
 }
 }

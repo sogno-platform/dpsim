@@ -10,7 +10,6 @@
 
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
-#include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>
@@ -38,7 +37,6 @@ namespace Ph1 {
 	/// a new equation ej - ek = V is added to the problem.
 	class VoltageSource :
 		public MNASimPowerComp<Complex>,
-		public DAEInterface,
 		public SharedFactory<VoltageSource> {
 	private:
 		///
@@ -125,12 +123,6 @@ namespace Ph1 {
 			VoltageSource& mVoltageSource;
 			std::vector< Attribute<Matrix>::Ptr > mLeftVectors;
 		};
-
-		// #### DAE Section ####
-		/// Residual function for DAE Solver
-		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
-		///Voltage Getter
-		Complex daeInitialize();
 	};
 }
 }

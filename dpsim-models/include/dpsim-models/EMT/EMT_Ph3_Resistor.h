@@ -10,13 +10,16 @@
 
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/Base/Base_Ph3_Resistor.h>
+
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
  /// EMT Resistor
 class Resistor :
 	public MNASimPowerComp<Real>,
+	public DAEInterface,
 	public Base::Ph3::Resistor,
 	public SharedFactory<Resistor> {
 protected:
@@ -51,6 +54,22 @@ public:
 		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
 		/// add MNA pre and post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+
+		// #### DAE Section ####
+		///
+		void daeInitialize(double time, double state[], double dstate_dt[], 
+			double absoluteTolerances[], double stateVarTypes[], int& counter) override;
+		///Residual Function for DAE Solver
+		void daeResidual(double time, const double state[], const double dstate_dt[], 
+			double resid[], std::vector<int>& off) override;
+		/// Calculation of jacobian
+		void daeJacobian(double current_time, const double state[], const double dstate_dt[], 
+			SUNMatrix jacobian, double cj, std::vector<int>& off) override;
+		///
+		void daePostStep(double Nexttime, const double state[], 
+			const double dstate_dt[], int& counter) override;
+		///
+		int getNumberOfStateVariables() override {return 0;}
 	};
 }
 }

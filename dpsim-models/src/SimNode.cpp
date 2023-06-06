@@ -21,11 +21,13 @@ SimNode<VarType>::SimNode(String uid, String name,
 		mMatrixNodeIndex = matrixNodeIndex;
 		**mVoltage = MatrixVar<VarType>::Zero(3, 1);
 		**mApparentPower = MatrixVar<VarType>::Zero(3, 1);
+		mDerVoltage = MatrixVar<VarType>::Zero(3, 1);
 	}
 	else {
 		mMatrixNodeIndex[0] = matrixNodeIndex[0];
 		**mVoltage = MatrixVar<VarType>::Zero(1, 1);
 		**mApparentPower = MatrixVar<VarType>::Zero(1, 1);
+		mDerVoltage = MatrixVar<VarType>::Zero(1, 1);
 	}
 }
 
@@ -103,6 +105,36 @@ void SimNode<Complex>::setVoltage(Complex newVoltage) {
 }
 
 template<>
+void SimNode<Real>::setVoltage(double newVoltage, PhaseType phaseType) {
+	if (phaseType == PhaseType::B)
+		(**mVoltage)(1, 0) = newVoltage;
+	else if (phaseType == PhaseType::C)
+		(**mVoltage)(2, 0) = newVoltage;
+	else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
+		(**mVoltage)(0, 0) = newVoltage;
+}
+
+template<>
+void SimNode<Complex>::setdVoltage(double newVoltage, PhaseType phaseType) {
+	if (phaseType == PhaseType::B)
+		mDerVoltage(1, 0) = newVoltage;
+	else if (phaseType == PhaseType::C)
+		mDerVoltage(2, 0) = newVoltage;
+	else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
+		mDerVoltage(0, 0) = newVoltage;
+}
+
+template<>
+void SimNode<Real>::setdVoltage(double newVoltage, PhaseType phaseType) {
+	if (phaseType == PhaseType::B)
+		mDerVoltage(1, 0) = newVoltage;
+	else if (phaseType == PhaseType::C)
+		mDerVoltage(2, 0) = newVoltage;
+	else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
+		mDerVoltage(0, 0) = newVoltage;
+}
+
+template<>
 void SimNode<Complex>::setPower(Complex newPower) {
 	(**mApparentPower)(0, 0) = newPower;
 }
@@ -158,6 +190,24 @@ void SimNode<Complex>::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 template <>
 void SimNode<Real>::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 
+}
+
+// #### DAE Section ####
+template <>
+void SimNode<Real>::daeSetAbsoluteTolerance(Real AbsTol){
+	mAbsoluteTolerance=AbsTol;
+}
+template <>
+void SimNode<Complex>::daeSetAbsoluteTolerance(Real AbsTol){
+	mAbsoluteTolerance=AbsTol;
+}
+template <>
+Real SimNode<Real>::daeGetAbsoluteTolerance(){
+	return mAbsoluteTolerance;
+}
+template <>
+Real SimNode<Complex>::daeGetAbsoluteTolerance(){
+	return mAbsoluteTolerance;
 }
 
 template class CPS::SimNode<Real>;

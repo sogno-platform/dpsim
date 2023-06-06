@@ -10,7 +10,6 @@
 
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBus.h>
-#include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSource.h>
 
 namespace CPS {
@@ -26,8 +25,7 @@ namespace Ph1 {
     class NetworkInjection:
 		public CompositePowerComp<Complex>,
 		public SharedFactory<NetworkInjection>,
-		public PFSolverInterfaceBus,
-		public DAEInterface {
+		public PFSolverInterfaceBus {
 
     private:
 		// ### Electrical Subcomponents ###
@@ -106,14 +104,6 @@ namespace Ph1 {
 		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
 		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-
-		// #### DAE Section ####
-		/// Residual function for DAE Solver
-		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) override;
-		///Voltage Getter
-		Complex daeInitialize() override;
-
-
 };
 }
 }

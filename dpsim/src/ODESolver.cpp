@@ -21,7 +21,10 @@ ODESolver::ODESolver(String name, const CPS::ODEInterface::Ptr &comp, bool impli
 }
 
 void ODESolver::initialize() {
-	mStates=N_VNew_Serial(mProbDim);
+	mFlag = SUNContext_Create(NULL, &mSunctx);
+	if (check_flag(&mFlag, "SUNContext_Create", 1)) throw CPS::Exception();
+
+	mStates = N_VNew_Serial(mProbDim, mSunctx);
 	// Set initial value: (Different from DAESolver), only for already initialized components!
 	// XXX
 	N_VSetArrayPointer((**mComponent->mOdePostState).data(), mStates);
@@ -38,7 +41,6 @@ void ODESolver::initialize() {
 	                       double tmp1[], double tmp2[], double tmp3[]) {
 		dummy->odeJacobian(t, y, fy, J, tmp1, tmp2, tmp3);
 	};
-
 
 	// Causes numerical issues, better allocate in every step-> see step
 	/*mArkode_mem= ARKodeCreate();
@@ -125,65 +127,60 @@ Real ODESolver::step(Real initial_time) {
 	mComponent->mOdePostState->set(mComponent->mOdePreState->get());
 
 	// Better allocate the arkode memory here to prevent numerical problems
-	mArkode_mem= ARKodeCreate();
-	 if (check_flag(mArkode_mem, "ARKodeCreate", 0))
-		mFlag=1;
+	mArkode_mem = ARKStepCreate(NULL, &ODESolver::StateSpaceWrapper, initial_time, mStates, mSunctx);
+	if (check_flag((void *)mArkode_mem, "ARKStepCreate", 0)) throw CPS::Exception();
 
-	mFlag = ARKodeSetUserData(mArkode_mem, this);
-	if (check_flag(&mFlag, "ARKodeSetUserData", 1))
-		mFlag=1;
+	/* Call ARKodeInit to initialize the integrator memory and specify the
+ 	right-hand side function in y'=f(t,y), the inital time T0, and
+ 	the initial dependent variable vector y(fluxes+mech. vars).*/
+ 	if (mImplicitIntegration) {
+		mFlag = ARKStepSetUserData(mArkode_mem, this);
+		if (check_flag(&mFlag, "ARKStepSetUserData", 1)) throw CPS::Exception();
 
-		/* Call ARKodeInit to initialize the integrator memory and specify the
- 	  right-hand side function in y'=f(t,y), the inital time T0, and
- 	  the initial dependent variable vector y(fluxes+mech. vars).*/
- 	if(mImplicitIntegration){
- 		mFlag = ARKodeInit(mArkode_mem, NULL, &ODESolver::StateSpaceWrapper, initial_time, mStates);
- 		if (check_flag(&mFlag, "ARKodeInit", 1)) throw CPS::Exception();
+		mFlag = ARKStepSStolerances(mArkode_mem, reltol, abstol);
+		if (check_flag(&mFlag, "ARKStepSStolerances", 1)) throw CPS::Exception();
 
  		// Initialize dense matrix data structure
- 	  A = SUNDenseMatrix(mProbDim, mProbDim);
- 	  if (check_flag((void *)A, "SUNDenseMatrix", 0)) throw CPS::Exception();
+		A = SUNDenseMatrix(mProbDim, mProbDim, mSunctx);
+ 	  	if (check_flag((void *)A, "SUNDenseMatrix", 0)) throw CPS::Exception();
+		// DEPRECATED
 
  		// Initialize linear solver
- 	  LS = SUNDenseLinearSolver(mStates, A);
- 	  if (check_flag((void *)LS, "SUNDenseLinearSolver", 0)) throw CPS::Exception();
+		LS = SUNLinSol_Dense(mStates, A, mSunctx);
+ 	  	if (check_flag((void *)LS, "SUNLinSol_Dense", 0)) throw CPS::Exception();
 
  		// Attach matrix and linear solver
- 		mFlag = ARKDlsSetLinearSolver(mArkode_mem, LS, A);
- 		if (check_flag(&mFlag, "ARKDlsSetLinearSolver", 1)) throw CPS::Exception();
+ 		mFlag = ARKStepSetLinearSolver(mArkode_mem, LS, A);
+ 		if (check_flag(&mFlag, "ARKStepSetLinearSolver", 1)) throw CPS::Exception();
 
  		// Set Jacobian routine
- 		mFlag = ARKDlsSetJacFn(mArkode_mem, &ODESolver::JacobianWrapper);
- 		if (check_flag(&mFlag, "ARKDlsSetJacFn", 1)) throw CPS::Exception();
+ 		mFlag = ARKStepSetJacFn(mArkode_mem, &ODESolver::JacobianWrapper);
+ 		if (check_flag(&mFlag, "ARKStepSetJacFn", 1)) throw CPS::Exception();
  	}
  	else {
- 		mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, initial_time, mStates);
- 		if (check_flag(&mFlag, "ARKodeInit", 1)) throw CPS::Exception();
+		mArkode_mem = ARKStepCreate(&ODESolver::StateSpaceWrapper, NULL, initial_time, mStates, mSunctx);
+		if (check_flag((void *)mArkode_mem, "ARKStepCreate", 0)) return 1;
  	}
-
-	mFlag = ARKodeSStolerances(mArkode_mem, reltol, abstol);
-	if (check_flag(&mFlag, "ARKodeSStolerances", 1))
-		mFlag=1;
-
 
 	// Main integrator loop
 	realtype t = T0;
 	while (Tf-t > 1.0e-15) {
-		mFlag = ARKode(mArkode_mem, Tf, mStates, &t, ARK_NORMAL);
+		mFlag = ARKStepEvolve(mArkode_mem, Tf, mStates, &t, ARK_NORMAL);
 		if (check_flag(&mFlag, "ARKode", 1))	break;
 	}
 
 	// Get some statistics to check for numerical problems (instability, blow-up etc)
-	mFlag = ARKodeGetNumSteps(mArkode_mem, &nst);
+	mFlag = ARKStepGetNumSteps(mArkode_mem, &nst);
 	 if(check_flag(&mFlag, "ARKodeGetNumSteps", 1))
 	 	return 1;
-	mFlag = ARKodeGetNumErrTestFails(mArkode_mem, &netf);
+	mFlag = ARKStepGetNumErrTestFails(mArkode_mem, &netf);
 	if(check_flag(&mFlag, "ARKodeGetNumErrTestFails", 1))
 		return 1;
 
-	ARKodeFree(&mArkode_mem);
+	ARKStepFree(&mArkode_mem);
 	SUNLinSolFree(LS);
 	SUNMatDestroy(A);
+	SUNContext_Free(&mSunctx);
 
 	// Print statistics:
 	//std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
