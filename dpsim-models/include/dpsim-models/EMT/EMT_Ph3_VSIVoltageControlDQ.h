@@ -18,6 +18,7 @@
 #include <dpsim-models/Base/Base_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/Signal/PLL.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
+#include <dpsim-models/Signal/PowerControllerVSI.h>
 
 namespace CPS {
 namespace EMT {
@@ -25,7 +26,7 @@ namespace Ph3 {
 	class VSIVoltageControlDQ :
 		public Base::AvVoltageSourceInverterDQ,
 		public CompositePowerComp<Real>,
-		public SharedFactory<VSIVoltageControlDQ> {
+		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
 
 		// ### General Parameters ###
