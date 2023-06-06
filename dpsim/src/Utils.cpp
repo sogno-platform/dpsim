@@ -240,6 +240,8 @@ void CommandLineArgs::parseArguments(int argc, char *argv[])
 					directImpl = DirectLinearSolverImpl::SparseLU;
 				} else if (arg == "KLU") {
 					directImpl = DirectLinearSolverImpl::KLU;
+				} else if (arg == "NICSLU") {
+					directImpl = DirectLinearSolverImpl::NICSLU;
 				} else if (arg == "CUDADense") {
 					directImpl = DirectLinearSolverImpl::CUDADense;
 				} else if (arg == "CUDASparse") {

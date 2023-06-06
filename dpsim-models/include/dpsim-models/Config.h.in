@@ -15,4 +15,5 @@
 #cmakedefine WITH_SUNDIALS
 #cmakedefine WITH_NUMPY
 #cmakedefine WITH_KLU
+#cmakedefine WITH_NICSLU
 #cmakedefine CGMES_BUILD

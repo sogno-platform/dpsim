@@ -24,6 +24,9 @@
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
 #endif
+#ifdef WITH_NICSLU
+#include <dpsim/NICSLUAdapter.h>
+#endif
 #include <dpsim/SparseLUAdapter.h>
 #ifdef WITH_CUDA
 #include <dpsim/GpuDenseAdapter.h>
@@ -47,6 +50,7 @@ namespace DPsim {
 	enum DirectLinearSolverImpl{
 		Undef = 0,
 		KLU,
+		NICSLU,
 		SparseLU,
 		DenseLU,
 		CUDADense,

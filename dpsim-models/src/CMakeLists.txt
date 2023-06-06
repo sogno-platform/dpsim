@@ -171,6 +171,11 @@ if(WITH_KLU)
 	list(APPEND MODELS_LIBRARIES ${KLU_LIBRARIES})
 endif()
 
+if(WITH_NICSLU)
+	list(APPEND MODELS_INCLUDE_DIRS ${NICSLU_INCLUDE_DIRS})
+	list(APPEND MODELS_LIBRARIES ${NICSLU_LIBRARIES})
+endif()
+
 target_link_libraries(dpsim-models PUBLIC ${MODELS_LIBRARIES})
 target_include_directories(dpsim-models PUBLIC ${MODELS_INCLUDE_DIRS})
 target_sources(dpsim-models PRIVATE ${MODELS_SOURCES})
