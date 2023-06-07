@@ -26,7 +26,7 @@ namespace Ph3 {
 	class VSIVoltageControlDQ :
 		public Base::AvVoltageSourceInverterDQ,
 		public CompositePowerComp<Real>,
-		public SharedFactory<AvVoltageSourceInverterDQ> {
+		public SharedFactory<VSIVoltageControlDQ> {
 	protected:
 
 		// ### General Parameters ###
@@ -142,9 +142,9 @@ namespace Ph3 {
 		/// Initializes internal variables of the component
 		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Updates current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		void mnaUpdateCurrent(const Matrix& leftVector);
 		/// Updates voltage across component
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		void mnaUpdateVoltage(const Matrix& leftVector);
 		/// MNA pre step operations
 		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
