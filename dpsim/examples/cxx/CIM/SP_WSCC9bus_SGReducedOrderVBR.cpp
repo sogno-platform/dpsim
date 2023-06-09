@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 	Bool withFault = true;
 	Real startTimeFault = 0.2;
 	Real endTimeFault = 0.3;
-	String faultBusName= "BUS6";
+	String faultBusName= "BUS5";
 	Real inertiaScalingFactor = 1.0;
 	String logDirectory = "logs";
 
@@ -51,16 +51,16 @@ int main(int argc, char *argv[]) {
 
 		if (args.options.find("sgType") != args.options.end())
 			sgType = args.getOptionString("sgType");
-		
+
 		if (args.options.find("withFault") != args.options.end())
 			withFault = args.getOptionBool("withFault");
 
 		if (args.options.find("startTimeFault") != args.options.end())
 			startTimeFault = args.getOptionReal("startTimeFault");
-		
+
 		if (args.options.find("endTimeFault") != args.options.end())
 			endTimeFault = args.getOptionReal("endTimeFault");
-		
+
 		if (args.options.find("faultBus") != args.options.end())
 			faultBusName = args.getOptionString("faultBus");
 
@@ -113,11 +113,11 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys;
 	if (sgType=="3")
 		sys = reader2.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::SG3OrderVBR);
-	else if (sgType=="4") 
+	else if (sgType=="4")
 		sys = reader2.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::SG4OrderVBR);
-	else if (sgType=="6b") 
+	else if (sgType=="6b")
 		sys = reader2.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::SG6bOrderVBR);
-	else 
+	else
 		throw CPS::SystemError("Unsupported reduced-order SG type!");
 
 	// Optionally extend topology with switch
