@@ -220,7 +220,6 @@ void simTrafoDP1ph() {
 	Real voltageMVSide = 10000;
 	Real trafoResistance = 1;
 	Real trafoInductance = 0.1;
-	//Real trafoPower = 1e6;
 	Real loadResistanceHVSide = 10000;
 	Real ratio = voltageHVSide/voltageMVSide;
 	Real loadResistanceMVSide = loadResistanceHVSide/(ratio*ratio);
@@ -327,11 +326,11 @@ void simTrafoElementsEMT3ph() {
 	logger->logAttribute("itrafo", trafoInd->attribute("i_intf"));
 
 	Simulation sim(simName);
-	sim.setSystem(sys);
+	//sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::EMT);
-	sim.addLogger(logger);
+	//sim.setDomain(Domain::EMT);
+	//sim.addLogger(logger);
 
 	sim.run();
 }
@@ -346,7 +345,6 @@ void simTrafoEMT3ph() {
 	Real voltageMVSide = 10000;
 	Real trafoResistance = 1;
 	Real trafoInductance = 0.1;
-	Real trafoPower = 1e6;
 	Real loadResistanceHVSide = 10000;
 	Real ratio = voltageHVSide/voltageMVSide;
 	Real loadResistanceMVSide = loadResistanceHVSide/(ratio*ratio);
@@ -357,7 +355,7 @@ void simTrafoEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("v_1", Logger::Level::debug);
-	auto trafo = EMT::Ph3::Transformer::make("trafo", "trafo", Logger::Level::debug, true);
+	auto trafo = EMT::Ph3::Transformer::make("trafo", "trafo", Logger::Level::debug);
 	auto loadRes = EMT::Ph3::Resistor::make("r_1", Logger::Level::debug);
 
 	// Topology
@@ -367,7 +365,7 @@ void simTrafoEMT3ph() {
 
 	// Parameters
 	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
-	trafo->setParameters(voltageHVSide, voltageMVSide, trafoPower, ratio, 0, CPS::Math::singlePhaseParameterToThreePhase(trafoResistance), CPS::Math::singlePhaseParameterToThreePhase(trafoInductance));
+	trafo->setParameters(voltageHVSide, voltageMVSide, ratio, 0, CPS::Math::singlePhaseParameterToThreePhase(trafoResistance), CPS::Math::singlePhaseParameterToThreePhase(trafoInductance));
 	loadRes->setParameters(CPS::Math::singlePhaseParameterToThreePhase(loadResistanceMVSide));
 
 	// Define system topology
