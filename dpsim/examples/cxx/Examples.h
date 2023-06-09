@@ -716,13 +716,13 @@ namespace SGIB {
         Real scaling_P = 1; //todo
         Real scaling_I = 1; //todo
 
-        Real KpVoltageCtrl = 1.6725*scaling_P; //1.6725
-        Real KiVoltageCtrl = 374.64*scaling_I; //374.64
-        Real KpCurrCtrl = 0.2*scaling_P; //1.3
-        Real KiCurrCtrl = 4.14*scaling_I; //(R+Ron)/tau
-        Real KpPLL = 0*scaling_P; //0.25
-        Real KiPLL = 0*scaling_I; //2
-        Real OmegaCutoff = 2*M_PI*60; //669
+        Real KpVoltageCtrl = 1.6725*scaling_P; 
+        Real KiVoltageCtrl = 374.64*scaling_I; 
+        Real KpCurrCtrl = 0.2*scaling_P; 
+        Real KiCurrCtrl = 4.14*scaling_I; 
+        Real KpPLL = 0; 
+        Real KiPLL = 0; 
+        Real OmegaCutoff = 2*M_PI*60; /
 
         // Further parameters
         Real systemOmega = 2 * PI * systemFrequency;
