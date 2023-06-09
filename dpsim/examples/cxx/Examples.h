@@ -722,7 +722,8 @@ namespace SGIB {
         Real KiCurrCtrl = 4.14*scaling_I; 
         Real KpPLL = 0; 
         Real KiPLL = 0; 
-        Real OmegaCutoff = 2*M_PI*60; /
+        Real OmegaCutoff = 2*M_PI*60;
+        
 
         // Further parameters
         Real systemOmega = 2 * PI * systemFrequency;
