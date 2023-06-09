@@ -20,8 +20,6 @@ protected:
   Real mNominalVoltageEnd1;
   /// Nominal voltage of secondary side
   Real mNominalVoltageEnd2;
-  /// Rated Apparent Power [VA]
-  Real mRatedPower;
   /// Resistance [Ohm]
   Matrix mResistance;
   /// Inductance [H]
@@ -35,12 +33,10 @@ public:
       : mRatio(attributeList->create<Complex>("ratio")){};
 
   ///
-  void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
-                     Real ratioAbs, Real ratioPhase, Matrix resistance,
-                     Matrix inductance) {
+  void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
+                     Real ratioPhase, Matrix resistance, Matrix inductance) {
     mNominalVoltageEnd1 = nomVoltageEnd1;
     mNominalVoltageEnd2 = nomVoltageEnd2;
-    mRatedPower = ratedPower;
     **mRatio = std::polar<Real>(ratioAbs, ratioPhase);
     mResistance = resistance;
     mInductance = inductance;

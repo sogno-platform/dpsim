@@ -402,13 +402,13 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off)
-      .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
-           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-           // cppcheck-suppress assignBoolToPointer
-           "with_resistive_losses"_a = false)
+      .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
+           "name"_a,
+           "loglevel"_a =
+               CPS::Logger::Level::off) // cppcheck-suppress assignBoolToPointer
       .def("set_parameters", &CPS::EMT::Ph3::Transformer::setParameters,
-           "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a,
-           "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
+           "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a,
+           "ratio_phase"_a, "resistance"_a, "inductance"_a)
       .def("connect", &CPS::EMT::Ph3::Transformer::connect);
 
   py::class_<CPS::EMT::Ph3::SeriesResistor,
