@@ -204,6 +204,7 @@ if(WITH_CIM)
 		CIM/DP_WSCC-9bus_IdealVS.cpp
 		CIM/EMT_WSCC-9bus_IdealCS.cpp
 		CIM/EMT_WSCC-9bus_IdealVS.cpp
+		CIM/SP_WSCC9bus_SGReducedOrderVBR.cpp
 	)
 
 	if(WITH_RT)
