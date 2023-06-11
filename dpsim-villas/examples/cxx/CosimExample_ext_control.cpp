@@ -17,7 +17,7 @@ Simulation setDPsim1(float ts, float tf, float u10) {
 	
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	// String simNamePF = "Cosim_example1";
-	// CPS::Logger::setLogDir("logs/"+simNamePF);
+	// Logger::setLogDir("logs/"+simNamePF);
 
 	// auto n1PF = SP::SimNode::make("n1");
 	// auto n2PF = SP::SimNode::make("n2");
@@ -44,7 +44,7 @@ Simulation setDPsim1(float ts, float tf, float u10) {
 	// loggerPF->logAttribute("1_v_1", n1PF->mVoltage);
 	// loggerPF->logAttribute("2_v_2", n2PF->mVoltage);
 
-	// Simulation simPF(simNamePF, CPS::Logger::Level::debug);
+	// Simulation simPF(simNamePF, Logger::Level::debug);
 	// simPF.setSystem(systemPF);
 	// simPF.setTimeStep(0.1);
 	// simPF.setFinalTime(0.1);
@@ -64,7 +64,7 @@ Simulation setDPsim1(float ts, float tf, float u10) {
 	auto n2 = EMT::SimNode::make("n2");
 
 	// Components
-	auto evs = EMT::Ph1::VoltageSource::make("v_intf");
+	auto evs = EMT::Ph1::VoltageSource::make("v_in_1");
 	evs->setParameters(u10);
 
 	auto r1 =  EMT::Ph1::Resistor::make("r_1");
@@ -92,7 +92,7 @@ Simulation setDPsim1(float ts, float tf, float u10) {
 	logger->logAttribute("5_v_evs", evs->mIntfVoltage, 1, 1);
 	
 	Simulation sim(simName);
-	sim.setDomain(CPS::Domain::EMT);
+	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 	sim.setSystem(sys);
 	sim.setTimeStep(ts);
@@ -149,7 +149,7 @@ Simulation setDPsim2(float ts, float tf, float u20) {
 	
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	// String simNamePF = "Cosim_example1";
-	// CPS::Logger::setLogDir("logs/"+simNamePF);
+	// Logger::setLogDir("logs/"+simNamePF);
 
 	// auto n1PF = SP::SimNode::make("n1");
 	// auto n2PF = SP::SimNode::make("n2");
@@ -176,7 +176,7 @@ Simulation setDPsim2(float ts, float tf, float u20) {
 	// loggerPF->logAttribute("1_v_1", n1PF->mVoltage);
 	// loggerPF->logAttribute("2_v_2", n2PF->mVoltage);
 
-	// Simulation simPF(simNamePF, CPS::Logger::Level::debug);
+	// Simulation simPF(simNamePF, Logger::Level::debug);
 	// simPF.setSystem(systemPF);
 	// simPF.setTimeStep(0.1);
 	// simPF.setFinalTime(0.1);
@@ -195,7 +195,7 @@ Simulation setDPsim2(float ts, float tf, float u20) {
 	auto n2 = EMT::SimNode::make("n2");
 
 	// Components
-	auto is = EMT::Ph1::CurrentSource::make("i_intf");
+	auto is = EMT::Ph1::CurrentSource::make("i_in_2");
 	is->setParameters(u20);
 
 	auto r3 =  EMT::Ph1::Resistor::make("r_3");
@@ -218,7 +218,7 @@ Simulation setDPsim2(float ts, float tf, float u20) {
 	logger->logAttribute("5_v_evs", is->mIntfVoltage, 1, 1);
 	
 	Simulation sim(simName);
-	sim.setDomain(CPS::Domain::EMT);
+	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 	sim.setSystem(sys);
 	sim.setTimeStep(ts);
@@ -268,34 +268,45 @@ Simulation setDPsim2(float ts, float tf, float u20) {
 int main(int argc, char* argv[]) {
 
 	float timeStep = 0.01;
-	float finalTime = 0.02;
+	float finalTime = 0.05;
 
 	// ** Initialization **
 	// Communication y20 -> S_1 and initialization of S_1
-	float y20 = 2.0;
+	// float y20 = 2.0;
 	
 	// Set up subsytem 1
-	Simulation sim1 = setDPsim1(timeStep, finalTime, y20);
+	Simulation sim1 = setDPsim1(timeStep, finalTime, 2.0);
 	sim1.start();
 
-	CPS::AttributeBase::Ptr y10_base = sim1.getIdObjAttribute("v_intf", "i_intf");	
+	AttributeBase::Ptr y10_base = sim1.getIdObjAttribute("v_in_1", "i_intf");
+	
 	// try {
-	auto y10_matrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(y10_base.getPtr());
+	auto y10_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(y10_base.getPtr());
 	Attribute<Real>::Ptr y10 = y10_matrix->deriveCoeff<Real>(0,0);
 	cout << "Output value from S1: " << y10->toString() << endl;
+	cout << "Output value from S1: " << **y10 << endl;
+
 	// } catch(...) {
-	// 	throw CPS::InvalidAttributeException();
+	// 	throw InvalidAttributeException();
 	// }
 
 	// "Communication" y10 -> S_2 and initialization of S_2
-	CPS::AttributeBase::Ptr u20_base = y10->cloneValueOntoNewAttribute();
-	auto u20Attr = std::dynamic_pointer_cast<CPS::Attribute<Real>>(u20_base.getPtr());
+	AttributeBase::Ptr u20_base = y10->cloneValueOntoNewAttribute();
+	auto u20Attr = std::dynamic_pointer_cast<Attribute<Real>>(u20_base.getPtr());
+	// std::shared_ptr<CPS::AttributeBase> u20_base_ptr = u20_base.getPtr();
+	// cout << "Input value to S2: " << *u20_base_ptr << endl;
 	cout << "Input value to S2: " << u20Attr->toString() << endl;
 
 	float u20 = u20Attr->get();
 
 	Simulation sim2 = setDPsim2(timeStep, finalTime, u20);
 	sim2.start();
+
+	AttributeBase::Ptr y20_base = sim2.getIdObjAttribute("i_in_2", "v_intf");
+	// auto y20_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(y20_base.getPtr());
+	// Attribute<Real>::Ptr y20 = y20_matrix->deriveCoeff<Real>(0,0);
+	// cout << "Output value from S2: " << y20->toString() << endl;
+	cout << "Output value from S2: " << y20_base->toString() << endl;
 	
 	// Main loop
 	float t = 0.0;
@@ -305,17 +316,65 @@ int main(int argc, char* argv[]) {
 
 		cout << "t = " << t << endl;
 		
-		y10_base = sim1.getIdObjAttribute("v_intf", "i_intf");	
-		y10_matrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(y10_base.getPtr());
-		y10 = y10_matrix->deriveCoeff<Real>(0,0);
-		cout << "Output value from S1: " << y10->toString() << endl;
+		AttributeBase::Ptr y1_base = sim1.getIdObjAttribute("v_in_1", "i_intf");	
+		auto y1_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(y1_base.getPtr());
+		Attribute<Real>::Ptr y1 = y1_matrix->deriveCoeff<Real>(0,0);
+		cout << "Output value from S1: " << **y1 << endl;
+		// cout << "Output value from S1: " << y1->toString() << endl;
+		// cout << "Output value from S1: " << y1_base->toString() << endl;
 
 		// "Communication" y10 -> S_2 and initialization of S_2
-		CPS::AttributeBase::Ptr u20_base = y10->cloneValueOntoNewAttribute();
-		auto u20Attr = std::dynamic_pointer_cast<CPS::Attribute<Real>>(u20_base.getPtr());
-		cout << "Input value to S2: " << u20Attr->toString() << endl;
+		// AttributeBase::Ptr u2_base = y1->cloneValueOntoNewAttribute();
+		// auto u2Attr = std::dynamic_pointer_cast<Attribute<Real>>(u2_base.getPtr());
+		// cout << "Input value to S2: " << u2Attr->toString() << endl;
 
-		float u20 = u20Attr->get();
+		// Get corresponding attribute in S_2
+		AttributeBase::Ptr u2_base = sim2.getIdObjAttribute("i_in_2", "i_intf");
+		auto u2_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(u2_base.getPtr());
+		Attribute<Real>::Ptr u2 = u2_matrix->deriveCoeff<Real>(0,0);
+		cout << "Current value in S2: " << **u2 << endl;
+		// cout << "Current value in S2: " << u2->toString() << endl;
+		// cout << "Current value in S2: " << u2_base->toString() << endl;
+		
+		// Put value
+		// *u2_base = *y1_base;
+		// *u2_base.getPtr() = *y1_base.getPtr();
+		**u2 = 27.2727;
+		Real u2_test = **u2;
+
+		// Verify
+		// u2_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(u2_base.getPtr());
+		// u2 = u2_matrix->deriveCoeff<Real>(0,0);
+		cout << "Input value to S2: " << u2_test << endl;
+
+		AttributeBase::Ptr u2_base_test = sim2.getIdObjAttribute("i_in_2", "i_intf");
+		// auto u2_matrix_test = std::dynamic_pointer_cast<Attribute<Matrix>>(u2_base_test.getPtr());
+		// Attribute<Real>::Ptr u2_test = u2_matrix_test->deriveCoeff<Real>(0,0);
+		// cout << "Current value in S2: " << u2_test->toString() << endl;
+		cout << "Current value in S2: " << u2_base_test->toString() << endl;
+		
+		sim2.next();
+
+		AttributeBase::Ptr y2_base = sim2.getIdObjAttribute("i_in_2", "v_intf");	
+		// auto y2_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(y2_base.getPtr());
+		// Attribute<Real>::Ptr y2 = y2_matrix->deriveCoeff<Real>(0,0);
+		// cout << "Output value from S2: " << y2->toString() << endl;
+		cout << "Output value from S2: " << y2_base->toString() << endl;
+
+		// Get corresponding attribute in S_1
+		AttributeBase::Ptr u1_base = sim1.getIdObjAttribute("v_in_1", "v_intf");
+		auto u1_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(u1_base.getPtr());
+		Attribute<Real>::Ptr u1 = u1_matrix->deriveCoeff<Real>(0,0);
+		cout << "Current value in S1: " << u1->toString() << endl;
+
+		// Put value
+		*u1_base = *y2_base;
+
+		// Verify
+		u1_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(u1_base.getPtr());
+		u1 = u1_matrix->deriveCoeff<Real>(0,0);
+		cout << "Input value to S1: " << u1->toString() << endl;
+
 	}
 
 	// Get only works for the typed ones
@@ -339,7 +398,7 @@ int main(int argc, char* argv[]) {
 	// }
 	// else if (String(argv[1]) == "1") {
 	// 	String simName = "SocketsCosim_example2";
-	// 	CPS::Logger::setLogDir("logs/"+simName);
+	// 	Logger::setLogDir("logs/"+simName);
 
 	// 	// Nodes
 	// 	auto n2 = SimNode::make("n2");
@@ -408,4 +467,6 @@ int main(int argc, char* argv[]) {
 
 	// 	sim.run();
 	// }
+
+	return 0;
 }
