@@ -217,7 +217,7 @@ void simulateEMT(SystemTopology& systemPF, String waveform) {
 			SystemComponentList{extnetEMT, lineEMT, loadEMT});
 
 	// Initialization of dynamic topology
-	systemEMT.initWithPowerflow(systemPF);
+	systemEMT.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);

@@ -76,13 +76,7 @@ int main(int argc, char *argv[]) {
 	CPS::CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
 	SystemTopology sys = reader2.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC, CPS::GeneratorType::FullOrderVBR);
 
-	sys.initWithPowerflow(systemPF);
-	for (auto comp : sys.mComponents) {
-		if (auto genEMT = std::dynamic_pointer_cast<CPS::EMT::Ph3::SynchronGeneratorVBR>(comp)) {
-			auto genPF = systemPF.component<CPS::SP::Ph1::SynchronGenerator>(comp->name());
-			genEMT->terminal(0)->setPower(-genPF->getApparentPower());
-		}
-	}
+	sys.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
 	// Logging
 	auto logger = DataLogger::make(simName);

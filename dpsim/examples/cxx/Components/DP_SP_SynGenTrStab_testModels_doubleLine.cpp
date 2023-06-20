@@ -30,13 +30,6 @@ Real Rkq1 = 0.0062;
 Real Llkq1 = 0.7252;
 Real Rkq2 = 0.0237;
 Real Llkq2 = 0.125;
-// Initialization parameters
-Real initActivePower = 300e6;
-Real initReactivePower = 0;
-Real initMechPower = 300e6;
-// Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-// Real initVoltAngle = -PI / 2;
-
 
 //PiLine parameters calculated from CIGRE Benchmark system
 Real lineResistance = 0.073;
@@ -84,7 +77,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	auto n3PF = SimNode<Complex>::make("n3", PhaseType::Single);
 
 	//Synchronous generator ideal model
-	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto genPF = SP::Ph1::SynchronGenerator::make("SynGen", Logger::Level::debug);
 	genPF->setParameters(ratedApparentPower, ratedVoltage, setPointActivePower, setPointVoltage, PowerflowBusType::PV);
 	genPF->setBaseVoltage(Vnom);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -153,8 +146,6 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	// Components
 	auto gen = CPS::SP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
-	gen->setInitialValues(initActivePower, initMechPower);
-
 
 	//Grid bus as Slack
 	auto extnet = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
@@ -247,7 +238,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	auto n3PF = SimNode<Complex>::make("n3", PhaseType::Single);
 
 	//Synchronous generator ideal model
-	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto genPF = SP::Ph1::SynchronGenerator::make("SynGen", Logger::Level::debug);
 	genPF->setParameters(ratedApparentPower, ratedVoltage, setPointActivePower, setPointVoltage, PowerflowBusType::PV);
 	genPF->setBaseVoltage(Vnom);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -316,7 +307,6 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	// Components
 	auto gen = CPS::DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
-	gen->setInitialValues(initActivePower, initMechPower);
 
 	//Grid bus as Slack
 	auto extnet = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);

@@ -14,7 +14,6 @@
 #include <dpsim-models/TopologicalPowerComp.h>
 #include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/SimNode.h>
-#include <dpsim-models/DP/DP_Ph1_Resistor.h>
 
 #ifdef WITH_GRAPHVIZ
   #include <dpsim-models/Graph.h>
@@ -107,8 +106,8 @@ namespace CPS {
 		/// Add multiple components
 		void addComponents(const IdentifiedObject::List& components);
 
-		/// Initialize nodes from PowerFlow
-		void initWithPowerflow(const SystemTopology& systemPF);
+		/// Initialize nodes and SG power from PowerFlow
+		void initWithPowerflow(const SystemTopology& systemPF, CPS::Domain domain = CPS::Domain::DP);
 
 		/// Adds component and initializes frequencies
 		void addTearComponent(IdentifiedObject::Ptr component);

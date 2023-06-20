@@ -32,13 +32,13 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	auto n3PF = SimNode<Complex>::make("n3", PhaseType::Single);
 
 	//Synchronous generator 1
-	auto gen1PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen1PF = SP::Ph1::SynchronGenerator::make("SynGen1", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen1PF->setParameters(ThreeBus.nomPower_G1, ThreeBus.nomPhPhVoltRMS_G1, ThreeBus.initActivePower_G1, ThreeBus.setPointVoltage_G1*ThreeBus.t1_ratio, PowerflowBusType::VD);
 	gen1PF->setBaseVoltage(ThreeBus.Vnom);
 
 	//Synchronous generator 2
-	auto gen2PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen2PF = SP::Ph1::SynchronGenerator::make("SynGen2", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen2PF->setParameters(ThreeBus.nomPower_G2, ThreeBus.nomPhPhVoltRMS_G2, ThreeBus.initActivePower_G2, ThreeBus.setPointVoltage_G2*ThreeBus.t2_ratio, PowerflowBusType::PV);
 	gen2PF->setBaseVoltage(ThreeBus.Vnom);
