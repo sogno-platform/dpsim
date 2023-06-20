@@ -699,7 +699,7 @@ namespace SGIB {
         Real pvNominalVoltage = 400;
         Real pvNominalActivePower = 1e5; //unnecessary
         Real pvNominalReactivePower = 0; //unnecessary
-        Real Vdref = sqrt(3. / 2.)* 400; //work with Amplitude (*sqrt(3/2))
+        Real Vdref = 400; //work with Amplitude (*sqrt(3/2))
         Real Vqref = 0;
         Real OmegaNull = 2*M_PI*60; //System circular frequency
 
