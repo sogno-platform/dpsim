@@ -12,6 +12,7 @@
 #include <unordered_map>
 
 #include <dpsim-models/SystemTopology.h>
+#include <dpsim-models/SP/SP_Ph1_SynchronGenerator.h>
 
 using namespace CPS;
 
@@ -72,7 +73,8 @@ void SystemTopology::addComponents(const IdentifiedObject::List& components) {
 		addComponent(comp);
 }
 
-void SystemTopology::initWithPowerflow(const SystemTopology& systemPF) {
+void SystemTopology::initWithPowerflow(const SystemTopology& systemPF, CPS::Domain domain) {
+
 	for (auto nodePF : systemPF.mNodes) {
 		if (auto node = this->node<TopologicalNode>(nodePF->name())) {
 			// Initiation of phase B and C in 3 Phase systems ? 
@@ -80,6 +82,22 @@ void SystemTopology::initWithPowerflow(const SystemTopology& systemPF) {
 			//SPDLOG_LOGGER_INFO(mSLog, "Former initial voltage: {}", node->initialSingleVoltage());
 			node->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(nodePF)->singleVoltage());
 			//SPDLOG_LOGGER_INFO(mSLog, "Updated initial voltage: {}", node->initialSingleVoltage());
+		}
+	}
+
+	// set initial power of SG
+	for (auto compPF : systemPF.mComponents) {
+		if (auto genPF = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(compPF)) {
+			if (domain==CPS::Domain::DP || domain==CPS::Domain::SP) {
+				auto comp = this->component<SimPowerComp<Complex>>(compPF->name());
+				auto terminal = comp->terminals()[0];
+				terminal->setPower(-genPF->getApparentPower());
+			} else if (domain==CPS::Domain::EMT) {
+				auto comp = this->component<SimPowerComp<Real>>(compPF->name());
+				auto terminal = comp->terminals()[0];
+				terminal->setPower(-genPF->getApparentPower());
+			}
+			//SPDLOG_LOGGER_INFO(mSLog, "Updated initial power of gen {}: {}", compPF->name(), genPF->getApparentPower());
 		}
 	}
 }

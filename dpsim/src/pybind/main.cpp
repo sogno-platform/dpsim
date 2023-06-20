@@ -44,6 +44,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 	and to parameterize all components of the network from Python.
     )pbdoc";
 
+	//Enums
 	py::enum_<CPS::Logger::Level>(m, "LogLevel")
 		.value("trace", CPS::Logger::Level::trace)
 		.value("debug", CPS::Logger::Level::debug)
@@ -57,116 +58,6 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def_static("single_phase_variable_to_three_phase", &CPS::Math::singlePhaseVariableToThreePhase)
 		.def_static("single_phase_parameter_to_three_phase", &CPS::Math::singlePhaseParameterToThreePhase)
 		.def_static("single_phase_power_to_three_phase", &CPS::Math::singlePhasePowerToThreePhase);
-
-	m.attr("RMS3PH_TO_PEAK1PH") = RMS3PH_TO_PEAK1PH;
-	m.attr("PEAK1PH_TO_RMS3PH") = PEAK1PH_TO_RMS3PH;
-	m.attr("P_SNUB_TRANSFORMER") = P_SNUB_TRANSFORMER;
-	m.attr("Q_SNUB_TRANSFORMER") = Q_SNUB_TRANSFORMER;
-
-	addAttributes(m);
-
-	py::class_<DPsim::DirectLinearSolverConfiguration>(m, "DirectLinearSolverConfiguration")
-		.def(py::init<>())
-		.def("set_fill_in_reduction_method", &DPsim::DirectLinearSolverConfiguration::setFillInReductionMethod)
-		.def("set_scaling_method", &DPsim::DirectLinearSolverConfiguration::setScalingMethod)
-		.def("set_partial_refactorization_method", &DPsim::DirectLinearSolverConfiguration::setPartialRefactorizationMethod)
-		.def("set_btf", &DPsim::DirectLinearSolverConfiguration::setBTF)
-		.def("get_scaling_method", &DPsim::DirectLinearSolverConfiguration::getScalingMethod)
-		.def("get_fill_in_reduction_method", &DPsim::DirectLinearSolverConfiguration::getFillInReductionMethod)
-		.def("get_partial_refactorization_method", &DPsim::DirectLinearSolverConfiguration::getPartialRefactorizationMethod)
-		.def("get_btf", &DPsim::DirectLinearSolverConfiguration::getBTF);
-
-    py::class_<DPsim::Simulation>(m, "Simulation")
-	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("name", &DPsim::Simulation::name)
-		.def("set_time_step", &DPsim::Simulation::setTimeStep)
-		.def("set_final_time", &DPsim::Simulation::setFinalTime)
-		.def("add_logger", &DPsim::Simulation::addLogger)
-		.def("set_system", &DPsim::Simulation::setSystem)
-		.def("run", &DPsim::Simulation::run)
-		.def("set_solver", &DPsim::Simulation::setSolverType)
-		.def("set_domain", &DPsim::Simulation::setDomain)
-		.def("start", &DPsim::Simulation::start)
-		.def("next", &DPsim::Simulation::next)
-		.def("stop", &DPsim::Simulation::stop)
-		.def("get_idobj_attr", &DPsim::Simulation::getIdObjAttribute, "comp"_a, "attr"_a)
-		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a)
-		.def("log_idobj_attribute", &DPsim::Simulation::logIdObjAttribute, "comp"_a, "attr"_a)
-		.def("log_attribute", &DPsim::Simulation::logAttribute, "name"_a, "attr"_a)
-		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
-		.def("do_system_matrix_recomputation", &DPsim::Simulation::doSystemMatrixRecomputation)
-		.def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
-		.def("do_frequency_parallelization", &DPsim::Simulation::doFrequencyParallelization)
-		.def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
-		.def("add_event", &DPsim::Simulation::addEvent)
-		.def("set_solver_component_behaviour", &DPsim::Simulation::setSolverAndComponentBehaviour)
-		.def("set_direct_solver_implementation", &DPsim::Simulation::setDirectLinearSolverImplementation)
-		.def("set_direct_linear_solver_configuration", &DPsim::Simulation::setDirectLinearSolverConfiguration)
-		.def("log_lu_times", &DPsim::Simulation::logLUTimes);
-
-	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
-		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info)
-		.def("name", &DPsim::RealTimeSimulation::name)
-		.def("set_time_step", &DPsim::RealTimeSimulation::setTimeStep)
-		.def("set_final_time", &DPsim::RealTimeSimulation::setFinalTime)
-		.def("add_logger", &DPsim::RealTimeSimulation::addLogger)
-		.def("set_system", &DPsim::RealTimeSimulation::setSystem)
-		.def("run", static_cast<void (DPsim::RealTimeSimulation::*)(CPS::Int startIn)>(&DPsim::RealTimeSimulation::run))
-		.def("set_solver", &DPsim::RealTimeSimulation::setSolverType)
-		.def("set_domain", &DPsim::RealTimeSimulation::setDomain);
-
-	py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(m, "SystemTopology")
-        .def(py::init<CPS::Real, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
-		.def(py::init<CPS::Real, CPS::Matrix, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
-		.def(py::init<CPS::Real>())
-		.def("add", &DPsim::SystemTopology::addComponent)
-		.def("add", &DPsim::SystemTopology::addComponents)
-		.def("node", py::overload_cast<std::string_view>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
-		.def("node", py::overload_cast<CPS::UInt>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
-		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Real>::Ptr, CPS::SimNode<CPS::Real>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Real>))
-		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Complex>::Ptr, CPS::SimNode<CPS::Complex>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Complex>))
-		.def("component", &DPsim::SystemTopology::component<CPS::TopologicalPowerComp>)
-		.def("add_tear_component", &DPsim::SystemTopology::addTearComponent)
-#ifdef WITH_GRAPHVIZ
-		.def("_repr_svg_", &DPsim::SystemTopology::render)
-		.def("render_to_file", &DPsim::SystemTopology::renderToFile)
-#endif
-		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
-		.def_readwrite("components", &DPsim::SystemTopology::mComponents)
-		.def_readwrite("components_at_node", &DPsim::SystemTopology::mComponentsAtNode)
-		.def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
-		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
-		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow);
-
-	py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m, "Interface");
-
-	py::class_<DPsim::DataLogger, std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
-        .def(py::init<std::string>())
-		.def_static("set_log_dir", &CPS::Logger::setLogDir)
-		.def_static("get_log_dir", &CPS::Logger::logDir)
-		.def("log_attribute", py::overload_cast<const CPS::String&, CPS::AttributeBase::Ptr, CPS::UInt, CPS::UInt>(&DPsim::DataLogger::logAttribute), "name"_a, "attr"_a, "max_cols"_a = 0, "max_rows"_a = 0)
-		/// Compatibility method. Might be removed later when the python examples have been fully adapted.
-		.def("log_attribute", py::overload_cast<const std::vector<CPS::String>&, CPS::AttributeBase::Ptr>(&DPsim::DataLogger::logAttribute), "names"_a, "attr"_a)
-		/// Compatibility method. Might be removed later when the python examples have been fully adapted.
-		.def("log_attribute", [](DPsim::DataLogger &logger, const CPS::String &name, const CPS::String &attr, const CPS::IdentifiedObject &comp, CPS::UInt rowsMax, CPS::UInt colsMax) {
-			logger.logAttribute(name, comp.attribute(attr), rowsMax, colsMax);
-		}, "name"_a, "attr"_a, "comp"_a, "rows_max"_a = 0, "cols_max"_a = 0)
-		/// Compatibility method. Might be removed later when the python examples have been fully adapted.;
-		.def("log_attribute", [](DPsim::DataLogger &logger, const std::vector<CPS::String> &names, const CPS::String &attr, const CPS::IdentifiedObject &comp) {
-			logger.logAttribute(names, comp.attribute(attr));
-		});
-
-	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
-		.def("name", &CPS::IdentifiedObject::name)
-		/// CHECK: It would be nicer if all the attributes of an IdObject were bound as properties so they show up in the documentation and auto-completion.
-		/// I don't know if this is possible to do because it depends on if the attribute map is filled before or after the code in this file is run.
-		/// Manually adding the attributes would of course be possible but very tedious to do for all existing components / attributes
-		.def("attr", &CPS::IdentifiedObject::attribute, "name"_a)
-		.def("print_attribute_list", &printAttributes)
-		.def("print_attribute", &printAttribute, "attribute_name"_a)
-		.def("__str__", &getAttributeList);
-
-	//Enums
 
 	py::enum_<DPsim::Solver::Behaviour>(m, "SolverBehaviour")
 		.value("Initialization", DPsim::Solver::Behaviour::Initialization)
@@ -246,6 +137,115 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("SECONDS", CPS::CSVReader::DataFormat::SECONDS)
 		.value("HOURS", CPS::CSVReader::DataFormat::HOURS)
 		.value("MINUTES", CPS::CSVReader::DataFormat::MINUTES);
+
+	m.attr("RMS3PH_TO_PEAK1PH") = RMS3PH_TO_PEAK1PH;
+	m.attr("PEAK1PH_TO_RMS3PH") = PEAK1PH_TO_RMS3PH;
+	m.attr("P_SNUB_TRANSFORMER") = P_SNUB_TRANSFORMER;
+	m.attr("Q_SNUB_TRANSFORMER") = Q_SNUB_TRANSFORMER;
+
+	addAttributes(m);
+
+	py::class_<DPsim::DirectLinearSolverConfiguration>(m, "DirectLinearSolverConfiguration")
+		.def(py::init<>())
+		.def("set_fill_in_reduction_method", &DPsim::DirectLinearSolverConfiguration::setFillInReductionMethod)
+		.def("set_scaling_method", &DPsim::DirectLinearSolverConfiguration::setScalingMethod)
+		.def("set_partial_refactorization_method", &DPsim::DirectLinearSolverConfiguration::setPartialRefactorizationMethod)
+		.def("set_btf", &DPsim::DirectLinearSolverConfiguration::setBTF)
+		.def("get_scaling_method", &DPsim::DirectLinearSolverConfiguration::getScalingMethod)
+		.def("get_fill_in_reduction_method", &DPsim::DirectLinearSolverConfiguration::getFillInReductionMethod)
+		.def("get_partial_refactorization_method", &DPsim::DirectLinearSolverConfiguration::getPartialRefactorizationMethod)
+		.def("get_btf", &DPsim::DirectLinearSolverConfiguration::getBTF);
+
+    py::class_<DPsim::Simulation>(m, "Simulation")
+	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def("name", &DPsim::Simulation::name)
+		.def("set_time_step", &DPsim::Simulation::setTimeStep)
+		.def("set_final_time", &DPsim::Simulation::setFinalTime)
+		.def("add_logger", &DPsim::Simulation::addLogger)
+		.def("set_system", &DPsim::Simulation::setSystem)
+		.def("run", &DPsim::Simulation::run)
+		.def("set_solver", &DPsim::Simulation::setSolverType)
+		.def("set_domain", &DPsim::Simulation::setDomain)
+		.def("start", &DPsim::Simulation::start)
+		.def("next", &DPsim::Simulation::next)
+		.def("stop", &DPsim::Simulation::stop)
+		.def("get_idobj_attr", &DPsim::Simulation::getIdObjAttribute, "comp"_a, "attr"_a)
+		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a)
+		.def("log_idobj_attribute", &DPsim::Simulation::logIdObjAttribute, "comp"_a, "attr"_a)
+		.def("log_attribute", &DPsim::Simulation::logAttribute, "name"_a, "attr"_a)
+		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
+		.def("do_system_matrix_recomputation", &DPsim::Simulation::doSystemMatrixRecomputation)
+		.def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
+		.def("do_frequency_parallelization", &DPsim::Simulation::doFrequencyParallelization)
+		.def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
+		.def("add_event", &DPsim::Simulation::addEvent)
+		.def("set_solver_component_behaviour", &DPsim::Simulation::setSolverAndComponentBehaviour)
+		.def("set_direct_solver_implementation", &DPsim::Simulation::setDirectLinearSolverImplementation)
+		.def("set_direct_linear_solver_configuration", &DPsim::Simulation::setDirectLinearSolverConfiguration)
+		.def("log_lu_times", &DPsim::Simulation::logLUTimes);
+
+	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
+		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info)
+		.def("name", &DPsim::RealTimeSimulation::name)
+		.def("set_time_step", &DPsim::RealTimeSimulation::setTimeStep)
+		.def("set_final_time", &DPsim::RealTimeSimulation::setFinalTime)
+		.def("add_logger", &DPsim::RealTimeSimulation::addLogger)
+		.def("set_system", &DPsim::RealTimeSimulation::setSystem)
+		.def("run", static_cast<void (DPsim::RealTimeSimulation::*)(CPS::Int startIn)>(&DPsim::RealTimeSimulation::run))
+		.def("set_solver", &DPsim::RealTimeSimulation::setSolverType)
+		.def("set_domain", &DPsim::RealTimeSimulation::setDomain);
+
+	py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(m, "SystemTopology")
+        .def(py::init<CPS::Real, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
+		.def(py::init<CPS::Real, CPS::Matrix, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
+		.def(py::init<CPS::Real>())
+		.def("add", &DPsim::SystemTopology::addComponent)
+		.def("add", &DPsim::SystemTopology::addComponents)
+		.def("node", py::overload_cast<std::string_view>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
+		.def("node", py::overload_cast<CPS::UInt>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
+		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Real>::Ptr, CPS::SimNode<CPS::Real>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Real>))
+		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Complex>::Ptr, CPS::SimNode<CPS::Complex>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Complex>))
+		.def("component", &DPsim::SystemTopology::component<CPS::TopologicalPowerComp>)
+		.def("add_tear_component", &DPsim::SystemTopology::addTearComponent)
+#ifdef WITH_GRAPHVIZ
+		.def("_repr_svg_", &DPsim::SystemTopology::render)
+		.def("render_to_file", &DPsim::SystemTopology::renderToFile)
+#endif
+		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
+		.def_readwrite("components", &DPsim::SystemTopology::mComponents)
+		.def_readwrite("components_at_node", &DPsim::SystemTopology::mComponentsAtNode)
+		.def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
+		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
+		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow, "systemPF"_a, "domain"_a=CPS::Domain::DP)
+		.def_readonly("components_at_node", &DPsim::SystemTopology::mComponentsAtNode);
+
+	py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m, "Interface");
+
+	py::class_<DPsim::DataLogger, std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
+        .def(py::init<std::string>())
+		.def_static("set_log_dir", &CPS::Logger::setLogDir)
+		.def_static("get_log_dir", &CPS::Logger::logDir)
+		.def("log_attribute", py::overload_cast<const CPS::String&, CPS::AttributeBase::Ptr, CPS::UInt, CPS::UInt>(&DPsim::DataLogger::logAttribute), "name"_a, "attr"_a, "max_cols"_a = 0, "max_rows"_a = 0)
+		/// Compatibility method. Might be removed later when the python examples have been fully adapted.
+		.def("log_attribute", py::overload_cast<const std::vector<CPS::String>&, CPS::AttributeBase::Ptr>(&DPsim::DataLogger::logAttribute), "names"_a, "attr"_a)
+		/// Compatibility method. Might be removed later when the python examples have been fully adapted.
+		.def("log_attribute", [](DPsim::DataLogger &logger, const CPS::String &name, const CPS::String &attr, const CPS::IdentifiedObject &comp, CPS::UInt rowsMax, CPS::UInt colsMax) {
+			logger.logAttribute(name, comp.attribute(attr), rowsMax, colsMax);
+		}, "name"_a, "attr"_a, "comp"_a, "rows_max"_a = 0, "cols_max"_a = 0)
+		/// Compatibility method. Might be removed later when the python examples have been fully adapted.;
+		.def("log_attribute", [](DPsim::DataLogger &logger, const std::vector<CPS::String> &names, const CPS::String &attr, const CPS::IdentifiedObject &comp) {
+			logger.logAttribute(names, comp.attribute(attr));
+		});
+
+	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
+		.def("name", &CPS::IdentifiedObject::name)
+		/// CHECK: It would be nicer if all the attributes of an IdObject were bound as properties so they show up in the documentation and auto-completion.
+		/// I don't know if this is possible to do because it depends on if the attribute map is filled before or after the code in this file is run.
+		/// Manually adding the attributes would of course be possible but very tedious to do for all existing components / attributes
+		.def("attr", &CPS::IdentifiedObject::attribute, "name"_a)
+		.def("print_attribute_list", &printAttributes)
+		.def("print_attribute", &printAttribute, "attribute_name"_a)
+		.def("__str__", &getAttributeList);
 
 #ifdef WITH_CIM
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")

@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{extnetEMT, lineEMT, loadEMT});
 
 	// Initialization of dynamic topology
-	systemEMT.initWithPowerflow(systemPF);
+	systemEMT.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);

@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	//Synchronous generator ideal model
-	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto genPF = SP::Ph1::SynchronGenerator::make("SynGen", Logger::Level::debug);
 	genPF->setParameters(syngenKundur.nomPower, syngenKundur.nomVoltage, setPointActivePower, setPointVoltage, PowerflowBusType::PV);
 	genPF->setBaseVoltage(VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{gen, line, fault, extnet});
 
 	// Initialization of dynamic topology
-	system.initWithPowerflow(systemPF);
+	system.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
 	// Logging
 	auto logger = DataLogger::make(simName);

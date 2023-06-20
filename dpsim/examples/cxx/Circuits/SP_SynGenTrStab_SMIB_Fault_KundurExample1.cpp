@@ -33,7 +33,6 @@ Real syngenRsPU = gen.RsPU;
 Real syngenD = gen.D;
 
 // SG - init
-Real initMechPower = 0.9*syngenNomPower;
 Real initActivePower = 0.9*syngenNomPower;
 Real setPointVoltage = syngenNomVoltage;
 
@@ -72,7 +71,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	auto n3PF = SimNode<Complex>::make("n3", PhaseType::Single);
 
 	// Synchronous generator ideal model
-	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto genPF = SP::Ph1::SynchronGenerator::make("SynGen", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	genPF->setParameters(syngenNomPower, syngenNomVoltage, initActivePower, setPointVoltage, PowerflowBusType::PV);
 	genPF->setBaseVoltage(nomVoltNetwork);
@@ -144,10 +143,6 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	genSP->setStandardParametersPU(syngenNomPower, syngenNomVoltage, nomFreq, syngenXpdPU, cmdInertiaFactor*syngenH, syngenRsPU, syngenD);
 	genSP->setModelFlags(false);
 
-	// Get actual active and reactive power of generator's Terminal from Powerflow solution
-	Complex initApparentPower= genPF->getApparentPower();
-	genSP->setInitialValues(initApparentPower, initMechPower);
-
 	// Transformer
 	auto trafoSP = CPS::SP::Ph1::Transformer::make("trafo", "trafo", Logger::Level::debug);
 	trafoSP->setParameters(transformerNomVoltageHV, transformerNomVoltageMV, transformerRatio, 0, transformerResistance, transformerInductance);
@@ -177,7 +172,6 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 
 	// Initialization of dynamic topology
 	systemSP.initWithPowerflow(systemPF);
-
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
