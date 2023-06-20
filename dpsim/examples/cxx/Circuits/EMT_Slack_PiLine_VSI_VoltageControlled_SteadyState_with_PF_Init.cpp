@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 	
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(0.88e-3, 0, 0);
+	linePF->setParameters(0.88e-3, 0, 0, 0);
 	linePF->setBaseVoltage(400);
 
 	Complex load1_s=3*std::pow(400, 2)/(Complex(83e-3, 137e-6*2*M_PI*60));
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
-	
+
 
 	// ----- EMT SIMULATION -----
 	Real timeStepEMT = timeStep;
@@ -85,25 +85,9 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto n1EMT = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2EMT = SimNode<Real>::make("n2", PhaseType::ABC);
-	auto n3EMT = SimNode<Real>::make("n3", PhaseType::ABC);
-	auto n4EMT = SimNode<Real>::make("n4", PhaseType::ABC);
-	auto n5EMT = SimNode<Real>::make("n5", PhaseType::ABC);
-	auto n6EMT = SimNode<Real>::make("n6", PhaseType::ABC);
-
-	auto res1EMT = EMT::Ph3::Resistor::make("R1", Logger::Level::debug);
-	res1EMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(Yazdani.Res1));
-
-	auto res2EMT = EMT::Ph3::Resistor::make("R2", Logger::Level::debug);
-	res2EMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(Yazdani.Res2));
-
-	auto ind1EMT = EMT::Ph3::Inductor::make("L1", Logger::Level::debug);
-	ind1EMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(Yazdani.Ind1));
-
-	auto ind2EMT = EMT::Ph3::Inductor::make("L2", Logger::Level::debug);
-	ind2EMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(Yazdani.Ind2));
-
-	auto capEMT = EMT::Ph3::Capacitor::make("C2", Logger::Level::debug);
-	capEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(Yazdani.Cap2));
+	
+	auto loadEMT = EMT::Ph3::RXLoad::make("Load", Logger::Level::debug);
+	loadEMT->setParameters(CPS::Math::singlePhasePowerToThreePhase(load1_p), CPS::Math::singlePhasePowerToThreePhase(load1_q), 400);
 
 	auto pv = EMT::Ph3::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
 	pv->setParameters(Yazdani.OmegaNull, Yazdani.Vdref, Yazdani.Vqref);
@@ -112,24 +96,29 @@ int main(int argc, char* argv[]) {
 	pv->setInitialStateValues(Yazdani.phi_dInit, Yazdani.phi_qInit, Yazdani.gamma_dInit, Yazdani.gamma_qInit);
 	pv->withControl(pvWithControl);
 
+
+	auto resOnEMT = EMT::Ph3::Resistor::make("R2", Logger::Level::debug);
+	resOnEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(0.88e-3));
+
 	// Topology
 	pv->connect({ n1EMT });
-	res1EMT->connect({n1EMT, n2EMT});
-	ind1EMT->connect({n2EMT, EMT::SimNode::GND});
-	res2EMT->connect({n1EMT, n4EMT});
-	ind2EMT->connect({n4EMT, n5EMT});
-	capEMT->connect({n5EMT, EMT::SimNode::GND});
-	
+	resOnEMT->connect({n1EMT, n2EMT});
+	loadEMT->connect({n2EMT});
+
 	auto systemEMT = SystemTopology(60,
-			SystemNodeList{n1EMT, n2EMT, n4EMT, n5EMT},
-			SystemComponentList{res1EMT, res2EMT, ind1EMT, ind2EMT, capEMT, pv});
+		SystemNodeList{n1EMT, n2EMT},
+		SystemComponentList{loadEMT, resOnEMT, pv});
 
 	// Initialization of dynamic topology
 	systemEMT.initWithPowerflow(systemPF);
 
+	Complex initial3PhPowerVSI= Complex(linePF->attributeTyped<Real>("p_inj")->get(), linePF->attributeTyped<Real>("q_inj")->get());
+
+	pv->terminal(0)->setPower(initial3PhPowerVSI);
+
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);
-	loggerEMT->logAttribute("Spannung_PCC", n1EMT->attribute("v"));
+	loggerEMT->logAttribute("Spannung_PCC", n2EMT->attribute("v"));
     loggerEMT->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
 	loggerEMT->logAttribute("Strom_RLC", pv->attribute("i_intf"));
 	loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));

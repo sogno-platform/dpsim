@@ -164,12 +164,15 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 	// use complex interface quantities for initialization calculations
 	MatrixComp intfVoltageComplex = Matrix::Zero(3, 1);
 	MatrixComp intfCurrentComplex = Matrix::Zero(3, 1);
+	// terminal powers in consumer system -> convert to generator system
+	Real activePower = terminal(0)->singlePower().real();;
+	Real reactivePower = terminal(0)->singlePower().imag();
 
 	// derive complex threephase initialization from single phase initial values (only valid for balanced systems)
 	intfVoltageComplex(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
 	intfVoltageComplex(1, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_B;
 	intfVoltageComplex(2, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_C;
-	intfCurrentComplex(0, 0) = -std::conj(2./3.*Complex(**mVdRef, **mVqRef) / intfVoltageComplex(0, 0));
+	intfCurrentComplex(0, 0) = -std::conj(2./3.*Complex(activePower, reactivePower) / intfVoltageComplex(0, 0));
 	intfCurrentComplex(1, 0) = intfCurrentComplex(0, 0) * SHIFT_TO_PHASE_B;
 	intfCurrentComplex(2, 0) = intfCurrentComplex(0, 0) * SHIFT_TO_PHASE_C;
 
@@ -366,7 +369,7 @@ void EMT::Ph3::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	Matrix vcdq, ircdq;
 	Real theta = mPLL->mOutputPrev->get()(0, 0);
 	vcdq = parkTransformPowerInvariant(theta, **mVirtualNodes[2]->mVoltage);
-	ircdq = parkTransformPowerInvariant(theta, - **mSubResistorF->mIntfCurrent);
+	ircdq = parkTransformPowerInvariant(theta, - **mSubResistorC->mIntfCurrent);
 	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
 	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
 	**mElecActivePower = - 1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
@@ -384,7 +387,7 @@ void EMT::Ph3::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	mVoltageControllerVSI->signalStep(time, timeStepCount);
 
 	// Transformation interface backward
-	**mVsref = inverseParkTransformPowerInvariant(mPLL->mOutputPrev->get()(0, 0), mPLL->mOutputCurr->get());
+	**mVsref = inverseParkTransformPowerInvariant(mPLL->mOutputPrev->get()(0, 0), mVoltageControllerVSI->mOutputCurr->get());
 
 	// Update nominal system angle
 	mThetaN = mThetaN + mTimeStep * **mOmegaN;
