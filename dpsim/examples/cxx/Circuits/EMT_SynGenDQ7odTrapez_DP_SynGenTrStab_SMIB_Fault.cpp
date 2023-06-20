@@ -61,7 +61,7 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	//Synchronous generator ideal model
-	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto genPF = SP::Ph1::SynchronGenerator::make("SynGen", Logger::Level::debug);
 	genPF->setParameters(syngenKundur.nomPower, syngenKundur.nomVoltage, setPointActivePower, setPointVoltage, PowerflowBusType::PV);
 	genPF->setBaseVoltage(VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -156,7 +156,7 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 			SystemComponentList{gen, line, fault, extnet});
 
 	// Initialization of dynamic topology
-	system.initWithPowerflow(systemPF);
+	system.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
 	// Logging
 	auto logger = DataLogger::make(simName);
@@ -253,19 +253,13 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	String simName = "DP_1ph_SynGenTrStab_Fault";
 	Logger::setLogDir("logs/"+simName);
 
-	// Extract relevant powerflow results
-	Real initActivePower = genPF->getApparentPower().real();
-	Real initMechPower = initActivePower;
-
 	// Nodes
 	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	// Components
 	auto gen = CPS::DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
-
 	gen->setFundamentalParametersPU(syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.Ll, syngenKundur.Lmd, syngenKundur.Llfd, syngenKundur.H, 1.5);
-	gen->setInitialValues(initActivePower, initMechPower);
 
 	//Grid bus as Slack
 	auto extnet = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
@@ -347,7 +341,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	//Synchronous generator ideal model
-	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto genPF = SP::Ph1::SynchronGenerator::make("SynGen", Logger::Level::debug);
 	genPF->setParameters(syngenKundur.nomPower, syngenKundur.nomVoltage, setPointActivePower, setPointVoltage, PowerflowBusType::PV);
 	genPF->setBaseVoltage(VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -394,19 +388,13 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	String simName = "SP_1ph_SynGenTrStab_Fault";
 	Logger::setLogDir("logs/"+simName);
 
-	// Extract relevant powerflow results
-	Real initActivePower = genPF->getApparentPower().real();
-	Real initMechPower = initActivePower;
-
 	// Nodes
 	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	// Components
 	auto gen = CPS::SP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
-
 	gen->setFundamentalParametersPU(syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.Ll, syngenKundur.Lmd, syngenKundur.Llfd, syngenKundur.H, 1.5);
-	gen->setInitialValues(initActivePower, initMechPower);
 
 	//Grid bus as Slack
 	auto extnet = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
@@ -437,7 +425,6 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 	// Initialization of dynamic topology
 	system.initWithPowerflow(systemPF);
-
 
 	// Logging
 	auto logger = DataLogger::make(simName);

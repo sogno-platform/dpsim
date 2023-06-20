@@ -28,13 +28,13 @@ void DP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	auto n3PF = SimNode<Complex>::make("n3", PhaseType::Single);
 
 	//Synchronous generator 1
-	auto gen1PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen1PF = SP::Ph1::SynchronGenerator::make("SynGen1", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen1PF->setParameters(ThreeBus.nomPower_G1, ThreeBus.nomPhPhVoltRMS_G1, ThreeBus.initActivePower_G1, ThreeBus.setPointVoltage_G1*ThreeBus.t1_ratio, PowerflowBusType::VD);
 	gen1PF->setBaseVoltage(ThreeBus.Vnom);
 
 	//Synchronous generator 2
-	auto gen2PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto gen2PF = SP::Ph1::SynchronGenerator::make("SynGen2", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	gen2PF->setParameters(ThreeBus.nomPower_G2, ThreeBus.nomPhPhVoltRMS_G2, ThreeBus.initActivePower_G2, ThreeBus.setPointVoltage_G2*ThreeBus.t2_ratio, PowerflowBusType::PV);
 	gen2PF->setBaseVoltage(ThreeBus.Vnom);
@@ -97,20 +97,14 @@ void DP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 
 	// Components
 	//Synchronous generator 1
-	auto gen1DP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
+	auto gen1DP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen1", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	gen1DP->setStandardParametersPU(ThreeBus.nomPower_G1, ThreeBus.nomPhPhVoltRMS_G1, ThreeBus.nomFreq_G1, ThreeBus.Xpd_G1*std::pow(ThreeBus.t1_ratio,2), cmdInertia_G1*ThreeBus.H_G1, ThreeBus.Rs_G1, cmdDamping_G1*ThreeBus.D_G1);
-	// Get actual active and reactive power of generator's Terminal from Powerflow solution
-	Complex initApparentPower_G1= gen1PF->getApparentPower();
-	gen1DP->setInitialValues(initApparentPower_G1, ThreeBus.initMechPower_G1);
 
 	//Synchronous generator 2
-	auto gen2DP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
+	auto gen2DP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen2", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	gen2DP->setStandardParametersPU(ThreeBus.nomPower_G2, ThreeBus.nomPhPhVoltRMS_G2, ThreeBus.nomFreq_G2, ThreeBus.Xpd_G2*std::pow(ThreeBus.t2_ratio,2), cmdInertia_G2*ThreeBus.H_G2, ThreeBus.Rs_G2, cmdDamping_G2*ThreeBus.D_G2);
-	// Get actual active and reactive power of generator's Terminal from Powerflow solution
-	Complex initApparentPower_G2= gen2PF->getApparentPower();
-	gen2DP->setInitialValues(initApparentPower_G2, ThreeBus.initMechPower_G2);
 
 	///Load
 	auto loadDP = DP::Ph1::RXLoad::make("Load", Logger::Level::debug);
