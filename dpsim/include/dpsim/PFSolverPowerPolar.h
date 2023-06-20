@@ -61,6 +61,8 @@ namespace DPsim {
         void calculatePAndQAtSlackBus();
         /// Calculate the reactive power at all PV buses from current solution
         void calculateQAtPVBuses();
+        /// Calculate the SG's active and reactive power from current solution
+        void setSGPower();
         /// Calculate branch flows from current solution and store them in line and transformer components
         void calculateBranchFlow();
         /// Calculate nodal power injections and store them in first line or transformer (in case no line is connected), so that lower level classes (Node, TopologicalTerminal) can stay untouched

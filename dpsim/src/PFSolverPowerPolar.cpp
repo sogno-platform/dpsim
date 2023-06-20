@@ -267,6 +267,7 @@ void PFSolverPowerPolar::setSolution() {
 	else {
 		calculatePAndQAtSlackBus();
         calculateQAtPVBuses();
+        //setSGPower();
 		SPDLOG_LOGGER_INFO(mSLog, "converged in {} iterations",mIterations);
 		SPDLOG_LOGGER_INFO(mSLog, "Solution: ");
 		SPDLOG_LOGGER_INFO(mSLog, "P\t\tQ\t\tV\t\tD");
@@ -279,7 +280,7 @@ void PFSolverPowerPolar::setSolution() {
         sol_V_complex(i) = CPS::Complex(sol_V.coeff(i)*cos(sol_D.coeff(i)), sol_V.coeff(i)*sin(sol_D.coeff(i)));
     }
 
-// update voltage and power at each node
+    // update voltage and power at each node
     for (auto node : mSystem.mNodes) {
         std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setVoltage(sol_V_complex(node->matrixNodeIndex())*mBaseVoltageAtNode[node]);
         std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setPower(sol_S_complex(node->matrixNodeIndex())*mBaseApparentPower);
@@ -353,24 +354,30 @@ Real PFSolverPowerPolar::Q(UInt k) {
 }
 
 void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
-    for (auto k: mVDBusIndices) {
+    for (auto topoNode: mVDBuses) {
+        auto node_idx = topoNode->matrixNodeIndex();
         CPS::Complex I(0.0, 0.0);
         for (UInt j = 0; j < mSystem.mNodes.size(); ++j) {
-            I += mY.coeff(k, j) * sol_Vcx(j);
+            I += mY.coeff(node_idx, j) * sol_Vcx(j);
         }
         CPS::Complex S(0.0, 0.0);
-        S = sol_Vcx(k) * conj(I);
-        sol_P(k) = S.real();
-        sol_Q(k) = S.imag();
-        for(auto extnet : mExternalGrids){
-            if(extnet->mPowerflowBusType==CPS::PowerflowBusType::VD){
-			    extnet->updatePowerInjection(S*mBaseApparentPower);
+        S = sol_Vcx(node_idx) * conj(I);
+        // GenPower = NodePower - PQLoadsPower
+        for(auto comp : mSystem.mComponentsAtNode[topoNode]) {
+            if (auto loadPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp))
+                S -= Complex(**(loadPtr->mActivePowerPerUnit), **(loadPtr->mReactivePowerPerUnit));
+        }
+        sol_P(node_idx) = S.real();
+        sol_Q(node_idx) = S.imag();
+
+        // Set power of external network injections of SG (VD)
+        for(auto comp : mSystem.mComponentsAtNode[topoNode]) {
+            if(auto extnetPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
+                extnetPtr->updatePowerInjection(S*mBaseApparentPower);
                 break;
             }
-        }
-        for(auto gen : mSynchronGenerators){
-            if(gen->mPowerflowBusType==CPS::PowerflowBusType::VD){
-			    gen->updatePowerInjection(S*mBaseApparentPower);
+            if(auto sgPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
+                sgPtr->updatePowerInjection(S*mBaseApparentPower);
                 break;
             }
         }
@@ -378,22 +385,46 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
 }
 
 void PFSolverPowerPolar::calculateQAtPVBuses() {
-        for (auto k: mPVBusIndices) {
+    //for (auto k: mPVBusIndices) {
+    for (auto topoNode: mPVBuses) {
+        auto node_idx = topoNode->matrixNodeIndex();
         CPS::Complex I(0.0, 0.0);
         for (UInt j = 0; j < mSystem.mNodes.size(); ++j) {
-            I += mY.coeff(k, j) * sol_Vcx(j);
+            I += mY.coeff(node_idx, j) * sol_Vcx(j);
         }
         CPS::Complex S(0.0, 0.0);
-        S = sol_Vcx(k) * conj(I);
-        sol_Q(k) = S.imag();
+        S = sol_Vcx(node_idx) * conj(I);
+        // GenPower = NodePower - PQLoadsPower
+        for(auto comp : mSystem.mComponentsAtNode[topoNode]) {
+            if (auto loadPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp))
+                S -= Complex(**(loadPtr->mActivePowerPerUnit), **(loadPtr->mReactivePowerPerUnit));
+        }
+        sol_Q(node_idx) = S.imag();
 
-        for (auto topoNode : mSystem.mNodes)
-            if (topoNode->matrixNodeIndex() == k)
-                for(auto comp : mSystem.mComponentsAtNode[topoNode])
-                    if(auto genPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp))
-                        if (genPtr->mPowerflowBusType==CPS::PowerflowBusType::PV)
-                            genPtr->updateReactivePowerInjection(S*mBaseApparentPower);
+        // Set power of SG (PQ)
+        for(auto comp : mSystem.mComponentsAtNode[topoNode]) {
+            if(auto sgPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
+                sgPtr->updatePowerInjection(S*mBaseApparentPower);
+            }
+        }
+    }
+}
 
+void PFSolverPowerPolar::setSGPower() {
+    for(auto genPtr : mSynchronGenerators) {
+        auto nodePtr = genPtr->node(0);
+        auto nodeIdx = nodePtr->matrixNodeIndex();
+        Complex nodeS = Complex(sol_P[nodeIdx], sol_Q[nodeIdx]);
+
+        // GenPower = NodePower - PQLoadsPower
+        for(auto comp : mSystem.mComponentsAtNode[nodePtr]) {
+            if (auto loadPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
+                nodeS += Complex(**(loadPtr->mActivePowerPerUnit), **(loadPtr->mReactivePowerPerUnit));
+            }
+        }
+
+        // Set Gen power
+        genPtr->updateReactivePowerInjection(nodeS*mBaseApparentPower);
     }
 }
 
