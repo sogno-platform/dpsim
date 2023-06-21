@@ -8,15 +8,14 @@
 
 #pragma once
 
-#include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
-#include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
+#include <dpsim-models/Base/Base_Ph3_Transformer.h>
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
-/// Transformer that includes an inductance and resistance
+/// Symmetric Transformer that includes an inductance and resistance
 class Transformer : public MNASimPowerComp<Real>,
                     public SharedFactory<Transformer>,
                     public Base::Ph3::Transformer {
@@ -30,6 +29,11 @@ public:
   Transformer(String name, Logger::Level logLevel = Logger::Level::off)
       : Transformer(name, name, logLevel) {}
 
+  /// Inductance [H]
+  const Attribute<Matrix>::Ptr mInductance;
+  ///Resistance [ohm]
+  const Attribute<Matrix>::Ptr mResistance;
+
 protected:
   /// DC equivalent current source [A]
   Matrix mEquivCurrent;
@@ -39,10 +43,6 @@ protected:
   Matrix mResScaling;
 
 public:
-  /// Inductance [H]
-  const Attribute<Matrix>::Ptr mInductance;
-  ///Resistance [ohm]
-  const Attribute<Matrix>::Ptr mResistance;
   // #### General ####
   /// Defines component parameters
   void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
