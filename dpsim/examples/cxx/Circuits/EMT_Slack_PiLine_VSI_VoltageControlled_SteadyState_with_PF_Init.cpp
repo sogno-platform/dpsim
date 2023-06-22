@@ -96,9 +96,10 @@ int main(int argc, char* argv[]) {
 	pv->setInitialStateValues(Yazdani.phi_dInit, Yazdani.phi_qInit, Yazdani.gamma_dInit, Yazdani.gamma_qInit);
 	pv->withControl(pvWithControl);
 
-
 	auto resOnEMT = EMT::Ph3::Resistor::make("R2", Logger::Level::debug);
 	resOnEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(0.88e-3));
+
+
 
 	// Topology
 	pv->connect({ n1EMT });
