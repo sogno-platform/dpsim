@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 	
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(88e-3, 0, 0);
+	linePF->setParameters(0.88e-3, 0, 0);
 	linePF->setBaseVoltage(400);
 
 	Complex load1_s=3*std::pow(400, 2)/(Complex(83e-3, 137e-6*2*M_PI*60));
@@ -144,6 +144,14 @@ int main(int argc, char* argv[]) {
 
 	// Initialization of dynamic topology
 	systemEMT.initWithPowerflow(systemPF);
+
+	// Initialization of dynamic topology
+	/*systemEMT.initWithPowerflow(systemPF);
+
+	Complex initial3PhPowerVSI= Complex(linePF->attributeTyped<Real>("p_inj")->get(), linePF->attributeTyped<Real>("q_inj")->get());
+
+	pv->terminal(0)->setPower(initial3PhPowerVSI);
+	*/
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);
