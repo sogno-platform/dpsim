@@ -678,8 +678,6 @@ namespace SGIB {
         Real systemOmega = 2 * PI * systemFrequency;
     };
     struct Yazdani {
-        Real systemFrequency = 60;
-        Real systemNominalVoltage = 1500; //unnecessary
 
         // Line parameters (R/X = 1)
         Real length = 5;
@@ -687,7 +685,7 @@ namespace SGIB {
 	    Real lineInductance = 0.5/314 * length;
         Real lineCapacitance = 50e-6/314 * length; 
 
-        // Initial state values
+        // Initial state values of VSI system matrix
         Real thetaPLLInit = 0; 
         Real phiPLLInit = 0; 
         Real phi_dInit = 0;
@@ -695,38 +693,38 @@ namespace SGIB {
         Real gamma_dInit = 0;
         Real gamma_qInit = 0;
 
-        // Nominal generated power values of VSI
-        Real pvNominalVoltage = 400;
-        Real pvNominalActivePower = 1e5; //unnecessary
-        Real pvNominalReactivePower = 0; //unnecessary
+        // VSI generated values
         Real Vdref = 400; //work with Amplitude (*sqrt(3/2))
         Real Vqref = 0;
+        Real systemFrequency = 60;
         Real OmegaNull = 2*M_PI*60; //System circular frequency
 
-        // VSI filter parameters + additional resistor
+
+        // VSI filter parameters 
         Real Lf = 100e-6;
         Real Cf = 2.5e-3;
-        Real Rf = 2.07e-3; //2.07e-3  
+        Real Rf = 2.07e-3;  
         Real tau = 0.5e-3;
-
         Real Rc = 1e-5; //connecting resistor to external network
       
 
-       // VSI controller parameters TODO
-        Real scaling_P = 1; //todo
-        Real scaling_I = 1; //todo
+       // VSI controller parameters
+        Real scaling_P = 1; 
+        Real scaling_I = 1; 
 
         Real KpVoltageCtrl = 1.6725*scaling_P; 
         Real KiVoltageCtrl = 374.64*scaling_I; 
         Real KpCurrCtrl = 0.2*scaling_P; 
         Real KiCurrCtrl = 4.14*scaling_I; 
+
+
+        // PLL controller parameters
+        // OmegaCutoff is the cutoff-frequency of the PLL filter
+        // in case of VCO-mode use KpPLL=0, KiPLL=0 and OmegaCutoff = OmegaNull to work as VCO
         Real KpPLL = 0; 
         Real KiPLL = 0; 
-        Real OmegaCutoff = 2*M_PI*60;
+        Real OmegaCutoff = OmegaNull;
         
-
-        // Further parameters
-        Real systemOmega = 2 * PI * systemFrequency;
 
         //Load Parameters
         Real Res1 = 83e-3;
