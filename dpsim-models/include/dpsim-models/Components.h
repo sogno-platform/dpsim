@@ -106,6 +106,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQ.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQTrapez.h>
 #include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlDQ.h>
+#include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlVCO.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSourceNorton.h>
 #ifdef WITH_SUNDIALS

@@ -22,19 +22,10 @@ namespace Signal {
 
 	protected:
 		
-		/// Nominal frequency
+		/// Nominal frequency (Input)
 		Real mOmegaNom;
 		/// Integration time step
         Real mTimeStep;
-
-		/// matrix A of state space model
-		Matrix mA = Matrix::Zero(2, 2);
-		/// matrix B of state space model
-		Matrix mB = Matrix::Zero(2, 2);
-		/// matrix C of state space model
-		Matrix mC = Matrix::Zero(2, 2);
-		/// matrix D of state space model
-		Matrix mD = Matrix::Zero(2, 2);
 
 	public:
 
@@ -42,17 +33,17 @@ namespace Signal {
 		const Attribute<Real>::Ptr mInputRef;
 
 		/// Previous Input
-        const Attribute<Matrix>::Ptr mInputPrev;
+        const Attribute<Real>::Ptr mInputPrev;
         /// Current Input
-        const Attribute<Matrix>::Ptr mInputCurr;
+        const Attribute<Real>::Ptr mInputCurr;
         /// Previous State
-        const Attribute<Matrix>::Ptr mStatePrev;
+        const Attribute<Real>::Ptr mStatePrev;
         /// Current State
-        const Attribute<Matrix>::Ptr mStateCurr;
+        const Attribute<Real>::Ptr mStateCurr;
         /// Previous Output
-        const Attribute<Matrix>::Ptr mOutputPrev;
+        const Attribute<Real>::Ptr mOutputPrev;
         /// Current Output
-        const Attribute<Matrix>::Ptr mOutputCurr;
+        const Attribute<Real>::Ptr mOutputCurr;
 
 		VCO(String name, Logger::Level logLevel = Logger::Level::off);
 		/// Setter for VCO parameters
@@ -60,9 +51,7 @@ namespace Signal {
 		/// Setter for simulation parameters
 		void setSimulationParameters(Real timestep);
 		/// Setter for initial values
-        void setInitialValues(Real input_init, Matrix state_init, Matrix output_init);
-		/// Composition of A, B, C, D matrices based on VCO parameters
-		void composeStateSpaceMatrices();
+        void setInitialValues(Real input_init, Real state_init, Real output_init);
 		/// pre step operations
 		void signalPreStep(Real time, Int timeStepCount);
 		/// step operations

@@ -103,6 +103,64 @@ void VoltageControllerVSI::setControllerParameters(Real Kp_voltageCtrl, Real Ki_
     mSLog->info("D = \n{}", mD);
 }
 
+//setter for controller parameters and setting up of system matrices with VCO
+void VoltageControllerVSI::setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_nominal) {
+
+	//Voltage Loop (First)
+	mKiVoltageCtrld = Ki_voltageCtrl;
+	mKiVoltageCtrlq = Ki_voltageCtrl;
+	mKpVoltageCtrld = Kp_voltageCtrl;
+	mKpVoltageCtrlq = Kp_voltageCtrl;
+
+	//Current Loop (Second)
+	mKiCurrCtrld = Ki_currCtrl;
+	mKiCurrCtrlq = Ki_currCtrl;
+	mKpCurrCtrld = Kp_currCtrl;
+	mKpCurrCtrlq = Kp_currCtrl;
+
+	//Frequency
+	mOmegaCutoff = Omega_nominal; 
+
+	//log loop parameters
+	mSLog->info("Control Parameters:");
+	mSLog->info("Voltage Loop: K_i = {}, K_p = {}", Kp_voltageCtrl, Ki_voltageCtrl);
+	mSLog->info("Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);
+	mSLog->info("Cut-Off Frequency = {}", Omega_nominal);  
+
+    // Set state space matrices using controller parameters
+
+	// [x] = [phid, phiq, gammad, gammaq]
+	// [u] = [vdref, vqref, vdc, vqc, idc, idq]
+	// [y] = [vdout, vqout]
+
+	mA <<
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		mKiVoltageCtrld, 0, 0, 0,
+		0, mKiVoltageCtrlq, 0, 0;
+
+	mB <<
+		1, 0, -1, 0, 0, 0,
+		0, 1, 0, -1, 0, 0,
+		mKpVoltageCtrld, 0, -mKpVoltageCtrld, 0, -1, 0,
+		0, mKpVoltageCtrlq, 0, -mKpVoltageCtrlq, 0, -1;
+
+	mC <<
+		mKpCurrCtrld*mKiVoltageCtrld, 0, mKiCurrCtrld, 0,
+		0, mKpCurrCtrlq*mKiVoltageCtrlq, 0, mKiCurrCtrlq;
+
+	mD <<
+		mKpCurrCtrld*mKpVoltageCtrld , 0, -mKpCurrCtrld*mKpVoltageCtrld + 1, 0, -mKpCurrCtrld, 0,
+		0, mKpCurrCtrlq*mKpVoltageCtrlq, 0, -mKpCurrCtrlq*mKpVoltageCtrlq + 1, 0, -mKpCurrCtrlq; 
+
+	// Log state-space matrices
+	mSLog->info("State space matrices:");
+    mSLog->info("A = \n{}", mA);
+    mSLog->info("B = \n{}", mB);
+    mSLog->info("C = \n{}", mC);
+    mSLog->info("D = \n{}", mD);
+}
+
 //setter for initial state values --> variables inside the system
 void VoltageControllerVSI::setInitialStateValues(Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit) {
 
