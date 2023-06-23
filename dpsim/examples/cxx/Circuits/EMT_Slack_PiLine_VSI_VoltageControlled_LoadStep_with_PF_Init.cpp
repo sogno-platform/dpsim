@@ -106,13 +106,21 @@ int main(int argc, char* argv[]) {
 	auto capEMT = EMT::Ph3::Capacitor::make("C2", Logger::Level::debug);
 	capEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(Yazdani.Cap2));
 
+	/*
 	auto pv = EMT::Ph3::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
 	pv->setParameters(Yazdani.OmegaNull, Yazdani.Vdref, Yazdani.Vqref);
 	pv->setControllerParameters(Yazdani.KpVoltageCtrl, Yazdani.KiVoltageCtrl, Yazdani.KpCurrCtrl, Yazdani.KiCurrCtrl, Yazdani.KpPLL, Yazdani.KiPLL, Yazdani.OmegaCutoff);
 	pv->setFilterParameters(Yazdani.Lf, Yazdani.Cf, Yazdani.Rf, Yazdani.Rc);
 	pv->setInitialStateValues(Yazdani.phi_dInit, Yazdani.phi_qInit, Yazdani.gamma_dInit, Yazdani.gamma_qInit);
 	pv->withControl(pvWithControl);
+	*/
 
+	auto pv = EMT::Ph3::VSIVoltageControlVCO::make("pv", "pv", Logger::Level::debug, false);
+	pv->setParameters(Yazdani.OmegaNull, Yazdani.Vdref, Yazdani.Vqref);
+	pv->setControllerParameters(Yazdani.KpVoltageCtrl, Yazdani.KiVoltageCtrl, Yazdani.KpCurrCtrl, Yazdani.KiCurrCtrl, Yazdani.OmegaNull);
+	pv->setFilterParameters(Yazdani.Lf, Yazdani.Cf, Yazdani.Rf, Yazdani.Rc); 
+	pv->setInitialStateValues(Yazdani.phi_dInit, Yazdani.phi_qInit, Yazdani.gamma_dInit, Yazdani.gamma_qInit);
+	pv->withControl(pvWithControl);
 
 	// Fault Event
     Real SwitchOpen = 1e9;
@@ -158,7 +166,8 @@ int main(int argc, char* argv[]) {
 	loggerEMT->logAttribute("Spannung_PCC", n1EMT->attribute("v"));
     loggerEMT->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
 	loggerEMT->logAttribute("Strom_RLC", pv->attribute("i_intf"));
-	loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
+	//loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
+	loggerEMT->logAttribute("VCO_Phase", pv->attribute("VCO_output"));
 	loggerEMT->logAttribute("P_elec", pv->attribute("P_elec"));
 	loggerEMT->logAttribute("Q_elec", pv->attribute("Q_elec"));
 
