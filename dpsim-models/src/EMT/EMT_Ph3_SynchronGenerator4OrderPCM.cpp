@@ -18,18 +18,11 @@ EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 
-	// model flags
-	mVoltageForm = false;
+	// Initialize attributes
+	mNumIter = mAttributes->create<Int>("NIterations", 0);
 
 	// model variables
 	**mEdq0_t = Matrix::Zero(3,1);
-	mEdq0_t_pred = Matrix::Zero(3,1);
-	mEdq0_t_corr = Matrix::Zero(3,1);
-	mdEdq0_t = Matrix::Zero(3,1);
-	mdEdq0_t_corr = Matrix::Zero(3,1);
-
-	// Initialize attributes
-	mNumIter = mAttributes->create<Int>("NIterations", 0);
 }
 
 EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
@@ -37,23 +30,15 @@ EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM
 	: SynchronGenerator4OrderPCM(name, name, logLevel) {
 }
 
-SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGenerator4OrderPCM::clone(const String& name) {
-	auto copy = SynchronGenerator4OrderPCM::make(name, mLogLevel);
-
-	return copy;
-}
-
 void EMT::Ph3::SynchronGenerator4OrderPCM::specificInitialization() {
 
-	// Initialize matrix of state representation
-	mA = Matrix::Zero(3,3);
-	mB = Matrix::Zero(3,3);
-	mC = Matrix::Zero(3,1);
-	calculateStateMatrix();
+	// calculate state representation matrix
+	calculateStateSpaceMatrices();
 
 	// initial voltage behind the transient reactance in the dq0 reference frame
 	(**mEdq0_t)(0,0) = (**mVdq0)(0,0) - (**mIdq0)(1,0) * mLq_t;
 	(**mEdq0_t)(1,0) = (**mVdq0)(1,0) + (**mIdq0)(0,0) * mLd_t;
+	(**mEdq0_t)(2,0) = 0.0;
 
 	mSLog->info(
 		"\n--- Model specific initialization  ---"
@@ -61,6 +46,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::specificInitialization() {
 		"\nInitial Eq_t (per unit): {:f}"
 		"\nMax number of iterations: {:d}"
 		"\nTolerance: {:f}"
+		"\nSG Model: 4 Order PCM"
 		"\n--- Model specific initialization finished ---",
 
 		(**mEdq0_t)(0,0),
@@ -71,69 +57,42 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::specificInitialization() {
 	mSLog->flush();
 }
 
-void EMT::Ph3::SynchronGenerator4OrderPCM::calculateStateMatrix() {
-	if (mVoltageForm) {
-		Real Td_t =  mTd0_t * (mLd_t / mLd);
-		Real Tq_t =  mTq0_t * (mLq_t / mLq);
-		mA << -1. / Tq_t   ,          0.0,		0.0,
-	               0.0     ,      -1 / Td_t,	0.0,
-				   0.0     ,          0.0,		0.0;
-		mB << (1. / Tq_t) * (mLq-mLq_t) / mLq,   				0.0, 					0.0,
-		  					0.0, 					(1. / Td_t) * (mLd-mLd_t) / mLd,	0.0,
-							0.0, 								0.0,					0.0;
-		mC <<               0.0,
-		   		(1. / Td_t) * (**mEf) * (mLd_t / mLd),
-				   			0.0;
-	}
-	else {	// Currents form
-		mA << -1./mTq0_t	,    	0.0,		0.0,
-		     	   0.0   	,    -1/mTd0_t,		0.0,
-				   0.0		,		0.0,		0.0;
-		mB <<             0.0                  , (1. / mTq0_t) * (mLq-mLq_t),		0.0,
-		  		(-1. / mTd0_t) * (mLd-mLd_t)   ,            0.0             ,		0.0,
-				  		  0.0				   ,			0.0				,		0.0;
-		mC <<          0.0,
-		 		 (1./mTd0_t) * (**mEf),
-				  	   0.0;
-	}
+void EMT::Ph3::SynchronGenerator4OrderPCM::calculateStateSpaceMatrices() {
+	// Initialize matrices of state representation
+	mAStateSpace <<	-mLq / mTq0_t / mLq_t,	0.0 				 , 0.0,
+              		0					 ,	-mLd / mTd0_t / mLd_t, 0.0,
+					0					 ,	0.0					 , 0.0;
+	mBStateSpace <<	(mLq-mLq_t) / mTq0_t / mLq_t,	0.0							, 0.0,
+					0.0							,	(mLd-mLd_t) / mTd0_t / mLd_t, 0.0,
+					0.0							,	0.0							, 0.0;
+	mCStateSpace <<	0.0,
+					1. / mTd0_t,
+					0.0;
+	// Precalculate trapezoidal based matrices (avoids redundant matrix inversions in correction steps)
+	Math::calculateStateSpaceTrapezoidalMatrices(mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, mAdTrapezoidal, mBdTrapezoidal, mCdTrapezoidal);
 }
 
 void EMT::Ph3::SynchronGenerator4OrderPCM::stepInPerUnit() {
-	// set number of iteratios equal to zero
-	**mNumIter = **mNumIter + 1;
+	// set number of iterations equal to zero
+	**mNumIter = 0;
 
 	// Predictor step (euler)
 
-	//predict mechanical variables at t=k+1
-	if (mSimTime>0.0) {
-		**mElecTorque = (**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0);
-		mdOmMech = 1 / (2.* mH) * (**mMechTorque - **mElecTorque);
-		mOmMech_pred = **mOmMech + mTimeStep * mdOmMech;
-		mdDelta = (mOmMech_pred - 1.) * mBase_OmMech;
-		mDelta_pred = **mDelta + mTimeStep * mdDelta;
-		mThetaMech_pred = **mThetaMech + mTimeStep * mOmMech_pred * mBase_OmMech;
-	} else {
-		mdOmMech = 0;
-		mOmMech_pred = **mOmMech;
-		mdDelta = 0;
-		mDelta_pred = **mDelta;
-		mThetaMech_pred = **mThetaMech;
-	}
+	// store values currently at t=k for later use
+	mEdq0tPrevStep = **mEdq0_t;
+	mIdq0PrevStep = **mIdq0;
+	mVdq0PrevStep = **mVdq0;
 
-	//predict voltage behind transient reactance
-	if (mVoltageForm)
-		mdEdq0_t = mA * **mEdq0_t + mB * **mVdq0 + mC;
-	else
-		mdEdq0_t = mA * **mEdq0_t + mB * **mIdq0 + mC;
-	mEdq0_t_pred = **mEdq0_t + mTimeStep * mdEdq0_t;
+	// predict emf at t=k+1 (euler) using
+	(**mEdq0_t) = Math::StateSpaceEuler(**mEdq0_t, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mVdq0);
 
-	// predict armature currents for at t=k+1
-	(**mIdq0)(0,0) = (mEdq0_t_pred(1,0) - (**mVdq0)(1,0) ) / mLd_t;
-	(**mIdq0)(1,0) = ((**mVdq0)(0,0) - mEdq0_t_pred(0,0) ) / mLq_t;
+	// predict stator currents at t=k+1 (assuming Vdq0(k+1)=Vdq0(k))
+	(**mIdq0)(0,0) = ((**mEdq0_t)(1,0) - (**mVdq0)(1,0)) / mLd_t;
+	(**mIdq0)(1,0) = ((**mVdq0)(0,0) - (**mEdq0_t)(0,0)) / mLq_t;
 	(**mIdq0)(2,0) = 0.0;
 
 	// convert currents into the abc domain
-	**mIntfCurrent = inverseParkTransform(mThetaMech_pred, **mIdq0);
+	**mIntfCurrent = inverseParkTransform(**mThetaMech, **mIdq0);
 	**mIntfCurrent = **mIntfCurrent * mBase_I;
 }
 
@@ -144,41 +103,20 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::mnaCompApplyRightSideVectorStamp(Matr
 }
 
 void EMT::Ph3::SynchronGenerator4OrderPCM::correctorStep() {
-	// corrector step (trapezoidal rule)
+	// increase number of iterations
+	**mNumIter = **mNumIter + 1;
 
-	if (**mNumIter == 1)
-		return;
+	// correct electrical vars
+	// calculate emf at j and k+1 (trapezoidal rule)
+	(**mEdq0_t) = Math::applyStateSpaceTrapezoidalMatrices(mAdTrapezoidal, mBdTrapezoidal, mCdTrapezoidal * **mEf, mEdq0tPrevStep, **mVdq0, mVdq0PrevStep);
 
-	//predict mechanical variables
-	if (mSimTime>0.0) {
-		mElecTorque_corr = (**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0);
-		mdOmMech_corr = 1 / (2.* mH) * (**mMechTorque - mElecTorque_corr);
-		mOmMech_corr = **mOmMech + mTimeStep / 2. * (mdOmMech + mdOmMech_corr);
-		mdDelta_corr = (mOmMech_corr - 1.) * mBase_OmMech;
-		mDelta_corr = **mDelta + mTimeStep / 2. * (mdDelta + mdDelta_corr);
-		mThetaMech_corr = **mThetaMech + mTimeStep / 2. * (**mOmMech + mOmMech_corr) * mBase_OmMech;
-	} else {
-		mElecTorque_corr = **mElecTorque;
-		mdOmMech_corr = 0;
-		mOmMech_corr = **mOmMech;
-		mdDelta_corr = 0;
-		mDelta_corr = **mDelta;
-		mThetaMech_corr = **mThetaMech;
-	}
 
-	//predict voltage behind transient reactance
-	if (mVoltageForm)
-		mdEdq0_t_corr = mA * **mEdq0_t + mB * **mVdq0 + mC;
-	else
-		mdEdq0_t_corr = mA * **mEdq0_t + mB * **mIdq0 + mC;
-	mEdq0_t_corr = **mEdq0_t + mTimeStep / 2 * (mdEdq0_t + mdEdq0_t_corr);
-
-	// armature currents for at t=k+1
-	(**mIdq0)(0,0) = (mEdq0_t_corr(1,0) - (**mVdq0)(1,0) ) / mLd_t;
-	(**mIdq0)(1,0) = ((**mVdq0)(0,0) - mEdq0_t_corr(0,0) ) / mLq_t;
+	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
+	(**mIdq0)(0,0) = ((**mEdq0_t)(1,0) - (**mVdq0)(1,0) ) / mLd_t;
+	(**mIdq0)(1,0) = ((**mVdq0)(0,0) - (**mEdq0_t)(0,0) ) / mLq_t;
 
 	// convert currents into the abc domain
-	**mIntfCurrent = inverseParkTransform(mThetaMech_corr, **mIdq0);
+	**mIntfCurrent = inverseParkTransform(**mThetaMech, **mIdq0);
 	**mIntfCurrent = **mIntfCurrent * mBase_I;
 
 	// stamp currents
@@ -186,45 +124,37 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::correctorStep() {
 }
 
 void EMT::Ph3::SynchronGenerator4OrderPCM::updateVoltage(const Matrix& leftVector) {
-	mVdq0_prev = **mVdq0;
+	// store voltage value currently at j-1 for later use
+	mVdq0PrevIter = **mVdq0;
 
 	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 	(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 
 	// convert Vdq into abc domain
-	if (**mNumIter == 0) {
-		**mVdq0 = parkTransform(mThetaMech_pred, **mIntfVoltage);
-	} else {
-		**mVdq0 = parkTransform(mThetaMech_corr, **mIntfVoltage);
-	}
+	**mVdq0 = parkTransform(**mThetaMech, **mIntfVoltage);
 	**mVdq0 = **mVdq0 / mBase_V;
 }
 
 bool EMT::Ph3::SynchronGenerator4OrderPCM::requiresIteration() {
-	if (**mNumIter == 0) {
-		// if no corrector step has been performed yet
-		**mNumIter = 1;
-		return true;
-	}
-
-	Matrix voltageDifference = **mVdq0 - mVdq0_prev;
-	if (Math::abs(voltageDifference(0,0)) > mTolerance || Math::abs(voltageDifference(1,0)) > mTolerance) {
-		if (**mNumIter == mMaxIter) {
-			return false;
-		} else {
-			return true;
-		}
-	} else
+	if (**mNumIter >= mMaxIter) {
+		// maximum number of iterations reached
 		return false;
+	} else if (**mNumIter == 0) {
+		// no corrector step has been performed yet,
+		// convergence cannot be confirmed
+		return true;
+	} else {
+		// check voltage convergence according to tolerance
+		Matrix voltageDifference = **mVdq0 - mVdq0PrevIter;
+		if (Math::abs(voltageDifference(0,0)) > mTolerance || Math::abs(voltageDifference(1,0)) > mTolerance)
+			return true;
+		else
+			return false;
+	}
 }
 
 void EMT::Ph3::SynchronGenerator4OrderPCM::mnaCompPostStep(const Matrix& leftVector) {
-	// update variables
-	**mEdq0_t = mEdq0_t_corr;
-	**mOmMech = mOmMech_corr;
-	**mThetaMech = mThetaMech_corr;
-	**mDelta = mDelta_corr;
 }
 
 Matrix EMT::Ph3::SynchronGenerator4OrderPCM::parkTransform(Real theta, const Matrix& abcVector) {
