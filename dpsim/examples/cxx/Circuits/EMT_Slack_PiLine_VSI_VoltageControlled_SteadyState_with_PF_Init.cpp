@@ -89,9 +89,18 @@ int main(int argc, char* argv[]) {
 	auto loadEMT = EMT::Ph3::RXLoad::make("Load", Logger::Level::debug);
 	loadEMT->setParameters(CPS::Math::singlePhasePowerToThreePhase(load1_p), CPS::Math::singlePhasePowerToThreePhase(load1_q), 400);
 
+	/*
 	auto pv = EMT::Ph3::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
 	pv->setParameters(Yazdani.OmegaNull, Yazdani.Vdref, Yazdani.Vqref);
 	pv->setControllerParameters(Yazdani.KpVoltageCtrl, Yazdani.KiVoltageCtrl, Yazdani.KpCurrCtrl, Yazdani.KiCurrCtrl, Yazdani.KpPLL, Yazdani.KiPLL, Yazdani.OmegaCutoff);
+	pv->setFilterParameters(Yazdani.Lf, Yazdani.Cf, Yazdani.Rf, Yazdani.Rc); 
+	pv->setInitialStateValues(Yazdani.phi_dInit, Yazdani.phi_qInit, Yazdani.gamma_dInit, Yazdani.gamma_qInit);
+	pv->withControl(pvWithControl);
+	*/
+
+	auto pv = EMT::Ph3::VSIVoltageControlVCO::make("pv", "pv", Logger::Level::debug, false);
+	pv->setParameters(Yazdani.OmegaNull, Yazdani.Vdref, Yazdani.Vqref);
+	pv->setControllerParameters(Yazdani.KpVoltageCtrl, Yazdani.KiVoltageCtrl, Yazdani.KpCurrCtrl, Yazdani.KiCurrCtrl, Yazdani.OmegaNull);
 	pv->setFilterParameters(Yazdani.Lf, Yazdani.Cf, Yazdani.Rf, Yazdani.Rc); 
 	pv->setInitialStateValues(Yazdani.phi_dInit, Yazdani.phi_qInit, Yazdani.gamma_dInit, Yazdani.gamma_qInit);
 	pv->withControl(pvWithControl);
@@ -122,7 +131,8 @@ int main(int argc, char* argv[]) {
 	loggerEMT->logAttribute("Spannung_PCC", n2EMT->attribute("v"));
     loggerEMT->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
 	loggerEMT->logAttribute("Strom_RLC", pv->attribute("i_intf"));
-	loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
+	//loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
+	loggerEMT->logAttribute("VCO_Phase", pv->attribute("VCO_output"));
 	loggerEMT->logAttribute("P_elec", pv->attribute("P_elec"));
 	loggerEMT->logAttribute("Q_elec", pv->attribute("Q_elec"));
 	

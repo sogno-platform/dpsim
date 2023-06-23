@@ -105,6 +105,7 @@ list(APPEND MODELS_SOURCES
 	# EMT/EMT_Ph3_SynchronGeneratorVBRStandalone.cpp
 	EMT/EMT_Ph3_SynchronGeneratorTrStab.cpp
 	EMT/EMT_Ph3_VSIVoltageControlDQ.cpp
+	EMT/EMT_Ph3_VSIVoltageControlVCO.cpp
 
 	SP/SP_Ph1_VoltageSource.cpp
 	SP/SP_Ph1_Capacitor.cpp
