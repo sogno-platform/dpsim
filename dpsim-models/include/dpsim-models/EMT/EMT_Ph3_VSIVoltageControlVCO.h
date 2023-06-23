@@ -16,17 +16,17 @@
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 #include <dpsim-models/Base/Base_AvVoltageSourceInverterDQ.h>
-#include <dpsim-models/Signal/PLL.h>
+#include <dpsim-models/Signal/VCO.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 #include <dpsim-models/Signal/PowerControllerVSI.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
-	class VSIVoltageControlDQ :
+	class VSIVoltageControlVCO :
 		public Base::AvVoltageSourceInverterDQ,
 		public CompositePowerComp<Real>,
-		public SharedFactory<VSIVoltageControlDQ> {
+		public SharedFactory<VSIVoltageControlVCO> {
 	protected:
 
 		// ### General Parameters ###
@@ -39,8 +39,8 @@ namespace Ph3 {
 		/// Active power reference
 
 		// ### Control Subcomponents ###
-		/// PLL
-		std::shared_ptr<Signal::PLL> mPLL;
+		/// VCO
+		std::shared_ptr<Signal::VCO> mVCO;
 		/// Power Controller
 		std::shared_ptr<Signal::VoltageControllerVSI> mVoltageControllerVSI;
 
@@ -81,10 +81,10 @@ namespace Ph3 {
 		// ### Inverter Interfacing Variables ###
 		// Control inputs
 		/// Measured voltage d-axis in local reference frame
-		/// Input for PLL
+		/// Input for VCO
 		const Attribute<Real>::Ptr mVcd;
 		/// Measured voltage q-axis in local reference frame
-		/// Input for PLL
+		/// Input for VCO
 		const Attribute<Real>::Ptr mVcq;
 		/// Measured current d-axis in local reference frame
 		const Attribute<Real>::Ptr mIrcd;
@@ -101,8 +101,8 @@ namespace Ph3 {
 		// Sub voltage source
 		const Attribute<Matrix>::Ptr mVs;
 
-		// PLL
-		const Attribute<Matrix>::Ptr mPllOutput;
+		// VCO
+		const Attribute<Real>::Ptr mVCOOutput;
 
 		// input, state and output vector for logging
 		const Attribute<Matrix>::Ptr mVoltagectrlInputs;
@@ -110,10 +110,10 @@ namespace Ph3 {
 		const Attribute<Matrix>::Ptr mVoltagectrlOutputs;
 
 		/// Defines name amd logging level
-		VSIVoltageControlDQ(String name, Logger::Level logLevel = Logger::Level::off)
-			: VSIVoltageControlDQ(name, name, logLevel) {}
+		VSIVoltageControlVCO(String name, Logger::Level logLevel = Logger::Level::off)
+			: VSIVoltageControlVCO(name, name, logLevel) {}
 		/// Defines UID, name, logging level and connection trafo existence
-		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withTrafo = false);
+		VSIVoltageControlVCO(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withTrafo = false);
 
 		// #### General ####
 		/// Initializes component from power flow data
@@ -121,7 +121,7 @@ namespace Ph3 {
 		/// Setter for gengit eral parameters of inverter
 		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
 		/// Setter for parameters of control loops
-		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Kp_pll, Real Ki_pll, Real Omega_cutoff);
+		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_nominal);
 		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
@@ -170,26 +170,26 @@ namespace Ph3 {
 
 		class ControlPreStep : public CPS::Task {
 		public:
-			ControlPreStep(VSIVoltageControlDQ& VSIVoltageControlDQ) :
-				Task(**VSIVoltageControlDQ.mName + ".ControlPreStep"), mVSIVoltageControlDQ(VSIVoltageControlDQ) {
-					mVSIVoltageControlDQ.addControlPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
+			ControlPreStep(VSIVoltageControlVCO& VSIVoltageControlVCO) :
+				Task(**VSIVoltageControlVCO.mName + ".ControlPreStep"), mVSIVoltageControlVCO(VSIVoltageControlVCO) {
+					mVSIVoltageControlVCO.addControlPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
-			void execute(Real time, Int timeStepCount) { mVSIVoltageControlDQ.controlPreStep(time, timeStepCount); };
+			void execute(Real time, Int timeStepCount) { mVSIVoltageControlVCO.controlPreStep(time, timeStepCount); };
 
 		private:
-			VSIVoltageControlDQ& mVSIVoltageControlDQ;
+			VSIVoltageControlVCO& mVSIVoltageControlVCO;
 		};
 
 		class ControlStep : public CPS::Task {
 		public:
-			ControlStep(VSIVoltageControlDQ& VSIVoltageControlDQ) :
-				Task(**VSIVoltageControlDQ.mName + ".ControlStep"), mVSIVoltageControlDQ(VSIVoltageControlDQ) {
-					mVSIVoltageControlDQ.addControlStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
+			ControlStep(VSIVoltageControlVCO& VSIVoltageControlVCO) :
+				Task(**VSIVoltageControlVCO.mName + ".ControlStep"), mVSIVoltageControlVCO(VSIVoltageControlVCO) {
+					mVSIVoltageControlVCO.addControlStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
-			void execute(Real time, Int timeStepCount) { mVSIVoltageControlDQ.controlStep(time, timeStepCount); };
+			void execute(Real time, Int timeStepCount) { mVSIVoltageControlVCO.controlStep(time, timeStepCount); };
 
 		private:
-			VSIVoltageControlDQ& mVSIVoltageControlDQ;
+			VSIVoltageControlVCO& mVSIVoltageControlVCO;
 		};
 	};
 }

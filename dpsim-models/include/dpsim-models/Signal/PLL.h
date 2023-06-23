@@ -25,7 +25,6 @@ namespace Signal {
 		Real mKp;
 		/// Integration constant of PI controller
 		Real mKi;
-
 		/// Nominal frequency
 		Real mOmegaNom;
 		/// Integration time step

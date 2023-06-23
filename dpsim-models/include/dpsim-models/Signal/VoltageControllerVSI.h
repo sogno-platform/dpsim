@@ -89,6 +89,9 @@ namespace Signal {
 		void setParameters(Real VampRef, Real OmegaRef);
 		/// Setter for parameters of control loops
 		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Kp_pll, Real Ki_pll, Real Omega_cutoff);
+		// Setter VCO Version
+		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_nominal);
+		
 		/// Setter for initial state values
 		void setInitialStateValues(Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
 
