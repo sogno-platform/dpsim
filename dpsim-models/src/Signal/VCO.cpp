@@ -15,20 +15,22 @@ VCO::VCO(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
     mInputRef(Attribute<Real>::createDynamic("input_ref", mAttributes)),
     /// CHECK: Which of these really need to be attributes?
-    mInputPrev(Attribute<Matrix>::create("input_prev", mAttributes, Matrix::Zero(2,1))),
-    mStatePrev(Attribute<Matrix>::create("state_prev", mAttributes, Matrix::Zero(2,1))),
-    mOutputPrev(Attribute<Matrix>::create("output_prev", mAttributes, Matrix::Zero(2,1))),
-    mInputCurr(Attribute<Matrix>::create("input_curr", mAttributes, Matrix::Zero(2,1))),
-    mStateCurr(Attribute<Matrix>::create("state_curr", mAttributes, Matrix::Zero(2,1))),
-    mOutputCurr(Attribute<Matrix>::create("output_curr", mAttributes, Matrix::Zero(2,1))) { }
+    mInputPrev(Attribute<Real>::create("input_prev", mAttributes)),
+    mStatePrev(Attribute<Real>::create("state_prev", mAttributes)),
+    mOutputPrev(Attribute<Real>::create("output_prev", mAttributes)),
+    mInputCurr(Attribute<Real>::create("input_curr", mAttributes)),
+    mStateCurr(Attribute<Real>::create("state_curr", mAttributes)),
+    mOutputCurr(Attribute<Real>::create("output_curr", mAttributes)) { }
 
 
 void VCO::setParameters(Real omegaNom) {
+    // Input is OmegaNom
+    // Output is Theta
     mOmegaNom = omegaNom;
     mSLog->info("OmegaNom = {}", mOmegaNom);
 
-    // First entry of input vector is constant omega
-    (**mInputCurr)(0,0) = mOmegaNom;
+    **mInputCurr = mOmegaNom;
+    **mInputRef = mOmegaNom;
 }
 
 void VCO::setSimulationParameters(Real timestep) {
@@ -36,30 +38,13 @@ void VCO::setSimulationParameters(Real timestep) {
     mSLog->info("Integration step = {}", mTimeStep);
 }
 
-void VCO::setInitialValues(Real input_init, Matrix state_init, Matrix output_init) {
-	(**mInputCurr)(1,0) = input_init;
+void VCO::setInitialValues(Real input_init, Real state_init, Real output_init) {
+	**mInputCurr = mOmegaNom;
     **mStateCurr = state_init;
     **mOutputCurr = output_init;
 
     mSLog->info("Initial values:");
-    mSLog->info("inputCurrInit = ({}, {}), stateCurrInit = ({}, {}), outputCurrInit = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
-}
-
-void VCO::composeStateSpaceMatrices() {
-    mA <<   0,  0,
-            0,  0;
-    mB <<   1,  0,
-            0,  1;
-    mC <<   1,  0,
-            0,  1;
-    mD <<   0,  0,
-            0,  0;
-
-    mSLog->info("State space matrices:");
-    mSLog->info("A = \n{}", mA);
-    mSLog->info("B = \n{}", mB);
-    mSLog->info("C = \n{}", mC);
-    mSLog->info("D = \n{}", mD);
+    mSLog->info("inputCurrInit = ({}), stateCurrInit = ({}), outputCurrInit = ({})", **mInputCurr, **mStateCurr, **mOutputCurr);
 }
 
 void VCO::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -82,16 +67,16 @@ void VCO::signalAddStepDependencies(AttributeBase::List &prevStepDependencies, A
 };
 
 void VCO::signalStep(Real time, Int timeStepCount) {
-    (**mInputCurr)(1,0) = **mInputRef;
+    **mInputCurr = **mInputRef;
 
     mSLog->info("Time {}:", time);
-    mSLog->info("Input values: inputCurr = ({}, {}), inputPrev = ({}, {}), stateCurr = ({}, {}), statePrev = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
+    mSLog->info("Input values: inputCurr = {}, inputPrev = ({}, stateCurr = ({}, statePrev = ({})", **mInputCurr, **mInputPrev, **mStateCurr, **mStatePrev);
 
-    **mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
-    **mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
+    **mStateCurr = (**mStatePrev + mTimeStep * **mInputCurr);
+    **mOutputCurr = **mStateCurr;
 
-    mSLog->info("State values: stateCurr = ({}, {})", (**mStateCurr)(0,0), (**mStateCurr)(1,0));
-    mSLog->info("Output values: outputCurr = ({}, {}):", (**mOutputCurr)(0,0), (**mOutputCurr)(1,0));
+    mSLog->info("State values: stateCurr = ({})", **mStateCurr);
+    mSLog->info("Output values: outputCurr = ({}):", **mOutputCurr);
 }
 
 Task::List VCO::getTasks() {
