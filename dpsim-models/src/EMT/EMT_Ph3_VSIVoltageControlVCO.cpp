@@ -359,7 +359,7 @@ void EMT::Ph3::VSIVoltageControlVCO::controlStep(Real time, Int timeStepCount) {
 	Matrix vcdq, ircdq;
 	Real theta = mVCO->mOutputPrev->get();
 	vcdq = parkTransformPowerInvariant(theta, **mVirtualNodes[2]->mVoltage);
-	ircdq = parkTransformPowerInvariant(theta, - **mSubResistorC->mIntfCurrent);
+	ircdq = parkTransformPowerInvariant(theta, - **mSubResistorF->mIntfCurrent);
 	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
 	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
 	**mElecActivePower = - 1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
@@ -419,7 +419,7 @@ void EMT::Ph3::VSIVoltageControlVCO::mnaUpdateCurrent(const Matrix& leftvector) 
 	if (mWithConnectionTransformer)
 		**mIntfCurrent = mConnectionTransformer->mIntfCurrent->get();
 	else
-		**mIntfCurrent = mSubResistorC->mIntfCurrent->get();
+		**mIntfCurrent = mSubResistorF->mIntfCurrent->get();
 }
 
 //Voltage update
