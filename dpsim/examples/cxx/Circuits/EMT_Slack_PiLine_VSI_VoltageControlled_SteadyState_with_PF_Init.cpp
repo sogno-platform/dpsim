@@ -132,7 +132,7 @@ int main(int argc, char* argv[]) {
     loggerEMT->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
 	loggerEMT->logAttribute("Strom_RLC", pv->attribute("i_intf"));
 	//loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
-	loggerEMT->logAttribute("VCO_Phase", pv->attribute("VCO_output"));
+	//loggerEMT->logAttribute("VCO_Phase", pv->attribute("VCO_output"));
 	loggerEMT->logAttribute("P_elec", pv->attribute("P_elec"));
 	loggerEMT->logAttribute("Q_elec", pv->attribute("Q_elec"));
 	
