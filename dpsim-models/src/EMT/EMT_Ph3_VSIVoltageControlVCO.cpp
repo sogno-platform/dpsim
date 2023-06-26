@@ -419,7 +419,7 @@ void EMT::Ph3::VSIVoltageControlVCO::mnaUpdateCurrent(const Matrix& leftvector) 
 	if (mWithConnectionTransformer)
 		**mIntfCurrent = mConnectionTransformer->mIntfCurrent->get();
 	else
-		**mIntfCurrent = mSubResistorF->mIntfCurrent->get();
+		**mIntfCurrent = mSubResistorC->mIntfCurrent->get();
 }
 
 //Voltage update
