@@ -100,7 +100,7 @@ void EMT::Ph3::VSIVoltageControlDQ::setParameters(Real sysOmega, Real VdRef, Rea
 	mVoltageControllerVSI->setParameters(VdRef, VqRef);
 
 	**mOmegaN = sysOmega;
-	**mVdRef = VdRef;
+	**mVdRef = VdRef * sqrt(3/2);
 	**mVqRef = VqRef;
 }
 
@@ -369,7 +369,7 @@ void EMT::Ph3::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	Matrix vcdq, ircdq;
 	Real theta = mPLL->mOutputPrev->get()(0, 0);
 	vcdq = parkTransformPowerInvariant(theta, **mVirtualNodes[2]->mVoltage);
-	ircdq = parkTransformPowerInvariant(theta, - **mSubResistorC->mIntfCurrent);
+	ircdq = parkTransformPowerInvariant(theta, - **mSubResistorF->mIntfCurrent);
 	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
 	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
 	**mElecActivePower = - 1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
@@ -428,7 +428,7 @@ void EMT::Ph3::VSIVoltageControlDQ::mnaUpdateCurrent(const Matrix& leftvector) {
 	if (mWithConnectionTransformer)
 		**mIntfCurrent = mConnectionTransformer->mIntfCurrent->get();
 	else
-		**mIntfCurrent = mSubResistorF->mIntfCurrent->get();
+		**mIntfCurrent = mSubResistorC->mIntfCurrent->get();
 }
 
 //Voltage update
