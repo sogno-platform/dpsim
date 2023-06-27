@@ -355,6 +355,7 @@ int main(int argc, char* argv[]) {
 	auto loggerEMT = DataLogger::make(simNameEMT);
 	loggerEMT->logAttribute("Spannung_PCC", n1EMT->attribute("v"));
 	loggerEMT->logAttribute("Spannung_Node_2", n2EMT->attribute("v"));
+	loggerEMT->logAttribute("Spannung_Node_3", n3EMT->attribute("v"));
     loggerEMT->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
 	loggerEMT->logAttribute("Strom_RLC", pv->attribute("i_intf"));
 	//loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
