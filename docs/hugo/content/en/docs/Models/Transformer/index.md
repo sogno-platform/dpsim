@@ -1,42 +1,81 @@
 ---
 title: "Transformer"
 linkTitle: "Transformer"
-date: 2021-07-22
+date: 2023-06-09
 ---
 
-## 2-Winding Transformer
+## 2-Winding Power Transformer
 The transformer model is composed of an RL-segment and an ideal transformer.
 The single line diagram is depicted in the figure below.
 
-![Transformer](electrical_transformer.svg)
+Diagram
 
-If node reduction is not applied, two virtual nodes are created to stamp this model into the system matrix.
+An RL- segment in time domain is described by
 
-Furthermore, the ideal transformer has an additional equation, which requires an extension of the system matrix.
-The complete matrix stamp for the ideal transformer is 
+$$
+\frac{\mathrm{d} i_L(t)}{\mathrm{d}t} = \frac{v_j(t) - v_k(t) - R * i_L(t)}{L}
+$$
 
-```math
-\begin{array}{c|c c c}
-  ~ & j & k & l \cr
-  \hline
-  j &  &  & -1 \cr
-  k &  &  & T \cr
-  l & 1 & -T & 0
-\end{array}
+Transforming it to DP domain , the RL segment is described by 
+
+$$
+  \frac{\mathrm{d} i_L(t)}{\mathrm{d}t} + j\omega *i_L(t)= \frac{v_j(t) - v_k(t) - R * i_L(t)}{L}
+$$
+
+Applying the trapezoidal method leads to the finite difference equation:
+
+$$
+i_L(t) = \frac{(1-b^2 - (a*R)^2 -j*2b) }{(1+a*R)^2+b^2} * i_L(t - \Delta t) + \frac{a+a^2*R - j *ab}{(1+aR)^2 + b^2} * (v(t) + v(t + \Delta t))
+$$
+with
+$$
+a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2} , \qquad v(t) = v_j(t) - v_k(t)
+$$
+
+Applying this to the transformer model 
+
+Diagram 
+
+$$
+i_n_0(t) = \frac{(1-b^2 - (a*R)^2 -j*2b) }{(1+a*R)^2+b^2} * i_n_0(t - \Delta t) + \frac{a+a^2*R - j *ab}{(1+aR)^2 + b^2} * (v(t) + v(t + \Delta t))
+$$
+with
+$$ 
+v(t) = v_n_0(t) - v'_n_1(t), \qquad v'_n_1(t)= n * v_n_1(t) , \qquad i_n_1(t) = n * i_n_0(t)
+$$
+
+Substituting for v(t) , we get 
+$$
+i_n_0(t) = \frac{a+a^2*R - j *ab}{(1+aR)^2 + b^2} * (v_n_0(t) - n*v_n_1(t)) + \frac{(1-b^2 - (a*R)^2 -j*2b) }{(1+a*R)^2+b^2} * i_n_0(t - \Delta t) + \frac{a+a^2*R - j *ab}{(1+aR)^2 + b^2} * (v_n_0(t-\Delta t) - n*v_n_1(t-\Delta t))
+$$
+
+This is equivalent to 
+$$
+i_n_0(t) = Y_e_q * (v_n_0(t) - n*v_n_1(t)) + I_e_q 
+$$
+$$
+i_n_1(t) = - n * i_n_0(t)
+$$
+
+So the admittance matrix becomes 
+
+$$
 \begin{pmatrix}
-v_j \cr
-v_k \cr
-i_{l} \cr
+i_n_0 \cr
+i_n_1 \cr
 \end{pmatrix}
 =
 \begin{pmatrix}
-  \cr
-  \cr
-  0\cr
+  Y_e_q & -n*Y_e_q\cr
+  -n*Y_e_q & n^2* Y_e_q \cr
 \end{pmatrix} 
-```
-
-The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
-$l$ indicates the inserted row and column to accommodate the relation between the two voltages at the ends of the transformer.
-The transformer ratio is defined as $T = V_{j} / V_{k}$.
-A phase shift can be introduced if $T$ is considered as a complex number.
+* 
+\begin{pmatrix}
+v_n_0 \cr
+v_n_1 \cr
+\end{pmatrix} + 
+\begin{pmatrix}
+I_e_q \cr
+-I_e_q \cr
+\end{pmatrix}
+$$
