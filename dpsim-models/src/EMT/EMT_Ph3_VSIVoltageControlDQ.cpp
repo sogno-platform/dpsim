@@ -100,7 +100,7 @@ void EMT::Ph3::VSIVoltageControlDQ::setParameters(Real sysOmega, Real VdRef, Rea
 	mVoltageControllerVSI->setParameters(VdRef, VqRef);
 
 	**mOmegaN = sysOmega;
-	**mVdRef = VdRef;
+	**mVdRef = VdRef * sqrt(3/2);
 	**mVqRef = VqRef;
 }
 

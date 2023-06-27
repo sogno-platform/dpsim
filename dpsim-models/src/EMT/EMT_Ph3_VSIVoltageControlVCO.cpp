@@ -100,7 +100,7 @@ void EMT::Ph3::VSIVoltageControlVCO::setParameters(Real sysOmega, Real VdRef, Re
 	mVoltageControllerVSI->setParameters(VdRef, VqRef);
 
 	**mOmegaN = sysOmega;
-	**mVdRef = VdRef;
+	**mVdRef = VdRef * sqrt(3/2);
 	**mVqRef = VqRef;
 }
 
@@ -419,7 +419,7 @@ void EMT::Ph3::VSIVoltageControlVCO::mnaUpdateCurrent(const Matrix& leftvector) 
 	if (mWithConnectionTransformer)
 		**mIntfCurrent = mConnectionTransformer->mIntfCurrent->get();
 	else
-		**mIntfCurrent = mSubResistorF->mIntfCurrent->get();
+		**mIntfCurrent = mSubResistorC->mIntfCurrent->get();
 }
 
 //Voltage update

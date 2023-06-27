@@ -694,7 +694,7 @@ namespace SGIB {
         Real gamma_qInit = 0;
 
         // VSI generated values
-        Real Vdref = 400 * sqrt(3./2.); //work with Amplitude (*sqrt(3/2))
+        Real Vdref = 400; //work with Amplitude (*sqrt(3/2))
         Real Vqref = 0;
         Real systemFrequency = 60;
         Real OmegaNull = 2*M_PI*60; //System circular frequency
