@@ -13,69 +13,68 @@ Diagram
 An RL- segment in time domain is described by
 
 $$
-\frac{\mathrm{d} i_L(t)}{\mathrm{d}t} = \frac{v_j(t) - v_k(t) - R * i_L(t)}{L}
+\frac{\mathrm{d} i_L(t)}{\mathrm{d}t} = \frac{v_j(t) - v_k(t) - R \cdot i_L(t)}{L}
 $$
 
 Transforming it to DP domain , the RL segment is described by 
 
 $$
-  \frac{\mathrm{d} i_L(t)}{\mathrm{d}t} + j\omega *i_L(t)= \frac{v_j(t) - v_k(t) - R * i_L(t)}{L}
+  \frac{\mathrm{d} \langle i \rangle}{\mathrm{d}t} + j\omega \cdot i_L(t)= \frac{v_j(t) - v_k(t) - R \cdot i_L(t)}{L}
 $$
 
 Applying the trapezoidal method leads to the finite difference equation:
-
-$$
-i_L(t) = \frac{(1-b^2 - (a*R)^2 -j*2b) }{(1+a*R)^2+b^2} * i_L(t - \Delta t) + \frac{a+a^2*R - j *ab}{(1+aR)^2 + b^2} * (v(t) + v(t + \Delta t))
-$$
+```math
+i_L(t) = \frac{(1-b^2 - (a*R)^2 -j*2b) }{(1+a*R)^2+b^2} \cdot i_L(t - \Delta t) + \frac{a+a^2*R - j *ab}{(1+aR)^2 + b^2} \cdot (v(t) + v(t + \Delta t))
+```
 with
-$$
+```math
 a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2} , \qquad v(t) = v_j(t) - v_k(t)
-$$
+```
 
 Applying this to the transformer model 
 
 Diagram 
 
-$$
-i_n_0(t) = \frac{(1-b^2 - (a*R)^2 -j*2b) }{(1+a*R)^2+b^2} * i_n_0(t - \Delta t) + \frac{a+a^2*R - j *ab}{(1+aR)^2 + b^2} * (v(t) + v(t + \Delta t))
-$$
+```math
+i_{n0}(t) = \frac{(1-b^{2} - (aR)^{2} -j2b) }{(1+aR)^{2}+b^{2}} * i_{n0}(t - \Delta t) + \frac{a+a^{2}R - jab}{(1+aR)^{2} + b^{2}} \cdot (v(t) + v(t + \Delta t))
+```
 with
-$$ 
-v(t) = v_n_0(t) - v'_n_1(t), \qquad v'_n_1(t)= n * v_n_1(t) , \qquad i_n_1(t) = n * i_n_0(t)
-$$
+```math
+v(t) = v_{n0}(t) - v^{'}_{n1}(t), \qquad v{'}_{n1}(t)= n * v_{n1}(t) , \qquad i_{n1}(t) = n * i_{n0}(t)
+```
 
 Substituting for v(t) , we get 
-$$
-i_n_0(t) = \frac{a+a^2*R - j *ab}{(1+aR)^2 + b^2} * (v_n_0(t) - n*v_n_1(t)) + \frac{(1-b^2 - (a*R)^2 -j*2b) }{(1+a*R)^2+b^2} * i_n_0(t - \Delta t) + \frac{a+a^2*R - j *ab}{(1+aR)^2 + b^2} * (v_n_0(t-\Delta t) - n*v_n_1(t-\Delta t))
-$$
+```math
+i_{n0}(t) = \frac{a+a^{2}R - jab}{(1+aR)^{2} + b^{2}} \cdot (v_{n0}(t) - n v_{n1}(t)) + \frac{(1-b^{2} - (aR)^{2} -j2b) }{(1+aR)^{2}+b^{2}} \cdot i_{n0}(t - \Delta t) + \frac{a+a^{2} R - j *ab}{(1+aR)^{2} + b^{2}} \cdot (v_{n0}(t-\Delta t) - n v_{n1}(t-\Delta t))
+```
 
 This is equivalent to 
-$$
-i_n_0(t) = Y_e_q * (v_n_0(t) - n*v_n_1(t)) + I_e_q 
-$$
-$$
-i_n_1(t) = - n * i_n_0(t)
-$$
+```math
+i_{n0}(t) = Y_{eq} (v_{n0}(t) - nv_{n1}(t)) + I_{eq} 
+```
+```math
+i_{n1}(t) = - n i_{n0}(t)
+```
 
 So the admittance matrix becomes 
 
-$$
+```math
 \begin{pmatrix}
-i_n_0 \cr
-i_n_1 \cr
+i_{n0} \cr
+i_{n1} \cr
 \end{pmatrix}
 =
 \begin{pmatrix}
-  Y_e_q & -n*Y_e_q\cr
-  -n*Y_e_q & n^2* Y_e_q \cr
+  Y_{eq} & -nY_{eq}\cr
+  -nY_{eq} & n^{2} Y_{eq} \cr
 \end{pmatrix} 
 * 
 \begin{pmatrix}
-v_n_0 \cr
-v_n_1 \cr
+v_{n0} \cr
+v_{n1} \cr
 \end{pmatrix} + 
 \begin{pmatrix}
-I_e_q \cr
--I_e_q \cr
+I_{eq} \cr
+-I_{eq} \cr
 \end{pmatrix}
-$$
+```
