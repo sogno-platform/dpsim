@@ -13,21 +13,21 @@ using namespace CPS;
 
 EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
 	CompositePowerComp<Real>(uid, name, true, true, logLevel),
-	mOmegaN(Attribute<Real>::create("Omega_nom", mAttributes)),
-	mVdRef(Attribute<Real>::create("VdRef", mAttributes)),
-	mVqRef(Attribute<Real>::create("VqRef", mAttributes)),
-	mVcd(Attribute<Real>::create("Vc_d", mAttributes, 0)),
-	mVcq(Attribute<Real>::create("Vc_q", mAttributes, 0)),
-	mIrcd(Attribute<Real>::create("Irc_d", mAttributes, 0)),
-	mIrcq(Attribute<Real>::create("Irc_q", mAttributes, 0)),
-	mElecActivePower(Attribute<Real>::create("P_elec", mAttributes, 0)),
-	mElecPassivePower(Attribute<Real>::create("Q_elec", mAttributes, 0)),
-	mVsref(Attribute<Matrix>::create("Vsref", mAttributes, Matrix::Zero(3,1))),
-	mVs(Attribute<Matrix>::createDynamic("Vs", mAttributes)),
-	mVCOOutput(Attribute<Real>::createDynamic("VCO_output", mAttributes)),
-	mVoltagectrlInputs(Attribute<Matrix>::createDynamic("voltagectrl_inputs", mAttributes)),
-	mVoltagectrlOutputs(Attribute<Matrix>::createDynamic("voltagectrl_outputs", mAttributes)),
-	mVoltagectrlStates(Attribute<Matrix>::createDynamic("voltagectrl_states", mAttributes))  {
+	mOmegaN(mAttributes->create<Real>("Omega_nom")),
+	mVdRef(mAttributes->create<Real>("VdRef")),
+	mVqRef(mAttributes->create<Real>("VqRef")),
+	mVcd(mAttributes->create<Real>("Vc_d", 0)),
+	mVcq(mAttributes->create<Real>("Vc_q", 0)),
+	mIrcd(mAttributes->create<Real>("Irc_d", 0)),
+	mIrcq(mAttributes->create<Real>("Irc_q", 0)),
+	mElecActivePower(mAttributes->create<Real>("P_elec", 0)),
+	mElecPassivePower(mAttributes->create<Real>("Q_elec", 0)),
+	mVsref(mAttributes->create<Matrix>("Vsref", Matrix::Zero(3,1))),
+	mVs(mAttributes->createDynamic<Matrix>("Vs")),
+	mVCOOutput(mAttributes->createDynamic<Real>("VCO_output")),
+	mVoltagectrlInputs(mAttributes->createDynamic<Matrix>("voltagectrl_inputs")),
+	mVoltagectrlOutputs(mAttributes->createDynamic<Matrix>("voltagectrl_outputs")),
+	mVoltagectrlStates(mAttributes->createDynamic<Matrix>("voltagectrl_states")){
 	
 	mPhaseType = PhaseType::ABC;
 
@@ -410,12 +410,12 @@ void EMT::Ph3::VSIVoltageControlVCO::mnaParentAddPostStepDependencies(AttributeB
 }
 
 void EMT::Ph3::VSIVoltageControlVCO::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-	mnaUpdateCurrent(**leftVector);
-	mnaUpdateVoltage(**leftVector);
+	mnaCompUpdateCurrent(**leftVector);
+	mnaCompUpdateVoltage(**leftVector);
 }
 
 //Current update
-void EMT::Ph3::VSIVoltageControlVCO::mnaUpdateCurrent(const Matrix& leftvector) {
+void EMT::Ph3::VSIVoltageControlVCO::mnaCompUpdateCurrent(const Matrix& leftvector) {
 	if (mWithConnectionTransformer)
 		**mIntfCurrent = mConnectionTransformer->mIntfCurrent->get();
 	else
@@ -423,7 +423,7 @@ void EMT::Ph3::VSIVoltageControlVCO::mnaUpdateCurrent(const Matrix& leftvector) 
 }
 
 //Voltage update
-void EMT::Ph3::VSIVoltageControlVCO::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::VSIVoltageControlVCO::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	for (auto virtualNode : mVirtualNodes)
 		virtualNode->mnaUpdateVoltage(leftVector);
 	(**mIntfVoltage)(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,0));
