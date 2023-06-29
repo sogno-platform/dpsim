@@ -13,14 +13,14 @@ using namespace CPS::Signal;
 
 VCO::VCO(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
-    mInputRef(Attribute<Real>::createDynamic("input_ref", mAttributes)),
+    mInputRef(mAttributes->createDynamic<Real>("input_ref")),
     /// CHECK: Which of these really need to be attributes?
-    mInputPrev(Attribute<Real>::create("input_prev", mAttributes)),
-    mStatePrev(Attribute<Real>::create("state_prev", mAttributes)),
-    mOutputPrev(Attribute<Real>::create("output_prev", mAttributes)),
-    mInputCurr(Attribute<Real>::create("input_curr", mAttributes)),
-    mStateCurr(Attribute<Real>::create("state_curr", mAttributes)),
-    mOutputCurr(Attribute<Real>::create("output_curr", mAttributes)) { }
+    mInputPrev(mAttributes->create<Real>("input_prev", 0)),
+    mStatePrev(mAttributes->create<Real>("state_prev", 0)),
+    mOutputPrev(mAttributes->create<Real>("output_prev", 0)),
+    mInputCurr(mAttributes->create<Real>("input_curr", 0)),
+    mStateCurr(mAttributes->create<Real>("state_curr", 0)),
+    mOutputCurr(mAttributes->create<Real>("output_curr", 0)) { }
 
 
 void VCO::setParameters(Real omegaNom) {

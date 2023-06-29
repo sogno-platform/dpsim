@@ -16,20 +16,20 @@ VoltageControllerVSI::VoltageControllerVSI(String name, Logger::Level logLevel) 
 	SimSignalComp(name, name, logLevel),
 
 	//Previous
-	mInputPrev(Attribute<Matrix>::create("input_prev", mAttributes, Matrix::Zero(6,1))),
-    mStatePrev(Attribute<Matrix>::create("state_prev", mAttributes, Matrix::Zero(4,1))),
-    mOutputPrev(Attribute<Matrix>::create("output_prev", mAttributes, Matrix::Zero(2,1))),
+	mInputPrev(mAttributes->create<Matrix>("input_prev", Matrix::Zero(6,1))),
+    mStatePrev(mAttributes->create<Matrix>("state_prev", Matrix::Zero(6,1))),
+    mOutputPrev(mAttributes->create<Matrix>("output_prev", Matrix::Zero(2,1))),
 
 	//Currently
-    mInputCurr(Attribute<Matrix>::create("input_curr", mAttributes, Matrix::Zero(6,1))),
-    mStateCurr(Attribute<Matrix>::create("state_curr", mAttributes, Matrix::Zero(4,1))),
-    mOutputCurr(Attribute<Matrix>::create("output_curr", mAttributes, Matrix::Zero(2,1))),
+    mInputCurr(mAttributes->create<Matrix>("input_curr", Matrix::Zero(6,1))),
+    mStateCurr(mAttributes->create<Matrix>("state_curr", Matrix::Zero(6,1))),
+    mOutputCurr(mAttributes->create<Matrix>("output_curr", Matrix::Zero(2,1))),
 
 	//Measured values from filter
-	mVc_d(Attribute<Real>::createDynamic("Vc_d", mAttributes)),
-	mVc_q(Attribute<Real>::createDynamic("Vc_q", mAttributes)),
-	mIrc_d(Attribute<Real>::createDynamic("Irc_d", mAttributes)),
-	mIrc_q(Attribute<Real>::createDynamic("Irc_q", mAttributes)) {
+	mVc_d(mAttributes->createDynamic<Real>("Vc_d")),
+	mVc_q(mAttributes->createDynamic<Real>("Vc_q")),
+	mIrc_d(mAttributes->createDynamic<Real>("Irc_d")),
+	mIrc_q(mAttributes->createDynamic<Real>("Irc_q")) {
 
 	mSLog->info("Create {} {}", type(), name);
 }
