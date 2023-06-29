@@ -17,12 +17,12 @@ VoltageControllerVSI::VoltageControllerVSI(String name, Logger::Level logLevel) 
 
 	//Previous
 	mInputPrev(mAttributes->create<Matrix>("input_prev", Matrix::Zero(6,1))),
-    mStatePrev(mAttributes->create<Matrix>("state_prev", Matrix::Zero(6,1))),
+    mStatePrev(mAttributes->create<Matrix>("state_prev", Matrix::Zero(4,1))),
     mOutputPrev(mAttributes->create<Matrix>("output_prev", Matrix::Zero(2,1))),
 
 	//Currently
     mInputCurr(mAttributes->create<Matrix>("input_curr", Matrix::Zero(6,1))),
-    mStateCurr(mAttributes->create<Matrix>("state_curr", Matrix::Zero(6,1))),
+    mStateCurr(mAttributes->create<Matrix>("state_curr", Matrix::Zero(4,1))),
     mOutputCurr(mAttributes->create<Matrix>("output_curr", Matrix::Zero(2,1))),
 
 	//Measured values from filter
