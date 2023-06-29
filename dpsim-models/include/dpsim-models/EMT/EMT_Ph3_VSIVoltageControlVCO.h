@@ -146,9 +146,9 @@ namespace Ph3 {
 		/// Initializes internal variables of the component
 		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Updates current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates voltage across component
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		/// MNA pre step operations
 		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
