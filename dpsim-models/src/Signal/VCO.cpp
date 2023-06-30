@@ -27,7 +27,7 @@ void VCO::setParameters(Real omegaNom) {
     // Input is OmegaNom
     // Output is Theta
     mOmegaNom = omegaNom;
-    mSLog->info("OmegaNom = {}", mOmegaNom);
+    SPDLOG_LOGGER_INFO(mSLog, "OmegaNom = {}", mOmegaNom);
 
     **mInputCurr = mOmegaNom;
     **mInputRef = mOmegaNom;
@@ -35,7 +35,7 @@ void VCO::setParameters(Real omegaNom) {
 
 void VCO::setSimulationParameters(Real timestep) {
     mTimeStep = timestep;
-    mSLog->info("Integration step = {}", mTimeStep);
+    SPDLOG_LOGGER_INFO(mSLog, "Integration step = {}", mTimeStep);
 }
 
 void VCO::setInitialValues(Real input_init, Real state_init, Real output_init) {
@@ -43,8 +43,8 @@ void VCO::setInitialValues(Real input_init, Real state_init, Real output_init) {
     **mStateCurr = state_init;
     **mOutputCurr = output_init;
 
-    mSLog->info("Initial values:");
-    mSLog->info("inputCurrInit = ({}), stateCurrInit = ({}), outputCurrInit = ({})", **mInputCurr, **mStateCurr, **mOutputCurr);
+    SPDLOG_LOGGER_INFO(mSLog, "Initial values:");
+    SPDLOG_LOGGER_INFO(mSLog, "inputCurrInit = ({}), stateCurrInit = ({}), outputCurrInit = ({})", **mInputCurr, **mStateCurr, **mOutputCurr);
 }
 
 void VCO::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -69,14 +69,16 @@ void VCO::signalAddStepDependencies(AttributeBase::List &prevStepDependencies, A
 void VCO::signalStep(Real time, Int timeStepCount) {
     **mInputCurr = **mInputRef;
 
-    mSLog->info("Time {}:", time);
-    mSLog->info("Input values: inputCurr = {}, inputPrev = ({}, stateCurr = ({}, statePrev = ({})", **mInputCurr, **mInputPrev, **mStateCurr, **mStatePrev);
 
+    SPDLOG_LOGGER_DEBUG(mSLog, "Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, **mInputCurr, **mInputPrev, **mStatePrev);
+
+    // calculate new states
     **mStateCurr = (**mStatePrev + mTimeStep * **mInputCurr);
-    **mOutputCurr = **mStateCurr;
+    SPDLOG_LOGGER_DEBUG(mSLog, "stateCurr = \n {}", **mStateCurr);  
 
-    mSLog->info("State values: stateCurr = ({})", **mStateCurr);
-    mSLog->info("Output values: outputCurr = ({}):", **mOutputCurr);
+    // calculate new outputs
+    **mOutputCurr = **mStateCurr;
+    SPDLOG_LOGGER_DEBUG(mSLog, "Output values: outputCurr = \n{}", **mOutputCurr);
 }
 
 Task::List VCO::getTasks() {
