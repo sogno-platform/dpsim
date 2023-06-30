@@ -31,7 +31,7 @@ VoltageControllerVSI::VoltageControllerVSI(String name, Logger::Level logLevel) 
 	mIrc_d(mAttributes->createDynamic<Real>("Irc_d")),
 	mIrc_q(mAttributes->createDynamic<Real>("Irc_q")) {
 
-	mSLog->info("Create {} {}", type(), name);
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
 }
 
 //set desired parameters to achieve
@@ -39,8 +39,8 @@ void VoltageControllerVSI::setParameters(Real VdRef, Real VqRef) {
 	mVdRef = VdRef;
 	mVqRef = VqRef;
 
-	mSLog->info("General Parameters:");
-	mSLog->info("Voltage D Amplitude={} [V] Voltage Q Amplitude={} [V]", mVdRef, mVqRef);
+	SPDLOG_LOGGER_INFO(mSLog, "General Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "Voltage D Amplitude={} [V] Voltage Q Amplitude={} [V]", mVdRef, mVqRef);
 
 }
 
@@ -63,11 +63,11 @@ void VoltageControllerVSI::setControllerParameters(Real Kp_voltageCtrl, Real Ki_
 	mOmegaCutoff = Omega_cutoff; 
 
 	//log loop parameters
-	mSLog->info("Control Parameters:");
-	mSLog->info("Voltage Loop: K_i = {}, K_p = {}", Kp_voltageCtrl, Ki_voltageCtrl);
-	mSLog->info("Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);
-	mSLog->info("PLL: K_p = {}, K_i = {}", Kp_pll, Ki_pll);
-	mSLog->info("Cut-Off Frequency = {}", Omega_cutoff);  
+	SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_i = {}, K_p = {}", Kp_voltageCtrl, Ki_voltageCtrl);
+	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);
+	SPDLOG_LOGGER_INFO(mSLog, "PLL: K_p = {}, K_i = {}", Kp_pll, Ki_pll);
+	SPDLOG_LOGGER_INFO(mSLog, "Cut-Off Frequency = {}", Omega_cutoff);  
 
     // Set state space matrices using controller parameters
 
@@ -96,11 +96,11 @@ void VoltageControllerVSI::setControllerParameters(Real Kp_voltageCtrl, Real Ki_
 		0, mKpCurrCtrlq*mKpVoltageCtrlq, 0, -mKpCurrCtrlq*mKpVoltageCtrlq + 1, 0, -mKpCurrCtrlq; 
 
 	// Log state-space matrices
-	mSLog->info("State space matrices:");
-    mSLog->info("A = \n{}", mA);
-    mSLog->info("B = \n{}", mB);
-    mSLog->info("C = \n{}", mC);
-    mSLog->info("D = \n{}", mD);
+	SPDLOG_LOGGER_INFO(mSLog, "State space matrices:");
+    SPDLOG_LOGGER_INFO(mSLog, "A = \n{}", mA);
+    SPDLOG_LOGGER_INFO(mSLog, "B = \n{}", mB);
+    SPDLOG_LOGGER_INFO(mSLog, "C = \n{}", mC);
+    SPDLOG_LOGGER_INFO(mSLog, "D = \n{}", mD);
 }
 
 //setter for controller parameters and setting up of system matrices with VCO
@@ -122,10 +122,10 @@ void VoltageControllerVSI::setControllerParameters(Real Kp_voltageCtrl, Real Ki_
 	mOmegaCutoff = Omega_nominal; 
 
 	//log loop parameters
-	mSLog->info("Control Parameters:");
-	mSLog->info("Voltage Loop: K_i = {}, K_p = {}", Kp_voltageCtrl, Ki_voltageCtrl);
-	mSLog->info("Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);
-	mSLog->info("Cut-Off Frequency = {}", Omega_nominal);  
+	SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_i = {}, K_p = {}", Kp_voltageCtrl, Ki_voltageCtrl);
+	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);
+	SPDLOG_LOGGER_INFO(mSLog, "Cut-Off Frequency = {}", Omega_nominal);  
 
     // Set state space matrices using controller parameters
 
@@ -154,11 +154,11 @@ void VoltageControllerVSI::setControllerParameters(Real Kp_voltageCtrl, Real Ki_
 		0, mKpCurrCtrlq*mKpVoltageCtrlq, 0, -mKpCurrCtrlq*mKpVoltageCtrlq + 1, 0, -mKpCurrCtrlq; 
 
 	// Log state-space matrices
-	mSLog->info("State space matrices:");
-    mSLog->info("A = \n{}", mA);
-    mSLog->info("B = \n{}", mB);
-    mSLog->info("C = \n{}", mC);
-    mSLog->info("D = \n{}", mD);
+	SPDLOG_LOGGER_INFO(mSLog, "State space matrices:");
+    SPDLOG_LOGGER_INFO(mSLog, "A = \n{}", mA);
+    SPDLOG_LOGGER_INFO(mSLog, "B = \n{}", mB);
+    SPDLOG_LOGGER_INFO(mSLog, "C = \n{}", mC);
+    SPDLOG_LOGGER_INFO(mSLog, "D = \n{}", mD);
 }
 
 //setter for initial state values --> variables inside the system
@@ -169,9 +169,9 @@ void VoltageControllerVSI::setInitialStateValues(Real phi_dInit, Real phi_qInit,
 	mGamma_dInit = gamma_dInit;
 	mGamma_qInit = gamma_qInit;
 
-	mSLog->info("Initial State Value Parameters:");
-	mSLog->info("Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
-	mSLog->info("Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
+	SPDLOG_LOGGER_INFO(mSLog, "Initial State Value Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog, "Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
+	SPDLOG_LOGGER_INFO(mSLog, "Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
 }
 
 //Creating state space model out of the variables
@@ -182,15 +182,15 @@ void VoltageControllerVSI::initializeStateSpaceModel(Real omega, Real timeStep, 
 
 	// initialization of input --> [u]
 	**mInputCurr << mVdRef, mVqRef, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
-	mSLog->info("Initialization of input: \n" + Logger::matrixToString(**mInputCurr));
+	SPDLOG_LOGGER_INFO(mSLog, "Initialization of input: \n" + Logger::matrixToString(**mInputCurr));
 
 	// initialization of states --> [x]
 	**mStateCurr << mPhi_dInit, mPhi_qInit, mGamma_dInit, mGamma_qInit;
-	mSLog->info("Initialization of states: \n" + Logger::matrixToString(**mStateCurr));
+	SPDLOG_LOGGER_INFO(mSLog, "Initialization of states: \n" + Logger::matrixToString(**mStateCurr));
 
 	// initialization of output --> [y]
 	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	mSLog->info("Initialization of output: \n" + Logger::matrixToString(**mOutputCurr));
+	SPDLOG_LOGGER_INFO(mSLog, "Initialization of output: \n" + Logger::matrixToString(**mOutputCurr));
 }
 
 void VoltageControllerVSI::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -220,15 +220,15 @@ void VoltageControllerVSI::signalStep(Real time, Int timeStepCount) {
 
 	// get current inputs
 	**mInputCurr << mVdRef, mVqRef, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
-    mSLog->debug("Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, **mInputCurr, **mInputPrev, **mStatePrev);
+    SPDLOG_LOGGER_DEBUG(mSLog, "Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, **mInputCurr, **mInputPrev, **mStatePrev);
 
 	// calculate new states
 	**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
-	mSLog->debug("stateCurr = \n {}", **mStateCurr);
+	SPDLOG_LOGGER_DEBUG(mSLog, "stateCurr = \n {}", **mStateCurr);
 
 	// calculate new outputs
 	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	mSLog->debug("Output values: outputCurr = \n{}", **mOutputCurr);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Output values: outputCurr = \n{}", **mOutputCurr);
 }
 
 Task::List VoltageControllerVSI::getTasks() {
