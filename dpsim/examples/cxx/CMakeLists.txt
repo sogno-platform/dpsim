@@ -74,12 +74,14 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/SP_SynGen4OrderDCIM_SMIB_Fault.cpp
+	Circuits/EMT_SynGen4OrderIter_SMIB_Fault.cpp
 
 	# SMIB Reduced Order - Load step
 	Circuits/SP_SMIB_ReducedOrderSG_LoadStep.cpp
 	Circuits/DP_SMIB_ReducedOrderSG_LoadStep.cpp
 	Circuits/EMT_SMIB_ReducedOrderSG_LoadStep.cpp
+	Circuits/EMT_SMIB_ReducedOrderSGIterative_LoadStep.cpp
+	Circuits/DP_SMIB_ReducedOrderSGIterative_LoadStep.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
@@ -128,6 +130,8 @@ list(APPEND TEST_SOURCES
 	Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
 	Circuits/EMT_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FrequencyRamp_CosineFM.cpp
+	Circuits/DP_SMIB_ReducedOrderSG_LoadStep.cpp
+	Circuits/DP_SMIB_ReducedOrderSGIterative_LoadStep.cpp
 )
 
 if(WITH_SUNDIALS)
@@ -170,6 +174,7 @@ if(WITH_CIM)
 		CIM/SP_WSCC9bus_SGReducedOrderVBR.cpp
 		CIM/EMT_WSCC9bus_SGReducedOrderVBR.cpp
 		CIM/DP_WSCC9bus_SGReducedOrderVBR.cpp
+		CIM/DP_WSCC9bus_SGReducedOrderIter.cpp
 
 		# PF(Power Flow) example
 		CIM/Slack_Trafo_Load.cpp
@@ -198,6 +203,7 @@ if(WITH_CIM)
 		CIM/DP_WSCC-9bus_IdealVS.cpp
 		CIM/EMT_WSCC-9bus_IdealCS.cpp
 		CIM/EMT_WSCC-9bus_IdealVS.cpp
+		CIM/SP_WSCC9bus_SGReducedOrderVBR.cpp
 	)
 
 	if(WITH_RT)

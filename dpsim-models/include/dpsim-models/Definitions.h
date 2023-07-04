@@ -108,9 +108,8 @@ namespace CPS {
 	enum class PhaseType { A, B, C, ABC, Single };
 	enum class Domain { SP, DP, EMT };
 	enum class PowerflowBusType { PV, PQ, VD, None };
-	enum class GeneratorType {PVNode, IdealVoltageSource, IdealCurrentSource, TransientStability, FullOrder, FullOrderVBR, SG6aOrderVBR, SG6bOrderVBR, SG4OrderVBR, SG3OrderVBR, None};
+	enum class GeneratorType {PVNode, IdealVoltageSource, IdealCurrentSource, TransientStability, FullOrder, FullOrderVBR, SG6aOrderVBR, SG6bOrderVBR, SG4OrderVBR, SG3OrderVBR, SG4OrderPCM, SG4OrderTPM, SG6OrderPCM, None};
 	enum class SGOrder {SG3Order, SG4Order, SG6aOrder, SG6bOrder};
-
 
 	// ### Exceptions ###
 	class Exception : public std::exception { };

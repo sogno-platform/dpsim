@@ -1,6 +1,6 @@
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -18,15 +18,21 @@ Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur
 
 int main(int argc, char* argv[]) {
 
+	// initiaize gen factory
+	SynchronGeneratorFactory::DP::Ph1::registerSynchronGenerators();
+
 	// Simulation parameters
-	String simName = "DP_SMIB_ReducedOrderSG_VBR_LoadStep";
-	Real timeStep = 100e-6;
+	String simName = "DP_SMIB_ReducedOrderSGIterative_LoadStep";
+	Real timeStep = 1e-3;
 	Real finalTime = 35;
 
 	// Default configuration
-	String sgType = defaultConfig.sgType;
 	Real loadStepEventTime = defaultConfig.loadStepEventTime;
 	Real H = syngenKundur.H;
+	Real tolerance = defaultConfig.tolerance;
+	int maxIter = defaultConfig.maxIter;
+	String SGModel = defaultConfig.sgType + "Iter";
+	SGModel = "4TPM";	// options: "4PCM", "4TPM", "6PCM"
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
@@ -35,18 +41,24 @@ int main(int argc, char* argv[]) {
 			simName = args.getOptionString("SimName");
 		if (args.options.find("TimeStep") != args.options.end())
 			timeStep = args.getOptionReal("TimeStep");
-		if (args.options.find("sgType") != args.options.end())
-			sgType = args.getOptionString("sgType");
+		if (args.options.find("Tolerance") != args.options.end())
+			tolerance = args.getOptionReal("Tolerance");
+		if (args.options.find("MaxIter") != args.options.end())
+			maxIter = int(args.getOptionReal("MaxIter"));
 		if (args.options.find("loadStepEventTime") != args.options.end())
 			loadStepEventTime = args.getOptionReal("loadStepEventTime");
 		if (args.options.find("inertia") != args.options.end())
 			H = args.getOptionReal("inertia");
+		if (args.options.find("SGModel") != args.options.end())
+			SGModel = args.getOptionString("SGModel");
 	}
 
 	std::cout << "Simulation Parameters: " << std::endl;
 	std::cout << "SimName: " << simName << std::endl;
 	std::cout << "Time Step: " << timeStep << std::endl;
-	std::cout << "SG: " << sgType << std::endl;
+	std::cout << "Tolerance: " << tolerance << std::endl;
+	std::cout << "Max N° of Iterations: " << maxIter << std::endl;
+	std::cout << "SG: " << SGModel << std::endl;
 
 	// Configure logging
 	Logger::Level logLevel = Logger::Level::info;
@@ -123,20 +135,22 @@ int main(int argc, char* argv[]) {
 
 	// Nodes
 	std::vector<Complex> initialVoltage_n1{ n1PF->voltage()(0,0)};
-	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0)};
 	auto n1DP = SimNode<Complex>::make("n1DP", PhaseType::Single, initialVoltage_n1);
+	std::vector<Complex> initialVoltage_n2{ n2PF->voltage()(0,0)};
 	auto n2DP = SimNode<Complex>::make("n2DP", PhaseType::Single, initialVoltage_n2);
 
 	// Synchronous generator
-	auto genDP = GeneratorFactory::createGenDP(sgType, "SynGen", logLevel);
+	auto genDP = Factory<CPS::Base::ReducedOrderSynchronGenerator<Complex>>::get().create(SGModel, "SynGen", logLevel);
 	genDP->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage,
-			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
-			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
+		syngenKundur.nomPower, syngenKundur.nomVoltage,
+		syngenKundur.nomFreq, H,
+		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
+		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+		syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
     genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
 	genDP->setModelAsNortonSource(true);
+	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setMaxIterations(maxIter);
+	std::dynamic_pointer_cast<MNASyncGenInterface>(genDP)->setTolerance(tolerance);
 
 	//Grid bus as Slack
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
@@ -144,26 +158,34 @@ int main(int argc, char* argv[]) {
 
     // Line
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", logLevel);
-	lineDP->setParameters(gridParams.lineResistance, gridParams.lineInductance,
-						  gridParams.lineCapacitance, gridParams.lineConductance);
+	lineDP->setParameters(gridParams.lineResistance,
+	                      gridParams.lineInductance,
+					      gridParams.lineCapacitance,
+						  gridParams.lineConductance);
 
 	// Topology
 	genDP->connect({ n1DP });
 	lineDP->connect({ n1DP, n2DP });
 	extnetDP->connect({ n2DP });
-	auto systemDP = SystemTopology(gridParams.nomFreq,
+	SystemTopology systemDP = SystemTopology(gridParams.nomFreq,
 			SystemNodeList{n1DP, n2DP},
 			SystemComponentList{genDP, lineDP, extnetDP});
 
 	// Logging
-	// log node voltage
 	auto logger = DataLogger::make(simName, true, logDownSampling);
-		for (auto node : systemDP.mNodes)
-			logger->logAttribute(node->name() + ".V", node->attribute("v"));
+
+	// log node voltage
+	for (auto node : systemDP.mNodes)
+		logger->logAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log generator vars
-	logger->logAttribute(genDP->name() + ".Tm", genDP->attribute("Tm"));
 	logger->logAttribute(genDP->name() + ".Te", genDP->attribute("Te"));
+	logger->logAttribute(genDP->name() + ".NIterations", genDP->attribute("NIterations"));
+	logger->logAttribute(genDP->name() + ".Edq_t", genDP->attribute("Edq_t"));
+	if (SGModel=="6PCM")
+		logger->logAttribute(genDP->name() + ".Edq_s", genDP->attribute("Edq_s"));
+	logger->logAttribute(genDP->name() + ".Vdq0", genDP->attribute("Vdq0"));
+	logger->logAttribute(genDP->name() + ".Idq0", genDP->attribute("Idq0"));
 	logger->logAttribute(genDP->name() + ".omega", genDP->attribute("w_r"));
 	logger->logAttribute(genDP->name() + ".delta", genDP->attribute("delta"));
 	logger->logAttribute(genDP->name() + ".Theta", genDP->attribute("Theta"));
@@ -179,7 +201,6 @@ int main(int argc, char* argv[]) {
 	simDP.setDomain(Domain::DP);
 	simDP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	simDP.addLogger(logger);
-	simDP.doSystemMatrixRecomputation(true);
 
 	// Events
 	simDP.addEvent(loadStepEvent);

@@ -60,7 +60,7 @@ namespace Base {
 			virtual ~ReducedOrderSynchronGenerator() { }
 			/// modelAsCurrentSource=true --> SG is modeled as current source, otherwise as voltage source
 			/// Both implementations are equivalent, but the current source implementation is more efficient
-			virtual void setModelAsCurrentSource(Bool modelAsCurrentSource);
+			virtual void setModelAsNortonSource(Bool modelAsCurrentSource);
 			///
 			void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
 			/// Initialization for 3 Order SynGen
@@ -113,7 +113,7 @@ namespace Base {
 			void initializeFromNodesAndTerminals(Real frequency);
 			/// Function to initialize the specific variables of each SG model
 			virtual void specificInitialization() = 0;
-			///
+			/// Model specific step
         	virtual void stepInPerUnit() = 0;
 
 			// ### MNA Section ###
@@ -128,9 +128,8 @@ namespace Base {
 			virtual void mnaCompPostStep(const Matrix& leftVector) = 0;
 			/// Stamps system matrix
 			virtual void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) = 0;
-			/// Model flag indicating whether the machine is modeled as current or voltage source
-			/// Default: currentsource (recommended)
-			Bool mModelAsCurrentSource = true;
+			/// Model flag indicating whether the machine is modelled as Norton or Thevenin equivalent
+			Bool mModelAsNortonSource;
 			// Model flag indicating the SG order to be used
 			SGOrder mSGOrder;
 

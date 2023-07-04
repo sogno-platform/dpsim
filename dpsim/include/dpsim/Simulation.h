@@ -146,6 +146,9 @@ namespace DPsim {
 		/// Prepare schedule for simulation
 		void prepSchedule();
 
+		/// ### SynGen Interface ###
+		int mMaxIterations = 10;
+
 	public:
 		/// Simulation logger
 		CPS::Logger::Log mLog;
@@ -176,6 +179,8 @@ namespace DPsim {
 		void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) { mDirectImpl = directImpl; }
 		///
 		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration& configuration) { mDirectLinearSolverConfiguration = configuration;	}
+		///
+		void setMaxNumberOfIterations(int maxIterations) {mMaxIterations = maxIterations;}
 		///
 		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
 		///

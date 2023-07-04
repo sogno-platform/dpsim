@@ -375,6 +375,10 @@ namespace Scenario6 {
         // adjustable using applyCommandLineArgsOptions
         String sgType = "4";
         Real loadStepEventTime = 10.0;
+
+        // parameters of iterative model
+        Real maxIter = 25;
+        Real tolerance = 1e-10;
     };
 
     struct GridParams {

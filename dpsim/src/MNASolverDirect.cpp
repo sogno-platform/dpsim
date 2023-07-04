@@ -218,15 +218,14 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 	// Reset source vector
 	mRightSideVector.setZero();
 
-	// Add together the right side vector (computed by the components'
-	// pre-step tasks)
+	// Add together the right side vector (computed by the components' pre-step tasks)
 	for (auto stamp : mRightVectorStamps)
 		mRightSideVector += *stamp;
 
 	if (!mIsInInitialization)
 		MnaSolver<VarType>::updateSwitchStatus();
 
-	if (mSwitchedMatrices.size() > 0) {
+	if (mSwitchedMatrices.size() > 0){
 		auto start = std::chrono::steady_clock::now();
 		**mLeftSideVector = mDirectLinearSolvers[mCurrentSwitchStatus][0]->solve(mRightSideVector);
 		auto end = std::chrono::steady_clock::now();
@@ -234,6 +233,57 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 		mSolveTimes.push_back(diff.count());
 	}
 
+	// CHECK: Is this really required? Or can operations actually become part of
+	// correctorStep and mnaPostStep?
+	for (auto syncGen : mSyncGen)
+		syncGen->updateVoltage(**mLeftSideVector);
+
+	// Reset number of iterations
+	mIter = 0;
+
+	// Additional solve steps for iterative models
+	if (mSyncGen.size() > 0) {
+		UInt numCompsRequireIter;
+		do {
+			// count synchronous generators that require iteration
+			numCompsRequireIter = 0;
+			for (auto syncGen : mSyncGen)
+				if (syncGen->requiresIteration())
+					numCompsRequireIter++;
+
+			// recompute solve step if at least one component demands iteration
+			if (numCompsRequireIter > 0){
+				mIter++;
+
+				// Reset source vector
+				mRightSideVector.setZero();
+
+				if (!mIsInInitialization)
+					MnaSolver<VarType>::updateSwitchStatus();
+
+				for (auto syncGen : mSyncGen)
+					syncGen->correctorStep();
+
+				// Add together the right side vector (computed by the components' pre-step tasks)
+				for (auto stamp : mRightVectorStamps)
+					mRightSideVector += *stamp;
+
+				if (mSwitchedMatrices.size() > 0) {
+					auto start = std::chrono::steady_clock::now();
+					**mLeftSideVector = mDirectLinearSolvers[mCurrentSwitchStatus][0]->solve(mRightSideVector);
+					auto end = std::chrono::steady_clock::now();
+					std::chrono::duration<Real> diff = end-start;
+					mSolveTimes.push_back(diff.count());
+				}
+
+				// CHECK: Is this really required? Or can operations actually become part of
+				// correctorStep and mnaPostStep?
+				for (auto syncGen : mSyncGen)
+					syncGen->updateVoltage(**mLeftSideVector);
+			}
+		}
+		while (numCompsRequireIter > 0);
+	}
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)

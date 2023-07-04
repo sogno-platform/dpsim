@@ -28,6 +28,10 @@ Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	// declare state variables
 	**mVdq0 = Matrix::Zero(3,1);
 	**mIdq0 = Matrix::Zero(3,1);
+
+	// default model is Norton equivalent
+	mModelAsNortonSource = true;
+	SPDLOG_LOGGER_INFO(this->mSLog, "SG per default modelled as Norton equivalent");
 }
 
 template <>
@@ -49,15 +53,23 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	///FIXME: The mVdq0 and mVdq member variables are mutually exclusive and carry the same attribute name. Maybe they can be unified?
 	**mVdq = Matrix::Zero(2,1);
 	**mIdq = Matrix::Zero(2,1);
+
+	// default model is Norton equivalent
+	mModelAsNortonSource = true;
+	SPDLOG_LOGGER_INFO(this->mSLog, "SG per default modelled as Norton equivalent");
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::setModelAsCurrentSource(Bool modelAsCurrentSource) {
-	mModelAsCurrentSource = modelAsCurrentSource;
+void Base::ReducedOrderSynchronGenerator<VarType>::setModelAsNortonSource(Bool modelAsCurrentSource) {
+	mModelAsNortonSource = modelAsCurrentSource;
 
-	if (!mModelAsCurrentSource)
-		// SG is modeled as voltage source
+	if (mModelAsNortonSource) {
+		this->setVirtualNodeNumber(0);
+		SPDLOG_LOGGER_INFO(this->mSLog, "Setting SG model to Norton equivalent");
+	} else {
 		this->setVirtualNodeNumber(2);
+		SPDLOG_LOGGER_INFO(this->mSLog, "Setting SG model to Thevenin equivalent");
+	}
 }
 
 template <typename VarType>
@@ -437,22 +449,30 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 		**mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
 	}
 
-	// calculate mechanical variables at t=k+1 with forward euler
-	if (mSimTime>0.0) {
-		**mElecTorque = ((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0));
+	// predict mechanical vars for all reduced-order models in the same manner
+	if (mSimTime > 0.0) {
+		// predict omega at t=k+1 (forward euler)
+		**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
 		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+
+		// predict theta and delta at t=k+1 (backward euler)
 		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
+	// model specific calculation of electrical vars
 	stepInPerUnit();
+
+	// stamp model specific right side vector after calculation of electrical vars
 	(**mRightVector).setZero();
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <>
 void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int timeStepCount) {
 	mSimTime = time;
+
+	// update controller variables
 	if (mHasExciter) {
 		mEf_prev = **mEf;
 		**mEf = mExciter->step((**mVdq0)(0,0), (**mVdq0)(1,0), mTimeStep);
@@ -462,17 +482,23 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int ti
 		**mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
 	}
 
-	// calculate mechanical variables at t=k+1 with forward euler
-	if (mSimTime>0.0) {
-		**mElecTorque = ((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0));
+	// predict mechanical vars for all reduced-order models in the same manner
+	if (mSimTime > 0.0) {
+		// predict omega at t=k+1 (forward euler)
+		**mElecTorque = (**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0);
 		**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+
+		// predict theta and delta at t=k+1 (backward euler)
 		**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 		**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 	}
 
+	// model specific calculation of electrical vars
 	stepInPerUnit();
+
+	// stamp model specific right side vector after calculation of electrical vars
 	(**mRightVector).setZero();
-	mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <typename VarType>
@@ -486,7 +512,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPreStep(Real time, Int
 	mSimTime = time;
 	stepInPerUnit();
 	(**mRightVector).setZero();
-	this->mnaApplyRightSideVectorStamp(**mRightVector);
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <typename VarType>

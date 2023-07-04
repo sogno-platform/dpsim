@@ -20,4 +20,21 @@ using namespace pybind11::literals;
 void addBaseComponents(py::module_ mBase) {
     py::class_<CPS::Base::Ph1::Switch, std::shared_ptr<CPS::Base::Ph1::Switch>>(mBase, "Switch");
     py::class_<CPS::Base::Ph3::Switch, std::shared_ptr<CPS::Base::Ph3::Switch>>(mBase, "SwitchPh3");
+
+    py::class_<CPS::MNASyncGenInterface, std::shared_ptr<CPS::MNASyncGenInterface>>(mBase, "MNASyncGenInterface", py::multiple_inheritance())
+        .def("set_max_iterations", &CPS::MNASyncGenInterface::setMaxIterations, "max_iter"_a)
+		.def("set_tolerance", &CPS::MNASyncGenInterface::setTolerance, "tolerance"_a);
+
+    py::class_<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>, std::shared_ptr<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>, CPS::SimPowerComp<CPS::Complex>>(mBase, "ReducedOrderSynchronGeneratorComplex", py::multiple_inheritance())
+        .def("set_base_parameters", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::setBaseParameters, "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
+		.def("set_initial_values", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::setInitialValues, "init_complex_electrical_power"_a, "init_mechanical_power"_a, "init_complex_terminal_voltage"_a)
+		.def("scale_inertia_constant", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::scaleInertiaConstant, "scaling_factor"_a)
+		.def("set_model_as_norton_source", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::setModelAsNortonSource, "model_as_norton_source"_a);
+
+    py::class_<CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>, std::shared_ptr<CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>>, CPS::SimPowerComp<CPS::Real>>(mBase, "ReducedOrderSynchronGeneratorReal", py::multiple_inheritance())
+        .def("set_base_parameters", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::setBaseParameters, "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
+		.def("set_initial_values", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::setInitialValues, "init_complex_electrical_power"_a, "init_mechanical_power"_a, "init_complex_terminal_voltage"_a)
+		.def("scale_inertia_constant", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::scaleInertiaConstant, "scaling_factor"_a)
+		.def("set_model_as_norton_source", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::setModelAsNortonSource, "model_as_norton_source"_a);
+
 }

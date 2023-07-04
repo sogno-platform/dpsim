@@ -1,12 +1,10 @@
 #include <DPsim.h>
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 
 using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 using namespace Examples::Grids::SMIB::ReducedOrderSynchronGenerator;
-
 
 // Default configuration of scenario
 Scenario6::Config defaultConfig;
@@ -20,29 +18,43 @@ Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur
 int main(int argc, char* argv[]) {
 
 	// Simulation parameters
-	String simName = "EMT_SMIB_ReducedOrderSG_LoadStep";
+	String simName = "EMT_SMIB_ReducedOrderSGIterative_LoadStep";
 	Real timeStep = 10e-6;
 	Real finalTime = 35;
 
 	// Default configuration
-	String sgType = defaultConfig.sgType;
 	Real loadStepEventTime = defaultConfig.loadStepEventTime;
 	Real H = syngenKundur.H;
+	Real tolerance = defaultConfig.tolerance;
+	int maxIter = defaultConfig.maxIter;
+	String SGModel = defaultConfig.sgType + "Iter";
+	SGModel = "4TPM";	// options: "4PCM", "4TPM", "6PCM"
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-		timeStep = args.timeStep;
-		finalTime = args.duration;
-		if (args.name != "dpsim")
-			simName = args.name;
-		if (args.options.find("sgType") != args.options.end())
-			sgType = args.getOptionString("sgType");
+		if (args.options.find("SimName") != args.options.end())
+			simName = args.getOptionString("SimName");
+		if (args.options.find("TimeStep") != args.options.end())
+			timeStep = args.getOptionReal("TimeStep");
+		if (args.options.find("Tolerance") != args.options.end())
+			tolerance = args.getOptionReal("Tolerance");
+		if (args.options.find("MaxIter") != args.options.end())
+			maxIter = int(args.getOptionReal("MaxIter"));
 		if (args.options.find("loadStepEventTime") != args.options.end())
 			loadStepEventTime = args.getOptionReal("loadStepEventTime");
 		if (args.options.find("inertia") != args.options.end())
 			H = args.getOptionReal("inertia");
+		if (args.options.find("SGModel") != args.options.end())
+			SGModel = args.getOptionString("SGModel");
 	}
+
+	std::cout << "Simulation Parameters: " << std::endl;
+	std::cout << "SimName: " << simName << std::endl;
+	std::cout << "Time Step: " << timeStep << std::endl;
+	std::cout << "Tolerance: " << tolerance << std::endl;
+	std::cout << "Max N° of Iterations: " << maxIter << std::endl;
+	std::cout << "SG: " << SGModel << std::endl;
 
 	// Configure logging
 	Logger::Level logLevel = Logger::Level::info;
@@ -130,15 +142,15 @@ int main(int argc, char* argv[]) {
 	auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
 
 	// Synchronous generator
-	auto genEMT = GeneratorFactory::createGenEMT(sgType, "SynGen", logLevel);
+	auto genEMT = EMT::Ph3::SynchronGenerator4OrderPCM::make("SynGen", logLevel);
 	genEMT->setOperationalParametersPerUnit(
-			syngenKundur.nomPower, syngenKundur.nomVoltage,
-			syngenKundur.nomFreq, H,
-	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
-			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
+		syngenKundur.nomPower, syngenKundur.nomVoltage,
+		syngenKundur.nomFreq, H,
+		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
+		syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t);
     genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0,0));
-	genEMT->setModelAsNortonSource(true);
+	genEMT->setMaxIterations(maxIter);
+	genEMT->setTolerance(tolerance);
 
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", logLevel);
@@ -154,7 +166,7 @@ int main(int argc, char* argv[]) {
 	genEMT->connect({ n1EMT });
 	lineEMT->connect({ n1EMT, n2EMT });
 	extnetEMT->connect({ n2EMT });
-	auto systemEMT = SystemTopology(gridParams.nomFreq,
+	SystemTopology systemEMT = SystemTopology(gridParams.nomFreq,
 			SystemNodeList{n1EMT, n2EMT},
 			SystemComponentList{genEMT, lineEMT, extnetEMT});
 
@@ -165,10 +177,12 @@ int main(int argc, char* argv[]) {
 			logger->logAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log generator vars
-	logger->logAttribute(genEMT->name() + ".Tm", genEMT->attribute("Tm"));
+	//logger->logAttribute(genEMT->name() + ".Tm", genEMT->attribute("Tm"));
 	logger->logAttribute(genEMT->name() + ".Te", genEMT->attribute("Te"));
 	logger->logAttribute(genEMT->name() + ".omega", genEMT->attribute("w_r"));
 	logger->logAttribute(genEMT->name() + ".delta", genEMT->attribute("delta"));
+	logger->logAttribute(genEMT->name() + ".NIterations", genEMT->attribute("NIterations"));
+	//logger->logAttribute(genEMT->name() + ".theta", genEMT->attribute("Theta"));
 
 	// load step event
 	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::Events::createEventAddPowerConsumption3Ph("n1EMT", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemEMT, Domain::EMT, logger);
@@ -181,7 +195,6 @@ int main(int argc, char* argv[]) {
 	simEMT.setDomain(Domain::EMT);
 	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	simEMT.addLogger(logger);
-	simEMT.doSystemMatrixRecomputation(true);
 
 	// Events
 	simEMT.addEvent(loadStepEvent);

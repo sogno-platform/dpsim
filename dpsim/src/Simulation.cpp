@@ -162,6 +162,7 @@ void Simulation::createMNASolver() {
 			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
 			solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
 			solver->initialize();
+			solver->setMaxNumberOfIterations(mMaxIterations);
 		}
 		mSolvers.push_back(solver);
 	}
@@ -410,9 +411,9 @@ void Simulation::logStepTimes(String logName) {
 	Real stepTimeSum = 0;
 	for (auto meas : mStepTimes) {
 		stepTimeSum += meas;
-		stepTimeLog->info("{:f}", meas);
+		stepTimeLog->info("{:.9f}", meas);
 	}
-	SPDLOG_LOGGER_INFO(mLog, "Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
+	SPDLOG_LOGGER_INFO(mLog, "Average step time: {:.9f}", stepTimeSum / mStepTimes.size());
 }
 
 void Simulation::logLUTimes() {
