@@ -34,6 +34,8 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 	//  // ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
+	Real timeStepPF = 0.1;
+	Real finalTimePF = 0.1;
 
 	// Components
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -69,14 +71,15 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(false);
+
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
-	simPF.setSystem(systemPF);
-	simPF.setTimeStep(0.1);
-	simPF.setFinalTime(0.1);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doInitFromNodesAndTerminals(false);
+	simPF.setSimulationParameters(timeStepPF, finalTimePF);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -155,14 +158,17 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 	loggerEMT->logAttribute("Edq0", 	genEMT->attribute("Edq0_t"));
 	loggerEMT->logAttribute("NIterations", 	genEMT->attribute("NIterations"));
 
+	// set solver parameters
+	auto solverParameterEMT = std::make_shared<SolverParametersMNA>();
+	solverParameterEMT->setInitFromNodesAndTerminals(true);
+	solverParameterEMT->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterEMT->doSystemMatrixRecomputation(true);
+
 	Simulation simEMT(simNameEMT, logLevel);
-	simEMT.doInitFromNodesAndTerminals(true);
 	simEMT.setSystem(systemEMT);
-	simEMT.setTimeStep(timeStep);
-	simEMT.setFinalTime(finalTime);
-	simEMT.setDomain(Domain::EMT);
+	simEMT.setSimulationParameters(timeStep, finalTime);
+	simDP.setSolverParameters(Domain::DP, Solver::Type::MNA, solverParameterEMT);
 	simEMT.addLogger(loggerEMT);
-	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 	// Events
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);

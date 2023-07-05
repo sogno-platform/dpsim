@@ -21,6 +21,8 @@ int main(int argc, char* argv[]) {
 	String simName = "EMT_SMIB_ReducedOrderSGIterative_LoadStep";
 	Real timeStep = 10e-6;
 	Real finalTime = 35;
+	Real timeStepPF = 0.1;
+	Real finalTimePF = 0.1;
 
 	// Default configuration
 	Real loadStepEventTime = defaultConfig.loadStepEventTime;
@@ -106,15 +108,16 @@ int main(int argc, char* argv[]) {
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(false);
+
 	// Simulation
 	Simulation simPF(simNamePF, logLevel);
 	simPF.setSystem(systemPF);
-	simPF.setTimeStep(0.1);
-	simPF.setFinalTime(0.1);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
-	simPF.doInitFromNodesAndTerminals(false);
+	simPF.setSimulationParameters(timeStepPF, finalTimePF);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -187,13 +190,16 @@ int main(int argc, char* argv[]) {
 	// load step event
 	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::Events::createEventAddPowerConsumption3Ph("n1EMT", std::round(loadStepEventTime/timeStep)*timeStep, gridParams.loadStepActivePower, systemEMT, Domain::EMT, logger);
 
+	// set solver parameters
+	auto solverParameterEMT = std::make_shared<SolverParametersMNA>();
+	solverParameterEMT->setInitFromNodesAndTerminals(true);
+	solverParameterEMT->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+
+	//
 	Simulation simEMT(simNameEMT, logLevel);
-	simEMT.doInitFromNodesAndTerminals(true);
 	simEMT.setSystem(systemEMT);
-	simEMT.setTimeStep(timeStep);
-	simEMT.setFinalTime(finalTime);
-	simEMT.setDomain(Domain::EMT);
-	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
+	simEMT.setSimulationParameters(timeStep, finalTime);
+	simEMT.setSolverParameters(Domain::EMT, Solver::Type::MNA, solverParameterEMT);
 	simEMT.addLogger(logger);
 
 	// Events

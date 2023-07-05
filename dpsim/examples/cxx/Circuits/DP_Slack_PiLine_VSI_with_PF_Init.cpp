@@ -74,15 +74,16 @@ int main(int argc, char* argv[]) {
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(false);
+
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
 	simPF.setSystem(systemPF);
-	simPF.setTimeStep(timeStepPF);
-	simPF.setFinalTime(finalTimePF);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
-	simPF.doInitFromNodesAndTerminals(false);
+	simPF.setSimulationParameters(timeStepPF, finalTimePF);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -136,8 +137,7 @@ int main(int argc, char* argv[]) {
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
 	sim.setSystem(systemDP);
-	sim.setTimeStep(timeStepDP);
-	sim.setFinalTime(finalTimeDP);
+	sim.setSimulationParameters(timeStepDP, finalTimeDP);
 	sim.setDomain(Domain::DP);
 	// sim.addEvent(loadStepEvent);
 	sim.addLogger(loggerDP);

@@ -61,8 +61,7 @@ void DP_VS_CS_R4() {
 	Simulation sim(simName);
 	sim.setSystem(sys);
 	sim.setTearingComponents(sys.mTearComponents);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -118,8 +117,7 @@ void DP_VS_CS_R4_Diakoptics() {
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
 	sim.setTearingComponents(sys.mTearComponents);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -174,8 +172,7 @@ void DP_VS_R2L3() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -232,8 +229,7 @@ void DP_VS_R2L3_Diakoptics() {
 	Simulation sim(simName);
 	sim.setSystem(sys);
 	sim.setTearingComponents(sys.mTearComponents);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();

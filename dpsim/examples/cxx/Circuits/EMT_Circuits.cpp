@@ -117,8 +117,7 @@ void EMT_CS_R2CL() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
@@ -221,8 +220,7 @@ void EMT_VS_CS_R4_DC() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
@@ -276,8 +274,7 @@ void EMT_VS_R2L3() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
@@ -392,8 +389,7 @@ void EMT_Ph3_VS_R2L3() {
 	sim.setSystem(sys);
 	sim.addLogger(logger);
 	sim.setDomain(Domain::EMT);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.run();
 }
 
@@ -445,8 +441,7 @@ void EMT_Ph3_VS_RC1() {
 	sim.setSystem(sys);
 	sim.addLogger(logger);
 	sim.setDomain(Domain::EMT);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.run();
 }
 

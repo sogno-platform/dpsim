@@ -198,14 +198,18 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	loggerDP->logAttribute("P_elec1", gen1DP->attribute("P_elec"));
 	loggerDP->logAttribute("P_elec2", gen2DP->attribute("P_elec"));
 
+	// set solver parameters
+	auto solverParameterDP = std::make_shared<SolverParametersMNA>();
+	solverParameterDP->setInitFromNodesAndTerminals(true);
+	solverParameterDP->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterDP->doSystemMatrixRecomputation(true);
+
+	//
 	Simulation simDP(simNameDP, Logger::Level::debug);
 	simDP.setSystem(systemDP);
-	simDP.setTimeStep(timeStep);
-	simDP.setFinalTime(finalTime);
-	simDP.setDomain(Domain::DP);
+	simDP.setSimulationParameters(timeStep, finalTime);
+	simDP.setSolverParameters(Domain::DP, Solver::Type::MNA, solverParameterDP);
 	simDP.addLogger(loggerDP);
-	simDP.doSystemMatrixRecomputation(true);
-	simDP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 	// Events
 	if (startFaultEvent){

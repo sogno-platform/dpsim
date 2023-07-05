@@ -48,8 +48,7 @@ int main(int argc, char* argv[]) {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();

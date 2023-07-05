@@ -42,8 +42,7 @@ void simElementsSP1ph() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -118,8 +117,7 @@ void simElementsDP1ph() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -156,8 +154,7 @@ void simComponentDP1ph() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -195,8 +192,7 @@ void simElementsEMT3ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 	sim.run();
@@ -234,8 +230,7 @@ void simComponentEMT3ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 	sim.run();

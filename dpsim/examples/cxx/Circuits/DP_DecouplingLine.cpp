@@ -61,8 +61,7 @@ void simElements() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -111,8 +110,7 @@ void simDecoupling() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -161,8 +159,7 @@ void simDecouplingEMT() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(CPS::Domain::EMT);
 	sim.addLogger(logger);
 

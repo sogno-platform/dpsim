@@ -74,8 +74,7 @@ void simElements() {
 	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(sys);
 	sim.setDomain(Domain::EMT);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -126,8 +125,7 @@ void simPiLine() {
 	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(sys);
 	sim.setDomain(Domain::EMT);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();

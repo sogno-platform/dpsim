@@ -310,14 +310,17 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	logger->logAttribute("delta_r", gen->attribute("delta_r"));
 	logger->logAttribute("Ep", gen->attribute("Ep_mag"));
 
+	// set solver parameters
+	auto solverParameterEMT = std::make_shared<SolverParametersMNA>();
+	solverParameterEMT->setInitFromNodesAndTerminals(true);
+	solverParameterEMT->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterEMT->doSystemMatrixRecomputation(true);
+
 	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(system);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::DP);
+	sim.setSimulationParameters(timeStep, finalTime);
+	sim.setSolverParameters(Domain::EMT, Solver::Type::MNA, solverParameterEMT);
 	sim.addLogger(logger);
-	sim.doSystemMatrixRecomputation(true);
-	sim.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 	// Events
 	if (startFaultEvent){
