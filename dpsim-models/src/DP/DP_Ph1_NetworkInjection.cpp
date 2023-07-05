@@ -56,9 +56,15 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqSt
 	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, smoothRamp);
 
 	SPDLOG_LOGGER_INFO(mSLog, "\nVoltage Ref={:s} [V]"
-				"\nFrequency={:s} [Hz]",
+				"\nInitial frequency={:s} [Hz]"
+				"\nRamp ROCOF={:s} [Hz/s]"
+				"\nRamp duration={:s} [s]"
+				"\nRamp nadir={:s} [Hz]",
 				Logger::phasorToString(initialPhasor),
-				Logger::realToString(freqStart));
+				Logger::realToString(freqStart),
+				Logger::realToString(rocof),
+				Logger::realToString(duration),
+				Logger::realToString(freqStart + rocof * duration));
 }
 
 void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {
