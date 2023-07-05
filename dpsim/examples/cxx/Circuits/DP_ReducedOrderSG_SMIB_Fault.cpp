@@ -168,8 +168,7 @@ int main(int argc, char* argv[]) {
 	Simulation simDP(simNameDP, logLevel);
 	simDP.doInitFromNodesAndTerminals(true);
 	simDP.setSystem(systemDP);
-	simDP.setTimeStep(timeStep);
-	simDP.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	simDP.setDomain(Domain::DP);
 	simDP.setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
 	simDP.addLogger(loggerDP);

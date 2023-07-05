@@ -47,8 +47,7 @@ int main(int argc, char* argv[]) {
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(system1);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.setSolverType(Solver::Type::MNA);
 	sim.addSystemTopology(system2);

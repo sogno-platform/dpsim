@@ -69,12 +69,9 @@ void DP_VS_RL_f60_largeTs() {
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.initialize();
-
 	sim.addLogger(logger);
-
 	sim.run();
 }
 
@@ -119,8 +116,7 @@ void DP_VS_RL_f60_vlargeTs() {
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.initialize();
 
 	sim.addLogger(logger);
@@ -169,8 +165,7 @@ void DP_VS_RL_f60() {
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.initialize();
 
 	sim.addLogger(logger);
@@ -219,8 +214,7 @@ void DP_VS_RL_f500_largeTs() {
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.initialize();
 
 	sim.addLogger(logger);
@@ -269,8 +263,7 @@ void DP_VS_RL_f500_ph500() {
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.initialize();
 
 	sim.addLogger(logger);
@@ -319,8 +312,7 @@ void DP_VS_RL_f500() {
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.initialize();
 
 	sim.addLogger(logger);

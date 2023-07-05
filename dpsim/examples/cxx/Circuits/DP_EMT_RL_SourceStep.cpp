@@ -46,8 +46,7 @@ static void DP_RL_SourceStep(Real timeStep, Real finalTime,
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -89,8 +88,7 @@ static void EMT_RL_SourceStep(Real timeStep, Real finalTime,
 	Simulation sim(simName);
 	sim.setSystem(sys);
 	sim.setDomain(CPS::Domain::EMT);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.addLogger(logger);
 
 	sim.run();

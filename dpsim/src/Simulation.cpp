@@ -54,7 +54,7 @@ Simulation::Simulation(String name, CommandLineArgs& args) :
 void Simulation::setSolverParameters(CPS::Domain domain, Solver::Type type, std::shared_ptr<SolverParameters> solverParameters)
 {
 	mDomain = domain;
-	mSolverType = Solver::Type::MNA;
+	mSolverType = type;
 	if (mSolverType == Solver::Type::MNA) {
 		if (solverParameters==nullptr) {
 			mSolverParams = std::make_shared<SolverParametersMNA>();
@@ -87,15 +87,17 @@ void Simulation::setSolverParameters(CPS::Domain domain, Solver::Type type, std:
 
 	if (mSolverType == Solver::Type::NRP) {
 		if (solverParameters==nullptr) {
-			mSolverParams = std::make_shared<SolverParametersNRP>();
+			//mSolverParams = std::make_shared<SolverParametersNRP>();
+			mSolverParams = std::make_shared<SolverParametersMNA>();
 			return;
-		} else if (std::dynamic_pointer_cast<DPsim::SolverParametersNRP>(solverParameters)) {
+		} else if (std::dynamic_pointer_cast<DPsim::SolverParametersMNA>(solverParameters)) {
 			mSolverParams = solverParameters;
 			return;
 		}
 		else {
 			std::stringstream ss;
 			ss << "Type of SolverParameters has to be SolverParametersNRP!!";
+			ss << "Type of SolverParameters has to be SolverParametersMNA!!";
 			throw std::invalid_argument(ss.str());
 		}
 	}

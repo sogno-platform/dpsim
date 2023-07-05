@@ -76,8 +76,7 @@ void simTrafoElementsSP1ph() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::SP);
 	sim.addLogger(logger);
 
@@ -129,8 +128,7 @@ void simTrafoSP1ph() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::SP);
 	sim.addLogger(logger);
 
@@ -201,8 +199,7 @@ void simTrafoElementsDP1ph() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
 
@@ -254,8 +251,7 @@ void simTrafoDP1ph() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
 
@@ -326,8 +322,7 @@ void simTrafoElementsEMT3ph() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
@@ -379,8 +374,7 @@ void simTrafoEMT3ph() {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 

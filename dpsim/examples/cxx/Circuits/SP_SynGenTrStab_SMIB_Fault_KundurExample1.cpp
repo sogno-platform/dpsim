@@ -115,15 +115,16 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 	loggerPF->logAttribute("v3", n3PF->attribute("v"));
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(false);
+
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
 	simPF.setSystem(systemPF);
-	simPF.setTimeStep(timeStepPF);
-	simPF.setFinalTime(finalTimePF);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
-	simPF.doInitFromNodesAndTerminals(false);
+	simPF.setSimulationParameters(timeStepPF, finalTimePF);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -207,14 +208,18 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	loggerSP->logAttribute("v_slack", extnetSP->attribute("v_intf"));
 	loggerSP->logAttribute("i_slack", extnetSP->attribute("i_intf"));
 
+	// set solver parameters
+	auto solverParameterSP = std::make_shared<SolverParametersMNA>();
+	solverParameterSP->setInitFromNodesAndTerminals(true);
+	solverParameterSP->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	//solverParameterSP->doSystemMatrixRecomputation(true);
+
+	//
 	Simulation simSP(simNameSP, Logger::Level::debug);
 	simSP.setSystem(systemSP);
-	simSP.setTimeStep(timeStep);
-	simSP.setFinalTime(finalTime);
-	simSP.setDomain(Domain::SP);
+	simSP.setSimulationParameters(timeStep, finalTime);
+	simSP.setSolverParameters(Domain::SP, Solver::Type::MNA, solverParameterSP);
 	simSP.addLogger(loggerSP);
-	// simSP.doSystemMatrixRecomputation(true);
-	simSP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 	// Events
 	auto sw1 = SwitchEvent::make(std::round(startTimeFault/timeStep)*timeStep, faultSP, true);

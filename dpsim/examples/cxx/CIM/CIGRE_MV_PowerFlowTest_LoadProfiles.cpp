@@ -128,14 +128,16 @@ int main(int argc, char** argv){
 		}
 	}
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Simulation);
+	solverParameters->setInitFromNodesAndTerminals(true);
+
+	//
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(system);
-	sim.setTimeStep(time_step);
-	sim.setFinalTime(time_end);
-	sim.setDomain(Domain::SP);
-	sim.setSolverType(Solver::Type::NRP);
-	sim.setSolverAndComponentBehaviour(Solver::Behaviour::Simulation);
-	sim.doInitFromNodesAndTerminals(true);
+	sim.setSimulationParameters(time_end, time_end);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	sim.addLogger(logger);
 
 	sim.run();

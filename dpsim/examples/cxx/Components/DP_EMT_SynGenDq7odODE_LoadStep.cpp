@@ -131,20 +131,26 @@ void EMT_SynGenDq7odODE_LoadStep(Real timeStep, Real finalTime, Real breakerClos
 	res->connect({CPS::EMT::SimNode::GND, n1});
 	fault->connect({CPS::EMT::SimNode::GND, n1});
 
+	//
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 
-		// Logging
+	// Logging
 	auto logger = DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i_gen", gen->attribute("i_intf"));
 	logger->logAttribute("wr_gen", gen->attribute("w_r"));
 
+	// set solver parameters
+	auto solverParameterEMT = std::make_shared<SolverParametersMNA>();
+	solverParameterEMT->setInitFromNodesAndTerminals(false);
+	solverParameterEMT->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterEMT->doSteadyStateInit(true);
+
+	//
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::EMT);
-	sim.doInitFromNodesAndTerminals(false);
+	sim.setSimulationParameters(timeStep, finalTime);
+	sim.setSolverParameters(Domain::EMT, Solver::Type::MNA, solverParameterEMT);
 	sim.addLogger(logger);
 
 	// Events

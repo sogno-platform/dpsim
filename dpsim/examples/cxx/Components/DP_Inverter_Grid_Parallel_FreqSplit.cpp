@@ -85,11 +85,18 @@ int main(int argc, char* argv[]) {
 		SystemNodeList{ n1, n2, n3, n4, n5 },
 		SystemComponentList{ inv, r1, l1, r2, l2, c1, rc, grid });
 
+	// set solver parameters
+	auto solverParameterDP = std::make_shared<SolverParametersMNA>();
+	solverParameterDP->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterDP->doSteadyStateInit(true);
+	solverParameterDP->doFrequencyParallelization(true);
+	
+	//
 	Simulation sim(simName, level);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.doFrequencyParallelization(true);
+	sim.setSimulationParameters(timeStep, finalTime);
+	sim.setSolverParameters(Domain::DP, Solver::Type::MNA, solverParameterDP);
+
 	if (threads > 0) {
 		auto scheduler = std::make_shared<ThreadLevelScheduler>(threads);
 		sim.setScheduler(scheduler);

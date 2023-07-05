@@ -56,6 +56,8 @@ int main(int argc, char* argv[]) {
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
+	Real timeStepPF = 0.1;
+	Real finalTimePF = 0.1;
 
 	// Components
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -93,14 +95,16 @@ int main(int argc, char* argv[]) {
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(false);
+
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::off);
 	simPF.setSystem(systemPF);
-	simPF.setTimeStep(0.1);
-	simPF.setFinalTime(0.1);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doInitFromNodesAndTerminals(false);
+	simPF.setSimulationParameters(timeStepPF, finalTimePF);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -176,16 +180,18 @@ int main(int argc, char* argv[]) {
 	loggerEMT->logAttribute("Idq0", 	genEMT->attribute("Idq0"));
 	loggerEMT->logAttribute("Edq0", 	genEMT->attribute("Edq0_t"));
 
+	// set solver parameters
+	auto solverParameterEMT = std::make_shared<SolverParametersMNA>();
+	solverParameterEMT->setInitFromNodesAndTerminals(true);
+	solverParameterEMT->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterEMT->doSystemMatrixRecomputation(true);
+
 	// Configure simulation
 	Simulation simEMT(simNameEMT, logLevel);
-	simEMT.doInitFromNodesAndTerminals(true);
 	simEMT.setSystem(systemEMT);
-	simEMT.setTimeStep(timeStep);
-	simEMT.setFinalTime(finalTime);
-	simEMT.setDomain(Domain::EMT);
-	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
+	simEMT.setSimulationParameters(timeStep, finalTime);
+	simEMT.setSolverParameters(Domain::EMT, Solver::Type::MNA, solverParameterEMT);
 	simEMT.addLogger(loggerEMT);
-	simEMT.doSystemMatrixRecomputation(true);
 
 	// Events
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);

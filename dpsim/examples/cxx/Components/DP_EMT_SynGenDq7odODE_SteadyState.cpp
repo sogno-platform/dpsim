@@ -118,12 +118,17 @@ void EMT_SynGenDq7odODE_SteadyState(Real timeStep, Real finalTime) {
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i_load", res->attribute("i_intf"));
 
+	// set solver parameters
+	auto solverParameterEMT = std::make_shared<SolverParametersMNA>();
+	solverParameterEMT->setInitFromNodesAndTerminals(false);
+	solverParameterEMT->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterEMT->doSteadyStateInit(true);
+
+	//
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::EMT);
-	sim.doInitFromNodesAndTerminals(false);
+	sim.setSimulationParameters(timeStep, finalTime);
+	sim.setSolverParameters(Domain::EMT, Solver::Type::MNA, solverParameterEMT);
 	sim.addLogger(logger);
 
 	sim.run();

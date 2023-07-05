@@ -92,17 +92,20 @@ int main(int argc, char *argv[]) {
 	// define logging
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
     for (auto node : systemPF.mNodes)
-        loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
+    	loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
+
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(true);
+	solverParameters->doSteadyStateInit(false);
 
 	// run powerflow
     Simulation simPF(simNamePF, logLevel);
 	simPF.setSystem(systemPF);
 	simPF.setTimeStep(finalTime);
 	simPF.setFinalTime(2*finalTime);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
-	simPF.doInitFromNodesAndTerminals(true);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
     simPF.addLogger(loggerPF);
     simPF.run();
 
@@ -141,8 +144,8 @@ int main(int argc, char *argv[]) {
 	// Logging
 	// log node voltage
 	auto logger = DataLogger::make(simName, true, logDownSampling);
-		for (auto node : sys.mNodes)
-			logger->logAttribute(node->name() + ".V", node->attribute("v"));
+	for (auto node : sys.mNodes)
+		logger->logAttribute(node->name() + ".V", node->attribute("v"));
 
 	// log generator vars
 	for (auto comp : sys.mComponents) {
@@ -154,14 +157,18 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	// set solver parameters
+	auto solverParameterSP = std::make_shared<SolverParametersMNA>();
+	solverParameterSP->setInitFromNodesAndTerminals(true);
+	solverParameterSP->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterSP->doSteadyStateInit(false);
+	solverParameterSP->doSystemMatrixRecomputation(true);
+
+	//
 	Simulation sim(simName, logLevel);
 	sim.setSystem(sys);
-	sim.setDomain(Domain::SP);
-	sim.setSolverType(Solver::Type::MNA);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.doSystemMatrixRecomputation(true);
-	sim.setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	sim.setSimulationParameters(timeStep, finalTime);
+	sim.setSolverParameters(Domain::SP, Solver::Type::MNA, solverParameterSP);
 	sim.addLogger(logger);
 
 	// Optionally add switch event

@@ -58,15 +58,17 @@ int main(int argc, char** argv){
         loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
     }
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(true);
+
 	// run powerflow
     Simulation simPF(simNamePF, Logger::Level::debug);
 	simPF.setSystem(systemPF);
 	simPF.setTimeStep(1);
 	simPF.setFinalTime(2);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
-	simPF.doInitFromNodesAndTerminals(true);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
     simPF.addLogger(loggerPF);
     simPF.run();
 
@@ -101,15 +103,19 @@ int main(int argc, char** argv){
 	Examples::Grids::CIGREMV::logPVAttributes(logger, pv);
 
 	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::Events::createEventAddPowerConsumption3Ph("N11", 2-timeStep, 1500.0e3, systemEMT, Domain::EMT, logger);
+
+	// set solver parameters
+	auto solverParameterEMT = std::make_shared<SolverParametersMNA>();
+	solverParameterEMT->setInitFromNodesAndTerminals(true);
+	solverParameterEMT->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterEMT->doSteadyStateInit(false);
+	
+	//
 	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(systemEMT);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::EMT);
-	sim.setSolverType(Solver::Type::MNA);
-	sim.doInitFromNodesAndTerminals(true);
+	simSP.setSimulationParameters(timeStep, finalTime);
+	simSP.setSolverParameters(Domain::EMT, Solver::Type::MNA, solverParameterEMT);
 	sim.addEvent(loadStepEvent);
-	sim.doSteadyStateInit(false);
 	sim.addLogger(logger);
 
 	sim.run();

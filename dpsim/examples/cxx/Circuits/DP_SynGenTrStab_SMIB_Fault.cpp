@@ -67,15 +67,16 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(false);
+
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
 	simPF.setSystem(systemPF);
-	simPF.setTimeStep(timeStepPF);
-	simPF.setFinalTime(finalTimePF);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
-	simPF.doInitFromNodesAndTerminals(false);
+	simDP.setSimulationParameters(timeStepPF, finalTimePF);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -147,15 +148,18 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	loggerDP->logAttribute("v_slack", extnetDP->attribute("v_intf"));
 	loggerDP->logAttribute("i_slack", extnetDP->attribute("i_intf"));
 
+	// set solver parameters
+	auto solverParameterDP = std::make_shared<SolverParametersMNA>();
+	solverParameterDP->setInitFromNodesAndTerminals(true);
+	solverParameterDP->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterDP->doSystemMatrixRecomputation(true);
 
+	//
 	Simulation simDP(simNameDP, Logger::Level::debug);
 	simDP.setSystem(systemDP);
-	simDP.setTimeStep(timeStep);
-	simDP.setFinalTime(finalTime);
-	simDP.setDomain(Domain::DP);
+	simDP.setSimulationParameters(timeStep, finalTime);
+	simDP.setSolverParameters(Domain::DP, Solver::Type::MNA, solverParameterDP);
 	simDP.addLogger(loggerDP);
-	simDP.doSystemMatrixRecomputation(true);
-	simDP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 	// Events
 	if (startFaultEvent){

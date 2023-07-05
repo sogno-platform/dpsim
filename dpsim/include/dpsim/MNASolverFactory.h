@@ -63,7 +63,7 @@ class MnaSolverFactory {
 	template <typename VarType>
 	static std::shared_ptr<MnaSolver<VarType>> factory(String name,
 		CPS::Domain domain = CPS::Domain::DP,
-		std::shared_ptr<SolverParametersMNA> solverParams = SolverParametersMNA(),
+		std::shared_ptr<SolverParametersMNA> solverParams = std::make_shared<SolverParametersMNA>(),
 		CPS::Logger::Level logLevel = CPS::Logger::Level::info,
 		String pluginName = "plugin.so")
 	{

@@ -144,7 +144,7 @@ namespace DPsim {
 		/// sovlerImpl: choose the most advanced solver implementation available by default
 		MnaSolverDirect(String name,
 			CPS::Domain domain = CPS::Domain::DP,
-			std::shared_ptr<SolverParametersMNA> solverParams = SolverParametersMNA(),
+			std::shared_ptr<SolverParametersMNA> solverParams = std::make_shared<SolverParametersMNA>(),
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		/// Destructor

@@ -32,7 +32,7 @@ namespace DPsim {
 		MnaSolverPlugin(String pluginName,
 			String name,
 			CPS::Domain domain = CPS::Domain::DP,
-			std::shared_ptr<SolverParametersMNA> solverParams = SolverParametersMNA(),
+			std::shared_ptr<SolverParametersMNA> solverParams = std::make_shared<SolverParametersMNA>(),
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		virtual ~MnaSolverPlugin();

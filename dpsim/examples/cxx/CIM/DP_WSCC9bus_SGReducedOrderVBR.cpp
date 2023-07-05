@@ -100,15 +100,17 @@ int main(int argc, char *argv[]) {
     for (auto node : systemPF.mNodes)
         loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(true);
+
 	// run powerflow
     Simulation simPF(simNamePF, logLevel);
 	simPF.setSystem(systemPF);
 	simPF.setTimeStep(finalTime);
 	simPF.setFinalTime(2*finalTime);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
-	simPF.doInitFromNodesAndTerminals(true);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
     simPF.addLogger(loggerPF);
     simPF.run();
 
@@ -161,14 +163,16 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	// set solver parameters
+	auto solverParameterDP = std::make_shared<SolverParametersMNA>();
+	solverParameterDP->setInitFromNodesAndTerminals(true);
+	solverParameterDP->setDirectLinearSolverImplementation(implementation);
+	solverParameterDP->doSystemMatrixRecomputation(true);
+
 	Simulation sim(simName, logLevel);
 	sim.setSystem(sys);
-	sim.setDomain(Domain::DP);
-	sim.setSolverType(Solver::Type::MNA);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.doSystemMatrixRecomputation(true);
-	sim.setDirectLinearSolverImplementation(implementation);
+	simSP.setSimulationParameters(timeStep, finalTime);
+	simSP.setSolverParameters(Domain::SP, Solver::Type::MNA, solverParameterDP);
 	sim.addLogger(logger);
 
 		// Optionally add switch event

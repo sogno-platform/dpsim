@@ -109,14 +109,17 @@ int main(int argc, char* argv[]) {
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(false);
+
 	// Simulation
 	Simulation simPF(simNamePF, logLevel);
 	simPF.setSystem(systemPF);
 	simPF.setTimeStep(0.1);
 	simPF.setFinalTime(0.1);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doInitFromNodesAndTerminals(false);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -221,15 +224,18 @@ int main(int argc, char* argv[]) {
 		loggerSP->logAttribute("Tm", turbineGovernorSP->attribute("Tm"));
 	}
 
+	// set solver parameters
+	auto solverParameterSP = std::make_shared<SolverParametersMNA>();
+	solverParameterSP->setInitFromNodesAndTerminals(true);
+	solverParameterSP->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterSP->doSystemMatrixRecomputation(true);
+
+	//
 	Simulation simSP(simNameSP, logLevel);
-	simSP.doInitFromNodesAndTerminals(true);
 	simSP.setSystem(systemSP);
-	simSP.setTimeStep(timeStep);
-	simSP.setFinalTime(finalTime);
-	simSP.setDomain(Domain::SP);
-	simSP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
+	simSP.setSimulationParameters(timeStep, finalTime);
+	simSP.setSolverParameters(Domain::SP, Solver::Type::MNA, solverParameterSP);
 	simSP.addLogger(loggerSP);
-	simSP.doSystemMatrixRecomputation(true);
 
 	// Events
 	auto sw1 = SwitchEvent::make(startTimeFault, fault, true);

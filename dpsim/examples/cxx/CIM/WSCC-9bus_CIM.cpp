@@ -51,19 +51,20 @@ int main(int argc, char *argv[]) {
 	// define logging
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
     for (auto node : systemPF.mNodes)
-    {
         loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
-    }
+
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(true);
+	solverParameters->doSteadyStateInit(false);
 
 	// run powerflow
     Simulation simPF(simNamePF, Logger::Level::debug);
 	simPF.setSystem(systemPF);
 	simPF.setTimeStep(finalTime);
 	simPF.setFinalTime(2*finalTime);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
-	simPF.doInitFromNodesAndTerminals(true);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
     simPF.addLogger(loggerPF);
     simPF.run();
 
@@ -92,13 +93,20 @@ int main(int argc, char *argv[]) {
 			logger->logAttribute(comp->name() + ".I", comp->attribute("i_intf"));
 	}
 
+	// set solver parameters
+	auto solverParameterDP = std::make_shared<SolverParametersMNA>();
+	solverParameterDP->setInitFromNodesAndTerminals(true);
+	solverParameterDP->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterDP->doSteadyStateInit(true);
+
+	//
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setDomain(Domain::DP);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
-	sim.doSteadyStateInit(true);
 	sim.addLogger(logger);
+	sim.setSimulationParameters(timeStep, finalTime);
+	sim.setSolverParameters(Domain::DP, Solver::Type::MNA, solverParameterDP);
 	sim.run();
 
 	return 0;

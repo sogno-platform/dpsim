@@ -56,15 +56,16 @@ int main(int argc, char* argv[]) {
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(false);
+
 	// Simulation
 	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(systemPF);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::SP);
-	sim.setSolverType(Solver::Type::NRP);
-	sim.setSolverAndComponentBehaviour(Solver::Behaviour::Simulation);
-	sim.doInitFromNodesAndTerminals(false);
+	simPF.setSimulationParameters(timeStepPF, finalTimePF);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	sim.addLogger(logger);
 	sim.run();
 }

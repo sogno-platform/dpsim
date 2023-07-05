@@ -63,8 +63,7 @@ void EMT_VS_RL_f60_largeTs() {
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.initialize();
 
@@ -114,8 +113,7 @@ void EMT_VS_RL_f60() {
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.initialize();
 
@@ -165,8 +163,7 @@ void EMT_VS_RL_f500() {
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.initialize();
 

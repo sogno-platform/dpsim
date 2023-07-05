@@ -42,18 +42,20 @@ int main(int argc, char** argv){
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
-	{
 		logger->logAttribute(node->name() + ".V", node->attribute("v"));
-	}
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Simulation);
+	solverParameters->setInitFromNodesAndTerminals(true);
+	solverParameters->doSteadyStateInit(false);
+
+	//
 	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(system);
 	sim.setTimeStep(1);
 	sim.setFinalTime(1);
-	sim.setDomain(Domain::SP);
-	sim.setSolverType(Solver::Type::NRP);
-	sim.setSolverAndComponentBehaviour(Solver::Behaviour::Simulation);
-	sim.doInitFromNodesAndTerminals(true);
+	sim.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	sim.addLogger(logger);
 
 	sim.run();

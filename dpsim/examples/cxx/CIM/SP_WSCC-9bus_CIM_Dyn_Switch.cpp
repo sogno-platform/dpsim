@@ -72,14 +72,18 @@ int main(int argc, char *argv[]) {
 	logger->logAttribute("P_elec_2", sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->attribute("P_elec"));
 	logger->logAttribute("P_elec_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("P_elec"));
 
+	// set solver parameters
+	auto solverParameterSP = std::make_shared<SolverParametersMNA>();
+	solverParameterSP->setInitFromNodesAndTerminals(true);
+	solverParameterSP->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterSP->doSteadyStateInit(false);
 
+	//
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
 	sim.setTimeStep(0.0001);
 	sim.setFinalTime(2);
-	sim.setDomain(Domain::SP);
-	sim.setSolverType(Solver::Type::MNA);
-	sim.doInitFromNodesAndTerminals(true);
+	sim.setSolverParameters(Domain::SP, Solver::Type::MNA, solverParameterSP);
 
 	auto swEvent1 = SwitchEvent::make(0.2-0.0001, sw, true);
 	//auto swEvent2 = SwitchEvent::make(0.07, sw, false);

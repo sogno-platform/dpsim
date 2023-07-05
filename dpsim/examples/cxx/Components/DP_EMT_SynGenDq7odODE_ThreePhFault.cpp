@@ -137,12 +137,16 @@ void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, String exten
 	logger->logAttribute("i_gen", gen->attribute("i_intf"));
 	logger->logAttribute("wr_gen", gen->attribute("w_r"));
 
+	// set solver parameters
+	auto solverParameterEMT = std::make_shared<SolverParametersMNA>();
+	solverParameterEMT->setInitFromNodesAndTerminals(false);
+	solverParameterEMT->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterEMT->doSteadyStateInit(true);
+	
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::EMT);
-	sim.doInitFromNodesAndTerminals(false);
+	sim.setSimulationParameters(timeStep, finalTime);
+	sim.setSolverParameters(Domain::EMT, Solver::Type::MNA, solverParameterEMT);
 	sim.addLogger(logger);
 
 	// Events

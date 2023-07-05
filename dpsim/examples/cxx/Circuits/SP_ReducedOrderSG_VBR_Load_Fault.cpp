@@ -150,15 +150,18 @@ int main(int argc, char* argv[]) {
 		loggerSP->logAttribute("Tm", turbineGovernorSP->attribute("Tm"));
 	}
 
+	// set solver parameters
+	auto solverParameterSP = std::make_shared<SolverParametersMNA>();
+	solverParameterSP->setInitFromNodesAndTerminals(true);
+	solverParameterSP->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterSP->doSystemMatrixRecomputation(true);
+
+	//
 	Simulation simSP(simNameSP, logLevel);
-	simSP.doInitFromNodesAndTerminals(true);
 	simSP.setSystem(systemSP);
-	simSP.setTimeStep(timeStep);
-	simSP.setFinalTime(finalTime);
-	simSP.setDomain(Domain::SP);
-	simSP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
+	simSP.setSimulationParameters(timeStep, finalTime);
+	simSP.setSolverParameters(Domain::SP, Solver::Type::MNA, solverParameterSP);
 	simSP.addLogger(loggerSP);
-	simSP.doSystemMatrixRecomputation(true);
 
 	// Events
 	auto sw1 = SwitchEvent::make(startTimeFault, fault, true);

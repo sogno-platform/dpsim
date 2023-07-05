@@ -51,13 +51,19 @@ int main(int argc, char *argv[]) {
 	logger->logAttribute("wr_2", sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->attribute("w_r"));
 	logger->logAttribute("wr_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("w_r"));
 
+	// set solver parameters
+	auto solverParameterDP = std::make_shared<SolverParametersMNA>();
+	solverParameterDP->setInitFromNodesAndTerminals(true);
+	solverParameterDP->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterDP->doSteadyStateInit(true);
+
+	//
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setDomain(Domain::DP);
 	sim.setTimeStep(0.0001);
 	sim.setFinalTime(2);
-	sim.doSteadyStateInit(true);
 	sim.addLogger(logger);
+	sim.setSolverParameters(Domain::DP, Solver::Type::MNA, solverParameterDP);
 	sim.run();
 
 	//std::ofstream ofTopo("topology_graph.svg");

@@ -46,16 +46,19 @@ int main(int argc, char** argv){
 
     auto loggerPF = DPsim::DataLogger::make(simName);
     for (auto node : system.mNodes)
-    {
         loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
-    }
+
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(true);
+	solverParameters->doSteadyStateInit(false);
+
+	//
     Simulation simPF(simName, Logger::Level::debug);
 	simPF.setSystem(system);
-	simPF.setTimeStep(timeStep);
-	simPF.setFinalTime(finalTime);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doInitFromNodesAndTerminals(true);
+	simPF.setSimulationParameters(timeStep, finalTime);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
     simPF.addLogger(loggerPF);
     simPF.run();
 }
