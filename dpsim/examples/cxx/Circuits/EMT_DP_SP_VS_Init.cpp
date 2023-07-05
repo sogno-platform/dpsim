@@ -38,8 +38,7 @@ void vsSetParamsDP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
 	sim.run();
@@ -72,8 +71,7 @@ void vsSetParamsSP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::SP);
 	sim.addLogger(logger);
 	sim.run();
@@ -142,8 +140,7 @@ void vsSetAttrDP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
 	sim.run();
@@ -178,8 +175,7 @@ void vsSetAttrSP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::SP);
 	sim.addLogger(logger);
 	sim.run();
@@ -214,8 +210,7 @@ void vsSetAttrEMT3ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 	sim.run();
@@ -250,8 +245,7 @@ void vsSetFromNodeDP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
 	sim.run();
@@ -286,8 +280,7 @@ void vsSetFromNodeSP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::SP);
 	sim.addLogger(logger);
 	sim.run();
@@ -322,8 +315,7 @@ void vsSetFromNodeEMT3ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 	sim.run();

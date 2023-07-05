@@ -2,20 +2,22 @@
 
 #pragma once
 
-#include "dpsim/MNASolverFactory.h"
 #include <vector>
 
 #include <dpsim/Config.h>
 #include <dpsim/DataLogger.h>
+#include <dpsim/MNASolverFactory.h>
 #include <dpsim/Solver.h>
+#include <dpsim/SolverParameters.h>
 #include <dpsim/Scheduler.h>
 #include <dpsim/Event.h>
+#include <dpsim-models/Attribute.h>
 #include <dpsim-models/Definitions.h>
+#include <dpsim/Interface.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/SimNode.h>
-#include <dpsim-models/Attribute.h>
-#include <dpsim/Interface.h>
+
 #include <nlohmann/json.hpp>
 
 #ifdef WITH_GRAPHVIZ
@@ -44,16 +46,7 @@ namespace DPsim {
 		/// Simulation timestep
 		const CPS::Attribute<Real>::Ptr mTimeStep;
 
-		/// Determines if the network should be split
-		/// into subnetworks at decoupling lines.
-		/// If the system is split, each subsystem is
-		/// solved by a dedicated MNA solver.
-		const CPS::Attribute<Bool>::Ptr mSplitSubnets;
 
-		/// Determines if steady-state initialization
-		/// should be executed prior to the simulation.
-		/// By default the initialization is disabled.
-		const CPS::Attribute<Bool>::Ptr mSteadyStateInit;
 
 	protected:
 		/// Time variable that is incremented at every step
@@ -84,35 +77,19 @@ namespace DPsim {
 		///
 		Solver::Type mSolverType = Solver::Type::MNA;
 		///
-		Solver::Behaviour mSolverBehaviour = Solver::Behaviour::Simulation;
-		///
 		Solver::List mSolvers;
-		///
-		DirectLinearSolverImpl mDirectImpl = DirectLinearSolverImpl::Undef;
 		///
 		DirectLinearSolverConfiguration mDirectLinearSolverConfiguration;
 		///
-		Bool mInitFromNodesAndTerminals = true;
-		/// Enable recomputation of system matrix during simulation
-		Bool mSystemMatrixRecomputation = false;
+		std::shared_ptr<SolverParameters> mSolverParams;
+	
 
 		/// If tearing components exist, the Diakoptics
 		/// solver is selected automatically.
 		CPS::IdentifiedObject::List mTearComponents = CPS::IdentifiedObject::List();
-		/// Determines if the system matrix is split into
-		/// several smaller matrices, one for each frequency.
-		/// This can only be done if the network is composed
-		/// of linear components that do no create cross
-		/// frequency coupling.
-		Bool mFreqParallel = false;
 		///
 		Bool mInitialized = false;
 
-		// #### Initialization ####
-		/// steady state initialization time limit
-		Real mSteadStIniTimeLimit = 10;
-		/// steady state initialization accuracy limit
-		Real mSteadStIniAccLimit = 0.0001;
 
 		// #### Task dependencies und scheduling ####
 		/// Scheduler used for task scheduling
@@ -170,41 +147,29 @@ namespace DPsim {
 		///
 		void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
 		///
+		void setSimulationParameters(CPS::Real timeStep, CPS::Real finalTime) {
+			**mTimeStep = timeStep;
+			**mFinalTime = finalTime;
+		}
+		///
 		void setDomain(CPS::Domain domain = CPS::Domain::DP) { mDomain = domain; }
 		///
 		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
-		/// set solver and component to initialization or simulation behaviour
-		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) { mSolverBehaviour = behaviour; }
 		///
-		void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) { mDirectImpl = directImpl; }
+		void setSolverParameters(CPS::Domain domain = CPS::Domain::DP, Solver::Type type = Solver::Type::MNA, 
+			std::shared_ptr<SolverParameters> solverParameters = nullptr);
 		///
-		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration& configuration) { mDirectLinearSolverConfiguration = configuration;	}
-		///
-		void setMaxNumberOfIterations(int maxIterations) {mMaxIterations = maxIterations;}
-		///
-		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
-		///
-		void doSplitSubnets(Bool splitSubnets = true) { **mSplitSubnets = splitSubnets; }
+		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration& configuration) { mDirectLinearSolverConfiguration = configuration; }
 		///
 		void setTearingComponents(CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List()) {
 			mTearComponents = tearComponents;
 		}
+		
 		/// Set the scheduling method
 		void setScheduler(const std::shared_ptr<Scheduler> &scheduler) {
 			mScheduler = scheduler;
 		}
-		/// Compute phasors of different frequencies in parallel
-		void doFrequencyParallelization(Bool value) { mFreqParallel = value; }
-		///
-		void doSystemMatrixRecomputation(Bool value) { mSystemMatrixRecomputation = value; }
-
-		// #### Initialization ####
-		/// activate steady state initialization
-		void doSteadyStateInit(Bool f) { **mSteadyStateInit = f; }
-		/// set steady state initialization time limit
-		void setSteadStIniTimeLimit(Real v) { mSteadStIniTimeLimit = v; }
-		/// set steady state initialization accuracy limit
-		void setSteadStIniAccLimit(Real v) { mSteadStIniAccLimit = v; }
+		
 
 		// #### Simulation Control ####
 		/// Create solver instances etc.

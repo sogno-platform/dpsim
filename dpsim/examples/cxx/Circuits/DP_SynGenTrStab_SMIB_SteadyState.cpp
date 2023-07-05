@@ -57,15 +57,16 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
+	// set solver parameters
+	auto solverParameters = std::make_shared<SolverParametersMNA>();
+	solverParameters->setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+	solverParameters->setInitFromNodesAndTerminals(false);
+
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
 	simPF.setSystem(systemPF);
-	simPF.setTimeStep(timeStepPF);
-	simPF.setFinalTime(finalTimePF);
-	simPF.setDomain(Domain::SP);
-	simPF.setSolverType(Solver::Type::NRP);
-	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
-	simPF.doInitFromNodesAndTerminals(false);
+	simPF.setSimulationParameters(timeStepPF, finalTimePF);
+	simPF.setSolverParameters(Domain::SP, Solver::Type::NRP, solverParameters);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -123,15 +124,12 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 	loggerDP->logAttribute("v_slack", extnetDP->attribute("v_intf"));
 	loggerDP->logAttribute("i_slack", extnetDP->attribute("i_intf"));
 
-
-
+	//
 	Simulation simDP(simNameDP, Logger::Level::debug);
 	simDP.setSystem(systemDP);
-	simDP.setTimeStep(timeStep);
-	simDP.setFinalTime(finalTime);
+	simDP.setSimulationParameters(timeStep, finalTime);
 	simDP.setDomain(Domain::DP);
 	simDP.addLogger(loggerDP);
-
 	simDP.run();
 }
 

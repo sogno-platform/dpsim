@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.doSystemMatrixRecomputation(true);
-	sim.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
+	sim.setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
 	sim.addLogger(logger);
 
 	// Optionally add switch event

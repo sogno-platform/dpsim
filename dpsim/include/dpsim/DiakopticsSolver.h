@@ -13,6 +13,7 @@
 #include <dpsim-models/SimSignalComp.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
+#include <dpsim/SolverParameters.h>
 
 #include <unordered_map>
 

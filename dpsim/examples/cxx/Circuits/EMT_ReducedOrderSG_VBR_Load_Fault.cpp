@@ -148,15 +148,18 @@ int main(int argc, char* argv[]) {
 		loggerEMT->logAttribute("Tm", turbineGovernorEMT->attribute("Tm"));
 	}
 
+	// set solver parameters
+	auto solverParameterEMT = std::make_shared<SolverParametersMNA>();
+	solverParameterEMT->setInitFromNodesAndTerminals(true);
+	solverParameterEMT->setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl::SparseLU);
+	solverParameterEMT->doSystemMatrixRecomputation(true);
+
+	//
 	Simulation simEMT(simNameEMT, logLevel);
-	simEMT.doInitFromNodesAndTerminals(true);
 	simEMT.setSystem(systemEMT);
-	simEMT.setTimeStep(timeStep);
-	simEMT.setFinalTime(finalTime);
-	simEMT.setDomain(Domain::EMT);
-	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
+	simEMT.setSimulationParameters(timeStep, finalTime);
+	simEMT.setSolverParameters(Domain::EMT, Solver::Type::MNA, solverParameterEMT);
 	simEMT.addLogger(loggerEMT);
-	simEMT.doSystemMatrixRecomputation(true);
 
 	// Events
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);

@@ -13,6 +13,7 @@
 
 #include <dpsim/Solver.h>
 #include <dpsim/Scheduler.h>
+#include <dpsim/SolverParametersMNA.h>
 #include "dpsim-models/SystemTopology.h"
 #include "dpsim-models/Components.h"
 
@@ -20,6 +21,9 @@ namespace DPsim {
     /// Solver class using the nonlinear powerflow (PF) formulation.
     class PFSolver: public Solver {
     protected:
+        /// ### Solver Parameters
+		std::shared_ptr<SolverParametersMNA> mSolverParams;
+
         /// Number of PQ nodes
         UInt mNumPQBuses = 0;
         /// Number of PV nodes
@@ -137,6 +141,7 @@ namespace DPsim {
 		PFSolver(CPS::String name,
 			CPS::SystemTopology system,
 			Real timeStep,
+		    std::shared_ptr<SolverParametersMNA> solverParams,
 			CPS::Logger::Level logLevel);
 		///
 		virtual ~PFSolver() { };
@@ -146,7 +151,9 @@ namespace DPsim {
         /// Allows to modify the powerflow bus type of a specific component
         void modifyPowerFlowBusComponent(CPS::String name, CPS::PowerflowBusType powerFlowBusType);
         /// set solver and component to initialization or simulation behaviour
-		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) override;
+		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour);
+        /// Gets Solver Parameters for Modified Nodal Analysis (MNA) 
+        //std::shared_ptr<SolverParametersMNA> getMNAParameters() { return std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams); }
 
         class SolveTask : public CPS::Task {
 		public:

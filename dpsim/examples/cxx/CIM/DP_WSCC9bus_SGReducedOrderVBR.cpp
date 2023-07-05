@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 	String faultBusName= "BUS6";
 	Real inertiaScalingFactor = 1.0;
 	String logDirectory = "logs";
-	DirectLinearSolverImpl implementation = DirectLinearSolverImpl::SparseLU;
+	CPS::DirectLinearSolverImpl implementation = CPS::DirectLinearSolverImpl::SparseLU;
 
 	// Find CIM files
 	std::list<fs::path> filenames;

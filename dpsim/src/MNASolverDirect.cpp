@@ -15,7 +15,10 @@ using namespace CPS;
 namespace DPsim {
 
 template <typename VarType>
-MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :	MnaSolver<VarType>(name, domain, logLevel) {
+MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, 
+	std::shared_ptr<SolverParametersMNA> solverParams, CPS::Logger::Level logLevel) :	
+	MnaSolver<VarType>(name, domain, solverParams, logLevel) {
+
 	mImplementationInUse = DirectLinearSolverImpl::SparseLU;
 }
 
@@ -152,7 +155,7 @@ void MnaSolverDirect<Real>::createEmptySystemMatrix() {
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
-	if (mSystemMatrixRecomputation) {
+	if (std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams)->mSystemMatrixRecomputation) {
 		mBaseSystemMatrix = SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
 		mVariableSystemMatrix = SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
 	} else {
@@ -169,7 +172,7 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
-	if (mFrequencyParallel) {
+	if (mSolverParams->mFreqParallel) {
 		for (UInt i = 0; i < std::pow(2,mSwitches.size()); ++i) {
 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 				auto bit = std::bitset<SWITCH_NUM>(i);
@@ -177,7 +180,7 @@ void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
 				mDirectLinearSolvers[bit].push_back(createDirectSolverImplementation(mSLog));
 			}
 		}
-	} else if (mSystemMatrixRecomputation) {
+	} else if (std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams)->mSystemMatrixRecomputation) {
 		mBaseSystemMatrix = SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices));
 		mVariableSystemMatrix = SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices));
 	} else {
@@ -305,7 +308,7 @@ void MnaSolverDirect<VarType>::solveWithHarmonics(Real time, Int timeStepCount, 
 
 template <typename VarType>
 void MnaSolverDirect<VarType>::logSystemMatrices() {
-	if (mFrequencyParallel) {
+	if (mSolverParams->mFreqParallel) {
 		for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
 			SPDLOG_LOGGER_INFO(mSLog, "System matrix for frequency: {:d} \n{:s}", i, Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][i]));
 		}
@@ -313,9 +316,8 @@ void MnaSolverDirect<VarType>::logSystemMatrices() {
 		for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i) {
 			SPDLOG_LOGGER_INFO(mSLog, "Right side vector for frequency: {:d} \n{:s}", i, Logger::matrixToString(mRightSideVectorHarm[i]));
 		}
-
 	}
-	else if (mSystemMatrixRecomputation) {
+	else if (mSolverParams->mSystemMatrixRecomputation) {
 		SPDLOG_LOGGER_INFO(mSLog, "Summarizing matrices: ");
 		SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
 		SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
@@ -390,23 +392,23 @@ template<typename VarType>
 std::shared_ptr<DirectLinearSolver> MnaSolverDirect<VarType>::createDirectSolverImplementation(CPS::Logger::Log mSLog) {
 	switch(this->mImplementationInUse)
 	{
-		case DirectLinearSolverImpl::DenseLU:
+		case CPS::DirectLinearSolverImpl::DenseLU:
 			return std::make_shared<DenseLUAdapter>(mSLog);
-		case DirectLinearSolverImpl::SparseLU:
+		case CPS::DirectLinearSolverImpl::SparseLU:
 			return std::make_shared<SparseLUAdapter>(mSLog);
 		#ifdef WITH_KLU
-		case DirectLinearSolverImpl::KLU:
+		case CPS::DirectLinearSolverImpl::KLU:
 			return std::make_shared<KLUAdapter>(mSLog);
 		#endif
 		#ifdef WITH_CUDA
-		case DirectLinearSolverImpl::CUDADense:
+		case CPS::DirectLinearSolverImpl::CUDADense:
 			return std::make_shared<GpuDenseAdapter>(mSLog);
 		#ifdef WITH_CUDA_SPARSE
-		case DirectLinearSolverImpl::CUDASparse:
+		case CPS::DirectLinearSolverImpl::CUDASparse:
 			return std::make_shared<GpuSparseAdapter>(mSLog);
 		#endif
 		#ifdef WITH_MAGMA
-		case DirectLinearSolverImpl::CUDAMagma:
+		case CPS::DirectLinearSolverImpl::CUDAMagma:
 			return std::make_shared<GpuMagmaAdapter>(mSLog);
 		#endif
 		#endif

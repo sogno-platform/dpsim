@@ -8,6 +8,7 @@
 
 
 #include <dpsim/MNASolver.h>
+#include <dpsim/Solver.h>
 #include <dpsim/SequentialScheduler.h>
 #include <memory>
 
@@ -18,12 +19,17 @@ namespace DPsim {
 
 
 template <typename VarType>
-MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :
+MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, 
+	std::shared_ptr<SolverParametersMNA> solverParams, CPS::Logger::Level logLevel) :
 	Solver(name, logLevel), mDomain(domain) {
+	
+	//
+	mSolverParams = solverParams;
 
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);
 	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::off);
+
 }
 
 template <typename VarType>
@@ -39,7 +45,7 @@ void MnaSolver<VarType>::initialize() {
 	// Register attribute for solution vector
 	///FIXME: This is kinda ugly... At least we should somehow unify mLeftSideVector and mLeftSideVectorHarm.
 	// Best case we have some kind of sub-attributes for attribute vectors / tensor attributes...
-	if (mFrequencyParallel) {
+	if ( mSolverParams->getFreqParallel()) {
 		SPDLOG_LOGGER_INFO(mSLog, "Computing network harmonics in parallel.");
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mLeftSideVectorHarm.push_back(AttributeStatic<Matrix>::make());
@@ -72,7 +78,7 @@ void MnaSolver<VarType>::initialize() {
 	// calculate MNA specific initialization values.
 	initializeComponents();
 
-	if (mSteadyStateInit) {
+	if (mSolverParams->getSteadyStateInit()) {
 		mIsInInitialization = true;
 		steadyStateInitialization();
 	}
@@ -104,12 +110,12 @@ void MnaSolver<Real>::initializeComponents() {
 	CPS::MNAInterface::List allMNAComps;
 	allMNAComps.insert(allMNAComps.end(), mMNAComponents.begin(), mMNAComponents.end());
 	allMNAComps.insert(allMNAComps.end(), mMNAIntfVariableComps.begin(), mMNAIntfVariableComps.end());
-
+	
 	for (auto comp : allMNAComps) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Real>>(comp);
 		if (!pComp)	continue;
 		pComp->checkForUnconnectedTerminals();
-		if (mInitFromNodesAndTerminals)
+		if (mSolverParams->getInitFromNodesAndTerminals())
 			pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 
@@ -137,13 +143,13 @@ void MnaSolver<Complex>::initializeComponents() {
 	CPS::MNAInterface::List allMNAComps;
 	allMNAComps.insert(allMNAComps.end(), mMNAComponents.begin(), mMNAComponents.end());
 	allMNAComps.insert(allMNAComps.end(), mMNAIntfVariableComps.begin(), mMNAIntfVariableComps.end());
-
+	
 	// Initialize power components with frequencies and from powerflow results
 	for (auto comp : allMNAComps) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
 		pComp->checkForUnconnectedTerminals();
-		if (mInitFromNodesAndTerminals)
+		if (mSolverParams->getInitFromNodesAndTerminals())
 			pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 
@@ -152,7 +158,7 @@ void MnaSolver<Complex>::initializeComponents() {
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 
 	SPDLOG_LOGGER_INFO(mSLog, "-- Initialize MNA properties of components");
-	if (mFrequencyParallel) {
+	if (mSolverParams->getFreqParallel()) {
 		// Initialize MNA specific parts of components.
 		for (auto comp : mMNAComponents) {
 			// Initialize MNA specific parts of components.
@@ -191,9 +197,9 @@ void MnaSolver<VarType>::initializeSystem() {
 		throw SystemError("Too many Switches.");
 	}
 
-	if (mFrequencyParallel)
+	if (mSolverParams->getFreqParallel())
 		initializeSystemWithParallelFrequencies();
-	else if (mSystemMatrixRecomputation)
+	else if (mSolverParams->getSystemMatrixRecomputation())
 		initializeSystemWithVariableMatrix();
 	else
 		initializeSystemWithPrecomputedMatrices();
@@ -378,7 +384,8 @@ void MnaSolver<Real>::createEmptyVectors() {
 
 template<>
 void MnaSolver<Complex>::createEmptyVectors() {
-	if (mFrequencyParallel) {
+
+	if (mSolverParams->getFreqParallel()) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
 			mLeftSideVectorHarm.push_back(AttributeStatic<Matrix>::make(Matrix::Zero(2*(mNumMatrixNodeIndices), 1)));
@@ -446,7 +453,7 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
 	SPDLOG_LOGGER_INFO(mSLog, "--- Run steady-state initialization ---");
-
+	
 	DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::off);
 	DataLogger initRightVectorLog(mName + "_InitRightVector", mLogLevel != CPS::Logger::Level::off);
 
@@ -455,7 +462,6 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 
 	// TODO: enable use of timestep distinct from simulation timestep
 	Real initTimeStep = mTimeStep;
-
 	Int timeStepCount = 0;
 	Real time = 0;
 	Real maxDiff = 1.0;
@@ -501,7 +507,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	sched.resolveDeps(tasks, inEdges, outEdges);
 	sched.createSchedule(tasks, inEdges, outEdges);
 
-	while (time < mSteadStIniTimeLimit) {
+	while (time < mSolverParams->getSteadyStateInitTimeLimit()) {
 		// Reset source vector
 		mRightSideVector.setZero();
 
@@ -526,7 +532,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 		maxDiff = diff.lpNorm<Eigen::Infinity>();
 		max = (**mLeftSideVector).lpNorm<Eigen::Infinity>();
 		// If difference is smaller than some epsilon, break
-		if ((maxDiff / max) < mSteadStIniAccLimit)
+		if ((maxDiff / max) < mSolverParams->getSteadyStateInitAccLimit())
 			break;
 	}
 
@@ -562,10 +568,10 @@ Task::List MnaSolver<VarType>::getTasks() {
 			l.push_back(task);
 		}
 	}
-	if (mFrequencyParallel) {
+	if (mSolverParams->getFreqParallel()) {
 		for (UInt i = 0; i < mSystem.mFrequencies.size(); ++i)
 			l.push_back(createSolveTaskHarm(i));
-	} else if (mSystemMatrixRecomputation) {
+	} else if (mSolverParams->getSystemMatrixRecomputation()) {
 		for (auto comp : this->mMNAIntfVariableComps) {
 			for (auto task : comp->mnaTasks())
 				l.push_back(task);
@@ -575,6 +581,7 @@ Task::List MnaSolver<VarType>::getTasks() {
 		l.push_back(createSolveTask());
 		l.push_back(createLogTask());
 	}
+
 	return l;
 }
 

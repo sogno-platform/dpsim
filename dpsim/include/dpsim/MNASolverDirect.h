@@ -16,7 +16,9 @@
 #include <memory>
 
 #include <dpsim/Config.h>
+#include <dpsim/Definitions.h>
 #include <dpsim/Solver.h>
+#include <dpsim/SolverParametersMNA.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/DirectLinearSolver.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
@@ -44,17 +46,6 @@
 
 namespace DPsim {
 
-	enum DirectLinearSolverImpl{
-		Undef = 0,
-		KLU,
-		SparseLU,
-		DenseLU,
-		CUDADense,
-		CUDASparse,
-		CUDAMagma,
-		Plugin
-	};
-
 	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
 	class MnaSolverDirect : public MnaSolver<VarType> {
@@ -74,10 +65,11 @@ namespace DPsim {
 		/// LU factorization of variable system matrix
 		std::shared_ptr<DirectLinearSolver> mDirectLinearSolverVariableSystemMatrix;
 		/// LU factorization indicator
-		DirectLinearSolverImpl mImplementationInUse;
+		CPS::DirectLinearSolverImpl mImplementationInUse;
 		/// LU factorization configuration
 		DirectLinearSolverConfiguration mConfigurationInUse;
 
+		using MnaSolver<VarType>::mSolverParams;
 		using MnaSolver<VarType>::mSwitches;
 		using MnaSolver<VarType>::mMNAIntfSwitches;
 		using MnaSolver<VarType>::mMNAComponents;
@@ -92,9 +84,7 @@ namespace DPsim {
 		using MnaSolver<VarType>::mIsInInitialization;
 		using MnaSolver<VarType>::mRightSideVectorHarm;
 		using MnaSolver<VarType>::mLeftSideVectorHarm;
-		using MnaSolver<VarType>::mFrequencyParallel;
 		using MnaSolver<VarType>::mSLog;
-		using MnaSolver<VarType>::mSystemMatrixRecomputation;
 		using MnaSolver<VarType>::hasVariableComponentChanged;
 		using MnaSolver<VarType>::mNumRecomputations;
 		using MnaSolver<VarType>::mSyncGen;
@@ -154,13 +144,14 @@ namespace DPsim {
 		/// sovlerImpl: choose the most advanced solver implementation available by default
 		MnaSolverDirect(String name,
 			CPS::Domain domain = CPS::Domain::DP,
+			std::shared_ptr<SolverParametersMNA> solverParams = std::make_shared<SolverParametersMNA>(),
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		/// Destructor
 		virtual ~MnaSolverDirect() = default;
 
 		/// Sets the linear solver to "implementation" and creates an object
-		void setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);
+		void setDirectLinearSolverImplementation(CPS::DirectLinearSolverImpl implementation);
 
 		/// Sets the linear solver configuration
 		void setDirectLinearSolverConfiguration(DirectLinearSolverConfiguration& configuration);
@@ -170,6 +161,10 @@ namespace DPsim {
 
 		/// ### SynGen Interface ###
 		int mIter = 0;
+		
+		/// Gets Solver Parameters for Modified Nodal Analysis (MNA) 
+        std::shared_ptr<SolverParametersMNA> getMNAParameters() { return std::dynamic_pointer_cast<SolverParametersMNA>(mSolverParams); }
+
 
 		// #### MNA Solver Tasks ####
 		///

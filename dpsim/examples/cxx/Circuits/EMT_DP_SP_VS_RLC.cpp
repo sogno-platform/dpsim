@@ -43,8 +43,7 @@ void voltageSourceResistorEMT3ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 	sim.run();
@@ -82,8 +81,7 @@ void voltageSourceResistorDP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
 	sim.run();
@@ -121,8 +119,7 @@ void voltageSourceResistorSP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::SP);
 	sim.addLogger(logger);
 	sim.run();
@@ -167,8 +164,7 @@ void voltageSourceInductorEMT3ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 	sim.run();
@@ -213,8 +209,7 @@ void voltageSourceInductorDP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
 	sim.run();
@@ -259,8 +254,7 @@ void voltageSourceInductorSP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::SP);
 	sim.addLogger(logger);
 	sim.run();
@@ -305,8 +299,7 @@ void voltageSourceCapacitorEMT3ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 	sim.run();
@@ -351,8 +344,7 @@ void voltageSourceCapacitorDP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
 	sim.run();
@@ -397,8 +389,7 @@ void voltageSourceCapacitorSP1ph() {
 	// Simulation
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	sim.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::SP);
 	sim.addLogger(logger);
 	sim.run();

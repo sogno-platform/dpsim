@@ -67,7 +67,7 @@ namespace DPsim {
         void calculateNodalInjection();
     public:
         /// Constructor to be used in simulation examples.
-        PFSolverPowerPolar(CPS::String name, const CPS::SystemTopology &system, CPS::Real timeStep, CPS::Logger::Level logLevel);
+        PFSolverPowerPolar(CPS::String name, const CPS::SystemTopology &system, CPS::Real timeStep, std::shared_ptr<SolverParametersMNA> solverParams, CPS::Logger::Level logLevel);
         ///
 		virtual ~PFSolverPowerPolar() { };
     };

@@ -17,6 +17,8 @@
 
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
+#include <dpsim/SolverParameters.h>
+#include <dpsim/SolverParametersMNA.h>
 #include <dpsim-models/IdentifiedObject.h>
 #include <DPsim.h>
 
@@ -65,6 +67,29 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	addAttributes(m);
 
+	py::class_<DPsim::SolverParameters, std::shared_ptr<DPsim::SolverParameters>>(m, "SolverParameters")
+		.def(py::init<>())
+		.def("set_init_from_nodes_and_terminals", &DPsim::SolverParameters::setInitFromNodesAndTerminals)
+		.def("get_init_from_nodes_and_terminals", &DPsim::SolverParameters::getInitFromNodesAndTerminals);
+
+	py::class_<DPsim::SolverParametersMNA, DPsim::SolverParameters, std::shared_ptr<DPsim::SolverParametersMNA>>(m, "SolverParametersMNA", py::multiple_inheritance())
+		.def(py::init<>())
+		.def("set_domain", &DPsim::SolverParametersMNA::setDomain)
+		.def("set_solver_and_component_behaviour", &DPsim::SolverParametersMNA::setSolverAndComponentBehaviour)
+		.def("do_split_subnets", &DPsim::SolverParametersMNA::doSplitSubnets)
+		.def("do_frequency_parallelization", &DPsim::SolverParametersMNA::doFrequencyParallelization)
+		.def("do_system_matrix_recomputation", &DPsim::SolverParametersMNA::doSystemMatrixRecomputation)
+		.def("set_direct_linear_solver_implementation", &DPsim::SolverParametersMNA::setDirectLinearSolverImplementation)
+		.def("do_steady_state_init", &DPsim::SolverParametersMNA::doSteadyStateInit)
+		.def("set_stead_st_ini_time_limit", &DPsim::SolverParametersMNA::setSteadStIniTimeLimit)
+		.def("set_stead_st_ini_acc_limit", &DPsim::SolverParametersMNA::setSteadStIniAccLimit)
+		.def("get_split_subnets", &DPsim::SolverParametersMNA::getSplitSubnets)
+		.def("get_freq_parallel", &DPsim::SolverParametersMNA::getFreqParallel)
+		.def("get_system_matrix_recomputation", &DPsim::SolverParametersMNA::getSystemMatrixRecomputation)
+		.def("get_steady_state_init", &DPsim::SolverParametersMNA::getSteadyStateInit)
+		.def("get_steady_state_init_time_limit", &DPsim::SolverParametersMNA::getSteadyStateInitTimeLimit)
+		.def("get_steady_state_init_acc_limit", &DPsim::SolverParametersMNA::getSteadyStateInitAccLimit);
+
 	py::class_<DPsim::DirectLinearSolverConfiguration>(m, "DirectLinearSolverConfiguration")
 		.def(py::init<>())
 		.def("set_fill_in_reduction_method", &DPsim::DirectLinearSolverConfiguration::setFillInReductionMethod)
@@ -81,25 +106,21 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("name", &DPsim::Simulation::name)
 		.def("set_time_step", &DPsim::Simulation::setTimeStep)
 		.def("set_final_time", &DPsim::Simulation::setFinalTime)
+		.def("set_simulation_parameters", &DPsim::Simulation::setSimulationParameters, "time_step"_a, "final_time"_a)
 		.def("add_logger", &DPsim::Simulation::addLogger)
 		.def("set_system", &DPsim::Simulation::setSystem)
 		.def("run", &DPsim::Simulation::run)
 		.def("set_solver", &DPsim::Simulation::setSolverType)
 		.def("set_domain", &DPsim::Simulation::setDomain)
+		.def("set_solver_parameters", &DPsim::Simulation::setSolverParameters, "domain"_a, "type"_a, "solverParameters"_a=nullptr)
 		.def("start", &DPsim::Simulation::start)
 		.def("next", &DPsim::Simulation::next)
 		.def("get_idobj_attr", &DPsim::Simulation::getIdObjAttribute, "comp"_a, "attr"_a)
 		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a)
 		.def("log_idobj_attribute", &DPsim::Simulation::logIdObjAttribute, "comp"_a, "attr"_a)
 		.def("log_attribute", &DPsim::Simulation::logAttribute, "name"_a, "attr"_a)
-		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
-		.def("do_system_matrix_recomputation", &DPsim::Simulation::doSystemMatrixRecomputation)
-		.def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
-		.def("do_frequency_parallelization", &DPsim::Simulation::doFrequencyParallelization)
 		.def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
 		.def("add_event", &DPsim::Simulation::addEvent)
-		.def("set_solver_component_behaviour", &DPsim::Simulation::setSolverAndComponentBehaviour)
-		.def("set_direct_solver_implementation", &DPsim::Simulation::setDirectLinearSolverImplementation)
 		.def("set_direct_linear_solver_configuration", &DPsim::Simulation::setDirectLinearSolverConfiguration)
 		.def("log_lu_times", &DPsim::Simulation::logLUTimes);
 
@@ -205,6 +226,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("DAE", DPsim::Solver::Type::DAE)
 		.value("NRP", DPsim::Solver::Type::NRP);
 
+	/*
 	py::enum_<DPsim::DirectLinearSolverImpl>(m, "DirectLinearSolverImpl")
 		.value("Undef", DPsim::DirectLinearSolverImpl::Undef)
 		.value("DenseLU", DPsim::DirectLinearSolverImpl::DenseLU)
@@ -213,6 +235,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("CUDADense", DPsim::DirectLinearSolverImpl::CUDADense)
 		.value("CUDASparse", DPsim::DirectLinearSolverImpl::CUDASparse)
 		.value("CUDAMagma", DPsim::DirectLinearSolverImpl::CUDAMagma);
+	*/
 
 	py::enum_<DPsim::SCALING_METHOD>(m, "scaling_method")
 		.value("no_scaling", DPsim::SCALING_METHOD::NO_SCALING)

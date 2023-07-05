@@ -19,6 +19,7 @@
 #include <list>
 #include <vector>
 
+#include <dpsim/Definitions.h>
 #include <dpsim/Timer.h>
 #include <dpsim/Solver.h>
 #include <dpsim-models/Logger.h>
@@ -62,7 +63,7 @@ public:
 		Bool si = false,
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA,
-		DirectLinearSolverImpl mi = DirectLinearSolverImpl::SparseLU,
+		CPS::DirectLinearSolverImpl mi = CPS::DirectLinearSolverImpl::SparseLU,
 		String spn = "plugin.so",
 		String params = "default.json"
 	);
@@ -80,7 +81,7 @@ public:
 		Bool si = false,
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA,
-		DirectLinearSolverImpl mi = DirectLinearSolverImpl::SparseLU,
+		CPS::DirectLinearSolverImpl mi = CPS::DirectLinearSolverImpl::SparseLU,
 		String spn = "plugin.so"
 	);
 
@@ -106,7 +107,7 @@ public:
 		CPS::Domain domain;
 		Solver::Type type;
 	} solver;
-	DPsim::DirectLinearSolverImpl directImpl;
+	CPS::DirectLinearSolverImpl directImpl;
 	String solverPluginName;
 
 	DPsim::Timer::StartClock::time_point startTime;

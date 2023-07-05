@@ -171,8 +171,7 @@ void DP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 
 	Simulation sim(simNameDP, Logger::Level::debug);
 	sim.setSystem(systemDP);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
+	simDP.setSimulationParameters(timeStep, finalTime);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(loggerDP);
 

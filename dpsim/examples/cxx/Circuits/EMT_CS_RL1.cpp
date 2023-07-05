@@ -14,6 +14,8 @@ using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
+	
+	std::shared_ptr<SolverParameters> mna_parameter = std::make_shared<SolverParametersMNA>();
 	Real timeStep = 1e-4;
 	Real finalTime = 1e-3;
 	String simName = "EMT_CS_RL1";
@@ -46,11 +48,9 @@ int main(int argc, char* argv[]) {
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::EMT);
+	sim.setSimulationParameters(timeStep, finalTime);
+	sim.setSolverParameters(Domain::EMT, Solver::Type::MNA);
 	sim.addLogger(logger);
-
 	sim.run();
 
 	return 0;
