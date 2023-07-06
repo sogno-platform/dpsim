@@ -25,6 +25,7 @@
 #include <dpsim-models/SP/SP_Ph1_VDNode.h>
 #include <dpsim-models/SP/SP_Ph1_NetworkInjection.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSource.h>
+#include <dpsim-models/SP/SP_Ph1_VSIVoltageControlDQ.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGeneratorTrStab.h>
 #include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGenerator3OrderVBR.h>
@@ -65,7 +66,7 @@
 #include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/DP/DP_Ph1_SVC.h>
 #include <dpsim-models/DP/DP_Ph1_varResSwitch.h>
-
+#include <dpsim-models/DP/DP_Ph1_VSIVoltageControlDQ.h>
 #include <dpsim-models/DP/DP_Ph3_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>
 #include <dpsim-models/DP/DP_Ph3_VoltageSource.h>
