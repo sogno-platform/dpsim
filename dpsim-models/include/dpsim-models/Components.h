@@ -30,6 +30,7 @@
 #include <dpsim-models/SP/SP_Ph1_SynchronGeneratorTrStab.h>
 #include <dpsim-models/SP/SP_Ph1_Transformer.h>
 #include <dpsim-models/SP/SP_Ph1_VDNode.h>
+#include <dpsim-models/SP/SP_Ph1_VSIVoltageControlDQ.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSource.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSourceInverter.h>
 #include <dpsim-models/SP/SP_Ph1_varResSwitch.h>
@@ -65,11 +66,11 @@
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorIdeal.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorTrStab.h>
 #include <dpsim-models/DP/DP_Ph1_Transformer.h>
+#include <dpsim-models/DP/DP_Ph1_VSIVoltageControlDQ.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceNorton.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceRamp.h>
 #include <dpsim-models/DP/DP_Ph1_varResSwitch.h>
-
 #include <dpsim-models/DP/DP_Ph3_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>
 #include <dpsim-models/DP/DP_Ph3_Resistor.h>
