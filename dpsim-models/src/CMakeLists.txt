@@ -50,6 +50,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_NetworkInjection.cpp
 	DP/DP_Ph1_varResSwitch.cpp
 	DP/DP_Ph1_DPDQInterface.cpp
+	DP/DP_Ph1_VSIVoltageControlDQ.cpp
 
 	DP/DP_Ph3_VoltageSource.cpp
 	DP/DP_Ph3_Capacitor.cpp
@@ -139,6 +140,7 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph3_Inductor.cpp
 	SP/SP_Ph3_Resistor.cpp
 	SP/SP_Ph3_VoltageSource.cpp
+	SP/SP_Ph1_VSIVoltageControlDQ.cpp
 
 	Signal/DecouplingLine.cpp
 	Signal/DecouplingLineEMT.cpp
