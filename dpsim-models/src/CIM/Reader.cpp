@@ -19,7 +19,7 @@ using namespace CPS::CIM;
 using CIMPP::UnitMultiplier;
 
 Reader::Reader(String name, Logger::Level logLevel, Logger::Level componentLogLevel) {
-	mSLog = Logger::get(name + "_CIM", logLevel);
+	mSLog = Logger::get(Logger::LoggerType::DEBUG, name + "_CIM", logLevel);
 
 	mModel = new CIMModel();
 	mModel->setDependencyCheckOff();

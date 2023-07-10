@@ -89,7 +89,7 @@ CSVReaderIterator::CSVReaderIterator(std::istream& str)
 CSVReaderIterator::CSVReaderIterator():m_str(NULL) { }
 
 CSVReader::CSVReader(CPS::String name, std::list<fs::path> paths, CPS::Logger::Level logLevel) {
-	mSLog = Logger::get(name + "_csvReader", logLevel);
+	mSLog = Logger::get(Logger::LoggerType::DEBUG, name + "_csvReader", logLevel);
 	//mFileList = paths;
 	for(auto file : paths){
 		if(file.string().find(".csv")!=std::string::npos){
@@ -101,7 +101,7 @@ CSVReader::CSVReader(CPS::String name, std::list<fs::path> paths, CPS::Logger::L
 }
 
 CSVReader::CSVReader(CPS::String name, CPS::String path,  CPS::Logger::Level logLevel) {
-	mSLog = Logger::get(name + "_csvReader", logLevel);
+	mSLog = Logger::get(Logger::LoggerType::DEBUG, name + "_csvReader", logLevel);
 
 	mPath = path;
 	for (const auto & entry : fs::directory_iterator(path)) {

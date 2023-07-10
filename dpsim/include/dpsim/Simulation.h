@@ -160,7 +160,7 @@ namespace DPsim {
 		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		/// Desctructor
-		virtual ~Simulation() { }
+		virtual ~Simulation() = default;
 
 		// #### Simulation Settings ####
 		///

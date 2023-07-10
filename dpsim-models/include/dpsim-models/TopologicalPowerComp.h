@@ -49,7 +49,7 @@ namespace CPS {
 			/* We also want to set the CLI loglevel according to the logLevel
 			 * std::max(Logger::Level::info, logLevel). But because of excessive
 			 * logging to Level::info that is currently infeasible. */
-			mSLog(Logger::get(name, logLevel, Logger::Level::warn)),
+			mSLog(Logger::get(Logger::LoggerType::COMPONENT, name, logLevel, Logger::Level::warn)),
 			mLogLevel(logLevel) { }
 
 		/// Basic constructor that takes name and log level and sets the UID to name as well
@@ -63,15 +63,15 @@ namespace CPS {
 		/// Returns terminal that are part of the component
 		virtual TopologicalTerminal::List topologicalTerminals() = 0;
 		/// Set behavior of component, e.g. initialization
-		void setBehaviour(Behaviour behaviour) { 
-			mBehaviour = behaviour; 
+		void setBehaviour(Behaviour behaviour) {
+			mBehaviour = behaviour;
 			if (mBehaviour == Behaviour::Initialization)
 				SPDLOG_LOGGER_INFO(mSLog, "Set component behaviour to Initialization");
 			else if (mBehaviour == Behaviour::PFSimulation)
 				SPDLOG_LOGGER_INFO(mSLog, "Set component behaviour to PFSimulation");
 			else if (mBehaviour == Behaviour::MNASimulation)
 				SPDLOG_LOGGER_INFO(mSLog, "Set component behaviour to MNASimulation");
-			else 
+			else
 				SPDLOG_LOGGER_WARN(mSLog, "Set component behaviour not fully supported yet");
 		}
 	};

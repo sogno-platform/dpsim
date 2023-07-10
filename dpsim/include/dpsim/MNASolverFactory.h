@@ -71,7 +71,7 @@ class MnaSolverFactory {
 		if (implementation == DirectLinearSolverImpl::Undef) {
 			implementation = DirectLinearSolverImpl::SparseLU;
 		}
-		CPS::Logger::Log log = CPS::Logger::get("MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
+		CPS::Logger::Log log = CPS::Logger::get(CPS::Logger::LoggerType::DEBUG, "MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
 
 		switch(implementation) {
 		/* TODO: have only one "solver" object of type MnaSolverDirect and only use setDirectLinearSolverImplementation in the switch-case.

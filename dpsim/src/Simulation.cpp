@@ -54,7 +54,7 @@ Simulation::Simulation(String name, CommandLineArgs& args) :
 
 void Simulation::create() {
 	// Logging
-	mLog = Logger::get(**mName, mLogLevel, std::max(Logger::Level::info, mLogLevel));
+	mLog = Logger::get(Logger::LoggerType::SIMULATION, **mName, mLogLevel, std::max(Logger::Level::info, mLogLevel));
 
 	Eigen::setNbThreads(1);
 
@@ -404,7 +404,7 @@ Real Simulation::step() {
 }
 
 void Simulation::logStepTimes(String logName) {
-	auto stepTimeLog = Logger::get(logName, Logger::Level::info);
+	auto stepTimeLog = Logger::get(Logger::LoggerType::SIMULATION, logName, Logger::Level::info);
 	Logger::setLogPattern(stepTimeLog, "%v");
 	stepTimeLog->info("step_time");
 
