@@ -9,8 +9,6 @@
 #include <chrono>
 #include <thread>
 
-#include <spdlog/sinks/stdout_color_sinks.h>
-
 #include <dpsim-villas/InterfaceWorkerVillas.h>
 #include <dpsim-models/Logger.h>
 #include <villas/signal_list.hpp>

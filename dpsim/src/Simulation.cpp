@@ -13,8 +13,6 @@
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/DiakopticsSolver.h>
 
-#include <spdlog/sinks/stdout_color_sinks.h>
-
 #ifdef WITH_CIM
   #include <dpsim-models/CIM/Reader.h>
 #endif
@@ -404,7 +402,7 @@ Real Simulation::step() {
 }
 
 void Simulation::logStepTimes(String logName) {
-	auto stepTimeLog = Logger::get(Logger::LoggerType::SIMULATION, logName, Logger::Level::info);
+	auto stepTimeLog = Logger::get(Logger::LoggerType::DEBUG, logName, Logger::Level::info);
 	Logger::setLogPattern(stepTimeLog, "%v");
 	stepTimeLog->info("step_time");
 

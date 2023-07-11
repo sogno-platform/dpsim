@@ -9,11 +9,8 @@
 #include <memory>
 #include <iomanip>
 
-#include <spdlog/sinks/null_sink.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-
-#include <dpsim-models/Filesystem.h>
 #include <dpsim-models/Logger.h>
+#include <dpsim-models/Filesystem.h>
 
 using namespace CPS;
 
@@ -165,7 +162,7 @@ Logger::Log Logger::create(Logger::LoggerType type, const std::string &name, con
 	String logDir = Logger::logDir();
 	String filepath = logDir + "/" + fileName + ".log";
 	std::vector<spdlog::sink_ptr> sinks;
-	Logger::Log ret;
+	Logger::Log logger;
 
 	if (clilevel != Logger::Level::off) {
 		// Why do we log into stderr instead of stdout?
@@ -194,17 +191,18 @@ Logger::Log Logger::create(Logger::LoggerType type, const std::string &name, con
 			file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filepath, true);
 			file_sink->set_level(filelevel);
 			// TODO: Use better prefix
-			file_sink->set_pattern(prefix() + "[%L] %v");
+			file_sink->set_pattern(prefix() + "[%l] %v");
 		}
 		sinks.push_back(file_sink);
 	}
 
 	if (filelevel == Logger::Level::off && clilevel == Logger::Level::off) {
-		ret = spdlog::create<spdlog::sinks::null_sink_st>(name);
+		logger = spdlog::create<spdlog::sinks::null_sink_st>(name);
 	} else {
-		ret = std::make_shared<spdlog::logger>(name, begin(sinks), end(sinks));
-		spdlog::register_logger(ret);
+		logger = std::make_shared<spdlog::logger>(name, begin(sinks), end(sinks));
+		spdlog::register_logger(logger);
 	}
+	logger->set_level(spdlog::level::trace);
 
-	return ret;
+	return logger;
 }

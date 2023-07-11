@@ -2,7 +2,8 @@
 
 #pragma once
 
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
+
 #include <spdlog/spdlog.h>
 
 #if defined(SPDLOG_VER_MAJOR) && SPDLOG_VER_MAJOR >= 1
@@ -12,6 +13,8 @@
 #endif
 
 #include <spdlog/fmt/ostr.h>
+#include <spdlog/sinks/null_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/MathUtils.h>

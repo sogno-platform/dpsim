@@ -77,7 +77,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("get_btf", &DPsim::DirectLinearSolverConfiguration::getBTF);
 
     py::class_<DPsim::Simulation>(m, "Simulation")
-	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info)
 		.def("name", &DPsim::Simulation::name)
 		.def("set_time_step", &DPsim::Simulation::setTimeStep)
 		.def("set_final_time", &DPsim::Simulation::setFinalTime)
