@@ -9,6 +9,7 @@
 
 
 #include <dpsim-models/CompositePowerComp.h>
+#include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/SP/SP_Ph1_Resistor.h>
 #include <dpsim-models/SP/SP_Ph1_Inductor.h>
@@ -23,18 +24,21 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 	class VSIVoltageControlDQ :
-		public Base::AvVoltageSourceInverterDQ,
 		public CompositePowerComp<Complex>,
+		public Base::AvVoltageSourceInverterDQ,
 		public SharedFactory<VSIVoltageControlDQ> {
 	protected:
 
 		// ### General Parameters ###
 		/// Nominal system angle
+		/// CHECK: Should this be an Attribute?
 		Real mThetaN = 0;
-        /// Nominal voltage
+		/// Nominal voltage
+		/// CHECK: Should this be an Attribute?
 		Real mVnom;
 		/// Simulation step
 		Real mTimeStep;
+
 
 		// ### Control Subcomponents ###
 		/// PLL
@@ -61,15 +65,9 @@ namespace Ph1 {
 		/// Flag for controller usage
 		Bool mWithControl=true;
 
-		// #### solver ####
-		///
-		std::vector<const Matrix*> mRightVectorStamps;
-
 	public:
 		// ### General Parameters ###
-		/// Nominal voltage
-		// const Attribute<Real>::Ptr mVnom;
-		/// Active power reference
+
 		/// Nominal frequency
 		const Attribute<Real>::Ptr mOmegaN;
 		/// Voltage d reference
@@ -87,9 +85,8 @@ namespace Ph1 {
 		const Attribute<Real>::Ptr mIrcd;
 		/// Measured current q-axis in local reference frame
 		const Attribute<Real>::Ptr mIrcq;
-        const Attribute<Real>::Ptr mElecActivePower;
+		const Attribute<Real>::Ptr mElecActivePower;
 		const Attribute<Real>::Ptr mElecPassivePower;
-        
 		// Control outputs
 		/// Voltage as control output after transformation interface
 		const Attribute<MatrixComp>::Ptr mVsref;
@@ -117,7 +114,7 @@ namespace Ph1 {
 		/// Setter for general parameters of inverter
 		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
 		/// Setter for parameters of control loops
-		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
+		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Kp_pll, Real Ki_pll, Real Omega_cutoff);
 		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
@@ -131,9 +128,9 @@ namespace Ph1 {
 		/// Initializes internal variables of the component
 		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Updates current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates voltage across component
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		/// MNA pre step operations
 		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
@@ -149,9 +146,9 @@ namespace Ph1 {
 		/// Perform step of controller
 		void controlStep(Real time, Int timeStepCount);
 		/// Add control step dependencies
-		void addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) const;
+		void addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 		/// Add control step dependencies
-		void addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) const;
+		void addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 
 		class ControlPreStep : public CPS::Task {
 		public:

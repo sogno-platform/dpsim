@@ -24,19 +24,21 @@ namespace CPS {
 namespace DP {
 namespace Ph1 {
 	class VSIVoltageControlDQ :
-		public Base::AvVoltageSourceInverterDQ,
 		public CompositePowerComp<Complex>,
+		public Base::AvVoltageSourceInverterDQ,
 		public SharedFactory<VSIVoltageControlDQ> {
 	protected:
 
 		// ### General Parameters ###
 		/// Nominal system angle
+		/// CHECK: Should this be an Attribute?
 		Real mThetaN = 0;
 		/// Nominal voltage
+		/// CHECK: Should this be an Attribute?
 		Real mVnom;
 		/// Simulation step
 		Real mTimeStep;
-		/// Active power reference
+
 
 		// ### Control Subcomponents ###
 		/// PLL
@@ -44,7 +46,7 @@ namespace Ph1 {
 		/// Power Controller
 		std::shared_ptr<Signal::VoltageControllerVSI> mVoltageControllerVSI;
 
-		// ### Electrical Subcomponents ###	
+		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
 		std::shared_ptr<DP::Ph1::VoltageSource> mSubCtrledVoltageSource;
 		/// Resistor Rf as part of LCL filter
@@ -58,15 +60,10 @@ namespace Ph1 {
 		/// Optional connection transformer
 		std::shared_ptr<DP::Ph1::Transformer> mConnectionTransformer;
 
-
 		/// Flag for connection transformer usage
 		Bool mWithConnectionTransformer=false;
 		/// Flag for controller usage
 		Bool mWithControl=true;
-
-		// #### solver ####
-		///
-		std::vector<const Matrix*> mRightVectorStamps;
 
 	public:
 		// ### General Parameters ###
@@ -114,7 +111,7 @@ namespace Ph1 {
 		// #### General ####
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
-		/// Setter for gengit eral parameters of inverter
+		/// Setter for general parameters of inverter
 		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
 		/// Setter for parameters of control loops
 		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Kp_pll, Real Ki_pll, Real Omega_cutoff);
@@ -125,16 +122,15 @@ namespace Ph1 {
 		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
 		/// Setter for initial values applied in controllers
 		void setInitialStateValues(Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
-
 		void withControl(Bool controlOn) { mWithControl = controlOn; };
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
 		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Updates current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates voltage across component
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		/// MNA pre step operations
 		void mnaParentPreStep(Real time, Int timeStepCount) override;
 		/// MNA post step operations
@@ -177,6 +173,7 @@ namespace Ph1 {
 		private:
 			VSIVoltageControlDQ& mVSIVoltageControlDQ;
 		};
+
 	};
 }
 }
