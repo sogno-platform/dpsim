@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
-	loggerDP->logAttribute("Spannung_PCC", n1DP->attribute("v"));
+	loggerDP->logAttribute("Spannung_PCC", n2DP->attribute("v"));
     loggerDP->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
 	loggerDP->logAttribute("Strom_RLC", pv->attribute("i_intf"));
 	loggerDP->logAttribute("PLL_Phase", pv->attribute("pll_output"));
