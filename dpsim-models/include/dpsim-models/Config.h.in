@@ -16,3 +16,4 @@
 #cmakedefine WITH_NUMPY
 #cmakedefine WITH_KLU
 #cmakedefine CGMES_BUILD
+#cmakedefine DEBUG_BUILD

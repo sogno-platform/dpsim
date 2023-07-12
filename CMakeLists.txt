@@ -80,6 +80,10 @@ check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 include(GetVersion)
 GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+	set(DEBUG_BUILD ON)
+endif()
+
 # Deprecated build options
 # TODO: Remove deprecated options in future release
 option(WITH_EIGEN_MODULE     "Fetch Eigen3 as module (deprecated option)" OFF)

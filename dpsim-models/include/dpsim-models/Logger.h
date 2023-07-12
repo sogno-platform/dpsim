@@ -2,7 +2,14 @@
 
 #pragma once
 
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
+#include <dpsim-models/Config.h>
+
+#if defined(DEBUG_BUILD)
+	#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+#else
+	#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
+#endif
+
 
 #include <spdlog/spdlog.h>
 
