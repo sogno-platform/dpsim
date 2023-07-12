@@ -5,8 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
-#include <iostream>
-using namespace std;
+
 #include <DPsim.h>
 #include "../Examples.h"
 
@@ -16,7 +15,6 @@ using namespace CPS;
 int main(int argc, char* argv[]) {
 
 	CIM::Examples::Grids::SGIB::Yazdani Yazdani;
-
 
 	Real finalTime = 0.5;
 	Real timeStep = 0.0001;
@@ -76,14 +74,14 @@ int main(int argc, char* argv[]) {
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
-	
 
-// 	// ----- DP SIMULATION -----
+
+	// ----- DP SIMULATION -----
 	Real timeStepDP = timeStep;
 	Real finalTimeDP = finalTime+timeStepDP;
 	String simNameDP = simName + "_DP";
 	Logger::setLogDir("logs/" + simNameDP);
-	
+
 	// Components
 	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -100,23 +98,22 @@ int main(int argc, char* argv[]) {
 
 	auto resOnDP = DP::Ph1::Resistor::make("R2", Logger::Level::debug);
 	resOnDP->setParameters(0.88e-3);
-	
+
 	// Topology
 	pv->connect({ n1DP });
 	resOnDP->connect({n1DP, n2DP});
 	loadDP->connect({n2DP});
 
-	
 	auto systemDP = SystemTopology(60,
 			SystemNodeList{n1DP, n2DP},
 			SystemComponentList{loadDP, resOnDP, pv});
-	
+
 	// Initialization of dynamic topology
 	systemDP.initWithPowerflow(systemPF);
 	Complex initial1PhPowerVSI= Complex(linePF->attributeTyped<Real>("p_inj")->get(), linePF->attributeTyped<Real>("q_inj")->get());
 
 	pv->terminal(0)->setPower(initial1PhPowerVSI);
-	
+
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
 	loggerDP->logAttribute("Spannung_PCC", n1DP->attribute("v"));
@@ -126,7 +123,7 @@ int main(int argc, char* argv[]) {
 	loggerDP->logAttribute("P_elec", pv->attribute("P_elec"));
 	loggerDP->logAttribute("Q_elec", pv->attribute("Q_elec"));
 	
-	// // Simulation
+	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
 	sim.setSystem(systemDP);
 	sim.setTimeStep(timeStepDP);
