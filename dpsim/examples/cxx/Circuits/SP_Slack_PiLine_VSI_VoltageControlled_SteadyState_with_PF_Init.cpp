@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 	
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(0.88e-3, 0, 0,0);
+	linePF->setParameters(0.88e-3, 0, 0, 0);
 	linePF->setBaseVoltage(400);
 
 	Complex load1_s=3*std::pow(400, 2)/(Complex(83e-3, 137e-6*2*M_PI*60));
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
 	auto n1SP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
 	
-	auto loadSP = DP::Ph1::RXLoad::make("Load", Logger::Level::debug);
+	auto loadSP = SP::Ph1::Load::make("Load", Logger::Level::debug);
 	loadSP->setParameters(load1_p, load1_q, 400);
 
 	auto pv = SP::Ph1::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
@@ -95,18 +95,18 @@ int main(int argc, char* argv[]) {
 	pv->setFilterParameters(Yazdani.Lf, Yazdani.Cf, Yazdani.Rf, Yazdani.Rc); 
 	pv->setInitialStateValues(Yazdani.phi_dInit, Yazdani.phi_qInit, Yazdani.gamma_dInit, Yazdani.gamma_qInit);
 	pv->withControl(pvWithControl);
-	auto resOnSP = DP::Ph1::Resistor::make("R2", Logger::Level::debug);
+
+	auto resOnSP = SP::Ph1::Resistor::make("R2", Logger::Level::debug);
 	resOnSP->setParameters(0.88e-3);
-	
 
 	// Topology
 	pv->connect({ n1SP });
 	resOnSP->connect({n1SP, n2SP});
 	loadSP->connect({n2SP});
-	
+
 	auto systemSP = SystemTopology(60,
 			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{loadSP, resOnSP,pv});
+			SystemComponentList{loadSP, resOnSP, pv});
 
 	// Initialization of dynamic topology
 	systemSP.initWithPowerflow(systemPF);
@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
-	loggerSP->logAttribute("Spannung_PCC", n1SP->attribute("v"));
+	loggerSP->logAttribute("Spannung_PCC", n2SP->attribute("v"));
     loggerSP->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
 	loggerSP->logAttribute("Strom_RLC", pv->attribute("i_intf"));
 	loggerSP->logAttribute("PLL_Phase", pv->attribute("pll_output"));
@@ -126,6 +126,8 @@ int main(int argc, char* argv[]) {
 	// Simulation
 	Simulation sim(simNameSP, Logger::Level::debug);
 	sim.setSystem(systemSP);
+	// sim.doInitFromNodesAndTerminals(true);
+	// sim.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	sim.setTimeStep(timeStepSP);
 	sim.setFinalTime(finalTimeSP);
 	sim.setDomain(Domain::SP);
