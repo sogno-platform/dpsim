@@ -1,7 +1,7 @@
 # Please keep 3.14 as minimum requirement for building on OPAL-RT targets
 cmake_minimum_required(VERSION 3.14...3.23)
 project(DPsim
-		VERSION 1.1.0
+		VERSION 1.1.1
 		DESCRIPTION "C++ Power System Simulation Library"
 		LANGUAGES CXX
 		HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
@@ -16,6 +16,12 @@ set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 if(POLICY CMP0076)
 	cmake_policy(SET CMP0076 NEW)
 endif()
+
+# Solve DOWNLOAD_EXTRACT_TIMESTAMP warning
+if(POLICY CMP0135)
+	cmake_policy(SET CMP0135 NEW)
+endif()
+
 # Allow setting Graphviz_ROOT for windows builds
 if(WIN32)
 	cmake_policy(SET CMP0074 NEW)

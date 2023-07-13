@@ -214,19 +214,9 @@ if(WITH_CIM)
 	endif()
 endif()
 
-if(WITH_PYBIND)
-	#list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
-	list(APPEND INCLUDE_DIRS ${Python_INCLUDE_DIRS})
-endif()
-
 if(WITH_OPENMP)
 	list(APPEND DPSIM_CXX_FLAGS ${OpenMP_CXX_FLAGS})
 	list(APPEND LIBRARIES ${OpenMP_CXX_FLAGS})
-endif()
-
-if(WITH_KLU)
-	list(APPEND INCLUDE_DIRS ${KLU_INCLUDE_DIR})
-	list(APPEND LIBRARIES ${KLU_LIBRARIES})
 endif()
 
 add_custom_target(tests)

@@ -61,7 +61,7 @@ class CMakeBuild(build_ext):
 setup(
     packages=find_packages('python/src'),
     package_dir={"dpsim": "python/src/dpsim"},
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     setup_requires=[
         'pytest-runner',
         'wheel'
