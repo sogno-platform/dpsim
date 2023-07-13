@@ -16,6 +16,12 @@ set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 if(POLICY CMP0076)
 	cmake_policy(SET CMP0076 NEW)
 endif()
+
+# Solve DOWNLOAD_EXTRACT_TIMESTAMP warning
+if(POLICY CMP0135)
+	cmake_policy(SET CMP0135 NEW)
+endif()
+
 # Allow setting Graphviz_ROOT for windows builds
 if(WIN32)
 	cmake_policy(SET CMP0074 NEW)

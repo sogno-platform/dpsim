@@ -13,7 +13,6 @@ set(MODELS_LIBRARIES
 	Threads::Threads
 	Eigen3::Eigen
 	spdlog::spdlog
-	klu
 )
 
 add_subdirectory(src)
