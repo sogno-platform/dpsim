@@ -55,6 +55,7 @@ if(WITH_JSON)
 endif()
 
 if(WITH_KLU)
+	list(APPEND DPSIM_LIBRARIES klu)
 	list(APPEND DPSIM_SOURCES
 		KLUAdapter.cpp
 	)
