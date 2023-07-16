@@ -151,7 +151,7 @@ namespace DPsim {
         class SolveTask : public CPS::Task {
 		public:
 			SolveTask(PFSolver& solver) :
-				Task(solver.mName + ".Solve"), mSolver(solver) {
+				Task("PFSolver.Solve"), mSolver(solver) {
 				mModifiedAttributes.push_back(Scheduler::external);
 			}
 

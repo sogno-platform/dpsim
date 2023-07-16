@@ -110,7 +110,7 @@ namespace DPsim {
 		class SubnetSolveTask : public CPS::Task {
 		public:
 			SubnetSolveTask(DiakopticsSolver<VarType>& solver, UInt net) :
-				Task(solver.mName + ".SubnetSolve_" + std::to_string(net)), mSolver(solver), mSubnet(solver.mSubnets[net]) {
+				Task("DiakopticsSolver.SubnetSolve_" + std::to_string(net)), mSolver(solver), mSubnet(solver.mSubnets[net]) {
 				for (auto it : mSubnet.components) {
 					if (it->getRightVector()->get().size() != 0) {
 						mAttributeDependencies.push_back(it->getRightVector());
@@ -130,7 +130,7 @@ namespace DPsim {
 		class PreSolveTask : public CPS::Task {
 		public:
 			PreSolveTask(DiakopticsSolver<VarType>& solver) :
-				Task(solver.mName + ".PreSolve"), mSolver(solver) {
+				Task("DiakopticsSolver.PreSolve"), mSolver(solver) {
 				mAttributeDependencies.push_back(solver.mOrigLeftSideVector);
 				mModifiedAttributes.push_back(solver.mMappedTearCurrents);
 			}
@@ -144,7 +144,7 @@ namespace DPsim {
 		class SolveTask : public CPS::Task {
 		public:
 			SolveTask(DiakopticsSolver<VarType>& solver, UInt net) :
-				Task(solver.mName + ".Solve_" + std::to_string(net)), mSolver(solver), mSubnet(solver.mSubnets[net]) {
+				Task("DiakopticsSolver.Solve_" + std::to_string(net)), mSolver(solver), mSubnet(solver.mSubnets[net]) {
 				mAttributeDependencies.push_back(solver.mMappedTearCurrents);
 				mModifiedAttributes.push_back(mSubnet.leftVector);
 			}
@@ -159,7 +159,7 @@ namespace DPsim {
 		class PostSolveTask : public CPS::Task {
 		public:
 			PostSolveTask(DiakopticsSolver<VarType>& solver) :
-				Task(solver.mName + ".PostSolve"), mSolver(solver) {
+				Task("DiakopticsSolver.PostSolve"), mSolver(solver) {
 				for (auto& net : solver.mSubnets) {
 					mAttributeDependencies.push_back(net.leftVector);
 				}
@@ -175,7 +175,7 @@ namespace DPsim {
 		class LogTask : public CPS::Task {
 		public:
 			LogTask(DiakopticsSolver<VarType>& solver) :
-				Task(solver.mName + ".Log"), mSolver(solver) {
+				Task("DiakopticsSolver.Log"), mSolver(solver) {
 				for (auto& net : solver.mSubnets) {
 					mAttributeDependencies.push_back(net.leftVector);
 				}

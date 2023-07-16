@@ -39,7 +39,7 @@ namespace DPsim {
 		class SolveTask : public CPS::Task {
 	public:
 			SolveTask(MnaSolverPlugin<VarType>& solver) :
-				Task(solver.mName + ".Solve"), mSolver(solver) {
+				Task("MNASolverPlugin.Solve"), mSolver(solver) {
 
 				for (auto it : solver.mMNAComponents) {
 					if (it->getRightVector()->get().size() != 0)
@@ -60,7 +60,7 @@ namespace DPsim {
 		class LogTask : public CPS::Task {
 		public:
 			LogTask(MnaSolverPlugin<VarType>& solver) :
-				Task(solver.mName + ".Log"), mSolver(solver) {
+				Task("MNASolverPlugin.Log"), mSolver(solver) {
 				mAttributeDependencies.push_back(solver.mLeftSideVector);
 				mModifiedAttributes.push_back(Scheduler::external);
 			}

@@ -86,7 +86,7 @@ namespace DPsim {
 		class SolveTask : public CPS::Task {
 		public:
 			SolveTask(ODESolver& solver)
-			: Task(solver.mName + ".Solve"), mSolver(solver) {
+			: Task("ODESolver.Solve"), mSolver(solver) {
 				mAttributeDependencies.push_back(solver.mComponent->mOdePreState);
 				mModifiedAttributes.push_back(solver.mComponent->mOdePostState);
 			}

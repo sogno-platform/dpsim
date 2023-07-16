@@ -23,7 +23,7 @@ template <typename VarType>
 DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	SystemTopology system, IdentifiedObject::List tearComponents,
 	Real timeStep, Logger::Level logLevel) :
-	Solver(name, logLevel),
+	Solver(logLevel),
 	mMappedTearCurrents(AttributeStatic<Matrix>::make()),
 	mOrigLeftSideVector(AttributeStatic<Matrix>::make()) {
 	mTimeStep = timeStep;

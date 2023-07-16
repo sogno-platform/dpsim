@@ -141,7 +141,7 @@ Logger::Log Logger::get(LoggerType type, const std::string &name, Level fileleve
 		case LoggerType::SIMULATION: {
 			if (Logger::Log logger = spdlog::get("simulation")) {
 				return logger;
-			} else return create(LoggerType::SIMULATION, "simulation", name, filelevel, clilevel);
+			} else return create(LoggerType::SIMULATION, name, "simulation", filelevel, clilevel);
 		}
 		case LoggerType::COMPONENT: {
 			if (Logger::Log logger = spdlog::get(name)) {

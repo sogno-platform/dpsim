@@ -19,7 +19,7 @@ namespace DPsim {
 
 template <typename VarType>
 MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :
-	Solver(name, logLevel), mDomain(domain) {
+	Solver(logLevel), mDomain(domain) {
 
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel == CPS::Logger::Level::trace);
@@ -315,7 +315,7 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 		if (genComp) {
 			mSyncGen.push_back(genComp);
 		}
-		
+
 		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
 		if (swComp) {
 			mSwitches.push_back(swComp);
@@ -447,8 +447,9 @@ template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
 	SPDLOG_LOGGER_INFO(mSLog, "--- Run steady-state initialization ---");
 
-	DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::off);
-	DataLogger initRightVectorLog(mName + "_InitRightVector", mLogLevel != CPS::Logger::Level::off);
+	//TODO: Update condition for enabled, see below
+	DataLogger initLeftVectorLog("InitLeftVector", true);
+	DataLogger initRightVectorLog("InitRightVector", true);
 
 	TopologicalPowerComp::Behaviour initBehaviourPowerComps = TopologicalPowerComp::Behaviour::Initialization;
 	SimSignalComp::Behaviour initBehaviourSignalComps = SimSignalComp::Behaviour::Initialization;
@@ -581,8 +582,9 @@ Task::List MnaSolver<VarType>::getTasks() {
 
 template <typename VarType>
 void MnaSolver<VarType>::log(Real time, Int timeStepCount) {
-	if (mLogLevel == Logger::Level::off)
-		return;
+	//TODO: Allow for activating / deactivating data logger functions
+	//if (mLogLevel == Logger::Level::off)
+	//	return;
 
 	if (mDomain == CPS::Domain::EMT) {
 		mLeftVectorLog->logEMTNodeValues(time, leftSideVector());

@@ -35,10 +35,6 @@ namespace DPsim {
 		enum Behaviour { Initialization, Simulation };
 
 	protected:
-		/// Name for logging
-		String mName;
-		/// Logging level
-		CPS::Logger::Level mLogLevel;
 		/// Logger
 		CPS::Logger::Log mSLog;
 		/// Time step for fixed step solvers
@@ -66,10 +62,8 @@ namespace DPsim {
 
 	public:
 
-		Solver(String name, CPS::Logger::Level logLevel) :
-			mName(name),
-			mLogLevel(logLevel),
-			mSLog(CPS::Logger::get(CPS::Logger::LoggerType::DEBUG, name + "_Solver", logLevel, CPS::Logger::Level::warn)) {
+		Solver(CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel = CPS::Logger::Level::warn) :
+			mSLog(CPS::Logger::get(CPS::Logger::LoggerType::SIMULATION, "Solver", logLevel, cliLevel)) {
 		}
 
 		virtual ~Solver() { }

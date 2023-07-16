@@ -176,7 +176,7 @@ namespace DPsim {
 		class SolveTask : public CPS::Task {
 		public:
 			SolveTask(MnaSolverDirect<VarType>& solver) :
-				Task(solver.mName + ".Solve"), mSolver(solver) {
+				Task("MNASolverDirect.Solve"), mSolver(solver) {
 
 				for (auto it : solver.mMNAComponents) {
 					if (it->getRightVector()->get().size() != 0)
@@ -200,7 +200,7 @@ namespace DPsim {
 		class SolveTaskHarm : public CPS::Task {
 		public:
 			SolveTaskHarm(MnaSolverDirect<VarType>& solver, UInt freqIdx) :
-				Task(solver.mName + ".Solve"), mSolver(solver), mFreqIdx(freqIdx) {
+				Task("MNASolverDirect.Solve"), mSolver(solver), mFreqIdx(freqIdx) {
 
 				for (auto it : solver.mMNAComponents) {
 					if (it->getRightVector()->get().size() != 0)
@@ -227,7 +227,7 @@ namespace DPsim {
 		class SolveTaskRecomp : public CPS::Task {
 		public:
 			SolveTaskRecomp(MnaSolverDirect<VarType>& solver) :
-				Task(solver.mName + ".Solve"), mSolver(solver) {
+				Task("MNASolverDirect.Solve"), mSolver(solver) {
 
 				for (auto it : solver.mMNAComponents) {
 					if (it->getRightVector()->get().size() != 0)
@@ -256,7 +256,7 @@ namespace DPsim {
 		class LogTask : public CPS::Task {
 		public:
 			LogTask(MnaSolverDirect<VarType>& solver) :
-				Task(solver.mName + ".Log"), mSolver(solver) {
+				Task("MNASolverDirect.Log"), mSolver(solver) {
 				mAttributeDependencies.push_back(solver.mLeftSideVector);
 				mModifiedAttributes.push_back(Scheduler::external);
 			}

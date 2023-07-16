@@ -14,7 +14,7 @@ using namespace DPsim;
 using namespace CPS;
 
 PFSolver::PFSolver(CPS::String name, CPS::SystemTopology system, CPS::Real timeStep, CPS::Logger::Level logLevel) :
-	Solver(name + "_PF", logLevel) {
+	Solver(logLevel) {
 	mSystem = system;
 	mTimeStep = timeStep;
 }

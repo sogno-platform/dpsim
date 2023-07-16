@@ -16,7 +16,7 @@ using namespace CPS;
 //#define NVECTOR_DATA(vec) NV_DATA_S (vec) // Returns pointer to the first element of array vec
 
 DAESolver::DAESolver(String name, const CPS::SystemTopology &system, Real dt, Real t0) :
-	Solver(name, CPS::Logger::Level::info),
+	Solver(CPS::Logger::Level::info),
 	mSystem(system),
 	mTimestep(dt) {
 

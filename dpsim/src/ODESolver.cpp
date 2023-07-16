@@ -12,7 +12,7 @@
 using namespace DPsim;
 
 ODESolver::ODESolver(String name, const CPS::ODEInterface::Ptr &comp, bool implicit_integration, Real timestep) :
-	Solver(name, CPS::Logger::Level::info),
+	Solver(CPS::Logger::Level::info),
 	mComponent(comp),
 	mImplicitIntegration(implicit_integration),
 	mTimestep(timestep) {
