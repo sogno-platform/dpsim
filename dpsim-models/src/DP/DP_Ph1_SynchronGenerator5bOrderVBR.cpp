@@ -13,8 +13,8 @@ using namespace CPS;
 DP::Ph1::SynchronGenerator5bOrderVBR::SynchronGenerator5bOrderVBR
     (const String & uid, const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)),
-	mEdq_s(Attribute<Matrix>::create("Edq_s", mAttributes))  {
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
+	mEdq_s(mAttributes->create<Matrix>("Edq_s")) {
 
 	//
 	mSGOrder = SGOrder::SG5bOrder;
@@ -58,6 +58,10 @@ void DP::Ph1::SynchronGenerator5bOrderVBR::specificInitialization() {
 }
 
 void DP::Ph1::SynchronGenerator5bOrderVBR::stepInPerUnit() {
+	// update DP-DQ transforms
+	mDomainInterface.updateDQToDPTransform(**mThetaMech, mSimTime);
+	mDomainInterface.updateDPToDQTransform(**mThetaMech, mSimTime);
+
 	if (mSimTime>0.0){
 		// calculate Edq_t at t=k
 		(**mEdq_t)(0,0) = 0.0;
@@ -69,7 +73,6 @@ void DP::Ph1::SynchronGenerator5bOrderVBR::stepInPerUnit() {
 	}
 
 	// VBR history voltage
-	calculateAuxiliarVariables();
 	calculateConductanceMatrix();
 
 	// calculate history term behind the transient reactance
@@ -81,5 +84,5 @@ void DP::Ph1::SynchronGenerator5bOrderVBR::stepInPerUnit() {
 	mEh_s(1,0) = mAq_s * (**mIdq)(0,0) + mBq_s * (**mEdq_t)(1,0) + mCq_s * (**mEdq_s)(1,0) + mDq_s * (**mEf) + mDq_s * mEf_prev;
 	
 	// convert Edq_t into the abc reference frame
-	mEvbr = (mKvbr * mEh_s * mBase_V_RMS)(0,0);
+	mEvbr = mDomainInterface.applyDQToDPTransform(mEh_s) * mBase_V_RMS;
 }

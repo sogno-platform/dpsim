@@ -12,9 +12,9 @@ using namespace CPS;
 
 SP::Ph1::SynchronGenerator5bOrderVBR::SynchronGenerator5bOrderVBR
     (const String & uid, const String & name, Logger::Level logLevel)
-	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
-	mEdq_t(Attribute<Matrix>::create("Edq_t", mAttributes)),
-	mEdq_s(Attribute<Matrix>::create("Edq_s", mAttributes))  {
+	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),	
+	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
+	mEdq_s(mAttributes->create<Matrix>("Edq_s")) {
 
 	//
 	mSGOrder = SGOrder::SG5bOrder;
