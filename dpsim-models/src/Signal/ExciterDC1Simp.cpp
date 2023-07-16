@@ -52,6 +52,14 @@ void ExciterDC1Simp::setParameters(Base::ExciterParameters parameters) {
 }
 
 void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {
+  //
+  mVh = Vh_init;
+  mEf = Ef_init;
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "Initially set excitation system initial values:"
+                     "\ninit Vh: {:e}"
+                     "\ninit Ef: {:e}",
+                     mVh, mEf);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "Initially set excitation system initial values:"

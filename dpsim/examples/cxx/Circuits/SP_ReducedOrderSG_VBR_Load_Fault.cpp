@@ -13,6 +13,9 @@ const Examples::Grids::SMIB::ScenarioConfig3 GridParams;
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
+// PSS
+const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;
+
 // Excitation system
 const Base::ExciterParameters excitationEremia =
     Examples::Components::Exciter::getExciterEremia();
@@ -35,6 +38,7 @@ int main(int argc, char *argv[]) {
   Real finalTime = 5;
   Real timeStep = 1e-3;
   Real H = syngenKundur.H;
+  bool withPSS = false;
   bool withExciter = false;
   bool withTurbineGovernor = false;
   std::string SGModel = "4";
@@ -46,6 +50,8 @@ int main(int argc, char *argv[]) {
   if (argc > 1) {
     if (args.options.find("SGModel") != args.options.end())
       SGModel = args.getOptionString("SGModel");
+    if (args.options.find("WITHPSS") != args.options.end())
+      withPSS = args.getOptionBool("WITHPSS");
     if (args.options.find("WITHEXCITER") != args.options.end())
       withExciter = args.getOptionBool("WITHEXCITER");
     if (args.options.find("WithTurbineGovernor") != args.options.end())
@@ -65,7 +71,7 @@ int main(int argc, char *argv[]) {
     logDownSampling = floor(100e-6 / timeStep);
   else
     logDownSampling = 1.0;
-  Logger::Level logLevel = Logger::Level::off;
+  Logger::Level logLevel = Logger::Level::debug;
   std::string simName = "SP_SynGen" + SGModel + "Order_VBR_Load_Fault" +
                         stepSize_str + inertia_str;
 
@@ -78,20 +84,6 @@ int main(int argc, char *argv[]) {
       {Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle),
                GridParams.VnomMV * sin(GridParams.initVoltAngle))});
   auto n1SP = SimNode<Complex>::make("n1SP", PhaseType::Single, initVoltN1);
-
-  // Synchronous generator
-  auto genSP = GeneratorFactory::createGenSP(SGModel, "SynGen", logLevel);
-  genSP->setOperationalParametersPerUnit(
-      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
-      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
-      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
-      syngenKundur.Tq0_s);
-  genSP->setInitialValues(
-      GridParams.initComplexElectricalPower, GridParams.mechPower,
-      Complex(GridParams.VnomMV * cos(GridParams.initVoltAngle),
-              GridParams.VnomMV * sin(GridParams.initVoltAngle)));
-  genSP->setModelAsNortonSource(true);
 
   // Synchronous generator
   auto genSP = Factory<SP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(
@@ -117,10 +109,29 @@ int main(int argc, char *argv[]) {
     genSP->addExciter(exciterSP);
   }
 
-  // Load
-  auto load = CPS::SP::Ph1::Load::make("Load", logLevel);
-  load->setParameters(GridParams.initActivePower, GridParams.initReactivePower,
-                      GridParams.VnomMV);
+  // Power system stabilizer
+  std::shared_ptr<Signal::PSS1A> pssSP = nullptr;
+  if (withPSS) {
+    pssSP = Signal::PSS1A::make("SynGen_PSS", logLevel);
+    pssSP->setParameters(
+        pssAndersonFarmer.Kp, pssAndersonFarmer.Kv, pssAndersonFarmer.Kw,
+        pssAndersonFarmer.T1, pssAndersonFarmer.T2, pssAndersonFarmer.T3,
+        pssAndersonFarmer.T4, pssAndersonFarmer.Vs_max,
+        pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw, timeStep);
+    genSP->addPSS(pssSP);
+  }
+
+  // Turbine Governor
+  std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorSP = nullptr;
+  if (withTurbineGovernor) {
+    turbineGovernorSP =
+        Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
+    turbineGovernorSP->setParameters(
+        turbineGovernor.T3, turbineGovernor.T4, turbineGovernor.T5,
+        turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R,
+        turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
+    genSP->addGovernor(turbineGovernorSP);
+  }
 
   //Breaker
   auto fault = CPS::SP::Ph1::Switch::make("Br_fault", logLevel);
