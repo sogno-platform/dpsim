@@ -25,7 +25,7 @@ void SequentialScheduler::createSchedule(const Task::List& tasks, const Edges& i
 	Scheduler::topologicalSort(tasks, inEdges, outEdges, mSchedule);
 
 	for (auto task : mSchedule)
-        SPDLOG_LOGGER_INFO(mSLog, "{}", task->toString());
+        SPDLOG_LOGGER_DEBUG(mSLog, "{}", task->toString());
 }
 
 void SequentialScheduler::step(Real time, Int timeStepCount) {

@@ -198,7 +198,7 @@ void Simulation::prepSchedule() {
 		mTasks.push_back(logger->getTask());
 	}
 	if (!mScheduler) {
-		mScheduler = std::make_shared<SequentialScheduler>();
+		mScheduler = std::make_shared<SequentialScheduler>(String(), mLogLevel);
 	}
 	mScheduler->resolveDeps(mTasks, mTaskInEdges, mTaskOutEdges);
 }
