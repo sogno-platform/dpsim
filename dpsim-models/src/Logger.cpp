@@ -139,19 +139,13 @@ String Logger::getCSVLineFromData(Real time, const MatrixComp& data) {
 Logger::Log Logger::get(LoggerType type, const std::string &name, Level filelevel, Level clilevel) {
 	switch (type) {
 		case LoggerType::SIMULATION: {
-			if (Logger::Log logger = spdlog::get("simulation")) {
-				return logger;
-			} else return create(LoggerType::SIMULATION, name, "simulation", filelevel, clilevel);
+			return create(LoggerType::SIMULATION, name, "simulation", filelevel, clilevel);
 		}
 		case LoggerType::COMPONENT: {
-			if (Logger::Log logger = spdlog::get(name)) {
-				return logger;
-			} else return create(LoggerType::COMPONENT, name, "components", filelevel, clilevel);
+			return create(LoggerType::COMPONENT, name, "components", filelevel, clilevel);
 		}
 		case LoggerType::DEBUG: {
-			if (Logger::Log logger = spdlog::get(name)) {
-				return logger;
-			} else return create(LoggerType::DEBUG, name, name, filelevel, clilevel);
+			return create(LoggerType::DEBUG, name, name, filelevel, clilevel);
 		}
 		default: {
 			// UNREACHABLE!
@@ -222,7 +216,6 @@ Logger::Log Logger::create(Logger::LoggerType type, const std::string &name, con
 	} else {
 		spdlog::sink_ptr dpsimSink = std::make_shared<dpsim_sink>(file_sink, Logger::mStdoutSink, Logger::mStderrSink, filelevel, clilevel);
 		logger = std::make_shared<spdlog::logger>(name, dpsimSink);
-		spdlog::register_logger(logger);
 	}
 	logger->set_level(std::min(filelevel, clilevel));
 
