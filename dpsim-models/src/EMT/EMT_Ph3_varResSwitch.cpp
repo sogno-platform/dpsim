@@ -14,7 +14,7 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLevel)
-	: Base::Ph3::Switch(mAttributes), SimPowerComp<Real>(uid, name, logLevel) {
+	: MNASimPowerComp<Real>(uid, name, false, true, logLevel), Base::Ph3::Switch(mAttributes) {
 	setTerminalNumber(2);
 	**mIntfVoltage = Matrix::Zero(1,1);
 	**mIntfCurrent = Matrix::Zero(1,1);
@@ -36,7 +36,7 @@ void EMT::Ph3::varResSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage = vInitABC.real();
 	**mIntfCurrent = (impedance.inverse() * vInitABC).real();
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -49,15 +49,13 @@ void EMT::Ph3::varResSwitch::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void EMT::Ph3::varResSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
+void EMT::Ph3::varResSwitch::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
-	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
-	**mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+	updateMatrixNodeIndices();
+	**mRightVector = Matrix::Zero(0, 0);
 }
 
-void EMT::Ph3::varResSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void EMT::Ph3::varResSwitch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	Matrix conductance = (**mSwitchClosed) ?
 		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
@@ -109,13 +107,13 @@ void EMT::Ph3::varResSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), -conductance(2, 1));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -conductance(2, 2));
 	}
-	mSLog->info(
+	SPDLOG_LOGGER_TRACE(mSLog,
 		"\nConductance matrix: {:s}",
 		Logger::matrixToString(conductance));
 }
 
-void EMT::Ph3::varResSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
-	Matrix conductance = (closed) ?
+void EMT::Ph3::varResSwitch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
+	MatrixFixedSize<3, 3> conductance = (closed) ?
 		(**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
 	// Set diagonal entries
@@ -167,14 +165,14 @@ void EMT::Ph3::varResSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -conductance(2, 2));
 	}
 
-	mSLog->info(
+	SPDLOG_LOGGER_TRACE(mSLog,
 		"\nConductance matrix: {:s}",
 		Logger::matrixToString(conductance));
 }
 
-void EMT::Ph3::varResSwitch::mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
+void EMT::Ph3::varResSwitch::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) { }
 
-void EMT::Ph3::varResSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+void EMT::Ph3::varResSwitch::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
 	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
 	Attribute<Matrix>::Ptr &leftVector) {
 
@@ -183,12 +181,12 @@ void EMT::Ph3::varResSwitch::mnaAddPostStepDependencies(AttributeBase::List &pre
 	modifiedAttributes.push_back(attribute("i_intf"));
 }
 
-void EMT::Ph3::varResSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector)  {
+void EMT::Ph3::varResSwitch::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector)  {
 	mnaUpdateVoltage(*leftVector);
 	mnaUpdateCurrent(*leftVector);
 }
 
-void EMT::Ph3::varResSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
+void EMT::Ph3::varResSwitch::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
@@ -203,7 +201,7 @@ void EMT::Ph3::varResSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 	}
 }
 
-void EMT::Ph3::varResSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
+void EMT::Ph3::varResSwitch::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = (**mSwitchClosed) ?
 		(**mClosedResistance).inverse() * **mIntfVoltage:
 		(**mOpenResistance).inverse() * **mIntfVoltage;

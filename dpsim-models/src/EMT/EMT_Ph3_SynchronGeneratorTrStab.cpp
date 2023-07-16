@@ -9,6 +9,29 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorTrStab.h>
 using namespace CPS;
 
+EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
+	: Base::SynchronGenerator(mAttributes), CompositePowerComp<Real>(uid, name, true, true, logLevel),
+	mEp(mAttributes->create<Complex>("Ep")),
+	mEp_abs(mAttributes->create<Real>("Ep_mag")),
+	mEp_phase(mAttributes->create<Real>("Ep_phase")),
+	mDelta_p(mAttributes->create<Real>("delta_r")),
+	mRefOmega(mAttributes->createDynamic<Real>("w_ref")),
+	mRefDelta(mAttributes->createDynamic<Real>("delta_ref")) {
+	mPhaseType = PhaseType::ABC;
+	setVirtualNodeNumber(2);
+	setTerminalNumber(1);
+	**mIntfVoltage = Matrix::Zero(3,1);
+	**mIntfCurrent = Matrix::Zero(3,1);
+
+	mStates = Matrix::Zero(10,1);
+}
+
+SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorTrStab::clone(String name) {
+	auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
+	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, **mInertia, **mRs, mKd);
+	return copy;
+}
+
 Matrix EMT::Ph3::SynchronGeneratorTrStab::parkTransformPowerInvariant(Real theta, const Matrix &fabc) {
 	// Calculates fdq = Tdq * fabc
 	// Assumes that d-axis starts aligned with phase a
@@ -28,30 +51,6 @@ Matrix EMT::Ph3::SynchronGeneratorTrStab::getParkTransformMatrixPowerInvariant(R
 		k * cos(theta), k * cos(theta - 2. * M_PI / 3.), k * cos(theta + 2. * M_PI / 3.),
 		-k * sin(theta), -k * sin(theta - 2. * M_PI / 3.), -k * sin(theta + 2. * M_PI / 3.);
 	return Tdq;
-}
-
-
-EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
-	: Base::SynchronGenerator(mAttributes), CompositePowerComp<Real>(uid, name, true, true, logLevel),
-	mEp(Attribute<Complex>::create("Ep", mAttributes)),
-	mEp_abs(Attribute<Real>::create("Ep_mag", mAttributes)),
-	mEp_phase(Attribute<Real>::create("Ep_phase", mAttributes)),
-	mDelta_p(Attribute<Real>::create("delta_r", mAttributes)),
-	mRefOmega(Attribute<Real>::createDynamic("w_ref", mAttributes)),
-	mRefDelta(Attribute<Real>::createDynamic("delta_ref", mAttributes)) {
-	mPhaseType = PhaseType::ABC;
-	setVirtualNodeNumber(2);
-	setTerminalNumber(1);
-	**mIntfVoltage = Matrix::Zero(3,1);
-	**mIntfCurrent = Matrix::Zero(3,1);
-
-	mStates = Matrix::Zero(10,1);
-}
-
-SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorTrStab::clone(String name) {
-	auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
-	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, **mInertia, **mRs, mKd);
-	return copy;
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
