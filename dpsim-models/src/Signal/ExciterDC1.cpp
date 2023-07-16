@@ -33,28 +33,29 @@ void Signal::ExciterDC1::setParameters(Base::ExciterParameters parameters) {
 	mMaxVa = parameters.MaxVa;
 	mMinVa = parameters.MinVa;
 	
-	mSLog->info("ExciterDC1 parameters:"
-				"\nType: DC1"
-				"\nTr: {:e}"
-				"\nTa: {:e}"
-				"\nKa: {:e}"
-				"\nTb: {:e}"
-				"\nTc: {:e}"
-				"\nTef: {:e}"
-				"\nKef: {:e}"
-				"\nTf: {:e}"
-				"\nKf: {:e}"
-				"\nAef: {:e}"
-				"\nBef: {:e}"
-				"\nMaximum amplifier Voltage: {:e}"
-				"\nMinimum amplifier Voltage: {:e}\n",
-				mTr,
-				mTa, mKa, 
-				mTb, mTc,
-				mTef, mKef,
-				mTf, mKf,
-				mAef, mBef,
-				mMaxVa, mMinVa);
+	SPDLOG_LOGGER_INFO(mSLog,
+		"ExciterDC1 parameters:"
+		"\nType: DC1"
+		"\nTr: {:e}"
+		"\nTa: {:e}"
+		"\nKa: {:e}"
+		"\nTb: {:e}"
+		"\nTc: {:e}"
+		"\nTef: {:e}"
+		"\nKef: {:e}"
+		"\nTf: {:e}"
+		"\nKf: {:e}"
+		"\nAef: {:e}"
+		"\nBef: {:e}"
+		"\nMaximum amplifier Voltage: {:e}"
+		"\nMinimum amplifier Voltage: {:e}\n",
+		mTr,
+		mTa, mKa, 
+		mTb, mTc,
+		mTef, mKef,
+		mTf, mKf,
+		mAef, mBef,
+		mMaxVa, mMinVa);
 }
 
 void Signal::ExciterDC1::initialize(Real Vh_init, Real Ef_init) {
@@ -62,10 +63,11 @@ void Signal::ExciterDC1::initialize(Real Vh_init, Real Ef_init) {
 	mVh = Vh_init;
 	mEf = Ef_init;
 
-	mSLog->info("Initially set excitation system initial values:"
-				"\ninit Vh: {:e}"
-				"\ninit Ef: {:e}",
-				mVh, mEf);
+	SPDLOG_LOGGER_INFO(mSLog,
+		"Initially set excitation system initial values:"
+		"\ninit Vh: {:e}"
+		"\ninit Ef: {:e}",
+		mVh, mEf);
 
 	/// init value of transducer output
 	mVr = mVh;
@@ -94,21 +96,23 @@ void Signal::ExciterDC1::initialize(Real Vh_init, Real Ef_init) {
 	
 	/// check initial conditions	
 	if (mEf - mVa / (mVsat + mKef))
-		mSLog->warn("Initial conditions are not consistent!!!");
+		SPDLOG_LOGGER_WARN(mSLog,"Initial conditions are not consistent!!!");
 
-	mSLog->info("Actually applied excitation system initial values:"
-				"\nVref : {:e}"
-				"\ninit Vr: {:e}"
-				"\ninit Vf: {:e}"
-				"\ninit Vb: {:e}"
-				"\ninit Vin: {:e}"				
-				"\ninit Va: {:e}",
-				mVref,
-				mVr, 
-				mVf,
-				mVb, 
-				mVin,
-				mVa);
+	SPDLOG_LOGGER_INFO(mSLog,
+		"Actually applied excitation system initial values:"
+		"\nVref : {:e}"
+		"\ninit Vr: {:e}"
+		"\ninit Vf: {:e}"
+		"\ninit Vb: {:e}"
+		"\ninit Vin: {:e}"				
+		"\ninit Va: {:e}",
+		mVref,
+		mVr, 
+		mVf,
+		mVb, 
+		mVin,
+		mVa);
+	mSLog->flush();
 }
 
 Real Signal::ExciterDC1::step(Real Vd, Real Vq, Real dt, Real Vpss) {

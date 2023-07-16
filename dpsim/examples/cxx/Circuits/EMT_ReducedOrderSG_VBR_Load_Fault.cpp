@@ -13,6 +13,9 @@ const Examples::Grids::SMIB::ScenarioConfig3 GridParams;
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
+// PSS
+const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;
+
 // Excitation system
 const Base::ExciterParameters excitationEremia =
     Examples::Components::Exciter::getExciterEremia();
@@ -35,6 +38,7 @@ int main(int argc, char *argv[]) {
   Real finalTime = 5;
   Real timeStep = 1e-3;
   Real H = syngenKundur.H;
+  bool withPSS = false;
   bool withExciter = false;
   bool withTurbineGovernor = false;
   std::string SGModel = "4";
@@ -46,6 +50,8 @@ int main(int argc, char *argv[]) {
   if (argc > 1) {
     if (args.options.find("SGModel") != args.options.end())
       SGModel = args.getOptionString("SGModel");
+    if (args.options.find("WITHPSS") != args.options.end())
+      withPSS = args.getOptionBool("WITHPSS");
     if (args.options.find("WITHEXCITER") != args.options.end())
       withExciter = args.getOptionBool("WITHEXCITER");
     if (args.options.find("WithTurbineGovernor") != args.options.end())
@@ -65,7 +71,7 @@ int main(int argc, char *argv[]) {
     logDownSampling = floor(100e-6 / timeStep);
   else
     logDownSampling = 1.0;
-  Logger::Level logLevel = Logger::Level::off;
+  Logger::Level logLevel = Logger::Level::debug;
   std::string simName = "EMT_SynGen" + SGModel + "Order_VBR_Load_Fault" +
                         stepSize_str + inertia_str;
 
@@ -79,19 +85,6 @@ int main(int argc, char *argv[]) {
       GridParams.initTerminalVolt * SHIFT_TO_PHASE_B,
       GridParams.initTerminalVolt * SHIFT_TO_PHASE_C};
   auto n1EMT = SimNode<Real>::make("n1EMT", PhaseType::ABC, initialVoltage_n1);
-
-  // Components
-  // Synchronous generator
-  auto genEMT = GeneratorFactory::createGenEMT(SGModel, "SynGen", logLevel);
-  genEMT->setOperationalParametersPerUnit(
-      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
-      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
-      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
-      syngenKundur.Tq0_s);
-  genEMT->setInitialValues(GridParams.initComplexElectricalPower,
-                           GridParams.mechPower, GridParams.initTerminalVolt);
-  genEMT->setModelAsNortonSource(true);
 
   // Components
   // Synchronous generator
@@ -117,12 +110,29 @@ int main(int argc, char *argv[]) {
     genEMT->addExciter(exciterEMT);
   }
 
-  // Load
-  auto load = CPS::EMT::Ph3::RXLoad::make("Load", logLevel);
-  load->setParameters(
-      Math::singlePhaseParameterToThreePhase(GridParams.initActivePower / 3),
-      Math::singlePhaseParameterToThreePhase(GridParams.initReactivePower / 3),
-      GridParams.VnomMV);
+  // Power system stabilizer
+  std::shared_ptr<Signal::PSS1A> pssEMT = nullptr;
+  if (withPSS) {
+    pssEMT = Signal::PSS1A::make("PSS", logLevel);
+    pssEMT->setParameters(
+        pssAndersonFarmer.Kp, pssAndersonFarmer.Kv, pssAndersonFarmer.Kw,
+        pssAndersonFarmer.T1, pssAndersonFarmer.T2, pssAndersonFarmer.T3,
+        pssAndersonFarmer.T4, pssAndersonFarmer.Vs_max,
+        pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw, timeStep);
+    genEMT->addPSS(pssEMT);
+  }
+
+  // Turbine Governor
+  std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorEMT = nullptr;
+  if (withTurbineGovernor) {
+    turbineGovernorEMT =
+        Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
+    turbineGovernorEMT->setParameters(
+        turbineGovernor.T3, turbineGovernor.T4, turbineGovernor.T5,
+        turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R,
+        turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
+    genEMT->addGovernor(turbineGovernorEMT);
+  }
 
   //Breaker
   auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", logLevel);

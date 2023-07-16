@@ -529,10 +529,13 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(
     **mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
   }
 
-  // update governor variables
-  if (mHasTurbineGovernor) {
-    mMechTorque_prev = **mMechTorque;
-    **mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
+  // update exciter and PSS variables
+  if (mHasPSS)
+    mVpss =
+        mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0, 0), (**mVdq)(1, 0));
+  if (mHasExciter) {
+    mEf_prev = **mEf;
+    **mEf = mExciter->step((**mVdq0)(0, 0), (**mVdq0)(1, 0), mTimeStep, mVpss);
   }
 
   // calculate mechanical variables at t=k+1 with forward euler
@@ -617,6 +620,33 @@ template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
     Real Kp, Real Kv, Real Kw, Real T1, Real T2, Real T3, Real T4, Real Vs_max,
     Real Vs_min, Real Tw, Real dt) {
+
+  if (!mHasExciter) {
+    std::cerr << "PSS can not be used without Exciter! PSS will be ignored!"
+              << std::endl;
+    SPDLOG_LOGGER_ERROR(
+        this->mSLog,
+        "PSS can not be used without Exciter! PSS will be ignored!");
+    return;
+  }
+
+  mPSS = Signal::PSS1A::make(**this->mName + "_PSS", this->mLogLevel);
+  mPSS->setParameters(Kp, Kv, Kw, T1, T2, T3, T4, Vs_max, Vs_min, Tw, dt);
+  mHasPSS = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
+    std::shared_ptr<Signal::PSS1A> PSS) {
+
+  if (!mHasExciter) {
+    std::cerr << "PSS can not be used without Exciter! PSS will be ignored!"
+              << std::endl;
+    SPDLOG_LOGGER_ERROR(
+        this->mSLog,
+        "PSS can not be used without Exciter! PSS will be ignored!");
+    return;
+  }
 
   if (!mHasExciter) {
     this->mSLog->error(
