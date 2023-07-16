@@ -33,32 +33,36 @@ void ExciterDC1Simp::setParameters(Base::ExciterParameters parameters) {
 	mMaxVa = parameters.MaxVa;
 	mMinVa = parameters.MinVa;
 
-	SPDLOG_LOGGER_INFO(mSLog, "ExciterDC1Simp parameters: \n"
-				"Ta: {:e}"
-				"\nKa: {:e}"
-				"\nTef: {:e}"
-				"\nKef: {:e}"
-				"\nTf: {:e}"
-				"\nKf: {:e}"
-				"\nTr: {:e}"
-				"\nAef: {:e}"
-				"\nBef: {:e}"
-				"\nMaximum amplifier Voltage: {:e}"
-				"\nMinimum amplifier Voltage: {:e}\n",
-				mTa, mKa, 
-				mTef, mKef,
-				mTf, mKf,
-				mTr,
-				mAef, mBef,
-				mMaxVa, mMinVa);
+	SPDLOG_LOGGER_INFO(mSLog, 
+		"ExciterDC1Simp parameters: \n"
+		"Ta: {:e}"
+		"\nKa: {:e}"
+		"\nTef: {:e}"
+		"\nKef: {:e}"
+		"\nTf: {:e}"
+		"\nKf: {:e}"
+		"\nTr: {:e}"
+		"\nAef: {:e}"
+		"\nBef: {:e}"
+		"\nMaximum amplifier Voltage: {:e}"
+		"\nMinimum amplifier Voltage: {:e}\n",
+		mTa, mKa, 
+		mTef, mKef,
+		mTf, mKf,
+		mTr,
+		mAef, mBef,
+		mMaxVa, mMinVa);
 }
 
 void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {
-	
-	SPDLOG_LOGGER_INFO(mSLog, "Initially set excitation system initial values:"
-				"\ninit Vh: {:e}"
-				"\ninit Ef: {:e}",
-				mVh, mEf);
+	//
+	mVh = Vh_init;
+	mEf = Ef_init;
+	SPDLOG_LOGGER_INFO(mSLog, 
+		"Initially set excitation system initial values:"
+		"\ninit Vh: {:e}"
+		"\ninit Ef: {:e}",
+		mVh, mEf);
 
 	/// init value of transducer output
 	mVr = mVh;
