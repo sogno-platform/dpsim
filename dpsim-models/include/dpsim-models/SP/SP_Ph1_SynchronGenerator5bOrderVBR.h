@@ -14,8 +14,8 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 	/// @brief Voltage-Behind-Reactance (VBR) implementation
-	/// of 5 order type 2 synchronous generator model
-	/// Reference: Milano, Documentation for PSAT version 2.0.0, chapter 15.
+	/// of 5th type 2 order synchronous generator model
+	/// Ref: Milano, Documentation for PSAT version 2.1.6, June 2, 2011, chapter 17.1.2
 	class SynchronGenerator5bOrderVBR :
 		public ReducedOrderSynchronGeneratorVBR,
 		public SharedFactory<SynchronGenerator5bOrderVBR> {
