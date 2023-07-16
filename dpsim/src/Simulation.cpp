@@ -26,13 +26,14 @@
 using namespace CPS;
 using namespace DPsim;
 
-Simulation::Simulation(String name,	Logger::Level logLevel) :
+Simulation::Simulation(String name,	Logger::Level logLevel, Logger::Level cliLevel) :
 	mName(AttributeStatic<String>::make(name)),
 	mFinalTime(AttributeStatic<Real>::make(0.001)),
 	mTimeStep(AttributeStatic<Real>::make(0.001)),
 	mSplitSubnets(AttributeStatic<Bool>::make(true)),
 	mSteadyStateInit(AttributeStatic<Bool>::make(false)),
-	mLogLevel(logLevel)  {
+	mLogLevel(logLevel),
+	mCliLevel(cliLevel)  {
 	create();
 }
 
@@ -52,7 +53,7 @@ Simulation::Simulation(String name, CommandLineArgs& args) :
 
 void Simulation::create() {
 	// Logging
-	mLog = Logger::get(Logger::LoggerType::SIMULATION, **mName, mLogLevel, std::max(Logger::Level::info, mLogLevel));
+	mLog = Logger::get(Logger::LoggerType::SIMULATION, **mName, mLogLevel, mCliLevel);
 
 	Eigen::setNbThreads(1);
 
@@ -198,7 +199,7 @@ void Simulation::prepSchedule() {
 		mTasks.push_back(logger->getTask());
 	}
 	if (!mScheduler) {
-		mScheduler = std::make_shared<SequentialScheduler>(String(), mLogLevel);
+		mScheduler = std::make_shared<SequentialScheduler>(String(), mLogLevel, mCliLevel);
 	}
 	mScheduler->resolveDeps(mTasks, mTaskInEdges, mTaskOutEdges);
 }

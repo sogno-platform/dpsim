@@ -25,7 +25,7 @@ namespace DPsim {
 
 	public:
 		/// Standard constructor
-		RealTimeSimulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
+		RealTimeSimulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info, CPS::Logger::Level cliLevel = CPS::Logger::Level::info);
 
 		/** Perform the main simulation loop in real time.
 		 *

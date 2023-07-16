@@ -73,8 +73,10 @@ namespace DPsim {
 		std::chrono::duration<double> mSimulationCalculationTime;
 
 		// #### Logging ####
-		/// Simulation log level
+		/// Simulation file log level
 		CPS::Logger::Level mLogLevel;
+		/// Simulation cli log level
+		CPS::Logger::Level mCliLevel;
 		/// (Real) time needed for the timesteps
 		std::vector<Real> mStepTimes;
 
@@ -157,7 +159,7 @@ namespace DPsim {
 		Simulation(String name, CommandLineArgs& args);
 
 		/// Creates simulation with name and log level
-		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
+		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info, CPS::Logger::Level cliLevel = CPS::Logger::Level::info);
 
 		/// Desctructor
 		virtual ~Simulation() = default;

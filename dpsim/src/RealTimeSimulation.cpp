@@ -14,8 +14,8 @@
 using namespace CPS;
 using namespace DPsim;
 
-RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel)
-	: Simulation(name, logLevel), mTimer() {
+RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel, Logger::Level cliLevel)
+	: Simulation(name, logLevel, cliLevel), mTimer() {
 
 	//addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
 	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);

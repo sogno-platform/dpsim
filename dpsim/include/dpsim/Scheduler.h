@@ -33,11 +33,9 @@ namespace DPsim {
 		typedef std::chrono::steady_clock::duration TaskTime;
 
 		///
-		Scheduler(CPS::Logger::Level logLevel = CPS::Logger::Level::off) :
+		Scheduler(CPS::Logger::Level logLevel = CPS::Logger::Level::info, CPS::Logger::Level cliLevel = CPS::Logger::Level::off) :
 			mRoot(std::make_shared<Root>()),
-			// Logging
-			mLogLevel(logLevel),
-			mSLog(CPS::Logger::get(CPS::Logger::LoggerType::SIMULATION, "Scheduler", logLevel, logLevel)) {
+			mSLog(CPS::Logger::get(CPS::Logger::LoggerType::SIMULATION, "Scheduler", logLevel, cliLevel)) {
 		}
 		///
 		virtual ~Scheduler() { }
@@ -98,8 +96,6 @@ namespace DPsim {
 
 		///
 		CPS::Task::Ptr mRoot;
-		/// Log level
-		CPS::Logger::Level mLogLevel;
 		/// Logger
 		CPS::Logger::Log mSLog;
 	private:

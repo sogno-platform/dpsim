@@ -77,7 +77,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("get_btf", &DPsim::DirectLinearSolverConfiguration::getBTF);
 
     py::class_<DPsim::Simulation>(m, "Simulation")
-	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info)
+	    .def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info, "cliLevel"_a = CPS::Logger::Level::info)
 		.def("name", &DPsim::Simulation::name)
 		.def("set_time_step", &DPsim::Simulation::setTimeStep)
 		.def("set_final_time", &DPsim::Simulation::setFinalTime)
@@ -104,7 +104,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("log_lu_times", &DPsim::Simulation::logLUTimes);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
-		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info)
+		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info, "cliLevel"_a = CPS::Logger::Level::info)
 		.def("name", &DPsim::RealTimeSimulation::name)
 		.def("set_time_step", &DPsim::RealTimeSimulation::setTimeStep)
 		.def("set_final_time", &DPsim::RealTimeSimulation::setFinalTime)
