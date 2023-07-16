@@ -37,8 +37,7 @@ namespace DPsim {
 			mRoot(std::make_shared<Root>()),
 			// Logging
 			mLogLevel(logLevel),
-			mSLog(CPS::Logger::get(CPS::Logger::LoggerType::DEBUG, "scheduler", logLevel)) {
-			mSLog->set_pattern("[%L] %v");
+			mSLog(CPS::Logger::get(CPS::Logger::LoggerType::SIMULATION, "Scheduler", logLevel, logLevel)) {
 		}
 		///
 		virtual ~Scheduler() { }

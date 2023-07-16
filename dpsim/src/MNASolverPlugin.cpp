@@ -39,7 +39,8 @@ MnaSolverPlugin<VarType>::~MnaSolverPlugin() {
 
 extern "C" void pluginLogger(const char * str)
 {
-	CPS::Logger::Log log = CPS::Logger::get(Logger::LoggerType::DEBUG, "Plugin", CPS::Logger::Level::debug, CPS::Logger::Level::debug);
+	///CHECK: Is it possible to use the normal Solver logger for this?
+	CPS::Logger::Log log = CPS::Logger::get(Logger::LoggerType::SIMULATION, "MNASolverPlugin", CPS::Logger::Level::debug, CPS::Logger::Level::debug);
 	log->info(str);
 }
 
