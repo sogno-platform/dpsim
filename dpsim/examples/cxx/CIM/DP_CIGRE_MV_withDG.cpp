@@ -49,7 +49,7 @@ int main(int argc, char** argv){
 	// read original network topology
 	String simNamePF = simName + "_Powerflow";
 	Logger::setLogDir("logs/" + simNamePF);
-    CIM::Reader reader(simNamePF, Logger::Level::debug, Logger::Level::debug);
+    CIM::Reader reader(Logger::Level::debug, Logger::Level::off, Logger::Level::debug);
     SystemTopology systemPF = reader.loadCIM(scenario.systemFrequency, filenames, Domain::SP);
 	Examples::Grids::CIGREMV::addInvertersToCIGREMV(systemPF, scenario, Domain::SP);
 
@@ -75,7 +75,7 @@ int main(int argc, char** argv){
 
 	// ----- DYNAMIC SIMULATION -----
 	Logger::setLogDir("logs/" + simName);
-	CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
+	CIM::Reader reader2(Logger::Level::debug, Logger::Level::off, Logger::Level::debug);
     SystemTopology systemDP = reader2.loadCIM(scenario.systemFrequency, filenames, CPS::Domain::DP);
 	Examples::Grids::CIGREMV::addInvertersToCIGREMV(systemDP, scenario, Domain::DP);
 	systemDP.initWithPowerflow(systemPF);

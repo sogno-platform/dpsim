@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 	signal(SIGINT, intr);
 #endif
 
-	Reader reader("cimviz", Logger::Level::info);
+	Reader reader(Logger::Level::info);
 
 	std::list<fs::path> filenames;
 	for (i = 0; gvc->input_filenames[i]; i++) {

@@ -20,7 +20,7 @@ log = logging.getLogger(base)
 # read topology from CIM
 files = glob.glob('build/_deps/cim-data-src/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results/*.xml') # downloaded by CMake
 log.info('CIM files: %s', files)
-reader = dpsimpy.CIMReader(name)
+reader = dpsimpy.CIMReader()
 system = reader.loadCIM(50, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
 
 # map from CSV to simulation names

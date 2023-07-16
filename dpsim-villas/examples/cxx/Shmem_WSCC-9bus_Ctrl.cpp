@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 	String simName = "Shmem_WSCC-9bus_Ctrl";
 	CPS::Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader(simName, CPS::Logger::Level::info, CPS::Logger::Level::off);
+	CPS::CIM::Reader reader(CPS::Logger::Level::info, CPS::Logger::Level::off, CPS::Logger::Level::off);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend system with controllable load (Profile)

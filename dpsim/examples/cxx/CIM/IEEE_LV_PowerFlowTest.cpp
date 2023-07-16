@@ -37,7 +37,7 @@ int main(int argc, char** argv){
 	String simName = "IEEE_EU_LV_reduced";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
+    CIM::Reader reader(Logger::Level::info, Logger::Level::off, Logger::Level::off);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	auto logger = DPsim::DataLogger::make(simName);

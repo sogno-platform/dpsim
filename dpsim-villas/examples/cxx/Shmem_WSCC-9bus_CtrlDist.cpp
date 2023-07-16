@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 			filenames = args.positionalPaths();
 		}
 
-		CIM::Reader reader(args.name, CPS::Logger::Level::info, CPS::Logger::Level::info);
+		CIM::Reader reader(CPS::Logger::Level::info, CPS::Logger::Level::off, CPS::Logger::Level::info);
 		SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
 		// Extend system with controllable load (Profile)

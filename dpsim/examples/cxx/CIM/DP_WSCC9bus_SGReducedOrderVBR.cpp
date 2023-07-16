@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 	// read original network topology
 	String simNamePF = simName + "_PF";
 	Logger::setLogDir(logDirectory + "/" + simNamePF);
-    CPS::CIM::Reader reader(simNamePF, logLevel, logLevel);
+    CPS::CIM::Reader reader(logLevel, Logger::Level::off, logLevel);
 
     SystemTopology systemPF = reader.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::PVNode);
 
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
 	// ----- DYNAMIC SIMULATION -----
 	Logger::setLogDir(logDirectory + "/" + simName);
 
-	CPS::CIM::Reader reader2(simName, logLevel, logLevel);
+	CPS::CIM::Reader reader2(logLevel, Logger::Level::off, logLevel);
 	SystemTopology sys;
 	if (sgType=="3")
 		sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::SG3OrderVBR);

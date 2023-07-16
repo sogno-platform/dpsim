@@ -47,7 +47,7 @@ int main(int argc, char** argv){
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_Powerflow";
 	Logger::setLogDir("logs/" + simNamePF);
-    CIM::Reader reader(simNamePF, Logger::Level::debug, Logger::Level::debug);
+    CIM::Reader reader(Logger::Level::debug, Logger::Level::off, Logger::Level::debug);
     SystemTopology systemPF = reader.loadCIM(systemFrequency, filenames, CPS::Domain::SP);
 
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
@@ -68,7 +68,7 @@ int main(int argc, char** argv){
 
 	// ----- DYNAMIC SIMULATION -----
 	Logger::setLogDir("logs/" + simName);
-	CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
+	CIM::Reader reader2(Logger::Level::debug, Logger::Level::off, Logger::Level::debug);
     SystemTopology systemDP = reader2.loadCIM(systemFrequency, filenames, CPS::Domain::DP);
 	systemDP.initWithPowerflow(systemPF);
 

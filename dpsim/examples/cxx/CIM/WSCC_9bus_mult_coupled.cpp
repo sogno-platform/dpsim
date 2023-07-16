@@ -70,7 +70,7 @@ void simulateCoupled(std::list<fs::path> filenames, CommandLineArgs& args, Int c
 		+ "_" + std::to_string(threads) + "_" + std::to_string(seq);
 	Logger::setLogDir("logs/"+simName);
 
-	CIM::Reader reader(simName, args.logLevel, args.logLevel);
+	CIM::Reader reader(args.logLevel, Logger::Level::off, args.logLevel);
 	SystemTopology sys = reader.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::IdealVoltageSource);
 
 	if (copies > 0)
@@ -134,6 +134,6 @@ int main(int argc, char *argv[]) {
 	std::cout << "Simulate with " << numCopies << " copies, "
 		<< numThreads << " threads, sequence number "
 		<< numSeq << std::endl;
-	
+
 	simulateCoupled(filenames, args, numCopies,	numThreads, numSeq);
 }

@@ -37,7 +37,7 @@ int main(int argc, char** argv){
 	String simName = "CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::info, Logger::Level::info);
+    CIM::Reader reader(Logger::Level::info, Logger::Level::off, Logger::Level::info);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	auto logger = DPsim::DataLogger::make(simName);

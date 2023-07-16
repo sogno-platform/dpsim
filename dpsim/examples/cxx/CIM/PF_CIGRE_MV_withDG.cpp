@@ -39,7 +39,7 @@ int main(int argc, char** argv){
 	Logger::setLogDir("logs/" + simName);
 
 	// read original network topology
-    CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::debug);
+    CIM::Reader reader(Logger::Level::debug, Logger::Level::off, Logger::Level::debug);
     SystemTopology system = reader.loadCIM(scenario.systemFrequency, filenames, Domain::SP);
 	Examples::Grids::CIGREMV::addInvertersToCIGREMV(system, scenario, Domain::SP);
 

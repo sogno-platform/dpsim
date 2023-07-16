@@ -37,7 +37,7 @@ int main(int argc, char** argv){
 	String simName = "Slack_Trafo_Load";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::info, Logger::Level::debug);
+    CIM::Reader reader(Logger::Level::info, Logger::Level::off, Logger::Level::debug);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	auto logger = DPsim::DataLogger::make(simName);

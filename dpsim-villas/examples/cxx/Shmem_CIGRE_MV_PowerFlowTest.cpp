@@ -23,11 +23,11 @@ int main(int argc, char** argv) {
 		"Rootnet_FULL_NE_06J16h_SV.xml",
 		"Rootnet_FULL_NE_06J16h_TP.xml"
 	}, "build/_deps/cim-data-src/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results", "CIMPATH");
-	
+
 	String simName = "Shmem_CIGRE_MV_PowerFlowTest";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, CPS::Logger::Level::debug, CPS::Logger::Level::off);
+    CIM::Reader reader(CPS::Logger::Level::debug, CPS::Logger::Level::off, CPS::Logger::Level::off);
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	RealTimeSimulation sim(simName, args.logLevel);

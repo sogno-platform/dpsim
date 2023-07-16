@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 	String simName = "SP_WSCC-9bus_dyn_switch";
 	Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::info);
+	CPS::CIM::Reader reader(Logger::Level::debug, Logger::Level::off, Logger::Level::info);
 	SystemTopology sys = reader.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::TransientStability);
 
 	// Extend topology with switch

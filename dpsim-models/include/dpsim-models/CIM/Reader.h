@@ -154,8 +154,8 @@ namespace CIM {
 	public:
 		/// Creates new reader with a name for logging.
 		/// The first log level is for the reader and the second for the generated components.
-		Reader(String name,
-			Logger::Level logLevel = Logger::Level::info,
+		Reader(Logger::Level logLevel = Logger::Level::info,
+			Logger::Level cliLevel = Logger::Level::off,
 			Logger::Level componentLogLevel = Logger::Level::off);
 		///
 		virtual ~Reader();

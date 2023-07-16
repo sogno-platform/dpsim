@@ -80,7 +80,7 @@ def dpsim():
     files = glob.glob('build/_deps/cim-data-src/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results/*.xml')
     log.info('CIM files: %s', files)
 
-    reader = dpsimpy.CIMReader(name)
+    reader = dpsimpy.CIMReader()
     system = reader.loadCIM(50, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
 
     csv_files = glob.glob('build/_deps/profile-data-src/CIGRE_MV_NoTap/load_profiles/')[0]

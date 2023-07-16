@@ -18,8 +18,8 @@ using namespace CPS;
 using namespace CPS::CIM;
 using CIMPP::UnitMultiplier;
 
-Reader::Reader(String name, Logger::Level logLevel, Logger::Level componentLogLevel) {
-	mSLog = Logger::get(Logger::LoggerType::DEBUG, name + "_CIM", logLevel);
+Reader::Reader(Logger::Level logLevel, Logger::Level cliLevel, Logger::Level componentLogLevel) {
+	mSLog = Logger::get(Logger::LoggerType::DEBUG, "CIMReader", logLevel, cliLevel);
 
 	mModel = new CIMModel();
 	mModel->setDependencyCheckOff();

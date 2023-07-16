@@ -58,7 +58,7 @@ int main(int argc, char** argv){
 	String simName = "Shmem_CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, CPS::Logger::Level::debug, CPS::Logger::Level::off);
+    CIM::Reader reader(CPS::Logger::Level::debug, CPS::Logger::Level::off, CPS::Logger::Level::off);
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	CSVReader csvreader(loadProfilePath, assignList, CPS::Logger::Level::info);

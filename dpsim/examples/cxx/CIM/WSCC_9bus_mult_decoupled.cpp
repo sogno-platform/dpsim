@@ -51,7 +51,7 @@ void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads, I
 		+ "_" + std::to_string(threads) + "_" + std::to_string(seq);
 	Logger::setLogDir("logs/"+simName);
 
-	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::info);
+	CIM::Reader reader(Logger::Level::off, Logger::Level::off, Logger::Level::info);
 	SystemTopology sys = reader.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::IdealVoltageSource);
 
 	if (copies > 0)
