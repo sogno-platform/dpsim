@@ -107,7 +107,7 @@ def dpsim():
         'LOAD-I-14': 'Load_I_14'
     }
 
-    csvreader = dpsimpy.CSVReader(name, csv_files, assignList, dpsimpy.LogLevel.info)
+    csvreader = dpsimpy.CSVReader(csv_files, assignList, dpsimpy.LogLevel.info)
     csvreader.assignLoadProfile(system, 0, 1, 300, dpsimpy.CSVReaderMode.MANUAL, dpsimpy.CSVReaderFormat.SECONDS)
 
     sim = dpsimpy.RealTimeSimulation(name)

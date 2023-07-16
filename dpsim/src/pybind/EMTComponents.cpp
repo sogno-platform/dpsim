@@ -11,7 +11,6 @@
 #include <dpsim/RealTimeSimulation.h>
 #include <dpsim-models/IdentifiedObject.h>
 #include <DPsim.h>
-#include <dpsim-models/CSVReader.h>
 #include <dpsim/pybind/Utils.h>
 
 namespace py = pybind11;

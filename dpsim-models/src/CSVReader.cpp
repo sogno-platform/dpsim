@@ -88,8 +88,8 @@ CSVReaderIterator::CSVReaderIterator(std::istream& str)
 
 CSVReaderIterator::CSVReaderIterator():m_str(NULL) { }
 
-CSVReader::CSVReader(CPS::String name, std::list<fs::path> paths, CPS::Logger::Level logLevel) {
-	mSLog = Logger::get(Logger::LoggerType::DEBUG, name + "_csvReader", logLevel);
+CSVReader::CSVReader(std::list<fs::path> paths, CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel) {
+	mSLog = Logger::get(Logger::LoggerType::DEBUG, "CSVReader", logLevel, cliLevel);
 	//mFileList = paths;
 	for(auto file : paths){
 		if(file.string().find(".csv")!=std::string::npos){
@@ -100,24 +100,23 @@ CSVReader::CSVReader(CPS::String name, std::list<fs::path> paths, CPS::Logger::L
 
 }
 
-CSVReader::CSVReader(CPS::String name, CPS::String path,  CPS::Logger::Level logLevel) {
-	mSLog = Logger::get(Logger::LoggerType::DEBUG, name + "_csvReader", logLevel);
+CSVReader::CSVReader(CPS::String path,  CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel) {
+	mSLog = Logger::get(Logger::LoggerType::DEBUG, "CSVReader", logLevel, cliLevel);
 
 	mPath = path;
 	for (const auto & entry : fs::directory_iterator(path)) {
-			mFileList.push_back(entry.path());
-
+		mFileList.push_back(entry.path());
 	}
 }
 
-CSVReader::CSVReader(CPS::String name, CPS::String path, std::map<String, String>& assignList, CPS::Logger::Level logLevel)
-	: CSVReader(name, path, logLevel) {
+CSVReader::CSVReader(CPS::String path, std::map<String, String>& assignList, CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel)
+	: CSVReader(path, logLevel, cliLevel) {
 
 	mAssignPattern = assignList;
 }
 
-CSVReader::CSVReader(CPS::String name, std::list<fs::path> paths, std::map<String, String>& assignList,
-CPS::Logger::Level logLevel): CSVReader(name, paths, logLevel){
+CSVReader::CSVReader(std::list<fs::path> paths, std::map<String, String>& assignList,
+CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel): CSVReader(paths, logLevel, cliLevel){
 	mAssignPattern = assignList;
 }
 

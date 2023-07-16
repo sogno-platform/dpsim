@@ -48,7 +48,7 @@ assignList = {
 # read profiles from CSV
 csv_files = 'build/_deps/profile-data-src/CIGRE_MV_NoTap/load_profiles/'
 log.info('CSV files: %s', csv_files)
-csvreader = dpsimpy.CSVReader(name, csv_files, assignList, dpsimpy.LogLevel.info)
+csvreader = dpsimpy.CSVReader(csv_files, assignList, dpsimpy.LogLevel.info)
 csvreader.assignLoadProfile(system, 0, 1, 300, dpsimpy.CSVReaderMode.MANUAL, dpsimpy.CSVReaderFormat.SECONDS)
 
 # instantiate logger

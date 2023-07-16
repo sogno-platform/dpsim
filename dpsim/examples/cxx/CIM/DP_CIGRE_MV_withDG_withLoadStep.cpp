@@ -7,7 +7,6 @@
  *********************************************************************************/
 
 #include <DPsim.h>
-#include <dpsim-models/CSVReader.h>
 #include "../Examples.h"
 
 using namespace std;

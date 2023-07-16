@@ -61,7 +61,7 @@ int main(int argc, char** argv){
     CIM::Reader reader(simName, CPS::Logger::Level::debug, CPS::Logger::Level::off);
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
-	CSVReader csvreader(simName, loadProfilePath, assignList, CPS::Logger::Level::info);
+	CSVReader csvreader(loadProfilePath, assignList, CPS::Logger::Level::info);
 	csvreader.assignLoadProfile(sys, 0, args.timeStep, args.duration, CSVReader::Mode::MANUAL);
 
 	RealTimeSimulation sim(simName, args.logLevel);

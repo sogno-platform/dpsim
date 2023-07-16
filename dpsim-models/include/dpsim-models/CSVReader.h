@@ -52,13 +52,13 @@ namespace CPS {
 		enum class DataFormat { HHMMSS, SECONDS, HOURS, MINUTES };
 
 		///
-		CSVReader(String name, std::list<fs::path> path, Logger::Level logLevel);
+		CSVReader(std::list<fs::path> path, Logger::Level logLevel, Logger::Level cliLevel = Logger::Level::off);
 		///
-		CSVReader(String name, String path, Logger::Level logLevel);
+		CSVReader(String path, Logger::Level logLevel, Logger::Level cliLevel = Logger::Level::off);
 		///
-		CSVReader(String name, std::list<fs::path> path, std::map<String, String>& assignList, Logger::Level logLevel);
+		CSVReader(std::list<fs::path> path, std::map<String, String>& assignList, Logger::Level logLevel, Logger::Level cliLevel = Logger::Level::off);
 		///
-		CSVReader(String name, String path, std::map<String, String>& assignList, Logger::Level logLevel);
+		CSVReader(String path, std::map<String, String>& assignList, Logger::Level logLevel, Logger::Level cliLevel = Logger::Level::off);
 
 		///	convert HH:MM:SS format timestamp into total seconds.
 		///	e.g.: 00 : 01 : 00 -- > 60.

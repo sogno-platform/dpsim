@@ -251,7 +251,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 #endif
 
 	py::class_<CPS::CSVReader>(m, "CSVReader")
-		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())
+		.def(py::init<const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level, CPS::Logger::Level>(), "path"_a, "assignlist"_a, "loglevel"_a, "clilevel"_a = CPS::Logger::Level::off)
 		.def("assignLoadProfile", &CPS::CSVReader::assignLoadProfile);
 
 	//Base Classes

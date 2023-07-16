@@ -8,7 +8,6 @@
 
 #include "dpsim-models/CIM/Reader.h"
 #include <DPsim.h>
-#include <dpsim-models/CSVReader.h>
 
 using namespace std;
 using namespace DPsim;
