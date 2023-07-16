@@ -12,6 +12,9 @@ const Examples::Grids::SMIB::ScenarioConfig3 GridParams;
 // Generator parameters
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
+// PSS
+const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;
+
 // Excitation system
 const Base::ExciterParameters excitationEremia = Examples::Components::Exciter::getExciterEremia();
 
@@ -32,6 +35,7 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 5;
 	Real timeStep = 1e-3;
 	Real H = syngenKundur.H;
+	bool withPSS = false;
 	bool withExciter = false;
 	bool withTurbineGovernor = false;
 	std::string SGModel = "4";
@@ -41,13 +45,14 @@ int main(int argc, char* argv[]) {
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-		if (args.options.find("SGModel") != args.options.end()) {
+		if (args.options.find("SGModel") != args.options.end())
 			SGModel = args.getOptionString("SGModel");
+		if (args.options.find("WITHPSS") != args.options.end())
+			withPSS = args.getOptionBool("WITHPSS");
 		if (args.options.find("WITHEXCITER") != args.options.end())
 			withExciter = args.getOptionBool("WITHEXCITER");
 		if (args.options.find("WithTurbineGovernor") != args.options.end())
 			withTurbineGovernor = args.getOptionBool("WithTurbineGovernor");
-		}
 		if (args.options.find("Inertia") != args.options.end())  {
 			H = args.getOptionReal("Inertia");
 			inertia_str = "_Inertia_" + std::to_string(H);
@@ -63,7 +68,7 @@ int main(int argc, char* argv[]) {
 		logDownSampling = floor(100e-6 / timeStep);
 	else
 		logDownSampling = 1.0;
-	Logger::Level logLevel = Logger::Level::off;
+	Logger::Level logLevel = Logger::Level::debug;
 	std::string simName = "DP_SynGen" + SGModel + "Order_VBR_Load_Fault" + stepSize_str + inertia_str;
 
 
@@ -96,6 +101,16 @@ int main(int argc, char* argv[]) {
 		exciterDP = Factory<Base::Exciter>::get().create("DC1Simp", "Exciter", logLevel);
 		exciterDP->setParameters(excitationEremia);
 		genDP->addExciter(exciterDP);
+	}
+
+	// Power system stabilizer
+	std::shared_ptr<Signal::PSS1A> pssDP = nullptr;
+	if (withPSS) {
+		pssDP = Signal::PSS1A::make("SynGen_PSS", logLevel);
+		pssDP->setParameters(pssAndersonFarmer.Kp, pssAndersonFarmer.Kv, pssAndersonFarmer.Kw, 
+			pssAndersonFarmer.T1, pssAndersonFarmer.T2, pssAndersonFarmer.T3, pssAndersonFarmer.T4, 
+			pssAndersonFarmer.Vs_max, pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw, timeStep);
+		genDP->addPSS(pssDP);
 	}
 
 	// Turbine Governor

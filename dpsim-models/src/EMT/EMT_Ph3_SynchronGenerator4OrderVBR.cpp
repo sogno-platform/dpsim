@@ -47,7 +47,7 @@ void EMT::Ph3::SynchronGenerator4OrderVBR::specificInitialization() {
 }
 
 void EMT::Ph3::SynchronGenerator4OrderVBR::stepInPerUnit() {
-
+	
 	if (mSimTime>0.0) {
 		// calculate Edq_t at t=k
 		(**mEdq0_t)(0,0) = -(**mIdq0)(1,0) * mLq_t + (**mVdq0)(0,0);
@@ -61,7 +61,7 @@ void EMT::Ph3::SynchronGenerator4OrderVBR::stepInPerUnit() {
 
 	// calculate resistance matrix at t=k+1
 	calculateResistanceMatrix();
-
+	
 	// VBR history voltage
 	mEhs_vbr(0,0) = mAd_t * (**mIdq0)(1,0) + mBd_t * (**mEdq0_t)(0,0);
 	mEhs_vbr(1,0) = mAq_t * (**mIdq0)(0,0) + mBq_t * (**mEdq0_t)(1,0) + mDq_t * mEf_prev + mDq_t * (**mEf);
