@@ -162,7 +162,7 @@ void EMT_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, b
 	simEMT.setDomain(Domain::EMT);
 	simEMT.addLogger(loggerEMT);
 	simEMT.doSystemMatrixRecomputation(true); //for varres switch
-	simEMT.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
+	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 	// Events
 	if (startFaultEvent){

@@ -172,7 +172,7 @@ void EMT_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, 
 	line23EMT->connect({ n2EMT, n3EMT });
 	// faultEMT->connect({EMT::SimNode::GND , n1EMT }); //terminal of generator 1
 	faultEMT->connect({EMT::SimNode::GND , n2EMT }); //terminal of generator 2	
-	// faultDP->connect({DP::SimNode::GND , n3DP }); //Load bus
+	// faultEMT->connect({EMT::SimNode::GND , n3EMT }); //Load bus
 	auto systemEMT = SystemTopology(60,
 			SystemNodeList{n1EMT, n2EMT, n3EMT},
 			SystemComponentList{gen1EMT, gen2EMT, loadEMT, line12EMT, line13EMT, line23EMT, faultEMT});
@@ -216,6 +216,8 @@ void EMT_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, 
 	simEMT.setFinalTime(finalTime);
 	simEMT.setDomain(Domain::EMT);
 	simEMT.addLogger(loggerEMT);
+	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
+	
 	if (useVarResSwitch == true) {
 		simEMT.doSystemMatrixRecomputation(true);
 	}
