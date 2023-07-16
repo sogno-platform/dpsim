@@ -127,7 +127,7 @@ void Reader::parseFiles() {
 		return;
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog, "#### List of TopologicalNodes, associated Terminals and Equipment");
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### List of TopologicalNodes, associated Terminals and Equipment");
 	for (auto obj : mModel->Objects) {
 		if (CIMPP::TopologicalNode* topNode = dynamic_cast<CIMPP::TopologicalNode*>(obj)) {
 			if (mDomain == Domain::EMT)
@@ -139,7 +139,7 @@ void Reader::parseFiles() {
 
 	// Collect voltage state variables associated to nodes that are used
 	// for various components.
-	SPDLOG_LOGGER_INFO(mSLog, "#### List of Node voltages and Terminal power flow data");
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### List of Node voltages and Terminal power flow data");
 	for (auto obj : mModel->Objects) {
 		// Check if object is of class SvVoltage
 		if (CIMPP::SvVoltage* volt = dynamic_cast<CIMPP::SvVoltage*>(obj)) {
@@ -151,7 +151,7 @@ void Reader::parseFiles() {
 		}
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog, "#### Create other components");
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Create other components");
 	for (auto obj : mModel->Objects) {
 
 		// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
@@ -171,7 +171,7 @@ void Reader::parseFiles() {
 		}
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog, "#### Check topology for unconnected components");
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Check topology for unconnected components");
 	for (auto pfe : mPowerflowEquipment) {
 		auto c = pfe.second;
 
@@ -228,7 +228,7 @@ void Reader::processSvVoltage(CIMPP::SvVoltage* volt) {
 	Real voltageAbs = Reader::unitValue(volt->v.value, UnitMultiplier::k);
 
 	try{
-		SPDLOG_LOGGER_INFO(mSLog, "    Angle={}", (float)volt->angle.value);
+		SPDLOG_LOGGER_DEBUG(mSLog, "    Angle={}", (float)volt->angle.value);
 	}catch(ReadingUninitializedField* e ){
 		volt->angle.value = 0;
 		std::cerr<< "Uninitialized Angle for SVVoltage at " << volt->TopologicalNode->name << ".Setting default value of " << volt->angle.value << std::endl;
@@ -236,7 +236,7 @@ void Reader::processSvVoltage(CIMPP::SvVoltage* volt) {
 	Real voltagePhase = volt->angle.value * PI / 180;
 	mPowerflowNodes[node->mRID]->setInitialVoltage(std::polar<Real>(voltageAbs, voltagePhase));
 
-	SPDLOG_LOGGER_INFO(mSLog, "Node {} MatrixNodeIndex {}: {} V, {} deg",
+	SPDLOG_LOGGER_DEBUG(mSLog, "Node {} MatrixNodeIndex {}: {} V, {} deg",
 		mPowerflowNodes[node->mRID]->uid(),
 		mPowerflowNodes[node->mRID]->matrixNodeIndex(),
 		std::abs(mPowerflowNodes[node->mRID]->initialSingleVoltage()),
@@ -299,14 +299,14 @@ Matrix::Index Reader::mapTopologicalNode(String mrid) {
 }
 
 TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(CIMPP::EnergyConsumer* consumer) {
-	SPDLOG_LOGGER_INFO(mSLog, "    Found EnergyConsumer {}", consumer->name);
+	SPDLOG_LOGGER_DEBUG(mSLog, "    Found EnergyConsumer {}", consumer->name);
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
 			return std::make_shared<EMT::Ph3::RXLoad>(consumer->mRID, consumer->name, mComponentLogLevel);
 		}
 		else
 		{
-		SPDLOG_LOGGER_INFO(mSLog, "    RXLoad for EMT not implemented yet");
+		SPDLOG_LOGGER_DEBUG(mSLog, "    RXLoad for EMT not implemented yet");
 		return std::make_shared<DP::Ph1::RXLoad>(consumer->mRID, consumer->name, mComponentLogLevel);
 		}
 	}
@@ -339,7 +339,7 @@ TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(CIMPP::EnergyConsumer* consu
 }
 
 TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment* line) {
-	SPDLOG_LOGGER_INFO(mSLog, "    Found ACLineSegment {} r={} x={} bch={} gch={}", line->name,
+	SPDLOG_LOGGER_DEBUG(mSLog, "    Found ACLineSegment {} r={} x={} bch={} gch={}", line->name,
 		(float) line->r.value,
 		(float) line->x.value,
 		(float) line->bch.value,
@@ -373,7 +373,7 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment* line) {
 			return cpsLine;
 		}
 		else {
-			SPDLOG_LOGGER_INFO(mSLog, "    PiLine for EMT not implemented yet");
+			SPDLOG_LOGGER_DEBUG(mSLog, "    PiLine for EMT not implemented yet");
 			auto cpsLine = std::make_shared<DP::Ph1::PiLine>(line->mRID, line->name, mComponentLogLevel);
 			cpsLine->setParameters(resistance, inductance, capacitance, conductance);
 			return cpsLine;
@@ -398,7 +398,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 		SPDLOG_LOGGER_WARN(mSLog, "PowerTransformer {} does not have exactly two windings, ignoring", trans->name);
 		return nullptr;
 	}
-	SPDLOG_LOGGER_INFO(mSLog, "Found PowerTransformer {}", trans->name);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Found PowerTransformer {}", trans->name);
 
 	// assign transformer ends
 	CIMPP::PowerTransformerEnd* end1 = nullptr, *end2 = nullptr;
@@ -409,30 +409,30 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 	}
 
 	// setting default values for non-set resistances and reactances
-	SPDLOG_LOGGER_INFO(mSLog, "    PowerTransformerEnd_1 {}", end1->name);
-    SPDLOG_LOGGER_INFO(mSLog, "    Srated={} Vrated={}", (float) end1->ratedS.value, (float) end1->ratedU.value);
+	SPDLOG_LOGGER_DEBUG(mSLog, "    PowerTransformerEnd_1 {}", end1->name);
+    SPDLOG_LOGGER_DEBUG(mSLog, "    Srated={} Vrated={}", (float) end1->ratedS.value, (float) end1->ratedU.value);
 	try{
-		SPDLOG_LOGGER_INFO(mSLog, "       R={}", (float) end1->r.value);
+		SPDLOG_LOGGER_DEBUG(mSLog, "       R={}", (float) end1->r.value);
 	}catch(ReadingUninitializedField* e1){
 		end1->r.value = 1e-12;
         SPDLOG_LOGGER_WARN(mSLog, "       Uninitialized value for PowerTrafoEnd1 setting default value of R={}", (float) end1->r.value);
 	}
 	try{
-		SPDLOG_LOGGER_INFO(mSLog, "       X={}", (float) end1->x.value);
+		SPDLOG_LOGGER_DEBUG(mSLog, "       X={}", (float) end1->x.value);
 	}catch(ReadingUninitializedField* e1){
 		end1->x.value = 1e-12;
         SPDLOG_LOGGER_WARN(mSLog, "       Uninitialized value for PowerTrafoEnd1 setting default value of X={}", (float) end1->x.value);
 	}
-    SPDLOG_LOGGER_INFO(mSLog, "    PowerTransformerEnd_2 {}", end2->name);
-    SPDLOG_LOGGER_INFO(mSLog, "    Srated={} Vrated={}", (float) end2->ratedS.value, (float) end2->ratedU.value);
+    SPDLOG_LOGGER_DEBUG(mSLog, "    PowerTransformerEnd_2 {}", end2->name);
+    SPDLOG_LOGGER_DEBUG(mSLog, "    Srated={} Vrated={}", (float) end2->ratedS.value, (float) end2->ratedU.value);
 	try{
-		SPDLOG_LOGGER_INFO(mSLog, "       R={}", (float) end2->r.value);
+		SPDLOG_LOGGER_DEBUG(mSLog, "       R={}", (float) end2->r.value);
 	}catch(ReadingUninitializedField* e1){
 		end2->r.value = 1e-12;
         SPDLOG_LOGGER_WARN(mSLog, "       Uninitialized value for PowerTrafoEnd2 setting default value of R={}", (float) end2->r.value);
 	}
 	try{
-		SPDLOG_LOGGER_INFO(mSLog, "       X={}", (float) end2->x.value);
+		SPDLOG_LOGGER_DEBUG(mSLog, "       X={}", (float) end2->x.value);
 	}catch(ReadingUninitializedField* e1){
 		end2->x.value = 1e-12;
         SPDLOG_LOGGER_WARN(mSLog, "       Uninitialized value for PowerTrafoEnd2 setting default value of X={}", (float) end2->x.value);
@@ -496,7 +496,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 		}
 		else
 		{
-			SPDLOG_LOGGER_INFO(mSLog, "    Transformer for EMT not implemented yet");
+			SPDLOG_LOGGER_DEBUG(mSLog, "    Transformer for EMT not implemented yet");
 			return nullptr;
 		}
 	}
@@ -516,10 +516,10 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 }
 
 TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachine* machine) {
-	SPDLOG_LOGGER_INFO(mSLog, "    Found  Synchronous machine {}", machine->name);
+	SPDLOG_LOGGER_DEBUG(mSLog, "    Found  Synchronous machine {}", machine->name);
 
 	if (mDomain == Domain::DP) {
-		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in DP domain.");
+		SPDLOG_LOGGER_DEBUG(mSLog, "    Create generator in DP domain.");
 		if (mGeneratorType == GeneratorType::TransientStability
 			|| mGeneratorType == GeneratorType::SG6aOrderVBR
 			|| mGeneratorType == GeneratorType::SG6bOrderVBR
@@ -563,12 +563,12 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 						Real nomFieldCurr = 0;
 
 						if (mGeneratorType == GeneratorType::TransientStability) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is TransientStability.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is TransientStability.");
 							auto gen = DP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency, Ld_t, H);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
 							auto gen = std::make_shared<DP::Ph1::SynchronGenerator6aOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(
 								ratedPower, ratedVoltage, mFrequency, H,
@@ -576,7 +576,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								Ld_s, Lq_s, Td0_s, Tq0_s);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
 							auto gen = std::make_shared<DP::Ph1::SynchronGenerator6bOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(
 								ratedPower, ratedVoltage, mFrequency, H,
@@ -584,14 +584,14 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								Ld_s, Lq_s, Td0_s, Tq0_s);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
 							auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderVBR>(
 								machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
 								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
 							auto gen = std::make_shared<DP::Ph1::SynchronGenerator3OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(
 								ratedPower, ratedVoltage, mFrequency, H,
@@ -620,7 +620,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 				}
 			}
 		} else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
-			SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is IdealVoltageSource.");
+			SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is IdealVoltageSource.");
 			return std::make_shared<DP::Ph1::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
 		} else if (mGeneratorType == GeneratorType::None) {
 			throw SystemError("GeneratorType is None. Specify!");
@@ -628,7 +628,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			throw SystemError("GeneratorType setting unfeasible.");
 		}
 	} else if (mDomain == Domain::SP) {
-		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in SP domain.");
+		SPDLOG_LOGGER_DEBUG(mSLog, "    Create generator in SP domain.");
 		if (mGeneratorType == GeneratorType::TransientStability
 			|| mGeneratorType == GeneratorType::SG6aOrderVBR
 			|| mGeneratorType == GeneratorType::SG6bOrderVBR
@@ -669,12 +669,12 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 						Real nomFieldCurr = 0;
 
 						if (mGeneratorType == GeneratorType::TransientStability) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is TransientStability.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is TransientStability.");
 							auto gen = SP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency, Ld_t, H);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
 							auto gen = std::make_shared<SP::Ph1::SynchronGenerator6aOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(
 								ratedPower, ratedVoltage, mFrequency, H,
@@ -682,7 +682,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								Ld_s, Lq_s, Td0_s, Tq0_s);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
 							auto gen = std::make_shared<SP::Ph1::SynchronGenerator6bOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(
 								ratedPower, ratedVoltage, mFrequency, H,
@@ -690,14 +690,14 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								Ld_s, Lq_s, Td0_s, Tq0_s);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
 							auto gen = std::make_shared<SP::Ph1::SynchronGenerator4OrderVBR>(
 								machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
 								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
 							auto gen = std::make_shared<SP::Ph1::SynchronGenerator3OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(
 								ratedPower, ratedVoltage, mFrequency, H,
@@ -708,7 +708,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 				}
 			}
 		} else if (mGeneratorType == GeneratorType::PVNode) {
-			SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is PVNode.");
+			SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is PVNode.");
 			for (auto obj : mModel->Objects) {
 				if (CIMPP::GeneratingUnit* genUnit = dynamic_cast<CIMPP::GeneratingUnit*>(obj)) {
 					for (auto syncGen : genUnit->RotatingMachine) {
@@ -719,19 +719,19 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 							Real maximumReactivePower = 1e12;
 							try{
 								setPointActivePower = unitValue(genUnit->initialP.value, UnitMultiplier::M);
-								SPDLOG_LOGGER_INFO(mSLog, "    setPointActivePower={}", setPointActivePower);
+								SPDLOG_LOGGER_DEBUG(mSLog, "    setPointActivePower={}", setPointActivePower);
 							}catch(ReadingUninitializedField* e){
 								std::cerr << "Uninitalized setPointActivePower for GeneratingUnit " << machine->name << ". Using default value of " << setPointActivePower << std::endl;
 							}
 							if (machine->RegulatingControl) {
 								setPointVoltage = unitValue(machine->RegulatingControl->targetValue.value, UnitMultiplier::k);
-								SPDLOG_LOGGER_INFO(mSLog, "    setPointVoltage={}", setPointVoltage);
+								SPDLOG_LOGGER_DEBUG(mSLog, "    setPointVoltage={}", setPointVoltage);
 							} else {
 								std::cerr << "Uninitalized setPointVoltage for GeneratingUnit " <<  machine->name << ". Using default value of " << setPointVoltage << std::endl;
 							}
 							try{
 								maximumReactivePower = unitValue(machine->maxQ.value, UnitMultiplier::M);
-								SPDLOG_LOGGER_INFO(mSLog, "    maximumReactivePower={}", maximumReactivePower);
+								SPDLOG_LOGGER_DEBUG(mSLog, "    maximumReactivePower={}", maximumReactivePower);
 							}catch(ReadingUninitializedField* e){
 								std::cerr << "Uninitalized maximumReactivePower for GeneratingUnit " <<  machine->name << ". Using default value of " << maximumReactivePower << std::endl;
 							}
@@ -748,7 +748,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 					}
 				}
 			}
-			SPDLOG_LOGGER_INFO(mSLog, "no corresponding initial power for {}", machine->name);
+			SPDLOG_LOGGER_DEBUG(mSLog, "no corresponding initial power for {}", machine->name);
 			return std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name, mComponentLogLevel);
 		} else if (mGeneratorType == GeneratorType::None) {
 			throw SystemError("GeneratorType is None. Specify!");
@@ -756,7 +756,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			throw SystemError("GeneratorType setting unfeasible.");
 		}
 	} else {
-		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in EMT domain.");
+		SPDLOG_LOGGER_DEBUG(mSLog, "    Create generator in EMT domain.");
 		if (mGeneratorType == GeneratorType::FullOrder
 			|| mGeneratorType == GeneratorType::FullOrderVBR
 			|| mGeneratorType == GeneratorType::SG3OrderVBR
@@ -799,7 +799,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 						Real nomFieldCurr = 0;
 
 						if (mGeneratorType == GeneratorType::FullOrder) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is FullOrder.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is FullOrder.");
 							auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorDQTrapez>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setParametersOperationalPerUnit(
 							ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
@@ -807,7 +807,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 							Td0_t, Tq0_t, Td0_s, Tq0_s, H);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::FullOrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is FullOrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is FullOrderVBR.");
 							auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setBaseAndOperationalPerUnitParameters(
 							ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
@@ -815,7 +815,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 							Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
 							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator6aOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(
 								ratedPower, ratedVoltage, mFrequency, H,
@@ -823,7 +823,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								Ld_s, Lq_s, Td0_s, Tq0_s);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
 							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator6bOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(
 								ratedPower, ratedVoltage, mFrequency, H,
@@ -831,14 +831,14 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								Ld_s, Lq_s, Td0_s, Tq0_s);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
 							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator4OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(
 								ratedPower, ratedVoltage, mFrequency, H,
 								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t);
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
-							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
 							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator3OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
 							gen->setOperationalParametersPerUnit(
 								ratedPower, ratedVoltage, mFrequency, H,
@@ -849,10 +849,10 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 				}
 			}
 		} else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
-			SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is IdealVoltageSource.");
+			SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is IdealVoltageSource.");
 			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel, GeneratorType::IdealVoltageSource);
 		} else if (mGeneratorType == GeneratorType::IdealCurrentSource) {
-			SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is IdealCurrentSource.");
+			SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is IdealCurrentSource.");
 			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel, GeneratorType::IdealCurrentSource);
 		} else if (mGeneratorType == GeneratorType::None) {
 			throw SystemError("GeneratorType is None. Specify!");
@@ -864,7 +864,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 }
 
 TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection* extnet) {
-	SPDLOG_LOGGER_INFO(mSLog, "Found External Network Injection {}", extnet->name);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Found External Network Injection {}", extnet->name);
 
 	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(extnet);
 
@@ -884,10 +884,10 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(CIMPP::ExternalNet
 
 			try {
 				if(extnet->RegulatingControl){
-					SPDLOG_LOGGER_INFO(mSLog, "       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);
+					SPDLOG_LOGGER_DEBUG(mSLog, "       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);
 					cpsextnet->setParameters(extnet->RegulatingControl->targetValue*baseVoltage); // assumes that value is specified in CIM data in per unit
 				} else {
-					SPDLOG_LOGGER_INFO(mSLog, "       No voltage set-point defined. Using 1 per unit.");
+					SPDLOG_LOGGER_DEBUG(mSLog, "       No voltage set-point defined. Using 1 per unit.");
 					cpsextnet->setParameters(1.*baseVoltage);
 				}
 			} catch (ReadingUninitializedField* e ) {
@@ -911,7 +911,7 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(CIMPP::ExternalNet
 }
 
 TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(CIMPP::EquivalentShunt* shunt){
-	SPDLOG_LOGGER_INFO(mSLog, "Found shunt {}", shunt->name);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Found shunt {}", shunt->name);
 
 	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(shunt);
 
@@ -959,12 +959,12 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode* topNode) {
 	mPowerflowNodes[topNode->mRID] = SimNode<VarType>::make(topNode->mRID, topNode->name, matrixNodeIndex, mPhase);
 
 	if (mPhase == PhaseType::ABC) {
-		SPDLOG_LOGGER_INFO(mSLog, "TopologicalNode {} phase A as simulation node {} ", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::A));
-		SPDLOG_LOGGER_INFO(mSLog, "TopologicalNode {} phase B as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::B));
-		SPDLOG_LOGGER_INFO(mSLog, "TopologicalNode {} phase C as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::C));
+		SPDLOG_LOGGER_DEBUG(mSLog, "TopologicalNode {} phase A as simulation node {} ", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::A));
+		SPDLOG_LOGGER_DEBUG(mSLog, "TopologicalNode {} phase B as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::B));
+		SPDLOG_LOGGER_DEBUG(mSLog, "TopologicalNode {} phase C as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::C));
 	}
 	else
-		SPDLOG_LOGGER_INFO(mSLog, "TopologicalNode id: {}, name: {} as simulation node {}", topNode->mRID, topNode->name, mPowerflowNodes[topNode->mRID]->matrixNodeIndex());
+		SPDLOG_LOGGER_DEBUG(mSLog, "TopologicalNode id: {}, name: {} as simulation node {}", topNode->mRID, topNode->name, mPowerflowNodes[topNode->mRID]->matrixNodeIndex());
 
 	for (auto term : topNode->Terminal) {
 		// Insert Terminal if it does not exist in the map and add reference to node.
@@ -976,7 +976,7 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode* topNode) {
 		if (!term->sequenceNumber.initialized)
 			term->sequenceNumber = 1;
 
-		SPDLOG_LOGGER_INFO(mSLog, "    Terminal {}, sequenceNumber {}", term->mRID, (int) term->sequenceNumber);
+		SPDLOG_LOGGER_DEBUG(mSLog, "    Terminal {}, sequenceNumber {}", term->mRID, (int) term->sequenceNumber);
 
 		// Try to process Equipment connected to Terminal.
 		CIMPP::ConductingEquipment *equipment = term->ConductingEquipment;
@@ -1000,7 +1000,7 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode* topNode) {
 			std::dynamic_pointer_cast<SimPowerComp<VarType>>(pfEquipment)->setTerminalAt(
 				std::dynamic_pointer_cast<SimTerminal<VarType>>(mPowerflowTerminals[term->mRID]), term->sequenceNumber-1);
 
-			SPDLOG_LOGGER_INFO(mSLog, "        Added Terminal {} to Equipment {}", term->mRID, equipment->mRID);
+			SPDLOG_LOGGER_DEBUG(mSLog, "        Added Terminal {} to Equipment {}", term->mRID, equipment->mRID);
 		}
 	}
 }
