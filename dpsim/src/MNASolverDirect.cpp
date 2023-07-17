@@ -66,23 +66,23 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 	mBaseSystemMatrix.setZero();
 	for (auto statElem : mMNAComponents)
 		statElem->mnaApplySystemMatrixStamp(mBaseSystemMatrix);
-	SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
 	mSLog->flush();
 
 	// Continue from base matrix
 	mVariableSystemMatrix = mBaseSystemMatrix;
 
 	// Now stamp switches into matrix
-	SPDLOG_LOGGER_INFO(mSLog, "Stamping switches");
+	SPDLOG_LOGGER_DEBUG(mSLog, "Stamping switches");
 	for (auto sw : mMNAIntfSwitches)
 		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
 	// Now stamp initial state of variable elements into matrix
-	SPDLOG_LOGGER_INFO(mSLog, "Stamping variable elements");
+	SPDLOG_LOGGER_DEBUG(mSLog, "Stamping variable elements");
 	for (auto varElem : mMNAIntfVariableComps)
 		varElem->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
-	SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
 	/* TODO: find replacement for flush() */
 	mSLog->flush();
 
@@ -307,32 +307,32 @@ template <typename VarType>
 void MnaSolverDirect<VarType>::logSystemMatrices() {
 	if (mFrequencyParallel) {
 		for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
-			SPDLOG_LOGGER_INFO(mSLog, "System matrix for frequency: {:d} \n{:s}", i, Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][i]));
+			SPDLOG_LOGGER_DEBUG(mSLog, "System matrix for frequency: {:d} \n{:s}", i, Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][i]));
 		}
 
 		for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i) {
-			SPDLOG_LOGGER_INFO(mSLog, "Right side vector for frequency: {:d} \n{:s}", i, Logger::matrixToString(mRightSideVectorHarm[i]));
+			SPDLOG_LOGGER_DEBUG(mSLog, "Right side vector for frequency: {:d} \n{:s}", i, Logger::matrixToString(mRightSideVectorHarm[i]));
 		}
 
 	}
 	else if (mSystemMatrixRecomputation) {
-		SPDLOG_LOGGER_INFO(mSLog, "Summarizing matrices: ");
-		SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
-		SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
-		SPDLOG_LOGGER_INFO(mSLog, "Right side vector: {}", Logger::matrixToString(mRightSideVector));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Summarizing matrices: ");
+		SPDLOG_LOGGER_DEBUG(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Right side vector: {}", Logger::matrixToString(mRightSideVector));
 	} else {
 		if (mSwitches.size() < 1) {
-			SPDLOG_LOGGER_INFO(mSLog, "System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
+			SPDLOG_LOGGER_DEBUG(mSLog, "System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
 		}
 		else {
-			SPDLOG_LOGGER_INFO(mSLog, "Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
+			SPDLOG_LOGGER_DEBUG(mSLog, "Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
 
 			for (auto sys : mSwitchedMatrices) {
-				SPDLOG_LOGGER_INFO(mSLog, "Switching System matrix {:s} \n{:s}",
+				SPDLOG_LOGGER_DEBUG(mSLog, "Switching System matrix {:s} \n{:s}",
 				sys.first.to_string(), Logger::matrixToString(sys.second[0]));
 			}
 		}
-		SPDLOG_LOGGER_INFO(mSLog, "Right side vector: \n{}", mRightSideVector);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Right side vector: \n{}", mRightSideVector);
 	}
 }
 

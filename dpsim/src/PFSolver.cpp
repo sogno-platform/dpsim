@@ -20,7 +20,7 @@ PFSolver::PFSolver(CPS::String name, CPS::SystemTopology system, CPS::Real timeS
 }
 
 void PFSolver::initialize(){
-	SPDLOG_LOGGER_INFO(mSLog, "#### INITIALIZATION OF POWERFLOW SOLVER ");
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### INITIALIZATION OF POWERFLOW SOLVER ");
     for (auto comp : mSystem.mComponents) {
         if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp))
             mSynchronGenerators.push_back(gen);
@@ -54,11 +54,11 @@ void PFSolver::initialize(){
 }
 
 void PFSolver::assignMatrixNodeIndices() {
-	SPDLOG_LOGGER_INFO(mSLog, "Assigning simulation nodes to topology nodes:");
+	SPDLOG_LOGGER_DEBUG(mSLog, "Assigning simulation nodes to topology nodes:");
 	UInt matrixNodeIndexIdx = 0;
 	for (UInt idx = 0; idx < mSystem.mNodes.size(); ++idx) {
 		mSystem.mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
-		SPDLOG_LOGGER_INFO(mSLog, "Node {}: MatrixNodeIndex {}", mSystem.mNodes[idx]->uid(), mSystem.mNodes[idx]->matrixNodeIndex());
+		SPDLOG_LOGGER_DEBUG(mSLog, "Node {}: MatrixNodeIndex {}", mSystem.mNodes[idx]->uid(), mSystem.mNodes[idx]->matrixNodeIndex());
 		++matrixNodeIndexIdx;
 	}
 	SPDLOG_LOGGER_INFO(mSLog, "Number of simulation nodes: {:d}", matrixNodeIndexIdx);
@@ -69,7 +69,7 @@ void PFSolver::initializeComponents(){
         std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp)->updateMatrixNodeIndices();
     }
 
-	SPDLOG_LOGGER_INFO(mSLog, "-- Initialize components from terminals or nodes of topology");
+	SPDLOG_LOGGER_DEBUG(mSLog, "-- Initialize components from terminals or nodes of topology");
 	for (auto comp : mSystem.mComponents) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
@@ -77,7 +77,7 @@ void PFSolver::initializeComponents(){
 			pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog, "-- Calculate per unit parameters for all components");
+	SPDLOG_LOGGER_DEBUG(mSLog, "-- Calculate per unit parameters for all components");
 	for (auto extnet : mExternalGrids) {
 			extnet->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 	}
@@ -121,7 +121,7 @@ void PFSolver::setBaseApparentPower() {
 		mBaseApparentPower = 100000000;
 		SPDLOG_LOGGER_WARN(mSLog, "No suitable quantity found for setting mBaseApparentPower. Using {} VA.", mBaseApparentPower);
 	}
-	SPDLOG_LOGGER_INFO(mSLog, "Base power = {} VA", mBaseApparentPower);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Base power = {} VA", mBaseApparentPower);
 }
 
 void PFSolver::determinePFBusType() {
@@ -129,7 +129,7 @@ void PFSolver::determinePFBusType() {
 	mPVBusIndices.clear();
 	mVDBusIndices.clear();
 
-	SPDLOG_LOGGER_INFO(mSLog, "-- Determine powerflow bus type for each node");
+	SPDLOG_LOGGER_DEBUG(mSLog, "-- Determine powerflow bus type for each node");
 
     // Determine powerflow bus type of each node through analysis of system topology
 	for (auto node : mSystem.mNodes) {
@@ -215,15 +215,15 @@ void PFSolver::determinePFBusType() {
     mPQPVBusIndices.insert(mPQPVBusIndices.end(), mPQBusIndices.begin(), mPQBusIndices.end());
     mPQPVBusIndices.insert(mPQPVBusIndices.end(), mPVBusIndices.begin(), mPVBusIndices.end());
 
-	SPDLOG_LOGGER_INFO(mSLog, "#### Create index vectors for power flow solver:");
-    SPDLOG_LOGGER_INFO(mSLog, "PQ Buses: {}", logVector(mPQBusIndices));
-    SPDLOG_LOGGER_INFO(mSLog, "PV Buses: {}", logVector(mPVBusIndices));
-    SPDLOG_LOGGER_INFO(mSLog, "VD Buses: {}", logVector(mVDBusIndices));
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Create index vectors for power flow solver:");
+    SPDLOG_LOGGER_DEBUG(mSLog, "PQ Buses: {}", logVector(mPQBusIndices));
+    SPDLOG_LOGGER_DEBUG(mSLog, "PV Buses: {}", logVector(mPVBusIndices));
+    SPDLOG_LOGGER_DEBUG(mSLog, "VD Buses: {}", logVector(mVDBusIndices));
 }
 
 void PFSolver::determineNodeBaseVoltages() {
 
-    SPDLOG_LOGGER_INFO(mSLog, "-- Determine base voltages for each node according to connected components");
+    SPDLOG_LOGGER_DEBUG(mSLog, "-- Determine base voltages for each node according to connected components");
     mSLog->flush();
 
 	for (auto node : mSystem.mNodes) {
@@ -231,34 +231,34 @@ void PFSolver::determineNodeBaseVoltages() {
 		for (auto comp : mSystem.mComponentsAtNode[node]) {
             if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi = std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
 				baseVoltage_=Math::abs(vsi->attributeTyped<CPS::Complex>("vnom")->get());
-                SPDLOG_LOGGER_INFO(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, vsi->name(), node->name());
+                SPDLOG_LOGGER_DEBUG(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, vsi->name(), node->name());
                 break;
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::RXLine> rxline = std::dynamic_pointer_cast<CPS::SP::Ph1::RXLine>(comp)) {
 				baseVoltage_ = rxline->attributeTyped<CPS::Real>("base_Voltage")->get();
-                SPDLOG_LOGGER_INFO(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, rxline->name(), node->name());
+                SPDLOG_LOGGER_DEBUG(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, rxline->name(), node->name());
                 break;
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp)) {
 				baseVoltage_ = line->attributeTyped<CPS::Real>("base_Voltage")->get();
-                SPDLOG_LOGGER_INFO(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, line->name(), node->name());
+                SPDLOG_LOGGER_DEBUG(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, line->name(), node->name());
                 break;
 			}
 			else if (std::shared_ptr<CPS::SP::Ph1::Transformer> trans = std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp)) {
 				if (trans->terminal(0)->node()->name() == node->name()){
                     baseVoltage_ = trans->attributeTyped<CPS::Real>("nominal_voltage_end1")->get();
-                    SPDLOG_LOGGER_INFO(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, trans->name(), node->name());
+                    SPDLOG_LOGGER_DEBUG(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, trans->name(), node->name());
                     break;
                 }
 				else if (trans->terminal(1)->node()->name() == node->name()){
                     baseVoltage_ = trans->attributeTyped<CPS::Real>("nominal_voltage_end2")->get();
-                    SPDLOG_LOGGER_INFO(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, trans->name(), node->name());
+                    SPDLOG_LOGGER_DEBUG(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, trans->name(), node->name());
                     break;
                 }
             }
             else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
                     baseVoltage_ = gen->attributeTyped<CPS::Real>("base_Voltage")->get();
-                    SPDLOG_LOGGER_INFO(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, gen->name(), node->name());
+                    SPDLOG_LOGGER_DEBUG(mSLog, "Choose base voltage {}V of {} to convert pu-solution of {}.", baseVoltage_, gen->name(), node->name());
                     break;
                 }
             else {
@@ -300,20 +300,20 @@ void PFSolver::modifyPowerFlowBusComponent(CPS::String name, CPS::PowerflowBusTy
 void PFSolver::setSolverAndComponentBehaviour(Solver::Behaviour behaviour) {
 	mBehaviour = behaviour;
 	if (mBehaviour == Behaviour::Initialization) {
-		SPDLOG_LOGGER_INFO(mSLog, "-- Set solver behaviour to Initialization");
+		SPDLOG_LOGGER_DEBUG(mSLog, "-- Set solver behaviour to Initialization");
 		// TODO: solver setting specific to initialization (e.g. one single PF run)
 
-		SPDLOG_LOGGER_INFO(mSLog, "-- Set component behaviour to Initialization");
+		SPDLOG_LOGGER_DEBUG(mSLog, "-- Set component behaviour to Initialization");
 		for (auto comp : mSystem.mComponents) {
 			auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
 			if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::Initialization);
 		}
 	}
 	else {
-		SPDLOG_LOGGER_INFO(mSLog, "-- Set solver behaviour to Simulation");
+		SPDLOG_LOGGER_DEBUG(mSLog, "-- Set solver behaviour to Simulation");
 		// TODO: solver setting specific to simulation
 
-		SPDLOG_LOGGER_INFO(mSLog, "-- Set component behaviour to PFSimulation");
+		SPDLOG_LOGGER_DEBUG(mSLog, "-- Set component behaviour to PFSimulation");
 		for (auto comp : mSystem.mComponents) {
 			auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
 			if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::PFSimulation);
@@ -331,7 +331,7 @@ void PFSolver::composeAdmittanceMatrix() {
 		for(auto trans : mTransformers) {
 			//to check if this transformer could be ignored
 			if (**trans->mResistance == 0 && **trans->mInductance == 0) {
-				SPDLOG_LOGGER_INFO(mSLog, "{} {} ignored for R = 0 and L = 0",trans->type(), trans->name());
+				SPDLOG_LOGGER_DEBUG(mSLog, "{} {} ignored for R = 0 and L = 0",trans->type(), trans->name());
 				continue;
 			}
 			trans->pfApplyAdmittanceMatrixStamp(mY);

@@ -114,10 +114,10 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
     Pesp = sol_P;
     Qesp = sol_Q;
 
-	SPDLOG_LOGGER_INFO(mSLog, "#### Initial solution: ");
-	SPDLOG_LOGGER_INFO(mSLog, "P\t\tQ\t\tV\t\tD");
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Initial solution: ");
+	SPDLOG_LOGGER_DEBUG(mSLog, "P\t\tQ\t\tV\t\tD");
 	for (UInt i = 0; i < mSystem.mNodes.size(); ++i) {
-		SPDLOG_LOGGER_INFO(mSLog, "{}\t{}\t{}\t{}", sol_P[i], sol_Q[i], sol_V[i], sol_D[i]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "{}\t{}\t{}\t{}", sol_P[i], sol_Q[i], sol_V[i], sol_D[i]);
 	}
     mSLog->flush();
 }
@@ -262,16 +262,16 @@ void PFSolverPowerPolar::updateSolution() {
 
 void PFSolverPowerPolar::setSolution() {
     if (! isConverged) {
-		SPDLOG_LOGGER_INFO(mSLog, "Not converged within {} iterations", mIterations);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Not converged within {} iterations", mIterations);
     }
 	else {
 		calculatePAndQAtSlackBus();
         calculateQAtPVBuses();
-		SPDLOG_LOGGER_INFO(mSLog, "converged in {} iterations",mIterations);
-		SPDLOG_LOGGER_INFO(mSLog, "Solution: ");
-		SPDLOG_LOGGER_INFO(mSLog, "P\t\tQ\t\tV\t\tD");
+		SPDLOG_LOGGER_DEBUG(mSLog, "converged in {} iterations",mIterations);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Solution: ");
+		SPDLOG_LOGGER_DEBUG(mSLog, "P\t\tQ\t\tV\t\tD");
 		for (UInt i = 0; i < mSystem.mNodes.size(); ++i) {
-			SPDLOG_LOGGER_INFO(mSLog, "{}\t{}\t{}\t{}", sol_P[i], sol_Q[i], sol_V[i], sol_D[i]);
+			SPDLOG_LOGGER_DEBUG(mSLog, "{}\t{}\t{}\t{}", sol_P[i], sol_Q[i], sol_V[i], sol_D[i]);
 		}
     }
     for (UInt i = 0; i < mSystem.mNodes.size(); ++i) {
