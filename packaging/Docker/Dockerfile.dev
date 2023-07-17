@@ -91,6 +91,7 @@ RUN cd /tmp && \
 	git checkout ${VILLAS_VERSION} && \
 	cmake ${CMAKE_OPTS} .. \
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+		-DWITH_FPGA=OFF \
 		-DDOWNLOAD_GO=OFF && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
