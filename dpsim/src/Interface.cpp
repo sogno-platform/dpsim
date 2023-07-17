@@ -7,6 +7,19 @@ using namespace CPS;
 
 namespace DPsim {
 
+	Interface::Interface(std::shared_ptr<InterfaceWorker> intf, Logger::Level logLevel, Logger::Level cliLevel, const String& name, UInt downsampling) :
+		mInterfaceWorker(intf),
+		mLog(Logger::get(Logger::LoggerType::SIMULATION, "interface", logLevel, cliLevel)),
+		mName(name),
+		mDownsampling(downsampling) {
+			mQueueDpsimToInterface = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
+			mQueueInterfaceToDpsim = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
+			if (mInterfaceWorker)
+			{
+				mInterfaceWorker->mLog = mLog;
+			}
+	};
+
     void Interface::open() {
         mInterfaceWorker->open();
         mOpened = true;
@@ -76,14 +89,6 @@ namespace DPsim {
 
         mExportAttrsDpsim.emplace_back(attr, 0);
     }
-
-    void Interface::setLogger(CPS::Logger::Log log) {
-        mLog = log;
-        if (mInterfaceWorker != nullptr)
-        {
-            mInterfaceWorker->mLog = log;
-        }	
-	}
 
     void Interface::syncImports() {
         //Block on read until all attributes with syncOnSimulationStart are read

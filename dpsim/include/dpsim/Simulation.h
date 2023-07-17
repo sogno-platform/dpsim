@@ -242,7 +242,6 @@ namespace DPsim {
 
 		///
 		void addInterface(Interface::Ptr eint) {
-			eint->setLogger(mLog);
 			mInterfaces.push_back(eint);
 		}
 

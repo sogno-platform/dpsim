@@ -223,8 +223,8 @@ Logger::Log Logger::create(Logger::LoggerType type, const std::string &name, con
 		if (filelevel < Level::info || clilevel < Level::info) {
 			SPDLOG_LOGGER_WARN(logger,
 				"This logger has been configured to log at level {} (file) and {} (cli)."
-				"However, because this is a release build, debug logging has been disabled."
-				"Please build in debug mode for extended log output.",
+				" However, because this is a release build, debug logging has been disabled."
+				" Please build in debug mode for extended log output.",
 				filelevel, clilevel);
 		}
 	#endif

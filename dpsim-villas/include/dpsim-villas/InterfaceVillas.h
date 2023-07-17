@@ -29,7 +29,7 @@ namespace DPsim {
 		/// @param sampleLength sample length configured for the node
 		/// @param name Name of this interface. Currently only used for naming the simulation tasks
 		/// @param downsampling Only import and export attributes on every nth timestep
-		InterfaceVillas(const String &nodeConfig, UInt queueLength = 512, UInt sampleLength = 64, const String& name = "", UInt downsampling = 1);
+		InterfaceVillas(const String &nodeConfig, CPS::Logger::Level logLevel = CPS::Logger::Level::info, CPS::Logger::Level cliLevel = CPS::Logger::Level::info, UInt queueLength = 512, UInt sampleLength = 64, const String& name = "", UInt downsampling = 1);
 
 		/// @brief configure an attribute import
 		/// @param attr the attribute that should be updated with the imported values
@@ -37,7 +37,7 @@ namespace DPsim {
 		/// @param blockOnRead Whether the simulation should block on every import until the attribute has been updated
 		/// @param syncOnSimulationStart Whether the simulation should block before the first timestep until this attribute has been updated
         void importAttribute(CPS::AttributeBase::Ptr attr, UInt idx, Bool blockOnRead = false, Bool syncOnSimulationStart = true);
-		
+
 		/// @brief configure an attribute export
 		/// @param attr the attribute which's value should be exported
 		/// @param idx The id given to the attribute within VILLASnode samples

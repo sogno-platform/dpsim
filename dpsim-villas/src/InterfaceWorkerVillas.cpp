@@ -30,10 +30,10 @@ InterfaceWorkerVillas::InterfaceWorkerVillas(const String &nodeConfig, UInt queu
 	{ }
 
 void InterfaceWorkerVillas::open() {
-	SPDLOG_LOGGER_INFO(mLog, "Opening InterfaceWorkerVillas...");
+	SPDLOG_LOGGER_INFO(mLog, "Opening InterfaceVillas...");
 
 	if (!InterfaceWorkerVillas::villasInitialized) {
-		SPDLOG_LOGGER_INFO(mLog, "Initializing Villas...");
+		SPDLOG_LOGGER_DEBUG(mLog, "Initializing Villas...");
 		initVillas();
 		InterfaceWorkerVillas::villasInitialized = true;
 	}
@@ -67,10 +67,10 @@ void InterfaceWorkerVillas::open() {
 		std::exit(1);
 	}
 
-	SPDLOG_LOGGER_INFO(mLog, "Preparing VILLASNode instance...");
+	SPDLOG_LOGGER_DEBUG(mLog, "Preparing VILLASNode instance...");
 	setupNodeSignals();
 	prepareNode();
-	SPDLOG_LOGGER_INFO(mLog, "Node is ready to send / receive data!");
+	SPDLOG_LOGGER_DEBUG(mLog, "Node is ready to send / receive data!");
 	mOpened = true;
 
 	mSequence = 0;

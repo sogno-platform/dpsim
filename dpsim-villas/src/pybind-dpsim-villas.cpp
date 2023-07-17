@@ -17,9 +17,11 @@ class PyInterfaceVillas: public DPsim::InterfaceVillas {
 public:
 	using DPsim::InterfaceVillas::InterfaceVillas;
 
-	PyInterfaceVillas(py::dict config, CPS::UInt queueLength, CPS::UInt sampleLength, const CPS::String &name, CPS::UInt downsampling) :
-		InterfaceVillas( 
+	PyInterfaceVillas(py::dict config, CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel, CPS::UInt queueLength, CPS::UInt sampleLength, const CPS::String &name, CPS::UInt downsampling) :
+		InterfaceVillas(
 			(py::str) py::module_::import("json").attr("dumps")(config, "indent"_a = py::none()), //json.dumps(config, indent=None)
+			logLevel,
+			cliLevel,
 			queueLength,
 			sampleLength,
 			name,
@@ -33,8 +35,8 @@ PYBIND11_MODULE(dpsimpyvillas, m) {
 	py::object interface = (py::object) py::module_::import("dpsimpy").attr("Interface");
 
 	py::class_<PyInterfaceVillas, std::shared_ptr<PyInterfaceVillas>>(m, "InterfaceVillas", interface)
-	    .def(py::init<const CPS::String&, CPS::UInt, CPS::UInt, const CPS::String&, CPS::UInt>(), "config"_a, "queue_length"_a=512, "sample_length"_a = 64, "name"_a = "", "downsampling"_a=1) // cppcheck-suppress assignBoolToPointer
-		.def(py::init<py::dict, CPS::UInt, CPS::UInt, const CPS::String&, CPS::UInt>(), "config"_a, "queue_length"_a=512, "sample_length"_a = 64, "name"_a = "", "downsampling"_a=1) // cppcheck-suppress assignBoolToPointer
+	    .def(py::init<const CPS::String&, CPS::Logger::Level, CPS::Logger::Level, CPS::UInt, CPS::UInt, const CPS::String&, CPS::UInt>(), "config"_a, "log_level"_a = CPS::Logger::Level::info, "cli_level"_a = CPS::Logger::Level::info, "queue_length"_a=512, "sample_length"_a = 64, "name"_a = "", "downsampling"_a=1) // cppcheck-suppress assignBoolToPointer
+		.def(py::init<py::dict, CPS::Logger::Level, CPS::Logger::Level, CPS::UInt, CPS::UInt, const CPS::String&, CPS::UInt>(), "config"_a, "log_level"_a = CPS::Logger::Level::info, "cli_level"_a = CPS::Logger::Level::info, "queue_length"_a=512, "sample_length"_a = 64, "name"_a = "", "downsampling"_a=1) // cppcheck-suppress assignBoolToPointer
 		.def("import_attribute", &PyInterfaceVillas::importAttribute, "attr"_a, "idx"_a, "block_on_read"_a = false, "sync_on_start"_a = true) // cppcheck-suppress assignBoolToPointer
 		.def("export_attribute", &PyInterfaceVillas::exportAttribute, "attr"_a, "idx"_a, "wait_for_on_write"_a = true, "name"_a = "", "unit"_a = ""); // cppcheck-suppress assignBoolToPointer
 }

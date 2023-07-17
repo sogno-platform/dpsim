@@ -36,13 +36,7 @@ namespace DPsim {
 			PACKET_CLOSE_INTERFACE = 1,
 		};
 
-        Interface(std::shared_ptr<InterfaceWorker> intf, const String& name = "", UInt downsampling = 1) : 
-			mInterfaceWorker(intf),
-			mName(name),
-			mDownsampling(downsampling) {
-				mQueueDpsimToInterface = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
-				mQueueInterfaceToDpsim = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
-			};
+        Interface(std::shared_ptr<InterfaceWorker> intf, CPS::Logger::Level fileLevel = CPS::Logger::Level::info, CPS::Logger::Level cliLevel = CPS::Logger::Level::info, const String& name = "", UInt downsampling = 1);
 
 		virtual void open();
 		virtual void close();
@@ -60,8 +54,6 @@ namespace DPsim {
 		virtual void syncImports();
 
 		virtual CPS::Task::List getTasks();
-
-		void setLogger(CPS::Logger::Log log);
 
 		virtual ~Interface() {
 			if (mOpened)
@@ -108,7 +100,7 @@ namespace DPsim {
 					mInterfaceWorker(intf) {};
 				void operator() () const;
 		};
- 
+
 		class ReaderThread {
 			private:
 				std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueInterfaceToDpsim;
