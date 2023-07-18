@@ -52,10 +52,10 @@ void EMT_Ph3_VSI2_4bus_SampleGrid() {
 	Real cf_param = 789.3e-6;
 	Real rc_param = 0.5;
 
-	Real transformerNominalPower = 5e6;
+	//Real transformerNominalPower = 5e6;
 
-	trans_DG1->setParameters(Vnom_pv, Vnom, Vnom_pv / Vnom, transformerNominalPower, 0., Matrix::Identity(3,3)*rc_param, Matrix::Identity(3,3)*lf_param*0.01);
-	trans_DG2->setParameters(Vnom_pv, Vnom, Vnom_pv / Vnom, transformerNominalPower, 0., Matrix::Identity(3,3)*rc_param, Matrix::Identity(3,3)*lf_param * 0.01);
+	trans_DG1->setParameters(Vnom_pv, Vnom, Vnom_pv / Vnom, 0., Matrix::Identity(3,3)*rc_param, Matrix::Identity(3,3)*lf_param*0.01);
+	trans_DG2->setParameters(Vnom_pv, Vnom, Vnom_pv / Vnom, 0., Matrix::Identity(3,3)*rc_param, Matrix::Identity(3,3)*lf_param * 0.01);
 
 	//trans_inductor->setParameters(lf_param*0.01);
 	auto piline = PiLine::make("piline", Logger::Level::debug);
