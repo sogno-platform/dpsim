@@ -128,7 +128,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		mSubSnubResistor1 = std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
 		mSubSnubResistor1->setParameters(mSnubberResistance1);
 		mSubSnubResistor1->connect({ node(0), SP::SimNode::GND });
-		SPDLOG_LOGGER_INFO(mSLog, "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]", node(0)->name(), Logger::realToString(mSnubberResistance1));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]", node(0)->name(), Logger::realToString(mSnubberResistance1));
 		mSubSnubResistor1->setBaseVoltage(**mNominalVoltageEnd1);
 		addMNASubComponent(mSubSnubResistor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
@@ -137,7 +137,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		mSubSnubResistor2 = std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
 		mSubSnubResistor2->setParameters(mSnubberResistance2);
 		mSubSnubResistor2->connect({ node(1), SP::SimNode::GND });
-		SPDLOG_LOGGER_INFO(mSLog, "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]", node(1)->name(), Logger::realToString(mSnubberResistance2));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]", node(1)->name(), Logger::realToString(mSnubberResistance2));
 		mSubSnubResistor2->setBaseVoltage(**mNominalVoltageEnd2);
 		addMNASubComponent(mSubSnubResistor2, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
@@ -155,15 +155,15 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		mSubSnubCapacitor2 = std::make_shared<SP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
 		mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
 		mSubSnubCapacitor2->connect({ node(1), SP::SimNode::GND });
-		SPDLOG_LOGGER_INFO(mSLog, "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]", node(1)->name(), Logger::realToString(mSnubberCapacitance2));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]", node(1)->name(), Logger::realToString(mSnubberCapacitance2));
 		mSubSnubCapacitor2->setBaseVoltage(**mNominalVoltageEnd2);
 		addMNASubComponent(mSubSnubCapacitor2, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
 	// Initialize electrical subcomponents
-	SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
+	SPDLOG_LOGGER_DEBUG(mSLog, "Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents) {
-		SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
+		SPDLOG_LOGGER_DEBUG(mSLog, "- {}", subcomp->name());
 		subcomp->initialize(mFrequencies);
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
@@ -193,28 +193,28 @@ void SP::Ph1::Transformer::setBaseVoltage(Real baseVoltage) {
 }
 
 void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
     mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
-    SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
+    SPDLOG_LOGGER_DEBUG(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
 
 	mBaseImpedance = **mBaseVoltage * **mBaseVoltage / mBaseApparentPower;
 	mBaseAdmittance = 1.0 / mBaseImpedance;
 	mBaseCurrent = baseApparentPower / (**mBaseVoltage * sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
-	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]", **mBaseVoltage, mBaseImpedance);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]", **mBaseVoltage, mBaseImpedance);
 
 	mResistancePerUnit = **mResistance / mBaseImpedance;
 	mReactancePerUnit = mReactance / mBaseImpedance;
-    SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [pu]  Reactance={} [pu]", mResistancePerUnit, mReactancePerUnit);
+    SPDLOG_LOGGER_DEBUG(mSLog, "Resistance={} [pu]  Reactance={} [pu]", mResistancePerUnit, mReactancePerUnit);
 
 	mBaseInductance = mBaseImpedance / mBaseOmega;
 	mInductancePerUnit = **mInductance / mBaseInductance;
 	// omega per unit=1, hence 1.0*mInductancePerUnit.
 	mLeakagePerUnit = Complex(mResistancePerUnit,1.*mInductancePerUnit);
-	SPDLOG_LOGGER_INFO(mSLog, "Leakage Impedance={} [pu] ", mLeakagePerUnit);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Leakage Impedance={} [pu] ", mLeakagePerUnit);
 
     mRatioAbsPerUnit = mRatioAbs / **mNominalVoltageEnd1 * **mNominalVoltageEnd2;
-    SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [pu]", mRatioAbsPerUnit);
+    SPDLOG_LOGGER_DEBUG(mSLog, "Tap Ratio={} [pu]", mRatioAbsPerUnit);
 
 	// Calculate per unit parameters of subcomps
 	if (mSubSnubResistor1)
@@ -255,7 +255,7 @@ void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y)
 	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(1)) += mY_element.coeff(1, 1);
 	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(0)) += mY_element.coeff(1, 0);
 
-	SPDLOG_LOGGER_INFO(mSLog, "#### Y matrix stamping: {}", mY_element);
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Y matrix stamping: {}", mY_element);
 
 	if (mSubSnubResistor1)
 		mSubSnubResistor1->pfApplyAdmittanceMatrixStamp(Y);
@@ -312,15 +312,15 @@ void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& system
 			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 
 	if (terminalNotGrounded(0)) {
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
 			mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex());
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
 			mVirtualNodes[1]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex());
 	}
 	if (terminalNotGrounded(1)) {
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(**mRatio),
 			matrixNodeIndex(1), mVirtualNodes[1]->matrixNodeIndex());
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to system at ({:d},{:d})", Logger::complexToString(- **mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1));
 	}
 }
@@ -348,7 +348,7 @@ void SP::Ph1::Transformer::mnaParentPostStep(Real time, Int timeStepCount, Attri
 
 void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	(**mIntfCurrent)(0, 0) = mSubInductor->intfCurrent()(0, 0);
-	SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0, 0)));
+	SPDLOG_LOGGER_TRACE(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0, 0)));
 
 }
 
@@ -357,5 +357,5 @@ void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0, 0) = 0;
 	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	(**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) - Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
-	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0, 0)));
+	SPDLOG_LOGGER_TRACE(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0, 0)));
 }

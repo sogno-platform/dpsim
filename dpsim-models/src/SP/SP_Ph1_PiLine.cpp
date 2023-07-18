@@ -71,25 +71,25 @@ void SP::Ph1::PiLine::setBaseVoltage(Real baseVoltage) {
 }
 
 void SP::Ph1::PiLine::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-    SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
+    SPDLOG_LOGGER_DEBUG(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
-    SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
+    SPDLOG_LOGGER_DEBUG(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
 
 	mBaseImpedance = (**mBaseVoltage * **mBaseVoltage) / mBaseApparentPower;
 	mBaseAdmittance = 1.0 / mBaseImpedance;
 	mBaseInductance = mBaseImpedance / mBaseOmega;
 	mBaseCapacitance = 1.0 / mBaseOmega / mBaseImpedance;
 	mBaseCurrent = baseApparentPower / (**mBaseVoltage * sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
-	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]", **mBaseVoltage, mBaseImpedance);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]", **mBaseVoltage, mBaseImpedance);
 
     mSeriesResPerUnit = **mSeriesRes / mBaseImpedance;
 	mSeriesIndPerUnit = **mSeriesInd / mBaseInductance;
 	mParallelCapPerUnit = **mParallelCap / mBaseCapacitance;
 	mParallelCondPerUnit = **mParallelCond / mBaseAdmittance;
 
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [pu] Reactance={} [pu]", mSeriesResPerUnit, 1. * mSeriesIndPerUnit);
-	SPDLOG_LOGGER_INFO(mSLog, "Susceptance={} [pu] Conductance={} [pu]", 1. * mParallelCapPerUnit, mParallelCondPerUnit);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Resistance={} [pu] Reactance={} [pu]", mSeriesResPerUnit, 1. * mSeriesIndPerUnit);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Susceptance={} [pu] Conductance={} [pu]", 1. * mParallelCapPerUnit, mParallelCondPerUnit);
 	mSLog->flush();
 }
 
@@ -125,8 +125,8 @@ void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 	Y.coeffRef(bus2, bus2) += mY_element.coeff(1, 1);
 	Y.coeffRef(bus2, bus1) += mY_element.coeff(1, 0);
 
-	SPDLOG_LOGGER_INFO(mSLog, "#### PF Y matrix stamping #### ");
-	SPDLOG_LOGGER_INFO(mSLog, "{}", mY_element);
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### PF Y matrix stamping #### ");
+	SPDLOG_LOGGER_DEBUG(mSLog, "{}", mY_element);
 	mSLog->flush();
 }
 
@@ -208,7 +208,7 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		addMNASubComponent(mSubParallelCapacitor1, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

@@ -275,14 +275,14 @@ void EMT::Ph3::SynchronGeneratorTrStab::mnaParentPostStep(Real time, Int timeSte
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::mnaCompUpdateVoltage(const Matrix& leftVector) {
-	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
+	SPDLOG_LOGGER_TRACE(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
 	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 	(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
+	SPDLOG_LOGGER_TRACE(mSLog, "Read current from {:d}", matrixNodeIndex(0));
 
 	**mIntfCurrent = **mSubInductor->mIntfCurrent;
 }

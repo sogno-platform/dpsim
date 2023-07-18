@@ -133,7 +133,7 @@ void SP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) 
 
 // #### MNA functions ####
 void SP::Ph1::NetworkInjection::mnaParentApplyRightSideVectorStamp(Matrix& rightVector) {
-	SPDLOG_LOGGER_DEBUG(mSLog, "Right Side Vector: {:s}",
+	SPDLOG_LOGGER_TRACE(mSLog, "Right Side Vector: {:s}",
 				Logger::matrixToString(rightVector));
 }
 

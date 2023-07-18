@@ -51,7 +51,7 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 	**mVmeasPrev = mPrevVoltage;
 
 	if (mMechMode) {
-		SPDLOG_LOGGER_INFO(mSLog, "Using Mechanical Model");
+		SPDLOG_LOGGER_DEBUG(mSLog, "Using Mechanical Model");
 	}
 
 	SPDLOG_LOGGER_INFO(mSLog,
@@ -247,7 +247,7 @@ void DP::Ph1::SVC::checkProtection(Real time) {
 	}
 
 	if (mDisconnect) {
-		SPDLOG_LOGGER_INFO(mSLog, "Disconnect SVC because of overvoltage at {}", time);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Disconnect SVC because of overvoltage at {}", time);
 		mSubCapacitorSwitch->open();
 		mSubInductorSwitch->open();
 		mValueChange = true;
@@ -356,7 +356,7 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
 				mTapPos = mTapPos - 1;
 				mTapPos = (mTapPos < mMinPos) ? mMinPos : mTapPos;
 				**mViolationCounter = 0;
-				SPDLOG_LOGGER_INFO(mSLog, "Time: {}"
+				SPDLOG_LOGGER_DEBUG(mSLog, "Time: {}"
 					"\nDecreasing Tap. Reason: Undervoltage"
 					"\nNew Tap Position: {}", time, mTapPos);
 			}
@@ -365,7 +365,7 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
 				mTapPos = mTapPos + 1;
 				mTapPos = (mTapPos > mMaxPos) ? mMaxPos : mTapPos;
 				**mViolationCounter = 0;
-				SPDLOG_LOGGER_INFO(mSLog, "Time: {}"
+				SPDLOG_LOGGER_DEBUG(mSLog, "Time: {}"
 					"\nIncreasing Tap. Reason: Overvoltag"
 					"\nNew Tap Position: {}", time, mTapPos);
 			}
@@ -376,7 +376,7 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
 					// inductor is active
 					mInductiveMode = true;
 					Real inductance = 1 / ((mTapPos / mMaxPos) * mBN * omega);
-					SPDLOG_LOGGER_INFO(mSLog, "New inductance: {}", inductance);
+					SPDLOG_LOGGER_DEBUG(mSLog, "New inductance: {}", inductance);
 					mSubInductor->updateInductance(inductance, mDeltaT);
 					mValueChange = true;
 					setSwitchState();
@@ -385,7 +385,7 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
 					// capacitor is active
 					mInductiveMode = false;
 					Real capacitance = ((mTapPos / mMinPos) * mBN) / omega;
-					SPDLOG_LOGGER_INFO(mSLog, "New capacitance: {}", capacitance);
+					SPDLOG_LOGGER_DEBUG(mSLog, "New capacitance: {}", capacitance);
 					mSubCapacitor->updateCapacitance(capacitance, mDeltaT);
 					mValueChange = true;
 					setSwitchState();
@@ -393,7 +393,7 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
 				}
 				else if (mTapPos = 0) {
 					// open both
-					SPDLOG_LOGGER_INFO(mSLog, "Time: {}"
+					SPDLOG_LOGGER_DEBUG(mSLog, "Time: {}"
 						"Tap Position: 0. Open both elements", time);
 					mSubInductorSwitch->open();
 					mSubCapacitorSwitch->open();
@@ -419,22 +419,22 @@ void DP::Ph1::SVC::setSwitchState() {
 	// set switches according to current mode of svc
 	if (mInductiveMode) {
 		if (!mSubInductorSwitch->mnaIsClosed()) {
-			SPDLOG_LOGGER_INFO(mSLog, "Inductive Mode: Closed Inductor Switch");
+			SPDLOG_LOGGER_DEBUG(mSLog, "Inductive Mode: Closed Inductor Switch");
 			mSubInductorSwitch->close();
 		}
 		if (mSubCapacitorSwitch->mnaIsClosed()) {
 			mSubCapacitorSwitch->open();
-			SPDLOG_LOGGER_INFO(mSLog, "Inductive Mode: Opened Capacitor Switch");
+			SPDLOG_LOGGER_DEBUG(mSLog, "Inductive Mode: Opened Capacitor Switch");
 		}
 	}
 	else {
 		if (mSubInductorSwitch->mnaIsClosed()) {
 			mSubInductorSwitch->open();
-			SPDLOG_LOGGER_INFO(mSLog, "Capacitive Mode: Openend Inductor Switch");
+			SPDLOG_LOGGER_DEBUG(mSLog, "Capacitive Mode: Openend Inductor Switch");
 		}
 		if (!mSubCapacitorSwitch->mnaIsClosed()) {
 			mSubCapacitorSwitch->close();
-			SPDLOG_LOGGER_INFO(mSLog, "Capacitive Mode: Closed Capcitor Switch");
+			SPDLOG_LOGGER_DEBUG(mSLog, "Capacitive Mode: Closed Capcitor Switch");
 		}
 	}
 }

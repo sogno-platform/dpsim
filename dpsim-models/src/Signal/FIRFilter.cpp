@@ -40,7 +40,7 @@ void FIRFilter::step(Real time) {
 
 	incrementIndex();
 	**mOutput = output;
-	SPDLOG_LOGGER_DEBUG(mSLog, "Set output to {}", output);
+	SPDLOG_LOGGER_TRACE(mSLog, "Set output to {}", output);
 }
 
 void FIRFilter::Step::execute(Real time, Int timeStepCount) {

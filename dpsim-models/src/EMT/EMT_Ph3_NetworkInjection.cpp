@@ -25,9 +25,9 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 	// Create electrical sub components
 	mSubVoltageSource = std::make_shared<EMT::Ph3::VoltageSource>(**mName + "_vs", mLogLevel);
 	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-	SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
+	SPDLOG_LOGGER_DEBUG(mSLog, "Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)
-		SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
+		SPDLOG_LOGGER_DEBUG(mSLog, "- {}", subcomp->name());
 
 	mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
 	mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
@@ -91,7 +91,7 @@ void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency)
 
 // #### MNA functions ####
 void EMT::Ph3::NetworkInjection::mnaParentApplyRightSideVectorStamp(Matrix& rightVector) {
-	SPDLOG_LOGGER_DEBUG(mSLog, "Right Side Vector: {:s}",
+	SPDLOG_LOGGER_TRACE(mSLog, "Right Side Vector: {:s}",
 				Logger::matrixToString(rightVector));
 }
 

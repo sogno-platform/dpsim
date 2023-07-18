@@ -112,17 +112,17 @@ void DP::Ph1::Inductor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMat
 			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mEquivCond(freq,0), mNumFreqs, freq);
 		}
 
-		SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freq);
+		SPDLOG_LOGGER_DEBUG(mSLog, "-- Stamp frequency {:d} ---", freq);
 		if (terminalNotGrounded(0))
-			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to system at ({:d},{:d})",
 				Logger::complexToString(mEquivCond(freq,0)), matrixNodeIndex(0), matrixNodeIndex(0));
 		if (terminalNotGrounded(1))
-			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to system at ({:d},{:d})",
 				Logger::complexToString(mEquivCond(freq,0)), matrixNodeIndex(1), matrixNodeIndex(1));
 		if ( terminalNotGrounded(0)  &&  terminalNotGrounded(1) ) {
-			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to system at ({:d},{:d})",
 				Logger::complexToString(-mEquivCond(freq,0)), matrixNodeIndex(0), matrixNodeIndex(1));
-			SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to system at ({:d},{:d})",
 				Logger::complexToString(-mEquivCond(freq,0)), matrixNodeIndex(1), matrixNodeIndex(0));
 		}
 	}
@@ -138,17 +138,17 @@ void DP::Ph1::Inductor::mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& syste
 			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mEquivCond(freqIdx,0));
 		}
 
-		SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freqIdx);
+		SPDLOG_LOGGER_DEBUG(mSLog, "-- Stamp frequency {:d} ---", freqIdx);
 		if (terminalNotGrounded(0))
-			SPDLOG_LOGGER_INFO(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
 				mEquivCond(freqIdx,0).real(), mEquivCond(freqIdx,0).imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 		if (terminalNotGrounded(1))
-			SPDLOG_LOGGER_INFO(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
 				mEquivCond(freqIdx,0).real(), mEquivCond(freqIdx,0).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
 		if ( terminalNotGrounded(0)  &&  terminalNotGrounded(1) ) {
-			SPDLOG_LOGGER_INFO(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
 				-mEquivCond(freqIdx,0).real(), -mEquivCond(freqIdx,0).imag(), matrixNodeIndex(0), matrixNodeIndex(1));
-			SPDLOG_LOGGER_INFO(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
+			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f}+j{:f} to system at ({:d},{:d})",
 				-mEquivCond(freqIdx,0).real(), -mEquivCond(freqIdx,0).imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 		}
 }
@@ -165,12 +165,12 @@ void DP::Ph1::Inductor::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
 		if (terminalNotGrounded(1))
 			Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent(freq,0), mNumFreqs, freq);
 
-		SPDLOG_LOGGER_DEBUG(mSLog, "MNA EquivCurrent {:s}", Logger::complexToString(mEquivCurrent(freq,0)));
+		SPDLOG_LOGGER_TRACE(mSLog, "MNA EquivCurrent {:s}", Logger::complexToString(mEquivCurrent(freq,0)));
 		if (terminalNotGrounded(0))
-			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
+			SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to source vector at {:d}",
 			Logger::complexToString(mEquivCurrent(freq,0)), matrixNodeIndex(0));
 		if (terminalNotGrounded(1))
-			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
+			SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to source vector at {:d}",
 			Logger::complexToString(-mEquivCurrent(freq,0)), matrixNodeIndex(1));
 	}
 }
@@ -230,7 +230,7 @@ void DP::Ph1::Inductor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 		if (terminalNotGrounded(0))
 			(**mIntfVoltage)(0,freq) = (**mIntfVoltage)(0,freq) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq);
 
-		SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,freq)));
+		SPDLOG_LOGGER_TRACE(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,freq)));
 	}
 }
 
@@ -242,20 +242,20 @@ void DP::Ph1::Inductor::mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int f
 	if (terminalNotGrounded(0))
 		(**mIntfVoltage)(0,freqIdx) = (**mIntfVoltage)(0,freqIdx) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,freqIdx)));
+	SPDLOG_LOGGER_TRACE(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,freqIdx)));
 }
 
 void DP::Ph1::Inductor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
+		SPDLOG_LOGGER_TRACE(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }
 
 void DP::Ph1::Inductor::mnaCompUpdateCurrentHarm() {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
-		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
+		SPDLOG_LOGGER_TRACE(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }
 

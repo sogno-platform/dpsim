@@ -149,7 +149,7 @@ void SimPowerComp<VarType>::setTerminalAt(typename SimTerminal<VarType>::Ptr ter
 		return;
 	}
 	mTerminals[terminalPosition] = terminal;
-	SPDLOG_LOGGER_INFO(mSLog, "Set Terminal at position {} to Node {}, simulation node {}", terminalPosition, mTerminals[terminalPosition]->node()->name(), mTerminals[terminalPosition]->matrixNodeIndex());
+	SPDLOG_LOGGER_DEBUG(mSLog, "Set Terminal at position {} to Node {}, simulation node {}", terminalPosition, mTerminals[terminalPosition]->node()->name(), mTerminals[terminalPosition]->matrixNodeIndex());
 }
 
 template <typename VarType>
@@ -195,7 +195,7 @@ void SimPowerComp<VarType>::setVirtualNodeAt(typename SimNode<VarType>::Ptr virt
 		SPDLOG_LOGGER_ERROR(mSLog, "Virtual Node position number too large for Component {} - Ignoring", **mName);
 	}
 	mVirtualNodes[nodeNum] = virtualNode;
-	SPDLOG_LOGGER_INFO(mSLog, "Set virtual Node at position {} to Node {}, simulation node {}",
+	SPDLOG_LOGGER_DEBUG(mSLog, "Set virtual Node at position {} to Node {}, simulation node {}",
 		nodeNum, mVirtualNodes[nodeNum]->name(), mVirtualNodes[nodeNum]->matrixNodeIndex());
 }
 

@@ -49,14 +49,14 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Load::clone(String name) {
 
  // #### Powerflow section ####
 void SP::Ph1::Load::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
-    SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);
+    SPDLOG_LOGGER_DEBUG(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);
 
 	**mActivePowerPerUnit = **mActivePower / mBaseApparentPower;
 	**mReactivePowerPerUnit = **mReactivePower /mBaseApparentPower;
-	SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [pu] Reactive Power={} [pu]", **mActivePowerPerUnit, **mReactivePowerPerUnit);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Active Power={} [pu] Reactive Power={} [pu]", **mActivePowerPerUnit, **mReactivePowerPerUnit);
 	mSLog->flush();
 }
 
@@ -145,7 +145,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
 	(**mIntfCurrent)(0, 0) = std::conj(Complex(attributeTyped<Real>("P")->get(), attributeTyped<Real>("Q")->get()) / (**mIntfVoltage)(0, 0));
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -154,7 +154,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
 		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_INFO(mSLog,
 		"Updated parameters according to powerflow:\n"
 		"Active Power={} [W] Reactive Power={} [VAr]", attributeTyped<Real>("P")->get(), attributeTyped<Real>("Q")->get());
 	mSLog->flush();

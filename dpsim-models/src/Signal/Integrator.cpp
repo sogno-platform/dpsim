@@ -59,14 +59,14 @@ void Integrator::signalAddStepDependencies(AttributeBase::List &prevStepDependen
 void Integrator::signalStep(Real time, Int timeStepCount) {
     **mInputCurr = **mInputRef;
 
-    SPDLOG_LOGGER_INFO(mSLog, "Time {}:", time);
-    SPDLOG_LOGGER_INFO(mSLog, "Input values: inputCurr = {}, inputPrev = {}, statePrev = {}", **mInputCurr, **mInputPrev, **mStatePrev);
+    SPDLOG_LOGGER_TRACE(mSLog, "Time {}:", time);
+    SPDLOG_LOGGER_TRACE(mSLog, "Input values: inputCurr = {}, inputPrev = {}, statePrev = {}", **mInputCurr, **mInputPrev, **mStatePrev);
 
     **mStateCurr =**mStatePrev + mTimeStep/2.0* **mInputCurr + mTimeStep/2.0* **mInputPrev;
     **mOutputCurr = **mStateCurr;
 
-    SPDLOG_LOGGER_INFO(mSLog, "State values: stateCurr = {}", **mStateCurr);
-    SPDLOG_LOGGER_INFO(mSLog, "Output values: outputCurr = {}:", **mOutputCurr);
+    SPDLOG_LOGGER_TRACE(mSLog, "State values: stateCurr = {}", **mStateCurr);
+    SPDLOG_LOGGER_TRACE(mSLog, "Output values: outputCurr = {}:", **mOutputCurr);
 }
 
 Task::List Integrator::getTasks() {

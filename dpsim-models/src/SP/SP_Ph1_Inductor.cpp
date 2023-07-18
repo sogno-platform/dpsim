@@ -74,17 +74,17 @@ void SP::Ph1::Inductor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMat
 
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
+	SPDLOG_LOGGER_DEBUG(mSLog, "-- Matrix Stamp ---");
 	if (terminalNotGrounded(0))
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			mSusceptance.real(), mSusceptance.imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			mSusceptance.real(), mSusceptance.imag(), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			-mSusceptance.real(), -mSusceptance.imag(), matrixNodeIndex(0), matrixNodeIndex(1));
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			-mSusceptance.real(), -mSusceptance.imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }

@@ -99,7 +99,7 @@ void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
 	} else {
 		**mIntfCurrent = RMS_TO_PEAK * (**mCurrentRef).real();
 	}
-	SPDLOG_LOGGER_DEBUG(mSLog, 
+	SPDLOG_LOGGER_TRACE(mSLog,
 		"\nUpdate current: {:s}",
 		Logger::matrixToString(**mIntfCurrent)
 	);

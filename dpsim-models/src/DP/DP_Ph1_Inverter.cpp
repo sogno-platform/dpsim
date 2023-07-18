@@ -37,11 +37,11 @@ void DP::Ph1::Inverter::initializeFromNodesAndTerminals(Real frequency) { }
 void DP::Ph1::Inverter::generateFrequencies() {
 	for (Int m = 2; m <= mMaxCarrierHarm; m = m+2) {
 		mCarHarms.push_back(m);
-		SPDLOG_LOGGER_INFO(mSLog, "Add carrier harmonic {0}", m);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add carrier harmonic {0}", m);
 	}
 	for (Int n = -mMaxModulHarm; n <= mMaxModulHarm; n = n+2) {
 		mModHarms.push_back(n);
-		SPDLOG_LOGGER_INFO(mSLog, "Add modulation harmonic {0}", n);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add modulation harmonic {0}", n);
 	}
 }
 
@@ -124,50 +124,50 @@ void DP::Ph1::Inverter::mnaCompInitializeHarm(Real omega, Real timeStep, std::ve
 }
 
 void DP::Ph1::Inverter::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
-	SPDLOG_LOGGER_INFO(mSLog, "--- Stamping into system matrix ---");
+	SPDLOG_LOGGER_DEBUG(mSLog, "--- Stamping into system matrix ---");
 
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		SPDLOG_LOGGER_INFO(mSLog, "Stamp frequency {:d}", freq);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Stamp frequency {:d}", freq);
 		if (terminalNotGrounded(0)) {
 			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(1, 0), mNumFreqs, freq);
 			Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0), mNumFreqs, freq);
 		}
 
 		if (terminalNotGrounded(0)) {
-			SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
-			SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
+			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
 		}
 	}
-	SPDLOG_LOGGER_INFO(mSLog, "--- Stamping into system matrix end ---");
+	SPDLOG_LOGGER_DEBUG(mSLog, "--- Stamping into system matrix end ---");
 }
 
 void DP::Ph1::Inverter::mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, Int freqIdx) {
-	SPDLOG_LOGGER_INFO(mSLog, "Stamp frequency {:d}", freqIdx);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Stamp frequency {:d}", freqIdx);
 	if (terminalNotGrounded(0)) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(1, 0));
 		Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
 	}
 
 	if (terminalNotGrounded(0)) {
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
 	}
 }
 
 void DP::Ph1::Inverter::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
-	SPDLOG_LOGGER_DEBUG(mSLog, "Stamp harmonics into source vector");
+	SPDLOG_LOGGER_TRACE(mSLog, "Stamp harmonics into source vector");
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0)) {
 			Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mIntfVoltage)(0,freq), mNumFreqs, freq);
 
-			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}, harmonic {:d}",
+			SPDLOG_LOGGER_TRACE(mSLog, "Add {:s} to source vector at {:d}, harmonic {:d}",
 				Logger::complexToString((**mIntfVoltage)(0,freq)), mVirtualNodes[0]->matrixNodeIndex(), freq);
 		}
 	}
 }
 
 void DP::Ph1::Inverter::mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector) {
-	SPDLOG_LOGGER_DEBUG(mSLog, "Stamp harmonics into source vector");
+	SPDLOG_LOGGER_TRACE(mSLog, "Stamp harmonics into source vector");
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0)) {
 			Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mIntfVoltage)(0,freq), 1, 0, freq);

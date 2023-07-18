@@ -57,11 +57,11 @@ void PLL::composeStateSpaceMatrices() {
     mD <<   0,  0,
             0,  0;
 
-    SPDLOG_LOGGER_INFO(mSLog, "State space matrices:");
-    SPDLOG_LOGGER_INFO(mSLog, "A = \n{}", mA);
-    SPDLOG_LOGGER_INFO(mSLog, "B = \n{}", mB);
-    SPDLOG_LOGGER_INFO(mSLog, "C = \n{}", mC);
-    SPDLOG_LOGGER_INFO(mSLog, "D = \n{}", mD);
+    SPDLOG_LOGGER_DEBUG(mSLog, "State space matrices:");
+    SPDLOG_LOGGER_DEBUG(mSLog, "A = \n{}", mA);
+    SPDLOG_LOGGER_DEBUG(mSLog, "B = \n{}", mB);
+    SPDLOG_LOGGER_DEBUG(mSLog, "C = \n{}", mC);
+    SPDLOG_LOGGER_DEBUG(mSLog, "D = \n{}", mD);
 }
 
 void PLL::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {

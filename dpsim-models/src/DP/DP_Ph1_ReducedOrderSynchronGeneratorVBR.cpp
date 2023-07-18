@@ -80,9 +80,9 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0) + complexOffset, mVirtualNodes[0]->matrixNodeIndex() + complexOffset));
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog, "List of index pairs of varying matrix entries: ");
+	SPDLOG_LOGGER_DEBUG(mSLog, "List of index pairs of varying matrix entries: ");
 	for (auto indexPair : mVariableSystemMatrixEntries)
-		SPDLOG_LOGGER_INFO(mSLog, "({}, {})", indexPair.first, indexPair.second);
+		SPDLOG_LOGGER_DEBUG(mSLog, "({}, {})", indexPair.first, indexPair.second);
 }
 
 void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {

@@ -150,7 +150,7 @@ void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
 	} else {
 		**mIntfVoltage = RMS3PH_TO_PEAK1PH * (**mVoltageRef).real();
 	}
-	SPDLOG_LOGGER_DEBUG(mSLog,
+	SPDLOG_LOGGER_TRACE(mSLog,
 		"\nUpdate Voltage: {:s}",
 		Logger::matrixToString(**mIntfVoltage)
 	);

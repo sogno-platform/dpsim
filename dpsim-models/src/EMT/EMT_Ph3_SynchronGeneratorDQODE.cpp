@@ -75,7 +75,7 @@ void EMT::Ph3::SynchronGeneratorDQODE::odePostStep() {
 	mIdq0(2, 0) = mIsr(6, 0);
 	**mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "\nCurrent: \n{:s}",
+	SPDLOG_LOGGER_TRACE(mSLog, "\nCurrent: \n{:s}",
 		Logger::matrixCompToString(**mIntfCurrent));
 }
 

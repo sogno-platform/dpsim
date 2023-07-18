@@ -35,16 +35,16 @@ void SP::Ph1::Shunt::setBaseVoltage(Real baseVoltage) {
 
 
 void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
-	SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
 
 	auto baseImpedance = (mBaseVoltage * mBaseVoltage) / baseApparentPower;
 	auto baseAdmittance = 1.0 / baseImpedance;
-	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Admittance={} [S]", mBaseVoltage, baseAdmittance);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Base Voltage={} [V]  Base Admittance={} [S]", mBaseVoltage, baseAdmittance);
 
 	mConductancePerUnit = **mConductance / baseAdmittance;
 	mSusceptancePerUnit = **mSusceptance / baseAdmittance;
-	SPDLOG_LOGGER_INFO(mSLog, "Susceptance={} [pu] Conductance={} [pu]", mSusceptancePerUnit, mConductancePerUnit);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Susceptance={} [pu] Conductance={} [pu]", mSusceptancePerUnit, mConductancePerUnit);
 };
 
 
@@ -61,6 +61,6 @@ void SP::Ph1::Shunt::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 
 	//set the circuit matrix values
 	Y.coeffRef(bus1, bus1) += Y_element;
-	SPDLOG_LOGGER_INFO(mSLog, "#### Y matrix stamping: {}", Y_element);
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Y matrix stamping: {}", Y_element);
 
 }

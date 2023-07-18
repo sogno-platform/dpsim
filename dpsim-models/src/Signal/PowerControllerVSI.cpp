@@ -83,11 +83,11 @@ void PowerControllerVSI::setControllerParameters(Real Kp_powerCtrl, Real Ki_powe
 		mKpCurrCtrld*mKpPowerCtrld, 0, 0, 0, -mKpCurrCtrld, 0,
 		0, -mKpCurrCtrlq * mKpPowerCtrlq, 0, 0, 0, -mKpCurrCtrlq;
 
-	SPDLOG_LOGGER_INFO(mSLog, "State space matrices:");
-    SPDLOG_LOGGER_INFO(mSLog, "A = \n{}", mA);
-    SPDLOG_LOGGER_INFO(mSLog, "B = \n{}", mB);
-    SPDLOG_LOGGER_INFO(mSLog, "C = \n{}", mC);
-    SPDLOG_LOGGER_INFO(mSLog, "D = \n{}", mD);
+	SPDLOG_LOGGER_DEBUG(mSLog, "State space matrices:");
+    SPDLOG_LOGGER_DEBUG(mSLog, "A = \n{}", mA);
+    SPDLOG_LOGGER_DEBUG(mSLog, "B = \n{}", mB);
+    SPDLOG_LOGGER_DEBUG(mSLog, "C = \n{}", mC);
+    SPDLOG_LOGGER_DEBUG(mSLog, "D = \n{}", mD);
 }
 
 void PowerControllerVSI::setInitialStateValues(Real pInit, Real qInit,
@@ -115,15 +115,15 @@ void PowerControllerVSI::initializeStateSpaceModel(Real omega, Real timeStep, At
 
 	// initialization of input
 	**mInputCurr << mPref, mQref, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
-	SPDLOG_LOGGER_INFO(mSLog, "Initialization of input: \n" + Logger::matrixToString(**mInputCurr));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Initialization of input: \n" + Logger::matrixToString(**mInputCurr));
 
 	// initialization of states
 	**mStateCurr << mPInit, mQInit, mPhi_dInit, mPhi_qInit, mGamma_dInit, mGamma_qInit;
-	SPDLOG_LOGGER_INFO(mSLog, "Initialization of states: \n" + Logger::matrixToString(**mStateCurr));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Initialization of states: \n" + Logger::matrixToString(**mStateCurr));
 
 	// initialization of output
 	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	SPDLOG_LOGGER_INFO(mSLog, "Initialization of output: \n" + Logger::matrixToString(**mOutputCurr));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Initialization of output: \n" + Logger::matrixToString(**mOutputCurr));
 }
 
 void PowerControllerVSI::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -154,15 +154,15 @@ void PowerControllerVSI::signalStep(Real time, Int timeStepCount) {
 
 	// get current inputs
 	**mInputCurr << mPref, mQref, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
-    SPDLOG_LOGGER_DEBUG(mSLog, "Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, **mInputCurr, **mInputPrev, **mStatePrev);
+    SPDLOG_LOGGER_TRACE(mSLog, "Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, **mInputCurr, **mInputPrev, **mStatePrev);
 
 	// calculate new states
 	**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
-	SPDLOG_LOGGER_DEBUG(mSLog, "stateCurr = \n {}", **mStateCurr);
+	SPDLOG_LOGGER_TRACE(mSLog, "stateCurr = \n {}", **mStateCurr);
 
 	// calculate new outputs
 	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	SPDLOG_LOGGER_DEBUG(mSLog, "Output values: outputCurr = \n{}", **mOutputCurr);
+	SPDLOG_LOGGER_TRACE(mSLog, "Output values: outputCurr = \n{}", **mOutputCurr);
 }
 
 void PowerControllerVSI::updateBMatrixStateSpaceModel() {

@@ -483,7 +483,7 @@ void CSVReader::assignLoadProfile(CPS::SystemTopology& sys, Real start_time, Rea
 		case CSVReader::Mode::AUTO: {
 			for (auto obj : sys.mComponents) {
 				if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(obj)) {
-					SPDLOG_LOGGER_INFO(mSLog, "Comparing csv file names with load mRIDs ...");
+					SPDLOG_LOGGER_DEBUG(mSLog, "Comparing csv file names with load mRIDs ...");
 					String load_name = load->name();
 					for (auto file : mFileList) {
 						String file_name = file.filename().string();
@@ -496,7 +496,7 @@ void CSVReader::assignLoadProfile(CPS::SystemTopology& sys, Real start_time, Rea
 						if (std::string(file_name.begin(), file_name.end() - 3).compare(load_name) == 0) {
 							load->mLoadProfile = readLoadProfile(file, start_time, time_step, end_time, format);
 							load->use_profile = true;
-							SPDLOG_LOGGER_INFO(mSLog, "Assigned {} to {}", file.filename().string(), load->name());
+							SPDLOG_LOGGER_DEBUG(mSLog, "Assigned {} to {}", file.filename().string(), load->name());
 						}
 					}
 				}
@@ -506,24 +506,24 @@ void CSVReader::assignLoadProfile(CPS::SystemTopology& sys, Real start_time, Rea
 		case CSVReader::Mode::MANUAL: {
 			Int LP_assigned_counter = 0;
 			Int LP_not_assigned_counter = 0;
-			SPDLOG_LOGGER_INFO(mSLog, "Assigning load profiles with user defined pattern ...");
+			SPDLOG_LOGGER_DEBUG(mSLog, "Assigning load profiles with user defined pattern ...");
 			for (auto obj : sys.mComponents) {
 				if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(obj)) {
 					std::map<String, String>::iterator file = mAssignPattern.find(load->name());
 					if (file == mAssignPattern.end()) {
 						std::cout<< load->name()<<" has no profile given."<<std::endl;
-						SPDLOG_LOGGER_INFO(mSLog, "{} has no profile given.", load->name());
+						SPDLOG_LOGGER_DEBUG(mSLog, "{} has no profile given.", load->name());
 						LP_not_assigned_counter++;
 						continue;
 					}
 					load->mLoadProfile = readLoadProfile(fs::path(mPath + file->second + ".csv"), start_time, time_step, end_time);
 					load->use_profile = true;
 					std::cout<<" Assigned "<< file->second<< " to " <<load->name()<<std::endl;
-					SPDLOG_LOGGER_INFO(mSLog, "Assigned {}.csv to {}", file->second, load->name());
+					SPDLOG_LOGGER_DEBUG(mSLog, "Assigned {}.csv to {}", file->second, load->name());
 					LP_assigned_counter++;
 				}
 			}
-			SPDLOG_LOGGER_INFO(mSLog, "Assigned profiles for {} loads, {} not assigned.", LP_assigned_counter, LP_not_assigned_counter);
+			SPDLOG_LOGGER_DEBUG(mSLog, "Assigned profiles for {} loads, {} not assigned.", LP_assigned_counter, LP_not_assigned_counter);
 			break;
 		}
 		default: {

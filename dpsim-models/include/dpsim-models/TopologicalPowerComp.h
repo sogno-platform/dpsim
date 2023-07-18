@@ -66,11 +66,11 @@ namespace CPS {
 		void setBehaviour(Behaviour behaviour) {
 			mBehaviour = behaviour;
 			if (mBehaviour == Behaviour::Initialization)
-				SPDLOG_LOGGER_INFO(mSLog, "Set component behaviour to Initialization");
+				SPDLOG_LOGGER_DEBUG(mSLog, "Set component behaviour to Initialization");
 			else if (mBehaviour == Behaviour::PFSimulation)
-				SPDLOG_LOGGER_INFO(mSLog, "Set component behaviour to PFSimulation");
+				SPDLOG_LOGGER_DEBUG(mSLog, "Set component behaviour to PFSimulation");
 			else if (mBehaviour == Behaviour::MNASimulation)
-				SPDLOG_LOGGER_INFO(mSLog, "Set component behaviour to MNASimulation");
+				SPDLOG_LOGGER_DEBUG(mSLog, "Set component behaviour to MNASimulation");
 			else
 				SPDLOG_LOGGER_WARN(mSLog, "Set component behaviour not fully supported yet");
 		}

@@ -31,7 +31,7 @@ Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 
 	// default model is Norton equivalent
 	mModelAsNortonSource = true;
-	SPDLOG_LOGGER_INFO(this->mSLog, "SG per default modelled as Norton equivalent");
+	SPDLOG_LOGGER_DEBUG(this->mSLog, "SG per default modelled as Norton equivalent");
 }
 
 template <>
@@ -56,7 +56,7 @@ Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 
 	// default model is Norton equivalent
 	mModelAsNortonSource = true;
-	SPDLOG_LOGGER_INFO(this->mSLog, "SG per default modelled as Norton equivalent");
+	SPDLOG_LOGGER_DEBUG(this->mSLog, "SG per default modelled as Norton equivalent");
 }
 
 template <typename VarType>
@@ -65,10 +65,10 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setModelAsNortonSource(Bool m
 
 	if (mModelAsNortonSource) {
 		this->setVirtualNodeNumber(0);
-		SPDLOG_LOGGER_INFO(this->mSLog, "Setting SG model to Norton equivalent");
+		SPDLOG_LOGGER_DEBUG(this->mSLog, "Setting SG model to Norton equivalent");
 	} else {
 		this->setVirtualNodeNumber(2);
-		SPDLOG_LOGGER_INFO(this->mSLog, "Setting SG model to Thevenin equivalent");
+		SPDLOG_LOGGER_DEBUG(this->mSLog, "Setting SG model to Thevenin equivalent");
 	}
 }
 
@@ -197,7 +197,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::scaleInertiaConstant(Real scalingFactor) {
 	mH = mH * scalingFactor;
-	SPDLOG_LOGGER_INFO(this->mSLog, "Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
+	SPDLOG_LOGGER_DEBUG(this->mSLog, "Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
 }
 
 template <typename VarType>

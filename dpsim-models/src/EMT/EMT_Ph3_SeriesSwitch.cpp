@@ -73,12 +73,12 @@ void EMT::Ph3::SeriesSwitch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& syst
 	}
 
 	if (terminalNotGrounded(0))
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
 	if (terminalNotGrounded(1))
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
 	}
 }
 
@@ -99,12 +99,12 @@ void EMT::Ph3::SeriesSwitch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, Sp
 	}
 
 	if (terminalNotGrounded(0))
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
 	if (terminalNotGrounded(1))
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
 	}
 }
 
@@ -133,12 +133,12 @@ void EMT::Ph3::SeriesSwitch::mnaCompUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(2,0) = (**mIntfVoltage)(2,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0,2));
 	}
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage A: {}", (**mIntfVoltage)(0,0));
+	SPDLOG_LOGGER_TRACE(mSLog, "Voltage A: {}", (**mIntfVoltage)(0,0));
 }
 
 void EMT::Ph3::SeriesSwitch::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	Real impedance = (**mIsClosed)? **mClosedResistance : **mOpenResistance;
 	**mIntfCurrent = **mIntfVoltage / impedance;
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {}", (**mIntfCurrent)(0,0));
+	SPDLOG_LOGGER_TRACE(mSLog, "Current A: {}", (**mIntfCurrent)(0,0));
 }

@@ -187,7 +187,7 @@ void DP::Ph3::SynchronGeneratorVBR::mnaStep(Matrix& systemMatrix, Matrix& rightV
 	if (mLogLevel != Logger::Level::off) {
 		Matrix logValues(statorCurrents().rows() + dqStatorCurrents().rows() + 3, 1);
 		logValues << statorCurrents()*mBase_I,  dqStatorCurrents(), electricalTorque(), rotationalSpeed(), rotorPosition();
-		SPDLOG_LOGGER_DEBUG(mLog, time, logValues);
+		SPDLOG_LOGGER_TRACE(mLog, time, logValues);
 	}
 }
 

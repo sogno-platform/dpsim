@@ -85,9 +85,9 @@ void DP::Ph3::SynchronGeneratorDQ::mnaCompApplySystemMatrixStamp(SparseMatrixRow
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0], Complex(conductance, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0)[1], matrixNodeIndices(0)[1], Complex(conductance, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0)[2], matrixNodeIndices(0)[2], Complex(conductance, 0));
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[1], matrixNodeIndices(0)[1]);
-		SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[2], matrixNodeIndices(0)[2]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[1], matrixNodeIndices(0)[1]);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndices(0)[2], matrixNodeIndices(0)[2]);
 	}
 }
 

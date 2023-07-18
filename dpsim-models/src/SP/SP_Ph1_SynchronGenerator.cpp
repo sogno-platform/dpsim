@@ -43,14 +43,14 @@ void SP::Ph1::SynchronGenerator::setBaseVoltage(Real baseVoltage) {
 }
 
 void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
 	mBaseApparentPower = baseApparentPower;
-    SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, baseOmega);
+    SPDLOG_LOGGER_DEBUG(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, baseOmega);
 
 	**mSetPointActivePowerPerUnit = **mSetPointActivePower / mBaseApparentPower;
     **mSetPointReactivePowerPerUnit = **mSetPointReactivePower / mBaseApparentPower;
 	**mSetPointVoltagePerUnit = **mSetPointVoltage / **mBaseVoltage;
-	SPDLOG_LOGGER_INFO(mSLog, "Active Power Set Point={} [pu] Voltage Set Point={} [pu]", **mSetPointActivePowerPerUnit, **mSetPointVoltagePerUnit);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Active Power Set Point={} [pu] Voltage Set Point={} [pu]", **mSetPointActivePowerPerUnit, **mSetPointVoltagePerUnit);
 	mSLog->flush();
 }
 

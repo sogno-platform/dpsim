@@ -77,17 +77,17 @@ void SP::Ph1::Capacitor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMa
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mSusceptance);
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
+	SPDLOG_LOGGER_DEBUG(mSLog, "-- Matrix Stamp ---");
 	if (terminalNotGrounded(0))
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			mSusceptance.real(), mSusceptance.imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			mSusceptance.real(), mSusceptance.imag(), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			-mSusceptance.real(), -mSusceptance.imag(), matrixNodeIndex(0), matrixNodeIndex(1));
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			-mSusceptance.real(), -mSusceptance.imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
@@ -125,18 +125,18 @@ void SP::Ph1::Capacitor::setBaseVoltage(Real baseVoltage){
 }
 
 void SP::Ph1::Capacitor::calculatePerUnitParameters(Real baseApparentPower){
-	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
     mBaseApparentPower = baseApparentPower;
-	SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]", baseApparentPower);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Base Power={} [VA]", baseApparentPower);
 
 	mBaseImpedance = mBaseVoltage * mBaseVoltage / mBaseApparentPower;
 	mBaseAdmittance = 1.0 / mBaseImpedance;
 	mBaseCurrent = baseApparentPower / (mBaseVoltage*sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
-	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]", mBaseVoltage, mBaseImpedance);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]", mBaseVoltage, mBaseImpedance);
 
 	mImpedancePerUnit = mImpedance / mBaseImpedance;
 	mAdmittancePerUnit = 1. / mImpedancePerUnit;
-    SPDLOG_LOGGER_INFO(mSLog, "Impedance={} [pu]  Admittance={} [pu]", Logger::complexToString(mImpedancePerUnit), Logger::complexToString(mAdmittancePerUnit));
+    SPDLOG_LOGGER_DEBUG(mSLog, "Impedance={} [pu]  Admittance={} [pu]", Logger::complexToString(mImpedancePerUnit), Logger::complexToString(mAdmittancePerUnit));
 }
 
 void SP::Ph1::Capacitor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
@@ -151,5 +151,5 @@ void SP::Ph1::Capacitor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 
 	//set the circuit matrix values
 	Y.coeffRef(bus1, bus1) += mAdmittancePerUnit;
-	SPDLOG_LOGGER_INFO(mSLog, "#### Y matrix stamping: {}", mAdmittancePerUnit);
+	SPDLOG_LOGGER_DEBUG(mSLog, "#### Y matrix stamping: {}", mAdmittancePerUnit);
 }

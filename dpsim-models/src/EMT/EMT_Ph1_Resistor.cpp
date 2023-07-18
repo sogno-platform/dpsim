@@ -60,12 +60,12 @@ void EMT::Ph1::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMa
 	}
 
 	if (terminalNotGrounded(0))
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", conductance, matrixNodeIndex(0), matrixNodeIndex(0));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f} to system at ({:d},{:d})", conductance, matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", conductance, matrixNodeIndex(1), matrixNodeIndex(1));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f} to system at ({:d},{:d})", conductance, matrixNodeIndex(1), matrixNodeIndex(1));
 	if ( terminalNotGrounded(0)  &&  terminalNotGrounded(1) ) {
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -conductance, matrixNodeIndex(0), matrixNodeIndex(1));
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -conductance, matrixNodeIndex(1), matrixNodeIndex(0));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f} to system at ({:d},{:d})", -conductance, matrixNodeIndex(0), matrixNodeIndex(1));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f} to system at ({:d},{:d})", -conductance, matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
 

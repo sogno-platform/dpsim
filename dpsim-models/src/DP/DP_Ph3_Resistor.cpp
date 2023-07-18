@@ -152,11 +152,11 @@ void DP::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(2,0) = (**mIntfVoltage)(2,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,2));
 	}
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage A: {} < {}", std::abs((**mIntfVoltage)(0,0)), std::arg((**mIntfVoltage)(0,0)));
+	SPDLOG_LOGGER_TRACE(mSLog, "Voltage A: {} < {}", std::abs((**mIntfVoltage)(0,0)), std::arg((**mIntfVoltage)(0,0)));
 }
 
 void DP::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	**mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
 
-	SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}", std::abs((**mIntfCurrent)(0,0)), std::arg((**mIntfCurrent)(0,0)));
+	SPDLOG_LOGGER_TRACE(mSLog, "Current A: {} < {}", std::abs((**mIntfCurrent)(0,0)), std::arg((**mIntfCurrent)(0,0)));
 }

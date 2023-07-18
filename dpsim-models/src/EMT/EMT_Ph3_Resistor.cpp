@@ -146,7 +146,7 @@ void EMT::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 		(**mIntfVoltage)(1, 0) = (**mIntfVoltage)(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 		(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
-	SPDLOG_LOGGER_DEBUG(mSLog,
+	SPDLOG_LOGGER_TRACE(mSLog,
 		"\nVoltage: {:s}",
 		Logger::matrixToString(**mIntfVoltage)
 	);
@@ -157,6 +157,6 @@ void EMT::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	Matrix resistanceInv = Matrix::Zero(3, 3);
 	Math::invertMatrix(**mResistance, resistanceInv);
 	**mIntfCurrent = resistanceInv * **mIntfVoltage;
-	SPDLOG_LOGGER_DEBUG(mSLog, "\nCurrent: {:s}", Logger::matrixToString(**mIntfCurrent));
+	SPDLOG_LOGGER_TRACE(mSLog, "\nCurrent: {:s}", Logger::matrixToString(**mIntfCurrent));
 	mSLog->flush();
 }

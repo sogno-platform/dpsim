@@ -52,7 +52,7 @@ void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage = **mSubRXLoad->mIntfVoltage;
 	**mIntfCurrent = **mSubRXLoad->mIntfCurrent;
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -113,7 +113,7 @@ void DP::Ph1::RXLoadSwitch::updateSwitchState(Real time) {
 
 		if (deltaV > 0.1) {
 			mSubSwitch->open();
-			SPDLOG_LOGGER_INFO(mSLog, "Opened Switch at {}", (float)time);
+			SPDLOG_LOGGER_DEBUG(mSLog, "Opened Switch at {}", (float)time);
 		}
 	}
 }

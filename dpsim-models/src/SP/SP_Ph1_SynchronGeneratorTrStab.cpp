@@ -241,7 +241,7 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 	mStates << Math::abs(**mEp), Math::phaseDeg(**mEp), **mElecActivePower, **mMechPower,
 		**mDelta_p, **mOmMech, dOmMech, dDelta_p, (**mIntfVoltage)(0,0).real(), (**mIntfVoltage)(0,0).imag();
-	SPDLOG_LOGGER_DEBUG(mSLog, "\nStates, time {:f}: \n{:s}", time, Logger::matrixToString(mStates));
+	SPDLOG_LOGGER_TRACE(mSLog, "\nStates, time {:f}: \n{:s}", time, Logger::matrixToString(mStates));
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -280,12 +280,12 @@ void SP::Ph1::SynchronGeneratorTrStab::mnaParentPostStep(Real time, Int timeStep
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaCompUpdateVoltage(const Matrix& leftVector) {
-	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
+	SPDLOG_LOGGER_TRACE(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
 	(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
+	SPDLOG_LOGGER_TRACE(mSLog, "Read current from {:d}", matrixNodeIndex(0));
 	//Current flowing out of component
 	**mIntfCurrent = mSubInductor->mIntfCurrent->get();
 }
@@ -295,5 +295,5 @@ void SP::Ph1::SynchronGeneratorTrStab::setReferenceOmega(Attribute<Real>::Ptr re
 	mRefDelta->setReference(refDeltaPtr);
 	mUseOmegaRef=true;
 
-	SPDLOG_LOGGER_INFO(mSLog, "Use of reference omega.");
+	SPDLOG_LOGGER_DEBUG(mSLog, "Use of reference omega.");
 }
