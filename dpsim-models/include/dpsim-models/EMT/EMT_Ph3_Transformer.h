@@ -29,6 +29,11 @@ public:
   Transformer(String name, Logger::Level logLevel = Logger::Level::off)
       : Transformer(name, name, logLevel) {}
 
+  const Attribute<Matrix>::Ptr mPrimaryCurrent;
+  const Attribute<Matrix>::Ptr mSecondaryCurrent;
+  const Attribute<Matrix>::Ptr mPrimaryLV;
+  const Attribute<Matrix>::Ptr mSecondaryLV;
+
   /// Inductance [H]
   const Attribute<Matrix>::Ptr mInductance;
   ///Resistance [ohm]
@@ -38,9 +43,9 @@ protected:
   /// DC equivalent current source [A]
   Matrix mEquivCurrent;
   /// Equivalent conductance [S]
-  Matrix mEquivCond;
-  /// Equivalent resistance scaling
-  Matrix mResScaling;
+  Real mEquivCond;
+  /// Coefficient in front of previous current value
+  Real mPrevCurrFac;
 
 public:
   // #### General ####
