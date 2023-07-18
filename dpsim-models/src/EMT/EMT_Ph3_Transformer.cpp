@@ -13,8 +13,12 @@ using namespace CPS;
 EMT::Ph3::Transformer::Transformer(String uid, String name,
 	Logger::Level logLevel)
 	: Base::Ph3::Transformer(mAttributes), 
-	MNASimPowerComp<Real>(uid, name, true, true, logLevel) {
-
+	MNASimPowerComp<Real>(uid, name, true, true, logLevel),
+	mPrimaryCurrent(mAttributes->create<Matrix>("primary_current")),
+	mSecondaryCurrent(mAttributes->create<Matrix>("secondary_current")),
+	mPrimaryLV(mAttributes->create<Matrix>("primary_voltage_LVside")),
+	mSecondaryLV(mAttributes->create<Matrix>("secondary_voltage_LVside")) {
+	
 	//
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
@@ -22,6 +26,13 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 	//
 	**mIntfVoltage = Matrix::Zero(3, 1);
 	**mIntfCurrent = Matrix::Zero(3, 1);
+	
+	//
+	mEquivCurrent = Matrix::Zero(3, 1);
+	**mPrimaryCurrent = Matrix::Zero(3, 1);
+	**mSecondaryCurrent = Matrix::Zero(3, 1);
+	**mPrimaryLV = Matrix::Zero(3, 1);
+	**mSecondaryLV = Matrix::Zero(3, 1);
 
 	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 }
@@ -75,6 +86,12 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfCurrent = iInit.real();
 	**mIntfVoltage = vInitABC.real();
 
+	//
+	**mPrimaryLV = Math::singlePhaseVariableToThreePhase(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1) * **mRatio).real();
+	**mSecondaryLV = Math::singlePhaseVariableToThreePhase(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)).real();
+	**mPrimaryCurrent = **mIntfCurrent;
+	**mSecondaryCurrent = (iInit * **mRatio).real();
+
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
@@ -92,64 +109,56 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 void EMT::Ph3::Transformer::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
 	initVars(timeStep);
+}
 
+void EMT::Ph3::Transformer::initVars(Real timeStep) {
+	// Assumption: symmetric R and L matrix
+	Real a = timeStep * (mResistance)(0,0) / (2. * (mInductance)(0,0));
+	Real b = timeStep / (2. * (mInductance)(0,0));
+
+	mEquivCond = b / (1. + a);
+	mPrevCurrFac = (1. - a ) / (1. + a);
+
+	// Update internal state
+	Matrix Voltage = Math::singlePhaseVariableToThreePhase(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)).real() -  **mPrimaryLV;
+	mEquivCurrent = mEquivCond * Voltage + mPrevCurrFac * **mIntfCurrent;
+
+	//
+	//**mIntfCurrent = mEquivCond * Voltage + mEquivCurrent;
+
+	//
 	mSLog->info(
-		"\n--- MNA initialization ---"
+		"\n--- Initialization internal states ---"
 		"\nInitial current {:s}"
 		"\nEquiv. current {:s}"
-		"\n--- MNA initialization finished ---",
+		"\n--- Initialization internal states finished ---",
 		Logger::matrixToString(**mIntfCurrent),
 		Logger::matrixToString(mEquivCurrent));
 	mSLog->flush();
 }
 
-void EMT::Ph3::Transformer::initVars(Real timeStep) {
-	//
-	mEquivCond = Matrix::Zero(3, 3);
-	for (int i =0 ; i < 3; i++) {
-		for (int j =0; j < 3; j++) {
-			if (i == j)
-				mEquivCond(i,j) = timeStep / (2.0 * (mInductance)(i, i));
-			else
-				mEquivCond(i,j) = 0;
-		}
-	}
-
-	//
-	mResScaling = Matrix::Zero(3, 3);
-    mResScaling(0,0) = 1 / ( 1 + ((mResistance)(0,0) * mEquivCond(0,0)));
-	mResScaling(1,1) = 1 / ( 1 + ((mResistance)(1,1) * mEquivCond(1,1)));
-	mResScaling(2,2) = 1 / ( 1 + ((mResistance)(2,2) * mEquivCond(2,2)));	
-
-	// Update internal state
-	mEquivCurrent = Matrix::Zero(3, 1);
-	mEquivCurrent(0,0) = mEquivCond(0,0) * (**mIntfVoltage)(0,0) + (**mIntfCurrent)(0,0);
-	mEquivCurrent(1,0) = mEquivCond(1,1) * (**mIntfVoltage)(0,0) + (**mIntfCurrent)(0,0);
-	mEquivCurrent(2,0) = mEquivCond(2,2) * (**mIntfVoltage)(0,0) + (**mIntfCurrent)(0,0);
-}
-
 void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mEquivCond(0, 0) * mResScaling(0,0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), mEquivCond(1, 1) * mResScaling(1,1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), mEquivCond(2, 2) * mResScaling(2,2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), mEquivCond);
 	}
 	if (terminalNotGrounded(1)) {
 		// set buttom right block, 3x3 entries
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), std::pow(std::abs(**mRatio),2) * mEquivCond(0, 0) * mResScaling(0,0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 1), std::pow(std::abs(**mRatio),2) * mEquivCond(1, 1) * mResScaling(1,1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 2), std::pow(std::abs(**mRatio),2) * mEquivCond(2, 2) * mResScaling(2,2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), std::pow((**mRatio).real(),2) * mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 1), std::pow((**mRatio).real(),2) * mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 2), std::pow((**mRatio).real(),2) * mEquivCond);
 	}
 	// Set off diagonal blocks, 2x3x3 entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), - std::abs(**mRatio) * mEquivCond(0, 0) * mResScaling(0,0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 1), - std::abs(**mRatio) * mEquivCond(1, 1) * mResScaling(1,1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), - std::abs(**mRatio) * mEquivCond(2, 2) * mResScaling(2,2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), - (**mRatio).real() * mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 1), - (**mRatio).real() * mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), - (**mRatio).real() * mEquivCond);
 
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), - std::abs(**mRatio) * mEquivCond(0, 0) * mResScaling(0,0));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 1), - std::abs(**mRatio) * mEquivCond(1, 1) * mResScaling(1,1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), - std::abs(**mRatio) * mEquivCond(2, 2) * mResScaling(2,2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), - (**mRatio).real() * mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 1), - (**mRatio).real() * mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), - (**mRatio).real() * mEquivCond);
 	}
 
 	//SPDLOG_LOGGER_INFO(mSLog,
@@ -158,19 +167,15 @@ void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& syste
 }
 
 void EMT::Ph3::Transformer::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
-	// Update internal state
-	mEquivCurrent(0,0) = mEquivCond(0,0) * (**mIntfVoltage)(0,0) + (**mIntfCurrent)(0,0);
-	mEquivCurrent(1,0) = mEquivCond(1,1) * (**mIntfVoltage)(1,0) + (**mIntfCurrent)(1,0);
-	mEquivCurrent(2,0) = mEquivCond(2,2) * (**mIntfVoltage)(2,0) + (**mIntfCurrent)(2,0);
 	if (terminalNotGrounded(0)) {
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), mEquivCurrent(0, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), mEquivCurrent(1, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(0, 2), mEquivCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), -mEquivCurrent(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), -mEquivCurrent(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 2), -mEquivCurrent(2, 0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), - std::abs(**mRatio) * mEquivCurrent(0, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), - std::abs(**mRatio) * mEquivCurrent(1, 0));
-		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), - std::abs(**mRatio) * mEquivCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), (**mRatio).real() * mEquivCurrent(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), (**mRatio).real() * mEquivCurrent(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), (**mRatio).real() * mEquivCurrent(2, 0));
 	}
 }
 
@@ -198,19 +203,36 @@ void EMT::Ph3::Transformer::mnaCompPostStep(Real time, Int timeStepCount, Attrib
 void EMT::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	**mIntfVoltage = Matrix::Zero(3,1);
-	if (terminalNotGrounded(1)) {
-		(**mIntfVoltage)(0, 0) += Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-		(**mIntfVoltage)(1, 0) += Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-		(**mIntfVoltage)(2, 0) += Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
-	}
 	if (terminalNotGrounded(0)) {
-		(**mIntfVoltage)(0, 0) -= Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-		(**mIntfVoltage)(1, 0) -= Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-		(**mIntfVoltage)(2, 0) -= Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+		(**mIntfVoltage)(0, 0) += Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		(**mIntfVoltage)(1, 0) += Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		(**mIntfVoltage)(2, 0) += Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+	}
+	if (terminalNotGrounded(1)) {
+		(**mSecondaryLV)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		(**mSecondaryLV)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		(**mSecondaryLV)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
+		**mIntfVoltage -= **mSecondaryLV;
+		**mPrimaryLV = **mSecondaryLV * (**mRatio).real();
 	}
 }
 
 void EMT::Ph3::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
+	//
+	Matrix Voltage = Matrix::Zero(3, 1);
+	Voltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+	Voltage(1,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+	Voltage(2,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+	Voltage = Voltage - **mPrimaryLV;
+	
+	//
+	**mIntfCurrent = mEquivCond * Voltage + mEquivCurrent;
+
+	//
+	**mPrimaryCurrent = **mIntfCurrent;
+	**mSecondaryCurrent = **mIntfCurrent * (**mRatio).real();
+
+	// Update internal state
+	mEquivCurrent = mEquivCond * Voltage + mPrevCurrFac * **mIntfCurrent;	
 }
 
