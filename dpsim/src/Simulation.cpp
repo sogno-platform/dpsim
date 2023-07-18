@@ -205,10 +205,10 @@ void Simulation::prepSchedule() {
 }
 
 void Simulation::schedule() {
-	SPDLOG_LOGGER_INFO(mLog, "Scheduling tasks.");
+	SPDLOG_LOGGER_DEBUG(mLog, "Scheduling tasks.");
 	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
-	SPDLOG_LOGGER_INFO(mLog, "Scheduling done.");
+	SPDLOG_LOGGER_DEBUG(mLog, "Scheduling done.");
 }
 
 #ifdef WITH_GRAPHVIZ
@@ -311,7 +311,7 @@ Graph::Graph Simulation::dependencyGraph() {
 			if (avgTimeWorst > Scheduler::TaskTime(0)) {
 				auto grad = (float) avgTimes[task].count() / avgTimeWorst.count();
 				n->set("fillcolor", CPS::Utils::Rgb::gradient(grad).hex());
-				SPDLOG_LOGGER_INFO(mLog, "{} {}", task->toString(), CPS::Utils::Rgb::gradient(grad).hex());
+				SPDLOG_LOGGER_DEBUG(mLog, "{} {}", task->toString(), CPS::Utils::Rgb::gradient(grad).hex());
 			}
 		}
 		else {
@@ -335,12 +335,12 @@ void Simulation::start() {
 	if (!mInitialized)
 		initialize();
 
-	SPDLOG_LOGGER_INFO(mLog, "Opening interfaces.");
-
-	for (auto intf : mInterfaces)
-		intf->open();
-
-	sync();
+	if (!mInterfaces.empty()) {
+		SPDLOG_LOGGER_DEBUG(mLog, "Opening interfaces.");
+		for (auto intf : mInterfaces)
+			intf->open();
+		sync();
+	}
 
 	SPDLOG_LOGGER_INFO(mLog, "Start simulation: {}", **mName);
 	SPDLOG_LOGGER_INFO(mLog, "Time step: {:e}", **mTimeStep);

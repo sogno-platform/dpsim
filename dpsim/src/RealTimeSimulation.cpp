@@ -29,12 +29,12 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 	if (!mInitialized)
 		initialize();
 
-	SPDLOG_LOGGER_INFO(mLog, "Opening interfaces.");
-
-	for (auto intf : mInterfaces)
-		intf->open();
-
-	sync();
+	if (!mInterfaces.empty()) {
+		SPDLOG_LOGGER_DEBUG(mLog, "Opening interfaces.");
+		for (auto intf : mInterfaces)
+			intf->open();
+		sync();
+	}
 
 	auto now_time = std::chrono::system_clock::to_time_t(startAt);
 	SPDLOG_LOGGER_INFO(mLog, "Starting simulation at {} (delta_T = {} seconds)",
