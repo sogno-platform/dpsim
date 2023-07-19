@@ -22,8 +22,8 @@ namespace DPsim {
 template <typename VarType>
 DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	SystemTopology system, IdentifiedObject::List tearComponents,
-	Real timeStep, Logger::Level logLevel) :
-	Solver(logLevel),
+	Real timeStep, Logger::Level logLevel, Logger::Level cliLevel) :
+	Solver(logLevel, cliLevel),
 	mMappedTearCurrents(AttributeStatic<Matrix>::make()),
 	mOrigLeftSideVector(AttributeStatic<Matrix>::make()) {
 	mTimeStep = timeStep;

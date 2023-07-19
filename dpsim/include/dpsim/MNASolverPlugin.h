@@ -30,7 +30,8 @@ namespace DPsim {
 		MnaSolverPlugin(String pluginName,
 			String name,
 			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
+			CPS::Logger::Level cliLevel = CPS::Logger::Level::info);
 
 		virtual ~MnaSolverPlugin();
 

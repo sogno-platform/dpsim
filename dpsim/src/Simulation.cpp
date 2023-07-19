@@ -99,7 +99,7 @@ void Simulation::createSolvers() {
 			break;
 #endif /* WITH_SUNDIALS */
 		case Solver::Type::NRP:
-			solver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem, **mTimeStep, mLogLevel);
+			solver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem, **mTimeStep, mLogLevel, mCliLevel);
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
 			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->initialize();
@@ -145,11 +145,11 @@ void Simulation::createMNASolver() {
 		if (mTearComponents.size() > 0) {
 			// Tear components available, use diakoptics
 			solver = std::make_shared<DiakopticsSolver<VarType>>(**mName,
-				subnets[net], mTearComponents, **mTimeStep, mLogLevel);
+				subnets[net], mTearComponents, **mTimeStep, mLogLevel, mCliLevel);
 		} else {
 			// Default case with lu decomposition from mna factory
 			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
-												 mLogLevel, mDirectImpl, mSolverPluginName);
+												 mLogLevel, mCliLevel, mDirectImpl, mSolverPluginName);
 			solver->setTimeStep(**mTimeStep);
 			solver->doSteadyStateInit(**mSteadyStateInit);
 			solver->doFrequencyParallelization(mFreqParallel);

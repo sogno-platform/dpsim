@@ -137,7 +137,8 @@ namespace DPsim {
 		PFSolver(CPS::String name,
 			CPS::SystemTopology system,
 			Real timeStep,
-			CPS::Logger::Level logLevel);
+			CPS::Logger::Level logLevel,
+			CPS::Logger::Level cliLevel);
 		///
 		virtual ~PFSolver() { };
 

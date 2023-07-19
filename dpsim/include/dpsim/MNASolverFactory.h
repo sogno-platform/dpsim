@@ -64,6 +64,7 @@ class MnaSolverFactory {
 	static std::shared_ptr<MnaSolver<VarType>> factory(String name,
 		CPS::Domain domain = CPS::Domain::DP,
 		CPS::Logger::Level logLevel = CPS::Logger::Level::info,
+		CPS::Logger::Level cliLevel = CPS::Logger::Level::info,
 		DirectLinearSolverImpl implementation = DirectLinearSolverImpl::SparseLU,
 		String pluginName = "plugin.so")
 	{
@@ -71,7 +72,7 @@ class MnaSolverFactory {
 		if (implementation == DirectLinearSolverImpl::Undef) {
 			implementation = DirectLinearSolverImpl::SparseLU;
 		}
-		CPS::Logger::Log log = CPS::Logger::get(CPS::Logger::LoggerType::SIMULATION, "MnaSolverFactory", logLevel, logLevel);
+		CPS::Logger::Log log = CPS::Logger::get(CPS::Logger::LoggerType::SIMULATION, "MnaSolverFactory", logLevel, cliLevel);
 
 		switch(implementation) {
 		/* TODO: have only one "solver" object of type MnaSolverDirect and only use setDirectLinearSolverImplementation in the switch-case.
@@ -80,14 +81,14 @@ class MnaSolverFactory {
 		case DirectLinearSolverImpl::SparseLU:
 		{
 			SPDLOG_LOGGER_DEBUG(log, "creating SparseLUAdapter solver implementation");
-			std::shared_ptr<MnaSolverDirect<VarType>> sparseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			std::shared_ptr<MnaSolverDirect<VarType>> sparseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel, cliLevel);
 			sparseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::SparseLU);
 			return sparseSolver;
 		}
 		case DirectLinearSolverImpl::DenseLU:
 		{
 			SPDLOG_LOGGER_DEBUG(log, "creating DenseLUAdapter solver implementation");
-			std::shared_ptr<MnaSolverDirect<VarType>> denseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			std::shared_ptr<MnaSolverDirect<VarType>> denseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel, cliLevel);
 			denseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::DenseLU);
 			return denseSolver;
 		}
@@ -95,7 +96,7 @@ class MnaSolverFactory {
 		case DirectLinearSolverImpl::KLU:
 		{
 			SPDLOG_LOGGER_DEBUG(log, "creating KLUAdapter solver implementation");
-			std::shared_ptr<MnaSolverDirect<VarType>> kluSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			std::shared_ptr<MnaSolverDirect<VarType>> kluSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel, cliLevel);
 			kluSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::KLU);
 			return kluSolver;
 		}
@@ -104,7 +105,7 @@ class MnaSolverFactory {
 		case DirectLinearSolverImpl::CUDADense:
 		{
 			SPDLOG_LOGGER_DEBUG(log, "creating GpuDenseAdapter solver implementation");
-			std::shared_ptr<MnaSolverDirect<VarType>> gpuDenseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			std::shared_ptr<MnaSolverDirect<VarType>> gpuDenseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel, cliLevel);
 			gpuDenseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::CUDADense);
 			return gpuDenseSolver;
 		}
@@ -112,7 +113,7 @@ class MnaSolverFactory {
 		case DirectLinearSolverImpl::CUDASparse:
 		{
 			SPDLOG_LOGGER_DEBUG(log, "creating GpuSparseAdapter solver implementation");
-			std::shared_ptr<MnaSolverDirect<VarType>> gpuSparseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			std::shared_ptr<MnaSolverDirect<VarType>> gpuSparseSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel, cliLevel);
 			gpuSparseSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::CUDASparse);
 			return gpuSparseSolver;
 		}
@@ -121,7 +122,7 @@ class MnaSolverFactory {
 		case DirectLinearSolverImpl::CUDAMagma:
 		{
 			SPDLOG_LOGGER_DEBUG(log, "creating GpuMagmaAdapter solver implementation");
-			std::shared_ptr<MnaSolverDirect<VarType>> gpuMagmaSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+			std::shared_ptr<MnaSolverDirect<VarType>> gpuMagmaSolver = std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel, cliLevel);
 			gpuMagmaSolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::CUDAMagma);
 			return gpuMagmaSolver;
 		}
@@ -130,7 +131,8 @@ class MnaSolverFactory {
 #ifdef WITH_MNASOLVERPLUGIN
 		case DirectLinearSolverImpl::Plugin:
 			SPDLOG_LOGGER_DEBUG(log, "creating Plugin solver implementation");
-			return std::make_shared<MnaSolverPlugin<VarType>>(pluginName, name, domain, logLevel);
+			return std::make_shared<MnaSolverPlugin<VarType>>(pluginName, name, domain, logLevel, cliLevel
+			);
 #endif
 		default:
 			throw CPS::SystemError("unsupported MNA implementation.");

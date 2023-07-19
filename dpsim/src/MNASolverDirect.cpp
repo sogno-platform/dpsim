@@ -15,7 +15,7 @@ using namespace CPS;
 namespace DPsim {
 
 template <typename VarType>
-MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :	MnaSolver<VarType>(name, domain, logLevel) {
+MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel) :	MnaSolver<VarType>(name, domain, logLevel, cliLevel) {
 	mImplementationInUse = DirectLinearSolverImpl::SparseLU;
 }
 
@@ -328,7 +328,7 @@ void MnaSolverDirect<VarType>::logSystemMatrices() {
 			SPDLOG_LOGGER_DEBUG(mSLog, "Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
 
 			for (auto sys : mSwitchedMatrices) {
-				SPDLOG_LOGGER_DEBUG(mSLog, "Switching System matrix {:s} \n{:s}",
+				SPDLOG_LOGGER_TRACE(mSLog, "Switching System matrix {:s} \n{:s}",
 				sys.first.to_string(), Logger::matrixToString(sys.second[0]));
 			}
 		}

@@ -103,7 +103,7 @@ namespace DPsim {
 		/// Solutions of the split systems
 		const CPS::Attribute<Matrix>::Ptr mOrigLeftSideVector;
 
-		DiakopticsSolver(String name, CPS::SystemTopology system, CPS::IdentifiedObject::List tearComponents, Real timeStep, CPS::Logger::Level logLevel);
+		DiakopticsSolver(String name, CPS::SystemTopology system, CPS::IdentifiedObject::List tearComponents, Real timeStep, CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel);
 
 		CPS::Task::List getTasks();
 

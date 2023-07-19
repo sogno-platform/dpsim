@@ -18,8 +18,8 @@ namespace DPsim {
 
 
 template <typename VarType>
-MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :
-	Solver(logLevel), mDomain(domain) {
+MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel) :
+	Solver(logLevel, cliLevel), mDomain(domain) {
 
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel == CPS::Logger::Level::trace);

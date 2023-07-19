@@ -11,8 +11,8 @@
 using namespace DPsim;
 using namespace CPS;
 
-PFSolverPowerPolar::PFSolverPowerPolar(CPS::String name, const CPS::SystemTopology &system, CPS::Real timeStep, CPS::Logger::Level logLevel)
-    : PFSolver(name, system, timeStep, logLevel){ }
+PFSolverPowerPolar::PFSolverPowerPolar(CPS::String name, const CPS::SystemTopology &system, CPS::Real timeStep, CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel)
+    : PFSolver(name, system, timeStep, logLevel, cliLevel){ }
 
 void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solution) {
 	resize_sol(mSystem.mNodes.size());

@@ -123,7 +123,8 @@ namespace DPsim {
 		/// Constructor should not be called by users but by Simulation
 		MnaSolver(String name,
 			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
+			CPS::Logger::Level cliLevel = CPS::Logger::Level::info);
 
 		/// Initialization of individual components
 		void initializeComponents();

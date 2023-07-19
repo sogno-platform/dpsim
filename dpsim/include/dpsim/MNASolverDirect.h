@@ -154,7 +154,8 @@ namespace DPsim {
 		/// sovlerImpl: choose the most advanced solver implementation available by default
 		MnaSolverDirect(String name,
 			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
+			CPS::Logger::Level cliLevel = CPS::Logger::Level::info);
 
 		/// Destructor
 		virtual ~MnaSolverDirect() = default;

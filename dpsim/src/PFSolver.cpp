@@ -13,8 +13,8 @@
 using namespace DPsim;
 using namespace CPS;
 
-PFSolver::PFSolver(CPS::String name, CPS::SystemTopology system, CPS::Real timeStep, CPS::Logger::Level logLevel) :
-	Solver(logLevel) {
+PFSolver::PFSolver(CPS::String name, CPS::SystemTopology system, CPS::Real timeStep, CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel) :
+	Solver(logLevel, cliLevel) {
 	mSystem = system;
 	mTimeStep = timeStep;
 }
