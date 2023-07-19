@@ -80,8 +80,6 @@ public:
   const Attribute<Complex>::Ptr mSecondaryLV;
 
   // #### Power flow results ####
-  /// branch Current flow [A], coef(0) has data from node 0, coef(1) from node 1.
-  const Attribute<MatrixComp>::Ptr mCurrent;
   /// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
   const Attribute<Matrix>::Ptr mActivePowerBranch;
   /// branch reactive powerflow [Var], coef(0) has data from node 0, coef(1) from node 1.
