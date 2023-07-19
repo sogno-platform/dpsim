@@ -14,8 +14,7 @@
 
 using namespace CPS;
 
-spdlog::sink_ptr Logger::mSimulationFileSink;
-spdlog::sink_ptr Logger::mComponentFileSink;
+std::map<std::string, spdlog::sink_ptr, std::less<>> Logger::mFileSinkRegistry;
 spdlog::sink_ptr Logger::mStdoutSink;
 spdlog::sink_ptr Logger::mStderrSink;
 
@@ -177,24 +176,16 @@ Logger::Log Logger::create(Logger::LoggerType type, const std::string &name, con
 
 	if (filelevel != Logger::Level::off) {
 		switch (type) {
-			case LoggerType::COMPONENT: {
-				if (!Logger::mComponentFileSink) {
-					Logger::mComponentFileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filepath, true);
-					Logger::mComponentFileSink->set_level(Level::trace);
-					// TODO: Use better prefix
-					Logger::mComponentFileSink->set_pattern(prefix() + "[%l][%n] %v");
-				}
-				file_sink = Logger::mComponentFileSink;
-				break;
-			}
+			case LoggerType::COMPONENT: //fallthrough;
 			case LoggerType::SIMULATION: {
-				if (!Logger::mSimulationFileSink) {
-					Logger::mSimulationFileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filepath, true);
-					Logger::mSimulationFileSink->set_level(Level::trace);
-					// TODO: Use better prefix
-					Logger::mSimulationFileSink->set_pattern(prefix() + "[%l][%n] %v");
+				file_sink = Logger::mFileSinkRegistry[filepath];
+				if (!file_sink) {
+					file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filepath, true);
+					file_sink->set_level(Level::trace);
+					//TODO: Use better prefix
+					file_sink->set_pattern(prefix() + "[%l][%n] %v");
+					Logger::mFileSinkRegistry[filepath] = file_sink;
 				}
-				file_sink = Logger::mSimulationFileSink;
 				break;
 			}
 			case LoggerType::DEBUG: {
@@ -219,13 +210,15 @@ Logger::Log Logger::create(Logger::LoggerType type, const std::string &name, con
 	}
 	logger->set_level(std::min(filelevel, clilevel));
 
+
+
 	#ifndef DEBUG_BUILD
 		if (filelevel < Level::info || clilevel < Level::info) {
 			SPDLOG_LOGGER_WARN(logger,
 				"This logger has been configured to log at level {} (file) and {} (cli)."
 				" However, because this is a release build, debug logging has been disabled."
 				" Please build in debug mode for extended log output.",
-				filelevel, clilevel);
+				spdlog::level::to_string_view(filelevel), spdlog::level::to_string_view(clilevel));
 		}
 	#endif
 

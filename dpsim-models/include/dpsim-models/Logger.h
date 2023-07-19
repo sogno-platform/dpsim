@@ -41,10 +41,8 @@ namespace CPS {
 			DEBUG
 		};
 
-		/// Holds the file sink shared by all simulation loggers
-		static spdlog::sink_ptr mSimulationFileSink;
-		/// Holds the file sink shared by all component loggers
-		static spdlog::sink_ptr mComponentFileSink;
+		/// Holds the file sinks shared by all simulation loggers
+		static std::map<std::string, spdlog::sink_ptr, std::less<>> mFileSinkRegistry;
 		/// Holds the stdout cli sink shared by all loggers
 		static spdlog::sink_ptr mStdoutSink;
 		/// Holds the stderr cli sink shared by all loggers
