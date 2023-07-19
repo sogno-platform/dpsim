@@ -12,11 +12,7 @@ using namespace CPS;
 
 DP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel)
 	: Base::Ph1::Transformer(mAttributes), 
-      MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
-	  mPrimaryCurrent(mAttributes->create<Complex>("primary_current")),
-	  mSecondaryCurrent(mAttributes->create<Complex>("secondary_current")),
-	  mPrimaryLV(mAttributes->create<Complex>("primary_voltage_LVside")),
-	  mSecondaryLV(mAttributes->create<Complex>("secondary_voltage_LVside")) {
+      MNASimPowerComp<Complex>(uid, name, true, true, logLevel) {
 	
 	//
 	setTerminalNumber(2);
@@ -70,41 +66,18 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	// Static calculations from load flow data
 	Real omega = 2. * PI * frequency;
 	Complex mImpedance  = Complex(**mResistance, omega * **mInductance);
-	(**mIntfVoltage)(0,0) = initialSingleVoltage(0) - initialSingleVoltage(1);
-	(**mIntfCurrent)(0,0) = (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) / mImpedance;
-
-	//
-	**mPrimaryLV = initialSingleVoltage(1) * **mRatio;
-	**mSecondaryLV = initialSingleVoltage(1);
-	**mPrimaryCurrent = (**mIntfCurrent)(0, 0);
-	**mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
+	(**mIntfVoltage)(0,0) = initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio;
+	(**mIntfCurrent)(0,0) = -(**mIntfVoltage)(0,0) / mImpedance;
 
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
-		"\nVoltage across: {:s}"
-		"\nCurrent: {:s}"
+		"\nVoltage across primary side: {:s}"
+		"\nPrimary side current flowing into node 0: {:s}"
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
-		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString((**mIntfVoltage)(0,0)),
 		Logger::phasorToString((**mIntfCurrent)(0,0)),
-		Logger::phasorToString(initialSingleVoltage(0)),
-		Logger::phasorToString(initialSingleVoltage(1)));
-	mSLog->flush();
-
-	SPDLOG_LOGGER_INFO(mSLog,
-		"\n--- Initialization from powerflow ---"
-		"\nVoltage across: {:s}"
-		"\nHV side Current: {:s} (= {:s})"
-		"\nLow side Current: {:s}"
-		"\nTerminal 0 voltage (HV side voltage): {:s}"
-		"\nTerminal 1 voltage (LV side voltage): {:s}"
-		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString((**mIntfVoltage)(0, 0)),
-		Logger::phasorToString(**mPrimaryCurrent),
-		Logger::complexToString(**mPrimaryCurrent),
-		Logger::phasorToString(**mSecondaryCurrent),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 	mSLog->flush();
@@ -124,9 +97,7 @@ void DP::Ph1::Transformer::initVars(Real timeStep) {
 		mPrevCurrFac(freq,0) = { preCurrFracReal, preCurrFracImag };
 
 		//
-		mEquivCurrent(freq,0) = mEquivCond(freq,0) * (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) + 
-								mPrevCurrFac(freq,0) * (**mIntfCurrent)(0, 0);
-		(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) + mEquivCurrent(freq,0);
+		mEquivCurrent(freq,0) = mEquivCond(freq,0) * (**mIntfVoltage)(0, freq) - mPrevCurrFac(freq,0) * (**mIntfCurrent)(0, freq);
 	}
 }
 
@@ -227,9 +198,7 @@ void DP::Ph1::Transformer::mnaCompApplyRightSideVectorStamp(Matrix& rightVector)
  void DP::Ph1::Transformer::mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector) { 
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
 		// Calculate equivalent current source for next time step
-		mEquivCurrent(freq,0) =
-			mEquivCond(freq,0) * (initialSingleVoltage(0) - **mPrimaryLV) + 
-			mPrevCurrFac(freq,0) * (**mIntfCurrent)(0,freq);
+		mEquivCurrent(freq,0) = mEquivCond(freq,0) * (**mIntfVoltage)(0, freq) - mPrevCurrFac(freq,0) * (**mIntfCurrent)(0,freq);
 
 		if (terminalNotGrounded(0))
 			Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freq,0), 1, 0, freq);
@@ -274,50 +243,40 @@ void DP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
 		(**mIntfVoltage)(0,freq) = 0;
 		if (terminalNotGrounded(0))
-			(**mIntfVoltage)(0,freq) += Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq);
-		if (terminalNotGrounded(1)) {
+			(**mIntfVoltage)(0, freq) += Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq);
+		if (terminalNotGrounded(1))
 			// TODO: add other frequencies
-			**mSecondaryLV = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1), mNumFreqs, freq);
-			**mPrimaryLV = **mSecondaryLV * **mRatio;
-			(**mIntfVoltage)(0,freq) -= **mSecondaryLV;
-		}
+			(**mIntfVoltage)(0, freq) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1), mNumFreqs, freq) * **mRatio;
 			
 		SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,freq)));
 	}
 }
 
 void DP::Ph1::Transformer::mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) { 
-	// CHECK
 	// v0 - v1
-	(**mIntfVoltage)(0,freqIdx) = 0;
+	(**mIntfVoltage)(0, freqIdx) = 0;
 	if (terminalNotGrounded(0))
-		(**mIntfVoltage)(0,freqIdx) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+		(**mIntfVoltage)(0, freqIdx) += Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		(**mIntfVoltage)(0,freqIdx) = (**mIntfVoltage)(0,freqIdx) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+		(**mIntfVoltage)(0, freqIdx) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) * **mRatio;
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString((**mIntfVoltage)(0,freqIdx)));
 }
 
 void DP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
-		(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq) - **mPrimaryLV) + mEquivCurrent(freq,0);
+		(**mIntfCurrent)(0, freq) = -(mEquivCond(freq,0) * (**mIntfVoltage)(0, freq) +  mEquivCurrent(freq,0));
 		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 
-
-		// TODO: add other frequencies
-		**mPrimaryCurrent = (**mIntfCurrent)(0, 0);
-		**mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
-
 		// Calculate equivalent current source for next time step
-		mEquivCurrent(freq,0) =
-			mEquivCond(freq,0) * (Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq) - **mPrimaryLV) 
-			+  mPrevCurrFac(freq,0) * (**mIntfCurrent)(0,freq);
-		}
+		mEquivCurrent(freq,0) = mEquivCond(freq,0) * (**mIntfVoltage)(0, freq) -  mPrevCurrFac(freq,0) * (**mIntfCurrent)(0,freq);
+	}
 }
 
 void DP::Ph1::Transformer::mnaCompUpdateCurrentHarm() {
+	// primary side current flowing into node 0
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
-		(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
+		(**mIntfCurrent)(0,freq) = -(mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0));
 		SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}", Logger::phasorToString((**mIntfCurrent)(0,freq)));
 	}
 }
