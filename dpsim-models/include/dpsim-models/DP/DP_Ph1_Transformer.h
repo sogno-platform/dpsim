@@ -36,12 +36,6 @@ namespace Ph1 {
 		/// Coefficient in front of previous current value for harmonics
 		MatrixComp mPrevCurrFac;
 
-		//
-		const Attribute<Complex>::Ptr mPrimaryCurrent;
-		const Attribute<Complex>::Ptr mSecondaryCurrent;
-		const Attribute<Complex>::Ptr mPrimaryLV;
-		const Attribute<Complex>::Ptr mSecondaryLV;
-
 	public:
 		// #### General ####
 		/// Defines component parameters

@@ -18,11 +18,7 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 	mActivePowerBranch(mAttributes->create<Matrix>("p_branch_vector")),
 	mReactivePowerBranch(mAttributes->create<Matrix>("q_branch_vector")),
 	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
-	mReactivePowerInjection(mAttributes->create<Real>("q_inj")),
-	mPrimaryCurrent(mAttributes->create<Complex>("primary_current")),
-	mSecondaryCurrent(mAttributes->create<Complex>("secondary_current")),
-	mPrimaryLV(mAttributes->create<Complex>("primary_voltage_LVside")),
-	mSecondaryLV(mAttributes->create<Complex>("secondary_voltage_LVside")) {
+	mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
 
 	setTerminalNumber(2);
 
@@ -88,27 +84,18 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	// Static calculations from load flow data
-	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0) - initialSingleVoltage(1);
-	(**mIntfCurrent)(0, 0) = (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) / mImpedance;
-
-	//
-	**mPrimaryLV = initialSingleVoltage(1) * **mRatio;
-	**mSecondaryLV = initialSingleVoltage(1);
-	**mPrimaryCurrent = (**mIntfCurrent)(0, 0);
-	**mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
+	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio;
+	(**mIntfCurrent)(0, 0) = -(initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) / mImpedance;
 
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
-		"\nVoltage across: {:s}"
-		"\nHV side Current: {:s} (= {:s})"
-		"\nLow side Current: {:s}"
+		"\nVoltage across primary side: {:s}"
+		"\nPrimary side current flowing into node 0: {:s}"
 		"\nTerminal 0 voltage (HV side voltage): {:s}"
 		"\nTerminal 1 voltage (LV side voltage): {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
-		Logger::phasorToString(**mPrimaryCurrent),
-		Logger::complexToString(**mPrimaryCurrent),
-		Logger::phasorToString(**mSecondaryCurrent),
+		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 	mSLog->flush();
@@ -231,11 +218,7 @@ void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(AttributeBase::List &p
 	Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
-	modifiedAttributes.push_back(mPrimaryLV);
-	modifiedAttributes.push_back(mSecondaryLV);
 	modifiedAttributes.push_back(mIntfCurrent);
-	modifiedAttributes.push_back(mSecondaryCurrent);
-	modifiedAttributes.push_back(mSecondaryCurrent);
 }
 
 void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
@@ -246,27 +229,13 @@ void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount, Attribu
 void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v0 - v1
 	(**mIntfVoltage)(0, 0) = 0.0;
-	if (terminalNotGrounded(0)) {
-		(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
-	}
-	if (terminalNotGrounded(1)) {
-		**mSecondaryLV = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
-		**mPrimaryLV = **mSecondaryLV * **mRatio;
-		(**mIntfVoltage)(0, 0) -= **mSecondaryLV;
-	}
-
-	
+	if (terminalNotGrounded(0))
+		(**mIntfVoltage)(0, 0) += Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	if (terminalNotGrounded(1)) 
+		(**mIntfVoltage)(0, 0) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) * **mRatio;
 }
 
 void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	(**mIntfCurrent)(0, 0) = 0.0;
-	if (terminalNotGrounded(0)) {
-		(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)) / mImpedance;
-	}
-	if (terminalNotGrounded(1)) {
-		(**mIntfCurrent)(0, 0) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) * (**mRatio / mImpedance);
-	}
-
-	**mPrimaryCurrent = (**mIntfCurrent)(0, 0);
-	**mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
+	// primary side current flowing into node 0
+	(**mIntfCurrent)(0, 0) = -(**mIntfVoltage)(0, 0) / mImpedance;
 }
