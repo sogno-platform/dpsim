@@ -13,11 +13,7 @@ using namespace CPS;
 EMT::Ph3::Transformer::Transformer(String uid, String name,
                                    Logger::Level logLevel)
     : Base::Ph3::Transformer(mAttributes),
-      MNASimPowerComp<Real>(uid, name, true, true, logLevel),
-      mPrimaryCurrent(mAttributes->create<Matrix>("primary_current")),
-      mSecondaryCurrent(mAttributes->create<Matrix>("secondary_current")),
-      mPrimaryLV(mAttributes->create<Matrix>("primary_voltage_LVside")),
-      mSecondaryLV(mAttributes->create<Matrix>("secondary_voltage_LVside")) {
+      MNASimPowerComp<Real>(uid, name, true, true, logLevel) {
 
   //
   mPhaseType = PhaseType::ABC;
@@ -26,13 +22,7 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
   //
   **mIntfVoltage = Matrix::Zero(3, 1);
   **mIntfCurrent = Matrix::Zero(3, 1);
-
-  //
   mEquivCurrent = Matrix::Zero(3, 1);
-  **mPrimaryCurrent = Matrix::Zero(3, 1);
-  **mSecondaryCurrent = Matrix::Zero(3, 1);
-  **mPrimaryLV = Matrix::Zero(3, 1);
-  **mSecondaryLV = Matrix::Zero(3, 1);
 
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 }
@@ -98,24 +88,14 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
   vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 
   MatrixComp iInit = impedance.inverse() * vInitABC;
-  **mIntfCurrent = iInit.real();
+  **mIntfCurrent = -iInit.real();
   **mIntfVoltage = vInitABC.real();
-
-  //
-  **mPrimaryLV = Math::singlePhaseVariableToThreePhase(
-                     RMS3PH_TO_PEAK1PH * initialSingleVoltage(1) * **mRatio)
-                     .real();
-  **mSecondaryLV = Math::singlePhaseVariableToThreePhase(
-                       RMS3PH_TO_PEAK1PH * initialSingleVoltage(1))
-                       .real();
-  **mPrimaryCurrent = **mIntfCurrent;
-  **mSecondaryCurrent = (iInit * **mRatio).real();
 
   SPDLOG_LOGGER_INFO(
       mSLog,
       "\n--- Initialization from powerflow ---"
-      "\nVoltage across: {:s}"
-      "\nCurrent: {:s}"
+      "\nVoltage across primary side: {:s}"
+      "\nPrimary side current flowing into node 0: {:s}"
       "\nTerminal 0 voltage: {:s}"
       "\nTerminal 1 voltage: {:s}"
       "\n--- Initialization from powerflow finished ---",
@@ -141,22 +121,15 @@ void EMT::Ph3::Transformer::initVars(Real timeStep) {
   mPrevCurrFac = (1. - a) / (1. + a);
 
   // Update internal state
-  Matrix Voltage = Math::singlePhaseVariableToThreePhase(
-                       RMS3PH_TO_PEAK1PH * initialSingleVoltage(0))
-                       .real() -
-                   **mPrimaryLV;
-  mEquivCurrent = mEquivCond * Voltage + mPrevCurrFac * **mIntfCurrent;
+  mEquivCurrent = mEquivCond * **mIntfVoltage - mPrevCurrFac * **mIntfCurrent;
 
-  //
-  //**mIntfCurrent = mEquivCond * Voltage + mEquivCurrent;
-
-  //
-  mSLog->info("\n--- Initialization internal states ---"
-              "\nInitial current {:s}"
-              "\nEquiv. current {:s}"
-              "\n--- Initialization internal states finished ---",
-              Logger::matrixToString(**mIntfCurrent),
-              Logger::matrixToString(mEquivCurrent));
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\n--- Initialization internal states ---"
+                     "\nInitial current {:s}"
+                     "\nEquiv. current {:s}"
+                     "\n--- Initialization internal states finished ---",
+                     Logger::matrixToString(**mIntfCurrent),
+                     Logger::matrixToString(mEquivCurrent));
   mSLog->flush();
 }
 
@@ -206,13 +179,15 @@ void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(
                              -(**mRatio).real() * mEquivCond);
   }
 
-  //SPDLOG_LOGGER_INFO(mSLog,
-  //	"\nEquivalent Conductance: {:s}",
-  //	Logger::matrixToString(mEquivCond));
+  SPDLOG_LOGGER_DEBUG(mSLog, "\nEquivalent Conductance: {:s}",
+                      Logger::matrixToString(mEquivCond));
 }
 
 void EMT::Ph3::Transformer::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
+  // Update internal state
+  mEquivCurrent = mEquivCond * **mIntfVoltage - mPrevCurrFac * **mIntfCurrent;
+
   if (terminalNotGrounded(0)) {
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),
                            -mEquivCurrent(0, 0));
@@ -261,7 +236,7 @@ void EMT::Ph3::Transformer::mnaCompPostStep(
 }
 
 void EMT::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  // v1 - v0
+  // v0 - v1
   **mIntfVoltage = Matrix::Zero(3, 1);
   if (terminalNotGrounded(0)) {
     (**mIntfVoltage)(0, 0) +=
@@ -272,35 +247,19 @@ void EMT::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
         Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
   }
   if (terminalNotGrounded(1)) {
-    (**mSecondaryLV)(0, 0) =
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-    (**mSecondaryLV)(1, 0) =
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-    (**mSecondaryLV)(2, 0) =
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
-    **mIntfVoltage -= **mSecondaryLV;
-    **mPrimaryLV = **mSecondaryLV * (**mRatio).real();
+    (**mIntfVoltage)(0, 0) -=
+        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0)) *
+        (**mRatio).real();
+    (**mIntfVoltage)(1, 0) -=
+        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1)) *
+        (**mRatio).real();
+    (**mIntfVoltage)(2, 0) -=
+        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2)) *
+        (**mRatio).real();
   }
 }
 
 void EMT::Ph3::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  //
-  Matrix Voltage = Matrix::Zero(3, 1);
-  Voltage(0, 0) =
-      Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-  Voltage(1, 0) =
-      Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-  Voltage(2, 0) =
-      Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
-  Voltage = Voltage - **mPrimaryLV;
-
-  //
-  **mIntfCurrent = mEquivCond * Voltage + mEquivCurrent;
-
-  //
-  **mPrimaryCurrent = **mIntfCurrent;
-  **mSecondaryCurrent = **mIntfCurrent * (**mRatio).real();
-
-  // Update internal state
-  mEquivCurrent = mEquivCond * Voltage + mPrevCurrFac * **mIntfCurrent;
+  // primary side current flowing into node 0
+  **mIntfCurrent = -(mEquivCond * **mIntfVoltage + mEquivCurrent);
 }

@@ -28,6 +28,8 @@ SP::Ph1::Transformer::Transformer(String uid, String name,
 
   setTerminalNumber(2);
 
+  setTerminalNumber(2);
+
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
   **mIntfVoltage = MatrixComp::Zero(1, 1);
   **mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -43,20 +45,8 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
                                          Real inductance) {
 
   // Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
-  Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2,
-                                        ratioAbs, ratioPhase, resistance,
-                                        inductance);
-
-  SPDLOG_LOGGER_INFO(
-      mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
-      **mNominalVoltageEnd1, **mNominalVoltageEnd2);
-  SPDLOG_LOGGER_INFO(
-      mSLog, "Resistance={} [Ohm] Inductance={} [H] (referred to primary side)",
-      **mResistance, **mInductance);
-  SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [/] Phase Shift={} [deg]",
-                     std::abs(**mRatio), std::arg(**mRatio));
-  SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
-
+  mRatioAbs = std::abs(**mRatio);
+  mRatioPhase = std::arg(**mRatio);
   SPDLOG_LOGGER_INFO(
       mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
       **mNominalVoltageEnd1, **mNominalVoltageEnd2);
@@ -113,22 +103,16 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
   }
 
   // Static calculations from load flow data
-  (**mIntfVoltage)(0, 0) = initialSingleVoltage(0) - initialSingleVoltage(1);
+  (**mIntfVoltage)(0, 0) =
+      initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio;
   (**mIntfCurrent)(0, 0) =
-      (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) /
+      -(initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) /
       mImpedance;
-
-  //
-  **mPrimaryLV = initialSingleVoltage(1) * **mRatio;
-  **mSecondaryLV = initialSingleVoltage(1);
-  **mPrimaryCurrent = (**mIntfCurrent)(0, 0);
-  **mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
-                     "\nVoltage across: {:s}"
-                     "\nHV side Current: {:s} (= {:s})"
-                     "\nLow side Current: {:s}"
+                     "\nVoltage across primary side: {:s}"
+                     "\nPrimary side current flowing into node 0: {:s}"
                      "\nTerminal 0 voltage (HV side voltage): {:s}"
                      "\nTerminal 1 voltage (LV side voltage): {:s}"
                      "\n--- Initialization from powerflow finished ---",
@@ -284,11 +268,7 @@ void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(
     Attribute<Matrix>::Ptr &leftVector) {
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfVoltage);
-  modifiedAttributes.push_back(mPrimaryLV);
-  modifiedAttributes.push_back(mSecondaryLV);
   modifiedAttributes.push_back(mIntfCurrent);
-  modifiedAttributes.push_back(mSecondaryCurrent);
-  modifiedAttributes.push_back(mSecondaryCurrent);
 }
 
 void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount,
@@ -300,16 +280,13 @@ void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount,
 void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // v0 - v1
   (**mIntfVoltage)(0, 0) = 0.0;
-  if (terminalNotGrounded(0)) {
-    (**mIntfVoltage)(0, 0) =
+  if (terminalNotGrounded(0))
+    (**mIntfVoltage)(0, 0) +=
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
-  }
-  if (terminalNotGrounded(1)) {
-    **mSecondaryLV =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
-    **mPrimaryLV = **mSecondaryLV * **mRatio;
-    (**mIntfVoltage)(0, 0) -= **mSecondaryLV;
-  }
+  if (terminalNotGrounded(1))
+    (**mIntfVoltage)(0, 0) -=
+        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) *
+        **mRatio;
 }
 
 void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
