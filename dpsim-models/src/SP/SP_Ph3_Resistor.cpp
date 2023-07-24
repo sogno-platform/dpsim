@@ -38,9 +38,9 @@ void SP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		voltMag * sin(voltPhase + 2. / 3. * M_PI));
 	**mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
 
-	SPDLOG_LOGGER_INFO(mSLog, "Node 1 : {}", Logger::phasorToString(initialVoltage(0)(0, 0)));
-	SPDLOG_LOGGER_INFO(mSLog, "Node 2 : {}", Logger::phasorToString(initialVoltage(1)(0, 0)));
-	SPDLOG_LOGGER_INFO(mSLog, "initialize {} {} voltage to {} and current to {}",
+	SPDLOG_LOGGER_DEBUG(mSLog, "Node 1 : {}", Logger::phasorToString(initialVoltage(0)(0, 0)));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Node 2 : {}", Logger::phasorToString(initialVoltage(1)(0, 0)));
+	SPDLOG_LOGGER_DEBUG(mSLog, "initialize {} {} voltage to {} and current to {}",
 		this->type(), this->name(),
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
 		Logger::phasorToString((**mIntfCurrent)(0, 0)));

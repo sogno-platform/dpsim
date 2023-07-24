@@ -37,7 +37,7 @@ void DP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		voltMag * sin(voltPhase + 2. / 3. * M_PI));
 	**mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow ---"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\n--- Initialization from powerflow ---"
 		"\nVoltage across amplitude and phase: \n{:s}"
 		"\nCurrent amplitude and phase: \n{:s}"
 		"\nTerminal 0 voltage amplitude and phase: \n{:s}"

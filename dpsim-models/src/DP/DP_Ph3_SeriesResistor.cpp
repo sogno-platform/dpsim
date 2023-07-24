@@ -47,7 +47,7 @@ void DP::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	**mIntfCurrent = impedance.cwiseInverse().cwiseProduct(**mIntfVoltage);
 
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow ---"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\n--- Initialization from powerflow ---"
 		"\nVoltage across amplitude and phase: \n{:s}"
 		"\nCurrent amplitude and phase: \n{:s}"
 		"\nTerminal 0 voltage amplitude and phase: \n{:s}"

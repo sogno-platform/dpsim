@@ -50,7 +50,7 @@ void DP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	 **mIntfCurrent = susceptance * **mIntfVoltage;
 
 	//TODO
-	 SPDLOG_LOGGER_INFO(mSLog,  "--- Initialize according to power flow ---" );
+	 SPDLOG_LOGGER_DEBUG(mSLog,  "--- Initialize according to power flow ---" );
 				// << "in phase A: " << std::endl
 				// << "Voltage across: " << std::abs((**mIntfVoltage)(0,0))
 				// << "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl

@@ -37,7 +37,7 @@ void EMT::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	**mIntfCurrent = **mIntfVoltage / **mResistance;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow ---"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\n--- Initialization from powerflow ---"
 		"\nVoltage across amplitude and phase: \n{}"
 		"\nCurrent amplitude and phase: \n{}"
 		"\nTerminal 0 voltage amplitude and phase: \n{}"

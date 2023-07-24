@@ -36,7 +36,7 @@ void EMT::Ph3::Switch::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage = vInitABC.real();
 	**mIntfCurrent = (impedance.inverse() * vInitABC).real();
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

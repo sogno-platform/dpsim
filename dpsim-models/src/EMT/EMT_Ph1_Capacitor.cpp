@@ -31,7 +31,7 @@ void EMT::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
 	(**mIntfCurrent)(0,0) = ((initialSingleVoltage(1) - initialSingleVoltage(0)) / impedance).real();
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:f}"
 		"\nCurrent: {:f}"

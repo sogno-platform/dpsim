@@ -32,7 +32,7 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::specificInitialization() {
 	// initial voltage behind the transient reactance in the dq0 reference frame
 	(**mEdq0_t)(1,0) = (**mVdq0)(1,0) + (**mIdq0)(0,0) * mLd_t;
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Model specific initialization  ---"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\n--- Model specific initialization finished ---",

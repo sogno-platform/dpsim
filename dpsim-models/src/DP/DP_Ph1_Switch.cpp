@@ -29,7 +29,7 @@ void DP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

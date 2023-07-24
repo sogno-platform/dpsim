@@ -143,7 +143,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -159,7 +159,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void DP::Ph1::Transformer::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\nTerminal 0 connected to {:s} = sim node {:d}"
 		"\nTerminal 1 connected to {:s} = sim node {:d}",
 		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),

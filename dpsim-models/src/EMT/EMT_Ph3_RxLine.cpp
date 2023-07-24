@@ -83,7 +83,7 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 	mInitialResistor->initializeFromNodesAndTerminals(frequency);
 	addMNASubComponent(mInitialResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

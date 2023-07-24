@@ -41,11 +41,11 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage = vInitABC.real();
 	**mIntfCurrent = (admittance * vInitABC).real();
 
-	SPDLOG_LOGGER_INFO(mSLog, "\nCapacitance [F]: {:s}"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\nCapacitance [F]: {:s}"
 				"\nAdmittance [S]: {:s}",
 				Logger::matrixToString(**mCapacitance),
 				Logger::matrixCompToString(admittance));
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

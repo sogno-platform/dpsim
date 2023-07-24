@@ -193,7 +193,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 	addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialize according to powerflow ---"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\n--- Initialize according to powerflow ---"
 				"\nTerminal 0 voltage: {:e}<{:e}"
 				"\nVoltage behind reactance: {:e}<{:e}"
 				"\ninitial electrical power: {:e}+j{:e}"

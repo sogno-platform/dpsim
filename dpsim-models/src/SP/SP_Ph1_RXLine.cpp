@@ -174,7 +174,7 @@ void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
 	mInitialResistor->initializeFromNodesAndTerminals(frequency);
 	addMNASubComponent(mInitialResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

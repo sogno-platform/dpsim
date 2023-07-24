@@ -48,7 +48,7 @@ void DP::Ph1::Inverter::generateFrequencies() {
 void DP::Ph1::Inverter::initialize(Matrix frequencies) {
 	SimPowerComp<Complex>::initialize(frequencies);
 
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization ---");
+	SPDLOG_LOGGER_DEBUG(mSLog, "\n--- Initialization ---");
 
 	// Check that both lists have the same length
 	mCarHarNum = static_cast<UInt>(mCarHarms.size());
@@ -77,7 +77,7 @@ void DP::Ph1::Inverter::initialize(Matrix frequencies) {
 			mMultInvFactorials[f+mModHarms[h]] = multInvFactorial(f+mModHarms[h]);
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\nFrequencies: \n{}"
 		"\nPhases: \n{}"
 		"\n--- End of initialization ---",

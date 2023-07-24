@@ -145,7 +145,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
 	(**mIntfCurrent)(0, 0) = std::conj(Complex(attributeTyped<Real>("P")->get(), attributeTyped<Real>("Q")->get()) / (**mIntfVoltage)(0, 0));
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -154,7 +154,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
 		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"Updated parameters according to powerflow:\n"
 		"Active Power={} [W] Reactive Power={} [VAr]", attributeTyped<Real>("P")->get(), attributeTyped<Real>("Q")->get());
 	mSLog->flush();

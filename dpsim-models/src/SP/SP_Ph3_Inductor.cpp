@@ -40,7 +40,7 @@ void SP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(2, 0) = (**mIntfVoltage)(0, 0) * Complex(cos(2. / 3. * M_PI), sin(2. / 3. * M_PI));
 	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 
-	SPDLOG_LOGGER_INFO(mSLog, "--- Initialize according to power flow ---");
+	SPDLOG_LOGGER_DEBUG(mSLog, "--- Initialize according to power flow ---");
 /*
 	mLog.info() << "--- Initialize according to power flow ---" << std::endl
 		<< "in phase A: " << std::endl

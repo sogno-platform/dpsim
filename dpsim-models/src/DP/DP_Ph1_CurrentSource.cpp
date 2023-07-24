@@ -39,7 +39,7 @@ void DP::Ph1::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(0) - initialSingleVoltage(1);
 	(**mIntfCurrent)(0,0) = **mCurrentRef;
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

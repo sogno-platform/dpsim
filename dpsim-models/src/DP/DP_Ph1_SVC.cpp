@@ -54,7 +54,7 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 		SPDLOG_LOGGER_DEBUG(mSLog, "Using Mechanical Model");
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n --- Parameters ---"
 		"\n Controller: T = {} K = {}"
 		"\n Reference Voltage  {} [kV]"

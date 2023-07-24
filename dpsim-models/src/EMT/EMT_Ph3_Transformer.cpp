@@ -58,9 +58,9 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		Real tmpVolt = mNominalVoltageEnd1;
 		mNominalVoltageEnd1 = mNominalVoltageEnd2;
 		mNominalVoltageEnd2 = tmpVolt;
-		SPDLOG_LOGGER_INFO(mSLog, "Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
-		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
-		SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
+		SPDLOG_LOGGER_DEBUG(mSLog, "Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
+		SPDLOG_LOGGER_DEBUG(mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]", std::abs(**mRatio), std::arg(**mRatio));
 	}
 
 	// Set initial voltage of virtual node in between
@@ -152,7 +152,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

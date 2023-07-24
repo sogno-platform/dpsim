@@ -69,7 +69,7 @@ void SP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		mSrcSig = srcSigSine;
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from node voltages ---"
 		"\nVoltage across: {:s}"
 		"\nTerminal 0 voltage: {:s}"
@@ -98,7 +98,7 @@ void SP::Ph1::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attrib
 
 	(**mIntfVoltage)(0,0) = mSrcSig->getSignal();
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"

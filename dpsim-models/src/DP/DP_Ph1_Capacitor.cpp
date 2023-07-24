@@ -40,11 +40,11 @@ void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\nCapacitance [F]: {:s}"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\nCapacitance [F]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
 				Logger::realToString(**mCapacitance),
 				Logger::complexToString(impedance));
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -73,7 +73,7 @@ void DP::Ph1::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 		(**mIntfCurrent)(0, freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"

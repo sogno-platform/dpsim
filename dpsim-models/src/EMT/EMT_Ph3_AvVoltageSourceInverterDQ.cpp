@@ -234,25 +234,25 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 	matrixOutputInit(0,0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
 	mPLL->setInitialValues(**mVcq, matrixStateInit, matrixOutputInit);
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_INFO(mSLog, "Terminal 0 connected to {:s} = sim node {:d}", mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex());
+
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nInterface voltage across: {:s}"
 		"\nInterface current: {:s}"
 		"\nTerminal 0 initial voltage: {:s}"
-		"\nTerminal 0 connected to {:s} = sim node {:d}"
 		"\nVirtual node 0 initial voltage: {:s}"
 		"\nVirtual node 1 initial voltage: {:s}"
 		"\nVirtual node 2 initial voltage: {:s}",
 		Logger::phasorToString(intfVoltageComplex(0, 0)),
 		Logger::phasorToString(intfCurrentComplex(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
-		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()),
 		Logger::phasorToString(mVirtualNodes[1]->initialSingleVoltage()),
 		Logger::phasorToString(mVirtualNodes[2]->initialSingleVoltage()));
 	if (mWithConnectionTransformer)
-		SPDLOG_LOGGER_INFO(mSLog, "\nVirtual node 3 initial voltage: {:s}", Logger::phasorToString(mVirtualNodes[3]->initialSingleVoltage()));
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow finished ---");
+		SPDLOG_LOGGER_DEBUG(mSLog, "\nVirtual node 3 initial voltage: {:s}", Logger::phasorToString(mVirtualNodes[3]->initialSingleVoltage()));
+	SPDLOG_LOGGER_DEBUG(mSLog, "\n--- Initialization from powerflow finished ---");
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

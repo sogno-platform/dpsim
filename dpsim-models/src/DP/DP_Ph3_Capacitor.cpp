@@ -52,7 +52,7 @@ void DP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	**mIntfCurrent = susceptance * **mIntfVoltage;
 
-	SPDLOG_LOGGER_INFO(mSLog,  "\n--- Initialize from power flow ---" );
+	SPDLOG_LOGGER_DEBUG(mSLog,  "\n--- Initialize from power flow ---" );
 				// << "Impedance: " << impedance << std::endl
 				// << "Voltage across: " << std::abs((**mIntfVoltage)(0,0))
 				// << "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl

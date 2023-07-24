@@ -56,7 +56,7 @@ void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(Real freque
 	addMNASubComponent(mSubLoadSide1, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::NO_TASK, false);
 	addMNASubComponent(mSubLoadSide2, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::NO_TASK, false);
 
-    SPDLOG_LOGGER_INFO(mSLog,
+    SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nTerminal 0 power flow: {:s} VA"
 		"\nTerminal 1 power flow: {:s} VA"

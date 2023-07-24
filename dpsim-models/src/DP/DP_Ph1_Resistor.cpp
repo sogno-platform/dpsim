@@ -29,11 +29,11 @@ void DP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\nResistance [Ohm]: {:s}"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\nResistance [Ohm]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
 				Logger::realToString(**mResistance),
 				Logger::complexToString(impedance));
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow ---"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
@@ -51,7 +51,7 @@ void DP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 
 	**mRightVector = Matrix::Zero(0, 0);
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"

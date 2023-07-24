@@ -23,7 +23,7 @@ void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage = initialVoltage(1) - initialVoltage(0);
 	**mIntfCurrent = **mIntfVoltage / impedance;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow ---"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\n--- Initialization from powerflow ---"
 		"\nVoltage across phasor: \n{}"
 		"\nCurrent phasor: \n{}"
 		"\nTerminal 0 voltage phasor: \n{}"

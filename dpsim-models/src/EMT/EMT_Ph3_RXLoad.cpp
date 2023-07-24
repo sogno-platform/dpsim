@@ -92,11 +92,11 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 		**mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
 
-		SPDLOG_LOGGER_INFO(mSLog, "\nActive Power [W]: {}"
+		SPDLOG_LOGGER_DEBUG(mSLog, "\nActive Power [W]: {}"
 					"\nReactive Power [VAr]: {}",
 					Logger::matrixToString(**mActivePower),
 					Logger::matrixToString(**mReactivePower));
-		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}
 
 	if ((**mActivePower)(0,0) != 0) {
@@ -151,7 +151,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	iInitABC = rhs_.conjugate().transpose();
 	**mIntfCurrent = iInitABC.real();
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

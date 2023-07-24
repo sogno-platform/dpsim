@@ -76,7 +76,7 @@ void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 	addMNASubComponent(mSubCurrentSource, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	updateIntfValues();
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -96,7 +96,7 @@ void DP::Ph1::PQLoadCS::updateSetPoint() {
 	//Complex current = power / (**mIntfVoltage)(0,0);
 
 	**mSubCurrentSource->mCurrentRef = std::conj(current);
-	SPDLOG_LOGGER_DEBUG(mSLog, 
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- update set points ---"
 		"\npower: {:s}"
 		"\nCurrent: {:s}",

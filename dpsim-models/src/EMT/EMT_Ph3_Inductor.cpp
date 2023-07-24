@@ -42,11 +42,11 @@ void EMT::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	MatrixComp admittance = impedance.inverse();
 	**mIntfCurrent = (admittance * vInitABC).real();
 
-	SPDLOG_LOGGER_INFO(mSLog, "\nInductance [H]: {:s}"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\nInductance [H]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
 				Logger::matrixToString(**mInductance),
 				Logger::matrixCompToString(impedance));
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -66,7 +66,7 @@ void EMT::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 	// Update internal state
 	mEquivCurrent = mEquivCond * **mIntfVoltage + **mIntfCurrent;
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"

@@ -39,11 +39,11 @@ void DP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\nInductance [H]: {:s}"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\nInductance [H]: {:s}"
 			 	"\nImpedance [Ohm]: {:s}",
 				 Logger::realToString(**mInductance),
 				 Logger::complexToString(impedance));
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -80,7 +80,7 @@ void DP::Ph1::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 	updateMatrixNodeIndices();
 	initVars(timeStep);
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"

@@ -40,11 +40,11 @@ void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	Math::invertMatrix(**mResistance, mResistanceInv);
 	**mIntfCurrent = (mResistanceInv * vInitABC).real();
 
-	SPDLOG_LOGGER_INFO(mSLog, "\nResistance [Ohm]: {:s}"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\nResistance [Ohm]: {:s}"
 				"\nConductance [S]: {:s}",
 				Logger::matrixToString(**mResistance),
 				Logger::matrixToString(mResistanceInv));
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -116,7 +116,7 @@ void EMT::Ph3::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMa
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -conductance(2, 2));
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\nConductance matrix: {:s}",
 		Logger::matrixToString(conductance));
 }

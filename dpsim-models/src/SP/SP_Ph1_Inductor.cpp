@@ -30,11 +30,11 @@ void SP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	**mIntfCurrent = mSusceptance * **mIntfVoltage;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\nInductance [H]: {:s}"
+	SPDLOG_LOGGER_DEBUG(mSLog, "\nInductance [H]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
 				Logger::realToString(**mInductance),
 				Logger::complexToString(1./mSusceptance));
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
@@ -52,7 +52,7 @@ void SP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 void SP::Ph1::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
 		"\nInitial current {:s}"

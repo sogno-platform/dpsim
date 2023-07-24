@@ -73,7 +73,7 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
 void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mNominalOmega = 2. * PI * frequency;
 	mReactance = mNominalOmega * **mInductance;
-	SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)", mReactance);
+	SPDLOG_LOGGER_DEBUG(mSLog, "Reactance={} [Ohm] (referred to primary side)", mReactance);
 
 	// Component parameters are referred to higher voltage side.
 	// Switch terminals to have terminal 0 at higher voltage side
@@ -88,9 +88,9 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		Real tmpVolt = **mNominalVoltageEnd1;
 		**mNominalVoltageEnd1 = **mNominalVoltageEnd2;
 		**mNominalVoltageEnd2 = tmpVolt;
-		SPDLOG_LOGGER_INFO(mSLog, "Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
-		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
-		SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]", mRatioAbs, mRatioPhase);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Switching terminals to have first terminal at higher voltage side. Updated parameters: ");
+		SPDLOG_LOGGER_DEBUG(mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+		SPDLOG_LOGGER_DEBUG(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]", mRatioAbs, mRatioPhase);
 	}
 
 	// Set initial voltage of virtual node in between
@@ -168,7 +168,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

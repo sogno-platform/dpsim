@@ -25,7 +25,7 @@ EMT::Ph3::CurrentSource::CurrentSource(String uid, String name, Logger::Level lo
 
 
 void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from node voltages and terminal ---");
+	SPDLOG_LOGGER_DEBUG(mSLog, "\n--- Initialization from node voltages and terminal ---");
 	if (!mParametersSet) {
 		auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw", Logger::Level::off);
 		// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
@@ -41,7 +41,7 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 		**mCurrentRef = CPS::Math::singlePhaseVariableToThreePhase(i_ref);
 		mSrcFreq->setReference(mSrcSig->attributeTyped<Real>("freq"));
 
-		SPDLOG_LOGGER_INFO(mSLog, "\nReference current: {:s}"
+		SPDLOG_LOGGER_DEBUG(mSLog, "\nReference current: {:s}"
 					"\nReference voltage: {:s}"
 					"\nReference power: {:s}"
 					"\nTerminal 0 voltage: {:s}"
@@ -56,11 +56,11 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 					Logger::complexToString(terminal(0)->singlePower()),
 					Logger::complexToString(terminal(1)->singlePower()));
 	} else {
-		SPDLOG_LOGGER_INFO(mSLog, "\nInitialization from node voltages and terminal omitted (parameter already set)."
+		SPDLOG_LOGGER_DEBUG(mSLog, "\nInitialization from node voltages and terminal omitted (parameter already set)."
 					"\nReference voltage: {:s}",
 					Logger::matrixCompToString(attributeTyped<MatrixComp>("I_ref")->get()));
 	}
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from node voltages and terminal ---");
+	SPDLOG_LOGGER_DEBUG(mSLog, "\n--- Initialization from node voltages and terminal ---");
 	mSLog->flush();
 }
 

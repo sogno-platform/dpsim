@@ -102,7 +102,7 @@ void EMT::Ph3::SynchronGeneratorVBR::setInitialValues(Real initActivePower, Real
 
 void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real frequency) {
 	if(!mInitialValuesSet) {
-		SPDLOG_LOGGER_INFO(mSLog, "--- Initialization from powerflow ---");
+		SPDLOG_LOGGER_DEBUG(mSLog, "--- Initialization from powerflow ---");
 
 		// terminal powers in consumer system -> convert to generator system
 		Real activePower = -terminal(0)->singlePower().real();
@@ -113,14 +113,14 @@ void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real freque
 
 		this->setInitialValues(activePower, reactivePower, voltMagnitude, Math::phase(initialSingleVoltage(0)), activePower);
 
-		SPDLOG_LOGGER_INFO(mSLog, "\nTerminal 0 voltage: {:s}"
+		SPDLOG_LOGGER_DEBUG(mSLog, "\nTerminal 0 voltage: {:s}"
 					"\nTerminal 0 power: {:s}"
 					"\n--- Initialization from powerflow finished ---",
 					Logger::phasorToString(initialSingleVoltage(0)),
 					Logger::complexToString(terminal(0)->singlePower()));
 		mSLog->flush();
 	} else {
-		SPDLOG_LOGGER_INFO(mSLog, "Initial values already set, skipping initializeFromNodesAndTerminals.");
+		SPDLOG_LOGGER_DEBUG(mSLog, "Initial values already set, skipping initializeFromNodesAndTerminals.");
 		mSLog->flush();
 	}
 }
@@ -239,8 +239,8 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep
 
 	CalculateL();
 
-	SPDLOG_LOGGER_INFO(mSLog, "Initialize right side vector of size {}", leftVector->get().rows());
-	SPDLOG_LOGGER_INFO(mSLog, "Component affects right side vector entries {}, {} and {}", matrixNodeIndex(0,0), matrixNodeIndex(0,1), matrixNodeIndex(0,2));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Initialize right side vector of size {}", leftVector->get().rows());
+	SPDLOG_LOGGER_DEBUG(mSLog, "Component affects right side vector entries {}, {} and {}", matrixNodeIndex(0,0), matrixNodeIndex(0,1), matrixNodeIndex(0,2));
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompPreStep(Real time, Int timeStepCount) {

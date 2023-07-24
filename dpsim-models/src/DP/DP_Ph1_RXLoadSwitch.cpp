@@ -52,7 +52,7 @@ void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfVoltage = **mSubRXLoad->mIntfVoltage;
 	**mIntfCurrent = **mSubRXLoad->mIntfCurrent;
 
-	SPDLOG_LOGGER_INFO(mSLog,
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
