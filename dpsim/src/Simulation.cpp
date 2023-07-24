@@ -69,13 +69,19 @@ void Simulation::initialize() {
 	switch (mDomain) {
 	case Domain::SP:
 		// Treat SP as DP
+		SPDLOG_LOGGER_INFO(mLog, "Created simulation in SP domain.");
+		createSolvers<Complex>();
+		break;
 	case Domain::DP:
+		SPDLOG_LOGGER_INFO(mLog, "Created simulation in DP domain.");
 		createSolvers<Complex>();
 		break;
 	case Domain::EMT:
+		SPDLOG_LOGGER_INFO(mLog, "Created simulation in EMT domain.");
 		createSolvers<Real>();
 		break;
 	}
+
 
 	mTime = 0;
 	mTimeStepCount = 0;
