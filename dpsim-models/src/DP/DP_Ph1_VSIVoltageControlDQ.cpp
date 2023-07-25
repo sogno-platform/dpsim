@@ -212,7 +212,6 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 	{
 		// Initialize control subcomponents
 		Complex vcdq, ircdq;
-		Real theta = std::arg(mVirtualNodes[3]->initialSingleVoltage());
 		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->initialSingleVoltage(), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
 		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
 
@@ -231,7 +230,6 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 	else{
 		// Initialize control subcomponents
 		Complex vcdq, ircdq;
-		Real theta = std::arg(mVirtualNodes[2]->initialSingleVoltage());
 		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->initialSingleVoltage(), std::arg(mVirtualNodes[2]->initialSingleVoltage()), 0);
 		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), std::arg(mVirtualNodes[2]->initialSingleVoltage()), 0);
 
@@ -306,7 +304,7 @@ void DP::Ph1::VSIVoltageControlDQ::addControlStepDependencies(AttributeBase::Lis
 void DP::Ph1::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	Complex vcdq, ircdq;
-	Real theta = mPLL->mOutputPrev->get()(0, 0);
+
 	if(mWithConnectionTransformer)
 	{
 		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0), mThetaN);
