@@ -170,7 +170,7 @@ namespace DPsim {
 		void logLUTimes() override;
 
 		/// ### SynGen Interface ###
-		int mIter = 0;
+		const CPS::Attribute<int>::Ptr mIter;
 
 		// #### MNA Solver Tasks ####
 		///

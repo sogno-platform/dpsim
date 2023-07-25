@@ -79,6 +79,10 @@ namespace DPsim {
 		CPS::Logger::Level mCliLevel;
 		/// (Real) time needed for the timesteps
 		std::vector<Real> mStepTimes;
+		/// List of data loggers. mLoggers[0] corresponds to the default simulation logger
+		DataLogger::List mDataLoggers;
+		/// Default simulation logger
+		DataLogger::Ptr mInternalDataLogger;
 
 		// #### Solver Settings ####
 		///
@@ -122,7 +126,8 @@ namespace DPsim {
 		/// List of all tasks to be scheduled
 		CPS::Task::List mTasks;
 		/// Task dependencies as incoming / outgoing edges
-		Scheduler::Edges mTaskInEdges, mTaskOutEdges;
+		Scheduler::Edges mTaskInEdges;
+		Scheduler::Edges mTaskOutEdges;
 
 		/// Vector of Interfaces
 		std::vector<Interface::Ptr> mInterfaces;
@@ -133,9 +138,6 @@ namespace DPsim {
 			/// Downsampling
 			UInt downsampling;
 		};
-
-		/// The data loggers
-		DataLogger::List mLoggers;
 
 		/// Helper function for constructors
 		void create();
@@ -188,7 +190,7 @@ namespace DPsim {
 		///
 		void doSplitSubnets(Bool splitSubnets = true) { **mSplitSubnets = splitSubnets; }
 		///
-		void setTearingComponents(CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List()) {
+		void setTearingComponents(CPS::IdentifiedObject::List const& tearComponents = CPS::IdentifiedObject::List()) {
 			mTearComponents = tearComponents;
 		}
 		/// Set the scheduling method
@@ -232,10 +234,11 @@ namespace DPsim {
 		}
 		/// Add a new data logger
 		void addLogger(DataLogger::Ptr logger) {
-			mLoggers.push_back(logger);
+			mDataLoggers.push_back(logger);
 		}
+
 		/// Write step time measurements to log file
-		void logStepTimes(String logName);
+		void logStepTimes(const String &logName);
 
 		/// Write LU decomposition times measurements to log file
 		void logLUTimes();
@@ -256,20 +259,15 @@ namespace DPsim {
 		Real finalTime() const { return **mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return **mTimeStep; }
-		DataLogger::List& loggers() { return mLoggers; }
-		std::shared_ptr<Scheduler> scheduler() { return mScheduler; }
+		DataLogger::List& loggers() { return mDataLoggers; }
+		std::shared_ptr<Scheduler> scheduler() const { return mScheduler; }
 		std::vector<Real>& stepTimes() { return mStepTimes; }
-
-		// #### Set component attributes during simulation ####
-		/// CHECK: Can these be deleted? getIdObjAttribute + "**attr =" should suffice
-		// void setIdObjAttr(const String &comp, const String &attr, Real value);
-		// void setIdObjAttr(const String &comp, const String &attr, Complex value);
 
 		// #### Get component attributes during simulation ####
 		CPS::AttributeBase::Ptr getIdObjAttribute(const String &comp, const String &attr);
 
 		void logIdObjAttribute(const String &comp, const String &attr);
 		/// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
-		void logAttribute(String name, CPS::AttributeBase::Ptr attr);
+		void logAttribute(const String &name, CPS::AttributeBase::Ptr attr);
 	};
 }

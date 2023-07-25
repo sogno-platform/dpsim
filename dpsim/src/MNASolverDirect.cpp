@@ -15,8 +15,10 @@ using namespace CPS;
 namespace DPsim {
 
 template <typename VarType>
-MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel) :	MnaSolver<VarType>(name, domain, logLevel, cliLevel) {
-	mImplementationInUse = DirectLinearSolverImpl::SparseLU;
+MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain, CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel) :
+	MnaSolver<VarType>(name, domain, logLevel, cliLevel),
+	mIter(AttributeStatic<int>::make()) {
+		mImplementationInUse = DirectLinearSolverImpl::SparseLU;
 }
 
 
@@ -239,7 +241,7 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 		syncGen->updateVoltage(**mLeftSideVector);
 
 	// Reset number of iterations
-	mIter = 0;
+	**mIter = 0;
 
 	// Additional solve steps for iterative models
 	if (mSyncGen.size() > 0) {
@@ -253,7 +255,7 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 
 			// recompute solve step if at least one component demands iteration
 			if (numCompsRequireIter > 0){
-				mIter++;
+				(**mIter)++;
 
 				// Reset source vector
 				mRightSideVector.setZero();

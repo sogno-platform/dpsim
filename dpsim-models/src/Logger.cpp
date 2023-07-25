@@ -203,7 +203,8 @@ Logger::Log Logger::create(Logger::LoggerType type, const std::string &name, con
 	}
 
 	if (filelevel == Logger::Level::off && clilevel == Logger::Level::off) {
-		logger = spdlog::create<spdlog::sinks::null_sink_st>(name);
+		auto null_sink = std::make_shared<spdlog::sinks::null_sink_st>();
+		logger = std::make_shared<spdlog::logger>(name, null_sink);
 	} else {
 		spdlog::sink_ptr dpsimSink = std::make_shared<dpsim_sink>(file_sink, Logger::mStdoutSink, Logger::mStderrSink, filelevel, clilevel);
 		logger = std::make_shared<spdlog::logger>(name, dpsimSink);

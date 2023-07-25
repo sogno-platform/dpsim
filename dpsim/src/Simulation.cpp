@@ -55,6 +55,10 @@ void Simulation::create() {
 	// Logging
 	mLog = Logger::get(Logger::LoggerType::SIMULATION, **mName, mLogLevel, mCliLevel);
 
+	// Default data logger
+	mInternalDataLogger = DataLogger::make(**mName + "_data");
+	mDataLoggers.push_back(mInternalDataLogger);
+
 	Eigen::setNbThreads(1);
 
 	mInitialized = false;
@@ -132,7 +136,7 @@ void Simulation::createSolvers() {
 
 template <typename VarType>
 void Simulation::createMNASolver() {
-	Solver::Ptr	 solver;
+	Solver::Ptr	solver;
 	std::vector<SystemTopology> subnets;
 	// The Diakoptics solver splits the system at a later point.
 	// That is why the system is not split here if tear components exist.
@@ -168,6 +172,16 @@ void Simulation::createMNASolver() {
 			solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
 			solver->initialize();
 			solver->setMaxNumberOfIterations(mMaxIterations);
+
+			// Log solver iteration numbers
+			if (mLogLevel < Logger::Level::info) {
+				if (auto mnaSolverDirect = std::dynamic_pointer_cast<MnaSolverDirect<Complex>>(solver)) {
+					mInternalDataLogger->logAttribute("iters" + copySuffix, mnaSolverDirect->mIter);
+				}
+				else if (auto mnaSolverDirect = std::dynamic_pointer_cast<MnaSolverDirect<Real>>(solver)) {
+					mInternalDataLogger->logAttribute("iters" + copySuffix, mnaSolverDirect->mIter);
+				}
+			}
 		}
 		mSolvers.push_back(solver);
 	}
@@ -201,7 +215,7 @@ void Simulation::prepSchedule() {
 		}
 	}
 
-	for (auto logger : mLoggers) {
+	for (auto logger : mDataLoggers) {
 		mTasks.push_back(logger->getTask());
 	}
 	if (!mScheduler) {
@@ -366,7 +380,7 @@ void Simulation::stop() {
 	for (auto intf : mInterfaces)
 		intf->close();
 
-	for (auto lg : mLoggers)
+	for (auto lg : mDataLoggers)
 		lg->close();
 
 	SPDLOG_LOGGER_INFO(mLog, "Simulation finished.");
@@ -408,7 +422,7 @@ Real Simulation::step() {
 	return mTime;
 }
 
-void Simulation::logStepTimes(String logName) {
+void Simulation::logStepTimes(const String &logName) {
 	auto stepTimeLog = Logger::get(Logger::LoggerType::DEBUG, logName, Logger::Level::info);
 	Logger::setLogPattern(stepTimeLog, "%v");
 	stepTimeLog->info("step_time");
@@ -454,10 +468,6 @@ void Simulation::logIdObjAttribute(const String &comp, const String &attr) {
 	logAttribute(name, attrPtr);
 }
 
-void Simulation::logAttribute(String name, CPS::AttributeBase::Ptr attr) {
-	if (mLoggers.size() > 0) {
-		mLoggers[0]->logAttribute(name, attr);
-	} else {
-		throw SystemError("Cannot log attributes when no logger is configured for this simulation!");
-	}
+void Simulation::logAttribute(const String &name, CPS::AttributeBase::Ptr attr) {
+	mInternalDataLogger->logAttribute(name, attr);
 }
