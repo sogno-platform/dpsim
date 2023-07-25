@@ -126,8 +126,6 @@ int main(int argc, char* argv[]) {
 	// Simulation
 	Simulation sim(simNameSP, Logger::Level::debug);
 	sim.setSystem(systemSP);
-	// sim.doInitFromNodesAndTerminals(true);
-	// sim.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	sim.setTimeStep(timeStepSP);
 	sim.setFinalTime(finalTimeSP);
 	sim.setDomain(Domain::SP);
