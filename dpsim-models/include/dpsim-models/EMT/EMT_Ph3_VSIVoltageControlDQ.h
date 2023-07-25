@@ -17,6 +17,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 #include <dpsim-models/Base/Base_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/Signal/PLL.h>
+#include <dpsim-models/Signal/VCO.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 #include <dpsim-models/Signal/PowerControllerVSI.h>
 
@@ -39,6 +40,8 @@ namespace Ph3 {
 		/// Active power reference
 
 		// ### Control Subcomponents ###
+		/// VCO
+		std::shared_ptr<Signal::VCO> mVCO;
 		/// PLL
 		std::shared_ptr<Signal::PLL> mPLL;
 		/// Power Controller
@@ -81,10 +84,8 @@ namespace Ph3 {
 		// ### Inverter Interfacing Variables ###
 		// Control inputs
 		/// Measured voltage d-axis in local reference frame
-		/// Input for PLL
 		const Attribute<Real>::Ptr mVcd;
 		/// Measured voltage q-axis in local reference frame
-		/// Input for PLL
 		const Attribute<Real>::Ptr mVcq;
 		/// Measured current d-axis in local reference frame
 		const Attribute<Real>::Ptr mIrcd;
@@ -100,6 +101,9 @@ namespace Ph3 {
 
 		// Sub voltage source
 		const Attribute<Matrix>::Ptr mVs;
+
+		// VCO
+		const Attribute<Real>::Ptr mVCOOutput;
 
 		// PLL
 		const Attribute<Matrix>::Ptr mPllOutput;
@@ -120,7 +124,9 @@ namespace Ph3 {
 		void initializeFromNodesAndTerminals(Real frequency);
 		/// Setter for gengit eral parameters of inverter
 		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
-		/// Setter for parameters of control loops
+		/// Setter for parameters of VCO control loops
+		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega);
+		/// Setter for parameters of PLL control loops
 		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Kp_pll, Real Ki_pll, Real Omega_cutoff);
 		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,

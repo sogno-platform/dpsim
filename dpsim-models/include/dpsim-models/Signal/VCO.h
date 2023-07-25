@@ -23,7 +23,7 @@ namespace Signal {
 	protected:
 		
 		/// Nominal frequency (Input)
-		Real mOmegaNom;
+		Real mOmega;
 		/// Integration time step
         Real mTimeStep;
 
@@ -47,7 +47,7 @@ namespace Signal {
 
 		VCO(String name, Logger::Level logLevel = Logger::Level::off);
 		/// Setter for VCO parameters
-		void setParameters(Real omegaNom);
+		void setParameters(Real omega);
 		/// Setter for simulation parameters
 		void setSimulationParameters(Real timestep);
 		/// Setter for initial values

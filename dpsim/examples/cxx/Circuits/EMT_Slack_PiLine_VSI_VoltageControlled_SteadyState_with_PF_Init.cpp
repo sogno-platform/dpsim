@@ -14,9 +14,10 @@ using namespace CPS;
 
 int main(int argc, char* argv[]) {
 
-	CIM::Examples::Grids::SGIB::Yazdani Yazdani;
+	// CIM::Examples::Grids::GridForming::ScenarioConfig1 scenario;
+	CIM::Examples::Grids::GridForming::Yazdani scenario;
 
-	Real finalTime = 0.5;
+	Real finalTime = 2;
 	Real timeStep = 0.0001;
 	String simName = "EMT_Slack_PiLine_VSI_VoltageControlled_SteadyState_with_PF_Init";
 	Bool pvWithControl = true;
@@ -33,27 +34,31 @@ int main(int argc, char* argv[]) {
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetPF->setParameters(400);
-	extnetPF->setBaseVoltage(400);
+	extnetPF->setParameters(scenario.systemNominalVoltage);
+	extnetPF->setBaseVoltage(scenario.systemNominalVoltage);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 	
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(0.88e-3, 0, 0, 0);
-	linePF->setBaseVoltage(400);
+	linePF->setParameters(scenario.lineResistance, 0, 0, 0);
+	linePF->setBaseVoltage(scenario.systemNominalVoltage);
 
-	Complex load1_s=3*std::pow(400, 2)/(Complex(83e-3, 137e-6*2*M_PI*60));
-	Real load1_p=load1_s.real();
-	Real load1_q=load1_s.imag();
+	Complex load1_s=3*std::pow(scenario.systemNominalVoltage, 2)/(Complex(scenario.loadRes1, scenario.loadInd1*scenario.systemNominalOmega));
+	Real loadActivePower=load1_s.real();
+	Real loadReactivePower=load1_s.imag();
 
 	auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
-	loadPF->setParameters(load1_p, load1_q, 400);
+	loadPF->setParameters(loadActivePower, loadReactivePower, scenario.systemNominalVoltage);
 	loadPF->modifyPowerFlowBusType(PowerflowBusType::PQ);
+
+	// auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
+	// loadPF->setParameters(scenario.loadActivePower, scenario.loadReactivePower, scenario.systemNominalVoltage);
+	// loadPF->modifyPowerFlowBusType(PowerflowBusType::PQ);
 
 	// Topology
 	extnetPF->connect({ n1PF });
 	linePF->connect({ n1PF, n2PF });
 	loadPF->connect({ n2PF });
-	auto systemPF = SystemTopology(60,
+	auto systemPF = SystemTopology(scenario.systemNominalFreq,
 			SystemNodeList{n1PF, n2PF},
 			SystemComponentList{linePF, extnetPF, loadPF});
 	
@@ -87,41 +92,32 @@ int main(int argc, char* argv[]) {
 	auto n2EMT = SimNode<Real>::make("n2", PhaseType::ABC);
 	
 	auto loadEMT = EMT::Ph3::RXLoad::make("Load", Logger::Level::debug);
-	loadEMT->setParameters(CPS::Math::singlePhasePowerToThreePhase(load1_p), CPS::Math::singlePhasePowerToThreePhase(load1_q), 400);
+	loadEMT->setParameters(CPS::Math::singlePhasePowerToThreePhase(loadActivePower), CPS::Math::singlePhasePowerToThreePhase(loadReactivePower), scenario.systemNominalVoltage);
 
-	/*
 	auto pv = EMT::Ph3::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
-	pv->setParameters(Yazdani.OmegaNull, Yazdani.Vdref, Yazdani.Vqref);
-	pv->setControllerParameters(Yazdani.KpVoltageCtrl, Yazdani.KiVoltageCtrl, Yazdani.KpCurrCtrl, Yazdani.KiCurrCtrl, Yazdani.KpPLL, Yazdani.KiPLL, Yazdani.OmegaCutoff);
-	pv->setFilterParameters(Yazdani.Lf, Yazdani.Cf, Yazdani.Rf, Yazdani.Rc); 
-	pv->setInitialStateValues(Yazdani.phi_dInit, Yazdani.phi_qInit, Yazdani.gamma_dInit, Yazdani.gamma_qInit);
-	pv->withControl(pvWithControl);
-	*/
-
-	auto pv = EMT::Ph3::VSIVoltageControlVCO::make("pv", "pv", Logger::Level::debug, false);
-	pv->setParameters(Yazdani.OmegaNull, Yazdani.Vdref, Yazdani.Vqref);
-	pv->setControllerParameters(Yazdani.KpVoltageCtrl, Yazdani.KiVoltageCtrl, Yazdani.KpCurrCtrl, Yazdani.KiCurrCtrl, Yazdani.OmegaNull);
-	pv->setFilterParameters(Yazdani.Lf, Yazdani.Cf, Yazdani.Rf, Yazdani.Rc); 
-	pv->setInitialStateValues(Yazdani.phi_dInit, Yazdani.phi_qInit, Yazdani.gamma_dInit, Yazdani.gamma_qInit);
+	pv->setParameters(scenario.systemNominalOmega, scenario.Vdref, scenario.Vqref);
+	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.KpPLL, scenario.KiPLL, scenario.OmegaCutoff);
+	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
+	pv->setInitialStateValues(scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
 	pv->withControl(pvWithControl);
 
-	auto resOnEMT = EMT::Ph3::Resistor::make("R2", Logger::Level::debug);
-	resOnEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(0.88e-3));
+	// auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
+	// lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(scenario.lineResistance), CPS::Math::singlePhaseParameterToThreePhase(scenario.lineInductance), 0, 0);
 
-
+	auto lineEMT = EMT::Ph3::Resistor::make("Line", Logger::Level::debug);
+	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(scenario.lineResistance));
 
 	// Topology
 	pv->connect({ n1EMT });
-	resOnEMT->connect({n1EMT, n2EMT});
+	lineEMT->connect({n1EMT, n2EMT});
 	loadEMT->connect({n2EMT});
 
-	auto systemEMT = SystemTopology(60,
+	auto systemEMT = SystemTopology(scenario.systemNominalFreq,
 		SystemNodeList{n1EMT, n2EMT},
-		SystemComponentList{loadEMT, resOnEMT, pv});
+		SystemComponentList{loadEMT, lineEMT, pv});
 
 	// Initialization of dynamic topology
 	systemEMT.initWithPowerflow(systemPF);
-
 	Complex initial3PhPowerVSI= Complex(linePF->attributeTyped<Real>("p_inj")->get(), linePF->attributeTyped<Real>("q_inj")->get());
 
 	pv->terminal(0)->setPower(initial3PhPowerVSI);
@@ -131,8 +127,7 @@ int main(int argc, char* argv[]) {
 	loggerEMT->logAttribute("Spannung_PCC", n2EMT->attribute("v"));
     loggerEMT->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
 	loggerEMT->logAttribute("Strom_RLC", pv->attribute("i_intf"));
-	//loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
-	//loggerEMT->logAttribute("VCO_Phase", pv->attribute("VCO_output"));
+	loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
 	loggerEMT->logAttribute("P_elec", pv->attribute("P_elec"));
 	loggerEMT->logAttribute("Q_elec", pv->attribute("Q_elec"));
 	
