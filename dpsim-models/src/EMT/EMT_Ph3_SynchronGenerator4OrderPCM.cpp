@@ -40,7 +40,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::specificInitialization() {
 	(**mEdq0_t)(1,0) = (**mVdq0)(1,0) + (**mIdq0)(0,0) * mLd_t;
 	(**mEdq0_t)(2,0) = 0.0;
 
-	mSLog->info(
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"

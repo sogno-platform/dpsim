@@ -40,7 +40,12 @@ void EMT::Ph3::SynchronGenerator5OrderVBR::specificInitialization() {
 	(**mEdq0_s)(0,0) = (**mVdq0)(0,0) - mLq_s * (**mIdq0)(1,0);
 	(**mEdq0_s)(1,0) = (**mVdq0)(1,0) + mLd_s * (**mIdq0)(0,0);
 
-	mSLog->info(
+	// initialize history term behind the transient reactance
+	mEh_t(0,0) = 0.0;
+	mEh_t(1,0) = mAq_t * (**mIdq0)(0,0) + mBq_t * (**mEdq0_t)(1,0) + mDq_t * (**mEf) + mDq_t * mEf_prev;
+	mEh_t(2,0) = 0.0;
+
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Model specific initialization  ---"
 		"\nSG model: 5th order type 2"
 		"\nInitial Ed_t (per unit): {:f}"
@@ -59,16 +64,14 @@ void EMT::Ph3::SynchronGenerator5OrderVBR::specificInitialization() {
 
 void EMT::Ph3::SynchronGenerator5OrderVBR::stepInPerUnit() {
 
-	if (mSimTime>0.0) {
-		// calculate Edq_t at t=k
-		(**mEdq0_t)(0,0) = 0.0;
-		(**mEdq0_t)(1,0) = mAq_t * (**mIdq0)(0,0) + mEh_t(1,0);
-		(**mEdq0_t)(2,0) = 0.0;
+	// calculate Edq_t at t=k
+	(**mEdq0_t)(0,0) = 0.0;
+	(**mEdq0_t)(1,0) = mAq_t * (**mIdq0)(0,0) + mEh_t(1,0);
+	(**mEdq0_t)(2,0) = 0.0;
 
-		// calculate Edq_s at t=k
-		(**mEdq0_s)(0,0) = (**mVdq0)(0,0) - mLq_s * (**mIdq0)(1,0);
-		(**mEdq0_s)(1,0) = (**mVdq0)(1,0) + mLd_s * (**mIdq0)(0,0);
-	}
+	// calculate Edq_s at t=k
+	(**mEdq0_s)(0,0) = (**mVdq0)(0,0) - mLq_s * (**mIdq0)(1,0);
+	(**mEdq0_s)(1,0) = (**mVdq0)(1,0) + mLd_s * (**mIdq0)(0,0);
 
 	// get transformation matrix
 	mAbcToDq0 = get_parkTransformMatrix();
