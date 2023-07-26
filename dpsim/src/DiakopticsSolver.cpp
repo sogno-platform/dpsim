@@ -29,8 +29,8 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	mTimeStep = timeStep;
 
 	// Raw source and solution vector logging
-	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);
-	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::off);
+	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel == CPS::Logger::Level::trace);
+	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel == CPS::Logger::Level::trace);
 
 	for (auto comp : tearComponents) {
 		auto pcomp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);

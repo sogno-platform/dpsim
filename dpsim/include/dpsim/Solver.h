@@ -37,6 +37,7 @@ namespace DPsim {
 	protected:
 		/// Logger
 		CPS::Logger::Log mSLog;
+		CPS::Logger::Level mLogLevel;
 		/// Time step for fixed step solvers
 		Real mTimeStep;
 		/// Activates parallelized computation of frequencies
@@ -63,7 +64,8 @@ namespace DPsim {
 	public:
 
 		Solver(CPS::Logger::Level logLevel, CPS::Logger::Level cliLevel = CPS::Logger::Level::warn) :
-			mSLog(CPS::Logger::get(CPS::Logger::LoggerType::SIMULATION, "Solver", logLevel, cliLevel)) {
+			mSLog(CPS::Logger::get(CPS::Logger::LoggerType::SIMULATION, "Solver", logLevel, cliLevel)),
+			mLogLevel(logLevel) {
 		}
 
 		virtual ~Solver() { }

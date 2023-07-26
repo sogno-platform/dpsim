@@ -27,6 +27,8 @@ namespace DPsim {
 	protected:
 		std::ofstream mLogFile;
 		String mName;
+		/// FIXME: The enabled-parameter cannot be changed midway through the simulation
+		/// Instead of setting this to false, the logger should not be created at all to reduce function call overhead
 		Bool mEnabled;
 		UInt mDownsampling;
 		fs::path mFilename;

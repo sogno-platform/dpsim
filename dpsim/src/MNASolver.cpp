@@ -447,9 +447,8 @@ template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
 	SPDLOG_LOGGER_DEBUG(mSLog, "--- Run steady-state initialization ---");
 
-	//TODO: Update condition for enabled, see below
-	DataLogger initLeftVectorLog("InitLeftVector", true);
-	DataLogger initRightVectorLog("InitRightVector", true);
+	DataLogger initLeftVectorLog("InitLeftVector", mLogLevel == CPS::Logger::Level::trace);
+	DataLogger initRightVectorLog("InitRightVector", mLogLevel == CPS::Logger::Level::trace);
 
 	TopologicalPowerComp::Behaviour initBehaviourPowerComps = TopologicalPowerComp::Behaviour::Initialization;
 	SimSignalComp::Behaviour initBehaviourSignalComps = SimSignalComp::Behaviour::Initialization;
