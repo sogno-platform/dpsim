@@ -584,6 +584,14 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
 								Ld_s, Lq_s, Td0_s, Tq0_s);
 							return gen;
+						} else if (mGeneratorType == GeneratorType::SG5OrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator5OrderVBR.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator5OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s, 0.0); 
+							return gen;
 						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
 							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
 							auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderVBR>(
@@ -839,6 +847,14 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								ratedPower, ratedVoltage, mFrequency, H,
 								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
 								Ld_s, Lq_s, Td0_s, Tq0_s);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG5OrderVBR) {
+							mSLog->info("    GeneratorType is SynchronGenerator5OrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator5OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s, 0.0); 
 							return gen;
 						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
 							SPDLOG_LOGGER_INFO(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
