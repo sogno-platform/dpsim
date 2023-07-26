@@ -89,11 +89,11 @@ def dpsim0():
     dpsimpy.Logger.set_log_dir('logs/' + sim_name)
 
     logger = dpsimpy.Logger(sim_name)
-    logger.log_attribute('v1', 'v', n1)
-    logger.log_attribute('v2', 'v', n2)
-    logger.log_attribute('r12', 'i_intf', r12)
-    logger.log_attribute('ievs', 'i_intf', evs)
-    logger.log_attribute('vevs', 'v_intf', evs)
+    logger.log_attribute('v1', n1.attr('v'))
+    logger.log_attribute('v2', n2.attr('v'))
+    logger.log_attribute('r12', r12.attr('i_intf'))
+    logger.log_attribute('ievs', evs.attr('i_intf'))
+    logger.log_attribute('vevs', evs.attr('v_intf'))
 
     sim = dpsimpy.RealTimeSimulation(sim_name)
     sim.set_system(sys)
@@ -132,10 +132,10 @@ def dpsim1():
     dpsimpy.Logger.set_log_dir('logs/' + sim_name)
 
     logger = dpsimpy.Logger(sim_name)
-    logger.log_attribute('v2', 'v', n2)
-    logger.log_attribute('r02', 'i_intf', r02)
-    logger.log_attribute('vecs', 'v_intf', ecs)
-    logger.log_attribute('iecs', 'i_intf', ecs)
+    logger.log_attribute('v2', n2.attr('v'))
+    logger.log_attribute('r02', r02.attr('i_intf'))
+    logger.log_attribute('vecs', ecs.attr('v_intf'))
+    logger.log_attribute('iecs', ecs.attr('i_intf'))
 
     sim = dpsimpy.RealTimeSimulation(sim_name)
     sim.set_system(sys)

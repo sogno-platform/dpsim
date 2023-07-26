@@ -137,7 +137,7 @@ def dpsim():
             .derive_phase(), (i*2)+1)
 
     for node in system.nodes:
-        logger.log_attribute(node.name()+'.V', 'v', node)
+        logger.log_attribute(node.name()+'.V', node.attr('v'))
 
     return sim, intf
 
