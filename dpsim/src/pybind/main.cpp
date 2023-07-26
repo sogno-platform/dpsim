@@ -194,7 +194,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("IdealVoltageSource", CPS::GeneratorType::IdealVoltageSource)
 		.value("SG3OrderVBR", CPS::GeneratorType::SG3OrderVBR)
 		.value("SG4OrderVBR", CPS::GeneratorType::SG4OrderVBR)
-		.value("SG5bOrderVBR", CPS::GeneratorType::SG5bOrderVBR)
+		.value("SG5OrderVBR", CPS::GeneratorType::SG5OrderVBR)
 		.value("SG6aOrderVBR", CPS::GeneratorType::SG6aOrderVBR)
 		.value("SG6bOrderVBR", CPS::GeneratorType::SG6bOrderVBR)
 		.value("FullOrderVBR", CPS::GeneratorType::FullOrderVBR)

@@ -39,7 +39,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_SynchronGenerator4OrderVBR.cpp
 	DP/DP_Ph1_SynchronGenerator4OrderPCM.cpp
 	DP/DP_Ph1_SynchronGenerator4OrderTPM.cpp
-	DP/DP_Ph1_SynchronGenerator5bOrderVBR.cpp
+	DP/DP_Ph1_SynchronGenerator5OrderVBR.cpp
 	DP/DP_Ph1_SynchronGenerator6OrderPCM.cpp
 	DP/DP_Ph1_SynchronGenerator6aOrderVBR.cpp
 	DP/DP_Ph1_SynchronGenerator6bOrderVBR.cpp
@@ -88,7 +88,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator3OrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator4OrderVBR.cpp
-	EMT/EMT_Ph3_SynchronGenerator5bOrderVBR.cpp
+	EMT/EMT_Ph3_SynchronGenerator5OrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGeneratorDQ.cpp
@@ -118,7 +118,7 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.cpp
 	SP/SP_Ph1_SynchronGenerator3OrderVBR.cpp
 	SP/SP_Ph1_SynchronGenerator4OrderVBR.cpp
-	SP/SP_Ph1_SynchronGenerator5bOrderVBR.cpp
+	SP/SP_Ph1_SynchronGenerator5OrderVBR.cpp
 	SP/SP_Ph1_SynchronGenerator6aOrderVBR.cpp
 	SP/SP_Ph1_SynchronGenerator6bOrderVBR.cpp
 	SP/SP_Ph1_PQNode.cpp
