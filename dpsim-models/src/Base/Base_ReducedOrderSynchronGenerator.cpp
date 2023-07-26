@@ -204,7 +204,7 @@ template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::calculateVBRconstants() {
 
 	Real Tf = 0;	
-	if (mSGOrder == SGOrder::SG5bOrder) {
+	if (mSGOrder == SGOrder::SG5Order) {
 		mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);
 		mYq = 0.0;
 		Tf = mTaa / mTd0_t;
@@ -229,7 +229,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::calculateVBRconstants() {
 	mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
 	mDq_t = mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);
 
-	if (mSGOrder == SGOrder::SG5bOrder) {
+	if (mSGOrder == SGOrder::SG5Order) {
 		mAd_s = (mTimeStep * (mLq - mLq_s)) / (2 * mTq0_s + mTimeStep);
 		mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
 		mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);
@@ -258,7 +258,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::calculateResistanceMatrixCons
 		mA = -mAd_t - mLq_t;
 		mB = mLd_t - mAq_t;
 	}
-	if (mSGOrder == SGOrder::SG5bOrder || mSGOrder == SGOrder::SG6aOrder || mSGOrder == SGOrder::SG6bOrder) {
+	if (mSGOrder == SGOrder::SG5Order || mSGOrder == SGOrder::SG6aOrder || mSGOrder == SGOrder::SG6bOrder) {
 		mA = -mLq_s - mAd_s;
 		mB = mLd_s - mAq_s;
 	}

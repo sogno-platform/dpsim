@@ -6,18 +6,18 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/SP/SP_Ph1_SynchronGenerator5bOrderVBR.h>
+#include <dpsim-models/SP/SP_Ph1_SynchronGenerator5OrderVBR.h>
 
 using namespace CPS;
 
-SP::Ph1::SynchronGenerator5bOrderVBR::SynchronGenerator5bOrderVBR
+SP::Ph1::SynchronGenerator5OrderVBR::SynchronGenerator5OrderVBR
     (const String & uid, const String & name, Logger::Level logLevel)
 	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),	
 	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
 	mEdq_s(mAttributes->create<Matrix>("Edq_s")) {
 
 	//
-	mSGOrder = SGOrder::SG5bOrder;
+	mSGOrder = SGOrder::SG5Order;
 
 	// model specific variables
 	**mEdq_t = Matrix::Zero(2,1);
@@ -26,12 +26,12 @@ SP::Ph1::SynchronGenerator5bOrderVBR::SynchronGenerator5bOrderVBR
 	mEh_t = Matrix::Zero(2,1);
 }
 
-SP::Ph1::SynchronGenerator5bOrderVBR::SynchronGenerator5bOrderVBR
+SP::Ph1::SynchronGenerator5OrderVBR::SynchronGenerator5OrderVBR
 	(const String & name, Logger::Level logLevel)
-	: SynchronGenerator5bOrderVBR(name, name, logLevel) {
+	: SynchronGenerator5OrderVBR(name, name, logLevel) {
 }
 
-void SP::Ph1::SynchronGenerator5bOrderVBR::specificInitialization() {
+void SP::Ph1::SynchronGenerator5OrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
 	(**mEdq_t)(0,0) = 0.0;
@@ -57,7 +57,7 @@ void SP::Ph1::SynchronGenerator5bOrderVBR::specificInitialization() {
 	mSLog->flush();
 }
 
-void SP::Ph1::SynchronGenerator5bOrderVBR::stepInPerUnit() {
+void SP::Ph1::SynchronGenerator5OrderVBR::stepInPerUnit() {
 	if (mSimTime>0.0) {
 		// calculate Edq_t at t=k
 		(**mEdq_t)(0,0) = 0.0;
