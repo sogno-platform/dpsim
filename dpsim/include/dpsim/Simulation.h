@@ -79,10 +79,8 @@ namespace DPsim {
 		CPS::Logger::Level mCliLevel;
 		/// (Real) time needed for the timesteps
 		std::vector<Real> mStepTimes;
-		/// List of data loggers. mLoggers[0] corresponds to the default simulation logger
-		DataLogger::List mDataLoggers;
-		/// Default simulation logger
-		DataLogger::Ptr mInternalDataLogger;
+		/// Map of data loggers. mLoggers[**mName] corresponds to the default simulation logger
+		std::map<String, DataLogger::Ptr, std::less<>> mDataLoggers;
 
 		// #### Solver Settings ####
 		///
@@ -232,9 +230,10 @@ namespace DPsim {
 		void addEvent(Event::Ptr e) {
 			mEvents.addEvent(e);
 		}
-		/// Add a new data logger
+		/// Add a new data logger.
+		/// When the name of the new logger matches the simulation name, the default simulation logger will be replaced!
 		void addLogger(DataLogger::Ptr logger) {
-			mDataLoggers.push_back(logger);
+			mDataLoggers[logger->name()] = logger;
 		}
 
 		/// Write step time measurements to log file
@@ -259,7 +258,7 @@ namespace DPsim {
 		Real finalTime() const { return **mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return **mTimeStep; }
-		DataLogger::List& loggers() { return mDataLoggers; }
+		std::map<String, DataLogger::Ptr, std::less<>> loggers() const { return mDataLoggers; }
 		std::shared_ptr<Scheduler> scheduler() const { return mScheduler; }
 		std::vector<Real>& stepTimes() { return mStepTimes; }
 

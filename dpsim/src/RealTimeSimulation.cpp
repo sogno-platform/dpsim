@@ -61,8 +61,8 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 	for (auto intf : mInterfaces)
 		intf->close();
 
-	for (auto lg : mDataLoggers)
-		lg->close();
+	for (const auto& [_path, logger] : mDataLoggers)
+		logger->close();
 
 	mTimer.stop();
 }

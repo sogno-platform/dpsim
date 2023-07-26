@@ -51,6 +51,10 @@ namespace DPsim {
 			open();
 		}
 
+		const String& name() const {
+			return mName;
+		}
+
 		void logPhasorNodeValues(Real time, const Matrix& data, Int freqNum = 1);
 		void logEMTNodeValues(Real time, const Matrix& data);
 

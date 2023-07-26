@@ -55,9 +55,8 @@ void Simulation::create() {
 	// Logging
 	mLog = Logger::get(Logger::LoggerType::SIMULATION, **mName, mLogLevel, mCliLevel);
 
-	// Default data logger
-	mInternalDataLogger = DataLogger::make(**mName + "_data");
-	mDataLoggers.push_back(mInternalDataLogger);
+	// Create default Data Logger
+	mDataLoggers[**mName] = DataLogger::make(**mName);
 
 	Eigen::setNbThreads(1);
 
@@ -67,6 +66,9 @@ void Simulation::create() {
 void Simulation::initialize() {
 	if (mInitialized)
 		return;
+
+	for (const auto& [_path, logger] : mDataLoggers)
+		logger->open();
 
 	mSolvers.clear();
 
@@ -176,10 +178,10 @@ void Simulation::createMNASolver() {
 			// Log solver iteration numbers
 			if (mLogLevel < Logger::Level::info) {
 				if (auto mnaSolverDirect = std::dynamic_pointer_cast<MnaSolverDirect<Complex>>(solver)) {
-					mInternalDataLogger->logAttribute("iters" + copySuffix, mnaSolverDirect->mIter);
+					mDataLoggers[**mName]->logAttribute("iters" + copySuffix, mnaSolverDirect->mIter);
 				}
 				else if (auto mnaSolverDirect = std::dynamic_pointer_cast<MnaSolverDirect<Real>>(solver)) {
-					mInternalDataLogger->logAttribute("iters" + copySuffix, mnaSolverDirect->mIter);
+					mDataLoggers[**mName]->logAttribute("iters" + copySuffix, mnaSolverDirect->mIter);
 				}
 			}
 		}
@@ -215,7 +217,7 @@ void Simulation::prepSchedule() {
 		}
 	}
 
-	for (auto logger : mDataLoggers) {
+	for (const auto& [_path, logger] : mDataLoggers) {
 		mTasks.push_back(logger->getTask());
 	}
 	if (!mScheduler) {
@@ -380,8 +382,8 @@ void Simulation::stop() {
 	for (auto intf : mInterfaces)
 		intf->close();
 
-	for (auto lg : mDataLoggers)
-		lg->close();
+	for (const auto& [_path, logger] : mDataLoggers)
+		logger->close();
 
 	SPDLOG_LOGGER_INFO(mLog, "Simulation finished.");
 	mLog->flush();
@@ -469,5 +471,5 @@ void Simulation::logIdObjAttribute(const String &comp, const String &attr) {
 }
 
 void Simulation::logAttribute(const String &name, CPS::AttributeBase::Ptr attr) {
-	mInternalDataLogger->logAttribute(name, attr);
+	mDataLoggers[**mName]->logAttribute(name, attr);
 }

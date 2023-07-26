@@ -31,8 +31,6 @@ DataLogger::DataLogger(String name, Bool enabled, UInt downsampling) :
 
 	if (mFilename.has_parent_path() && !fs::exists(mFilename.parent_path()))
 		fs::create_directory(mFilename.parent_path());
-
-	open();
 }
 
 void DataLogger::open() {
@@ -189,7 +187,7 @@ void DataLogger::logAttribute(const std::vector<String> &name, CPS::AttributeBas
 				}
 			}
 		}
-	}	
+	}
 }
 
 void DataLogger::logAttribute(const String &name, CPS::AttributeBase::Ptr attr, UInt rowsMax, UInt colsMax) {
