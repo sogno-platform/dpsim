@@ -16,7 +16,6 @@ SP::Ph1::SynchronGenerator5OrderVBR::SynchronGenerator5OrderVBR
 	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
 	mEdq_s(mAttributes->create<Matrix>("Edq_s")) {
 
-	//
 	mSGOrder = SGOrder::SG5Order;
 
 	// model specific variables
@@ -41,7 +40,11 @@ void SP::Ph1::SynchronGenerator5OrderVBR::specificInitialization() {
 	(**mEdq_s)(0,0) = (**mVdq)(0,0) - (mLq_s) * (**mIdq)(1,0);
 	(**mEdq_s)(1,0) = (**mVdq)(1,0) + (mLd_s) * (**mIdq)(0,0);
 
-	mSLog->info(
+	// initial history term behind the transient reactance
+	mEh_t(0,0) = 0.0;
+	mEh_t(1,0) = mAq_t * (**mIdq)(0,0) + mBq_t * (**mEdq_t)(1,0) + mDq_t * (**mEf) + mDq_t * mEf_prev;
+
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Model specific initialization  ---"
 		"\nSG model: 5th order type 2"
 		"\nInitial Ed_t (per unit): {:f}"
@@ -58,15 +61,13 @@ void SP::Ph1::SynchronGenerator5OrderVBR::specificInitialization() {
 }
 
 void SP::Ph1::SynchronGenerator5OrderVBR::stepInPerUnit() {
-	if (mSimTime>0.0) {
-		// calculate Edq_t at t=k
-		(**mEdq_t)(0,0) = 0.0;
-		(**mEdq_t)(1,0) = mAq_t * (**mIdq)(0,0) + mEh_t(1,0);
+	// calculate Edq_t at t=k
+	(**mEdq_t)(0,0) = 0.0;
+	(**mEdq_t)(1,0) = mAq_t * (**mIdq)(0,0) + mEh_t(1,0);
 
-		// calculate Edq_s at t=k
-		(**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);
-		(**mEdq_s)(1,0) = (**mVdq)(1,0) + mLd_s * (**mIdq)(0,0);
-	}
+	// calculate Edq_s at t=k
+	(**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);
+	(**mEdq_s)(1,0) = (**mVdq)(1,0) + mLd_s * (**mIdq)(0,0);
 
 	mDqToComplexA = get_DqToComplexATransformMatrix();
 	mComplexAToDq = mDqToComplexA.transpose();
