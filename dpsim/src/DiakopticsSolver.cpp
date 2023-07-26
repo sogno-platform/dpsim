@@ -32,6 +32,9 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel == CPS::Logger::Level::trace);
 	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel == CPS::Logger::Level::trace);
 
+	mLeftVectorLog->open();
+	mRightVectorLog->open();
+
 	for (auto comp : tearComponents) {
 		auto pcomp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 		if (pcomp)

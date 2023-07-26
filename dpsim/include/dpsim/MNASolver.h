@@ -198,6 +198,9 @@ namespace DPsim {
 		virtual ~MnaSolver() {
 			if (mSystemMatrixRecomputation)
 				SPDLOG_LOGGER_DEBUG(mSLog, "Number of system matrix recomputations: {:}", mNumRecomputations);
+
+			mLeftVectorLog->close();
+			mRightVectorLog->close();
 		};
 
 		/// Calls subroutines to set up everything that is required before simulation

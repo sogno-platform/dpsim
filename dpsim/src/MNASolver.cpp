@@ -24,6 +24,9 @@ MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Leve
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel == CPS::Logger::Level::trace);
 	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel == CPS::Logger::Level::trace);
+
+	mLeftVectorLog->open();
+	mRightVectorLog->open();
 }
 
 template <typename VarType>
@@ -246,8 +249,7 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 		SPDLOG_LOGGER_DEBUG(mSLog, "Stamping {:s} {:s} into source vector",
 			idObj->type(), idObj->name());
-		if (mSLog->should_log(spdlog::level::trace))
-			mSLog->trace("\n{:s}", Logger::matrixToString(mRightSideVector));
+		SPDLOG_LOGGER_TRACE(mSLog, "\n{:s}", Logger::matrixToString(mRightSideVector));
 	}
 }
 
@@ -275,8 +277,7 @@ void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 		SPDLOG_LOGGER_DEBUG(mSLog, "Stamping {:s} {:s} into source vector",
 			idObj->type(), idObj->name());
-		if (mSLog->should_log(spdlog::level::trace))
-			mSLog->trace("\n{:s}", Logger::matrixToString(mRightSideVector));
+		SPDLOG_LOGGER_TRACE(mSLog, "\n{:s}", Logger::matrixToString(mRightSideVector));
 	}
 }
 
@@ -450,6 +451,9 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	DataLogger initLeftVectorLog("InitLeftVector", mLogLevel == CPS::Logger::Level::trace);
 	DataLogger initRightVectorLog("InitRightVector", mLogLevel == CPS::Logger::Level::trace);
 
+	initLeftVectorLog.open();
+	initRightVectorLog.open();
+
 	TopologicalPowerComp::Behaviour initBehaviourPowerComps = TopologicalPowerComp::Behaviour::Initialization;
 	SimSignalComp::Behaviour initBehaviourSignalComps = SimSignalComp::Behaviour::Initialization;
 
@@ -534,6 +538,9 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 
 	// Reset system for actual simulation
 	mRightSideVector.setZero();
+
+	initLeftVectorLog.close();
+	initRightVectorLog.close();
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "--- Finished steady-state initialization ---");
 }
