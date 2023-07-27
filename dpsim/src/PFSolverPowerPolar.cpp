@@ -267,7 +267,6 @@ void PFSolverPowerPolar::setSolution() {
 	else {
 		calculatePAndQAtSlackBus();
         calculateQAtPVBuses();
-        //setSGPower();
 		SPDLOG_LOGGER_INFO(mSLog, "converged in {} iterations",mIterations);
 		SPDLOG_LOGGER_INFO(mSLog, "Solution: ");
 		SPDLOG_LOGGER_INFO(mSLog, "P\t\tQ\t\tV\t\tD");
@@ -407,24 +406,6 @@ void PFSolverPowerPolar::calculateQAtPVBuses() {
                 sgPtr->updatePowerInjection(S*mBaseApparentPower);
             }
         }
-    }
-}
-
-void PFSolverPowerPolar::setSGPower() {
-    for(auto genPtr : mSynchronGenerators) {
-        auto nodePtr = genPtr->node(0);
-        auto nodeIdx = nodePtr->matrixNodeIndex();
-        Complex nodeS = Complex(sol_P[nodeIdx], sol_Q[nodeIdx]);
-
-        // GenPower = NodePower - PQLoadsPower
-        for(auto comp : mSystem.mComponentsAtNode[nodePtr]) {
-            if (auto loadPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
-                nodeS += Complex(**(loadPtr->mActivePowerPerUnit), **(loadPtr->mReactivePowerPerUnit));
-            }
-        }
-
-        // Set Gen power
-        genPtr->updateReactivePowerInjection(nodeS*mBaseApparentPower);
     }
 }
 
