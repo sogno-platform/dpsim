@@ -12,7 +12,7 @@ using namespace CPS;
 
 SP::Ph1::SynchronGenerator5OrderVBR::SynchronGenerator5OrderVBR
     (const String & uid, const String & name, Logger::Level logLevel)
-	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),	
+	: ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
 	mEdq_t(mAttributes->create<Matrix>("Edq_t")),
 	mEdq_s(mAttributes->create<Matrix>("Edq_s")) {
 
@@ -46,7 +46,7 @@ void SP::Ph1::SynchronGenerator5OrderVBR::specificInitialization() {
 
 	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Model specific initialization  ---"
-		"\nSG model: 5th order type 2"
+		"\nSG model: 5th order"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\nInitial Ed_s (per unit): {:f}"
@@ -82,7 +82,7 @@ void SP::Ph1::SynchronGenerator5OrderVBR::stepInPerUnit() {
 	// calculate history term behind the subtransient reactance
 	mEh_s(0,0) = mAd_s * (**mIdq)(1,0) + mCd_s * (**mEdq_s)(0,0);
 	mEh_s(1,0) = mAq_s * (**mIdq)(0,0) + mBq_s * (**mEdq_t)(1,0) + mCq_s * (**mEdq_s)(1,0) + mDq_s * (**mEf) + mDq_s * mEf_prev;
-	
+
 	// convert Edq_t into the abc reference frame
 	mEh_s = mDqToComplexA * mEh_s;
 	mEvbr = Complex(mEh_s(0,0), mEh_s(1,0)) * mBase_V_RMS;

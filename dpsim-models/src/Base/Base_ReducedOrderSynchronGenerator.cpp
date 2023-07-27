@@ -109,11 +109,11 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mTd0_t = Td0_t;
 	mH = H;
 
-	SPDLOG_LOGGER_DEBUG(this->mSLog, "Set base parameters: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				mNomPower, mNomVolt, mNomFreq);
 
-	SPDLOG_LOGGER_DEBUG(this->mSLog, "Set operational parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set operational parameters in per unit: \n"
 			"inertia: {:e}\n"
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nTd0_t: {:e}\n",
@@ -137,11 +137,11 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mTq0_t = Tq0_t;
 	mH = H;
 
-	SPDLOG_LOGGER_DEBUG(this->mSLog, "Set base parameters: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				mNomPower, mNomVolt, mNomFreq);
 
-	SPDLOG_LOGGER_DEBUG(this->mSLog, "Set operational parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set operational parameters in per unit: \n"
 			"inertia: {:e}\n"
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\n"
@@ -174,11 +174,11 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 	mTaa = Taa;
 	mH = H;
 
-	SPDLOG_LOGGER_DEBUG(this->mSLog, "Set base parameters: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				mNomPower, mNomVolt, mNomFreq);
 
-	SPDLOG_LOGGER_DEBUG(this->mSLog, "Set operational parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(this->mSLog, "Set operational parameters in per unit: \n"
 			"inertia: {:e}\n"
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\n"
@@ -197,13 +197,13 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::scaleInertiaConstant(Real scalingFactor) {
 	mH = mH * scalingFactor;
-	SPDLOG_LOGGER_DEBUG(this->mSLog, "Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
+	SPDLOG_LOGGER_INFO(this->mSLog, "Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
 }
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::calculateVBRconstants() {
 
-	Real Tf = 0;	
+	Real Tf = 0;
 	if (mSGOrder == SGOrder::SG5Order) {
 		mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);
 		mYq = 0.0;
@@ -294,9 +294,9 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 
 		mInitElecPower.real(), mInitElecPower.real() / mNomPower,
 		mInitElecPower.imag(), mInitElecPower.imag() / mNomPower,
-		Math::abs(mInitVoltage), 
+		Math::abs(mInitVoltage),
 		Math::phase(mInitVoltage), Math::phaseDeg(mInitVoltage),
-		Math::abs(mInitCurrent), 
+		Math::abs(mInitCurrent),
 		Math::phase(mInitCurrent), Math::phaseDeg(mInitCurrent)
 	);
 	this->mSLog->flush();

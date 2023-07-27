@@ -43,7 +43,7 @@ void DP::Ph1::SynchronGenerator6bOrderVBR::specificInitialization() {
 
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Model specific initialization  ---"
-		"\nSG model: 6th order type a (Anderson - Fouad's model)"
+		"\nSG model: 6th order type b (Anderson - Fouad's model)"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\nInitial Ed_s (per unit): {:f}"

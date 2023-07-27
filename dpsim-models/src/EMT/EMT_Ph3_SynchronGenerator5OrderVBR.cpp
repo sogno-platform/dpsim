@@ -18,7 +18,7 @@ EMT::Ph3::SynchronGenerator5OrderVBR::SynchronGenerator5OrderVBR
 
 	//
 	mSGOrder = SGOrder::SG5Order;
-	
+
 	// model specific variables
 	**mEdq0_t = Matrix::Zero(3,1);
 	**mEdq0_s = Matrix::Zero(3,1);
@@ -47,7 +47,7 @@ void EMT::Ph3::SynchronGenerator5OrderVBR::specificInitialization() {
 
 	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Model specific initialization  ---"
-		"\nSG model: 5th order type 2"
+		"\nSG model: 5th order"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\nInitial Ed_s (per unit): {:f}"
