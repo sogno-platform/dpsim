@@ -40,9 +40,9 @@ void EMT::Ph3::SynchronGenerator6bOrderVBR::specificInitialization() {
 	(**mEdq0_s)(0,0) = (**mVdq0)(0,0) - mLq_s * (**mIdq0)(1,0);
 	(**mEdq0_s)(1,0) = (**mVdq0)(1,0) + mLd_s * (**mIdq0)(0,0);
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Model specific initialization  ---"
-		"\nSG model: 6th order type a (Anderson - Fouad's model)"
+		"\nSG model: 6th order type b (Anderson - Fouad's model)"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"
 		"\nInitial Ed_s (per unit): {:f}"
