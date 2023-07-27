@@ -328,11 +328,10 @@ void MnaSolverDirect<VarType>::logSystemMatrices() {
 		}
 		else {
 			SPDLOG_LOGGER_DEBUG(mSLog, "Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
-
-			for (auto sys : mSwitchedMatrices) {
-				SPDLOG_LOGGER_TRACE(mSLog, "Switching System matrix {:s} \n{:s}",
-				sys.first.to_string(), Logger::matrixToString(sys.second[0]));
-			}
+			// for (auto sys : mSwitchedMatrices) {
+				// SPDLOG_LOGGER_DEBUG(mSLog, "Switching System matrix {:s} \n{:s}",
+				// sys.first.to_string(), Logger::matrixToString(sys.second[0]));
+			// }
 		}
 		SPDLOG_LOGGER_DEBUG(mSLog, "Right side vector: \n{}", mRightSideVector);
 	}
