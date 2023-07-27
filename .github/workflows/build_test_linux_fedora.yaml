@@ -2,8 +2,6 @@ name: Build & Test Fedora
 
 on:
   push:
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 ## Build ##
 
