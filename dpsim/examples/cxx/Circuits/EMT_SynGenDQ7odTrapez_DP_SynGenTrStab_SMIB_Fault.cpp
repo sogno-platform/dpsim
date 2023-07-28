@@ -86,7 +86,7 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 			SystemComponentList{genPF, linePF, extnetPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 	loggerPF->logAttribute("v_line", linePF->attribute("v_intf"));
@@ -159,7 +159,7 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 	system.initWithPowerflow(systemPF);
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v_line", line->attribute("v_intf"));
@@ -229,7 +229,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 			SystemComponentList{genPF, linePF, extnetPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 	loggerPF->logAttribute("v_line", linePF->attribute("v_intf"));
@@ -299,7 +299,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v_line", line->attribute("v_intf"));
@@ -371,7 +371,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 			SystemComponentList{genPF, linePF, extnetPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 	loggerPF->logAttribute("v_line", linePF->attribute("v_intf"));
@@ -441,7 +441,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v_line", line->attribute("v_intf"));

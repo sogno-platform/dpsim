@@ -32,7 +32,7 @@ void vsSetParamsDP1ph() {
 		SystemComponentList{vs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
@@ -66,7 +66,7 @@ void vsSetParamsSP1ph() {
 		SystemComponentList{vs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
@@ -100,7 +100,7 @@ void vsSetParamsEMT3ph() {
 		SystemComponentList{vs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
@@ -136,7 +136,7 @@ void vsSetAttrDP1ph() {
 		SystemComponentList{vs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
@@ -172,7 +172,7 @@ void vsSetAttrSP1ph() {
 		SystemComponentList{vs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
@@ -208,7 +208,7 @@ void vsSetAttrEMT3ph() {
 		SystemComponentList{vs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
@@ -244,7 +244,7 @@ void vsSetFromNodeDP1ph() {
 		SystemComponentList{vs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
@@ -280,7 +280,7 @@ void vsSetFromNodeSP1ph() {
 		SystemComponentList{vs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation
@@ -316,7 +316,7 @@ void vsSetFromNodeEMT3ph() {
 		SystemComponentList{vs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 
 	// Simulation

@@ -63,7 +63,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 			SystemComponentList{genPF, linePF, extnetPF, faultPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
@@ -127,7 +127,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 
 
 	// Logging
-	auto loggerSP = DataLogger::make(simNameSP);
+	auto loggerSP = CPS::DataLogger::make(simNameSP);
 	loggerSP->logAttribute("v1", n1SP->attribute("v"));
 	loggerSP->logAttribute("v2", n2SP->attribute("v"));
 	//gen

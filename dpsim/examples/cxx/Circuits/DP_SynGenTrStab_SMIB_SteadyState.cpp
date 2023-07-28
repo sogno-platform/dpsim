@@ -53,7 +53,7 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 			SystemComponentList{genPF, linePF, extnetPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
@@ -105,7 +105,7 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 
 
 	// Logging
-	auto loggerDP = DataLogger::make(simNameDP);
+	auto loggerDP = CPS::DataLogger::make(simNameDP);
 	loggerDP->logAttribute("v1", n1DP->attribute("v"));
 	loggerDP->logAttribute("v2", n2DP->attribute("v"));
 	//gen

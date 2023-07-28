@@ -65,7 +65,7 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 			SystemComponentList{genPF, linePF, extnetPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
@@ -143,7 +143,7 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 			SystemComponentList{genEMT, lineEMT, fault, extnetEMT});
 
 	// Logging
-	auto loggerEMT = DataLogger::make(simNameEMT, true, logDownSampling);
+	auto loggerEMT = CPS::DataLogger::make(simNameEMT, true, logDownSampling);
 	//loggerEMT->logAttribute("v2", n2EMT->attribute("v"));
 	//loggerEMT->logAttribute("v_gen", 	genEMT->attribute("v_intf"));
     //loggerEMT->logAttribute("i_gen", 	genEMT->attribute("i_intf"));

@@ -156,9 +156,9 @@ void EMT_Ph3_VSI2_4bus_SampleGrid() {
 	//nrpSolver.writePFResultsToDynamicTopology(sysPF, sys);
 
 	// Logging
-	//auto logger = DataLogger::make(simName);
-	auto logger_vsi = DataLogger::make(simName+"_pv1");
-	auto logger_vsi2 = DataLogger::make(simName + "_pv2");
+	//auto logger = CPS::DataLogger::make(simName);
+	auto logger_vsi = CPS::DataLogger::make(simName+"_pv1");
+	auto logger_vsi2 = CPS::DataLogger::make(simName + "_pv2");
 	//// currents
 	//logger->logAttribute("i_vs", vs->attribute("i_intf"));
 	//logger->logAttribute("i_vsi", vsi->attribute("i_intf"));

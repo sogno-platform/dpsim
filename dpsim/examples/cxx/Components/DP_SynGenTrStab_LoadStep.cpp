@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, load});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i_gen", gen->attribute("i_intf"));
 	logger->logAttribute("i_load", load->attribute("i_intf"));

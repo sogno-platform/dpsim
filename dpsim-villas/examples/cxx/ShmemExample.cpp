@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
 	sim.addInterface(std::shared_ptr<Interface>(&intf));
 
 	// Logger
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->mVoltage);
 	logger->logAttribute("v2", n2->mVoltage);
 	logger->logAttribute("v3", n3->mVoltage);

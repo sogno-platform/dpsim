@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1, l1});
 
 	// Logger
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("iR1", r1->attribute("i_intf"));
 	logger->logAttribute("iL1", l1->attribute("i_intf"));

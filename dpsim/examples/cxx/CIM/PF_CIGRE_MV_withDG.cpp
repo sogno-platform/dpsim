@@ -43,7 +43,7 @@ int main(int argc, char** argv){
     SystemTopology system = reader.loadCIM(scenario.systemFrequency, filenames, Domain::SP);
 	Examples::Grids::CIGREMV::addInvertersToCIGREMV(system, scenario, Domain::SP);
 
-    auto loggerPF = DPsim::DataLogger::make(simName);
+    auto loggerPF = CPS::DataLogger::make(simName);
     for (auto node : system.mNodes)
     {
         loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));

@@ -38,7 +38,7 @@ static void DP_RL_SourceStep(Real timeStep, Real finalTime,
 		SystemNodeList{ n1, n2, n3 },
 		SystemComponentList{ vs, r, l, sw });
 
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));
@@ -80,7 +80,7 @@ static void EMT_RL_SourceStep(Real timeStep, Real finalTime,
 		SystemNodeList{ n1, n2, n3 },
 		SystemComponentList{ vs, r, l, sw });
 
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));

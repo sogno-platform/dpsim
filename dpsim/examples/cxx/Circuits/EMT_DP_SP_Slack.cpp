@@ -36,7 +36,7 @@ void simElementsSP1ph() {
 		SystemComponentList{vs, load});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i1", vs->attribute("i_intf"));
 
@@ -74,7 +74,7 @@ void simComponentSP1ph() {
 		SystemComponentList{sl, load});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i1", sl->attribute("i_intf"));
 
@@ -112,7 +112,7 @@ void simElementsDP1ph() {
 		SystemComponentList{vs, load});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i1", vs->attribute("i_intf"));
 
@@ -150,7 +150,7 @@ void simComponentDP1ph() {
 		SystemComponentList{sl, load});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i1", sl->attribute("i_intf"));
 
@@ -188,7 +188,7 @@ void simElementsEMT3ph() {
 		SystemComponentList{vs, load});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i1", vs->attribute("i_intf"));
 
@@ -227,7 +227,7 @@ void simComponentEMT3ph() {
 		SystemComponentList{vs, load});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i1", vs->attribute("i_intf"));
 

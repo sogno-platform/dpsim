@@ -8,10 +8,10 @@
 
 #include <iomanip>
 
-#include <dpsim/DataLogger.h>
+#include <dpsim-models/DataLogger.h>
 #include <dpsim-models/Logger.h>
 
-using namespace DPsim;
+using namespace CPS;
 
 DataLogger::DataLogger(Bool enabled) :
 	mLogFile(),
@@ -34,6 +34,9 @@ DataLogger::DataLogger(String name, Bool enabled, UInt downsampling) :
 }
 
 void DataLogger::open() {
+	if (!mEnabled) {
+		return;
+	}
 	mLogFile = std::ofstream(mFilename, std::ios_base::out|std::ios_base::trunc);
 	if (!mLogFile.is_open()) {
 		// TODO: replace by exception
@@ -43,7 +46,9 @@ void DataLogger::open() {
 }
 
 void DataLogger::close() {
-	mLogFile.close();
+	if (mLogFile) {
+		mLogFile.close();
+	}
 }
 
 void DataLogger::setColumnNames(std::vector<String> names) {
@@ -62,6 +67,16 @@ void DataLogger::logDataLine(Real time, Real data) {
 
 	mLogFile << std::scientific << std::right << std::setw(14) << time;
 	mLogFile << ", " << std::right << std::setw(13) << data;
+	mLogFile << '\n';
+}
+
+void DataLogger::logDataLine(Real time, std::vector<Real> data) {
+	if (!mEnabled)
+		return;
+
+	mLogFile << std::scientific << std::right << std::setw(14) << time;
+	for (const auto& it : data)
+		mLogFile << ", " << std::right << std::setw(13) << it;
 	mLogFile << '\n';
 }
 

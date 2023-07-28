@@ -47,7 +47,7 @@ int main(int argc, char** argv){
     CIM::Reader reader(Logger::Level::debug, Logger::Level::off, Logger::Level::debug);
     SystemTopology systemPF = reader.loadCIM(systemFrequency, filenames, CPS::Domain::SP);
 
-    auto loggerPF = DPsim::DataLogger::make(simNamePF);
+    auto loggerPF = CPS::DataLogger::make(simNamePF);
     for (auto node : systemPF.mNodes)
     {
         loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
@@ -70,7 +70,7 @@ int main(int argc, char** argv){
     SystemTopology systemEMT = reader2.loadCIM(systemFrequency, filenames, CPS::Domain::EMT, PhaseType::ABC);
 	systemEMT.initWithPowerflow(systemPF);
 
-	auto logger = DPsim::DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 
 	// log node voltages
 	for (auto node : systemEMT.mNodes)

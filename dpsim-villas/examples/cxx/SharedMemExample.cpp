@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(2.0);
-	
+
     std::string shmemConfig = R"STRING(
 		{
         "type": "shmem",
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 	sim.addInterface(intf);
 
 	// Logger
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->mVoltage);
 	logger->logAttribute("v2", n2->mVoltage);
 	logger->logAttribute("v3", n3->mVoltage);

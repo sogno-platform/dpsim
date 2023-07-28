@@ -138,13 +138,13 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m, "Interface");
 
-	py::class_<DPsim::DataLogger, std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
+	py::class_<CPS::DataLogger, std::shared_ptr<CPS::DataLogger>>(m, "Logger")
         .def(py::init<std::string>())
 		.def_static("set_log_dir", &CPS::Logger::setLogDir)
 		.def_static("get_log_dir", &CPS::Logger::logDir)
-		.def("log_attribute", py::overload_cast<const CPS::String&, CPS::AttributeBase::Ptr, CPS::UInt, CPS::UInt>(&DPsim::DataLogger::logAttribute), "name"_a, "attr"_a, "max_rows"_a = 0, "max_cols"_a = 0)
+		.def("log_attribute", py::overload_cast<const CPS::String&, CPS::AttributeBase::Ptr, CPS::UInt, CPS::UInt>(&CPS::DataLogger::logAttribute), "name"_a, "attr"_a, "max_rows"_a = 0, "max_cols"_a = 0)
 		/// Compatibility method. Might be removed later when the python examples have been fully adapted.
-		.def("log_attribute", py::overload_cast<const std::vector<CPS::String>&, CPS::AttributeBase::Ptr>(&DPsim::DataLogger::logAttribute), "names"_a, "attr"_a);
+		.def("log_attribute", py::overload_cast<const std::vector<CPS::String>&, CPS::AttributeBase::Ptr>(&CPS::DataLogger::logAttribute), "names"_a, "attr"_a);
 
 	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
 		.def("name", &CPS::IdentifiedObject::name)

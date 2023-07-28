@@ -55,7 +55,7 @@ void EMT_VS_RL_f60_largeTs() {
 		SystemComponentList{vs, rline, lline, rload});
 
 	// Logger
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));
@@ -106,7 +106,7 @@ void EMT_VS_RL_f60() {
 		SystemComponentList{vs, rline, lline, rload});
 
 	// Logger
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));
@@ -157,7 +157,7 @@ void EMT_VS_RL_f500() {
 		SystemComponentList{vs, rline, lline, rload});
 
 	// Logger
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));

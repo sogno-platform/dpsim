@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{genEMT, load, fault});
 
 	// Logging
-	auto loggerEMT = DataLogger::make(simNameEMT, true, logDownSampling);
+	auto loggerEMT = CPS::DataLogger::make(simNameEMT, true, logDownSampling);
 	loggerEMT->logAttribute("v_gen", 	genEMT->attribute("v_intf"));
 	loggerEMT->logAttribute("i_gen", 	genEMT->attribute("i_intf"));
     loggerEMT->logAttribute("Te", 		genEMT->attribute("Te"));

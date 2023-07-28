@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
 	systemPF.component<CPS::SP::Ph1::SynchronGenerator>("GEN1")->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
 
 	// define logging
-    auto loggerPF = DPsim::DataLogger::make(simNamePF);
+    auto loggerPF = CPS::DataLogger::make(simNamePF);
     for (auto node : systemPF.mNodes)
         loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
 
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
 
 	// Logging
 	// log node voltage
-	auto logger = DataLogger::make(simName, true, logDownSampling);
+	auto logger = CPS::DataLogger::make(simName, true, logDownSampling);
 		for (auto node : sys.mNodes)
 			logger->logAttribute(node->name() + ".V", node->attribute("v"));
 

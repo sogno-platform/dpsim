@@ -38,7 +38,7 @@ Real finalTime = 1.0;
 Real timeStep = 10e-6;
 Real startTimeFault=0.2;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	if (argc > 1) {
 		CommandLineArgs args(argc, argv);
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(VnomMV);
 	extnetPF->setBaseVoltage(VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{genPF, linePF, extnetPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 	loggerPF->logAttribute("v_line", linePF->attribute("v_intf"));
@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
 		syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.poleNum, syngenKundur.nomFieldCurr,
 		syngenKundur.Rs, syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Ld_s,
 		syngenKundur.Lq_s, syngenKundur.Ll, syngenKundur.Td0_t, syngenKundur.Tq0_t, syngenKundur.Td0_s, syngenKundur.Tq0_s, syngenKundur.H);
-	
+
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
 	gen->terminal(0)->setPower(-genPF->getApparentPower());
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v_line", line->attribute("v_intf"));

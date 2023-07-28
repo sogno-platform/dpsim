@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{genPF, linePF, extnetPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
@@ -194,7 +194,7 @@ int main(int argc, char* argv[]) {
 			   SystemComponentList{genSP, lineSP, extnetSP, fault});
 
 	// Logging
-	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
+	auto loggerSP = CPS::DataLogger::make(simNameSP, true, logDownSampling);
 	loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
     loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
     loggerSP->logAttribute("Te", 	 	genSP->attribute("Te"));

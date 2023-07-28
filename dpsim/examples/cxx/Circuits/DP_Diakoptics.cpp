@@ -51,7 +51,7 @@ void DP_VS_CS_R4() {
 		SystemComponentList{vs, r1, r2, r3, r4, cs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));
@@ -108,7 +108,7 @@ void DP_VS_CS_R4_Diakoptics() {
 	sys.addTearComponent(r3);
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));
@@ -164,7 +164,7 @@ void DP_VS_R2L3() {
 		SystemComponentList{vs, r1, l1, l2, l3, r2});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));
@@ -221,7 +221,7 @@ void DP_VS_R2L3_Diakoptics() {
 	sys.addTearComponent(l1);
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));

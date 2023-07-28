@@ -32,7 +32,7 @@ void DP_CS_R1(CommandLineArgs& args) {
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i10", r1->attribute("i_intf"));
 
@@ -63,7 +63,7 @@ void DP_VS_R1(CommandLineArgs& args) {
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{vs, r});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 
 	Simulation sim(simName, args);
@@ -103,7 +103,7 @@ void DP_CS_R2CL(CommandLineArgs& args) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs, r1, c1, l1, r2});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("i12", cs->attribute("i_intf"));
@@ -151,7 +151,7 @@ void DP_VS_CS_R4(CommandLineArgs& args) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));
@@ -200,7 +200,7 @@ void DP_VS_R2L3(CommandLineArgs& args) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));
@@ -239,7 +239,7 @@ void DP_VS_RC1(CommandLineArgs& args) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, c1});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("i12", r1->attribute("i_intf"));
@@ -280,7 +280,7 @@ void DP_VS_RL2(CommandLineArgs& args) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, rl, ll, rL});
 
 	// Logger
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("i12", rL->attribute("i_intf"));
@@ -338,7 +338,7 @@ void DP_Ph3_VS_R2L3(CommandLineArgs& args) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));
@@ -388,7 +388,7 @@ void DP_Ph3_VS_RC1(CommandLineArgs& args) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, c1});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("i12", r1->attribute("i_intf"));

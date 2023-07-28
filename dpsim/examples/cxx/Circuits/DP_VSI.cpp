@@ -108,7 +108,7 @@ void DP_Ph1_VSI2_4bus_SampleGrid() {
 		node->setInitialVoltage(Complex(Vnom, 0));
 	}
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	// currents
 	/*logger->logAttribute("i_vs", vs->attribute("i_intf"));
 	logger->logAttribute("i_vsi", vsi->attribute("i_intf"));

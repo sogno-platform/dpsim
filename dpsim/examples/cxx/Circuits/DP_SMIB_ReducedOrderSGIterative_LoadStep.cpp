@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{genPF, linePF, extnetPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
@@ -172,7 +172,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{genDP, lineDP, extnetDP});
 
 	// Logging
-	auto logger = DataLogger::make(simName, true, logDownSampling);
+	auto logger = CPS::DataLogger::make(simName, true, logDownSampling);
 
 	// log node voltage
 	for (auto node : systemDP.mNodes)

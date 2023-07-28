@@ -51,7 +51,7 @@ int main(int argc, char** argv){
 	Examples::Grids::CIGREMV::addInvertersToCIGREMV(systemPF, scenario, Domain::SP);
 
 	// define logging
-    auto loggerPF = DPsim::DataLogger::make(simNamePF);
+    auto loggerPF = CPS::DataLogger::make(simNamePF);
     for (auto node : systemPF.mNodes) {
         loggerPF->logAttribute(node->name() + ".V", node->attribute("v"));
     }
@@ -76,7 +76,7 @@ int main(int argc, char** argv){
 	Examples::Grids::CIGREMV::addInvertersToCIGREMV(systemDP, scenario, Domain::DP);
 	systemDP.initWithPowerflow(systemPF);
 
-	auto logger = DPsim::DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 
 	// log node voltages
 	for (auto node : systemDP.mNodes)

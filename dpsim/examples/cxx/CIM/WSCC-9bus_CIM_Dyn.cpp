@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::TransientStability);
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
 	logger->logAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
 	logger->logAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));

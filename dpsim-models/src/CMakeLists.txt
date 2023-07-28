@@ -1,5 +1,6 @@
 add_library(dpsim-models STATIC
 	Logger.cpp
+	DataLogger.cpp
 	MathUtils.cpp
 	Attribute.cpp
 	TopologicalNode.cpp

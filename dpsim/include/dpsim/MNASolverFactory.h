@@ -9,7 +9,7 @@
 #pragma once
 
 #include <dpsim/MNASolver.h>
-#include <dpsim/DataLogger.h>
+#include <dpsim-models/DataLogger.h>
 #include <dpsim/MNASolverDirect.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim/DenseLUAdapter.h>

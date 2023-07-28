@@ -63,6 +63,7 @@ void MNASimPowerComp<VarType>::mnaUpdateCurrent(const Matrix& leftVector) {
 
 template<typename VarType>
 void MNASimPowerComp<VarType>::mnaPreStep(Real time, Int timeStepCount) {
+	mSimulationTime = time;
 	this->mnaCompPreStep(time, timeStepCount);
 };
 

@@ -40,7 +40,7 @@ int main(int argc, char** argv){
     CIM::Reader reader(Logger::Level::info, Logger::Level::off, Logger::Level::info);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
-	auto logger = DPsim::DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	for (auto node : system.mNodes)
 	{
 		logger->logAttribute(node->name() + ".V", node->attribute("v"));

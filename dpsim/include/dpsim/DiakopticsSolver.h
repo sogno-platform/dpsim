@@ -11,7 +11,7 @@
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/SimSignalComp.h>
-#include <dpsim/DataLogger.h>
+#include <dpsim-models/DataLogger.h>
 #include <dpsim/Solver.h>
 
 #include <unordered_map>
@@ -49,9 +49,9 @@ namespace DPsim {
 		CPS::SystemTopology mSystem;
 
 		/// Left side vector logger
-		std::shared_ptr<DataLogger> mLeftVectorLog;
+		std::shared_ptr<CPS::DataLogger> mLeftVectorLog;
 		/// Right side vector logger
-		std::shared_ptr<DataLogger> mRightVectorLog;
+		std::shared_ptr<CPS::DataLogger> mRightVectorLog;
 
 		std::vector<Subnet> mSubnets;
 		std::unordered_map<typename CPS::SimNode<VarType>::Ptr, Subnet*> mNodeSubnetMap;

@@ -7,7 +7,7 @@ This is a summary of general guidelines for the development of DPsim.
 
 ## Logging
 
-There are two ways to log information in DPsim: The `CPS::Logger` (called the **Text Logger**), which can write to `.log` files and to the CLI, as well as the `DPsim::DataLogger` (called the **Data Logger**), which can write to `.csv` files.
+There are two ways to log information in DPsim: The `CPS::Logger` (called the **Text Logger**), which can write to `.log` files and to the CLI, as well as the `CPS::DataLogger` (called the **Data Logger**), which can write to `.csv` files.
 
 ### Log Levels
 The log levels that can be used with the Text Logger are as follows:

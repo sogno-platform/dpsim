@@ -14,6 +14,7 @@
 #include <memory>
 
 #include <dpsim-models/Logger.h>
+#include <dpsim-models/DataLogger.h>
 #include <dpsim-models/IdentifiedObject.h>
 #include <dpsim-models/TopologicalTerminal.h>
 #include <dpsim-models/TopologicalNode.h>
@@ -33,6 +34,9 @@ namespace CPS {
 		Logger::Log mSLog;
 		/// Component logger control for internal variables
 		Logger::Level mLogLevel;
+		// Data logger
+		DataLogger::Ptr mDataLogger;
+
 		/// Determine state of the simulation, e.g. to implement
 		/// special behavior for components during initialization
 		Behaviour mBehaviour = Behaviour::MNASimulation;
@@ -50,13 +54,19 @@ namespace CPS {
 			 * std::max(Logger::Level::info, logLevel). But because of excessive
 			 * logging to Level::info that is currently infeasible. */
 			mSLog(Logger::get(Logger::LoggerType::COMPONENT, name, logLevel, std::max(Logger::Level::warn, logLevel))),
-			mLogLevel(logLevel) { }
+			mLogLevel(logLevel) {
+				mDataLogger = DataLogger::make(name + "_trace", logLevel == Logger::Level::trace);
+			}
 
 		/// Basic constructor that takes name and log level and sets the UID to name as well
 		TopologicalPowerComp(String name, Logger::Level logLevel = Logger::Level::off)
 			: TopologicalPowerComp(name, name, logLevel) { }
-		/// Destructor - does not do anything
-		virtual ~TopologicalPowerComp() { }
+		/// Destructor
+		virtual ~TopologicalPowerComp() {
+			if (mDataLogger) {
+				mDataLogger->close();
+			}
+		}
 
 		/// Returns nodes connected to this component
 		virtual TopologicalNode::List topologicalNodes() = 0;

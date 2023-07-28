@@ -99,9 +99,9 @@ namespace ExcitationSystemEremia {
 
 namespace TurbineGovernor {
     struct TurbineGovernorPSAT1 {
-        // Turbine Governor type 1 
-        // Taken from from PSAT - example d_014_pss_l14 
-        
+        // Turbine Governor type 1
+        // Taken from from PSAT - example d_014_pss_l14
+
         // Reference speed (p.u.)
         Real OmegaRef = 1.0;
         // Pilot valve droop (p.u.)
@@ -123,9 +123,9 @@ namespace TurbineGovernor {
     };
 
     struct TurbineGovernorPSAT2 {
-        // Turbine Governor type 1 
+        // Turbine Governor type 1
         // Taken from PSAT - example d_anderson_farmer
-        
+
         // Reference speed (p.u.)
         Real OmegaRef = 1.0;
         // Pilot valve droop (p.u.)
@@ -279,7 +279,7 @@ namespace SMIB {
         Complex initComplexElectricalPower = Complex(initActivePower, initReactivePower);
         Complex initTerminalVolt = VnomMV * Complex(cos(initVoltAngle), sin(initVoltAngle));
 
-        // 
+        //
         Real SwitchClosed = 0.1;
 	    Real SwitchOpen = 1e6;
     };
@@ -368,7 +368,7 @@ namespace Scenario5 {
 }
 
 namespace Scenario6 {
-    // SMIB scenario with ideal trafo and load step as event 
+    // SMIB scenario with ideal trafo and load step as event
 
     struct Config {
         // default configuration of scenario
@@ -402,7 +402,7 @@ namespace Scenario6 {
         Real lineConductance = 0.0048; // Psnub 0.5% of 555MW
 
         // Load step
-        Real loadStepActivePower = 100e6; 
+        Real loadStepActivePower = 100e6;
     };
 }
 
@@ -619,7 +619,7 @@ namespace CIGREMV {
         }
     }
 
-    void logPVAttributes(DPsim::DataLogger::Ptr logger, CPS::TopologicalPowerComp::Ptr pv) {
+    void logPVAttributes(CPS::DataLogger::Ptr logger, CPS::TopologicalPowerComp::Ptr pv) {
 
         // power controller
         std::vector<String> inputNames = {  pv->name() + "_powerctrl_input_pref", pv->name() + "_powerctrl_input_qref",
@@ -647,7 +647,7 @@ namespace CIGREMV {
 }
 
 namespace Events {
-        std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain, DPsim::DataLogger::Ptr logger) {
+        std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain, CPS::DataLogger::Ptr logger) {
 
         // TODO: use base classes ph1
         if (domain == CPS::Domain::DP) {
@@ -675,7 +675,7 @@ namespace Events {
         }
     }
 
-    std::shared_ptr<DPsim::SwitchEvent3Ph> createEventAddPowerConsumption3Ph(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain, DPsim::DataLogger::Ptr logger) {
+    std::shared_ptr<DPsim::SwitchEvent3Ph> createEventAddPowerConsumption3Ph(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain, CPS::DataLogger::Ptr logger) {
 
         // TODO: use base classes ph3
          if (domain == CPS::Domain::EMT) {

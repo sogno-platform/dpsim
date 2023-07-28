@@ -73,6 +73,18 @@ void DP::Ph1::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<
 		(**mIntfCurrent)(0, freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 	}
 
+	#if defined(DEBUG_BUILD)
+		std::vector<String> columns;
+
+		for (UInt freq = 0; freq < mNumFreqs; freq++) {
+			columns.push_back("voltage_abs_" + freq);
+			columns.push_back("voltage_angle_" + freq);
+		}
+
+			mDataLogger->open();
+			mDataLogger->setColumnNames(columns);
+	#endif
+
 	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- MNA initialization ---"
 		"\nInitial voltage {:s}"
@@ -240,6 +252,10 @@ void DP::Ph1::Capacitor::MnaPostStepHarm::execute(Real time, Int timeStepCount) 
 
 void DP::Ph1::Capacitor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
+	#if defined(DEBUG_BUILD)
+		std::vector<Real> logData;
+	#endif
+
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		(**mIntfVoltage)(0,freq) = 0;
 		if (terminalNotGrounded(1))
@@ -247,8 +263,16 @@ void DP::Ph1::Capacitor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 		if (terminalNotGrounded(0))
 			(**mIntfVoltage)(0,freq) = (**mIntfVoltage)(0,freq) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq);
 
-		SPDLOG_LOGGER_TRACE(mSLog, "Voltage {:e}<{:e}", std::abs((**mIntfVoltage)(0,freq)), std::arg((**mIntfVoltage)(0,freq)));
+		#if defined(DEBUG_BUILD)
+			logData.push_back(std::abs((**mIntfVoltage)(0,freq)));
+			logData.push_back(std::arg((**mIntfVoltage)(0,freq)));
+		#endif
 	}
+
+	#if defined(DEBUG_BUILD)
+		mDataLogger->logDataLine(mSimulationTime, logData);
+	#endif
+
 }
 
 void DP::Ph1::Capacitor::mnaCompUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) {

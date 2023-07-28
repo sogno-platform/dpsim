@@ -16,7 +16,7 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Solver.h>
-#include <dpsim/DataLogger.h>
+#include <dpsim-models/DataLogger.h>
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
@@ -109,9 +109,9 @@ namespace DPsim {
 		/// Last simulation time step when log was updated
 		Int mLastLogTimeStep = 0;
 		/// Left side vector logger
-		std::shared_ptr<DataLogger> mLeftVectorLog;
+		std::shared_ptr<CPS::DataLogger> mLeftVectorLog;
 		/// Right side vector logger
-		std::shared_ptr<DataLogger> mRightVectorLog;
+		std::shared_ptr<CPS::DataLogger> mRightVectorLog;
 
 		/// LU factorization measurements
 		std::vector<Real> mFactorizeTimes;

@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
 	fault->connect({SimNode::GND, n1});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i_gen", gen->attribute("i_intf"));
 

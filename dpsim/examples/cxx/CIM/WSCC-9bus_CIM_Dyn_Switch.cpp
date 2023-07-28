@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 	sys.addComponent(sw);
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
 	logger->logAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
 	logger->logAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));

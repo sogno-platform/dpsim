@@ -126,7 +126,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{genDP, load, fault});
 
 	// Logging
-	auto loggerDP = DataLogger::make(simNameDP, true, logDownSampling);
+	auto loggerDP = CPS::DataLogger::make(simNameDP, true, logDownSampling);
 	loggerDP->logAttribute("v_gen", 	 genDP->attribute("v_intf"));
     loggerDP->logAttribute("i_gen", 	 genDP->attribute("i_intf"));
     loggerDP->logAttribute("Te", 	 genDP->attribute("Te"));

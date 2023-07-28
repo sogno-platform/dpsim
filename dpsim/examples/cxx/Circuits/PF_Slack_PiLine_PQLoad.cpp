@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{extnetPF, linePF, loadPF});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 

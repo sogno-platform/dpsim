@@ -6,7 +6,7 @@
 #include <vector>
 
 #include <dpsim/Config.h>
-#include <dpsim/DataLogger.h>
+#include <dpsim-models/DataLogger.h>
 #include <dpsim/Solver.h>
 #include <dpsim/Scheduler.h>
 #include <dpsim/Event.h>
@@ -80,7 +80,7 @@ namespace DPsim {
 		/// (Real) time needed for the timesteps
 		std::vector<Real> mStepTimes;
 		/// Map of data loggers. mLoggers[**mName] corresponds to the default simulation logger
-		std::map<String, DataLogger::Ptr, std::less<>> mDataLoggers;
+		std::map<String, CPS::DataLogger::Ptr, std::less<>> mDataLoggers;
 
 		// #### Solver Settings ####
 		///
@@ -132,7 +132,7 @@ namespace DPsim {
 
 		struct LoggerMapping {
 			/// Simulation data logger
-			DataLogger::Ptr logger;
+			CPS::DataLogger::Ptr logger;
 			/// Downsampling
 			UInt downsampling;
 		};
@@ -232,7 +232,7 @@ namespace DPsim {
 		}
 		/// Add a new data logger.
 		/// When the name of the new logger matches the simulation name, the default simulation logger will be replaced!
-		void addLogger(DataLogger::Ptr logger) {
+		void addLogger(CPS::DataLogger::Ptr logger) {
 			mDataLoggers[logger->name()] = logger;
 		}
 
@@ -258,7 +258,7 @@ namespace DPsim {
 		Real finalTime() const { return **mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return **mTimeStep; }
-		std::map<String, DataLogger::Ptr, std::less<>> loggers() const { return mDataLoggers; }
+		std::map<String, CPS::DataLogger::Ptr, std::less<>> loggers() const { return mDataLoggers; }
 		std::shared_ptr<Scheduler> scheduler() const { return mScheduler; }
 		std::vector<Real>& stepTimes() { return mStepTimes; }
 

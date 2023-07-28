@@ -59,7 +59,7 @@ void powerFlow(SystemTopology& systemPF) {
 			SystemComponentList{extnetPF, linePF, loadPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
@@ -111,7 +111,7 @@ void simulateDP(SystemTopology& systemPF, String waveform) {
 	systemDP.initWithPowerflow(systemPF);
 
 	// Logging
-	auto loggerDP = DataLogger::make(simNameDP);
+	auto loggerDP = CPS::DataLogger::make(simNameDP);
 	loggerDP->logAttribute("v1", n1DP->attribute("v"));
 	loggerDP->logAttribute("v2", n2DP->attribute("v"));
 	loggerDP->logAttribute("isrc", extnetDP->attribute("i_intf"));
@@ -166,7 +166,7 @@ void simulateSP(SystemTopology& systemPF, String waveform) {
 	systemSP.initWithPowerflow(systemPF);
 
 	// Logging
-	auto loggerSP = DataLogger::make(simNameSP);
+	auto loggerSP = CPS::DataLogger::make(simNameSP);
 	loggerSP->logAttribute("v1", n1SP->attribute("v"));
 	loggerSP->logAttribute("v2", n2SP->attribute("v"));
 	loggerSP->logAttribute("i12", lineSP->attribute("i_intf"));
@@ -219,7 +219,7 @@ void simulateEMT(SystemTopology& systemPF, String waveform) {
 	systemEMT.initWithPowerflow(systemPF);
 
 	// Logging
-	auto loggerEMT = DataLogger::make(simNameEMT);
+	auto loggerEMT = CPS::DataLogger::make(simNameEMT);
 	loggerEMT->logAttribute("v1", n1EMT->attribute("v"));
 	loggerEMT->logAttribute("v2", n2EMT->attribute("v"));
 	loggerEMT->logAttribute("i12", lineEMT->attribute("i_intf"));

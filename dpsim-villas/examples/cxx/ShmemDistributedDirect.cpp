@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
 		sim.setFinalTime(finalTime);
 
 		// Logging
-		auto logger = DataLogger::make(simName);
+		auto logger = CPS::DataLogger::make(simName);
 		logger->logAttribute("v1", n1->mVoltage);
 		logger->logAttribute("v2", n2->mVoltage);
 		logger->logAttribute("r12", r12->mIntfCurrent);
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
 		sim.setFinalTime(finalTime);
 
 		// Logging
-		auto logger = DataLogger::make(simName);
+		auto logger = CPS::DataLogger::make(simName);
 		logger->logAttribute("v2", n2->mVoltage);
 		logger->logAttribute("r02", r02->mIntfCurrent);
 		logger->logAttribute("vecs", ecs->mIntfVoltage);

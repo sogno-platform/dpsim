@@ -84,7 +84,7 @@ void simulateDiakoptics(std::list<fs::path> filenames,
 		sim.setTearingComponents(sys.mTearComponents);
 
 	// Logging
-	//auto logger = DataLogger::make(simName);
+	//auto logger = CPS::DataLogger::make(simName);
 	//for (Int cop = 1; cop <= copies; cop++) {
 	//	for (Int bus  = 1; bus <= 9; bus++) {
 	//		String attrName = "v" + std::to_string(bus) + "_" + std::to_string(cop);

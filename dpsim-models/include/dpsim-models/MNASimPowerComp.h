@@ -15,6 +15,9 @@ namespace CPS {
 		Bool mHasPreStep;
 		Bool mHasPostStep;
 
+	protected:
+		Real mSimulationTime;
+
 	public:
 		using Type = VarType;
 		using Ptr = std::shared_ptr<MNASimPowerComp<VarType>>;

@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 	sim.doFrequencyParallelization(false);
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"), 1, 9);
 	logger->logAttribute("v2", n2->attribute("v"), 1, 1);
 	logger->logAttribute("v3", n3->attribute("v"), 1, 9);

@@ -56,7 +56,7 @@ void Simulation::create() {
 	mLog = Logger::get(Logger::LoggerType::SIMULATION, **mName, mLogLevel, mCliLevel);
 
 	// Create default Data Logger
-	mDataLoggers[**mName] = DataLogger::make(**mName);
+	mDataLoggers[**mName] = CPS::DataLogger::make(**mName);
 
 	Eigen::setNbThreads(1);
 

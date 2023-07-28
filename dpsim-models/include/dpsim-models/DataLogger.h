@@ -12,15 +12,13 @@
 #include <iostream>
 #include <fstream>
 
-#include <dpsim/Definitions.h>
-#include <dpsim/Scheduler.h>
 #include <dpsim-models/Filesystem.h>
 #include <dpsim-models/PtrFactory.h>
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/SimNode.h>
 #include <dpsim-models/Task.h>
 
-namespace DPsim {
+namespace CPS {
 
 	class DataLogger : public SharedFactory<DataLogger> {
 
@@ -35,16 +33,17 @@ namespace DPsim {
 
 		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
 
-		void logDataLine(Real time, Real data);
-		void logDataLine(Real time, const Matrix& data);
-		void logDataLine(Real time, const MatrixComp& data);
-
 	public:
 		typedef std::shared_ptr<DataLogger> Ptr;
 		typedef std::vector<DataLogger::Ptr> List;
 
 		DataLogger(Bool enabled = true);
 		DataLogger(String name, Bool enabled = true, UInt downsampling = 1);
+
+		void logDataLine(Real time, Real data);
+		void logDataLine(Real time, std::vector<Real> data);
+		void logDataLine(Real time, const Matrix& data);
+		void logDataLine(Real time, const MatrixComp& data);
 
 		void open();
 		void close();
@@ -78,7 +77,7 @@ namespace DPsim {
 				for (auto attr : logger.mAttributes) {
 					mAttributeDependencies.push_back(attr.second);
 				}
-				mModifiedAttributes.push_back(Scheduler::external);
+				mModifiedAttributes.push_back(nullptr); //nullptr = Scheduler::external, but this cannot be used because the scheduler is not linked yet.
 			}
 
 			void execute(Real time, Int timeStepCount);

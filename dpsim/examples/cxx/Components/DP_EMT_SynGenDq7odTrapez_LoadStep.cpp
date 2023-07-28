@@ -82,7 +82,7 @@ void DP_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerCl
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i_gen", gen->attribute("i_intf"));
 	logger->logAttribute("wr_gen", gen->attribute("w_r"));
@@ -134,7 +134,7 @@ void EMT_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerC
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i_gen", gen->attribute("i_intf"));
 	logger->logAttribute("wr_gen", gen->attribute("w_r"));

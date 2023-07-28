@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 		SystemComponentList{ vs1, r12, r02 });
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->mVoltage);
 	logger->logAttribute("v2", n2->mVoltage);
 	logger->logAttribute("r12", r12->mIntfCurrent);

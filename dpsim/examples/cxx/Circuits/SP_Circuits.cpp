@@ -60,7 +60,7 @@ void SP_Ph3_VS_R2L3() {
 	auto sys = SystemTopology(50, SystemNodeList{ n1, n2, n3, n4 }, SystemComponentList{ vs, r1, l1, l2, l3, r2 });
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("v3", n3->attribute("v"));
@@ -115,7 +115,7 @@ void SP_Ph3_VS_RC1() {
 	auto sys = SystemTopology(50, SystemNodeList{ n1, n2 }, SystemComponentList{ vs, r1, c1 });
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("i12", r1->attribute("i_intf"));

@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
 	Bool withExciter = false;
 	Real timeStepEvent = 30.0;
 	Real cmdLoadFactor = 1.5;
-	
+
 
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
@@ -79,14 +79,14 @@ int main(int argc, char* argv[]) {
 	gen->setInitialValues(initActivePower, initReactivePower, initTerminalVoltageMagnitude,
 		initTerminalVoltageAngle, initMechPower);
 
-	if (withGovernor) 
+	if (withGovernor)
 		gen->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa, govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr, govKundur.Tsm, initActivePower / syngenKundur.nomPower, initMechPower / syngenKundur.nomPower);
 
 	if (withExciter)
 		gen->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke, excEremia.Tf, excEremia.Kf, excEremia.Tr);
 
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", CPS::Logger::Level::info);
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(RloadOriginal), 
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(RloadOriginal),
 						 Math::singlePhaseParameterToThreePhase(RloadNew));
 	fault->openSwitch();
 
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, fault});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("i_gen", gen->attribute("i_intf"));
 	logger->logAttribute("wr_gen", gen->attribute("w_r"));

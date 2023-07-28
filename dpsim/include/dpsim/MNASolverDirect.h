@@ -17,7 +17,7 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Solver.h>
-#include <dpsim/DataLogger.h>
+#include <dpsim-models/DataLogger.h>
 #include <dpsim/DirectLinearSolver.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim/DenseLUAdapter.h>

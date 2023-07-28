@@ -13,6 +13,7 @@
 #include <list>
 
 #include <dpsim/Definitions.h>
+#include <dpsim/Scheduler.h>
 #include <dpsim/Config.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim-models/Logger.h>

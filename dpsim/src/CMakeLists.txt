@@ -11,7 +11,6 @@ set(DPSIM_SOURCES
 	Utils.cpp
 	Timer.cpp
 	Event.cpp
-	DataLogger.cpp
 	Scheduler.cpp
 	SequentialScheduler.cpp
 	ThreadScheduler.cpp

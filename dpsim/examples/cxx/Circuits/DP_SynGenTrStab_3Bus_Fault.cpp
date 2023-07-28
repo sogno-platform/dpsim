@@ -80,7 +80,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 			SystemComponentList{gen1PF, gen2PF, loadPF, line12PF, line13PF, line23PF, faultPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v_bus1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v_bus2", n2PF->attribute("v"));
 	loggerPF->logAttribute("v_bus3", n3PF->attribute("v"));
@@ -169,7 +169,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	systemDP.initWithPowerflow(systemPF);
 
 	// Logging
-	auto loggerDP = DataLogger::make(simNameDP);
+	auto loggerDP = CPS::DataLogger::make(simNameDP);
 	loggerDP->logAttribute("v1", n1DP->attribute("v"));
 	loggerDP->logAttribute("v2", n2DP->attribute("v"));
 	loggerDP->logAttribute("v3", n3DP->attribute("v"));

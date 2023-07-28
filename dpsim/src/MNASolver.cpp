@@ -249,7 +249,7 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 		SPDLOG_LOGGER_DEBUG(mSLog, "Stamping {:s} {:s} into source vector",
 			idObj->type(), idObj->name());
-		SPDLOG_LOGGER_TRACE(mSLog, "\n{:s}", Logger::matrixToString(mRightSideVector));
+		SPDLOG_LOGGER_DEBUG(mSLog, "\n{:s}", Logger::matrixToString(mRightSideVector));
 	}
 }
 
@@ -277,7 +277,7 @@ void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 		SPDLOG_LOGGER_DEBUG(mSLog, "Stamping {:s} {:s} into source vector",
 			idObj->type(), idObj->name());
-		SPDLOG_LOGGER_TRACE(mSLog, "\n{:s}", Logger::matrixToString(mRightSideVector));
+		SPDLOG_LOGGER_DEBUG(mSLog, "\n{:s}", Logger::matrixToString(mRightSideVector));
 	}
 }
 

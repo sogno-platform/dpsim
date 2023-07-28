@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
 
 	InterfaceShmem intf("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
 
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 
 	// Register exportable node voltages
 	UInt o = 0;

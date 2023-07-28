@@ -69,7 +69,7 @@ void simTrafoElementsSP1ph() {
 	SystemTopology sys(frequency, SystemNodeList{n1, n2, vn1 }, SystemComponentList{vs, trafoRes, trafoInd, trafoSnubberResHVSide, trafoSnubberResMVSide, trafoSnubberCapMVSide, loadRes});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("itrafo", trafoInd->attribute("i_intf"));
@@ -122,7 +122,7 @@ void simTrafoSP1ph() {
 	SystemTopology sys(50, SystemNodeList{n1, n2 }, SystemComponentList{vs, trafo, loadRes});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("itrafo", trafo->attribute("i_intf"));
@@ -194,7 +194,7 @@ void simTrafoElementsDP1ph() {
 	SystemTopology sys(frequency, SystemNodeList{n1, n2, vn1 }, SystemComponentList{vs, trafoRes, trafoInd, trafoSnubberResHVSide, trafoSnubberResMVSide, trafoSnubberCapMVSide, loadRes});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("itrafo", trafoInd->attribute("i_intf"));
@@ -247,7 +247,7 @@ void simTrafoDP1ph() {
 	SystemTopology sys(50, SystemNodeList{n1, n2 }, SystemComponentList{vs, trafo, loadRes});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("itrafo", trafo->attribute("i_intf"));
@@ -319,7 +319,7 @@ void simTrafoElementsEMT3ph() {
 	SystemTopology sys(frequency, SystemNodeList{n1, n2, vn1 }, SystemComponentList{vs, trafoRes, trafoInd, trafoSnubberResHVSide, trafoSnubberResMVSide, trafoSnubberCapMVSide, loadRes});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("itrafo", trafoInd->attribute("i_intf"));
@@ -372,7 +372,7 @@ void simTrafoEMT3ph() {
 	SystemTopology sys(50, SystemNodeList{n1, n2 }, SystemComponentList{vs, trafo, loadRes});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("itrafo", trafo->attribute("i_intf"));

@@ -101,7 +101,7 @@ void doSim(int threads, int generators, int repNumber) {
 	auto sys = SystemTopology(60, nodes, components);
 
 	// Logging
-	//auto logger = DataLogger::make(name);
+	//auto logger = CPS::DataLogger::make(name);
 	//logger->logAttribute("v1", n1->attribute("v"));
 	//logger->logAttribute("i_load", res->attribute("i_intf"));
 

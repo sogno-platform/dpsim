@@ -55,7 +55,7 @@ void simElements() {
 		//SystemComponentList{vs, res, ind, load});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 
@@ -101,7 +101,7 @@ void simDecoupling() {
 	sys.addComponents(dline->getLineComponents());
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("i1", vs->attribute("i_intf"));
@@ -151,7 +151,7 @@ void simDecouplingEMT() {
 	sys.addComponents(dline->getLineComponents());
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("i1", vs->attribute("i_intf"));

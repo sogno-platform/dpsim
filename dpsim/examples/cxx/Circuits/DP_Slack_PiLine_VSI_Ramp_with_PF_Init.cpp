@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{extnetPF, linePF, loadPF});
 
 	// Logging
-	auto loggerPF = DataLogger::make(simNamePF);
+	auto loggerPF = CPS::DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
 
@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
 	systemDP.initWithPowerflow(systemPF);
 
 	// Logging
-	auto loggerDP = DataLogger::make(simName);
+	auto loggerDP = CPS::DataLogger::make(simName);
 	loggerDP->logAttribute("v1", n1DP->attribute("v"));
 	loggerDP->logAttribute("v2", n2DP->attribute("v"));
 	loggerDP->logAttribute("i12", lineDP->attribute("i_intf"));

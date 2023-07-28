@@ -66,7 +66,7 @@ void simElements() {
 		//SystemComponentList{vs, res, ind, load});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("iline", ind->attribute("i_intf"));
@@ -118,7 +118,7 @@ void simPiLine() {
 		SystemComponentList{vs, line, load});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("iline", line->attribute("i_intf"));

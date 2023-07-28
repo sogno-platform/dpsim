@@ -36,7 +36,7 @@ void voltageSourceResistorEMT3ph() {
 		SystemComponentList{vs, res});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("iR", res->attribute("i_intf"));
 
@@ -75,7 +75,7 @@ void voltageSourceResistorDP1ph() {
 		SystemComponentList{vs, res});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("iR", res->attribute("i_intf"));
 
@@ -114,7 +114,7 @@ void voltageSourceResistorSP1ph() {
 		SystemComponentList{vs, res});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("iR", res->attribute("i_intf"));
 
@@ -158,7 +158,7 @@ void voltageSourceInductorEMT3ph() {
 		SystemComponentList{vs, res, ind});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("iR", res->attribute("i_intf"));
@@ -204,7 +204,7 @@ void voltageSourceInductorDP1ph() {
 		SystemComponentList{vs, res, ind});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("iR", res->attribute("i_intf"));
@@ -250,7 +250,7 @@ void voltageSourceInductorSP1ph() {
 		SystemComponentList{vs, res, ind});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("iR", res->attribute("i_intf"));
@@ -296,7 +296,7 @@ void voltageSourceCapacitorEMT3ph() {
 		SystemComponentList{vs, res, cap});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("iR", res->attribute("i_intf"));
@@ -342,7 +342,7 @@ void voltageSourceCapacitorDP1ph() {
 		SystemComponentList{vs, res, cap});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("iR", res->attribute("i_intf"));
@@ -388,7 +388,7 @@ void voltageSourceCapacitorSP1ph() {
 		SystemComponentList{vs, res, cap});
 
 	// Logging
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->attribute("v"));
 	logger->logAttribute("v2", n2->attribute("v"));
 	logger->logAttribute("iR", res->attribute("i_intf"));

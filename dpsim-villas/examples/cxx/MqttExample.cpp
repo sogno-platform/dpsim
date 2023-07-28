@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(10.0);
-	
+
     std::string mqttConfig = R"STRING({
         "type": "mqtt",
         "format": "json",
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 	intf->exportAttribute(ll->mIntfCurrent->deriveCoeff<Complex>(0, 0), 1, true, "v_load");
 
 	// Logger
-	auto logger = DataLogger::make(simName);
+	auto logger = CPS::DataLogger::make(simName);
 	logger->logAttribute("v1", n1->mVoltage);
 	logger->logAttribute("v2", n2->mVoltage);
 	logger->logAttribute("v3", n3->mVoltage);

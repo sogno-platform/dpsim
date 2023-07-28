@@ -12,11 +12,11 @@ In general, attributes are instances of the `Attribute<T>` class, but they are u
 
 Through the template parameter `T` of the `Attribute<T>` class, attributes can have different value types, most commonly `Real`, `Complex`, `Matrix`, or `MatrixComp`. Additionally, attributes can fall into one of two categories:
 **Static** attributes have a fixed value which can only be changed explicitly through the attribute's `set`-method or through a mutable reference obtained through `get`.
-**Dynamic** attributes on the other hand can dynamically re-compute their value from other attributes every time they are read. This can for example be used to create a scalar attribute of type `Real` whose value always contains the magnitude of another, different attribute of type `Complex`. 
+**Dynamic** attributes on the other hand can dynamically re-compute their value from other attributes every time they are read. This can for example be used to create a scalar attribute of type `Real` whose value always contains the magnitude of another, different attribute of type `Complex`.
 
 Any simulation component or class which inherits from `IdentifiedObject` contains an instance of an `AttributeList`.
 This list can be used to store all the attributes present in this component and later access them via a `String` instead of having to use the member variable directly.
-For reasons of code clarity and runtime safety, the member variables should still be used whenever possible. 
+For reasons of code clarity and runtime safety, the member variables should still be used whenever possible.
 
 ## Creating and Storing Attributes
 Normally, a new attribute is created by using the `create` or `createDynamic` method of an `AttributeList` object.
@@ -24,7 +24,7 @@ These two methods will create a new attribute of the given type and insert it in
 Afterwards, a pointer to the attribute is returned which can then be stored in a component's member variable. Usually this is done in the
 component's constructor in an initialization list:
 
-```cpp    
+```cpp
 /// Component class Base::Ph1::PiLine
 
 public:
@@ -53,7 +53,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mTimeStep(AttributeStatic<Real>::make(0.001)),
 	mSplitSubnets(AttributeStatic<Bool>::make(true)),
 	mSteadyStateInit(AttributeStatic<Bool>::make(false)),
-	//... 
+	//...
 {
 	// ...
 }
@@ -83,7 +83,7 @@ Real read3 = **attr; //read3 = 0.003
 ```
 
 ## Working with Dynamic Attributes
-In general, dynamic attributes can be accessed via the same `get` and `set`-methods described above for static attributes. However, 
+In general, dynamic attributes can be accessed via the same `get` and `set`-methods described above for static attributes. However,
 dynamic attributes can additionally have **dependencies** on other attributes which affect the behavior of these methods.
 Usually, this is used to dynamically compute the attribute's value from the value of another attribute. In the simplest case, a dynamic
 attribute can be set to **reference** another (static or dynamic) attribute using the `setReference`-method. After this method has been called,
@@ -150,7 +150,7 @@ required attribute pointer, one can either directly access the public member var
 auto r1 = DP::Ph1::Resistor::make("r_1");
 r1->setParameters(5);
 
-auto logger = DataLogger::make("simName");
+auto logger = CPS::DataLogger::make("simName");
 // Access the attribute through the member variable
 logger->logAttribute("i12", r1->mIntfCurrent);
 
