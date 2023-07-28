@@ -45,7 +45,7 @@ void DP::Ph1::SynchronGenerator4OrderPCM::specificInitialization() {
 	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
 	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
 
-	mSLog->info(
+	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"

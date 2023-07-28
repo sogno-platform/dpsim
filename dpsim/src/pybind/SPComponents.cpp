@@ -129,6 +129,11 @@ void addSPPh1Components(py::module_ mSPPh1) {
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::SP::Ph1::SynchronGenerator4OrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
 		.def("connect", &CPS::SP::Ph1::SynchronGenerator4OrderVBR::connect);
 
+	py::class_<CPS::SP::Ph1::SynchronGenerator5OrderVBR, std::shared_ptr<CPS::SP::Ph1::SynchronGenerator5OrderVBR>, CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>(mSPPh1, "SynchronGenerator5OrderVBR", py::multiple_inheritance())
+		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::SP::Ph1::SynchronGenerator5OrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a, "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
+		.def("connect", &CPS::SP::Ph1::SynchronGenerator5OrderVBR::connect);	
+
 	py::class_<CPS::SP::Ph1::SynchronGenerator6aOrderVBR, std::shared_ptr<CPS::SP::Ph1::SynchronGenerator6aOrderVBR>, CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>(mSPPh1, "SynchronGenerator6aOrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::SP::Ph1::SynchronGenerator6aOrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a, "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
@@ -175,7 +180,7 @@ void addSPPh3Components(py::module_ mSPPh3) {
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::SP::Ph3::Resistor::setParameters, "R"_a)
-		.def("connect", &CPS::SP::Ph3::Resistor::connect);;
+		.def("connect", &CPS::SP::Ph3::Resistor::connect);
 
 	py::class_<CPS::SP::Ph3::Capacitor, std::shared_ptr<CPS::SP::Ph3::Capacitor>, CPS::SimPowerComp<CPS::Complex>>(mSPPh3, "Capacitor", py::multiple_inheritance())
         .def(py::init<std::string>())

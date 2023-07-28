@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 	Real switchOpen = GridParams.SwitchOpen;
 	Real startTimeFault = 1.0;
 	Real endTimeFault   = 1.1;
-	Real finalTime = 20;
+	Real finalTime = 10;
 	Real timeStep = 1e-3;
 	Real H = syngenKundur.H;
 	bool withExciter = false;
@@ -195,14 +195,15 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
-	loggerSP->logAttribute("v_gen", 	 genSP->attribute("v_intf"));
-    loggerSP->logAttribute("i_gen", 	 genSP->attribute("i_intf"));
-    loggerSP->logAttribute("Te", 	 	genSP->attribute("Te"));
-    loggerSP->logAttribute("delta", 	 genSP->attribute("delta"));
-    loggerSP->logAttribute("w_r", 		 genSP->attribute("w_r"));
-	loggerSP->logAttribute("Vdq0", 		 genSP->attribute("Vdq0"));
-	loggerSP->logAttribute("Idq0", 		 genSP->attribute("Idq0"));
-	if (SGModel=="6a" || SGModel=="6b") {
+	loggerSP->logAttribute("v_gen", genSP->attribute("v_intf"));
+    loggerSP->logAttribute("i_gen", genSP->attribute("i_intf"));
+    loggerSP->logAttribute("Te", 	genSP->attribute("Te"));
+	loggerSP->logAttribute("Ef", 	genSP->attribute("Ef"));
+    loggerSP->logAttribute("delta", genSP->attribute("delta"));
+    loggerSP->logAttribute("w_r", 	genSP->attribute("w_r"));
+	loggerSP->logAttribute("Vdq0", 	genSP->attribute("Vdq0"));
+	loggerSP->logAttribute("Idq0",	genSP->attribute("Idq0"));
+	if (SGModel=="5b" || SGModel=="6a" || SGModel=="6b") {
 		loggerSP->logAttribute("Edq0_s", 		 genSP->attribute("Edq_s"));
 		loggerSP->logAttribute("Edq0_t", 		 genSP->attribute("Edq_t"));
 	} else {
