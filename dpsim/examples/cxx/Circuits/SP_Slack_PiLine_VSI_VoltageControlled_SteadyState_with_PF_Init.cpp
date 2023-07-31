@@ -14,9 +14,10 @@ using namespace CPS;
 
 int main(int argc, char* argv[]) {
 
-	CIM::Examples::Grids::SGIB::Yazdani Yazdani;
+	// CIM::Examples::Grids::GridForming::ScenarioConfig1 scenario;
+	CIM::Examples::Grids::GridForming::Yazdani scenario;
 
-	Real finalTime = 0.5;
+	Real finalTime = 2;
 	Real timeStep = 0.0001;
 	String simName = "SP_Slack_PiLine_VSI_VoltageControlled_SteadyState_with_PF_Init";
 	Bool pvWithControl = true;
@@ -33,27 +34,31 @@ int main(int argc, char* argv[]) {
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetPF->setParameters(400);
-	extnetPF->setBaseVoltage(400);
+	extnetPF->setParameters(scenario.systemNominalVoltage);
+	extnetPF->setBaseVoltage(scenario.systemNominalVoltage);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 	
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(0.88e-3, 0, 0, 0);
-	linePF->setBaseVoltage(400);
+	linePF->setParameters(scenario.lineResistance, 0, 0, 0);
+	linePF->setBaseVoltage(scenario.systemNominalVoltage);
 
-	Complex load1_s=3*std::pow(400, 2)/(Complex(83e-3, 137e-6*2*M_PI*60));
-	Real load1_p=load1_s.real();
-	Real load1_q=load1_s.imag();
+	Complex load1_s=3*std::pow(scenario.systemNominalVoltage, 2)/(Complex(scenario.loadRes1, scenario.loadInd1*scenario.systemNominalOmega));
+	Real loadActivePower=load1_s.real();
+	Real loadReactivePower=load1_s.imag();
 
 	auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
-	loadPF->setParameters(load1_p, load1_q, 400);
+	loadPF->setParameters(loadActivePower, loadReactivePower, scenario.systemNominalVoltage);
 	loadPF->modifyPowerFlowBusType(PowerflowBusType::PQ);
+
+	// auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
+	// loadPF->setParameters(scenario.loadActivePower, scenario.loadReactivePower, scenario.systemNominalVoltage);
+	// loadPF->modifyPowerFlowBusType(PowerflowBusType::PQ);
 
 	// Topology
 	extnetPF->connect({ n1PF });
 	linePF->connect({ n1PF, n2PF });
 	loadPF->connect({ n2PF });
-	auto systemPF = SystemTopology(60,
+	auto systemPF = SystemTopology(scenario.systemNominalFreq,
 			SystemNodeList{n1PF, n2PF},
 			SystemComponentList{linePF, extnetPF, loadPF});
 	
@@ -87,26 +92,29 @@ int main(int argc, char* argv[]) {
 	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
 	
 	auto loadSP = SP::Ph1::Load::make("Load", Logger::Level::debug);
-	loadSP->setParameters(load1_p, load1_q, 400);
+	loadSP->setParameters(loadActivePower, loadReactivePower, scenario.systemNominalVoltage);
 
 	auto pv = SP::Ph1::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
-	pv->setParameters(Yazdani.OmegaNull, Yazdani.Vdref, Yazdani.Vqref);
-	pv->setControllerParameters(Yazdani.KpVoltageCtrl, Yazdani.KiVoltageCtrl, Yazdani.KpCurrCtrl, Yazdani.KiCurrCtrl, Yazdani.KpPLL, Yazdani.KiPLL, Yazdani.OmegaCutoff);
-	pv->setFilterParameters(Yazdani.Lf, Yazdani.Cf, Yazdani.Rf, Yazdani.Rc); 
-	pv->setInitialStateValues(Yazdani.phi_dInit, Yazdani.phi_qInit, Yazdani.gamma_dInit, Yazdani.gamma_qInit);
+	pv->setParameters(scenario.systemNominalOmega, scenario.Vdref, scenario.Vqref);
+	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.KpPLL, scenario.KiPLL, scenario.OmegaCutoff);
+	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
+	pv->setInitialStateValues(scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
 	pv->withControl(pvWithControl);
 
-	auto resOnSP = SP::Ph1::Resistor::make("R2", Logger::Level::debug);
-	resOnSP->setParameters(0.88e-3);
+	// auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
+	// lineSP->setParameters(scenario.lineResistance, scenario.lineInductance, 0, 0);
+
+	auto lineSP = SP::Ph1::Resistor::make("Line", Logger::Level::debug);
+	lineSP->setParameters(scenario.lineResistance);
 
 	// Topology
 	pv->connect({ n1SP });
-	resOnSP->connect({n1SP, n2SP});
+	lineSP->connect({n1SP, n2SP});
 	loadSP->connect({n2SP});
 
-	auto systemSP = SystemTopology(60,
+	auto systemSP = SystemTopology(scenario.systemNominalFreq,
 			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{loadSP, resOnSP, pv});
+			SystemComponentList{loadSP, lineSP, pv});
 
 	// Initialization of dynamic topology
 	systemSP.initWithPowerflow(systemPF);

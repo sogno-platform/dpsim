@@ -677,64 +677,126 @@ namespace SGIB {
         // Further parameters
         Real systemOmega = 2 * PI * systemFrequency;
     };
-    struct Yazdani {
+}
+namespace GridForming {
 
-        // Line parameters (R/X = 1)
-        Real length = 5;
-        Real lineResistance = 0.5 * length;
-	    Real lineInductance = 0.5/314 * length;
-        Real lineCapacitance = 50e-6/314 * length; 
+    struct ScenarioConfig1 {
+        Real systemNominalFreq = 60;
+        Real systemNominalOmega = 2*M_PI*systemNominalFreq;
+        Real systemNominalVoltage=20e3;
+
+        // Line
+        Real lineResistance = 0.88e-3;
+        Real lineInductance = 0;
+
+        // Real lineResistance = 1.27e-4 * 529;
+        // Real lineInductance = 9.05e-4 * 529;
+
+        // VSI nominal values
+        Real vsiNominalVoltage= 20e3;
+        Real vsiNominalActivePower= 900e6;
+        Real vsiNominalReactivePower= 900e6;
+
+        // VSI Voltage controller parameters
+        Real Vdref = 20e3;
+        Real Vqref = 0;
+        Real KpVoltageCtrl = 0.22486;
+        Real KiVoltageCtrl = 99.6873;
+        Real KpCurrCtrl = 5.1993;
+        Real KiCurrCtrl = 501.6734;
+
+        // VCO/PLL controller parameters
+        // OmegaCutoff is the cutoff-frequency of the PLL filter
+        // in case of VCO-mode use KpPLL=0, KiPLL=0 and OmegaCutoff = OmegaNull to work as VCO
+        Real KpPLL = 0; 
+        Real KiPLL = 0; 
+        Real OmegaCutoff = systemNominalOmega;
 
         // Initial state values of VSI system matrix
-        Real thetaPLLInit = 0; 
+        Real thetaPLLInit = 0;
         Real phiPLLInit = 0; 
         Real phi_dInit = 0;
         Real phi_qInit = 0;
         Real gamma_dInit = 0;
         Real gamma_qInit = 0;
+        
+        // VSI filter parameters
+        Real Lf = 0.005132002392797;
+        Real Rf = 0.5;
+        Real Cf = 2.984155182973038e-4;
+        Real Rc = 1.382329156938857;
 
-        // VSI generated values
-        Real Vdref = 400; //work with Amplitude (*sqrt(3/2))
+        // Grid Parameters (X/R = 10)
+        Real loadRes1 = 5.877777777777778;
+        Real loadInd1 = 0.155912897954838;
+
+        // // Load
+        // Real loadActivePower= 0.5*vsiNominalActivePower;
+        // Real loadReactivePower= 0.001*vsiNominalReactivePower;
+    };
+
+    struct Yazdani {
+        Real systemNominalFreq = 60;
+        Real systemNominalOmega = 2*M_PI*systemNominalFreq;
+        Real systemNominalVoltage=400;
+
+        // // Line parameters (R/X = 1)
+        // Real length = 5;
+        // Real lineResistance = 0.5 * length;
+        // Real lineInductance = 0.5/systemNominalFreq * length;
+        // Real lineCapacitance = 50e-6/systemNominalFreq * length;
+
+        Real lineResistance = 0.88e-3;
+        Real lineInductance = 0;
+
+        // VSI nominal values
+        // Real vsiNominalVoltage= 400;
+        // Real vsiNominalActivePower= 900e6;
+        // Real vsiNominalReactivePower= 900e6;
+
+        // VSI Voltage controller parameters
+        Real Vdref = systemNominalVoltage;
         Real Vqref = 0;
-        Real systemFrequency = 60;
-        Real OmegaNull = 2*M_PI*60; //System circular frequency
+        Real scaling_P = 1;
+        Real scaling_I = 1;
+        Real KpVoltageCtrl = 1.6725*scaling_P;
+        Real KiVoltageCtrl = 374.64*scaling_I;
+        Real KpCurrCtrl = 0.2*scaling_P;
+        Real KiCurrCtrl = 4.14*scaling_I;
 
+        // VCO/PLL controller parameters
+        // OmegaCutoff is the cutoff-frequency of the PLL filter
+        // in case of VCO-mode use KpPLL=0, KiPLL=0 and OmegaCutoff = OmegaNull to work as VCO
+        Real KpPLL = 0; 
+        Real KiPLL = 0; 
+        Real OmegaCutoff = systemNominalOmega;
 
+        // Initial state values of VSI system matrix
+        Real thetaPLLInit = 0;
+        Real phiPLLInit = 0; 
+        Real phi_dInit = 0;
+        Real phi_qInit = 0;
+        Real gamma_dInit = 0;
+        Real gamma_qInit = 0;
+        
         // VSI filter parameters 
         Real Lf = 100e-6;
         Real Cf = 2.5e-3;
         Real Rf = 2.07e-3;  
         Real tau = 0.5e-3;
         Real Rc = 1e-5; //connecting resistor to external network
-      
-
-       // VSI controller parameters
-        Real scaling_P = 1; 
-        Real scaling_I = 1; 
-
-        Real KpVoltageCtrl = 1.6725*scaling_P; 
-        Real KiVoltageCtrl = 374.64*scaling_I; 
-        Real KpCurrCtrl = 0.2*scaling_P; 
-        Real KiCurrCtrl = 4.14*scaling_I; 
-
-
-        // PLL controller parameters
-        // OmegaCutoff is the cutoff-frequency of the PLL filter
-        // in case of VCO-mode use KpPLL=0, KiPLL=0 and OmegaCutoff = OmegaNull to work as VCO
-        Real KpPLL = 0; 
-        Real KiPLL = 0; 
-        Real OmegaCutoff = OmegaNull;
         
-
         //Load Parameters
-        Real Res1 = 83e-3;
-        Real Ind1 = 137e-6;
-        Real Res2 = 50e-3;
-        Real Ind2 = 68e-6;
-        Real Cap2 = 13.55e-3;
+        Real loadRes1 = 83e-3;
+        Real loadInd1 = 137e-6;
+        Real loadRes2 = 50e-3;
+        Real loadInd2 = 68e-6;
+        Real loadCap2 = 13.55e-3;
+
+        // // Load
+        // Real loadActivePower= 0.5*vsiNominalActivePower;
+        // Real loadReactivePower= 0.001*vsiNominalReactivePower;
     };
-
-
 }
 
 namespace CIGREMV {
