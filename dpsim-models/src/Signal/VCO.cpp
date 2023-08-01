@@ -23,14 +23,14 @@ VCO::VCO(String name, Logger::Level logLevel) :
     mOutputCurr(mAttributes->create<Real>("output_curr", 0)) { }
 
 
-void VCO::setParameters(Real omegaNom) {
+void VCO::setParameters(Real omega) {
     // Input is OmegaNom
     // Output is Theta
-    mOmegaNom = omegaNom;
-    SPDLOG_LOGGER_INFO(mSLog, "OmegaNom = {}", mOmegaNom);
+    mOmega = omega;
+    SPDLOG_LOGGER_INFO(mSLog, "Omega = {}", mOmega);
 
-    **mInputCurr = mOmegaNom;
-    **mInputRef = mOmegaNom;
+    **mInputCurr = mOmega;
+    **mInputRef = mOmega;
 }
 
 void VCO::setSimulationParameters(Real timestep) {
@@ -39,7 +39,7 @@ void VCO::setSimulationParameters(Real timestep) {
 }
 
 void VCO::setInitialValues(Real input_init, Real state_init, Real output_init) {
-	**mInputCurr = mOmegaNom;
+	**mInputCurr = mOmega;
     **mStateCurr = state_init;
     **mOutputCurr = output_init;
 
