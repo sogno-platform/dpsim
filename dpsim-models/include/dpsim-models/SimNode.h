@@ -127,4 +127,7 @@ namespace CPS {
 
 	template<>
 	void SimNode<Complex>::setVoltage(Complex newVoltage);
+
+	template<>
+	void SimNode<Complex>::setPower(Complex newPower);
 }
