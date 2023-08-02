@@ -19,13 +19,6 @@ DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	**mIntfCurrent = MatrixComp::Zero(1,1);
 }
 
-///DEPRECATED: Remove method
-SimPowerComp<Complex>::Ptr DP::Ph1::PiLine::clone(String name) {
-	auto copy = PiLine::make(name, mLogLevel);
-	copy->setParameters(**mSeriesRes, **mSeriesInd, **mParallelCap, **mParallelCond);
-	return copy;
-}
-
 void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 
 	// Static calculation
