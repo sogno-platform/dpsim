@@ -30,20 +30,6 @@ SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	**mReactivePowerBranch = Matrix::Zero(2,1);
 }
 
-void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capacitance, Real conductance) {
-
-	**mSeriesRes = resistance;
-	**mSeriesInd = inductance;
-	**mParallelCap = capacitance;
-	**mParallelCond = conductance;
-
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]", **mSeriesRes, **mSeriesInd);
-    SPDLOG_LOGGER_INFO(mSLog, "Capacitance={} [F] Conductance={} [S]", **mParallelCap, **mParallelCond);
-	mSLog->flush();
-	mParametersSet = true;
-
-}
-
 // #### Powerflow section ####
 void SP::Ph1::PiLine::setBaseVoltage(Real baseVoltage) {
     **mBaseVoltage = baseVoltage;
