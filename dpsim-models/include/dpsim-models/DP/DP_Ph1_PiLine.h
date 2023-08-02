@@ -47,15 +47,6 @@ public:
   PiLine(String name, Logger::Level logLevel = Logger::Level::off)
       : PiLine(name, name, logLevel) {}
 
-public:
-  /// Defines UID, name and logging level
-  PiLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
-  /// Defines name and logging level
-  PiLine(String name, Logger::Level logLevel = Logger::Level::off)
-      : PiLine(name, name, logLevel) {}
-
-  SimPowerComp<Complex>::Ptr clone(String copySuffix);
-
   // #### General ####
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency);
