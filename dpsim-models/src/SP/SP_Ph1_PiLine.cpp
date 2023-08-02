@@ -31,49 +31,6 @@ SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
   **mReactivePowerBranch = Matrix::Zero(2, 1);
 }
 
-void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance,
-                                    Real capacitance, Real conductance) {
-
-  **mSeriesRes = resistance;
-  **mSeriesInd = inductance;
-  **mParallelCap = capacitance;
-  **mParallelCond = conductance;
-
-  SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]",
-                     **mSeriesRes, **mSeriesInd);
-  SPDLOG_LOGGER_INFO(mSLog, "Capacitance={} [F] Conductance={} [S]",
-                     **mParallelCap, **mParallelCond);
-  mSLog->flush();
-  mParametersSet = true;
-
-  if (capacitance > 0) {
-    **mParallelCap = capacitance;
-  } else {
-    **mParallelCap = 1e-12;
-    SPDLOG_LOGGER_WARN(
-        mSLog, "Zero value for Capacitance, setting default value of C={} [F]",
-        **mParallelCap);
-  }
-  if (conductance > 0) {
-    **mParallelCond = conductance;
-  } else {
-    if (mBehaviour == Behaviour::Initialization)
-      **mParallelCond =
-          (conductance >= 0)
-              ? conductance
-              : 1e-6; // init mode for initFromPowerFlow of mna system components
-    else
-      **mParallelCond = (conductance > 0) ? conductance : 1e-6;
-    SPDLOG_LOGGER_WARN(
-        mSLog, "Zero value for Conductance, setting default value of G={} [S]",
-        **mParallelCond);
-  }
-  SPDLOG_LOGGER_INFO(mSLog, "Capacitance={} [F] Conductance={} [S]",
-                     **mParallelCap, **mParallelCond);
-  mSLog->flush();
-  mParametersSet = true;
-}
-
 // #### Powerflow section ####
 void SP::Ph1::PiLine::setBaseVoltage(Real baseVoltage) {
   **mBaseVoltage = baseVoltage;

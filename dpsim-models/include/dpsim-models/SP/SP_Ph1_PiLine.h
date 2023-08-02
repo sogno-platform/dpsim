@@ -11,7 +11,6 @@
 #include <dpsim-models/Base/Base_Ph1_PiLine.h>
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/SP/SP_Ph1_Capacitor.h>
-#include <dpsim-models/SP/SP_Ph1_Inductor.h>
 #include <dpsim-models/SP/SP_Ph1_ResIndSeries.h>
 #include <dpsim-models/SP/SP_Ph1_Resistor.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
@@ -96,11 +95,7 @@ public:
   /// Defines name and logging level
   PiLine(String name, Logger::Level logLevel = Logger::Level::off)
       : PiLine(name, name, logLevel) {}
-  ///
-  SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
-  ///
-  void setParameters(Real resistance, Real inductance, Real capacitance = -1,
-                     Real conductance = -1);
+
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 
