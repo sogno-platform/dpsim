@@ -20,14 +20,13 @@ namespace SP {namespace Ph1 {
 		const Attribute<Real>::Ptr mConductance;
 		/// Susceptance [S]
 		const Attribute<Real>::Ptr mSusceptance;
+		/// Conductance [S]
+		const Attribute<Real>::Ptr mConductancePerUnit;
+		/// Susceptance [S]
+		const Attribute<Real>::Ptr mSusceptancePerUnit;
 	private:
         /// Base voltage [V]
         Real mBaseVoltage;
-
-		/// Conductance [pu]
-        Real mConductancePerUnit;
-		/// Susceptance [pu]
-        Real mSusceptancePerUnit;
 
 	public:
 		/// Defines UID, name, component parameters and logging level
