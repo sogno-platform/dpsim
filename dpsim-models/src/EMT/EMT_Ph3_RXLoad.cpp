@@ -66,11 +66,6 @@ void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower, R
 	initPowerFromTerminal = false;
 }
 
-SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
-	// everything set by initializeFromNodesAndTerminals
-	return RXLoad::make(name, mLogLevel);
-}
-
 void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 	if (initPowerFromTerminal) {
