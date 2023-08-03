@@ -60,8 +60,6 @@ namespace CPS {
 					Matrix activePower, Matrix reactivePower, Real volt,
 					Logger::Level logLevel = Logger::Level::off);
 
-				SimPowerComp<Real>::Ptr clone(String name);
-
 				// #### General ####
 				///
 				void setParameters(Matrix activePower, Matrix reactivePower, Real volt);

@@ -40,13 +40,6 @@ void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nom
 	mParametersSet = true;
 }
 
-
-SimPowerComp<Complex>::Ptr SP::Ph1::Load::clone(String name) {
-	// everything set by initializeFromNodesAndTerminals
-	return Load::make(name, mLogLevel);
-}
-
-
  // #### Powerflow section ####
 void SP::Ph1::Load::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
 	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
