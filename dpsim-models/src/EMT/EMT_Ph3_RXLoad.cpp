@@ -73,7 +73,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
 
 void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
-		if (initPowerFromTerminal) {
+	if (initPowerFromTerminal) {
 		**mActivePower = Matrix::Zero(3, 3);
 		(**mActivePower)(0, 0) = mTerminals[0]->singleActivePower() / 3.;
 		(**mActivePower)(1, 1) = mTerminals[0]->singleActivePower() / 3.;
@@ -107,6 +107,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
 		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+		**mIntfCurrent += mSubResistor->intfCurrent();
 	}
 
 	if ((**mReactivePower)(0, 0) != 0)
@@ -123,6 +124,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromNodesAndTerminals(frequency);
 		addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+		**mIntfCurrent += mSubInductor->intfCurrent();
 	}
 	else if (mReactance(0,0) < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) * mReactance.inverse();
@@ -133,6 +135,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
 		addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+		**mIntfCurrent += mSubCapacitor->intfCurrent();
 	}
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
@@ -140,16 +143,6 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	**mIntfVoltage = vInitABC.real();
-
-	MatrixComp iInitABC = MatrixComp::Zero(3, 1);
-	// v i^T* = S
-	// v^T v i^T* = v^T S
-	// i^T*= (|v|^2)^(-1) v^T S
-
-	Complex v_ = vInitABC(0, 0)*vInitABC(0, 0) + vInitABC(1, 0)*vInitABC(1, 0) + vInitABC(2, 0)*vInitABC(2, 0);
-	MatrixComp rhs_ = Complex(1, 0) / v_ * vInitABC.transpose() * mPower;
-	iInitABC = rhs_.conjugate().transpose();
-	**mIntfCurrent = iInitABC.real();
 
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
