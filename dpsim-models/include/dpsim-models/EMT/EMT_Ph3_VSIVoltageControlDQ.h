@@ -16,6 +16,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 #include <dpsim-models/Base/Base_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/Signal/Droop.h>
 #include <dpsim-models/Signal/VCO.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 
@@ -38,9 +39,11 @@ namespace Ph3 {
 		/// Active power reference
 
 		// ### Control Subcomponents ###
+		/// Droop
+		std::shared_ptr<Signal::Droop> mDroop;
 		/// VCO
 		std::shared_ptr<Signal::VCO> mVCO;
-		/// Power Controller
+		/// Voltage Controller
 		std::shared_ptr<Signal::VoltageControllerVSI> mVoltageControllerVSI;
 
 		// ### Electrical Subcomponents ###	
@@ -75,6 +78,9 @@ namespace Ph3 {
 		const Attribute<Real>::Ptr mVdRef;
 		/// Voltage q reference
 		const Attribute<Real>::Ptr mVqRef;
+		/// Active power reference
+		const Attribute<Real>::Ptr mPRef;
+
 
 		// ### Inverter Interfacing Variables ###
 		// Control inputs
@@ -97,6 +103,9 @@ namespace Ph3 {
 		// Sub voltage source
 		const Attribute<Matrix>::Ptr mVs;
 
+		// Droop
+		const Attribute<Real>::Ptr mDroopOutput;
+
 		// VCO
 		const Attribute<Real>::Ptr mVCOOutput;
 
@@ -115,9 +124,9 @@ namespace Ph3 {
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
 		/// Setter for general parameters of inverter
-		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
+		void setParameters(Real Omega, Real VdRef, Real VqRef, Real Pref);
 		/// Setter for parameters of VCO control loops
-		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega);
+		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega, Real taup, Real taui, Real mp );
 		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);

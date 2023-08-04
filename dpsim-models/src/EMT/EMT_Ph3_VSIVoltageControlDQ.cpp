@@ -16,6 +16,7 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 	mOmegaN(mAttributes->create<Real>("Omega_nom")),
 	mVdRef(mAttributes->create<Real>("VdRef")),
 	mVqRef(mAttributes->create<Real>("VqRef")),
+	mPRef(mAttributes->create<Real>("PRef")),
 	mVcd(mAttributes->create<Real>("Vc_d", 0)),
 	mVcq(mAttributes->create<Real>("Vc_q", 0)),
 	mIrcd(mAttributes->create<Real>("Irc_d", 0)),
@@ -24,6 +25,7 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 	mElecPassivePower(mAttributes->create<Real>("Q_elec", 0)),
 	mVsref(mAttributes->create<Matrix>("Vsref", Matrix::Zero(3,1))),
 	mVs(mAttributes->createDynamic<Matrix>("Vs")),
+	mDroopOutput(mAttributes->createDynamic<Real>("droop_output")),
 	mVCOOutput(mAttributes->createDynamic<Real>("vco_output")),
 	mVoltagectrlInputs(mAttributes->createDynamic<Matrix>("voltagectrl_inputs")),
 	mVoltagectrlOutputs(mAttributes->createDynamic<Matrix>("voltagectrl_outputs")),
@@ -67,14 +69,19 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 		SPDLOG_LOGGER_INFO(mSLog,"- {}", subcomp->name());
 
 	// Create control sub components
+	mDroop = Signal::Droop::make(**mName + "_Droop", mLogLevel);
 	mVCO = Signal::VCO::make(**mName + "_VCO", mLogLevel);
 	mVoltageControllerVSI = Signal::VoltageControllerVSI::make(**mName + "_VoltageControllerVSI", mLogLevel);
 
 	// Sub voltage source
 	mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
 
-	// VCO
-	mVCO->mInputRef->setReference(mOmegaN);
+	// Droop
+	mDroop->mInputRef->setReference(mOmegaN);
+	mDroopOutput->setReference(mDroop->mOutputCurr);
+
+    // VCO
+    mVCO->mInputRef->setReference(mOmegaN);
 	mVCOOutput->setReference(mVCO->mOutputCurr);
 
 	// Voltage controller
@@ -91,18 +98,22 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 }
 
 //setter goal voltage and frequency
-void EMT::Ph3::VSIVoltageControlDQ::setParameters(Real sysOmega, Real VdRef, Real VqRef) {
+void EMT::Ph3::VSIVoltageControlDQ::setParameters(Real Omega, Real VdRef, Real VqRef, Real Pref) {
 	mParametersSet = true;
 
 	SPDLOG_LOGGER_INFO(mSLog,"General Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog,"Nominal Omega={} [1/s]", sysOmega);
+	SPDLOG_LOGGER_INFO(mSLog,"Nominal Omega={} [1/s]", Omega);
 	SPDLOG_LOGGER_INFO(mSLog,"VdRef={} [V] VqRef={} [V]", VdRef, VqRef);
 
 	mVoltageControllerVSI->setParameters(VdRef, VqRef);
+	mVCO->setParameters(Omega);
+	mDroop->setParameters(Pref, Omega);
 
-	**mOmegaN = sysOmega;
+	**mOmegaN = Omega;
 	**mVdRef = VdRef * sqrt(3/2);
 	**mVqRef = VqRef;
+	**mPRef= Pref;
+
 }
 
 //setter for transformer if used
@@ -125,14 +136,15 @@ void EMT::Ph3::VSIVoltageControlDQ::setTransformerParameters(Real nomVoltageEnd1
 
 
 //VCO
-void EMT::Ph3::VSIVoltageControlDQ::setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega) {
+void EMT::Ph3::VSIVoltageControlDQ::setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega,
+	Real taup, Real taui, Real mp ) {
 
 	SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
 	SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_p = {}, K_i = {}", Kp_voltageCtrl, Ki_voltageCtrl);
 	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_p = {}, K_i = {}", Kp_currCtrl, Ki_currCtrl);
 	SPDLOG_LOGGER_INFO(mSLog, "VCO: Omega_Nom = {}", Omega);
 
-	mVCO->setParameters(Omega);
+	mDroop->setControllerParameters(taup, taui, mp);
 	mVoltageControllerVSI->setControllerParameters(Kp_voltageCtrl, Ki_voltageCtrl, Kp_currCtrl, Ki_currCtrl, Omega);
 }
 
@@ -241,8 +253,9 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 		**mIrcd = ircdq(0, 0);
 		**mIrcq = ircdq(1, 0);
 
-		// VCO input
-		mVCO->setInitialValues(**mOmegaN, theta, theta);
+		// Droop and VCO input
+		mDroop->setInitialStateValues(**mOmegaN, **mElecActivePower);
+        mVCO->setInitialValues(**mOmegaN, theta, theta);
 	} 
 	else
 	{
@@ -258,8 +271,9 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 		**mIrcd = ircdq(0, 0);
 		**mIrcq = ircdq(1, 0);
 
-	    // VCO frequency input
-		mVCO->setInitialValues(**mOmegaN, theta, theta);
+	    // Droop and VCo initialisation
+		mDroop->setInitialStateValues(**mOmegaN, **mElecActivePower);
+        mVCO->setInitialValues(**mOmegaN, theta, theta);
 	}
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
@@ -296,18 +310,21 @@ void EMT::Ph3::VSIVoltageControlDQ::mnaParentInitialize(Real omega, Real timeSte
 
 void EMT::Ph3::VSIVoltageControlDQ::addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
+	mDroop->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mVCO->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mVoltageControllerVSI->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 }
 
 void EMT::Ph3::VSIVoltageControlDQ::controlPreStep(Real time, Int timeStepCount) {
 	// add pre-step of subcomponents
+	mDroop->signalPreStep(time, timeStepCount);
 	mVCO->signalPreStep(time, timeStepCount);
 	mVoltageControllerVSI->signalPreStep(time, timeStepCount);
 }
 
 void EMT::Ph3::VSIVoltageControlDQ::addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add step dependencies of subcomponents
+	mDroop->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mVCO->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mVoltageControllerVSI->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	// add step dependencies of component itself
@@ -375,15 +392,14 @@ void EMT::Ph3::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	**mIrcq = ircdq(1, 0);
 
 	// add step of subcomponents
+	mDroop->signalStep(time, timeStepCount);
 	mVCO->signalStep(time, timeStepCount);
 	mVoltageControllerVSI->signalStep(time, timeStepCount);
 
 	// Transformation interface backward
 	**mVsref = inverseParkTransformPowerInvariant(mVCO->mOutputPrev->get(), mVoltageControllerVSI->mOutputCurr->get());
 
-	// Update nominal system angle
-	//mThetaN = mThetaN + mTimeStep * **mOmegaN;
-    mThetaN = std::fmod(mThetaN + mTimeStep * **mOmegaN,2*PI);
+	mThetaN = mThetaN + mTimeStep * **mOmegaN;
 }
 
 void EMT::Ph3::VSIVoltageControlDQ::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
