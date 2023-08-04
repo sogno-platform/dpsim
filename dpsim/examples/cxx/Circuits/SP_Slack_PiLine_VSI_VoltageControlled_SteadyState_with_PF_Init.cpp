@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
 
 	auto pv = SP::Ph1::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
 	pv->setParameters(scenario.systemNominalOmega, scenario.Vdref, scenario.Vqref);
-	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.KpPLL, scenario.KiPLL, scenario.OmegaCutoff);
+	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.systemNominalOmega);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
 	pv->setInitialStateValues(scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
 	pv->withControl(pvWithControl);
@@ -124,10 +124,11 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
-	loggerSP->logAttribute("Spannung_PCC", n2SP->attribute("v"));
-    loggerSP->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
+    loggerSP->logAttribute("Controlled_source_PV", pv->attribute("Vs"));
+	loggerSP->logAttribute("Voltage_terminal_PV", n1SP->attribute("v"));
+	loggerSP->logAttribute("Voltage_PCC", n2SP->attribute("v"));
 	loggerSP->logAttribute("Strom_RLC", pv->attribute("i_intf"));
-	loggerSP->logAttribute("PLL_Phase", pv->attribute("pll_output"));
+	loggerSP->logAttribute("VCO_output", pv->attribute("vco_output"));
 	loggerSP->logAttribute("P_elec", pv->attribute("P_elec"));
 	loggerSP->logAttribute("Q_elec", pv->attribute("Q_elec"));
 	

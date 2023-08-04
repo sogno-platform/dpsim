@@ -17,7 +17,7 @@
 #include <dpsim-models/SP/SP_Ph1_VoltageSource.h>
 #include <dpsim-models/SP/SP_Ph1_Transformer.h>
 #include <dpsim-models/Base/Base_AvVoltageSourceInverterDQ.h>
-#include <dpsim-models/Signal/PLL.h>
+#include <dpsim-models/Signal/VCO.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 
 namespace CPS {
@@ -41,8 +41,8 @@ namespace Ph1 {
 
 
 		// ### Control Subcomponents ###
-		/// PLL
-		std::shared_ptr<Signal::PLL> mPLL;
+		/// VCO
+		std::shared_ptr<Signal::VCO> mVCO;
 		/// Power Controller
 		std::shared_ptr<Signal::VoltageControllerVSI> mVoltageControllerVSI;
 
@@ -94,8 +94,8 @@ namespace Ph1 {
 		// Sub voltage source
 		const Attribute<MatrixComp>::Ptr mVs;
 
-		// PLL
-		const Attribute<Matrix>::Ptr mPllOutput;
+		// VCO
+		const Attribute<Real>::Ptr mVCOOutput;
 
 		// input, state and output vector for logging
 		const Attribute<Matrix>::Ptr mVoltagectrlInputs;
@@ -114,7 +114,7 @@ namespace Ph1 {
 		/// Setter for general parameters of inverter
 		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
 		/// Setter for parameters of control loops
-		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Kp_pll, Real Ki_pll, Real Omega_cutoff);
+		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega);
 		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);

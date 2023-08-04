@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
 
 	auto pv = EMT::Ph3::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
 	pv->setParameters(scenario.systemNominalOmega, scenario.Vdref, scenario.Vqref);
-	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.KpPLL, scenario.KiPLL, scenario.OmegaCutoff);
+	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.systemNominalOmega);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
 	pv->setInitialStateValues(scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
 	pv->withControl(pvWithControl);
@@ -124,10 +124,11 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);
-	loggerEMT->logAttribute("Spannung_PCC", n2EMT->attribute("v"));
-    loggerEMT->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
-	loggerEMT->logAttribute("Strom_RLC", pv->attribute("i_intf"));
-	loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
+	loggerEMT->logAttribute("Controlled_source_PV", pv->attribute("Vs"));
+	loggerEMT->logAttribute("Voltage_terminal_PV", n1EMT->attribute("v"));
+	loggerEMT->logAttribute("Voltage_PCC", n2EMT->attribute("v"));
+	loggerEMT->logAttribute("Strom_PV", pv->attribute("i_intf"));
+	loggerEMT->logAttribute("VCO_output", pv->attribute("vco_output"));
 	loggerEMT->logAttribute("P_elec", pv->attribute("P_elec"));
 	loggerEMT->logAttribute("Q_elec", pv->attribute("Q_elec"));
 	

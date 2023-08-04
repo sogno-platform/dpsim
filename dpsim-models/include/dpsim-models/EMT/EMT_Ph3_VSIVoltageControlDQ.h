@@ -16,17 +16,15 @@
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 #include <dpsim-models/Base/Base_AvVoltageSourceInverterDQ.h>
-#include <dpsim-models/Signal/PLL.h>
 #include <dpsim-models/Signal/VCO.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
-#include <dpsim-models/Signal/PowerControllerVSI.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
 	class VSIVoltageControlDQ :
-		public Base::AvVoltageSourceInverterDQ,
 		public CompositePowerComp<Real>,
+		public Base::AvVoltageSourceInverterDQ,
 		public SharedFactory<VSIVoltageControlDQ> {
 	protected:
 
@@ -42,8 +40,6 @@ namespace Ph3 {
 		// ### Control Subcomponents ###
 		/// VCO
 		std::shared_ptr<Signal::VCO> mVCO;
-		/// PLL
-		std::shared_ptr<Signal::PLL> mPLL;
 		/// Power Controller
 		std::shared_ptr<Signal::VoltageControllerVSI> mVoltageControllerVSI;
 
@@ -60,7 +56,6 @@ namespace Ph3 {
 		std::shared_ptr<EMT::Ph3::Resistor> mSubResistorC;
 		/// Optional connection transformer
 		std::shared_ptr<EMT::Ph3::Transformer> mConnectionTransformer;
-
 
 		/// Flag for connection transformer usage
 		Bool mWithConnectionTransformer=false;
@@ -105,9 +100,6 @@ namespace Ph3 {
 		// VCO
 		const Attribute<Real>::Ptr mVCOOutput;
 
-		// PLL
-		const Attribute<Matrix>::Ptr mPllOutput;
-
 		// input, state and output vector for logging
 		const Attribute<Matrix>::Ptr mVoltagectrlInputs;
 		const Attribute<Matrix>::Ptr mVoltagectrlStates;
@@ -122,12 +114,10 @@ namespace Ph3 {
 		// #### General ####
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
-		/// Setter for gengit eral parameters of inverter
+		/// Setter for general parameters of inverter
 		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
 		/// Setter for parameters of VCO control loops
 		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega);
-		/// Setter for parameters of PLL control loops
-		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Kp_pll, Real Ki_pll, Real Omega_cutoff);
 		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
