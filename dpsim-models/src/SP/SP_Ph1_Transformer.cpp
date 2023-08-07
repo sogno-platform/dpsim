@@ -38,15 +38,14 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 	// Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
 	Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
 
+	mRatioAbs = std::abs(**mRatio);
+	mRatioPhase = std::arg(**mRatio);
+	mParametersSet = true;
+	
 	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
 	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H] (referred to primary side)", **mResistance, **mInductance);
     SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [/] Phase Shift={} [deg]", std::abs(**mRatio), std::arg(**mRatio));
-	SPDLOG_LOGGER_INFO(mSLog, "Rated Power={} [W]", **mRatedPower);
-
-	mRatioAbs = std::abs(**mRatio);
-	mRatioPhase = std::arg(**mRatio);
-
-	mParametersSet = true;
+	mSLog->flush();
 }
 
 void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
@@ -124,6 +123,7 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]", **mBaseVoltage, mBaseImpedance);
 
 	mResistancePerUnit = **mResistance / mBaseImpedance;
+	mReactance = mNominalOmega * **mInductance;
 	mReactancePerUnit = mReactance / mBaseImpedance;
     SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [pu]  Reactance={} [pu]", mResistancePerUnit, mReactancePerUnit);
 
@@ -135,9 +135,12 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 
     mRatioAbsPerUnit = mRatioAbs / **mNominalVoltageEnd1 * **mNominalVoltageEnd2;
     SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [pu]", mRatioAbsPerUnit);
+	mSLog->flush();
 }
 
 void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
+	SPDLOG_LOGGER_INFO(mSLog, "TEST");
+	mSLog->flush();
 	// calculate matrix stamp
 	mY_element = MatrixComp(2, 2);
 	Complex y = Complex(1, 0) / mLeakagePerUnit;
@@ -166,6 +169,7 @@ void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y)
 	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(0)) += mY_element.coeff(1, 0);
 
 	SPDLOG_LOGGER_INFO(mSLog, "#### Y matrix stamping: {}", mY_element);
+	mSLog->flush();
 }
 
 
@@ -194,16 +198,11 @@ void SP::Ph1::Transformer::mnaCompInitialize(Real omega, Real timeStep, Attribut
 void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
 	SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
 	if (terminalNotGrounded(0)) {
-<<<<<<< HEAD
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), 1. / mImpedance);
-=======
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), 1. / mImpedance);
->>>>>>> b615f3a4 (delete virtual nodes of SP Transformer)
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			(Complex(1, 0) / mImpedance).real(), (Complex(1, 0) / mImpedance).imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 	}
 	if (terminalNotGrounded(1)) {
-<<<<<<< HEAD
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), std::pow(**mRatio,2) / mImpedance );
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			(std::pow(**mRatio,2) / mImpedance).real(), (std::pow(**mRatio,2) / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
@@ -218,20 +217,6 @@ void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& system
 	}
 
 	mSLog->flush();
-=======
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), std::pow(**mRatio,2) / mImpedance );
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-			(std::pow(**mRatio,2) / mImpedance).real(), (std::pow(**mRatio,2) / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
-	}
-	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -**mRatio / mImpedance );
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-			(-**mRatio / mImpedance).real(), (-**mRatio / mImpedance).imag(), matrixNodeIndex(0), matrixNodeIndex(1));
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -**mRatio / mImpedance );
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-			(-**mRatio / mImpedance).real(), (-**mRatio / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(0));
-	}
->>>>>>> b615f3a4 (delete virtual nodes of SP Transformer)
 }
 
 void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, 
@@ -250,7 +235,6 @@ void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount, Attribu
 void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v0 - v1
 	(**mIntfVoltage)(0, 0) = 0.0;
-<<<<<<< HEAD
 	if (terminalNotGrounded(0))
 		(**mIntfVoltage)(0, 0) += Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	if (terminalNotGrounded(1)) 
@@ -260,23 +244,4 @@ void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
 void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
 	// primary side current flowing into node 0
 	(**mIntfCurrent)(0, 0) = -(**mIntfVoltage)(0, 0) / mImpedance;
-=======
-	if (terminalNotGrounded(0)) {
-		(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
-	}
-	if (terminalNotGrounded(0)) {
-		(**mIntfVoltage)(0, 0) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
-	}
-	
-}
-
-void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	(**mIntfCurrent)(0, 0) = 0.0;
-	if (terminalNotGrounded(0)) {
-		(**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)) / mImpedance;
-	}
-	if (terminalNotGrounded(1)) {
-		(**mIntfCurrent)(0, 0) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) * (**mRatio / mImpedance);
-	}
->>>>>>> b615f3a4 (delete virtual nodes of SP Transformer)
 }
