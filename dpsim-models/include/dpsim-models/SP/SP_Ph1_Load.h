@@ -52,13 +52,25 @@ private:
   /// Capacitance [F]
   Real mCapacitance;
 
-  /// Internal inductor
-  std::shared_ptr<SP::Ph1::Inductor> mSubInductor;
-  /// Internal capacitor
-  std::shared_ptr<SP::Ph1::Capacitor> mSubCapacitor;
-  /// Internal resistance
-  std::shared_ptr<SP::Ph1::Resistor> mSubResistor;
-
+	private:
+		/// base apparent power[VA]
+		Real mBaseApparentPower;
+		///base omega [1/s]
+		Real mBaseOmega;
+		/// Resistance [Ohm]
+		Real mResistance;
+		/// Conductance [S]
+		Real mConductance;
+		/// Reactance [Ohm]
+		Real mReactance;
+		/// Inductance [H]
+		Real mInductance;
+		/// Capacitance [F]
+		Real mCapacitance;
+		///
+		Bool initPowerFromTerminal = true;
+		///
+		Bool initVoltageFromNode = true;
 		/// Internal inductor
 		std::shared_ptr<SP::Ph1::Inductor> mSubInductor;
 		/// Internal capacitor
@@ -72,9 +84,9 @@ private:
 		Load(String name, Logger::Level logLevel = Logger::Level::off)
 			: Load(name, name, logLevel) { }
 		///
-		void setParameters(Real activePower, Real reactivePower, Real nominalVoltage=0);
+		void setParameters(Real activePower, Real reactivePower);
 		///
-		SimPowerComp<Complex>::Ptr clone(String name) override;
+		void setParameters(Real activePower, Real reactivePower, Real nominalVoltage);
 
   // #### General ####
   /// Initializes component from power flow data
