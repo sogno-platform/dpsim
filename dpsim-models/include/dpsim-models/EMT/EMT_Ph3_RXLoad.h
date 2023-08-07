@@ -15,50 +15,58 @@
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
-namespace EMT {
-namespace Ph3 {
-/// \brief
-/// TODO: currently modelled as an impedance, which obviously doesn't have a constant power characteristic
-/// Model as current source and read from CSV files
-class RXLoad : public CompositePowerComp<Real>, public SharedFactory<RXLoad> {
-protected:
-  /// Power [Watt]
-  MatrixComp mPower;
-  /// Resistance [Ohm]
-  Matrix mResistance;
-  /// Reactance [Ohm]
-  Matrix mReactance;
-  /// Inductance [H]
-  Matrix mInductance;
-  /// Capacitance [F]
-  Matrix mCapacitance;
-  ///
-  Bool initPowerFromTerminal = true;
-  /// Internal inductor
-  std::shared_ptr<EMT::Ph3::Inductor> mSubInductor;
-  /// Internal capacitor
-  std::shared_ptr<EMT::Ph3::Capacitor> mSubCapacitor;
-  /// Internal resistance
-  std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
-
-public:
-  /// Active power [Watt]
-  const Attribute<Matrix>::Ptr mActivePower;
-  /// Reactive power [VAr]
-  const Attribute<Matrix>::Ptr mReactivePower;
-  /// Nominal voltage [V]
-  const Attribute<Real>::Ptr mNomVoltage;
-  /// Defines UID, name and logging level
-  RXLoad(String uid, String name, Logger::Level logLevel = Logger::Level::off);
-  /// Defines name, component parameters and logging level
-  RXLoad(String name, Logger::Level logLevel = Logger::Level::off);
-  /// Defines name, component parameters and logging level
-  RXLoad(String name, Matrix activePower, Matrix reactivePower, Real volt,
-         Logger::Level logLevel = Logger::Level::off);
+	namespace EMT {
+		namespace Ph3 {
+			/// \brief
+			/// TODO: currently modelled as an impedance, which obviously doesn't have a constant power characteristic
+			/// Model as current source and read from CSV files
+			class RXLoad :
+				public CompositePowerComp<Real>,
+				public SharedFactory<RXLoad> {
+			protected:
+				/// Power [Watt]
+				MatrixComp mPower;
+				/// Resistance [Ohm]
+				Matrix mResistance;
+				/// Reactance [Ohm]
+				Matrix mReactance;
+				/// Inductance [H]
+				Matrix mInductance;
+				/// Capacitance [F]
+				Matrix mCapacitance;
+				///
+				Bool initPowerFromTerminal = true;
+				///
+				Bool initVoltageFromNode = true;
+				/// Internal inductor
+				std::shared_ptr<EMT::Ph3::Inductor> mSubInductor;
+				/// Internal capacitor
+				std::shared_ptr<EMT::Ph3::Capacitor> mSubCapacitor;
+				/// Internal resistance
+				std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
+			public:
+				/// Active power [Watt]
+				const Attribute<Matrix>::Ptr mActivePower;
+				/// Reactive power [VAr]
+				const Attribute<Matrix>::Ptr mReactivePower;
+				/// Nominal voltage [V]
+				const Attribute<Real>::Ptr mNomVoltage;
+				/// Defines UID, name and logging level
+				RXLoad(String uid, String name,
+					Logger::Level logLevel = Logger::Level::off);
+				/// Defines name, component parameters and logging level
+				RXLoad(String name,
+					Logger::Level logLevel = Logger::Level::off);
+				/// Defines name, component parameters and logging level
+				RXLoad(String name,
+					Matrix activePower, Matrix reactivePower, Real nominalVoltage,
+					Logger::Level logLevel = Logger::Level::off);
 
 				// #### General ####
 				///
-				void setParameters(Matrix activePower, Matrix reactivePower, Real volt=0);
+				void setParameters(Matrix activePower, Matrix reactivePower);
+				///
+				void setParameters(Matrix activePower, Matrix reactivePower, Real nominalVoltage);
 				/// Initializes component from power flow data
 				void initializeFromNodesAndTerminals(Real frequency);
 

@@ -14,28 +14,39 @@ using namespace CPS;
 // please note that P,Q values can not be passed inside constructor since P,Q are currently read from the terminal,
 // and these values are not yet assigned to the terminals when this constructor was called in reader.
 SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
-    : CompositePowerComp<Complex>(uid, name, false, true, logLevel),
-      mActivePowerPerUnit(mAttributes->create<Real>("P_pu")),
-      mReactivePowerPerUnit(mAttributes->create<Real>("Q_pu")),
-      mActivePower(mAttributes->createDynamic<Real>(
-          "P")), //Made dynamic so it can be imported through InterfaceVillas
-      mReactivePower(mAttributes->createDynamic<Real>(
-          "Q")), //Made dynamic so it can be imported through InterfaceVillas
-      mNomVoltage(mAttributes->create<Real>("V_nom")) {
+	: CompositePowerComp<Complex>(uid, name, false, true, logLevel),
+	mActivePowerPerUnit(mAttributes->create<Real>("P_pu")),
+	mReactivePowerPerUnit(mAttributes->create<Real>("Q_pu")),
+	mActivePower(mAttributes->createDynamic<Real>("P")), //Made dynamic so it can be imported through InterfaceVillas
+	mReactivePower(mAttributes->createDynamic<Real>("Q")), //Made dynamic so it can be imported through InterfaceVillas
+	mNomVoltage(mAttributes->create<Real>("V_nom")) {
 
-  SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", **mName, this->type());
-  mSLog->flush();
-  **mIntfVoltage = MatrixComp::Zero(1, 1);
-  **mIntfCurrent = MatrixComp::Zero(1, 1);
-  setTerminalNumber(1);
-};
+	SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", **mName, this->type());
+	mSLog->flush();
+	**mIntfVoltage = MatrixComp::Zero(1, 1);
+	**mIntfCurrent = MatrixComp::Zero(1, 1);
+    setTerminalNumber(1);
+}
 
-void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
+void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower) {
 	**mActivePower = activePower;
 	**mReactivePower = reactivePower;
-	**mNomVoltage = nominalVoltage;
+	initPowerFromTerminal = false;
 
-  mParametersSet = true;
+	SPDLOG_LOGGER_INFO(mSLog, 
+		"Active Power={}[W]"
+		"\nReactive Power={} [VAr]", 
+		**mActivePower, **mReactivePower);
+	mSLog->flush();
+}
+
+void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
+	setParameters(activePower, reactivePower);
+	**mNomVoltage = nominalVoltage;
+	initVoltageFromNode = false;
+
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
+	mSLog->flush();
 }
 
 // #### Powerflow section ####
@@ -92,13 +103,13 @@ void SP::Ph1::Load::updatePQ(Real time) {
 
 void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 
-	if(!mParametersSet){
+	if(initPowerFromTerminal){
 		setParameters(
 			mTerminals[0]->singleActivePower(),
 			mTerminals[0]->singleReactivePower(),
 			std::abs(mTerminals[0]->initialSingleVoltage()));
 	}
-	if (**mNomVoltage==0) {
+	if (initVoltageFromNode) {
 		**mNomVoltage = std::abs(initialSingleVoltage(0));
 		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}

@@ -25,14 +25,30 @@ DP::Ph1::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
 DP::Ph1::RXLoad::RXLoad(String name, Logger::Level logLevel)
     : RXLoad(name, name, logLevel) {}
 
+void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower) {
+	**mActivePower = activePower;
+	**mReactivePower = reactivePower;
+	initPowerFromTerminal = false;
+
+	SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
+}
+
+void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
+	setParameters(activePower, reactivePower);
+	**mNomVoltage = nominalVoltage;
+	initVoltageFromNode = false;
+
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
+}
+
 void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
-	if(!mParametersSet){
+	if(initPowerFromTerminal){
 		setParameters(
 			mTerminals[0]->singleActivePower(),
 			mTerminals[0]->singleReactivePower());
 	}
-	if (**mNomVoltage==0) {
+	if (initVoltageFromNode) {
 		**mNomVoltage = std::abs(initialSingleVoltage(0));
 		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}
@@ -92,21 +108,8 @@ void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mReactance);
 }
 
-void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower,
-                                    Real volt) {
-  mParametersSet = true;
-  **mActivePower = activePower;
-  **mReactivePower = reactivePower;
-  **mNomVoltage = volt;
-
-  SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [W] Reactive Power={} [VAr]",
-                     **mActivePower, **mReactivePower);
-  SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
-}
-
-void DP::Ph1::RXLoad::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  (**mIntfVoltage)(0, 0) =
-      Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+void DP::Ph1::RXLoad::mnaCompUpdateVoltage(const Matrix& leftVector) {
+	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::RXLoad::mnaCompUpdateCurrent(const Matrix &leftVector) {
