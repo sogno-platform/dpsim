@@ -14,38 +14,23 @@ using namespace CPS::Signal;
 Droop::Droop(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
     mInputRef(mAttributes->createDynamic<Real>("input_ref")),
-    /// CHECK: Which of these really need to be attributes?
+    mOutputRef(mAttributes->createDynamic<Real>("output_ref")),
 
-    //Previous
     mInputPrev(mAttributes->create<Matrix>("input_prev", Matrix::Zero(3,1))),
     mStatePrev(mAttributes->create<Matrix>("state_prev", Matrix::Zero(1,1))),
     mOutputPrev(mAttributes->create<Matrix>("output_prev", Matrix::Zero(1,1))),
-
-    //Currently
     mInputCurr(mAttributes->create<Matrix>("input_curr", Matrix::Zero(3,1))),
     mStateCurr(mAttributes->create<Matrix>("state_curr", Matrix::Zero(1,1))),
-    mOutputCurr(mAttributes->create<Matrix>("output_curr", Matrix::Zero(1,1))), 
-    
-    //Measured from system
-    mVc_d(mAttributes->createDynamic<Real>("Vc_d")),
-	mVc_q(mAttributes->createDynamic<Real>("Vc_q")),
-	mIrc_d(mAttributes->createDynamic<Real>("Irc_d")),
-	mIrc_q(mAttributes->createDynamic<Real>("Irc_q")),
-    mOmega(mAttributes->createDynamic<Real>("OmegaSystem")),
-    mPowerInst(mAttributes->createDynamic<Real>("PowerSystem"))
-    
-    { 
-	    SPDLOG_LOGGER_INFO(mSLog,"Create {} {}", type(), name);
-    }
+    mOutputCurr(mAttributes->create<Matrix>("output_curr", Matrix::Zero(1,1))) {}
 
 
 // set Parameters
 void Droop::setParameters(Real powerSet, Real omegaNom) {
-   
+
     mOmegaNom = omegaNom;
     mPowerSet = powerSet;
   
-    SPDLOG_LOGGER_INFO(mSLog, "Omega Nominal = {}, Power Set Point = {}", mOmegaNom, mPowerSet);
+    SPDLOG_LOGGER_INFO(mSLog, "Grid Nominal Omega = {}, Power Set Point = {}", mOmegaNom, mPowerSet);
 }
 
 //setter for controller parameters and setting up of system matrices
@@ -57,9 +42,9 @@ void Droop::setControllerParameters(Real m_p, Real tau_p, Real tau_l) {
 
     SPDLOG_LOGGER_INFO(mSLog,"m_p = {}, tau_p = {}, tau_l = {}, ", mM_p, mTau_p, mTau_l);
 
-    /// [x] = omegaSystem
-    /// [y] = omegaSystem
-    /// [u] = omegaNominal, powerSystem, powerSet
+    /// [x] = omega
+    /// [u] = PowerInst, PowerSet, omegaNom
+    /// [y] = omega
 
     mA <<  -1/mTau_p;
     mB <<  1/mTau_p, -mM_p/mTau_p, mM_p/mTau_p;
@@ -73,37 +58,20 @@ void Droop::setControllerParameters(Real m_p, Real tau_p, Real tau_l) {
     SPDLOG_LOGGER_INFO(mSLog,"D = \n{}", mD);
 }
 
+// setter for simulation time
 void Droop::setSimulationParameters(Real timestep) {
     mTimeStep = timestep;
     SPDLOG_LOGGER_INFO(mSLog,"Integration step = {}", mTimeStep);
 }
 
-void Droop::setInitialStateValues(Real omegaInit, Real powerInit) {
-	
-    mOmegaInit = omegaInit;
-	mPowerInit = powerInit;
+// initialize state values of matrices
+void Droop::setInitialStateValues(Matrix input_init, Matrix state_init, Matrix output_init) {	
+	**mInputCurr = input_init; /// [u] = PowerInst, PowerSet, omegaNom
+    **mStateCurr = state_init;  /// [x] = omega
+    **mOutputCurr = output_init; /// [y] = omega
 
 	SPDLOG_LOGGER_INFO(mSLog,"Initial State Value Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog,"Omega Init = {}, Power Init = {}", omegaInit, powerInit);
-}
-
-//Creating state space model out of the variables
-void Droop::initializeStateSpaceModel(Real omegaNom, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-
-	mTimeStep = timeStep;
-	mOmegaNom = omegaNom;
-
-	// initialization of input --> [u]
-	**mInputCurr << mOmegaNom, **mOmega, **mPowerInst;
-	SPDLOG_LOGGER_INFO(mSLog,"Initialization of input: \n" + Logger::matrixToString(**mInputCurr));
-
-	// initialization of states --> [x]
-	**mStateCurr << mOmegaInit;
-	SPDLOG_LOGGER_INFO(mSLog,"Initialization of states: \n" + Logger::matrixToString(**mStateCurr));
-
-	// initialization of output --> [y]
-	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	SPDLOG_LOGGER_INFO(mSLog,"Initialization of output: {}}" , **mOutputCurr);
+	SPDLOG_LOGGER_INFO(mSLog,"Omega Init = {}, Power Init = {}", **mStateCurr(0,0), **mInputCurr(0,0));
 }
 
 void Droop::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -120,26 +88,25 @@ void Droop::signalPreStep(Real time, Int timeStepCount) {
 }
 
 void Droop::signalAddStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	
-    **mPowerInst = **mVc_d * **mIrc_d + **mVc_d * **mIrc_d; 
-    attributeDependencies.push_back(mOmega);
-	attributeDependencies.push_back(mPowerInst);
+	attributeDependencies.push_back(mInputRef);
 	modifiedAttributes.push_back(mInputCurr);
     modifiedAttributes.push_back(mOutputCurr);
 };
 
 void Droop::signalStep(Real time, Int timeStepCount) {
-    // get current inputs
-	**mInputCurr << mOmegaNom, **mOmega, **mPowerInst;
-    SPDLOG_LOGGER_DEBUG(mSLog, "Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, **mInputCurr, **mInputPrev, **mStatePrev);
+    
+    (**mInputCurr)(0,0) = **mInputRef;
 
-	// calculate new states
-	**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
-	SPDLOG_LOGGER_DEBUG(mSLog, "stateCurr = \n {}", **mStateCurr);
+    SPDLOG_LOGGER_INFO(mSLog, "Time {}:", time);
+    SPDLOG_LOGGER_INFO(mSLog, "Input values: inputCurr = ({}, {}), inputPrev = ({}, {}), stateCurr = ({}, {}), statePrev = ({}, {})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStateCurr)(1,0), (**mStatePrev)(0,0), (**mStatePrev)(1,0));
 
-	// calculate new outputs
-	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	SPDLOG_LOGGER_DEBUG(mSLog, "Output values: outputCurr = \n{}", **mOutputCurr);
+    **mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
+    **mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
+
+    **mOutputRef=(**mOutputCurr)(0,0);
+
+    SPDLOG_LOGGER_INFO(mSLog, "State values: stateCurr = ({}, {})", (**mStateCurr)(0,0), (**mStateCurr)(1,0));
+    SPDLOG_LOGGER_INFO(mSLog, "Output values: outputCurr = ({}, {}):", (**mOutputCurr)(0,0), (**mOutputCurr)(1,0));
 }
 
 Task::List Droop::getTasks() {

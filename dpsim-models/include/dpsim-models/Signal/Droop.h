@@ -22,18 +22,17 @@ namespace Signal {
 
 	protected:
 
-		Real mM_p;
-		Real mTau_p;
-		Real mTau_l;
-		
+		// Inverter parameters
 		Real mOmegaNom;
 		Real mPowerSet;
 
+		// Controller parameters
+		Real mM_p;
+		Real mTau_p;
+		Real mTau_l;
+
+		// Integration time step
         Real mTimeStep;
-
-		Real mOmegaInit = 0;
-		Real mPowerInit = 0;
-
 
 		/// matrix A of state space model
 		Matrix mA = Matrix::Zero(1, 1);
@@ -46,16 +45,11 @@ namespace Signal {
 
 	public:
 
-		const Attribute<Real>::Ptr mVc_d;
-		const Attribute<Real>::Ptr mVc_q;
-		const Attribute<Real>::Ptr mIrc_d;
-		const Attribute<Real>::Ptr mIrc_q;
-
-		const Attribute<Real>::Ptr mOmega;
-		const Attribute<Real>::Ptr mPowerInst;
-
 		/// This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
 		const Attribute<Real>::Ptr mInputRef;
+
+		const Attribute<Real>::Ptr mOutputRef; // to the VCO input
+		
 		/// Previous Input
         const Attribute<Matrix>::Ptr mInputPrev;
         /// Current Input
@@ -73,13 +67,11 @@ namespace Signal {
 		/// Setter for Droop parameters
 		void setParameters(Real powerSet, Real omegaNom);
 		/// Setter for simulation parameters
-		void setControllerParameters(Real taup, Real taui, Real mp);
+		void setControllerParameters(Real m_p, Real tau_p, Real tau_l);
 		/// Setter for initial values
         void setSimulationParameters(Real timestep);
 		/// Composition of A, B, C, D matrices based on Droop parameters
-		void setInitialStateValues(Real omegaInit, Real powerInit);
-
-		void initializeStateSpaceModel(Real omegaNom, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void setInitialStateValues(Matrix input_init, Matrix state_init, Matrix output_init);
 		/// pre step operations
 		void signalPreStep(Real time, Int timeStepCount);
 		/// step operations

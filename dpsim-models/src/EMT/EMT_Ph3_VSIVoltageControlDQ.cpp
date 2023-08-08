@@ -77,8 +77,8 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 	mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
 
 	// Droop
-	mDroop->mInputRef->setReference(mOmegaN);
-	mDroopOutput->setReference(mDroop->mOutputCurr);
+	mDroop->mInputRef->setReference(**mElecActivePower);
+	mDroopOutput->setReference(mDroop->mOutputRef);
 
     // VCO
     mVCO->mInputRef->setReference(mDroopOutput);
@@ -134,7 +134,7 @@ void EMT::Ph3::VSIVoltageControlDQ::setTransformerParameters(Real nomVoltageEnd1
 		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase, CPS::Math::singlePhaseParameterToThreePhase(mTransformerResistance), CPS::Math::singlePhaseParameterToThreePhase(mTransformerInductance));
 }
 
-
+//setter for controller parameters of droop + voltage control
 void EMT::Ph3::VSIVoltageControlDQ::setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega,
 	Real m_p, Real tau_p, Real tau_l ) {
 
@@ -142,11 +142,13 @@ void EMT::Ph3::VSIVoltageControlDQ::setControllerParameters(Real Kp_voltageCtrl,
 	SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_p = {}, K_i = {}", Kp_voltageCtrl, Ki_voltageCtrl);
 	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_p = {}, K_i = {}", Kp_currCtrl, Ki_currCtrl);
 	SPDLOG_LOGGER_INFO(mSLog, "VCO: Omega_Nom = {}", Omega);
+	SPDLOG_LOGGER_INFO(mSLog, "Droop Control: M_p = {}, Tau_p = {}, Tau_l  = {}", m_p, tau_p, tau_l);
 
 	mDroop->setControllerParameters(m_p, tau_p, tau_l);
 	mVoltageControllerVSI->setControllerParameters(Kp_voltageCtrl, Ki_voltageCtrl, Kp_currCtrl, Ki_currCtrl, Omega);
 }
 
+// setter for internal filter parameters
 void EMT::Ph3::VSIVoltageControlDQ::setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc) {
 	Base::AvVoltageSourceInverterDQ::setFilterParameters(Lf, Cf, Rf, Rc);
 
@@ -252,8 +254,22 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 		**mIrcd = ircdq(0, 0);
 		**mIrcq = ircdq(1, 0);
 
+		**mElecActivePower= **mIrcd * **mVcd + **mIrcq * **mVcq;
+
+		Matrix matrixInputInit = Matrix::Zero(3,1);
+		Matrix matrixStateInit = Matrix::Zero(1,1);
+		Matrix matrixOutputInit = Matrix::Zero(1,1);
+
+		matrixInputInit(0,0)= **mElecActivePower;
+		matrixInputInit(1,0)= **mPRef;
+		matrixInputInit(2,0)= **mOmegaN;
+		matrixStateInit(0,0) = **mOmegaN;
+		matrixOutputInit(0,0) = **mOmegaN;
+
 		// Droop and VCO input
-		mDroop->setInitialStateValues(**mOmegaN, **mElecActivePower);
+		// Input: [PowerInst, PowerSet, omegaNom] //State: [omega] // Output: [omega]
+		mDroop->setInitialStateValues(matrixInputInit, matrixStateInit, matrixOutputInit);
+		// Input: [OmegaSet] //State: [theta] // Output: [theta]
         mVCO->setInitialValues(**mOmegaN, theta, theta);
 	} 
 	else
@@ -270,8 +286,23 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 		**mIrcd = ircdq(0, 0);
 		**mIrcq = ircdq(1, 0);
 
-	    // Droop and VCo initialisation
-		mDroop->setInitialStateValues(**mOmegaN, **mElecActivePower);
+	    // Droop and VCO initialisation
+		**mElecActivePower= **mIrcd * **mVcd + **mIrcq * **mVcq;
+
+		Matrix matrixInputInit = Matrix::Zero(3,1);
+		Matrix matrixStateInit = Matrix::Zero(1,1);
+		Matrix matrixOutputInit = Matrix::Zero(1,1);
+
+		matrixInputInit(0,0)= **mElecActivePower;
+		matrixInputInit(1,0)= **mPRef;
+		matrixInputInit(2,0)= **mOmegaN;
+		matrixStateInit(0,0) = **mOmegaN;
+		matrixOutputInit(0,0) = **mOmegaN;
+
+		// Droop and VCO input
+		// Input: [PowerInst, PowerSet, omegaNom] //State: [omega] // Output: [omega]
+		mDroop->setInitialStateValues(matrixInputInit, matrixStateInit, matrixOutputInit);
+		// Input: [OmegaSet] //State: [theta] // Output: [theta]
         mVCO->setInitialValues(**mOmegaN, theta, theta);
 	}
 	SPDLOG_LOGGER_INFO(mSLog,
