@@ -29,11 +29,10 @@ void EMT::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
 
-	Complex phasorA = initialSingleVoltage(1) - initialSingleVoltage(0);
-	(**mIntfVoltage)(0,0) = phasorA.real();
-	Complex alpha(cos(2./3.*PI), sin(2./3.*PI));
-	(**mIntfVoltage)(1, 0) = Complex(phasorA * pow(alpha,2)).real();
-	(**mIntfVoltage)(2, 0) = Complex(phasorA * alpha).real();
+	Complex phasorA = (initialSingleVoltage(1) - initialSingleVoltage(0)) * RMS3PH_TO_PEAK1PH;
+	(**mIntfVoltage)(0, 0) = phasorA.real();
+	(**mIntfVoltage)(1, 0) = Complex(phasorA * SHIFT_TO_PHASE_B).real();
+	(**mIntfVoltage)(2, 0) = Complex(phasorA * SHIFT_TO_PHASE_C).real();
 
 	**mIntfCurrent = **mIntfVoltage / impedance;
 
