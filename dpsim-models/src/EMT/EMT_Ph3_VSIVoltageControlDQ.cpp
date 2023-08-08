@@ -25,7 +25,7 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 	mElecPassivePower(mAttributes->create<Real>("Q_elec", 0)),
 	mVsref(mAttributes->create<Matrix>("Vsref", Matrix::Zero(3,1))),
 	mVs(mAttributes->createDynamic<Matrix>("Vs")),
-	mDroopOutput(mAttributes->createDynamic<Matrix>("droop_output")),
+	mDroopOutput(mAttributes->createDynamic<Real>("droop_output")),
 	mVCOOutput(mAttributes->createDynamic<Real>("vco_output")),
 	mVoltagectrlInputs(mAttributes->createDynamic<Matrix>("voltagectrl_inputs")),
 	mVoltagectrlOutputs(mAttributes->createDynamic<Matrix>("voltagectrl_outputs")),
@@ -81,7 +81,7 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 	mDroopOutput->setReference(mDroop->mOutputCurr);
 
     // VCO
-    mVCO->mInputRef->setReference(mOmegaN);
+    mVCO->mInputRef->setReference(mDroopOutput);
 	mVCOOutput->setReference(mVCO->mOutputCurr);
 
 	// Voltage controller
@@ -135,16 +135,15 @@ void EMT::Ph3::VSIVoltageControlDQ::setTransformerParameters(Real nomVoltageEnd1
 }
 
 
-//VCO
 void EMT::Ph3::VSIVoltageControlDQ::setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega,
-	Real taup, Real taui, Real mp ) {
+	Real m_p, Real tau_p, Real tau_l ) {
 
 	SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
 	SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_p = {}, K_i = {}", Kp_voltageCtrl, Ki_voltageCtrl);
 	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_p = {}, K_i = {}", Kp_currCtrl, Ki_currCtrl);
 	SPDLOG_LOGGER_INFO(mSLog, "VCO: Omega_Nom = {}", Omega);
 
-	mDroop->setControllerParameters(taup, taui, mp);
+	mDroop->setControllerParameters(m_p, tau_p, tau_l);
 	mVoltageControllerVSI->setControllerParameters(Kp_voltageCtrl, Ki_voltageCtrl, Kp_currCtrl, Ki_currCtrl, Omega);
 }
 

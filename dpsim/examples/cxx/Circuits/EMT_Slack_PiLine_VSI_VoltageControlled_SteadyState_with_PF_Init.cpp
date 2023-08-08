@@ -14,8 +14,8 @@ using namespace CPS;
 
 int main(int argc, char* argv[]) {
 
-	// CIM::Examples::Grids::GridForming::ScenarioConfig1 scenario;
-	CIM::Examples::Grids::GridForming::Yazdani scenario;
+	CIM::Examples::Grids::GridForming::ScenarioConfig1 scenario;
+	// CIM::Examples::Grids::GridForming::Yazdani scenario;
 
 	Real finalTime = 2;
 	Real timeStep = 0.0001;
@@ -95,8 +95,8 @@ int main(int argc, char* argv[]) {
 	loadEMT->setParameters(CPS::Math::singlePhasePowerToThreePhase(loadActivePower), CPS::Math::singlePhasePowerToThreePhase(loadReactivePower), scenario.systemNominalVoltage);
 
 	auto pv = EMT::Ph3::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
-	pv->setParameters(scenario.systemNominalOmega, scenario.Vdref, scenario.Vqref, 1e7); //initialise with Pref
-	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.systemNominalOmega, 0, 0, 0); //	Initialise with taup taui mp
+	pv->setParameters(scenario.systemNominalOmega, scenario.Vdref, scenario.Vqref, scenario.Pref);
+	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.systemNominalOmega, m_p, tau_p, tau_l);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
 	pv->setInitialStateValues(scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
 	pv->withControl(pvWithControl);

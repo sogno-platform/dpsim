@@ -705,12 +705,11 @@ namespace GridForming {
         Real KpCurrCtrl = 5.1993;
         Real KiCurrCtrl = 501.6734;
 
-        // VCO/PLL controller parameters
-        // OmegaCutoff is the cutoff-frequency of the PLL filter
-        // in case of VCO-mode use KpPLL=0, KiPLL=0 and OmegaCutoff = OmegaNull to work as VCO
-        Real KpPLL = 0; 
-        Real KiPLL = 0; 
-        Real OmegaCutoff = systemNominalOmega;
+        // Droop controller parameters
+        Real Pref= 0.777778*vsiNominalActivePower;
+        Real m_p= 2.094395102393195e-8;
+        Real tau_p= 0.5;
+		Real tau_l= 0; //tau_l=0 for first order filter 
 
         // Initial state values of VSI system matrix
         Real thetaPLLInit = 0;
@@ -764,12 +763,8 @@ namespace GridForming {
         Real KpCurrCtrl = 0.2*scaling_P;
         Real KiCurrCtrl = 4.14*scaling_I;
 
-        // VCO/PLL controller parameters
-        // OmegaCutoff is the cutoff-frequency of the PLL filter
-        // in case of VCO-mode use KpPLL=0, KiPLL=0 and OmegaCutoff = OmegaNull to work as VCO
-        Real KpPLL = 0; 
-        Real KiPLL = 0; 
-        Real OmegaCutoff = systemNominalOmega;
+        // Droop controller parameters
+
 
         // Initial state values of VSI system matrix
         Real thetaPLLInit = 0;
