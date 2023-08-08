@@ -65,9 +65,9 @@ namespace Signal {
         /// Current State
         const Attribute<Matrix>::Ptr mStateCurr;
         /// Previous Output
-        const Attribute<Real>::Ptr mOutputPrev;
+        const Attribute<Matrix>::Ptr mOutputPrev;
         /// Current Output
-        const Attribute<Real>::Ptr mOutputCurr;
+        const Attribute<Matrix>::Ptr mOutputCurr;
 
 		Droop(String name, Logger::Level logLevel = Logger::Level::off);
 		/// Setter for Droop parameters
