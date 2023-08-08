@@ -493,6 +493,7 @@ struct ScenarioConfig {
   Real lineResistance = 0.5 * length;
   Real lineInductance = 0.5 / 314 * length;
   Real lineCapacitance = 50e-6 / 314 * length;
+  Real lineConductance = 0;
 
   // PV controller parameters
   Real scalingKp = 1;
@@ -543,6 +544,8 @@ struct ScenarioConfig1 {
   // Line
   Real lineResistance = 0.88e-3;
   Real lineInductance = 0;
+  Real lineCapacitance = 0;
+  Real lineConductance = 0;
 
   // Real lineResistance = 1.27e-4 * 529;
   // Real lineInductance = 9.05e-4 * 529;
@@ -571,7 +574,7 @@ struct ScenarioConfig1 {
   Real Pref = 0.777778 * vsiNominalActivePower;
   Real m_p = 2.094395102393195e-8;
   Real tau_p = 0.5;
-  Real tau_l = 0; //tau_l=0 for first order filter
+  Real tau_l = 0.1; //tau_l=0 for first order filter
 
   // Initial state values of VSI system matrix
   Real thetaPLLInit = 0;
@@ -581,15 +584,18 @@ struct ScenarioConfig1 {
   Real gamma_dInit = 0;
   Real gamma_qInit = 0;
 
+  // Grid Parameters (X/R = 10)
+  Real loadRes1 = 5.877777777777778;
+  Real loadInd1 = 0.155912897954838;
+  Real loadRes2 = 50e-3;
+  Real loadInd2 = 68e-6;
+  Real loadCap2 = 13.55e-3;
+
   // VSI filter parameters
   Real Lf = 0.005132002392797;
   Real Rf = 0.5;
   Real Cf = 2.984155182973038e-4;
   Real Rc = 1.382329156938857;
-
-  // Grid Parameters (X/R = 10)
-  Real loadRes1 = 5.877777777777778;
-  Real loadInd1 = 0.155912897954838;
 
   // // Load
   // Real loadActivePower= 0.5*vsiNominalActivePower;
