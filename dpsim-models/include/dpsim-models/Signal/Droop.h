@@ -22,9 +22,9 @@ namespace Signal {
 
 	protected:
 
-		Real mTaup;
-		Real mTaui;
-		Real mMp;
+		Real mM_p;
+		Real mTau_p;
+		Real mTau_l;
 		
 		Real mOmegaNom;
 		Real mPowerSet;

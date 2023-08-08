@@ -49,20 +49,20 @@ void Droop::setParameters(Real powerSet, Real omegaNom) {
 }
 
 //setter for controller parameters and setting up of system matrices
-void Droop::setControllerParameters(Real taup, Real taui, Real mp) {
+void Droop::setControllerParameters(Real m_p, Real tau_p, Real tau_l) {
     
-    mTaup = taup;
-    mTaui = taui;
-    mMp = mp;
-	
-    SPDLOG_LOGGER_INFO(mSLog,"Taup = {}, Taui = {}, Mp = {}", mMp, mTaui, mTaup);
+    mM_p = m_p;    
+    mTau_p = tau_p;
+    mTau_l = tau_l;
+
+    SPDLOG_LOGGER_INFO(mSLog,"m_p = {}, tau_p = {}, tau_l = {}, ", mM_p, mTau_p, mTau_l);
 
     /// [x] = omegaSystem
     /// [y] = omegaSystem
     /// [u] = omegaNominal, powerSystem, powerSet
 
-    mA <<  -1/mTaup;
-    mB <<  1/mTaup, -mMp/mTaup, mMp/mTaup;
+    mA <<  -1/mTau_p;
+    mB <<  1/mTau_p, -mM_p/mTau_p, mM_p/mTau_p;
     mC <<  1;
     mD <<  0, 0, 0;
 
@@ -103,7 +103,7 @@ void Droop::initializeStateSpaceModel(Real omegaNom, Real timeStep, Attribute<Ma
 
 	// initialization of output --> [y]
 	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	SPDLOG_LOGGER_INFO(mSLog,"Initialization of output: \n" + Logger::matrixToString(**mOutputCurr));
+	SPDLOG_LOGGER_INFO(mSLog,"Initialization of output: {}}" , **mOutputCurr);
 }
 
 void Droop::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
