@@ -25,7 +25,7 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 	mElecPassivePower(mAttributes->create<Real>("Q_elec", 0)),
 	mVsref(mAttributes->create<Matrix>("Vsref", Matrix::Zero(3,1))),
 	mVs(mAttributes->createDynamic<Matrix>("Vs")),
-	mDroopOutput(mAttributes->createDynamic<Real>("droop_output")),
+	mDroopOutput(mAttributes->createDynamic<Matrix>("droop_output")),
 	mVCOOutput(mAttributes->createDynamic<Real>("vco_output")),
 	mVoltagectrlInputs(mAttributes->createDynamic<Matrix>("voltagectrl_inputs")),
 	mVoltagectrlOutputs(mAttributes->createDynamic<Matrix>("voltagectrl_outputs")),

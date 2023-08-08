@@ -153,6 +153,7 @@ list(APPEND MODELS_SOURCES
 	Signal/TurbineGovernorType1.cpp
 	Signal/PLL.cpp
 	Signal/VCO.cpp
+	Signal/Droop.cpp
 	Signal/Integrator.cpp
 	Signal/PowerControllerVSI.cpp
 	Signal/VoltageControllerVSI.cpp
