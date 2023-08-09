@@ -40,7 +40,7 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
   // Create parallel sub components
-  if (**mParallelCond >= 0) {
+  if (**mParallelCond > 0) {
     mSubParallelResistor0 =
         std::make_shared<DP::Ph1::Resistor>(**mName + "_con0", mLogLevel);
     mSubParallelResistor0->setParameters(2. / **mParallelCond);
@@ -64,32 +64,41 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
   }
 
-  mSubParallelCapacitor1 =
-      std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap1", mLogLevel);
-  mSubParallelCapacitor1->setParameters(**mParallelCap / 2.);
-  mSubParallelCapacitor1->connect(
-      SimNode::List{SimNode::GND, mTerminals[1]->node()});
-  mSubParallelCapacitor1->initialize(mFrequencies);
-  mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubParallelCapacitor1,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-}
+  if (**mParallelCap > 0) {
+    mSubParallelCapacitor0 =
+        std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap0", mLogLevel);
+    mSubParallelCapacitor0->setParameters(**mParallelCap / 2.);
+    mSubParallelCapacitor0->connect(
+        SimNode::List{SimNode::GND, mTerminals[0]->node()});
+    mSubParallelCapacitor0->initialize(mFrequencies);
+    mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
+    addMNASubComponent(mSubParallelCapacitor0,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-SPDLOG_LOGGER_INFO(
-    mSLog,
-    "\n--- Initialization from powerflow ---"
-    "\nVoltage across: {:s}"
-    "\nCurrent: {:s}"
-    "\nTerminal 0 voltage: {:s}"
-    "\nTerminal 1 voltage: {:s}"
-    "\nVirtual Node 1 voltage: {:s}"
-    "\n--- Initialization from powerflow finished ---",
-    Logger::phasorToString((**mIntfVoltage)(0, 0)),
-    Logger::phasorToString((**mIntfCurrent)(0, 0)),
-    Logger::phasorToString(initialSingleVoltage(0)),
-    Logger::phasorToString(initialSingleVoltage(1)),
-    Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+    mSubParallelCapacitor1 =
+        std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap1", mLogLevel);
+    mSubParallelCapacitor1->setParameters(**mParallelCap / 2.);
+    mSubParallelCapacitor1->connect(
+        SimNode::List{SimNode::GND, mTerminals[1]->node()});
+    mSubParallelCapacitor1->initialize(mFrequencies);
+    mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
+    addMNASubComponent(mSubParallelCapacitor1,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
+
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\n--- Initialization from powerflow ---"
+                     "\nVoltage across: {:s}"
+                     "\nCurrent: {:s}"
+                     "\nTerminal 0 voltage: {:s}"
+                     "\nTerminal 1 voltage: {:s}"
+                     "\n--- Initialization from powerflow finished ---",
+                     Logger::phasorToString((**mIntfVoltage)(0, 0)),
+                     Logger::phasorToString((**mIntfCurrent)(0, 0)),
+                     Logger::phasorToString(initialSingleVoltage(0)),
+                     Logger::phasorToString(initialSingleVoltage(1)));
 }
 
 void DP::Ph1::PiLine::mnaParentAddPreStepDependencies(
@@ -143,10 +152,12 @@ void DP::Ph1::PiLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
 MNAInterface::List DP::Ph1::PiLine::mnaTearGroundComponents() {
   MNAInterface::List gndComponents;
 
-  gndComponents.push_back(mSubParallelResistor0);
-  gndComponents.push_back(mSubParallelResistor1);
+  if (**mParallelCond > 0) {
+    gndComponents.push_back(mSubParallelResistor0);
+    gndComponents.push_back(mSubParallelResistor1);
+  }
 
-  if (**mParallelCap >= 0) {
+  if (**mParallelCap > 0) {
     gndComponents.push_back(mSubParallelCapacitor0);
     gndComponents.push_back(mSubParallelCapacitor1);
   }

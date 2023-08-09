@@ -19,9 +19,6 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
   setTerminalNumber(2);
 
   //
-  setTerminalNumber(2);
-
-  //
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 
   //
@@ -233,41 +230,15 @@ void DP::Ph1::Transformer::mnaCompApplySystemMatrixStampHarm(
   }
 }
 
-void DP::Ph1::Transformer::mnaCompApplyRightSideVectorStampHarm(
+void DP::Ph1::Transformer::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
   for (Int freq = 0; freq < mNumFreqs; freq++) {
-    // Calculate equivalent current source for next time step
-    mEquivCurrent(freq, 0) = mEquivCond(freq, 0) * (**mIntfVoltage)(0, freq) -
-                             mPrevCurrFac(freq, 0) * (**mIntfCurrent)(0, freq);
-
-    SPDLOG_LOGGER_DEBUG(mSLog, "MNA EquivCurrent {:s}",
-                        Logger::complexToString(mEquivCurrent(freq, 0)));
-    if (terminalNotGrounded(0))
-      SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-                          Logger::complexToString(mEquivCurrent(freq, 0)),
-                          matrixNodeIndex(0));
-    if (terminalNotGrounded(1))
-      SPDLOG_LOGGER_DEBUG(
-          mSLog, "Add {:s} to source vector at {:d}",
-          Logger::complexToString(-**mRatio * mEquivCurrent(freq, 0)),
-          matrixNodeIndex(1));
-  }
-}
-
-void DP::Ph1::Transformer::mnaCompApplyRightSideVectorStampHarm(
-    Matrix &rightVector) {
-  for (Int freq = 0; freq < mNumFreqs; freq++) {
-    // Calculate equivalent current source for next time step
-    mEquivCurrent(freq, 0) =
-        mEquivCond(freq, 0) * (initialSingleVoltage(0) - **mPrimaryLV) +
-        mPrevCurrFac(freq, 0) * (**mIntfCurrent)(0, freq);
-
     if (terminalNotGrounded(0))
       Math::setVectorElement(rightVector, matrixNodeIndex(0),
-                             mEquivCurrent(freq, 0), mNumFreqs, freq);
+                             -mEquivCurrent(freq, 0), mNumFreqs, freq);
     if (terminalNotGrounded(1))
       Math::setVectorElement(rightVector, matrixNodeIndex(1),
-                             -**mRatio * mEquivCurrent(freq, 0), mNumFreqs,
+                             **mRatio * mEquivCurrent(freq, 0), mNumFreqs,
                              freq);
 
     SPDLOG_LOGGER_DEBUG(mSLog, "MNA EquivCurrent {:s}",
@@ -288,10 +259,8 @@ void DP::Ph1::Transformer::mnaCompApplyRightSideVectorStampHarm(
     Matrix &rightVector) {
   for (Int freq = 0; freq < mNumFreqs; freq++) {
     // Calculate equivalent current source for next time step
-    mEquivCurrent(freq, 0) =
-        mEquivCond(freq, 0) *
-            (initialSingleVoltage(0) - initialSingleVoltage(1) * **mRatio) +
-        mPrevCurrFac(freq, 0) * (**mIntfCurrent)(0, freq);
+    mEquivCurrent(freq, 0) = mEquivCond(freq, 0) * (**mIntfVoltage)(0, freq) -
+                             mPrevCurrFac(freq, 0) * (**mIntfCurrent)(0, freq);
 
     if (terminalNotGrounded(0))
       Math::setVectorElement(rightVector, matrixNodeIndex(0),

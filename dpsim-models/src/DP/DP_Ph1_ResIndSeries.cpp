@@ -51,7 +51,7 @@ void DP::Ph1::ResIndSeries::initialize(Matrix frequencies) {
 void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 
   Real omega = 2. * PI * frequency;
-  Complex impedance = {0, omega * **mInductance};
+  Complex impedance = {**mResistance, omega * **mInductance};
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
 
@@ -66,6 +66,7 @@ void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
                      Logger::phasorToString((**mIntfCurrent)(0, 0)),
                      Logger::phasorToString(initialSingleVoltage(0)),
                      Logger::phasorToString(initialSingleVoltage(1)));
+  mSLog->flush();
 }
 
 // #### MNA functions ####
@@ -107,13 +108,13 @@ void DP::Ph1::ResIndSeries::mnaCompInitialize(
                      Logger::phasorToString((**mIntfVoltage)(0, 0)),
                      Logger::phasorToString((**mIntfCurrent)(0, 0)),
                      Logger::complexToString(mEquivCurrent(0, 0)));
+  mSLog->flush();
 }
 
 void DP::Ph1::ResIndSeries::mnaCompInitializeHarm(
     Real omega, Real timeStep,
     std::vector<Attribute<Matrix>::Ptr> leftVectors) {
   updateMatrixNodeIndices();
-
   initVars(timeStep);
 
   mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
@@ -242,9 +243,24 @@ void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStampHarm(
   }
 }
 
-void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
-                                   AttributeBase::List &attributeDependencies,
-                                   AttributeBase::List &modifiedAttributes) {
+void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStampHarm(
+    Matrix &rightVector, Int freqIdx) {
+  mEquivCurrent(freqIdx, 0) =
+      mEquivCond(freqIdx, 0) * (**mIntfVoltage)(0, freqIdx) +
+      mPrevCurrFac(freqIdx, 0) * (**mIntfCurrent)(0, freqIdx);
+
+  if (terminalNotGrounded(0))
+    Math::setVectorElement(rightVector, matrixNodeIndex(0),
+                           mEquivCurrent(freqIdx, 0));
+  if (terminalNotGrounded(1))
+    Math::setVectorElement(rightVector, matrixNodeIndex(1),
+                           -mEquivCurrent(freqIdx, 0));
+}
+
+void DP::Ph1::ResIndSeries::mnaCompAddPreStepDependencies(
+    AttributeBase::List &prevStepDependencies,
+    AttributeBase::List &attributeDependencies,
+    AttributeBase::List &modifiedAttributes) {
   // actually depends on L, but then we'd have to modify the system matrix anyway
   modifiedAttributes.push_back(mRightVector);
   prevStepDependencies.push_back(mIntfVoltage);
@@ -252,7 +268,7 @@ void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
 }
 
 void DP::Ph1::ResIndSeries::mnaCompPreStep(Real time, Int timeStepCount) {
-  mResIndSeries.mnaCompApplyRightSideVectorStamp(**mRightVector);
+  this->mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::ResIndSeries::MnaPreStepHarm::execute(Real time,
@@ -261,10 +277,11 @@ void DP::Ph1::ResIndSeries::MnaPreStepHarm::execute(Real time,
       **mResIndSeries.mRightVector);
 }
 
-void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
-                                    AttributeBase::List &attributeDependencies,
-                                    AttributeBase::List &modifiedAttributes,
-                                    Attribute<Matrix>::Ptr &leftVector) {
+void DP::Ph1::ResIndSeries::mnaCompAddPostStepDependencies(
+    AttributeBase::List &prevStepDependencies,
+    AttributeBase::List &attributeDependencies,
+    AttributeBase::List &modifiedAttributes,
+    Attribute<Matrix>::Ptr &leftVector) {
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mIntfCurrent);
