@@ -45,8 +45,10 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
                                          Real inductance) {
 
   // Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
-  mRatioAbs = std::abs(**mRatio);
-  mRatioPhase = std::arg(**mRatio);
+  Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2,
+                                        ratioAbs, ratioPhase, resistance,
+                                        inductance);
+
   SPDLOG_LOGGER_INFO(
       mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
       **mNominalVoltageEnd1, **mNominalVoltageEnd2);
@@ -56,6 +58,9 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
   SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [/] Phase Shift={} [deg]",
                      std::abs(**mRatio), std::arg(**mRatio));
   SPDLOG_LOGGER_INFO(mSLog, "Rated Power={} [W]", **mRatedPower);
+
+  mRatioAbs = std::abs(**mRatio);
+  mRatioPhase = std::arg(**mRatio);
 
   mParametersSet = true;
 }
@@ -290,18 +295,6 @@ void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  (**mIntfCurrent)(0, 0) = 0.0;
-  if (terminalNotGrounded(0)) {
-    (**mIntfCurrent)(0, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)) /
-        mImpedance;
-  }
-  if (terminalNotGrounded(1)) {
-    (**mIntfCurrent)(0, 0) -=
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) *
-        (**mRatio / mImpedance);
-  }
-
-  **mPrimaryCurrent = (**mIntfCurrent)(0, 0);
-  **mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
+  // primary side current flowing into node 0
+  (**mIntfCurrent)(0, 0) = -(**mIntfVoltage)(0, 0) / mImpedance;
 }

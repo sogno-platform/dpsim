@@ -9,11 +9,7 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph1_Transformer.h>
-#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/SP/SP_Ph1_Capacitor.h>
-#include <dpsim-models/SP/SP_Ph1_Inductor.h>
-#include <dpsim-models/SP/SP_Ph1_Resistor.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBranch.h>
 
@@ -74,14 +70,10 @@ public:
   // #### Power flow results ####
   /// branch Current flow [A], coef(0) has data from node 0, coef(1) from node 1.
   const Attribute<MatrixComp>::Ptr mCurrent;
-  const Attribute<Complex>::Ptr mPrimaryCurrent;
-  const Attribute<Complex>::Ptr mSecondaryCurrent;
-  const Attribute<Complex>::Ptr mPrimaryLV;
-  const Attribute<Complex>::Ptr mSecondaryLV;
 
-  // #### Power flow results ####
   /// branch active powerflow [W], coef(0) has data from node 0, coef(1) from node 1.
   const Attribute<Matrix>::Ptr mActivePowerBranch;
+
   /// branch reactive powerflow [Var], coef(0) has data from node 0, coef(1) from node 1.
   const Attribute<Matrix>::Ptr mReactivePowerBranch;
   /// nodal active power injection

@@ -9,8 +9,8 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph1_PiLine.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
-#include <dpsim-models/DP/DP_Ph1_Inductor.h>
 #include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
