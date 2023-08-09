@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <dpsim-models/Base/Base_Ph1_Inductor.h>
 #include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
 namespace DP {
@@ -91,12 +91,46 @@ public:
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
 
+  class MnaPreStepHarm : public CPS::Task {
+  public:
+    MnaPreStepHarm(ResIndSeries &ResIndSeries)
+        : Task(**ResIndSeries.mName + ".MnaPreStepHarm"),
+          mResIndSeries(ResIndSeries) {
+      // actually depends on C, but then we'd have to modify the system matrix anyway
+      mModifiedAttributes.push_back(mResIndSeries.attribute("right_vector"));
+      mPrevStepDependencies.push_back(mResIndSeries.attribute("i_intf"));
+      mPrevStepDependencies.push_back(mResIndSeries.attribute("v_intf"));
+    }
+    void execute(Real time, Int timeStepCount);
+
+  private:
+    ResIndSeries &mResIndSeries;
+  };
+
+  class MnaPostStepHarm : public CPS::Task {
+  public:
+    MnaPostStepHarm(ResIndSeries &ResIndSeries,
+                    const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
+        : Task(**ResIndSeries.mName + ".MnaPostStepHarm"),
+          mResIndSeries(ResIndSeries), mLeftVectors(leftVectors) {
+      for (UInt i = 0; i < mLeftVectors.size(); i++)
+        mAttributeDependencies.push_back(mLeftVectors[i]);
+      mModifiedAttributes.push_back(mResIndSeries.attribute("v_intf"));
+      mModifiedAttributes.push_back(mResIndSeries.attribute("i_intf"));
+    }
+    void execute(Real time, Int timeStepCount);
+
+  private:
+    ResIndSeries &mResIndSeries;
+    std::vector<Attribute<Matrix>::Ptr> mLeftVectors;
+  };
+
   // #### Tearing methods ####
   void mnaTearInitialize(Real omega, Real timestep) override;
   void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
   void mnaTearApplyVoltageStamp(Matrix &voltageVector) override;
   void mnaTearPostStep(Complex voltage, Complex current) override;
 };
-}
-}
-}
+} // namespace Ph1
+} // namespace DP
+} // namespace CPS

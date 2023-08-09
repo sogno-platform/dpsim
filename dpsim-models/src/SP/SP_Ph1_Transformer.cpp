@@ -39,8 +39,10 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
                                          Real inductance) {
 
   // Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
-  mRatioAbs = std::abs(**mRatio);
-  mRatioPhase = std::arg(**mRatio);
+  Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2,
+                                        ratioAbs, ratioPhase, resistance,
+                                        inductance);
+
   SPDLOG_LOGGER_INFO(
       mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
       **mNominalVoltageEnd1, **mNominalVoltageEnd2);
@@ -50,6 +52,9 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
   SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [/] Phase Shift={} [deg]",
                      std::abs(**mRatio), std::arg(**mRatio));
   SPDLOG_LOGGER_INFO(mSLog, "Rated Power={} [W]", **mRatedPower);
+
+  mRatioAbs = std::abs(**mRatio);
+  mRatioPhase = std::arg(**mRatio);
 
   mParametersSet = true;
 }
@@ -215,51 +220,6 @@ void SP::Ph1::Transformer::mnaCompInitialize(
   updateMatrixNodeIndices();
 }
 
-<<<<<<< HEAD
-void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
-    SparseMatrixRow &systemMatrix) {
-  SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
-  if (terminalNotGrounded(0)) {
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0),
-                           1. / mImpedance);
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-                       (Complex(1, 0) / mImpedance).real(),
-                       (Complex(1, 0) / mImpedance).imag(), matrixNodeIndex(0),
-                       matrixNodeIndex(0));
-  }
-  if (terminalNotGrounded(1)) {
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1),
-                           std::pow(**mRatio, 2) / mImpedance);
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-                       (std::pow(**mRatio, 2) / mImpedance).real(),
-                       (std::pow(**mRatio, 2) / mImpedance).imag(),
-                       matrixNodeIndex(1), matrixNodeIndex(1));
-  }
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
-                           -**mRatio / mImpedance);
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-                       (-**mRatio / mImpedance).real(),
-                       (-**mRatio / mImpedance).imag(), matrixNodeIndex(0),
-                       matrixNodeIndex(1));
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0),
-                           -**mRatio / mImpedance);
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-                       (-**mRatio / mImpedance).real(),
-                       (-**mRatio / mImpedance).imag(), matrixNodeIndex(1),
-                       matrixNodeIndex(0));
-  }
-}
-
-void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(
-    AttributeBase::List &prevStepDependencies,
-    AttributeBase::List &attributeDependencies,
-    AttributeBase::List &modifiedAttributes,
-    Attribute<Matrix>::Ptr &leftVector) {
-  attributeDependencies.push_back(leftVector);
-  modifiedAttributes.push_back(mIntfVoltage);
-  modifiedAttributes.push_back(mIntfCurrent);
-=======
 void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
@@ -306,12 +266,6 @@ void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mIntfCurrent);
-<<<<<<< HEAD
-  modifiedAttributes.push_back(mSecondaryCurrent);
-  modifiedAttributes.push_back(mSecondaryCurrent);
->>>>>>> cb8aa51d8 (set initial voltages in validation notebook of power transformer)
-=======
->>>>>>> 49bfba6d0 (change direction of interface current of PTs)
 }
 
 void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount,
@@ -320,33 +274,6 @@ void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount,
   this->mnaUpdateCurrent(**leftVector);
 }
 
-<<<<<<< HEAD
-void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  // v0 - v1
-  (**mIntfVoltage)(0, 0) = 0.0;
-  if (terminalNotGrounded(0)) {
-    (**mIntfVoltage)(0, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
-  }
-  if (terminalNotGrounded(0)) {
-    (**mIntfVoltage)(0, 0) -=
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
-  }
-}
-
-void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  (**mIntfCurrent)(0, 0) = 0.0;
-  if (terminalNotGrounded(0)) {
-    (**mIntfCurrent)(0, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)) /
-        mImpedance;
-  }
-  if (terminalNotGrounded(1)) {
-    (**mIntfCurrent)(0, 0) -=
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) *
-        (**mRatio / mImpedance);
-  }
-=======
 void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // v0 - v1
   (**mIntfVoltage)(0, 0) = 0.0;
@@ -360,24 +287,6 @@ void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
-<<<<<<< HEAD
-  (**mIntfCurrent)(0, 0) = 0.0;
-  if (terminalNotGrounded(0)) {
-    (**mIntfCurrent)(0, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)) /
-        mImpedance;
-  }
-  if (terminalNotGrounded(1)) {
-    (**mIntfCurrent)(0, 0) -=
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) *
-        (**mRatio / mImpedance);
-  }
-
-  **mPrimaryCurrent = (**mIntfCurrent)(0, 0);
-  **mSecondaryCurrent = (**mIntfCurrent)(0, 0) * **mRatio;
->>>>>>> cb8aa51d8 (set initial voltages in validation notebook of power transformer)
-=======
-// primary side current flowing into node 0
-(**mIntfCurrent)(0, 0) = -(**mIntfVoltage)(0, 0) / mImpedance;
->>>>>>> 49bfba6d0 (change direction of interface current of PTs)
+  // primary side current flowing into node 0
+  (**mIntfCurrent)(0, 0) = -(**mIntfVoltage)(0, 0) / mImpedance;
 }

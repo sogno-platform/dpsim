@@ -29,11 +29,6 @@ public:
   Transformer(String name, Logger::Level logLevel = Logger::Level::off)
       : Transformer(name, name, logLevel) {}
 
-  /// Inductance [H]
-  const Attribute<Matrix>::Ptr mInductance;
-  ///Resistance [ohm]
-  const Attribute<Matrix>::Ptr mResistance;
-
 protected:
   /// DC equivalent current source [A]
   Matrix mEquivCurrent;

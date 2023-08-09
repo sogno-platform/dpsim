@@ -9,8 +9,8 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph3_PiLine.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
-#include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_ResIndSeries.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/Solver/MNAInterface.h>
@@ -38,13 +38,6 @@ protected:
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
   /// solver
   std::vector<const Matrix *> mRightVectorStamps;
-
-public:
-  /// Defines UID, name and logging level
-  PiLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
-  /// Defines name and logging level
-  PiLine(String name, Logger::Level logLevel = Logger::Level::off)
-      : PiLine(name, name, logLevel) {}
 
 public:
   /// Defines UID, name and logging level
