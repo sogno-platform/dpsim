@@ -36,7 +36,7 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	addMNASubComponent(mSubSeriesElement, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	// Create parallel sub components
-	if (**mParallelCond >= 0) {
+	if (**mParallelCond > 0) {
 		mSubParallelResistor0 = std::make_shared<DP::Ph1::Resistor>(**mName + "_con0", mLogLevel);
 		mSubParallelResistor0->setParameters(2. / **mParallelCond);
 		mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
@@ -52,7 +52,7 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		addMNASubComponent(mSubParallelResistor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 	}
 
-	if (**mParallelCap >= 0) {
+	if (**mParallelCap > 0) {
 		mSubParallelCapacitor0 = std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap0", mLogLevel);
 		mSubParallelCapacitor0->setParameters(**mParallelCap / 2.);
 		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
@@ -121,10 +121,12 @@ void DP::Ph1::PiLine::mnaCompUpdateCurrent(const Matrix& leftVector) {
 MNAInterface::List DP::Ph1::PiLine::mnaTearGroundComponents() {
 	MNAInterface::List gndComponents;
 
-	gndComponents.push_back(mSubParallelResistor0);
-	gndComponents.push_back(mSubParallelResistor1);
+	if (**mParallelCond > 0) {
+		gndComponents.push_back(mSubParallelResistor0);
+		gndComponents.push_back(mSubParallelResistor1);
+	}
 
-	if (**mParallelCap >= 0) {
+	if (**mParallelCap > 0) {
 		gndComponents.push_back(mSubParallelCapacitor0);
 		gndComponents.push_back(mSubParallelCapacitor1);
 	}
