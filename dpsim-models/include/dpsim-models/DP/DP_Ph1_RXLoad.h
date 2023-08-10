@@ -53,8 +53,6 @@ namespace Ph1 {
 		RXLoad(String name,
 			Logger::Level logLevel = Logger::Level::off);
 
-		SimPowerComp<Complex>::Ptr clone(String name);
-
 		// #### General ####
 		/// Initialize component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);

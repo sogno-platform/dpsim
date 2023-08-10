@@ -26,14 +26,6 @@ DP::Ph1::RXLoad::RXLoad(String name, Logger::Level logLevel)
 	: RXLoad(name, name, logLevel) {
 }
 
-/// DEPRECATED: Delete method
-SimPowerComp<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
-	auto copy = RXLoad::make(name, mLogLevel);
-	if (mParametersSet)
-		copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage);
-	return copy;
-}
-
 void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 	if(!mParametersSet){
