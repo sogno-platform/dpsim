@@ -13,6 +13,7 @@
 #include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
+#include <dpsim-models/Signal/ExciterST1Simp.h>
 #include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
 

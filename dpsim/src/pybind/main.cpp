@@ -206,7 +206,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 	py::enum_<CPS::ExciterType>(m, "ExciterType")
 		.value("Simple", CPS::ExciterType::Simple)
 		.value("DC1Simp", CPS::ExciterType::DC1Simp)
-		.value("DC1", CPS::ExciterType::DC1);
+		.value("DC1", CPS::ExciterType::DC1)
+		.value("ST1Simp", CPS::ExciterType::ST1Simp);
 
 	py::enum_<DPsim::Solver::Type>(m, "Solver")
 		.value("MNA", DPsim::Solver::Type::MNA)
