@@ -137,6 +137,7 @@ list(APPEND MODELS_SOURCES
 	Signal/DecouplingLineEMT.cpp
 	Signal/ExciterDC1.cpp
 	Signal/ExciterDC1Simp.cpp
+	Signal/ExciterST1Simp.cpp
 	Signal/PSS1A.cpp
 	Signal/FIRFilter.cpp
 	Signal/TurbineGovernor.cpp

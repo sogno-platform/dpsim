@@ -132,7 +132,14 @@ enum class GeneratorType {
   None
 };
 enum class SGOrder { SG3Order, SG4Order, SG5Order, SG6aOrder, SG6bOrder };
-enum class ExciterType { Simple, DC1Simp, DC1 };
+enum class ExciterType { Simple, DC1Simp, DC1, ST1Simp };
+
+// ### Exceptions ###
+class Exception : public std::exception {};
+class AccessException : public Exception {};
+class TypeException : public Exception {};
+class InvalidAttributeException : public Exception {};
+class InvalidArgumentException : public Exception {};
 
 // ### Exceptions ###
 class Exception : public std::exception {};
