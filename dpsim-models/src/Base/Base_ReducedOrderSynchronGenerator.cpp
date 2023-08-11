@@ -604,6 +604,9 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
   if (exciterType == ExciterType::DC1)
     mExciter = CPS::Signal::ExciterDC1::make("Exciter_" + this->name(),
                                              this->mLogLevel);
+  if (exciterType == ExciterType::ST1Simp)
+    mExciter = CPS::Signal::ExciterST1Simp::make("Exciter_" + this->name(),
+                                                 this->mLogLevel);
 
   mExciter->setParameters(exciterParameters);
   mHasExciter = true;
