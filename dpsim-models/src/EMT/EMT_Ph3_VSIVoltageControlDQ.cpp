@@ -77,7 +77,7 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 	mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
 
 	// Droop
-	mDroop->mInputRef->setReference(**mElecActivePower);
+	mDroop->mInputRef->setReference(mElecActivePower); // maybe mPref ?
 	mDroopOutput->setReference(mDroop->mOutputRef);
 
     // VCO
@@ -409,10 +409,14 @@ void EMT::Ph3::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	Real theta = mVCO->mOutputPrev->get();
 	vcdq = parkTransformPowerInvariant(theta, **mVirtualNodes[2]->mVoltage);
 	ircdq = parkTransformPowerInvariant(theta, - **mSubResistorF->mIntfCurrent);
+
 	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
 	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
+
+	//calculation of system power
 	**mElecActivePower = - 1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
 	**mElecPassivePower = - 1. * (intfVoltageDQ(1, 0)*intfCurrentDQ(0, 0) - intfVoltageDQ(0, 0)*intfCurrentDQ(1, 0));
+
 	//vector of voltages
 	**mVcd = vcdq(0, 0);
 	**mVcq = vcdq(1, 0);
