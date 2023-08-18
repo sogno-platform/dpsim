@@ -14,8 +14,8 @@ using namespace CPS;
 
 int main(int argc, char* argv[]) {
 
-	// CIM::Examples::Grids::GridForming::ScenarioConfig1 scenario;
-	CIM::Examples::Grids::GridForming::Yazdani scenario;
+	CIM::Examples::Grids::GridForming::ScenarioConfig1 scenario;
+	// CIM::Examples::Grids::GridForming::Yazdani scenario;
 
 	Real finalTime = 5;
 	Real timeStep = 0.0001;
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 	
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(scenario.lineResistance, 0, 0, 0);
+	linePF->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance, scenario.lineConductance);
 	linePF->setBaseVoltage(scenario.systemNominalVoltage);
 
 	// Topology
@@ -50,6 +50,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{linePF, extnetPF});
 	
 	// Logging
+	
 	auto loggerPF = DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]) {
 	String simNameEMT = simName + "_EMT";
 	Logger::setLogDir("logs/" + simNameEMT);
 
-	// Components
+	// Components EMT Simulation
 	auto n1EMT = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2EMT = SimNode<Real>::make("n2", PhaseType::ABC);
 	auto n3EMT = SimNode<Real>::make("n3", PhaseType::ABC);
@@ -95,14 +96,12 @@ int main(int argc, char* argv[]) {
 	load2EMT->setParameters(CPS::Math::singlePhasePowerToThreePhase(load2ActivePower), CPS::Math::singlePhasePowerToThreePhase(load2ReactivePower), scenario.systemNominalVoltage);
 	
 	auto pv = EMT::Ph3::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
-	pv->setParameters(scenario.systemNominalOmega, scenario.Vdref, scenario.Vqref, 1e7); //initialise with Pref
-	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.systemNominalOmega, 0, 0, 0); //	Initialise with taup taui mp
+	pv->setParameters(scenario.systemNominalOmega, scenario.Vdref, scenario.Vqref, scenario.Pref); //initialise with Pref
+	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.systemNominalOmega, scenario.m_p, scenario.tau_p, scenario.tau_l); //Initialise with taup taui mp
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
 	pv->setInitialStateValues(scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
 	pv->withControl(pvWithControl);
 
-	// auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	// lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(scenario.lineResistance), CPS::Math::singlePhaseParameterToThreePhase(scenario.lineInductance), 0, 0);
 
 	auto lineEMT = EMT::Ph3::Resistor::make("Line", Logger::Level::debug);
 	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(scenario.lineResistance));
@@ -141,17 +140,22 @@ int main(int argc, char* argv[]) {
 	pv->terminal(0)->setPower(initial3PhPowerVSI);
 
 	// Logging
+
+	
 	auto loggerEMT = DataLogger::make(simNameEMT);
 	loggerEMT->logAttribute("Spannung_PCC", n2EMT->attribute("v"));
 	loggerEMT->logAttribute("Spannung_Load1", n3EMT->attribute("v"));
 	loggerEMT->logAttribute("Spannung_Load2", n4EMT->attribute("v"));
     loggerEMT->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
 	loggerEMT->logAttribute("Strom_RLC", pv->attribute("i_intf"));
-	//loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
-	//loggerEMT->logAttribute("VCO_Phase", pv->attribute("VCO_output"));
+	loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
+	loggerEMT->logAttribute("VCO_Phase", pv->attribute("VCO_output"));
 	loggerEMT->logAttribute("P_elec", pv->attribute("P_elec"));
 	loggerEMT->logAttribute("Q_elec", pv->attribute("Q_elec"));
 	
+
+	
+
 	// Simulation
 	Simulation sim(simNameEMT, Logger::Level::debug);
 	sim.setSystem(systemEMT);
