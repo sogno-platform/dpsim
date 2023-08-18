@@ -731,6 +731,9 @@ namespace GridForming {
         // Grid Parameters (X/R = 10)
         Real loadRes1 = 5.877777777777778;
         Real loadInd1 = 0.155912897954838;
+        Real loadRes2 = 50e-3;
+        Real loadInd2 = 68e-6;
+        Real loadCap2 = 13.55e-3;
 
         // // Load
         // Real loadActivePower= 0.5*vsiNominalActivePower;
