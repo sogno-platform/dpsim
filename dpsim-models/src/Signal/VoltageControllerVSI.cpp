@@ -47,22 +47,22 @@ void VoltageControllerVSI::setParameters(Real VdRef, Real VqRef) {
 //setter for controller parameters and setting up of system matrices
 void VoltageControllerVSI::setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Kp_pll, Real Ki_pll, Real Omega_cutoff) {
 
-	//Voltage Loop (First)
+	// Voltage Loop (First)
 	mKiVoltageCtrld = Ki_voltageCtrl;
 	mKiVoltageCtrlq = Ki_voltageCtrl;
 	mKpVoltageCtrld = Kp_voltageCtrl;
 	mKpVoltageCtrlq = Kp_voltageCtrl;
 
-	//Current Loop (Second)
+	// Current Loop (Second)
 	mKiCurrCtrld = Ki_currCtrl;
 	mKiCurrCtrlq = Ki_currCtrl;
 	mKpCurrCtrld = Kp_currCtrl;
 	mKpCurrCtrlq = Kp_currCtrl;
 
-	//Frequency
+	// Frequency
 	mOmegaCutoff = Omega_cutoff; 
 
-	//log loop parameters
+	// log loop parameters
 	SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
 	SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_i = {}, K_p = {}", Kp_voltageCtrl, Ki_voltageCtrl);
 	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);

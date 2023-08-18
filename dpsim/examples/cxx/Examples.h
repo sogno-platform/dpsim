@@ -638,6 +638,7 @@ namespace SGIB {
         Real lineResistance = 0.5 * length;
 	    Real lineInductance = 0.5/314 * length;
         Real lineCapacitance = 50e-6/314 * length;
+        Real lineConductance = 0;
 
         // PV controller parameters
         Real scalingKp = 1;
@@ -688,6 +689,8 @@ namespace GridForming {
         // Line
         Real lineResistance = 0.88e-3;
         Real lineInductance = 0;
+        Real lineCapacitance = 0;
+        Real lineConductance = 0;
 
         // Real lineResistance = 1.27e-4 * 529;
         // Real lineInductance = 9.05e-4 * 529;
