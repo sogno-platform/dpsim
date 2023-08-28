@@ -42,12 +42,19 @@ void Droop::setControllerParameters(Real m_p, Real tau_p, Real tau_l) {
 
     SPDLOG_LOGGER_INFO(mSLog,"m_p = {}, tau_p = {}, tau_l = {}, ", mM_p, mTau_p, mTau_l);
 
-    /// [x] = omega
+    /// [x] = omegaNet
     /// [u] = PowerInst, PowerSet, omegaNom
-    /// [y] = omega
+    /// [y] = omegaNet
 
+    /*
     mA <<  -1/mTau_p;
     mB <<  1/mTau_p, -mM_p/mTau_p, mM_p/mTau_p;
+    mC <<  1;
+    mD <<  0, 0, 0;
+    */
+
+    mA <<  -1/mTau_p;
+    mB <<  -mM_p/mTau_p, mM_p/mTau_p, 1/mTau_p;
     mC <<  1;
     mD <<  0, 0, 0;
 
@@ -71,7 +78,7 @@ void Droop::setInitialStateValues(Matrix input_init, Matrix state_init, Matrix o
     **mOutputCurr = output_init; /// [y] = omega
 
 	SPDLOG_LOGGER_INFO(mSLog,"Initial State Value Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog,"Omega Init = {}, Power Init = {}", (**mStateCurr)(0,0), (**mInputCurr)(0,0));
+	SPDLOG_LOGGER_INFO(mSLog,"Omega Init = {}, Power Init = {}, Power Set = {}, Omega Nominal = {}", (**mStateCurr)(0,0), (**mInputCurr)(0,0),(**mInputCurr)(1,0),(**mInputCurr)(2,0));
 }
 
 void Droop::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -81,6 +88,7 @@ void Droop::signalAddPreStepDependencies(AttributeBase::List &prevStepDependenci
     modifiedAttributes.push_back(mOutputPrev);
 };
 
+// previous values are overwritten with new values
 void Droop::signalPreStep(Real time, Int timeStepCount) {
     **mInputPrev = **mInputCurr;
     **mStatePrev = **mStateCurr;
@@ -98,15 +106,15 @@ void Droop::signalStep(Real time, Int timeStepCount) {
     (**mInputCurr)(0,0) = **mInputRef;
 
     SPDLOG_LOGGER_INFO(mSLog, "Time {}:", time);
-    SPDLOG_LOGGER_INFO(mSLog, "Input values: inputCurr = ({}, {}), inputPrev = ({}, {}), stateCurr = ({}), statePrev = ({})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mStateCurr)(0,0), (**mStatePrev)(0,0));
+    SPDLOG_LOGGER_INFO(mSLog, "Input values: inputCurr = ({}, {}, {}), inputPrev = ({}, {}, {}), stateCurr = ({}), statePrev = ({})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputCurr)(2,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mInputPrev)(2,0), (**mStateCurr)(0,0), (**mStatePrev)(0,0));
 
     **mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
     **mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
 
     **mOutputRef=(**mOutputCurr)(0,0);
 
-    SPDLOG_LOGGER_INFO(mSLog, "State values: stateCurr = ({}, {})", (**mStateCurr)(0,0));
-    SPDLOG_LOGGER_INFO(mSLog, "Output values: outputCurr = ({}, {}):", (**mOutputCurr)(0,0));
+    SPDLOG_LOGGER_INFO(mSLog, "State values: stateCurr = ({})", (**mStateCurr)(0,0));
+    SPDLOG_LOGGER_INFO(mSLog, "Output values: outputCurr = ({}):", (**mOutputCurr)(0,0));
 }
 
 Task::List Droop::getTasks() {

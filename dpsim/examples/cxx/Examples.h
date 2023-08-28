@@ -712,7 +712,7 @@ namespace GridForming {
         Real Pref= 0.777778*vsiNominalActivePower;
         Real m_p= 2.094395102393195e-8;
         Real tau_p= 0.5;
-		Real tau_l= 0; //tau_l=0 for first order filter 
+		Real tau_l= 0.1; //tau_l=0 for first order filter 
 
         // Initial state values of VSI system matrix
         Real thetaPLLInit = 0;
