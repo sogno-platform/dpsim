@@ -82,7 +82,7 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 
     // VCO
     mVCO->mInputRef->setReference(mDroopOutput);
-	mVCOOutput->setReference(mVCO->mOutputCurr);
+	mVCOOutput->setReference(mVCO->mOutputRef);
 
 	// Voltage controller
 	// input references
@@ -270,7 +270,7 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 		// Input: [PowerInst, PowerSet, omegaNom] //State: [omega] // Output: [omega]
 		mDroop->setInitialStateValues(matrixInputInit, matrixStateInit, matrixOutputInit);
 		// Input: [OmegaSet] //State: [theta] // Output: [theta]
-        mVCO->setInitialValues(**mOmegaN, theta, theta);
+        mVCO->setInitialValues(**mDroopOutput, theta, theta);
 	} 
 	else
 	{
@@ -303,7 +303,7 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 		// Input: [PowerInst, PowerSet, omegaNom] //State: [omega] // Output: [omega]
 		mDroop->setInitialStateValues(matrixInputInit, matrixStateInit, matrixOutputInit);
 		// Input: [OmegaSet] //State: [theta] // Output: [theta]
-        mVCO->setInitialValues(**mOmegaN, theta, theta);
+        mVCO->setInitialValues(**mDroopOutput, theta, theta);
 	}
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
@@ -331,6 +331,7 @@ void EMT::Ph3::VSIVoltageControlDQ::mnaParentInitialize(Real omega, Real timeSte
 
 	// initialize state space controller
 	mVoltageControllerVSI->initializeStateSpaceModel(omega, timeStep, leftVector);
+	mDroop->setSimulationParameters(timeStep);
 	mVCO->setSimulationParameters(timeStep);
 
 	// TODO: these are actually no MNA tasks
@@ -406,7 +407,7 @@ Matrix EMT::Ph3::VSIVoltageControlDQ::getInverseParkTransformMatrixPowerInvarian
 void EMT::Ph3::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	Matrix vcdq, ircdq;
-	Real theta = mVCO->mOutputPrev->get();
+	Real theta = (**mVCO->mOutputPrev)(0,0);
 	vcdq = parkTransformPowerInvariant(theta, **mVirtualNodes[2]->mVoltage);
 	ircdq = parkTransformPowerInvariant(theta, - **mSubResistorF->mIntfCurrent);
 
@@ -431,7 +432,7 @@ void EMT::Ph3::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	mVoltageControllerVSI->signalStep(time, timeStepCount);
 
 	// Transformation interface backward
-	**mVsref = inverseParkTransformPowerInvariant(mVCO->mOutputPrev->get(), mVoltageControllerVSI->mOutputCurr->get());
+	**mVsref = inverseParkTransformPowerInvariant((**mVCO->mOutputPrev)(0,0), mVoltageControllerVSI->mOutputCurr->get());
 
 	mThetaN = mThetaN + mTimeStep * **mOmegaN;
 }
