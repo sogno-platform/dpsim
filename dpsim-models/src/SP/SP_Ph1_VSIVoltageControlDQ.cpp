@@ -71,7 +71,7 @@ SP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 
 	// VCO
 	mVCO->mInputRef->setReference(mOmegaN);
-	mVCOOutput->setReference(mVCO->mOutputCurr);
+	mVCOOutput->setReference(mVCO->mOutputRef);
 
 	// Voltage controller
 	// input references
@@ -296,12 +296,12 @@ void SP::Ph1::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 
 	if(mWithConnectionTransformer)
 	{
-		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), mVCO->mOutputPrev->get(), mThetaN);
-		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), mVCO->mOutputPrev->get(), mThetaN);
+		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), (**mVCO->mOutputPrev)(0,0), mThetaN);
+		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), (**mVCO->mOutputPrev)(0,0), mThetaN);
 	}
 	else{
-		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->singleVoltage(), mVCO->mOutputPrev->get(), mThetaN);
-		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), mVCO->mOutputPrev->get(), mThetaN);
+		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->singleVoltage(), (**mVCO->mOutputPrev)(0,0), mThetaN);
+		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), (**mVCO->mOutputPrev)(0,0), mThetaN);
 	
 	}
 
@@ -315,7 +315,7 @@ void SP::Ph1::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	mVoltageControllerVSI->signalStep(time, timeStepCount);
 
 	// Transformation interface backward
-	(**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(0, 0), mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(1, 0)), mThetaN, mVCO->mOutputPrev->get());
+	(**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(0, 0), mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(1, 0)), mThetaN, (**mVCO->mOutputPrev)(0,0));
 
 	// Update nominal system angle
 	mThetaN = mThetaN + mTimeStep * **mOmegaN;
@@ -326,7 +326,7 @@ void SP::Ph1::VSIVoltageControlDQ::mnaParentAddPreStepDependencies(AttributeBase
 	prevStepDependencies.push_back(mIntfCurrent);
 	prevStepDependencies.push_back(mIntfVoltage);
 	attributeDependencies.push_back(mVoltageControllerVSI->attributeTyped<Matrix>("output_prev"));
-	attributeDependencies.push_back(mVCO->attributeTyped<Real>("output_prev"));
+	attributeDependencies.push_back(mVCO->attributeTyped<Matrix>("output_prev"));
 	modifiedAttributes.push_back(mRightVector);
 }
 

@@ -13,12 +13,13 @@ using namespace CPS::Signal;
 
 Droop::Droop(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
-    mInputRef(mAttributes->createDynamic<Real>("input_ref")),
-    mOutputRef(mAttributes->createDynamic<Real>("output_ref")),
+    mInputRef(mAttributes->createDynamic<Real>("input_ref")), // instant power
+    mOutputRef(mAttributes->createDynamic<Real>("output_ref")), // output omega
 
     mInputPrev(mAttributes->create<Matrix>("input_prev", Matrix::Zero(3,1))),
     mStatePrev(mAttributes->create<Matrix>("state_prev", Matrix::Zero(1,1))),
     mOutputPrev(mAttributes->create<Matrix>("output_prev", Matrix::Zero(1,1))),
+
     mInputCurr(mAttributes->create<Matrix>("input_curr", Matrix::Zero(3,1))),
     mStateCurr(mAttributes->create<Matrix>("state_curr", Matrix::Zero(1,1))),
     mOutputCurr(mAttributes->create<Matrix>("output_curr", Matrix::Zero(1,1))) {}
@@ -103,15 +104,15 @@ void Droop::signalAddStepDependencies(AttributeBase::List &prevStepDependencies,
 
 void Droop::signalStep(Real time, Int timeStepCount) {
     
-    (**mInputCurr)(0,0) = **mInputRef;
+    (**mInputCurr)(0,0) = **mInputRef; // power inst gets read from network
 
     SPDLOG_LOGGER_INFO(mSLog, "Time {}:", time);
-    SPDLOG_LOGGER_INFO(mSLog, "Input values: inputCurr = ({}, {}, {}), inputPrev = ({}, {}, {}), stateCurr = ({}), statePrev = ({})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputCurr)(2,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mInputPrev)(2,0), (**mStateCurr)(0,0), (**mStatePrev)(0,0));
+    SPDLOG_LOGGER_INFO(mSLog, "Input values: inputCurr = ({}, {}, {}), inputPrev = ({}, {}, {}), statePrev = ({})", (**mInputCurr)(0,0), (**mInputCurr)(1,0), (**mInputCurr)(2,0), (**mInputPrev)(0,0), (**mInputPrev)(1,0), (**mInputPrev)(2,0), (**mStatePrev)(0,0));
 
     **mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
     **mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
 
-    **mOutputRef=(**mOutputCurr)(0,0);
+    **mOutputRef = (**mOutputCurr)(0,0);
 
     SPDLOG_LOGGER_INFO(mSLog, "State values: stateCurr = ({})", (**mStateCurr)(0,0));
     SPDLOG_LOGGER_INFO(mSLog, "Output values: outputCurr = ({}):", (**mOutputCurr)(0,0));

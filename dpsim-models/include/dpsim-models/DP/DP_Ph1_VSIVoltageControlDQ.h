@@ -95,7 +95,7 @@ namespace Ph1 {
 		const Attribute<MatrixComp>::Ptr mVs;
 
 		// VCO
-		const Attribute<Real>::Ptr mVCOOutput;
+		const Attribute<Matrix>::Ptr mVCOOutput;
 
 		// input, state and output vector for logging
 		const Attribute<Matrix>::Ptr mVoltagectrlInputs;
