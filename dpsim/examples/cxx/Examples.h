@@ -533,7 +533,7 @@ struct ScenarioConfig {
   // Further parameters
   Real systemOmega = 2 * PI * systemFrequency;
 };
-}
+} // namespace SGIB
 namespace GridForming {
 
 struct ScenarioConfig1 {
@@ -664,7 +664,7 @@ struct Yazdani {
   // Real loadActivePower= 0.5*vsiNominalActivePower;
   // Real loadReactivePower= 0.001*vsiNominalReactivePower;
 };
-}
+} // namespace GridForming
 
 namespace CIGREMV {
 
@@ -805,76 +805,73 @@ void addInvertersToCIGREMV(SystemTopology &system,
       system.addComponent(pv);
       system.connectComponentToNodes<Real>(pv, {connectionNode});
     }
-
-    void logPVAttributes(DPsim::DataLogger::Ptr logger,
-                         CPS::TopologicalPowerComp::Ptr pv) {
-
-      // power controller
-      std::vector<String> inputNames = {pv->name() + "_powerctrl_input_pref",
-                                        pv->name() + "_powerctrl_input_qref",
-                                        pv->name() + "_powerctrl_input_vcd",
-                                        pv->name() + "_powerctrl_input_vcq",
-                                        pv->name() + "_powerctrl_input_ircd",
-                                        pv->name() + "_powerctrl_input_ircq"};
-      logger->logAttribute(inputNames, pv->attribute("powerctrl_inputs"));
-      std::vector<String> stateNames = {pv->name() + "_powerctrl_state_p",
-                                        pv->name() + "_powerctrl_state_q",
-                                        pv->name() + "_powerctrl_state_phid",
-                                        pv->name() + "_powerctrl_state_phiq",
-                                        pv->name() + "_powerctrl_state_gammad",
-                                        pv->name() + "_powerctrl_state_gammaq"};
-      logger->logAttribute(stateNames, pv->attribute("powerctrl_states"));
-      std::vector<String> outputNames = {pv->name() + "_powerctrl_output_vsd",
-                                         pv->name() + "_powerctrl_output_vsq"};
-      logger->logAttribute(outputNames, pv->attribute("powerctrl_outputs"));
-
-      // interface variables
-      logger->logAttribute(pv->name() + "_v_intf", pv->attribute("v_intf"));
-      logger->logAttribute(pv->name() + "_i_intf", pv->attribute("i_intf"));
-
-      // additional variables
-      logger->logAttribute(pv->name() + "_pll_output",
-                           pv->attribute("pll_output"));
-      logger->logAttribute(pv->name() + "_vsref", pv->attribute("Vsref"));
-      logger->logAttribute(pv->name() + "_vs", pv->attribute("Vs"));
-    }
-
-    void logVoltageControlledVSIAttributes(DPsim::DataLogger::Ptr logger,
-                                           CPS::TopologicalPowerComp::Ptr pv) {
-
-      // voltage controller
-      std::vector<String> inputNames = {pv->name() + "_voltagectrl_input_vdref",
-                                        pv->name() + "_voltagectrl_input_vqref",
-                                        pv->name() + "_voltagectrl_input_ircd",
-                                        pv->name() + "_voltagectrl_input_ircq"};
-      logger->logAttribute(inputNames, pv->attribute("voltagectrl_inputs"));
-      std::vector<String> stateNames = {
-          pv->name() + "_voltagectrl_state_p",
-          pv->name() + "_voltagectrl_state_q",
-          pv->name() + "_voltagectrl_state_phid",
-          pv->name() + "_voltagectrl_state_phiq",
-          pv->name() + "_voltagectrl_state_gammad",
-          pv->name() + "_voltagectrl_state_gammaq"};
-      logger->logAttribute(stateNames, pv->attribute("voltagectrl_states"));
-      std::vector<String> outputNames = {pv->name() + "_voltagectrl_output_vsd",
-                                         pv->name() +
-                                             "_voltagectrl_output_vsq"};
-      logger->logAttribute(outputNames, pv->attribute("voltagectrl_outputs"));
-
-      // interface variables
-      logger->logAttribute(pv->name() + "_v_intf", pv->attribute("v_intf"));
-      logger->logAttribute(pv->name() + "_i_intf", pv->attribute("i_intf"));
-
-      // additional variables
-      logger->logAttribute(pv->name() + "_pll_output",
-                           pv->attribute("pll_output"));
-      logger->logAttribute(pv->name() + "_vsref", pv->attribute("Vsref"));
-      logger->logAttribute(pv->name() + "_vs", pv->attribute("Vs"));
-    }
   }
+}
+
+void logPVAttributes(DPsim::DataLogger::Ptr logger,
+                     CPS::TopologicalPowerComp::Ptr pv) {
+
+  // power controller
+  std::vector<String> inputNames = {pv->name() + "_powerctrl_input_pref",
+                                    pv->name() + "_powerctrl_input_qref",
+                                    pv->name() + "_powerctrl_input_vcd",
+                                    pv->name() + "_powerctrl_input_vcq",
+                                    pv->name() + "_powerctrl_input_ircd",
+                                    pv->name() + "_powerctrl_input_ircq"};
+  logger->logAttribute(inputNames, pv->attribute("powerctrl_inputs"));
+  std::vector<String> stateNames = {pv->name() + "_powerctrl_state_p",
+                                    pv->name() + "_powerctrl_state_q",
+                                    pv->name() + "_powerctrl_state_phid",
+                                    pv->name() + "_powerctrl_state_phiq",
+                                    pv->name() + "_powerctrl_state_gammad",
+                                    pv->name() + "_powerctrl_state_gammaq"};
+  logger->logAttribute(stateNames, pv->attribute("powerctrl_states"));
+  std::vector<String> outputNames = {pv->name() + "_powerctrl_output_vsd",
+                                     pv->name() + "_powerctrl_output_vsq"};
+  logger->logAttribute(outputNames, pv->attribute("powerctrl_outputs"));
+
+  // interface variables
+  logger->logAttribute(pv->name() + "_v_intf", pv->attribute("v_intf"));
+  logger->logAttribute(pv->name() + "_i_intf", pv->attribute("i_intf"));
+
+  // additional variables
+  logger->logAttribute(pv->name() + "_pll_output", pv->attribute("pll_output"));
+  logger->logAttribute(pv->name() + "_vsref", pv->attribute("Vsref"));
+  logger->logAttribute(pv->name() + "_vs", pv->attribute("Vs"));
+}
+
+void logVoltageControlledVSIAttributes(DPsim::DataLogger::Ptr logger,
+                                       CPS::TopologicalPowerComp::Ptr pv) {
+
+  // voltage controller
+  std::vector<String> inputNames = {pv->name() + "_voltagectrl_input_vdref",
+                                    pv->name() + "_voltagectrl_input_vqref",
+                                    pv->name() + "_voltagectrl_input_ircd",
+                                    pv->name() + "_voltagectrl_input_ircq"};
+  logger->logAttribute(inputNames, pv->attribute("voltagectrl_inputs"));
+  std::vector<String> stateNames = {pv->name() + "_voltagectrl_state_p",
+                                    pv->name() + "_voltagectrl_state_q",
+                                    pv->name() + "_voltagectrl_state_phid",
+                                    pv->name() + "_voltagectrl_state_phiq",
+                                    pv->name() + "_voltagectrl_state_gammad",
+                                    pv->name() + "_voltagectrl_state_gammaq"};
+  logger->logAttribute(stateNames, pv->attribute("voltagectrl_states"));
+  std::vector<String> outputNames = {pv->name() + "_voltagectrl_output_vsd",
+                                     pv->name() + "_voltagectrl_output_vsq"};
+  logger->logAttribute(outputNames, pv->attribute("voltagectrl_outputs"));
+
+  // interface variables
+  logger->logAttribute(pv->name() + "_v_intf", pv->attribute("v_intf"));
+  logger->logAttribute(pv->name() + "_i_intf", pv->attribute("i_intf"));
+
+  // additional variables
+  logger->logAttribute(pv->name() + "_pll_output", pv->attribute("pll_output"));
+  logger->logAttribute(pv->name() + "_vsref", pv->attribute("Vsref"));
+  logger->logAttribute(pv->name() + "_vs", pv->attribute("Vs"));
+}
 
 } // namespace CIGREMV
-} // namespace CIGREMV
+} // namespace Grids
 
 namespace Events {
 std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(

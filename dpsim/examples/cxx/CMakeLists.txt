@@ -140,6 +140,8 @@ list(APPEND TEST_SOURCES
 	Circuits/DP_SMIB_ReducedOrderSGIterative_LoadStep.cpp
 	Circuits/EMT_Slack_PiLine_VSI_VoltageControlled_SteadyState_with_PF_Init.cpp
 	Circuits/EMT_Slack_PiLine_VSI_VoltageControlled_LoadStep_with_PF_Init.cpp
+	Circuits/DP_Slack_PiLine_VSI_VoltageControlled_SteadyState_with_PF_Init
+	Circuits/SP_Slack_PiLine_VSI_VoltageControlled_SteadyState_with_PF_Init
 )
 
 if(WITH_SUNDIALS)

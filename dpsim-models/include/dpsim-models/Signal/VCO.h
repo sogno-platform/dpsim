@@ -27,11 +27,19 @@ namespace Signal {
 		/// Integration time step
         Real mTimeStep;
 
+
+		/// matrix A of state space model
+		Matrix mA = Matrix::Zero(1, 1);
+		/// matrix B of state space model
+		Matrix mB = Matrix::Zero(1, 1);
+
 	public:
 
 		/// This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
 		const Attribute<Real>::Ptr mInputRef;
 
+		const Attribute<Real>::Ptr mOutputRef;
+/*
 		/// Previous Input
         const Attribute<Real>::Ptr mInputPrev;
         /// Current Input
@@ -44,6 +52,20 @@ namespace Signal {
         const Attribute<Real>::Ptr mOutputPrev;
         /// Current Output
         const Attribute<Real>::Ptr mOutputCurr;
+*/
+		/// Previous Input
+        const Attribute<Matrix>::Ptr mInputPrev;
+        /// Current Input
+        const Attribute<Matrix>::Ptr mInputCurr;
+        /// Previous State
+        const Attribute<Matrix>::Ptr mStatePrev;
+        /// Current State
+        const Attribute<Matrix>::Ptr mStateCurr;
+        /// Previous Output
+        const Attribute<Matrix>::Ptr mOutputPrev;
+        /// Current Output
+        const Attribute<Matrix>::Ptr mOutputCurr;
+
 
 		VCO(String name, Logger::Level logLevel = Logger::Level::off);
 		/// Setter for VCO parameters
