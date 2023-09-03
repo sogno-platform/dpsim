@@ -24,7 +24,7 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 	mElecPassivePower(mAttributes->create<Real>("Q_elec", 0)),
 	mVsref(mAttributes->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))),
 	mVs(mAttributes->createDynamic<MatrixComp>("Vs")),
-	mVCOOutput(mAttributes->createDynamic<Real>("vco_output")),
+	mVCOOutput(mAttributes->createDynamic<Matrix>("vco_output")),
 	mVoltagectrlInputs(mAttributes->createDynamic<Matrix>("voltagectrl_inputs")),
 	mVoltagectrlOutputs(mAttributes->createDynamic<Matrix>("voltagectrl_outputs")),
 	mVoltagectrlStates(mAttributes->createDynamic<Matrix>("voltagectrl_states")) {
@@ -296,12 +296,12 @@ void DP::Ph1::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 
 	if(mWithConnectionTransformer)
 	{
-		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), mVCO->mOutputPrev->get(), mThetaN);
-		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), mVCO->mOutputPrev->get(), mThetaN);
+		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), (**mVCO->mOutputPrev)(0,0), mThetaN);
+		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), (**mVCO->mOutputPrev)(0,0), mThetaN);
 	}
 	else{
-		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->singleVoltage(), mVCO->mOutputPrev->get(), mThetaN);
-		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), mVCO->mOutputPrev->get(), mThetaN);
+		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->singleVoltage(), (**mVCO->mOutputPrev)(0,0), mThetaN);
+		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), (**mVCO->mOutputPrev)(0,0), mThetaN);
 	
 	}
 
@@ -315,7 +315,7 @@ void DP::Ph1::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	mVoltageControllerVSI->signalStep(time, timeStepCount);
 
 	// Transformation interface backward
-	(**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(0, 0), mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(1, 0)), mThetaN, mVCO->mOutputPrev->get());
+	(**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(0, 0), mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(1, 0)), mThetaN, (**mVCO->mOutputPrev)(0,0));
 
 	// Update nominal system angle
 	mThetaN = mThetaN + mTimeStep * **mOmegaN;
@@ -326,7 +326,7 @@ void DP::Ph1::VSIVoltageControlDQ::mnaParentAddPreStepDependencies(AttributeBase
 	prevStepDependencies.push_back(mIntfCurrent);
 	prevStepDependencies.push_back(mIntfVoltage);
 	attributeDependencies.push_back(mVoltageControllerVSI->attributeTyped<Matrix>("output_prev"));
-	attributeDependencies.push_back(mVCO->attributeTyped<Real>("output_prev"));
+	attributeDependencies.push_back(mVCO->attributeTyped<Matrix>("output_prev"));
 	modifiedAttributes.push_back(mRightVector);
 }
 
