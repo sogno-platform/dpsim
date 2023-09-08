@@ -204,10 +204,10 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 	py::class_<CPS::EMT::Ph3::VSIVoltageControlDQ, std::shared_ptr<CPS::EMT::Ph3::VSIVoltageControlDQ>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "VSIVoltageControlDQ", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
-		.def("set_parameters", &CPS::EMT::Ph3::VSIVoltageControlDQ::setParameters, "sys_omega"_a, "vdref"_a, "vqref"_a) // add Pref
+		.def("set_parameters", &CPS::EMT::Ph3::VSIVoltageControlDQ::setParameters, "sys_omega"_a, "vdref"_a, "vqref"_a, "p_ref"_a)
 		.def("set_filter_parameters", &CPS::EMT::Ph3::VSIVoltageControlDQ::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
 		.def("set_controller_parameters", &CPS::EMT::Ph3::VSIVoltageControlDQ::setControllerParameters,
-			"Kp_pll"_a, "Ki_pll"_a, "Kp_voltage_ctrl"_a, "Ki_voltage_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a)
+			"Kp_voltage_ctrl"_a, "Ki_voltage_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a, "m_p"_a, "tau_p"_a, "tau_l"_a)
 		.def("set_transformer_parameters", &CPS::EMT::Ph3::VSIVoltageControlDQ::setTransformerParameters,
 			"nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a, "omega"_a)
 		.def("set_initial_state_values", &CPS::EMT::Ph3::VSIVoltageControlDQ::setInitialStateValues,
