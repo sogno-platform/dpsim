@@ -17,6 +17,7 @@ list(APPEND MODELS_SOURCES
 	Base/Base_SynchronGenerator.cpp
 	Base/Base_AvVoltageSourceInverterDQ.cpp
 	Base/Base_AvVoltageSourceInverterDQWithStateSpace.cpp
+	Base/Base_VSIVoltageSourceInverterDQ.cpp
 
 	DP/DP_Ph1_Capacitor.cpp
 	DP/DP_Ph1_CurrentSource.cpp
