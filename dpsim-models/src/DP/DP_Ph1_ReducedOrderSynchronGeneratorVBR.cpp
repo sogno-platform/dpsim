@@ -48,14 +48,17 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 
 	mDomainInterface.setDPShiftFrequency(mBase_OmMech);
 
-	if (mModelAsNortonSource) {
-		// FIXME set variable matrix entries accordingly as shown below
-		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
-	} else {
-		// get matrix dimension to properly set variable entries
-		auto n = leftVector->asRawPointer()->rows();
-		auto complexOffset = (UInt)(n / 2);
+	// get matrix dimension to properly set variable entries
+	auto n = leftVector->asRawPointer()->rows();
+	auto complexOffset = (UInt)(n / 2);
 
+	// set variable matrix entries depending on equivalent representation
+	if (mModelAsNortonSource) {
+		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0)));
+		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0) + complexOffset, matrixNodeIndex(0, 0)));
+		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0) + complexOffset));
+		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0) + complexOffset, matrixNodeIndex(0, 0) + complexOffset));
+	} else {
 		// upper left
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[0]->matrixNodeIndex()));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex() + complexOffset, mVirtualNodes[0]->matrixNodeIndex()));
@@ -68,12 +71,13 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(Real omega,
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), matrixNodeIndex(0, 0) + complexOffset));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0) + complexOffset, matrixNodeIndex(0, 0) + complexOffset));
 
-		// off diagonal
+		// first off diagonal
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0)));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex() + complexOffset, matrixNodeIndex(0, 0)));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0, 0) + complexOffset));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(mVirtualNodes[0]->matrixNodeIndex() + complexOffset, matrixNodeIndex(0, 0) + complexOffset));
 
+		// second off diagonal
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex()));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0) + complexOffset, mVirtualNodes[0]->matrixNodeIndex()));
 		mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex() + complexOffset));
