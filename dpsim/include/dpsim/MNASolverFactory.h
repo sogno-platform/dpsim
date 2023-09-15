@@ -64,12 +64,12 @@ class MnaSolverFactory {
 	static std::shared_ptr<MnaSolver<VarType>> factory(String name,
 		CPS::Domain domain = CPS::Domain::DP,
 		CPS::Logger::Level logLevel = CPS::Logger::Level::info,
-		DirectLinearSolverImpl implementation = DirectLinearSolverImpl::SparseLU,
+		DirectLinearSolverImpl implementation = DirectLinearSolverImpl::KLU,
 		String pluginName = "plugin.so")
 	{
-		//To avoid regression we use SparseLU in case of undefined implementation
+		//To avoid regression we use KLU in case of undefined implementation
 		if (implementation == DirectLinearSolverImpl::Undef) {
-			implementation = DirectLinearSolverImpl::SparseLU;
+			implementation = DirectLinearSolverImpl::KLU;
 		}
 		CPS::Logger::Log log = CPS::Logger::get("MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
 
