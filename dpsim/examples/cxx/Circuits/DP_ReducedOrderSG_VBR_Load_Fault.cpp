@@ -20,9 +20,17 @@ const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;
 const auto excitationEremia =
     Examples::Components::Exciter::getExciterParametersEremia();
 
-// Turbine Goverour
-const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1
-    turbineGovernor;
+// Steam Turbine
+const Examples::Components::TurbineGovernor::SteamTurbine dSteamTurbine;
+// Steam Turbine Governor
+const Examples::Components::TurbineGovernor::SteamTurbineGovernor
+    dSteamGovernor;
+
+// Hydro Turbine
+const Examples::Components::TurbineGovernor::HydroTurbine dHydroTurbine;
+// Hydro Turbine Governor
+const Examples::Components::TurbineGovernor::HydroTurbineGovernor
+    dHydroGovernor;
 
 int main(int argc, char *argv[]) {
 
@@ -30,6 +38,7 @@ int main(int argc, char *argv[]) {
   ExciterFactory::registerExciters();
   SynchronGeneratorFactory::DP::Ph1::registerSynchronGenerators();
 
+<<<<<<< HEAD
   //Simultion parameters
   Real switchClosed = GridParams.SwitchClosed;
   Real switchOpen = GridParams.SwitchOpen;
@@ -44,6 +53,32 @@ int main(int argc, char *argv[]) {
   std::string SGModel = "4";
   std::string stepSize_str = "";
   std::string inertia_str = "";
+=======
+  //Simultion parameters
+  Real switchClosed = GridParams.SwitchClosed;
+  Real switchOpen = GridParams.SwitchOpen;
+  Real startTimeFault = 1.0;
+  Real endTimeFault = 30;
+  Real finalTime = 60;
+  Real timeStep = 1e-3;
+  Real H = syngenKundur.H;
+<<<<<<< HEAD
+  bool withPSS = false;
+  bool withExciter = false;
+  bool withTurbineGovernor = false;
+=======
+  bool withExciter = true;
+  bool withTurbineGovernor = true;
+  bool hydro = true;
+  bool steam = false;
+  if (hydro == steam)
+    withTurbineGovernor = false;
+
+>>>>>>> 8e9cbf324 (HiWi added new Hydro and Steam Turbines and Governor models)
+  std::string SGModel = "4";
+  std::string stepSize_str = "";
+  std::string inertia_str = "";
+>>>>>>> 338446cac (added new Hydro and Steam Turbines and Governor models)
 
   // Command line args processing
   CommandLineArgs args(argc, argv);
@@ -121,6 +156,7 @@ int main(int argc, char *argv[]) {
     genDP->addPSS(pssDP);
   }
 
+<<<<<<< HEAD
   // Turbine Governor
   std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorDP = nullptr;
   if (withTurbineGovernor) {
@@ -137,6 +173,67 @@ int main(int argc, char *argv[]) {
   auto fault = CPS::DP::Ph1::Switch::make("Br_fault", logLevel);
   fault->setParameters(switchOpen, switchClosed);
   fault->open();
+=======
+<<<<<<< HEAD
+  // Power system stabilizer
+  std::shared_ptr<Signal::PSS1A> pssDP = nullptr;
+  if (withPSS) {
+    pssDP = Signal::PSS1A::make("SynGen_PSS", logLevel);
+    pssDP->setParameters(pssAndersonFarmer.Kp, pssAndersonFarmer.Kv,
+                         pssAndersonFarmer.Kw, pssAndersonFarmer.T1,
+                         pssAndersonFarmer.T2, pssAndersonFarmer.T3,
+                         pssAndersonFarmer.T4, pssAndersonFarmer.Vs_max,
+                         pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw);
+    genDP->addPSS(pssDP);
+  }
+
+  // Turbine Governor
+  std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorDP = nullptr;
+=======
+>>>>>>> 8e9cbf324 (HiWi added new Hydro and Steam Turbines and Governor models)
+  if (withTurbineGovernor) {
+
+    // Steam Turbine and Governor
+    if (steam) {
+      std::shared_ptr<Signal::SteamTurbine> steamTurbine = nullptr;
+      steamTurbine =
+          Signal::SteamTurbine::make("SynGen_SteamTurbine", logLevel);
+      steamTurbine->setParameters(dSteamTurbine.Fhp, dSteamTurbine.Fip,
+                                  dSteamTurbine.Flp, dSteamTurbine.Tch,
+                                  dSteamTurbine.Tco, dSteamTurbine.Trh);
+      genDP->addSteamTurbine(steamTurbine);
+
+      std::shared_ptr<Signal::SteamTurbineGovernor> steamTurbineGovernor =
+          nullptr;
+      steamTurbineGovernor = Signal::SteamTurbineGovernor::make(
+          "SynGen_SteamTurbineGovernor", logLevel);
+      steamTurbineGovernor->setParameters(
+          dSteamGovernor.OmRef, dSteamGovernor.R, dSteamGovernor.T2,
+          dSteamGovernor.T3, dSteamGovernor.delPmax, dSteamGovernor.delPmin,
+          dSteamGovernor.Pmax, dSteamGovernor.Pmin);
+      genDP->addSteamTurbineGovernor(steamTurbineGovernor);
+    }
+
+    // Hydro Turbine and Governor
+    if (hydro) {
+      std::shared_ptr<Signal::HydroTurbine> hydroTurbine = nullptr;
+      hydroTurbine =
+          Signal::HydroTurbine::make("SynGen_HydroTurbine", logLevel);
+      hydroTurbine->setParameters(dHydroTurbine.Tw);
+      genDP->addHydroTurbine(hydroTurbine);
+
+      std::shared_ptr<Signal::HydroTurbineGovernor> hydroTurbineGovernor =
+          nullptr;
+      hydroTurbineGovernor = Signal::HydroTurbineGovernor::make(
+          "SynGen_HydroTurbineGovernor", logLevel);
+      hydroTurbineGovernor->setParameters(
+          dHydroGovernor.OmRef, dHydroGovernor.R, dHydroGovernor.T1,
+          dHydroGovernor.T2, dHydroGovernor.T3, dHydroGovernor.Pmax,
+          dHydroGovernor.Pmin);
+      genDP->addHydroTurbineGovernor(hydroTurbineGovernor);
+    }
+  }
+>>>>>>> 338446cac (added new Hydro and Steam Turbines and Governor models)
 
   // Topology
   genDP->connect({n1DP});
@@ -167,9 +264,35 @@ int main(int argc, char *argv[]) {
   loggerDP->logAttribute("Ef", genDP->attribute("Ef"));
   loggerDP->logAttribute("Tm", genDP->attribute("Tm"));
 
+<<<<<<< HEAD
   // Events
   auto sw1 = SwitchEvent::make(startTimeFault, fault, true);
   simDP.addEvent(sw1);
+=======
+  // Logging
+  auto loggerDP = DataLogger::make(simNameDP, true, logDownSampling);
+<<<<<<< HEAD
+  loggerDP->logAttribute("v_gen", genDP->attribute("v_intf"));
+  loggerDP->logAttribute("i_gen", genDP->attribute("i_intf"));
+  loggerDP->logAttribute("Te", genDP->attribute("Te"));
+  loggerDP->logAttribute("delta", genDP->attribute("delta"));
+  loggerDP->logAttribute("w_r", genDP->attribute("w_r"));
+  loggerDP->logAttribute("Vdq0", genDP->attribute("Vdq0"));
+  loggerDP->logAttribute("Idq0", genDP->attribute("Idq0"));
+  loggerDP->logAttribute("Ef", genDP->attribute("Ef"));
+  loggerDP->logAttribute("Tm", genDP->attribute("Tm"));
+=======
+  loggerDP->logAttribute("v_gen", genDP->attribute("v_intf"));
+  loggerDP->logAttribute("i_gen", genDP->attribute("i_intf"));
+  loggerDP->logAttribute("Te", genDP->attribute("Te"));
+  loggerDP->logAttribute("delta", genDP->attribute("delta"));
+  loggerDP->logAttribute("w_r", genDP->attribute("w_r"));
+  loggerDP->logAttribute("Vdq0", genDP->attribute("Vdq0"));
+  loggerDP->logAttribute("Idq0", genDP->attribute("Idq0"));
+  loggerDP->logAttribute("Ef", genDP->attribute("Ef"));
+  loggerDP->logAttribute("Tm", genDP->attribute("Tm"));
+>>>>>>> 8e9cbf324 (HiWi added new Hydro and Steam Turbines and Governor models)
+>>>>>>> 338446cac (added new Hydro and Steam Turbines and Governor models)
 
   auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
   simDP.addEvent(sw2);
