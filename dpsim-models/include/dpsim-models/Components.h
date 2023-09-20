@@ -129,10 +129,12 @@
 #include <dpsim-models/Signal/ExciterST1Simp.h>
 #include <dpsim-models/Signal/FIRFilter.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>
+#include <dpsim-models/Signal/HydroTurbine.h>
+#include <dpsim-models/Signal/HydroTurbineGovernor.h>
 #include <dpsim-models/Signal/Integrator.h>
 #include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/PSSType2.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
-#include <dpsim-models/Signal/TurbineGovernor.h>
-#include <dpsim-models/Signal/TurbineGovernorType1.h>
+#include <dpsim-models/Signal/SteamTurbine.h>
+#include <dpsim-models/Signal/SteamTurbineGovernor.h>
