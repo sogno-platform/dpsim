@@ -149,7 +149,10 @@ list(APPEND MODELS_SOURCES
 	Signal/SignalGenerator.cpp
 	Signal/FrequencyRampGenerator.cpp
 	Signal/CosineFMGenerator.cpp
-)
+	Signal/SteamTurbine.cpp
+	Signal/SteamTurbineGovernor.cpp
+	Signal/HydroTurbine.cpp
+	Signal/HydroTurbineGovernor.cpp)
 
 if(WITH_CIM)
 	list(APPEND MODELS_SOURCES CIM/Reader.cpp)
