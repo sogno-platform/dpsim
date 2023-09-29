@@ -34,6 +34,13 @@ void addSPPh1Components(py::module_ mSPPh1) {
 		.def_property("V_ref", createAttributeGetter<CPS::Complex>("V_ref"), createAttributeSetter<CPS::Complex>("V_ref"))
 		.def_property("f_src", createAttributeGetter<CPS::Real>("f_src"), createAttributeSetter<CPS::Real>("f_src"));
 
+	py::class_<CPS::SP::Ph1::CurrentSource, std::shared_ptr<CPS::SP::Ph1::CurrentSource>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "CurrentSource", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::SP::Ph1::CurrentSource::setParameters, "I_ref"_a)
+		.def("connect", &CPS::SP::Ph1::CurrentSource::connect)
+		.def_property("I_ref", createAttributeGetter<CPS::Complex>("I_ref"), createAttributeSetter<CPS::Complex>("I_ref"));
+
 	py::class_<CPS::SP::Ph1::Resistor, std::shared_ptr<CPS::SP::Ph1::Resistor>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Resistor", py::multiple_inheritance())
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::Logger::Level>())
