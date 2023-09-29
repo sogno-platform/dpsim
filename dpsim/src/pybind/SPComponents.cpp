@@ -44,6 +44,18 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
                     createAttributeSetter<CPS::Real>("f_src"));
 
+  py::class_<CPS::SP::Ph1::CurrentSource,
+             std::shared_ptr<CPS::SP::Ph1::CurrentSource>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "CurrentSource",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::SP::Ph1::CurrentSource::setParameters,
+           "I_ref"_a)
+      .def("connect", &CPS::SP::Ph1::CurrentSource::connect)
+      .def_property("I_ref", createAttributeGetter<CPS::Complex>("I_ref"),
+                    createAttributeSetter<CPS::Complex>("I_ref"));
+
   py::class_<CPS::SP::Ph1::Resistor, std::shared_ptr<CPS::SP::Ph1::Resistor>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Resistor",
                                               py::multiple_inheritance())
@@ -134,7 +146,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph1::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		    // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::SP::Ph1::Switch::open)
       .def("close", &CPS::SP::Ph1::Switch::close)
@@ -167,7 +179,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph1::varResSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::SP::Ph1::varResSwitch::open)
       .def("close", &CPS::SP::Ph1::varResSwitch::close)
@@ -304,7 +316,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		    // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "with_trafo"_a = false)
       .def("set_parameters",
            &CPS::SP::Ph1::AvVoltageSourceInverterDQ::setParameters,

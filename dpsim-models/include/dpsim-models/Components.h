@@ -11,6 +11,7 @@
 #include <dpsim-models/Config.h>
 
 #include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/SP/SP_Ph1_CurrentSource.h>
 #include <dpsim-models/SP/SP_Ph1_Load.h>
 #include <dpsim-models/SP/SP_Ph1_NetworkInjection.h>
 #include <dpsim-models/SP/SP_Ph1_PQNode.h>
