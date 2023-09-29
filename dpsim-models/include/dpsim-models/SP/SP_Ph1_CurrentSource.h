@@ -39,33 +39,33 @@ public:
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) final;
 
   // #### MNA section ####
   ///
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector);
+                         Attribute<Matrix>::Ptr leftVector) final;
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) {}
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final {}
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) final;
   ///
   void mnaCompUpdateVoltage(const Matrix &leftVector);
 
   /// Add MNA pre step dependencies
-  void mnaCompAddPreStepDependencies(
-      AttributeBase::List &prevStepDependencies,
-      AttributeBase::List &attributeDependencies,
-      AttributeBase::List &modifiedAttributes) override;
+  void
+  mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
+                                AttributeBase::List &attributeDependencies,
+                                AttributeBase::List &modifiedAttributes) final;
   /// Add MNA post step dependencies
   void
   mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) override;
-  void mnaCompPreStep(Real time, Int timeStepCount) override;
+                                 Attribute<Matrix>::Ptr &leftVector) final;
+  void mnaCompPreStep(Real time, Int timeStepCount) final;
   void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) override;
+                       Attribute<Matrix>::Ptr &leftVector) final;
 };
 } // namespace Ph1
 } // namespace SP
