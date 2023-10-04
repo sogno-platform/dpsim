@@ -88,6 +88,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_domain", &DPsim::Simulation::setDomain)
 		.def("start", &DPsim::Simulation::start)
 		.def("next", &DPsim::Simulation::next)
+		.def("stop", &DPsim::Simulation::stop)
 		.def("get_idobj_attr", &DPsim::Simulation::getIdObjAttribute, "comp"_a, "attr"_a)
 		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a)
 		.def("log_idobj_attribute", &DPsim::Simulation::logIdObjAttribute, "comp"_a, "attr"_a)
