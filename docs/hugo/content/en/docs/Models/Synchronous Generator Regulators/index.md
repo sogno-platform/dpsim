@@ -26,20 +26,22 @@ where $v_{ref,0}$ is initialized after the power flow computations and $v_{pss}(
 This model is used to represent field controlled dc commutator exciters with continuously acting voltage regulators (especially the direct-acting rheostatic, rotating
 amplifier, and magnetic amplifier types). The control diagram of this exciter is depicted in Fig. 1 and it is described by the following set of differential equations: 
 </br></br>
+
 $$
-    T_R \frac{d}{dt} v_R(t) = v_h(t) - v_R(t),
+    T_{R} \frac{d}{dt} v_{R}(t) = v_{h}(t) - v_{R}(t)
 $$
+
 $$
-    T_b \frac{d}{dt} v_b(t) = v_{ref} - v_R(t) - v_f(t) - v_b(t),
-$$
-$$
-    T_a \frac{d}{dt} v_a(t) = K_a v_{in}(t) - v_a(t),
-$$
-$$
-    T_f \frac{d}{dt} v_f(t) - K_f \frac{d}{dt} v_{ef}(t) = -v_f(t),
+    T_{b} \frac{d}{dt} v_{b}(t) = v_{ref} - v_{R}(t) - v_{f}(t) - v_{b}(t),
 $$
 $$
-    T_{ef} \frac{d}{dt} v_{ef}(t) = v_a(t) - (K_{ef} + sat(t)) v_{ef}(t),
+    T_{a} \frac{d}{dt} v_{a}(t) = K_{a} v_{in}(t) - v_{a}(t),
+$$
+$$
+    T_{f} \frac{d}{dt} v_{f}(t) - K_{f} \frac{d}{dt} v_{ef}(t) = -v_{f}(t),
+$$
+$$
+    T_{ef} \frac{d}{dt} v_{ef}(t) = v_{a}(t) - (K_{ef} + sat(t)) v_{ef}(t),
 $$
 where $v_h$ is the module of the machine's terminal voltage, and $v_{in}$ is the amplifier input signal, which for the IEEE Type DC1 is given by:
 $$
@@ -227,7 +229,8 @@ $$
 where $\omega(k=0)$ is calculated after the power flow analysis and after the initialization of synchronous machines (see section initialization of SG) and normally is equal to $1.0$ (pu).
 
 
-## Turbine Governor
+## Turbine Governor Models
+In DPsim there are two type of Turbine Governor implementations.  The *Turbine Governor Type 1* implements both, the turbine and the governor, in one component. In difference to that, Steam Turbine and Steam Turbine Governor are implemented as two separate classes, therefore the objects are created separately. Steam/Hydro Turbine and Steam/Hydro Turbine Governor are two blocks that has to be connected in series. 
 
 ### Turbine Governor Type 1
 <center>
@@ -274,7 +277,23 @@ $$
 $$
     \tau_m(k+1) = x_{g3}(k+1) + \frac{T_4}{T_3} (x_{g2}(k+1) + \frac{T_3}{T_c} x_{g1}(k+1)),
 $$
-Since the values of all variables for $t=k$ are known, $\tau_m(k+1)$ can be easily calculated using the discretised equations, which is carried out in the `preStep` function of the generator connected to each exciter. Then, $\tau_m(k)$ is used to approximate the mechanical differential equations of the generator at time $k+1$. The valueof $\tau_m(k+1)$ is stored and used to approximate the machanical variables of the generator at time $k+2$, and so on.  
+Since the values of all variables for $t=k$ are known, $\tau_m(k+1)$ can be easily calculated using the discretised equations, which is carried out in the `preStep` function of the generator connected to each governor. Then, $\tau_m(k)$ is used to approximate the mechanical differential equations of the generator at time $k+1$. The valueof $\tau_m(k+1)$ is stored and used to approximate the machanical variables of the generator at time $k+2$, and so on.
+
+### Steam Turbine
+**Note 1**: In the step function of each PT1 lag element the integrator $\frac{1}{s}$ is simulated with Forward Euler Method, it the output value for $k$ calculated in the previous step and following the Forward Euler formula calculate the value for $k+1$. To avoid unnecessary dead beat behavior, complex transfer functions, with more then one pole and zero, are represented as a sum of multiple PT1 elements connected in parallel, via partial fracture decomposition. Parallel blocks are discretized separately with the same time step.  
+
+**Steam Turbine** receives as input signal from Steam Turbine Governor $p_{gv}$ and as output gives the mechanical power $p_{m}$ to a synchronous generator. Steam Turbine is divided in high-pressure, intermediate-pressure and low-pressure stages. Each of them is modeled as a first order lag element with time constants $T_{CH}, T_{RH}, T_{CO}$. If a time constant is chosen to be equal to zero, the according lag element is deactivated. The total turbine mechanical power is a sum of powers provided by each stage, each fraction can be modeled with corresponding gain-factors $F_{HP}, F_{IP}, F_{LP}$. Note that the sum of gain-factors should be equal to one $F_{HP}+F_{IP}+F_{LP} = 1$.
+
+
+
+### Steam Turbine and Steam Turbine Governor
+**Steam turbine governor** get as input the frequency (rotational speed of the generator)  deviation $\Delta\omega$ from set-frequency ($50 Hz$ or $60 Hz$) and gives target value $p_{gv}$ to the turbine , $p_0$ is mechanical power that is produced at set-frequency. The governor is implemented as a controller $\frac{K(1+sT_2)}{(1+sT_1)}$, where $K=1/R$ with $R$-droop coefficient, and a PT1 lag element with embedded limiters before and after the integrator. The Controller is Simulated as a gain parallel to a PT1 element $\frac{K(1+sT_2)}{(1+sT_1)}=K(\frac{T_2}{T_1}+\frac{T_1-T_2}{T_1} \frac{1}{1+sT_1})$. For safety reasons in the governor output signal is limited to the range [0 pu, 1 pu].
+
+### Hydro Turbine
+**Hydro Turbine** receives as input signal from Hydro Turbine Governor $p_{gv}$ and as output gives the mechanical power $p_{m}$ to a synchronous generator. The transfer function is specified by water starting time parameter $T_{w}$. The transfer function is a sum of two parallel blocks $\frac{1-sT_w}{1+0.5sT_w}=-2+\frac{3}{1+0.5sT_w}$ which is discretized separately.
+
+### Hydro Turbine Governor
+**Hydro Turbine Governor** get as input the frequency (rotational speed of the generator)  deviation $\Delta\omega$ from set-frequency ($50 Hz$ or $60 Hz$) and gives target value $p_{gv}$ to the turbine , $p_0$ is mechanical power that is produced at set-frequency. The controller transfer Function is defined as $K\frac{1+sT_2}{(1+sT_1)(1+sT_3)}=K(\frac{T_1-T_2}{T_1-T_3} \frac{1}{1+sT_1} + \frac{T_2-T_3}{T_1-T_3} \frac{1}{1+sT_3})$, where $K=\frac{1}{R}$ and $R$ is the droop coefficient. Two parallel PT1 blocks are discretized separately, their outputs are weighted by according factors and added. The disadvantage of the parallel block representation is the error the time constants are equal, that is why is should it must apply $T_1 \neq T_2$. The sum of both blocks, the output $p_{gv}$ is limited to the range [0pu, 1pu].  
 
 
 ## References
