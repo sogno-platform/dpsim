@@ -1,6 +1,7 @@
 FROM fedora:36 AS base
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
+ARG VILLAS_VERSION=5185c25ba7442c3e9264f4225f9a46829956732c
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -87,6 +88,7 @@ RUN cd /tmp && \
 RUN cd /tmp && \
 	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
 	mkdir -p villas-node/build && cd villas-node/build && \
+	git checkout ${VILLAS_VERSION} && \
 	cmake ${CMAKE_OPTS} .. \
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
 		-DDOWNLOAD_GO=OFF && \
