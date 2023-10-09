@@ -269,8 +269,8 @@ jobs:
       container_commands: |
         docker exec dpsim-compose_dpsim_1 /bin/bash -c "pip install paho-mqtt"
         docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "/dpsim-mqtt" -u wildcard -v&
-        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-producer.py"&
-        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt.py"
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-producer.py"&
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt.py"
 
   test-villas-examples-2:
     name: Run dpsim-mqtt-import-export VILLASnode example
@@ -280,7 +280,7 @@ jobs:
       compose_file_path: examples/villas/docker-compose-tests
       container_commands: |
         docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "#" -u wildcard -v&
-        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-import-export.py"
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-import-export.py"
 
   test-villas-examples-3:
     name: Run dpsim-mqtt-import-export-MIMO VILLASnode example
@@ -291,7 +291,7 @@ jobs:
       continue_on_error: true
       container_commands: |
         docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "#" -u wildcard -v&
-        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-import-export-MIMO.py"
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-import-export-MIMO.py"
 
   test-villas-examples-4:
     name: Run dpsim-file VILLASnode example
@@ -302,7 +302,7 @@ jobs:
       continue_on_error: true
       container_commands: |
         docker exec dpsim-compose_dpsim_1 /bin/bash -c "sleep 3 && tail -f /dpsim/logs/output.csv"&
-        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-file.py"
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-file.py"
 
   test-villas-examples-5:
     name: Run mqtt-cigre-mv-pf-profiles VILLASnode example
@@ -312,4 +312,4 @@ jobs:
       compose_file_path: examples/villas/docker-compose-tests
       container_commands: |
         docker exec dpsim-compose_mqtt_1 mosquitto_sub -t "#" -u wildcard -v&
-        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python /dpsim/examples/villas/dpsim-mqtt-cigre-mv-pf-profiles.py"
+        docker exec dpsim-compose_dpsim_1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-cigre-mv-pf-profiles.py"
