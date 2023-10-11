@@ -18,7 +18,7 @@ KLUAdapter::~KLUAdapter()
         klu_free_symbolic(&mSymbolic, &mCommon);
     if (mNumeric)
         klu_free_numeric(&mNumeric, &mCommon);
-    mSLog->info("Number of Pivot Faults: {}", mPivotFaults);
+    SPDLOG_LOGGER_INFO(mSLog,"Number of Pivot Faults: {}", mPivotFaults);
 }
 
 KLUAdapter::KLUAdapter()

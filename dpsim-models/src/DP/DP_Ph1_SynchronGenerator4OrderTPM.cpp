@@ -46,11 +46,11 @@ void DP::Ph1::SynchronGenerator4OrderTPM::setOperationalParametersPerUnit(Real n
 			nomVolt, nomFreq, H, Ld, Lq, L0,
 			Ld_t, Lq_t, Td0_t, Tq0_t);
 
-	mSLog->info("Set base parameters: \n"
+	SPDLOG_LOGGER_INFO(mSLog,"Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
 				nomPower, nomVolt, nomFreq);
 
-	mSLog->info("Set operational parameters in per unit: \n"
+	SPDLOG_LOGGER_INFO(mSLog,"Set operational parameters in per unit: \n"
 			"inertia: {:e}\n"
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\n"
