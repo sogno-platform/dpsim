@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 	String simName = "EMT_WSCC-9bus_VBR";
 	Real timeStep;
 	Real finalTime;
-	DirectLinearSolverImpl implementation = DirectLinearSolverImpl::SparseLU;
+	DirectLinearSolverImpl implementation = DirectLinearSolverImpl::KLU;
 
 	// Find CIM files
 	std::list<fs::path> filenames;

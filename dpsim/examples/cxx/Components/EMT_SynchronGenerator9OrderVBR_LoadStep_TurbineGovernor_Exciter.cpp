@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
 	Bool withExciter = false;
 	Real timeStepEvent = 30.0;
 	Real cmdLoadFactor = 1.5;
-	
+
 
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
@@ -79,14 +79,14 @@ int main(int argc, char* argv[]) {
 	gen->setInitialValues(initActivePower, initReactivePower, initTerminalVoltageMagnitude,
 		initTerminalVoltageAngle, initMechPower);
 
-	if (withGovernor) 
+	if (withGovernor)
 		gen->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa, govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr, govKundur.Tsm, initActivePower / syngenKundur.nomPower, initMechPower / syngenKundur.nomPower);
 
 	if (withExciter)
 		gen->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke, excEremia.Tf, excEremia.Kf, excEremia.Tr);
 
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", CPS::Logger::Level::info);
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(RloadOriginal), 
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(RloadOriginal),
 						 Math::singlePhaseParameterToThreePhase(RloadNew));
 	fault->openSwitch();
 
@@ -115,7 +115,6 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.doSystemMatrixRecomputation(true);
-	sim.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 

@@ -172,6 +172,5 @@ int main(int argc, char* argv[]) {
 	sim.addLogger(logger);
 	sim.addEvent(sw1);
 	sim.doSystemMatrixRecomputation(true);
-	sim.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	sim.run();
 }

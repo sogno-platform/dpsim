@@ -214,7 +214,6 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	simSP.setDomain(Domain::SP);
 	simSP.addLogger(loggerSP);
 	// simSP.doSystemMatrixRecomputation(true);
-	simSP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 	// Events
 	auto sw1 = SwitchEvent::make(std::round(startTimeFault/timeStep)*timeStep, faultSP, true);

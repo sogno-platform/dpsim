@@ -199,7 +199,6 @@ int main(int argc, char* argv[]) {
 	simDP.setTimeStep(timeStep);
 	simDP.setFinalTime(finalTime);
 	simDP.setDomain(Domain::DP);
-	simDP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	simDP.addLogger(logger);
 
 	// Events

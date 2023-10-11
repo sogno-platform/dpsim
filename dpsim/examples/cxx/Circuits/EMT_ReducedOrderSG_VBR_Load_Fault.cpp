@@ -154,7 +154,6 @@ int main(int argc, char* argv[]) {
 	simEMT.setTimeStep(timeStep);
 	simEMT.setFinalTime(finalTime);
 	simEMT.setDomain(Domain::EMT);
-	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 	simEMT.addLogger(loggerEMT);
 	simEMT.doSystemMatrixRecomputation(true);
 
