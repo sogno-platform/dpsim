@@ -1,16 +1,16 @@
 FROM fedora:36 AS base
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-ARG VILLAS_VERSION=c976cd62d8c6667a078be0785ca3e623a05f7456
+ARG VILLAS_VERSION=5185c25ba7442c3e9264f4225f9a46829956732c
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
 
 LABEL \
-	org.opencontainers.image.title = "DPsim" \
-	org.opencontainers.image.licenses = "MPL 2.0" \
-	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
-	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
+	org.opencontainers.image.title="DPsim" \
+	org.opencontainers.image.licenses="MPL 2.0" \
+	org.opencontainers.image.url="http://dpsim.fein-aachen.org/" \
+	org.opencontainers.image.source="https://github.com/sogno-platform/dpsim"
 
 RUN dnf -y update
 

@@ -6,10 +6,10 @@ ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
 
 LABEL \
-	org.opencontainers.image.title = "DPsim" \
-	org.opencontainers.image.licenses = "MPL 2.0" \
-	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
-	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
+	org.opencontainers.image.title="DPsim" \
+	org.opencontainers.image.licenses="MPL 2.0" \
+	org.opencontainers.image.url="http://dpsim.fein-aachen.org/" \
+	org.opencontainers.image.source="https://github.com/sogno-platform/dpsim"
 
 RUN dnf -y update && \
 	dnf install -y epel-release dnf-plugins-core && \
@@ -54,6 +54,7 @@ RUN dnf -y install \
 	openssl-devel \
 	libuuid-devel \
 	libconfig-devel \
+	libwebsockets-devel \
 	libnl3-devel \
 	libcurl-devel \
 	jansson-devel \
@@ -78,18 +79,6 @@ RUN git clone --branch 3.0 --recurse-submodules --depth 1 https://git.rwth-aache
 
 ENV PATH="$PWD/cricket/bin:${PATH}"
 ENV LD_LIBRARY_PATH="$PWD/cricket/bin:${LD_LIBRARY_PATH}"
-
-# Install Libwebsockets from source because the repo variant is not suitable
-RUN git clone --branch v4.3-stable --depth 1 https://libwebsockets.org/repo/libwebsockets && \
-	mkdir -p libwebsockets/build && \
-	pushd libwebsockets/build && \
-	cmake ${CMAKE_OPTS} .. \
-		-DLWS_WITH_IPV6=ON \
-		-DLWS_WITHOUT_TESTAPPS=ON \
-		-DLWS_WITHOUT_EXTENSIONS=OFF \
-		-DLWS_WITH_SERVER_STATUS=ON && \
-	make ${MAKE_OPTS} ${TARGET} && \
-	popd
 
 # Profiling dependencies
 RUN dnf -y install \

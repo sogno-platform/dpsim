@@ -56,9 +56,7 @@ void InterfaceWorkerVillas::open() {
 	mNode = node::NodeFactory::make(nodeTypeString);
 
 	int ret = 0;
-	uuid_t fakeSuperNodeUUID;
-	uuid_generate_random(fakeSuperNodeUUID);
-	ret = mNode->parse(config, fakeSuperNodeUUID);
+	ret = mNode->parse(config);
 	if (ret < 0) {
 		SPDLOG_LOGGER_ERROR(mLog, "Error: Node in InterfaceVillas failed to parse config. Parse returned code {}", ret);
 		std::exit(1);
