@@ -16,7 +16,7 @@ const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngen
 const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;
 
 // Excitation system
-const Base::ExciterParameters excitationEremia = Examples::Components::Exciter::getExciterEremia();
+const auto excitationEremia = Examples::Components::Exciter::getExciterParametersEremia();
 
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1 turbineGovernor;

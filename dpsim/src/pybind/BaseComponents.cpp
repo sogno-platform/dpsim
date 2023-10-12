@@ -37,4 +37,6 @@ void addBaseComponents(py::module_ mBase) {
 		.def("scale_inertia_constant", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::scaleInertiaConstant, "scaling_factor"_a)
 		.def("set_model_as_norton_source", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::setModelAsNortonSource, "model_as_norton_source"_a);
 
+    py::class_<CPS::Base::ExciterParameters, std::shared_ptr<CPS::Base::ExciterParameters>>(mBase, "ExciterParameters")
+        .def(py::init());
 }

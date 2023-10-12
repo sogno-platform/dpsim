@@ -563,13 +563,13 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPostStep(Real time, In
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
-	CPS::Base::ExciterParameters exciterParameters, ExciterType exciterType) {
+	std::shared_ptr<CPS::Base::ExciterParameters> exciterParameters, ExciterType exciterType) {
 	
-	if (exciterType == ExciterType::DC1Simp) 
-		mExciter = CPS::Signal::ExciterDC1Simp::make("Exciter_" + this->name(), this->mLogLevel);
 	if (exciterType == ExciterType::DC1) 
 		mExciter = CPS::Signal::ExciterDC1::make("Exciter_" + this->name(), this->mLogLevel);
-	if (exciterType == ExciterType::ST1Simp) 
+	else if (exciterType == ExciterType::DC1Simp) 
+		mExciter = CPS::Signal::ExciterDC1Simp::make("Exciter_" + this->name(), this->mLogLevel);
+	else if (exciterType == ExciterType::ST1Simp) 
 		mExciter = CPS::Signal::ExciterST1Simp::make("Exciter_" + this->name(), this->mLogLevel);
 	
 	mExciter->setParameters(exciterParameters);
