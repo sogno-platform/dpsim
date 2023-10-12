@@ -17,12 +17,9 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.h>
-#include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
-#include <dpsim-models/SP/SP_Ph1_SynchronGenerator3OrderVBR.h>
-#include <dpsim-models/SP/SP_Ph1_SynchronGenerator4OrderVBR.h>
-#include <dpsim-models/SP/SP_Ph1_SynchronGenerator6aOrderVBR.h>
-#include <dpsim-models/SP/SP_Ph1_SynchronGenerator6bOrderVBR.h>
+#include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
+#include <dpsim-models/Signal/ExciterST1Simp.h>
 
 #pragma once
 
@@ -92,6 +89,63 @@ template <class BaseClass> class Creator {
     }
 
     std::map<std::string, Creator<BaseClass> *> functionMap;
+  };
+
+  template <class BaseClass> class FactoryRegistration {
+  public:
+    FactoryRegistration(std::string type, Creator<BaseClass> *Fn) {
+      Factory<BaseClass>::get().registerExciter(type, Fn);
+    }
+  };
+
+  namespace ExciterFactory {
+  void registerExciters() {
+    FactoryRegistration<CPS::Base::Exciter> _ExciterDC1(
+        "DC1", new DerivedCreator<CPS::Signal::ExciterDC1, CPS::Base::Exciter>);
+    FactoryRegistration<CPS::Base::Exciter> _ExciterDC1Simp(
+        "DC1Simp",
+        new DerivedCreator<CPS::Signal::ExciterDC1Simp, CPS::Base::Exciter>);
+    FactoryRegistration<CPS::Base::Exciter> _ExciterST1Simp(
+        "ST1",
+        new DerivedCreator<CPS::Signal::ExciterST1Simp, CPS::Base::Exciter>);
+  }
+
+  std::vector<std::string> getItems() {
+    std::vector<std::string> items;
+    for (auto g : functionMap) {
+      items.push_back(g.first);
+    }
+
+    return items;
+  }
+
+  std::shared_ptr<BaseClass>
+  create(std::string type, const std::string &name,
+         CPS::Logger::Level logLevel = CPS::Logger::Level::debug) {
+
+    auto it = functionMap.find(type);
+    if (it != functionMap.end())
+      return it->second->Create(name, logLevel);
+    else
+      throw CPS::SystemError("Unsupported type '" + type + "'!");
+  }
+
+  void registerExciter(const std::string &type, Creator<BaseClass> *Fn) {
+    functionMap[type] = Fn;
+  }
+
+private:
+  Factory() {}
+  Factory(const Factory &);
+  ~Factory() {
+    auto i = functionMap.begin();
+    while (i != functionMap.end()) {
+      delete (*i).second;
+      ++i;
+    }
+  }
+
+  std::map<std::string, Creator<BaseClass> *> functionMap;
   };
 
   template <class BaseClass> class FactoryRegistration {

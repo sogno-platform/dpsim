@@ -17,8 +17,12 @@ const Examples::Components::SynchronousGeneratorKundur::MachineParameters
 const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;
 
 // Excitation system
+<<<<<<< HEAD
 const Base::ExciterParameters excitationEremia =
     Examples::Components::Exciter::getExciterEremia();
+=======
+const auto excitationEremia = Examples::Components::Exciter::getExciterParametersEremia();
+>>>>>>> 506e74fd3 (new class structure exciterParameters)
 
 // Turbine Goverour
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1

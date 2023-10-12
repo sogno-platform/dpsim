@@ -14,6 +14,22 @@
 
 namespace CPS {
 namespace Signal {
+
+	class ExciterST1Parameters :
+		public Base::ExciterParameters,
+		public SharedFactory<ExciterST1Parameters> {
+
+		public:
+			/// Transducer time constant (s)
+			Real Tr = 0;
+			/// Amplifier gain
+			Real Ka = 0;
+			/// 
+			Real MaxVa = 0;
+			///
+			Real MinVa = 0;
+	};
+
 	/// Simplified Type ST1 exciter (Regulator time constant Ta=0, without transient gain reduction: Tb=Tc=0)
 	/// Used in Kundur two areas system
 	/// Ref.: Kundur, 9.815
@@ -43,13 +59,13 @@ namespace Signal {
 
 	public:
 		/// Constructor
-		ExciterST1Simp(const String & name, Logger::Level logLevel = Logger::Level::debug);
+		ExciterST1Simp(const String & name, Logger::Level logLevel = Logger::Level::info);
 		/// Initializes exciter parameters
-		void setParameters(Base::ExciterParameters parameters) override;
+		void setParameters(std::shared_ptr<Base::ExciterParameters> parameters) final;
 		/// Initializes exciter variables
-		void initialize(Real Vh_init, Real Vf_init) override;
+		void initialize(Real Vh_init, Real Vf_init) final;
 		/// Performs an step to update field voltage value
-		Real step(Real Vd, Real Vq, Real dt, Real Vpss = 0) override;
+		Real step(Real Vd, Real Vq, Real dt, Real Vpss = 0) final;
 	};
 }
 }
