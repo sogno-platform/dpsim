@@ -17,45 +17,51 @@ Signal::ExciterDC1::ExciterDC1(const String & name, CPS::Logger::Level logLevel)
 	this->setExciterType(ExciterType::DC1);
 }
 	
-void Signal::ExciterDC1::setParameters(Base::ExciterParameters parameters) {
+void Signal::ExciterDC1::setParameters(std::shared_ptr<Base::ExciterParameters> parameters) {
 	
-	mTr = parameters.Tr;
-	mTa = parameters.Ta;
-	mTb = parameters.Tb;
-	mTc = parameters.Tc;
-	mTef = parameters.Tef;
-	mTf = parameters.Tf;
-	mKa = parameters.Ka;
-	mKef = parameters.Kef;
-	mKf = parameters.Kf;
-	mAef = parameters.Aef;
-	mBef = parameters.Bef;
-	mMaxVa = parameters.MaxVa;
-	mMinVa = parameters.MinVa;
 	
-	SPDLOG_LOGGER_INFO(mSLog,
-		"ExciterDC1 parameters:"
-		"\nType: DC1"
-		"\nTr: {:e}"
-		"\nTa: {:e}"
-		"\nKa: {:e}"
-		"\nTb: {:e}"
-		"\nTc: {:e}"
-		"\nTef: {:e}"
-		"\nKef: {:e}"
-		"\nTf: {:e}"
-		"\nKf: {:e}"
-		"\nAef: {:e}"
-		"\nBef: {:e}"
-		"\nMaximum amplifier Voltage: {:e}"
-		"\nMinimum amplifier Voltage: {:e}\n",
-		mTr,
-		mTa, mKa, 
-		mTb, mTc,
-		mTef, mKef,
-		mTf, mKf,
-		mAef, mBef,
-		mMaxVa, mMinVa);
+	if (auto temp_struct = std::dynamic_pointer_cast<Signal::ExciterDC1Parameters>(parameters)){
+		mTr = temp_struct->Tr;
+		mTa = temp_struct->Ta;
+		mTb = temp_struct->Tb;
+		mTc = temp_struct->Tc;
+		mTef = temp_struct->Tef;
+		mTf = temp_struct->Tf;
+		mKa = temp_struct->Ka;
+		mKef = temp_struct->Kef;
+		mKf = temp_struct->Kf;
+		mAef = temp_struct->Aef;
+		mBef = temp_struct->Bef;
+		mMaxVa = temp_struct->MaxVa;
+		mMinVa = temp_struct->MinVa;
+		
+		SPDLOG_LOGGER_INFO(mSLog,
+			"ExciterDC1 parameters:"
+			"\nType: DC1"
+			"\nTr: {:e}"
+			"\nTa: {:e}"
+			"\nKa: {:e}"
+			"\nTb: {:e}"
+			"\nTc: {:e}"
+			"\nTef: {:e}"
+			"\nKef: {:e}"
+			"\nTf: {:e}"
+			"\nKf: {:e}"
+			"\nAef: {:e}"
+			"\nBef: {:e}"
+			"\nMaximum amplifier Voltage: {:e}"
+			"\nMinimum amplifier Voltage: {:e}\n",
+			mTr,
+			mTa, mKa, 
+			mTb, mTc,
+			mTef, mKef,
+			mTf, mKf,
+			mAef, mBef,
+			mMaxVa, mMinVa);
+	} else {
+		std::cout << "The type of the ExciterParameters of " << this->name() << " has to be ExciterParametersDC1!" << std::endl;
+		throw CPS::TypeException();
+	}
 }
 
 void Signal::ExciterDC1::initialize(Real Vh_init, Real Ef_init) {

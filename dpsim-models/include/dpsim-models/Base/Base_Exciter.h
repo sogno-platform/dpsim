@@ -13,34 +13,11 @@
 namespace CPS {
 namespace Base {
 
-	struct ExciterParameters {
-		/// Transducer time constant (s)
-		Real Tr = 0;
-		/// Amplifier time constant
-		Real Ta = 0;
-		/// Pole of the regulator inherent dynamic
-		Real Tb = 0;
-		/// Zero of the regulator inherent dynamic
-		Real Tc = 0;
-		/// Field circuit time constant
-		Real Tef = 0;
-		/// Stabilizer time constant
-		Real Tf = 0;
-		/// Amplifier gain
-		Real Ka = 0;
-		/// Field circuit integral deviation
-		Real Kef = 0;
-		/// Stabilizer gain
-		Real Kf = 0;
-		/// First ceiling coefficient
-		Real Aef = 0;
-		/// Second ceiling coefficient
-		Real Bef = 0;
-		/// 
-		Real MaxVa = 0;
-		///
-		Real MinVa = 0;
-	};
+	class ExciterParameters {
+		public:
+			ExciterParameters() { };
+			virtual ~ExciterParameters() = default;
+	 };
 
 	/// @brief Base model for exciters
 	class Exciter {
@@ -53,7 +30,7 @@ namespace Base {
         	void setExciterType(ExciterType exciterType) {mExciterType = exciterType;};
 
 			///
-			virtual void setParameters(ExciterParameters parameters) = 0;
+			virtual void setParameters(std::shared_ptr<Base::ExciterParameters> parameters) = 0;
 
 			/// Initializes exciter variables
 			virtual void initialize(Real Vh_init, Real Ef_init) = 0;

@@ -17,6 +17,8 @@ using namespace CPS::CIM;
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 const Examples::Components::TurbineGovernor::GovernorKundur govKundur;
+const auto excitationEremia =
+    Examples::Components::Exciter::getExciterParametersEremia();
 
 // Initialization parameters
 Real nominalVoltage = 24e3;
@@ -94,7 +96,7 @@ int main(int argc, char *argv[]) {
   if (withExciter) {
     exciter =
         CPS::Signal::ExciterDC1Simp::make("Exciter", CPS::Logger::Level::info);
-    exciter->setParameters(Examples::Components::Exciter::getExciterEremia());
+    exciter->setParameters(excitationEremia);
     gen->addExciter(exciter);
   }
 

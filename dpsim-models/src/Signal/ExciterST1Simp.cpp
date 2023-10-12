@@ -17,17 +17,22 @@ Signal::ExciterST1Simp::ExciterST1Simp(const String & name, CPS::Logger::Level l
 	this->setExciterType(ExciterType::ST1Simp);
 }
 	
-void Signal::ExciterST1Simp::setParameters(Base::ExciterParameters parameters) {
+void Signal::ExciterST1Simp::setParameters(std::shared_ptr<Base::ExciterParameters> parameters) {
 	
-	mTr = parameters.Tr;
-	mKa = parameters.Ka;
-	
-	SPDLOG_LOGGER_INFO(mSLog,
-		"Exciter ST1Simp parameters:"
-		"\nType: ST1Simp"
-		"\nTr: {:e}"
-		"\nKa: {:e}\n",
-		mTr, mKa);
+	if (auto temp_struct = std::dynamic_pointer_cast<Signal::ExciterST1Parameters>(parameters)){
+		mTr = temp_struct->Tr;
+		mKa = temp_struct->Ka;
+
+		SPDLOG_LOGGER_INFO(mSLog,
+			"Exciter ST1Simp parameters:"
+			"\nType: ST1Simp"
+			"\nTr: {:e}"
+			"\nKa: {:e}\n",
+			mTr, mKa);
+	} else {
+		std::cout << "The type of the ExciterParameters of " << this->name() << " has to be ExciterST1Parameters!" << std::endl;
+		throw CPS::TypeException();
+	}		
 }
 
 void Signal::ExciterST1Simp::initialize(Real Vh_init, Real Ef_init) {
