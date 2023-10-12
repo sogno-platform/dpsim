@@ -14,6 +14,40 @@
 
 namespace CPS {
 namespace Signal {
+
+	class ExciterDC1Parameters :
+		public Base::ExciterParameters,
+		public SharedFactory<ExciterDC1Parameters> {
+		
+		public:
+			/// Transducer time constant (s)
+			Real Tr = 0;
+			/// Amplifier time constant
+			Real Ta = 0;
+			/// Pole of the regulator inherent dynamic
+			Real Tb = 0;
+			/// Zero of the regulator inherent dynamic
+			Real Tc = 0;
+			/// Field circuit time constant
+			Real Tef = 0;
+			/// Stabilizer time constant
+			Real Tf = 0;
+			/// Amplifier gain
+			Real Ka = 0;
+			/// Field circuit integral deviation
+			Real Kef = 0;
+			/// Stabilizer gain
+			Real Kf = 0;
+			/// First ceiling coefficient
+			Real Aef = 0;
+			/// Second ceiling coefficient
+			Real Bef = 0;
+			/// 
+			Real MaxVa = 0;
+			///
+			Real MinVa = 0;
+	};
+
 	/// Type DC1 exciter
 	/// Ref.: IEEE Recommended Practice for Excitation System Models for Power System Stability Studies
 	class ExciterDC1 :
@@ -84,13 +118,13 @@ namespace Signal {
 
 	public:
 		/// Constructor
-		ExciterDC1(const String & name, Logger::Level logLevel = Logger::Level::debug);
+		ExciterDC1(const String & name, Logger::Level logLevel = Logger::Level::info);
 		/// Initializes exciter parameters
-		void setParameters(Base::ExciterParameters parameters) override;
+		void setParameters(std::shared_ptr<Base::ExciterParameters> parameters) final;
 		/// Initializes exciter variables
-		void initialize(Real Vh_init, Real Vf_init) override;
+		void initialize(Real Vh_init, Real Vf_init) final;
 		/// Performs an step to update field voltage value
-		Real step(Real Vd, Real Vq, Real dt, Real Vpss = 0) override;
+		Real step(Real Vd, Real Vq, Real dt, Real Vpss = 0) final;
 	};
 }
 }
