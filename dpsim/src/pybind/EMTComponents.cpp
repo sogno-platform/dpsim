@@ -143,7 +143,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 		.def("set_initial_values", &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::setInitialValues, "init_complex_electrical_power"_a, "init_mechanical_power"_a, "init_complex_terminal_voltage"_a)
 		.def("scale_inertia_constant", &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::scaleInertiaConstant, "scaling_factor"_a)
 		.def("set_model_as_norton_source", &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::setModelAsNortonSource, "model_as_norton_source"_a)
-		.def("add_exciter", py::overload_cast<CPS::Base::ExciterParameters, CPS::ExciterType>(&CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::addExciter), "exciter_parameters"_a, "exciter_type"_a=CPS::ExciterType::DC1Simp)
+		.def("add_exciter", py::overload_cast<std::shared_ptr<CPS::Base::ExciterParameters>, CPS::ExciterType>(&CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::addExciter), "exciter_parameters"_a, "exciter_type"_a=CPS::ExciterType::DC1Simp)
 		.def("add_pss", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::addPSS), "Kp"_a, "Kv"_a, "Kw"_a, "T1"_a, "T2"_a, "T3"_a, "T4"_a, "Vs_max"_a, "Vs_min"_a, "Tw"_a)
 		.def("add_governor", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::addGovernor), "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Tmin"_a, "Tmax"_a, "OmRef"_a);
 

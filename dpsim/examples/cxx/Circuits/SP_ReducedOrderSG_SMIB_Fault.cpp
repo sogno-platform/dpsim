@@ -13,7 +13,7 @@ const Examples::Grids::SMIB::ScenarioConfig2 GridParams;
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
 // Excitation system
-const Base::ExciterParameters excitationEremia = Examples::Components::Exciter::getExciterEremia();
+const auto excitationEremia = Examples::Components::Exciter::getExciterParametersEremia();
 
 // PSS
 const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;

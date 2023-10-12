@@ -91,7 +91,7 @@ namespace Base {
 				Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef);
 			void addGovernor(std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor);
 			/// Add automatic voltage regulator
-			void addExciter(CPS::Base::ExciterParameters exciterParameters, ExciterType exciterType = ExciterType::DC1Simp);
+			void addExciter(std::shared_ptr<CPS::Base::ExciterParameters> exciterParameters, ExciterType exciterType = ExciterType::DC1Simp);
 			/// Add automatic voltage regulator
 			void addExciter(std::shared_ptr<Base::Exciter> exciter);
 			/// Add power system stabilizer

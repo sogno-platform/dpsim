@@ -22,7 +22,9 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.h>
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
+#include <dpsim-models/Signal/ExciterST1Simp.h>
 
 #pragma once
 
@@ -105,6 +107,7 @@ namespace ExciterFactory {
     void registerExciters() {
         FactoryRegistration<CPS::Base::Exciter> _ExciterDC1("DC1", new DerivedCreator<CPS::Signal::ExciterDC1, CPS::Base::Exciter>);
         FactoryRegistration<CPS::Base::Exciter> _ExciterDC1Simp("DC1Simp", new DerivedCreator<CPS::Signal::ExciterDC1Simp, CPS::Base::Exciter>);
+        FactoryRegistration<CPS::Base::Exciter> _ExciterST1Simp("ST1", new DerivedCreator<CPS::Signal::ExciterST1Simp, CPS::Base::Exciter>);
     }
 }
 

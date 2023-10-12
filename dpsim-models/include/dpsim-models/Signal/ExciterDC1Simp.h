@@ -14,6 +14,36 @@
 
 namespace CPS {
 namespace Signal {
+
+	class ExciterDC1SimpParameters :
+		public Base::ExciterParameters,
+		public SharedFactory<ExciterDC1SimpParameters> {
+		
+		public:
+			/// Transducer time constant (s)
+			Real Tr = 0;
+			/// Amplifier time constant
+			Real Ta = 0;
+			/// Field circuit time constant
+			Real Tef = 0;
+			/// Stabilizer time constant
+			Real Tf = 0;
+			/// Amplifier gain
+			Real Ka = 0;
+			/// Field circuit integral deviation
+			Real Kef = 0;
+			/// Stabilizer gain
+			Real Kf = 0;
+			/// First ceiling coefficient
+			Real Aef = 0;
+			/// Second ceiling coefficient
+			Real Bef = 0;
+			/// 
+			Real MaxVa = 0;
+			///
+			Real MinVa = 0;
+	};
+
 	/// AVR model type 1
 	/// Simplified model of IEEE DC1 type exciter. It does not model the time constants
 	/// Tb and Tc which are normally small and thereby ignored. 
@@ -77,13 +107,13 @@ namespace Signal {
 
 	public:
 		/// Constructor
-		ExciterDC1Simp(const String & name, CPS::Logger::Level logLevel = Logger::Level::debug);
+		ExciterDC1Simp(const String & name, CPS::Logger::Level logLevel = Logger::Level::info);
 		/// Initializes exciter parameters
-		void setParameters(Base::ExciterParameters parameters) override;
+		void setParameters(std::shared_ptr<Base::ExciterParameters> parameters) final;
 		/// Initializes exciter variables
-		void initialize(Real Vh_init, Real Vf_init) override;
+		void initialize(Real Vh_init, Real Vf_init) final;
 		/// Performs an step to update field voltage value
-		Real step(Real mVd, Real mVq, Real dt, Real Vpss = 0) override;
+		Real step(Real mVd, Real mVq, Real dt, Real Vpss = 0) final;
 	};
 }
 }

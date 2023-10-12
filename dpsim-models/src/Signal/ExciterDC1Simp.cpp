@@ -19,39 +19,44 @@ ExciterDC1Simp::ExciterDC1Simp(const String & name, CPS::Logger::Level logLevel)
     this->setExciterType(ExciterType::DC1Simp);
 }
 
-void ExciterDC1Simp::setParameters(Base::ExciterParameters parameters) {
+void ExciterDC1Simp::setParameters(std::shared_ptr<Base::ExciterParameters> parameters) {
 
-	mTa = parameters.Ta;
-	mTef = parameters.Tef;
-	mTf = parameters.Tf;
-	mTr = parameters.Tr;
-	mKa = parameters.Ka;
-	mKef = parameters.Kef;
-	mKf = parameters.Kf;
-	mAef = parameters.Aef;
-	mBef = parameters.Bef;
-	mMaxVa = parameters.MaxVa;
-	mMinVa = parameters.MinVa;
+	if (auto temp_struct = std::dynamic_pointer_cast<Signal::ExciterDC1SimpParameters>(parameters)){
+		mTa = temp_struct->Ta;
+		mTef = temp_struct->Tef;
+		mTf = temp_struct->Tf;
+		mTr = temp_struct->Tr;
+		mKa = temp_struct->Ka;
+		mKef = temp_struct->Kef;
+		mKf = temp_struct->Kf;
+		mAef = temp_struct->Aef;
+		mBef = temp_struct->Bef;
+		mMaxVa = temp_struct->MaxVa;
+		mMinVa = temp_struct->MinVa;
 
-	SPDLOG_LOGGER_INFO(mSLog, 
-		"ExciterDC1Simp parameters: \n"
-		"Ta: {:e}"
-		"\nKa: {:e}"
-		"\nTef: {:e}"
-		"\nKef: {:e}"
-		"\nTf: {:e}"
-		"\nKf: {:e}"
-		"\nTr: {:e}"
-		"\nAef: {:e}"
-		"\nBef: {:e}"
-		"\nMaximum amplifier Voltage: {:e}"
-		"\nMinimum amplifier Voltage: {:e}\n",
-		mTa, mKa, 
-		mTef, mKef,
-		mTf, mKf,
-		mTr,
-		mAef, mBef,
-		mMaxVa, mMinVa);
+		SPDLOG_LOGGER_INFO(mSLog, 
+			"ExciterDC1Simp parameters: \n"
+			"Ta: {:e}"
+			"\nKa: {:e}"
+			"\nTef: {:e}"
+			"\nKef: {:e}"
+			"\nTf: {:e}"
+			"\nKf: {:e}"
+			"\nTr: {:e}"
+			"\nAef: {:e}"
+			"\nBef: {:e}"
+			"\nMaximum amplifier Voltage: {:e}"
+			"\nMinimum amplifier Voltage: {:e}\n",
+			mTa, mKa, 
+			mTef, mKef,
+			mTf, mKf,
+			mTr,
+			mAef, mBef,
+			mMaxVa, mMinVa);
+	} else {
+		std::cout << "The type of the ExciterParameters of " << this->name() << " has to be ExciterDC1SimpParameters!" << std::endl;
+		throw CPS::TypeException();
+	}
 }
 
 void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {

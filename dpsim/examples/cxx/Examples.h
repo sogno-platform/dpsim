@@ -66,31 +66,31 @@ namespace Exciter{
     // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
     // voltage-regulator
 
-    CPS::Base::ExciterParameters getExciterEremia() {
-        CPS::Base::ExciterParameters ExcitationSystemEremia;    
-        ExcitationSystemEremia.Ka = 46;
-        ExcitationSystemEremia.Ta = 0.06;
+    std::shared_ptr<CPS::Signal::ExciterDC1SimpParameters> getExciterParametersEremia() {
+        auto excitationSystemEremia = CPS::Signal::ExciterDC1SimpParameters::make();
+        excitationSystemEremia->Ka = 46;
+        excitationSystemEremia->Ta = 0.06;
         // exciter
-        ExcitationSystemEremia.Kef = -0.0435;
-        ExcitationSystemEremia.Tef = 0.46;
+        excitationSystemEremia->Kef = -0.0435;
+        excitationSystemEremia->Tef = 0.46;
         // stabilizing feedback
-        ExcitationSystemEremia.Kf = 0.1;
-        ExcitationSystemEremia.Tf = 1;
+        excitationSystemEremia->Kf = 0.1;
+        excitationSystemEremia->Tf = 1;
         // voltage transducer
-        ExcitationSystemEremia.Tr = 0.02;
+        excitationSystemEremia->Tr = 0.02;
         // saturation function coefficients
-        ExcitationSystemEremia.Aef = 0.33;
-        ExcitationSystemEremia.Bef = 0.1;
+        excitationSystemEremia->Aef = 0.33;
+        excitationSystemEremia->Bef = 0.1;
 
         //
-        ExcitationSystemEremia.MaxVa = 1.0;
-        ExcitationSystemEremia.MinVa = -0.9;
+        excitationSystemEremia->MaxVa = 1.0;
+        excitationSystemEremia->MinVa = -0.9;
 
-        //
-        ExcitationSystemEremia.Tb = 10;
-        ExcitationSystemEremia.Tc = 1.0;
-
-        return ExcitationSystemEremia;
+        // DC1 additional parameters
+        //excitationSystemEremia->Tb = 10;
+        //excitationSystemEremia->Tc = 1.0;
+        
+        return excitationSystemEremia;
     }
 
     struct ExcitationKundur {
