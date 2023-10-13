@@ -10,10 +10,7 @@
 
 #include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Base/Base_Governor.h>
-#include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Signal/ExciterDC1.h>
-#include <dpsim-models/Signal/ExciterDC1Simp.h>
-#include <dpsim-models/Signal/ExciterST1Simp.h>
+#include <dpsim-models/Base/Base_PSS.h>
 #include <dpsim-models/Signal/HydroTurbine.h>
 #include <dpsim-models/Signal/HydroTurbineGovernor.h>
 #include <dpsim-models/Signal/PSS1A.h>
@@ -96,15 +93,9 @@ public:
 
   // ### Controllers ###
   /// Add automatic voltage regulator
-  void
-  addExciter(std::shared_ptr<CPS::Base::ExciterParameters> exciterParameters,
-             ExciterType exciterType = ExciterType::DC1Simp);
-  /// Add automatic voltage regulator
   void addExciter(std::shared_ptr<Base::Exciter> exciter);
   /// Add power system stabilizer
-  void addPSS(Real Kp, Real Kv, Real Kw, Real T1, Real T2, Real T3, Real T4,
-              Real Vs_max, Real Vs_min, Real Tw);
-  void addPSS(std::shared_ptr<Signal::PSS1A> PSS);
+  void addPSS(std::shared_ptr<Base::PSS> PSS);
 
   /// Add Governor/TurbineGovernor
   //void addGovernor(std::shared_ptr<CPS::Base::GovernorParameters> governorParameters, GovernorType governorType = GovernorType::TurbineGovernorType1);
@@ -127,27 +118,6 @@ public:
   //void addHydroTurbineGovernor(std::shared_ptr<Signal::HydroTurbineGovernor> hydroTurbineGovernor);
 
 protected:
-  using MNASimPowerComp<VarType>::mRightVector;
-  using MNASimPowerComp<VarType>::mIntfVoltage;
-  using MNASimPowerComp<VarType>::MnaPreStep;
-  using MNASimPowerComp<VarType>::MnaPostStep;
-
-  ///
-  ReducedOrderSynchronGenerator(String uid, String name,
-                                Logger::Level logLevel);
-  ///
-  void calculateVBRconstants();
-  ///
-  void calculateResistanceMatrixConstants();
-  ///
-  virtual void initializeResistanceMatrix() = 0;
-  ///
-  void initializeFromNodesAndTerminals(Real frequency);
-  /// Function to initialize the specific variables of each SG model
-  virtual void specificInitialization() = 0;
-  /// Model specific step
-  virtual void stepInPerUnit() = 0;
-
   // ### MNA Section ###
   ///
   void mnaCompInitialize(Real omega, Real timeStep,
@@ -322,6 +292,18 @@ protected:
   Bool mHasExciter = false;
   /// Determines if Exciter is activated
   Bool mHasPSS = false;
+
+  /// Signal component modelling voltage regulator and exciter
+  std::shared_ptr<Base::Exciter> mExciter;
+  /// Signal component modelling power system stabilizer
+  std::shared_ptr<Base::PSS> mPSS;
+  /// Signal component modelling Turbine
+  //std::shared_ptr<Signal::Turbine> mTurbine;
+  /// Signal component modelling governor control
+  std::shared_ptr<Base::Governor> mGovernor;
+
+  ///
+  Real mVpss = 0;
 
   /// Signal component modelling voltage regulator and exciter
   std::shared_ptr<Base::Exciter> mExciter;
