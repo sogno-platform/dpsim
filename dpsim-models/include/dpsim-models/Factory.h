@@ -111,6 +111,12 @@ namespace ExciterFactory {
     }
 }
 
+namespace PSSFactory {
+    void registerExciters() {
+        FactoryRegistration<CPS::Base::PSS> _PSS1A("PSS1A", new DerivedCreator<CPS::Signal::PSS1A, CPS::Base::PSS>);
+    }
+}
+
 namespace SynchronGeneratorFactory {
 namespace SP {
 namespace Ph1 {

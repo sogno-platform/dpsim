@@ -34,6 +34,13 @@ void addSignalComponents(py::module_ mSignal) {
         .def("set_parameters", &CPS::Signal::DecouplingLineEMT::setParameters, "node_1"_a, "node_2"_a, "resistance"_a, "inductance"_a, "capacitance"_a)
         .def("get_line_components", &CPS::Signal::DecouplingLineEMT::getLineComponents);
 
+    // Exciters
+    py::class_<CPS::Signal::ExciterDC1, std::shared_ptr<CPS::Signal::ExciterDC1>, CPS::Base::Exciter>(mSignal, "ExciterDC1", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+    py::class_<CPS::Signal::ExciterDC1Simp, std::shared_ptr<CPS::Signal::ExciterDC1Simp>, CPS::Base::Exciter>(mSignal, "ExciterDC1Simp", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+    py::class_<CPS::Signal::ExciterST1Simp, std::shared_ptr<CPS::Signal::ExciterST1Simp>, CPS::Base::Exciter>(mSignal, "ExciterST1Simp", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
     py::class_<CPS::Signal::ExciterDC1Parameters, std::shared_ptr<CPS::Signal::ExciterDC1Parameters>, CPS::Base::ExciterParameters>(mSignal, "ExciterDC1Parameters", py::multiple_inheritance())
         .def(py::init())
         .def_readwrite("Tr", &CPS::Signal::ExciterDC1Parameters::Tr)
@@ -49,7 +56,6 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("Bef", &CPS::Signal::ExciterDC1Parameters::Bef)
         .def_readwrite("MaxVa", &CPS::Signal::ExciterDC1Parameters::MaxVa)
         .def_readwrite("MinVa", &CPS::Signal::ExciterDC1Parameters::MinVa);
-
     py::class_<CPS::Signal::ExciterDC1SimpParameters, std::shared_ptr<CPS::Signal::ExciterDC1SimpParameters>, CPS::Base::ExciterParameters>(mSignal, "ExciterDC1SimpParameters", py::multiple_inheritance())
         .def(py::init())
         .def_readwrite("Tr", &CPS::Signal::ExciterDC1SimpParameters::Tr)
@@ -63,8 +69,6 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("Bef", &CPS::Signal::ExciterDC1SimpParameters::Bef)
         .def_readwrite("MaxVa", &CPS::Signal::ExciterDC1SimpParameters::MaxVa)
         .def_readwrite("MinVa", &CPS::Signal::ExciterDC1SimpParameters::MinVa);
-
-    // Exciters
     py::class_<CPS::Signal::ExciterST1Parameters, std::shared_ptr<CPS::Signal::ExciterST1Parameters>, CPS::Base::ExciterParameters>(mSignal, "ExciterST1Parameters", py::multiple_inheritance())
         .def(py::init())
         .def_readwrite("Tr", &CPS::Signal::ExciterST1Parameters::Tr)
@@ -72,6 +76,23 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("MaxVa", &CPS::Signal::ExciterST1Parameters::MaxVa)
         .def_readwrite("MinVa", &CPS::Signal::ExciterST1Parameters::MinVa);
 
+    // PSS
+    py::class_<CPS::Signal::PSS1A, std::shared_ptr<CPS::Signal::PSS1A>, CPS::Base::PSS>(mSignal, "PSS1A", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+
+    py::class_<CPS::Signal::PSS1AParameters, std::shared_ptr<CPS::Signal::PSS1AParameters>, CPS::Base::PSSParameters>(mSignal, "PSS1AParameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("Kp", &CPS::Signal::PSS1AParameters::Kp)
+        .def_readwrite("Kv", &CPS::Signal::PSS1AParameters::Kv)
+        .def_readwrite("Kw", &CPS::Signal::PSS1AParameters::Kw)
+        .def_readwrite("T1", &CPS::Signal::PSS1AParameters::T1)
+        .def_readwrite("T2", &CPS::Signal::PSS1AParameters::T2)
+        .def_readwrite("T3", &CPS::Signal::PSS1AParameters::T3)
+        .def_readwrite("T4", &CPS::Signal::PSS1AParameters::T4)
+        .def_readwrite("Tw", &CPS::Signal::PSS1AParameters::Tw)
+        .def_readwrite("Vs_max", &CPS::Signal::PSS1AParameters::Vs_max)
+        .def_readwrite("Vs_min", &CPS::Signal::PSS1AParameters::Vs_min);
+    
     // Governos
     py::class_<CPS::Signal::TurbineGovernorType1, std::shared_ptr<CPS::Signal::TurbineGovernorType1>, CPS::Base::Governor>(mSignal, "TurbineGovernorType1", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);

@@ -56,34 +56,10 @@ namespace Signal {
 		public SharedFactory<ExciterDC1> {
 
 	private: 
-		// ### Exciter Parameters ####
-		/// Transducer time constant (s)
-		Real mTr;
-		/// Amplifier time constant
-		Real mTa;
-		/// Pole of the regulator inherent dynamic
-		Real mTb;
-		/// Zero of the regulator inherent dynamic
-		Real mTc;
-		/// Field circuit time constant
-		Real mTef;
-		/// Stabilizer time constant
-		Real mTf;
-		/// Amplifier gain
-		Real mKa;
-		/// Field circuit integral deviation
-		Real mKef;
-		/// Stabilizer gain
-		Real mKf;
-		/// First ceiling coefficient
-		Real mAef;
-		/// Second ceiling coefficient
-		Real mBef;
-		///
-		Real mMaxVa;
-		///
-		Real mMinVa;
+		/// Exciter Parameters
+		std::shared_ptr<ExciterDC1Parameters> mParameters;
 
+		// ### Exciter Variables ####
 		/// Transducer input at time k-1
 		Real mVh = 0;
 		/// Transducer output at time k
