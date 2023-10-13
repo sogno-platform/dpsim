@@ -18,8 +18,7 @@ Signal::ExciterDC1::ExciterDC1(const String & name, CPS::Logger::Level logLevel)
 }
 	
 void Signal::ExciterDC1::setParameters(std::shared_ptr<Base::ExciterParameters> parameters) {
-	
-	
+
 	if (auto temp_struct = std::dynamic_pointer_cast<Signal::ExciterDC1Parameters>(parameters)){
 		mTr = temp_struct->Tr;
 		mTa = temp_struct->Ta;
