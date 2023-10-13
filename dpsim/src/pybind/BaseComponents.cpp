@@ -54,18 +54,14 @@ void addBaseComponents(py::module_ mBase) {
                CPS::Complex>::setModelAsNortonSource,
            "model_as_norton_source"_a)
       .def("add_exciter",
-           py::overload_cast<std::shared_ptr<CPS::Base::ExciterParameters>,
-                             CPS::ExciterType>(
+           py::overload_cast<std::shared_ptr<CPS::Base::Exciter>>(
                &CPS::Base::ReducedOrderSynchronGenerator<
                    CPS::Complex>::addExciter),
-           "exciter_parameters"_a, "exciter_type"_a = CPS::ExciterType::DC1Simp)
+           "exciter"_a)
       .def("add_pss",
-           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real>(
+           py::overload_cast<std::shared_ptr<CPS::Base::PSS>>(
                &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::addPSS),
-           "Kp"_a, "Kv"_a, "Kw"_a, "T1"_a, "T2"_a, "T3"_a, "T4"_a, "Vs_max"_a,
-           "Vs_min"_a, "Tw"_a)
+           "pss"_a)
       .def("add_governor",
            py::overload_cast<std::shared_ptr<CPS::Base::Governor>>(
                &CPS::Base::ReducedOrderSynchronGenerator<
@@ -96,17 +92,13 @@ void addBaseComponents(py::module_ mBase) {
            "model_as_norton_source"_a)
       .def(
           "add_exciter",
-          py::overload_cast<std::shared_ptr<CPS::Base::ExciterParameters>,
-                            CPS::ExciterType>(
+          py::overload_cast<std::shared_ptr<CPS::Base::Exciter>>(
               &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::addExciter),
-          "exciter_parameters"_a, "exciter_type"_a = CPS::ExciterType::DC1Simp)
+          "exciter"_a)
       .def("add_pss",
-           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real>(
+           py::overload_cast<std::shared_ptr<CPS::Base::PSS>>(
                &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::addPSS),
-           "Kp"_a, "Kv"_a, "Kw"_a, "T1"_a, "T2"_a, "T3"_a, "T4"_a, "Vs_max"_a,
-           "Vs_min"_a, "Tw"_a)
+           "pss"_a)
       .def("add_governor",
            py::overload_cast<std::shared_ptr<CPS::Base::Governor>>(
                &CPS::Base::ReducedOrderSynchronGenerator<
@@ -114,10 +106,18 @@ void addBaseComponents(py::module_ mBase) {
            "governor"_a);
 
   py::class_<CPS::Base::Exciter, std::shared_ptr<CPS::Base::Exciter>>(
-      mBase, "Exciter", py::multiple_inheritance());
+      mBase, "Exciter", py::multiple_inheritance())
+      .def("set_parameters", &CPS::Base::Exciter::setParameters,
+           "parameters"_a);
   py::class_<CPS::Base::ExciterParameters,
              std::shared_ptr<CPS::Base::ExciterParameters>>(
       mBase, "ExciterParameters");
+
+  py::class_<CPS::Base::PSS, std::shared_ptr<CPS::Base::PSS>>(
+      mBase, "PSS", py::multiple_inheritance())
+      .def("set_parameters", &CPS::Base::PSS::setParameters, "parameters"_a);
+  py::class_<CPS::Base::PSSParameters,
+             std::shared_ptr<CPS::Base::PSSParameters>>(mBase, "PSSParameters");
 
   py::class_<CPS::Base::Governor, std::shared_ptr<CPS::Base::Governor>>(
       mBase, "Governor", py::multiple_inheritance())

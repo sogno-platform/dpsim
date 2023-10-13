@@ -7,32 +7,26 @@
  *********************************************************************************/
 
 #include <dpsim-models/Signal/ExciterST1Simp.h>
-#include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
 
 Signal::ExciterST1Simp::ExciterST1Simp(const String & name, CPS::Logger::Level logLevel) 
-	: SimSignalComp(name, name, logLevel) { 
-
-	this->setExciterType(ExciterType::ST1Simp);
-}
+	: SimSignalComp(name, name, logLevel) { }
 	
 void Signal::ExciterST1Simp::setParameters(std::shared_ptr<Base::ExciterParameters> parameters) {
 	
-	if (auto temp_struct = std::dynamic_pointer_cast<Signal::ExciterST1Parameters>(parameters)){
-		mTr = temp_struct->Tr;
-		mKa = temp_struct->Ka;
+	if (auto params = std::dynamic_pointer_cast<Signal::ExciterST1Parameters>(parameters)){
+		mParameters = params;
 
 		SPDLOG_LOGGER_INFO(mSLog,
 			"Exciter ST1Simp parameters:"
-			"\nType: ST1Simp"
 			"\nTr: {:e}"
 			"\nKa: {:e}\n",
-			mTr, mKa);
+			mParameters->Tr, mParameters->Ka);
 	} else {
-		std::cout << "The type of the ExciterParameters of " << this->name() << " has to be ExciterST1Parameters!" << std::endl;
+		std::cout << "Type of parameters class of " << this->name() << " has to be ExciterST1Simp!" << std::endl;
 		throw CPS::TypeException();
-	}		
+	}
 }
 
 void Signal::ExciterST1Simp::initialize(Real Vh_init, Real Ef_init) {
@@ -50,7 +44,7 @@ void Signal::ExciterST1Simp::initialize(Real Vh_init, Real Ef_init) {
 	mVr = mVh;
 	
 	/// exciter reference
-	mVref = mVr - mEf / mKa;
+	mVref = mVr - mEf / mParameters->Ka;
 
 	SPDLOG_LOGGER_INFO(mSLog,
 		"Actually applied excitation system initial values:"
@@ -70,10 +64,10 @@ Real Signal::ExciterST1Simp::step(Real Vd, Real Vq, Real dt, Real Vpss) {
 	// compute state variables at time k using euler forward
 
 	// Voltage Transducer
-	mVr = mVr_prev + dt / mTr * (mVh - mVr_prev);
+	mVr = mVr_prev + dt / mParameters->Tr * (mVh - mVr_prev);
 	
 	// Exciter output
-	mEf =(mVr + Vpss - mVref) * mKa; 
+	mEf =(mVr + Vpss - mVref) * mParameters->Ka; 
 	
 	return mEf;
 }
