@@ -71,9 +71,6 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp
-	Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/EMT_SynGen4OrderIter_SMIB_Fault.cpp
 
 	# SMIB Reduced Order - Load step
@@ -117,9 +114,6 @@ list(APPEND TEST_SOURCES
 	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp
-	Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault.cpp
 	Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
