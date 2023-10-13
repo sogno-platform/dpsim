@@ -8,30 +8,19 @@
 
 #pragma once
 
-<<<<<<< HEAD
-=======
-#include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
-<<<<<<< HEAD
->>>>>>> 338446cac (added new Hydro and Steam Turbines and Governor models)
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Base/Base_Governor.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
 #include <dpsim-models/Signal/ExciterST1Simp.h>
-#include <dpsim-models/Signal/PSS1A.h>
-#include <dpsim-models/Signal/TurbineGovernorType1.h>
-<<<<<<< HEAD
-#include <dpsim-models/Solver/MNAInterface.h>
-=======
-=======
-#include <dpsim-models/Signal/Exciter.h>
-//#include <dpsim-models/Signal/TurbineGovernorType1.h>
-#include <dpsim-models/Signal/SteamTurbine.h>
-#include <dpsim-models/Signal/SteamTurbineGovernor.h>
 #include <dpsim-models/Signal/HydroTurbine.h>
 #include <dpsim-models/Signal/HydroTurbineGovernor.h>
->>>>>>> 8e9cbf324 (HiWi added new Hydro and Steam Turbines and Governor models)
->>>>>>> 338446cac (added new Hydro and Steam Turbines and Governor models)
+#include <dpsim-models/Signal/PSS1A.h>
+#include <dpsim-models/Signal/SteamTurbine.h>
+#include <dpsim-models/Signal/SteamTurbineGovernor.h>
+#include <dpsim-models/Signal/TurbineGovernorType1.h>
+#include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
 namespace Base {
@@ -102,13 +91,10 @@ public:
   ///
   void setInitialValues(Complex initComplexElectricalPower,
                         Real initMechanicalPower, Complex initTerminalVoltage);
+  ///
+  void scaleInertiaConstant(Real scalingFactor);
 
-<<<<<<< HEAD
-  /// Add governor and turbine
-  void addGovernor(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R,
-                   Real Pmin, Real Pmax, Real OmRef);
-  void
-  addGovernor(std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor);
+  // ### Controllers ###
   /// Add automatic voltage regulator
   void
   addExciter(std::shared_ptr<CPS::Base::ExciterParameters> exciterParameters,
@@ -120,49 +106,25 @@ public:
               Real Vs_max, Real Vs_min, Real Tw);
   void addPSS(std::shared_ptr<Signal::PSS1A> PSS);
 
-  /// ### Setters ###
-  void scaleInertiaConstant(Real scalingFactor);
-=======
-<<<<<<< HEAD
-			/// Add governor and turbine
-			void addGovernor(Real T3, Real T4, Real T5, Real Tc, 
-				Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef);
-			void addGovernor(std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor);
-			/// Add automatic voltage regulator
-			void addExciter(std::shared_ptr<CPS::Base::ExciterParameters> exciterParameters, ExciterType exciterType = ExciterType::DC1Simp);
-			/// Add automatic voltage regulator
-			void addExciter(std::shared_ptr<Base::Exciter> exciter);
-			/// Add power system stabilizer
-			void addPSS(Real Kp, Real Kv, Real Kw, Real T1, Real T2, Real T3, Real T4, 
-				Real Vs_max, Real Vs_min, Real Tw);
-			void addPSS(std::shared_ptr<Signal::PSS1A> PSS);
-
-=======
-			//Add Steam Turbine and Governor separately
-			//it is adviced to choose Pminit of turbine to mPref of the Governor by f_ref=f_n (50Hz/60Hz)
-			void addSteamTurbine(Real Fhp, Real Fip, Real Flp, Real Tch, Real Trh, Real Tco, Real Pminit);
-			void addSteamTurbine(std::shared_ptr<Signal::SteamTurbine> steamTurbine);
-			//Add Steam Turbine Governor
-			void addSteamTurbineGovernor(Real OmRef, Real Pref, Real R, Real T2, Real T3, 
-										Real dPmax, Real dPmin, Real Pmax, Real Pmin);
-			void addSteamTurbineGovernor(std::shared_ptr<Signal::SteamTurbineGovernor> steamTurbineGovernor);
-
-			//Add Hydro Turbine and Governor separately
-			//it is adviced to choose Pminit of turbine to mPref of the Governor by f_ref=f_n (50Hz/60Hz)
-			void addHydroTurbine(Real Tw, Real Pminit);
-			void addHydroTurbine(std::shared_ptr<Signal::HydroTurbine> HydroTurbine);
-			//Add Hydrp Turbine Governor
-			void addHydroTurbineGovernor(Real OmRef, Real Pref, Real R, Real T1, Real T2, Real T3,
-                                         Real Pmax, Real Pmin);
-			void addHydroTurbineGovernor(std::shared_ptr<Signal::HydroTurbineGovernor> hydroTurbineGovernor);
-
-
-			/// Add voltage regulator and exciter
-			void addExciter(Real Ta, Real Ka, Real Te, Real Ke,
-				Real Tf, Real Kf, Real Tr);
-			void addExciter(std::shared_ptr<Signal::Exciter> exciter);
->>>>>>> 8e9cbf324 (HiWi added new Hydro and Steam Turbines and Governor models)
->>>>>>> 338446cac (added new Hydro and Steam Turbines and Governor models)
+  /// Add Governor/TurbineGovernor
+  //void addGovernor(std::shared_ptr<CPS::Base::GovernorParameters> governorParameters, GovernorType governorType = GovernorType::TurbineGovernorType1);
+  void addGovernor(std::shared_ptr<Base::Governor> governor);
+  //Add Steam Turbine and Governor separately
+  //it is adviced to choose Pminit of turbine to mPref of the Governor by f_ref=f_n (50Hz/60Hz)
+  //void addSteamTurbine(Real Fhp, Real Fip, Real Flp, Real Tch, Real Trh, Real Tco, Real Pminit);
+  //void addSteamTurbine(std::shared_ptr<Signal::SteamTurbine> steamTurbine);
+  //Add Steam Turbine Governor
+  //void addSteamTurbineGovernor(Real OmRef, Real Pref, Real R, Real T2, Real T3,
+  //							Real dPmax, Real dPmin, Real Pmax, Real Pmin);
+  //void addSteamTurbineGovernor(std::shared_ptr<Signal::SteamTurbineGovernor> steamTurbineGovernor);
+  //Add Hydro Turbine and Governor separately
+  //it is adviced to choose Pminit of turbine to mPref of the Governor by f_ref=f_n (50Hz/60Hz)
+  //void addHydroTurbine(Real Tw, Real Pminit);
+  //void addHydroTurbine(std::shared_ptr<Signal::HydroTurbine> HydroTurbine);
+  //Add Hydrp Turbine Governor
+  //void addHydroTurbineGovernor(Real OmRef, Real Pref, Real R, Real T1, Real T2, Real T3,
+  //                             Real Pmax, Real Pmin);
+  //void addHydroTurbineGovernor(std::shared_ptr<Signal::HydroTurbineGovernor> hydroTurbineGovernor);
 
 protected:
   using MNASimPowerComp<VarType>::mRightVector;
@@ -348,64 +310,31 @@ protected:
   ///
   Real mVpss = 0;
 
-<<<<<<< HEAD
   // #### Controllers ####
-  /// Determines if Turbine and Governor are activated
-  Bool mHasTurbineGovernor = false;
+  //Determines if generator has a turbine
+  Bool mHasTurbine = false;
+  //Determines if turbine has a Governor/TurbineGovernor
+  Bool mHasGovernor = false;
   /// Determines if Exciter is activated
   Bool mHasExciter = false;
   /// Determines if Exciter is activated
   Bool mHasPSS = false;
-  /// Signal component modelling governor control and steam turbine
-  std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
+
   /// Signal component modelling voltage regulator and exciter
   std::shared_ptr<Base::Exciter> mExciter;
-  /// Signal component modelling voltage regulator and exciter
+  /// Signal component modelling power system stabilizer
   std::shared_ptr<Signal::PSS1A> mPSS;
+  /// Signal component modelling Turbine
+  //std::shared_ptr<Signal::Turbine> mTurbine;
+  /// Signal component modelling governor control
+  std::shared_ptr<Base::Governor> mGovernor;
+
   ///
   Real mVpss = 0;
-=======
-			// #### Controllers ####
-			//Determines if generator has a turbine
-			Bool mHasTurbine =false;
-			//Determines if turbine has a governor
-			Bool mHasGovernor =false;
-			/// Determines if Turbine and Governor are activated
-			Bool mHasTurbineGovernor = false;
-			/// Determines if Exciter is activated
-			Bool mHasExciter = false;
-<<<<<<< HEAD
-			/// Determines if Exciter is activated
-			Bool mHasPSS = false;
-			/// Signal component modelling governor control and steam turbine
-			std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
-=======
-			/// Is it a steam ower plant?
-			Bool mSteam = false;
-			/// Is it a hydro power plant?
-			Bool mHydro = false;
-
-			///Signal component modelling Steam Turbine
-			std::shared_ptr<Signal::SteamTurbine> mSteamTurbine;
-			/// Signal component modelling steam governor controll
-			std::shared_ptr<Signal::SteamTurbineGovernor> mSteamTurbineGovernor;
-			
-			///Signal component modelling Hydro Turbine
-			std::shared_ptr<Signal::HydroTurbine> mHydroTurbine;
-			/// Signal component modelling hydro governor controll
-			std::shared_ptr<Signal::HydroTurbineGovernor> mHydroTurbineGovernor;
-			
->>>>>>> 8e9cbf324 (HiWi added new Hydro and Steam Turbines and Governor models)
-			/// Signal component modelling voltage regulator and exciter
-			std::shared_ptr<Base::Exciter> mExciter;
-			/// Signal component modelling voltage regulator and exciter
-			std::shared_ptr<Signal::PSS1A> mPSS;
-			/// 
-			Real mVpss = 0;
->>>>>>> 338446cac (added new Hydro and Steam Turbines and Governor models)
 
   ///
   Real mTimeStep;
+  ///
   Real mSimTime;
 };
 } // namespace Base
