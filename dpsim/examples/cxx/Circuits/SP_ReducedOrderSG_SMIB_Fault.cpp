@@ -14,15 +14,16 @@ const Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
 // Excitation system
-const auto excitationEremia =
+const auto excitationParams =
     Examples::Components::Exciter::getExciterParametersEremia();
 
 // PSS
-const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;
+const auto pssParams =
+    Examples::Components::PowerSystemStabilizer::getPSS1AParametersPSAT();
 
 // Turbine Goverour
-const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1
-    turbineGovernor;
+const auto governorParams =
+    Examples::Components::TurbineGovernor::getTurbineGovernorPSAT1();
 
 int main(int argc, char *argv[]) {
 
@@ -192,7 +193,7 @@ int main(int argc, char *argv[]) {
   if (withExciter) {
     exciterSP =
         Factory<Base::Exciter>::get().create("DC1Simp", "Exciter", logLevel);
-    exciterSP->setParameters(excitationEremia);
+    exciterSP->setParameters(excitationParams);
     genSP->addExciter(exciterSP);
   }
 
@@ -200,11 +201,7 @@ int main(int argc, char *argv[]) {
   std::shared_ptr<Signal::PSS1A> pssSP = nullptr;
   if (withPSS) {
     pssSP = Signal::PSS1A::make("SynGen_PSS", logLevel);
-    pssSP->setParameters(pssAndersonFarmer.Kp, pssAndersonFarmer.Kv,
-                         pssAndersonFarmer.Kw, pssAndersonFarmer.T1,
-                         pssAndersonFarmer.T2, pssAndersonFarmer.T3,
-                         pssAndersonFarmer.T4, pssAndersonFarmer.Vs_max,
-                         pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw);
+    pssSP->setParameters(pssParams);
     genSP->addPSS(pssSP);
   }
 
@@ -213,10 +210,7 @@ int main(int argc, char *argv[]) {
   if (withTurbineGovernor) {
     turbineGovernorSP =
         Signal::TurbineGovernorType1::make("SynGen_TurbineGovernor", logLevel);
-    turbineGovernorSP->setParameters(
-        turbineGovernor.T3, turbineGovernor.T4, turbineGovernor.T5,
-        turbineGovernor.Tc, turbineGovernor.Ts, turbineGovernor.R,
-        turbineGovernor.Tmin, turbineGovernor.Tmax, turbineGovernor.OmegaRef);
+    turbineGovernorSP->setParameters(governorParams);
     genSP->addGovernor(turbineGovernorSP);
   }
 
