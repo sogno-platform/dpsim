@@ -14,20 +14,25 @@ const Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
 // PSS
-const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;
+const auto pssPSAT = Examples::Components::PowerSystemStabilizer::getPSS1AParametersPSAT();
 
 // Excitation system
 const auto excitationEremia =
     Examples::Components::Exciter::getExciterParametersEremia();
 
+// Turbine Governor Type 1
+const auto governorPSAT1 = Examples::Components::TurbineGovernor::getTurbineGovernorPSAT1();
+
+
 // Steam Turbine
-const Examples::Components::TurbineGovernor::SteamTurbine dSteamTurbine;
+//const Examples::Components::TurbineGovernor::SteamTurbine dSteamTurbine;
 
 // Steam Turbine Governor
-Examples::Components::TurbineGovernor::SteamTurbineGovernor dSteamGovernor;
+//Examples::Components::TurbineGovernor::SteamTurbineGovernor dSteamGovernor;
 
 int main(int argc, char *argv[]) {
 
+<<<<<<< HEAD
   // initiaize factories
   ExciterFactory::registerExciters();
   SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
@@ -89,6 +94,115 @@ int main(int argc, char *argv[]) {
       inertia_str = "_Inertia_" + std::to_string(H);
     }
   }
+=======
+	// initiaize factories
+	ExciterFactory::registerExciters();
+	SynchronGeneratorFactory::EMT::Ph3::registerSynchronGenerators();
+
+	// Simultion parameters
+	Real switchClosed = GridParams.SwitchClosed;
+	Real switchOpen = GridParams.SwitchOpen;
+	Real startTimeFault = 1.0;
+	Real endTimeFault   = 4;
+	Real finalTime = 20;
+	Real timeStep = 1e-3;
+	Real H = syngenKundur.H;
+	bool withPSS = false;
+	bool withExciter = false;
+	bool withTurbineGovernor = false;
+	std::string SGModel = "4";
+	std::string stepSize_str = "";
+	std::string inertia_str = "";
+
+	// Command line args processing
+	CommandLineArgs args(argc, argv);
+	if (argc > 1) {
+		if (args.options.find("SGModel") != args.options.end())
+			SGModel = args.getOptionString("SGModel");
+		if (args.options.find("WITHPSS") != args.options.end())
+			withPSS = args.getOptionBool("WITHPSS");
+		if (args.options.find("WITHEXCITER") != args.options.end())
+			withExciter = args.getOptionBool("WITHEXCITER");		
+		if (args.options.find("WithTurbineGovernor") != args.options.end())
+			withTurbineGovernor = args.getOptionBool("WithTurbineGovernor");
+		if (args.options.find("StepSize") != args.options.end()) {
+			timeStep = args.getOptionReal("StepSize");
+			stepSize_str = "_StepSize_" + std::to_string(timeStep);
+		}
+		if (args.options.find("Inertia") != args.options.end())  {
+			H = args.getOptionReal("Inertia");
+			inertia_str = "_Inertia_" + std::to_string(H);
+		}
+	}
+
+	Real logDownSampling;
+	if (timeStep<100e-6)
+		logDownSampling = floor(100e-6 / timeStep);
+	else
+		logDownSampling = 1.0;
+	Logger::Level logLevel = Logger::Level::debug;
+	std::string simName ="EMT_SynGen" + SGModel + "Order_VBR_Load_Fault" + stepSize_str + inertia_str;
+
+
+	// ----- Dynamic simulation ------
+	String simNameEMT = simName;
+	Logger::setLogDir("logs/"+simNameEMT);
+
+	// Nodes
+	std::vector<Complex> initialVoltage_n1{ GridParams.initTerminalVolt,
+											GridParams.initTerminalVolt * SHIFT_TO_PHASE_B,
+											GridParams.initTerminalVolt * SHIFT_TO_PHASE_C
+										  };
+	auto n1EMT = SimNode<Real>::make("n1EMT", PhaseType::ABC, initialVoltage_n1);
+
+	// Components
+	// Synchronous generator
+	auto genEMT = Factory<EMT::Ph3::ReducedOrderSynchronGeneratorVBR>::get().create(SGModel, "SynGen", logLevel);
+	genEMT->setOperationalParametersPerUnit(
+			syngenKundur.nomPower, syngenKundur.nomVoltage,
+			syngenKundur.nomFreq, H,
+	 		syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll,
+			syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
+			syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s, syngenKundur.Tq0_s);
+    genEMT->setInitialValues(GridParams.initComplexElectricalPower, GridParams.mechPower,
+							 GridParams.initTerminalVolt);
+	genEMT->setModelAsNortonSource(true);
+	
+	// Exciter
+	std::shared_ptr<Base::Exciter> exciterEMT = nullptr;
+	if (withExciter) {
+		exciterEMT = Factory<Base::Exciter>::get().create("DC1Simp", "Exciter", logLevel);
+		exciterEMT->setParameters(excitationEremia);
+		genEMT->addExciter(exciterEMT);
+	}
+
+	// Power system stabilizer
+	std::shared_ptr<Signal::PSS1A> pssEMT = nullptr;
+	if (pssEMT) {
+		pssEMT = Signal::PSS1A::make("SynGen_PSS", logLevel);
+		pssEMT->setParameters(pssPSAT);
+		genEMT->addPSS(pssEMT);
+	}
+
+	// Turbine Governor
+	std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorEMT = nullptr;
+	if (withTurbineGovernor) {
+		turbineGovernorEMT = Signal::TurbineGovernorType1::make("SynGen_Governor", logLevel);
+		turbineGovernorEMT->setParameters(governorPSAT1);
+		genEMT->addGovernor(turbineGovernorEMT);
+	}
+
+	/*
+	// Steam Turbine Governor
+	std::shared_ptr<Signal::SteamTurbineGovernor> steamTurbineGovernor = nullptr;
+	if (withTurbineGovernor) {
+		steamTurbineGovernor = Signal::SteamTurbineGovernor::make("SynGen_SteamTurbineGovernor", logLevel);
+		steamTurbineGovernor->setParameters(dSteamGovernor.OmRef, dSteamGovernor.R, dSteamGovernor.T2, dSteamGovernor.T3,  
+								dSteamGovernor.delPmax, dSteamGovernor.delPmin, dSteamGovernor.Pmax, dSteamGovernor.Pmin);
+		genEMT->addSteamTurbineGovernor(steamTurbineGovernor);
+	}
+	*/
+>>>>>>> a32df206b (add base class for PSS)
 
   Real logDownSampling;
   if (timeStep < 100e-6)

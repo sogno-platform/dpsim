@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <dpsim-models/Definitions.h>
-
 namespace CPS {
 namespace Base {
 
@@ -22,12 +20,7 @@ namespace Base {
 	/// @brief Base model for Governors
 	class Governor {
 
-		private:
-        	GovernorType mGovernorType = GovernorType::TurbineGovernorType1;
-
 		public:
-			/// 
-        	void setGovernorType(GovernorType governorType) {mGovernorType = governorType;};
 
 			///
 			virtual void setParameters(std::shared_ptr<Base::GovernorParameters> parameters) = 0;

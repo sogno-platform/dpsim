@@ -39,12 +39,8 @@ namespace Signal {
 		public SharedFactory<ExciterST1Simp> {
 
 	private: 
-		// ### Exciter Parameters ####
-		/// Transducer time constant (s)
-		Real mTr;
-		///  Regulator gain
-		Real mKa;
-
+		/// Exciter Parameters
+		std::shared_ptr<ExciterST1Parameters> mParameters;
 
 		/// Transducer input at time k-1
 		Real mVh = 0;
