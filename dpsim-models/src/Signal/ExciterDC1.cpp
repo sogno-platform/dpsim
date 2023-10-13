@@ -7,35 +7,19 @@
  *********************************************************************************/
 
 #include <dpsim-models/Signal/ExciterDC1.h>
-#include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
 
 Signal::ExciterDC1::ExciterDC1(const String & name, CPS::Logger::Level logLevel) 
-	: SimSignalComp(name, name, logLevel) { 
-
-	this->setExciterType(ExciterType::DC1);
-}
+	: SimSignalComp(name, name, logLevel) { }
 	
 void Signal::ExciterDC1::setParameters(std::shared_ptr<Base::ExciterParameters> parameters) {
 
-	if (auto temp_struct = std::dynamic_pointer_cast<Signal::ExciterDC1Parameters>(parameters)){
-		mTr = temp_struct->Tr;
-		mTa = temp_struct->Ta;
-		mTb = temp_struct->Tb;
-		mTc = temp_struct->Tc;
-		mTef = temp_struct->Tef;
-		mTf = temp_struct->Tf;
-		mKa = temp_struct->Ka;
-		mKef = temp_struct->Kef;
-		mKf = temp_struct->Kf;
-		mAef = temp_struct->Aef;
-		mBef = temp_struct->Bef;
-		mMaxVa = temp_struct->MaxVa;
-		mMinVa = temp_struct->MinVa;
+	if (auto params = std::dynamic_pointer_cast<Signal::ExciterDC1Parameters>(parameters)){
+		mParameters = params;
 		
 		SPDLOG_LOGGER_INFO(mSLog,
-			"ExciterDC1 parameters:"
+			"\nExciterDC1 parameters:"
 			"\nType: DC1"
 			"\nTr: {:e}"
 			"\nTa: {:e}"
@@ -50,15 +34,14 @@ void Signal::ExciterDC1::setParameters(std::shared_ptr<Base::ExciterParameters> 
 			"\nBef: {:e}"
 			"\nMaximum amplifier Voltage: {:e}"
 			"\nMinimum amplifier Voltage: {:e}\n",
-			mTr,
-			mTa, mKa, 
-			mTb, mTc,
-			mTef, mKef,
-			mTf, mKf,
-			mAef, mBef,
-			mMaxVa, mMinVa);
+			mParameters->Tr, mParameters->Ta, 
+			mParameters->Ka, mParameters->Tb, 
+			mParameters->Tc, mParameters->Tef, 
+			mParameters->Kef, mParameters->Tf, 
+			mParameters->Kf, mParameters->Aef, 
+			mParameters->Bef, mParameters->MaxVa, mParameters->MinVa);
 	} else {
-		std::cout << "The type of the ExciterParameters of " << this->name() << " has to be ExciterParametersDC1!" << std::endl;
+		std::cout << "Type of parameters class of " << this->name() << " has to be ExciterDC1Parameters!" << std::endl;
 		throw CPS::TypeException();
 	}
 }
@@ -81,17 +64,17 @@ void Signal::ExciterDC1::initialize(Real Vh_init, Real Ef_init) {
 	mVf = 0.0;
 
 	// ceiling function
-	mVsat = mAef * exp(mBef * abs(mEf));
+	mVsat = mParameters->Aef * exp(mParameters->Bef * abs(mEf));
 
 	/// init value of amplifier output
-	mVa = mKef * mEf + mVsat * mEf;
-	if (mVa>mMaxVa)
-		mVa = mMaxVa;
-	if (mVa<mMinVa)
-		mVa = mMinVa;
+	mVa = mParameters->Kef * mEf + mVsat * mEf;
+	if (mVa>mParameters->MaxVa)
+		mVa = mParameters->MaxVa;
+	if (mVa<mParameters->MinVa)
+		mVa = mParameters->MinVa;
 
 	/// init value of amplifier input
-	mVin = mVa / mKa;
+	mVin = mVa / mParameters->Ka;
 
 	/// 
 	mVb = mVin;
@@ -100,8 +83,8 @@ void Signal::ExciterDC1::initialize(Real Vh_init, Real Ef_init) {
 	mVref = mVr + mVin;
 	
 	/// check initial conditions	
-	if (mEf - mVa / (mVsat + mKef))
-		SPDLOG_LOGGER_WARN(mSLog,"Initial conditions are not consistent!!!");
+	if (mEf - mVa / (mVsat + mParameters->Kef))
+		SPDLOG_LOGGER_WARN(mSLog,"\nInitial conditions are not consistent!!!");
 
 	SPDLOG_LOGGER_INFO(mSLog,
 		"Actually applied excitation system initial values:"
@@ -135,27 +118,27 @@ Real Signal::ExciterDC1::step(Real Vd, Real Vq, Real dt, Real Vpss) {
 	// compute state variables at time k using euler forward
 
 	// saturation function
-	mVsat = mAef * exp(mBef * abs(mEf_prev));
+	mVsat = mParameters->Aef * exp(mParameters->Bef * abs(mEf_prev));
 
 	// Voltage Transducer
-	mVr = mVr_prev + dt / mTr * (mVh - mVr_prev);
+	mVr = mVr_prev + dt / mParameters->Tr * (mVh - mVr_prev);
 
 	// Regulator output
-	mVb = mVb_prev * (1 - dt / mTb) + dt / mTb * (mVref + Vpss - mVr_prev - mVf_prev);
-	mVin = dt * (mTc / mTb) * (mVref + Vpss - mVr_prev - mVf_prev - mVb_prev) + mVb;
+	mVb = mVb_prev * (1 - dt / mParameters->Tb) + dt / mParameters->Tb * (mVref + Vpss - mVr_prev - mVf_prev);
+	mVin = dt * (mParameters->Tc / mParameters->Tb) * (mVref + Vpss - mVr_prev - mVf_prev - mVb_prev) + mVb;
 
 	// Amplifier
-	mVa = mVa_prev + dt / mTa * (mVin_prev * mKa - mVa_prev);
-	if (mVa>mMaxVa)
-		mVa = mMaxVa;
-	if (mVa<mMinVa)
-		mVa = mMinVa;
+	mVa = mVa_prev + dt / mParameters->Ta * (mVin_prev * mParameters->Ka - mVa_prev);
+	if (mVa>mParameters->MaxVa)
+		mVa = mParameters->MaxVa;
+	if (mVa<mParameters->MinVa)
+		mVa = mParameters->MinVa;
 
 	// Stabilizing feedback
-	mVf = (1. - dt / mTf) * mVf_prev + dt * mKf / (mTf * mTef) * (mVa_prev - (mVsat + mKef) * mEf_prev);
+	mVf = (1. - dt / mParameters->Tf) * mVf_prev + dt * mParameters->Kf / (mParameters->Tf * mParameters->Tef) * (mVa_prev - (mVsat + mParameters->Kef) * mEf_prev);
 		
 	// Exciter output
-	mEf = mEf_prev + dt / mTef * (mVa_prev - (mVsat + mKef) * mEf_prev); 
+	mEf = mEf_prev + dt / mParameters->Tef * (mVa_prev - (mVsat + mParameters->Kef) * mEf_prev); 
 	
 	return mEf;
 }

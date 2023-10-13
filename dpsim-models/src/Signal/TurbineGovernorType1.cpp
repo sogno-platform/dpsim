@@ -39,9 +39,8 @@ void TurbineGovernorType1::setParameters(
                        mParameters->Pmin, mParameters->Pmax,
                        mParameters->OmRef);
   } else {
-    std::cout << "The type of the pparameter GovernorParameters of "
-              << this->name() << " has to be TurbineGovernorType1Parameters!"
-              << std::endl;
+    std::cout << "Type of parameters class of " << this->name()
+              << " has to be TurbineGovernorType1Parameters!" << std::endl;
     throw CPS::TypeException();
   }
 }
