@@ -110,9 +110,7 @@ namespace CPS {
 	enum class PowerflowBusType { PV, PQ, VD, None };
 	enum class GeneratorType {PVNode, IdealVoltageSource, IdealCurrentSource, TransientStability, FullOrder, FullOrderVBR, SG6aOrderVBR, SG6bOrderVBR, SG5OrderVBR, SG4OrderVBR, SG3OrderVBR, SG4OrderPCM, SG4OrderTPM, SG6OrderPCM, None};
 	enum class SGOrder {SG3Order, SG4Order, SG5Order, SG6aOrder, SG6bOrder};
-	enum class ExciterType {Simple, DC1Simp, DC1, ST1Simp};
-	enum class GovernorType {Steam, Hydro, TurbineGovernorType1};
-	
+		
 	// ### Exceptions ###
 	class Exception : public std::exception { };
 	class AccessException : public Exception { };

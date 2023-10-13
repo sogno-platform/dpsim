@@ -7,14 +7,13 @@
  *********************************************************************************/
 
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
-#include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
 using namespace CPS::Signal;
 
 Signal::TurbineGovernorType1::TurbineGovernorType1(
 	const String & name, CPS::Logger::Level logLevel) 
-	: SimSignalComp(name, name, logLevel){ }
+	: SimSignalComp(name, name, logLevel){ 	}
 
 void TurbineGovernorType1::setParameters(std::shared_ptr<Base::GovernorParameters> parameters) {
 
@@ -35,7 +34,7 @@ void TurbineGovernorType1::setParameters(std::shared_ptr<Base::GovernorParameter
 			mParameters->Tc, mParameters->Ts, mParameters->R,
 			mParameters->Pmin, mParameters->Pmax, mParameters->OmRef);
 	} else {
-		std::cout << "The type of the pparameter GovernorParameters of " << this->name() << " has to be TurbineGovernorType1Parameters!" << std::endl;
+		std::cout << "Type of parameters class of " << this->name() << " has to be TurbineGovernorType1Parameters!" << std::endl;
 		throw CPS::TypeException();
 	}
 }

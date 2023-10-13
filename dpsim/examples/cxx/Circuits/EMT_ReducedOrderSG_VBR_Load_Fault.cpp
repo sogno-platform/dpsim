@@ -13,16 +13,20 @@ const Examples::Grids::SMIB::ScenarioConfig3 GridParams;
 const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 
 // PSS
-const Examples::Components::PowerSystemStabilizer::PSS1APSAT pssAndersonFarmer;
+const auto pssPSAT = Examples::Components::PowerSystemStabilizer::getPSS1AParametersPSAT();
 
 // Excitation system
 const auto excitationEremia = Examples::Components::Exciter::getExciterParametersEremia();
 
+// Turbine Governor Type 1
+const auto governorPSAT1 = Examples::Components::TurbineGovernor::getTurbineGovernorPSAT1();
+
+
 // Steam Turbine
-const Examples::Components::TurbineGovernor::SteamTurbine dSteamTurbine;
+//const Examples::Components::TurbineGovernor::SteamTurbine dSteamTurbine;
 
 // Steam Turbine Governor
-Examples::Components::TurbineGovernor::SteamTurbineGovernor dSteamGovernor;
+//Examples::Components::TurbineGovernor::SteamTurbineGovernor dSteamGovernor;
 
 int main(int argc, char* argv[]) {
 
@@ -38,14 +42,9 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 20;
 	Real timeStep = 1e-3;
 	Real H = syngenKundur.H;
-<<<<<<< HEAD
 	bool withPSS = false;
 	bool withExciter = false;
 	bool withTurbineGovernor = false;
-=======
-	bool withExciter = true;
-	bool withTurbineGovernor = true;
->>>>>>> 8e9cbf324 (HiWi added new Hydro and Steam Turbines and Governor models)
 	std::string SGModel = "4";
 	std::string stepSize_str = "";
 	std::string inertia_str = "";
@@ -112,30 +111,23 @@ int main(int argc, char* argv[]) {
 		genEMT->addExciter(exciterEMT);
 	}
 
-<<<<<<< HEAD
 	// Power system stabilizer
 	std::shared_ptr<Signal::PSS1A> pssEMT = nullptr;
-	if (withPSS) {
-		pssEMT = Signal::PSS1A::make("PSS", logLevel);
-		pssEMT->setParameters(pssAndersonFarmer.Kp, pssAndersonFarmer.Kv, pssAndersonFarmer.Kw, 
-			pssAndersonFarmer.T1, pssAndersonFarmer.T2, pssAndersonFarmer.T3, pssAndersonFarmer.T4, 
-			pssAndersonFarmer.Vs_max, pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw);
+	if (pssEMT) {
+		pssEMT = Signal::PSS1A::make("SynGen_PSS", logLevel);
+		pssEMT->setParameters(pssPSAT);
 		genEMT->addPSS(pssEMT);
 	}
 
 	// Turbine Governor
 	std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernorEMT = nullptr;
-=======
-	// Steam Turbine
-	std::shared_ptr<Signal::SteamTurbine> steamTurbine = nullptr;
->>>>>>> 8e9cbf324 (HiWi added new Hydro and Steam Turbines and Governor models)
 	if (withTurbineGovernor) {
-		steamTurbine = Signal::SteamTurbine::make("SynGen_SteamTurbine", logLevel);
-		steamTurbine->setParameters(dSteamTurbine.Fhp, dSteamTurbine.Fip,dSteamTurbine.Flp,
-									dSteamTurbine.Tch, dSteamTurbine.Tco, dSteamTurbine.Trh);
-		genEMT->addSteamTurbine(steamTurbine);
+		turbineGovernorEMT = Signal::TurbineGovernorType1::make("SynGen_Governor", logLevel);
+		turbineGovernorEMT->setParameters(governorPSAT1);
+		genEMT->addGovernor(turbineGovernorEMT);
 	}
 
+	/*
 	// Steam Turbine Governor
 	std::shared_ptr<Signal::SteamTurbineGovernor> steamTurbineGovernor = nullptr;
 	if (withTurbineGovernor) {
@@ -144,6 +136,7 @@ int main(int argc, char* argv[]) {
 								dSteamGovernor.delPmax, dSteamGovernor.delPmin, dSteamGovernor.Pmax, dSteamGovernor.Pmin);
 		genEMT->addSteamTurbineGovernor(steamTurbineGovernor);
 	}
+	*/
 
 	// Load
 	auto load = CPS::EMT::Ph3::RXLoad::make("Load", logLevel);

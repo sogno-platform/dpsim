@@ -105,30 +105,32 @@ namespace Exciter{
 }
 
 namespace PowerSystemStabilizer {
-    struct PSS1APSAT {
+    std::shared_ptr<CPS::Signal::PSS1AParameters> getPSS1AParametersPSAT() {
         // Power system stabilizer type 2 
         // Taken from from PSAT - example d_anderson_farmer Gen2
-
+        auto PSSA1PSAT = CPS::Signal::PSS1AParameters::make();
         /// Stabilizer gain for active power (pu/pu)
-		Real Kp = 0;
+		PSSA1PSAT->Kp = 0;
 		/// Stabilizer gain for bus voltage magnitude (pu/pu)
-		Real Kv = 0;
+		PSSA1PSAT->Kv = 0;
 		/// Stabilizer gain for omega gain (pu/pu)
-		Real Kw = 15;
+		PSSA1PSAT->Kw = 15;
 		/// First stabilizer time constant (s)
-		Real T1 = 0.1;
+		PSSA1PSAT->T1 = 0.1;
 		/// Second stabilizer time constant (s)
-		Real T2 = 0.01;
+		PSSA1PSAT->T2 = 0.01;
 		/// Thrid stabilizer time constant (s)
-		Real T3 = 0.12;
+		PSSA1PSAT->T3 = 0.12;
 		/// Fourth stabilizer time constant (s)
-		Real T4 = 0.01;
+		PSSA1PSAT->T4 = 0.01;
 		/// Max stabilizer output signal (pu)
-		Real Vs_max = 0.1;
+		PSSA1PSAT->Vs_max = 0.1;
 		/// Min stabilizer output signal (pu)
-		Real Vs_min = -0.1;
+		PSSA1PSAT->Vs_min = -0.1;
 		/// Wash-out time constant (s)
-		Real Tw = 10;
+		PSSA1PSAT->Tw = 10;
+
+        return PSSA1PSAT;
     };
 
     struct PSSKundur {
@@ -173,52 +175,57 @@ namespace TurbineGovernor {
         Real Tsm = 0.3;
     };
 
-    struct TurbineGovernorPSAT1 {
+    std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters> getTurbineGovernorPSAT1() {
         // Turbine Governor type 1 
         // Taken from from PSAT - example d_014_pss_l14 
-        
+        auto governor = CPS::Signal::TurbineGovernorType1Parameters::make();
         // Reference speed (p.u.)
-        Real OmegaRef = 1.0;
+        governor->OmRef = 1.0;
         // Pilot valve droop (p.u.)
-        Real R = 0.02;
+        governor->R = 0.02;
         // Maximum Torque (p.u.)
-        Real Tmax = 1.2;
+        governor->Pmax = 1.2;
         // Minimim Torque (p.u.)
-        Real Tmin = 0.3;
+        governor->Pmin = 0.3;
         // Governor time constant (s)
-        Real Ts = 0.1;
+        governor->Ts = 0.1;
         // Servo time constant (s)
-        Real Tc = 0.45;
+        governor->Tc = 0.45;
         // Transient gain time constant (s)
-        Real T3 = 0.0;
+        governor->T3 = 0.0;
         // Power fraction time constant (s)
-        Real T4 = 12.0;
+        governor->T4 = 12.0;
         // Reheat time constant (s)
-        Real T5 = 50.0;
+        governor->T5 = 50.0;
+
+        return governor;
     };
 
-    struct TurbineGovernorPSAT2 {
+    std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters> getTurbineGovernorPSAT2() {
         // Turbine Governor type 1 
         // Taken from PSAT - example d_anderson_farmer
-        
+        auto governor = CPS::Signal::TurbineGovernorType1Parameters::make();
+
         // Reference speed (p.u.)
-        Real OmegaRef = 1.0;
+        governor->OmRef = 1.0;
         // Pilot valve droop (p.u.)
-        Real R = 0.04;
+        governor->R = 0.04;
         // Maximum Torque (p.u.)
-        Real Tmax = 100;
+        governor->Pmax = 100;
         // Minimim Torque (p.u.)
-        Real Tmin = 0.0;
+        governor->Pmin = 0.0;
         // Governor time constant (s)
-        Real Ts = 20;
+        governor->Ts = 20;
         // Servo time constant (s)
-        Real Tc = 0.2;
+        governor->Tc = 0.2;
         // Transient gain time constant (s)
-        Real T3 = 0.2;
+        governor->T3 = 0.2;
         // Power fraction time constant (s)
-        Real T4 = 0.2;
+        governor->T4 = 0.2;
         // Reheat time constant (s)
-        Real T5 = 0.2;
+        governor->T5 = 0.2;
+
+        return governor;
     };
 
     struct SteamTurbine{

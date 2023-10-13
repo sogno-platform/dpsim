@@ -55,30 +55,10 @@ namespace Signal {
 		public SharedFactory<ExciterDC1Simp> {
 
 	private: 
-		// ### Exciter Parameters ####
-		/// Ampliﬁer time constant (s)
-		Real mTa;
-		/// Ampliﬁer gain (pu/pu)
-		Real mKa;
-		/// Field circuit integral deviation
-		Real mKef;
-		/// Field circuit time constant (s)
-		Real mTef;
-		/// Stabilizer gain (s pu/pu)
-		Real mKf;
-		/// Stabilizer time constant (s)
-		Real mTf;
-		/// Measurement time constant (s)
-		Real mTr;
-		/// First ceiling coefficient
-		Real mAef;
-		/// Second ceiling coefficient
-		Real mBef;
-		/// Maximum amplifier output (p.u.)
-		Real mMaxVa;
-		/// Minumum amplifier output (p.u.)
-		Real mMinVa;
+		/// Exciter Parameters
+		std::shared_ptr<ExciterDC1SimpParameters> mParameters;
 
+		// ### Exciter Variables ####
 		/// Reference voltage (with effect of PSS)
 		Real mVref = 0;
 		/// Output of voltage transducer at time k-1
