@@ -64,10 +64,27 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("MaxVa", &CPS::Signal::ExciterDC1SimpParameters::MaxVa)
         .def_readwrite("MinVa", &CPS::Signal::ExciterDC1SimpParameters::MinVa);
 
+    // Exciters
     py::class_<CPS::Signal::ExciterST1Parameters, std::shared_ptr<CPS::Signal::ExciterST1Parameters>, CPS::Base::ExciterParameters>(mSignal, "ExciterST1Parameters", py::multiple_inheritance())
         .def(py::init())
         .def_readwrite("Tr", &CPS::Signal::ExciterST1Parameters::Tr)
         .def_readwrite("Ka", &CPS::Signal::ExciterST1Parameters::Ka)
         .def_readwrite("MaxVa", &CPS::Signal::ExciterST1Parameters::MaxVa)
         .def_readwrite("MinVa", &CPS::Signal::ExciterST1Parameters::MinVa);
+
+    // Governos
+    py::class_<CPS::Signal::TurbineGovernorType1, std::shared_ptr<CPS::Signal::TurbineGovernorType1>, CPS::Base::Governor>(mSignal, "TurbineGovernorType1", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+
+    py::class_<CPS::Signal::TurbineGovernorType1Parameters, std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters>, CPS::Base::GovernorParameters>(mSignal, "TurbineGovernorType1Parameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("Pmax", &CPS::Signal::TurbineGovernorType1Parameters::Pmax)
+        .def_readwrite("Pmin", &CPS::Signal::TurbineGovernorType1Parameters::Pmin)
+        .def_readwrite("R", &CPS::Signal::TurbineGovernorType1Parameters::R)
+        .def_readwrite("T3", &CPS::Signal::TurbineGovernorType1Parameters::T3)
+        .def_readwrite("T4", &CPS::Signal::TurbineGovernorType1Parameters::T4)
+        .def_readwrite("T5", &CPS::Signal::TurbineGovernorType1Parameters::T5)
+        .def_readwrite("Tc", &CPS::Signal::TurbineGovernorType1Parameters::Tc)
+        .def_readwrite("Ts", &CPS::Signal::TurbineGovernorType1Parameters::Ts)
+        .def_readwrite("OmRef", &CPS::Signal::TurbineGovernorType1Parameters::OmRef);
 }

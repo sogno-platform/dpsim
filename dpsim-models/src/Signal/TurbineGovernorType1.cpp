@@ -16,39 +16,36 @@ Signal::TurbineGovernorType1::TurbineGovernorType1(
 	const String & name, CPS::Logger::Level logLevel) 
 	: SimSignalComp(name, name, logLevel){ }
 
-void TurbineGovernorType1::setParameters(Real T3, Real T4, Real T5, 
-	Real Tc, Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef) {
-	mT3 = T3;
-	mT4 = T4;
-	mT5 = T5;
-	mTc = Tc;
-	mTs = Ts;
-	mR = R;
-	mPmin = Pmin;
-	mPmax = Pmax;
-	mOmRef = OmRef;
+void TurbineGovernorType1::setParameters(std::shared_ptr<Base::GovernorParameters> parameters) {
 
-	SPDLOG_LOGGER_INFO(mSLog, "TurbineGovernorType1 parameters: "
-				"\nT3: {:e}"
-				"\nT4: {:e}"
-				"\nT5: {:e}"
-				"\nTc: {:e}"
-				"\nTs: {:e}"
-				"\nR: {:e}"
-				"\nTmin: {:e}"
-				"\nTmax: {:e}"
-				"\nOmRef: {:e}",
-				mT3, mT4, mT5,
-				mTc, mTs, mR,
-				mPmin, mPmax, mOmRef);
+	if (auto params = std::dynamic_pointer_cast<Signal::TurbineGovernorType1Parameters>(parameters)){
+		mParameters = params;
+		SPDLOG_LOGGER_INFO(mSLog, 
+			"TurbineGovernorType1 parameters: "
+			"\nT3: {:e}"
+			"\nT4: {:e}"
+			"\nT5: {:e}"
+			"\nTc: {:e}"
+			"\nTs: {:e}"
+			"\nR: {:e}"
+			"\nTmin: {:e}"
+			"\nTmax: {:e}"
+			"\nOmRef: {:e}",
+			mParameters->T3, mParameters->T4, mParameters->T5,
+			mParameters->Tc, mParameters->Ts, mParameters->R,
+			mParameters->Pmin, mParameters->Pmax, mParameters->OmRef);
+	} else {
+		std::cout << "The type of the pparameter GovernorParameters of " << this->name() << " has to be TurbineGovernorType1Parameters!" << std::endl;
+		throw CPS::TypeException();
+	}
 }
 
 void TurbineGovernorType1::initialize(Real PmRef) {
 	mPmRef = PmRef;
 	mXg1 = PmRef;
-	mXg2 = (1 - mT3 / mTc) * mXg1;
-	mXg3 = (1 - mT4 / mT5) * (mXg2 + mT3 / mTc * mXg1);
-	mTm = mXg3 + mT4 / mT5 * (mXg2 + mT3 / mTc * mXg1);
+	mXg2 = (1 - mParameters->T3 / mParameters->Tc) * mXg1;
+	mXg3 = (1 - mParameters->T4 / mParameters->T5) * (mXg2 + mParameters->T3 / mParameters->Tc * mXg1);
+	mTm = mXg3 + mParameters->T4 / mParameters->T5 * (mXg2 + mParameters->T3 / mParameters->Tc * mXg1);
 
 	SPDLOG_LOGGER_INFO(mSLog, "Governor initial values: \n"
 				"\nTorder: {:f}"
@@ -67,23 +64,23 @@ Real TurbineGovernorType1::step(Real Omega, Real dt) {
 	mXg3_prev = mXg3;
 
 	/// Input of speed relay
-	Real Pin = mPmRef + (mOmRef - Omega) / mR;
-	if (Pin>mPmax)
-		Pin = mPmax;
-	if (Pin<mPmin)
-		Pin = mPmin;
+	Real Pin = mPmRef + (mParameters->OmRef - Omega) / mParameters->R;
+	if (Pin>mParameters->Pmax)
+		Pin = mParameters->Pmax;
+	if (Pin<mParameters->Pmin)
+		Pin = mParameters->Pmin;
 	
 	/// Governor
-	mXg1 = mXg1_prev + dt / mTs * (Pin - mXg1_prev);
+	mXg1 = mXg1_prev + dt / mParameters->Ts * (Pin - mXg1_prev);
 
 	/// Servo
-	mXg2 = mXg2_prev + dt / mTc * ((1 - mT3 / mTc) * mXg1_prev - mXg2_prev);
+	mXg2 = mXg2_prev + dt / mParameters->Tc * ((1 - mParameters->T3 / mParameters->Tc) * mXg1_prev - mXg2_prev);
 
 	/// Reheat
-	mXg3 = mXg3_prev + dt / mT5 * ((1- mT4 / mT5) * (mXg2_prev + mT3 / mTc * mXg1_prev) - mXg3_prev);
+	mXg3 = mXg3_prev + dt / mParameters->T5 * ((1- mParameters->T4 / mParameters->T5) * (mXg2_prev + mParameters->T3 / mParameters->Tc * mXg1_prev) - mXg3_prev);
 
 	/// Mechanical torque
-	mTm = mXg3 + mT4 / mT5 * (mXg2 + mT3 / mTc * mXg1);
+	mTm = mXg3 + mParameters->T4 / mParameters->T5 * (mXg2 + mParameters->T3 / mParameters->Tc * mXg1);
 
 	return mTm;
 }

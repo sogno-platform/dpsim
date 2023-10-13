@@ -9,38 +9,45 @@
 #pragma once
 
 #include <dpsim-models/SimSignalComp.h>
+#include <dpsim-models/Base/Base_Governor.h>
 #include <dpsim-models/Logger.h>
 
 namespace CPS {
 namespace Signal {
 
+	class TurbineGovernorType1Parameters :
+		public Base::GovernorParameters,
+		public SharedFactory<TurbineGovernorType1Parameters> {
+		
+		public:
+			/// Maximum turbine power
+			Real Pmax;
+			/// Minimum turbine power
+			Real Pmin;
+			/// Droop
+			Real R;
+			/// Transient gain time constant (s)
+			Real T3;
+			/// Power fraction time constant (s)
+			Real T4;
+			/// Reheat time constant (s)
+			Real T5;
+			/// Servo time constant (s)
+			Real Tc;
+			/// Governor time constant (s)
+			Real Ts;
+			/// Speed reference (pu)
+			Real OmRef;
+	};
+
 	/// Turbine governor type 1 model 
 	/// Ref.: Milano - Power system modelling and scripting, page 358
 	class TurbineGovernorType1 :
 		public SimSignalComp,
+		public Base::Governor,
 		public SharedFactory<TurbineGovernorType1> {
 	private:
-		// ### Steam Turbine Parameters ####
-		/// Maximum turbine power
-		Real mPmax;
-		/// Minimum turbine power
-		Real mPmin;
-		/// Droop
-		Real mR;
-		/// Transient gain time constant (s)
-		Real mT3;
-		/// Power fraction time constant (s)
-		Real mT4;
-		/// Reheat time constant (s)
-		Real mT5;
-		/// Servo time constant (s)
-		Real mTc;
-		/// Governor time constant (s)
-		Real mTs;
-		/// Speed reference (pu)
-		Real mOmRef;
-		/// Reference torque (pu)
-		Real mPmRef;
+		std::shared_ptr<TurbineGovernorType1Parameters> mParameters;
 
 		// ### Variables ###
 		/// Mechanical speed at time k-1
@@ -53,6 +60,8 @@ namespace Signal {
 		Real mXg3_prev;
 
 		// ### Variables ###
+		/// Reference torque (pu)
+		Real mPmRef;
 		/// Governor output at time k
  		Real mXg1;
 		/// Servo output at time k
@@ -70,12 +79,11 @@ namespace Signal {
 		TurbineGovernorType1(const String & name, CPS::Logger::Level logLevel);
 
 		/// Initializes exciter parameters
-		void setParameters(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R, 
-			Real Pmin, Real Pmax, Real OmRef);
+		void setParameters(std::shared_ptr<Base::GovernorParameters> parameters) final;
 		///
-		void initialize(Real PmRef) override;
+		void initialize(Real PmRef) final;
 		/// Performs an step to update field voltage value
-		Real step(Real Omega, Real dt);
+		Real step(Real Omega, Real dt) final;
 	};
 }
 }
