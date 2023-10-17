@@ -82,8 +82,10 @@ public:
   /// Initializes exciter parameters
   void setParameters(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc,
                      Real K, Real Tsr, Real Tsm);
+
   ///
   void initialize(Real PmRef, Real Tm_init);
+
   /// Performs an step to update field voltage value
   Real step(Real mOm, Real mOmRef, Real PmRef, Real dt);
 };
