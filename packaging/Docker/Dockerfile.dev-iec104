@@ -1,0 +1,107 @@
+# base with basic dependencies (no build dependencies)
+FROM fedora:34 AS base
+
+LABEL \
+	org.label-schema.schema-version = "1.0.0" \
+	org.label-schema.name = "DPsim" \
+	org.label-schema.license = "MPL 2.0" \
+	org.label-schema.url = "http://dpsim.fein-aachen.org/" \
+	org.label-schema.vcs-url = "https://github.com/sogno-platform/dpsim"
+
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
+
+RUN dnf -y update
+
+# Toolchain
+RUN dnf -y install \
+	gcc gcc-c++ clang \
+	git \
+	rpmdevtools rpm-build \
+	make cmake pkgconfig \
+	python3-pip \
+	cppcheck
+
+# Tools needed for developement
+RUN dnf -y install \
+	doxygen graphviz \
+	gdb \
+	procps-ng
+
+# Dependencies
+RUN dnf --refresh -y install \
+	python3-devel \
+	eigen3-devel \
+	libxml2-devel \
+	graphviz-devel \
+	spdlog-devel \
+	fmt-devel
+
+# Install some debuginfos
+RUN dnf -y debuginfo-install \
+	python3
+
+# Build & Install sundials
+RUN cd /tmp && \
+	git clone --recursive https://github.com/LLNL/sundials.git && \
+	mkdir -p sundials/build && cd sundials/build && \
+	git checkout v3.2.1 && \
+	cmake -DCMAKE_BUILD_TYPE=Release ..  && \
+	make -j$(nproc) install
+
+# minimal VILLAS dependencies (+ go or cmake would download it)
+RUN dnf -y install \
+    openssl-devel \
+    libuuid-devel \
+    libcurl-devel \
+    jansson-devel \
+    libwebsockets-devel
+
+# optional VILLAS dependencies
+RUN dnf -y install \
+	mosquitto-devel \
+	libconfig-devel \
+	libnl3-devel
+
+# Install lib60870 from fork with pkg-config file
+RUN cd /tmp && \
+	git clone https://github.com/mz-automation/lib60870.git && \
+	mkdir -p lib60870/build && cd lib60870/build && \
+	cmake -DCMAKE_INSTALL_DIR=/usr/local ../lib60870-C && make -j$(nproc) install && \
+	rm -rf /tmp/lib60870
+
+# Python dependencies
+ADD requirements.txt .
+RUN pip3 install --upgrade wheel build
+RUN pip3 install -r requirements.txt
+
+# Install CIMpp from source
+RUN cd /tmp && \
+	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
+	mkdir -p libcimpp/build && cd libcimpp/build && \
+	cmake -DCMAKE_INSTALL_DIR=/usr/local -DUSE_CIM_VERSION=CGMES_2.4.15_16FEB2016 -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	rm -rf /tmp/libcimpp
+
+# Install VILLAS from source
+RUN cd /tmp && \
+	git clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \
+	mkdir -p villasnode/build && cd villasnode/build && \
+	cmake -DCMAKE_INSTALL_DIR=/usr/local .. && make -j$(nproc) install && \
+	rm -rf /tmp/villasnode
+
+# target for vscode dev container
+FROM base AS dev-vscode
+
+# create a non-root user for vscode to use
+ARG USERNAME=dpsim
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+RUN groupadd --gid $USER_GID $USERNAME \
+	&& useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+	&& echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+	&& chmod 0440 /etc/sudoers.d/$USERNAME
+
+# use base image when no target is specified
+FROM base
