@@ -10,14 +10,7 @@
 
 #include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Base/Base_Governor.h>
-#include <dpsim-models/Base/Base_PSS.h>
-#include <dpsim-models/Signal/HydroTurbine.h>
-#include <dpsim-models/Signal/HydroTurbineGovernor.h>
-#include <dpsim-models/Signal/PSS1A.h>
-#include <dpsim-models/Signal/SteamTurbine.h>
-#include <dpsim-models/Signal/SteamTurbineGovernor.h>
-#include <dpsim-models/Signal/TurbineGovernorType1.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Base/Base_Turbine.h>
 
 namespace CPS {
 namespace Base {
@@ -96,6 +89,10 @@ public:
   void addExciter(std::shared_ptr<Base::Exciter> exciter);
   /// Add power system stabilizer
   void addPSS(std::shared_ptr<Base::PSS> PSS);
+  /// Add Governor/TurbineGovernor
+  void addGovernor(std::shared_ptr<Base::Governor> governor);
+  /// Add Governor/TurbineGovernor
+  void addTurbine(std::shared_ptr<Base::Turbine> turbine);
 
   /// Add Governor/TurbineGovernor
   //void addGovernor(std::shared_ptr<CPS::Base::GovernorParameters> governorParameters, GovernorType governorType = GovernorType::TurbineGovernorType1);
@@ -302,14 +299,26 @@ protected:
   Real mVpss = 0;
 
   // #### Controllers ####
-  //Determines if generator has a turbine
-  Bool mHasTurbine = false;
-  //Determines if turbine has a Governor/TurbineGovernor
-  Bool mHasGovernor = false;
   /// Determines if Exciter is activated
   Bool mHasExciter = false;
   /// Determines if Exciter is activated
   Bool mHasPSS = false;
+  //Determines if generator has a turbine
+  Bool mHasTurbine = false;
+  //Determines if turbine has a Governor/TurbineGovernor
+  Bool mHasGovernor = false;
+
+  /// Signal component modelling voltage regulator and exciter
+  std::shared_ptr<Base::Exciter> mExciter;
+  /// Signal component modelling power system stabilizer
+  std::shared_ptr<Base::PSS> mPSS;
+  /// Signal component modelling governor control
+  std::shared_ptr<Base::Governor> mGovernor;
+  /// Signal component modelling Turbine
+  std::shared_ptr<Base::Turbine> mTurbine;
+
+  ///
+  Real mVpss = 0;
 
   /// Signal component modelling voltage regulator and exciter
   std::shared_ptr<Base::Exciter> mExciter;

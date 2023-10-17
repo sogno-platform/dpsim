@@ -357,13 +357,36 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
   **mThetaMech = **mDelta - PI / 2.;
 
   // Initialize controllers
-  if (mHasPSS)
-    mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq0)(0, 0),
-                     (**mVdq0)(1, 0));
+  if (mHasPSS) {
+    if (!mHasExciter) {
+      SPDLOG_LOGGER_ERROR(
+          this->mSLog,
+          "\nPSS can not be used without Exciter! PSS will be ignored!");
+      mHasPSS = false;
+    } else {
+      mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq0)(0, 0),
+                       (**mVdq0)(1, 0));
+    }
+  }
   if (mHasExciter)
     mExciter->initialize(Math::abs(mInitVoltage), **mEf);
-  if (mHasTurbineGovernor)
-    mTurbineGovernor->initialize(**mMechTorque);
+
+  if (mHasTurbine) {
+    if (!mHasGovernor) {
+      SPDLOG_LOGGER_ERROR(this->mSLog, "\nTurbine can not be used without "
+                                       "Governor! Exciter will be ignored!");
+      mHasTurbine = false;
+    } else {
+      mTurbine->initialize(**mMechTorque);
+    }
+  }
+  if (mHasGovernor)
+    mGovernor->initialize(**mMechTorque);
+
+  // set initial interface current
+  (**mIntfCurrent)(0, 0) = (mInitCurrent * mBase_I).real();
+  (**mIntfCurrent)(1, 0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_B).real();
+  (**mIntfCurrent)(2, 0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_C).real();
 
   // set initial interface current
   (**mIntfCurrent)(0, 0) = (mInitCurrent * mBase_I).real();
@@ -438,24 +461,30 @@ void Base::ReducedOrderSynchronGenerator<
   **mThetaMech = **mDelta - PI / 2.;
 
   // Initialize controllers
-  if (mHasPSS)
-    mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq)(0, 0), (**mVdq)(1, 0));
+  if (mHasPSS) {
+    if (!mHasExciter) {
+      SPDLOG_LOGGER_ERROR(
+          this->mSLog,
+          "\nPSS can not be used without Exciter! PSS will be ignored!");
+      mHasPSS = false;
+    } else {
+      mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq)(0, 0),
+                       (**mVdq)(1, 0));
+    }
+  }
   if (mHasExciter)
     mExciter->initialize(Math::abs(mInitVoltage), **mEf);
-  //if (mHasTurbine)
-  //	mTurbine->initialize(**mMechTorque);
+  if (mHasTurbine) {
+    if (!mHasGovernor) {
+      SPDLOG_LOGGER_ERROR(this->mSLog, "\nTurbine can not be used without "
+                                       "Governor! Exciter will be ignored!");
+      mHasTurbine = false;
+    } else {
+      mTurbine->initialize(**mMechTorque);
+    }
+  }
   if (mHasGovernor)
     mGovernor->initialize(**mMechTorque);
-  //if (mHasTurbineGovernor){
-  //	if(mSteam){
-  //	mSteamTurbine->initialize(**mMechTorque);
-  //	mSteamTurbineGovernor->initialize(**mMechTorque);
-  //	}
-  //	if(mHydro){
-  //	mHydroTurbine->initialize(**mMechTorque);
-  //	mHydroTurbineGovernor->initialize(**mMechTorque);
-  //	}
-  //}
 
   // set initial value of current
   (**mIntfCurrent)(0, 0) = mInitCurrent * mBase_I_RMS;
@@ -503,23 +532,15 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(
   mSimTime = time;
 
   // update governor variables
-  if (mHasTurbineGovernor) {
+  if (mHasTurbine && mHasGovernor) {
     mMechTorque_prev = **mMechTorque;
-    **mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
+    **mMechTorque =
+        mTurbine->step(mGovernor->step(**mOmMech, mTimeStep), mTimeStep);
   }
-  // update governor variables
-  /*
-	if (mHasTurbineGovernor) {
-		if(mSteam){
-		mMechTorque_prev = **mMechTorque;
-		**mMechTorque = mSteamTurbine->step(mSteamTurbineGovernor->step(**mOmMech, mTimeStep), mTimeStep);
-		}
-		if(mHydro){
-		mMechTorque_prev = **mMechTorque;
-		**mMechTorque = mHydroTurbine->step(mHydroTurbineGovernor->step(**mOmMech, mTimeStep), mTimeStep);
-		}
-	}
-	*/
+  if (!mHasTurbine && mHasGovernor) {
+    mMechTorque_prev = **mMechTorque;
+    **mMechTorque = mGovernor->step(**mOmMech, mTimeStep);
+  }
 
   // calculate mechanical variables at t=k+1 with forward euler
   **mElecTorque =
@@ -549,21 +570,12 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(
   mSimTime = time;
 
   // update governor variables
-  /*
-	if (mHasTurbineGovernor) {
-		if(mSteam){
-		mMechTorque_prev = **mMechTorque;
-		**mMechTorque = mSteamTurbine->step(mSteamTurbineGovernor->step(**mOmMech, mTimeStep), mTimeStep);
-		}
-		if(mHydro){
-		mMechTorque_prev = **mMechTorque;
-		**mMechTorque = mHydroTurbine->step(mHydroTurbineGovernor->step(**mOmMech, mTimeStep), mTimeStep);
-		}
-	}
-	*/
-
-  // update governor variables
-  if (mHasGovernor) {
+  if (mHasTurbine && mHasGovernor) {
+    mMechTorque_prev = **mMechTorque;
+    **mMechTorque =
+        mTurbine->step(mGovernor->step(**mOmMech, mTimeStep), mTimeStep);
+  }
+  if (!mHasTurbine && mHasGovernor) {
     mMechTorque_prev = **mMechTorque;
     **mMechTorque = mGovernor->step(**mOmMech, mTimeStep);
   }
@@ -634,26 +646,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
     std::shared_ptr<Base::PSS> PSS) {
-  if (!mHasExciter) {
-    std::cerr << "PSS can not be used without Exciter! PSS will be ignored!"
-              << std::endl;
-    SPDLOG_LOGGER_ERROR(
-        this->mSLog,
-        "PSS can not be used without Exciter! PSS will be ignored!");
-    return;
-  }
-
-  if (!mHasExciter) {
-    std::cerr << "PSS can not be used without Exciter! PSS will be ignored!"
-              << std::endl;
-    SPDLOG_LOGGER_ERROR(
-        this->mSLog,
-        "PSS can not be used without Exciter! PSS will be ignored!");
-    return;
-  }
-
-  mPSS = Signal::PSS1A::make(**this->mName + "_PSS", this->mLogLevel);
-  mPSS->setParameters(Kp, Kv, Kw, T1, T2, T3, T4, Vs_max, Vs_min, Tw);
+  mPSS = PSS;
   mHasPSS = true;
 }
 
@@ -664,98 +657,108 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(
   mHasGovernor = true;
 }
 
-/*
-void Base::ReducedOrderSynchronGenerator<VarType>::addSteamTurbine(Real Fhp, Real Fip, Real Flp, Real Tch, Real Trh, Real Tco, Real Pminit) {
-	mSteam=true;
-	mSteamTurbine = Signal::SteamTurbine::make(**this->mName + "_SteamTurbine", this->mLogLevel);
-	mSteamTurbine->setParameters(Fhp,Fip,Flp,Tch,Trh,Tco);
-	mSteamTurbine->initialize(Pminit);
-	mHasTurbine = true;
-	if (mHasGovernor)
-	mHasTurbineGovernor=true;
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addTurbine(
+    std::shared_ptr<Base::Turbine> turbine) {
+  mTurbine = turbine;
+  mHasTurbine = true;
 }
 
+<<<<<<< HEAD
 //Create a steam turbine via exsiting object
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addSteamTurbine(std::shared_ptr<Signal::SteamTurbine> steamTurbine) {
-	mSteam=true;
-	mSteamTurbine = steamTurbine;
-	mHasTurbine = true;
-	if (mHasGovernor)
-	mHasTurbineGovernor=true;
+void Base::ReducedOrderSynchronGenerator<VarType>::addSteamTurbine(
+    std::shared_ptr<Signal::SteamTurbine> steamTurbine) {
+  mSteam = true;
+  mSteamTurbine = steamTurbine;
+  mHasTurbine = true;
+  if (mHasGovernor)
+    mHasTurbineGovernor = true;
 }
 
-void Base::ReducedOrderSynchronGenerator<VarType>::addSteamTurbineGovernor(Real OmRef, Real Pref, Real R, Real T2, Real T3, 
-													Real dPmax, Real dPmin, Real Pmax, Real Pmin) {
-	mSteam=true;
-	mSteamTurbineGovernor = Signal::SteamTurbineGovernor::make(**this->mName + "_SteamTurbineGovernor", this->mLogLevel);
-	mSteamTurbineGovernor->setParameters(OmRef, R, T2, T3, dPmax, dPmin, Pmax, Pmin);
-	mSteamTurbineGovernor->initialize(Pref);
-	mHasGovernor = true;
-	if (mHasTurbine)
-	mHasTurbineGovernor=true;
+void Base::ReducedOrderSynchronGenerator<VarType>::addSteamTurbineGovernor(
+    Real OmRef, Real Pref, Real R, Real T2, Real T3, Real dPmax, Real dPmin,
+    Real Pmax, Real Pmin) {
+  mSteam = true;
+  mSteamTurbineGovernor = Signal::SteamTurbineGovernor::make(
+      **this->mName + "_SteamTurbineGovernor", this->mLogLevel);
+  mSteamTurbineGovernor->setParameters(OmRef, R, T2, T3, dPmax, dPmin, Pmax,
+                                       Pmin);
+  mSteamTurbineGovernor->initialize(Pref);
+  mHasGovernor = true;
+  if (mHasTurbine)
+    mHasTurbineGovernor = true;
 }
 //Create a steam turbine governor via exsiting object
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addSteamTurbineGovernor(std::shared_ptr<Signal::SteamTurbineGovernor> steamTurbineGovernor) {
-	mSteam=true;
-	mSteamTurbineGovernor = steamTurbineGovernor;
-	mHasGovernor = true;
-	if (mHasTurbine)
-	mHasTurbineGovernor=true;
+void Base::ReducedOrderSynchronGenerator<VarType>::addSteamTurbineGovernor(
+    std::shared_ptr<Signal::SteamTurbineGovernor> steamTurbineGovernor) {
+  mSteam = true;
+  mSteamTurbineGovernor = steamTurbineGovernor;
+  mHasGovernor = true;
+  if (mHasTurbine)
+    mHasTurbineGovernor = true;
 }
 
 //Create a Hydro Turbine
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addHydroTurbine(Real Tw, Real Pminit) {
-	mHydro=true;
-	mHydroTurbine = Signal::HydroTurbine::make(**this->mName + "HydroTurbine", this->mLogLevel);
-	mHydroTurbine->setParameters(Tw);
-	mHydroTurbine->initialize(Pminit);
-	mHasTurbine = true;
-	if (mHasGovernor)
-	mHasTurbineGovernor=true;
+void Base::ReducedOrderSynchronGenerator<VarType>::addHydroTurbine(
+    Real Tw, Real Pminit) {
+  mHydro = true;
+  mHydroTurbine = Signal::HydroTurbine::make(**this->mName + "HydroTurbine",
+                                             this->mLogLevel);
+  mHydroTurbine->setParameters(Tw);
+  mHydroTurbine->initialize(Pminit);
+  mHasTurbine = true;
+  if (mHasGovernor)
+    mHasTurbineGovernor = true;
 }
 
 //Create a Hydro turbine via exsiting object
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addHydroTurbine(std::shared_ptr<Signal::HydroTurbine> HydroTurbine) {
-	mHydro=true;
-	mHydroTurbine = HydroTurbine;
-	mHasTurbine = true;
-	if (mHasGovernor)
-	mHasTurbineGovernor=true;
+void Base::ReducedOrderSynchronGenerator<VarType>::addHydroTurbine(
+    std::shared_ptr<Signal::HydroTurbine> HydroTurbine) {
+  mHydro = true;
+  mHydroTurbine = HydroTurbine;
+  mHasTurbine = true;
+  if (mHasGovernor)
+    mHasTurbineGovernor = true;
 }
 
 //Create a Hydro Turbine Governor
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addHydroTurbineGovernor(Real OmRef, Real Pref, Real R, Real T1, Real T2, Real T3,
-                                         					Real Pmax, Real Pmin) {
-	mHydro=true;
-	mHydroTurbineGovernor = Signal::HydroTurbineGovernor::make(**this->mName + "_HydroTurbineGovernor", this->mLogLevel);
-	mHydroTurbineGovernor->setParameters(OmRef, R, T1, T2, T3, Pmax, Pmin);
-	mHydroTurbineGovernor->initialize(Pref);
-	mHasGovernor = true;
-	if (mHasTurbine)
-	mHasTurbineGovernor=true;
+void Base::ReducedOrderSynchronGenerator<VarType>::addHydroTurbineGovernor(
+    Real OmRef, Real Pref, Real R, Real T1, Real T2, Real T3, Real Pmax,
+    Real Pmin) {
+  mHydro = true;
+  mHydroTurbineGovernor = Signal::HydroTurbineGovernor::make(
+      **this->mName + "_HydroTurbineGovernor", this->mLogLevel);
+  mHydroTurbineGovernor->setParameters(OmRef, R, T1, T2, T3, Pmax, Pmin);
+  mHydroTurbineGovernor->initialize(Pref);
+  mHasGovernor = true;
+  if (mHasTurbine)
+    mHasTurbineGovernor = true;
 }
 
 //Create a Hydro turbine governor via exsiting object
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addHydroTurbineGovernor(std::shared_ptr<Signal::HydroTurbineGovernor> hydroTurbineGovernor) {
-	mHydro=true;
-	mHydroTurbineGovernor = hydroTurbineGovernor;
-	mHasGovernor = true;
-	if (mHasTurbine)
-	mHasTurbineGovernor=true;
+void Base::ReducedOrderSynchronGenerator<VarType>::addHydroTurbineGovernor(
+    std::shared_ptr<Signal::HydroTurbineGovernor> hydroTurbineGovernor) {
+  mHydro = true;
+  mHydroTurbineGovernor = hydroTurbineGovernor;
+  mHasGovernor = true;
+  if (mHasTurbine)
+    mHasTurbineGovernor = true;
 <<<<<<< HEAD
 >>>>>>> 8e9cbf324 (HiWi added new Hydro and Steam Turbines and Governor models)
 >>>>>>> 338446cac (added new Hydro and Steam Turbines and Governor models)
 =======
 >>>>>>> a32df206b (add base class for PSS)
 }
-*/
+* /
 
-// Declare specializations to move definitions to .cpp
-template class CPS::Base::ReducedOrderSynchronGenerator<Real>;
+=======
+>>>>>>> 62767fe69 (new base class for Turbine)
+    // Declare specializations to move definitions to .cpp
+    template class CPS::Base::ReducedOrderSynchronGenerator<Real>;
 template class CPS::Base::ReducedOrderSynchronGenerator<Complex>;
