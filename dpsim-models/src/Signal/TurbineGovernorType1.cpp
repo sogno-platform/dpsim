@@ -13,7 +13,7 @@ using namespace CPS::Signal;
 
 Signal::TurbineGovernorType1::TurbineGovernorType1(
 	const String & name, CPS::Logger::Level logLevel) 
-	: SimSignalComp(name, name, logLevel){ 	}
+	: SimSignalComp(name, name, logLevel) { }
 
 void TurbineGovernorType1::setParameters(std::shared_ptr<Base::GovernorParameters> parameters) {
 
