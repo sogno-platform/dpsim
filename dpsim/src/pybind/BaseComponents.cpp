@@ -54,4 +54,8 @@ void addBaseComponents(py::module_ mBase) {
     py::class_<CPS::Base::Governor, std::shared_ptr<CPS::Base::Governor>>(mBase, "Governor", py::multiple_inheritance())
         .def("set_parameters", &CPS::Base::Governor::setParameters, "parameters"_a);
     py::class_<CPS::Base::GovernorParameters, std::shared_ptr<CPS::Base::GovernorParameters>>(mBase, "GovernorParameters");
+
+    py::class_<CPS::Base::Turbine, std::shared_ptr<CPS::Base::Turbine>>(mBase, "Turbine", py::multiple_inheritance())
+        .def("set_parameters", &CPS::Base::Turbine::setParameters, "parameters"_a);
+    py::class_<CPS::Base::TurbineParameters, std::shared_ptr<CPS::Base::TurbineParameters>>(mBase, "TurbineParameters");
 }
