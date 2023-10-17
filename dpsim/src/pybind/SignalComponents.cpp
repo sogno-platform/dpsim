@@ -96,6 +96,10 @@ void addSignalComponents(py::module_ mSignal) {
     // Governos
     py::class_<CPS::Signal::TurbineGovernorType1, std::shared_ptr<CPS::Signal::TurbineGovernorType1>, CPS::Base::Governor>(mSignal, "TurbineGovernorType1", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+    py::class_<CPS::Signal::HydroTurbineGovernor, std::shared_ptr<CPS::Signal::HydroTurbineGovernor>, CPS::Base::Governor>(mSignal, "HydroTurbineGovernor", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+    py::class_<CPS::Signal::SteamTurbineGovernor, std::shared_ptr<CPS::Signal::SteamTurbineGovernor>, CPS::Base::Governor>(mSignal, "SteamTurbineGovernor", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
 
     py::class_<CPS::Signal::TurbineGovernorType1Parameters, std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters>, CPS::Base::GovernorParameters>(mSignal, "TurbineGovernorType1Parameters", py::multiple_inheritance())
         .def(py::init())
@@ -108,4 +112,41 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("Tc", &CPS::Signal::TurbineGovernorType1Parameters::Tc)
         .def_readwrite("Ts", &CPS::Signal::TurbineGovernorType1Parameters::Ts)
         .def_readwrite("OmRef", &CPS::Signal::TurbineGovernorType1Parameters::OmRef);
+    py::class_<CPS::Signal::HydroGorvernorParameters, std::shared_ptr<CPS::Signal::HydroGorvernorParameters>, CPS::Base::GovernorParameters>(mSignal, "HydroGorvernorParameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("R", &CPS::Signal::HydroGorvernorParameters::R)
+        .def_readwrite("T1", &CPS::Signal::HydroGorvernorParameters::T1)
+        .def_readwrite("T2", &CPS::Signal::HydroGorvernorParameters::T2)
+        .def_readwrite("T3", &CPS::Signal::HydroGorvernorParameters::T3)
+        .def_readwrite("Pmax", &CPS::Signal::HydroGorvernorParameters::Pmax)
+        .def_readwrite("Pmin", &CPS::Signal::HydroGorvernorParameters::Pmin)
+        .def_readwrite("OmRef", &CPS::Signal::HydroGorvernorParameters::OmRef);
+    py::class_<CPS::Signal::SteamGorvernorParameters, std::shared_ptr<CPS::Signal::SteamGorvernorParameters>, CPS::Base::GovernorParameters>(mSignal, "SteamGorvernorParameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("R", &CPS::Signal::SteamGorvernorParameters::R)
+        .def_readwrite("T2", &CPS::Signal::SteamGorvernorParameters::T2)
+        .def_readwrite("T3", &CPS::Signal::SteamGorvernorParameters::T3)
+        .def_readwrite("dPmax", &CPS::Signal::SteamGorvernorParameters::dPmax)
+        .def_readwrite("dPmin", &CPS::Signal::SteamGorvernorParameters::dPmin)
+        .def_readwrite("Pmax", &CPS::Signal::SteamGorvernorParameters::Pmax)
+        .def_readwrite("Pmin", &CPS::Signal::SteamGorvernorParameters::Pmin)
+        .def_readwrite("OmRef", &CPS::Signal::SteamGorvernorParameters::OmRef);
+
+    // Turbines
+    py::class_<CPS::Signal::HydroTurbine, std::shared_ptr<CPS::Signal::HydroTurbine>, CPS::Base::Turbine>(mSignal, "HydroTurbine", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+    py::class_<CPS::Signal::SteamTurbine, std::shared_ptr<CPS::Signal::SteamTurbine>, CPS::Base::Turbine>(mSignal, "SteamTurbine", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+
+    py::class_<CPS::Signal::HydroTurbineParameters, std::shared_ptr<CPS::Signal::HydroTurbineParameters>, CPS::Base::TurbineParameters>(mSignal, "HydroTurbineParameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("Tw", &CPS::Signal::HydroTurbineParameters::Tw);
+    py::class_<CPS::Signal::SteamTurbineParameters, std::shared_ptr<CPS::Signal::SteamTurbineParameters>, CPS::Base::TurbineParameters>(mSignal, "SteamTurbineParameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("Fhp", &CPS::Signal::SteamTurbineParameters::Fhp)
+        .def_readwrite("Fip", &CPS::Signal::SteamTurbineParameters::Fip)
+        .def_readwrite("Flp", &CPS::Signal::SteamTurbineParameters::Flp)
+        .def_readwrite("Tch", &CPS::Signal::SteamTurbineParameters::Tch)
+        .def_readwrite("Trh", &CPS::Signal::SteamTurbineParameters::Trh)
+        .def_readwrite("Tco", &CPS::Signal::SteamTurbineParameters::Tco);
 }
