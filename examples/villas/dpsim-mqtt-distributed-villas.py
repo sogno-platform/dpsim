@@ -150,9 +150,11 @@ def dpsim0():
     
     intf = dpsimpyvillas.InterfaceVillas(name="dpsim0-mqtt0", config=intf_config)
 
-    sim.add_interface(intf, True)
-    sim.import_attribute(evs.attr('V_ref'), 0)
-    sim.export_attribute(evs.attr('i_intf').derive_coeff(0,0), 0)
+    sim.add_interface(intf)
+
+    # TODO: Find out for what were those functions, and which functions from the new version can replace them, if required
+    # sim.import_attribute(evs.attr('V_ref'), 0)
+    # sim.export_attribute(evs.attr('i_intf').derive_coeff(0,0), 0)
   
     sim.run(1)
 
@@ -205,9 +207,11 @@ def dpsim1():
     }
 
     intf = dpsimpyvillas.InterfaceVillas(name="dpsim1-mqtt1", config=intf_config)
-    sim.add_interface(intf, True)
-    sim.import_attribute(ecs.attr('I_ref'), 0)
-    sim.export_attribute(ecs.attr('v_intf').derive_coeff(0,0).derive_scaled(complex(-1,0)), 0)
+    sim.add_interface(intf)
+
+    # TODO: Find out for what were those functions, and which functions from the new version can replace them, if required
+    # sim.import_attribute(ecs.attr('I_ref'), 0)
+    # sim.export_attribute(ecs.attr('v_intf').derive_coeff(0,0).derive_scaled(complex(-1,0)), 0)
   
     sim.run(1)
 
