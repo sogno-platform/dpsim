@@ -1,0 +1,42 @@
+{
+	"CIMFiles": [
+        "/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_XX_YYY_DL_.xml",		
+        "/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_XX_YYY_SV_.xml",
+        "/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_XX_YYY_TP_.xml",
+        "/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_YYY_EQ_.xml",
+		"/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_XX_YYY_SSH_.xml",
+		"/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_XX_YYY_DY_.xml"
+    ],
+	"SolverParameters": {
+		"Domains": ["RMS", "DP", "EMT"],	
+		"Solver": "MNA" 	
+	},
+	"SimulationParameters": {
+		"SimulationName": "IEEE14_JSON",
+		"LogLevel": "info",
+		"StartTime": 0,
+		"EndTime" : 3,
+		"TimeSteps": [0.02, 0.01, 0.005, 0.001], 
+		"InitFromPF": true,
+		"InitFromNodesAndTerminals": true,
+		"ReferenceNode": "Bus_0001",
+		"SGModel": "6Order",
+		"Frequency": 60
+	},
+	"Events": {
+		"EventType": "ShortCircuit",
+		"EventStartTime": 0.02,
+		"EventEndTime": 0.1,
+		"EventParameters": {
+			"FaultOpenResistance": 1e6,
+			"FaultClosedResistance": 0.1,
+			"NodeName": "Bus_0014"
+		}
+	},
+	"LoggerVariables":{
+		"Node": {
+			"Voltages": ["Bus_0014"],
+			"Power": ["Bus_0014"]
+		}
+	}
+}

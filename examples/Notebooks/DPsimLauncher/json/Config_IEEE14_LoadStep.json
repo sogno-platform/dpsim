@@ -1,0 +1,46 @@
+{
+	"CIMFiles": [
+        "/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_XX_YYY_DL_.xml",		
+        "/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_XX_YYY_SV_.xml",
+        "/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_XX_YYY_TP_.xml",
+        "/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_YYY_EQ_.xml",
+		"/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_XX_YYY_SSH_.xml",
+		"/home/mmo/git/Can/cimpy/cimpy/examples/sampledata/IEEE14/19700101T0000Z_XX_YYY_DY_.xml"
+    ],
+	"SolverParameters": {
+		"Domains": ["RMS", "DP", "EMT"],	
+		"Solver": "MNA" 	
+	},
+	"SimulationParameters": {
+		"SimulationName": "IEEE14_JSON",
+		"LogLevel": "info",
+		"StartTime": 0,
+		"EndTime" : 100,
+		"TimeSteps": [0.0001], 
+		"InitFromPF": true,
+		"InitFromNodesAndTerminals": true,
+		"ReferenceNode": "Bus_0001",
+		"SGModel": "6Order",
+		"Frequency": 60
+	},
+	"Events": {
+		"EventType": "LoadStep",
+		"EventStartTime": 1,
+		"EventEndTime": 5,
+		"EventParameters": {
+			"AdditionalActivePower": 50,
+			"AdditionalReactivePower": 0.0,
+			"NodeName": "Bus_0001"
+		}
+	},
+	"LoggerVariables":{
+		"Node": {
+			"Voltages": ["Bus_0001"]
+		},
+		"Component": {
+			"w_r": ["Gen_0001", "Gen_0002", "Gen_0003", "Gen_0006", "Gen_0008"],
+			"Te": ["Gen_0001", "Gen_0002", "Gen_0003", "Gen_0006", "Gen_0008"]
+		}
+
+	}
+}
