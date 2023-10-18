@@ -15,13 +15,15 @@ void SteamTurbineGovernor::setParameters(std::shared_ptr<Base::GovernorParameter
 			"Steam Governor parameters: "
 				"\nOmRef: {:e}"
 				"\nR: {:e}"
+				"\nT1: {:e}"
 				"\nT2: {:e}"
 				"\nT3: {:e}"
 				"\ndPmax: {:e}"
 				"\ndPmin: {:e}"
 				"\nPmax: {:e}"
 				"\nPmin: {:e}",
-				mParameters->OmRef, mParameters->R, mParameters->T2,
+				mParameters->OmRef, mParameters->R, 
+				mParameters->T1, mParameters->T2,
 				mParameters->T3, mParameters->dPmax, mParameters->dPmin,
 				mParameters->Pmax, mParameters->Pmin);
 	} else {
@@ -36,6 +38,9 @@ void SteamTurbineGovernor::initialize(Real Pref) {
     	mPref = Pref;
 		mDelOm_prev = 0;
     	mDelOm = 0;
+		mP1=0;
+		mP1_next=0;
+		mP=0;
     	mDelPgv = 0;
 		mPgv = Pref;
 		mPgv_next = Pref;
@@ -59,12 +64,21 @@ Real SteamTurbineGovernor::step(Real Omega, Real dt) {
     // write the values that were calculated in the previous step
 	mDelOm_prev = mDelOm;
 	mPgv = mPgv_next;
+	mP1 = mP1_next;
 
 	// Calculate the input of the governor for time step k
 	 mDelOm = mParameters->OmRef-Omega;
 
-	// Calculate thee input of integrator in PT1 via values of controller and output of governor 
-	 mDelPgv = (1. / mParameters->R *( mDelOm + mParameters->T2 / dt * (mDelOm-mDelOm_prev)) + mPref- mPgv) * 1. / mParameters->T3;
+	// Transfer function 1/R (1+sT2)/(s+T1) = 1/R (T2/T1 + (T1-T2)/T1 *1/(sT1)) = P(s)/delOm(s)
+ 	if(mParameters->T1==0) {
+		mP = (1/mParameters->R) * (mDelOm + (mParameters->T2/dt) * (mDelOm-mDelOm_prev));
+	} else {
+		mP1_next = mP1+(dt/mParameters->T1) * (mDelOm*(mParameters->T1-mParameters->T2) / mParameters->T1-mP1);
+		mP = (1/mParameters->R) * (mP1+mDelOm * (mParameters->T2/mParameters->T1));
+	}
+
+	// Calculate thee input of integrator in PT1 via values of controller and output of governor
+	mDelPgv = (mP + mPref- mPgv) * 1/mParameters->T3;
 	if (mDelPgv<mParameters->dPmin)
 		mDelPgv = mParameters->dPmin;
 	if(mDelPgv>mParameters->dPmax)

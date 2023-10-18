@@ -250,7 +250,9 @@ namespace TurbineGovernor {
         Real OmRef = 1.0;
         //Pilot valve droop (p.u.)
         Real R = 0.04;
-        // PD controller time constant (s)
+        //Controller time constant (s)
+        Real T1=0;
+        //Controller time constant (s)
         Real T2 = 0.2;
         // Servo time constant (s)
         Real T3 = 0.1;
