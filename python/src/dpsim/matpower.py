@@ -450,7 +450,8 @@ class Reader:
                 if (self.mpc_avr_data is not None and int(bus_index) in self.mpc_avr_data['bus'].tolist()):
                     try:
                         avr_row_idx = self.mpc_avr_data.index[self.mpc_avr_data['bus'] == int(bus_index)].tolist()[0]
-                        exciter_parameters = dpsimpy.signal.ExciterParameters()
+                        exciter = dpsimpy.signal.ExciterDC1Simp("Exciter_Bus" + bus_index, self.log_level)
+                        exciter_parameters = dpsimpy.signal.ExciterDC1SimpParameters()
                         exciter_parameters.Ka = self.mpc_avr_data['Ka'][avr_row_idx]
                         exciter_parameters.Ta = self.mpc_avr_data['Ta'][avr_row_idx]
                         exciter_parameters.Kef = self.mpc_avr_data['Kef'][avr_row_idx]
@@ -462,9 +463,10 @@ class Reader:
                         exciter_parameters.Bef = self.mpc_avr_data['Bef'][avr_row_idx]
                         exciter_parameters.MaxVa = self.mpc_avr_data['Va_max'][avr_row_idx]
                         exciter_parameters.MinVa = self.mpc_avr_data['Va_min'][avr_row_idx]
-                        exciter_parameters.Tb = self.mpc_avr_data['Tb'][avr_row_idx]
-                        exciter_parameters.Tc = self.mpc_avr_data['Tc'][avr_row_idx]
-                        gen.add_exciter(exciter_parameters=exciter_parameters, exciter_type=dpsimpy.ExciterType.DC1Simp)
+                        #exciter_parameters.Tb = self.mpc_avr_data['Tb'][avr_row_idx]
+                        #exciter_parameters.Tc = self.mpc_avr_data['Tc'][avr_row_idx]
+                        exciter.set_parameters(exciter_parameters)
+                        gen.add_exciter(exciter)
                     except Exception as e:
                         print("ERROR: " + str(e))
                         raise Exception()
@@ -474,18 +476,20 @@ class Reader:
                 if (self.mpc_pss_data is not None and int(bus_index) in self.mpc_pss_data['bus'].tolist()):
                     try:
                         pss_row_idx =  self.mpc_pss_data.index[self.mpc_pss_data['bus'] == int(bus_index)].tolist()[0]
-                        PSS = {}
-                        PSS["Kp"] = 0 
-                        PSS["Kv"] = 0 
-                        PSS["Kw"] = self.mpc_pss_data['Kw'][pss_row_idx]
-                        PSS["T1"] = self.mpc_pss_data['T1'][pss_row_idx]
-                        PSS["T2"] = self.mpc_pss_data['T2'][pss_row_idx]
-                        PSS["T3"] = self.mpc_pss_data['T3'][pss_row_idx]
-                        PSS["T4"] = self.mpc_pss_data['T4'][pss_row_idx]
-                        PSS["Vs_max"] = self.mpc_pss_data['Vs_max'][pss_row_idx]
-                        PSS["Vs_min"] = self.mpc_pss_data['Vs_min'][pss_row_idx]
-                        PSS["Tw"] = self.mpc_pss_data['Tw'][pss_row_idx]
-                        gen.add_pss(**PSS)
+                        pss = dpsimpy.signal.PSS1A("PSS_Bus" + bus_index, self.log_level)
+                        pss_parameters = dpsimpy.signal.PSS1AParameters()
+                        pss_parameters.Kp = 0 
+                        pss_parameters.Kv = 0 
+                        pss_parameters.Kw = self.mpc_pss_data['Kw'][pss_row_idx]
+                        pss_parameters.T1 = self.mpc_pss_data['T1'][pss_row_idx]
+                        pss_parameters.T2 = self.mpc_pss_data['T2'][pss_row_idx]
+                        pss_parameters.T3 = self.mpc_pss_data['T3'][pss_row_idx]
+                        pss_parameters.T4 = self.mpc_pss_data['T4'][pss_row_idx]
+                        pss_parameters.Vs_max = self.mpc_pss_data['Vs_max'][pss_row_idx]
+                        pss_parameters.Vs_min = self.mpc_pss_data['Vs_min'][pss_row_idx]
+                        pss_parameters.Tw = self.mpc_pss_data['Tw'][pss_row_idx]
+                        pss.set_parameters(pss_parameters)
+                        gen.add_pss(pss)
                     except Exception as e:
                         print("ERROR: " + str(e))
                         raise Exception()
@@ -495,18 +499,20 @@ class Reader:
                 if (self.mpc_tg_data is not None and int(bus_index) in self.mpc_tg_data['bus'].tolist()):
                     try:
                         tg_row_idx =  self.mpc_tg_data.index[self.mpc_tg_data['bus'] == int(bus_index)].tolist()[0]
-                        Governor = {}
-                        #Governor["OmRef"] = self.mpc_tg_data['OmRef'][tg_row_idx]
-                        Governor["OmRef"] = 1
-                        Governor["R"] = self.mpc_tg_data['R'][tg_row_idx]
-                        Governor["Tmax"] = self.mpc_tg_data['Tmax'][tg_row_idx]
-                        Governor["Tmin"] = self.mpc_tg_data['Tmin'][tg_row_idx]
-                        Governor["Ts"] = self.mpc_tg_data['Ts'][tg_row_idx]
-                        Governor["Tc"] = self.mpc_tg_data['Tc'][tg_row_idx]
-                        Governor["T3"] = self.mpc_tg_data['T3'][tg_row_idx]
-                        Governor["T4"] = self.mpc_tg_data['T4'][tg_row_idx]
-                        Governor["T5"] = self.mpc_tg_data['T5'][tg_row_idx]
-                        gen.add_governor(**Governor)
+                        governor = dpsimpy.signal.TurbineGovernorType1("TG_Bus" + bus_index, self.log_level)
+                        governor_parameters = dpsimpy.signal.TurbineGovernorType1Parameters()
+                        #governor_parameters.OmRef"] = self.mpc_tg_data['OmRef'][tg_row_idx]
+                        governor_parameters.OmRef = 1
+                        governor_parameters.R = self.mpc_tg_data['R'][tg_row_idx]
+                        governor_parameters.Tmax = self.mpc_tg_data['Tmax'][tg_row_idx]
+                        governor_parameters.Tmin = self.mpc_tg_data['Tmin'][tg_row_idx]
+                        governor_parameters.Ts = self.mpc_tg_data['Ts'][tg_row_idx]
+                        governor_parameters.Tc = self.mpc_tg_data['Tc'][tg_row_idx]
+                        governor_parameters.T3 = self.mpc_tg_data['T3'][tg_row_idx]
+                        governor_parameters.T4 = self.mpc_tg_data['T4'][tg_row_idx]
+                        governor_parameters.T5 = self.mpc_tg_data['T5'][tg_row_idx]
+                        governor.set_parameters(governor_parameters)
+                        gen.add_governor(governor)
                     except Exception as e:
                         print("ERROR: " + str(e))
                         raise Exception()
