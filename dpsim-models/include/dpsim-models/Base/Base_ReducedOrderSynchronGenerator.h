@@ -100,11 +100,15 @@ public:
   /// Add Governor/TurbineGovernor
   void addTurbine(std::shared_ptr<Base::Turbine> turbine);
 
-protected:
-  using MNASimPowerComp<VarType>::mRightVector;
-  using MNASimPowerComp<VarType>::mIntfVoltage;
-  using MNASimPowerComp<VarType>::MnaPreStep;
-  using MNASimPowerComp<VarType>::MnaPostStep;
+			// ### Controllers ###
+			/// Add automatic voltage regulator
+			void addExciter(std::shared_ptr<Base::Exciter> exciter);
+			/// Add power system stabilizer
+			void addPSS(std::shared_ptr<Base::PSS> PSS);
+			/// Add Governor/TurbineGovernor
+			void addGovernor(std::shared_ptr<Base::Governor> governor);
+			/// Add Governor/TurbineGovernor
+			void addTurbine(std::shared_ptr<Base::Turbine> turbine);
 
   ///
   ReducedOrderSynchronGenerator(String uid, String name,
