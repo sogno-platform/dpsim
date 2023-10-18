@@ -330,9 +330,11 @@ class Reader:
                 transf_s = self.mpc_branch_data.at[index,'rateA'] * mw_w 
                 primary_V = tmp_fbus['Vm'][fbus_index-1] * fbus_baseV
                 secondary_V = tmp_tbus['Vm'][tbus_index-1] * tbus_baseV
-                
+
+                #is there if the second condition in upper if is false: not(fbus_baseV==tbus_baseV)
                 if (branch_ratio==0):
                     branch_ratio=1
+                    
                 transf_ratioAbs = branch_ratio * fbus_baseV / tbus_baseV
                 
                 # From MATPOWER-manual taps at “from” bus,  impedance at “to” bus,  i.e.  ifr=x=b= 0,tap=|Vf|/|Vt|
@@ -348,8 +350,8 @@ class Reader:
                     transf_l = transf_x / self.mpc_omega   
                 else:
                     transf_baseV = tbus_baseV
-                    transf_r = self.mpc_branch_data.at[index,'r']* transf_baseZ
-                    transf_x = self.mpc_branch_data.at[index,'x']* transf_baseZ
+                    transf_r = self.mpc_branch_data.at[index,'r']* transf_baseZ * (branch_ratio**2)
+                    transf_x = self.mpc_branch_data.at[index,'x']* transf_baseZ * (branch_ratio**2)
                     transf_l = transf_x / self.mpc_omega
                 
                 # create dpsim component
