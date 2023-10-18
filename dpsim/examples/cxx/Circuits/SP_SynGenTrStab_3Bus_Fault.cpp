@@ -205,7 +205,6 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	simSP.setDomain(Domain::SP);
 	simSP.addLogger(loggerSP);
 	simSP.doSystemMatrixRecomputation(true);
-	simSP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 		// Events
 	if (startFaultEvent){

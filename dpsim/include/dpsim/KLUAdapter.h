@@ -38,7 +38,7 @@ namespace DPsim
 		std::vector<Int> mVaryingRows;
 
 		/// KLU-specific structs
-        klu_common mCommon;
+		klu_common mCommon;
 		klu_numeric* mNumeric = nullptr;
 		klu_symbolic* mSymbolic = nullptr;
 
@@ -46,6 +46,9 @@ namespace DPsim
 		/// Define which ordering to choose in preprocessing
 		/// AMD_ORDERING is defined in SuiteSparse/AMD
 		int mPreordering = AMD_ORDERING;
+
+		/// Count Pivot faults
+		int mPivotFaults = 0;
 
 		PARTIAL_REFACTORIZATION_METHOD mPartialRefactorizationMethod = PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH;
 

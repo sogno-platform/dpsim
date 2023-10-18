@@ -162,7 +162,6 @@ void EMT_3ph_4OrderSynGenIter(String simName, Real timeStep, Real finalTime, Rea
 	simEMT.setFinalTime(finalTime);
 	simEMT.setDomain(Domain::EMT);
 	simEMT.addLogger(loggerEMT);
-	simEMT.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 	// Events
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);

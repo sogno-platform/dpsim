@@ -155,7 +155,6 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	simDP.setDomain(Domain::DP);
 	simDP.addLogger(loggerDP);
 	simDP.doSystemMatrixRecomputation(true);
-	simDP.setDirectLinearSolverImplementation(DPsim::DirectLinearSolverImpl::SparseLU);
 
 	// Events
 	if (startFaultEvent){

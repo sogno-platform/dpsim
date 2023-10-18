@@ -53,7 +53,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::specificInitialization() {
 	//
 	mEdqts << **mEdq_t, **mEdq_s;
 
-	mSLog->info(
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Model specific initialization  ---"
 		"\nInitial Ed_t (per unit): {:f}"
 		"\nInitial Eq_t (per unit): {:f}"

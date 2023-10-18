@@ -18,6 +18,7 @@ KLUAdapter::~KLUAdapter()
         klu_free_symbolic(&mSymbolic, &mCommon);
     if (mNumeric)
         klu_free_numeric(&mNumeric, &mCommon);
+    SPDLOG_LOGGER_INFO(mSLog,"Number of Pivot Faults: {}", mPivotFaults);
 }
 
 KLUAdapter::KLUAdapter()
@@ -150,6 +151,7 @@ void KLUAdapter::partialRefactorize(SparseMatrix &systemMatrix,
         if (mCommon.status == KLU_PIVOT_FAULT)
         {
             /* pivot became too small => fully factorize again */
+            mPivotFaults++;
             factorize(systemMatrix);
         }
     }
