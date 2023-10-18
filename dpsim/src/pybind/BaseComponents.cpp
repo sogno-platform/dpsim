@@ -46,6 +46,7 @@ void addBaseComponents(py::module_ mBase) {
         .def(py::init());
 
     py::class_<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>, std::shared_ptr<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>, CPS::SimPowerComp<CPS::Complex>>(mBase, "ReducedOrderSynchronGeneratorComplex", py::multiple_inheritance())
+        .def("connect", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::connect)
         .def("set_base_parameters", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::setBaseParameters, "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
 		.def("set_initial_values", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::setInitialValues, "init_complex_electrical_power"_a, "init_mechanical_power"_a, "init_complex_terminal_voltage"_a)
 		.def("scale_inertia_constant", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::scaleInertiaConstant, "scaling_factor"_a)
@@ -56,6 +57,7 @@ void addBaseComponents(py::module_ mBase) {
         .def("add_turbine", py::overload_cast<std::shared_ptr<CPS::Base::Turbine>>(&CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::addTurbine), "turbine"_a);
 
     py::class_<CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>, std::shared_ptr<CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>>, CPS::SimPowerComp<CPS::Real>>(mBase, "ReducedOrderSynchronGeneratorReal", py::multiple_inheritance())
+        .def("connect", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::connect)
         .def("set_base_parameters", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::setBaseParameters, "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
 		.def("set_initial_values", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::setInitialValues, "init_complex_electrical_power"_a, "init_mechanical_power"_a, "init_complex_terminal_voltage"_a)
 		.def("scale_inertia_constant", &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::scaleInertiaConstant, "scaling_factor"_a)
