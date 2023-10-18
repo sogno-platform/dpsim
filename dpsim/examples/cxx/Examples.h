@@ -156,136 +156,136 @@ struct PSSKundur {
 } // namespace PowerSystemStabilizer
 
 namespace TurbineGovernor {
-struct GovernorKundur {
-  // Turbine model parameters (tandem compound single reheat steam turbine, fossil-fuelled)
-  // from P. Kundur, "Power System Stability and Control", 1994, p. 427
-  Real Ta_t = 0.3; // T_CH
-  Real Fa = 0.3;   // F_HP
-  Real Tb = 7.0;   // T_RH
-  Real Fb = 0.3;   // F_IP
-  Real Tc = 0.5;   // T_CO
-  Real Fc = 0.4;   // F_LP
+    struct GovernorKundur {
+        // Turbine model parameters (tandem compound single reheat steam turbine, fossil-fuelled)
+        // from P. Kundur, "Power System Stability and Control", 1994, p. 427
+        Real Ta_t = 0.3;    // T_CH
+        Real Fa = 0.3;      // F_HP
+        Real Tb = 7.0;      // T_RH
+        Real Fb = 0.3;      // F_IP
+        Real Tc = 0.5;      // T_CO
+        Real Fc = 0.4;      // F_LP
 
-  // Governor parameters (mechanical-hydraulic control)
-  // from P. Kundur, "Power System Stability and Control", 1994, p. 437
-  Real Kg = 20; // 5% droop
-  Real Tsr = 0.1;
-  Real Tsm = 0.3;
-};
+        // Governor parameters (mechanical-hydraulic control)
+        // from P. Kundur, "Power System Stability and Control", 1994, p. 437
+        Real Kg = 20;       // 5% droop
+        Real Tsr = 0.1;
+        Real Tsm = 0.3;
+    };
 
-std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters>
-getTurbineGovernorPSAT1() {
-  // Turbine Governor type 1
-  // Taken from from PSAT - example d_014_pss_l14
-  auto governor = CPS::Signal::TurbineGovernorType1Parameters::make();
-  // Reference speed (p.u.)
-  governor->OmRef = 1.0;
-  // Pilot valve droop (p.u.)
-  governor->R = 0.02;
-  // Maximum Torque (p.u.)
-  governor->Pmax = 1.2;
-  // Minimim Torque (p.u.)
-  governor->Pmin = 0.3;
-  // Governor time constant (s)
-  governor->Ts = 0.1;
-  // Servo time constant (s)
-  governor->Tc = 0.45;
-  // Transient gain time constant (s)
-  governor->T3 = 0.0;
-  // Power fraction time constant (s)
-  governor->T4 = 12.0;
-  // Reheat time constant (s)
-  governor->T5 = 50.0;
+    std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters> getTurbineGovernorPSAT1() {
+        // Turbine Governor type 1 
+        // Taken from from PSAT - example d_014_pss_l14 
+        auto governor = CPS::Signal::TurbineGovernorType1Parameters::make();
+        // Reference speed (p.u.)
+        governor->OmRef = 1.0;
+        // Pilot valve droop (p.u.)
+        governor->R = 0.02;
+        // Maximum Torque (p.u.)
+        governor->Pmax = 1.2;
+        // Minimim Torque (p.u.)
+        governor->Pmin = 0.3;
+        // Governor time constant (s)
+        governor->Ts = 0.1;
+        // Servo time constant (s)
+        governor->Tc = 0.45;
+        // Transient gain time constant (s)
+        governor->T3 = 0.0;
+        // Power fraction time constant (s)
+        governor->T4 = 12.0;
+        // Reheat time constant (s)
+        governor->T5 = 50.0;
 
-  return governor;
-};
+        return governor;
+    };
 
-std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters>
-getTurbineGovernorPSAT2() {
-  // Turbine Governor type 1
-  // Taken from PSAT - example d_anderson_farmer
-  auto governor = CPS::Signal::TurbineGovernorType1Parameters::make();
+    std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters> getTurbineGovernorPSAT2() {
+        // Turbine Governor type 1 
+        // Taken from PSAT - example d_anderson_farmer
+        auto governor = CPS::Signal::TurbineGovernorType1Parameters::make();
 
-  // Reference speed (p.u.)
-  governor->OmRef = 1.0;
-  // Pilot valve droop (p.u.)
-  governor->R = 0.04;
-  // Maximum Torque (p.u.)
-  governor->Pmax = 100;
-  // Minimim Torque (p.u.)
-  governor->Pmin = 0.0;
-  // Governor time constant (s)
-  governor->Ts = 20;
-  // Servo time constant (s)
-  governor->Tc = 0.2;
-  // Transient gain time constant (s)
-  governor->T3 = 0.2;
-  // Power fraction time constant (s)
-  governor->T4 = 0.2;
-  // Reheat time constant (s)
-  governor->T5 = 0.2;
+        // Reference speed (p.u.)
+        governor->OmRef = 1.0;
+        // Pilot valve droop (p.u.)
+        governor->R = 0.04;
+        // Maximum Torque (p.u.)
+        governor->Pmax = 100;
+        // Minimim Torque (p.u.)
+        governor->Pmin = 0.0;
+        // Governor time constant (s)
+        governor->Ts = 20;
+        // Servo time constant (s)
+        governor->Tc = 0.2;
+        // Transient gain time constant (s)
+        governor->T3 = 0.2;
+        // Power fraction time constant (s)
+        governor->T4 = 0.2;
+        // Reheat time constant (s)
+        governor->T5 = 0.2;
 
-  return governor;
-};
+        return governor;
+    };
 
-struct SteamTurbine {
-  //Steam Turbine implemented by HiWi in August 2023,
-  //Power fraction of a high pressure stage
-  Real Fhp = 0.3;
-  //Power fraction of an intermediate pressure stage
-  Real Fip = 0.3;
-  // Power fraction of a low pressure stage
-  Real Flp = 0.4;
-  //Time constant of main inlet volume and steam chest (s)
-  Real Tch = 0.1;
-  // Time constant of reheater (s)
-  Real Trh = 4;
-  // Time constant of cross over piping and LP inlet volumes (s)
-  Real Tco = 0.3;
-};
+    struct SteamTurbine{
+        //Steam Turbine implemented by HiWi in August 2023, 
+        //Power fraction of a high pressure stage
+        Real Fhp = 0.3;
+        //Power fraction of an intermediate pressure stage
+        Real Fip = 0.3;
+        // Power fraction of a low pressure stage
+        Real Flp = 0.4;
+        //Time constant of main inlet volume and steam chest (s)
+        Real Tch = 0.1;
+        // Time constant of reheater (s)
+        Real Trh = 4;
+        // Time constant of cross over piping and LP inlet volumes (s)
+        Real Tco = 0.3;
+    };
+    
+    struct SteamTurbineGovernor{
+        //Steam Turbine Governor implemented by Hiwi in August 2023, 
+        //Values taken from previous examples
+        Real OmRef = 1.0;
+        //Pilot valve droop (p.u.)
+        Real R = 0.04;
+        //Controller time constant (s)
+        Real T1=0;
+        //Controller time constant (s)
+        Real T2 = 0.2;
+        // Servo time constant (s)
+        Real T3 = 0.1;
+        // Maximum power increase (p.u.) (depends on time step, here 1e-3)
+        Real delPmax = 50;
+        // Minimim power (p.u.) (depends on time step, here 1e-3)
+        Real delPmin = -50;
+        // Maximum power (p.u.)
+        Real Pmax = 1;
+        // Minimim power (p.u.)
+        Real Pmin = 0;
+    };
 
-struct SteamTurbineGovernor {
-  //Steam Turbine Governor implemented by Hiwi in August 2023,
-  //Values taken from previous examples
-  Real OmRef = 1.0;
-  //Pilot valve droop (p.u.)
-  Real R = 0.04;
-  // PD controller time constant (s)
-  Real T2 = 0.2;
-  // Servo time constant (s)
-  Real T3 = 0.1;
-  // Maximum power increase (p.u.) (depends on time step, here 1e-3)
-  Real delPmax = 50;
-  // Minimim power (p.u.) (depends on time step, here 1e-3)
-  Real delPmin = -50;
-  // Maximum power (p.u.)
-  Real Pmax = 1;
-  // Minimim power (p.u.)
-  Real Pmin = 0;
-};
+        struct HydroTurbine{
+        //Water Starting time
+        Real Tw=0.1;
+    };
 
-struct HydroTurbine {
-  //Water Starting time
-  Real Tw = 0.1;
-};
+    struct HydroTurbineGovernor{
+        //Om Ref for the Governor, nequivalent in pu for 50Hz or 60Hz
+        Real OmRef=1;
+        // Droop
+        Real R= 0.04;
+        //Time Constants of Controller
+        Real T1=0.12;
+        Real T2=1.2;
+        Real T3=12;
+        //Maximum mechanical power(pu)
+        Real Pmax=1;
+        //Minimum mechanical power (pu)
+        Real Pmin=0;
+    };
 
-struct HydroTurbineGovernor {
-  //Om Ref for the Governor, nequivalent in pu for 50Hz or 60Hz
-  Real OmRef = 1;
-  // Droop
-  Real R = 0.04;
-  //Time Constants of Controller
-  Real T1 = 0.12;
-  Real T2 = 1.2;
-  Real T3 = 12;
-  //Maximum mechanical power(pu)
-  Real Pmax = 1;
-  //Minimum mechanical power (pu)
-  Real Pmin = 0;
-};
-
-} // namespace TurbineGovernor
-} // namespace Components
+}
+} 
 
 namespace Grids {
 namespace CIGREHVEuropean {
