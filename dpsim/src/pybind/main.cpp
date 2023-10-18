@@ -94,11 +94,6 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("FullOrder", CPS::GeneratorType::FullOrder)
 		.value("NONE", CPS::GeneratorType::None);
 
-	py::enum_<CPS::ExciterType>(m, "ExciterType")
-		.value("Simple", CPS::ExciterType::Simple)
-		.value("DC1Simp", CPS::ExciterType::DC1Simp)
-		.value("DC1", CPS::ExciterType::DC1);
-
 	py::enum_<DPsim::Solver::Type>(m, "Solver")
 		.value("MNA", DPsim::Solver::Type::MNA)
 		.value("DAE", DPsim::Solver::Type::DAE)

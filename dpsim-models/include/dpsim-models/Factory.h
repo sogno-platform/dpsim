@@ -105,7 +105,6 @@ class FactoryRegistration {
 
 namespace ExciterFactory {
     void registerExciters() {
-<<<<<<< HEAD
         FactoryRegistration<CPS::Base::Exciter> _ExciterDC1("DC1", new DerivedCreator<CPS::Signal::ExciterDC1, CPS::Base::Exciter>);
         FactoryRegistration<CPS::Base::Exciter> _ExciterDC1Simp("DC1Simp", new DerivedCreator<CPS::Signal::ExciterDC1Simp, CPS::Base::Exciter>);
         FactoryRegistration<CPS::Base::Exciter> _ExciterST1Simp("ST1", new DerivedCreator<CPS::Signal::ExciterST1Simp, CPS::Base::Exciter>);
@@ -115,9 +114,6 @@ namespace ExciterFactory {
 namespace PSSFactory {
     void registerExciters() {
         FactoryRegistration<CPS::Base::PSS> _PSS1A("PSS1A", new DerivedCreator<CPS::Signal::PSS1A, CPS::Base::PSS>);
-=======
-        FactoryRegistration<CPS::Base::Exciter> _ExciterDC1Simp("DC1Simp", new DerivedCreator<CPS::Signal::ExciterDC1Simp, CPS::Base::Exciter>);
->>>>>>> 74ca12243 (add PSS type 2 and add base class for exciter)
     }
 }
 

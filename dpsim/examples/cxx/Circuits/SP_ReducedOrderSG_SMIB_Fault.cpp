@@ -168,23 +168,10 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Power system stabilizer
-<<<<<<< HEAD
 	std::shared_ptr<Signal::PSS1A> pssSP = nullptr;
 	if (withPSS) {
 		pssSP = Signal::PSS1A::make("SynGen_PSS", logLevel);
 		pssSP->setParameters(pssParams);
-=======
-	std::shared_ptr<Signal::PSSType2> pssSP = nullptr;
-	if (withPSS) {
-		pssSP = Signal::PSSType2::make("SynGen_PSS", logLevel);
-		pssSP->setParameters(pssAndersonFarmer.Kp, pssAndersonFarmer.Kv, pssAndersonFarmer.Kw, 
-			pssAndersonFarmer.T1, pssAndersonFarmer.T2, pssAndersonFarmer.T3, pssAndersonFarmer.T4, 
-<<<<<<< HEAD
-			pssAndersonFarmer.Vs_max, pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw, timeStep);
->>>>>>> 74ca12243 (add PSS type 2 and add base class for exciter)
-=======
-			pssAndersonFarmer.Vs_max, pssAndersonFarmer.Vs_min, pssAndersonFarmer.Tw);
->>>>>>> 19593ac88 (remove parameter dt from setParameters() of PSS)
 		genSP->addPSS(pssSP);
 	}
 
