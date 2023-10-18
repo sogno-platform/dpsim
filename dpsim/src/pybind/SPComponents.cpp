@@ -234,18 +234,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
   py::class_<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR,
              std::shared_ptr<CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>,
              CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>(
-      mSPPh1, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance())
-      .def("set_base_parameters",
-           &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::setBaseParameters,
-           "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
-      .def("set_initial_values",
-           &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::setInitialValues,
-           "init_complex_electrical_power"_a, "init_mechanical_power"_a,
-           "init_complex_terminal_voltage"_a)
-      .def("set_model_as_norton_source",
-           &CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR::
-               setModelAsNortonSource,
-           "model_as_norton_source"_a);
+      mSPPh1, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance());
 
   py::class_<CPS::SP::Ph1::SynchronGenerator3OrderVBR,
              std::shared_ptr<CPS::SP::Ph1::SynchronGenerator3OrderVBR>,
@@ -260,8 +249,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
                &CPS::SP::Ph1::SynchronGenerator3OrderVBR::
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
-           "Lq"_a, "L0"_a, "Ld_t"_a, "Td0_t"_a)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator3OrderVBR::connect);
+           "Lq"_a, "L0"_a, "Ld_t"_a, "Td0_t"_a);
 
   py::class_<CPS::SP::Ph1::SynchronGenerator4OrderVBR,
              std::shared_ptr<CPS::SP::Ph1::SynchronGenerator4OrderVBR>,
@@ -276,8 +264,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
                &CPS::SP::Ph1::SynchronGenerator4OrderVBR::
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
-           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator4OrderVBR::connect);
+           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a);
 
   py::class_<CPS::SP::Ph1::SynchronGenerator5OrderVBR,
              std::shared_ptr<CPS::SP::Ph1::SynchronGenerator5OrderVBR>,
@@ -294,8 +281,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
-           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator5OrderVBR::connect);
+           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a);
 
   py::class_<CPS::SP::Ph1::SynchronGenerator6aOrderVBR,
              std::shared_ptr<CPS::SP::Ph1::SynchronGenerator6aOrderVBR>,
@@ -312,8 +298,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
-           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator6aOrderVBR::connect);
+           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a);
 
   py::class_<CPS::SP::Ph1::SynchronGenerator6bOrderVBR,
              std::shared_ptr<CPS::SP::Ph1::SynchronGenerator6bOrderVBR>,
@@ -330,8 +315,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
-           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a = 0)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator6bOrderVBR::connect);
+           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a = 0);
 
   py::class_<CPS::SP::Ph1::AvVoltageSourceInverterDQ,
              std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>,
