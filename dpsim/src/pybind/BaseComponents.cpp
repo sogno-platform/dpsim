@@ -36,14 +36,16 @@ void addBaseComponents(py::module_ mBase) {
       .def("set_parameters", &CPS::Base::Exciter::setParameters,
            "parameters"_a);
   py::class_<CPS::Base::ExciterParameters,
-             std::shared_ptr<CPS::Base::ExciterParameters>>(
-      mBase, "ExciterParameters");
+             std::shared_ptr<CPS::Base::ExciterParameters>>(mBase,
+                                                            "ExciterParameters")
+      .def(py::init());
 
   py::class_<CPS::Base::PSS, std::shared_ptr<CPS::Base::PSS>>(
       mBase, "PSS", py::multiple_inheritance())
       .def("set_parameters", &CPS::Base::PSS::setParameters, "parameters"_a);
   py::class_<CPS::Base::PSSParameters,
-             std::shared_ptr<CPS::Base::PSSParameters>>(mBase, "PSSParameters");
+             std::shared_ptr<CPS::Base::PSSParameters>>(mBase, "PSSParameters")
+      .def(py::init());
 
   py::class_<CPS::Base::Governor, std::shared_ptr<CPS::Base::Governor>>(
       mBase, "Governor", py::multiple_inheritance())
@@ -51,15 +53,17 @@ void addBaseComponents(py::module_ mBase) {
            "parameters"_a);
   py::class_<CPS::Base::GovernorParameters,
              std::shared_ptr<CPS::Base::GovernorParameters>>(
-      mBase, "GovernorParameters");
+      mBase, "GovernorParameters")
+      .def(py::init());
 
   py::class_<CPS::Base::Turbine, std::shared_ptr<CPS::Base::Turbine>>(
       mBase, "Turbine", py::multiple_inheritance())
       .def("set_parameters", &CPS::Base::Turbine::setParameters,
            "parameters"_a);
   py::class_<CPS::Base::TurbineParameters,
-             std::shared_ptr<CPS::Base::TurbineParameters>>(
-      mBase, "TurbineParameters");
+             std::shared_ptr<CPS::Base::TurbineParameters>>(mBase,
+                                                            "TurbineParameters")
+      .def(py::init());
 
   py::class_<
       CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>,
