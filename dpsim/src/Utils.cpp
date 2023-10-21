@@ -327,15 +327,6 @@ void CommandLineArgs::showUsage() {
 	}
 
 	std::cout << std::endl;
-	showCopyright();
-}
-
-void CommandLineArgs::showCopyright() {
-	std::cout << "DPsim " << DPSIM_VERSION << "-" << DPSIM_RELEASE << std::endl;
-	std::cout << " Copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC" << std::endl;
-	std::cout << " Markus Mirz <MMirz@eonerc.rwth-aachen.de>" << std::endl;
-	std::cout << " Steffen Vogel <StVogel@eonerc.rwth-aachen.de>" << std::endl;
-	std::cout << " Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>" << std::endl;
 }
 
 std::list<fs::path> CommandLineArgs::positionalPaths() const {
