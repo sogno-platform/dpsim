@@ -30,6 +30,9 @@ The project is released under the terms of the [MPL 2.0](https://mozilla.org/MPL
 
 ## Contact
 
-- Markus Mirz <mmirz@eonerc.rwth-aachen.de>
-- Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
-- Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>
+[LF Energy Slack](https://slack.lfenergy.org/) - Chat with other users and developers and get help in the **#sogno** or **#sogno-dpsim** channel.
+
+You can also send a direct message to
+- Markus Mirz
+- Jan Dinkelbach
+- Steffen Vogel

@@ -86,7 +86,6 @@ public:
 
 	void parseArguments(int argc, char *argv[]);
 	void showUsage();
-	void showCopyright();
 
 	double timeStep;
 	double duration;
