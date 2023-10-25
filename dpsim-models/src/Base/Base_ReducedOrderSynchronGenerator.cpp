@@ -14,6 +14,20 @@ template <>
 Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: MNASimPowerComp<Real>(uid, name, true, true, logLevel),
+	mH(mAttributes->create<Real>("H", 0)),
+	mLd(mAttributes->create<Real>("Ld", 0)),
+	mLq(mAttributes->create<Real>("Lq", 0)),
+	mL0(mAttributes->create<Real>("L0", 0)),
+	mLd_t(mAttributes->create<Real>("Ld_t", 0)),
+	mLq_t(mAttributes->create<Real>("Lq_t", 0)),
+	mLd_s(mAttributes->create<Real>("Ld_s", 0)),
+	mLq_s(mAttributes->create<Real>("Lq_s", 0)),
+	mTd0_t(mAttributes->create<Real>("Td0_t", 0)),
+	mTq0_t(mAttributes->create<Real>("Tq0_t", 0)),
+	mTd0_s(mAttributes->create<Real>("Td0_s", 0)),
+	mTq0_s(mAttributes->create<Real>("Tq0_s", 0)),
+	mTaa(mAttributes->create<Real>("Taa", 0)),
+	mInitElecPower(mAttributes->create<Complex>("initElecPower")),
 	mVdq0(mAttributes->create<Matrix>("Vdq0")),
 	mIdq0(mAttributes->create<Matrix>("Idq0")),
 	mElecTorque(mAttributes->create<Real>("Te")),
@@ -38,6 +52,20 @@ template <>
 Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
 	String uid, String name, Logger::Level logLevel)
 	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
+	mH(mAttributes->create<Real>("H", 0)),
+	mLd(mAttributes->create<Real>("Ld", 0)),
+	mLq(mAttributes->create<Real>("Lq", 0)),
+	mL0(mAttributes->create<Real>("L0", 0)),
+	mLd_t(mAttributes->create<Real>("Ld_t", 0)),
+	mLq_t(mAttributes->create<Real>("Lq_t", 0)),
+	mLd_s(mAttributes->create<Real>("Ld_s", 0)),
+	mLq_s(mAttributes->create<Real>("Lq_s", 0)),
+	mTd0_t(mAttributes->create<Real>("Td0_t", 0)),
+	mTq0_t(mAttributes->create<Real>("Tq0_t", 0)),
+	mTd0_s(mAttributes->create<Real>("Td0_s", 0)),
+	mTq0_s(mAttributes->create<Real>("Tq0_s", 0)),
+	mTaa(mAttributes->create<Real>("Taa", 0)),
+	mInitElecPower(mAttributes->create<Complex>("initElecPower")),
 	mVdq(mAttributes->create<Matrix>("Vdq0")),
 	mIdq(mAttributes->create<Matrix>("Idq0")),
 	mElecTorque(mAttributes->create<Real>("Te")),
@@ -102,12 +130,12 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 
-	mLd = Ld;
-	mLq = Lq;
-	mL0 = L0;
-	mLd_t = Ld_t;
-	mTd0_t = Td0_t;
-	mH = H;
+	**mLd = Ld;
+	**mLq = Lq;
+	**mL0 = L0;
+	**mLd_t = Ld_t;
+	**mTd0_t = Td0_t;
+	**mH = H;
 
 	SPDLOG_LOGGER_INFO(this->mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
@@ -117,8 +145,8 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 			"inertia: {:e}\n"
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nTd0_t: {:e}\n",
-			mH, mLd, mLq, mL0,
-			mLd_t, mTd0_t);
+			**mH, **mLd, **mLq, **mL0,
+			**mLd_t, **mTd0_t);
 }
 
 template <typename VarType>
@@ -128,14 +156,14 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 
-	mLd = Ld;
-	mLq = Lq;
-	mL0 = L0;
-	mLd_t = Ld_t;
-	mLq_t = Lq_t;
-	mTd0_t = Td0_t;
-	mTq0_t = Tq0_t;
-	mH = H;
+	**mLd = Ld;
+	**mLq = Lq;
+	**mL0 = L0;
+	**mLd_t = Ld_t;
+	**mLq_t = Lq_t;
+	**mTd0_t = Td0_t;
+	**mTq0_t = Tq0_t;
+	**mH = H;
 
 	SPDLOG_LOGGER_INFO(this->mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
@@ -146,9 +174,9 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 			"Ld: {:e}\nLq: {:e}\nL0: {:e}\n"
 			"Ld_t: {:e}\nLq_t: {:e}\n"
 			"Td0_t: {:e}\nTq0_t: {:e}\n",
-			mH, mLd, mLq, mL0,
-			mLd_t, mLq_t,
-			mTd0_t, mTq0_t);
+			**mH, **mLd, **mLq, **mL0,
+			**mLd_t, **mLq_t,
+			**mTd0_t, **mTq0_t);
 }
 
 template <typename VarType>
@@ -160,19 +188,19 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 
-	mLd = Ld;
-	mLq = Lq;
-	mL0 = L0;
-	mLd_t = Ld_t;
-	mLq_t = Lq_t;
-	mLd_s = Ld_s;
-	mLq_s = Lq_s;
-	mTd0_t = Td0_t;
-	mTq0_t = Tq0_t;
-	mTd0_s = Td0_s;
-	mTq0_s = Tq0_s;
-	mTaa = Taa;
-	mH = H;
+	**mLd = Ld;
+	**mLq = Lq;
+	**mL0 = L0;
+	**mLd_t = Ld_t;
+	**mLq_t = Lq_t;
+	**mLd_s = Ld_s;
+	**mLq_s = Lq_s;
+	**mTd0_t = Td0_t;
+	**mTq0_t = Tq0_t;
+	**mTd0_s = Td0_s;
+	**mTq0_s = Tq0_s;
+	**mTaa = Taa;
+	**mH = H;
 
 	SPDLOG_LOGGER_INFO(this->mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n",
@@ -186,18 +214,18 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setOperationalParametersPerUn
 			"Ld_s: {:e}\nLq_s: {:e}\n"
 			"Td0_s: {:e}\nTq0_s: {:e}\n"
 			"Taa: {:e}\n",
-			mH, mLd, mLq, mL0,
-			mLd_t, mLq_t,
-			mTd0_t, mTq0_t,
-			mLd_s, mLq_s,
-			mTd0_s, mTq0_s,
-			mTaa);
+			**mH, **mLd, **mLq, **mL0,
+			**mLd_t, **mLq_t,
+			**mTd0_t, **mTq0_t,
+			**mLd_s, **mLq_s,
+			**mTd0_s, **mTq0_s,
+			**mTaa);
 }
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::scaleInertiaConstant(Real scalingFactor) {
-	mH = mH * scalingFactor;
-	SPDLOG_LOGGER_INFO(this->mSLog, "Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, mH);
+	**mH = **mH * scalingFactor;
+	SPDLOG_LOGGER_INFO(this->mSLog, "Scaling inertia with factor {:e}:\n resulting inertia: {:e}\n", scalingFactor, **mH);
 }
 
 template <typename VarType>
@@ -205,62 +233,62 @@ void Base::ReducedOrderSynchronGenerator<VarType>::calculateVBRconstants() {
 
 	Real Tf = 0;
 	if (mSGOrder == SGOrder::SG5Order) {
-		mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);
+		mYd = (**mTd0_s / **mTd0_t) * (**mLd_s / **mLd_t) * (**mLd - **mLd_t);
 		mYq = 0.0;
-		Tf = mTaa / mTd0_t;
+		Tf = **mTaa / **mTd0_t;
 	}
 	else if (mSGOrder == SGOrder::SG6aOrder) {
-		mYd = (mTd0_s / mTd0_t) * (mLd_s / mLd_t) * (mLd - mLd_t);
-		mYq = (mTq0_s / mTq0_t) * (mLq_s / mLq_t) * (mLq - mLq_t);
-		Tf = mTaa / mTd0_t;
+		mYd = (**mTd0_s / **mTd0_t) * (**mLd_s / **mLd_t) * (**mLd - **mLd_t);
+		mYq = (**mTq0_s / **mTq0_t) * (**mLq_s / **mLq_t) * (**mLq - **mLq_t);
+		Tf = **mTaa / **mTd0_t;
 	} else {
 		mYd = 0;
 		mYq = 0;
 	}
 
-	Real Zq_t = mLd - mLd_t - mYd;
-	Real Zd_t = mLq - mLq_t - mYq;
-	Real Zq_s = mLd_t - mLd_s + mYd;
-	Real Zd_s = mLq_t - mLq_s + mYq;
+	Real Zq_t = **mLd - **mLd_t - mYd;
+	Real Zd_t = **mLq - **mLq_t - mYq;
+	Real Zq_s = **mLd_t - **mLd_s + mYd;
+	Real Zd_s = **mLq_t - **mLq_s + mYq;
 
-	mAd_t = mTimeStep * Zd_t / (2 * mTq0_t + mTimeStep);
-	mBd_t = (2 * mTq0_t - mTimeStep) / (2 * mTq0_t + mTimeStep);
-	mAq_t = - mTimeStep * Zq_t / (2 * mTd0_t + mTimeStep);
-	mBq_t = (2 * mTd0_t - mTimeStep) / (2 * mTd0_t + mTimeStep);
-	mDq_t = mTimeStep * (1 - Tf) / (2 * mTd0_t + mTimeStep);
+	mAd_t = mTimeStep * Zd_t / (2 * **mTq0_t + mTimeStep);
+	mBd_t = (2 * **mTq0_t - mTimeStep) / (2 * **mTq0_t + mTimeStep);
+	mAq_t = - mTimeStep * Zq_t / (2 * **mTd0_t + mTimeStep);
+	mBq_t = (2 * **mTd0_t - mTimeStep) / (2 * **mTd0_t + mTimeStep);
+	mDq_t = mTimeStep * (1 - Tf) / (2 * **mTd0_t + mTimeStep);
 
 	if (mSGOrder == SGOrder::SG5Order) {
-		mAd_s = (mTimeStep * (mLq - mLq_s)) / (2 * mTq0_s + mTimeStep);
-		mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
-		mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);
-		mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);
-		mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
-		mDq_s = (mTimeStep * mDq_t + Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);
+		mAd_s = (mTimeStep * (**mLq - **mLq_s)) / (2 * **mTq0_s + mTimeStep);
+		mCd_s = (2 * **mTq0_s - mTimeStep) / (2 * **mTq0_s + mTimeStep);
+		mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * **mTd0_s + mTimeStep);
+		mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * **mTd0_s + mTimeStep);
+		mCq_s = (2 * **mTd0_s - mTimeStep) / (2 * **mTd0_s + mTimeStep);
+		mDq_s = (mTimeStep * mDq_t + Tf * mTimeStep) / (2 * **mTd0_s + mTimeStep);
 	}
 	else if (mSGOrder == SGOrder::SG6aOrder || mSGOrder == SGOrder::SG6bOrder) {
-		mAd_s = (mTimeStep * Zd_s + mTimeStep * mAd_t) / (2 * mTq0_s + mTimeStep);
-		mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * mTq0_s + mTimeStep);
-		mCd_s = (2 * mTq0_s - mTimeStep) / (2 * mTq0_s + mTimeStep);
-		mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * mTd0_s + mTimeStep);
-		mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * mTd0_s + mTimeStep);
-		mCq_s = (2 * mTd0_s - mTimeStep) / (2 * mTd0_s + mTimeStep);
-		mDq_s = (mTimeStep * mDq_t + Tf * mTimeStep) / (2 * mTd0_s + mTimeStep);
+		mAd_s = (mTimeStep * Zd_s + mTimeStep * mAd_t) / (2 * **mTq0_s + mTimeStep);
+		mBd_s = (mTimeStep * mBd_t + mTimeStep) / (2 * **mTq0_s + mTimeStep);
+		mCd_s = (2 * **mTq0_s - mTimeStep) / (2 * **mTq0_s + mTimeStep);
+		mAq_s = (-mTimeStep * Zq_s + mTimeStep * mAq_t ) / (2 * **mTd0_s + mTimeStep);
+		mBq_s = (mTimeStep * mBq_t + mTimeStep) / (2 * **mTd0_s + mTimeStep);
+		mCq_s = (2 * **mTd0_s - mTimeStep) / (2 * **mTd0_s + mTimeStep);
+		mDq_s = (mTimeStep * mDq_t + Tf * mTimeStep) / (2 * **mTd0_s + mTimeStep);
 	}
 }
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::calculateResistanceMatrixConstants() {
 	if (mSGOrder == SGOrder::SG3Order) {
-		mA = -mLq;
-		mB = mLd_t - mAq_t;
+		mA = -**mLq;
+		mB = **mLd_t - mAq_t;
 	}
 	if (mSGOrder == SGOrder::SG4Order) {
-		mA = -mAd_t - mLq_t;
-		mB = mLd_t - mAq_t;
+		mA = -mAd_t - **mLq_t;
+		mB = **mLd_t - mAq_t;
 	}
 	if (mSGOrder == SGOrder::SG5Order || mSGOrder == SGOrder::SG6aOrder || mSGOrder == SGOrder::SG6bOrder) {
-		mA = -mLq_s - mAd_s;
-		mB = mLd_s - mAq_s;
+		mA = -**mLq_s - mAd_s;
+		mB = **mLd_s - mAq_s;
 	}
 }
 
@@ -268,13 +296,13 @@ template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 	Complex initComplexElectricalPower, Real initMechanicalPower, Complex initTerminalVoltage) {
 
-	mInitElecPower = initComplexElectricalPower;
+	**mInitElecPower = initComplexElectricalPower;
 	mInitMechPower = initMechanicalPower;
 
 	mInitVoltage = initTerminalVoltage;
 	mInitVoltageAngle = Math::phase(mInitVoltage);
 
-	mInitCurrent = std::conj(mInitElecPower / mInitVoltage);
+	mInitCurrent = std::conj(**mInitElecPower / mInitVoltage);
 	mInitCurrentAngle = Math::phase(mInitCurrent);
 
 	mInitVoltage = mInitVoltage / mBase_V_RMS;
@@ -291,8 +319,8 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 		"\nInitial current magnitude: {:} p.u."
 		"\nInitial current phase: {:} rad = ({:}°)"
 		"\n--- Set initial values finished ---\n",
-		mInitElecPower.real(), mInitElecPower.real() / mNomPower,
-		mInitElecPower.imag(), mInitElecPower.imag() / mNomPower,
+		**mInitElecPower.real(), **mInitElecPower.real() / mNomPower,
+		**mInitElecPower.imag(), **mInitElecPower.imag() / mNomPower,
 		Math::abs(mInitVoltage),
 		Math::phase(mInitVoltage), Math::phaseDeg(mInitVoltage),
 		Math::abs(mInitCurrent),
@@ -314,7 +342,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	mMechTorque_prev = **mMechTorque;
 
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
-	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
+	Complex Eq0 = mInitVoltage + Complex(0, **mLq) * mInitCurrent;
 
 	// Load angle
 	**mDelta = Math::phase(Eq0);
@@ -328,7 +356,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 	(**mVdq0)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta - mInitVoltageAngle);
 
 	// calculate Ef
-	**mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq0)(0,0);
+	**mEf = Math::abs(Eq0) + (**mLd - **mLq) * (**mIdq0)(0,0);
 	mEf_prev = **mEf;
 
 	// initial electrical torque
@@ -412,7 +440,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	mMechTorque_prev = **mMechTorque;
 
 	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
-	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
+	Complex Eq0 = mInitVoltage + Complex(0, **mLq) * mInitCurrent;
 
 	// Load angle
 	**mDelta = Math::phase(Eq0);
@@ -426,7 +454,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	(**mVdq)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta - mInitVoltageAngle);
 
 	// calculate Ef
-	**mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq)(0,0);
+	**mEf = Math::abs(Eq0) + (**mLd - **mLq) * (**mIdq)(0,0);
 	mEf_prev = **mEf;
 
 	// initial electrical torque
@@ -522,7 +550,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int
 	
 	// calculate mechanical variables at t=k+1 with forward euler
 	**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
-	**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+	**mOmMech = **mOmMech + mTimeStep * (1. / (2. * **mH) * (mMechTorque_prev - **mElecTorque));
 	**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 	**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 
@@ -555,7 +583,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int ti
 
 	// calculate mechanical variables at t=k+1 with forward euler
 	**mElecTorque = ((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0));
-	**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+	**mOmMech = **mOmMech + mTimeStep * (1. / (2. * **mH) * (mMechTorque_prev - **mElecTorque));
 	**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
 	**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 

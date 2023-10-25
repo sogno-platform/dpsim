@@ -32,8 +32,8 @@ SP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
 void SP::Ph1::SynchronGenerator4OrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
-	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
-	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
+	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * **mLq_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * **mLd_t;
 
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Model specific initialization  ---"
@@ -52,8 +52,8 @@ void SP::Ph1::SynchronGenerator4OrderVBR::stepInPerUnit() {
 
 	if (mSimTime>0.0) {
 		// calculate Edq_t at t=k
-		(**mEdq_t)(0,0) = -(**mIdq)(1,0) * mLq_t + (**mVdq)(0,0);
-		(**mEdq_t)(1,0) = (**mIdq)(0,0) * mLd_t + (**mVdq)(1,0);
+		(**mEdq_t)(0,0) = -(**mIdq)(1,0) * **mLq_t + (**mVdq)(0,0);
+		(**mEdq_t)(1,0) = (**mIdq)(0,0) * **mLd_t + (**mVdq)(1,0);
 	}
 
 	// get transformation matrix

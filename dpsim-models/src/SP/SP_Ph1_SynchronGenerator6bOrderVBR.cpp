@@ -34,12 +34,12 @@ SP::Ph1::SynchronGenerator6bOrderVBR::SynchronGenerator6bOrderVBR
 void SP::Ph1::SynchronGenerator6bOrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
-	(**mEdq_t)(0,0) = (mLq - mLq_t) * (**mIdq)(1,0);
-	(**mEdq_t)(1,0) = **mEf - (mLd - mLd_t) * (**mIdq)(0,0);
+	(**mEdq_t)(0,0) = (**mLq - **mLq_t) * (**mIdq)(1,0);
+	(**mEdq_t)(1,0) = **mEf - (**mLd - **mLd_t) * (**mIdq)(0,0);
 
 	// initial dq behind the subtransient reactance in the dq reference frame
-	(**mEdq_s)(0,0) = (**mVdq)(0,0) - mLq_s * (**mIdq)(1,0);
-	(**mEdq_s)(1,0) = (**mVdq)(1,0) + mLd_s * (**mIdq)(0,0);
+	(**mEdq_s)(0,0) = (**mVdq)(0,0) - **mLq_s * (**mIdq)(1,0);
+	(**mEdq_s)(1,0) = (**mVdq)(1,0) + **mLd_s * (**mIdq)(0,0);
 
 	// initialize history term behind the transient reactance
 	mEh_t(0,0) = mAd_t * (**mIdq)(1,0) + mBd_t * (**mEdq_t)(0,0);
@@ -69,8 +69,8 @@ void SP::Ph1::SynchronGenerator6bOrderVBR::stepInPerUnit() {
 	(**mEdq_t)(1,0) = mAq_t * (**mIdq)(0,0) + mEh_t(1,0);
 
 	// calculate Edq_s at t=k
-	(**mEdq_s)(0,0) = -(**mIdq)(1,0) * mLq_s + (**mVdq)(0,0);
-	(**mEdq_s)(1,0) = (**mIdq)(0,0) * mLd_s + (**mVdq)(1,0);
+	(**mEdq_s)(0,0) = -(**mIdq)(1,0) * **mLq_s + (**mVdq)(0,0);
+	(**mEdq_s)(1,0) = (**mIdq)(0,0) * **mLd_s + (**mVdq)(1,0);
 
 	mDqToComplexA = get_DqToComplexATransformMatrix();
 	mComplexAToDq = mDqToComplexA.transpose();
