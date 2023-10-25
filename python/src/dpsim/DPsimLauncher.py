@@ -16,7 +16,7 @@ TIME_STEP_PF = 0.1
 FINAL_TIME_PF = 0.1
 
 class DPsimLauncher:
-    def __init__(self, file_path = '/home/mmo-cya/dpsim/python/src/dpsim/Config_network.json'):
+    def __init__(self, file_path):
         # data contained in the json file
         self.data = {}
         # cimpy topology
@@ -120,13 +120,13 @@ class DPsimLauncher:
         # get syn gen model to use in dynamic simulation
         # TODO: ADD MORE SYNGEN MODELS
         if "SGModel" in self.data["SimulationParameters"].keys():
-            if self.data["SimulationParameters"] == "3Order":
+            if self.data["SimulationParameters"]["SGModel"] == "3Order":
                 self.syn_gen_model = SGModels.VBR_3Order
-            elif self.data["SimulationParameters"] == "4Order":
+            elif self.data["SimulationParameters"]["SGModel"] == "4Order":
                 self.syn_gen_model = SGModels.VBR_4Order
-            elif self.data["SimulationParameters"] == "5Order":
+            elif self.data["SimulationParameters"]["SGModel"] == "5Order":
                 self.syn_gen_model = SGModels.VBR_5Order
-            elif self.data["SimulationParameters"] == "6Order":
+            elif self.data["SimulationParameters"]["SGModel"] == "6Order":
                 self.syn_gen_model = SGModels.VBR_6Order
             else:
                 # TODO: WARN MESSAGE

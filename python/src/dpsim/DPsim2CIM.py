@@ -1,9 +1,9 @@
 from enum import Enum
 import numpy as np
 import logging
-from cimpy import utils
+from cimpy import cimedit
 import sys
-sys.path.insert(0,'/home/mmo-cya/dpsim/build')
+sys.path.insert(0,'/home/mmo/git/Can/dpsim/build')
 import dpsimpy
 
 # configure logging
@@ -81,7 +81,7 @@ def DPsimToCIMpy(DPsim_system_PF, DPsim_simulation, DPsim_system_dyn=None, frequ
         angle = np.angle(DPsim_simulation.get_idobj_attr(node.name(), 'v').get()[0])
         baseVoltage = unitValue(get_node_base_voltage(DPsim_system_PF, node), Multiplier.m)
         uid = DPsim_simulation.get_idobj_attr(node.name(), 'uid').get()             
-        cim_topology = utils.add_TopologicalNode(cim_topology=cim_topology, version="cgmes_v2_4_15", 
+        cim_topology = cimedit.add_TopologicalNode(cim_topology=cim_topology, version="cgmes_v2_4_15", 
                                                  name=node.name(), mRID=uid, baseVoltage=baseVoltage, v=v, angle=angle)
         logging.debug('Added TopologicalNode: \n\tname={}\n\tbaseVoltage={}[kV]\n\tv={}\n\tangle={}[rad]"'.format(node.name(), baseVoltage, v, angle))
 
@@ -96,7 +96,7 @@ def DPsimToCIMpy(DPsim_system_PF, DPsim_simulation, DPsim_system_dyn=None, frequ
             
             # determine the connected Nodes
             node_list =  node_of_comp(DPsim_system_PF, comp.name())
-            cim_topology = utils.add_ACLineSegment(cim_topology=cim_topology, version="cgmes_v2_4_15", name=comp.name(), 
+            cim_topology = cimedit.add_ACLineSegment(cim_topology=cim_topology, version="cgmes_v2_4_15", name=comp.name(), 
                                                    node1_name=node_list[0].name(), node2_name=node_list[1].name(), r=r, 
                                                    x=x, bch=bch, gch=gch, baseVoltage=baseVoltage)        
                 
@@ -110,7 +110,7 @@ def DPsimToCIMpy(DPsim_system_PF, DPsim_simulation, DPsim_system_dyn=None, frequ
             
             #determine the connected Node
             node = node_of_comp(DPsim_system_PF, comp.name())
-            cim_topology = utils.add_EnergyConsumer(cim_topology=cim_topology, version="cgmes_v2_4_15", name=comp.name(), 
+            cim_topology = cimedit.add_EnergyConsumer(cim_topology=cim_topology, version="cgmes_v2_4_15", name=comp.name(), 
                              node_name=node[0].name(), p_nom=p, q_nom=q, p_init=p, q_init=q, baseVoltage=Vnom)
             logging.debug('Added Load: \n\tname={}, \n\tp={}[MW], \n\tq={}[MVAr], \n\tbaseVoltage={}[kV], \n\tnode name={}'.format(
                             comp.name, p, q, Vnom, node[0].name))
@@ -137,7 +137,7 @@ def DPsimToCIMpy(DPsim_system_PF, DPsim_simulation, DPsim_system_dyn=None, frequ
                 mNominalVoltageEnd2 = unitValue(base_voltage_n1, Multiplier.m)
                 mNominalVoltageEnd1 = unitValue(base_voltage_n2, Multiplier.m)
                 
-            cim_topology = utils.add_PowerTransfomer(cim_topology=cim_topology, version="cgmes_v2_4_15", name=comp.name(),
+            cim_topology = cimedit.add_PowerTransfomer(cim_topology=cim_topology, version="cgmes_v2_4_15", name=comp.name(),
                                                 node1_name=node1_name, node2_name=node2_name, 
                                                 r=r, x=x, nominal_voltage_end1=mNominalVoltageEnd1, nominal_voltage_end2=mNominalVoltageEnd2)
             logging.debug('Added Transformer: \n\tname={}, \n\tr={}[Ohm], \n\tx={}[Ohm], \n\tbaseVoltage={}[kV], \n\tnode1 name={}, \n\tnode2 name={}'.format(
@@ -156,7 +156,7 @@ def DPsimToCIMpy(DPsim_system_PF, DPsim_simulation, DPsim_system_dyn=None, frequ
             node = node_of_comp(DPsim_system_PF, comp.name())
             
             # Add Synchronous Machine to the network
-            cim_topology = utils.add_SynchronousMachine(cim_topology=cim_topology, version="cgmes_v2_4_15", name=comp.name(), node_name=node[0].name(), 
+            cim_topology = cimedit.add_SynchronousMachine(cim_topology=cim_topology, version="cgmes_v2_4_15", name=comp.name(), node_name=node[0].name(), 
                                                         ratedS=ratedS, ratedU=ratedU, p=p, q=q, targetValue=targetValue, initialP=initialP)
             logging.debug('Added SynchronGenerator: \n\tname={}, \n\tp={}[MW], \n\tq={}[MVAr], \n\tratedU={}[kV], \n\tratedS={}[MVA], \n\ttargetValue={}, \n\tinitial={}, \n\tnode name={}'.format(
                     comp.name(), p, q, ratedU, ratedS, targetValue, initialP, node[0].name()))
@@ -186,7 +186,7 @@ def DPsimToCIMpy(DPsim_system_PF, DPsim_simulation, DPsim_system_dyn=None, frequ
                             sg_mRID=cim_comp_mRID
                     
                 # Extend SynchronousMachine with dynamic Parameters
-                cim_topology = utils.extend_SynchronousMachineTimeConstantReactance(cim_topology=cim_topology, version="cgmes_v2_4_15", SynchronousMachine_mRID=sg_mRID, 
+                cim_topology = cimedit.extend_SynchronousMachineTimeConstantReactance(cim_topology=cim_topology, version="cgmes_v2_4_15", SynchronousMachine_mRID=sg_mRID, 
                                                                                 damping=0, inertia=inertia, statorResistance=statorResistance, statorLeakageReactance=statorLeakageReactance, 
                                                                                 tpdo=tpdo, tpqo=tpqo, tppdo=tppdo, tppqo=tppqo, xDirectSubtrans=xDirectSubtrans, xDirectSync=xDirectSync, 
                                                                                 xDirectTrans=xDirectTrans, xQuadSubtrans=xQuadSubtrans, xQuadSync=xQuadSync, xQuadTrans=xQuadTrans)
@@ -196,7 +196,7 @@ def DPsimToCIMpy(DPsim_system_PF, DPsim_simulation, DPsim_system_dyn=None, frequ
         elif "NetworkInjection" in str(type(comp)):
             # determine the connected Node
             Node_name = node_of_comp(DPsim_system, comp.uid)
-            cim_topology = utils.add_external_network_injection(cim_topology, "cgmes_v2_4_15", Node_name, 1)
+            cim_topology = cimedit.add_external_network_injection(cim_topology, "cgmes_v2_4_15", Node_name, 1)
         """
         
     return cim_topology
