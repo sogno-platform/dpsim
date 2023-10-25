@@ -15,7 +15,7 @@
 		"SimulationName": "IEEE14_JSON",
 		"LogLevel": "info",
 		"StartTime": 0,
-		"EndTime" : 100,
+		"EndTime" : 5,
 		"TimeSteps": [0.0001], 
 		"InitFromPF": true,
 		"InitFromNodesAndTerminals": true,
@@ -26,7 +26,7 @@
 	"Events": {
 		"EventType": "LoadStep",
 		"EventStartTime": 1,
-		"EventEndTime": 5,
+		"EventEndTime": 2,
 		"EventParameters": {
 			"AdditionalActivePower": 50,
 			"AdditionalReactivePower": 0.0,
