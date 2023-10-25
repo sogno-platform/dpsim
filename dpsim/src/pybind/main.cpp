@@ -201,6 +201,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def(py::init<CPS::Real>())
 		.def("add", &DPsim::SystemTopology::addComponent)
 		.def("add", &DPsim::SystemTopology::addComponents)
+		.def("add_node", &DPsim::SystemTopology::addNode)
+		.def("add_nodes", &DPsim::SystemTopology::addNodes)
 		.def("node", py::overload_cast<std::string_view>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
 		.def("node", py::overload_cast<CPS::UInt>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
 		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Real>::Ptr, CPS::SimNode<CPS::Real>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Real>))
@@ -216,8 +218,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def_readwrite("components_at_node", &DPsim::SystemTopology::mComponentsAtNode)
 		.def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
 		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
-		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow, "systemPF"_a, "domain"_a=CPS::Domain::DP)
-		.def_readonly("components_at_node", &DPsim::SystemTopology::mComponentsAtNode);
+		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow, "systemPF"_a, "domain"_a=CPS::Domain::DP);
 
 	py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m, "Interface");
 
@@ -278,8 +279,10 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_power", py::overload_cast<CPS::Complex>(&CPS::TopologicalTerminal::setPower))
 		.def("set_power", py::overload_cast<CPS::MatrixComp>(&CPS::TopologicalTerminal::setPower));
 
-	py::class_<CPS::SimTerminal<CPS::Complex>, std::shared_ptr<CPS::SimTerminal<CPS::Complex>>, CPS::TopologicalTerminal>(m, "SimTerminalComplex");
-	py::class_<CPS::SimTerminal<CPS::Real>, std::shared_ptr<CPS::SimTerminal<CPS::Real>>, CPS::TopologicalTerminal>(m, "SimTerminalReal");
+	py::class_<CPS::SimTerminal<CPS::Complex>, std::shared_ptr<CPS::SimTerminal<CPS::Complex>>, CPS::TopologicalTerminal>(m, "SimTerminalComplex")
+		.def("node", &CPS::SimTerminal<CPS::Complex>::node);
+	py::class_<CPS::SimTerminal<CPS::Real>, std::shared_ptr<CPS::SimTerminal<CPS::Real>>, CPS::TopologicalTerminal>(m, "SimTerminalReal")
+		.def("node", &CPS::SimTerminal<CPS::Real>::node);
 
 
 	//Events

@@ -87,22 +87,26 @@ void addDPPh1Components(py::module_ mDPPh1) {
 
 	py::class_<CPS::DP::Ph1::NetworkInjection, std::shared_ptr<CPS::DP::Ph1::NetworkInjection>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "NetworkInjection", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters", py::overload_cast<CPS::Complex, CPS::Real>(&CPS::DP::Ph1::NetworkInjection::setParameters), "V_ref"_a, "f_src"_a = 0)
 		.def("connect", &CPS::DP::Ph1::NetworkInjection::connect);
 
 	py::class_<CPS::DP::Ph1::PiLine, std::shared_ptr<CPS::DP::Ph1::PiLine>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "PiLine", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("set_parameters", &CPS::DP::Ph1::PiLine::setParameters, "series_resistance"_a, "series_inductance"_a, "parallel_capacitance"_a=0, "parallel_conductance"_a=0)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+        .def("set_parameters", &CPS::DP::Ph1::PiLine::setParameters, "R"_a, "L"_a, "C"_a=0, "G"_a=0)
 		.def("connect", &CPS::DP::Ph1::PiLine::connect);
 
 	py::class_<CPS::DP::Ph1::RXLoad, std::shared_ptr<CPS::DP::Ph1::RXLoad>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "RXLoad", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_power", py::overload_cast<CPS::Real, CPS::Real>(&CPS::DP::Ph1::RXLoad::setParameters), "active_power"_a, "reactive_power"_a)
         .def("set_parameters", py::overload_cast<CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::RXLoad::setParameters), "active_power"_a, "reactive_power"_a, "volt"_a)
 		.def("connect", &CPS::DP::Ph1::RXLoad::connect);
 
 	py::class_<CPS::DP::Ph1::Switch, std::shared_ptr<CPS::DP::Ph1::Switch>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(mDPPh1, "Switch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
         .def("set_parameters", &CPS::DP::Ph1::Switch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false) // cppcheck-suppress assignBoolToPointer
 		.def("open", &CPS::DP::Ph1::Switch::open)
 		.def("close", &CPS::DP::Ph1::Switch::close)
@@ -134,35 +138,43 @@ void addDPPh1Components(py::module_ mDPPh1) {
 
 	py::class_<CPS::DP::Ph1::SynchronGenerator3OrderVBR, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator3OrderVBR>, CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>(mDPPh1, "SynchronGenerator3OrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::SynchronGenerator3OrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Td0_t"_a);
 		
 	py::class_<CPS::DP::Ph1::SynchronGenerator4OrderVBR, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator4OrderVBR>, CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>(mDPPh1, "SynchronGenerator4OrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::SynchronGenerator4OrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a);
 
 	py::class_<CPS::DP::Ph1::SynchronGenerator5OrderVBR, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator5OrderVBR>, CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>(mDPPh1, "SynchronGenerator5OrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::SynchronGenerator5OrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a, "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a);
 
 	py::class_<CPS::DP::Ph1::SynchronGenerator6aOrderVBR, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator6aOrderVBR>, CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>(mDPPh1, "SynchronGenerator6aOrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::SynchronGenerator6aOrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a, "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a);
 
 	py::class_<CPS::DP::Ph1::SynchronGenerator6bOrderVBR, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator6bOrderVBR>, CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>(mDPPh1, "SynchronGenerator6bOrderVBR", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a, "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a=0);
 
 	py::class_<CPS::DP::Ph1::SynchronGenerator4OrderTPM, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator4OrderTPM>, CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>, CPS::MNASyncGenInterface>(mDPPh1, "SynchronGenerator4OrderTPM", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::SynchronGenerator4OrderTPM::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a);
 
 	py::class_<CPS::DP::Ph1::SynchronGenerator4OrderPCM, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator4OrderPCM>, CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>, CPS::MNASyncGenInterface>(mDPPh1, "SynchronGenerator4OrderPCM", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::SynchronGenerator4OrderPCM::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
 		.def("connect", &CPS::DP::Ph1::SynchronGenerator4OrderPCM::connect);
 
 	py::class_<CPS::DP::Ph1::SynchronGenerator6OrderPCM, std::shared_ptr<CPS::DP::Ph1::SynchronGenerator6OrderPCM>, CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>, CPS::MNASyncGenInterface>(mDPPh1, "SynchronGenerator6OrderPCM", py::multiple_inheritance())
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::SynchronGenerator6OrderPCM::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a, "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a=0)
 		.def("connect", &CPS::DP::Ph1::SynchronGenerator6OrderPCM::connect);
 
