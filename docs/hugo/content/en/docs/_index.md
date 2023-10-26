@@ -40,6 +40,7 @@ If you want to get more involved by contributing to DPsim, please send us a Pull
 If you are using DPsim for your research, please cite one of the following papers in your publications:
 
 - M. Mirz, S. Vogel, G. Reinke, A. Monti, "[**DPsim — A dynamic phasor real-time simulator for power systems**](https://www.sciencedirect.com/science/article/pii/S2352711018302760)," _SoftwareX_, Volume 10, July–December 2019, 100253.
+- J. Dinkelbach, M. Moraga, and A. Monti, “[Reduced-Order Synchronous Generator Modelling for Real-Time Simulation using Shifted Frequency Analysis](https://ieeexplore.ieee.org/document/10089718),” in _2023 Open Source Modelling and Simulation of Energy Systems (OSMSES)_, 2023.
 - J. Dinkelbach, L. Razik, M. Mirz, A. Benigni, and A. Monti, “[Template-based generation of programming language specific code for smart grid modelling compliant with CIM and CGMES](https://onlinelibrary.wiley.com/doi/abs/10.1049/tje2.12208),” _The Journal of Engineering_, 2022.
 - G. Nakti, J. Dinkelbach, M. Mirz, and A. Monti, “[Comparative Assessment of Shifted Frequency Modeling in Transient Stability Analysis using the Open Source Simulator DPsim](https://ieeexplore.ieee.org/document/9769135),” in _2022 Open Source Modelling and Simulation of Energy Systems (OSMSES)_, 2022.
 - J. Dinkelbach, L. Schumacher, L. Razik, A. Benigni, and A. Monti, “[Factorisation Path Based Refactorisation for High-Performance LU Decomposition in Real-Time Power System Simulation](https://www.mdpi.com/1996-1073/14/23/7989),” _Energies_, 2021.
