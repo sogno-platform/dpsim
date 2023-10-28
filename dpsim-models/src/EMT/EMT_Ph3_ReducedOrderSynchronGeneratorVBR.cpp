@@ -32,7 +32,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::initializeResistanceMatrix() {
 	mResistanceMatrixDq0 = MatrixFixedSize<3, 3>::Zero(3,3);
 	mResistanceMatrixDq0 <<	0.0,	mA,		0.0,
 							mB,		0.0,	0.0,
-					  		0.0,	0.0,	mL0;
+					  		0.0,	0.0,	**mL0;
 
 	// initialize conductance matrix
 	mConductanceMatrix = MatrixFixedSize<3, 3>::Zero(3,3);

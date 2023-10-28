@@ -27,6 +27,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_RXLoadSwitch.cpp
 	DP/DP_Ph1_PQLoadCS.cpp
 	DP/DP_Ph1_Resistor.cpp
+	DP/DP_Ph1_ResIndSeries.cpp
 	DP/DP_Ph1_Transformer.cpp
 	DP/DP_Ph1_VoltageSource.cpp
 	DP/DP_Ph1_VoltageSourceRamp.cpp
@@ -77,6 +78,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp
 	EMT/EMT_Ph3_Resistor.cpp
 	EMT/EMT_Ph3_SeriesResistor.cpp
+	EMT/EMT_Ph3_ResIndSeries.cpp
 	EMT/EMT_Ph3_SeriesSwitch.cpp
 	EMT/EMT_Ph3_VoltageSourceNorton.cpp
 	EMT/EMT_Ph3_PiLine.cpp
@@ -105,6 +107,7 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph1_Capacitor.cpp
 	SP/SP_Ph1_Inductor.cpp
 	SP/SP_Ph1_Resistor.cpp
+	SP/SP_Ph1_ResIndSeries.cpp
 	SP/SP_Ph1_AvVoltageSourceInverterDQ.cpp
 	SP/SP_Ph1_RXLine.cpp
 	SP/SP_Ph1_VoltageSourceInverter.cpp
@@ -135,7 +138,10 @@ list(APPEND MODELS_SOURCES
 
 	Signal/DecouplingLine.cpp
 	Signal/DecouplingLineEMT.cpp
-	Signal/Exciter.cpp
+	Signal/ExciterDC1.cpp
+	Signal/ExciterDC1Simp.cpp
+	Signal/ExciterST1Simp.cpp
+	Signal/PSS1A.cpp
 	Signal/FIRFilter.cpp
 	Signal/TurbineGovernor.cpp
 	Signal/TurbineGovernorType1.cpp
@@ -146,7 +152,10 @@ list(APPEND MODELS_SOURCES
 	Signal/SignalGenerator.cpp
 	Signal/FrequencyRampGenerator.cpp
 	Signal/CosineFMGenerator.cpp
-)
+	Signal/SteamTurbine.cpp
+	Signal/SteamTurbineGovernor.cpp
+	Signal/HydroTurbine.cpp
+	Signal/HydroTurbineGovernor.cpp)
 
 if(WITH_CIM)
 	list(APPEND MODELS_SOURCES CIM/Reader.cpp)

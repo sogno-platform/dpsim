@@ -29,26 +29,15 @@ void EMT::Ph3::SynchronGeneratorVBR::initialize(Matrix frequencies) {
 	SimPowerComp<Real>::initialize(frequencies);
 }
 
-Matrix& EMT::Ph3::SynchronGeneratorVBR::dqStatorCurrents() { return mDqStatorCurrents; }
-
-Real EMT::Ph3::SynchronGeneratorVBR::electricalTorque() const { return **mElecTorque * mBase_T; }
-
-Real EMT::Ph3::SynchronGeneratorVBR::rotationalSpeed() const { return **mOmMech * mBase_OmMech; }
-
-Real EMT::Ph3::SynchronGeneratorVBR::rotorPosition() const { return mThetaMech; }
-
-Matrix& EMT::Ph3::SynchronGeneratorVBR::statorCurrents() { return mIabc; }
-
-Bool EMT::Ph3::SynchronGeneratorVBR::hasParameterChanged() { return true; }
-
 void EMT::Ph3::SynchronGeneratorVBR::setBaseAndOperationalPerUnitParameters(
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ld, Real Lq, Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
 	Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s, Real inertia) {
 
-	Base::SynchronGenerator::setBaseAndOperationalPerUnitParameters(nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
-	 																Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s,
-	 																Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, inertia);
+	Base::SynchronGenerator::setBaseAndOperationalPerUnitParameters(
+		nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
+	 	Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s,
+	 	Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, inertia);
 
 	SPDLOG_LOGGER_INFO(mSLog, "Set base parameters: \n"
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n nomFieldCur: {:e}\n",
@@ -79,12 +68,13 @@ void EMT::Ph3::SynchronGeneratorVBR::setBaseAndFundamentalPerUnitParameters(
 		nomPower, nomVolt, nomFreq, nomFieldCur,
 		poleNumber, Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 
-	SPDLOG_LOGGER_INFO(mSLog, "Set base and fundamental parameters in per unit: \n"
-				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\npoleNumber: {:d}\nnomFieldCur: {:e}\n"
-				"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
-				"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\ninertia: {:e}",
-				nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
-				Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+	SPDLOG_LOGGER_INFO(mSLog, 
+		"Set base and fundamental parameters in per unit: \n"
+		"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\npoleNumber: {:d}\nnomFieldCur: {:e}\n"
+		"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
+		"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\ninertia: {:e}",
+		nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
+		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::setInitialValues(Real initActivePower, Real initReactivePower,
@@ -93,11 +83,12 @@ void EMT::Ph3::SynchronGeneratorVBR::setInitialValues(Real initActivePower, Real
 	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
 		initTerminalVolt, initVoltAngle, initMechPower);
 
-	SPDLOG_LOGGER_INFO(mSLog, "Set initial values: \n"
-				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
-				"initVoltAngle: {:e} \ninitMechPower: {:e}",
-				initActivePower, initReactivePower, initTerminalVolt,
-				initVoltAngle, initMechPower);
+	SPDLOG_LOGGER_INFO(mSLog, 
+		"Set initial values: \n"
+		"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
+		"initVoltAngle: {:e} \ninitMechPower: {:e}",
+		initActivePower, initReactivePower, initTerminalVolt,
+		initVoltAngle, initMechPower);
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real frequency) {
@@ -118,15 +109,14 @@ void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real freque
 					"\n--- Initialization from powerflow finished ---",
 					Logger::phasorToString(initialSingleVoltage(0)),
 					Logger::complexToString(terminal(0)->singlePower()));
-		mSLog->flush();
 	} else {
 		SPDLOG_LOGGER_INFO(mSLog, "Initial values already set, skipping initializeFromNodesAndTerminals.");
-		mSLog->flush();
 	}
+	mSLog->flush();
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
+	updateMatrixNodeIndices();
 
 	for (UInt phase1Idx = 0; phase1Idx < 3; ++phase1Idx)
 		for (UInt phase2Idx = 0; phase2Idx < 3; ++phase2Idx)
@@ -135,7 +125,6 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep
 	SPDLOG_LOGGER_INFO(mSLog, "List of index pairs of varying matrix entries: ");
 	for (auto indexPair : mVariableSystemMatrixEntries)
 		SPDLOG_LOGGER_INFO(mSLog, "({}, {})", indexPair.first, indexPair.second);
-
 
 	mSystemOmega = omega;
 	mTimeStep = timeStep;
@@ -189,8 +178,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep
 	mPsimq = mPsisr(3,0);
 	mPsimd = mPsisr(0,0);
 
-	/// Init voltage excitation
-	mVfd = mVsr(1,0);
+	**mVfd = mVsr(1,0);
 
 
 	// #### VBR Model Dynamic variables #######################################
@@ -241,6 +229,14 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(Real omega, Real timeStep
 
 	SPDLOG_LOGGER_INFO(mSLog, "Initialize right side vector of size {}", leftVector->get().rows());
 	SPDLOG_LOGGER_INFO(mSLog, "Component affects right side vector entries {}, {} and {}", matrixNodeIndex(0,0), matrixNodeIndex(0,1), matrixNodeIndex(0,2));
+
+	// set initial interface current
+	mVabc << mVa, mVb, mVc;
+	**mIntfVoltage = mVabc * mBase_V;
+
+	// set initial interface voltage
+	mIabc << mIa, mIb, mIc;
+	**mIntfCurrent = mIabc * mBase_I;
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompPreStep(Real time, Int timeStepCount) {
@@ -336,10 +332,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Real time, Int timeStepCoun
 	}
 
 	// ################ Update machine stator and rotor variables ############################
-	mVabc <<
-		mVa,
-		mVb,
-		mVc;
+	mVabc << mVa, mVb, mVc;
 
 	mVq = parkTransform(mThetaMech, mVa, mVb, mVc)(0);
 	mVd = parkTransform(mThetaMech, mVa, mVb, mVc)(1);
@@ -349,7 +342,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Real time, Int timeStepCoun
 		// Get exciter output voltage
 		// Note: scaled by Rfd/Lmd to transform from exciter pu system
 		// to the synchronous generator pu system
-		mVfd = (mRfd / mLmd)*mExciter->step(mVd, mVq, mTimeStep);
+		**mVfd = (mRfd / mLmd)*mExciter->step(mVd, mVq, mTimeStep);
 	}
 	mIabc = R_eq_vbr.inverse()*(mVabc - E_eq_vbr);
 
@@ -371,7 +364,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Real time, Int timeStepCoun
 			mId;
 
 		mPsikq1kq2 = E1*mIq + E2*mPsikq1kq2 + E1*mIq_hist;
-		mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3*mVfd;
+		mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3 * **mVfd;
 
 		mPsikq1 = mPsikq1kq2(0);
 		mPsikq2 = mPsikq1kq2(1);
@@ -386,7 +379,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(Real time, Int timeStepCoun
 			mId;
 
 		mPsikq1 = E1_1d*mIq + E2_1d*mPsikq1 + E1_1d*mIq_hist;
-		mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3*mVfd;
+		mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3 * **mVfd;
 
 		mPsifd = mPsifdkd(0);
 		mPsikd = mPsifdkd(1);
@@ -563,9 +556,9 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarVariables() {
 	K = mKrs_teta_inv*K*mKrs_teta;
 
 	if (mNumDampingWindings == 2)
-		h_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+		h_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26) * **mVfd;
 	else
-		h_qdr = K1a*E2_1d*mPsikq1 + K1a*E1_1d*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+		h_qdr = K1a*E2_1d*mPsikq1 + K1a*E1_1d*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26) * **mVfd;
 
 	H_qdr << h_qdr,
 		0;

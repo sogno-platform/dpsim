@@ -16,7 +16,15 @@ MatrixComp TopologicalNode::initialVoltage() const { return **mInitialVoltage; }
 
 void TopologicalNode::setInitialVoltage(MatrixComp voltage) const { **mInitialVoltage = voltage; }
 
-void TopologicalNode::setInitialVoltage(Complex voltage) const { (**mInitialVoltage)(0,0) = voltage; }
+void TopologicalNode::setInitialVoltage(Complex voltage) const {
+	if (mPhaseType == PhaseType::Single) {
+		(**mInitialVoltage)(0,0) = voltage;
+	} else {
+		(**mInitialVoltage)(0,0) = voltage;
+		(**mInitialVoltage)(1,0) = SHIFT_TO_PHASE_B * voltage;
+		(**mInitialVoltage)(2,0) = SHIFT_TO_PHASE_C * voltage;
+	}
+}
 
 void TopologicalNode::setInitialVoltage(Complex voltage, Int phaseIndex) const {
 	(**mInitialVoltage)(phaseIndex, 0) = voltage;

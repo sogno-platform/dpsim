@@ -132,11 +132,9 @@ int main(int argc, char *argv[]) {
 		sys.addComponent(sw);
 	}
 
-	sys.initWithPowerflow(systemPF);
+	sys.initWithPowerflow(systemPF, CPS::Domain::EMT);
 	for (auto comp : sys.mComponents) {
 		if (auto genReducedOrder = std::dynamic_pointer_cast<CPS::Base::ReducedOrderSynchronGenerator<Real>>(comp)) {
-			auto genPF = systemPF.component<CPS::SP::Ph1::SynchronGenerator>(comp->name());
-			genReducedOrder->terminal(0)->setPower(-genPF->getApparentPower());
 			genReducedOrder->scaleInertiaConstant(inertiaScalingFactor);
 			genReducedOrder->setModelAsNortonSource(false);
 		}

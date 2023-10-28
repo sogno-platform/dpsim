@@ -31,6 +31,8 @@ namespace CPS {
 			private:
 				///
 				CPS::Signal::SignalGenerator::Ptr mSrcSig;
+				///
+				Real mTimeStep;
 			protected:
 				// Updates voltage according to reference phasor and frequency
 				void updateVoltage(Real time);

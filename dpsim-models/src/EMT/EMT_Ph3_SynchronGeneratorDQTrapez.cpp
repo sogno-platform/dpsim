@@ -24,7 +24,7 @@ EMT::Ph3::SynchronGeneratorDQTrapez::SynchronGeneratorDQTrapez(String name, Logg
 }
 
 void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-		updateMatrixNodeIndices();
+	updateMatrixNodeIndices();
 	mTimeStep = timeStep;
 
 	SynchronGeneratorDQ::initializeMatrixAndStates();
@@ -57,7 +57,8 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 		// Get exciter output voltage
 		// Note: scaled by Rfd/Lmd to transform from exciter pu system
 		// to the synchronous generator pu system
-		mVsr(1,0) = (mRfd / mLmd)*mExciter->step(mVsr(0,0), mVsr(3,0), mTimeStep);
+		mVsr(1,0) = (mRfd / mLmd) * mExciter->step(mVsr(0,0), mVsr(3,0), mTimeStep);
+		**mVfd = mVsr(1,0);
 	}
 
 	// Update of mechanical torque from turbine governor

@@ -30,7 +30,7 @@ EMT::Ph3::SynchronGenerator3OrderVBR::SynchronGenerator3OrderVBR
 
 void EMT::Ph3::SynchronGenerator3OrderVBR::specificInitialization() {
 	// initial voltage behind the transient reactance in the dq0 reference frame
-	(**mEdq0_t)(1,0) = (**mVdq0)(1,0) + (**mIdq0)(0,0) * mLd_t;
+	(**mEdq0_t)(1,0) = (**mVdq0)(1,0) + (**mIdq0)(0,0) * **mLd_t;
 
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Model specific initialization  ---"
@@ -46,7 +46,7 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::stepInPerUnit() {
 
 	if (mSimTime>0.0) {
 		// calculate Eq_t at t=k
-		(**mEdq0_t)(1,0) = (**mIdq0)(0,0) * mLd_t + (**mVdq0)(1,0);
+		(**mEdq0_t)(1,0) = (**mIdq0)(0,0) * **mLd_t + (**mVdq0)(1,0);
 	}
 
 	// get transformation matrix

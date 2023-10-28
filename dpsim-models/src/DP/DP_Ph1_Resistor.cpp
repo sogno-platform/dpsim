@@ -43,6 +43,7 @@ void DP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
+	mSLog->flush();
 }
 
 // #### MNA functions ####
@@ -58,6 +59,7 @@ void DP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 		"\n--- MNA initialization finished ---",
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
 		Logger::phasorToString((**mIntfCurrent)(0, 0)));
+	mSLog->flush();
 }
 
 void DP::Ph1::Resistor::mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {

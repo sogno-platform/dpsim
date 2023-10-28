@@ -347,6 +347,16 @@ void Simulation::start() {
 	SPDLOG_LOGGER_INFO(mLog, "Time step: {:e}", **mTimeStep);
 	SPDLOG_LOGGER_INFO(mLog, "Final time: {:e}", **mFinalTime);
 
+	// In PF we dont log the initial conditions of the componentes because they are not calculated
+	// In dynamic simulations log initial values of attributes (t=0)
+	if (mSolverType != Solver::Type::NRP) {
+		if (mLoggers.size() > 0) 
+			mLoggers[0]->log(0, 0);
+
+		// In dynamic simulations increase simulation time to calculate first results at t=timestep
+		mTime += **mTimeStep;
+	}
+	
 	mSimulationStartTimePoint = std::chrono::steady_clock::now();
 }
 
@@ -369,7 +379,7 @@ void Simulation::stop() {
 }
 
 Real Simulation::next() {
-	if (mTime < **mFinalTime)
+	if (mTime < **mFinalTime + 1e-12)
 		step();
 	else
 		stop();
@@ -381,7 +391,7 @@ Real Simulation::next() {
 void Simulation::run() {
 	start();
 
-	while (mTime < **mFinalTime) {
+	while (mTime < **mFinalTime + 1e-12) {
 		step();
 	}
 
@@ -390,8 +400,8 @@ void Simulation::run() {
 
 Real Simulation::step() {
 	auto start = std::chrono::steady_clock::now();
+	
 	mEvents.handleEvents(mTime);
-
 	mScheduler->step(mTime, mTimeStepCount);
 
 	mTime += **mTimeStep;

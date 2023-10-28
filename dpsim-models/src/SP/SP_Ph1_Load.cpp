@@ -26,18 +26,27 @@ SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
     setTerminalNumber(1);
-};
+}
 
-
-void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
+void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower) {
 	**mActivePower = activePower;
 	**mReactivePower = reactivePower;
-	**mNomVoltage = nominalVoltage;
+	initPowerFromTerminal = false;
 
-	SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
+	SPDLOG_LOGGER_INFO(mSLog, 
+		"Active Power={}[W]"
+		"\nReactive Power={} [VAr]", 
+		**mActivePower, **mReactivePower);
 	mSLog->flush();
+}
 
-	mParametersSet = true;
+void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
+	setParameters(activePower, reactivePower);
+	**mNomVoltage = nominalVoltage;
+	initVoltageFromNode = false;
+
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
+	mSLog->flush();
 }
 
  // #### Powerflow section ####
@@ -92,11 +101,15 @@ void SP::Ph1::Load::updatePQ(Real time) {
 
 void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 
-	if(!mParametersSet){
+	if(initPowerFromTerminal){
 		setParameters(
 			mTerminals[0]->singleActivePower(),
 			mTerminals[0]->singleReactivePower(),
 			std::abs(mTerminals[0]->initialSingleVoltage()));
+	}
+	if (initVoltageFromNode) {
+		**mNomVoltage = std::abs(initialSingleVoltage(0));
+		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}
 
 	// instantiate subResistor for active power consumption

@@ -39,6 +39,7 @@ void EMT::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		(**mIntfCurrent)(0,0),
 		initialSingleVoltage(0).real(),
 		initialSingleVoltage(1).real());
+	mSLog->flush();
 }
 
 void EMT::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -67,6 +68,7 @@ void EMT::Ph1::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMa
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -conductance, matrixNodeIndex(0), matrixNodeIndex(1));
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -conductance, matrixNodeIndex(1), matrixNodeIndex(0));
 	}
+	mSLog->flush();
 }
 
 void EMT::Ph1::Resistor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

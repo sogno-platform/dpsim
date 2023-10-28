@@ -51,6 +51,10 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 				sol_P(pq->matrixNodeIndex()) += vsi->attributeTyped<CPS::Real>("P_ref")->get() / mBaseApparentPower;
 				sol_Q(pq->matrixNodeIndex()) += vsi->attributeTyped<CPS::Real>("Q_ref")->get() / mBaseApparentPower;
 			}
+            else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
+				sol_P(pq->matrixNodeIndex()) += gen->attributeTyped<CPS::Real>("P_set_pu")->get();
+                sol_Q(pq->matrixNodeIndex()) += gen->attributeTyped<CPS::Real>("Q_set_pu")->get();
+			}
             sol_S_complex(pq->matrixNodeIndex()) = CPS::Complex(sol_P[pq->matrixNodeIndex()], sol_Q[pq->matrixNodeIndex()]);
 		}
 	}
@@ -64,9 +68,11 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 			if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
 				sol_P(pv->matrixNodeIndex()) += gen->attributeTyped<CPS::Real>("P_set_pu")->get();
 				sol_V(pv->matrixNodeIndex()) = gen->attributeTyped<CPS::Real>("V_set_pu")->get();
+                sol_Q(pv->matrixNodeIndex()) += gen->attributeTyped<CPS::Real>("Q_set_pu")->get();
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
 				sol_P(pv->matrixNodeIndex()) -= load->attributeTyped<CPS::Real>("P_pu")->get();
+                sol_Q(pv->matrixNodeIndex()) -= load->attributeTyped<CPS::Real>("Q_pu")->get();
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi =
 				std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
@@ -76,6 +82,7 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 				std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
 				sol_P(pv->matrixNodeIndex()) += extnet->attributeTyped<CPS::Real>("p_inj")->get() / mBaseApparentPower;
 				sol_V(pv->matrixNodeIndex()) = extnet->attributeTyped<CPS::Real>("V_set_pu")->get();
+                // sol_Q(pv->matrixNodeIndex()) += extnet->attributeTyped<CPS::Real>("q_inj")->get() / mBaseApparentPower; //Todo allow initialisation of p_inj and q_inj in SP_NetworkInjection (use updatePowerInjection?)
 			}
 			sol_S_complex(pv->matrixNodeIndex()) = CPS::Complex(sol_P[pv->matrixNodeIndex()], sol_Q[pv->matrixNodeIndex()]);
 			sol_V_complex(pv->matrixNodeIndex()) = CPS::Complex(sol_V[pv->matrixNodeIndex()], sol_D[pv->matrixNodeIndex()]);
@@ -92,6 +99,20 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
         for (auto comp : mSystem.mComponentsAtNode[vd]) {
             if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
                 sol_V(vd->matrixNodeIndex()) = extnet->attributeTyped<CPS::Real>("V_set_pu")->get();
+                sol_P(vd->matrixNodeIndex()) += extnet->attributeTyped<CPS::Real>("p_inj")->get() / mBaseApparentPower; // Todo add p_set q_set to extnet
+                sol_Q(vd->matrixNodeIndex()) += extnet->attributeTyped<CPS::Real>("q_inj")->get() / mBaseApparentPower;
+            }
+
+            // if load at VD bus, substract P and Q
+            else if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
+				sol_P(vd->matrixNodeIndex()) -= load->attributeTyped<CPS::Real>("P_pu")->get();
+                sol_Q(vd->matrixNodeIndex()) -= load->attributeTyped<CPS::Real>("Q_pu")->get();
+            }
+    
+            // if generator at VD, add P_set Q_Set
+            else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
+                sol_P(vd->matrixNodeIndex()) += gen->attributeTyped<CPS::Real>("P_set_pu")->get();
+                sol_Q(vd->matrixNodeIndex()) += gen->attributeTyped<CPS::Real>("Q_set_pu")->get();
             }
         }
 
@@ -267,6 +288,7 @@ void PFSolverPowerPolar::setSolution() {
 	else {
 		calculatePAndQAtSlackBus();
         calculateQAtPVBuses();
+        calculatePAndQInjectionPQBuses();
 		SPDLOG_LOGGER_INFO(mSLog, "converged in {} iterations",mIterations);
 		SPDLOG_LOGGER_INFO(mSLog, "Solution: ");
 		SPDLOG_LOGGER_INFO(mSLog, "P\t\tQ\t\tV\t\tD");
@@ -279,7 +301,7 @@ void PFSolverPowerPolar::setSolution() {
         sol_V_complex(i) = CPS::Complex(sol_V.coeff(i)*cos(sol_D.coeff(i)), sol_V.coeff(i)*sin(sol_D.coeff(i)));
     }
 
-// update voltage and power at each node
+    // update voltage and power at each node
     for (auto node : mSystem.mNodes) {
         std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setVoltage(sol_V_complex(node->matrixNodeIndex())*mBaseVoltageAtNode[node]);
         std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setPower(sol_S_complex(node->matrixNodeIndex())*mBaseApparentPower);
@@ -353,47 +375,95 @@ Real PFSolverPowerPolar::Q(UInt k) {
 }
 
 void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
-    for (auto k: mVDBusIndices) {
+    for (auto topoNode: mVDBuses) {
+        auto node_idx = topoNode->matrixNodeIndex();
+
+        // calculate power flowing out of the node into the admittance matrix (not into PQ Loads)
         CPS::Complex I(0.0, 0.0);
-        for (UInt j = 0; j < mSystem.mNodes.size(); ++j) {
-            I += mY.coeff(k, j) * sol_Vcx(j);
-        }
-        CPS::Complex S(0.0, 0.0);
-        S = sol_Vcx(k) * conj(I);
-        sol_P(k) = S.real();
-        sol_Q(k) = S.imag();
-        for(auto extnet : mExternalGrids){
-            if(extnet->mPowerflowBusType==CPS::PowerflowBusType::VD){
-			    extnet->updatePowerInjection(S*mBaseApparentPower);
+        for (UInt j = 0; j < mSystem.mNodes.size(); ++j)
+            I += mY.coeff(node_idx, j) * sol_Vcx(j);
+        CPS::Complex S = sol_Vcx(node_idx) * conj(I);
+        
+        // GenPower = Power flowing out of node + PQLoadsPower
+        for(auto comp : mSystem.mComponentsAtNode[topoNode])
+            if (auto loadPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp))
+                S += Complex(**(loadPtr->mActivePowerPerUnit), **(loadPtr->mReactivePowerPerUnit));
+     
+        // Set power of external network injections of SG (VD)
+        for(auto comp : mSystem.mComponentsAtNode[topoNode]) {
+            if(auto extnetPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
+                extnetPtr->updatePowerInjection(S*mBaseApparentPower);
+                break;
+            }
+            if(auto sgPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
+                sgPtr->updatePowerInjection(S*mBaseApparentPower);
                 break;
             }
         }
-        for(auto gen : mSynchronGenerators){
-            if(gen->mPowerflowBusType==CPS::PowerflowBusType::VD){
-			    gen->updatePowerInjection(S*mBaseApparentPower);
-                break;
-            }
-        }
+
+        // P flowing from this node to the other nodes = S - S_Shunts
+        // ** capacitive susceptance is positive --> q is injected into the node
+        CPS::Real V =  sol_V.coeff(node_idx);
+        for(auto comp : mSystem.mComponentsAtNode[topoNode]) 
+            if (auto shuntPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp)) 
+                S += std::pow(V,2) * Complex(-**(shuntPtr->mConductancePerUnit), **(shuntPtr->mSusceptancePerUnit));
+
+        sol_P(node_idx) = S.real();
+        sol_Q(node_idx) = S.imag();
     }
 }
 
 void PFSolverPowerPolar::calculateQAtPVBuses() {
-        for (auto k: mPVBusIndices) {
+    for (auto topoNode: mPVBuses) {
+        auto node_idx = topoNode->matrixNodeIndex();
+
+        // calculate power flowing out of the node into the admittance matrix (not into PQ Loads)
         CPS::Complex I(0.0, 0.0);
-        for (UInt j = 0; j < mSystem.mNodes.size(); ++j) {
-            I += mY.coeff(k, j) * sol_Vcx(j);
-        }
-        CPS::Complex S(0.0, 0.0);
-        S = sol_Vcx(k) * conj(I);
-        sol_Q(k) = S.imag();
+        for (UInt j = 0; j < mSystem.mNodes.size(); ++j)
+            I += mY.coeff(node_idx, j) * sol_Vcx(j);
+        Complex S = sol_Vcx(node_idx) * conj(I);
+        
+        // GenPower = Power flowing out of node + PQLoadsPower
+        auto Sgen = S;
+        for(auto comp : mSystem.mComponentsAtNode[topoNode])
+            if (auto loadPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp))
+                Sgen += Complex(**(loadPtr->mActivePowerPerUnit), **(loadPtr->mReactivePowerPerUnit));
 
-        for (auto topoNode : mSystem.mNodes)
-            if (topoNode->matrixNodeIndex() == k)
-                for(auto comp : mSystem.mComponentsAtNode[topoNode])
-                    if(auto genPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp))
-                        if (genPtr->mPowerflowBusType==CPS::PowerflowBusType::PV)
-                            genPtr->updateReactivePowerInjection(S*mBaseApparentPower);
+        // Set power of SG
+        for(auto comp : mSystem.mComponentsAtNode[topoNode])
+            if(auto sgPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp))
+                sgPtr->updatePowerInjection(Sgen*mBaseApparentPower);
 
+        // P flowing from this node to the other nodes = S - S_Shunts
+        // ** capacitive susceptance is positive --> q is injected into the node
+        CPS::Real V =  sol_V.coeff(node_idx);
+        for(auto comp : mSystem.mComponentsAtNode[topoNode]) 
+            if (auto shuntPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp)) 
+                S += std::pow(V,2) * Complex(-**(shuntPtr->mConductancePerUnit), **(shuntPtr->mSusceptancePerUnit));
+
+        sol_Q(node_idx) = S.imag();
+    }
+}
+
+void PFSolverPowerPolar::calculatePAndQInjectionPQBuses() {
+    for (auto topoNode: mPQBuses) {
+        auto node_idx = topoNode->matrixNodeIndex();
+
+        // calculate power flowing out of the node into the admittance matrix (not into PQ Loads)
+        CPS::Complex I(0.0, 0.0);
+        for (UInt j = 0; j < mSystem.mNodes.size(); ++j)
+            I += mY.coeff(node_idx, j) * sol_Vcx(j);
+        CPS::Complex S = sol_Vcx(node_idx) * conj(I);
+
+        // S flowing from this node to the other nodes = S - S_Shunts
+        // ** capacitive susceptance is positive --> q is injected into the node
+        CPS::Real V =  sol_V.coeff(node_idx);
+        for(auto comp : mSystem.mComponentsAtNode[topoNode]) 
+            if (auto shuntPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp)) 
+                S += std::pow(V,2) * Complex(-**(shuntPtr->mConductancePerUnit), **(shuntPtr->mSusceptancePerUnit));
+
+        sol_P(node_idx) = S.real();
+        sol_Q(node_idx) = S.imag();
     }
 }
 

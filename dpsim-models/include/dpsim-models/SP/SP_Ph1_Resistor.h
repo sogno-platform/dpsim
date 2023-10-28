@@ -55,7 +55,7 @@ namespace Ph1 {
 
 		// #### General ####
 		/// Initializes component from power flow data
-		void initializeFromNodesAndTerminals(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency) override;
 
 		// #### Powerflow section ####
 		/// Set base voltage
@@ -67,20 +67,20 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		///
-		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
+		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
 		/// Update interface voltage from MNA system result
-		void mnaCompUpdateVoltage(const Matrix& leftVector);
+		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
 		/// Update interface current from MNA system result
-		void mnaCompUpdateCurrent(const Matrix& leftVector);
+		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
 		/// MNA pre and post step operations
-		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
 		/// add MNA pre and post step dependencies
-		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
 		// #### MNA Tear Section ####
-		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
+		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) override;
 
 	};
 }

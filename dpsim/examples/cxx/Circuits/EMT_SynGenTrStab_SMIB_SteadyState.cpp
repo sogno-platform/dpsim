@@ -25,7 +25,6 @@ Real Xpd=0.31;
 Real Rs = 0.003*0;
 Real D = 1*50;
 // Initialization parameters
-Real initMechPower= 300e6;
 Real initActivePower = 300e6;
 Real setPointVoltage=nomPhPhVoltRMS + 0.05*nomPhPhVoltRMS;
 
@@ -55,7 +54,7 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	//Synchronous generator ideal model
-	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto genPF = SP::Ph1::SynchronGenerator::make("SynGen", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	genPF->setParameters(nomPower, nomPhPhVoltRMS, initActivePower, setPointVoltage*t_ratio, PowerflowBusType::PV);
 	genPF->setBaseVoltage(Vnom);
@@ -110,10 +109,6 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	genEMT->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd*std::pow(t_ratio,2), cmdInertia*H, Rs, D );
 
-	// Get actual active and reactive power of generator's Terminal from Powerflow solution
-	Complex initApparentPower= genPF->getApparentPower();
-	genEMT->setInitialValues(initApparentPower, initMechPower);
-
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
@@ -133,8 +128,7 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 			SystemComponentList{genEMT, lineEMT, extnetEMT});
 
 	// Initialization of dynamic topology
-	systemEMT.initWithPowerflow(systemPF);
-
+	systemEMT.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);

@@ -27,7 +27,7 @@ void SP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	//Synchronous generator ideal model
-	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto genPF = SP::Ph1::SynchronGenerator::make("SynGen", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
 	genPF->setParameters(smib.nomPower, smib.nomPhPhVoltRMS, smib.initActivePower, smib.setPointVoltage*smib.t_ratio, PowerflowBusType::PV);
 	genPF->setBaseVoltage(smib.Vnom);
@@ -81,9 +81,6 @@ void SP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 	auto genSP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	genSP->setStandardParametersPU(smib.nomPower, smib.nomPhPhVoltRMS, smib.nomFreq, smib.Xpd*std::pow(smib.t_ratio,2), cmdInertia*smib.H, smib.Rs, cmdDamping*smib.D );
-	// Get actual active and reactive power of generator's Terminal from Powerflow solution
-	Complex initApparentPower= genPF->getApparentPower();
-	genSP->setInitialValues(initApparentPower, smib.initMechPower);
 
 	//Grid bus as Slack
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
@@ -102,7 +99,6 @@ void SP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 
 	// Initialization of dynamic topology
 	systemSP.initWithPowerflow(systemPF);
-
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);

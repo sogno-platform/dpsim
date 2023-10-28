@@ -81,9 +81,7 @@ int main(int argc, char** argv){
 
 	// log node voltages
 	for (auto node : systemDP.mNodes)
-	{
 		logger->logAttribute(node->name() + ".V", node->attribute("v"));
-	}
 
 	// log line currents
 	for (auto comp : systemDP.mComponents) {

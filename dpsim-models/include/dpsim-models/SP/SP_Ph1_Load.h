@@ -52,7 +52,10 @@ namespace Ph1 {
 		Real mInductance;
 		/// Capacitance [F]
 		Real mCapacitance;
-
+		///
+		Bool initPowerFromTerminal = true;
+		///
+		Bool initVoltageFromNode = true;
 		/// Internal inductor
 		std::shared_ptr<SP::Ph1::Inductor> mSubInductor;
 		/// Internal capacitor
@@ -65,6 +68,8 @@ namespace Ph1 {
 		/// Defines name and logging level
 		Load(String name, Logger::Level logLevel = Logger::Level::off)
 			: Load(name, name, logLevel) { }
+		///
+		void setParameters(Real activePower, Real reactivePower);
 		///
 		void setParameters(Real activePower, Real reactivePower, Real nominalVoltage);
 

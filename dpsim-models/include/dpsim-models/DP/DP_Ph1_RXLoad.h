@@ -31,6 +31,10 @@ namespace Ph1 {
 		Real mInductance;
 		/// Capacitance [F]
 		Real mCapacitance;
+		///
+		Bool initPowerFromTerminal = true;
+		///
+		Bool initVoltageFromNode = true;
 		/// Internal inductor
 		std::shared_ptr<DP::Ph1::Inductor> mSubInductor;
 		/// Internal capacitor
@@ -57,7 +61,9 @@ namespace Ph1 {
 		/// Initialize component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
 		/// Set model specific parameters
-		void setParameters(Real activePower, Real ReactivePower, Real volt);
+		void setParameters(Real activePower, Real ReactivePower);
+		/// Set model specific parameters
+		void setParameters(Real activePower, Real ReactivePower, Real nominalVoltage);
 
 		// #### MNA section ####
 		/// Update interface current from MNA system result

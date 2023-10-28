@@ -36,8 +36,8 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::specificInitialization() {
 	calculateStateSpaceMatrices();
 
 	// initial voltage behind the transient reactance in the dq0 reference frame
-	(**mEdq0_t)(0,0) = (**mVdq0)(0,0) - (**mIdq0)(1,0) * mLq_t;
-	(**mEdq0_t)(1,0) = (**mVdq0)(1,0) + (**mIdq0)(0,0) * mLd_t;
+	(**mEdq0_t)(0,0) = (**mVdq0)(0,0) - (**mIdq0)(1,0) * **mLq_t;
+	(**mEdq0_t)(1,0) = (**mVdq0)(1,0) + (**mIdq0)(0,0) * **mLd_t;
 	(**mEdq0_t)(2,0) = 0.0;
 
 	SPDLOG_LOGGER_DEBUG(mSLog,
@@ -59,14 +59,14 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::specificInitialization() {
 
 void EMT::Ph3::SynchronGenerator4OrderPCM::calculateStateSpaceMatrices() {
 	// Initialize matrices of state representation
-	mAStateSpace <<	-mLq / mTq0_t / mLq_t,	0.0 				 , 0.0,
-              		0					 ,	-mLd / mTd0_t / mLd_t, 0.0,
+	mAStateSpace <<	-**mLq / **mTq0_t / **mLq_t,	0.0 				 , 0.0,
+              		0					 ,	-**mLd / **mTd0_t / **mLd_t, 0.0,
 					0					 ,	0.0					 , 0.0;
-	mBStateSpace <<	(mLq-mLq_t) / mTq0_t / mLq_t,	0.0							, 0.0,
-					0.0							,	(mLd-mLd_t) / mTd0_t / mLd_t, 0.0,
+	mBStateSpace <<	(**mLq-**mLq_t) / **mTq0_t / **mLq_t,	0.0							, 0.0,
+					0.0							,	(**mLd-**mLd_t) / **mTd0_t / **mLd_t, 0.0,
 					0.0							,	0.0							, 0.0;
 	mCStateSpace <<	0.0,
-					1. / mTd0_t,
+					1. / **mTd0_t,
 					0.0;
 	// Precalculate trapezoidal based matrices (avoids redundant matrix inversions in correction steps)
 	Math::calculateStateSpaceTrapezoidalMatrices(mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, mAdTrapezoidal, mBdTrapezoidal, mCdTrapezoidal);
@@ -87,8 +87,8 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	(**mEdq0_t) = Math::StateSpaceEuler(**mEdq0_t, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mVdq0);
 
 	// predict stator currents at t=k+1 (assuming Vdq0(k+1)=Vdq0(k))
-	(**mIdq0)(0,0) = ((**mEdq0_t)(1,0) - (**mVdq0)(1,0)) / mLd_t;
-	(**mIdq0)(1,0) = ((**mVdq0)(0,0) - (**mEdq0_t)(0,0)) / mLq_t;
+	(**mIdq0)(0,0) = ((**mEdq0_t)(1,0) - (**mVdq0)(1,0)) / **mLd_t;
+	(**mIdq0)(1,0) = ((**mVdq0)(0,0) - (**mEdq0_t)(0,0)) / **mLq_t;
 	(**mIdq0)(2,0) = 0.0;
 
 	// convert currents into the abc domain
@@ -112,8 +112,8 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::correctorStep() {
 
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
-	(**mIdq0)(0,0) = ((**mEdq0_t)(1,0) - (**mVdq0)(1,0) ) / mLd_t;
-	(**mIdq0)(1,0) = ((**mVdq0)(0,0) - (**mEdq0_t)(0,0) ) / mLq_t;
+	(**mIdq0)(0,0) = ((**mEdq0_t)(1,0) - (**mVdq0)(1,0) ) / **mLd_t;
+	(**mIdq0)(1,0) = ((**mVdq0)(0,0) - (**mEdq0_t)(0,0) ) / **mLq_t;
 
 	// convert currents into the abc domain
 	**mIntfCurrent = inverseParkTransform(**mThetaMech, **mIdq0);

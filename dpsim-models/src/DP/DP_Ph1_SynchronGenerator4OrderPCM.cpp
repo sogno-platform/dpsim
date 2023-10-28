@@ -42,8 +42,8 @@ void DP::Ph1::SynchronGenerator4OrderPCM::specificInitialization() {
 	calculateStateSpaceMatrices();
 
 	// initial voltage behind the transient reactance in the dq0 reference frame
-	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
-	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
+	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * **mLq_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * **mLd_t;
 
 	SPDLOG_LOGGER_DEBUG(mSLog,
 		"\n--- Model specific initialization  ---"
@@ -66,12 +66,12 @@ void DP::Ph1::SynchronGenerator4OrderPCM::specificInitialization() {
 
 void DP::Ph1::SynchronGenerator4OrderPCM::calculateStateSpaceMatrices() {
 	// Initialize matrices of state representation
-	mAStateSpace <<	-mLq / mTq0_t / mLq_t,	0,
-              		0,						-mLd / mTd0_t / mLd_t;
-	mBStateSpace <<	(mLq-mLq_t) / mTq0_t / mLq_t,	0.0,
-					0.0,							(mLd-mLd_t) / mTd0_t / mLd_t;
+	mAStateSpace <<	-**mLq / **mTq0_t / **mLq_t,	0,
+              		0,						-**mLd / **mTd0_t / **mLd_t;
+	mBStateSpace <<	(**mLq-**mLq_t) / **mTq0_t / **mLq_t,	0.0,
+					0.0,							(**mLd-**mLd_t) / **mTd0_t / **mLd_t;
 	mCStateSpace <<	0,
-					1 / mTd0_t;
+					1 / **mTd0_t;
 
 	// Precalculate trapezoidal based matrices (avoids redundant matrix inversions in correction steps)
 	Math::calculateStateSpaceTrapezoidalMatrices(mAStateSpace, mBStateSpace, mCStateSpace, mTimeStep, mAdTrapezoidal, mBdTrapezoidal, mCdTrapezoidal);
@@ -94,8 +94,8 @@ void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 	(**mEdq_t) = Math::StateSpaceEuler(**mEdq_t, mAStateSpace, mBStateSpace, mCStateSpace * **mEf, mTimeStep, **mVdq);
 
 	// predict stator currents at t=k+1 (assuming Vdq(k+1)=Vdq(k))
-	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0)) / mLd_t;
-	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0)) / mLq_t;
+	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0)) / **mLd_t;
+	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0)) / **mLq_t;
 
 	// convert currents to dp domain
 	(**mIntfCurrent)(0,0) = mDomainInterface.applyDQToDPTransform(**mIdq) * mBase_I_RMS;
@@ -115,8 +115,8 @@ void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
 	(**mEdq_t) = Math::applyStateSpaceTrapezoidalMatrices(mAdTrapezoidal, mBdTrapezoidal, mCdTrapezoidal * **mEf, mEdqtPrevStep, **mVdq, mVdqPrevStep);
 
 	// calculate corrected stator currents at t=k+1 (assuming Vdq(k+1)=VdqPrevIter(k+1))
-	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / mLd_t;
-	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0) ) / mLq_t;
+	(**mIdq)(0,0) = ((**mEdq_t)(1,0) - (**mVdq)(1,0) ) / **mLd_t;
+	(**mIdq)(1,0) = ((**mVdq)(0,0) - (**mEdq_t)(0,0) ) / **mLq_t;
 
 	// convert corrected currents to dp domain
 	(**mIntfCurrent)(0,0) = mDomainInterface.applyDQToDPTransform(**mIdq) * mBase_I_RMS;

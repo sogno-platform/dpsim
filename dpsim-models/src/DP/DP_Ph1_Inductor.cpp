@@ -54,6 +54,7 @@ void DP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
+	mSLog->flush();
 }
 
 // #### MNA functions ####
@@ -89,11 +90,11 @@ void DP::Ph1::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 		Logger::phasorToString((**mIntfVoltage)(0,0)),
 		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::complexToString(mEquivCurrent(0,0)));
+	mSLog->flush();
 }
 
 void DP::Ph1::Inductor::mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
-		updateMatrixNodeIndices();
-
+	updateMatrixNodeIndices();
 	initVars(timeStep);
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));

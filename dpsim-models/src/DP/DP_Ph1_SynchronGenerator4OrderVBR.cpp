@@ -31,8 +31,8 @@ DP::Ph1::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR
 void DP::Ph1::SynchronGenerator4OrderVBR::specificInitialization() {
 
 	// initial voltage behind the transient reactance in the dq reference frame
-	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
-	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
+	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * **mLq_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * **mLd_t;
 
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Model specific initialization  ---"
@@ -53,8 +53,8 @@ void DP::Ph1::SynchronGenerator4OrderVBR::stepInPerUnit() {
 	mDomainInterface.updateDPToDQTransform(**mThetaMech, mSimTime);
 
 	// calculate Edq_t at t=k
-	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * mLq_t;
-	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * mLd_t;
+	(**mEdq_t)(0,0) = (**mVdq)(0,0) - (**mIdq)(1,0) * **mLq_t;
+	(**mEdq_t)(1,0) = (**mVdq)(1,0) + (**mIdq)(0,0) * **mLd_t;
 
 	// Update time-varying reactance matrix
 	calculateConductanceMatrix();

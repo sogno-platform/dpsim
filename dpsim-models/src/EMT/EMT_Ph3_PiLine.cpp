@@ -13,7 +13,6 @@ using namespace CPS;
 EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	: Base::Ph3::PiLine(mAttributes), CompositePowerComp<Real>(uid, name, true, true, logLevel) {
 	mPhaseType = PhaseType::ABC;
-	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 
 	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
@@ -32,15 +31,6 @@ SimPowerComp<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
 
 void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 
-	// By default there is always a small conductance to ground to
-	// avoid problems with floating nodes.
-	Matrix defaultParallelCond = Matrix::Zero(3, 3);
-	defaultParallelCond <<
-		1e-6, 0, 0,
-		0, 1e-6, 0,
-		0, 0, 1e-6;
-	**mParallelCond = ((**mParallelCond)(0, 0) > 0) ? **mParallelCond : defaultParallelCond;
-
 	// Static calculation
 	Real omega = 2. * PI * frequency;
 	MatrixComp impedance = MatrixComp::Zero(3, 3);
@@ -57,44 +47,30 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	**mIntfCurrent = iInit.real();
 	**mIntfVoltage = vInitABC.real();
 
-	// Initialization of virtual node
-	// Initial voltage of phase B,C is set after A
-	MatrixComp vInitTerm0 = MatrixComp::Zero(3, 1);
-	vInitTerm0(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
-	vInitTerm0(1, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_B;
-	vInitTerm0(2, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_C;
-
-	mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH*(vInitTerm0 + **mSeriesRes * iInit));
-
-	// Create series sub components
-	mSubSeriesResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
-	mSubSeriesResistor->setParameters(**mSeriesRes);
-	mSubSeriesResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
-	mSubSeriesResistor->initialize(mFrequencies);
-	mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubSeriesResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
-	mSubSeriesInductor = std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
-	mSubSeriesInductor->setParameters(**mSeriesInd);
-	mSubSeriesInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
-	mSubSeriesInductor->initialize(mFrequencies);
-	mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubSeriesInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+	// Create series rl sub component
+	mSubSeriesElement = std::make_shared<EMT::Ph3::ResIndSeries>(**mName + "_ResIndSeries", mLogLevel);
+	mSubSeriesElement->connect({ mTerminals[0]->node(), mTerminals[1]->node() });
+	mSubSeriesElement->setParameters(**mSeriesRes, **mSeriesInd);
+	mSubSeriesElement->initialize(mFrequencies);
+	mSubSeriesElement->initializeFromNodesAndTerminals(frequency);
+	addMNASubComponent(mSubSeriesElement, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	// Create parallel sub components
-	mSubParallelResistor0 = std::make_shared<EMT::Ph3::Resistor>(**mName + "_con0", mLogLevel);
-	mSubParallelResistor0->setParameters(2. * (**mParallelCond).inverse());
-	mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
-	mSubParallelResistor0->initialize(mFrequencies);
-	mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubParallelResistor0, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+	if ((**mParallelCond)(0,0) > 0) {
+		mSubParallelResistor0 = std::make_shared<EMT::Ph3::Resistor>(**mName + "_con0", mLogLevel);
+		mSubParallelResistor0->setParameters(2. * (**mParallelCond).inverse());
+		mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
+		mSubParallelResistor0->initialize(mFrequencies);
+		mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
+		addMNASubComponent(mSubParallelResistor0, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
-	mSubParallelResistor1 = std::make_shared<EMT::Ph3::Resistor>(**mName + "_con1", mLogLevel);
-	mSubParallelResistor1->setParameters(2. * (**mParallelCond).inverse());
-	mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
-	mSubParallelResistor1->initialize(mFrequencies);
-	mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubParallelResistor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+		mSubParallelResistor1 = std::make_shared<EMT::Ph3::Resistor>(**mName + "_con1", mLogLevel);
+		mSubParallelResistor1->setParameters(2. * (**mParallelCond).inverse());
+		mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
+		mSubParallelResistor1->initialize(mFrequencies);
+		mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
+		addMNASubComponent(mSubParallelResistor1, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+	}
 
 	if ((**mParallelCap)(0,0) > 0) {
 		mSubParallelCapacitor0 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_cap0", mLogLevel);
@@ -131,13 +107,11 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
-		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(**mIntfVoltage),
 		Logger::matrixToString(**mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
-		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)),
-		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
 	mSLog->flush();
 }
 
@@ -178,5 +152,5 @@ void EMT::Ph3::PiLine::mnaCompUpdateVoltage(const Matrix& leftVector) {
 }
 
 void EMT::Ph3::PiLine::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	**mIntfCurrent = mSubSeriesInductor->intfCurrent();
+	**mIntfCurrent = mSubSeriesElement->intfCurrent();
 }

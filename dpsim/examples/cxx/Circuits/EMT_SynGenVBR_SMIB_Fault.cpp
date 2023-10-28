@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	//Synchronous generator ideal model
-	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
+	auto genPF = SP::Ph1::SynchronGenerator::make("SynGen", Logger::Level::debug);
 	genPF->setParameters(syngenKundur.nomPower, syngenKundur.nomVoltage, setPointActivePower, setPointVoltage, PowerflowBusType::PV);
 	genPF->setBaseVoltage(VnomMV);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
@@ -106,6 +106,13 @@ int main(int argc, char* argv[]) {
 	// ----- Dynamic simulation ------
 	Logger::setLogDir("logs/"+simName);
 
+	// Extract relevant powerflow results
+	Real initTerminalVolt = std::abs(n1PF->singleVoltage())*RMS3PH_TO_PEAK1PH;
+	Real initVoltAngle = Math::phase(n1PF->singleVoltage()); // angle in rad
+	Real initActivePower = genPF->getApparentPower().real();
+	Real initReactivePower = genPF->getApparentPower().imag();
+	Real initMechPower = initActivePower;
+	
 	// Nodes
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2 = SimNode<Real>::make("n2", PhaseType::ABC);
@@ -117,6 +124,7 @@ int main(int argc, char* argv[]) {
 		syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.poleNum, syngenKundur.nomFieldCurr,
 		syngenKundur.Rs, syngenKundur.Ll, syngenKundur.Lmd, syngenKundur.Lmq, syngenKundur.Rfd, syngenKundur.Llfd, syngenKundur.Rkd,
 		syngenKundur.Llkd, syngenKundur.Rkq1, syngenKundur.Llkq1, syngenKundur.Rkq2, syngenKundur.Llkq2, syngenKundur.H);
+	gen->setInitialValues(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
@@ -144,8 +152,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{gen, line, fault, extnet});
 
 	// Initialization of dynamic topology
-	system.initWithPowerflow(systemPF);
-	gen->terminal(0)->setPower(-genPF->getApparentPower());
+	system.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
 	// Logging
 	auto logger = DataLogger::make(simName);
