@@ -1,6 +1,6 @@
 include(FetchContent)
 FetchContent_Declare(cim-data
-	GIT_REPOSITORY https://git.rwth-aachen.de/acs/public/grid-data/cim-grid-data.git
+	GIT_REPOSITORY https://github.com/dpsim-simulator/cim-grid-data.git
 	GIT_TAG        master
 	GIT_SHALLOW    TRUE
 	GIT_PROGRESS   TRUE
@@ -9,7 +9,7 @@ FetchContent_Declare(cim-data
 FetchContent_MakeAvailable(cim-data)
 
 FetchContent_Declare(profile-data
-	GIT_REPOSITORY https://git.rwth-aachen.de/acs/public/grid-data/grid-profiles.git
+	GIT_REPOSITORY https://github.com/dpsim-simulator/example-profile-data.git
 	GIT_TAG        master
 	GIT_SHALLOW    TRUE
 	GIT_PROGRESS   TRUE
