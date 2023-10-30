@@ -125,3 +125,23 @@ void EMT::Ph1::Inductor::mnaCompUpdateVoltage(const Matrix &leftVector) {
 void EMT::Ph1::Inductor::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = mEquivCond * (**mIntfVoltage)(0, 0) + mEquivCurrent;
 }
+
+void EMT::Ph1::Inductor::stampEigenvalueMatrices(Matrix& signMatrix, Matrix& discretizationMatrix, Matrix& branchNodeIncidenceMatrix)
+{
+	signMatrix(mBranchIdx, mBranchIdx) = 1.0;
+	discretizationMatrix(mBranchIdx, mBranchIdx) = -2 * mEquivCond;
+	if (terminalNotGrounded(0))
+	{
+		branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(0)) = 1.0;
+	}
+	if (terminalNotGrounded(1))
+	{
+		branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(1)) = -1.0;
+	}
+}
+
+void EMT::Ph1::Inductor::setBranchIdx(int i)
+{
+	mBranchIdx = i;
+}
+
