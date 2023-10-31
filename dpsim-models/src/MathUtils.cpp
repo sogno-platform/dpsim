@@ -98,9 +98,9 @@ Real Math::realFromVectorElement(const Matrix &mat, Matrix::Index row) {
 }
 
 // TODO: [Georgii] resize existing matrix instead of creating a new one (performance, memory)
-MatrixComp Math::returnNonZeroElements(const MatrixComp &matrix)
+MatrixComp Math::returnNonZeroElements(const MatrixComp &mat)
 {
-	Eigen::Matrix<bool, Eigen::Dynamic, Eigen::Dynamic> mask = (matrix.array().abs() > 1e-14);
+	Eigen::Matrix<bool, Eigen::Dynamic, Eigen::Dynamic> mask = (mat.array().abs() > 1e-14);
 	int nonZeroCount = mask.cast<int>().sum();
 
 	Eigen::MatrixXcd nonZeroMatrix(nonZeroCount, 1);
@@ -111,7 +111,7 @@ MatrixComp Math::returnNonZeroElements(const MatrixComp &matrix)
 		{
 			if (mask(i, j))
 			{
-				nonZeroMatrix(index++) = matrix(i, j);
+				nonZeroMatrix(index++) = mat(i, j);
 			}
 		}
 	}
