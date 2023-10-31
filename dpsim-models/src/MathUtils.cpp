@@ -97,14 +97,33 @@ Real Math::realFromVectorElement(const Matrix &mat, Matrix::Index row) {
   return mat(row, 0);
 }
 
-void Math::setMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
-                            Matrix::Index column, Complex value, Int maxFreq,
-                            Int freqIdx) {
-  // Assume square matrix
-  Eigen::Index harmonicOffset = mat.rows() / maxFreq;
-  Eigen::Index complexOffset = harmonicOffset / 2;
-  Eigen::Index harmRow = row + harmonicOffset * freqIdx;
-  Eigen::Index harmCol = column + harmonicOffset * freqIdx;
+// TODO: [Georgii] resize existing matrix instead of creating a new one (performance, memory)
+MatrixComp Math::returnNonZeroElements(const MatrixComp &matrix)
+{
+	Eigen::Matrix<bool, Eigen::Dynamic, Eigen::Dynamic> mask = (matrix.array().abs() > 1e-14);
+	int nonZeroCount = mask.cast<int>().sum();
+
+	Eigen::MatrixXcd nonZeroMatrix(nonZeroCount, 1);
+	int index = 0;
+	for (int i = 0; i < mask.rows(); ++i)
+	{
+		for (int j = 0; j < mask.cols(); ++j)
+		{
+			if (mask(i, j))
+			{
+				nonZeroMatrix(index++) = matrix(i, j);
+			}
+		}
+	}
+	return nonZeroMatrix;
+}
+
+void Math::setMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq, Int freqIdx) {
+	// Assume square matrix
+	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+	Eigen::Index complexOffset = harmonicOffset / 2;
+	Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+	Eigen::Index harmCol = column + harmonicOffset * freqIdx;
 
   mat.coeffRef(harmRow, harmCol) = value.real();
   mat.coeffRef(harmRow + complexOffset, harmCol + complexOffset) = value.real();
