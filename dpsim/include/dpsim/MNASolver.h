@@ -20,10 +20,9 @@
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNASyncGenInterface.h>
-#include <dpsim-models/Solver/MNAVariableCompInterface.h>
-#include <dpsim/Config.h>
-#include <dpsim/DataLogger.h>
-#include <dpsim/Solver.h>
+#include <dpsim-models/SimSignalComp.h>
+#include <dpsim-models/SimPowerComp.h>
+#include <dpsim-models/Solver/EigenvalueCompInterface.h>
 
 /* std::size_t is the largest data type. No container can store
  * more than std::size_t elements. Define the number of switches
@@ -120,9 +119,17 @@ protected:
   /// LU refactorization measurements
   std::vector<Real> mRecomputationTimes;
 
-  /// Constructor should not be called by users but by Simulation
-  MnaSolver(String name, CPS::Domain domain = CPS::Domain::DP,
-            CPS::Logger::Level logLevel = CPS::Logger::Level::info);
+		// #### Eigenvalue extraction ####
+		Matrix mSignMatrix;
+		Matrix mDiscretizationMatrix;
+		Matrix mBranchNodeIncidenceMatrix;
+		Matrix mNodeBranchIncidenceMatrix;
+		Matrix mStateMatrix;
+
+		/// Constructor should not be called by users but by Simulation
+		MnaSolver(String name,
+			CPS::Domain domain = CPS::Domain::DP,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
   /// Initialization of individual components
   void initializeComponents();
@@ -191,9 +198,12 @@ protected:
   /// Logs left and right vector
   virtual void log(Real time, Int timeStepCount) override;
 
-public:
-  /// Solution vector of unknown quantities
-  CPS::Attribute<Matrix>::Ptr mLeftSideVector;
+		// #### Eigenvalue extraction ####
+		virtual void calculateStateMatrix() = 0;
+
+	public:
+		/// Solution vector of unknown quantities
+		CPS::Attribute<Matrix>::Ptr mLeftSideVector;
 
   /// Solution vector of unknown quantities (parallel frequencies)
   std::vector<CPS::Attribute<Matrix>::Ptr> mLeftSideVectorHarm;
@@ -208,14 +218,32 @@ public:
   /// Calls subroutines to set up everything that is required before simulation
   virtual void initialize() override;
 
-  // #### Setter and Getter ####
-  ///
-  virtual void setSystem(const CPS::SystemTopology &system) override;
-  ///
-  Matrix &leftSideVector() { return **mLeftSideVector; }
-  ///
-  Matrix &rightSideVector() { return mRightSideVector; }
-  ///
-  virtual CPS::Task::List getTasks() override;
-};
-} // namespace DPsim
+		// #### Setter and Getter ####
+		///
+		virtual void setSystem(const CPS::SystemTopology &system) override;
+		///
+		Matrix& leftSideVector() { return **mLeftSideVector; }
+		///
+		Matrix& rightSideVector() { return mRightSideVector; }
+		///
+		virtual CPS::Task::List getTasks() override;
+
+		// #### Eigenvalue extraction ####
+		/// extract eigenvalues from power system matrix
+		void extractEigenvalues();
+
+	private:	
+		// #### Eigenvalue extraction ####
+		MatrixComp mDiscreteEigenvalues;
+		MatrixComp mEigenvalues;
+		CPS::EigenvalueCompInterface::List mEigenvalueComponents;
+
+		// #### Eigenvalue extraction ####
+		void identifyEigenvalueComponents();
+		void setBranchIndices();
+		void createEmptyEigenvalueMatrices();
+		void stampEigenvalueMatrices();
+		void computeDiscreteEigenvalues();
+		void recoverEigenvalues();
+	};
+}

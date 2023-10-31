@@ -387,10 +387,78 @@ template <typename VarType> void MnaSolverDirect<VarType>::logSolveTime() {
 }
 
 template <typename VarType>
-void MnaSolverDirect<VarType>::logFactorizationTime() {
-  for (auto meas : mFactorizeTimes) {
-    SPDLOG_LOGGER_INFO(mSLog, "LU factorization time: {:.12f}", meas);
-  }
+void MnaSolverDirect<VarType>::calculateStateMatrix()
+{
+	// TODO: [Georgii] use back substitution of factorized power system matrix instead of inversion (performance)
+	SPDLOG_LOGGER_INFO(mSLog, "power system matrix: {}", Logger::matrixToString(mSwitchedMatrices[mCurrentSwitchStatus][0]));
+	mSLog->flush();
+	Matrix intermediateResult = ((Matrix)mSwitchedMatrices[mCurrentSwitchStatus][0]).inverse() * mNodeBranchIncidenceMatrix;
+	mStateMatrix = mSignMatrix + mDiscretizationMatrix * mBranchNodeIncidenceMatrix * intermediateResult;
+}
+
+template <typename VarType>
+void MnaSolverDirect<VarType>::logSystemMatrices() {
+	if (mFrequencyParallel) {
+		for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
+			SPDLOG_LOGGER_INFO(mSLog, "System matrix for frequency: {:d} \n{:s}", i, Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][i]));
+		}
+
+		for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i) {
+			SPDLOG_LOGGER_INFO(mSLog, "Right side vector for frequency: {:d} \n{:s}", i, Logger::matrixToString(mRightSideVectorHarm[i]));
+		}
+
+	}
+	else if (mSystemMatrixRecomputation) {
+		SPDLOG_LOGGER_INFO(mSLog, "Summarizing matrices: ");
+		SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
+		SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
+		SPDLOG_LOGGER_INFO(mSLog, "Right side vector: {}", Logger::matrixToString(mRightSideVector));
+	} else {
+		if (mSwitches.size() < 1) {
+			SPDLOG_LOGGER_INFO(mSLog, "System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
+		}
+		else {
+			SPDLOG_LOGGER_INFO(mSLog, "Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
+
+			for (auto sys : mSwitchedMatrices) {
+				SPDLOG_LOGGER_INFO(mSLog, "Switching System matrix {:s} \n{:s}",
+				sys.first.to_string(), Logger::matrixToString(sys.second[0]));
+			}
+		}
+		SPDLOG_LOGGER_INFO(mSLog, "Right side vector: \n{}", mRightSideVector);
+	}
+}
+
+template<typename VarType>
+void MnaSolverDirect<VarType>::logLUTimes() {
+	logFactorizationTime();
+	logRecomputationTime();
+	logSolveTime();
+}
+
+template<typename VarType>
+void MnaSolverDirect<VarType>::logSolveTime(){
+	Real solveSum = 0.0;
+	Real solveMax = 0.0;
+	for(auto meas : mSolveTimes)
+	{
+		solveSum += meas;
+		if(meas > solveMax)
+			solveMax = meas;
+	}
+  	SPDLOG_LOGGER_INFO(mSLog, "Cumulative solve times: {:.12f}", solveSum);
+	SPDLOG_LOGGER_INFO(mSLog, "Average solve time: {:.12f}", solveSum/static_cast<double>(mSolveTimes.size()));
+	SPDLOG_LOGGER_INFO(mSLog, "Maximum solve time: {:.12f}", solveMax);
+	SPDLOG_LOGGER_INFO(mSLog, "Number of solves: {:d}", mSolveTimes.size());
+}
+
+
+template <typename VarType>
+void MnaSolverDirect<VarType>::logFactorizationTime()
+{
+	for (auto meas : mFactorizeTimes) {
+		SPDLOG_LOGGER_INFO(mSLog, "LU factorization time: {:.12f}", meas);
+	}
 }
 
 template <typename VarType>

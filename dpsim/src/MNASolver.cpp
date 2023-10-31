@@ -358,36 +358,106 @@ template <typename VarType> void MnaSolver<VarType>::identifyTopologyObjects() {
   }
 }
 
-template <typename VarType> void MnaSolver<VarType>::assignMatrixNodeIndices() {
-  UInt matrixNodeIndexIdx = 0;
-  for (UInt idx = 0; idx < mNodes.size(); ++idx) {
-    mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
-    SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase A of node {}",
-                       matrixNodeIndexIdx, idx);
-    ++matrixNodeIndexIdx;
-    if (mNodes[idx]->phaseType() == CPS::PhaseType::ABC) {
-      mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
-      SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase B of node {}",
-                         matrixNodeIndexIdx, idx);
-      ++matrixNodeIndexIdx;
-      mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
-      SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase C of node {}",
-                         matrixNodeIndexIdx, idx);
-      ++matrixNodeIndexIdx;
-    }
-    // This should be true when the final network node is reached, not considering virtual nodes
-    if (idx == mNumNetNodes - 1)
-      mNumNetMatrixNodeIndices = matrixNodeIndexIdx;
-  }
-  // Total number of network nodes including virtual nodes is matrixNodeIndexIdx + 1, which is why the variable is incremented after assignment
-  mNumMatrixNodeIndices = matrixNodeIndexIdx;
-  mNumVirtualMatrixNodeIndices =
-      mNumMatrixNodeIndices - mNumNetMatrixNodeIndices;
-  mNumHarmMatrixNodeIndices =
-      static_cast<UInt>(mSystem.mFrequencies.size() - 1) *
-      mNumMatrixNodeIndices;
-  mNumTotalMatrixNodeIndices =
-      static_cast<UInt>(mSystem.mFrequencies.size()) * mNumMatrixNodeIndices;
+template <typename VarType>
+void MnaSolver<VarType>::extractEigenvalues() 
+{
+	identifyEigenvalueComponents();
+	setBranchIndices();
+	createEmptyEigenvalueMatrices();
+	stampEigenvalueMatrices();
+	calculateStateMatrix();
+	computeDiscreteEigenvalues();
+	recoverEigenvalues();
+
+	SPDLOG_LOGGER_INFO(mSLog, "sign matrix: {}", Logger::matrixToString(mSignMatrix));
+	SPDLOG_LOGGER_INFO(mSLog, "discretization matrix: {}", Logger::matrixToString(mDiscretizationMatrix));
+	SPDLOG_LOGGER_INFO(mSLog, "branch <-> node incidence matrix: {}", Logger::matrixToString(mBranchNodeIncidenceMatrix));
+	SPDLOG_LOGGER_INFO(mSLog, "node <-> branch incidence matrix: {}", Logger::matrixToString(mNodeBranchIncidenceMatrix));
+	SPDLOG_LOGGER_INFO(mSLog, "discretized state matrix: {}", Logger::matrixToString(mStateMatrix));
+	SPDLOG_LOGGER_INFO(mSLog, "discrete eigenvalues: {}", Logger::matrixCompToString(mDiscreteEigenvalues));
+	SPDLOG_LOGGER_INFO(mSLog, "eigenvalues: {}", Logger::matrixCompToString(mEigenvalues));
+	mSLog->flush();
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::identifyEigenvalueComponents()
+{
+	// TODO: [Georgii] throw exception if topology contains components that do not implement EigenvalueCompInterface
+	for (auto comp : mSystem.mComponents)
+	{
+		auto eigenvalueComponent = std::dynamic_pointer_cast<CPS::EigenvalueCompInterface>(comp);
+		if (eigenvalueComponent)
+		{
+			mEigenvalueComponents.push_back(eigenvalueComponent);
+		}
+	}
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::setBranchIndices()
+{
+	int size = mEigenvalueComponents.size();
+	for (int i = 0; i < size; i++)
+	{
+		mEigenvalueComponents[i]->setBranchIdx(i);
+	}
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::createEmptyEigenvalueMatrices()
+{
+	int nBranches = mEigenvalueComponents.size();
+	mSignMatrix = Matrix(nBranches, nBranches);
+	mDiscretizationMatrix = Matrix(nBranches, nBranches);
+	mBranchNodeIncidenceMatrix = Matrix(nBranches, mNumMatrixNodeIndices);
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::stampEigenvalueMatrices()
+{
+	for (auto comp : mEigenvalueComponents)
+	{
+		comp->stampEigenvalueMatrices(mSignMatrix, mDiscretizationMatrix, mBranchNodeIncidenceMatrix);
+	}
+	mNodeBranchIncidenceMatrix = mBranchNodeIncidenceMatrix.transpose();
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::computeDiscreteEigenvalues()
+{
+	auto discreteEigenvaluesIncludingZeros = mStateMatrix.eigenvalues();
+	mDiscreteEigenvalues = CPS::Math::returnNonZeroElements(discreteEigenvaluesIncludingZeros);
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::recoverEigenvalues()
+{
+	mEigenvalues = 2.0 / mTimeStep * (mDiscreteEigenvalues.array() - 1.0) / (mDiscreteEigenvalues.array() + 1.0);
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::assignMatrixNodeIndices() {
+	UInt matrixNodeIndexIdx = 0;
+	for (UInt idx = 0; idx < mNodes.size(); ++idx) {
+		mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
+		SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase A of node {}", matrixNodeIndexIdx, idx);
+		++matrixNodeIndexIdx;
+		if (mNodes[idx]->phaseType() == CPS::PhaseType::ABC) {
+			mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
+			SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase B of node {}", matrixNodeIndexIdx, idx);
+			++matrixNodeIndexIdx;
+			mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
+			SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase C of node {}", matrixNodeIndexIdx, idx);
+			++matrixNodeIndexIdx;
+		}
+		// This should be true when the final network node is reached, not considering virtual nodes
+		if (idx == mNumNetNodes-1) mNumNetMatrixNodeIndices = matrixNodeIndexIdx;
+	}
+	// Total number of network nodes including virtual nodes is matrixNodeIndexIdx + 1, which is why the variable is incremented after assignment
+	mNumMatrixNodeIndices = matrixNodeIndexIdx;
+	mNumVirtualMatrixNodeIndices = mNumMatrixNodeIndices - mNumNetMatrixNodeIndices;
+	mNumHarmMatrixNodeIndices = static_cast<UInt>(mSystem.mFrequencies.size()-1) * mNumMatrixNodeIndices;
+	mNumTotalMatrixNodeIndices = static_cast<UInt>(mSystem.mFrequencies.size()) * mNumMatrixNodeIndices;
 
   SPDLOG_LOGGER_INFO(mSLog, "Assigned simulation nodes to topology nodes:");
   SPDLOG_LOGGER_INFO(mSLog, "Number of network simulation nodes: {:d}",

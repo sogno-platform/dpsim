@@ -79,30 +79,36 @@ protected:
   /// LU factorization configuration
   DirectLinearSolverConfiguration mConfigurationInUse;
 
-  using MnaSolver<VarType>::mSwitches;
-  using MnaSolver<VarType>::mMNAIntfSwitches;
-  using MnaSolver<VarType>::mMNAComponents;
-  using MnaSolver<VarType>::mVariableComps;
-  using MnaSolver<VarType>::mMNAIntfVariableComps;
-  using MnaSolver<VarType>::mRightSideVector;
-  using MnaSolver<VarType>::mLeftSideVector;
-  using MnaSolver<VarType>::mCurrentSwitchStatus;
-  using MnaSolver<VarType>::mRightVectorStamps;
-  using MnaSolver<VarType>::mNumNetNodes;
-  using MnaSolver<VarType>::mNodes;
-  using MnaSolver<VarType>::mIsInInitialization;
-  using MnaSolver<VarType>::mRightSideVectorHarm;
-  using MnaSolver<VarType>::mLeftSideVectorHarm;
-  using MnaSolver<VarType>::mFrequencyParallel;
-  using MnaSolver<VarType>::mSLog;
-  using MnaSolver<VarType>::mSystemMatrixRecomputation;
-  using MnaSolver<VarType>::hasVariableComponentChanged;
-  using MnaSolver<VarType>::mNumRecomputations;
-  using MnaSolver<VarType>::mSyncGen;
-  using MnaSolver<VarType>::mFactorizeTimes;
-  using MnaSolver<VarType>::mSolveTimes;
-  using MnaSolver<VarType>::mRecomputationTimes;
-  using MnaSolver<VarType>::mListVariableSystemMatrixEntries;
+		using MnaSolver<VarType>::mSwitches;
+		using MnaSolver<VarType>::mMNAIntfSwitches;
+		using MnaSolver<VarType>::mMNAComponents;
+		using MnaSolver<VarType>::mVariableComps;
+		using MnaSolver<VarType>::mMNAIntfVariableComps;
+		using MnaSolver<VarType>::mRightSideVector;
+		using MnaSolver<VarType>::mLeftSideVector;
+		using MnaSolver<VarType>::mCurrentSwitchStatus;
+		using MnaSolver<VarType>::mRightVectorStamps;
+		using MnaSolver<VarType>::mNumNetNodes;
+		using MnaSolver<VarType>::mNodes;
+		using MnaSolver<VarType>::mIsInInitialization;
+		using MnaSolver<VarType>::mRightSideVectorHarm;
+		using MnaSolver<VarType>::mLeftSideVectorHarm;
+		using MnaSolver<VarType>::mFrequencyParallel;
+		using MnaSolver<VarType>::mSLog;
+		using MnaSolver<VarType>::mSystemMatrixRecomputation;
+		using MnaSolver<VarType>::hasVariableComponentChanged;
+		using MnaSolver<VarType>::mNumRecomputations;
+		using MnaSolver<VarType>::mSyncGen;
+		using MnaSolver<VarType>::mFactorizeTimes;
+		using MnaSolver<VarType>::mSolveTimes;
+		using MnaSolver<VarType>::mRecomputationTimes;
+		using MnaSolver<VarType>::mListVariableSystemMatrixEntries;
+		// ### Eigenvalue extraction ###
+		using MnaSolver<VarType>::mSignMatrix;
+		using MnaSolver<VarType>::mDiscretizationMatrix;
+		using MnaSolver<VarType>::mBranchNodeIncidenceMatrix;
+		using MnaSolver<VarType>::mNodeBranchIncidenceMatrix;
+		using MnaSolver<VarType>::mStateMatrix;
 
   // #### General
   /// Create system matrix
@@ -154,11 +160,15 @@ protected:
   std::shared_ptr<DirectLinearSolver>
   createDirectSolverImplementation(CPS::Logger::Log mSLog);
 
-public:
-  /// Constructor should not be called by users but by Simulation
-  /// sovlerImpl: choose the most advanced solver implementation available by default
-  MnaSolverDirect(String name, CPS::Domain domain = CPS::Domain::DP,
-                  CPS::Logger::Level logLevel = CPS::Logger::Level::info);
+		// ### Eigenvalue extraction ###
+		void calculateStateMatrix() override;
+
+	public:
+		/// Constructor should not be called by users but by Simulation
+		/// sovlerImpl: choose the most advanced solver implementation available by default
+		MnaSolverDirect(String name,
+			CPS::Domain domain = CPS::Domain::DP,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
   /// Destructor
   virtual ~MnaSolverDirect() = default;
