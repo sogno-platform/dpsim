@@ -241,12 +241,20 @@ public:
   /// Create the schedule for the independent tasks
   void schedule();
 
-  /// Schedule an event in the simulation
-  void addEvent(Event::Ptr e) { mEvents.addEvent(e); }
-  /// Add a new data logger
-  void addLogger(DataLogger::Ptr logger) { mLoggers.push_back(logger); }
-  /// Write step time measurements to log file
-  void logStepTimes(String logName);
+		// ### Eigenvalue extraction ###
+		/// Extract eigenvalues from power system conductance matrix
+		void extractEigenvalues();
+
+		/// Schedule an event in the simulation
+		void addEvent(Event::Ptr e) {
+			mEvents.addEvent(e);
+		}
+		/// Add a new data logger
+		void addLogger(DataLogger::Ptr logger) {
+			mLoggers.push_back(logger);
+		}
+		/// Write step time measurements to log file
+		void logStepTimes(String logName);
 
   /// Write LU decomposition times measurements to log file
   void logLUTimes();

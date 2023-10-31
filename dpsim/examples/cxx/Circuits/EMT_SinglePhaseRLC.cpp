@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
-	// sim.extractEigenvalues();
+	sim.extractEigenvalues();
 	
 	sim.run();
 

@@ -417,6 +417,23 @@ Real Simulation::step() {
   return mTime;
 }
 
+void Simulation::extractEigenvalues()
+{
+	if (!mInitialized)
+	{
+		initialize();
+	}
+	// TODO: [Georgii] throw exceptions for multiple solvers and for non-supported solver types
+	if (mSolvers.size() == 1)
+	{
+		auto mnaSolver = std::dynamic_pointer_cast<DPsim::MnaSolver<Real>>(mSolvers[0]);
+		if (mnaSolver)
+		{
+			mnaSolver->extractEigenvalues();
+		}
+	}
+}
+
 void Simulation::logStepTimes(String logName) {
   auto stepTimeLog = Logger::get(logName, Logger::Level::info);
   Logger::setLogPattern(stepTimeLog, "%v");
