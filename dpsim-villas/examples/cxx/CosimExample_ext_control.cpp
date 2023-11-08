@@ -111,9 +111,11 @@ Simulation setDPsim1(float ts, float tf, float u10) {
 	n2_v0(0,0) = u10;
 
 	Eigen::MatrixXd ir1_0(1,1);
-	ir1_0(0,0) = n1_v0(0,0) / r1_r;
+	// ir1_0(0,0) = n1_v0(0,0) / r1_r;
+	ir1_0(0,0) = 50;
 	Eigen::MatrixXd irLine_0(1,1);
-	irLine_0(0,0) = (n1_v0(0,0) - n2_v0(0,0)) / rLine_r;
+	// irLine_0(0,0) = (n1_v0(0,0) - n2_v0(0,0)) / rLine_r;
+	irLine_0(0,0) = 30;
 
 	r1->setIntfVoltage(n1_v0);
 	r1->setIntfCurrent(ir1_0);
@@ -268,7 +270,7 @@ Simulation setDPsim2(float ts, float tf, float u20) {
 int main(int argc, char* argv[]) {
 
 	float timeStep = 0.01;
-	float finalTime = 0.05;
+	float finalTime = 1.0;
 
 	// ** Initialization **
 	// Communication y20 -> S_1 and initialization of S_1
@@ -301,6 +303,10 @@ int main(int argc, char* argv[]) {
 
 	Simulation sim2 = setDPsim2(timeStep, finalTime, u20);
 	sim2.start();
+
+	// Verify initialization
+	AttributeBase::Ptr u20_base_test = sim2.getIdObjAttribute("i_in_2", "i_intf");
+	cout << "Current value in S2: " << u20_base_test->toString() << endl;
 
 	AttributeBase::Ptr y20_base = sim2.getIdObjAttribute("i_in_2", "v_intf");
 	// auto y20_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(y20_base.getPtr());
@@ -339,13 +345,20 @@ int main(int argc, char* argv[]) {
 		// Put value
 		// *u2_base = *y1_base;
 		// *u2_base.getPtr() = *y1_base.getPtr();
-		**u2 = 27.2727;
-		Real u2_test = **u2;
+		
+		// This way doesn't work
+		// **u2 = 27.2727;
+		// Real u2_test = **u2;
+
+		// this way does work
+		u2->set(**y1);
+		Real u2_test2 = **u2;
 
 		// Verify
 		// u2_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(u2_base.getPtr());
 		// u2 = u2_matrix->deriveCoeff<Real>(0,0);
-		cout << "Input value to S2: " << u2_test << endl;
+		// cout << "Input value to S2: " << u2_test << endl;
+		cout << "Input value to S2 (option 2): " << u2_test2 << endl;
 
 		AttributeBase::Ptr u2_base_test = sim2.getIdObjAttribute("i_in_2", "i_intf");
 		// auto u2_matrix_test = std::dynamic_pointer_cast<Attribute<Matrix>>(u2_base_test.getPtr());
@@ -356,10 +369,11 @@ int main(int argc, char* argv[]) {
 		sim2.next();
 
 		AttributeBase::Ptr y2_base = sim2.getIdObjAttribute("i_in_2", "v_intf");	
-		// auto y2_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(y2_base.getPtr());
-		// Attribute<Real>::Ptr y2 = y2_matrix->deriveCoeff<Real>(0,0);
+		auto y2_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(y2_base.getPtr());
+		Attribute<Real>::Ptr y2 = y2_matrix->deriveCoeff<Real>(0,0);
+		cout << "Output value from S2: " << **y2 << endl;
 		// cout << "Output value from S2: " << y2->toString() << endl;
-		cout << "Output value from S2: " << y2_base->toString() << endl;
+		// cout << "Output value from S2: " << y2_base->toString() << endl;
 
 		// Get corresponding attribute in S_1
 		AttributeBase::Ptr u1_base = sim1.getIdObjAttribute("v_in_1", "v_intf");
@@ -368,12 +382,22 @@ int main(int argc, char* argv[]) {
 		cout << "Current value in S1: " << u1->toString() << endl;
 
 		// Put value
-		*u1_base = *y2_base;
+		// *u1_base = *y2_base;
+
+		u1->set(**y2);
+		Real u1_test2 = **u1;
 
 		// Verify
-		u1_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(u1_base.getPtr());
-		u1 = u1_matrix->deriveCoeff<Real>(0,0);
-		cout << "Input value to S1: " << u1->toString() << endl;
+		// u1_matrix = std::dynamic_pointer_cast<Attribute<Matrix>>(u1_base.getPtr());
+		// u1 = u1_matrix->deriveCoeff<Real>(0,0);
+		// cout << "Input value to S1: " << u1->toString() << endl;
+		cout << "Input value to S1 (option 2): " << u1_test2 << endl;
+
+		AttributeBase::Ptr u1_base_test = sim1.getIdObjAttribute("v_in_1", "v_intf");
+		// auto u2_matrix_test = std::dynamic_pointer_cast<Attribute<Matrix>>(u2_base_test.getPtr());
+		// Attribute<Real>::Ptr u2_test = u2_matrix_test->deriveCoeff<Real>(0,0);
+		// cout << "Current value in S2: " << u2_test->toString() << endl;
+		cout << "Current value in S1: " << u1_base_test->toString() << endl;
 
 	}
 

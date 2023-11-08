@@ -74,23 +74,27 @@ int main(int argc, char* argv[]) {
 	n2_v0(0,0) = 2.0;
 
 	Eigen::MatrixXd ir1_0(1,1);
-	ir1_0(0,0) = n1_v0(0,0) / r1_r;
+	ir1_0(0,0) = -n1_v0(0,0) / r1_r;
 	Eigen::MatrixXd irLine_0(1,1);
 	irLine_0(0,0) = (n1_v0(0,0) - n2_v0(0,0)) / rLine_r;
 
 	Eigen::MatrixXd ir3_0(1,1);
 	ir3_0(0,0) = n2_v0(0,0) / r3_r;
 
+	Eigen::MatrixXd ic1_0 = ir1_0 - irLine_0;
+	Eigen::MatrixXd vrLine_0 = n1_v0 - n2_v0;
+	Eigen::MatrixXd ic2_0 = irLine_0 - ir3_0;
+
 	r1->setIntfVoltage(n1_v0);
 	r1->setIntfCurrent(ir1_0);
 	c1->setIntfVoltage(n1_v0);
-	c1->setIntfCurrent(ir1_0 - irLine_0);
-	rLine->setIntfVoltage(n1_v0 - n2_v0);
+	c1->setIntfCurrent(ic1_0);
+	rLine->setIntfVoltage(vrLine_0);
 	rLine->setIntfCurrent(irLine_0);
 	r3->setIntfVoltage(n2_v0);
 	r3->setIntfCurrent(ir3_0);
 	c2->setIntfVoltage(n2_v0);
-	c2->setIntfCurrent(irLine_0 - ir3_0);
+	c2->setIntfCurrent(ic2_0);
 
 	sim.run();
 }
