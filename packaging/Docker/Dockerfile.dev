@@ -85,15 +85,15 @@ RUN cd /tmp && \
 	rm -rf /tmp/libcimpp
 
 # Install VILLASnode from source
-# RUN cd /tmp && \
-# 	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
-# 	mkdir -p villas-node/build && cd villas-node/build && \
-# 	git checkout ${VILLAS_VERSION} && \
-# 	cmake ${CMAKE_OPTS} .. \
-# 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
-# 		-DDOWNLOAD_GO=OFF && \
-# 	make ${MAKE_OPTS} install && \
-# 	rm -rf /tmp/villas-node
+RUN cd /tmp && \
+	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
+	mkdir -p villas-node/build && cd villas-node/build && \
+	git checkout ${VILLAS_VERSION} && \
+	cmake ${CMAKE_OPTS} .. \
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+		-DDOWNLOAD_GO=OFF && \
+	make ${MAKE_OPTS} install && \
+	rm -rf /tmp/villas-node
 
 # Remove this part in the future and use dedicated Jupyter Dockerfile
 # Activate Jupyter extensions
