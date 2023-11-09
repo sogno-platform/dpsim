@@ -449,8 +449,6 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	}
 	if (mHasExciter) 
 		mExciter->initialize(Math::abs(mInitVoltage), **mEf);
-	if (mHasTurbineGovernor)
-		mTurbineGovernor->initialize(**mMechTorque);
 	
 	if (mHasTurbine) {
 		if (!mHasGovernor) {
