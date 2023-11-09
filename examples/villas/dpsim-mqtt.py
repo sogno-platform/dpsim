@@ -58,6 +58,11 @@ intf.export_attribute(r12.attr('i_intf').derive_coeff(0, 0), 0)
 
 sim.add_interface(intf)
 
+# TODO: Find out for what were those functions, and which functions from the new version can replace them, if required
+# sim.import_attribute(evs.attr('V_ref'), 0)
+# sim.export_attribute(r12.attr('i_intf').derive_coeff(0, 0), 0)
+# sim.export_attribute(evs.attr('v_intf').derive_coeff(0, 0).derive_scaled(complex(-1,0)), 1)
+
 sim.add_logger(logger)
 
 sim.run(1)
