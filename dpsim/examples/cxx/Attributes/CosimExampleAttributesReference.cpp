@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include <DPsim.h>
-#include <dpsim-villas/InterfaceVillas.h>
 
 using namespace DPsim;
 using namespace CPS;
