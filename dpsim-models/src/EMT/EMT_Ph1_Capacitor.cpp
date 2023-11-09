@@ -25,7 +25,6 @@ SimPowerComp<Real>::Ptr EMT::Ph1::Capacitor::clone(String name) {
 }
 
 void EMT::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
-
 	Real omega = 2 * PI * frequency;
 	Complex impedance = { 0, - 1. / (omega * **mCapacitance) };
 	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
@@ -42,6 +41,7 @@ void EMT::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		(**mIntfCurrent)(0,0),
 		initialSingleVoltage(0).real(),
 		initialSingleVoltage(1).real());
+	mSLog->flush();
 }
 
 void EMT::Ph1::Capacitor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
