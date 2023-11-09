@@ -413,97 +413,104 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 }
 
 template <>
-void Base::ReducedOrderSynchronGenerator<
-    Complex>::initializeFromNodesAndTerminals(Real frequency) {
+void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTerminals(Real frequency) {
 
-  this->updateMatrixNodeIndices();
+	this->updateMatrixNodeIndices();
 
-  if (!mInitialValuesSet)
-    this->setInitialValues(-this->terminal(0)->singlePower(),
-                           -this->terminal(0)->singlePower().real(),
-                           this->initialSingleVoltage(0));
+	if(!mInitialValuesSet)
+		this->setInitialValues(-this->terminal(0)->singlePower(), -this->terminal(0)->singlePower().real(), this->initialSingleVoltage(0));
 
-  // Initialize mechanical torque
-  **mMechTorque = mInitMechPower / mNomPower;
-  mMechTorque_prev = **mMechTorque;
+	// Initialize mechanical torque
+	**mMechTorque = mInitMechPower / mNomPower;
+	mMechTorque_prev = **mMechTorque;
 
-  // calculate steady state machine emf (i.e. voltage behind synchronous reactance)
-  Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
+	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
+	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
 
-  // Load angle
-  **mDelta = Math::phase(Eq0);
+	// Load angle
+	**mDelta = Math::phase(Eq0);
 
-  // convert currrents to dq reference frame
-  (**mIdq)(0, 0) = Math::abs(mInitCurrent) * sin(**mDelta - mInitCurrentAngle);
-  (**mIdq)(1, 0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
+	// convert currrents to dq reference frame
+	(**mIdq)(0,0) = Math::abs(mInitCurrent) * sin(**mDelta - mInitCurrentAngle);
+	(**mIdq)(1,0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
 
-  // convert voltages to dq reference frame
-  (**mVdq)(0, 0) = Math::abs(mInitVoltage) * sin(**mDelta - mInitVoltageAngle);
-  (**mVdq)(1, 0) = Math::abs(mInitVoltage) * cos(**mDelta - mInitVoltageAngle);
+	// convert voltages to dq reference frame
+	(**mVdq)(0,0) = Math::abs(mInitVoltage) * sin(**mDelta - mInitVoltageAngle);
+	(**mVdq)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta - mInitVoltageAngle);
 
-  // calculate Ef
-  **mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq)(0, 0);
-  mEf_prev = **mEf;
+	// calculate Ef
+	**mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq)(0,0);
+	mEf_prev = **mEf;
 
-  // initial electrical torque
-  **mElecTorque =
-      (**mVdq)(0, 0) * (**mIdq)(0, 0) + (**mVdq)(1, 0) * (**mIdq)(1, 0);
+	// initial electrical torque
+	**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
 
-  // Initialize omega mech with nominal system frequency
-  **mOmMech = mNomOmega / mBase_OmMech;
+	// Initialize omega mech with nominal system frequency
+	**mOmMech = mNomOmega / mBase_OmMech;
 
-  // initialize theta and calculate transform matrix
-  **mThetaMech = **mDelta - PI / 2.;
+	// initialize theta and calculate transform matrix
+	**mThetaMech = **mDelta - PI / 2.;
 
-  // Initialize controllers
-  if (mHasPSS) {
-    if (!mHasExciter) {
-      SPDLOG_LOGGER_ERROR(
-          this->mSLog,
-          "\nPSS can not be used without Exciter! PSS will be ignored!");
-      mHasPSS = false;
-    } else {
-      mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq)(0, 0),
-                       (**mVdq)(1, 0));
-    }
-  }
-  if (mHasExciter)
-    mExciter->initialize(Math::abs(mInitVoltage), **mEf);
-  if (mHasTurbine) {
-    if (!mHasGovernor) {
-      SPDLOG_LOGGER_ERROR(this->mSLog, "\nTurbine can not be used without "
-                                       "Governor! Exciter will be ignored!");
-      mHasTurbine = false;
-    } else {
-      mTurbine->initialize(**mMechTorque);
-    }
-  }
-  if (mHasGovernor)
-    mGovernor->initialize(**mMechTorque);
+	// Initialize controllers
+	if (mHasPSS) {
+		if (!mHasExciter) {
+			SPDLOG_LOGGER_ERROR(this->mSLog, "\nPSS can not be used without Exciter! PSS will be ignored!");
+			mHasPSS = false;
+		} else {
+			mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq)(0,0), (**mVdq)(1,0));
+		}
+	}
+	if (mHasExciter) 
+		mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+	
+	if (mHasTurbine) {
+		if (!mHasGovernor) {
+			SPDLOG_LOGGER_ERROR(this->mSLog, "\nTurbine can not be used without Governor! Exciter will be ignored!");
+			mHasTurbine = false;
+		} else {
+			mTurbine->initialize(**mMechTorque);
+		}
+	}
+	if (mHasGovernor)
+		mGovernor->initialize(**mMechTorque);
 
-  // set initial value of current
-  (**mIntfCurrent)(0, 0) = mInitCurrent * mBase_I_RMS;
+	// set initial value of current
+	(**mIntfCurrent)(0,0) = mInitCurrent * mBase_I_RMS;
+	
+	// set initial interface voltage
+	(**mIntfVoltage)(0,0) = mInitVoltage * mBase_V_RMS;
 
-  // set initial interface voltage
-  (**mIntfVoltage)(0, 0) = mInitVoltage * mBase_V_RMS;
+	// set initial value of current
+	(**mIntfCurrent)(0,0) = mInitCurrent * mBase_I_RMS;
+	
+	// set initial interface voltage
+	(**mIntfVoltage)(0,0) = mInitVoltage * mBase_V_RMS;
 
-  SPDLOG_LOGGER_INFO(this->mSLog,
-                     "\n--- Initialization from power flow  ---"
-                     "\nInitial Vd (per unit): {:f}"
-                     "\nInitial Vq (per unit): {:f}"
-                     "\nInitial Id (per unit): {:f}"
-                     "\nInitial Iq (per unit): {:f}"
-                     "\nInitial Ef (per unit): {:f}"
-                     "\nInitial mechanical torque (per unit): {:f}"
-                     "\nInitial electrical torque (per unit): {:f}"
-                     "\nInitial initial mechanical theta (per unit): {:f}"
-                     "\nInitial delta (per unit): {:f} (= {:f}°)"
-                     "\n--- Initialization from power flow finished ---",
+	SPDLOG_LOGGER_DEBUG(this->mSLog,
+		"\n--- Initialization from power flow  ---"
+		"\nInitial Vd (per unit): {:f}"
+		"\nInitial Vq (per unit): {:f}"
+		"\nInitial Id (per unit): {:f}"
+		"\nInitial Iq (per unit): {:f}"
+		"\nInitial Ef (per unit): {:f}"
+		"\nInitial mechanical torque (per unit): {:f}"
+		"\nInitial electrical torque (per unit): {:f}"
+		"\nInitial initial mechanical theta (per unit): {:f}"
+        "\nInitial delta (per unit): {:f} (= {:f}°)"
+		"\n--- Initialization from power flow finished ---",
 
-                     (**mVdq)(0, 0), (**mVdq)(1, 0), (**mIdq)(0, 0),
-                     (**mIdq)(1, 0), **mEf, **mMechTorque, **mElecTorque,
-                     **mThetaMech, **mDelta, **mDelta * 180 / PI);
-  this->mSLog->flush();
+		(**mVdq)(0,0),
+		(**mVdq)(1,0),
+		(**mIdq)(0,0),
+		(**mIdq)(1,0),
+		**mEf,
+		**mMechTorque,
+		**mElecTorque,
+		**mThetaMech,
+        **mDelta,
+		**mDelta * 180 / PI
+	);
+	this->mSLog->flush();
 }
 
 template <typename VarType>
