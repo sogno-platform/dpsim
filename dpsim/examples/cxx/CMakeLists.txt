@@ -111,6 +111,12 @@ set(INVERTER_SOURCES
 	Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp
 )
 
+set(ATTRIBUTES_SOURCES
+	Attributes/Attributes.cpp
+	Attributes/CosimExampleAttributes.cpp
+	Attributes/CosimExampleAttributesReference.cpp
+)
+
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry
 # also has to appear in another list in this file.
 list(APPEND TEST_SOURCES
@@ -221,7 +227,7 @@ endif()
 
 add_custom_target(tests)
 
-foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${DAE_SOURCES} ${INVERTER_SOURCES})
+foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${DAE_SOURCES} ${INVERTER_SOURCES} ${ATTRIBUTES_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})

@@ -16,9 +16,8 @@ set(SHMEM_SOURCES
 	FileExample.cpp
 	MqttExample.cpp
 	SharedMemExample.cpp
-	CosimExample_ext_control.cpp
-	CosimExample_ext_control_base.cpp
-	attributes_test.cpp
+	SocketExample.cpp
+	CosimSocketExample.cpp
 	#ShmemExample.cpp
 	#ShmemDistributedReference.cpp
 	#ShmemDistributedDirect.cpp
