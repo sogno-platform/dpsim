@@ -1,14 +1,14 @@
 services:
   dpsim:
     build:
-      context: ../../../../ #dpsim top-level folder
+      context: ../../../ #dpsim top-level folder
       dockerfile: packaging/Docker/Dockerfile.dev
     environment:
       PYTHONPATH: /dpsim/build:/dpsim/build/Source/Python:/dpsim/Source/Python 
     ports:
       - "8888:8888"
     volumes:
-      - ../../../../:/dpsim
+      - ../../../:/dpsim
     privileged: true
     stdin_open: true
     tty: true
