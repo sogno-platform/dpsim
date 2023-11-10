@@ -791,10 +791,12 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT   = @CMAKE_CURRENT_SOURCE_DIR@/DoxyMain.md \
-          @CMAKE_CURRENT_SOURCE_DIR@/../../Source \
-          @CMAKE_CURRENT_SOURCE_DIR@/../../Include \
-          @CMAKE_CURRENT_SOURCE_DIR@/../../models/Source \
-          @CMAKE_CURRENT_SOURCE_DIR@/../../models/Include
+          @CMAKE_CURRENT_SOURCE_DIR@/../../dpsim/src \
+          @CMAKE_CURRENT_SOURCE_DIR@/../../dpsim/include \
+          @CMAKE_CURRENT_SOURCE_DIR@/../../dpsim-models/src \
+          @CMAKE_CURRENT_SOURCE_DIR@/../../dpsim-models/include \
+          @CMAKE_CURRENT_SOURCE_DIR@/../../dpsim-villas/src \
+          @CMAKE_CURRENT_SOURCE_DIR@/../../dpsim-villas/include
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
