@@ -10,6 +10,9 @@
 
 #include <dpsim-models/Definitions.h>
 
+// This macro defines the tolerance used to compare double numbers
+#define DOUBLE_EPSILON 1E-12 
+
 namespace DPsim {
 	// #### Types ####
 	using Real = CPS::Real;
