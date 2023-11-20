@@ -379,7 +379,7 @@ void Simulation::stop() {
 }
 
 Real Simulation::next() {
-	if (mTime < **mFinalTime + 1e-12)
+	if (mTime < **mFinalTime + DOUBLE_EPSILON)
 		step();
 	else
 		stop();
@@ -391,7 +391,7 @@ Real Simulation::next() {
 void Simulation::run() {
 	start();
 
-	while (mTime < **mFinalTime + 1e-12) {
+	while (mTime < **mFinalTime + DOUBLE_EPSILON) {
 		step();
 	}
 
