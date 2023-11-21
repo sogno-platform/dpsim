@@ -387,13 +387,10 @@ template <typename VarType> void MnaSolverDirect<VarType>::logSolveTime() {
 }
 
 template <typename VarType>
-void MnaSolverDirect<VarType>::calculateStateMatrix()
+void MnaSolverDirect<VarType>::extractEigenvalues()
 {
-	// TODO: [Georgii] use back substitution of factorized power system matrix instead of inversion (performance)
-	SPDLOG_LOGGER_INFO(mSLog, "power system matrix: {}", Logger::matrixToString(mSwitchedMatrices[mCurrentSwitchStatus][0]));
-	mSLog->flush();
-	Matrix intermediateResult = ((Matrix)mSwitchedMatrices[mCurrentSwitchStatus][0]).inverse() * mNodeBranchIncidenceMatrix;
-	mStateMatrix = mSignMatrix + mDiscretizationMatrix * mBranchNodeIncidenceMatrix * intermediateResult;
+	MnaSolver<VarType>::extractEigenvalues();
+	MnaSolver<VarType>::mMNAEigenvalueExtractor.extractEigenvalues(((Matrix)mSwitchedMatrices[mCurrentSwitchStatus][0]), Solver::mTimeStep);
 }
 
 template <typename VarType>

@@ -361,78 +361,7 @@ template <typename VarType> void MnaSolver<VarType>::identifyTopologyObjects() {
 template <typename VarType>
 void MnaSolver<VarType>::extractEigenvalues() 
 {
-	identifyEigenvalueComponents();
-	setBranchIndices();
-	createEmptyEigenvalueMatrices();
-	stampEigenvalueMatrices();
-	calculateStateMatrix();
-	computeDiscreteEigenvalues();
-	recoverEigenvalues();
-
-	SPDLOG_LOGGER_INFO(mSLog, "sign matrix: {}", Logger::matrixToString(mSignMatrix));
-	SPDLOG_LOGGER_INFO(mSLog, "discretization matrix: {}", Logger::matrixToString(mDiscretizationMatrix));
-	SPDLOG_LOGGER_INFO(mSLog, "branch <-> node incidence matrix: {}", Logger::matrixToString(mBranchNodeIncidenceMatrix));
-	SPDLOG_LOGGER_INFO(mSLog, "node <-> branch incidence matrix: {}", Logger::matrixToString(mNodeBranchIncidenceMatrix));
-	SPDLOG_LOGGER_INFO(mSLog, "discretized state matrix: {}", Logger::matrixToString(mStateMatrix));
-	SPDLOG_LOGGER_INFO(mSLog, "discrete eigenvalues: {}", Logger::matrixCompToString(mDiscreteEigenvalues));
-	SPDLOG_LOGGER_INFO(mSLog, "eigenvalues: {}", Logger::matrixCompToString(mEigenvalues));
-	mSLog->flush();
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::identifyEigenvalueComponents()
-{
-	// TODO: [Georgii] throw exception if topology contains components that do not implement EigenvalueCompInterface
-	for (auto comp : mSystem.mComponents)
-	{
-		auto eigenvalueComponent = std::dynamic_pointer_cast<CPS::EigenvalueCompInterface>(comp);
-		if (eigenvalueComponent)
-		{
-			mEigenvalueComponents.push_back(eigenvalueComponent);
-		}
-	}
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::setBranchIndices()
-{
-	int size = mEigenvalueComponents.size();
-	for (int i = 0; i < size; i++)
-	{
-		mEigenvalueComponents[i]->setBranchIdx(i);
-	}
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::createEmptyEigenvalueMatrices()
-{
-	int nBranches = mEigenvalueComponents.size();
-	mSignMatrix = Matrix(nBranches, nBranches);
-	mDiscretizationMatrix = Matrix(nBranches, nBranches);
-	mBranchNodeIncidenceMatrix = Matrix(nBranches, mNumMatrixNodeIndices);
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::stampEigenvalueMatrices()
-{
-	for (auto comp : mEigenvalueComponents)
-	{
-		comp->stampEigenvalueMatrices(mSignMatrix, mDiscretizationMatrix, mBranchNodeIncidenceMatrix);
-	}
-	mNodeBranchIncidenceMatrix = mBranchNodeIncidenceMatrix.transpose();
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::computeDiscreteEigenvalues()
-{
-	auto discreteEigenvaluesIncludingZeros = mStateMatrix.eigenvalues();
-	mDiscreteEigenvalues = CPS::Math::returnNonZeroElements(discreteEigenvaluesIncludingZeros);
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::recoverEigenvalues()
-{
-	mEigenvalues = 2.0 / mTimeStep * (mDiscreteEigenvalues.array() - 1.0) / (mDiscreteEigenvalues.array() + 1.0);
+	mMNAEigenvalueExtractor.initialize(mSystem, mNumMatrixNodeIndices);
 }
 
 template <typename VarType>

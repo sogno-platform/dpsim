@@ -103,12 +103,6 @@ protected:
 		using MnaSolver<VarType>::mSolveTimes;
 		using MnaSolver<VarType>::mRecomputationTimes;
 		using MnaSolver<VarType>::mListVariableSystemMatrixEntries;
-		// ### Eigenvalue extraction ###
-		using MnaSolver<VarType>::mSignMatrix;
-		using MnaSolver<VarType>::mDiscretizationMatrix;
-		using MnaSolver<VarType>::mBranchNodeIncidenceMatrix;
-		using MnaSolver<VarType>::mNodeBranchIncidenceMatrix;
-		using MnaSolver<VarType>::mStateMatrix;
 
   // #### General
   /// Create system matrix
@@ -160,8 +154,6 @@ protected:
   std::shared_ptr<DirectLinearSolver>
   createDirectSolverImplementation(CPS::Logger::Log mSLog);
 
-		// ### Eigenvalue extraction ###
-		void calculateStateMatrix() override;
 
 	public:
 		/// Constructor should not be called by users but by Simulation
@@ -173,9 +165,11 @@ protected:
   /// Destructor
   virtual ~MnaSolverDirect() = default;
 
-  /// Sets the linear solver to "implementation" and creates an object
-  void
-  setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);
+		// ### Eigenvalue extraction ###
+		void extractEigenvalues() override;
+
+		/// Sets the linear solver to "implementation" and creates an object
+		void setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);
 
   /// Sets the linear solver configuration
   void setDirectLinearSolverConfiguration(

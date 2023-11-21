@@ -14,6 +14,10 @@
 #include <unordered_map>
 #include <vector>
 
+#include <dpsim/Config.h>
+#include <dpsim/Solver.h>
+#include <dpsim/DataLogger.h>
+#include <dpsim/MNAEigenvalueExtractor.h>
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/SimSignalComp.h>
@@ -22,7 +26,6 @@
 #include <dpsim-models/Solver/MNASyncGenInterface.h>
 #include <dpsim-models/SimSignalComp.h>
 #include <dpsim-models/SimPowerComp.h>
-#include <dpsim-models/Solver/EigenvalueCompInterface.h>
 
 /* std::size_t is the largest data type. No container can store
  * more than std::size_t elements. Define the number of switches
@@ -120,12 +123,7 @@ protected:
   std::vector<Real> mRecomputationTimes;
 
 		// #### Eigenvalue extraction ####
-		Matrix mSignMatrix;
-		Matrix mDiscretizationMatrix;
-		Matrix mBranchNodeIncidenceMatrix;
-		Matrix mNodeBranchIncidenceMatrix;
-		Matrix mStateMatrix;
-
+		MNAEigenvalueExtractor mMNAEigenvalueExtractor;
 		/// Constructor should not be called by users but by Simulation
 		MnaSolver(String name,
 			CPS::Domain domain = CPS::Domain::DP,
@@ -198,8 +196,6 @@ protected:
   /// Logs left and right vector
   virtual void log(Real time, Int timeStepCount) override;
 
-		// #### Eigenvalue extraction ####
-		virtual void calculateStateMatrix() = 0;
 
 	public:
 		/// Solution vector of unknown quantities
@@ -230,20 +226,6 @@ protected:
 
 		// #### Eigenvalue extraction ####
 		/// extract eigenvalues from power system matrix
-		void extractEigenvalues();
-
-	private:	
-		// #### Eigenvalue extraction ####
-		MatrixComp mDiscreteEigenvalues;
-		MatrixComp mEigenvalues;
-		CPS::EigenvalueCompInterface::List mEigenvalueComponents;
-
-		// #### Eigenvalue extraction ####
-		void identifyEigenvalueComponents();
-		void setBranchIndices();
-		void createEmptyEigenvalueMatrices();
-		void stampEigenvalueMatrices();
-		void computeDiscreteEigenvalues();
-		void recoverEigenvalues();
+		virtual void extractEigenvalues();
 	};
 }

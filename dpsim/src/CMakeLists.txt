@@ -3,6 +3,7 @@ set(DPSIM_SOURCES
 	RealTimeSimulation.cpp
 	MNASolver.cpp
 	MNASolverDirect.cpp
+	MNAEigenvalueExtractor.cpp
 	DenseLUAdapter.cpp
 	SparseLUAdapter.cpp
 	DirectLinearSolverConfiguration.cpp
