@@ -28,8 +28,9 @@ void EMT::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
 	Complex impedance = { 0, - 1. / (omega * **mCapacitance) };
-	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
-	(**mIntfCurrent)(0,0) = ((initialSingleVoltage(1) - initialSingleVoltage(0)) / impedance).real();
+	Complex voltage = RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+	(**mIntfVoltage)(0,0) = voltage.real();
+	(**mIntfCurrent)(0,0) = (voltage / impedance).real();
 
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
@@ -40,8 +41,8 @@ void EMT::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		"\n--- Initialization from powerflow finished ---",
 		(**mIntfVoltage)(0,0),
 		(**mIntfCurrent)(0,0),
-		initialSingleVoltage(0).real(),
-		initialSingleVoltage(1).real());
+		(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)).real(),
+		(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)).real());
 	mSLog->flush();
 }
 

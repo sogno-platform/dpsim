@@ -24,8 +24,8 @@ SimPowerComp<Real>::Ptr EMT::Ph1::Resistor::clone(String name) {
 }
 
 void EMT::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
-
-	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
+	Complex voltage = RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+	(**mIntfVoltage)(0,0) = voltage.real();
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / **mResistance;
 
 	SPDLOG_LOGGER_INFO(mSLog,
@@ -37,8 +37,8 @@ void EMT::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		"\n--- Initialization from powerflow finished ---",
 		(**mIntfVoltage)(0,0),
 		(**mIntfCurrent)(0,0),
-		initialSingleVoltage(0).real(),
-		initialSingleVoltage(1).real());
+		(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)).real(),
+		(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)).real());
 	mSLog->flush();
 }
 
