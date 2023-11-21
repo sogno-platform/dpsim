@@ -1,6 +1,7 @@
 #pragma once
 
 #include <dpsim/Definitions.h>
+#include <dpsim/DataLogger.h>
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/Solver/EigenvalueCompInterface.h>
 
@@ -25,6 +26,7 @@ namespace DPsim
 		Matrix mStateMatrix;
 		MatrixComp mDiscreteEigenvalues;
 		MatrixComp mEigenvalues;
+		CPS::Logger::Log mSLog;
 
 		void identifyEigenvalueComponents(const CPS::IdentifiedObject::List &components);
 		void setBranchIndices();

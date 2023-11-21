@@ -2,9 +2,10 @@
 
 namespace DPsim
 {
-    MNAEigenvalueExtractor::MNAEigenvalueExtractor() {}
+    MNAEigenvalueExtractor::MNAEigenvalueExtractor() : mSLog(CPS::Logger::get("MNAEigenvalueExtractor", CPS::Logger::Level::info, CPS::Logger::Level::info)) {}
 
     MNAEigenvalueExtractor::MNAEigenvalueExtractor(const CPS::SystemTopology &topology, UInt numMatrixNodeIndices)
+        : mSLog(CPS::Logger::get("MNAEigenvalueExtractor", CPS::Logger::Level::info, CPS::Logger::Level::info))
     {
         initialize(topology, numMatrixNodeIndices);
     }
@@ -15,6 +16,13 @@ namespace DPsim
         setBranchIndices();
         createEmptyEigenvalueMatrices(numMatrixNodeIndices);
         stampEigenvalueMatrices();
+
+        SPDLOG_LOGGER_INFO(mSLog, "---- Initialize ----");
+        SPDLOG_LOGGER_INFO(mSLog, "sign matrix: {}", CPS::Logger::matrixToString(mSignMatrix));
+        SPDLOG_LOGGER_INFO(mSLog, "discretization matrix: {}", CPS::Logger::matrixToString(mDiscretizationMatrix));
+        SPDLOG_LOGGER_INFO(mSLog, "branch <-> node incidence matrix: {}", CPS::Logger::matrixToString(mBranchNodeIncidenceMatrix));
+        SPDLOG_LOGGER_INFO(mSLog, "node <-> branch incidence matrix: {}", CPS::Logger::matrixToString(mNodeBranchIncidenceMatrix));
+        mSLog->flush();
     }
 
     void MNAEigenvalueExtractor::identifyEigenvalueComponents(const CPS::IdentifiedObject::List &components)
@@ -61,6 +69,12 @@ namespace DPsim
         calculateStateMatrix(powerSystemMatrix);
         computeDiscreteEigenvalues();
         recoverEigenvalues(timeStep);
+
+        SPDLOG_LOGGER_INFO(mSLog, "---- Extract eigenvalues ----");
+        SPDLOG_LOGGER_INFO(mSLog, "discretized state matrix: {}", CPS::Logger::matrixToString(mStateMatrix));
+        SPDLOG_LOGGER_INFO(mSLog, "discrete eigenvalues: {}", CPS::Logger::matrixCompToString(mDiscreteEigenvalues));
+        SPDLOG_LOGGER_INFO(mSLog, "eigenvalues: {}", CPS::Logger::matrixCompToString(mEigenvalues));
+        mSLog->flush();
     }
 
     void MNAEigenvalueExtractor::calculateStateMatrix(const Matrix &powerSystemMatrix)
