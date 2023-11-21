@@ -39,11 +39,10 @@ SimNode<VarType>::SimNode(PhaseType phaseType)
 
 template <>
 void SimNode<Real>::initialize() {
-	if (phaseType() == PhaseType::Single) {
-		(**mVoltage)(0,0) = (**mInitialVoltage)(0,0).real();
-	} else {
+	if (phaseType() == PhaseType::Single)
+		(**mVoltage)(0,0) = (RMS3PH_TO_PEAK1PH * (**mInitialVoltage)(0,0)).real();
+	else 
 		**mVoltage = (RMS3PH_TO_PEAK1PH * **mInitialVoltage).real();
-	}
 }
 
 template <>

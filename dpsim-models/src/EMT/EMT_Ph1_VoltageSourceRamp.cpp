@@ -43,8 +43,8 @@ void EMT::Ph1::VoltageSourceRamp::setParameters(Complex voltage, Complex addVolt
 void EMT::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
 	SimPowerComp<Real>::initialize(frequencies);
 
-	if (**mVoltageRef == Complex(0, 0))
-		**mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
+	if (**mVoltageRef == Complex(0, 0)) 
+		**mVoltageRef = RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
 
 	mSubVoltageSource = VoltageSource::make(**mName + "_src", mLogLevel);
 	mSubVoltageSource->setParameters(**mVoltageRef, 0);
