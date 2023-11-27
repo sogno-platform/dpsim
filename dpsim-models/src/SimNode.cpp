@@ -37,6 +37,23 @@ SimNode<VarType>::SimNode(PhaseType phaseType)
 		**mVoltage = MatrixVar<VarType>::Zero(3, 1);
 }
 
+template <>
+void SimNode<Real>::initialize() {
+	if (phaseType() == PhaseType::Single)
+		(**mVoltage)(0,0) = (RMS3PH_TO_PEAK1PH * (**mInitialVoltage)(0,0)).real();
+	else 
+		**mVoltage = (RMS3PH_TO_PEAK1PH * **mInitialVoltage).real();
+}
+
+template <>
+void SimNode<Complex>::initialize() {
+	(**mVoltage)(0,0) = (**mInitialVoltage)(0,0);
+	if (phaseType() == PhaseType::ABC) {
+		(**mVoltage)(1,0) = (**mInitialVoltage)(1,0);
+		(**mVoltage)(2,0) = (**mInitialVoltage)(2,0);
+	}
+}
+
 template <typename VarType>
 void SimNode<VarType>::initialize(Matrix frequencies) {
 	mFrequencies = frequencies;

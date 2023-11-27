@@ -24,8 +24,8 @@ SimPowerComp<Real>::Ptr EMT::Ph1::Resistor::clone(String name) {
 }
 
 void EMT::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
-
-	(**mIntfVoltage)(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
+	Complex voltage = RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+	(**mIntfVoltage)(0,0) = voltage.real();
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / **mResistance;
 
 	SPDLOG_LOGGER_INFO(mSLog,
@@ -37,8 +37,9 @@ void EMT::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 		"\n--- Initialization from powerflow finished ---",
 		(**mIntfVoltage)(0,0),
 		(**mIntfCurrent)(0,0),
-		initialSingleVoltage(0).real(),
-		initialSingleVoltage(1).real());
+		(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)).real(),
+		(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)).real());
+	mSLog->flush();
 }
 
 void EMT::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -67,6 +68,7 @@ void EMT::Ph1::Resistor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMa
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -conductance, matrixNodeIndex(0), matrixNodeIndex(1));
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -conductance, matrixNodeIndex(1), matrixNodeIndex(0));
 	}
+	mSLog->flush();
 }
 
 void EMT::Ph1::Resistor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

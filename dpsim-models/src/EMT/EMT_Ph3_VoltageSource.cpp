@@ -99,6 +99,8 @@ SimPowerComp<Real>::Ptr EMT::Ph3::VoltageSource::clone(String name) {
 
 void EMT::Ph3::VoltageSource::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
+
+	mTimeStep = timeStep;
 }
 
 void EMT::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {

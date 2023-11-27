@@ -128,6 +128,10 @@ void MnaSolver<Real>::initializeComponents() {
 
 	for (auto comp : mMNAIntfSwitches)
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mLeftSideVector);
+		
+	// Initialize nodes
+	for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); ++nodeIdx)
+		mNodes[nodeIdx]->initialize();
 }
 
 template <>
@@ -177,6 +181,10 @@ void MnaSolver<Complex>::initializeComponents() {
 
 		for (auto comp : mMNAIntfSwitches)
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mLeftSideVector);
+
+		// Initialize nodes
+		for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); ++nodeIdx)
+			mNodes[nodeIdx]->initialize();
 	}
 }
 

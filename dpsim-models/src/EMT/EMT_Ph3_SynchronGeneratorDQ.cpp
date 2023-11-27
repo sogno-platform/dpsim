@@ -147,11 +147,10 @@ void EMT::Ph3::SynchronGeneratorDQ::initializeFromNodesAndTerminals(Real frequen
 					"\n--- Initialization from powerflow finished ---",
 					Logger::phasorToString(initialSingleVoltage(0)),
 					Logger::complexToString(terminal(0)->singlePower()));
-		mSLog->flush();
 	} else {
 		SPDLOG_LOGGER_INFO(mSLog, "Initial values already set, skipping initializeFromNodesAndTerminals.");
-		mSLog->flush();
 	}
+	mSLog->flush();
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {

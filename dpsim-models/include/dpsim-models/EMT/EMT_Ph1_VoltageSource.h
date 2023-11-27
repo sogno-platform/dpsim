@@ -25,6 +25,8 @@ namespace Ph1 {
 	class VoltageSource :
 		public MNASimPowerComp<Real>,
 		public SharedFactory<VoltageSource> {
+	private:
+		Real mTimeStep;
 	protected:
 		void updateVoltage(Real time);
 	public:
