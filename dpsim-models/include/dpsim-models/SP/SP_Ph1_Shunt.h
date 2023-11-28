@@ -20,9 +20,9 @@ namespace SP {namespace Ph1 {
 		const Attribute<Real>::Ptr mConductance;
 		/// Susceptance [S]
 		const Attribute<Real>::Ptr mSusceptance;
-		/// Conductance [S]
+		/// Conductance [pu]
 		const Attribute<Real>::Ptr mConductancePerUnit;
-		/// Susceptance [S]
+		/// Susceptance [pu]
 		const Attribute<Real>::Ptr mSusceptancePerUnit;
 	private:
         /// Base voltage [V]
