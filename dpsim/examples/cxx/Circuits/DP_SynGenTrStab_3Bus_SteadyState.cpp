@@ -132,7 +132,7 @@ void DP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 			SystemComponentList{gen1DP, gen2DP, loadDP, line12DP, line13DP, line23DP});
 
 	// Initialization of dynamic topology
-	systemDP.initWithPowerflow(systemPF);
+	systemDP.initWithPowerflow(systemPF, Domain::DP);
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);

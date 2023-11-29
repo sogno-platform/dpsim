@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{extnetDP, lineDP, loadDP});
 
 	// Initialization of dynamic topology
-	systemDP.initWithPowerflow(systemPF);
+	systemDP.initWithPowerflow(systemPF, Domain::DP);
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);

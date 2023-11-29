@@ -107,7 +107,7 @@ namespace CPS {
 		void addComponents(const IdentifiedObject::List& components);
 
 		/// Initialize nodes and SG power from PowerFlow
-		void initWithPowerflow(const SystemTopology& systemPF, CPS::Domain domain = CPS::Domain::DP);
+		void initWithPowerflow(const SystemTopology& systemPF, CPS::Domain domain);
 
 		/// Adds component and initializes frequencies
 		void addTearComponent(IdentifiedObject::Ptr component);
