@@ -120,7 +120,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 			SystemComponentList{genSP, lineSP, extnetSP, faultSP});
 
 	// Initialization of dynamic topology
-	systemSP.initWithPowerflow(systemPF);
+	systemSP.initWithPowerflow(systemPF, Domain::SP);
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);

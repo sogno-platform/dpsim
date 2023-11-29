@@ -98,7 +98,7 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 			SystemComponentList{genDP, lineDP, extnetDP});
 
 	// Initialization of dynamic topology
-	systemDP.initWithPowerflow(systemPF);
+	systemDP.initWithPowerflow(systemPF, Domain::DP);
 
 
 	// Logging

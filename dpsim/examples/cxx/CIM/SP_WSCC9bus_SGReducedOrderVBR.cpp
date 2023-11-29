@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
 		sys.addComponent(faultSP);
 	}
 
-	sys.initWithPowerflow(systemPF);
+	sys.initWithPowerflow(systemPF, Domain::SP);
 	for (auto comp : sys.mComponents) {
 		if (auto genReducedOrder = std::dynamic_pointer_cast<CPS::Base::ReducedOrderSynchronGenerator<Complex>>(comp))
 			genReducedOrder->scaleInertiaConstant(inertiaScalingFactor);
