@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{extnetSP, lineSP, pv});
 
 	// Initialization of dynamic topology with values from powerflow
-	systemSP.initWithPowerflow(systemPF);
+	systemSP.initWithPowerflow(systemPF, Domain::SP);
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);

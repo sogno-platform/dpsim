@@ -108,7 +108,7 @@ void simulateDP(SystemTopology& systemPF, String waveform) {
 			SystemComponentList{extnetDP, lineDP, loadDP});
 
 	// Initialization of dynamic topology
-	systemDP.initWithPowerflow(systemPF);
+	systemDP.initWithPowerflow(systemPF, Domain::DP);
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
@@ -163,7 +163,7 @@ void simulateSP(SystemTopology& systemPF, String waveform) {
 			SystemComponentList{extnetSP, lineSP, loadSP});
 
 	// Initialization of dynamic topology with values from powerflow
-	systemSP.initWithPowerflow(systemPF);
+	systemSP.initWithPowerflow(systemPF, Domain::SP);
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
@@ -216,7 +216,7 @@ void simulateEMT(SystemTopology& systemPF, String waveform) {
 			SystemComponentList{extnetEMT, lineEMT, loadEMT});
 
 	// Initialization of dynamic topology
-	systemEMT.initWithPowerflow(systemPF);
+	systemEMT.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);

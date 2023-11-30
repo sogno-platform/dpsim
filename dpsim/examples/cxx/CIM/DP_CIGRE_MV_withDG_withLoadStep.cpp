@@ -75,15 +75,13 @@ int main(int argc, char** argv){
 	CIM::Reader reader2(simName, Logger::Level::info, Logger::Level::debug);
     SystemTopology systemDP = reader2.loadCIM(scenario.systemFrequency, filenames, CPS::Domain::DP);
 	Examples::Grids::CIGREMV::addInvertersToCIGREMV(systemDP, scenario, Domain::DP);
-	systemDP.initWithPowerflow(systemPF);
+	systemDP.initWithPowerflow(systemPF, CPS::Domain::DP);
 
 	auto logger = DPsim::DataLogger::make(simName);
 
 	// log node voltages
 	for (auto node : systemDP.mNodes)
-	{
 		logger->logAttribute(node->name() + ".V", node->attribute("v"));
-	}
 
 	// log line currents
 	for (auto comp : systemDP.mComponents) {

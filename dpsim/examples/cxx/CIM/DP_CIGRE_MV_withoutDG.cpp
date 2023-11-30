@@ -71,7 +71,7 @@ int main(int argc, char** argv){
 	Logger::setLogDir("logs/" + simName);
 	CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
     SystemTopology systemDP = reader2.loadCIM(systemFrequency, filenames, CPS::Domain::DP);
-	systemDP.initWithPowerflow(systemPF);
+	systemDP.initWithPowerflow(systemPF, CPS::Domain::DP);
 
 	auto logger = DPsim::DataLogger::make(simName);
 

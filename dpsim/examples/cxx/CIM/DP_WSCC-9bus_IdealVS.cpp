@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     CPS::CIM::Reader reader(simNamePF, Logger::Level::debug, Logger::Level::debug);
     SystemTopology systemPF = reader.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::PVNode);
 	systemPF.component<CPS::SP::Ph1::SynchronGenerator>("GEN1")->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
-	
+
 	// define logging
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
     for (auto node : systemPF.mNodes)
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 
 	CPS::CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
 	SystemTopology sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::IdealVoltageSource);
-	sys.initWithPowerflow(systemPF);
+	sys.initWithPowerflow(systemPF, CPS::Domain::DP);
 
 	// Logging
 	auto logger = DataLogger::make(simName);
