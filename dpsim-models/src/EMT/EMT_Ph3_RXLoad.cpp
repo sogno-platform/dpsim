@@ -37,6 +37,11 @@ EMT::Ph3::RXLoad::RXLoad(String name,
 	setParameters(activePower, reactivePower, nominalVoltage);
 }
 
+void EMT::Ph3::RXLoad::setParameters(Real activePower, Real reactivePower) {
+	this->setParameters(Math::singlePhaseParameterToThreePhase(activePower / 3.), 
+						Math::singlePhaseParameterToThreePhase(reactivePower / 3.));
+}
+
 void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower) {
 	**mActivePower = activePower;
 	**mReactivePower = reactivePower;
@@ -54,6 +59,7 @@ void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower) {
 			"\nReactive Power [VAr]: {}",
 			Logger::matrixToString(**mActivePower),
 			Logger::matrixToString(**mReactivePower));
+	mSLog->flush();
 }
 
 void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower, Real nominalVoltage) {
