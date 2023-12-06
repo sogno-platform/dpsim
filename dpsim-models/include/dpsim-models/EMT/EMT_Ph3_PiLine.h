@@ -46,8 +46,6 @@ namespace Ph3 {
 		PiLine(String name, Logger::Level logLevel = Logger::Level::off)
 			: PiLine(name, name, logLevel) { }
 
-		SimPowerComp<Real>::Ptr clone(String copySuffix);
-
 		// #### General ####
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
