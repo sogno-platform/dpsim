@@ -11,7 +11,6 @@
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
-#include <dpsim-models/DP/DP_Ph1_Inductor.h>
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_Transformer.h>
@@ -48,13 +47,11 @@ namespace Ph1 {
 		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
 		std::shared_ptr<DP::Ph1::VoltageSource> mSubCtrledVoltageSource;
-		/// Resistor Rf as part of LCL filter
-		std::shared_ptr<DP::Ph1::Resistor> mSubResistorF;
-		/// Capacitor Cf as part of LCL filter
+		/// RL Element as part of LC filter
+		std::shared_ptr<DP::Ph1::ResIndSeries> mSubFilterRL;
+		/// Capacitor Cf as part of LC filter
 		std::shared_ptr<DP::Ph1::Capacitor> mSubCapacitorF;
-		/// Inductor Lf as part of LCL filter
-		std::shared_ptr<DP::Ph1::Inductor> mSubInductorF;
-		/// Resistor Rc as part of LCL filter
+		/// Resistor Rc as part of LC filter
 		std::shared_ptr<DP::Ph1::Resistor> mSubResistorC;
 		/// Optional connection transformer
 		std::shared_ptr<DP::Ph1::Transformer> mConnectionTransformer;

@@ -28,11 +28,11 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 	mVoltagectrlStates(mAttributes->createDynamic<Matrix>("voltagectrl_states")) {
 
 	if (withTrafo) {
-		setVirtualNodeNumber(4);
+		setVirtualNodeNumber(3);
 		mConnectionTransformer = DP::Ph1::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel);
 		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	} else {
-		setVirtualNodeNumber(3);
+		setVirtualNodeNumber(2);
 	}
 	mWithConnectionTransformer = withTrafo;
 	setTerminalNumber(1);
@@ -42,15 +42,13 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Create electrical sub components
-	mSubResistorF = DP::Ph1::Resistor::make(**mName + "_resF", mLogLevel);
-	mSubResistorC = DP::Ph1::Resistor::make(**mName + "_resC", mLogLevel);
+	mSubFilterRL = DP::Ph1::ResIndSeries::make(**mName + "_FilterRL", mLogLevel);
 	mSubCapacitorF = DP::Ph1::Capacitor::make(**mName + "_capF", mLogLevel);
-	mSubInductorF = DP::Ph1::Inductor::make(**mName + "_indF", mLogLevel);
+	mSubResistorC = DP::Ph1::Resistor::make(**mName + "_resC", mLogLevel);
 	mSubCtrledVoltageSource = DP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
-	addMNASubComponent(mSubResistorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-	addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+	addMNASubComponent(mSubFilterRL, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-	addMNASubComponent(mSubInductorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+	addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	// Pre-step of the subcontrolled voltage source is handled explicitly in mnaParentPreStep
 	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -86,11 +84,10 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 
 void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequency) {
 	// set subcomponent parameters
-	mSubResistorC->setParameters(mRc);
-	mSubResistorF->setParameters(mRf);
-	mSubInductorF->setParameters(mLf);
+	mSubFilterRL->setParameters(mRf, mLf);
 	mSubCapacitorF->setParameters(mCf);
-
+	mSubResistorC->setParameters(mRc);
+	
 	// set controller parameters
 	mVCO->setParameters(**mOmegaN);
 	mVoltageControllerVSI->setControllerParameters(mKpVoltageCtrl, mKiVoltageCtrl, mKpCurrCtrl, mKiCurrCtrl, mOmegaVSI);
@@ -136,13 +133,12 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 
 	// Connect electrical subcomponents
 	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
-	mSubResistorF->connect({ mVirtualNodes[0], mVirtualNodes[1] });
-	mSubInductorF->connect({ mVirtualNodes[1], mVirtualNodes[2] });
-	mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[2] });
+	mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
+	mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[1] });
 	if (mWithConnectionTransformer)
-		mSubResistorC->connect({ mVirtualNodes[2],  mVirtualNodes[3]});
+		mSubResistorC->connect({ mVirtualNodes[2],  mVirtualNodes[1]});
 	else
-		mSubResistorC->connect({ mVirtualNodes[2],  mTerminals[0]->node()});
+		mSubResistorC->connect({ mTerminals[0]->node(), mVirtualNodes[1]});
 
 	// Initialize electrical subcomponents
 	for (auto subcomp: mSubComponents) {
