@@ -91,6 +91,16 @@ namespace Base {
 		/// Voltage as control output after transformation interface
 		const Attribute<MatrixComp>::Ptr mVsref;
 
+		// ### Voltage Controller Variables ###
+		///
+		const Attribute<Real>::Ptr mPhi_d;
+		///
+		const Attribute<Real>::Ptr mPhi_q;
+		///
+		const Attribute<Real>::Ptr mGamma_d;
+		///
+		const Attribute<Real>::Ptr mGamma_q;
+
     public:
 		explicit VSIVoltageSourceInverterDQ(Logger::Log Log, CPS::AttributeList::Ptr attributeList) :
 			mLogger(Log),
