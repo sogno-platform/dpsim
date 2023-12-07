@@ -133,7 +133,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{pv,lineEMT, load1SwitchEMT, load1EMT, load2SwitchEMT, load2EMT});
 
 	// Initialization of dynamic topology
-	systemEMT.initWithPowerflow(systemPF);
+	systemEMT.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
 	Complex initial3PhPowerVSI = Complex(linePF->attributeTyped<Real>("p_inj")->get(), linePF->attributeTyped<Real>("q_inj")->get());
 

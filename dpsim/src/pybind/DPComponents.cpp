@@ -180,18 +180,18 @@ void addDPPh1Components(py::module_ mDPPh1) {
 		.def("with_control", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::withControl)
 		.def("connect", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::connect);
 
-	py::class_<CPS::DP::Ph1::VSIVoltageControlDQ, std::shared_ptr<CPS::DP::Ph1::VSIVoltageControlDQ>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "VSIVoltageControlDQ", py::multiple_inheritance())
+	py::class_<CPS::DP::Ph1::VSIVoltageControlDQ, std::shared_ptr<CPS::DP::Ph1::VSIVoltageControlDQ>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::VSIVoltageSourceInverterDQ>(mDPPh1, "VSIVoltageControlDQ", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
-		.def("set_parameters", &CPS::DP::Ph1::VSIVoltageControlDQ::setParameters, "sys_omega"_a, "vdref"_a, "vqref"_a)
-		.def("set_filter_parameters", &CPS::DP::Ph1::VSIVoltageControlDQ::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
-		.def("set_controller_parameters", &CPS::DP::Ph1::VSIVoltageControlDQ::setControllerParameters,
-			"Kp_voltage_ctrl"_a, "Ki_voltage_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a)
-		.def("set_transformer_parameters", &CPS::DP::Ph1::VSIVoltageControlDQ::setTransformerParameters,
-			"nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a, "omega"_a)
-		.def("set_initial_state_values", &CPS::DP::Ph1::VSIVoltageControlDQ::setInitialStateValues,
-			"phi_d_init"_a, "phi_q_init"_a, "gamma_d_init"_a, "gamma_q_init"_a)
-		.def("with_control", &CPS::DP::Ph1::VSIVoltageControlDQ::withControl)
+		//.def("set_parameters", &CPS::DP::Ph1::VSIVoltageControlDQ::setParameters, "sys_omega"_a, "vdref"_a, "vqref"_a)
+		//.def("set_filter_parameters", &CPS::DP::Ph1::VSIVoltageControlDQ::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
+		//.def("set_controller_parameters", &CPS::DP::Ph1::VSIVoltageControlDQ::setControllerParameters,
+		//	"Kp_voltage_ctrl"_a, "Ki_voltage_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a)
+		//.def("set_transformer_parameters", &CPS::DP::Ph1::VSIVoltageControlDQ::setTransformerParameters,
+		//	"nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a, "omega"_a)
+		//.def("set_initial_state_values", &CPS::DP::Ph1::VSIVoltageControlDQ::setInitialStateValues,
+		//	"phi_d_init"_a, "phi_q_init"_a, "gamma_d_init"_a, "gamma_q_init"_a)
+		//.def("with_control", &CPS::DP::Ph1::VSIVoltageControlDQ::withControl)
 		.def("connect", &CPS::DP::Ph1::VSIVoltageControlDQ::connect);
 
 	py::class_<CPS::DP::Ph1::Inverter, std::shared_ptr<CPS::DP::Ph1::Inverter>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Inverter", py::multiple_inheritance())

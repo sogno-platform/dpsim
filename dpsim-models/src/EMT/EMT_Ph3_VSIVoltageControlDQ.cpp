@@ -36,7 +36,7 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 	//if transformer is connected --> setup
 	if (withTrafo) {
 		setVirtualNodeNumber(4);
-		mConnectionTransformer = EMT::Ph3::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel, false);
+		mConnectionTransformer = EMT::Ph3::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel);
 		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	} else {
 		setVirtualNodeNumber(3);
@@ -131,7 +131,7 @@ void EMT::Ph3::VSIVoltageControlDQ::setTransformerParameters(Real nomVoltageEnd1
 
 	if (mWithConnectionTransformer)
 		// TODO: resistive losses neglected so far (mWithResistiveLosses=false)
-		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase, CPS::Math::singlePhaseParameterToThreePhase(mTransformerResistance), CPS::Math::singlePhaseParameterToThreePhase(mTransformerInductance));
+		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatioAbs, mTransformerRatioPhase, CPS::Math::singlePhaseParameterToThreePhase(mTransformerResistance), CPS::Math::singlePhaseParameterToThreePhase(mTransformerInductance));
 }
 
 //setter for controller parameters of droop + voltage control
@@ -178,8 +178,8 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 	MatrixComp intfVoltageComplex = Matrix::Zero(3, 1);
 	MatrixComp intfCurrentComplex = Matrix::Zero(3, 1);
 	// terminal powers in consumer system -> convert to generator system
-	Real activePower = terminal(0)->singlePower().real();;
-	Real reactivePower = terminal(0)->singlePower().imag();
+	Real activePower = -terminal(0)->singlePower().real();
+	Real reactivePower = -terminal(0)->singlePower().imag();
 
 	// derive complex threephase initialization from single phase initial values (only valid for balanced systems)
 	intfVoltageComplex(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);

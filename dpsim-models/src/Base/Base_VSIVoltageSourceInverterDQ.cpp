@@ -10,35 +10,86 @@
 
 using namespace CPS;
 
-void Base::VSIVoltageSourceInverterDQ::setParameters(Real sysOmega, Real VdRef, Real VqRef) {
+void Base::VSIVoltageSourceInverterDQ::setParameters(
+	Real sysOmega, Real VdRef, Real VqRef) {
+
 	**mOmegaN = sysOmega;
 	**mVdRef = VdRef;
 	**mVqRef = VqRef;
+
+	SPDLOG_LOGGER_INFO(mLogger, 
+		"\nGeneral Parameters:"
+		"\n\tNominal Omega = {} [1/s]"
+		"\n\tVdRef = {} [V] "
+		"\n\tVqRef = {} [V]",
+		**mOmegaN, **mVdRef, **mVqRef);
 }
 
-void Base::VSIVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
+void Base::VSIVoltageSourceInverterDQ::setTransformerParameters(
+	Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
 	Real ratioPhase, Real resistance, Real inductance) {
 
 	mTransformerNominalVoltageEnd1 = nomVoltageEnd1;
 	mTransformerNominalVoltageEnd2 = nomVoltageEnd2;
-	mTransformerRatedPower = ratedPower;
 	mTransformerResistance = resistance;
 	mTransformerInductance = inductance;
 	mTransformerRatioAbs = ratioAbs;
 	mTransformerRatioPhase = ratioPhase;
-};
 
-void Base::VSIVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc) {
+	SPDLOG_LOGGER_INFO(mLogger, 
+		"\nTransformer Parameters:"
+		"\n\tNominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]"
+		"\n\tRated Apparent Power = {} [VA]"
+		"\n\tResistance={} [Ohm] Inductance={} [H]"
+    	"\n\tTap Ratio={} [ ] Phase Shift={} [deg]", 
+		mTransformerRatioAbs, mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2,
+		mTransformerResistance, mTransformerInductance, mTransformerRatioPhase);
+}
+
+void Base::VSIVoltageSourceInverterDQ::setFilterParameters(
+	Real Lf, Real Cf, Real Rf, Real Rc) {
+
 	mLf = Lf;
 	mCf = Cf;
 	mRf = Rf;
 	mRc = Rc;
+
+	SPDLOG_LOGGER_INFO(mLogger, 
+		"\nFilter Parameters:"
+		"\n\tInductance Lf = {} [H]"
+		"\n\tCapacitance Cf = {} [F]"
+		"\n\tResistance Rf = {} [H]" 
+		"\n\tResistance Rc = {} [F]",
+		mLf, mCf, mRf, mRc);
 }
 
-void Base::VSIVoltageSourceInverterDQ::setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega) {
+void Base::VSIVoltageSourceInverterDQ::setControllerParameters(
+	Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega) {
+	
 	mKiVoltageCtrl = Ki_voltageCtrl;
 	mKiCurrCtrl = Ki_currCtrl;
 	mKpVoltageCtrl = Kp_voltageCtrl;
 	mKpCurrCtrl = Kp_currCtrl;
 	mOmegaVSI = Omega;
+
+	SPDLOG_LOGGER_INFO(mLogger, 
+		"\nControl Parameters:"
+		"\nVoltage Loop: K_p = {}, K_i = {}"
+		"\nCurrent Loop: K_p = {}, K_i = {}"
+		"\nVCO: Omega_Nom = {}", 
+		mKpVoltageCtrl, mKiVoltageCtrl,
+		mKpCurrCtrl, mKiCurrCtrl,
+		Omega);
+}
+
+void Base::VSIVoltageSourceInverterDQ::setInitialStateValues(
+	Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit) {
+
+	SPDLOG_LOGGER_INFO(mLogger, 
+		"\nInitial State Value Parameters:"
+		"\n\tPhi_dInit = {}"
+		"\n\tPhi_qInit = {}"
+		"\n\tGamma_dInit = {}"
+		"\n\tGamma_qInit = {}",
+		phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
 }

@@ -66,4 +66,12 @@ void addBaseComponents(py::module_ mBase) {
 		.def("add_pss", py::overload_cast<std::shared_ptr<CPS::Base::PSS>>(&CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::addPSS), "pss"_a)
         .def("add_governor", py::overload_cast<std::shared_ptr<CPS::Base::Governor>>(&CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::addGovernor), "governor"_a)
         .def("add_turbine", py::overload_cast<std::shared_ptr<CPS::Base::Turbine>>(&CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::addTurbine), "turbine"_a);
+
+    py::class_<CPS::Base::VSIVoltageSourceInverterDQ, std::shared_ptr<CPS::Base::VSIVoltageSourceInverterDQ>>(mBase, "VSIVoltageSourceInverterDQ", py::multiple_inheritance())
+        .def("set_parameters", &CPS::Base::VSIVoltageSourceInverterDQ::setParameters, "sys_omega"_a, "vdref"_a, "vqref"_a)
+		.def("set_filter_parameters", &CPS::Base::VSIVoltageSourceInverterDQ::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
+		.def("set_controller_parameters", &CPS::Base::VSIVoltageSourceInverterDQ::setControllerParameters,
+			"Kp_voltage_ctrl"_a, "Ki_voltage_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a);
+		//.def("set_transformer_parameters", &CPS::Base::VSIVoltageSourceInverterDQ::setTransformerParameters,
+		//	"nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a, "omega"_a);
 }

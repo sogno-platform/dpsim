@@ -13,9 +13,7 @@ using namespace CPS;
 
 DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
 	CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mOmegaN(mAttributes->create<Real>("Omega_nom")),
-	mVdRef(mAttributes->create<Real>("VdRef")),
-	mVqRef(mAttributes->create<Real>("VqRef")),
+	VSIVoltageSourceInverterDQ(this->mSLog, mAttributes),
 	mVcd(mAttributes->create<Real>("Vc_d", 0)),
 	mVcq(mAttributes->create<Real>("Vc_q", 0)),
 	mIrcd(mAttributes->create<Real>("Irc_d", 0)),
@@ -31,7 +29,7 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 
 	if (withTrafo) {
 		setVirtualNodeNumber(4);
-		mConnectionTransformer = DP::Ph1::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel, false);
+		mConnectionTransformer = DP::Ph1::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel);
 		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	} else {
 		setVirtualNodeNumber(3);
@@ -86,78 +84,25 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 	mVoltagectrlOutputs->setReference(mVoltageControllerVSI->mOutputCurr);
 }
 
-void DP::Ph1::VSIVoltageControlDQ::setParameters(Real sysOmega, Real VdRef, Real VqRef) {
-	mParametersSet = true;
-
-	SPDLOG_LOGGER_INFO(mSLog, "General Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog, "Nominal Omega={} [1/s]", sysOmega);
-	SPDLOG_LOGGER_INFO(mSLog, "VdRef={} [V] VqRef={} [V]", VdRef, VqRef);
-
-	mVoltageControllerVSI->setParameters(VdRef, VqRef);
-
-	**mOmegaN = sysOmega;
-	**mVdRef = VdRef;
-	**mVqRef = VqRef;
-}
-
-void DP::Ph1::VSIVoltageControlDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, 
-	Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
-	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower,
-	ratioAbs, ratioPhase, resistance, inductance);
-
-	SPDLOG_LOGGER_INFO(mSLog, "Connection Transformer Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);
-	SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power = {} [VA]", mTransformerRatedPower);
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]", mTransformerResistance, mTransformerInductance);
-    SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
-
-	if (mWithConnectionTransformer)
-		// TODO: resistive losses neglected so far (mWithResistiveLosses=false)
-		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance, mTransformerInductance);
-}
-
-void DP::Ph1::VSIVoltageControlDQ::setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega) {
-
-	SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_p = {}, K_i = {}", Kp_voltageCtrl, Ki_voltageCtrl);
-	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_p = {}, K_i = {}", Kp_currCtrl, Ki_currCtrl);
-	SPDLOG_LOGGER_INFO(mSLog, "VCO: Omega_Nom = {}", Omega);
-
-	mVCO->setParameters(Omega);
-	mVoltageControllerVSI->setControllerParameters(Kp_voltageCtrl, Ki_voltageCtrl, Kp_currCtrl, Ki_currCtrl, Omega);
-}
-
-void DP::Ph1::VSIVoltageControlDQ::setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc) {
-	Base::AvVoltageSourceInverterDQ::setFilterParameters(Lf, Cf, Rf, Rc);
-
-	SPDLOG_LOGGER_INFO(mSLog, "Filter Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog, "Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
-
+void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequency) {
+	// set subcomponent parameters
 	mSubResistorC->setParameters(mRc);
 	mSubResistorF->setParameters(mRf);
 	mSubInductorF->setParameters(mLf);
 	mSubCapacitorF->setParameters(mCf);
-}
 
-//Overload function of Voltage Controller --> set start values of states
-void DP::Ph1::VSIVoltageControlDQ::setInitialStateValues(Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit) {
+	// set controller parameters
+	mVCO->setParameters(**mOmegaN);
+	mVoltageControllerVSI->setControllerParameters(mKpVoltageCtrl, mKiVoltageCtrl, mKpCurrCtrl, mKiCurrCtrl, mOmegaVSI);
 
-	SPDLOG_LOGGER_INFO(mSLog, "Initial State Value Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog, "Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
-	SPDLOG_LOGGER_INFO(mSLog, "Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
-
-	mVoltageControllerVSI->setInitialStateValues(phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
-}
-
-void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequency) {
+	
 	// terminal powers in consumer system -> convert to generator system
-	Real activePower = terminal(0)->singlePower().real();;
-	Real reactivePower = terminal(0)->singlePower().imag();
+	Real activePower = -terminal(0)->singlePower().real();
+	Real reactivePower = -terminal(0)->singlePower().imag();
 
-	// set initial interface quantities
+	// set initial interface quantities --> Current flowing out of the inverter is positive
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0);
-	(**mIntfCurrent)(0, 0) = -std::conj(Complex(activePower, reactivePower) / (**mIntfVoltage)(0,0));
+	(**mIntfCurrent)(0, 0) = std::conj(Complex(activePower, reactivePower) / (**mIntfVoltage)(0,0));
 
 	Complex filterInterfaceInitialVoltage;
 	Complex filterInterfaceInitialCurrent;
@@ -177,10 +122,10 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 	}
 
 	// derive initialization quantities of filter
-	Complex vcInit = filterInterfaceInitialVoltage - filterInterfaceInitialCurrent * mRc;
+	Complex vcInit = filterInterfaceInitialVoltage + filterInterfaceInitialCurrent * mRc;
 	Complex icfInit = vcInit * Complex(0., 2. * PI * frequency * mCf);
-	Complex vfInit = vcInit - (filterInterfaceInitialCurrent - icfInit) * Complex(0., 2. * PI * frequency * mLf);
-	Complex vsInit = vfInit - (filterInterfaceInitialCurrent - icfInit) * Complex(mRf, 0);
+	Complex vfInit = vcInit - (filterInterfaceInitialCurrent + icfInit) * Complex(0., 2. * PI * frequency * mLf);
+	Complex vsInit = vfInit - (filterInterfaceInitialCurrent + icfInit) * Complex(mRf, 0);
 	mVirtualNodes[0]->setInitialVoltage(vsInit);
 	mVirtualNodes[1]->setInitialVoltage(vfInit);
 	mVirtualNodes[2]->setInitialVoltage(vcInit);
@@ -193,7 +138,7 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
 	mSubResistorF->connect({ mVirtualNodes[0], mVirtualNodes[1] });
 	mSubInductorF->connect({ mVirtualNodes[1], mVirtualNodes[2] });
-	mSubCapacitorF->connect({ mVirtualNodes[2], SimNode::GND });
+	mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[2] });
 	if (mWithConnectionTransformer)
 		mSubResistorC->connect({ mVirtualNodes[2],  mVirtualNodes[3]});
 	else
@@ -205,8 +150,7 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
 
-	if(mWithConnectionTransformer)
-	{
+	if(mWithConnectionTransformer) {
 		// Initialize control subcomponents
 		Complex vcdq, ircdq;
 		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->initialSingleVoltage(), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
@@ -219,8 +163,7 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 
 		// VCO input
 		mVCO->setInitialValues(**mVcq, std::arg(mVirtualNodes[3]->initialSingleVoltage()), std::arg(mVirtualNodes[3]->initialSingleVoltage()));
-	}
-	else{
+	} else {
 		// Initialize control subcomponents
 		Complex vcdq, ircdq;
 		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->initialSingleVoltage(), std::arg(mVirtualNodes[2]->initialSingleVoltage()), 0);
@@ -294,15 +237,12 @@ void DP::Ph1::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	Complex vcdq, ircdq;
 
-	if(mWithConnectionTransformer)
-	{
+	if(mWithConnectionTransformer) {
 		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), (**mVCO->mOutputPrev)(0,0), mThetaN);
 		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), (**mVCO->mOutputPrev)(0,0), mThetaN);
-	}
-	else{
+	} else {
 		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->singleVoltage(), (**mVCO->mOutputPrev)(0,0), mThetaN);
 		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), (**mVCO->mOutputPrev)(0,0), mThetaN);
-	
 	}
 
 	**mVcd = vcdq.real();

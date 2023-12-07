@@ -10,13 +10,12 @@
 
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
-#include <dpsim-models/Definitions.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
 #include <dpsim-models/DP/DP_Ph1_Inductor.h>
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_Transformer.h>
-#include <dpsim-models/Base/Base_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/Base/Base_VSIVoltageSourceInverterDQ.h>
 #include <dpsim-models/Signal/VCO.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 
@@ -25,7 +24,7 @@ namespace DP {
 namespace Ph1 {
 	class VSIVoltageControlDQ :
 		public CompositePowerComp<Complex>,
-		public Base::AvVoltageSourceInverterDQ,
+		public Base::VSIVoltageSourceInverterDQ,
 		public SharedFactory<VSIVoltageControlDQ> {
 	protected:
 
@@ -60,20 +59,8 @@ namespace Ph1 {
 		/// Optional connection transformer
 		std::shared_ptr<DP::Ph1::Transformer> mConnectionTransformer;
 
-		/// Flag for connection transformer usage
-		Bool mWithConnectionTransformer=false;
-		/// Flag for controller usage
-		Bool mWithControl=true;
-
 	public:
 		// ### General Parameters ###
-
-		/// Nominal frequency
-		const Attribute<Real>::Ptr mOmegaN;
-		/// Voltage d reference
-		const Attribute<Real>::Ptr mVdRef;
-		/// Voltage q reference
-		const Attribute<Real>::Ptr mVqRef;
 
 		// ### Inverter Interfacing Variables ###
 		// Control inputs
@@ -111,18 +98,6 @@ namespace Ph1 {
 		// #### General ####
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
-		/// Setter for general parameters of inverter
-		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
-		/// Setter for parameters of control loops
-		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega);
-		/// Setter for parameters of transformer
-		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
-			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
-		/// Setter for parameters of filter
-		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
-		/// Setter for initial values applied in controllers
-		void setInitialStateValues(Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
-		void withControl(Bool controlOn) { mWithControl = controlOn; };
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component

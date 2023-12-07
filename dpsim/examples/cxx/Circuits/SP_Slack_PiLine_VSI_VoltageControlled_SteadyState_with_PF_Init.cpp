@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{loadSP, lineSP, pv});
 
 	// Initialization of dynamic topology
-	systemSP.initWithPowerflow(systemPF);
+	systemSP.initWithPowerflow(systemPF, CPS::Domain::SP);
 	Complex initial1PhPowerVSI= Complex(linePF->attributeTyped<Real>("p_inj")->get(), linePF->attributeTyped<Real>("q_inj")->get());
 
 	pv->terminal(0)->setPower(initial1PhPowerVSI);

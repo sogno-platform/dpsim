@@ -64,8 +64,8 @@ void VoltageControllerVSI::setControllerParameters(Real Kp_voltageCtrl, Real Ki_
 
 	// log loop parameters
 	SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_i = {}, K_p = {}", Kp_voltageCtrl, Ki_voltageCtrl);
-	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);
+	SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_i = {}, K_p = {}", Ki_voltageCtrl, Kp_voltageCtrl);
+	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_i = {}, K_p = {}", Ki_currCtrl, Kp_currCtrl);
 	SPDLOG_LOGGER_INFO(mSLog, "PLL: K_p = {}, K_i = {}", Kp_pll, Ki_pll);
 	SPDLOG_LOGGER_INFO(mSLog, "Cut-Off Frequency = {}", Omega_cutoff);  
 
