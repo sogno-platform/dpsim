@@ -13,16 +13,16 @@ using namespace CPS;
 void Base::VSIVoltageSourceInverterDQ::setParameters(
 	Real sysOmega, Real VdRef, Real VqRef) {
 
-	**mOmegaN = sysOmega;
-	**mVdRef = VdRef;
-	**mVqRef = VqRef;
+	mOmegaNom = sysOmega;
+	mVdRef = VdRef;
+	mVqRef = VqRef;
 
 	SPDLOG_LOGGER_INFO(mLogger, 
 		"\nGeneral Parameters:"
 		"\n\tNominal Omega = {} [1/s]"
 		"\n\tVdRef = {} [V] "
 		"\n\tVqRef = {} [V]",
-		**mOmegaN, **mVdRef, **mVqRef);
+		mOmegaNom, mVdRef, mVqRef);
 }
 
 void Base::VSIVoltageSourceInverterDQ::setTransformerParameters(

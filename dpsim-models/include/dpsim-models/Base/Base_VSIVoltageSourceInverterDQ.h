@@ -23,26 +23,32 @@ namespace Base {
 
 	protected:
 		// ### General Parameters ###
-		/// Nominal frequency
-		const Attribute<Real>::Ptr mOmegaN;
-		/// Nominal system angle
-		const Attribute<Real>::Ptr mThetaN;
 		/// Simulation step
 		Real mTimeStep;
+		/// Nominal Omega
+		Real mOmegaN;
 
 		// ### Inverter Parameters ###
+		/// Nominal frequency
+		Real mOmegaNom;
 		/// Nominal voltage
 		Real mVnom;
 		/// Voltage d reference
-		const Attribute<Real>::Ptr mVdRef;
+		Real mVdRef;
 		/// Voltage q reference
-		const Attribute<Real>::Ptr mVqRef;
+		Real mVqRef;
+		/// Active power reference
+		Real mPref;
+
+		// ### Inverter Flags ###
 		/// Flag for connection transformer usage
 		Bool mWithConnectionTransformer=false;
 		/// Flag for controller usage
 		Bool mWithControl=true;
+		/// Flag for control droop usage
+		Bool mWithDroop = false;
 
-		/// Filter parameters
+		// Filter parameters
 		Real mLf;
 		Real mCf;
 		Real mRf;
@@ -62,13 +68,46 @@ namespace Base {
 		Real mTransformerInductance;
 		Real mTransformerRatioAbs;
 		Real mTransformerRatioPhase;
+
+		// ### Inverter Variables ###
+		/// Omega
+		const Attribute<Real>::Ptr mOmega;
+		/// System angle (rotating at nominal omega)
+		const Attribute<Real>::Ptr mThetaSys;
+		/// Inverter angle (rotating at inverter omega)
+		const Attribute<Real>::Ptr mThetaInv;
+		/// Measured voltage d-axis in local reference frame
+		const Attribute<Real>::Ptr mVcap_d;
+		/// Measured voltage q-axis in local reference frame
+		const Attribute<Real>::Ptr mVcap_q;
+		/// Measured current d-axis in local reference frame
+		const Attribute<Real>::Ptr mIfilter_d;
+		/// Measured current q-axis in local reference frame
+		const Attribute<Real>::Ptr mIfilter_q;
+		/// inverter terminal active power
+		const Attribute<Real>::Ptr mActivePower;
+		/// inverter terminal reactive power
+		const Attribute<Real>::Ptr mReactivePower;
+		/// Voltage as control output after transformation interface
+		const Attribute<MatrixComp>::Ptr mVsref;
+
     public:
 		explicit VSIVoltageSourceInverterDQ(Logger::Log Log, CPS::AttributeList::Ptr attributeList) :
 			mLogger(Log),
-			mOmegaN(attributeList->create<Real>("Omega_nom")),
-			mThetaN(attributeList->create<Real>("Theta", 0)),
-			mVdRef(attributeList->create<Real>("VdRef")),
-			mVqRef(attributeList->create<Real>("VqRef")) { };
+			mOmega(attributeList->create<Real>("Omega", 0)),
+			mThetaSys(attributeList->create<Real>("mThetaSys", 0)),
+			mThetaInv(attributeList->create<Real>("mThetaInv", 0)),
+			mVcap_d(attributeList->create<Real>("Vcap_d", 0)),
+			mVcap_q(attributeList->create<Real>("Vcap_q", 0)),
+			mIfilter_d(attributeList->create<Real>("Ifilter_d", 0)),
+			mIfilter_q(attributeList->create<Real>("Ifilter_q", 0)),
+			mActivePower(attributeList->create<Real>("P_elec", 0)),
+			mReactivePower(attributeList->create<Real>("Q_elec", 0)),
+			mVsref(attributeList->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))),
+			mPhi_d(attributeList->create<Real>("Phi_d", 0)),
+			mPhi_q(attributeList->create<Real>("Phi_q", 0)),
+			mGamma_d(attributeList->create<Real>("Gamma_d", 0)),
+			mGamma_q(attributeList->create<Real>("Gamma_q", 0)) { };
 
 		/// Setter for general parameters of inverter
 		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
