@@ -30,7 +30,8 @@ void addAttributes(py::module_ m) {
 		py::class_<CPS::Attribute<CPS::Real>, CPS::AttributePointer<CPS::Attribute<CPS::Real>>, CPS::AttributeBase>(m, "AttributeReal")
 			.def("get", &CPS::Attribute<CPS::Real>::get)
 			.def("set", &CPS::Attribute<CPS::Real>::set)
-			.def("derive_scaled", &CPS::Attribute<CPS::Real>::deriveScaled);
+			.def("derive_scaled", &CPS::Attribute<CPS::Real>::deriveScaled)
+			.def("derive_complex", &CPS::Attribute<CPS::Real>::deriveComplex);
 
 		py::class_<CPS::AttributeStatic<CPS::Real>, CPS::AttributePointer<CPS::AttributeStatic<CPS::Real>>, CPS::Attribute<CPS::Real>>(m, "AttributeRealStat");
 		py::class_<CPS::AttributeDynamic<CPS::Real>, CPS::AttributePointer<CPS::AttributeDynamic<CPS::Real>>, CPS::Attribute<CPS::Real>>(m, "AttributeRealDyn")
