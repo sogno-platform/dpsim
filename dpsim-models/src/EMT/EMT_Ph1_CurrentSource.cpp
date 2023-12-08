@@ -76,8 +76,8 @@ void EMT::Ph1::CurrentSource::mnaCompPostStep(Real time, Int timeStepCount, Attr
 
 void EMT::Ph1::CurrentSource::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	(**mIntfVoltage)(0,0) = 0;
-	if (terminalNotGrounded(0))
-		(**mIntfVoltage)(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
+		(**mIntfVoltage)(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
+	if (terminalNotGrounded(0))
+		(**mIntfVoltage)(0,0) = (**mIntfVoltage)(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
