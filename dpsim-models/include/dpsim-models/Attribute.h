@@ -534,6 +534,28 @@ public:
 };
 
 /**
+		 * Convenience method for building a complex attribute from a real attribute
+		 * @return a new complex attribute whose real part always equal value of `this`
+		 * */
+template <typename U = T,
+          std::enable_if_t<std::is_same_v<Real, U>, bool> = true>
+AttributePointer<Attribute<Complex>> deriveComplex()
+// requires std::same_as<T, CPS::Complex> //CPP20
+{
+  AttributeUpdateTask<CPS::Complex, CPS::Real>::Actor getter =
+      [](std::shared_ptr<Complex> &dependent, Attribute<Real>::Ptr dependency) {
+        *dependent = CPS::Complex(dependency->get(), 0);
+      };
+  AttributeUpdateTask<CPS::Complex, CPS::Real>::Actor setter =
+      [](std::shared_ptr<Complex> &dependent, Attribute<Real>::Ptr dependency) {
+        dependency->set(dependent->real());
+      };
+  return derive<CPS::Complex>(getter, setter);
+}
+
+};
+
+/**
 	 * Class for static attributes. A static attribute's value can only ever by changed via the `get` and `set` methods (or the reference provided by `get`).
 	 * Static attributes do not directly depend on any other attributes and currently cannot have any update tasks.
 	 * */

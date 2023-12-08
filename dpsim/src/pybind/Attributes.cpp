@@ -33,7 +33,8 @@ void addAttributes(py::module_ m) {
              CPS::AttributeBase>(m, "AttributeReal")
       .def("get", &CPS::Attribute<CPS::Real>::get)
       .def("set", &CPS::Attribute<CPS::Real>::set)
-      .def("derive_scaled", &CPS::Attribute<CPS::Real>::deriveScaled);
+      .def("derive_scaled", &CPS::Attribute<CPS::Real>::deriveScaled)
+      .def("derive_complex", &CPS::Attribute<CPS::Real>::deriveComplex);
 
   py::class_<CPS::AttributeStatic<CPS::Real>,
              CPS::AttributePointer<CPS::AttributeStatic<CPS::Real>>,
