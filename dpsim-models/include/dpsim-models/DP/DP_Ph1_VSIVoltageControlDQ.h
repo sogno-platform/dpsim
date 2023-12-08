@@ -7,9 +7,9 @@
  *********************************************************************************/
 #pragma once
 
-
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
@@ -27,22 +27,9 @@ namespace Ph1 {
 		public SharedFactory<VSIVoltageControlDQ> {
 	protected:
 
-		// ### General Parameters ###
-		/// Nominal system angle
-		/// CHECK: Should this be an Attribute?
-		Real mThetaN = 0;
-		/// Nominal voltage
-		/// CHECK: Should this be an Attribute?
-		Real mVnom;
-		/// Simulation step
-		Real mTimeStep;
-
-
 		// ### Control Subcomponents ###
 		/// VCO
 		std::shared_ptr<Signal::VCO> mVCO;
-		/// Power Controller
-		std::shared_ptr<Signal::VoltageControllerVSI> mVoltageControllerVSI;
 
 		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
@@ -58,34 +45,7 @@ namespace Ph1 {
 
 	public:
 		// ### General Parameters ###
-
-		// ### Inverter Interfacing Variables ###
-		// Control inputs
-		/// Measured voltage d-axis in local reference frame
-		const Attribute<Real>::Ptr mVcd;
-		/// Measured voltage q-axis in local reference frame
-		const Attribute<Real>::Ptr mVcq;
-		/// Measured current d-axis in local reference frame
-		const Attribute<Real>::Ptr mIrcd;
-		/// Measured current q-axis in local reference frame
-		const Attribute<Real>::Ptr mIrcq;
-		const Attribute<Real>::Ptr mElecActivePower;
-		const Attribute<Real>::Ptr mElecPassivePower;
-		// Control outputs
-		/// Voltage as control output after transformation interface
-		const Attribute<MatrixComp>::Ptr mVsref;
-
-		// Sub voltage source
-		const Attribute<MatrixComp>::Ptr mVs;
-
-		// VCO
-		const Attribute<Matrix>::Ptr mVCOOutput;
-
-		// input, state and output vector for logging
-		const Attribute<Matrix>::Ptr mVoltagectrlInputs;
-		const Attribute<Matrix>::Ptr mVoltagectrlStates;
-		const Attribute<Matrix>::Ptr mVoltagectrlOutputs;
-
+		
 		/// Defines name amd logging level
 		VSIVoltageControlDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: VSIVoltageControlDQ(name, name, logLevel) {}

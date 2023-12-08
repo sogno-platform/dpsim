@@ -11,7 +11,7 @@
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/AttributeList.h>
-
+#include <dpsim-models/Base/VSIControlDQ.h>
 
 namespace CPS {
 namespace Base {
@@ -43,8 +43,6 @@ namespace Base {
 		// ### Inverter Flags ###
 		/// Flag for connection transformer usage
 		Bool mWithConnectionTransformer=false;
-		/// Flag for controller usage
-		Bool mWithControl=true;
 		/// Flag for control droop usage
 		Bool mWithDroop = false;
 
@@ -53,13 +51,6 @@ namespace Base {
 		Real mCf;
 		Real mRf;
 		Real mRc;
-
-		// ### VSI Control parameters###
-		Real mKiVoltageCtrl = 0;
-		Real mKiCurrCtrl = 0;
-		Real mKpVoltageCtrl = 0;
-		Real mKpCurrCtrl = 0;
-		Real mOmegaVSI;
 
 		/// transformer
 		Real mTransformerNominalVoltageEnd1;
@@ -92,14 +83,14 @@ namespace Base {
 		const Attribute<MatrixComp>::Ptr mVsref;
 
 		// ### Voltage Controller Variables ###
-		///
-		const Attribute<Real>::Ptr mPhi_d;
-		///
-		const Attribute<Real>::Ptr mPhi_q;
-		///
-		const Attribute<Real>::Ptr mGamma_d;
-		///
-		const Attribute<Real>::Ptr mGamma_q;
+
+		// #### Controllers ####
+		/// Determines if VSI control is activated
+		Bool mWithControl = true;
+			
+		/// Signal component modelling voltage regulator and exciter
+		std::shared_ptr<Base::VSIControlDQ> mVSIController;
+		
 
     public:
 		explicit VSIVoltageSourceInverterDQ(Logger::Log Log, CPS::AttributeList::Ptr attributeList) :
@@ -113,11 +104,7 @@ namespace Base {
 			mIfilter_q(attributeList->create<Real>("Ifilter_q", 0)),
 			mActivePower(attributeList->create<Real>("P_elec", 0)),
 			mReactivePower(attributeList->create<Real>("Q_elec", 0)),
-			mVsref(attributeList->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))),
-			mPhi_d(attributeList->create<Real>("Phi_d", 0)),
-			mPhi_q(attributeList->create<Real>("Phi_q", 0)),
-			mGamma_d(attributeList->create<Real>("Gamma_d", 0)),
-			mGamma_q(attributeList->create<Real>("Gamma_q", 0)) { };
+			mVsref(attributeList->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))) { };
 
 		/// Setter for general parameters of inverter
 		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
@@ -126,17 +113,20 @@ namespace Base {
 		/// Setter for optional connection transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
 			Real ratioPhase, Real resistance, Real inductance);
-		/// Setter for parameters of control loops
-		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega);
 		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
 			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
 		/// Setter for initial values applied in controllers
 		void setInitialStateValues(Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
 		/// 
-		void withControl(Bool controlOn) { mWithControl = controlOn; };
-		/// 
 		void withConnectionTransformer(Bool withConnectionTransformer) { mWithConnectionTransformer = withConnectionTransformer; };
+
+		// ### Controllers ###
+		/// Add VSI Controller
+		void addVSIController(std::shared_ptr<Base::VSIControlDQ> VSIController);
+
+	protected:
+		void initializeControllerStates();
     };
 }
 }

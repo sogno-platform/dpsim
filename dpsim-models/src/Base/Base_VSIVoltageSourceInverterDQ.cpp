@@ -63,58 +63,7 @@ void Base::VSIVoltageSourceInverterDQ::setFilterParameters(
 		mLf, mCf, mRf, mRc);
 }
 
-void Base::VSIVoltageSourceInverterDQ::setControllerParameters(
-	Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega) {
-	
-	mKiVoltageCtrl = Ki_voltageCtrl;
-	mKiCurrCtrl = Ki_currCtrl;
-	mKpVoltageCtrl = Kp_voltageCtrl;
-	mKpCurrCtrl = Kp_currCtrl;
-	mOmegaVSI = Omega;
-
-	SPDLOG_LOGGER_INFO(mLogger, 
-		"\nControl Parameters:"
-		"\nVoltage Loop: K_p = {}, K_i = {}"
-		"\nCurrent Loop: K_p = {}, K_i = {}"
-		"\nVCO: Omega_Nom = {}", 
-		mKpVoltageCtrl, mKiVoltageCtrl,
-		mKpCurrCtrl, mKiCurrCtrl,
-		Omega);
-}
-
-void Base::VSIVoltageSourceInverterDQ::setInitialStateValues(
-	Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit) {
-
-	SPDLOG_LOGGER_INFO(mLogger, 
-		"\nInitial State Value Parameters:"
-		"\n\tPhi_dInit = {}"
-		"\n\tPhi_qInit = {}"
-		"\n\tGamma_dInit = {}"
-		"\n\tGamma_qInit = {}",
-		phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
-}
-
-void Base::VSIVoltageSourceInverterDQ::initializeControllerStates() {
-	Complex Vsref_dq = Math::rotatingFrame2to1((**mVsref)(0,0), **mThetaInv, **mThetaSys);
-	**mPhi_d = **mIfilter_d;
-	//**mPhi_d = **mIfilter_d / mKiv;
-	//**mPhi_d = (**mIfilter_d + mOmegaNom*mCf * **mVcap_q) / mKiv;
-	**mPhi_q = **mIfilter_q;
-	//**mPhi_q = **mIfilter_q / mKiv; 
-	//**mPhi_q = (**mIfilter_q - mOmegaNom*mCf * **mVcap_d) / mKiv; 
-	**mGamma_d = Vsref_dq.real() - **mVcap_d;
-	//**mGamma_d = (Vsref_dq.real() - **mVcap_d) / mKic;
-	//**mGamma_d = (Vsref_dq.real() + mOmegaNom*mLf * **mIfilter_q) / mKic;
-	**mGamma_q = Vsref_dq.imag() - **mVcap_q;
-	//**mGamma_q = (Vsref_dq.imag() - **mVcap_q) / mKic;
-	//**mGamma_q = (Vsref_dq.imag() - mOmegaNom*mLf * **mIfilter_d) / mKic;
-
-	SPDLOG_LOGGER_INFO(mSLog_,
-			"\nInitialize controller states:"	  
-			"\n\tPhi_d = {}"
-			"\n\tPhi_q = {}"
-			"\n\tGamma_d = {}"
-			"\n\tGamma_q = {}",
-			**mPhi_d, **mPhi_q, **mGamma_d, **mGamma_q);
-	mSLog_->flush();
+void Base::VSIVoltageSourceInverterDQ::addVSIController(std::shared_ptr<Base::VSIControlDQ> VSIController) {
+	mVSIController = VSIController;
+	mWithControl = true;
 }
