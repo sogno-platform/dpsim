@@ -7,7 +7,7 @@ using namespace CPS::Signal;
 Signal::VSIControlType1::VSIControlType1(const String & name, CPS::Logger::Level logLevel) 
 	: SimSignalComp(name, name, logLevel) { }
 
-void VSIControlType1::setParameters(std::shared_ptr<Base::TurbineParameters> parameters) {
+void VSIControlType1::setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) {
     if (auto params = std::dynamic_pointer_cast<Signal::VSIControlType1Parameters>(parameters)){
         mParameters = params;
         SPDLOG_LOGGER_INFO(mSLog, 
@@ -24,21 +24,24 @@ void VSIControlType1::setParameters(std::shared_ptr<Base::TurbineParameters> par
 	}
 }
 
-void VSIControlType1::initialize(Complex Vsref, Idq_filter) {
-    Complex Vsref_dq = Math::rotatingFrame2to1((**mVsref)(0,0), **mThetaInv, **mThetaSys);
-	mPhi_d = **mIfilter_d / mKiv;
-	mPhi_q = **mIfilter_q / mKiv; 
-	mGamma_d = (Vsref_dq.real() - **mVcap_d) / mKic;
-	mGamma_q = (Vsref_dq.imag() - **mVcap_q) / mKic;
+void VSIControlType1::initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, 
+	const Complex& Ifilter_dq, Real time_step) {
+		
+	mTimeStep = time_step;
+	**mPhi_d = Ifilter_dq.real() / mParameters->Kiv;
+	**mPhi_q = Ifilter_dq.imag() / mParameters->Kiv; 
+	**mGamma_d = (Vsref_dq.real() - Vcap_dq.real()) / mParameters->Kic;
+	**mGamma_q = (Vsref_dq.imag() - Vcap_dq.imag()) / mParameters->Kic;
+	**mStateCurr << **mPhi_d, **mPhi_q, **mGamma_d, **mGamma_q;
 
-	SPDLOG_LOGGER_INFO(mLogger,
+	SPDLOG_LOGGER_INFO(mSLog,
 			"\nInitialize controller states:"	  
 			"\n\tPhi_d = {}"
 			"\n\tPhi_q = {}"
 			"\n\tGamma_d = {}"
 			"\n\tGamma_q = {}",
-			mPhi_d, mPhi_q, mGamma_d, mGamma_q);
-	mLogger->flush();
+			**mPhi_d, **mPhi_q, **mGamma_d, **mGamma_q);
+	mSLog->flush();
 
     // initialize state matrix
     // [x] = [phid, phiq, gammad, gammaq]
@@ -65,7 +68,7 @@ void VSIControlType1::initialize(Complex Vsref, Idq_filter) {
 		mParameters->Kpc * mParameters->Kpv , 0, -mParameters->Kpc * mParameters->Kpv + 1, 0, -mParameters->Kpc, 0,
 		0, mParameters->Kpc * mParameters->Kpv, 0, -mParameters->Kpc * mParameters->Kpv + 1, 0, -mParameters->Kpc;
 
-    Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, Matri::Zero(4,1), mTimeStep, mATrapezoidal, mBTrapezoidal, mCTrapezoidal);
+    Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, Matrix::Zero(4,1), mTimeStep, mATrapezoidal, mBTrapezoidal, mCTrapezoidal);
 
     // Log state-space matrices
 	SPDLOG_LOGGER_INFO(mSLog, "State space matrices:");
@@ -73,14 +76,17 @@ void VSIControlType1::initialize(Complex Vsref, Idq_filter) {
     SPDLOG_LOGGER_INFO(mSLog, "B = \n{}", mB);
     SPDLOG_LOGGER_INFO(mSLog, "C = \n{}", mC);
     SPDLOG_LOGGER_INFO(mSLog, "D = \n{}", mD);
-    mLogger->flush();
+    mSLog->flush();
 }
 
-Real VSIControlType1::step(Real Vcap_d, Real Vcap_q, Real Ifilter_d, Real Ifilter_q) {
+Complex VSIControlType1::step(const Complex& Vcap_dq, const Complex& Ifilter_dq) {
     
+	//
+	**mStatePrev = **mStateCurr;
+
     // get current inputs
-	mInputCurr << mParameters->VdRef, mParameters->VqRef, Vcap_d, Vcap_q, Ifilter_d, Ifilter_q;
-    SPDLOG_LOGGER_DEBUG(mSLog, "Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, mInputCurr, mInputPrev, mStatePrev);
+	**mInputCurr << mParameters->VdRef, mParameters->VqRef, Vcap_dq.real(), Vcap_dq.imag(), Ifilter_dq.real(), Ifilter_dq.imag();
+    SPDLOG_LOGGER_DEBUG(mSLog, "Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, **mInputCurr, **mInputPrev, **mStatePrev);
 
 	// calculate new states
 	//**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
@@ -88,9 +94,10 @@ Real VSIControlType1::step(Real Vcap_d, Real Vcap_q, Real Ifilter_d, Real Ifilte
 	SPDLOG_LOGGER_DEBUG(mSLog, "stateCurr = \n {}", **mStateCurr);
 
 	// calculate new outputs
-	**mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
-	SPDLOG_LOGGER_DEBUG(mSLog, "Output values: outputCurr = \n{}", **mOutputCurr);
-    
-    //TODO: RETURN?
+	**mOutput = mC * **mStateCurr + mD * **mInputCurr;
+	SPDLOG_LOGGER_DEBUG(mSLog, "Output values: outputCurr = \n{}", **mOutput);
+
+	//
+	return Complex((**mOutput)(0,0), (**mOutput)(1,0));
 }
 

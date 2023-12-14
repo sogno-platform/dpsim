@@ -11,7 +11,7 @@
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/AttributeList.h>
-#include <dpsim-models/Base/VSIControlDQ.h>
+#include <dpsim-models/Base/Base_VSIControlDQ.h>
 
 namespace CPS {
 namespace Base {
@@ -42,7 +42,7 @@ namespace Base {
 
 		// ### Inverter Flags ###
 		/// Flag for connection transformer usage
-		Bool mWithConnectionTransformer=false;
+		Bool mWithConnectionTransformer = false;
 		/// Flag for control droop usage
 		Bool mWithDroop = false;
 
@@ -67,20 +67,16 @@ namespace Base {
 		const Attribute<Real>::Ptr mThetaSys;
 		/// Inverter angle (rotating at inverter omega)
 		const Attribute<Real>::Ptr mThetaInv;
-		/// Measured voltage d-axis in local reference frame
-		const Attribute<Real>::Ptr mVcap_d;
-		/// Measured voltage q-axis in local reference frame
-		const Attribute<Real>::Ptr mVcap_q;
-		/// Measured current d-axis in local reference frame
-		const Attribute<Real>::Ptr mIfilter_d;
-		/// Measured current q-axis in local reference frame
-		const Attribute<Real>::Ptr mIfilter_q;
-		/// inverter terminal active power
-		const Attribute<Real>::Ptr mActivePower;
-		/// inverter terminal reactive power
-		const Attribute<Real>::Ptr mReactivePower;
 		/// Voltage as control output after transformation interface
 		const Attribute<MatrixComp>::Ptr mVsref;
+		/// Voltage as control output after transformation interface
+		const Attribute<Complex>::Ptr mVsref_dq;
+		/// Measured voltage in dq reference frame
+		const Attribute<Complex>::Ptr mVcap_dq;
+		/// Measured current in dq reference frame
+		const Attribute<Complex>::Ptr mIfilter_dq;
+		/// inverter terminal active power
+		const Attribute<Complex>::Ptr mPower;
 
 		// ### Voltage Controller Variables ###
 
@@ -93,18 +89,18 @@ namespace Base {
 		
 
     public:
-		explicit VSIVoltageSourceInverterDQ(Logger::Log Log, CPS::AttributeList::Ptr attributeList) :
+		explicit VSIVoltageSourceInverterDQ(Logger::Log Log, CPS::AttributeList::Ptr attributeList,
+			Bool withConnectionTransformer) :
 			mLogger(Log),
+			mWithConnectionTransformer(withConnectionTransformer),
 			mOmega(attributeList->create<Real>("Omega", 0)),
 			mThetaSys(attributeList->create<Real>("mThetaSys", 0)),
 			mThetaInv(attributeList->create<Real>("mThetaInv", 0)),
-			mVcap_d(attributeList->create<Real>("Vcap_d", 0)),
-			mVcap_q(attributeList->create<Real>("Vcap_q", 0)),
-			mIfilter_d(attributeList->create<Real>("Ifilter_d", 0)),
-			mIfilter_q(attributeList->create<Real>("Ifilter_q", 0)),
-			mActivePower(attributeList->create<Real>("P_elec", 0)),
-			mReactivePower(attributeList->create<Real>("Q_elec", 0)),
-			mVsref(attributeList->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))) { };
+			mVsref(attributeList->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))),
+			mVsref_dq(attributeList->create<Complex>("mVsref_dq", Complex(0,0))),
+			mVcap_dq(attributeList->create<Complex>("mVcap_dq", 0)),
+			mIfilter_dq(attributeList->create<Complex>("Ifilter_dq", 0)),
+			mPower(attributeList->create<Complex>("Power", 0)){ };
 
 		/// Setter for general parameters of inverter
 		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
@@ -113,13 +109,6 @@ namespace Base {
 		/// Setter for optional connection transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
 			Real ratioPhase, Real resistance, Real inductance);
-		/// Setter for parameters of transformer
-		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
-			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
-		/// Setter for initial values applied in controllers
-		void setInitialStateValues(Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
-		/// 
-		void withConnectionTransformer(Bool withConnectionTransformer) { mWithConnectionTransformer = withConnectionTransformer; };
 
 		// ### Controllers ###
 		/// Add VSI Controller

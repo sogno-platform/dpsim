@@ -161,4 +161,30 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("Tch", &CPS::Signal::SteamTurbineParameters::Tch)
         .def_readwrite("Trh", &CPS::Signal::SteamTurbineParameters::Trh)
         .def_readwrite("Tco", &CPS::Signal::SteamTurbineParameters::Tco);
+
+    // VSI Controllers
+    py::class_<CPS::Signal::VSIControlType1, std::shared_ptr<CPS::Signal::VSIControlType1>, CPS::Base::VSIControlDQ>(mSignal, "VSIControlType1", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+    py::class_<CPS::Signal::VSIControlType2, std::shared_ptr<CPS::Signal::VSIControlType2>, CPS::Base::VSIControlDQ>(mSignal, "VSIControlType2", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+
+    py::class_<CPS::Signal::VSIControlType1Parameters, std::shared_ptr<CPS::Signal::VSIControlType1Parameters>, CPS::Base::VSIControlParameters>(mSignal, "VSIControlType1Parameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("Kpv", &CPS::Signal::VSIControlType1Parameters::Kpv)
+        .def_readwrite("Kiv", &CPS::Signal::VSIControlType1Parameters::Kiv)
+        .def_readwrite("Kpc", &CPS::Signal::VSIControlType1Parameters::Kpc)
+        .def_readwrite("Kic", &CPS::Signal::VSIControlType1Parameters::Kic)
+        .def_readwrite("VdRef", &CPS::Signal::VSIControlType1Parameters::VdRef)
+        .def_readwrite("VqRef", &CPS::Signal::VSIControlType1Parameters::VqRef);
+    py::class_<CPS::Signal::VSIControlType2Parameters, std::shared_ptr<CPS::Signal::VSIControlType2Parameters>, CPS::Base::VSIControlParameters>(mSignal, "VSIControlType2Parameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("Kpv", &CPS::Signal::VSIControlType2Parameters::Kpv)
+        .def_readwrite("Kiv", &CPS::Signal::VSIControlType2Parameters::Kiv)
+        .def_readwrite("Kpc", &CPS::Signal::VSIControlType2Parameters::Kpc)
+        .def_readwrite("Kic", &CPS::Signal::VSIControlType2Parameters::Kic)
+        .def_readwrite("VdRef", &CPS::Signal::VSIControlType2Parameters::VdRef)
+        .def_readwrite("VqRef", &CPS::Signal::VSIControlType2Parameters::VqRef)
+        .def_readwrite("omegaNom", &CPS::Signal::VSIControlType2Parameters::omegaNom)
+        .def_readwrite("Cf", &CPS::Signal::VSIControlType2Parameters::Cf)
+        .def_readwrite("Lf", &CPS::Signal::VSIControlType2Parameters::Lf);
 }

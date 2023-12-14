@@ -45,7 +45,7 @@ namespace Ph1 {
 
 	public:
 		// ### General Parameters ###
-		
+
 		/// Defines name amd logging level
 		VSIVoltageControlDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: VSIVoltageControlDQ(name, name, logLevel) {}
@@ -72,40 +72,9 @@ namespace Ph1 {
 		/// Add MNA post step dependencies
 		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
-		// #### Control section ####
-		/// Control pre step operations
-		void controlPreStep(Real time, Int timeStepCount);
-		/// Perform step of controller
-		void controlStep(Real time, Int timeStepCount);
-		/// Add control step dependencies
-		void addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
-		/// Add control step dependencies
-		void addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
-
-		class ControlPreStep : public CPS::Task {
-		public:
-			ControlPreStep(VSIVoltageControlDQ& VSIVoltageControlDQ) :
-				Task(**VSIVoltageControlDQ.mName + ".ControlPreStep"), mVSIVoltageControlDQ(VSIVoltageControlDQ) {
-					mVSIVoltageControlDQ.addControlPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mVSIVoltageControlDQ.controlPreStep(time, timeStepCount); };
-
-		private:
-			VSIVoltageControlDQ& mVSIVoltageControlDQ;
-		};
-
-		class ControlStep : public CPS::Task {
-		public:
-			ControlStep(VSIVoltageControlDQ& VSIVoltageControlDQ) :
-				Task(**VSIVoltageControlDQ.mName + ".ControlStep"), mVSIVoltageControlDQ(VSIVoltageControlDQ) {
-					mVSIVoltageControlDQ.addControlStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
-			}
-			void execute(Real time, Int timeStepCount) { mVSIVoltageControlDQ.controlStep(time, timeStepCount); };
-
-		private:
-			VSIVoltageControlDQ& mVSIVoltageControlDQ;
-		};
-
+	private:
+		///
+		void createSubComponents();
 	};
 }
 }

@@ -17,19 +17,24 @@ namespace Base {
 			virtual ~VSIControlParameters() = default;
 	 };
 
-	/// @brief Base model for VSI controllers in dq referebce frame
+	/// @brief Base model for VSI controllers in dq reference frame
 	class VSIControlDQ {
+
+		protected:
+			///
+			Real mTimeStep;
 
 		public:
 
 			///
 			virtual void setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) = 0;
 
-			/// Initializes Turbine variables
-			virtual void initialize() = 0;
+			/// Initializes
+			virtual void initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, const Complex& Ifilter_dq, Real time_step) = 0;
 
 			/// 
-			virtual Real step() = 0;
+			virtual Complex step(const Complex& Vcap_dq, const Complex& Ifilter_dq) = 0;
+
 	};
 }
 }
