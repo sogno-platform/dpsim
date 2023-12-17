@@ -413,17 +413,21 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 		if (pComp->hasVirtualNodes()) {
 			for (UInt node = 0; node < pComp->virtualNodesNumber(); ++node) {
 				mNodes.push_back(pComp->virtualNode(node));
-				SPDLOG_LOGGER_INFO(mSLog, "Collected virtual node {} of {}", virtualNode, node, pComp->name());
+				SPDLOG_LOGGER_INFO(mSLog, 
+					"Collected virtual node {} of {} of component {}", virtualNode, node, pComp->name());
 			}
 		}
 
 		// Repeat the same steps for virtual nodes of sub components
 		// TODO: recursive behavior
+		std::cout << "SubCompoenent number = " << pComp->subComponents().size() << std::endl;
 		if (pComp->hasSubComponents()) {
+			std::cout << "TestSubComp" << std::endl;
 			for (auto pSubComp : pComp->subComponents()) {
 				for (UInt node = 0; node < pSubComp->virtualNodesNumber(); ++node) {
 					mNodes.push_back(pSubComp->virtualNode(node));
-					SPDLOG_LOGGER_INFO(mSLog, "Collected virtual node {} of {}", virtualNode, node, pComp->name());
+					SPDLOG_LOGGER_INFO(mSLog, 
+						"Collected virtual node {} of {} of component {}", virtualNode, node, pComp->name());
 				}
 			}
 		}
