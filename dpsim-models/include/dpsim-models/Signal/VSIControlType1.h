@@ -39,7 +39,7 @@ namespace Signal {
 		
         /// Controller variables
         /// state variable of the outer loop (d-component)
-        const Attribute<Real>::Ptr mPhi_d;
+        Attribute<Real>::Ptr mPhi_d;
         /// state variable of the outer loop (q-component)
         const Attribute<Real>::Ptr mPhi_q;
         /// state variable of the inner loop (d-component)
@@ -79,8 +79,8 @@ namespace Signal {
 
     public:
         ///
-        explicit VSIControlType1(const String & name) : 
-			SimSignalComp(name, name),
+        explicit VSIControlType1(const String & name, CPS::Logger::Level logLevel) : 
+			SimSignalComp(name, name, logLevel),
 			mPhi_d(mAttributes->create<Real>("Phi_d", 0)),
 			mPhi_q(mAttributes->create<Real>("Phi_q", 0)),
 			mGamma_d(mAttributes->create<Real>("Gamma_d", 0)),
@@ -92,7 +92,7 @@ namespace Signal {
     		mOutput(mAttributes->create<Matrix>("output", Matrix::Zero(2,1))) { }
 
 	    /// Constructor with log level
-	    VSIControlType1(const String & name, CPS::Logger::Level logLevel);
+	    VSIControlType1(const String & name);
 
 	    /// Sets Parameters of the turbine
 	    void setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) final;

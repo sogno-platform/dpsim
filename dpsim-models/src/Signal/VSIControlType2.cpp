@@ -4,9 +4,6 @@
 using namespace CPS;
 using namespace CPS::Signal;
 
-Signal::VSIControlType2::VSIControlType2(const String & name, CPS::Logger::Level logLevel) 
-	: SimSignalComp(name, name, logLevel) { }
-
 void VSIControlType2::setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) {
     if (auto params = std::dynamic_pointer_cast<Signal::VSIControlType2Parameters>(parameters)){
         mParameters = params;

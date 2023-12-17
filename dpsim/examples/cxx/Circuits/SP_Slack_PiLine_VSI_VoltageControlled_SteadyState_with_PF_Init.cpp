@@ -17,11 +17,9 @@ int main(int argc, char* argv[]) {
 	// CIM::Examples::Grids::GridForming::ScenarioConfig1 scenario;
 	CIM::Examples::Grids::GridForming::Yazdani scenario;
 
-	Real finalTime = 2;
+	Real finalTime = 0.1;
 	Real timeStep = 0.0001;
 	String simName = "SP_Slack_PiLine_VSI_VoltageControlled_SteadyState_with_PF_Init";
-	Bool pvWithControl = true;
-
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
@@ -42,9 +40,9 @@ int main(int argc, char* argv[]) {
 	linePF->setParameters(scenario.lineResistance, 0, 0, 0);
 	linePF->setBaseVoltage(scenario.systemNominalVoltage);
 
-	Complex load1_s=3*std::pow(scenario.systemNominalVoltage, 2)/(Complex(scenario.loadRes1, scenario.loadInd1*scenario.systemNominalOmega));
-	Real loadActivePower=load1_s.real();
-	Real loadReactivePower=load1_s.imag();
+	Complex load1_s = 3*std::pow(scenario.systemNominalVoltage, 2)/(Complex(scenario.loadRes1, scenario.loadInd1*scenario.systemNominalOmega));
+	Real loadActivePower = load1_s.real();
+	Real loadReactivePower = load1_s.imag();
 
 	auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
 	loadPF->setParameters(loadActivePower, loadReactivePower, scenario.systemNominalVoltage);
@@ -96,10 +94,19 @@ int main(int argc, char* argv[]) {
 
 	auto pv = SP::Ph1::VSIVoltageControlDQ::make("pv", "pv", Logger::Level::debug, false);
 	pv->setParameters(scenario.systemNominalOmega, scenario.Vdref, scenario.Vqref);
-	pv->setControllerParameters(scenario.KpVoltageCtrl, scenario.KiVoltageCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.systemNominalOmega);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
-	pv->setInitialStateValues(scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
-	pv->withControl(pvWithControl);
+
+	auto controller_parameters = Signal::VSIControlType1Parameters::make();
+	controller_parameters->VdRef = scenario.Vdref;
+	controller_parameters->VqRef = 0;
+	controller_parameters->Kpv = 1.6725;
+	controller_parameters->Kiv = 374.64;
+	controller_parameters->Kpc = 0.2;
+	controller_parameters->Kic = 4.14;
+
+	auto controller = Signal::VSIControlType1::make("VSIController", Logger::Level::info);
+	controller->setParameters(controller_parameters);
+	pv->addVSIController(controller);
 
 	// auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	// lineSP->setParameters(scenario.lineResistance, scenario.lineInductance, 0, 0);
@@ -119,18 +126,14 @@ int main(int argc, char* argv[]) {
 	// Initialization of dynamic topology
 	systemSP.initWithPowerflow(systemPF, CPS::Domain::SP);
 	Complex initial1PhPowerVSI= Complex(linePF->attributeTyped<Real>("p_inj")->get(), linePF->attributeTyped<Real>("q_inj")->get());
-
 	pv->terminal(0)->setPower(initial1PhPowerVSI);
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
-    loggerSP->logAttribute("Controlled_source_PV", pv->attribute("Vs"));
-	loggerSP->logAttribute("Voltage_terminal_PV", n1SP->attribute("v"));
-	loggerSP->logAttribute("Voltage_PCC", n2SP->attribute("v"));
-	loggerSP->logAttribute("Strom_RLC", pv->attribute("i_intf"));
-	loggerSP->logAttribute("VCO_output", pv->attribute("vco_output"));
-	loggerSP->logAttribute("P_elec", pv->attribute("P_elec"));
-	loggerSP->logAttribute("Q_elec", pv->attribute("Q_elec"));
+	loggerSP->logAttribute("N1.V", n1SP->attribute("v"));
+	loggerSP->logAttribute("N2.V", n2SP->attribute("v"));
+	loggerSP->logAttribute("PV.I", pv->attribute("i_intf"));
+	loggerSP->logAttribute("PV.V", pv->attribute("v_intf"));
 	
 	// Simulation
 	Simulation sim(simNameSP, Logger::Level::debug);

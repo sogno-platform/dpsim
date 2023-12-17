@@ -85,8 +85,8 @@ namespace Signal {
 
     public:
         ///
-        explicit VSIControlType2(const String & name) : 
-            SimSignalComp(name, name),
+        explicit VSIControlType2(const String & name, CPS::Logger::Level logLevel) : 
+            SimSignalComp(name, name, logLevel),
             mPhi_d(mAttributes->create<Real>("Phi_d", 0)),
 			mPhi_q(mAttributes->create<Real>("Phi_q", 0)),
 			mGamma_d(mAttributes->create<Real>("Gamma_d", 0)),
@@ -96,9 +96,6 @@ namespace Signal {
     		mStatePrev(mAttributes->create<Matrix>("state_prev", Matrix::Zero(4,1))),
     		mStateCurr(mAttributes->create<Matrix>("state_curr", Matrix::Zero(4,1))),
     		mOutput(mAttributes->create<Matrix>("output", Matrix::Zero(2,1))) { }
-
-	    /// Constructor with log level
-	    VSIControlType2(const String & name, CPS::Logger::Level logLevel);
 
 	    /// Sets Parameters of the turbine
 	    void setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) final;

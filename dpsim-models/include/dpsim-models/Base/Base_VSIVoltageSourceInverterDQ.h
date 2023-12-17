@@ -94,11 +94,11 @@ namespace Base {
 			mLogger(Log),
 			mWithConnectionTransformer(withConnectionTransformer),
 			mOmega(attributeList->create<Real>("Omega", 0)),
-			mThetaSys(attributeList->create<Real>("mThetaSys", 0)),
-			mThetaInv(attributeList->create<Real>("mThetaInv", 0)),
+			mThetaSys(attributeList->create<Real>("ThetaSys", 0)),
+			mThetaInv(attributeList->create<Real>("ThetaInv", 0)),
 			mVsref(attributeList->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))),
-			mVsref_dq(attributeList->create<Complex>("mVsref_dq", Complex(0,0))),
-			mVcap_dq(attributeList->create<Complex>("mVcap_dq", 0)),
+			mVsref_dq(attributeList->create<Complex>("Vsref_dq", Complex(0,0))),
+			mVcap_dq(attributeList->create<Complex>("Vcap_dq", 0)),
 			mIfilter_dq(attributeList->create<Complex>("Ifilter_dq", 0)),
 			mPower(attributeList->create<Complex>("Power", 0)){ };
 
@@ -116,6 +116,7 @@ namespace Base {
 
 	protected:
 		void initializeControllerStates();
+		virtual void createSubComponents() = 0;
     };
 }
 }

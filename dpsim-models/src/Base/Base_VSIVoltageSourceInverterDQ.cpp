@@ -54,6 +54,8 @@ void Base::VSIVoltageSourceInverterDQ::setFilterParameters(
 	mRf = Rf;
 	mRc = Rc;
 
+	createSubComponents();
+
 	SPDLOG_LOGGER_INFO(mLogger, 
 		"\nFilter Parameters:"
 		"\n\tInductance Lf = {} [H]"
@@ -61,6 +63,7 @@ void Base::VSIVoltageSourceInverterDQ::setFilterParameters(
 		"\n\tResistance Rf = {} [H]" 
 		"\n\tResistance Rc = {} [F]",
 		mLf, mCf, mRf, mRc);
+	mLogger->flush();
 }
 
 void Base::VSIVoltageSourceInverterDQ::addVSIController(std::shared_ptr<Base::VSIControlDQ> VSIController) {
