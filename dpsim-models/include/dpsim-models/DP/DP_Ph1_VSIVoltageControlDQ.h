@@ -15,7 +15,6 @@
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_Transformer.h>
 #include <dpsim-models/Base/Base_VSIVoltageSourceInverterDQ.h>
-#include <dpsim-models/Signal/VCO.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 
 namespace CPS {
@@ -26,11 +25,7 @@ namespace Ph1 {
 		public Base::VSIVoltageSourceInverterDQ,
 		public SharedFactory<VSIVoltageControlDQ> {
 	protected:
-
-		// ### Control Subcomponents ###
-		/// VCO
-		std::shared_ptr<Signal::VCO> mVCO;
-
+	
 		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
 		std::shared_ptr<DP::Ph1::VoltageSource> mSubCtrledVoltageSource;
@@ -74,7 +69,9 @@ namespace Ph1 {
 
 	private:
 		///
-		void createSubComponents();
+		void createSubComponents() final;
+		///
+		void connectSubComponents();
 	};
 }
 }

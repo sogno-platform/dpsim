@@ -420,9 +420,7 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 
 		// Repeat the same steps for virtual nodes of sub components
 		// TODO: recursive behavior
-		std::cout << "SubCompoenent number = " << pComp->subComponents().size() << std::endl;
 		if (pComp->hasSubComponents()) {
-			std::cout << "TestSubComp" << std::endl;
 			for (auto pSubComp : pComp->subComponents()) {
 				for (UInt node = 0; node < pSubComp->virtualNodesNumber(); ++node) {
 					mNodes.push_back(pSubComp->virtualNode(node));

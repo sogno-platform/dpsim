@@ -10,7 +10,6 @@
 
 using namespace CPS;
 
-
 DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
 	CompositePowerComp<Complex>(uid, name, true, true, logLevel),
 	VSIVoltageSourceInverterDQ(this->mSLog, mAttributes, withTrafo) {
@@ -25,14 +24,13 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 }
 
-void DP::Ph1::VSIVoltageControlDQ::createSubComponents() {
-
-	// create electrical subcomponents
+void DP::Ph1::VSIVoltageControlDQ::createSubComponents() {	
 	mSubCtrledVoltageSource = DP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
 	mSubFilterRL = DP::Ph1::ResIndSeries::make(**mName + "_FilterRL", mLogLevel);
 	mSubCapacitorF = DP::Ph1::Capacitor::make(**mName + "_CapF", mLogLevel);
 	// TODO: ADD IF FOR INTERFACE RESISTOR?
 	mSubResistorC = DP::Ph1::Resistor::make(**mName + "_ResC", mLogLevel);
+	
 	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	addMNASubComponent(mSubFilterRL, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -46,8 +44,9 @@ void DP::Ph1::VSIVoltageControlDQ::createSubComponents() {
 	mSubFilterRL->setParameters(mRf, mLf);
 	mSubCapacitorF->setParameters(mCf);
 	mSubResistorC->setParameters(mRc);
+}
 
-	// Connect sub componetes
+void DP::Ph1::VSIVoltageControlDQ::connectSubComponents() {
 	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
 	mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
 	mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[1] });
@@ -57,7 +56,7 @@ void DP::Ph1::VSIVoltageControlDQ::createSubComponents() {
 		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[2]});
 	} else {
 		mSubResistorC->connect({ mTerminals[0]->node(), mVirtualNodes[1]});
-	}
+	}	
 }
 
 void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequency) {
@@ -66,7 +65,7 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 
 	// set initial interface quantities --> Current flowing into the inverter is positive
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0);
-	(**mIntfCurrent)(0, 0) = -std::conj(**mPower) / (**mIntfVoltage)(0,0);
+	(**mIntfCurrent)(0, 0) = std::conj(**mPower / (**mIntfVoltage)(0,0));
 
 	//
 	Complex filterInterfaceInitialVoltage = (**mIntfVoltage)(0, 0);
@@ -78,10 +77,10 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 	}
 
 	// derive initialization quantities of filter
-	Complex vcInit = filterInterfaceInitialVoltage - filterInterfaceInitialCurrent * mRc;
+	Complex vcInit = filterInterfaceInitialVoltage + filterInterfaceInitialCurrent * mRc;
 	Complex icfInit = vcInit * Complex(0., mOmegaNom * mCf);
-	Complex vsInit = vcInit - (filterInterfaceInitialCurrent - icfInit) * Complex(mRf, mOmegaNom * mLf);
-	
+	Complex vsInit = vcInit + (filterInterfaceInitialCurrent + icfInit) * Complex(mRf, mOmegaNom * mLf);
+
 	// initialize voltage of virtual nodes
 	mVirtualNodes[0]->setInitialVoltage(vsInit);
 	mVirtualNodes[1]->setInitialVoltage(vcInit);
@@ -89,14 +88,17 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 		mVirtualNodes[2]->setInitialVoltage(filterInterfaceInitialVoltage);
 
 	// Set parameters electrical subcomponents
-	(**mVsref)(0,0) = mVirtualNodes[0]->initialSingleVoltage();
+	(**mVsref)(0,0) = vsInit;
 
 	// Create & Initialize electrical subcomponents
-	this->createSubComponents();
+	this->connectSubComponents();
 	for (auto subcomp: mSubComponents) {
 		subcomp->initialize(mFrequencies);
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
+
+	// droop
+	**mOmega = mOmegaNom;
 
 	// initialize angles
 	**mThetaSys = 0;
@@ -104,10 +106,9 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 
 	// Initialie voltage controller variables
 	**mVcap_dq = Math::rotatingFrame2to1((**mSubCapacitorF->mIntfVoltage)(0,0), **mThetaInv, **mThetaSys);
-	**mIfilter_dq = Math::rotatingFrame2to1(-(**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
+	**mIfilter_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
 	**mVsref_dq = Math::rotatingFrame2to1((**mVsref)(0,0), **mThetaInv, **mThetaSys);
 
-	// initialize states
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
 		"\nTerminal 0 connected to {} = sim node {}"
@@ -142,7 +143,8 @@ void DP::Ph1::VSIVoltageControlDQ::mnaParentAddPreStepDependencies(AttributeBase
 void DP::Ph1::VSIVoltageControlDQ::mnaParentPreStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	**mVcap_dq = Math::rotatingFrame2to1((**mSubCapacitorF->mIntfVoltage)(0,0), **mThetaInv, **mThetaSys);
-	**mIfilter_dq = Math::rotatingFrame2to1(-(**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);	
+	//**mIfilter_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
+	**mIfilter_dq = Math::rotatingFrame2to1((**mSubResistorC->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
 
 	// TODO: droop
 	//if (mWithDroop)
@@ -194,5 +196,6 @@ void DP::Ph1::VSIVoltageControlDQ::mnaCompUpdateVoltage(const Matrix& leftVector
 		virtualNode->mnaUpdateVoltage(leftVector);
 	(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 
-	//TODO: UPDATE POWER?
+	// Update Power
+	**mPower = (**mIntfVoltage)(0,0) * std::conj((**mIntfCurrent)(0,0));
 }

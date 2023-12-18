@@ -25,7 +25,6 @@ SP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 }
 
 void SP::Ph1::VSIVoltageControlDQ::createSubComponents() {
-	std::cout << "Test createSubComponents 0 " << std::endl;
 	// create electrical subcomponents
 	mSubCtrledVoltageSource = SP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
 	mSubFilterRL = SP::Ph1::ResIndSeries::make(**mName + "_FilterRL", mLogLevel);
@@ -64,7 +63,7 @@ void SP::Ph1::VSIVoltageControlDQ::connectSubComponents() {
 void SP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequency) {
 	// terminal powers in consumer system -> convert to generator system
 	**mPower = -terminal(0)->singlePower();
-	std::cout << "**mPower = " << **mPower << std::endl;
+
 	// set initial interface quantities --> Current flowing into the inverter is positive
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0);
 	(**mIntfCurrent)(0, 0) = std::conj(**mPower / (**mIntfVoltage)(0,0));
@@ -82,16 +81,6 @@ void SP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 	Complex vcInit = filterInterfaceInitialVoltage + filterInterfaceInitialCurrent * mRc;
 	Complex icfInit = vcInit * Complex(0., mOmegaNom * mCf);
 	Complex vsInit = vcInit + (filterInterfaceInitialCurrent + icfInit) * Complex(mRf, mOmegaNom * mLf);
-
-	SPDLOG_LOGGER_INFO(mSLog, 
-		"\n--- Part Initialization from powerflow ---"
-		"\nvcInit  = {}"
-		"\nicfInit = {}"
-		"\nvsInit  = {}"
-		"\nInit If  = {}"
-		"\nInit Vfilter  = {}",
-		vcInit, icfInit, vsInit, filterInterfaceInitialCurrent + icfInit, vsInit-vcInit);
-	mSLog->flush();
 
 	// initialize voltage of virtual nodes
 	mVirtualNodes[0]->setInitialVoltage(vsInit);
@@ -120,14 +109,6 @@ void SP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 	**mVcap_dq = Math::rotatingFrame2to1((**mSubCapacitorF->mIntfVoltage)(0,0), **mThetaInv, **mThetaSys);
 	**mIfilter_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
 	**mVsref_dq = Math::rotatingFrame2to1((**mVsref)(0,0), **mThetaInv, **mThetaSys);
-
-	SPDLOG_LOGGER_INFO(mSLog, 
-		"\n--- Part Initialization 2 from powerflow ---"
-		"\n**mVcap_dq  = {}"
-		"\n**mIfilter_dq = {}"
-		"\n**mVsref_dq  = {}",
-		**mVcap_dq, **mIfilter_dq, **mVsref_dq);
-	mSLog->flush();
 
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
@@ -165,12 +146,6 @@ void SP::Ph1::VSIVoltageControlDQ::mnaParentPreStep(Real time, Int timeStepCount
 	**mVcap_dq = Math::rotatingFrame2to1((**mSubCapacitorF->mIntfVoltage)(0,0), **mThetaInv, **mThetaSys);
 	**mIfilter_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
 
-	//std::cout << "Time = " << time << std::endl;
-	//std::cout << "(**mSubCapacitorF->mIntfVoltage)(0,0) = " << (**mSubCapacitorF->mIntfVoltage)(0,0) << std::endl;
-	//std::cout << "mVirtualNodes[2]->singleVoltage() = " << mVirtualNodes[1]->singleVoltage() << std::endl;
-	//std::cout << "(**mSubFilterRL->mIntfCurrent)(0, 0) = " << (**mSubFilterRL->mIntfCurrent)(0, 0) << std::endl;
-	//std::cout << "(**mSubResistorC->mIntfCurrent)(0, 0) = " << (**mSubResistorC->mIntfCurrent)(0, 0) << std::endl;
-
 	// TODO: droop
 	//if (mWithDroop)
 	//	mDroop->signalStep(time, timeStepCount);
@@ -187,9 +162,6 @@ void SP::Ph1::VSIVoltageControlDQ::mnaParentPreStep(Real time, Int timeStepCount
 
 	// Transformation interface backward
 	(**mVsref)(0,0) = Math::rotatingFrame2to1(**mVsref_dq, **mThetaSys, **mThetaInv);
-
-	//std::cout << "(**mVsref)(0,0) = " << (**mVsref)(0,0) << std::endl;
-	//std::cout << "===================================================================" << std::endl;
 
 	// pre-step of subcomponents - controlled source
 	if (mWithControl)

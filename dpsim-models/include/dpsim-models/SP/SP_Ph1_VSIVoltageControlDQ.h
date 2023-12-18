@@ -69,7 +69,7 @@ namespace Ph1 {
 
 	private:
 		///
-		void createSubComponents();
+		void createSubComponents() final;
 		///
 		void connectSubComponents();
 	};

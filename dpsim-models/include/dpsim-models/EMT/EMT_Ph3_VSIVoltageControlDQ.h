@@ -69,7 +69,9 @@ namespace Ph3 {
 
 	private:
 		///
-		void createSubComponents();
+		void createSubComponents() final;
+		///
+		void connectSubComponents();
 
 		// #### Mathematical Matrix Transforms ####
 		///
