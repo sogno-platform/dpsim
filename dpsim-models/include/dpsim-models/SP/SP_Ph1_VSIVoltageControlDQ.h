@@ -33,7 +33,7 @@ namespace Ph1 {
 		std::shared_ptr<SP::Ph1::ResIndSeries> mSubFilterRL;
 		/// Capacitor Cf as part of LC filter
 		std::shared_ptr<SP::Ph1::Capacitor> mSubCapacitorF;
-		/// Resistor Rc as part of LC filter
+		/// Optional interface Resistor Rc (connected between grid and filter capacitor)
 		std::shared_ptr<SP::Ph1::Resistor> mSubResistorC;
 		/// Optional connection transformer
 		std::shared_ptr<SP::Ph1::Transformer> mConnectionTransformer;
@@ -45,7 +45,7 @@ namespace Ph1 {
 		VSIVoltageControlDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: VSIVoltageControlDQ(name, name, logLevel) {}
 		/// Defines UID, name, logging level and connection trafo existence
-		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withTrafo = false);
+		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withInterfaceResistor = false, Bool withTrafo = false);
 
 		// #### General ####
 		/// Initializes component from power flow data

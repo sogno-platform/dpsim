@@ -170,7 +170,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
 	
 	py::class_<CPS::SP::Ph1::VSIVoltageControlDQ, std::shared_ptr<CPS::SP::Ph1::VSIVoltageControlDQ>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::VSIVoltageSourceInverterDQ>(mSPPh1, "VSIVoltageControlDQ", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
+		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_interface_resistor"_a=false, "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
 		.def("connect", &CPS::SP::Ph1::VSIVoltageControlDQ::connect);
 }
 

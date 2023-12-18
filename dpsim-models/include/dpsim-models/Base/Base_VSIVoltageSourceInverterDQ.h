@@ -41,6 +41,8 @@ namespace Base {
 		Real mPref;
 
 		// ### Inverter Flags ###
+		/// Flag for usage of interface resistor Rc
+		Bool mWithInterfaceResistor = false;
 		/// Flag for connection transformer usage
 		Bool mWithConnectionTransformer = false;
 		/// Flag for control droop usage
@@ -90,8 +92,9 @@ namespace Base {
 
     public:
 		explicit VSIVoltageSourceInverterDQ(Logger::Log Log, CPS::AttributeList::Ptr attributeList,
-			Bool withConnectionTransformer) :
+			Bool withInterfaceResistor, Bool withConnectionTransformer) :
 			mLogger(Log),
+			mWithInterfaceResistor(withInterfaceResistor),
 			mWithConnectionTransformer(withConnectionTransformer),
 			mOmega(attributeList->create<Real>("Omega", 0)),
 			mThetaSys(attributeList->create<Real>("ThetaSys", 0)),
@@ -115,7 +118,6 @@ namespace Base {
 		void addVSIController(std::shared_ptr<Base::VSIControlDQ> VSIController);
 
 	protected:
-		void initializeControllerStates();
 		virtual void createSubComponents() = 0;
     };
 }

@@ -182,7 +182,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
 
 	py::class_<CPS::DP::Ph1::VSIVoltageControlDQ, std::shared_ptr<CPS::DP::Ph1::VSIVoltageControlDQ>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::VSIVoltageSourceInverterDQ>(mDPPh1, "VSIVoltageControlDQ", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
+		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_interface_resistor"_a=false, "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
 		.def("connect", &CPS::DP::Ph1::VSIVoltageControlDQ::connect);
 
 	py::class_<CPS::DP::Ph1::Inverter, std::shared_ptr<CPS::DP::Ph1::Inverter>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Inverter", py::multiple_inheritance())
