@@ -541,12 +541,8 @@ class Reader:
         if self.domain in [Domain.PF, Domain.SP]:
             load = self.dpsimpy_components.Load(load_name, self.log_level)
         else:
-           load = self.dpsimpy_components.RXLoad(load_name, self.log_level)
-        
-        if (self.domain==Domain.EMT):
-            load_p = dpsimpy.Math.single_phase_parameter_to_three_phase(load_p/3)
-            load_q = dpsimpy.Math.single_phase_parameter_to_three_phase(load_q/3)
-        load.set_power(load_p, load_q)
+           load = dpsimpy_components.RXLoad(load_name, self.log_level)
+        load.set_parameters(load_p, load_q)
         
         if (self.domain==Domain.PF and bus_type==dpsimpy.PowerflowBusType.PQ):
             load.modify_power_flow_bus_type(bus_type)
