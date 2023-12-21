@@ -31,7 +31,7 @@ SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
 void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower) {
 	**mActivePower = activePower;
 	**mReactivePower = reactivePower;
-	initPowerFromTerminal = false;
+	mInitPowerFromTerminal = false;
 
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"Active Power={}[W]"
@@ -43,7 +43,7 @@ void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower) {
 void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
 	setParameters(activePower, reactivePower);
 	**mNomVoltage = nominalVoltage;
-	initVoltageFromNode = false;
+	mInitVoltageFromNode = false;
 
 	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	mSLog->flush();
@@ -101,13 +101,12 @@ void SP::Ph1::Load::updatePQ(Real time) {
 
 void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 
-	if(initPowerFromTerminal){
+	if (mInitPowerFromTerminal) {
 		setParameters(
 			mTerminals[0]->singleActivePower(),
-			mTerminals[0]->singleReactivePower(),
-			std::abs(mTerminals[0]->initialSingleVoltage()));
+			mTerminals[0]->singleReactivePower());
 	}
-	if (initVoltageFromNode) {
+	if (mInitVoltageFromNode) {
 		**mNomVoltage = std::abs(initialSingleVoltage(0));
 		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}

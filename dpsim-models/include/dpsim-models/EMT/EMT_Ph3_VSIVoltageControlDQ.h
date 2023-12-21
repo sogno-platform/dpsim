@@ -45,7 +45,8 @@ namespace Ph3 {
 		VSIVoltageControlDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: VSIVoltageControlDQ(name, name, logLevel) {}
 		/// Defines UID, name, logging level and connection trafo existence
-		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withInterfaceResistor = false, Bool withTrafo = false);
+		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, 
+							Bool withInterfaceResistor = false, Bool withTrafo = false);
 
 		// #### General ####
 		/// Initializes component from power flow data

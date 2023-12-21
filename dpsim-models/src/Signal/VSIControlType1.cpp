@@ -90,20 +90,19 @@ Complex VSIControlType1::step(const Complex& Vcap_dq, const Complex& Ifilter_dq)
 	**mInputCurr << mParameters->VdRef, mParameters->VqRef, Vcap_dq.real(), Vcap_dq.imag(), Ifilter_dq.real(), Ifilter_dq.imag();
     
 	// calculate new states
-	**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
-    //**mStateCurr = Math::applyStateSpaceTrapezoidalMatrices(mATrapezoidal, mBTrapezoidal, mCTrapezoidal, **mStatePrev, **mInputCurr, **mInputPrev);
+	//**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
+    **mStateCurr = Math::applyStateSpaceTrapezoidalMatrices(mATrapezoidal, mBTrapezoidal, mCTrapezoidal, **mStatePrev, **mInputCurr, **mInputPrev);
 
 	// calculate new outputs
 	**mOutput = mC * **mStateCurr + mD * **mInputCurr;
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+	SPDLOG_LOGGER_DEBUG(mSLog, 
 				"\n - InputCurr = \n{}"
 				"\n - InputPrev = \n{}"
 				"\n - StatePrev = \n{}"
 				"\n - StateCurr = \n{}"
 				"\n - Output values: \n{}",
 				**mInputCurr, **mInputPrev, **mStatePrev, **mStateCurr, **mOutput);
-	mSLog->flush();
 
 	//
 	return Complex((**mOutput)(0,0), (**mOutput)(1,0));

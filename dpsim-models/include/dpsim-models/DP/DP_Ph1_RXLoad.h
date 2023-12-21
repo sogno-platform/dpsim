@@ -31,10 +31,6 @@ namespace Ph1 {
 		Real mInductance;
 		/// Capacitance [F]
 		Real mCapacitance;
-		///
-		Bool initPowerFromTerminal = true;
-		///
-		Bool initVoltageFromNode = true;
 		/// Internal inductor
 		std::shared_ptr<DP::Ph1::Inductor> mSubInductor;
 		/// Internal capacitor
@@ -43,6 +39,13 @@ namespace Ph1 {
 		std::shared_ptr<DP::Ph1::Resistor> mSubResistor;
 		/// Right side vectors of subcomponents
 		std::vector<const Matrix*> mRightVectorStamps;
+
+		/// ### Flags
+		///
+		Bool mInitPowerFromTerminal = true;
+		///
+		Bool mInitVoltageFromNode = true;
+
 	public:
 		/// Active power [Watt]
 		const Attribute<Real>::Ptr mActivePower;

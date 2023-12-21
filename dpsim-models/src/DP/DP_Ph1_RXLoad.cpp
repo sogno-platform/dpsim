@@ -29,7 +29,7 @@ DP::Ph1::RXLoad::RXLoad(String name, Logger::Level logLevel)
 void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower) {
 	**mActivePower = activePower;
 	**mReactivePower = reactivePower;
-	initPowerFromTerminal = false;
+	mInitPowerFromTerminal = false;
 
 	SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
 }
@@ -37,19 +37,19 @@ void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower) {
 void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
 	setParameters(activePower, reactivePower);
 	**mNomVoltage = nominalVoltage;
-	initVoltageFromNode = false;
+	mInitVoltageFromNode = false;
 
 	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 }
 
 void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
-	if(initPowerFromTerminal){
+	if(mInitPowerFromTerminal){
 		setParameters(
 			mTerminals[0]->singleActivePower(),
 			mTerminals[0]->singleReactivePower());
 	}
-	if (initVoltageFromNode) {
+	if (mInitVoltageFromNode) {
 		**mNomVoltage = std::abs(initialSingleVoltage(0));
 		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}

@@ -52,7 +52,7 @@ void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower) {
 	mPower(1, 1) = { (**mActivePower)(1, 1), (**mReactivePower)(1, 1) };
 	mPower(2, 2) = { (**mActivePower)(2, 2), (**mReactivePower)(2, 2) };
 
-	initPowerFromTerminal = false;
+	mInitPowerFromTerminal = false;
 
 	SPDLOG_LOGGER_INFO(mSLog, 
 			"\nActive Power [W]: {}"
@@ -62,18 +62,28 @@ void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower) {
 	mSLog->flush();
 }
 
+void EMT::Ph3::RXLoad::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
+	
+	this->setParameters(Math::singlePhaseParameterToThreePhase(activePower / 3.), 
+						Math::singlePhaseParameterToThreePhase(reactivePower / 3.));
+	**mNomVoltage = nominalVoltage;
+	mInitVoltageFromNode = false;
+	
+	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
+}
+
 void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower, Real nominalVoltage) {
 	
 	setParameters(activePower, reactivePower);
 	**mNomVoltage = nominalVoltage;
-	initVoltageFromNode = false;
+	mInitVoltageFromNode = false;
 	
 	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 }
 
 void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
-	if (initPowerFromTerminal) {
+	if (mInitPowerFromTerminal) {
 		**mActivePower = Matrix::Zero(3, 3);
 		(**mActivePower)(0, 0) = mTerminals[0]->singleActivePower() / 3.;
 		(**mActivePower)(1, 1) = mTerminals[0]->singleActivePower() / 3.;
@@ -96,7 +106,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 					Logger::matrixToString(**mReactivePower));
 		
 	}
-	if (initVoltageFromNode) {
+	if (mInitVoltageFromNode) {
 		**mNomVoltage = std::abs(initialSingleVoltage(0));
 		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 	}
