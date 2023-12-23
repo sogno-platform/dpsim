@@ -26,8 +26,14 @@ namespace Signal {
             Real VqRef;
 	};
 
-    /// Doc: TODO
-	/// Ref.: TODO
+    /// DOC: Controller for a grid-forming power converter, 
+	/// which is implemented by using two cascaded
+	/// PI controllers working on the dq reference frame
+	/// The output of the inverter is used as the reference voltage
+    /// for the voltage source of the inverter
+	/// *** This controller does not consider the feedforward terms
+	/// Ref.: Joan Rocabert, Control of Power Converters in AC Microgrids
+	///       & BA of Matthias Mees
 	class VSIControlType1 :
 		public SimSignalComp,
         public Base::VSIControlDQ,

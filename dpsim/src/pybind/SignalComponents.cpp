@@ -167,6 +167,8 @@ void addSignalComponents(py::module_ mSignal) {
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
     py::class_<CPS::Signal::VSIControlType2, std::shared_ptr<CPS::Signal::VSIControlType2>, CPS::Base::VSIControlDQ>(mSignal, "VSIControlType2", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+    py::class_<CPS::Signal::VSIControlType3, std::shared_ptr<CPS::Signal::VSIControlType3>, CPS::Base::VSIControlDQ>(mSignal, "VSIControlType3", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
 
     py::class_<CPS::Signal::VSIControlType1Parameters, std::shared_ptr<CPS::Signal::VSIControlType1Parameters>, CPS::Base::VSIControlParameters>(mSignal, "VSIControlType1Parameters", py::multiple_inheritance())
         .def(py::init())
@@ -187,4 +189,12 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("omegaNom", &CPS::Signal::VSIControlType2Parameters::omegaNom)
         .def_readwrite("Cf", &CPS::Signal::VSIControlType2Parameters::Cf)
         .def_readwrite("Lf", &CPS::Signal::VSIControlType2Parameters::Lf);
+    py::class_<CPS::Signal::VSIControlType3Parameters, std::shared_ptr<CPS::Signal::VSIControlType3Parameters>, CPS::Base::VSIControlParameters>(mSignal, "VSIControlType3Parameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("Kpv", &CPS::Signal::VSIControlType3Parameters::Kpv)
+        .def_readwrite("Kiv", &CPS::Signal::VSIControlType3Parameters::Kiv)
+        .def_readwrite("Kpc", &CPS::Signal::VSIControlType3Parameters::Kpc)
+        .def_readwrite("Kic", &CPS::Signal::VSIControlType3Parameters::Kic)
+        .def_readwrite("VdRef", &CPS::Signal::VSIControlType3Parameters::VdRef)
+        .def_readwrite("VqRef", &CPS::Signal::VSIControlType3Parameters::VqRef);
 }

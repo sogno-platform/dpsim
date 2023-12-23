@@ -7,9 +7,10 @@
 namespace CPS {
 namespace Signal {
 
-    class VSIControlType2Parameters :
+    
+    class VSIControlType3Parameters :
 		public Base::VSIControlParameters,
-		public SharedFactory<VSIControlType2Parameters> {
+		public SharedFactory<VSIControlType3Parameters> {
 		
 		public:
 			/// 
@@ -24,29 +25,24 @@ namespace Signal {
             Real VdRef;
             ///
             Real VqRef;
-            ///
-            Real omegaNom;
-            ///
-            Real Cf;
-            ///
-            Real Lf;
 	};
 
     /// DOC: Controller for a grid-forming power converter, 
-	/// which is implemented by using two cascaded
-	/// PI controllers working on the dq reference frame
-    /// The output of the inverter is used as the reference voltage
-    /// for the voltage source of the inverter
-	/// *** This controller considers the feedforward terms
+	/// formed by one PI (voltage loop) and one PT1 block which
+    /// subtitutes the PI controller of the current loop.
+	/// The output of the inverter is the equivalent current flowing
+    /// into the LC-Filter, e.g. the reference for the current source 
+    /// of the inverter
+	/// *** This controller does not consider the feedforward terms
 	/// Ref.: Yazdani
-	class VSIControlType2 :
+	class VSIControlType3 :
 		public SimSignalComp,
         public Base::VSIControlDQ,
-		public SharedFactory<VSIControlType2> {
+		public SharedFactory<VSIControlType3> {
 
     private:
         /// Controller Parameters
-		std::shared_ptr<VSIControlType2Parameters> mParameters;
+		std::shared_ptr<VSIControlType3Parameters> mParameters;
 
         /// Controller variables
         /// state variable of the outer loop (d-component)
@@ -90,7 +86,7 @@ namespace Signal {
 
     public:
         ///
-        explicit VSIControlType2(const String & name, CPS::Logger::Level logLevel) : 
+        explicit VSIControlType3(const String & name, CPS::Logger::Level logLevel) : 
             SimSignalComp(name, name, logLevel),
             mPhi_d(mAttributes->create<Real>("Phi_d", 0)),
 			mPhi_q(mAttributes->create<Real>("Phi_q", 0)),

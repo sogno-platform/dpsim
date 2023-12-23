@@ -28,20 +28,16 @@ SP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 }
 
 void SP::Ph1::VSIVoltageControlDQ::createSubComponents() {
-	// voltage source
-	mSubCtrledVoltageSource = SP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
-	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-	
 	// RL Element as part of the LC filter
 	mSubFilterRL = SP::Ph1::ResIndSeries::make(**mName + "_FilterRL", mLogLevel);
 	mSubFilterRL->setParameters(mRf, mLf);
 	addMNASubComponent(mSubFilterRL, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-	
+
 	// Capacitor as part of the LC filter
 	mSubCapacitorF = SP::Ph1::Capacitor::make(**mName + "_CapF", mLogLevel);
 	mSubCapacitorF->setParameters(mCf);
 	addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-	
+
 	// optinal: interface resistor
 	if (mWithInterfaceResistor) {
 		mSubResistorC = SP::Ph1::Resistor::make(**mName + "_ResC", mLogLevel);
@@ -53,13 +49,12 @@ void SP::Ph1::VSIVoltageControlDQ::createSubComponents() {
 	if (mWithConnectionTransformer) {
 		mConnectionTransformer = SP::Ph1::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel);
 		//TODO: SET PARAMETERS
-		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 	}
 }
 
 void SP::Ph1::VSIVoltageControlDQ::connectSubComponents() {
 	// TODO: COULD WE MOVE THIS FUNCTION TO THE BASE CLASS?
-	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
 	if (mWithConnectionTransformer && mWithInterfaceResistor) {
 		// with transformer and interface resistor
 		mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
@@ -203,21 +198,20 @@ void SP::Ph1::VSIVoltageControlDQ::mnaParentPreStep(Real time, Int timeStepCount
 	**mThetaSys = **mThetaSys + mTimeStep * mOmegaNom;
 
 	//
-	//if (mWithControl)
-	//	**mVsref_dq = mVSIController->step(**mVcap_dq, **mIfilter_dq);
+	//mWithControl = false;
+	//**mVsref_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys); 
+	if (mWithControl)
+		**mVsref_dq = mVSIController->step(**mVcap_dq, **mIfilter_dq);
 
-	// initial reference voltage of voltage source
+	// Transformation interface backward
 	(**mVsref)(0,0) = Math::rotatingFrame2to1(**mVsref_dq, **mThetaSys, **mThetaInv);
 
-	// set reference voltage of voltage source
-	if (mWithControl)
-		**mSubCtrledVoltageSource->mVoltageRef = (**mVsref)(0,0);
+	mnaApplyRightSideVectorStamp(**mRightVector);
+}
 
-	// pre-step of voltage source
-	std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
-
-	// stamp right side vector
-	mnaCompApplyRightSideVectorStamp(**mRightVector);
+void SP::Ph1::VSIVoltageControlDQ::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
+	// TODO
+	Math::setVectorElement(**mRightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mVsref)(0,0)); 
 }
 
 void SP::Ph1::VSIVoltageControlDQ::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -232,6 +226,7 @@ void SP::Ph1::VSIVoltageControlDQ::mnaParentPostStep(Real time, Int timeStepCoun
 }
 
 void SP::Ph1::VSIVoltageControlDQ::mnaCompUpdateCurrent(const Matrix& leftvector) {
+	// TODO: CHECK
 	if (mWithInterfaceResistor)
 		**mIntfCurrent = mSubResistorC->mIntfCurrent->get();
 	else

@@ -12,7 +12,6 @@
 #include <dpsim-models/SP/SP_Ph1_ResIndSeries.h>
 #include <dpsim-models/SP/SP_Ph1_Resistor.h>
 #include <dpsim-models/SP/SP_Ph1_Capacitor.h>
-#include <dpsim-models/SP/SP_Ph1_VoltageSource.h>
 #include <dpsim-models/SP/SP_Ph1_Transformer.h>
 #include <dpsim-models/Base/Base_VSIVoltageSourceInverterDQ.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
@@ -27,8 +26,6 @@ namespace Ph1 {
 	protected:
 	
 		// ### Electrical Subcomponents ###
-		/// Controlled voltage source
-		std::shared_ptr<SP::Ph1::VoltageSource> mSubCtrledVoltageSource;
 		/// RL Element as part of LC filter
 		std::shared_ptr<SP::Ph1::ResIndSeries> mSubFilterRL;
 		/// Capacitor Cf as part of LC filter
@@ -66,6 +63,8 @@ namespace Ph1 {
 		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		/// Add MNA post step dependencies
 		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		///
+		void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
 
 	private:
 		///
