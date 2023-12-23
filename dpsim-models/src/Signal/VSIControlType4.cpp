@@ -1,14 +1,14 @@
-#include <dpsim-models/Signal/VSIControlType2.h>
+#include <dpsim-models/Signal/VSIControlType4.h>
 #include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
 using namespace CPS::Signal;
 
-void VSIControlType2::setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) {
-    if (auto params = std::dynamic_pointer_cast<Signal::VSIControlType2Parameters>(parameters)){
+void VSIControlType4::setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) {
+    if (auto params = std::dynamic_pointer_cast<Signal::VSIControlType4Parameters>(parameters)){
         mParameters = params;
         SPDLOG_LOGGER_INFO(mSLog, 
-			"\nVSIController Type2 Parameters: "
+			"\nVSIController Type4 Parameters: "
 			"\nKpv: {:e}"
 			"\nKiv: {:e}"
 			"\nKpc: {:e}"
@@ -16,12 +16,12 @@ void VSIControlType2::setParameters(std::shared_ptr<Base::VSIControlParameters> 
 			mParameters->Kpv, mParameters->Kiv,
 			mParameters->Kpc, mParameters->Kic);
 	} else {
-		std::cout << "Type of parameters class of " << this->name() << " has to be VSIControlType2!" << std::endl;
+		std::cout << "Type of parameters class of " << this->name() << " has to be VSIControlType4!" << std::endl;
 		throw CPS::TypeException();
 	}
 }
 
-void VSIControlType2::initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, 
+void VSIControlType4::initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, 
 	const Complex& Ifilter_dq, Real time_step) {
 
 	mTimeStep = time_step;
@@ -79,7 +79,7 @@ void VSIControlType2::initialize(const Complex& Vsref_dq, const Complex& Vcap_dq
     mSLog->flush();
 }
 
-Complex VSIControlType2::step(const Complex& Vcap_dq, const Complex& Ifilter_dq) {
+Complex VSIControlType4::step(const Complex& Vcap_dq, const Complex& Ifilter_dq) {
     
 	//
 	**mStatePrev = **mStateCurr;
@@ -93,8 +93,14 @@ Complex VSIControlType2::step(const Complex& Vcap_dq, const Complex& Ifilter_dq)
     **mStateCurr = Math::applyStateSpaceTrapezoidalMatrices(mATrapezoidal, mBTrapezoidal, mCTrapezoidal, **mStatePrev, **mInputCurr, **mInputPrev);
 
 	// calculate new outputs
-	**mOutput = mC * **mStateCurr + mD * **mInputCurr;
+	//**mOutput = mC * **mStateCurr + mD * **mInputCurr;
     
+	Real theta_s = 1e-3;
+	Real error_d = mParameters->VdRef - Vcap_dq.real();
+	Real error_q = mParameters->VqRef - Vcap_dq.imag();
+	(**mOutput)(0,0) = ((**mStateCurr)(0, 0) * mParameters->Kiv + mParameters->Kpv * error_d - mParameters->omegaNom * mParameters->Cf * Vcap_dq.imag()) * (mTimeStep/theta_s) + (-mTimeStep/theta_s +1) * Ifilter_dq.real();
+	(**mOutput)(1,0) = ((**mStateCurr)(1, 0) * mParameters->Kiv + mParameters->Kpv * error_q + mParameters->omegaNom * mParameters->Cf * Vcap_dq.real()) * (mTimeStep/theta_s) + (-mTimeStep/theta_s +1) * Ifilter_dq.imag();
+
 	SPDLOG_LOGGER_DEBUG(mSLog, 
 				"\n - InputCurr = \n{}"
 				"\n - InputPrev = \n{}"
@@ -102,7 +108,7 @@ Complex VSIControlType2::step(const Complex& Vcap_dq, const Complex& Ifilter_dq)
 				"\n - StateCurr = \n{}"
 				"\n - Output values: \n{}",
 				**mInputCurr, **mInputPrev, **mStatePrev, **mStateCurr, **mOutput);
-				
+
     //
 	return Complex((**mOutput)(0,0), (**mOutput)(1,0));
 }
