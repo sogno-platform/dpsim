@@ -11,17 +11,12 @@
 using namespace CPS;
 
 DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel, 
-	Bool withInterfaceResistor, Bool withTrafo) :
+	Bool modelAsCurrentSource, Bool withInterfaceResistor, Bool withTrafo) :
 	CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	VSIVoltageSourceInverterDQ(this->mSLog, mAttributes, withInterfaceResistor, withTrafo) {
+	VSIVoltageSourceInverterDQ<Complex>(this->mSLog, mAttributes, modelAsCurrentSource, withInterfaceResistor, withTrafo) {
 	
 	setTerminalNumber(1);
-	if (mWithConnectionTransformer && mWithInterfaceResistor)
-		setVirtualNodeNumber(3);
-	else if (mWithConnectionTransformer || mWithInterfaceResistor)
-		setVirtualNodeNumber(2);
-	else
-		setVirtualNodeNumber(1);
+	setVirtualNodeNumber(this->determineNumberOfVirtualNodes());
 	
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -29,9 +24,11 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 
 void DP::Ph1::VSIVoltageControlDQ::createSubComponents() {	
 	// voltage source
-	mSubCtrledVoltageSource = DP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
-	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-	
+	if (!mModelAsCurrentSource) {
+		mSubCtrledVoltageSource = DP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
+		addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+	}
+
 	// RL Element as part of the LC filter	
 	mSubFilterRL = DP::Ph1::ResIndSeries::make(**mName + "_FilterRL", mLogLevel);
 	addMNASubComponent(mSubFilterRL, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -59,7 +56,8 @@ void DP::Ph1::VSIVoltageControlDQ::createSubComponents() {
 
 void DP::Ph1::VSIVoltageControlDQ::connectSubComponents() {
 	// TODO: COULD WE MOVE THIS FUNCTION TO THE BASE CLASS?
-	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
+	if (!mModelAsCurrentSource)
+		mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
 	if (mWithConnectionTransformer && mWithInterfaceResistor) {
 		// with transformer and interface resistor
 		mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
@@ -91,43 +89,11 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0);
 	(**mIntfCurrent)(0, 0) = std::conj(**mPower / (**mIntfVoltage)(0,0));
 
-	//
-	Complex filterInterfaceInitialVoltage = (**mIntfVoltage)(0, 0);
-	Complex filterInterfaceInitialCurrent = (**mIntfCurrent)(0, 0);
-	if (mWithConnectionTransformer) {
-		// TODO: check calculation of variables with PT
-		// calculate quantities of low voltage side of transformer (being the interface quantities of the filter)
-		filterInterfaceInitialVoltage = ((**mIntfVoltage)(0, 0) - Complex(mTransformerResistance, mTransformerInductance * mOmegaNom) * (**mIntfCurrent)(0, 0)) / Complex(mTransformerRatioAbs, mTransformerRatioPhase);
-		filterInterfaceInitialCurrent = (**mIntfCurrent)(0, 0) * Complex(mTransformerRatioAbs, mTransformerRatioPhase);		
-	}
+	// initialize filter variables and set initial voltage of virtual nodes
+	initializeFilterVariables((**mIntfVoltage)(0, 0), (**mIntfCurrent)(0, 0), mVirtualNodes);
 
-	// derive initialization quantities of filter
-	/// initial filter capacitor voltage
-	Complex vcInit;
-	if (mWithInterfaceResistor)
-		vcInit = filterInterfaceInitialVoltage + filterInterfaceInitialCurrent * mRc;
-	else
-		vcInit = (**mIntfVoltage)(0, 0);
-	/// initial filter capacitor current 	
-	Complex icfInit = vcInit * Complex(0., mOmegaNom * mCf);
-	/// initial voltage of voltage source
-	Complex vsInit = vcInit + (filterInterfaceInitialCurrent + icfInit) * Complex(mRf, mOmegaNom * mLf);
-
-	// initialize voltage of virtual nodes
-	mVirtualNodes[0]->setInitialVoltage(vsInit);
-	if (mWithConnectionTransformer && mWithInterfaceResistor) {
-		// filter capacitor is connected to mVirtualNodes[1]
-		// and interface resistor between mVirtualNodes[1] and mVirtualNodes[2]
-		mVirtualNodes[1]->setInitialVoltage(vcInit);
-		mVirtualNodes[2]->setInitialVoltage(filterInterfaceInitialVoltage);
-	} else if (mWithConnectionTransformer || mWithInterfaceResistor) {
-		// filter capacitor is connected to mVirtualNodes[1], the second
-		// node of the PT or of the interface resistor is mTerminals[0]
-		mVirtualNodes[1]->setInitialVoltage(vcInit);
-	}
-
-	// initial reference voltage of voltage source
-	(**mVsref)(0,0) = vsInit;
+	// calculate initial source value
+	(**mSourceValue)(0,0) = Math::rotatingFrame2to1(**mSourceValue_dq, **mThetaSys, **mThetaInv);
 
 	// Create & Initialize electrical subcomponents
 	this->connectSubComponents();
@@ -138,19 +104,6 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 
 	// TODO: droop
 	**mOmega = mOmegaNom;
-
-	// initialize angles
-	**mThetaSys = 0;
-	**mThetaInv = std::arg((**mSubCapacitorF->mIntfVoltage)(0,0));
-
-	// Initialie voltage controller variables
-	**mVcap_dq = Math::rotatingFrame2to1((**mSubCapacitorF->mIntfVoltage)(0,0), **mThetaInv, **mThetaSys);
-	if (mWithInterfaceResistor)
-		// TODO: CHECK
-		**mIfilter_dq = Math::rotatingFrame2to1((**mSubResistorC->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
-	else
-		**mIfilter_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);	
-	**mVsref_dq = Math::rotatingFrame2to1((**mVsref)(0,0), **mThetaInv, **mThetaSys);
 
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
@@ -167,7 +120,7 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 		(**mVcap_dq).real(), (**mVcap_dq).imag(),
 		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		(**mIfilter_dq).real(), (**mIfilter_dq).imag(),
-		(**mVsref)(0,0));
+		(**mSourceValue)(0,0));
 	mSLog->flush();
 }
 
@@ -175,7 +128,7 @@ void DP::Ph1::VSIVoltageControlDQ::mnaParentInitialize(Real omega, Real timeStep
 	this->updateMatrixNodeIndices();
 	mTimeStep = timeStep;
 	if (mWithControl)
-		mVSIController->initialize(**mVsref_dq, **mVcap_dq, **mIfilter_dq, mTimeStep);
+		mVSIController->initialize(**mSourceValue_dq, **mVcap_dq, **mIfilter_dq, mTimeStep, mModelAsCurrentSource);
 }
 
 void DP::Ph1::VSIVoltageControlDQ::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -184,13 +137,9 @@ void DP::Ph1::VSIVoltageControlDQ::mnaParentAddPreStepDependencies(AttributeBase
 }
 
 void DP::Ph1::VSIVoltageControlDQ::mnaParentPreStep(Real time, Int timeStepCount) {
-	// Transformation interface forward
+	// get measurements
 	**mVcap_dq = Math::rotatingFrame2to1((**mSubCapacitorF->mIntfVoltage)(0,0), **mThetaInv, **mThetaSys);
-	if (mWithInterfaceResistor)
-		// TODO: CHECK
-		**mIfilter_dq = Math::rotatingFrame2to1((**mSubResistorC->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
-	else
-		**mIfilter_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);	
+	**mIfilter_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);	
 
 	// TODO: droop
 	//if (mWithDroop)
@@ -204,18 +153,20 @@ void DP::Ph1::VSIVoltageControlDQ::mnaParentPreStep(Real time, Int timeStepCount
 
 	//
 	if (mWithControl)
-		**mVsref_dq = mVSIController->step(**mVcap_dq, **mIfilter_dq);
+		**mSourceValue_dq = mVSIController->step(**mVcap_dq, **mIfilter_dq);
 
 	// Transformation interface backward
-	(**mVsref)(0,0) = Math::rotatingFrame2to1(**mVsref_dq, **mThetaSys, **mThetaInv);
-
-	// set reference voltage of voltage source
-	if (mWithControl)
-		**mSubCtrledVoltageSource->mVoltageRef = (**mVsref)(0,0);
-
-	// pre-step of voltage source
-	std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
+	(**mSourceValue)(0,0) = Math::rotatingFrame2to1(**mSourceValue_dq, **mThetaSys, **mThetaInv);
 	
+	// set reference voltage of voltage source
+	if (!mModelAsCurrentSource) {
+		// pre-step of voltage source
+		**mSubCtrledVoltageSource->mVoltageRef = (**mSourceValue)(0,0);
+		std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
+	} else {
+		Math::setVectorElement(**mRightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mSourceValue)(0,0)); 
+	}
+
 	// stamp right side vector
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }

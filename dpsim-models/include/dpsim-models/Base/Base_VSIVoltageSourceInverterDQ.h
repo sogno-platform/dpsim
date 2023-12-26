@@ -12,10 +12,13 @@
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Base/Base_VSIControlDQ.h>
+#include <dpsim-models/SimNode.h>
 
 namespace CPS {
 namespace Base {
-/// @brief Base model of average inverter
+
+	/// @brief Base model of average grid forming inverter
+	template <typename VarType>
 	class VSIVoltageSourceInverterDQ {
 	private:
 		/// Component logger
@@ -23,6 +26,8 @@ namespace Base {
 
 	protected:
 		// ### General Parameters ###
+		/// mModelAsCurrentSource=true --> Inverter is modeled as current source, otherwise as voltage source
+		Bool mModelAsCurrentSource;
 		/// Simulation step
 		Real mTimeStep;
 		/// Nominal Omega
@@ -69,10 +74,10 @@ namespace Base {
 		const Attribute<Real>::Ptr mThetaSys;
 		/// Inverter angle (rotating at inverter omega)
 		const Attribute<Real>::Ptr mThetaInv;
-		/// Voltage as control output after transformation interface
-		const Attribute<MatrixComp>::Ptr mVsref;
-		/// Voltage as control output after transformation interface
-		const Attribute<Complex>::Ptr mVsref_dq;
+		/// Voltage/Current as control output after transformation interface
+		const Attribute<MatrixComp>::Ptr mSourceValue;
+		/// Voltage/Current as control output after transformation interface
+		const Attribute<Complex>::Ptr mSourceValue_dq;
 		/// Measured voltage in dq reference frame
 		const Attribute<Complex>::Ptr mVcap_dq;
 		/// Measured current in dq reference frame
@@ -87,20 +92,20 @@ namespace Base {
 		Bool mWithControl = true;
 			
 		/// Signal component modelling voltage regulator and exciter
-		std::shared_ptr<Base::VSIControlDQ> mVSIController;
-		
+		std::shared_ptr<Base::VSIControlDQ> mVSIController;		
 
     public:
 		explicit VSIVoltageSourceInverterDQ(Logger::Log Log, CPS::AttributeList::Ptr attributeList,
-			Bool withInterfaceResistor, Bool withConnectionTransformer) :
+			Bool modelAsCurrentSource, Bool withInterfaceResistor, Bool withConnectionTransformer) :
 			mLogger(Log),
+			mModelAsCurrentSource(modelAsCurrentSource),
 			mWithInterfaceResistor(withInterfaceResistor),
 			mWithConnectionTransformer(withConnectionTransformer),
 			mOmega(attributeList->create<Real>("Omega", 0)),
 			mThetaSys(attributeList->create<Real>("ThetaSys", 0)),
 			mThetaInv(attributeList->create<Real>("ThetaInv", 0)),
-			mVsref(attributeList->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))),
-			mVsref_dq(attributeList->create<Complex>("Vsref_dq", Complex(0,0))),
+			mSourceValue(attributeList->create<MatrixComp>("SourceValue", MatrixComp::Zero(1,1))),
+			mSourceValue_dq(attributeList->create<Complex>("SourceValue_dq", Complex(0,0))),
 			mVcap_dq(attributeList->create<Complex>("Vcap_dq", 0)),
 			mIfilter_dq(attributeList->create<Complex>("Ifilter_dq", 0)),
 			mPower(attributeList->create<Complex>("Power", 0)){ };
@@ -118,7 +123,14 @@ namespace Base {
 		void addVSIController(std::shared_ptr<Base::VSIControlDQ> VSIController);
 
 	protected:
+		///
 		virtual void createSubComponents() = 0;
+		///
+		int determineNumberOfVirtualNodes();
+		///
+		void initializeFilterVariables(const Complex & interfaceVoltage, 
+									   const Complex & interfaceCurrent,
+									   typename SimNode<VarType>::List virtualNodesList);
     };
 }
 }

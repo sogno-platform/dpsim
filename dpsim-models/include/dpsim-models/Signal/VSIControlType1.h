@@ -100,12 +100,13 @@ namespace Signal {
 	    /// Constructor with log level
 	    VSIControlType1(const String & name);
 
-	    /// Sets Parameters of the turbine
+	    /// Sets Parameters of the vsi controller
 	    void setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) final;
 
-	    /// Initialises the initial state of the turbine
-	    void initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, const Complex& Ifilter_dq, Real time_step) final;
-
+	    /// Initialises the initial state of the vsi controller
+	    void initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, 
+						const Complex& Ifilter_dq, Real time_step, Bool modelAsCurrentSource) final;
+		
 	    /// Performs a step to update all state variables and the output
 	    Complex step(const Complex& Vcap_dq, const Complex& Ifilter_dq) final;
     };

@@ -23,6 +23,8 @@ namespace Base {
 		protected:
 			///
 			Real mTimeStep;
+			/// mModelAsCurrentSource=true --> Current loop is replaced by PT1 and inverter is modelled as current source
+			Bool mModelAsCurrentSource;
 
 		public:
 
@@ -30,9 +32,11 @@ namespace Base {
 			virtual void setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) = 0;
 
 			/// Initializes
-			virtual void initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, const Complex& Ifilter_dq, Real time_step) = 0;
+			virtual void initialize(const Complex& Vsref_dq, const Complex& Vcap_dq,
+									const Complex& Ifilter_dq, Real time_step, Bool modelAsCurrentSource) = 0;
 
-			/// 
+			/// Returns voltage of the voltage source if mModelAsCurrentSource=false,
+			/// and current of equivalent current source if mModelAsCurrentSource=true
 			virtual Complex step(const Complex& Vcap_dq, const Complex& Ifilter_dq) = 0;
 
 	};

@@ -22,7 +22,7 @@ namespace DP {
 namespace Ph1 {
 	class VSIVoltageControlDQ :
 		public CompositePowerComp<Complex>,
-		public Base::VSIVoltageSourceInverterDQ,
+		public Base::VSIVoltageSourceInverterDQ<Complex>,
 		public SharedFactory<VSIVoltageControlDQ> {
 	protected:
 	
@@ -45,27 +45,29 @@ namespace Ph1 {
 		VSIVoltageControlDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: VSIVoltageControlDQ(name, name, logLevel) {}
 		/// Defines UID, name, logging level and connection trafo existence
-		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withInterfaceResistor = false, Bool withTrafo = false);
+		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, 
+							Bool modelAsCurrentSource = false, Bool withInterfaceResistor = false, 
+							Bool withTrafo = false);
 
 		// #### General ####
 		/// Initializes component from power flow data
-		void initializeFromNodesAndTerminals(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency) final;
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) final;
 		/// Updates current through the component
-		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) final;
 		/// Updates voltage across component
-		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) final;
 		/// MNA pre step operations
-		void mnaParentPreStep(Real time, Int timeStepCount) override;
+		void mnaParentPreStep(Real time, Int timeStepCount) final;
 		/// MNA post step operations
-		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) final;
 		/// Add MNA pre step dependencies
-		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) final;
 		/// Add MNA post step dependencies
-		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) final;
 
 	private:
 		///

@@ -104,11 +104,12 @@ namespace Signal {
     		mStateCurr(mAttributes->create<Matrix>("state_curr", Matrix::Zero(4,1))),
     		mOutput(mAttributes->create<Matrix>("output", Matrix::Zero(2,1))) { }
 
-	    /// Sets Parameters of the turbine
+	    /// Sets parameters of the vsi controller
 	    void setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) final;
 
-	    /// Initialises the initial state of the turbine
-	    void initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, const Complex& Ifilter_dq, Real time_step) final;
+	    /// Initialises the initial state of the vsi controller
+	    void initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, 
+                        const Complex& Ifilter_dq, Real time_step, Bool modelAsCurrentSource) final;
 
 	    /// Performs a step to update all state variables and the output
 	    Complex step(const Complex& Vcap_dq, const Complex& Ifilter_dq) final;

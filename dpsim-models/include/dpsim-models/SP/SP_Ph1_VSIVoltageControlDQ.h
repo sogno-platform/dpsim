@@ -9,6 +9,7 @@
 
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/SP/SP_Ph1_VoltageSource.h>
 #include <dpsim-models/SP/SP_Ph1_ResIndSeries.h>
 #include <dpsim-models/SP/SP_Ph1_Resistor.h>
 #include <dpsim-models/SP/SP_Ph1_Capacitor.h>
@@ -21,11 +22,13 @@ namespace SP {
 namespace Ph1 {
 	class VSIVoltageControlDQ :
 		public CompositePowerComp<Complex>,
-		public Base::VSIVoltageSourceInverterDQ,
+		public Base::VSIVoltageSourceInverterDQ<Complex>,
 		public SharedFactory<VSIVoltageControlDQ> {
 	protected:
 	
 		// ### Electrical Subcomponents ###
+		/// Controlled voltage source
+		std::shared_ptr<SP::Ph1::VoltageSource> mSubCtrledVoltageSource;
 		/// RL Element as part of LC filter
 		std::shared_ptr<SP::Ph1::ResIndSeries> mSubFilterRL;
 		/// Capacitor Cf as part of LC filter
@@ -42,7 +45,9 @@ namespace Ph1 {
 		VSIVoltageControlDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: VSIVoltageControlDQ(name, name, logLevel) {}
 		/// Defines UID, name, logging level and connection trafo existence
-		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withInterfaceResistor = false, Bool withTrafo = false);
+		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, 
+							Bool modelAsCurrentSource = true, Bool withInterfaceResistor = false, 
+							Bool withTrafo = false);
 
 		// #### General ####
 		/// Initializes component from power flow data

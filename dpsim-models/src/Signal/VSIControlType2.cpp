@@ -22,9 +22,10 @@ void VSIControlType2::setParameters(std::shared_ptr<Base::VSIControlParameters> 
 }
 
 void VSIControlType2::initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, 
-	const Complex& Ifilter_dq, Real time_step) {
+	const Complex& Ifilter_dq, Real time_step, Bool modelAsCurrentSource) {
 
 	mTimeStep = time_step;
+	mModelAsCurrentSource = modelAsCurrentSource;
 	**mPhi_d = (Ifilter_dq.real() + mParameters->omegaNom * mParameters->Cf * Vcap_dq.imag()) / mParameters->Kiv;
 	**mPhi_q = (Ifilter_dq.imag() - mParameters->omegaNom * mParameters->Cf * Vcap_dq.real()) / mParameters->Kiv; 
 	**mGamma_d = (Vsref_dq.real() + mParameters->omegaNom * mParameters->Lf * Ifilter_dq.imag()) / mParameters->Kic;
@@ -71,12 +72,17 @@ void VSIControlType2::initialize(const Complex& Vsref_dq, const Complex& Vcap_dq
 	**mInputCurr << mParameters->VdRef, mParameters->VqRef, Vcap_dq.real(), Vcap_dq.imag(), Ifilter_dq.real(), Ifilter_dq.imag();
 
     // Log state-space matrices
-	SPDLOG_LOGGER_INFO(mSLog, "State space matrices:");
-    SPDLOG_LOGGER_INFO(mSLog, "A = \n{}", mA);
-    SPDLOG_LOGGER_INFO(mSLog, "B = \n{}", mB);
-    SPDLOG_LOGGER_INFO(mSLog, "C = \n{}", mC);
-    SPDLOG_LOGGER_INFO(mSLog, "D = \n{}", mD);
+	SPDLOG_LOGGER_INFO(mSLog, 
+				"\nState space matrices:"
+				"\nA = \n{}"
+    			"\nB = \n{}"
+    			"\nC = \n{}"
+    			"\nD = \n{}", 
+				mA, mB, mC, mD);
     mSLog->flush();
+
+	if (mModelAsCurrentSource)
+		mAuxVar = mTimeStep / mParameters->tau;
 }
 
 Complex VSIControlType2::step(const Complex& Vcap_dq, const Complex& Ifilter_dq) {
@@ -92,8 +98,16 @@ Complex VSIControlType2::step(const Complex& Vcap_dq, const Complex& Ifilter_dq)
 	//**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
     **mStateCurr = Math::applyStateSpaceTrapezoidalMatrices(mATrapezoidal, mBTrapezoidal, mCTrapezoidal, **mStatePrev, **mInputCurr, **mInputPrev);
 
-	// calculate new outputs
-	**mOutput = mC * **mStateCurr + mD * **mInputCurr;
+	if (mModelAsCurrentSource) {
+		Real error_d = mParameters->VdRef - Vcap_dq.real();
+		Real error_q = mParameters->VqRef - Vcap_dq.imag();
+		(**mOutput)(0,0) = ((**mStateCurr)(0, 0) * mParameters->Kiv + mParameters->Kpv * error_d - mParameters->omegaNom * mParameters->Cf * Vcap_dq.imag()) * mAuxVar + (1 - mAuxVar) * Ifilter_dq.real();
+		(**mOutput)(1,0) = ((**mStateCurr)(1, 0) * mParameters->Kiv + mParameters->Kpv * error_q + mParameters->omegaNom * mParameters->Cf * Vcap_dq.real()) * mAuxVar + (1 - mAuxVar) * Ifilter_dq.imag();
+	}
+	else {
+		// calculate new outputs
+		**mOutput = mC * **mStateCurr + mD * **mInputCurr;
+	}
     
 	SPDLOG_LOGGER_DEBUG(mSLog, 
 				"\n - InputCurr = \n{}"

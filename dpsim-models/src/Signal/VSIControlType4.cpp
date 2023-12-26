@@ -22,9 +22,10 @@ void VSIControlType4::setParameters(std::shared_ptr<Base::VSIControlParameters> 
 }
 
 void VSIControlType4::initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, 
-	const Complex& Ifilter_dq, Real time_step) {
+	const Complex& Ifilter_dq, Real time_step, Bool modelAsCurrentSource) {
 
 	mTimeStep = time_step;
+	mModelAsCurrentSource = modelAsCurrentSource;
 	**mPhi_d = (Ifilter_dq.real() + mParameters->omegaNom * mParameters->Cf * Vcap_dq.imag()) / mParameters->Kiv;
 	**mPhi_q = (Ifilter_dq.imag() - mParameters->omegaNom * mParameters->Cf * Vcap_dq.real()) / mParameters->Kiv; 
 	**mGamma_d = (Vsref_dq.real() + mParameters->omegaNom * mParameters->Lf * Ifilter_dq.imag()) / mParameters->Kic;
@@ -71,11 +72,13 @@ void VSIControlType4::initialize(const Complex& Vsref_dq, const Complex& Vcap_dq
 	**mInputCurr << mParameters->VdRef, mParameters->VqRef, Vcap_dq.real(), Vcap_dq.imag(), Ifilter_dq.real(), Ifilter_dq.imag();
 
     // Log state-space matrices
-	SPDLOG_LOGGER_INFO(mSLog, "State space matrices:");
-    SPDLOG_LOGGER_INFO(mSLog, "A = \n{}", mA);
-    SPDLOG_LOGGER_INFO(mSLog, "B = \n{}", mB);
-    SPDLOG_LOGGER_INFO(mSLog, "C = \n{}", mC);
-    SPDLOG_LOGGER_INFO(mSLog, "D = \n{}", mD);
+	SPDLOG_LOGGER_INFO(mSLog, 
+				"\nState space matrices:"
+				"\nA = \n{}"
+    			"\nB = \n{}"
+    			"\nC = \n{}"
+    			"\nD = \n{}", 
+				mA, mB, mC, mD);
     mSLog->flush();
 }
 
