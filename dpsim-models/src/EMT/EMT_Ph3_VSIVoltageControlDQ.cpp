@@ -11,9 +11,9 @@
 using namespace CPS;
 
 EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel, 
-	Bool modelAsCurrentSource, Bool withInterfaceResistor, Bool withTrafo) :
+	Bool modelAsCurrentSource, Bool withInterfaceResistor) :
 	CompositePowerComp<Real>(uid, name, true, true, logLevel),
-	VSIVoltageSourceInverterDQ(this->mSLog, mAttributes, modelAsCurrentSource, withInterfaceResistor, withTrafo) {
+	VSIVoltageSourceInverterDQ(this->mSLog, mAttributes, modelAsCurrentSource, withInterfaceResistor) {
 	
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
@@ -49,31 +49,13 @@ void EMT::Ph3::VSIVoltageControlDQ::createSubComponents() {
 		addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 		mSubResistorC->setParameters(Math::singlePhaseParameterToThreePhase(mRc));
 	}
-
-	// optional: with power transformer
-	if (mWithConnectionTransformer) {
-		mConnectionTransformer = EMT::Ph3::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel);
-		//TODO: SET PARAMETERS
-		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-	}	
 }
 
 void EMT::Ph3::VSIVoltageControlDQ::connectSubComponents() {
 	// TODO: COULD WE MOVE THIS FUNCTION TO THE BASE CLASS?
 	if (!mModelAsCurrentSource)
 		mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
-	if (mWithConnectionTransformer && mWithInterfaceResistor) {
-		// with transformer and interface resistor
-		mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
-		mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[1] });
-		mSubResistorC->connect({ mVirtualNodes[2],  mVirtualNodes[1]});
-		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[2]});
-	} else if (mWithConnectionTransformer) {
-		// only transformer
-		mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
-		mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[1] });
-		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[1]});
-	} else if (mWithInterfaceResistor) {
+	if (mWithInterfaceResistor) {
 		// only interface resistor
 		mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
 		mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[1] });
@@ -95,18 +77,6 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 	**mIntfVoltage = Math::singlePhaseVariableToThreePhase(RMS3PH_TO_PEAK1PH * intfVoltageComplex).real();
 	**mIntfCurrent = Math::singlePhaseVariableToThreePhase(RMS3PH_TO_PEAK1PH * intfCurrentComplex).real();
 
-	// TODO
-	/*
-	Complex filterInterfaceInitialVoltage = intfVoltageComplex(0, 0);
-	Complex filterInterfaceInitialCurrent = intfCurrentComplex(0, 0);
-	if (mWithConnectionTransformer) {
-		// TODO: CHECK THIS
-		// calculate quantities of low voltage side of transformer (being the interface quantities of the filter)
-		filterInterfaceInitialVoltage = ((**mIntfVoltage)(0, 0) - Complex(mTransformerResistance, mTransformerInductance * mOmegaNom) * (**mIntfCurrent)(0, 0)) / Complex(mTransformerRatioAbs, mTransformerRatioPhase);
-		filterInterfaceInitialCurrent = (**mIntfCurrent)(0, 0) * Complex(mTransformerRatioAbs, mTransformerRatioPhase);		
-	}
-	*/
-
 	// derive initialization quantities of filter
 	/// initial filter capacitor voltage
 	Complex vcInit;
@@ -121,15 +91,9 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 
 	// initialize voltage of virtual nodes
 	mVirtualNodes[0]->setInitialVoltage(vsInit);
-	if (mWithConnectionTransformer && mWithInterfaceResistor) {
-		// filter capacitor is connected to mVirtualNodes[1]
-		// and interface resistor between mVirtualNodes[1] and mVirtualNodes[2]
-		mVirtualNodes[1]->setInitialVoltage(vcInit);
-		// TODO: CHECK CALCULATION OF intfVoltageComplex
-		mVirtualNodes[2]->setInitialVoltage(intfVoltageComplex);
-	} else if (mWithConnectionTransformer || mWithInterfaceResistor) {
+	if (mWithInterfaceResistor) {
 		// filter capacitor is connected to mVirtualNodes[1], the second
-		// node of the PT or of the interface resistor is mTerminals[0]
+		// node of the interface resistor is mTerminals[0]
 		mVirtualNodes[1]->setInitialVoltage(vcInit);
 	}
 
@@ -196,10 +160,7 @@ void EMT::Ph3::VSIVoltageControlDQ::mnaParentAddPreStepDependencies(AttributeBas
 void EMT::Ph3::VSIVoltageControlDQ::mnaParentPreStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	**mVcap_dq = parkTransformPowerInvariant(**mThetaInv, **mSubCapacitorF->mIntfVoltage);
-	if (mWithInterfaceResistor)
-		**mIfilter_dq = parkTransformPowerInvariant(**mThetaInv, **mSubResistorC->mIntfCurrent);
-	else
-		**mIfilter_dq = parkTransformPowerInvariant(**mThetaInv, **mSubFilterRL->mIntfCurrent);
+	**mIfilter_dq = parkTransformPowerInvariant(**mThetaInv, **mSubFilterRL->mIntfCurrent);
 
 	// TODO: droop
 	//if (mWithDroop)
@@ -240,9 +201,7 @@ void EMT::Ph3::VSIVoltageControlDQ::mnaParentPostStep(Real time, Int timeStepCou
 }
 
 void EMT::Ph3::VSIVoltageControlDQ::mnaCompUpdateCurrent(const Matrix& leftvector) {
-	if (mWithConnectionTransformer)
-		**mIntfCurrent = mConnectionTransformer->mIntfCurrent->get();
-	else if (mWithInterfaceResistor)
+	if (mWithInterfaceResistor)
 		**mIntfCurrent = mSubResistorC->mIntfCurrent->get();
 	else
 		**mIntfCurrent = mSubCapacitorF->mIntfCurrent->get() + mSubFilterRL->mIntfCurrent->get();

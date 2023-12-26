@@ -48,8 +48,6 @@ namespace Base {
 		// ### Inverter Flags ###
 		/// Flag for usage of interface resistor Rc
 		Bool mWithInterfaceResistor = false;
-		/// Flag for connection transformer usage
-		Bool mWithConnectionTransformer = false;
 		/// Flag for control droop usage
 		Bool mWithDroop = false;
 
@@ -58,14 +56,6 @@ namespace Base {
 		Real mCf;
 		Real mRf;
 		Real mRc;
-
-		/// transformer
-		Real mTransformerNominalVoltageEnd1;
-		Real mTransformerNominalVoltageEnd2;
-		Real mTransformerResistance;
-		Real mTransformerInductance;
-		Real mTransformerRatioAbs;
-		Real mTransformerRatioPhase;
 
 		// ### Inverter Variables ###
 		/// Omega
@@ -96,11 +86,10 @@ namespace Base {
 
     public:
 		explicit VSIVoltageSourceInverterDQ(Logger::Log Log, CPS::AttributeList::Ptr attributeList,
-			Bool modelAsCurrentSource, Bool withInterfaceResistor, Bool withConnectionTransformer) :
+			Bool modelAsCurrentSource, Bool withInterfaceResistor) :
 			mLogger(Log),
 			mModelAsCurrentSource(modelAsCurrentSource),
 			mWithInterfaceResistor(withInterfaceResistor),
-			mWithConnectionTransformer(withConnectionTransformer),
 			mOmega(attributeList->create<Real>("Omega", 0)),
 			mThetaSys(attributeList->create<Real>("ThetaSys", 0)),
 			mThetaInv(attributeList->create<Real>("ThetaInv", 0)),
@@ -114,9 +103,6 @@ namespace Base {
 		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
 		/// Setter for filter parameters
 		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
-		/// Setter for optional connection transformer
-		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
-			Real ratioPhase, Real resistance, Real inductance);
 
 		// ### Controllers ###
 		/// Add VSI Controller

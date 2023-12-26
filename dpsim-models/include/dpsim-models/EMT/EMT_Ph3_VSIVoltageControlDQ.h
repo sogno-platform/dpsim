@@ -13,7 +13,6 @@
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
-#include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 #include <dpsim-models/Base/Base_VSIVoltageSourceInverterDQ.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 
@@ -35,8 +34,6 @@ namespace Ph3 {
 		std::shared_ptr<EMT::Ph3::Capacitor> mSubCapacitorF;
 		/// Optional interface Resistor Rc (connected between grid and filter capacitor)
 		std::shared_ptr<EMT::Ph3::Resistor> mSubResistorC;
-		/// Optional connection transformer
-		std::shared_ptr<EMT::Ph3::Transformer> mConnectionTransformer;
 
 	public:
 		// ### General Parameters ###
@@ -46,8 +43,7 @@ namespace Ph3 {
 			: VSIVoltageControlDQ(name, name, logLevel) {}
 		/// Defines UID, name, logging level and connection trafo existence
 		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, 
-							Bool modelAsCurrentSource = false, Bool withInterfaceResistor = false, 
-							Bool withTrafo = false);
+							Bool modelAsCurrentSource = false, Bool withInterfaceResistor = false);
 
 		// #### General ####
 		/// Initializes component from power flow data

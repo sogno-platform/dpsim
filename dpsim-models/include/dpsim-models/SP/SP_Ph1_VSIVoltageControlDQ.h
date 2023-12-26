@@ -46,8 +46,7 @@ namespace Ph1 {
 			: VSIVoltageControlDQ(name, name, logLevel) {}
 		/// Defines UID, name, logging level and connection trafo existence
 		VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, 
-							Bool modelAsCurrentSource = true, Bool withInterfaceResistor = false, 
-							Bool withTrafo = false);
+							Bool modelAsCurrentSource = true, Bool withInterfaceResistor = false);
 
 		// #### General ####
 		/// Initializes component from power flow data

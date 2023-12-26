@@ -11,9 +11,9 @@
 using namespace CPS;
 
 DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logger::Level logLevel, 
-	Bool modelAsCurrentSource, Bool withInterfaceResistor, Bool withTrafo) :
+	Bool modelAsCurrentSource, Bool withInterfaceResistor) :
 	CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	VSIVoltageSourceInverterDQ<Complex>(this->mSLog, mAttributes, modelAsCurrentSource, withInterfaceResistor, withTrafo) {
+	VSIVoltageSourceInverterDQ<Complex>(this->mSLog, mAttributes, modelAsCurrentSource, withInterfaceResistor) {
 	
 	setTerminalNumber(1);
 	setVirtualNodeNumber(this->determineNumberOfVirtualNodes());
@@ -45,31 +45,13 @@ void DP::Ph1::VSIVoltageControlDQ::createSubComponents() {
 		mSubResistorC->setParameters(mRc);
 		addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 	}
-
-	// optional: with power transformer
-	if (mWithConnectionTransformer) {
-		mConnectionTransformer = DP::Ph1::Transformer::make(**mName + "_trans", **mName + "_trans", mLogLevel);
-		//TODO: SET PARAMETERS
-		addMNASubComponent(mConnectionTransformer, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-	}
 }
 
 void DP::Ph1::VSIVoltageControlDQ::connectSubComponents() {
 	// TODO: COULD WE MOVE THIS FUNCTION TO THE BASE CLASS?
 	if (!mModelAsCurrentSource)
 		mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
-	if (mWithConnectionTransformer && mWithInterfaceResistor) {
-		// with transformer and interface resistor
-		mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
-		mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[1] });
-		mSubResistorC->connect({ mVirtualNodes[2],  mVirtualNodes[1]});
-		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[2]});
-	} else if (mWithConnectionTransformer) {
-		// only transformer
-		mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
-		mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[1] });
-		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[1]});
-	} else if (mWithInterfaceResistor) {
+	if (mWithInterfaceResistor) {
 		// only interface resistor
 		mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
 		mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[1] });

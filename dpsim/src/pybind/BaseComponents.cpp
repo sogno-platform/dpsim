@@ -78,8 +78,6 @@ void addBaseComponents(py::module_ mBase) {
         .def("set_parameters", &CPS::Base::VSIVoltageSourceInverterDQ<CPS::Complex>::setParameters, "sys_omega"_a, "vdref"_a, "vqref"_a)
 		.def("set_filter_parameters", &CPS::Base::VSIVoltageSourceInverterDQ<CPS::Complex>::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
         .def("add_vsi_controller", &CPS::Base::VSIVoltageSourceInverterDQ<CPS::Complex>::addVSIController, "VSIController"_a);
-		//.def("set_transformer_parameters", &CPS::Base::VSIVoltageSourceInverterDQ::setTransformerParameters,
-		//	"nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a, "omega"_a);
 
     py::class_<CPS::Base::VSIControlDQ, std::shared_ptr<CPS::Base::VSIControlDQ>>(mBase, "VSIControlDQ", py::multiple_inheritance())
         .def("set_parameters", &CPS::Base::VSIControlDQ::setParameters, "parameters"_a);

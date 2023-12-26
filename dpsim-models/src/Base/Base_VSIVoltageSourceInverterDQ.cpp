@@ -27,28 +27,6 @@ void Base::VSIVoltageSourceInverterDQ<VarType>::setParameters(
 }
 
 template <typename VarType>
-void Base::VSIVoltageSourceInverterDQ<VarType>::setTransformerParameters(
-	Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
-	Real ratioPhase, Real resistance, Real inductance) {
-
-	mTransformerNominalVoltageEnd1 = nomVoltageEnd1;
-	mTransformerNominalVoltageEnd2 = nomVoltageEnd2;
-	mTransformerResistance = resistance;
-	mTransformerInductance = inductance;
-	mTransformerRatioAbs = ratioAbs;
-	mTransformerRatioPhase = ratioPhase;
-
-	SPDLOG_LOGGER_INFO(mLogger, 
-		"\nTransformer Parameters:"
-		"\n\tNominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]"
-		"\n\tRated Apparent Power = {} [VA]"
-		"\n\tResistance={} [Ohm] Inductance={} [H]"
-    	"\n\tTap Ratio={} [ ] Phase Shift={} [deg]", 
-		mTransformerRatioAbs, mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2,
-		mTransformerResistance, mTransformerInductance, mTransformerRatioPhase);
-}
-
-template <typename VarType>
 void Base::VSIVoltageSourceInverterDQ<VarType>::setFilterParameters(
 	Real Lf, Real Cf, Real Rf, Real Rc) {
 
@@ -74,8 +52,6 @@ int Base::VSIVoltageSourceInverterDQ<VarType>::determineNumberOfVirtualNodes() {
 	// first virtual node is the second node of the rl element
 	int numberOfVirtualNodes = 1;
 	
-	if (mWithConnectionTransformer) 
-		numberOfVirtualNodes += 1;
 	if (mWithInterfaceResistor) 
 		numberOfVirtualNodes += 1;	
 	
@@ -145,15 +121,9 @@ void Base::VSIVoltageSourceInverterDQ<VarType>::initializeFilterVariables(
 	// TODO: MOVE
 	// initialize voltage of virtual nodes
 	virtualNodesList[0]->setInitialVoltage(vcInit + filterCurrentInit * Complex(mRf, mOmegaNom * mLf));
-	if (mWithConnectionTransformer && mWithInterfaceResistor) {
-		// filter capacitor is connected to mVirtualNodes[1]
-		// and interface resistor between mVirtualNodes[1] and mVirtualNodes[2]
-		virtualNodesList[1]->setInitialVoltage(vcInit);
-		// TODO
-		//mVirtualNodes[2]->setInitialVoltage(filterInterfaceInitialVoltage);
-	} else if (mWithConnectionTransformer || mWithInterfaceResistor) {
+	if (mWithInterfaceResistor) {
 		// filter capacitor is connected to mVirtualNodes[1], the second
-		// node of the PT or of the interface resistor is mTerminals[0]
+		// node of the interface resistor is mTerminals[0]
 		virtualNodesList[1]->setInitialVoltage(vcInit);
 	}
 }
