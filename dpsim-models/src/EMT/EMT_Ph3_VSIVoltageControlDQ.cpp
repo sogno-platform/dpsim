@@ -92,26 +92,15 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 
 	// droop
 	**mOmega = mOmegaNom;
-	
+
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
 		"\nTerminal 0 connected to {} = sim node {}"
 		"\nInverter terminal voltage: {}[V]"
-		"\nInverter d-axis terminal voltage: {}[V]"
-		"\nInverter q-axis terminal voltage: {}[V]"
-		"\nInverter output current: {}[A]"
-		"\nInverter d-axis filter current: {}[A]"
-		"\nInverter q-axis filter current: {}[A]"
-		"\nInitial voltage source: {}[V]"
-		"\nInverter d-axis voltage source: {}[V]"
-		"\nInverter q-axis voltage source: {}[V]",
+		"\nInverter output current: {}[A]",
 		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
-		Logger::phasorToString((**mIntfVoltage)(0, 0)),
-		(**mVcap_dq).real(), (**mVcap_dq).imag(),
-		Logger::phasorToString((**mIntfCurrent)(0, 0)),
-		(**mIfilter_dq).real(), (**mIfilter_dq).imag(),
-		(**mSourceValue)(0,0),
-		(**mSourceValue_dq).real(), (**mSourceValue_dq).imag());
+		(**mIntfVoltage)(0, 0),
+		(**mIntfCurrent)(0, 0));
 	mSLog->flush();
 }
 

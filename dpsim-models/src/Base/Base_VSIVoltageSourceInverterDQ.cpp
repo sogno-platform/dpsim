@@ -97,8 +97,10 @@ void Base::VSIVoltageSourceInverterDQ<VarType>::initializeFilterVariables(
 	**mIfilter_dq = Math::rotatingFrame2to1(filterCurrentInit, **mThetaInv, **mThetaSys);
 	**mSourceValue_dq = Math::rotatingFrame2to1(sourceInitialValue, **mThetaInv, **mThetaSys);
 	
+	String inverter_type = mModelAsCurrentSource? "current source": "voltage source";
 	String unit = mModelAsCurrentSource? "[A]": "[V]";
 	SPDLOG_LOGGER_INFO(mLogger, 
+		"\nInverter will be modelled as {}"
 		"\nInitialize Filter Variables:"
 		"\n\tInitial capacitor voltage: {}[V]"
 		"\n\tInitial capacitor voltage d-axis: {}[V]"
@@ -109,6 +111,7 @@ void Base::VSIVoltageSourceInverterDQ<VarType>::initializeFilterVariables(
 		"\n\tInitial equivalent source: {}{}"
 		"\n\tInverter equivalent source d-axis value: {}{}"
 		"\n\tInverter equivalent source q-axis value: {}{}",
+		inverter_type,
 		Logger::phasorToString(vcInit),
 		(**mVcap_dq).real(), (**mVcap_dq).imag(),
 		Logger::phasorToString(filterCurrentInit),

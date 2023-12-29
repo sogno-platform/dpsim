@@ -152,5 +152,3 @@
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 #include <dpsim-models/Signal/VSIControlType1.h>
 #include <dpsim-models/Signal/VSIControlType2.h>
-#include <dpsim-models/Signal/VSIControlType3.h>
-#include <dpsim-models/Signal/VSIControlType4.h>

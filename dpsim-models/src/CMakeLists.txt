@@ -160,8 +160,6 @@ list(APPEND MODELS_SOURCES
 	Signal/VoltageControllerVSI.cpp
 	Signal/VSIControlType1.cpp
 	Signal/VSIControlType2.cpp
-	Signal/VSIControlType3.cpp
-	Signal/VSIControlType4.cpp
 	Signal/SineWaveGenerator.cpp
 	Signal/SignalGenerator.cpp
 	Signal/FrequencyRampGenerator.cpp
