@@ -5,7 +5,7 @@ using namespace CPS;
 using namespace CPS::Signal;
 
 void VSIControlType1::setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) {
-    if (auto params = std::dynamic_pointer_cast<Signal::VSIControlType1Parameters>(parameters)){
+	if (auto params = std::dynamic_pointer_cast<Signal::VSIControlType1Parameters>(parameters)){
         mParameters = params;
         SPDLOG_LOGGER_INFO(mSLog, 
 			"\nVSIController Type1 Parameters: "
