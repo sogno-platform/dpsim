@@ -157,6 +157,7 @@ void DP::Ph1::VSIVoltageControlDQ::mnaParentAddPostStepDependencies(AttributeBas
 void DP::Ph1::VSIVoltageControlDQ::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	mnaCompUpdateCurrent(**leftVector);
 	mnaCompUpdateVoltage(**leftVector);
+	updatePower();
 }
 
 void DP::Ph1::VSIVoltageControlDQ::mnaCompUpdateCurrent(const Matrix& leftvector) {
