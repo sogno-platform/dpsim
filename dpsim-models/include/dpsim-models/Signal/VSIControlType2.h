@@ -30,15 +30,20 @@ namespace Signal {
             Real Cf;
             ///
             Real Lf;
-            ///
+            /// Equivalent time constant of the PT1 block
             Real tau;
 	};
 
     /// DOC: Controller for a grid-forming power converter, 
 	/// which is implemented by using two cascaded
-	/// PI controllers working on the dq reference frame
+	/// PI controllers working on the dq reference frame.
     /// The output of the inverter is used as the reference voltage
-    /// for the voltage source of the inverter
+    /// for the voltage source of the inverter 
+    /// Optional: if mModelAsCurrentSource == true, the PI controller
+    /// modelling the current loop is replaced by one equivalent PT1 block
+    /// In this case the output of the inverter is the equivalent current flowing
+    /// into the RLC-Filter, e.g. the reference for the current source 
+    /// of the inverter
 	/// *** This controller considers the feedforward terms
 	/// Ref.: Yazdani
 	class VSIControlType2 :

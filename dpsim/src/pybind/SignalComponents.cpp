@@ -179,7 +179,8 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("Kpc", &CPS::Signal::VSIControlType1Parameters::Kpc)
         .def_readwrite("Kic", &CPS::Signal::VSIControlType1Parameters::Kic)
         .def_readwrite("VdRef", &CPS::Signal::VSIControlType1Parameters::VdRef)
-        .def_readwrite("VqRef", &CPS::Signal::VSIControlType1Parameters::VqRef);
+        .def_readwrite("VqRef", &CPS::Signal::VSIControlType1Parameters::VqRef)
+        .def_readwrite("tau", &CPS::Signal::VSIControlType1Parameters::tau);
     py::class_<CPS::Signal::VSIControlType2Parameters, std::shared_ptr<CPS::Signal::VSIControlType2Parameters>, CPS::Base::VSIControlParameters>(mSignal, "VSIControlType2Parameters", py::multiple_inheritance())
         .def(py::init())
         .def_readwrite("Kpv", &CPS::Signal::VSIControlType2Parameters::Kpv)
@@ -190,7 +191,8 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("VqRef", &CPS::Signal::VSIControlType2Parameters::VqRef)
         .def_readwrite("omegaNom", &CPS::Signal::VSIControlType2Parameters::omegaNom)
         .def_readwrite("Cf", &CPS::Signal::VSIControlType2Parameters::Cf)
-        .def_readwrite("Lf", &CPS::Signal::VSIControlType2Parameters::Lf);
+        .def_readwrite("Lf", &CPS::Signal::VSIControlType2Parameters::Lf)
+        .def_readwrite("tau", &CPS::Signal::VSIControlType2Parameters::tau);
     py::class_<CPS::Signal::VSIControlType3Parameters, std::shared_ptr<CPS::Signal::VSIControlType3Parameters>, CPS::Base::VSIControlParameters>(mSignal, "VSIControlType3Parameters", py::multiple_inheritance())
         .def(py::init())
         .def_readwrite("Kpv", &CPS::Signal::VSIControlType3Parameters::Kpv)

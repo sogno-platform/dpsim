@@ -47,30 +47,34 @@ namespace Ph3 {
 
 		// #### General ####
 		/// Initializes component from power flow data
-		void initializeFromNodesAndTerminals(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency) final;
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+		void mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) final;
 		/// Updates current through the component
-		void mnaCompUpdateCurrent(const Matrix& leftVector) override;
+		void mnaCompUpdateCurrent(const Matrix& leftVector) final;
 		/// Updates voltage across component
-		void mnaCompUpdateVoltage(const Matrix& leftVector) override;
+		void mnaCompUpdateVoltage(const Matrix& leftVector) final;
 		/// MNA pre step operations
-		void mnaParentPreStep(Real time, Int timeStepCount) override;
+		void mnaParentPreStep(Real time, Int timeStepCount) final;
+		///
+		void mnaParentApplyRightSideVectorStamp(Matrix& rightVector) final;
 		/// MNA post step operations
-		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) final;
 		/// Add MNA pre step dependencies
-		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) final;
 		/// Add MNA post step dependencies
-		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) final;
 
 	private:
 		///
 		void createSubComponents() final;
 		///
 		void connectSubComponents();
-
+		///
+		void updatePower();
+		
 		// #### Mathematical Matrix Transforms ####
 		///
 		Matrix getParkTransformMatrixPowerInvariant(Real theta);

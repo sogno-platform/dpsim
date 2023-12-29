@@ -64,12 +64,16 @@ namespace Ph1 {
 		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) final;
 		/// Add MNA post step dependencies
 		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) final;
+		///
+		void mnaParentApplyRightSideVectorStamp(Matrix& rightVector) final;
 
 	private:
 		///
 		void createSubComponents() final;
 		///
 		void connectSubComponents();
+		///
+		void updatePower();
 	};
 }
 }

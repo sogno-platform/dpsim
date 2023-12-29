@@ -96,8 +96,15 @@ Complex VSIControlType1::step(const Complex& Vcap_dq, const Complex& Ifilter_dq)
 	//**mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep, **mInputCurr, **mInputPrev);
     **mStateCurr = Math::applyStateSpaceTrapezoidalMatrices(mATrapezoidal, mBTrapezoidal, mCTrapezoidal, **mStatePrev, **mInputCurr, **mInputPrev);
 
-	// calculate new outputs
-	**mOutput = mC * **mStateCurr + mD * **mInputCurr;
+	// calculate controller outputs
+	if (mModelAsCurrentSource) {
+		Real error_d = mParameters->VdRef - Vcap_dq.real();
+		Real error_q = mParameters->VqRef - Vcap_dq.imag();
+		(**mOutput)(0,0) = ((**mStateCurr)(0, 0) * mParameters->Kiv + mParameters->Kpv * error_d) * (mTimeStep / mParameters->tau) + (1. - mTimeStep / mParameters->tau) * Ifilter_dq.real();
+		(**mOutput)(1,0) = ((**mStateCurr)(1, 0) * mParameters->Kiv + mParameters->Kpv * error_q) * (mTimeStep / mParameters->tau) + (1. - mTimeStep / mParameters->tau) * Ifilter_dq.imag();
+	} else {
+		**mOutput = mC * **mStateCurr + mD * **mInputCurr;
+	}
 
 	SPDLOG_LOGGER_DEBUG(mSLog, 
 				"\n - InputCurr = \n{}"

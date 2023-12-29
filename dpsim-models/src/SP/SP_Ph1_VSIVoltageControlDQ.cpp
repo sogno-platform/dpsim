@@ -70,32 +70,11 @@ void SP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(0);
 	(**mIntfCurrent)(0, 0) = std::conj(**mPower / (**mIntfVoltage)(0,0));
 
-	//
-	Complex filterInterfaceInitialVoltage = (**mIntfVoltage)(0, 0);
-	Complex filterInterfaceInitialCurrent = (**mIntfCurrent)(0, 0);
+	// initialize filter variables and set initial voltage of virtual nodes
+	initializeFilterVariables((**mIntfVoltage)(0, 0), (**mIntfCurrent)(0, 0), mVirtualNodes);
 
-	// derive initialization quantities of filter
-	/// initial filter capacitor voltage
-	Complex vcInit;
-	if (mWithInterfaceResistor)
-		vcInit = filterInterfaceInitialVoltage + filterInterfaceInitialCurrent * mRc;
-	else
-		vcInit = (**mIntfVoltage)(0, 0);
-	/// initial filter capacitor current 
-	Complex icfInit = vcInit * Complex(0., mOmegaNom * mCf);
-	/// initial voltage of voltage source
-	Complex vsInit = vcInit + (filterInterfaceInitialCurrent + icfInit) * Complex(mRf, mOmegaNom * mLf);
-
-	// initialize voltage of virtual nodes
-	mVirtualNodes[0]->setInitialVoltage(vsInit);
-	if (mWithInterfaceResistor) {
-		// filter capacitor is connected to mVirtualNodes[1], the second
-		// node of the interface resistor is mTerminals[0]
-		mVirtualNodes[1]->setInitialVoltage(vcInit);
-	}
-
-	// Set parameters voltage source
-	(**mSourceValue)(0,0) = vsInit;
+	// calculate initial source value
+	(**mSourceValue)(0,0) = Math::rotatingFrame2to1(**mSourceValue_dq, **mThetaSys, **mThetaInv);
 
 	// Connect & Initialize electrical subcomponents
 	this->connectSubComponents();
@@ -106,19 +85,6 @@ void SP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 
 	// TODO: droop
 	**mOmega = mOmegaNom;
-
-	// initialize angles
-	**mThetaSys = 0;
-	**mThetaInv = std::arg((**mSubCapacitorF->mIntfVoltage)(0,0));
-
-	// Initialie voltage controller variables
-	**mVcap_dq = Math::rotatingFrame2to1((**mSubCapacitorF->mIntfVoltage)(0,0), **mThetaInv, **mThetaSys);
-	if (mWithInterfaceResistor)
-		// TODO: CHECK!
-		**mIfilter_dq = Math::rotatingFrame2to1((**mSubResistorC->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
-	else
-		**mIfilter_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
-	**mSourceValue_dq = Math::rotatingFrame2to1((**mSourceValue)(0,0), **mThetaInv, **mThetaSys);
 
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"\n--- Initialization from powerflow ---"
@@ -152,13 +118,9 @@ void SP::Ph1::VSIVoltageControlDQ::mnaParentAddPreStepDependencies(AttributeBase
 }
 
 void SP::Ph1::VSIVoltageControlDQ::mnaParentPreStep(Real time, Int timeStepCount) {
-	// Transformation interface forward
+	// get measurements
 	**mVcap_dq = Math::rotatingFrame2to1((**mSubCapacitorF->mIntfVoltage)(0,0), **mThetaInv, **mThetaSys);
-	if (mWithInterfaceResistor)
-		// TODO: CHECK
-		**mIfilter_dq = Math::rotatingFrame2to1((**mSubResistorC->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
-	else
-		**mIfilter_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);
+	**mIfilter_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys);	
 
 	// TODO: droop
 	//if (mWithDroop)
@@ -171,20 +133,25 @@ void SP::Ph1::VSIVoltageControlDQ::mnaParentPreStep(Real time, Int timeStepCount
 	**mThetaSys = **mThetaSys + mTimeStep * mOmegaNom;
 
 	//
-	//mWithControl = false;
-	//**mSourceValue_dq = Math::rotatingFrame2to1((**mSubFilterRL->mIntfCurrent)(0, 0), **mThetaInv, **mThetaSys); 
 	if (mWithControl)
 		**mSourceValue_dq = mVSIController->step(**mVcap_dq, **mIfilter_dq);
 
 	// Transformation interface backward
 	(**mSourceValue)(0,0) = Math::rotatingFrame2to1(**mSourceValue_dq, **mThetaSys, **mThetaInv);
 
+	// set reference voltage of voltage source
+	if (!mModelAsCurrentSource) {
+		// pre-step of voltage source
+		**mSubCtrledVoltageSource->mVoltageRef = (**mSourceValue)(0,0);
+		std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
+	}
+
 	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
-void SP::Ph1::VSIVoltageControlDQ::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) {
-	// TODO
-	Math::setVectorElement(**mRightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mSourceValue)(0,0)); 
+void SP::Ph1::VSIVoltageControlDQ::mnaParentApplyRightSideVectorStamp(Matrix& rightVector) {
+	if (mModelAsCurrentSource)
+		Math::setVectorElement(**mRightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mSourceValue)(0,0)); 
 }
 
 void SP::Ph1::VSIVoltageControlDQ::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -196,24 +163,17 @@ void SP::Ph1::VSIVoltageControlDQ::mnaParentAddPostStepDependencies(AttributeBas
 void SP::Ph1::VSIVoltageControlDQ::mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	mnaCompUpdateCurrent(**leftVector);
 	mnaCompUpdateVoltage(**leftVector);
+	updatePower();
 }
 
 void SP::Ph1::VSIVoltageControlDQ::mnaCompUpdateCurrent(const Matrix& leftvector) {
-	// TODO: CHECK
-	if (mWithInterfaceResistor)
-		**mIntfCurrent = mSubResistorC->mIntfCurrent->get();
-	else
-		**mIntfCurrent = mSubCapacitorF->mIntfCurrent->get() + mSubFilterRL->mIntfCurrent->get();
+	**mIntfCurrent = mSubCapacitorF->mIntfCurrent->get() + mSubFilterRL->mIntfCurrent->get();
 }
 
 void SP::Ph1::VSIVoltageControlDQ::mnaCompUpdateVoltage(const Matrix& leftVector) {
-	// update voltage of virtual nodes
-	for (auto virtualNode : mVirtualNodes)
-		// CHECK: Is it really necessary?
-		virtualNode->mnaUpdateVoltage(leftVector);
-
 	(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+}
 
-	// Update Power
+void SP::Ph1::VSIVoltageControlDQ::updatePower() {
 	**mPower = (**mIntfVoltage)(0,0) * std::conj((**mIntfCurrent)(0,0));
 }

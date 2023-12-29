@@ -52,12 +52,12 @@ void DP::Ph1::VSIVoltageControlDQ::connectSubComponents() {
 	if (!mModelAsCurrentSource)
 		mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
 	if (mWithInterfaceResistor) {
-		// only interface resistor
+		// with interface resistor
 		mSubFilterRL->connect({ mVirtualNodes[1], mVirtualNodes[0] });
 		mSubCapacitorF->connect({ SimNode::GND, mVirtualNodes[1] });
 		mSubResistorC->connect({ mTerminals[0]->node(), mVirtualNodes[1]});
 	} else {
-		// without transformer and interface resistor
+		// without interface resistor
 		mSubFilterRL->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 		mSubCapacitorF->connect({ SimNode::GND, mTerminals[0]->node() });
 	}
@@ -145,12 +145,15 @@ void DP::Ph1::VSIVoltageControlDQ::mnaParentPreStep(Real time, Int timeStepCount
 		// pre-step of voltage source
 		**mSubCtrledVoltageSource->mVoltageRef = (**mSourceValue)(0,0);
 		std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)->mnaPreStep(time, timeStepCount);
-	} else {
-		Math::setVectorElement(**mRightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mSourceValue)(0,0)); 
 	}
 
 	// stamp right side vector
 	mnaApplyRightSideVectorStamp(**mRightVector);
+}
+
+void DP::Ph1::VSIVoltageControlDQ::mnaParentApplyRightSideVectorStamp(Matrix& rightVector) {
+	if (mModelAsCurrentSource)
+		Math::addToVectorElement(**mRightVector, mVirtualNodes[0]->matrixNodeIndex(), (**mSourceValue)(0,0)); 
 }
 
 void DP::Ph1::VSIVoltageControlDQ::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -165,20 +168,13 @@ void DP::Ph1::VSIVoltageControlDQ::mnaParentPostStep(Real time, Int timeStepCoun
 }
 
 void DP::Ph1::VSIVoltageControlDQ::mnaCompUpdateCurrent(const Matrix& leftvector) {
-	if (mWithInterfaceResistor)
-		**mIntfCurrent = mSubResistorC->mIntfCurrent->get();
-	else
-		**mIntfCurrent = mSubCapacitorF->mIntfCurrent->get() + mSubFilterRL->mIntfCurrent->get();
+	**mIntfCurrent = mSubCapacitorF->mIntfCurrent->get() + mSubFilterRL->mIntfCurrent->get();
 }
 
 void DP::Ph1::VSIVoltageControlDQ::mnaCompUpdateVoltage(const Matrix& leftVector) {
-	// update voltage of virtual nodes
-	for (auto virtualNode : mVirtualNodes)
-		// CHECK: Is it really necessary?
-		virtualNode->mnaUpdateVoltage(leftVector);
-	
 	(**mIntfVoltage)(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+}
 
-	// Update Power
+void DP::Ph1::VSIVoltageControlDQ::updatePower() {
 	**mPower = (**mIntfVoltage)(0,0) * std::conj((**mIntfCurrent)(0,0));
 }
