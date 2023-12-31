@@ -40,6 +40,8 @@ void SteamTurbineGovernor::initialize(Real Pref) {
     	mDelPgv = 0;
 		mPgv = Pref;
 		mPgv_next = Pref;
+		mPlim_in=Pref;
+		mPlim_in_next=Pref;
 
     	SPDLOG_LOGGER_INFO(mSLog, 
 			"\nSteam Governor initial values:"
@@ -58,9 +60,18 @@ void SteamTurbineGovernor::initialize(Real Pref) {
 }
 
 Real SteamTurbineGovernor::step(Real Omega, Real dt) {
+
+	// WIndup is implemented to compare the models to IAEW. If no windup is desired set Kbc=0
+	const Real cKbc=10;
+
+	const Real cA=mParameters->T2/mParameters->T1;
+	const Real cB=(mParameters->T1 - mParameters->T2) / mParameters->T1;
+
     // write the values that were calculated in the previous step
 	mDelOm_prev = mDelOm;
 	mPgv = mPgv_next;
+	mPlim_in = mPlim_in_next;
+	mP1 = mP1_next;
 
 	// Calculate the input of the governor for time step k
 	 mDelOm = mParameters->OmRef-Omega;
@@ -69,8 +80,8 @@ Real SteamTurbineGovernor::step(Real Omega, Real dt) {
  	if(mParameters->T1==0) {
 		mP = (1/mParameters->R) * (mDelOm + (mParameters->T2/dt) * (mDelOm-mDelOm_prev));
 	} else {
-		mP1_next = mP1+(dt/mParameters->T1) * (mDelOm*(mParameters->T1-mParameters->T2) / mParameters->T1-mP1);
-		mP = (1/mParameters->R) * (mP1+mDelOm * (mParameters->T2/mParameters->T1));
+		mP1_next = mP1+(dt/mParameters->T1) * (mDelOm*cB-mP1);
+		mP = (1/mParameters->R) * (mP1+mDelOm * cA);
 	}
 
 	// Calculate thee input of integrator in PT1 via values of controller and output of governor
@@ -80,12 +91,26 @@ Real SteamTurbineGovernor::step(Real Omega, Real dt) {
 	if(mDelPgv>mParameters->dPmax)
 		mDelPgv = mParameters->dPmax;
 
-	// Calculating output of PT1 actuator, the output of the governor
+	// Calculating output of PT1 actuator, the output of the governor, without windup
+	/*
 	mPgv_next = dt * mDelPgv + mPgv;
 	if(mPgv_next<mParameters->Pmin)
 		mPgv_next = mParameters->Pmin;
 	if(mPgv_next>mParameters->Pmax)
+		mPgv_next = mParameters->Pmax; */
+
+	// Calculating output of PT1 actuator, the output of the governor, including windup
+	
+	mPlim_in_next = dt *(mDelPgv - cKbc*(mPlim_in - mPgv)) + mPlim_in;
+	if(mPlim_in_next<mParameters->Pmin){
+		mPgv_next = mParameters->Pmin;
+	}
+	else if(mPlim_in_next>mParameters->Pmax){
 		mPgv_next = mParameters->Pmax;
+	}
+	else{
+		mPgv_next=mPlim_in_next;
+	}
 
 	return mPgv;
 }
