@@ -20,26 +20,26 @@ namespace Signal {
 		public SharedFactory<SteamGorvernorParameters> {
 
         public:
-            // Droop, the value 1/K in the controller K(1+sT_2)
+            /// Droop, the value 1/K in the controller K(1+sT_2)
             Real R;
             // T_1 related to the differentiator in the controlle K(1+sT_2)/(1+sT_1)
             Real T1;
             // T_2 related to the differentiator in the controlle K(1+sT_2)
             Real T2;
-            // Time constant T_3 of the actuator in the Governor
+            /// Time constant T_3 of the actuator in the Governor
             Real T3;
         
             // ### Physical constraints ###
-            //Maximum growth rate
+            /// Maximum growth rate
             Real dPmax;
-            //Minimum decay rate
+            /// Minimum decay rate
             Real dPmin;
-            //Maximum mechanical power(pu)
+            /// Maximum mechanical power(pu)
             Real Pmax;
-            //Minimum mechanical power (pu)
+            /// Minimum mechanical power (pu)
             Real Pmin;
 
-            // Setpoint for omega (pu). It is adviced to choose Om_ref=1
+            /// Setpoint for omega (pu). It is adviced to choose Om_ref=1
             Real OmRef;
     };
 
@@ -55,29 +55,33 @@ namespace Signal {
 		    std::shared_ptr<SteamGorvernorParameters> mParameters;
     
             // ### Setpoints of the machine ###
-            //Setpoint for mechanical Power (pu)
+            /// Setpoint for mechanical Power (pu)
             Real mPref;
     
-            // ### Variables at time step k-1 ###
+            /// ### Variables at time step k-1 ###
             Real mDelOm_prev;    
     
             // ### Variables at time step k ###
-            // Delta Omega = Omega_ref-Omega_meas at k
+            /// Delta Omega = Omega_ref-Omega_meas at k
             Real mDelOm;
-            //Variable after the rate limiter and before integrator at k
+            /// Variable after the rate limiter and before integrator at k
             Real mDelPgv;
-            // The outpur of the Governor at k
+            /// The outpur of the Governor at k
             Real mPgv;
-            //
+            /// Windup variable
             Real mP1;
-            //
+            /// Windup variable
             Real mP;
+            /// Windup variable
+            Real mPlim_in;
     
             // ### Variables at time step k+1 ###
-            // The outpur of the PT1 with limiters at k+1 (Governor output)
+            /// The outpur of the PT1 with limiters at k+1 (Governor output)
             Real mPgv_next;
-            //
+            ///
             Real mP1_next;
+            ///
+            Real mPlim_in_next;
             
         public:
             ///
