@@ -22,9 +22,9 @@ namespace Signal {
         public:
             /// Droop, the value 1/K in the controller K(1+sT_2)
             Real R;
-            // T_1 related to the differentiator in the controlle K(1+sT_2)/(1+sT_1)
+            /// T_1 related to the differentiator in the controlle K(1+sT_2)/(1+sT_1)
             Real T1;
-            // T_2 related to the differentiator in the controlle K(1+sT_2)
+            /// T_2 related to the differentiator in the controlle K(1+sT_2)
             Real T2;
             /// Time constant T_3 of the actuator in the Governor
             Real T3;

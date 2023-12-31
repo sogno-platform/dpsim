@@ -135,6 +135,7 @@ void addSignalComponents(py::module_ mSignal) {
     py::class_<CPS::Signal::SteamGorvernorParameters, std::shared_ptr<CPS::Signal::SteamGorvernorParameters>, CPS::Base::GovernorParameters>(mSignal, "SteamGorvernorParameters", py::multiple_inheritance())
         .def(py::init())
         .def_readwrite("R", &CPS::Signal::SteamGorvernorParameters::R)
+        .def_readwrite("T1", &CPS::Signal::SteamGorvernorParameters::T1)
         .def_readwrite("T2", &CPS::Signal::SteamGorvernorParameters::T2)
         .def_readwrite("T3", &CPS::Signal::SteamGorvernorParameters::T3)
         .def_readwrite("dPmax", &CPS::Signal::SteamGorvernorParameters::dPmax)
