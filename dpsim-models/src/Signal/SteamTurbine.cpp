@@ -21,6 +21,7 @@ void SteamTurbine::setParameters(std::shared_ptr<Base::TurbineParameters> parame
 				"\nTco: {:e}",
 				mParameters->Fhp, mParameters->Fip, mParameters->Flp,
 				mParameters->Tch, mParameters->Trh, mParameters->Tco);
+            mSLog->flush();
         } else{
             SPDLOG_LOGGER_INFO(mSLog, 
                 "The sum of factors Fhp+Fip+Flp of the steam turbine {} should be equal to 1!", this->name());
@@ -50,6 +51,7 @@ void SteamTurbine::initialize(Real Pminit) {
 			"\nPlp: {:f}"
 			"\nPm: {:f}",
 			mPhp, mPip, mPlp, mPm);
+        mSLog->flush();
     } else {
         SPDLOG_LOGGER_INFO(mSLog, "Initial mechanical power of steam turbine {} in pu should be betwenn 0 and 1", this->name());
         std::cout << "Initial mechanical power of steam turbine " << this->name() << " in pu should be betwenn 0 and 1" << std::endl;
