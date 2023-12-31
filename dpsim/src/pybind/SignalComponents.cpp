@@ -35,12 +35,23 @@ void addSignalComponents(py::module_ mSignal) {
         .def("get_line_components", &CPS::Signal::DecouplingLineEMT::getLineComponents);
 
     // Exciters
+    py::class_<CPS::Signal::ExciterStatic, std::shared_ptr<CPS::Signal::ExciterStatic>, CPS::Base::Exciter>(mSignal, "ExciterStatic", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
     py::class_<CPS::Signal::ExciterDC1, std::shared_ptr<CPS::Signal::ExciterDC1>, CPS::Base::Exciter>(mSignal, "ExciterDC1", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
     py::class_<CPS::Signal::ExciterDC1Simp, std::shared_ptr<CPS::Signal::ExciterDC1Simp>, CPS::Base::Exciter>(mSignal, "ExciterDC1Simp", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
     py::class_<CPS::Signal::ExciterST1Simp, std::shared_ptr<CPS::Signal::ExciterST1Simp>, CPS::Base::Exciter>(mSignal, "ExciterST1Simp", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
+    
+    py::class_<CPS::Signal::ExciterStaticParameters, std::shared_ptr<CPS::Signal::ExciterStaticParameters>, CPS::Base::ExciterParameters>(mSignal, "ExciterStaticParameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("Ta", &CPS::Signal::ExciterStaticParameters::Ta)
+        .def_readwrite("Tb", &CPS::Signal::ExciterStaticParameters::Tb)
+        .def_readwrite("Te", &CPS::Signal::ExciterStaticParameters::Te)
+        .def_readwrite("Ka", &CPS::Signal::ExciterStaticParameters::Ka)
+        .def_readwrite("MaxEfd", &CPS::Signal::ExciterStaticParameters::MaxEfd)
+        .def_readwrite("MinEfd", &CPS::Signal::ExciterStaticParameters::MinEfd);
     py::class_<CPS::Signal::ExciterDC1Parameters, std::shared_ptr<CPS::Signal::ExciterDC1Parameters>, CPS::Base::ExciterParameters>(mSignal, "ExciterDC1Parameters", py::multiple_inheritance())
         .def(py::init())
         .def_readwrite("Tr", &CPS::Signal::ExciterDC1Parameters::Tr)
