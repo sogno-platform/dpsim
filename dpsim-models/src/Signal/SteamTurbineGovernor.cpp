@@ -40,8 +40,11 @@ void SteamTurbineGovernor::initialize(Real Pref) {
     	mDelPgv = 0;
 		mPgv = Pref;
 		mPgv_next = Pref;
-		mPlim_in=Pref;
-		mPlim_in_next=Pref;
+		mPlim_in = Pref;
+		mPlim_in_next = Pref;
+		mP1 = 0;
+		mP1_next = 0;
+		mP = 0;
 
     	SPDLOG_LOGGER_INFO(mSLog, 
 			"\nSteam Governor initial values:"
