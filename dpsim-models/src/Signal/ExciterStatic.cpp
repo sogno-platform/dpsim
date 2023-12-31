@@ -40,6 +40,8 @@ void ExciterStatic::initialize(Real Vh_init, Real Ef_init) {
 	mVh = Vh_init;
 	mEfd = Ef_init;
 	mEfd_next = Ef_init;
+	mEfd_lim_in=Ef_init;
+	mEfd_lim_in_next=Ef_init;
 
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"Initially set excitation system initial values:"
@@ -79,12 +81,17 @@ void ExciterStatic::initialize(Real Vh_init, Real Ef_init) {
 }
 
 Real ExciterStatic::step(Real mVd, Real mVq, Real dt, Real Vpss) {
+	
+	//Wind-up constant
+	//FIX ME: when cKbc=0 the behaviour is not as expected. (Exprected is the behavious as without Windup)
+	const Real cKbc=10;
 
 	// Voltage magnitude calculation
 	mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
 
 	/// Update state variables that were calculated in last step
 	mEfd = mEfd_next;
+	mEfd_lim_in = mEfd_lim_in_next;
 	mXb = mXb_next;
 
 	/// Compute Xb at time k+1 using euler forward
@@ -93,13 +100,25 @@ Real ExciterStatic::step(Real mVd, Real mVq, Real dt, Real Vpss) {
 	
 	// Compute Edf at time k+1 using euler forward
 	mVe = (mVin * mCa + mXb * mCb) * mParameters->Ka;
-	mEfd_next = (mVe-mEfd) * dt / mParameters->Te + mEfd;
 
-	/// Limiter for Efd
+	/*
+	/// Integrator for T_e time constant !without! Wind-up
+	mEfd_next = (mVe-mEfd) * dt / mParameters->Te + mEfd;
+	/// limiter for Efd
 	if (mEfd_next > mParameters->MaxEfd)
 		mEfd_next = mParameters->MaxEfd;
 	else if (mEfd_next < mParameters->MinEfd)
 		mEfd_next = mParameters->MinEfd;
+	*/
+	
+	//Integrator for T_e time constant !with! Wind-up
+	mEfd_lim_in_next = dt*((mVe-mEfd) / mParameters->Te - cKbc*(mEfd_lim_in-mEfd)) + mEfd_lim_in;
+	if (mEfd_lim_in_next > mParameters->MaxEfd)
+		mEfd_next = mParameters->MaxEfd;
+	else if (mEfd_lim_in_next < mParameters->MinEfd)
+		mEfd_next = mParameters->MinEfd;
+	else
+		mEfd_next=mEfd_lim_in_next;
 
-	return mEfd_next;
+	return mEfd;
 }
