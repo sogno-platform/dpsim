@@ -11,7 +11,7 @@ void ExciterStatic::setParameters(std::shared_ptr<Base::ExciterParameters> param
 	if (auto params = std::dynamic_pointer_cast<Signal::ExciterStaticParameters>(parameters)){
 		mParameters = params;
 
-		if(mParameters->Ta==mParameters->Tb) {
+		if (mParameters->Ta == mParameters->Tb) {
 			SPDLOG_LOGGER_INFO(mSLog, 
 				"\n if Ta=Tb  the auxilary state variable Xb can be ignored, as Xb=0",
 				this->name());
@@ -47,25 +47,30 @@ void ExciterStatic::initialize(Real Vh_init, Real Ef_init) {
 		"\ninit Ef: {:e}",
 		mVh, mEfd);
 
-	if ((Ef_init>mParameters->MaxEfd) || (Ef_init<mParameters->MinEfd) {
+	if ((Ef_init>mParameters->MaxEfd) || (Ef_init<mParameters->MinEfd))
 		SPDLOG_LOGGER_WARN(mSLog, 
-			"\nThe initialisation is bad, Ef_init out of allowed band ({}<Ef_init<{}). The simulation will be continued ",
+			"\nWARNING: The initialisation is bad, Ef_init out of allowed band ({}<Ef_init<{})."
+			"\nThe simulation will be continued ",
 			mParameters->MinEfd, mParameters->MaxEfd);
-		//throw CPS::TypeException();
-	}
+
+	// initialize auxiliar parameters
+	mCa = mParameters->Ta / mParameters->Tb;
+	mCb = (mParameters->Tb - mParameters->Ta) / mParameters->Tb;
+
+	///
+	mVref = mVh + mEfd / mParameters->Ka;
 
 	/// Input of the first lead lag block
-	mVin = Ef_init / mParameters->Ka;
-	/// Init value of amplifier input 
-	mVref = mVin + Vh_init;
+	mVin = mVref - mVh;
+
 	/// Initial value for auxilar state variable
-	mXb = mVin;
+	mXb = (mEfd / mParameters->Ka - mVin * mCa) / mCb ;
 	mXb_next = mXb;
 	
 	SPDLOG_LOGGER_INFO(mSLog, 
 		"\nExciter Initialization"
 		"\nExciter type: ExciterStatic"
-		"\nCalculated set poit and auxilary state variable:"
+		"\nCalculated set poit and auxilary state variables:"
 		"\nVref : {:e}"
 		"\nXb : {:e}",
 		"\nVin = Vref-Vh : {:e}",
@@ -75,11 +80,7 @@ void ExciterStatic::initialize(Real Vh_init, Real Ef_init) {
 
 Real ExciterStatic::step(Real mVd, Real mVq, Real dt, Real Vpss) {
 
-    /// TODO: move cA and cB to initialize() to avoid recomputation in each simulation step
-	const Real cA = mParameters->Ta / mParameters->Tb;
-	const Real cB = (mParameters->Tb - mParameters->Ta) / mParameters->Tb;
-
-	/// Voltage magnitude calculation
+	// Voltage magnitude calculation
 	mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
 
 	/// Update state variables that were calculated in last step
@@ -88,11 +89,11 @@ Real ExciterStatic::step(Real mVd, Real mVq, Real dt, Real Vpss) {
 
 	/// Compute Xb at time k+1 using euler forward
 	mVin = mVref - mVh + Vpss;
-	mXb_next = (mVin-mXb) * dt/mParameters->Tb + mXb;
+	mXb_next = mXb + (mVin - mXb) * dt / mParameters->Tb;
 	
-	/// Compute Edf at time k+1 using euler forward
-	mVe = (mVin*cA + mXb*cB) * mParameters->Ka;
-	mEfd_next = (mVe-mEfd) * dt / mParameters->Te +mEfd;
+	// Compute Edf at time k+1 using euler forward
+	mVe = (mVin * mCa + mXb * mCb) * mParameters->Ka;
+	mEfd_next = (mVe-mEfd) * dt / mParameters->Te + mEfd;
 
 	/// Limiter for Efd
 	if (mEfd_next > mParameters->MaxEfd)
@@ -100,5 +101,5 @@ Real ExciterStatic::step(Real mVd, Real mVq, Real dt, Real Vpss) {
 	else if (mEfd_next < mParameters->MinEfd)
 		mEfd_next = mParameters->MinEfd;
 
-	return mEfd;
+	return mEfd_next;
 }

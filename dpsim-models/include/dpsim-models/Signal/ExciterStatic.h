@@ -53,14 +53,18 @@ namespace Signal {
 		Real mEfd = 0;
 		/// Exciter output at step k+1
 		Real mEfd_next = 0;
-		/// Auxilary state variable from partial fratcion decompostion (1+sT_A)/(1+sT_B) at step k
+		/// Auxilary state variable from partial fraction decompostion (1+sT_A)/(1+sT_B) at step k
 		Real mXb = 0;
-		/// Auxilary state variable from partial fratcion decompostion (1+sT_A)/(1+sT_B) at step k+1
+		/// Auxilary state variable from partial fraction decompostion (1+sT_A)/(1+sT_B) at step k+1
 		Real mXb_next = 0;
-		/// Input of the first lead lag block at time k (alwazs Vref-Vh+Vpss)
+		/// Input of the first lead lag block at time k (=Vref-Vh+Vpss)
 		Real mVin = 0;
 		/// Input of the second lag block 1/(1+sTe)
 		Real mVe;
+
+		/// Auxiliar parameters
+		Real mCa;
+		Real mCb;
 
 	public:
 		/// Constructor
