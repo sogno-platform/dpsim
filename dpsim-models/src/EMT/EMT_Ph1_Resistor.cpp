@@ -126,7 +126,7 @@ void EMT::Ph1::Resistor::stampEigenvalueMatrices(Matrix &signMatrix, Matrix &dis
 	}
 }
 
-void EMT::Ph1::Resistor::setBranchIdx(int i)
+void EMT::Ph1::Resistor::setBranchIdx(UInt i)
 {
 	mBranchIdx = i;
 }

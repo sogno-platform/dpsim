@@ -60,30 +60,19 @@ public:
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) {}
 
-		// Implementation of EigenExtractCompInterface methods
-		void stampEigenvalueMatrices(Matrix& signMatrix, Matrix& discretizationMatrix, Matrix& branchNodeIncidenceMatrix) final;
-		void setBranchIdx(int i) final;
-
 		/// Add MNA pre step dependencies
 		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 
-  void mnaCompPreStep(Real time, Int timeStepCount) override;
-  void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) override;
+		/// Add MNA post step dependencies
+		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
-  /// Add MNA pre step dependencies
-  void mnaCompAddPreStepDependencies(
-      AttributeBase::List &prevStepDependencies,
-      AttributeBase::List &attributeDependencies,
-      AttributeBase::List &modifiedAttributes) override;
-
-  /// Add MNA post step dependencies
-  void
-  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
-                                 AttributeBase::List &attributeDependencies,
-                                 AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) override;
-};
-} // namespace Ph1
-} // namespace EMT
-} // namespace CPS
+		// Implementation of EigenExtractCompInterface methods
+		void stampEigenvalueMatrices(Matrix& signMatrix, Matrix& discretizationMatrix, Matrix& branchNodeIncidenceMatrix) final;
+		void setBranchIdx(UInt i) final;
+	private:
+		/// Branch index
+		UInt mBranchIdx;
+	};
+}
+}
+}

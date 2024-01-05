@@ -84,7 +84,7 @@ void EMT::Ph1::VoltageSource::stampEigenvalueMatrices(Matrix &signMatrix, Matrix
 	}
 }
 
-void EMT::Ph1::VoltageSource::setBranchIdx(int i)
+void EMT::Ph1::VoltageSource::setBranchIdx(UInt i)
 {
 	mBranchIdx = i;
 }

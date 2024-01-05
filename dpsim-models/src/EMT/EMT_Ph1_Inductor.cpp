@@ -140,7 +140,7 @@ void EMT::Ph1::Inductor::stampEigenvalueMatrices(Matrix& signMatrix, Matrix& dis
 	}
 }
 
-void EMT::Ph1::Inductor::setBranchIdx(int i)
+void EMT::Ph1::Inductor::setBranchIdx(UInt i)
 {
 	mBranchIdx = i;
 }

@@ -143,7 +143,7 @@ void EMT::Ph1::Capacitor::stampEigenvalueMatrices(Matrix &signMatrix, Matrix &di
 	}
 }
 
-void EMT::Ph1::Capacitor::setBranchIdx(int i)
+void EMT::Ph1::Capacitor::setBranchIdx(UInt i)
 {
 	mBranchIdx = i;
 }

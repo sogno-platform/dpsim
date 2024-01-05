@@ -75,7 +75,10 @@ public:
 			
 		// Implementation of EigenExtractCompInterface methods
 		void stampEigenvalueMatrices(Matrix& signMatrix, Matrix& discretizationMatrix, Matrix& branchNodeIncidenceMatrix) final;
-		void setBranchIdx(int i) final;
+		void setBranchIdx(UInt i) final;
+	private:
+		/// Branch index
+		UInt mBranchIdx;
 	};
 }
 }
