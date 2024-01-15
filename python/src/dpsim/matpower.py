@@ -711,3 +711,25 @@ class Reader:
 
             #set terminal power of generator in dpsim
             self.system.component(gen_name).get_terminal(index=0).set_power(-complex_power)
+            
+    def get_pf_results(self):
+        pf_results = pd.DataFrame(columns=['Bus', 'Vm [pu]', 'Va [°]', 'P [MW]', 'Q [MVAr]'])
+        for i in range(self.mpc_bus_data.shape[0]):
+            node_name = "N" + str(self.mpc_bus_data['bus_i'][i]) #ex. N5
+
+            p_gen = 0
+            q_gen = 0
+            # if PV or Slack bus --> add gen power 
+            gen_data = self.mpc_gen_data.loc[self.mpc_gen_data['bus'] == self.mpc_bus_data.at[i,'bus_i']]
+            if (gen_data.shape[0] > 0):
+                p_gen = gen_data['Pg'].values[0]
+                q_gen = gen_data['Qg'].values[0]
+
+            pf_results.loc[i] = ([node_name] 
+                         + [self.mpc_bus_data['Vm'][i]] 
+                         + [self.mpc_bus_data['Va'][i]]
+                         + [p_gen - self.mpc_bus_data['Pd'][i]]
+                         + [q_gen - self.mpc_bus_data['Qd'][i]])
+            
+        return pf_results
+        
