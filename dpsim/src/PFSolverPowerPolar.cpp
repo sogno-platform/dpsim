@@ -386,31 +386,31 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
         CPS::Complex S = sol_Vcx(node_idx) * conj(I);
 
         // add load power to obtain generator power (S_gen = S_inj + S_load)
+        auto Sgen = S;
         for(auto comp : mSystem.mComponentsAtNode[topoNode])
             if (auto loadPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp))
-                S += Complex(**(loadPtr->mActivePowerPerUnit), **(loadPtr->mReactivePowerPerUnit));
+                Sgen += Complex(**(loadPtr->mActivePowerPerUnit), **(loadPtr->mReactivePowerPerUnit));
 
         // Set power of either VD-type external network injection or VD-type synchronous generator depending on what is connected
         for(auto comp : mSystem.mComponentsAtNode[topoNode]) {
             if(auto extnetPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
-                extnetPtr->updatePowerInjection(S*mBaseApparentPower);
+                extnetPtr->updatePowerInjection(Sgen*mBaseApparentPower);
                 break;
             }
             if(auto sgPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
-                sgPtr->updatePowerInjection(S*mBaseApparentPower);
+                sgPtr->updatePowerInjection(Sgen*mBaseApparentPower);
                 break;
             }
         }
 
-        // Subtracting shunt power to obtain power injection flowing from this node to the other nodes
-		// FIXME: this calculates here S_gen-S_shunt, which is equal to S_inj_to_other+S_load, but generally not equal to S_inj_to_other
+        // Subtracting shunt power to obtain power injection flowing from this node to the other nodes: S_inj_to_other = S_inj-S_shunt
         CPS::Real V =  sol_V.coeff(node_idx);
         for(auto comp : mSystem.mComponentsAtNode[topoNode])
             if (auto shuntPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp))
 				// capacitive susceptance is positive --> q is injected into the node
                 S += std::pow(V,2) * Complex(-**(shuntPtr->mConductancePerUnit), **(shuntPtr->mSusceptancePerUnit));
 
-		// TODO: check whether S_inj_to_other+S_load should be stored here in sol_P and sol_Q or rather S_inj
+		// TODO: check whether S_inj_to_other should be stored here in sol_P and sol_Q or rather S_inj
         sol_P(node_idx) = S.real();
         sol_Q(node_idx) = S.imag();
     }
