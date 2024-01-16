@@ -12,7 +12,7 @@
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
-#include <dpsim-models/Solver/EigenvalueCompInterface.h>
+#include <dpsim-models/Solver/EigenvalueDynamicCompInterface.h>
 
 namespace CPS {
 namespace EMT {
@@ -28,7 +28,7 @@ namespace Ph1 {
 		public MNASimPowerComp<Real>,
 		public Base::Ph1::Inductor,
 		public SharedFactory<Inductor>,
-		public EigenvalueCompInterface {
+		public EigenvalueDynamicCompInterface<Matrix> {
 	protected:
 		/// DC equivalent current source [A]
 		Real mEquivCurrent;
@@ -75,8 +75,10 @@ public:
 		/// Add MNA post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 		
-		// Implementation of EigenExtractCompInterface methods
-		void stampEigenvalueMatrices(Matrix& signMatrix, Matrix& discretizationMatrix, Matrix& branchNodeIncidenceMatrix) final;
+		// #### Implementation of eigenvalue dynamic component interface ####
+		void stampSignMatrix(Matrix& signMatrix, Complex coeffDP) final;
+		void stampDiscretizationMatrix(Matrix& discretizationMatrix, Complex coeffDP) final;
+		void stampBranchNodeIncidenceMatrix(Matrix& branchNodeIncidenceMatrix) final;
 		void setBranchIdx(UInt i) final;
 	private:
 		/// Branch index

@@ -129,10 +129,18 @@ void EMT::Ph1::Capacitor::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = mEquivCond * (**mIntfVoltage)(0, 0) + mEquivCurrent;
 }
 
-void EMT::Ph1::Capacitor::stampEigenvalueMatrices(Matrix &signMatrix, Matrix &discretizationMatrix, Matrix &branchNodeIncidenceMatrix)
+void EMT::Ph1::Capacitor::stampSignMatrix(Matrix &signMatrix, Complex coeffDP)
 {
 	signMatrix(mBranchIdx, mBranchIdx) = -1.0;
+}
+
+void EMT::Ph1::Capacitor::stampDiscretizationMatrix(Matrix &discretizationMatrix, Complex coeffDP)
+{
 	discretizationMatrix(mBranchIdx, mBranchIdx) = 2 * mEquivCond;
+}
+
+void EMT::Ph1::Capacitor::stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix)
+{
 	if (terminalNotGrounded(0))
 	{
 		branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(0)) = 1.0;
