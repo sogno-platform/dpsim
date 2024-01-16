@@ -65,6 +65,8 @@ public:
 
 		static MatrixComp returnNonZeroElements(const MatrixComp& mat);
 
+		static MatrixComp convertToComplex(const Matrix &realEquivalentMatrix);
+
 		static void setMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq = 1, Int freqIdx = 0);
 
   static void addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,

@@ -118,6 +118,32 @@ MatrixComp Math::returnNonZeroElements(const MatrixComp &mat)
 	return nonZeroMatrix;
 }
 
+MatrixComp Math::convertToComplex(const Matrix &realEquivalentMatrix)
+{
+	// The size of the complex matrix is half the size of the real matrix
+	int size = realEquivalentMatrix.rows() / 2;
+
+	// Create a complex matrix of the appropriate size
+	MatrixComp complexMatrix(size, size);
+
+	// Iterate over the complex matrix
+	for (int i = 0; i < size; ++i)
+	{
+		for (int j = 0; j < size; ++j)
+		{
+			// The real part is in the upper left quadrant of the real matrix
+			double realPart = realEquivalentMatrix(i, j);
+
+			// The imaginary part is in the lower left quadrant of the real matrix
+			double imagPart = realEquivalentMatrix(i + size, j);
+
+			// Assign the complex number to the complex matrix
+			complexMatrix(i, j) = std::complex<double>(realPart, imagPart);
+		}
+	}
+	return complexMatrix;
+}
+
 void Math::setMatrixElement(SparseMatrixRow& mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq, Int freqIdx) {
 	// Assume square matrix
 	Eigen::Index harmonicOffset = mat.rows() / maxFreq;
