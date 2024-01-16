@@ -9,26 +9,25 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
-#include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/DAEInterface.h>
-#include <dpsim-models/Solver/MNATearInterface.h>
+#include <dpsim-models/Solver/EigenvalueCompInterface.h>
 
 namespace CPS {
 namespace DP {
 namespace Ph1 {
-/// \brief Dynamic phasor resistor model
-class Resistor : public MNASimPowerComp<Complex>,
-                 public Base::Ph1::Resistor,
-                 public MNATearInterface,
-                 public DAEInterface,
-                 public SharedFactory<Resistor> {
-public:
-  /// Defines UID, name and logging level
-  Resistor(String uid, String name,
-           Logger::Level loglevel = Logger::Level::off);
-  /// Defines name and logging level
-  Resistor(String name, Logger::Level logLevel = Logger::Level::off)
-      : Resistor(name, name, logLevel) {}
+	/// \brief Dynamic phasor resistor model
+	class Resistor :
+		public MNASimPowerComp<Complex>,
+		public Base::Ph1::Resistor,
+		public MNATearInterface,
+		public DAEInterface,
+		public SharedFactory<Resistor>,
+		public EigenvalueCompInterface {
+	public:
+		/// Defines UID, name and logging level
+		Resistor(String uid, String name, Logger::Level loglevel = Logger::Level::off);
+		/// Defines name and logging level
+		Resistor(String name, Logger::Level logLevel = Logger::Level::off)
+			: Resistor(name, name, logLevel) { }
 
   SimPowerComp<Complex>::Ptr clone(String name);
 
@@ -80,16 +79,20 @@ public:
     std::vector<Attribute<Matrix>::Ptr> mLeftVectors;
   };
 
-  // #### MNA Tear Section ####
-  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix);
+		// #### DAE Section ####
+		///Residual Function for DAE Solver
+		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
+		///Voltage Getter
+		Complex daeInitialize();
 
-  // #### DAE Section ####
-  ///Residual Function for DAE Solver
-  void daeResidual(double ttime, const double state[], const double dstate_dt[],
-                   double resid[], std::vector<int> &off);
-  ///Voltage Getter
-  Complex daeInitialize();
-};
-} // namespace Ph1
-} // namespace DP
-} // namespace CPS
+		// #### Implementation of eigenvalue component interface ####
+		void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
+		void setBranchIdx(UInt i) override;
+
+	private:
+		/// Branch index
+		UInt mBranchIdx;
+	};
+}
+}
+}

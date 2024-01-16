@@ -72,7 +72,7 @@ void EMT::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(
   }
 }
 
-void EMT::Ph1::VoltageSource::stampEigenvalueMatrices(Matrix &signMatrix, Matrix &discretizationMatrix, Matrix &branchNodeIncidenceMatrix)
+void EMT::Ph1::VoltageSource::stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix)
 {
 	if (terminalNotGrounded(0))
 	{

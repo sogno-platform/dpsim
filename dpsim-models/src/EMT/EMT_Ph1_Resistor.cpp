@@ -114,7 +114,7 @@ void EMT::Ph1::Resistor::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / **mResistance;
 }
 
-void EMT::Ph1::Resistor::stampEigenvalueMatrices(Matrix &signMatrix, Matrix &discretizationMatrix, Matrix &branchNodeIncidenceMatrix)
+void EMT::Ph1::Resistor::stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix)
 {
 	if (terminalNotGrounded(0))
 	{

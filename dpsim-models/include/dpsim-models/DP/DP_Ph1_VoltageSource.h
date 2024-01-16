@@ -10,40 +10,41 @@
 
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Signal/CosineFMGenerator.h>
-#include <dpsim-models/Signal/FrequencyRampGenerator.h>
-#include <dpsim-models/Signal/SignalGenerator.h>
-#include <dpsim-models/Signal/SineWaveGenerator.h>
-#include <dpsim-models/Solver/DAEInterface.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/EigenvalueCompInterface.h>
 
 namespace CPS {
 namespace DP {
 namespace Ph1 {
-/// \brief Ideal Voltage source model
-///
-/// This component uses a SignalGenerator instance to produce an output signal on mIntfVoltage.
-/// The signal generator can be configured to produce different signal shapes
-/// By default or when the setParameters(Complex voltageRef, Real srcFreq = 0.0) function is used to configure this VoltageSource,
-/// the SineWaveGenerator will be used. The frequency of the sine wave can be modified through the mSrcFreq attribute while the
-/// magnitude and phase of the wave are derived from the magnitude and phase of the mVoltageRef attribute. Refer to the formula
-/// in SineWaveGenerator.cpp for further details.
-/// When one of the other setParameters functions is used to configure this VoltageSource, the output signal will not react to changes in
-/// mVoltageRef or mSrcFreq. Instead, only the parameters given in the setParameters call are used to produce the signal.
-///
-/// This model uses modified nodal analysis to represent an ideal voltage source.
-/// For a voltage source between nodes j and k, a new variable
-/// (current across the voltage source) is added to the left side vector
-/// as unkown and it is taken into account for the equation of node j as
-/// positve and for the equation of node k as negative. Moreover
-/// a new equation ej - ek = V is added to the problem.
-class VoltageSource : public MNASimPowerComp<Complex>,
-                      public DAEInterface,
-                      public SharedFactory<VoltageSource> {
-private:
-  ///
-  void updateVoltage(Real time);
-  ///
-  CPS::Signal::SignalGenerator::Ptr mSrcSig;
+	/// \brief Ideal Voltage source model
+	///
+	/// This component uses a SignalGenerator instance to produce an output signal on mIntfVoltage.
+	/// The signal generator can be configured to produce different signal shapes
+	/// By default or when the setParameters(Complex voltageRef, Real srcFreq = 0.0) function is used to configure this VoltageSource,
+	/// the SineWaveGenerator will be used. The frequency of the sine wave can be modified through the mSrcFreq attribute while the
+	/// magnitude and phase of the wave are derived from the magnitude and phase of the mVoltageRef attribute. Refer to the formula
+	/// in SineWaveGenerator.cpp for further details.
+	/// When one of the other setParameters functions is used to configure this VoltageSource, the output signal will not react to changes in
+	/// mVoltageRef or mSrcFreq. Instead, only the parameters given in the setParameters call are used to produce the signal.
+	///
+	/// This model uses modified nodal analysis to represent an ideal voltage source.
+	/// For a voltage source between nodes j and k, a new variable
+	/// (current across the voltage source) is added to the left side vector
+	/// as unkown and it is taken into account for the equation of node j as
+	/// positve and for the equation of node k as negative. Moreover
+	/// a new equation ej - ek = V is added to the problem.
+	class VoltageSource :
+		public MNASimPowerComp<Complex>,
+		public DAEInterface,
+		public SharedFactory<VoltageSource>,
+		public EigenvalueCompInterface {
+	private:
+		///
+		void updateVoltage(Real time);
+		///
+		CPS::Signal::SignalGenerator::Ptr mSrcSig;
+	public:
+		const CPS::Attribute<Complex>::Ptr mVoltageRef;
+		const CPS::Attribute<Real>::Ptr mSrcFreq;
 
 public:
   const CPS::Attribute<Complex>::Ptr mVoltageRef;
@@ -124,34 +125,20 @@ public:
     }
     void execute(Real time, Int timeStepCount);
 
-  private:
-    VoltageSource &mVoltageSource;
-  };
+		// #### DAE Section ####
+		/// Residual function for DAE Solver
+		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
+		///Voltage Getter
+		Complex daeInitialize();
 
-  class MnaPostStepHarm : public CPS::Task {
-  public:
-    MnaPostStepHarm(VoltageSource &voltageSource,
-                    const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
-        : Task(**voltageSource.mName + ".MnaPostStepHarm"),
-          mVoltageSource(voltageSource), mLeftVectors(leftVectors) {
-      for (UInt i = 0; i < mLeftVectors.size(); i++)
-        mAttributeDependencies.push_back(mLeftVectors[i]);
-      mModifiedAttributes.push_back(mVoltageSource.mIntfCurrent);
-    }
-    void execute(Real time, Int timeStepCount);
+		// #### Implementation of eigenvalue component interface ####
+		void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
+		void setBranchIdx(UInt i) override;
 
-  private:
-    VoltageSource &mVoltageSource;
-    std::vector<Attribute<Matrix>::Ptr> mLeftVectors;
-  };
-
-  // #### DAE Section ####
-  /// Residual function for DAE Solver
-  void daeResidual(double ttime, const double state[], const double dstate_dt[],
-                   double resid[], std::vector<int> &off);
-  ///Voltage Getter
-  Complex daeInitialize();
-};
-} // namespace Ph1
-} // namespace DP
-} // namespace CPS
+	private:
+		/// Branch index
+		UInt mBranchIdx;
+	};
+}
+}
+}

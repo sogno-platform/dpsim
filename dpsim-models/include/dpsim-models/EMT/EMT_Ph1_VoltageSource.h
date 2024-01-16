@@ -66,8 +66,8 @@ public:
 		/// Add MNA post step dependencies
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 
-		// Implementation of EigenExtractCompInterface methods
-		void stampEigenvalueMatrices(Matrix& signMatrix, Matrix& discretizationMatrix, Matrix& branchNodeIncidenceMatrix) final;
+		// #### Implementation of eigenvalue component interface ####
+		void stampBranchNodeIncidenceMatrix(Matrix& branchNodeIncidenceMatrix) final;
 		void setBranchIdx(UInt i) final;
 	private:
 		/// Branch index
