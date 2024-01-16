@@ -139,8 +139,6 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 }
 
 void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
-	SPDLOG_LOGGER_INFO(mSLog, "TEST");
-	mSLog->flush();
 	// calculate matrix stamp
 	mY_element = MatrixComp(2, 2);
 	Complex y = Complex(1, 0) / mLeakagePerUnit;
