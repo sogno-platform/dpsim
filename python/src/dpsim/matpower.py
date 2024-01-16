@@ -402,7 +402,7 @@ class Reader:
 
             gen_model = self.mpc_dyn_gen_data['model'][gen_dyn_row_idx]
             gen_model=4
-            gen_baseS = self.mpc_dyn_gen_data['BaseS'][gen_dyn_row_idx]*mw_w 
+            gen_baseS = self.mpc_dyn_gen_data['BaseS'][gen_dyn_row_idx] * mw_w 
             H = self.mpc_dyn_gen_data['H'][gen_dyn_row_idx]
             Ra = self.mpc_dyn_gen_data['Ra'][gen_dyn_row_idx]
             #Ll = self.mpc_dyn_gen_data['Xl'][gen_dyn_row_idx]
@@ -708,7 +708,7 @@ class Reader:
             #set terminal power of generator in dpsim
             self.system.component(gen_name).get_terminal(index=0).set_power(-complex_power)
             
-    def get_pf_results(self):
+    def get_pf_results(self, decimals=5):
         pf_results = pd.DataFrame(columns=['Bus', 'Vm [pu]', 'Va [°]', 'P [MW]', 'Q [MVAr]'])
         for i in range(self.mpc_bus_data.shape[0]):
             node_name = "N" + str(self.mpc_bus_data['bus_i'][i]) #ex. N5
@@ -722,10 +722,10 @@ class Reader:
                 q_gen = gen_data['Qg'].values[0]
 
             pf_results.loc[i] = ([node_name] 
-                         + [self.mpc_bus_data['Vm'][i]] 
-                         + [self.mpc_bus_data['Va'][i]]
-                         + [p_gen - self.mpc_bus_data['Pd'][i]]
-                         + [q_gen - self.mpc_bus_data['Qd'][i]])
+                         + [round(self.mpc_bus_data['Vm'][i], decimals)] 
+                         + [round(self.mpc_bus_data['Va'][i], decimals)]
+                         + [round(p_gen - self.mpc_bus_data['Pd'][i] - self.mpc_bus_data['Gs'][i] * (self.mpc_bus_data['Vm'][i] ** 2), decimals)]
+                         + [round(q_gen - self.mpc_bus_data['Qd'][i] + self.mpc_bus_data['Bs'][i] * (self.mpc_bus_data['Vm'][i] ** 2), decimals)])
             
         return pf_results
         
