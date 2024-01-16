@@ -321,20 +321,14 @@ class Reader:
                 # Secondary side is tbus
                 # In matpower impedaces are referred to tbus
                 
-                # 
                 trafo_num = trafo_num + 1
                 transf_name = "transformer%s_%s-%s" %(trafo_num, fbus_index, tbus_index)
                 
-                # get transformer power and voltages
-                # Matpower: Used to specify branch flow limits. By default these are limits on apparent power with units in MV
-                transf_s = self.mpc_branch_data.at[index,'rateA'] * mw_w 
-                primary_V = tmp_fbus['Vm'][fbus_index-1] * fbus_baseV
-                secondary_V = tmp_tbus['Vm'][tbus_index-1] * tbus_baseV
-
-                #is there if the second condition in upper if is false: not(fbus_baseV==tbus_baseV)
+                # ratio==0 means ratio==1
                 if (branch_ratio==0):
                     branch_ratio=1
-                    
+                
+                # TODO: For transformation of Impedances a ratio with angle shift has to be used!     
                 transf_ratioAbs = branch_ratio * fbus_baseV / tbus_baseV
                 
                 # From MATPOWER-manual taps at “from” bus,  impedance at “to” bus,  i.e.  ifr=x=b= 0,tap=|Vf|/|Vt|
@@ -342,16 +336,18 @@ class Reader:
                 transf_baseZ = tbus_baseV * tbus_baseV / (self.mpc_base_power_MVA)
 
                 # DPsim convention: impedance values must be referred to high voltage side (and base voltage set to higher voltage)
-                if primary_V > secondary_V:
+                if fbus_baseV > tbus_baseV:
+                    # HV side is fbus_baseV
                     # impedances are referred to LV side --> change side 
                     transf_baseV = fbus_baseV
                     transf_r = self.mpc_branch_data.at[index,'r'] * (transf_ratioAbs**2) * transf_baseZ
                     transf_x = self.mpc_branch_data.at[index,'x'] * (transf_ratioAbs**2) * transf_baseZ
-                    transf_l = transf_x / self.mpc_omega   
+                    transf_l = transf_x / self.mpc_omega
                 else:
+                    # HV side is tbus_baseV
                     transf_baseV = tbus_baseV
-                    transf_r = self.mpc_branch_data.at[index,'r']* transf_baseZ * (branch_ratio**2)
-                    transf_x = self.mpc_branch_data.at[index,'x']* transf_baseZ * (branch_ratio**2)
+                    transf_r = self.mpc_branch_data.at[index,'r'] * transf_baseZ * (branch_ratio**2)
+                    transf_x = self.mpc_branch_data.at[index,'x'] * transf_baseZ * (branch_ratio**2)
                     transf_l = transf_x / self.mpc_omega
                 
                 # create dpsim component
