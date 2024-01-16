@@ -36,30 +36,31 @@
 #define SWITCH_NUM sizeof(std::size_t) * 8
 
 namespace DPsim {
-/// Solver class using Modified Nodal Analysis (MNA).
-template <typename VarType> class MnaSolver : public Solver {
-protected:
-  // #### General simulation settings ####
-  /// Simulation domain, which can be dynamic phasor (DP) or EMT
-  CPS::Domain mDomain;
-  /// Number of network and virtual nodes, single line equivalent
-  UInt mNumNodes = 0;
-  /// Number of network nodes, single line equivalent
-  UInt mNumNetNodes = 0;
-  /// Number of virtual nodes, single line equivalent
-  UInt mNumVirtualNodes = 0;
-  /// Number of network and virtual nodes, considering individual phases
-  UInt mNumMatrixNodeIndices = 0;
-  /// Number of network nodes, considering individual phases
-  UInt mNumNetMatrixNodeIndices = 0;
-  /// Number of virtual nodes, considering individual phases
-  UInt mNumVirtualMatrixNodeIndices = 0;
-  /// Number of nodes, excluding the primary frequency
-  UInt mNumHarmMatrixNodeIndices = 0;
-  /// Total number of network and virtual nodes, considering individual phases and additional frequencies
-  UInt mNumTotalMatrixNodeIndices = 0;
-  /// List of index pairs of varying matrix entries
-  std::vector<std::pair<UInt, UInt>> mListVariableSystemMatrixEntries;
+	/// Solver class using Modified Nodal Analysis (MNA).
+	template <typename VarType>
+	class MnaSolver : public Solver {		
+	protected:
+		// #### General simulation settings ####
+		/// Simulation domain, which can be dynamic phasor (DP) or EMT
+		CPS::Domain mDomain;
+		/// Number of network and virtual nodes, single line equivalent
+		UInt mNumNodes = 0;
+		/// Number of network nodes, single line equivalent
+		UInt mNumNetNodes = 0;
+		/// Number of virtual nodes, single line equivalent
+		UInt mNumVirtualNodes = 0;
+		/// Number of network and virtual nodes, considering individual phases
+		UInt mNumMatrixNodeIndices = 0;
+		/// Number of network nodes, considering individual phases
+		UInt mNumNetMatrixNodeIndices = 0;
+		/// Number of virtual nodes, considering individual phases
+		UInt mNumVirtualMatrixNodeIndices = 0;
+		/// Number of nodes, excluding the primary frequency
+		UInt mNumHarmMatrixNodeIndices = 0;
+		/// Total number of network and virtual nodes, considering individual phases and additional frequencies
+		UInt mNumTotalMatrixNodeIndices = 0;
+		/// List of index pairs of varying matrix entries
+		std::vector<std::pair<UInt, UInt>> mListVariableSystemMatrixEntries;
 
   /// System topology
   CPS::SystemTopology mSystem;
@@ -123,7 +124,10 @@ protected:
   std::vector<Real> mRecomputationTimes;
 
 		// #### Eigenvalue extraction ####
-		MNAEigenvalueExtractor mMNAEigenvalueExtractor;
+		// Define MatrixType as an alias for Matrix if VarType is Real, otherwise define it as an alias for MatrixComp
+		using MatrixType = typename std::conditional<std::is_same<VarType, Real>::value, Matrix, MatrixComp>::type;
+		MNAEigenvalueExtractor<MatrixType> mMNAEigenvalueExtractor;
+
 		/// Constructor should not be called by users but by Simulation
 		MnaSolver(String name,
 			CPS::Domain domain = CPS::Domain::DP,

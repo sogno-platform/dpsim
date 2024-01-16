@@ -426,10 +426,28 @@ void Simulation::extractEigenvalues()
 	// TODO: [Georgii] throw exceptions for multiple solvers and for non-supported solver types
 	if (mSolvers.size() == 1)
 	{
-		auto mnaSolver = std::dynamic_pointer_cast<DPsim::MnaSolver<Real>>(mSolvers[0]);
-		if (mnaSolver)
+		switch (mDomain)
 		{
-			mnaSolver->extractEigenvalues();
+		case Domain::SP:
+			break; // SP domain is not supported
+		case Domain::DP:
+		{
+			auto mnaComplexSolver = std::dynamic_pointer_cast<DPsim::MnaSolver<Complex>>(mSolvers[0]);
+			if (mnaComplexSolver)
+			{
+				mnaComplexSolver->extractEigenvalues();
+			}
+			break;
+		}
+		case Domain::EMT:
+		{
+			auto mnaRealSolver = std::dynamic_pointer_cast<DPsim::MnaSolver<Real>>(mSolvers[0]);
+			if (mnaRealSolver)
+			{
+				mnaRealSolver->extractEigenvalues();
+			}
+			break;
+		}
 		}
 	}
 }

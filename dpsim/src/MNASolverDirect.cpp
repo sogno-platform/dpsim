@@ -390,7 +390,7 @@ template <typename VarType>
 void MnaSolverDirect<VarType>::extractEigenvalues()
 {
 	MnaSolver<VarType>::extractEigenvalues();
-	MnaSolver<VarType>::mMNAEigenvalueExtractor.extractEigenvalues(((Matrix)mSwitchedMatrices[mCurrentSwitchStatus][0]), Solver::mTimeStep);
+	MnaSolver<VarType>::mMNAEigenvalueExtractor.extractEigenvalues(((Matrix)mSwitchedMatrices[mCurrentSwitchStatus][0]));
 }
 
 template <typename VarType>

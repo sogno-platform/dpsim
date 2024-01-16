@@ -361,7 +361,7 @@ template <typename VarType> void MnaSolver<VarType>::identifyTopologyObjects() {
 template <typename VarType>
 void MnaSolver<VarType>::extractEigenvalues() 
 {
-	mMNAEigenvalueExtractor.initialize(mSystem, mNumMatrixNodeIndices);
+	mMNAEigenvalueExtractor.initialize(mSystem, mNumMatrixNodeIndices, Solver::mTimeStep);
 }
 
 template <typename VarType>
