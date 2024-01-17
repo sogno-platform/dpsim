@@ -162,16 +162,19 @@ class Reader:
             self.process_mpc_dyn()        
 
         # get the correct module to be used (dpsimpy.sp, dpsimpy.dp or dpsimpy.emt) 
-        dpsimpy_components = None
+        self.dpsimpy_components = None
         if (self.domain == Domain.PF or self.domain == Domain.SP):
-            dpsimpy_components = dpsimpy.sp.ph1
-            dpsimpy_components.SimNode = getattr(dpsimpy.sp, "SimNode")
+            self.dpsimpy_components = dpsimpy.sp.ph1
+            self.dpsimpy_components.SimNode = getattr(dpsimpy.sp, "SimNode")
+            self.dpsimpy_components.Switch = getattr(dpsimpy.sp.ph1, "Switch")
         elif (self.domain == Domain.DP):
-            dpsimpy_components = dpsimpy.dp.ph1
-            dpsimpy_components.SimNode = getattr(dpsimpy.dp, "SimNode") 
+            self.dpsimpy_components = dpsimpy.dp.ph1
+            self.dpsimpy_components.SimNode = getattr(dpsimpy.dp, "SimNode")
+            self.dpsimpy_components.Switch = getattr(dpsimpy.dp.ph1, "Switch") 
         elif (self.domain == Domain.EMT):
-            dpsimpy_components = dpsimpy.emt.ph3
-            dpsimpy_components.SimNode = getattr(dpsimpy.emt, "SimNode")  
+            self.dpsimpy_components = dpsimpy.emt.ph3
+            self.dpsimpy_components.SimNode = getattr(dpsimpy.emt, "SimNode")  
+            self.dpsimpy_components.Switch = getattr(dpsimpy.emt.ph3, "SeriesSwitch") 
         else:
             raise Exception('ERROR: domain {} is not supported in dpsimpy'.format(self.domain))
             
@@ -197,9 +200,9 @@ class Reader:
                     bus_assets=list(self.mpc_bus_assets_dict[int(bus_index)])
                     
             if (self.domain == Domain.EMT):      
-                self.dpsimpy_busses_dict[bus_name] = dpsimpy_components.SimNode(bus_name, dpsimpy.PhaseType.ABC)
+                self.dpsimpy_busses_dict[bus_name] = self.dpsimpy_components.SimNode(bus_name, dpsimpy.PhaseType.ABC)
             else:
-                self.dpsimpy_busses_dict[bus_name] = dpsimpy_components.SimNode(bus_name, dpsimpy.PhaseType.Single)                
+                self.dpsimpy_busses_dict[bus_name] = self.dpsimpy_components.SimNode(bus_name, dpsimpy.PhaseType.Single)                
                
             # for each bus type create corresponding dpsimpy component
             # 1 = PQ, 2 = PV, 3 = ref, 4 = isolated
@@ -209,33 +212,32 @@ class Reader:
             if bus_type == 1:
                 if not bus_assets: 
                     # aggregated load
-                    self.map_energy_consumer(index, bus_index, dpsimpy_components, bus_type=dpsimpy.PowerflowBusType.PQ)
+                    self.map_energy_consumer(index, bus_index, bus_type=dpsimpy.PowerflowBusType.PQ)
                     
                 else:
                     for i, comp in enumerate(bus_assets): 
                         # WARN: now the loads are created and the first load is initialized with the total power P_d Q_d!!!!!!!!                       
                         if i==0:
-                            self.map_energy_consumer(index, bus_index, dpsimpy_components, load_name=comp, bus_type=dpsimpy.PowerflowBusType.PQ)
+                            self.map_energy_consumer(index, bus_index, load_name=comp, bus_type=dpsimpy.PowerflowBusType.PQ)
                         else:
                             load_baseV = self.mpc_bus_data.at[index,'baseKV'] * kv_v
-                            self.dpsimpy_comp_dict[comp] = [dpsimpy_components.Load(comp, log_level)]
+                            self.dpsimpy_comp_dict[comp] = [self.dpsimpy_components.Load(comp, log_level)]
                             self.dpsimpy_comp_dict[comp][0].set_parameters(0, 0, load_baseV)
                             self.dpsimpy_comp_dict[comp].append([self.dpsimpy_busses_dict[bus_name]])
 
                 #shunts
-                self.map_shunt(index, bus_index, dpsimpy_components)
+                self.map_shunt(index, bus_index)
                     
             # Generators
             elif bus_type == 2:
                 # map SG
-                self.map_synchronous_machine(index, bus_index, dpsimpy_components,
-                                             with_pss=with_pss, with_tg=with_tg, with_avr=with_avr)
+                self.map_synchronous_machine(index, bus_index, with_pss=with_pss, with_tg=with_tg, with_avr=with_avr)
                 
                 # check if there is a load connected to PV bus (and create it)
-                self.map_energy_consumer(index, bus_index, dpsimpy_components, bus_type=dpsimpy.PowerflowBusType.PV)
+                self.map_energy_consumer(index, bus_index, bus_type=dpsimpy.PowerflowBusType.PV)
 
                 #shunts
-                self.map_shunt(index, bus_index, dpsimpy_components)
+                self.map_shunt(index, bus_index)
 
             # Slack bus
             elif bus_type == 3:
@@ -246,14 +248,14 @@ class Reader:
                 # # TODO implement initial reactive power for slack in Dpsim.
                 
                 #self.map_network_injection(index, bus_index, map_network_injection)
-                self.map_synchronous_machine(index, bus_index, dpsimpy_components, bus_type=dpsimpy.PowerflowBusType.VD,
+                self.map_synchronous_machine(index, bus_index, bus_type=dpsimpy.PowerflowBusType.VD,
                                              with_pss=with_pss, with_tg=with_tg, with_avr=with_avr)
 
                 # check if there is a load connected to slack bus (and create it)
-                self.map_energy_consumer(index, bus_index, dpsimpy_components, bus_type=dpsimpy.PowerflowBusType.VD)
+                self.map_energy_consumer(index, bus_index, bus_type=dpsimpy.PowerflowBusType.VD)
                 
                 #shunts
-                self.map_shunt(index, bus_index, dpsimpy_components)
+                self.map_shunt(index, bus_index)
                     
             #isolated
             elif bus_type == 4:
@@ -301,7 +303,7 @@ class Reader:
                 line_g = 0 # line conductance is not included in mpc
                 
                 # create dpsim object
-                self.dpsimpy_comp_dict[line_name] = [dpsimpy_components.PiLine(line_name, log_level)]
+                self.dpsimpy_comp_dict[line_name] = [self.dpsimpy_components.PiLine(line_name, log_level)]
                 if (self.domain==Domain.EMT):
                     self.dpsimpy_comp_dict[line_name][0].set_parameters(dpsimpy.Math.single_phase_parameter_to_three_phase(line_r), 
                                                                         dpsimpy.Math.single_phase_parameter_to_three_phase(line_l), 
@@ -351,7 +353,7 @@ class Reader:
                     transf_l = transf_x / self.mpc_omega
                 
                 # create dpsim component
-                trafo = dpsimpy_components.Transformer(transf_name, log_level)                
+                trafo = self.dpsimpy_components.Transformer(transf_name, log_level)                
                 if (self.domain==Domain.EMT):
                     trafo.set_parameters(fbus_baseV, tbus_baseV, np.abs(transf_ratioAbs), np.angle(transf_ratioAbs), 
                                          dpsimpy.Math.single_phase_parameter_to_three_phase(transf_r), 
@@ -375,7 +377,7 @@ class Reader:
     
         return bus_name
     
-    def map_synchronous_machine(self, index, bus_index, dpsimpy_components, bus_type=dpsimpy.PowerflowBusType.PV,
+    def map_synchronous_machine(self, index, bus_index, bus_type=dpsimpy.PowerflowBusType.PV,
                                 with_pss=True, with_tg=True, with_avr=True):
         #
         gen_name = "Gen_N" + str(bus_index)
@@ -390,7 +392,7 @@ class Reader:
         
         gen = None
         if (self.domain == Domain.PF):
-            gen = dpsimpy_components.SynchronGenerator(gen_name, self.log_level)
+            gen = self.dpsimpy_components.SynchronGenerator(gen_name, self.log_level)
             gen.set_parameters(gen_baseS, gen_baseV, gen_p, gen_v, bus_type, gen_q)
             gen.set_base_voltage(gen_baseV) 
             gen.modify_power_flow_bus_type(bus_type)          
@@ -419,20 +421,20 @@ class Reader:
             Lq_s = self.mpc_dyn_gen_data['Xq_s'][gen_dyn_row_idx]
                 
             if (gen_model==3):
-                gen = dpsimpy_components.SynchronGenerator3OrderVBR(gen_name, self.log_level)
+                gen = self.dpsimpy_components.SynchronGenerator3OrderVBR(gen_name, self.log_level)
                 gen.set_operational_parameters_per_unit(nom_power=gen_baseS, nom_voltage=gen_baseV, nom_frequency=self.mpc_freq, 
                                                         H=H, Ld=Ld, Lq=Lq, L0=Ll, Ld_t=Ld_t, Td0_t=Td0_t)
             elif (gen_model==4):
-                gen = dpsimpy_components.SynchronGenerator4OrderVBR(gen_name, self.log_level)
+                gen = self.dpsimpy_components.SynchronGenerator4OrderVBR(gen_name, self.log_level)
                 gen.set_operational_parameters_per_unit(nom_power=gen_baseS, nom_voltage=gen_baseV, nom_frequency=self.mpc_freq, 
                                         H=H, Ld=Ld, Lq=Lq, L0=Ll, Ld_t=Ld_t, Lq_t=Lq_t, Td0_t=Td0_t, Tq0_t=Tq0_t)
             elif (gen_model==5):
-                gen = dpsimpy_components.SynchronGenerator5OrderVBR(gen_name, self.log_level)
+                gen = self.dpsimpy_components.SynchronGenerator5OrderVBR(gen_name, self.log_level)
                 gen.set_operational_parameters_per_unit(nom_power=gen_baseS, nom_voltage=gen_baseV, nom_frequency=self.mpc_freq, 
                                         H=H, Ld=Ld, Lq=Lq, L0=Ll, Ld_t=Ld_t, Lq_t=Lq_t, Td0_t=Td0_t, Tq0_t=Tq0_t,
                                         Ld_s=Ld_s, Lq_s=Lq_s, Td0_s=Td0_s, Tq0_s=Tq0_s, Taa=0)
             elif (gen_model==6):
-                gen = dpsimpy_components.SynchronGenerator6aOrderVBR(gen_name, self.log_level)
+                gen = self.dpsimpy_components.SynchronGenerator6aOrderVBR(gen_name, self.log_level)
                 gen.set_operational_parameters_per_unit(nom_power=gen_baseS, nom_voltage=gen_baseV, nom_frequency=self.mpc_freq, 
                                         H=H, Ld=Ld, Lq=Lq, L0=Ll, Ld_t=Ld_t, Lq_t=Lq_t, Td0_t=Td0_t, Tq0_t=Tq0_t,
                                         Ld_s=Ld_s, Lq_s=Lq_s, Td0_s=Td0_s, Tq0_s=Tq0_s, Taa=0)		
@@ -517,7 +519,7 @@ class Reader:
         self.dpsimpy_comp_dict[gen_name] = [gen]
         self.dpsimpy_comp_dict[gen_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)]]) # [to bus]
         
-    def map_energy_consumer(self, index, bus_index, dpsimpy_components, load_name=None, bus_type = dpsimpy.PowerflowBusType.PQ):
+    def map_energy_consumer(self, index, bus_index, load_name=None, bus_type = dpsimpy.PowerflowBusType.PQ):
         # check if there is a load connected to PV bus
         load_p = self.mpc_bus_data.at[index,'Pd'] * mw_w
         load_q = self.mpc_bus_data.at[index,'Qd'] * mw_w
@@ -537,9 +539,9 @@ class Reader:
         # create dpsim components
         load = None
         if self.domain in [Domain.PF, Domain.SP]:
-            load = dpsimpy_components.Load(load_name, self.log_level)
+            load = self.dpsimpy_components.Load(load_name, self.log_level)
         else:
-           load = dpsimpy_components.RXLoad(load_name, self.log_level)
+           load = self.dpsimpy_components.RXLoad(load_name, self.log_level)
         
         if (self.domain==Domain.EMT):
             load_p = dpsimpy.Math.single_phase_parameter_to_three_phase(load_p/3)
@@ -552,7 +554,7 @@ class Reader:
         self.dpsimpy_comp_dict[load_name] = [load]
         self.dpsimpy_comp_dict[load_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)]]) # [to bus]
     
-    def map_shunt(self, index, bus_index, dpsimpy_components):
+    def map_shunt(self, index, bus_index):
         # Gs in Matpower represents the MW demanded at V = 1.0 p.u., Bs the MVAr injected at V = 1.0 p.u.
         
         # check if there is a shunt connected to this bus
@@ -576,7 +578,7 @@ class Reader:
         shunt = None
         if (self.domain==Domain.PF):
             shunt_name = "Shunt_N" + bus_index
-            shunt = dpsimpy_components.Shunt(shunt_name, self.log_level)
+            shunt = self.dpsimpy_components.Shunt(shunt_name, self.log_level)
             shunt.set_parameters(gs, bs)
             shunt.set_base_voltage(bus_baseV)
             self.dpsimpy_comp_dict[shunt_name] = [shunt]
@@ -589,10 +591,10 @@ class Reader:
                 if (self.domain==Domain.EMT):
                     r = dpsimpy.Math.single_phase_parameter_to_three_phase(r)
                 shunt_name = "Shunt_Res_N" + bus_index
-                shunt_res = dpsimpy_components.Resistor(shunt_name, self.log_level)
+                shunt_res = self.dpsimpy_components.Resistor(shunt_name, self.log_level)
                 shunt_res.set_parameters(r)
                 self.dpsimpy_comp_dict[shunt_name] = [shunt_res]
-                self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)], dpsimpy_components.SimNode.gnd])
+                self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)], self.dpsimpy_components.SimNode.gnd])
             
             # convert susceptance->reactance and calculate equivalent inductance/capacitance
             x = 1 / bs
@@ -605,21 +607,21 @@ class Reader:
                     if (self.domain==Domain.EMT):
                         c = dpsimpy.Math.single_phase_parameter_to_three_phase(c)
                     shunt_name = "Shunt_Cap_N" + bus_index
-                    shunt_cap = dpsimpy_components.Capacitor(shunt_name, self.log_level)
+                    shunt_cap = self.dpsimpy_components.Capacitor(shunt_name, self.log_level)
                     shunt_cap.set_parameters(c)
                     self.dpsimpy_comp_dict[shunt_name] = [shunt_cap]
-                    self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)], dpsimpy_components.SimNode.gnd]) 
+                    self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)], self.dpsimpy_components.SimNode.gnd]) 
                 else:
                     l = -x / self.mpc_omega
                     if (self.domain==Domain.EMT):
                         l = dpsimpy.Math.single_phase_parameter_to_three_phase(l)
                     shunt_name = "ShuntInd_N" + bus_index
-                    shunt_ind = dpsimpy_components.Inductor(shunt_name, self.log_level)
+                    shunt_ind = self.dpsimpy_components.Inductor(shunt_name, self.log_level)
                     shunt_ind.set_parameters(l)
                     self.dpsimpy_comp_dict[shunt_name] = [shunt_ind]
-                    self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)], dpsimpy_components.SimNode.gnd]) 
+                    self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)], self.dpsimpy_components.SimNode.gnd]) 
         
-    def map_network_injection(self, index, bus_index, dpsimpy_components):
+    def map_network_injection(self, index, bus_index):
         
         self.inj = self.inj + 1
         extnet_name = "extnet%s" %self.inj
@@ -631,7 +633,7 @@ class Reader:
         if (self.domain == Domain.EMT):
             extnet_v = dpsimpy.Math.single_phase_variable_to_three_phase(extnet_v)
             
-        self.dpsimpy_comp_dict[extnet_name] = [dpsimpy_components.NetworkInjection(extnet_name, self.log_level)]
+        self.dpsimpy_comp_dict[extnet_name] = [self.dpsimpy_components.NetworkInjection(extnet_name, self.log_level)]
         self.dpsimpy_comp_dict[extnet_name][0].set_parameters(extnet_v)
         if (self.domain == Domain.PF):
             self.dpsimpy_comp_dict[extnet_name][0].set_base_voltage(extnet_baseV)
@@ -729,3 +731,16 @@ class Reader:
             
         return pf_results
         
+    def add_3ph_faut(self, node_name, switch_closed=1e-3, switch_open=1e18):
+        sw = None
+        if (self.domain==Domain.PF):
+            raise Exception('Faults can only be used for dynamic simulations!')
+        
+        fault_name = 'Fault_' + node_name
+        sw = self.dpsimpy_components.Switch(fault_name, self.log_level)
+        sw.set_parameters(switch_open, switch_closed)
+        sw.open()
+        self.dpsimpy_comp_dict[fault_name] = [sw]
+        self.dpsimpy_comp_dict[fault_name].append([self.dpsimpy_components.SimNode.gnd, self.dpsimpy_busses_dict[node_name]])
+        
+        return sw
