@@ -227,9 +227,5 @@ namespace DPsim {
 		Matrix& rightSideVector() { return mRightSideVector; }
 		///
 		virtual CPS::Task::List getTasks() override;
-
-		// #### Eigenvalue extraction ####
-		/// extract eigenvalues from power system matrix
-		virtual void extractEigenvalues();
 	};
 }

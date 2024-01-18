@@ -109,29 +109,14 @@ using MatrixFixedSizeComp = Eigen::Matrix<Complex, rows, cols, Eigen::ColMajor>;
 static const Complex jComp(0.0, 1.0);
 /// @endcond
 
-// ### Enumerations ###
-enum class NumericalMethod { Euler, Trapezoidal };
-enum class PhaseType { A, B, C, ABC, Single };
-enum class Domain { SP, DP, EMT };
-enum class PowerflowBusType { PV, PQ, VD, None };
-enum class GeneratorType {
-  PVNode,
-  IdealVoltageSource,
-  IdealCurrentSource,
-  TransientStability,
-  FullOrder,
-  FullOrderVBR,
-  SG6aOrderVBR,
-  SG6bOrderVBR,
-  SG5OrderVBR,
-  SG4OrderVBR,
-  SG3OrderVBR,
-  SG4OrderPCM,
-  SG4OrderTPM,
-  SG6OrderPCM,
-  None
-};
-enum class SGOrder { SG3Order, SG4Order, SG5Order, SG6aOrder, SG6bOrder };
+	// ### Enumerations ###
+	enum class NumericalMethod { Euler, Trapezoidal };
+	enum class PhaseType { A, B, C, ABC, Single };
+	enum class Domain { SP, DP, EMT };
+	enum class PowerflowBusType { PV, PQ, VD, None };
+	enum class GeneratorType {PVNode, IdealVoltageSource, IdealCurrentSource, TransientStability, FullOrder, FullOrderVBR, SG6aOrderVBR, SG6bOrderVBR, SG5OrderVBR, SG4OrderVBR, SG3OrderVBR, SG4OrderPCM, SG4OrderTPM, SG6OrderPCM, None};
+	enum class SGOrder {SG3Order, SG4Order, SG5Order, SG6aOrder, SG6bOrder};
+	enum class EigenvalueExtractionMode { Disabled, AtStart, AtEveryStep };
 
 // ### Exceptions ###
 class Exception : public std::exception {};

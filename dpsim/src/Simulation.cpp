@@ -141,33 +141,32 @@ template <typename VarType> void Simulation::createMNASolver() {
     if (subnets.size() > 1)
       copySuffix = "_" + std::to_string(net);
 
-    // TODO: In the future, here we could possibly even use different
-    // solvers for different subnets if deemed useful
-    if (mTearComponents.size() > 0) {
-      // Tear components available, use diakoptics
-      solver = std::make_shared<DiakopticsSolver<VarType>>(
-          **mName, subnets[net], mTearComponents, **mTimeStep, mLogLevel);
-    } else {
-      // Default case with lu decomposition from mna factory
-      solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
-                                                  mLogLevel, mDirectImpl,
-                                                  mSolverPluginName);
-      solver->setTimeStep(**mTimeStep);
-      solver->doSteadyStateInit(**mSteadyStateInit);
-      solver->doFrequencyParallelization(mFreqParallel);
-      solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
-      solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
-      solver->setSystem(subnets[net]);
-      solver->setSolverAndComponentBehaviour(mSolverBehaviour);
-      solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
-      solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
-      solver->setDirectLinearSolverConfiguration(
-          mDirectLinearSolverConfiguration);
-      solver->initialize();
-      solver->setMaxNumberOfIterations(mMaxIterations);
-    }
-    mSolvers.push_back(solver);
-  }
+		// TODO: In the future, here we could possibly even use different
+		// solvers for different subnets if deemed useful
+		if (mTearComponents.size() > 0) {
+			// Tear components available, use diakoptics
+			solver = std::make_shared<DiakopticsSolver<VarType>>(**mName,
+				subnets[net], mTearComponents, **mTimeStep, mLogLevel);
+		} else {
+			// Default case with lu decomposition from mna factory
+			solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
+												 mLogLevel, mDirectImpl, mSolverPluginName);
+			solver->setTimeStep(**mTimeStep);
+			solver->doSteadyStateInit(**mSteadyStateInit);
+			solver->doFrequencyParallelization(mFreqParallel);
+			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
+			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
+			solver->setSystem(subnets[net]);
+			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
+			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
+			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
+			solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
+			solver->setEigenvalueExtractionMode(mEigenvalueExtractionMode);
+			solver->initialize();
+			solver->setMaxNumberOfIterations(mMaxIterations);
+		}
+		mSolvers.push_back(solver);
+	}
 }
 
 void Simulation::sync() const {
@@ -356,11 +355,19 @@ void Simulation::start() {
     if (mLoggers.size() > 0)
       mLoggers[0]->log(0, 0);
 
-    // In dynamic simulations increase simulation time to calculate first results at t=timestep
-    mTime += **mTimeStep;
-  }
+		// In dynamic simulations increase simulation time to calculate first results at t=timestep
+		mTime += **mTimeStep;
+	}
 
-  mSimulationStartTimePoint = std::chrono::steady_clock::now();
+	if (mEigenvalueExtractionMode == CPS::EigenvalueExtractionMode::AtStart)
+	{
+		if (mSolvers.size() == 1)
+		{
+			mSolvers[0]->extractEigenvalues();
+		}		
+	}
+
+	mSimulationStartTimePoint = std::chrono::steady_clock::now();
 }
 
 void Simulation::stop() {
@@ -415,41 +422,6 @@ Real Simulation::step() {
   std::chrono::duration<double> diff = end - start;
   mStepTimes.push_back(diff.count());
   return mTime;
-}
-
-void Simulation::extractEigenvalues()
-{
-	if (!mInitialized)
-	{
-		initialize();
-	}
-	// TODO: [Georgii] throw exceptions for multiple solvers and for non-supported solver types
-	if (mSolvers.size() == 1)
-	{
-		switch (mDomain)
-		{
-		case Domain::SP:
-			break; // SP domain is not supported
-		case Domain::DP:
-		{
-			auto mnaComplexSolver = std::dynamic_pointer_cast<DPsim::MnaSolver<Complex>>(mSolvers[0]);
-			if (mnaComplexSolver)
-			{
-				mnaComplexSolver->extractEigenvalues();
-			}
-			break;
-		}
-		case Domain::EMT:
-		{
-			auto mnaRealSolver = std::dynamic_pointer_cast<DPsim::MnaSolver<Real>>(mSolvers[0]);
-			if (mnaRealSolver)
-			{
-				mnaRealSolver->extractEigenvalues();
-			}
-			break;
-		}
-		}
-	}
 }
 
 void Simulation::logStepTimes(String logName) {

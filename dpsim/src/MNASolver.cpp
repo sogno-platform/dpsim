@@ -96,7 +96,13 @@ template <typename VarType> void MnaSolver<VarType>::initialize() {
   SPDLOG_LOGGER_INFO(mSLog, "--- Initial system matrices and vectors ---");
   logSystemMatrices();
 
-  mSLog->flush();
+	if (Solver::mEigenvalueExtractionMode != CPS::EigenvalueExtractionMode::Disabled)
+	{
+		SPDLOG_LOGGER_INFO(mSLog, "--- Initialize eigenvalue extractor ---");
+		mMNAEigenvalueExtractor.initialize(mSystem, mNumMatrixNodeIndices, Solver::mTimeStep);
+	}
+
+	mSLog->flush();
 }
 
 template <> void MnaSolver<Real>::initializeComponents() {
@@ -356,12 +362,6 @@ template <typename VarType> void MnaSolver<VarType>::identifyTopologyObjects() {
         mSimSignalComps.push_back(sigComp);
     }
   }
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::extractEigenvalues() 
-{
-	mMNAEigenvalueExtractor.initialize(mSystem, mNumMatrixNodeIndices, Solver::mTimeStep);
 }
 
 template <typename VarType>

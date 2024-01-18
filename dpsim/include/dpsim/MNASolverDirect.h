@@ -166,6 +166,7 @@ protected:
   virtual ~MnaSolverDirect() = default;
 
 		// ### Eigenvalue extraction ###
+		/// Extract eigenvalues from power system conductance matrix
 		void extractEigenvalues() override;
 
 		/// Sets the linear solver to "implementation" and creates an object

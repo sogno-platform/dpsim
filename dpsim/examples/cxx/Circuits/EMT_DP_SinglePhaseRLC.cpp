@@ -47,8 +47,8 @@ void runEMT()
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::EMT);
+	sim.setEigenvalueExtractionMode(EigenvalueExtractionMode::AtStart);
 	sim.addLogger(logger);
-	sim.extractEigenvalues();
 
 	sim.run();
 }
@@ -97,8 +97,8 @@ void runDP()
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::DP);
-	sim.addLogger(logger);
-	sim.extractEigenvalues();
+	sim.setEigenvalueExtractionMode(EigenvalueExtractionMode::AtStart);
+	sim.addLogger(logger);	
 
 	sim.run();
 }

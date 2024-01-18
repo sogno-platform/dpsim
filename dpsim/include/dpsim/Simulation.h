@@ -161,59 +161,43 @@ public:
   /// Desctructor
   virtual ~Simulation() {}
 
-  // #### Simulation Settings ####
-  ///
-  void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
-  ///
-  void setTimeStep(Real timeStep) { **mTimeStep = timeStep; }
-  ///
-  void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
-  ///
-  void setDomain(CPS::Domain domain = CPS::Domain::DP) { mDomain = domain; }
-  ///
-  void setSolverType(Solver::Type solverType = Solver::Type::MNA) {
-    mSolverType = solverType;
-  }
-  /// set solver and component to initialization or simulation behaviour
-  void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) {
-    mSolverBehaviour = behaviour;
-  }
-  ///
-  void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) {
-    mDirectImpl = directImpl;
-  }
-  ///
-  void setDirectLinearSolverConfiguration(
-      const DirectLinearSolverConfiguration &configuration) {
-    mDirectLinearSolverConfiguration = configuration;
-  }
-  ///
-  void setMaxNumberOfIterations(int maxIterations) {
-    mMaxIterations = maxIterations;
-  }
-  ///
-  void doInitFromNodesAndTerminals(Bool f = true) {
-    mInitFromNodesAndTerminals = f;
-  }
-  ///
-  void doSplitSubnets(Bool splitSubnets = true) {
-    **mSplitSubnets = splitSubnets;
-  }
-  ///
-  void setTearingComponents(CPS::IdentifiedObject::List tearComponents =
-                                CPS::IdentifiedObject::List()) {
-    mTearComponents = tearComponents;
-  }
-  /// Set the scheduling method
-  void setScheduler(const std::shared_ptr<Scheduler> &scheduler) {
-    mScheduler = scheduler;
-  }
-  /// Compute phasors of different frequencies in parallel
-  void doFrequencyParallelization(Bool value) { mFreqParallel = value; }
-  ///
-  void doSystemMatrixRecomputation(Bool value) {
-    mSystemMatrixRecomputation = value;
-  }
+		// #### Simulation Settings ####
+		///
+		void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
+		///
+		void setTimeStep(Real timeStep) { **mTimeStep = timeStep; }
+		///
+		void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
+		///
+		void setDomain(CPS::Domain domain = CPS::Domain::DP) { mDomain = domain; }
+		///
+		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
+		///
+		void setEigenvalueExtractionMode(CPS::EigenvalueExtractionMode eigenvalueExtractionMode) { mEigenvalueExtractionMode = eigenvalueExtractionMode; }
+		/// set solver and component to initialization or simulation behaviour
+		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) { mSolverBehaviour = behaviour; }
+		///
+		void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) { mDirectImpl = directImpl; }
+		///
+		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration& configuration) { mDirectLinearSolverConfiguration = configuration;	}
+		///
+		void setMaxNumberOfIterations(int maxIterations) {mMaxIterations = maxIterations;}
+		///
+		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
+		///
+		void doSplitSubnets(Bool splitSubnets = true) { **mSplitSubnets = splitSubnets; }
+		///
+		void setTearingComponents(CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List()) {
+			mTearComponents = tearComponents;
+		}
+		/// Set the scheduling method
+		void setScheduler(const std::shared_ptr<Scheduler> &scheduler) {
+			mScheduler = scheduler;
+		}
+		/// Compute phasors of different frequencies in parallel
+		void doFrequencyParallelization(Bool value) { mFreqParallel = value; }
+		///
+		void doSystemMatrixRecomputation(Bool value) { mSystemMatrixRecomputation = value; }
 
   // #### Initialization ####
   /// activate steady state initialization
@@ -240,10 +224,6 @@ public:
   void sync() const;
   /// Create the schedule for the independent tasks
   void schedule();
-
-		// ### Eigenvalue extraction ###
-		/// Extract eigenvalues from power system conductance matrix
-		void extractEigenvalues();
 
 		/// Schedule an event in the simulation
 		void addEvent(Event::Ptr e) {
@@ -289,8 +269,11 @@ public:
   CPS::AttributeBase::Ptr getIdObjAttribute(const String &comp,
                                             const String &attr);
 
-  void logIdObjAttribute(const String &comp, const String &attr);
-  /// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
-  void logAttribute(String name, CPS::AttributeBase::Ptr attr);
-};
-} // namespace DPsim
+		void logIdObjAttribute(const String &comp, const String &attr);
+		/// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
+		void logAttribute(String name, CPS::AttributeBase::Ptr attr);
+
+		private:
+		CPS::EigenvalueExtractionMode mEigenvalueExtractionMode = CPS::EigenvalueExtractionMode::Disabled;
+	};
+}

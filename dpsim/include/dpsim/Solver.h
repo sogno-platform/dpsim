@@ -64,13 +64,15 @@ protected:
   /// Solver behaviour initialization or simulation
   Behaviour mBehaviour = Solver::Behaviour::Simulation;
 
-public:
-  Solver(String name, CPS::Logger::Level logLevel)
-      : mName(name), mLogLevel(logLevel),
-        mSLog(CPS::Logger::get(name + "_Solver", logLevel,
-                               CPS::Logger::Level::warn)) {}
+		/// Eigenvalue extraction type
+		CPS::EigenvalueExtractionMode mEigenvalueExtractionMode = CPS::EigenvalueExtractionMode::Disabled;
 
-  virtual ~Solver() {}
+	public:
+		Solver(String name, CPS::Logger::Level logLevel) :
+			mName(name),
+			mLogLevel(logLevel),
+			mSLog(CPS::Logger::get(name + "_Solver", logLevel, CPS::Logger::Level::warn)) {
+		}
 
   // #### Solver settings ####
   /// Solver types:
@@ -118,10 +120,19 @@ public:
   /// Log results
   virtual void log(Real time, Int timeStepCount){};
 
-  /// ### SynGen Interface ###
-  int mMaxIterations = 10;
-  void setMaxNumberOfIterations(int maxIterations) {
-    mMaxIterations = maxIterations;
-  }
-};
-} // namespace DPsim
+		// #### Simulation ####
+		/// Get tasks for scheduler
+		virtual CPS::Task::List getTasks() = 0;
+		/// Log results
+		virtual void log(Real time, Int timeStepCount) { };
+
+		/// ### SynGen Interface ###
+		int mMaxIterations = 10;
+		void setMaxNumberOfIterations(int maxIterations) {mMaxIterations = maxIterations;}
+
+		/// ### Eigenvalue Extraction ###
+		void setEigenvalueExtractionMode(CPS::EigenvalueExtractionMode eigenvalueExtractionMode) { mEigenvalueExtractionMode = eigenvalueExtractionMode; }
+		/// 
+		virtual void extractEigenvalues(){};
+	};
+}
