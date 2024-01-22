@@ -6,13 +6,6 @@ namespace DPsim
     MNAEigenvalueExtractor<MatrixType>::MNAEigenvalueExtractor() : mSLog(CPS::Logger::get("MNAEigenvalueExtractor", CPS::Logger::Level::info, CPS::Logger::Level::info)) {}
 
     template <typename MatrixType>
-    MNAEigenvalueExtractor<MatrixType>::MNAEigenvalueExtractor(const CPS::SystemTopology &topology, UInt numMatrixNodeIndices, Real timeStep)
-        : mSLog(CPS::Logger::get("MNAEigenvalueExtractor", CPS::Logger::Level::info, CPS::Logger::Level::info))
-    {
-        initialize(topology, numMatrixNodeIndices, timeStep);
-    }
-
-    template <typename MatrixType>
     void MNAEigenvalueExtractor<MatrixType>::initialize(const CPS::SystemTopology &topology, UInt numMatrixNodeIndices, Real timeStep)
     {
         setParameters(topology, timeStep);

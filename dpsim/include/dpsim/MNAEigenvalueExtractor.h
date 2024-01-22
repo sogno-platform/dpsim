@@ -13,7 +13,6 @@ namespace DPsim
 	{
 	public:
 		MNAEigenvalueExtractor();
-		MNAEigenvalueExtractor(const CPS::SystemTopology &topology, UInt numMatrixNodeIndices, Real timeStep);
 
 		void initialize(const CPS::SystemTopology &topology, UInt numMatrixNodeIndices, Real timeStep);
 		void extractEigenvalues(const Matrix &powerSystemMatrix);		
