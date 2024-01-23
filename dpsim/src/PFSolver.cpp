@@ -172,29 +172,14 @@ void PFSolver::determinePFBusType() {
 			SPDLOG_LOGGER_INFO(mSLog, "{}: no component connected -> set as PQ bus", node->name());
 			mPQBusIndices.push_back(node->matrixNodeIndex());
 			mPQBuses.push_back(node);
-		} // only PV type component connected -> set as PV bus
-		else if (connectedPV && !connectedPQ && !connectedVD) {
-			SPDLOG_LOGGER_INFO(mSLog, "{}: only PV type component connected -> set as PV bus", node->name());
+		}
+		else if (connectedPV && !connectedVD) {
+			SPDLOG_LOGGER_INFO(mSLog, "{}: PV type component connected -> set as PV bus", node->name());
 			mPVBusIndices.push_back(node->matrixNodeIndex());
 			mPVBuses.push_back(node);
-		} // PV and PQ type component connected -> set as PV bus (TODO: bus type should be modifiable by user afterwards)
-		else if (connectedPV && connectedPQ && !connectedVD) {
-			SPDLOG_LOGGER_INFO(mSLog, "{}: PV and PQ type component connected -> set as PV bus", node->name());
-			mPVBusIndices.push_back(node->matrixNodeIndex());
-			mPVBuses.push_back(node);
-		} // only VD type component connected -> set as VD bus
-		else if (!connectedPV && !connectedPQ && connectedVD) {
-			SPDLOG_LOGGER_INFO(mSLog, "{}: only VD type component connected -> set as VD bus", node->name());
-			mVDBusIndices.push_back(node->matrixNodeIndex());
-			mVDBuses.push_back(node);
-		} // VD and PV type component connect -> set as VD bus
-		else if (connectedPV && !connectedPQ && connectedVD) {
-			SPDLOG_LOGGER_INFO(mSLog, "{}: VD and PV type component connect -> set as VD bus", node->name());
-			mVDBusIndices.push_back(node->matrixNodeIndex());
-			mVDBuses.push_back(node);
-		} // VD, PV and PQ type component connect -> set as VD bus
-		else if (connectedPV && connectedPQ && connectedVD) {
-			SPDLOG_LOGGER_INFO(mSLog, "{}: VD, PV and PQ type component connect -> set as VD bus", node->name());
+		}
+		else if (connectedVD) {
+			SPDLOG_LOGGER_INFO(mSLog, "{}: VD type component connected -> set as VD bus", node->name());
 			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
 		}
