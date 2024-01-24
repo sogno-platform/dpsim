@@ -426,159 +426,125 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment *line) {
   }
 }
 
-TopologicalPowerComp::Ptr
-Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
-  if (trans->PowerTransformerEnd.size() != 2) {
-    SPDLOG_LOGGER_WARN(
-        mSLog,
-        "PowerTransformer {} does not have exactly two windings, ignoring",
-        trans->name);
-    return nullptr;
-  }
-  SPDLOG_LOGGER_INFO(mSLog, "Found PowerTransformer {}", trans->name);
+TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* trans) {
+	if (trans->PowerTransformerEnd.size() != 2) {
+		SPDLOG_LOGGER_WARN(mSLog, "PowerTransformer {} does not have exactly two windings, ignoring", trans->name);
+		return nullptr;
+	}
+	SPDLOG_LOGGER_INFO(mSLog, "Found PowerTransformer {}", trans->name);
 
-  // assign transformer ends
-  CIMPP::PowerTransformerEnd *end1 = nullptr, *end2 = nullptr;
-  for (auto end : trans->PowerTransformerEnd) {
-    if (end->Terminal->sequenceNumber == 1)
-      end1 = end;
-    else if (end->Terminal->sequenceNumber == 2)
-      end2 = end;
-    else
-      return nullptr;
-  }
+	// assign transformer ends
+	CIMPP::PowerTransformerEnd* end1 = nullptr, *end2 = nullptr;
+	for (auto end : trans->PowerTransformerEnd) {
+		if (end->Terminal->sequenceNumber == 1) end1 = end;
+		else if (end->Terminal->sequenceNumber == 2) end2 = end;
+		else return nullptr;
+	}
 
-  // setting default values for non-set resistances and reactances
-  SPDLOG_LOGGER_INFO(mSLog, "    PowerTransformerEnd_1 {}", end1->name);
-  SPDLOG_LOGGER_INFO(mSLog, "    Srated={} Vrated={}",
-                     (float)end1->ratedS.value, (float)end1->ratedU.value);
-  try {
-    SPDLOG_LOGGER_INFO(mSLog, "       R={}", (float)end1->r.value);
-  } catch (ReadingUninitializedField *e1) {
-    end1->r.value = 1e-12;
-    SPDLOG_LOGGER_WARN(mSLog,
-                       "       Uninitialized value for PowerTrafoEnd1 setting "
-                       "default value of R={}",
-                       (float)end1->r.value);
-  }
-  try {
-    SPDLOG_LOGGER_INFO(mSLog, "       X={}", (float)end1->x.value);
-  } catch (ReadingUninitializedField *e1) {
-    end1->x.value = 1e-12;
-    SPDLOG_LOGGER_WARN(mSLog,
-                       "       Uninitialized value for PowerTrafoEnd1 setting "
-                       "default value of X={}",
-                       (float)end1->x.value);
-  }
-  SPDLOG_LOGGER_INFO(mSLog, "    PowerTransformerEnd_2 {}", end2->name);
-  SPDLOG_LOGGER_INFO(mSLog, "    Srated={} Vrated={}",
-                     (float)end2->ratedS.value, (float)end2->ratedU.value);
-  try {
-    SPDLOG_LOGGER_INFO(mSLog, "       R={}", (float)end2->r.value);
-  } catch (ReadingUninitializedField *e1) {
-    end2->r.value = 1e-12;
-    SPDLOG_LOGGER_WARN(mSLog,
-                       "       Uninitialized value for PowerTrafoEnd2 setting "
-                       "default value of R={}",
-                       (float)end2->r.value);
-  }
-  try {
-    SPDLOG_LOGGER_INFO(mSLog, "       X={}", (float)end2->x.value);
-  } catch (ReadingUninitializedField *e1) {
-    end2->x.value = 1e-12;
-    SPDLOG_LOGGER_WARN(mSLog,
-                       "       Uninitialized value for PowerTrafoEnd2 setting "
-                       "default value of X={}",
-                       (float)end2->x.value);
-  }
+	// setting default values for non-set resistances and reactances
+	SPDLOG_LOGGER_INFO(mSLog, "    PowerTransformerEnd_1 {}", end1->name);
+    SPDLOG_LOGGER_INFO(mSLog, "    Srated={} Vrated={}", (float) end1->ratedS.value, (float) end1->ratedU.value);
+	try{
+		SPDLOG_LOGGER_INFO(mSLog, "       R={}", (float) end1->r.value);
+	}catch(ReadingUninitializedField* e1){
+		end1->r.value = 1e-12;
+        SPDLOG_LOGGER_WARN(mSLog, "       Uninitialized value for PowerTrafoEnd1 setting default value of R={}", (float) end1->r.value);
+	}
+	try{
+		SPDLOG_LOGGER_INFO(mSLog, "       X={}", (float) end1->x.value);
+	}catch(ReadingUninitializedField* e1){
+		end1->x.value = 1e-12;
+        SPDLOG_LOGGER_WARN(mSLog, "       Uninitialized value for PowerTrafoEnd1 setting default value of X={}", (float) end1->x.value);
+	}
+    SPDLOG_LOGGER_INFO(mSLog, "    PowerTransformerEnd_2 {}", end2->name);
+    SPDLOG_LOGGER_INFO(mSLog, "    Srated={} Vrated={}", (float) end2->ratedS.value, (float) end2->ratedU.value);
+	try{
+		SPDLOG_LOGGER_INFO(mSLog, "       R={}", (float) end2->r.value);
+	}catch(ReadingUninitializedField* e1){
+		end2->r.value = 1e-12;
+        SPDLOG_LOGGER_WARN(mSLog, "       Uninitialized value for PowerTrafoEnd2 setting default value of R={}", (float) end2->r.value);
+	}
+	try{
+		SPDLOG_LOGGER_INFO(mSLog, "       X={}", (float) end2->x.value);
+	}catch(ReadingUninitializedField* e1){
+		end2->x.value = 1e-12;
+        SPDLOG_LOGGER_WARN(mSLog, "       Uninitialized value for PowerTrafoEnd2 setting default value of X={}", (float) end2->x.value);
+	}
 
-  if (end1->ratedS.value != end2->ratedS.value) {
-    SPDLOG_LOGGER_WARN(
-        mSLog,
-        "    PowerTransformerEnds of {} come with distinct rated power values. "
-        "Using rated power of PowerTransformerEnd_1.",
-        trans->name);
-  }
-  Real ratedPower = unitValue(end1->ratedS.value, UnitMultiplier::M);
-  Real voltageNode1 = unitValue(end1->ratedU.value, UnitMultiplier::k);
-  Real voltageNode2 = unitValue(end2->ratedU.value, UnitMultiplier::k);
+	if (end1->ratedS.value != end2->ratedS.value) {
+		SPDLOG_LOGGER_WARN(mSLog, "    PowerTransformerEnds of {} come with distinct rated power values. Using rated power of PowerTransformerEnd_1.", trans->name);
+	}
+	Real ratedPower = unitValue(end1->ratedS.value, UnitMultiplier::M);
+	Real voltageNode1 = unitValue(end1->ratedU.value, UnitMultiplier::k);
+	Real voltageNode2 = unitValue(end2->ratedU.value, UnitMultiplier::k);
+    Real ratioAbsNominal = voltageNode1 / voltageNode2;
+	
+	// use normalStep from RatioTapChanger
+	Real branch_ratio = 1;
+	if (end1->RatioTapChanger) {
+		branch_ratio = 1 + (end1->RatioTapChanger->normalStep - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100;
+	}
 
-  Real ratioAbsNominal = voltageNode1 / voltageNode2;
-  Real ratioAbs = ratioAbsNominal;
+	// if corresponding SvTapStep available, use instead tap position from there
+	if (end1->RatioTapChanger) {
+		for (auto obj : mModel->Objects) {
+			auto tapStep = dynamic_cast<CIMPP::SvTapStep*>(obj);
+			if (tapStep && tapStep->TapChanger == end1->RatioTapChanger) {
+				branch_ratio = 1 + (tapStep->position - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100;
+			}
+		}
+	}
+	Real ratioAbs = branch_ratio * ratioAbsNominal;
 
-  // use normalStep from RatioTapChanger
-  if (end1->RatioTapChanger) {
-    ratioAbs =
-        voltageNode1 / voltageNode2 *
-        (1 + (end1->RatioTapChanger->normalStep -
-              end1->RatioTapChanger->neutralStep) *
-                 end1->RatioTapChanger->stepVoltageIncrement.value / 100);
-  }
+	// TODO: To be extracted from cim class
+	Real ratioPhase = 0;
 
-  // if corresponding SvTapStep available, use instead tap position from there
-  if (end1->RatioTapChanger) {
-    for (auto obj : mModel->Objects) {
-      auto tapStep = dynamic_cast<CIMPP::SvTapStep *>(obj);
-      if (tapStep && tapStep->TapChanger == end1->RatioTapChanger) {
-        ratioAbs =
-            voltageNode1 / voltageNode2 *
-            (1 + (tapStep->position - end1->RatioTapChanger->neutralStep) *
-                     end1->RatioTapChanger->stepVoltageIncrement.value / 100);
-      }
-    }
-  }
+    // Calculate resistance and inductance referred to higher voltage side
+	Real resistance = 0;
+    Real inductance = 0;
+	if (voltageNode1 >= voltageNode2 && abs(end1->x.value) > 1e-12) {
+		inductance = end1->x.value / mOmega * std::pow(branch_ratio, 2);
+		resistance = end1->r.value * std::pow(branch_ratio, 2);
+	} else if (voltageNode1 >= voltageNode2 && abs(end2->x.value) > 1e-12) {
+		inductance = end2->x.value / mOmega * std::pow(ratioAbsNominal, 2) * std::pow(branch_ratio, 2);
+		resistance = end2->r.value * std::pow(ratioAbsNominal, 2) *  std::pow(branch_ratio, 2);
+	}
+	else if (voltageNode2 > voltageNode1 && abs(end2->x.value) > 1e-12) {
+		inductance = end2->x.value / mOmega / std::pow(branch_ratio, 2);
+		resistance = end2->r.value / std::pow(branch_ratio, 2);
+	}
+	else if (voltageNode2 > voltageNode1 && abs(end1->x.value) > 1e-12) {
+		inductance = end1->x.value / mOmega / std::pow(ratioAbsNominal, 2) / std::pow(branch_ratio, 2);
+		resistance = end1->r.value / std::pow(ratioAbsNominal, 2) / std::pow(branch_ratio, 2);
+	}
 
-  // TODO: To be extracted from cim class
-  Real ratioPhase = 0;
-
-  // Calculate resistance and inductance referred to higher voltage side
-  Real resistance = 0;
-  Real inductance = 0;
-  if (voltageNode1 >= voltageNode2 && abs(end1->x.value) > 1e-12) {
-    inductance = end1->x.value / mOmega;
-    resistance = end1->r.value;
-  } else if (voltageNode1 >= voltageNode2 && abs(end2->x.value) > 1e-12) {
-    inductance = end2->x.value / mOmega * std::pow(ratioAbsNominal, 2);
-    resistance = end2->r.value * std::pow(ratioAbsNominal, 2);
-  } else if (voltageNode2 > voltageNode1 && abs(end2->x.value) > 1e-12) {
-    inductance = end2->x.value / mOmega;
-    resistance = end2->r.value;
-  } else if (voltageNode2 > voltageNode1 && abs(end1->x.value) > 1e-12) {
-    inductance = end1->x.value / mOmega / std::pow(ratioAbsNominal, 2);
-    resistance = end1->r.value / std::pow(ratioAbsNominal, 2);
-  }
-
-  if (mDomain == Domain::EMT) {
-    if (mPhase == PhaseType::ABC) {
-      Matrix resistance_3ph =
-          CPS::Math::singlePhaseParameterToThreePhase(resistance);
-      Matrix inductance_3ph =
-          CPS::Math::singlePhaseParameterToThreePhase(inductance);
-      Bool withResistiveLosses = resistance > 0;
-      auto transformer = std::make_shared<EMT::Ph3::Transformer>(
-          trans->mRID, trans->name, mComponentLogLevel);
-      transformer->setParameters(voltageNode1, voltageNode2, ratioAbs,
-                                 ratioPhase, resistance_3ph, inductance_3ph);
-      return transformer;
-    } else {
-      SPDLOG_LOGGER_INFO(mSLog, "    Transformer for EMT not implemented yet");
-      return nullptr;
-    }
-  } else if (mDomain == Domain::SP) {
-    auto transformer = std::make_shared<SP::Ph1::Transformer>(
-        trans->mRID, trans->name, mComponentLogLevel);
-    transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs,
-                               ratioPhase, resistance, inductance);
-    Real baseVolt = voltageNode1 >= voltageNode2 ? voltageNode1 : voltageNode2;
-    transformer->setBaseVoltage(baseVolt);
-    return transformer;
-  } else {
-    auto transformer = std::make_shared<DP::Ph1::Transformer>(
-        trans->mRID, trans->name, mComponentLogLevel);
-    transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase,
-                               resistance, inductance);
-    return transformer;
-  }
+	if (mDomain == Domain::EMT) {
+		if (mPhase == PhaseType::ABC) {
+			Matrix resistance_3ph = CPS::Math::singlePhaseParameterToThreePhase(resistance);
+			Matrix inductance_3ph = CPS::Math::singlePhaseParameterToThreePhase(inductance);
+			Bool withResistiveLosses = resistance > 0;
+			auto transformer = std::make_shared<EMT::Ph3::Transformer>(trans->mRID, trans->name, mComponentLogLevel);
+			transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
+			return transformer;
+		}
+		else
+		{
+			SPDLOG_LOGGER_INFO(mSLog, "    Transformer for EMT not implemented yet");
+			return nullptr;
+		}
+	}
+	else if (mDomain == Domain::SP) {
+		auto transformer = std::make_shared<SP::Ph1::Transformer>(trans->mRID, trans->name, mComponentLogLevel);
+		transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs, ratioPhase, resistance, inductance);
+		Real baseVolt = voltageNode1 >= voltageNode2 ? voltageNode1 : voltageNode2;
+		transformer->setBaseVoltage(baseVolt);
+		return transformer;
+	}
+	else {
+		auto transformer = std::make_shared<DP::Ph1::Transformer>(trans->mRID, trans->name, mComponentLogLevel);
+		transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance, inductance);
+		return transformer;
+	}
 }
 
 TopologicalPowerComp::Ptr
@@ -1200,7 +1166,66 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode *topNode) {
   }
 }
 
-template void
-Reader::processTopologicalNode<Real>(CIMPP::TopologicalNode *topNode);
-template void
-Reader::processTopologicalNode<Complex>(CIMPP::TopologicalNode *topNode);
+std::map<String, std::vector<CPS::Real>> Reader::getPowerFlowResults() {
+	// Return map as table: (nodeName, vector)
+	// where vector[0] = Vm [kV]
+	//		 vector[1] = Va [°]
+	//		 vector[1] = P [MW]
+	//		 vector[1] = Q [MVAr]
+
+	std::map<String, std::vector<CPS::Real>> pfResults;
+
+	// Collect SvVoltage information
+	for (auto obj : mModel->Objects) {
+		// Check if object is of class SvVoltage
+		if (CIMPP::SvVoltage* volt = dynamic_cast<CIMPP::SvVoltage*>(obj)) {
+
+			CIMPP::TopologicalNode* node = volt->TopologicalNode;
+			if (!node) {
+				SPDLOG_LOGGER_WARN(mSLog, "SvVoltage references missing Topological Node, ignoring");
+				continue;
+			}
+			auto nodeName = node->name;
+			Real voltageAbs = volt->v.value;
+			try{
+				SPDLOG_LOGGER_INFO(mSLog, "    Angle={}", (float)volt->angle.value);
+			}catch(ReadingUninitializedField* e ){
+				volt->angle.value = 0;
+				std::cerr<< "Uninitialized Angle for SVVoltage at " << volt->TopologicalNode->name << ".Setting default value of " << volt->angle.value << std::endl;
+			}
+			Real voltagePhase = volt->angle.value;
+
+			std::vector<CPS::Real> data{voltageAbs, voltagePhase, 0.0, 0.0};
+			pfResults[nodeName] = data;
+		}
+	}
+
+	// Collect SvPowerFlow information
+	for (auto obj : mModel->Objects) {
+		if (CIMPP::SvPowerFlow* flow = dynamic_cast<CIMPP::SvPowerFlow*>(obj)) {
+			
+			auto conductingEquipment = flow->Terminal->ConductingEquipment;
+			auto nodeName = flow->Terminal->TopologicalNode->name;
+			if (dynamic_cast<CIMPP::EnergyConsumer*>(conductingEquipment) 				||
+				dynamic_cast<CIMPP::ExternalNetworkInjection*>(conductingEquipment) 	||
+				dynamic_cast<CIMPP::EquivalentShunt*>(conductingEquipment)) {
+
+				if (pfResults.count(nodeName)) {
+					pfResults[nodeName][2] -= flow->p.value;
+					pfResults[nodeName][3] -= flow->q.value;
+				}
+			}
+			else if (dynamic_cast<CIMPP::SynchronousMachine*>(conductingEquipment)) {
+				if (pfResults.count(nodeName)) {
+					pfResults[nodeName][2] -= flow->p.value;
+					pfResults[nodeName][3] -= flow->q.value;
+				}
+			}
+		}
+	}
+
+	return pfResults;
+}
+
+template void Reader::processTopologicalNode<Real>(CIMPP::TopologicalNode* topNode);
+template void Reader::processTopologicalNode<Complex>(CIMPP::TopologicalNode* topNode);
