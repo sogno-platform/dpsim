@@ -447,13 +447,12 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 	Real ratedPower = unitValue(end1->ratedS.value, UnitMultiplier::M);
 	Real voltageNode1 = unitValue(end1->ratedU.value, UnitMultiplier::k);
 	Real voltageNode2 = unitValue(end2->ratedU.value, UnitMultiplier::k);
-
     Real ratioAbsNominal = voltageNode1 / voltageNode2;
-	Real ratioAbs = ratioAbsNominal;
-
+	
 	// use normalStep from RatioTapChanger
+	Real branch_ratio = 1;
 	if (end1->RatioTapChanger) {
-		ratioAbs = voltageNode1 / voltageNode2 * (1 + (end1->RatioTapChanger->normalStep - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
+		branch_ratio = 1 + (end1->RatioTapChanger->normalStep - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100;
 	}
 
 	// if corresponding SvTapStep available, use instead tap position from there
@@ -461,10 +460,11 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 		for (auto obj : mModel->Objects) {
 			auto tapStep = dynamic_cast<CIMPP::SvTapStep*>(obj);
 			if (tapStep && tapStep->TapChanger == end1->RatioTapChanger) {
-				ratioAbs = voltageNode1 / voltageNode2 * (1 + (tapStep->position - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
+				branch_ratio = 1 + (tapStep->position - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100;
 			}
 		}
 	}
+	Real ratioAbs = branch_ratio * ratioAbsNominal;
 
 	// TODO: To be extracted from cim class
 	Real ratioPhase = 0;
@@ -473,19 +473,19 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 	Real resistance = 0;
     Real inductance = 0;
 	if (voltageNode1 >= voltageNode2 && abs(end1->x.value) > 1e-12) {
-		inductance = end1->x.value / mOmega;
-		resistance = end1->r.value;
+		inductance = end1->x.value / mOmega * std::pow(branch_ratio, 2);
+		resistance = end1->r.value * std::pow(branch_ratio, 2);
 	} else if (voltageNode1 >= voltageNode2 && abs(end2->x.value) > 1e-12) {
-		inductance = end2->x.value / mOmega * std::pow(ratioAbsNominal, 2);
-		resistance = end2->r.value * std::pow(ratioAbsNominal, 2);
+		inductance = end2->x.value / mOmega * std::pow(ratioAbsNominal, 2) * std::pow(branch_ratio, 2);
+		resistance = end2->r.value * std::pow(ratioAbsNominal, 2) *  std::pow(branch_ratio, 2);
 	}
 	else if (voltageNode2 > voltageNode1 && abs(end2->x.value) > 1e-12) {
-		inductance = end2->x.value / mOmega;
-		resistance = end2->r.value;
+		inductance = end2->x.value / mOmega / std::pow(branch_ratio, 2);
+		resistance = end2->r.value / std::pow(branch_ratio, 2);
 	}
 	else if (voltageNode2 > voltageNode1 && abs(end1->x.value) > 1e-12) {
-		inductance = end1->x.value / mOmega / std::pow(ratioAbsNominal, 2);
-		resistance = end1->r.value / std::pow(ratioAbsNominal, 2);
+		inductance = end1->x.value / mOmega / std::pow(ratioAbsNominal, 2) / std::pow(branch_ratio, 2);
+		resistance = end1->r.value / std::pow(ratioAbsNominal, 2) / std::pow(branch_ratio, 2);
 	}
 
 	if (mDomain == Domain::EMT) {
@@ -1030,6 +1030,67 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode* topNode) {
 			SPDLOG_LOGGER_INFO(mSLog, "        Added Terminal {} to Equipment {}", term->mRID, equipment->mRID);
 		}
 	}
+}
+
+std::map<String, std::vector<CPS::Real>> Reader::getPowerFlowResults() {
+	// Return map as table: (nodeName, vector)
+	// where vector[0] = Vm [kV]
+	//		 vector[1] = Va [°]
+	//		 vector[1] = P [MW]
+	//		 vector[1] = Q [MVAr]
+
+	std::map<String, std::vector<CPS::Real>> pfResults;
+
+	// Collect SvVoltage information
+	for (auto obj : mModel->Objects) {
+		// Check if object is of class SvVoltage
+		if (CIMPP::SvVoltage* volt = dynamic_cast<CIMPP::SvVoltage*>(obj)) {
+
+			CIMPP::TopologicalNode* node = volt->TopologicalNode;
+			if (!node) {
+				SPDLOG_LOGGER_WARN(mSLog, "SvVoltage references missing Topological Node, ignoring");
+				continue;
+			}
+			auto nodeName = node->name;
+			Real voltageAbs = volt->v.value;
+			try{
+				SPDLOG_LOGGER_INFO(mSLog, "    Angle={}", (float)volt->angle.value);
+			}catch(ReadingUninitializedField* e ){
+				volt->angle.value = 0;
+				std::cerr<< "Uninitialized Angle for SVVoltage at " << volt->TopologicalNode->name << ".Setting default value of " << volt->angle.value << std::endl;
+			}
+			Real voltagePhase = volt->angle.value;
+
+			std::vector<CPS::Real> data{voltageAbs, voltagePhase, 0.0, 0.0};
+			pfResults[nodeName] = data;
+		}
+	}
+
+	// Collect SvPowerFlow information
+	for (auto obj : mModel->Objects) {
+		if (CIMPP::SvPowerFlow* flow = dynamic_cast<CIMPP::SvPowerFlow*>(obj)) {
+			
+			auto conductingEquipment = flow->Terminal->ConductingEquipment;
+			auto nodeName = flow->Terminal->TopologicalNode->name;
+			if (dynamic_cast<CIMPP::EnergyConsumer*>(conductingEquipment) 				||
+				dynamic_cast<CIMPP::ExternalNetworkInjection*>(conductingEquipment) 	||
+				dynamic_cast<CIMPP::EquivalentShunt*>(conductingEquipment)) {
+
+				if (pfResults.count(nodeName)) {
+					pfResults[nodeName][2] -= flow->p.value;
+					pfResults[nodeName][3] -= flow->q.value;
+				}
+			}
+			else if (dynamic_cast<CIMPP::SynchronousMachine*>(conductingEquipment)) {
+				if (pfResults.count(nodeName)) {
+					pfResults[nodeName][2] -= flow->p.value;
+					pfResults[nodeName][3] -= flow->q.value;
+				}
+			}
+		}
+	}
+
+	return pfResults;
 }
 
 template void Reader::processTopologicalNode<Real>(CIMPP::TopologicalNode* topNode);
