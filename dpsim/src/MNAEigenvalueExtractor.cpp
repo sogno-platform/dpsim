@@ -68,12 +68,11 @@ namespace DPsim
     void MNAEigenvalueExtractor<MatrixType>::createEmptyEigenvalueMatrices(UInt numMatrixNodeIndices)
     {
         int nBranches = mEigenvalueComponents.size();
-        // TODO: [Georgii] use Matrix::Zero to initialize with zeros
-        mSignMatrix = Matrix(nBranches, nBranches);
-        mDiscretizationMatrix = Matrix(nBranches, nBranches);
-        mBranchNodeIncidenceMatrix = Matrix(nBranches, numMatrixNodeIndices);
-        **mEigenvalues = MatrixComp(mEigenvalueDynamicComponents.size(), 1);
-        **mDiscreteEigenvalues = MatrixComp(mEigenvalueDynamicComponents.size(), 1);
+        mSignMatrix = Matrix::Zero(nBranches, nBranches);
+        mDiscretizationMatrix = Matrix::Zero(nBranches, nBranches);
+        mBranchNodeIncidenceMatrix = Matrix::Zero(nBranches, numMatrixNodeIndices);
+        **mEigenvalues = MatrixComp::Zero(mEigenvalueDynamicComponents.size(), 1);
+        **mDiscreteEigenvalues = MatrixComp::Zero(mEigenvalueDynamicComponents.size(), 1);
     }
 
     template <typename MatrixType>
@@ -163,8 +162,7 @@ namespace DPsim
     template <>
     void MNAEigenvalueExtractor<MatrixComp>::recoverEigenvalues()
     {
-        // TODO: [Georgii] use Complex(0,1) instead of j
-        **mEigenvalues = 2.0 / mTimeStep * ((**mDiscreteEigenvalues).array() - 1.0) / ((**mDiscreteEigenvalues).array() + 1.0) + 1.0j * mSystemOmega;
+        **mEigenvalues = 2.0 / mTimeStep * ((**mDiscreteEigenvalues).array() - 1.0) / ((**mDiscreteEigenvalues).array() + 1.0) + Complex(0.0, 1.0) * mSystemOmega;
     }
 
     template <>
