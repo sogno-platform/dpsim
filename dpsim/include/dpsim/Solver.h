@@ -133,6 +133,6 @@ protected:
 		/// ### Eigenvalue Extraction ###
 		void setEigenvalueExtractionMode(CPS::EigenvalueExtractionMode eigenvalueExtractionMode) { mEigenvalueExtractionMode = eigenvalueExtractionMode; }
 		/// 
-		virtual void extractEigenvalues(){};
+		virtual void extractEigenvalues(Real time, Int timeStepCount){};
 	};
 }

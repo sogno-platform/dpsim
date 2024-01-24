@@ -387,9 +387,9 @@ template <typename VarType> void MnaSolverDirect<VarType>::logSolveTime() {
 }
 
 template <typename VarType>
-void MnaSolverDirect<VarType>::extractEigenvalues()
+void MnaSolverDirect<VarType>::extractEigenvalues(Real time, Int timeStepCount)
 {
-	MnaSolver<VarType>::mMNAEigenvalueExtractor.extractEigenvalues(((Matrix)mSwitchedMatrices[mCurrentSwitchStatus][0]));
+	MnaSolver<VarType>::mMNAEigenvalueExtractor.extractEigenvalues(((Matrix)mSwitchedMatrices[mCurrentSwitchStatus][0]), time, timeStepCount);
 }
 
 template <typename VarType>

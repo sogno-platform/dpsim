@@ -363,7 +363,7 @@ void Simulation::start() {
 	{
 		if (mSolvers.size() == 1)
 		{
-			mSolvers[0]->extractEigenvalues();
+			mSolvers[0]->extractEigenvalues(0.0, 1.0);
 		}		
 	}
 
