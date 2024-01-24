@@ -308,7 +308,12 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
   for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
     mNodes[nodeIdx]->mnaUpdateVoltage(**mLeftSideVector);
 
-  // Components' states will be updated by the post-step tasks
+	// Components' states will be updated by the post-step tasks
+
+	if (Solver::mEigenvalueExtractionMode == CPS::EigenvalueExtractionMode::AtEveryStep)
+	{
+		extractEigenvalues(time, timeStepCount); // TODO: [Georgii] create task instead of calling in solve()
+	}
 }
 
 template <typename VarType>
