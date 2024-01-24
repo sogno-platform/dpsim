@@ -11,28 +11,29 @@
 #include <dpsim-models/Base/Base_Ph1_Switch.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
-#include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
-#include <dpsim-models/Solver/MNASwitchInterface.h>
+#include <dpsim-models/Base/Base_Ph1_Switch.h>
+#include <dpsim-models/Solver/EigenvalueCompInterface.h>
 
 namespace CPS {
 namespace DP {
 namespace Ph1 {
-/// \brief Dynamic phasor switch
-///
-/// The switch can be opened and closed.
-/// Each state has a specific resistance value.
-class Switch : public MNASimPowerComp<Complex>,
-               public Base::Ph1::Switch,
-               public SharedFactory<Switch>,
-               public MNASwitchInterface {
-protected:
-public:
-  /// Defines UID, name, component parameters and logging level
-  Switch(String uid, String name, Logger::Level loglevel = Logger::Level::off);
-  /// Defines name, component parameters and logging level
-  Switch(String name, Logger::Level logLevel = Logger::Level::off)
-      : Switch(name, name, logLevel) {}
+	/// \brief Dynamic phasor switch
+	///
+	/// The switch can be opened and closed.
+	/// Each state has a specific resistance value.
+	class Switch :
+		public MNASimPowerComp<Complex>,
+		public Base::Ph1::Switch,
+		public SharedFactory<Switch>,
+		public MNASwitchInterface,
+		public EigenvalueCompInterface {
+	protected:
+	public:
+		/// Defines UID, name, component parameters and logging level
+		Switch(String uid, String name,	Logger::Level loglevel = Logger::Level::off);
+		/// Defines name, component parameters and logging level
+		Switch(String name, Logger::Level logLevel = Logger::Level::off)
+			: Switch(name, name, logLevel) { }
 
   SimPowerComp<Complex>::Ptr clone(String name);
 
@@ -61,14 +62,20 @@ public:
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector);
 
-  // #### MNA section for switch ####
-  /// Check if switch is closed
-  Bool mnaIsClosed();
-  /// Stamps system matrix considering the defined switch position
-  void mnaCompApplySwitchSystemMatrixStamp(Bool closed,
-                                           SparseMatrixRow &systemMatrix,
-                                           Int freqIdx);
-};
-} // namespace Ph1
-} // namespace DP
-} // namespace CPS
+		// #### MNA section for switch ####
+		/// Check if switch is closed
+		Bool mnaIsClosed();
+		/// Stamps system matrix considering the defined switch position
+		void mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx);
+
+		// #### Implementation of eigenvalue component interface ####
+		void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
+		void setBranchIdx(UInt i) override;
+
+	private:
+		/// Branch index
+		UInt mBranchIdx;
+	};
+}
+}
+}
