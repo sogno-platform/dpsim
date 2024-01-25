@@ -20,7 +20,7 @@ jobs:
 
     - name: Build dpsim source dist
       shell: bash
-      run: python -m build --sdist --outdir dist/
+      run: python3 -m build --sdist --outdir dist/
 
     - name: Publish distribution to Test PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
