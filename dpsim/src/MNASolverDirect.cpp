@@ -226,8 +226,15 @@ MnaSolverDirect<VarType>::createSolveTaskHarm(UInt freqIdx) {
 }
 
 template <typename VarType>
-std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createLogTask() {
-  return std::make_shared<MnaSolverDirect<VarType>::LogTask>(*this);
+std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createExtractEigenvaluesTask()
+{
+	return std::make_shared<MnaSolverDirect<VarType>::ExtractEigenvaluesTask>(*this);
+}
+
+template <typename VarType>
+std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createLogTask()
+{
+	return std::make_shared<MnaSolverDirect<VarType>::LogTask>(*this);
 }
 
 template <typename VarType>
@@ -309,11 +316,6 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
     mNodes[nodeIdx]->mnaUpdateVoltage(**mLeftSideVector);
 
 	// Components' states will be updated by the post-step tasks
-
-	if (Solver::mEigenvalueExtractionMode == CPS::EigenvalueExtractionMode::AtEveryStep)
-	{
-		extractEigenvalues(time, timeStepCount); // TODO: [Georgii] create task instead of calling in solve()
-	}
 }
 
 template <typename VarType>

@@ -583,40 +583,44 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 template <typename VarType> Task::List MnaSolver<VarType>::getTasks() {
   Task::List l;
 
-  for (auto comp : mMNAComponents) {
-    for (auto task : comp->mnaTasks()) {
-      l.push_back(task);
-    }
-  }
-  for (auto comp : mMNAIntfSwitches) {
-    for (auto task : comp->mnaTasks()) {
-      l.push_back(task);
-    }
-  }
-  for (auto node : mNodes) {
-    for (auto task : node->mnaTasks())
-      l.push_back(task);
-  }
-  // TODO signal components should be moved out of MNA solver
-  for (auto comp : mSimSignalComps) {
-    for (auto task : comp->getTasks()) {
-      l.push_back(task);
-    }
-  }
-  if (mFrequencyParallel) {
-    for (UInt i = 0; i < mSystem.mFrequencies.size(); ++i)
-      l.push_back(createSolveTaskHarm(i));
-  } else if (mSystemMatrixRecomputation) {
-    for (auto comp : this->mMNAIntfVariableComps) {
-      for (auto task : comp->mnaTasks())
-        l.push_back(task);
-    }
-    l.push_back(createSolveTaskRecomp());
-  } else {
-    l.push_back(createSolveTask());
-    l.push_back(createLogTask());
-  }
-  return l;
+	for (auto comp : mMNAComponents) {
+		for (auto task : comp->mnaTasks()) {
+			l.push_back(task);
+		}
+	}
+	for (auto comp : mMNAIntfSwitches) {
+		for (auto task : comp->mnaTasks()) {
+			l.push_back(task);
+		}
+	}
+	for (auto node : mNodes) {
+		for (auto task : node->mnaTasks())
+			l.push_back(task);
+	}
+	// TODO signal components should be moved out of MNA solver
+	for (auto comp : mSimSignalComps) {
+		for (auto task : comp->getTasks()) {
+			l.push_back(task);
+		}
+	}
+	if (mFrequencyParallel) {
+		for (UInt i = 0; i < mSystem.mFrequencies.size(); ++i)
+			l.push_back(createSolveTaskHarm(i));
+	} else if (mSystemMatrixRecomputation) {
+		for (auto comp : this->mMNAIntfVariableComps) {
+			for (auto task : comp->mnaTasks())
+				l.push_back(task);
+		}
+		l.push_back(createSolveTaskRecomp());
+	} else {
+		l.push_back(createSolveTask());
+		if (mEigenvalueExtractionMode == CPS::EigenvalueExtractionMode::AtEveryStep)
+		{
+			l.push_back(createExtractEigenvaluesTask());
+		}
+		l.push_back(createLogTask());
+	}
+	return l;
 }
 
 template <typename VarType>

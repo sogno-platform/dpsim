@@ -129,19 +129,21 @@ protected:
   /// Recomputes systems matrix
   virtual void recomputeSystemMatrix(Real time);
 
-  // #### Scheduler Task Methods ####
-  /// Create a solve task for this solver implementation
-  std::shared_ptr<CPS::Task> createSolveTask() override;
-  /// Create a solve task for this solver implementation
-  std::shared_ptr<CPS::Task> createLogTask() override;
-  /// Create a solve task for this solver implementation
-  std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
-  /// Logging of system matrices and source vector
-  void logSystemMatrices() override;
-  /// Solves system for single frequency
-  void solve(Real time, Int timeStepCount) override;
-  /// Solves system for multiple frequencies
-  void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) override;
+		// #### Scheduler Task Methods ####
+		/// Create a solve task for this solver implementation
+		std::shared_ptr<CPS::Task> createSolveTask() override;
+		/// Create a solve task for this solver implementation
+		std::shared_ptr<CPS::Task> createLogTask() override;
+		/// Create a solve task for this solver implementation
+		std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
+		///  Create a task for eigenvalue extraction
+		std::shared_ptr<CPS::Task> createExtractEigenvaluesTask() override;
+		/// Logging of system matrices and source vector
+		void logSystemMatrices() override;
+		/// Solves system for single frequency
+		void solve(Real time, Int timeStepCount) override;
+		/// Solves system for multiple frequencies
+		void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) override;
 
   /// Logging of the right-hand-side solution time
   void logSolveTime();
@@ -263,14 +265,33 @@ protected:
     MnaSolverDirect<VarType> &mSolver;
   };
 
-  ///
-  class LogTask : public CPS::Task {
-  public:
-    LogTask(MnaSolverDirect<VarType> &solver)
-        : Task(solver.mName + ".Log"), mSolver(solver) {
-      mAttributeDependencies.push_back(solver.mLeftSideVector);
-      mModifiedAttributes.push_back(Scheduler::external);
-    }
+		///
+		class ExtractEigenvaluesTask : public CPS::Task
+		{
+		public:
+			ExtractEigenvaluesTask(MnaSolverDirect<VarType> &solver) : Task(solver.mName + ".ExtractEigenvalues"), mSolver(solver)
+			{
+				mAttributeDependencies.push_back(solver.mLeftSideVector);
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount)
+			{
+				mSolver.extractEigenvalues(time, timeStepCount);
+			}
+
+		private:
+			MnaSolverDirect<VarType> &mSolver;
+		};
+
+		///
+		class LogTask : public CPS::Task {
+		public:
+			LogTask(MnaSolverDirect<VarType>& solver) :
+				Task(solver.mName + ".Log"), mSolver(solver) {
+				mAttributeDependencies.push_back(solver.mLeftSideVector);
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
 
     void execute(Real time, Int timeStepCount) {
       mSolver.log(time, timeStepCount);

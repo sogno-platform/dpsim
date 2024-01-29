@@ -184,12 +184,14 @@ namespace DPsim {
   /// Logging of system matrices and source vector
   virtual void logSystemMatrices() = 0;
 
-  /// Create a solve task for this solver implementation
-  virtual std::shared_ptr<CPS::Task> createSolveTask() = 0;
-  /// Create a solve task for this solver implementation
-  virtual std::shared_ptr<CPS::Task> createLogTask() = 0;
-  /// Create a solve task for this solver implementation
-  virtual std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) = 0;
+		/// Create a solve task for this solver implementation
+		virtual std::shared_ptr<CPS::Task> createSolveTask() = 0;
+		/// Create a solve task for this solver implementation
+		virtual std::shared_ptr<CPS::Task> createLogTask() = 0;
+		/// Create a solve task for this solver implementation
+		virtual std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) = 0;
+		/// Create a task for eigenvalues extraction
+		virtual std::shared_ptr<CPS::Task> createExtractEigenvaluesTask() = 0;
 
   // #### Scheduler Task Methods ####
   /// Solves system for single frequency
