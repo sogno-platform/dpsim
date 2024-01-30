@@ -28,10 +28,21 @@ void Logger::setLogPattern(std::shared_ptr<spdlog::logger> logger,
 }
 
 // #### to string methods ####
-String Logger::matrixToString(const Matrix &mat) {
-  std::stringstream ss;
-  ss << std::scientific << "\n" << mat;
-  return ss.str();
+template <typename VarType>
+String Logger::matrixVarToString(const MatrixVar<VarType> &mat)
+{
+	std::stringstream ss;
+	ss << std::scientific << "\n"
+	   << mat;
+	return ss.str();
+}
+template String Logger::matrixVarToString<Real>(const MatrixVar<Real> &mat);
+template String Logger::matrixVarToString<Complex>(const MatrixVar<Complex> &mat);
+
+String Logger::matrixToString(const Matrix& mat) {
+	std::stringstream ss;
+	ss << std::scientific << "\n" << mat;
+	return ss.str();
 }
 
 String Logger::matrixCompToString(const MatrixComp &mat) {

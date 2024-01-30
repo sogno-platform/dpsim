@@ -53,19 +53,21 @@ public:
   static void setLogPattern(std::shared_ptr<spdlog::logger> logger,
                             std::string pattern);
 
-  // #### to string methods ####
-  static String matrixToString(const Matrix &mat);
-  static String matrixCompToString(const MatrixComp &mat);
-  static String sparseMatrixToString(const SparseMatrix &mat);
-  static String sparseMatrixCompToString(const SparseMatrixComp &mat);
-  static String phasorMatrixToString(const MatrixComp &mat);
-  static String phasorToString(const Complex &num);
-  static String complexToString(const Complex &num);
-  static String realToString(const Real &num);
-
-  static String getCSVColumnNames(std::vector<String> names);
-  static String getCSVLineFromData(Real time, Real data);
-  static String getCSVLineFromData(Real time, const Matrix &data);
-  static String getCSVLineFromData(Real time, const MatrixComp &data);
-};
-} // namespace CPS
+		// #### to string methods ####
+		template <typename VarType>
+		static String matrixVarToString(const MatrixVar<VarType>& mat);
+		static String matrixToString(const Matrix& mat);
+		static String matrixCompToString(const MatrixComp& mat);
+		static String sparseMatrixToString(const SparseMatrix& mat);
+		static String sparseMatrixCompToString(const SparseMatrixComp& mat);
+		static String phasorMatrixToString(const MatrixComp& mat);
+		static String phasorToString(const Complex& num);
+		static String complexToString(const Complex& num);
+		static String realToString(const Real& num);
+		
+		static String getCSVColumnNames(std::vector<String> names);
+		static String getCSVLineFromData(Real time, Real data);
+		static String getCSVLineFromData(Real time, const Matrix& data);
+		static String getCSVLineFromData(Real time, const MatrixComp& data);
+	};
+}

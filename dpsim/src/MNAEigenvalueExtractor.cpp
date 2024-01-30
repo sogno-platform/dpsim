@@ -97,23 +97,12 @@ namespace DPsim
         mDiscreteEigenvaluesLogger.logAttribute("discreteEigenvalues", mDiscreteEigenvalues);
     }
 
-    template <>
-    void MNAEigenvalueExtractor<Real>::logInitialization()
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::logInitialization()
     {
         SPDLOG_LOGGER_INFO(mSLog, "---- Initialize ----");
-        SPDLOG_LOGGER_INFO(mSLog, "sign matrix: {}", CPS::Logger::matrixToString(mSignMatrix));
-        SPDLOG_LOGGER_INFO(mSLog, "discretization matrix: {}", CPS::Logger::matrixToString(mDiscretizationMatrix));
-        SPDLOG_LOGGER_INFO(mSLog, "branch <-> node incidence matrix: {}", CPS::Logger::matrixToString(mBranchNodeIncidenceMatrix));
-        SPDLOG_LOGGER_INFO(mSLog, "node <-> branch incidence matrix: {}", CPS::Logger::matrixToString(mNodeBranchIncidenceMatrix));
-        mSLog->flush();
-    }
-
-    template <>
-    void MNAEigenvalueExtractor<Complex>::logInitialization()
-    {
-        SPDLOG_LOGGER_INFO(mSLog, "---- Initialize ----");
-        SPDLOG_LOGGER_INFO(mSLog, "sign matrix: {}", CPS::Logger::matrixCompToString(mSignMatrix));
-        SPDLOG_LOGGER_INFO(mSLog, "discretization matrix: {}", CPS::Logger::matrixCompToString(mDiscretizationMatrix));
+        SPDLOG_LOGGER_INFO(mSLog, "sign matrix: {}", CPS::Logger::matrixVarToString(mSignMatrix));
+        SPDLOG_LOGGER_INFO(mSLog, "discretization matrix: {}", CPS::Logger::matrixVarToString(mDiscretizationMatrix));
         SPDLOG_LOGGER_INFO(mSLog, "branch <-> node incidence matrix: {}", CPS::Logger::matrixToString(mBranchNodeIncidenceMatrix));
         SPDLOG_LOGGER_INFO(mSLog, "node <-> branch incidence matrix: {}", CPS::Logger::matrixToString(mNodeBranchIncidenceMatrix));
         mSLog->flush();
@@ -165,24 +154,12 @@ namespace DPsim
         **mEigenvalues = 2.0 / mTimeStep * ((**mDiscreteEigenvalues).array() - 1.0) / ((**mDiscreteEigenvalues).array() + 1.0) + Complex(0.0, 1.0) * mSystemOmega;
     }
 
-    template <>
-    void MNAEigenvalueExtractor<Real>::logExtraction(Real time, Int timeStepCount)
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::logExtraction(Real time, Int timeStepCount)
     {
         SPDLOG_LOGGER_INFO(mSLog, "---- Extract eigenvalues ----");
         SPDLOG_LOGGER_INFO(mSLog, "time: {}", CPS::Logger::realToString(time));
-        SPDLOG_LOGGER_INFO(mSLog, "discretized state matrix: {}", CPS::Logger::matrixToString(mStateMatrix));
-        mSLog->flush();
-
-        mEigenvaluesLogger.log(time, timeStepCount);
-        mDiscreteEigenvaluesLogger.log(time, timeStepCount);
-    }
-
-    template <>
-    void MNAEigenvalueExtractor<Complex>::logExtraction(Real time, Int timeStepCount)
-    {
-        SPDLOG_LOGGER_INFO(mSLog, "---- Extract eigenvalues ----");
-        SPDLOG_LOGGER_INFO(mSLog, "time: {}", CPS::Logger::realToString(time));
-        SPDLOG_LOGGER_INFO(mSLog, "discretized state matrix: {}", CPS::Logger::matrixCompToString(mStateMatrix));
+        SPDLOG_LOGGER_INFO(mSLog, "discretized state matrix: {}", CPS::Logger::matrixVarToString(mStateMatrix));
         mSLog->flush();
 
         mEigenvaluesLogger.log(time, timeStepCount);
