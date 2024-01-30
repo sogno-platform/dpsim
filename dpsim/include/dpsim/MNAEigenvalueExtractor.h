@@ -9,7 +9,7 @@
 namespace DPsim
 {
 	/// Extracts eigenvalues using MNA power system conductance matrix
-	template <typename MatrixType>
+	template <typename VarType>
 	class MNAEigenvalueExtractor
 	{
 	public:
@@ -20,15 +20,15 @@ namespace DPsim
 
 	private:
 		CPS::EigenvalueCompInterface::List mEigenvalueComponents;
-		typename CPS::EigenvalueDynamicCompInterface<MatrixType>::List mEigenvalueDynamicComponents;
+		typename CPS::EigenvalueDynamicCompInterface<VarType>::List mEigenvalueDynamicComponents;
 		Real mTimeStep;
 		Real mSystemOmega;
 		Complex mCoeffDP;
-		MatrixType mSignMatrix;
-		MatrixType mDiscretizationMatrix;
+		MatrixVar<VarType> mSignMatrix;
+		MatrixVar<VarType> mDiscretizationMatrix;
 		Matrix mBranchNodeIncidenceMatrix;
 		Matrix mNodeBranchIncidenceMatrix;
-		MatrixType mStateMatrix;
+		MatrixVar<VarType> mStateMatrix;
 		CPS::AttributeStatic<MatrixComp>::Ptr mDiscreteEigenvalues;
 		CPS::AttributeStatic<MatrixComp>::Ptr mEigenvalues;
 		CPS::Logger::Log mSLog;

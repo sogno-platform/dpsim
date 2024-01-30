@@ -124,9 +124,7 @@ namespace DPsim {
   std::vector<Real> mRecomputationTimes;
 
 		// #### Eigenvalue extraction ####
-		// Define MatrixType as an alias for Matrix if VarType is Real, otherwise define it as an alias for MatrixComp
-		using MatrixType = typename std::conditional<std::is_same<VarType, Real>::value, Matrix, MatrixComp>::type;
-		MNAEigenvalueExtractor<MatrixType> mMNAEigenvalueExtractor;
+		MNAEigenvalueExtractor<VarType> mMNAEigenvalueExtractor;
 
 		/// Constructor should not be called by users but by Simulation
 		MnaSolver(String name,

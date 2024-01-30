@@ -358,12 +358,12 @@ void DP::Ph1::Capacitor::mnaCompUpdateCurrentHarm() {
   }
 }
 
-void DP::Ph1::Capacitor::stampSignMatrix(MatrixComp &signMatrix, Complex coeffDP)
+void DP::Ph1::Capacitor::stampSignMatrix(MatrixVar<Complex> &signMatrix, Complex coeffDP)
 {
 	signMatrix(mBranchIdx, mBranchIdx) = -1.0;
 }
 
-void DP::Ph1::Capacitor::stampDiscretizationMatrix(MatrixComp &discretizationMatrix, Complex coeffDP)
+void DP::Ph1::Capacitor::stampDiscretizationMatrix(MatrixVar<Complex> &discretizationMatrix, Complex coeffDP)
 {
 	discretizationMatrix(mBranchIdx, mBranchIdx) = mEquivCond(0, 0) * (1.0 + coeffDP);
 	//TODO [Georgii]: decide how to handle cases when mEquivCond has bigger size than one

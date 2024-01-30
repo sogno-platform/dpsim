@@ -2,16 +2,16 @@
 
 namespace DPsim
 {
-    template <typename MatrixType>
-    MNAEigenvalueExtractor<MatrixType>::MNAEigenvalueExtractor() : mSLog(CPS::Logger::get("MNAEigenvalueExtractor", CPS::Logger::Level::info, CPS::Logger::Level::info)),
+    template <typename VarType>
+    MNAEigenvalueExtractor<VarType>::MNAEigenvalueExtractor() : mSLog(CPS::Logger::get("MNAEigenvalueExtractor", CPS::Logger::Level::info, CPS::Logger::Level::info)),
                                                                    mEigenvaluesLogger("eigenvalues", true, 1), mDiscreteEigenvaluesLogger("discreteEigenvalues", true, 1)
     {
         mEigenvalues = CPS::AttributeStatic<MatrixComp>::make();
         mDiscreteEigenvalues = CPS::AttributeStatic<MatrixComp>::make();
     }
 
-    template <typename MatrixType>
-    void MNAEigenvalueExtractor<MatrixType>::initialize(const CPS::SystemTopology &topology, UInt numMatrixNodeIndices, Real timeStep)
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::initialize(const CPS::SystemTopology &topology, UInt numMatrixNodeIndices, Real timeStep)
     {
         setParameters(topology, timeStep);
         identifyEigenvalueComponents(topology.mComponents);
@@ -22,8 +22,8 @@ namespace DPsim
         logInitialization();
     }
 
-    template <typename MatrixType>
-    void MNAEigenvalueExtractor<MatrixType>::setParameters(const CPS::SystemTopology &topology, Real timeStep)
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::setParameters(const CPS::SystemTopology &topology, Real timeStep)
     {
         mTimeStep = timeStep;
         // Relevant only for DP
@@ -35,8 +35,8 @@ namespace DPsim
         mCoeffDP = Complex(realPart, imagPart);
     }
 
-    template <typename MatrixType>
-    void MNAEigenvalueExtractor<MatrixType>::identifyEigenvalueComponents(const CPS::IdentifiedObject::List &components)
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::identifyEigenvalueComponents(const CPS::IdentifiedObject::List &components)
     {
         // TODO: [Georgii] throw exception if topology contains components that do not implement EigenvalueCompInterface
         for (auto comp : components)
@@ -45,7 +45,7 @@ namespace DPsim
             if (eigenvalueComponent)
             {
                 mEigenvalueComponents.push_back(eigenvalueComponent);
-                auto eigenvalueDynamicComponent = std::dynamic_pointer_cast<CPS::EigenvalueDynamicCompInterface<MatrixType>>(comp);
+                auto eigenvalueDynamicComponent = std::dynamic_pointer_cast<CPS::EigenvalueDynamicCompInterface<VarType>>(comp);
                 if (eigenvalueDynamicComponent)
                 {
                     mEigenvalueDynamicComponents.push_back(eigenvalueDynamicComponent);
@@ -54,8 +54,8 @@ namespace DPsim
         }
     }
 
-    template <typename MatrixType>
-    void MNAEigenvalueExtractor<MatrixType>::setBranchIndices()
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::setBranchIndices()
     {
         int size = mEigenvalueComponents.size();
         for (int i = 0; i < size; i++)
@@ -64,19 +64,19 @@ namespace DPsim
         }
     }
 
-    template <typename MatrixType>
-    void MNAEigenvalueExtractor<MatrixType>::createEmptyEigenvalueMatrices(UInt numMatrixNodeIndices)
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::createEmptyEigenvalueMatrices(UInt numMatrixNodeIndices)
     {
         int nBranches = mEigenvalueComponents.size();
-        mSignMatrix = Matrix::Zero(nBranches, nBranches);
-        mDiscretizationMatrix = Matrix::Zero(nBranches, nBranches);
+        mSignMatrix = MatrixVar<VarType>::Zero(nBranches, nBranches);
+        mDiscretizationMatrix = MatrixVar<VarType>::Zero(nBranches, nBranches);
         mBranchNodeIncidenceMatrix = Matrix::Zero(nBranches, numMatrixNodeIndices);
         **mEigenvalues = MatrixComp::Zero(mEigenvalueDynamicComponents.size(), 1);
         **mDiscreteEigenvalues = MatrixComp::Zero(mEigenvalueDynamicComponents.size(), 1);
     }
 
-    template <typename MatrixType>
-    void MNAEigenvalueExtractor<MatrixType>::stampEigenvalueMatrices()
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::stampEigenvalueMatrices()
     {
         for (auto comp : mEigenvalueComponents)
         {
@@ -90,15 +90,15 @@ namespace DPsim
         }
     }
 
-    template <typename MatrixType>
-    void MNAEigenvalueExtractor<MatrixType>::setLogAttributes()
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::setLogAttributes()
     {
         mEigenvaluesLogger.logAttribute("eigenvalues", mEigenvalues);
         mDiscreteEigenvaluesLogger.logAttribute("discreteEigenvalues", mDiscreteEigenvalues);
     }
 
     template <>
-    void MNAEigenvalueExtractor<Matrix>::logInitialization()
+    void MNAEigenvalueExtractor<Real>::logInitialization()
     {
         SPDLOG_LOGGER_INFO(mSLog, "---- Initialize ----");
         SPDLOG_LOGGER_INFO(mSLog, "sign matrix: {}", CPS::Logger::matrixToString(mSignMatrix));
@@ -109,7 +109,7 @@ namespace DPsim
     }
 
     template <>
-    void MNAEigenvalueExtractor<MatrixComp>::logInitialization()
+    void MNAEigenvalueExtractor<Complex>::logInitialization()
     {
         SPDLOG_LOGGER_INFO(mSLog, "---- Initialize ----");
         SPDLOG_LOGGER_INFO(mSLog, "sign matrix: {}", CPS::Logger::matrixCompToString(mSignMatrix));
@@ -119,8 +119,8 @@ namespace DPsim
         mSLog->flush();
     }
 
-    template <typename MatrixType>
-    void MNAEigenvalueExtractor<MatrixType>::extractEigenvalues(const Matrix &powerSystemMatrix, Real time, Int timeStepCount)
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::extractEigenvalues(const Matrix &powerSystemMatrix, Real time, Int timeStepCount)
     {
         calculateStateMatrix(powerSystemMatrix);
         computeDiscreteEigenvalues();
@@ -129,7 +129,7 @@ namespace DPsim
     }
 
     template <>
-    void MNAEigenvalueExtractor<Matrix>::calculateStateMatrix(const Matrix &powerSystemMatrix)
+    void MNAEigenvalueExtractor<Real>::calculateStateMatrix(const Matrix &powerSystemMatrix)
     {
         // TODO: [Georgii] use back substitution of factorized power system matrix instead of inversion (performance)
         Matrix intermediateResult = powerSystemMatrix.inverse() * mNodeBranchIncidenceMatrix;
@@ -137,7 +137,7 @@ namespace DPsim
     }
 
     template <>
-    void MNAEigenvalueExtractor<MatrixComp>::calculateStateMatrix(const Matrix &powerSystemMatrix)
+    void MNAEigenvalueExtractor<Complex>::calculateStateMatrix(const Matrix &powerSystemMatrix)
     {
         // TODO: [Georgii] use back substitution of factorized power system matrix instead of inversion (performance)
         MatrixComp compPowerSystemMatrix = CPS::Math::convertToComplex(powerSystemMatrix);
@@ -145,8 +145,8 @@ namespace DPsim
         mStateMatrix = mSignMatrix + mDiscretizationMatrix * mBranchNodeIncidenceMatrix * intermediateResult;
     }
 
-    template <typename MatrixType>
-    void MNAEigenvalueExtractor<MatrixType>::computeDiscreteEigenvalues()
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::computeDiscreteEigenvalues()
     {
         auto discreteEigenvaluesIncludingZeros = mStateMatrix.eigenvalues();
         **mDiscreteEigenvalues = CPS::Math::returnNonZeroElements(discreteEigenvaluesIncludingZeros);
@@ -154,19 +154,19 @@ namespace DPsim
     }
 
     template <>
-    void MNAEigenvalueExtractor<Matrix>::recoverEigenvalues()
+    void MNAEigenvalueExtractor<Real>::recoverEigenvalues()
     {
         **mEigenvalues = 2.0 / mTimeStep * ((**mDiscreteEigenvalues).array() - 1.0) / ((**mDiscreteEigenvalues).array() + 1.0);
     }
 
     template <>
-    void MNAEigenvalueExtractor<MatrixComp>::recoverEigenvalues()
+    void MNAEigenvalueExtractor<Complex>::recoverEigenvalues()
     {
         **mEigenvalues = 2.0 / mTimeStep * ((**mDiscreteEigenvalues).array() - 1.0) / ((**mDiscreteEigenvalues).array() + 1.0) + Complex(0.0, 1.0) * mSystemOmega;
     }
 
     template <>
-    void MNAEigenvalueExtractor<Matrix>::logExtraction(Real time, Int timeStepCount)
+    void MNAEigenvalueExtractor<Real>::logExtraction(Real time, Int timeStepCount)
     {
         SPDLOG_LOGGER_INFO(mSLog, "---- Extract eigenvalues ----");
         SPDLOG_LOGGER_INFO(mSLog, "time: {}", CPS::Logger::realToString(time));
@@ -178,7 +178,7 @@ namespace DPsim
     }
 
     template <>
-    void MNAEigenvalueExtractor<MatrixComp>::logExtraction(Real time, Int timeStepCount)
+    void MNAEigenvalueExtractor<Complex>::logExtraction(Real time, Int timeStepCount)
     {
         SPDLOG_LOGGER_INFO(mSLog, "---- Extract eigenvalues ----");
         SPDLOG_LOGGER_INFO(mSLog, "time: {}", CPS::Logger::realToString(time));
@@ -189,6 +189,6 @@ namespace DPsim
         mDiscreteEigenvaluesLogger.log(time, timeStepCount);
     }
 
-    template class MNAEigenvalueExtractor<Matrix>;
-    template class MNAEigenvalueExtractor<MatrixComp>;
+    template class MNAEigenvalueExtractor<Real>;
+    template class MNAEigenvalueExtractor<Complex>;
 }

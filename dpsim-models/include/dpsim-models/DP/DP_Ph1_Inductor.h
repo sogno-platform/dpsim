@@ -29,7 +29,7 @@ namespace Ph1 {
 		public Base::Ph1::Inductor,
 		public MNATearInterface,
 		public SharedFactory<Inductor>,
-		public EigenvalueDynamicCompInterface<MatrixComp> {
+		public EigenvalueDynamicCompInterface<Complex> {
 	protected:
 		/// DC equivalent current source for harmonics [A]
 		MatrixComp mEquivCurrent;
@@ -117,8 +117,8 @@ public:
     void execute(Real time, Int timeStepCount);
 
 		// #### Implementation of eigenvalue dynamic component interface ####
-		void stampSignMatrix(MatrixComp &signMatrix, Complex coeffDP) override;
-		void stampDiscretizationMatrix(MatrixComp &discretizationMatrix, Complex coeffDP) override;
+		void stampSignMatrix(MatrixVar<Complex> &signMatrix, Complex coeffDP) override;
+		void stampDiscretizationMatrix(MatrixVar<Complex> &discretizationMatrix, Complex coeffDP) override;
 		void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
 		void setBranchIdx(UInt i) override;
 

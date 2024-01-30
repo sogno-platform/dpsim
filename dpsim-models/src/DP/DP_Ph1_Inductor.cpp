@@ -345,12 +345,12 @@ void DP::Ph1::Inductor::mnaTearPostStep(Complex voltage, Complex current) {
   (**mIntfCurrent)(0, 0) = mEquivCond(0, 0) * voltage + mEquivCurrent(0, 0);
 }
 
-void DP::Ph1::Inductor::stampSignMatrix(MatrixComp &signMatrix, Complex coeffDP)
+void DP::Ph1::Inductor::stampSignMatrix(MatrixVar<Complex> &signMatrix, Complex coeffDP)
 {
 	signMatrix(mBranchIdx, mBranchIdx) = coeffDP;
 }
 
-void DP::Ph1::Inductor::stampDiscretizationMatrix(MatrixComp &discretizationMatrix, Complex coeffDP)
+void DP::Ph1::Inductor::stampDiscretizationMatrix(MatrixVar<Complex> &discretizationMatrix, Complex coeffDP)
 {
 	discretizationMatrix(mBranchIdx, mBranchIdx) = -mEquivCond(0, 0) * (1.0 + coeffDP);
 	//TODO [Georgii]: decide how to handle cases when mEquivCond has bigger size than one

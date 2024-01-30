@@ -28,7 +28,7 @@ namespace Ph1 {
 		public MNASimPowerComp<Real>,
 		public Base::Ph1::Inductor,
 		public SharedFactory<Inductor>,
-		public EigenvalueDynamicCompInterface<Matrix> {
+		public EigenvalueDynamicCompInterface<Real> {
 	protected:
 		/// DC equivalent current source [A]
 		Real mEquivCurrent;
@@ -76,9 +76,9 @@ public:
 		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
 		
 		// #### Implementation of eigenvalue dynamic component interface ####
-		void stampSignMatrix(Matrix& signMatrix, Complex coeffDP) final;
-		void stampDiscretizationMatrix(Matrix& discretizationMatrix, Complex coeffDP) final;
-		void stampBranchNodeIncidenceMatrix(Matrix& branchNodeIncidenceMatrix) final;
+		void stampSignMatrix(MatrixVar<Real> &signMatrix, Complex coeffDP) final;
+		void stampDiscretizationMatrix(MatrixVar<Real> &discretizationMatrix, Complex coeffDP) final;
+		void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) final;
 		void setBranchIdx(UInt i) final;
 	private:
 		/// Branch index
