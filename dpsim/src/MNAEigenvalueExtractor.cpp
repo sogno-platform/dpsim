@@ -3,8 +3,7 @@
 namespace DPsim
 {
     template <typename VarType>
-    MNAEigenvalueExtractor<VarType>::MNAEigenvalueExtractor() : mSLog(CPS::Logger::get("MNAEigenvalueExtractor", CPS::Logger::Level::info, CPS::Logger::Level::info)),
-                                                                   mEigenvaluesLogger("eigenvalues", true, 1), mDiscreteEigenvaluesLogger("discreteEigenvalues", true, 1)
+    MNAEigenvalueExtractor<VarType>::MNAEigenvalueExtractor()
     {
         mEigenvalues = CPS::AttributeStatic<MatrixComp>::make();
         mDiscreteEigenvalues = CPS::AttributeStatic<MatrixComp>::make();
@@ -18,8 +17,8 @@ namespace DPsim
         setBranchIndices();
         createEmptyEigenvalueMatrices(numMatrixNodeIndices);
         stampEigenvalueMatrices();
-        setLogAttributes();
-        logInitialization();
+        mLogger.setLogAttributes(mEigenvalues, mDiscreteEigenvalues);
+        mLogger.logInitialization(mSignMatrix, mDiscretizationMatrix, mBranchNodeIncidenceMatrix, mNodeBranchIncidenceMatrix);
     }
 
     template <typename VarType>
@@ -91,30 +90,12 @@ namespace DPsim
     }
 
     template <typename VarType>
-    void MNAEigenvalueExtractor<VarType>::setLogAttributes()
-    {
-        mEigenvaluesLogger.logAttribute("eigenvalues", mEigenvalues);
-        mDiscreteEigenvaluesLogger.logAttribute("discreteEigenvalues", mDiscreteEigenvalues);
-    }
-
-    template <typename VarType>
-    void MNAEigenvalueExtractor<VarType>::logInitialization()
-    {
-        SPDLOG_LOGGER_INFO(mSLog, "---- Initialize ----");
-        SPDLOG_LOGGER_INFO(mSLog, "sign matrix: {}", CPS::Logger::matrixVarToString(mSignMatrix));
-        SPDLOG_LOGGER_INFO(mSLog, "discretization matrix: {}", CPS::Logger::matrixVarToString(mDiscretizationMatrix));
-        SPDLOG_LOGGER_INFO(mSLog, "branch <-> node incidence matrix: {}", CPS::Logger::matrixToString(mBranchNodeIncidenceMatrix));
-        SPDLOG_LOGGER_INFO(mSLog, "node <-> branch incidence matrix: {}", CPS::Logger::matrixToString(mNodeBranchIncidenceMatrix));
-        mSLog->flush();
-    }
-
-    template <typename VarType>
     void MNAEigenvalueExtractor<VarType>::extractEigenvalues(const Matrix &powerSystemMatrix, Real time, Int timeStepCount)
     {
         calculateStateMatrix(powerSystemMatrix);
         computeDiscreteEigenvalues();
         recoverEigenvalues();
-        logExtraction(time, timeStepCount);
+        mLogger.logExtraction(time, timeStepCount, mStateMatrix);
     }
 
     template <>
@@ -152,18 +133,6 @@ namespace DPsim
     void MNAEigenvalueExtractor<Complex>::recoverEigenvalues()
     {
         **mEigenvalues = 2.0 / mTimeStep * ((**mDiscreteEigenvalues).array() - 1.0) / ((**mDiscreteEigenvalues).array() + 1.0) + Complex(0.0, 1.0) * mSystemOmega;
-    }
-
-    template <typename VarType>
-    void MNAEigenvalueExtractor<VarType>::logExtraction(Real time, Int timeStepCount)
-    {
-        SPDLOG_LOGGER_INFO(mSLog, "---- Extract eigenvalues ----");
-        SPDLOG_LOGGER_INFO(mSLog, "time: {}", CPS::Logger::realToString(time));
-        SPDLOG_LOGGER_INFO(mSLog, "discretized state matrix: {}", CPS::Logger::matrixVarToString(mStateMatrix));
-        mSLog->flush();
-
-        mEigenvaluesLogger.log(time, timeStepCount);
-        mDiscreteEigenvaluesLogger.log(time, timeStepCount);
     }
 
     template class MNAEigenvalueExtractor<Real>;
