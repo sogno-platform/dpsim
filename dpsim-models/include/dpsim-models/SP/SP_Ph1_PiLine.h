@@ -12,8 +12,8 @@
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBranch.h>
 #include <dpsim-models/Base/Base_Ph1_PiLine.h>
+#include <dpsim-models/SP/SP_Ph1_ResIndSeries.h>
 #include <dpsim-models/SP/SP_Ph1_Resistor.h>
-#include <dpsim-models/SP/SP_Ph1_Inductor.h>
 #include <dpsim-models/SP/SP_Ph1_Capacitor.h>
 
 namespace CPS {
@@ -71,10 +71,8 @@ namespace Ph1 {
 
 		// #### Admittance matrix stamp ####
 		MatrixComp mY_element;
-		/// Series Inductance submodel
-		std::shared_ptr<Inductor> mSubSeriesInductor;
-		/// Series Resistor submodel
-		std::shared_ptr<Resistor> mSubSeriesResistor;
+		/// Series Resistor-Inductance submodel
+		std::shared_ptr<ResIndSeries> mSubSeriesElement;
 		/// Parallel Resistor submodel at Terminal 0
 		std::shared_ptr<Resistor> mSubParallelResistor0;
 		// Parallel Capacitor submodel at Terminal 0
@@ -97,10 +95,7 @@ namespace Ph1 {
 		/// Defines name and logging level
 		PiLine(String name, Logger::Level logLevel = Logger::Level::off)
 			: PiLine(name, name, logLevel) { }
-		///
-		SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
-		///
-		void setParameters(Real resistance, Real inductance, Real capacitance = -1, Real conductance = -1);
+			
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency) override;
 

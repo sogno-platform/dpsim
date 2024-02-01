@@ -42,7 +42,7 @@ namespace CPS {
 
 				// #### General ####
 				/// Initializes component from power flow data
-				void initializeFromNodesAndTerminals(Real frequency);
+				void initializeFromNodesAndTerminals(Real frequency) override;
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component

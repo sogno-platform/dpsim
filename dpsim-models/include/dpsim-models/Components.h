@@ -11,6 +11,7 @@
 #include <dpsim-models/Config.h>
 
 #include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/SP/SP_Ph1_ResIndSeries.h>
 #include <dpsim-models/SP/SP_Ph1_RXLine.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSourceInverter.h>
 #include <dpsim-models/SP/SP_Ph1_PiLine.h>
@@ -48,6 +49,7 @@
 #include <dpsim-models/DP/DP_Ph1_PQLoadCS.h>
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
+#include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
 #include <dpsim-models/DP/DP_Ph1_Transformer.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceRamp.h>
@@ -94,6 +96,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
+#include <dpsim-models/EMT/EMT_Ph3_ResIndSeries.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesSwitch.h>
 #include <dpsim-models/EMT/EMT_Ph3_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>

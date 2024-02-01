@@ -22,47 +22,12 @@ SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 	mSLog->flush();
 
-	setVirtualNodeNumber(1);
     setTerminalNumber(2);
 	**mIntfVoltage = MatrixComp::Zero(1, 1);
 	**mIntfCurrent = MatrixComp::Zero(1, 1);
 	**mCurrent = MatrixComp::Zero(2,1);
 	**mActivePowerBranch = Matrix::Zero(2,1);
 	**mReactivePowerBranch = Matrix::Zero(2,1);
-}
-
-void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capacitance, Real conductance) {
-
-	**mSeriesRes = resistance;
-	**mSeriesInd = inductance;
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]", **mSeriesRes, **mSeriesInd);
-
-    if(capacitance > 0){
-        **mParallelCap = capacitance;
-    }else{
-        **mParallelCap = 1e-12;
-        SPDLOG_LOGGER_WARN(mSLog, "Zero value for Capacitance, setting default value of C={} [F]", **mParallelCap);
-    }
-    if(conductance > 0){
-        **mParallelCond = conductance;
-    }else{
-        if (mBehaviour == Behaviour::Initialization)
-			**mParallelCond = (conductance >= 0) ? conductance : 1e-6; // init mode for initFromPowerFlow of mna system components
-		else
-			**mParallelCond = (conductance > 0) ? conductance : 1e-6;
-        SPDLOG_LOGGER_WARN(mSLog, "Zero value for Conductance, setting default value of G={} [S]", **mParallelCond);
-    }
-    SPDLOG_LOGGER_INFO(mSLog, "Capacitance={} [F] Conductance={} [S]", **mParallelCap, **mParallelCond);
-	mSLog->flush();
-	mParametersSet = true;
-
-}
-
-/// DEPRECATED: Delete method
-SimPowerComp<Complex>::Ptr SP::Ph1::PiLine::clone(String name) {
-	auto copy = PiLine::make(name, mLogLevel);
-	copy->setParameters(**mSeriesRes, **mSeriesInd, **mParallelCap, **mParallelCond);
-	return copy;
 }
 
 // #### Powerflow section ####
@@ -99,7 +64,11 @@ void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 
 	//create the element admittance matrix
 	Complex y = Complex(1, 0) / Complex(mSeriesResPerUnit, 1. * mSeriesIndPerUnit);
-	Complex ys = Complex(mParallelCondPerUnit, 1. * mParallelCapPerUnit) / Complex(2, 0);
+	Complex ys;
+	if (mParallelCondPerUnit==0 && mParallelCapPerUnit == 0)
+		ys = Complex(0,0);
+	else
+		ys = Complex(mParallelCondPerUnit, 1. * mParallelCapPerUnit) / Complex(2, 0);
 
 	//Fill the internal matrix
 	mY_element = MatrixComp(2, 2);
@@ -116,7 +85,6 @@ void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 				std::stringstream ss;
 				ss << "Line>>" << this->name() << ": infinite or nan values in the element Y at: " << i << "," << j;
 				throw std::invalid_argument(ss.str());
-				std::cout << "Line>>" << this->name() << ": infinite or nan values in the element Y at: " << i << "," << j << std::endl;
 			}
 
 	//set the circuit matrix values
@@ -147,36 +115,22 @@ MatrixComp SP::Ph1::PiLine::Y_element() {
 
 void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 
-	// By default there is always a small conductance to ground to
-	// avoid problems with floating nodes.
-	**mParallelCond = (**mParallelCond >= 0) ? **mParallelCond : 1e-6;
-
 	// Static calculation
 	Real omega = 2. * PI * frequency;
 	Complex impedance = { **mSeriesRes, omega * **mSeriesInd };
 	(**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
 
-	// Initialization of virtual node
-	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) + (**mIntfCurrent)(0, 0) * **mSeriesRes);
-
-	// Create series sub components
-	mSubSeriesResistor = std::make_shared<SP::Ph1::Resistor>(**mName + "_res", mLogLevel);
-	mSubSeriesResistor->setParameters(**mSeriesRes);
-	mSubSeriesResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
-	mSubSeriesResistor->initialize(mFrequencies);
-	mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubSeriesResistor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
-	mSubSeriesInductor = std::make_shared<SP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
-	mSubSeriesInductor->setParameters(**mSeriesInd);
-	mSubSeriesInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
-	mSubSeriesInductor->initialize(mFrequencies);
-	mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
-	addMNASubComponent(mSubSeriesInductor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+	// Create series rl sub component
+	mSubSeriesElement = std::make_shared<SP::Ph1::ResIndSeries>(**mName + "_ResIndSeries", mLogLevel);
+	mSubSeriesElement->connect({ mTerminals[0]->node(), mTerminals[1]->node() });
+	mSubSeriesElement->setParameters(**mSeriesRes, **mSeriesInd);
+	mSubSeriesElement->initialize(mFrequencies);
+	mSubSeriesElement->initializeFromNodesAndTerminals(frequency);
+	addMNASubComponent(mSubSeriesElement, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	// Create parallel sub components
-	if (**mParallelCond >= 0) {
+	if (**mParallelCond > 0) {
 		mSubParallelResistor0 = std::make_shared<SP::Ph1::Resistor>(**mName + "_con0", mLogLevel);
 		mSubParallelResistor0->setParameters(2. / **mParallelCond);
 		mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
@@ -192,7 +146,7 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		addMNASubComponent(mSubParallelResistor1, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 	}
 
-	if (**mParallelCap >= 0) {
+	if (**mParallelCap > 0) {
 		mSubParallelCapacitor0 = std::make_shared<SP::Ph1::Capacitor>(**mName + "_cap0", mLogLevel);
 		mSubParallelCapacitor0->setParameters(**mParallelCap / 2.);
 		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
@@ -214,13 +168,11 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
-		"\nVirtual Node 1 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
 		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
-		Logger::phasorToString(initialSingleVoltage(1)),
-		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
 void SP::Ph1::PiLine::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
@@ -243,16 +195,18 @@ void SP::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix& leftVector) {
 }
 
 void SP::Ph1::PiLine::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	(**mIntfCurrent)(0, 0) = mSubSeriesInductor->intfCurrent()(0, 0);
+	(**mIntfCurrent)(0, 0) = mSubSeriesElement->intfCurrent()(0, 0);
 }
 
 MNAInterface::List SP::Ph1::PiLine::mnaTearGroundComponents() {
 	MNAInterface::List gndComponents;
 
-	gndComponents.push_back(mSubParallelResistor0);
-	gndComponents.push_back(mSubParallelResistor1);
+	if (**mParallelCond > 0) {
+		gndComponents.push_back(mSubParallelResistor0);
+		gndComponents.push_back(mSubParallelResistor1);
+	}
 
-	if (**mParallelCap >= 0) {
+	if (**mParallelCap > 0) {
 		gndComponents.push_back(mSubParallelCapacitor0);
 		gndComponents.push_back(mSubParallelCapacitor1);
 	}
@@ -261,21 +215,18 @@ MNAInterface::List SP::Ph1::PiLine::mnaTearGroundComponents() {
 }
 
 void SP::Ph1::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
-	mSubSeriesResistor->mnaTearSetIdx(mTearIdx);
-	mSubSeriesResistor->mnaTearInitialize(omega, timeStep);
-	mSubSeriesInductor->mnaTearSetIdx(mTearIdx);
-	mSubSeriesInductor->mnaTearInitialize(omega, timeStep);
+	mSubSeriesElement->mnaTearSetIdx(mTearIdx);
+	mSubSeriesElement->mnaTearInitialize(omega, timeStep);
 }
 
 void SP::Ph1::PiLine::mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix) {
-	mSubSeriesResistor->mnaTearApplyMatrixStamp(tearMatrix);
-	mSubSeriesInductor->mnaTearApplyMatrixStamp(tearMatrix);
+	mSubSeriesElement->mnaTearApplyMatrixStamp(tearMatrix);
 }
 
 void SP::Ph1::PiLine::mnaTearApplyVoltageStamp(Matrix& voltageVector) {
-	mSubSeriesInductor->mnaTearApplyVoltageStamp(voltageVector);
+	mSubSeriesElement->mnaTearApplyVoltageStamp(voltageVector);
 }
 
 void SP::Ph1::PiLine::mnaTearPostStep(Complex voltage, Complex current) {
-	mSubSeriesInductor->mnaTearPostStep(voltage - current * **mSeriesRes, current);
+	mSubSeriesElement->mnaTearPostStep(voltage - current * **mSeriesRes, current);
 }

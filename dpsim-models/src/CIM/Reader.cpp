@@ -351,8 +351,10 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment* line) {
 
 	// By default there is always a small conductance to ground to
 	// avoid problems with floating nodes.
-	Real capacitance = mShuntCapacitorValue;
-	Real conductance = mShuntConductanceValue;
+	//Real capacitance = mShuntCapacitorValue;
+	//Real conductance = mShuntConductanceValue;
+	Real capacitance=0;
+	Real conductance=0;
 
 	if(line->bch.value > 1e-9 && !mSetShuntCapacitor)
 		capacitance = Real(line->bch.value / mOmega);
@@ -491,8 +493,8 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 			Matrix resistance_3ph = CPS::Math::singlePhaseParameterToThreePhase(resistance);
 			Matrix inductance_3ph = CPS::Math::singlePhaseParameterToThreePhase(inductance);
 			Bool withResistiveLosses = resistance > 0;
-			auto transformer = std::make_shared<EMT::Ph3::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-			transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
+			auto transformer = std::make_shared<EMT::Ph3::Transformer>(trans->mRID, trans->name, mComponentLogLevel);
+			transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
 			return transformer;
 		}
 		else
@@ -509,9 +511,8 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 		return transformer;
 	}
 	else {
-		Bool withResistiveLosses = resistance > 0;
-		auto transformer = std::make_shared<DP::Ph1::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-		transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs, ratioPhase, resistance, inductance);
+		auto transformer = std::make_shared<DP::Ph1::Transformer>(trans->mRID, trans->name, mComponentLogLevel);
+		transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance, inductance);
 		return transformer;
 	}
 }
