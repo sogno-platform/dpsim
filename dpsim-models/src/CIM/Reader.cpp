@@ -942,17 +942,37 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(CIMPP::ExternalNet
 }
 
 TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(CIMPP::EquivalentShunt* shunt){
+	
 	SPDLOG_LOGGER_INFO(mSLog, "Found shunt {}", shunt->name);
 
-	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(shunt);
+	if(mDomain == Domain::SP) {
+		auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(shunt->mRID, shunt->name, mComponentLogLevel);
+		Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(shunt);
+		cpsShunt->setParameters(shunt->g.value, shunt->b.value);
+		cpsShunt->setBaseVoltage(baseVoltage);
+		SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in SP domain.");
+		return cpsShunt;
+	} else if(mDomain == Domain::DP) {
+		// TODO: consider number of switched sections
+		auto cpsShunt = std::make_shared<DP::Ph1::Shunt>(shunt->mRID, shunt->name, mComponentLogLevel);
+		cpsShunt->setParameters(shunt->g.value, shunt->b.value);
+		SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in DP domain.");
+		mSLog->flush();
 
-	auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(shunt->mRID, shunt->name, mComponentLogLevel);
-	cpsShunt->setParameters(shunt->g.value, shunt->b.value);
-	cpsShunt->setBaseVoltage(baseVoltage);
-	return cpsShunt;
+		return cpsShunt;
+	} 
+	else {
+		// TODO: consider number of switched sections
+		auto cpsShunt = std::make_shared<EMT::Ph3::Shunt>(shunt->mRID, shunt->name, mComponentLogLevel);
+		cpsShunt->setParameters(shunt->g.value, shunt->b.value);
+		SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in EMT domain.");
+		mSLog->flush();
+
+		return cpsShunt;
+	}
 }
 
-TopologicalPowerComp::Ptr Reader::mapEquivalentLinearShunt(CIMPP::LinearShuntCompensator* linearShunt){
+TopologicalPowerComp::Ptr Reader::mapEquivalentLinearShunt(CIMPP::LinearShuntCompensator* linearShunt) {
 	
 	SPDLOG_LOGGER_INFO(mSLog, "Found linear shunt {}", linearShunt->name);
 	
@@ -962,7 +982,7 @@ TopologicalPowerComp::Ptr Reader::mapEquivalentLinearShunt(CIMPP::LinearShuntCom
 		Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(linearShunt);
 		cpsShunt->setParameters(linearShunt->gPerSection.value, linearShunt->bPerSection.value);
 		cpsShunt->setBaseVoltage(baseVoltage);
-		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in SP domain.");
+		SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in SP domain.");
 		mSLog->flush();
 
 		return cpsShunt;
@@ -971,11 +991,22 @@ TopologicalPowerComp::Ptr Reader::mapEquivalentLinearShunt(CIMPP::LinearShuntCom
 		// TODO: consider number of switched sections
 		auto cpsShunt = std::make_shared<DP::Ph1::Shunt>(linearShunt->mRID, linearShunt->name, mComponentLogLevel);
 		cpsShunt->setParameters(linearShunt->gPerSection.value, linearShunt->bPerSection.value);
-		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in SP domain.");
+		SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in DP domain.");
 		mSLog->flush();
 
 		return cpsShunt;
 	} 
+	else {
+		// TODO: consider number of switched sections
+		auto cpsShunt = std::make_shared<EMT::Ph3::Shunt>(linearShunt->mRID, linearShunt->name, mComponentLogLevel);
+		cpsShunt->setParameters(linearShunt->gPerSection.value, linearShunt->bPerSection.value);
+		SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in EMT domain.");
+		mSLog->flush();
+
+		return cpsShunt;
+	}
+
+	return nullptr;
 }
 
 Real Reader::determineBaseVoltageAssociatedWithEquipment(CIMPP::ConductingEquipment* equipment){
