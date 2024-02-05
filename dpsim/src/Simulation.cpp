@@ -161,7 +161,7 @@ template <typename VarType> void Simulation::createMNASolver() {
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
 			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
 			solver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
-			solver->setEigenvalueExtractionMode(mEigenvalueExtractionMode);
+			solver->doEigenvalueExtraction(mIsEigenvalueExtractionEnabled);
 			solver->initialize();
 			solver->setMaxNumberOfIterations(mMaxIterations);
 		}
@@ -358,15 +358,7 @@ void Simulation::start() {
 		// In dynamic simulations increase simulation time to calculate first results at t=timestep
 		mTime += **mTimeStep;
 	}
-
-	if (mEigenvalueExtractionMode == CPS::EigenvalueExtractionMode::AtStart)
-	{
-		if (mSolvers.size() == 1)
-		{
-			mSolvers[0]->extractEigenvalues(0.0, 1.0);
-		}		
-	}
-
+	
 	mSimulationStartTimePoint = std::chrono::steady_clock::now();
 }
 

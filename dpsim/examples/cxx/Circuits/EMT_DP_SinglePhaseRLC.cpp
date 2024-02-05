@@ -47,7 +47,7 @@ void runEMT(Real resistance)
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::EMT);
-	sim.setEigenvalueExtractionMode(EigenvalueExtractionMode::AtStart);
+	sim.doEigenvalueExtraction(true);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -115,7 +115,7 @@ void runDP()
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::DP);
-	sim.setEigenvalueExtractionMode(EigenvalueExtractionMode::AtEveryStep);
+	sim.doEigenvalueExtraction(true);
 	sim.addLogger(logger);	
 
 	sim.run();

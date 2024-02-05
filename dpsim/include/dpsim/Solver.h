@@ -64,8 +64,8 @@ protected:
   /// Solver behaviour initialization or simulation
   Behaviour mBehaviour = Solver::Behaviour::Simulation;
 
-		/// Eigenvalue extraction type
-		CPS::EigenvalueExtractionMode mEigenvalueExtractionMode = CPS::EigenvalueExtractionMode::Disabled;
+		/// Enables extraction of eigenvalues
+		Bool mIsEigenvalueExtractionEnabled = false;
 
 	public:
 		Solver(String name, CPS::Logger::Level logLevel) :
@@ -131,7 +131,7 @@ protected:
 		void setMaxNumberOfIterations(int maxIterations) {mMaxIterations = maxIterations;}
 
 		/// ### Eigenvalue Extraction ###
-		void setEigenvalueExtractionMode(CPS::EigenvalueExtractionMode eigenvalueExtractionMode) { mEigenvalueExtractionMode = eigenvalueExtractionMode; }
+		void doEigenvalueExtraction(Bool isEigenvalueExtractionEnabled) { mIsEigenvalueExtractionEnabled = isEigenvalueExtractionEnabled; }
 		///
 		virtual void extractEigenvalues(Real time, Int timeStepCount){
 			// no default implementation for all types of solvers

@@ -173,7 +173,7 @@ public:
 		///
 		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
 		///
-		void setEigenvalueExtractionMode(CPS::EigenvalueExtractionMode eigenvalueExtractionMode) { mEigenvalueExtractionMode = eigenvalueExtractionMode; }
+		void doEigenvalueExtraction(Bool isEigenvalueExtractionEnabled = true) { mIsEigenvalueExtractionEnabled = isEigenvalueExtractionEnabled; }
 		/// set solver and component to initialization or simulation behaviour
 		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) { mSolverBehaviour = behaviour; }
 		///
@@ -274,6 +274,6 @@ public:
 		void logAttribute(String name, CPS::AttributeBase::Ptr attr);
 
 		private:
-		CPS::EigenvalueExtractionMode mEigenvalueExtractionMode = CPS::EigenvalueExtractionMode::Disabled;
+		Bool mIsEigenvalueExtractionEnabled = false;
 	};
 }

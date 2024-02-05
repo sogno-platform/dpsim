@@ -96,7 +96,7 @@ template <typename VarType> void MnaSolver<VarType>::initialize() {
   SPDLOG_LOGGER_INFO(mSLog, "--- Initial system matrices and vectors ---");
   logSystemMatrices();
 
-	if (Solver::mEigenvalueExtractionMode != CPS::EigenvalueExtractionMode::Disabled)
+	if (Solver::mIsEigenvalueExtractionEnabled)
 	{
 		SPDLOG_LOGGER_INFO(mSLog, "--- Initialize eigenvalue extractor ---");
 		mMNAEigenvalueExtractor.initialize(mSystem, mNumMatrixNodeIndices, Solver::mTimeStep);
@@ -614,7 +614,7 @@ template <typename VarType> Task::List MnaSolver<VarType>::getTasks() {
 		l.push_back(createSolveTaskRecomp());
 	} else {
 		l.push_back(createSolveTask());
-		if (mEigenvalueExtractionMode == CPS::EigenvalueExtractionMode::AtEveryStep)
+		if (mIsEigenvalueExtractionEnabled)
 		{
 			l.push_back(createExtractEigenvaluesTask());
 		}
