@@ -170,6 +170,8 @@ protected:
 		// ### Eigenvalue extraction ###
 		/// Extract eigenvalues from power system conductance matrix
 		void extractEigenvalues(Real time, Int timeStepCount) override;
+		///
+		void closeEigenvalueLogger() override;
 
 		/// Sets the linear solver to "implementation" and creates an object
 		void setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);

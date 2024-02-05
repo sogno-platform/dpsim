@@ -135,6 +135,12 @@ namespace DPsim
         **mEigenvalues = 2.0 / mTimeStep * ((**mDiscreteEigenvalues).array() - 1.0) / ((**mDiscreteEigenvalues).array() + 1.0) + Complex(0.0, 1.0) * mSystemOmega;
     }
 
+    template <typename VarType>
+    void MNAEigenvalueExtractor<VarType>::closeLogger()
+    {
+        mLogger.close();
+    }
+
     template class MNAEigenvalueExtractor<Real>;
     template class MNAEigenvalueExtractor<Complex>;
 }

@@ -14,7 +14,8 @@ namespace DPsim
 		MNAEigenvalueExtractor();
 
 		void initialize(const CPS::SystemTopology &topology, UInt numMatrixNodeIndices, Real timeStep);
-		void extractEigenvalues(const Matrix &powerSystemMatrix, Real time, Int timeStepCount);		
+		void extractEigenvalues(const Matrix &powerSystemMatrix, Real time, Int timeStepCount);
+		void closeLogger();
 
 	private:
 		CPS::EigenvalueCompInterface::List mEigenvalueComponents;

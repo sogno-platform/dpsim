@@ -400,6 +400,12 @@ void MnaSolverDirect<VarType>::extractEigenvalues(Real time, Int timeStepCount)
 }
 
 template <typename VarType>
+void MnaSolverDirect<VarType>::closeEigenvalueLogger()
+{
+	MnaSolver<VarType>::mMNAEigenvalueExtractor.closeLogger();
+}
+
+template <typename VarType>
 void MnaSolverDirect<VarType>::logSystemMatrices() {
 	if (mFrequencyParallel) {
 		for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size(); ++i) {

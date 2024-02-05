@@ -386,8 +386,11 @@ void Simulation::stop() {
   for (auto lg : mLoggers)
     lg->close();
 
-  SPDLOG_LOGGER_INFO(mLog, "Simulation finished.");
-  mLog->flush();
+	for (auto solver : mSolvers)
+		solver->closeEigenvalueLogger();
+
+	SPDLOG_LOGGER_INFO(mLog, "Simulation finished.");
+	mLog->flush();
 }
 
 Real Simulation::next() {

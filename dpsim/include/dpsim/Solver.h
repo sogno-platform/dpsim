@@ -132,7 +132,13 @@ protected:
 
 		/// ### Eigenvalue Extraction ###
 		void setEigenvalueExtractionMode(CPS::EigenvalueExtractionMode eigenvalueExtractionMode) { mEigenvalueExtractionMode = eigenvalueExtractionMode; }
-		/// 
-		virtual void extractEigenvalues(Real time, Int timeStepCount){};
+		///
+		virtual void extractEigenvalues(Real time, Int timeStepCount){
+			// no default implementation for all types of solvers
+		};
+		///
+		virtual void closeEigenvalueLogger(){
+			// no default implementation for all types of solvers
+		};
 	};
 }
