@@ -103,6 +103,11 @@
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesSwitch.h>
+#include <dpsim-models/EMT/EMT_Ph3_Shunt.h>
+#include <dpsim-models/EMT/EMT_Ph3_CurrentSource.h>
+#include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
+#include <dpsim-models/EMT/EMT_Ph3_VoltageSourceNorton.h>
+#include <dpsim-models/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.h>
