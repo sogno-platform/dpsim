@@ -105,6 +105,8 @@ TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass* obj) {
 		return mapExternalNetworkInjection(extnet);
 	if (CIMPP::EquivalentShunt *shunt = dynamic_cast<CIMPP::EquivalentShunt*>(obj))
 		return mapEquivalentShunt(shunt);
+	if (CIMPP::LinearShuntCompensator *linearShunt = dynamic_cast<CIMPP::LinearShuntCompensator *>(obj))
+		return mapEquivalentLinearShunt(linearShunt);
 
 	return nullptr;
 }
@@ -525,6 +527,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 		if (mGeneratorType == GeneratorType::TransientStability
 			|| mGeneratorType == GeneratorType::SG6aOrderVBR
 			|| mGeneratorType == GeneratorType::SG6bOrderVBR
+			|| mGeneratorType == GeneratorType::SG5OrderVBR
 			|| mGeneratorType == GeneratorType::SG4OrderVBR
 			|| mGeneratorType == GeneratorType::SG3OrderVBR
 			|| mGeneratorType == GeneratorType::SG4OrderPCM
@@ -780,6 +783,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			|| mGeneratorType == GeneratorType::FullOrderVBR
 			|| mGeneratorType == GeneratorType::SG3OrderVBR
 			|| mGeneratorType == GeneratorType::SG4OrderVBR
+			|| mGeneratorType == GeneratorType::SG5OrderVBR
 			|| mGeneratorType == GeneratorType::SG6aOrderVBR
 			|| mGeneratorType == GeneratorType::SG6bOrderVBR) {
 
@@ -948,6 +952,34 @@ TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(CIMPP::EquivalentShunt* shu
 	return cpsShunt;
 }
 
+TopologicalPowerComp::Ptr Reader::mapEquivalentLinearShunt(CIMPP::LinearShuntCompensator* linearShunt){
+	
+	SPDLOG_LOGGER_INFO(mSLog, "Found linear shunt {}", linearShunt->name);
+
+	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(linearShunt);
+
+	auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(linearShunt->mRID, linearShunt->name, mComponentLogLevel);
+	if(mDomain == Domain::SP) {
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in SP domain.");
+		mSLog->flush();
+		cpsShunt->setParameters(linearShunt->gPerSection.value, linearShunt->bPerSection.value);
+		cpsShunt->setBaseVoltage(baseVoltage);
+	} 
+	/*elif(mDomain == Domain::DP) {
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in DP domain.");
+		auto cpsShunt = std::make_shared<DP::Ph1::capacitor(shunt->mRID, shunt->name, mComponentLogLevel);
+		cpsShunt->setParameters(shunt->g.value, shunt->b.value);
+		cpsShunt->setBaseVoltage(baseVoltage);
+	} else(mDomain == Domain::EMT) {
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in EMT domain.");
+	
+	}
+	*/
+
+	// TODO: consider number of switched sections
+	return cpsShunt;
+}
+
 Real Reader::determineBaseVoltageAssociatedWithEquipment(CIMPP::ConductingEquipment* equipment){
 	Real baseVoltage = 0;
 
@@ -1074,7 +1106,8 @@ std::map<String, std::vector<CPS::Real>> Reader::getPowerFlowResults() {
 			auto nodeName = flow->Terminal->TopologicalNode->name;
 			if (dynamic_cast<CIMPP::EnergyConsumer*>(conductingEquipment) 				||
 				dynamic_cast<CIMPP::ExternalNetworkInjection*>(conductingEquipment) 	||
-				dynamic_cast<CIMPP::EquivalentShunt*>(conductingEquipment)) {
+				dynamic_cast<CIMPP::EquivalentShunt*>(conductingEquipment)				||
+				dynamic_cast<CIMPP::LinearShuntCompensator*>(conductingEquipment) ) {
 
 				if (pfResults.count(nodeName)) {
 					pfResults[nodeName][2] -= flow->p.value;

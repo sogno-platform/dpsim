@@ -7,14 +7,20 @@
  *********************************************************************************/
 
 #pragma once
-#include <dpsim-models/SimPowerComp.h>
+
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBranch.h>
+#include <dpsim-models/SP/SP_Ph1_Capacitor.h>
+#include <dpsim-models/SP/SP_Ph1_Resistor.h>
 
 namespace CPS {
+namespace SP {
+namespace Ph1 {
 
-namespace SP {namespace Ph1 {
-
-	class Shunt : public SimPowerComp<Complex>, public SharedFactory<Shunt>, public PFSolverInterfaceBranch {
+	class Shunt : 
+		public CompositePowerComp<Complex>, 
+		public SharedFactory<Shunt>, 
+		public PFSolverInterfaceBranch {
 	public:
 		/// Conductance [S]
 		const Attribute<Real>::Ptr mConductance;
@@ -24,6 +30,12 @@ namespace SP {namespace Ph1 {
 		const Attribute<Real>::Ptr mConductancePerUnit;
 		/// Susceptance [pu]
 		const Attribute<Real>::Ptr mSusceptancePerUnit;
+
+		/// Capacitor between terminal and ground
+		std::shared_ptr<Capacitor> mSubCapacitor;
+		/// Resistor between terminal and ground
+		std::shared_ptr<Resistor> mSubResistor;
+
 	private:
         /// Base voltage [V]
         Real mBaseVoltage;
@@ -47,6 +59,18 @@ namespace SP {namespace Ph1 {
 		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
 		/// Stamps admittance matrix
 		void pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y);
+
+		// #### MNA section ####
+		/// Initializes component from power flow data
+		void initializeFromNodesAndTerminals(Real frequency) final;
+		/// Updates internal current variable of the component
+		void mnaCompUpdateCurrent(const Matrix& leftVector) final;
+		/// Updates internal voltage variable of the component
+		void mnaCompUpdateVoltage(const Matrix& leftVector) final;
+		/// MNA post-step operations
+		void mnaParentPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) final;
+		/// add MNA post-step dependencies
+		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) final;
 
 	};
 }
