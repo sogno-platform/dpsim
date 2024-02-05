@@ -34,14 +34,19 @@ namespace CPS {
 				Matrix mInductance;
 				/// Capacitance [F]
 				Matrix mCapacitance;
-				///
-				Bool initPowerFromTerminal = true;
 				/// Internal inductor
 				std::shared_ptr<EMT::Ph3::Inductor> mSubInductor;
 				/// Internal capacitor
 				std::shared_ptr<EMT::Ph3::Capacitor> mSubCapacitor;
 				/// Internal resistance
 				std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
+
+				/// ### Flags
+				///
+				Bool mInitPowerFromTerminal = true;
+				///
+				Bool mInitVoltageFromNode = true;
+				
 			public:
 				/// Active power [Watt]
 				const Attribute<Matrix>::Ptr mActivePower;
@@ -57,12 +62,19 @@ namespace CPS {
 					Logger::Level logLevel = Logger::Level::off);
 				/// Defines name, component parameters and logging level
 				RXLoad(String name,
-					Matrix activePower, Matrix reactivePower, Real volt,
+					Matrix activePower, Matrix reactivePower, Real nominalVoltage,
 					Logger::Level logLevel = Logger::Level::off);
 
 				// #### General ####
+				/// set 1ph power (power_phase_a = power_phase_b = power_phase_a = power_1ph/3)
+				/// Nominal voltage will be initialized from power flow results, if they are available
+				void setParameters(Real activePower, Real reactivePower);
+				/// 
+				void setParameters(Matrix activePower, Matrix reactivePower);
+				/// set 1ph power (power_phase_a = power_phase_b = power_phase_a = power_1ph/3)
+				void setParameters(Real activePower, Real reactivePower, Real nominalVoltage);
 				///
-				void setParameters(Matrix activePower, Matrix reactivePower, Real volt);
+				void setParameters(Matrix activePower, Matrix reactivePower, Real nominalVoltage);
 				/// Initializes component from power flow data
 				void initializeFromNodesAndTerminals(Real frequency);
 

@@ -19,7 +19,6 @@ set(CIRCUIT_SOURCES
 
 	# DP examples with PF initialization
 	Circuits/DP_Slack_PiLine_PQLoad_with_PF_Init.cpp
-	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
 	Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 
 	# Powerflow examples
@@ -33,7 +32,7 @@ set(CIRCUIT_SOURCES
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp
-
+	
 	# EMT examples with PF initialization
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
 	Circuits/EMT_Slack_PiLine_VSI_with_PF_Init.cpp
@@ -42,7 +41,6 @@ set(CIRCUIT_SOURCES
 	# SP examples
 	Circuits/SP_Circuits.cpp
 	Circuits/SP_PiLine.cpp
-	Circuits/SP_Slack_PiLine_VSI_with_PF_Init.cpp
 	Circuits/SP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	Circuits/SP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 
@@ -71,9 +69,6 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp
-	Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/EMT_SynGen4OrderIter_SMIB_Fault.cpp
 
 	# SMIB Reduced Order - Load step
@@ -117,9 +112,6 @@ list(APPEND TEST_SOURCES
 	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp
-	Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault.cpp
 	Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
@@ -128,6 +120,7 @@ list(APPEND TEST_SOURCES
 	Circuits/EMT_SynGenVBR_OperationalParams_SMIB_Fault.cpp
 	Circuits/EMT_SynGenVBR_SMIB_Fault.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
+	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FrequencyRamp_CosineFM.cpp	
 	Circuits/EMT_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FrequencyRamp_CosineFM.cpp
 	Circuits/DP_SMIB_ReducedOrderSG_LoadStep.cpp

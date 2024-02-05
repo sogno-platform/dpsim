@@ -7,13 +7,13 @@
  *********************************************************************************/
 
 #include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
+#include <cmath>
 
 using namespace CPS;
 
 DP::Ph1::ResIndSeries::ResIndSeries(String uid, String name, Logger::Level logLevel)
 	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
 	mInductance(mAttributes->create<Real>("L")),
-	///FIXME: The resistance is never used anywhere...
 	mResistance(mAttributes->create<Real>("R")) {
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
@@ -31,6 +31,12 @@ SimPowerComp<Complex>::Ptr DP::Ph1::ResIndSeries::clone(String name) {
 void DP::Ph1::ResIndSeries::setParameters(Real resistance, Real inductance) {
 	**mResistance = resistance;
 	**mInductance = inductance;
+
+	//check initial value of inductance
+	if (**mInductance==0.0) {
+		std::string err = "Inductance of " + this->name() + " can not be zero!";
+		throw std::invalid_argument(err);
+	}
 }
 
 void DP::Ph1::ResIndSeries::initialize(Matrix frequencies) {
@@ -44,7 +50,7 @@ void DP::Ph1::ResIndSeries::initialize(Matrix frequencies) {
 void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2. * PI * frequency;
-	Complex impedance = { 0, omega * **mInductance };
+	Complex impedance = { **mResistance, omega * **mInductance };
 	(**mIntfVoltage)(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	(**mIntfCurrent)(0,0) = (**mIntfVoltage)(0,0) / impedance;
 
@@ -59,6 +65,7 @@ void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
+	mSLog->flush();
 }
 
 // #### MNA functions ####
@@ -66,18 +73,17 @@ void DP::Ph1::ResIndSeries::initializeFromNodesAndTerminals(Real frequency) {
 void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
 	for (Int freq = 0; freq < mNumFreqs; freq++) {
 		Real a = timeStep / (2. * **mInductance);
-		Real b = timeStep * 2.*PI * mFrequencies(freq,0) / 2.;
+		Real b = timeStep * 2. *PI * mFrequencies(freq,0) / 2.;
 
-		Real equivCondReal = a / (1. + b * b);
-		Real equivCondImag =  -a * b / (1. + b * b);
+		Real equivCondReal = ( a + **mResistance * std::pow(a, 2) ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
+		Real equivCondImag =  -a * b / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
 		mEquivCond(freq,0) = { equivCondReal, equivCondImag };
-		Real preCurrFracReal = (1. - b * b) / (1. + b * b);
-		Real preCurrFracImag =  (-2. * b) / (1. + b * b);
+
+		Real preCurrFracReal = ( 1. - std::pow(b,2) + - std::pow(**mResistance * a, 2) ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2));
+		Real preCurrFracImag =  ( -2. * b ) / ( std::pow(1. + **mResistance * a, 2) + std::pow(b, 2) );
 		mPrevCurrFac(freq,0) = { preCurrFracReal, preCurrFracImag };
 
-		// TODO: check if this is correct or if it should be only computed before the step
 		mEquivCurrent(freq,0) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mPrevCurrFac(freq,0) * (**mIntfCurrent)(0,freq);
-		(**mIntfCurrent)(0,freq) = mEquivCond(freq,0) * (**mIntfVoltage)(0,freq) + mEquivCurrent(freq,0);
 	}
 }
 
@@ -94,11 +100,11 @@ void DP::Ph1::ResIndSeries::mnaCompInitialize(Real omega, Real timeStep, Attribu
 		Logger::phasorToString((**mIntfVoltage)(0,0)),
 		Logger::phasorToString((**mIntfCurrent)(0,0)),
 		Logger::complexToString(mEquivCurrent(0,0)));
+	mSLog->flush();
 }
 
 void DP::Ph1::ResIndSeries::mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
-		updateMatrixNodeIndices();
-
+	updateMatrixNodeIndices();
 	initVars(timeStep);
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
@@ -194,7 +200,18 @@ void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStampHarm(Matrix& rightVe
 	}
 }
 
-void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStampHarm(Matrix& rightVector, Int freqIdx) {
+	mEquivCurrent(freqIdx,0) =
+		mEquivCond(freqIdx,0) * (**mIntfVoltage)(0, freqIdx)
+		+ mPrevCurrFac(freqIdx,0) * (**mIntfCurrent)(0, freqIdx);
+
+	if (terminalNotGrounded(0))
+		Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freqIdx,0));
+	if (terminalNotGrounded(1))
+		Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent(freqIdx,0));
+}
+
+void DP::Ph1::ResIndSeries::mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// actually depends on L, but then we'd have to modify the system matrix anyway
 	modifiedAttributes.push_back(mRightVector);
 	prevStepDependencies.push_back(mIntfVoltage);
@@ -202,14 +219,14 @@ void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, At
 }
 
 void DP::Ph1::ResIndSeries::mnaCompPreStep(Real time, Int timeStepCount) {
-	mResIndSeries.mnaCompApplyRightSideVectorStamp(**mRightVector);
+	this->mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::ResIndSeries::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 	mResIndSeries.mnaCompApplyRightSideVectorStampHarm(**mResIndSeries.mRightVector);
 }
 
-void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void DP::Ph1::ResIndSeries::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
@@ -281,5 +298,4 @@ void DP::Ph1::ResIndSeries::mnaTearApplyVoltageStamp(Matrix& voltageVector) {
 void DP::Ph1::ResIndSeries::mnaTearPostStep(Complex voltage, Complex current) {
 	(**mIntfVoltage)(0, 0) = voltage;
 	(**mIntfCurrent)(0, 0) = mEquivCond(0,0) * voltage + mEquivCurrent(0,0);
-
 }

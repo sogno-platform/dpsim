@@ -10,6 +10,7 @@
 
 #include <map>
 #include <list>
+#include <vector>
 
 #include <dpsim-models/Filesystem.h>
 #include <dpsim-models/Definitions.h>
@@ -49,6 +50,7 @@ namespace CIMPP {
 	class EquivalentShunt;
 	class TopologicalNode;
 	class ConductingEquipment;
+	class LinearShuntCompensator;
 };
 #else
 #include <CIMNamespaces.hpp>
@@ -66,8 +68,6 @@ namespace CIM {
 		Logger::Level mComponentLogLevel;
 		/// Model from CIM++
 		CIMModel *mModel;
-		/// All components after mapping
-		IdentifiedObject::List mComponents;
 		/// System frequency (has to be given to convert between reactances
 		/// in CIM and inductances used inside the simulation)
 		Real mFrequency;
@@ -146,6 +146,9 @@ namespace CIM {
 		TopologicalPowerComp::Ptr mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection* extnet);
 		/// Returns a shunt
 		TopologicalPowerComp::Ptr mapEquivalentShunt(CIMPP::EquivalentShunt *shunt);
+		///
+		TopologicalPowerComp::Ptr mapEquivalentLinearShunt(CIMPP::LinearShuntCompensator *linearShunt);
+		
 
 		// #### Helper Functions ####
 		/// Determine base voltage associated with object
@@ -177,6 +180,10 @@ namespace CIM {
 		void setShuntConductance(Real v);
 		/// If set, some components like loads include protection switches
 		void useProtectionSwitches(Bool value = true);
+
+		//
+		///
+		std::map<String, std::vector<CPS::Real>> getPowerFlowResults();
 	};
 }
 }

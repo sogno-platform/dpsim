@@ -296,6 +296,7 @@ void Base::SynchronGenerator::initPerUnitStates() {
 	}
 
 	**mElecTorque = (mPsisr(3,0)*mIsr(0,0) - mPsisr(0,0)*mIsr(3,0));
+	**mVfd = (mLmd / mRfd) * init_vfd;
 
 	// Initialize controllers
 	if (mHasExciter){
@@ -385,17 +386,15 @@ Real Base::SynchronGenerator::calcHfromJ(Real J, Real omegaNominal,
   return J * 0.5 * omegaNominal * omegaNominal / polePairNumber;
 }
 
-void Base::SynchronGenerator::addExciter(Real Ta, Real Ka, Real Te, Real Ke,
-	Real Tf, Real Kf, Real Tr) {
-	mExciter = Signal::Exciter::make("Exciter", CPS::Logger::Level::info);
-	mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
+void Base::SynchronGenerator::addExciter(std::shared_ptr<Base::Exciter> exciter) {
+	mExciter = exciter;
 	mHasExciter = true;
 }
 
 void Base::SynchronGenerator::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
 	Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef) {
 	mTurbineGovernor = Signal::TurbineGovernor::make("TurbineGovernor", CPS::Logger::Level::info);
-	mTurbineGovernor->setParameters(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
+  mTurbineGovernor->setParameters(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
 	mTurbineGovernor->initialize(PmRef, Tm_init);
 	mHasTurbineGovernor = true;
 }

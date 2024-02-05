@@ -45,6 +45,7 @@ void SP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
+	mSLog->flush();
 }
 
 // #### MNA section ####
@@ -59,6 +60,7 @@ void SP::Ph1::Inductor::mnaCompInitialize(Real omega, Real timeStep, Attribute<M
 		"\n--- MNA initialization finished ---",
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
 		Logger::phasorToString((**mIntfCurrent)(0, 0)));
+	mSLog->flush();
 }
 
 void SP::Ph1::Inductor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
@@ -87,9 +89,12 @@ void SP::Ph1::Inductor::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMat
 		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
 			-mSusceptance.real(), -mSusceptance.imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
+	mSLog->flush();
 }
 
-void SP::Ph1::Inductor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void SP::Ph1::Inductor::mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, 
+	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, 
+	Attribute<Matrix>::Ptr &leftVector) {
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(mIntfVoltage);
 	modifiedAttributes.push_back(mIntfCurrent);
@@ -102,7 +107,7 @@ void SP::Ph1::Inductor::mnaCompPostStep(Real time, Int timeStepCount, Attribute<
 
 void SP::Ph1::Inductor::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
-	**mIntfVoltage = Matrix::Zero(3, 1);
+	**mIntfVoltage = Matrix::Zero(1, 1);
 	if (terminalNotGrounded(1)) {
 		(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	}

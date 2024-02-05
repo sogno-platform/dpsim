@@ -10,7 +10,7 @@
 
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/AttributeList.h>
-#include <dpsim-models/Signal/Exciter.h>
+#include <dpsim-models/Signal/ExciterDC1Simp.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 
 namespace CPS {
@@ -35,9 +35,8 @@ namespace Base {
 		/// Add governor and turbine
 		void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
 			Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
-		/// Add voltage regulator and exciter
-		void addExciter(Real Ta, Real Ka, Real Te, Real Ke,
-			Real Tf, Real Kf, Real Tr);
+		/// Add automatic voltage regulator
+			void addExciter(std::shared_ptr<Base::Exciter> exciter);
 
 	protected:
 		///
@@ -194,6 +193,9 @@ namespace Base {
 		const Attribute<Real>::Ptr mMechPower;
 		/// electrical torque
 		const Attribute<Real>::Ptr mElecTorque;
+		/// Voltage excitation
+		const Attribute<Real>::Ptr mVfd;
+
 	protected:
 		/// \brief Vector of stator and rotor voltages.
 		///
@@ -288,7 +290,8 @@ namespace Base {
 			mElecActivePower(attributeList->create<Real>("P_elec", 0)),
 			mElecReactivePower(attributeList->create<Real>("Q_elec", 0)),
 			mMechPower(attributeList->create<Real>("P_mech", 0)),
-			mElecTorque(attributeList->create<Real>("T_e", 0)) { };
+			mElecTorque(attributeList->create<Real>("T_e", 0)),
+			mVfd(attributeList->create<Real>("Vfd", 0)) { };
 
 		///
 		void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
@@ -356,7 +359,7 @@ namespace Base {
 		/// Signal component modelling governor control and steam turbine
 		std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
 		/// Signal component modelling voltage regulator and exciter
-		std::shared_ptr<Signal::Exciter> mExciter;
+		std::shared_ptr<Base::Exciter> mExciter;
 	};
 }
 }

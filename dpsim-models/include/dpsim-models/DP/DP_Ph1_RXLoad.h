@@ -39,6 +39,13 @@ namespace Ph1 {
 		std::shared_ptr<DP::Ph1::Resistor> mSubResistor;
 		/// Right side vectors of subcomponents
 		std::vector<const Matrix*> mRightVectorStamps;
+
+		/// ### Flags
+		///
+		Bool mInitPowerFromTerminal = true;
+		///
+		Bool mInitVoltageFromNode = true;
+
 	public:
 		/// Active power [Watt]
 		const Attribute<Real>::Ptr mActivePower;
@@ -57,7 +64,9 @@ namespace Ph1 {
 		/// Initialize component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
 		/// Set model specific parameters
-		void setParameters(Real activePower, Real ReactivePower, Real volt);
+		void setParameters(Real activePower, Real ReactivePower);
+		/// Set model specific parameters
+		void setParameters(Real activePower, Real ReactivePower, Real nominalVoltage);
 
 		// #### MNA section ####
 		/// Update interface current from MNA system result

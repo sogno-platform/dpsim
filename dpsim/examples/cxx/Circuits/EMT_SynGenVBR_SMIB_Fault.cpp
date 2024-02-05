@@ -112,7 +112,6 @@ int main(int argc, char* argv[]) {
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initReactivePower = genPF->getApparentPower().imag();
 	Real initMechPower = initActivePower;
-
 	// Nodes
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2 = SimNode<Real>::make("n2", PhaseType::ABC);

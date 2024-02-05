@@ -11,6 +11,7 @@
 #include <dpsim-models/Config.h>
 
 #include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/SP/SP_Ph1_ResIndSeries.h>
 #include <dpsim-models/SP/SP_Ph1_RXLine.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSourceInverter.h>
 #include <dpsim-models/SP/SP_Ph1_PiLine.h>
@@ -25,6 +26,7 @@
 #include <dpsim-models/SP/SP_Ph1_VDNode.h>
 #include <dpsim-models/SP/SP_Ph1_NetworkInjection.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSource.h>
+#include <dpsim-models/SP/SP_Ph1_VSIVoltageControlDQ.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGeneratorTrStab.h>
 #include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGenerator3OrderVBR.h>
@@ -48,10 +50,12 @@
 #include <dpsim-models/DP/DP_Ph1_PQLoadCS.h>
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
+#include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
 #include <dpsim-models/DP/DP_Ph1_Transformer.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceRamp.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceNorton.h>
+#include <dpsim-models/DP/DP_Ph1_Shunt.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorIdeal.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorTrStab.h>
@@ -69,7 +73,7 @@
 #include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/DP/DP_Ph1_SVC.h>
 #include <dpsim-models/DP/DP_Ph1_varResSwitch.h>
-
+#include <dpsim-models/DP/DP_Ph1_VSIVoltageControlDQ.h>
 #include <dpsim-models/DP/DP_Ph3_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>
 #include <dpsim-models/DP/DP_Ph3_VoltageSource.h>
@@ -92,9 +96,12 @@
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h>
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlDQ.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
+#include <dpsim-models/EMT/EMT_Ph3_ResIndSeries.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesSwitch.h>
+#include <dpsim-models/EMT/EMT_Ph3_Shunt.h>
 #include <dpsim-models/EMT/EMT_Ph3_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSourceNorton.h>
@@ -122,12 +129,26 @@
 
 #include <dpsim-models/Signal/DecouplingLine.h>
 #include <dpsim-models/Signal/DecouplingLineEMT.h>
-#include <dpsim-models/Signal/Exciter.h>
+#include <dpsim-models/Signal/ExciterStatic.h>
+#include <dpsim-models/Signal/ExciterDC1.h>
+#include <dpsim-models/Signal/ExciterDC1Simp.h>
+#include <dpsim-models/Signal/ExciterST1Simp.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
+#include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/FIRFilter.h>
 #include <dpsim-models/Signal/Integrator.h>
+#include <dpsim-models/Signal/VCO.h>
+#include <dpsim-models/Signal/Droop.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>
 #include <dpsim-models/Signal/CosineFMGenerator.h>
+#include <dpsim-models/Signal/SteamTurbine.h>
+#include <dpsim-models/Signal/SteamTurbineGovernor.h>
+#include <dpsim-models/Signal/HydroTurbine.h>
+#include <dpsim-models/Signal/HydroTurbineGovernor.h>
+#include <dpsim-models/Signal/PowerControllerVSI.h>
+#include <dpsim-models/Signal/VoltageControllerVSI.h>
+#include <dpsim-models/Signal/VSIControlType1.h>
+#include <dpsim-models/Signal/VSIControlType2.h>

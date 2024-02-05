@@ -413,7 +413,8 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 		if (pComp->hasVirtualNodes()) {
 			for (UInt node = 0; node < pComp->virtualNodesNumber(); ++node) {
 				mNodes.push_back(pComp->virtualNode(node));
-				SPDLOG_LOGGER_INFO(mSLog, "Collected virtual node {} of {}", virtualNode, node, pComp->name());
+				SPDLOG_LOGGER_INFO(mSLog, 
+					"Collected virtual node {} of {} of component {}", virtualNode, node, pComp->name());
 			}
 		}
 
@@ -423,7 +424,8 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 			for (auto pSubComp : pComp->subComponents()) {
 				for (UInt node = 0; node < pSubComp->virtualNodesNumber(); ++node) {
 					mNodes.push_back(pSubComp->virtualNode(node));
-					SPDLOG_LOGGER_INFO(mSLog, "Collected virtual node {} of {}", virtualNode, node, pComp->name());
+					SPDLOG_LOGGER_INFO(mSLog, 
+						"Collected virtual node {} of {} of component {}", virtualNode, node, pComp->name());
 				}
 			}
 		}

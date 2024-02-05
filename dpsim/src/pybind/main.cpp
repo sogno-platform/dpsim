@@ -249,12 +249,14 @@ PYBIND11_MODULE(dpsimpy, m) {
 #ifdef WITH_CIM
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
 		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info, "comploglevel"_a = CPS::Logger::Level::off)
-		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM);
+		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM)
+		.def("get_powerflow_results", &CPS::CIM::Reader::getPowerFlowResults);
 #endif
 
 	py::class_<CPS::CSVReader>(m, "CSVReader")
 		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())
 		.def("assignLoadProfile", &CPS::CSVReader::assignLoadProfile);
+
 
 	//Base Classes
 

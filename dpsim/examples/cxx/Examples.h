@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/Components.h>
@@ -60,8 +61,104 @@ namespace SynchronousGeneratorKundur {
     };
 }
 
-namespace GovernorKundur {
-    struct Parameters {
+namespace Exciter{
+    // Excitation system parameters (IEEE Type DC1 - simplified)
+    // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
+    // voltage-regulator
+
+    std::shared_ptr<CPS::Signal::ExciterDC1SimpParameters> getExciterParametersEremia() {
+        auto excitationSystemEremia = CPS::Signal::ExciterDC1SimpParameters::make();
+        excitationSystemEremia->Ka = 46;
+        excitationSystemEremia->Ta = 0.06;
+        // exciter
+        excitationSystemEremia->Kef = -0.0435;
+        excitationSystemEremia->Tef = 0.46;
+        // stabilizing feedback
+        excitationSystemEremia->Kf = 0.1;
+        excitationSystemEremia->Tf = 1;
+        // voltage transducer
+        excitationSystemEremia->Tr = 0.02;
+        // saturation function coefficients
+        excitationSystemEremia->Aef = 0.33;
+        excitationSystemEremia->Bef = 0.1;
+
+        //
+        excitationSystemEremia->MaxVa = 1.0;
+        excitationSystemEremia->MinVa = -0.9;
+
+        // DC1 additional parameters
+        //excitationSystemEremia->Tb = 10;
+        //excitationSystemEremia->Tc = 1.0;
+        
+        return excitationSystemEremia;
+    }
+
+    struct ExcitationKundur {
+        /// Exciter model used in Kundurs. It is a very simplified version of a thyristor 
+	    /// exciter (ST1 type) without transient gain reduction or derivative feedback 
+	    /// (only proportional block + terminal voltage transducer) 
+	    /// Ref.: Kundur,  Power System Stability and Control, p. 865
+        Real Ka = 200;
+        // voltage transducer
+        Real Tr = 0.02;
+    };
+}
+
+namespace PowerSystemStabilizer {
+    std::shared_ptr<CPS::Signal::PSS1AParameters> getPSS1AParametersPSAT() {
+        // Power system stabilizer type 2 
+        // Taken from from PSAT - example d_anderson_farmer Gen2
+        auto PSSA1PSAT = CPS::Signal::PSS1AParameters::make();
+        /// Stabilizer gain for active power (pu/pu)
+		PSSA1PSAT->Kp = 0;
+		/// Stabilizer gain for bus voltage magnitude (pu/pu)
+		PSSA1PSAT->Kv = 0;
+		/// Stabilizer gain for omega gain (pu/pu)
+		PSSA1PSAT->Kw = 15;
+		/// First stabilizer time constant (s)
+		PSSA1PSAT->T1 = 0.1;
+		/// Second stabilizer time constant (s)
+		PSSA1PSAT->T2 = 0.01;
+		/// Thrid stabilizer time constant (s)
+		PSSA1PSAT->T3 = 0.12;
+		/// Fourth stabilizer time constant (s)
+		PSSA1PSAT->T4 = 0.01;
+		/// Max stabilizer output signal (pu)
+		PSSA1PSAT->Vs_max = 0.1;
+		/// Min stabilizer output signal (pu)
+		PSSA1PSAT->Vs_min = -0.1;
+		/// Wash-out time constant (s)
+		PSSA1PSAT->Tw = 10;
+
+        return PSSA1PSAT;
+    };
+
+    struct PSSKundur {
+        /// Power system stabilizer consisting of three blocks: a phase compensation
+        /// block, a signal washout block, and a gain block
+        /// Ref: Kundur, Power System Stability and Control, p. 865
+
+        /// Stabilizer gain for active power (pu/pu)
+		Real Kp = 0;
+		/// Stabilizer gain for bus voltage magnitude (pu/pu)
+		Real Kv = 0;
+		/// Stabilizer gain for omega gain (pu/pu)
+		Real Kw = 9.5;
+		/// First stabilizer time constant (s)
+		Real T1 = 0.154;
+		/// Second stabilizer time constant (s)
+		Real T2 = 0.033;
+		/// Max stabilizer output signal (pu)
+		Real Vs_max = 0.2;
+		/// Min stabilizer output signal (pu)
+		Real Vs_min = -0.2;
+		/// Wash-out time constant (s)
+		Real Tw = 1.41;
+    };
+}
+
+namespace TurbineGovernor {
+    struct GovernorKundur {
         // Turbine model parameters (tandem compound single reheat steam turbine, fossil-fuelled)
         // from P. Kundur, "Power System Stability and Control", 1994, p. 427
         Real Ta_t = 0.3;    // T_CH
@@ -77,76 +174,120 @@ namespace GovernorKundur {
         Real Tsr = 0.1;
         Real Tsm = 0.3;
     };
-}
 
-namespace ExcitationSystemEremia {
-    struct Parameters {
-        // Excitation system parameters (IEEE Type DC1A)
-        // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
-        // voltage-regulator
-        Real Ka = 46;
-        Real Ta = 0.06;
-        // exciter
-        Real Ke = -0.0435;
-        Real Te = 0.46;
-        // stabilizing feedback
-        Real Kf = 0.1;
-        Real Tf = 1;
-        // voltage transducer
-        Real Tr = 0.02;
-    };
-}
-
-namespace TurbineGovernor {
-    struct TurbineGovernorPSAT1 {
+    std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters> getTurbineGovernorPSAT1() {
         // Turbine Governor type 1 
         // Taken from from PSAT - example d_014_pss_l14 
-        
+        auto governor = CPS::Signal::TurbineGovernorType1Parameters::make();
         // Reference speed (p.u.)
-        Real OmegaRef = 1.0;
+        governor->OmRef = 1.0;
         // Pilot valve droop (p.u.)
-        Real R = 0.02;
+        governor->R = 0.02;
         // Maximum Torque (p.u.)
-        Real Tmax = 1.2;
+        governor->Pmax = 1.2;
         // Minimim Torque (p.u.)
-        Real Tmin = 0.3;
+        governor->Pmin = 0.3;
         // Governor time constant (s)
-        Real Ts = 0.1;
+        governor->Ts = 0.1;
         // Servo time constant (s)
-        Real Tc = 0.45;
+        governor->Tc = 0.45;
         // Transient gain time constant (s)
-        Real T3 = 0.0;
+        governor->T3 = 0.0;
         // Power fraction time constant (s)
-        Real T4 = 12.0;
+        governor->T4 = 12.0;
         // Reheat time constant (s)
-        Real T5 = 50.0;
+        governor->T5 = 50.0;
+
+        return governor;
     };
 
-    struct TurbineGovernorPSAT2 {
+    std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters> getTurbineGovernorPSAT2() {
         // Turbine Governor type 1 
         // Taken from PSAT - example d_anderson_farmer
-        
+        auto governor = CPS::Signal::TurbineGovernorType1Parameters::make();
+
         // Reference speed (p.u.)
-        Real OmegaRef = 1.0;
+        governor->OmRef = 1.0;
         // Pilot valve droop (p.u.)
-        Real R = 0.04;
+        governor->R = 0.04;
         // Maximum Torque (p.u.)
-        Real Tmax = 100;
+        governor->Pmax = 100;
         // Minimim Torque (p.u.)
-        Real Tmin = 0.0;
+        governor->Pmin = 0.0;
         // Governor time constant (s)
-        Real Ts = 20;
+        governor->Ts = 20;
         // Servo time constant (s)
-        Real Tc = 0.2;
+        governor->Tc = 0.2;
         // Transient gain time constant (s)
-        Real T3 = 0.2;
+        governor->T3 = 0.2;
         // Power fraction time constant (s)
-        Real T4 = 0.2;
+        governor->T4 = 0.2;
         // Reheat time constant (s)
-        Real T5 = 0.2;
+        governor->T5 = 0.2;
+
+        return governor;
     };
+
+    struct SteamTurbine{
+        //Steam Turbine implemented by HiWi in August 2023, 
+        //Power fraction of a high pressure stage
+        Real Fhp = 0.3;
+        //Power fraction of an intermediate pressure stage
+        Real Fip = 0.3;
+        // Power fraction of a low pressure stage
+        Real Flp = 0.4;
+        //Time constant of main inlet volume and steam chest (s)
+        Real Tch = 0.1;
+        // Time constant of reheater (s)
+        Real Trh = 4;
+        // Time constant of cross over piping and LP inlet volumes (s)
+        Real Tco = 0.3;
+    };
+    
+    struct SteamTurbineGovernor{
+        //Steam Turbine Governor implemented by Hiwi in August 2023, 
+        //Values taken from previous examples
+        Real OmRef = 1.0;
+        //Pilot valve droop (p.u.)
+        Real R = 0.04;
+        //Controller time constant (s)
+        Real T1=0;
+        //Controller time constant (s)
+        Real T2 = 0.2;
+        // Servo time constant (s)
+        Real T3 = 0.1;
+        // Maximum power increase (p.u.) (depends on time step, here 1e-3)
+        Real delPmax = 50;
+        // Minimim power (p.u.) (depends on time step, here 1e-3)
+        Real delPmin = -50;
+        // Maximum power (p.u.)
+        Real Pmax = 1;
+        // Minimim power (p.u.)
+        Real Pmin = 0;
+    };
+
+        struct HydroTurbine{
+        //Water Starting time
+        Real Tw=0.1;
+    };
+
+    struct HydroTurbineGovernor{
+        //Om Ref for the Governor, nequivalent in pu for 50Hz or 60Hz
+        Real OmRef=1;
+        // Droop
+        Real R= 0.04;
+        //Time Constants of Controller
+        Real T1=0.12;
+        Real T2=1.2;
+        Real T3=12;
+        //Maximum mechanical power(pu)
+        Real Pmax=1;
+        //Minimum mechanical power (pu)
+        Real Pmin=0;
+    };
+
 }
-}
+} 
 
 namespace Grids {
 namespace CIGREHVEuropean {
@@ -180,6 +321,8 @@ namespace KundurExample1 {
     // P. Kundur, "Power System Stability and Control", Example 13.2, pp. 864-869.
     struct Network {
         Real nomVoltage = 400e3;
+        Real nomFreq = 60;
+        Real nomOmega = nomFreq* 2*PI;
     };
 
     struct Gen {
@@ -189,8 +332,20 @@ namespace KundurExample1 {
         Real XpdPU = 0.3;
         Real RsPU = 0;
         Real D = 1.0;
+        Real initActivePower = 0.9 * nomPower;
+        Real initMechPower = 0.9 * nomPower;
+        Real setPointVoltage = nomVoltage;
     };
+
     struct Line1 {
+        // Vnom = 400kV
+        Real lineResistance = 0.0721;
+        Real lineReactance = 36.0360;
+        Real lineSusceptance = 0;
+        Real lineConductance =0;
+    };
+
+    struct Line2 {
         // Vnom = 400kV
         Real lineResistance = 0.0721;
         Real lineReactance = 36.0360;
@@ -280,7 +435,7 @@ namespace SMIB {
         Complex initTerminalVolt = VnomMV * Complex(cos(initVoltAngle), sin(initVoltAngle));
 
         // 
-        Real SwitchClosed = 0.1;
+        Real SwitchClosed = 10;
 	    Real SwitchOpen = 1e6;
     };
 
@@ -483,6 +638,7 @@ namespace SGIB {
         Real lineResistance = 0.5 * length;
 	    Real lineInductance = 0.5/314 * length;
         Real lineCapacitance = 50e-6/314 * length;
+        Real lineConductance = 0;
 
         // PV controller parameters
         Real scalingKp = 1;
@@ -521,6 +677,126 @@ namespace SGIB {
 
         // Further parameters
         Real systemOmega = 2 * PI * systemFrequency;
+    };
+}
+namespace GridForming {
+
+    struct ScenarioConfig1 {
+        Real systemNominalFreq = 60;
+        Real systemNominalOmega = 2*M_PI*systemNominalFreq;
+        Real systemNominalVoltage=20e3;
+
+        // Line
+        Real lineResistance = 0.88e-3;
+        Real lineInductance = 0;
+        Real lineCapacitance = 0;
+        Real lineConductance = 0;
+
+        // Real lineResistance = 1.27e-4 * 529;
+        // Real lineInductance = 9.05e-4 * 529;
+
+        // VSI nominal values
+        Real vsiNominalVoltage= 20e3;
+        Real vsiNominalActivePower= 900e6;
+        Real vsiNominalReactivePower= 900e6;
+
+        // VSI Voltage controller parameters
+        Real Vdref = 20e3;
+        Real Vqref = 0;
+        Real KpVoltageCtrl = 0.22486;
+        Real KiVoltageCtrl = 99.6873;
+        Real KpCurrCtrl = 5.1993;
+        Real KiCurrCtrl = 501.6734;
+
+        // Droop controller parameters
+        Real Pref= 0.777778*vsiNominalActivePower;
+        Real m_p= 2.094395102393195e-8;
+        Real tau_p= 0.5;
+		Real tau_l= 0.1; //tau_l=0 for first order filter 
+
+        // Initial state values of VSI system matrix
+        Real thetaPLLInit = 0;
+        Real phiPLLInit = 0; 
+        Real phi_dInit = 0;
+        Real phi_qInit = 0;
+        Real gamma_dInit = 0;
+        Real gamma_qInit = 0;
+        
+        // VSI filter parameters
+        Real Lf = 0.005132002392797;
+        Real Rf = 0.5;
+        Real Cf = 2.984155182973038e-4;
+        Real Rc = 1.382329156938857;
+
+        // Grid Parameters (X/R = 10)
+        Real loadRes1 = 5.877777777777778;
+        Real loadInd1 = 0.155912897954838;
+        Real loadRes2 = 50e-3;
+        Real loadInd2 = 68e-6;
+        Real loadCap2 = 13.55e-3;
+
+        // // Load
+        // Real loadActivePower= 0.5*vsiNominalActivePower;
+        // Real loadReactivePower= 0.001*vsiNominalReactivePower;
+    };
+
+    struct Yazdani {
+        Real systemNominalFreq = 60;
+        Real systemNominalOmega = 2*M_PI*systemNominalFreq;
+        Real systemNominalVoltage=400;
+
+        // // Line parameters (R/X = 1)
+        // Real length = 5;
+        // Real lineResistance = 0.5 * length;
+        // Real lineInductance = 0.5/systemNominalFreq * length;
+        // Real lineCapacitance = 50e-6/systemNominalFreq * length;
+
+        Real lineResistance = 0.88e-3;
+        Real lineInductance = 0;
+
+        // VSI nominal values
+        // Real vsiNominalVoltage= 400;
+        // Real vsiNominalActivePower= 900e6;
+        // Real vsiNominalReactivePower= 900e6;
+
+        // VSI Voltage controller parameters
+        Real Vdref = systemNominalVoltage;
+        Real Vqref = 0;
+        Real scaling_P = 1;
+        Real scaling_I = 1;
+        Real KpVoltageCtrl = 1.6725*scaling_P;
+        Real KiVoltageCtrl = 374.64*scaling_I;
+        Real KpCurrCtrl = 0.2*scaling_P;
+        Real KiCurrCtrl = 4.14*scaling_I;
+
+        // Droop controller parameters
+
+
+        // Initial state values of VSI system matrix
+        Real thetaPLLInit = 0;
+        Real phiPLLInit = 0; 
+        Real phi_dInit = 0;
+        Real phi_qInit = 0;
+        Real gamma_dInit = 0;
+        Real gamma_qInit = 0;
+        
+        // VSI filter parameters 
+        Real Lf = 100e-6;
+        Real Cf = 2.5e-3;
+        Real Rf = 2.07e-3;  
+        Real tau = 0.5e-3;
+        Real Rc = 1e-5; //connecting resistor to external network
+        
+        //Load Parameters
+        Real loadRes1 = 83e-3;
+        Real loadInd1 = 137e-6;
+        Real loadRes2 = 50e-3;
+        Real loadInd2 = 68e-6;
+        Real loadCap2 = 13.55e-3;
+
+        // // Load
+        // Real loadActivePower= 0.5*vsiNominalActivePower;
+        // Real loadReactivePower= 0.001*vsiNominalReactivePower;
     };
 }
 
@@ -643,6 +919,28 @@ namespace CIGREMV {
         logger->logAttribute(pv->name() + "_vs", pv->attribute("Vs"));
     }
 
+    void logVoltageControlledVSIAttributes(DPsim::DataLogger::Ptr logger, CPS::TopologicalPowerComp::Ptr pv) {
+
+        // voltage controller
+        std::vector<String> inputNames = {  pv->name() + "_voltagectrl_input_vdref", pv->name() + "_voltagectrl_input_vqref",
+                                            pv->name() + "_voltagectrl_input_ircd", pv->name() + "_voltagectrl_input_ircq"};
+        logger->logAttribute(inputNames, pv->attribute("voltagectrl_inputs"));
+        std::vector<String> stateNames = {  pv->name() + "_voltagectrl_state_p", pv->name() + "_voltagectrl_state_q",
+                                            pv->name() + "_voltagectrl_state_phid", pv->name() + "_voltagectrl_state_phiq",
+                                            pv->name() + "_voltagectrl_state_gammad", pv->name() + "_voltagectrl_state_gammaq"};
+        logger->logAttribute(stateNames, pv->attribute("voltagectrl_states"));
+        std::vector<String> outputNames = {  pv->name() + "_voltagectrl_output_vsd", pv->name() + "_voltagectrl_output_vsq"};
+        logger->logAttribute(outputNames, pv->attribute("voltagectrl_outputs"));
+
+        // interface variables
+        logger->logAttribute(pv->name() + "_v_intf", pv->attribute("v_intf"));
+        logger->logAttribute(pv->name() + "_i_intf", pv->attribute("i_intf"));
+
+        // additional variables
+        logger->logAttribute(pv->name() + "_pll_output", pv->attribute("pll_output"));
+        logger->logAttribute(pv->name() + "_vsref", pv->attribute("Vsref"));
+        logger->logAttribute(pv->name() + "_vs", pv->attribute("Vs"));
+    }
 }
 }
 

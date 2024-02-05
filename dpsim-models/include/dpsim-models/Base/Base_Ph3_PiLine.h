@@ -34,11 +34,20 @@ namespace Ph3 {
 
 		///
 		void setParameters(Matrix seriesResistance, Matrix seriesInductance,
-			Matrix parallelCapacitance = Matrix::Zero(3,3), Matrix parallelConductance = Matrix::Zero(3,3)) const {
+			Matrix parallelCapacitance = Matrix::Zero(3,3), Matrix parallelConductance = Matrix::Zero(3,3)) {
 			**mSeriesRes = seriesResistance;
 			**mSeriesInd = seriesInductance;
 			**mParallelCond = parallelConductance;
 			**mParallelCap = parallelCapacitance;
+		}
+
+		/// function for symmetrical three phase systems
+		void setParameters(Real seriesResistance, Real seriesInductance,
+			Real parallelCapacitance = 0.0, Real parallelConductance = 0.0) {
+			**mSeriesRes = Math::singlePhaseParameterToThreePhase(seriesResistance);
+			**mSeriesInd = Math::singlePhaseParameterToThreePhase(seriesInductance);
+			**mParallelCond = Math::singlePhaseParameterToThreePhase(parallelConductance);
+			**mParallelCap = Math::singlePhaseParameterToThreePhase(parallelCapacitance);
 		}
 	};
 }
