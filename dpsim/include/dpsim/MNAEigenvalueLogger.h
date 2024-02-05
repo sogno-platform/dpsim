@@ -8,7 +8,7 @@ namespace DPsim
 	class MNAEigenvalueLogger
 	{
 	public:
-		MNAEigenvalueLogger();
+		MNAEigenvalueLogger(String name, CPS::Logger::Level logLevel);
 
 		void setLogAttributes(CPS::AttributeStatic<MatrixComp>::Ptr eigenvalues, CPS::AttributeStatic<MatrixComp>::Ptr discreteEigenvalues);
 		template <typename VarType>

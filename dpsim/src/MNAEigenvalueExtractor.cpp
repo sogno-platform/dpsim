@@ -3,7 +3,7 @@
 namespace DPsim
 {
     template <typename VarType>
-    MNAEigenvalueExtractor<VarType>::MNAEigenvalueExtractor()
+    MNAEigenvalueExtractor<VarType>::MNAEigenvalueExtractor(CPS::Logger::Level logLevel) : mLogger("MNAEigenvalueExtractor", logLevel)
     {
         mEigenvalues = CPS::AttributeStatic<MatrixComp>::make();
         mDiscreteEigenvalues = CPS::AttributeStatic<MatrixComp>::make();

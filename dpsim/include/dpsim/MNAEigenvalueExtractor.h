@@ -11,7 +11,7 @@ namespace DPsim
 	class MNAEigenvalueExtractor
 	{
 	public:
-		MNAEigenvalueExtractor();
+		MNAEigenvalueExtractor(CPS::Logger::Level logLevel);
 
 		void initialize(const CPS::SystemTopology &topology, UInt numMatrixNodeIndices, Real timeStep);
 		void extractEigenvalues(const Matrix &powerSystemMatrix, Real time, Int timeStepCount);
