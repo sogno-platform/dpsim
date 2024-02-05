@@ -95,26 +95,23 @@ Real Reader::unitValue(Real value, CIMPP::UnitMultiplier mult) {
   return value;
 }
 
-TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass *obj) {
-  if (CIMPP::ACLineSegment *line = dynamic_cast<CIMPP::ACLineSegment *>(obj))
-    return mapACLineSegment(line);
-  if (CIMPP::EnergyConsumer *consumer =
-          dynamic_cast<CIMPP::EnergyConsumer *>(obj))
-    return mapEnergyConsumer(consumer);
-  if (CIMPP::PowerTransformer *trans =
-          dynamic_cast<CIMPP::PowerTransformer *>(obj))
-    return mapPowerTransformer(trans);
-  if (CIMPP::SynchronousMachine *syncMachine =
-          dynamic_cast<CIMPP::SynchronousMachine *>(obj))
-    return mapSynchronousMachine(syncMachine);
-  if (CIMPP::ExternalNetworkInjection *extnet =
-          dynamic_cast<CIMPP::ExternalNetworkInjection *>(obj))
-    return mapExternalNetworkInjection(extnet);
-  if (CIMPP::EquivalentShunt *shunt =
-          dynamic_cast<CIMPP::EquivalentShunt *>(obj))
-    return mapEquivalentShunt(shunt);
+TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass* obj) {
+	if (CIMPP::ACLineSegment *line = dynamic_cast<CIMPP::ACLineSegment*>(obj))
+		return mapACLineSegment(line);
+	if (CIMPP::EnergyConsumer *consumer = dynamic_cast<CIMPP::EnergyConsumer*>(obj))
+		return mapEnergyConsumer(consumer);
+	if (CIMPP::PowerTransformer *trans = dynamic_cast<CIMPP::PowerTransformer*>(obj))
+		return mapPowerTransformer(trans);
+	if (CIMPP::SynchronousMachine *syncMachine = dynamic_cast<CIMPP::SynchronousMachine*>(obj))
+		return mapSynchronousMachine(syncMachine);
+	if (CIMPP::ExternalNetworkInjection *extnet = dynamic_cast<CIMPP::ExternalNetworkInjection*>(obj))
+		return mapExternalNetworkInjection(extnet);
+	if (CIMPP::EquivalentShunt *shunt = dynamic_cast<CIMPP::EquivalentShunt*>(obj))
+		return mapEquivalentShunt(shunt);
+	if (CIMPP::LinearShuntCompensator *linearShunt = dynamic_cast<CIMPP::LinearShuntCompensator *>(obj))
+		return mapEquivalentLinearShunt(linearShunt);
 
-  return nullptr;
+	return nullptr;
 }
 
 void Reader::addFiles(const fs::path &filename) {
@@ -547,442 +544,377 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 	}
 }
 
-TopologicalPowerComp::Ptr
-Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
-  SPDLOG_LOGGER_INFO(mSLog, "    Found  Synchronous machine {}", machine->name);
+TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachine* machine) {
+	SPDLOG_LOGGER_INFO(mSLog, "    Found  Synchronous machine {}", machine->name);
 
-  if (mDomain == Domain::DP) {
-    SPDLOG_LOGGER_INFO(mSLog, "    Create generator in DP domain.");
-    if (mGeneratorType == GeneratorType::TransientStability ||
-        mGeneratorType == GeneratorType::SG6aOrderVBR ||
-        mGeneratorType == GeneratorType::SG6bOrderVBR ||
-        mGeneratorType == GeneratorType::SG4OrderVBR ||
-        mGeneratorType == GeneratorType::SG3OrderVBR ||
-        mGeneratorType == GeneratorType::SG4OrderPCM ||
-        mGeneratorType == GeneratorType::SG4OrderTPM ||
-        mGeneratorType == GeneratorType::SG6OrderPCM) {
+	if (mDomain == Domain::DP) {
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in DP domain.");
+		if (mGeneratorType == GeneratorType::TransientStability
+			|| mGeneratorType == GeneratorType::SG6aOrderVBR
+			|| mGeneratorType == GeneratorType::SG6bOrderVBR
+			|| mGeneratorType == GeneratorType::SG5OrderVBR
+			|| mGeneratorType == GeneratorType::SG4OrderVBR
+			|| mGeneratorType == GeneratorType::SG3OrderVBR
+			|| mGeneratorType == GeneratorType::SG4OrderPCM
+			|| mGeneratorType == GeneratorType::SG4OrderTPM
+			|| mGeneratorType == GeneratorType::SG6OrderPCM) {
 
-      Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
-      Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
+			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
 
-      for (auto obj : mModel->Objects) {
-        // Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
-        if (CIMPP::SynchronousMachineTimeConstantReactance *genDyn =
-                dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance *>(
-                    obj)) {
-          if (genDyn->SynchronousMachine->mRID == machine->mRID) {
-            // stator
-            Real Rs = genDyn->statorResistance.value;
-            Real Ll = genDyn->statorLeakageReactance.value;
+			for (auto obj : mModel->Objects) {
+				// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
+				if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
+					dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
+					if (genDyn->SynchronousMachine->mRID == machine->mRID) {
+						// stator
+						Real Rs = genDyn->statorResistance.value;
+						Real Ll = genDyn->statorLeakageReactance.value;
 
-            // reactances
-            Real Ld = genDyn->xDirectSync.value;
-            Real Lq = genDyn->xQuadSync.value;
-            Real Ld_t = genDyn->xDirectTrans.value;
-            Real Lq_t = genDyn->xQuadTrans.value;
-            Real Ld_s = genDyn->xDirectSubtrans.value;
-            Real Lq_s = genDyn->xQuadSubtrans.value;
+						// reactances
+						Real Ld = genDyn->xDirectSync.value;
+						Real Lq = genDyn->xQuadSync.value;
+						Real Ld_t = genDyn->xDirectTrans.value;
+						Real Lq_t = genDyn->xQuadTrans.value;
+						Real Ld_s = genDyn->xDirectSubtrans.value;
+						Real Lq_s = genDyn->xQuadSubtrans.value;
 
-            // time constants
-            Real Td0_t = genDyn->tpdo.value;
-            Real Tq0_t = genDyn->tpqo.value;
-            Real Td0_s = genDyn->tppdo.value;
-            Real Tq0_s = genDyn->tppqo.value;
+						// time constants
+						Real Td0_t = genDyn->tpdo.value;
+						Real Tq0_t = genDyn->tpqo.value;
+						Real Td0_s = genDyn->tppdo.value;
+						Real Tq0_s = genDyn->tppqo.value;
 
-            // inertia
-            Real H = genDyn->inertia.value;
+						// inertia
+						Real H = genDyn->inertia.value;
 
-            // not available in CIM -> set to 0, as actually no impact on machine equations
-            Int poleNum = 0;
-            Real nomFieldCurr = 0;
+						// not available in CIM -> set to 0, as actually no impact on machine equations
+						Int poleNum = 0;
+						Real nomFieldCurr = 0;
 
-            if (mGeneratorType == GeneratorType::TransientStability) {
-              SPDLOG_LOGGER_DEBUG(mSLog,
-                                  "    GeneratorType is TransientStability.");
-              auto gen = DP::Ph1::SynchronGeneratorTrStab::make(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency,
-                                           Ld_t, H);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
-              auto gen = std::make_shared<DP::Ph1::SynchronGenerator6aOrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
-              auto gen = std::make_shared<DP::Ph1::SynchronGenerator6bOrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG5OrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator5OrderVBR.");
-              auto gen = std::make_shared<DP::Ph1::SynchronGenerator5OrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s, 0.0);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
-              auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage,
-                                                   mFrequency, H, Ld, Lq, Ll,
-                                                   Ld_t, Lq_t, Td0_t, Tq0_t);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
-              auto gen = std::make_shared<DP::Ph1::SynchronGenerator3OrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage,
-                                                   mFrequency, H, Ld, Lq, Ll,
-                                                   Ld_t, Td0_t);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG4OrderPCM) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator4OrderPCM.");
-              auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderPCM>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage,
-                                                   mFrequency, H, Ld, Lq, Ll,
-                                                   Ld_t, Lq_t, Td0_t, Tq0_t);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG4OrderTPM) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator4OrderTPM.");
-              auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderTPM>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage,
-                                                   mFrequency, H, Ld, Lq, Ll,
-                                                   Ld_t, Lq_t, Td0_t, Tq0_t);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG6OrderPCM) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator6OrderPCM.");
-              auto gen = std::make_shared<DP::Ph1::SynchronGenerator6OrderPCM>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s);
-              return gen;
-            }
-          }
-        }
-      }
-    } else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
-      SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is IdealVoltageSource.");
-      return std::make_shared<DP::Ph1::SynchronGeneratorIdeal>(
-          machine->mRID, machine->name, mComponentLogLevel);
-    } else if (mGeneratorType == GeneratorType::None) {
-      throw SystemError("GeneratorType is None. Specify!");
-    } else {
-      throw SystemError("GeneratorType setting unfeasible.");
-    }
-  } else if (mDomain == Domain::SP) {
-    SPDLOG_LOGGER_INFO(mSLog, "    Create generator in SP domain.");
-    if (mGeneratorType == GeneratorType::TransientStability ||
-        mGeneratorType == GeneratorType::SG6aOrderVBR ||
-        mGeneratorType == GeneratorType::SG6bOrderVBR ||
-        mGeneratorType == GeneratorType::SG5OrderVBR ||
-        mGeneratorType == GeneratorType::SG4OrderVBR ||
-        mGeneratorType == GeneratorType::SG3OrderVBR) {
+						if (mGeneratorType == GeneratorType::TransientStability) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is TransientStability.");
+							auto gen = DP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency, Ld_t, H);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator6aOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator6bOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG5OrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator5OrderVBR.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator5OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s, 0.0);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderVBR>(
+								machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator3OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Td0_t);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG4OrderPCM) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator4OrderPCM.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderPCM>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG4OrderTPM) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator4OrderTPM.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderTPM>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6OrderPCM) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6OrderPCM.");
+							auto gen = std::make_shared<DP::Ph1::SynchronGenerator6OrderPCM>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s);
+							return gen;
+						}
+					}
+				}
+			}
+		} else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
+			SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is IdealVoltageSource.");
+			return std::make_shared<DP::Ph1::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
+		} else if (mGeneratorType == GeneratorType::None) {
+			throw SystemError("GeneratorType is None. Specify!");
+		} else {
+			throw SystemError("GeneratorType setting unfeasible.");
+		}
+	} else if (mDomain == Domain::SP) {
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in SP domain.");
+		if (mGeneratorType == GeneratorType::TransientStability
+			|| mGeneratorType == GeneratorType::SG6aOrderVBR
+			|| mGeneratorType == GeneratorType::SG6bOrderVBR
+			|| mGeneratorType == GeneratorType::SG5OrderVBR
+			|| mGeneratorType == GeneratorType::SG4OrderVBR
+			|| mGeneratorType == GeneratorType::SG3OrderVBR) {
 
-      Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
-      Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
+			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
 
-      for (auto obj : mModel->Objects) {
-        // Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
-        if (CIMPP::SynchronousMachineTimeConstantReactance *genDyn =
-                dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance *>(
-                    obj)) {
-          if (genDyn->SynchronousMachine->mRID == machine->mRID) {
-            // stator
-            Real Rs = genDyn->statorResistance.value;
-            Real Ll = genDyn->statorLeakageReactance.value;
+			for (auto obj : mModel->Objects) {
+				// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
+				if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
+					dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
+					if (genDyn->SynchronousMachine->mRID == machine->mRID) {
+						// stator
+						Real Rs = genDyn->statorResistance.value;
+						Real Ll = genDyn->statorLeakageReactance.value;
 
-            // reactances
-            Real Ld = genDyn->xDirectSync.value;
-            Real Lq = genDyn->xQuadSync.value;
-            Real Ld_t = genDyn->xDirectTrans.value;
-            Real Lq_t = genDyn->xQuadTrans.value;
-            Real Ld_s = genDyn->xDirectSubtrans.value;
-            Real Lq_s = genDyn->xQuadSubtrans.value;
+						// reactances
+						Real Ld = genDyn->xDirectSync.value;
+						Real Lq = genDyn->xQuadSync.value;
+						Real Ld_t = genDyn->xDirectTrans.value;
+						Real Lq_t = genDyn->xQuadTrans.value;
+						Real Ld_s = genDyn->xDirectSubtrans.value;
+						Real Lq_s = genDyn->xQuadSubtrans.value;
 
-            // time constants
-            Real Td0_t = genDyn->tpdo.value;
-            Real Tq0_t = genDyn->tpqo.value;
-            Real Td0_s = genDyn->tppdo.value;
-            Real Tq0_s = genDyn->tppqo.value;
+						// time constants
+						Real Td0_t = genDyn->tpdo.value;
+						Real Tq0_t = genDyn->tpqo.value;
+						Real Td0_s = genDyn->tppdo.value;
+						Real Tq0_s = genDyn->tppqo.value;
 
-            // inertia
-            Real H = genDyn->inertia.value;
+						// inertia
+						Real H = genDyn->inertia.value;
 
-            // not available in CIM -> set to 0, as actually no impact on machine equations
-            Int poleNum = 0;
-            Real nomFieldCurr = 0;
+						// not available in CIM -> set to 0, as actually no impact on machine equations
+						Int poleNum = 0;
+						Real nomFieldCurr = 0;
 
-            if (mGeneratorType == GeneratorType::TransientStability) {
-              SPDLOG_LOGGER_DEBUG(mSLog,
-                                  "    GeneratorType is TransientStability.");
-              auto gen = SP::Ph1::SynchronGeneratorTrStab::make(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency,
-                                           Ld_t, H);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
-              auto gen = std::make_shared<SP::Ph1::SynchronGenerator6aOrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
-              auto gen = std::make_shared<SP::Ph1::SynchronGenerator6bOrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG5OrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator5OrderVBR.");
-              auto gen = std::make_shared<SP::Ph1::SynchronGenerator5OrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s, 0.0);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
-              auto gen = std::make_shared<SP::Ph1::SynchronGenerator4OrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage,
-                                                   mFrequency, H, Ld, Lq, Ll,
-                                                   Ld_t, Lq_t, Td0_t, Tq0_t);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
-              auto gen = std::make_shared<SP::Ph1::SynchronGenerator3OrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage,
-                                                   mFrequency, H, Ld, Lq, Ll,
-                                                   Ld_t, Td0_t);
-              return gen;
-            }
-          }
-        }
-      }
-    } else if (mGeneratorType == GeneratorType::PVNode) {
-      SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is PVNode.");
-      for (auto obj : mModel->Objects) {
-        if (CIMPP::GeneratingUnit *genUnit =
-                dynamic_cast<CIMPP::GeneratingUnit *>(obj)) {
-          for (auto syncGen : genUnit->RotatingMachine) {
-            if (syncGen->mRID == machine->mRID) {
-              // Check whether relevant input data are set, otherwise set default values
-              Real setPointActivePower = 0;
-              Real setPointVoltage = 0;
-              Real maximumReactivePower = 1e12;
-              try {
-                setPointActivePower =
-                    unitValue(genUnit->initialP.value, UnitMultiplier::M);
-                SPDLOG_LOGGER_INFO(mSLog, "    setPointActivePower={}",
-                                   setPointActivePower);
-              } catch (ReadingUninitializedField *e) {
-                std::cerr
-                    << "Uninitalized setPointActivePower for GeneratingUnit "
-                    << machine->name << ". Using default value of "
-                    << setPointActivePower << std::endl;
-              }
-              if (machine->RegulatingControl) {
-                setPointVoltage =
-                    unitValue(machine->RegulatingControl->targetValue.value,
-                              UnitMultiplier::k);
-                SPDLOG_LOGGER_INFO(mSLog, "    setPointVoltage={}",
-                                   setPointVoltage);
-              } else {
-                std::cerr << "Uninitalized setPointVoltage for GeneratingUnit "
-                          << machine->name << ". Using default value of "
-                          << setPointVoltage << std::endl;
-              }
-              try {
-                maximumReactivePower =
-                    unitValue(machine->maxQ.value, UnitMultiplier::M);
-                SPDLOG_LOGGER_INFO(mSLog, "    maximumReactivePower={}",
-                                   maximumReactivePower);
-              } catch (ReadingUninitializedField *e) {
-                std::cerr
-                    << "Uninitalized maximumReactivePower for GeneratingUnit "
-                    << machine->name << ". Using default value of "
-                    << maximumReactivePower << std::endl;
-              }
+						if (mGeneratorType == GeneratorType::TransientStability) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is TransientStability.");
+							auto gen = SP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency, Ld_t, H);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator6aOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator6bOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG5OrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator5OrderVBR.");
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator5OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s, 0.0);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator4OrderVBR>(
+								machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator3OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Td0_t);
+							return gen;
+						}
+					}
+				}
+			}
+		} else if (mGeneratorType == GeneratorType::PVNode) {
+			SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is PVNode.");
+			for (auto obj : mModel->Objects) {
+				if (CIMPP::GeneratingUnit* genUnit = dynamic_cast<CIMPP::GeneratingUnit*>(obj)) {
+					for (auto syncGen : genUnit->RotatingMachine) {
+						if (syncGen->mRID == machine->mRID){
+							// Check whether relevant input data are set, otherwise set default values
+							Real setPointActivePower = 0;
+							Real setPointVoltage = 0;
+							Real maximumReactivePower = 1e12;
+							try{
+								setPointActivePower = unitValue(genUnit->initialP.value, UnitMultiplier::M);
+								SPDLOG_LOGGER_INFO(mSLog, "    setPointActivePower={}", setPointActivePower);
+							}catch(ReadingUninitializedField* e){
+								std::cerr << "Uninitalized setPointActivePower for GeneratingUnit " << machine->name << ". Using default value of " << setPointActivePower << std::endl;
+							}
+							if (machine->RegulatingControl) {
+								setPointVoltage = unitValue(machine->RegulatingControl->targetValue.value, UnitMultiplier::k);
+								SPDLOG_LOGGER_INFO(mSLog, "    setPointVoltage={}", setPointVoltage);
+							} else {
+								std::cerr << "Uninitalized setPointVoltage for GeneratingUnit " <<  machine->name << ". Using default value of " << setPointVoltage << std::endl;
+							}
+							try{
+								maximumReactivePower = unitValue(machine->maxQ.value, UnitMultiplier::M);
+								SPDLOG_LOGGER_INFO(mSLog, "    maximumReactivePower={}", maximumReactivePower);
+							}catch(ReadingUninitializedField* e){
+								std::cerr << "Uninitalized maximumReactivePower for GeneratingUnit " <<  machine->name << ". Using default value of " << maximumReactivePower << std::endl;
+							}
 
-              auto gen = std::make_shared<SP::Ph1::SynchronGenerator>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setParameters(
-                  unitValue(machine->ratedS.value, UnitMultiplier::M),
-                  unitValue(machine->ratedU.value, UnitMultiplier::k),
-                  setPointActivePower, setPointVoltage, PowerflowBusType::PV);
-              gen->setBaseVoltage(
-                  unitValue(machine->ratedU.value, UnitMultiplier::k));
-              return gen;
-            }
-          }
-        }
-      }
-      SPDLOG_LOGGER_INFO(mSLog, "no corresponding initial power for {}",
-                         machine->name);
-      return std::make_shared<SP::Ph1::SynchronGenerator>(
-          machine->mRID, machine->name, mComponentLogLevel);
-    } else if (mGeneratorType == GeneratorType::None) {
-      throw SystemError("GeneratorType is None. Specify!");
-    } else {
-      throw SystemError("GeneratorType setting unfeasible.");
-    }
-  } else {
-    SPDLOG_LOGGER_INFO(mSLog, "    Create generator in EMT domain.");
-    if (mGeneratorType == GeneratorType::FullOrder ||
-        mGeneratorType == GeneratorType::FullOrderVBR ||
-        mGeneratorType == GeneratorType::SG3OrderVBR ||
-        mGeneratorType == GeneratorType::SG4OrderVBR ||
-        mGeneratorType == GeneratorType::SG6aOrderVBR ||
-        mGeneratorType == GeneratorType::SG6bOrderVBR) {
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name, mComponentLogLevel);
+								gen->setParameters(unitValue(machine->ratedS.value, UnitMultiplier::M),
+										unitValue(machine->ratedU.value, UnitMultiplier::k),
+										setPointActivePower,
+										setPointVoltage,
+										PowerflowBusType::PV);
+								gen->setBaseVoltage(unitValue(machine->ratedU.value, UnitMultiplier::k));
+							return gen;
+						}
+					}
+				}
+			}
+			SPDLOG_LOGGER_INFO(mSLog, "no corresponding initial power for {}", machine->name);
+			return std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name, mComponentLogLevel);
+		} else if (mGeneratorType == GeneratorType::None) {
+			throw SystemError("GeneratorType is None. Specify!");
+		} else {
+			throw SystemError("GeneratorType setting unfeasible.");
+		}
+	} else {
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in EMT domain.");
+		if (mGeneratorType == GeneratorType::FullOrder
+			|| mGeneratorType == GeneratorType::FullOrderVBR
+			|| mGeneratorType == GeneratorType::SG3OrderVBR
+			|| mGeneratorType == GeneratorType::SG4OrderVBR
+			|| mGeneratorType == GeneratorType::SG5OrderVBR
+			|| mGeneratorType == GeneratorType::SG6aOrderVBR
+			|| mGeneratorType == GeneratorType::SG6bOrderVBR) {
 
-      Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
-      Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
+			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
 
-      for (auto obj : mModel->Objects) {
-        // Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
-        if (CIMPP::SynchronousMachineTimeConstantReactance *genDyn =
-                dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance *>(
-                    obj)) {
-          if (genDyn->SynchronousMachine->mRID == machine->mRID) {
+			for (auto obj : mModel->Objects) {
+				// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
+				if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
+					dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
+					if (genDyn->SynchronousMachine->mRID == machine->mRID) {
 
-            // stator
-            Real Rs = genDyn->statorResistance.value;
-            Real Ll = genDyn->statorLeakageReactance.value;
+						// stator
+						Real Rs = genDyn->statorResistance.value;
+						Real Ll = genDyn->statorLeakageReactance.value;
 
-            // reactances
-            Real Ld = genDyn->xDirectSync.value;
-            Real Lq = genDyn->xQuadSync.value;
-            Real Ld_t = genDyn->xDirectTrans.value;
-            Real Lq_t = genDyn->xQuadTrans.value;
-            Real Ld_s = genDyn->xDirectSubtrans.value;
-            Real Lq_s = genDyn->xQuadSubtrans.value;
+						// reactances
+						Real Ld = genDyn->xDirectSync.value;
+						Real Lq = genDyn->xQuadSync.value;
+						Real Ld_t = genDyn->xDirectTrans.value;
+						Real Lq_t = genDyn->xQuadTrans.value;
+						Real Ld_s = genDyn->xDirectSubtrans.value;
+						Real Lq_s = genDyn->xQuadSubtrans.value;
 
-            // time constants
-            Real Td0_t = genDyn->tpdo.value;
-            Real Tq0_t = genDyn->tpqo.value;
-            Real Td0_s = genDyn->tppdo.value;
-            Real Tq0_s = genDyn->tppqo.value;
+						// time constants
+						Real Td0_t = genDyn->tpdo.value;
+						Real Tq0_t = genDyn->tpqo.value;
+						Real Td0_s = genDyn->tppdo.value;
+						Real Tq0_s = genDyn->tppqo.value;
 
-            // inertia
-            Real H = genDyn->inertia.value;
+						// inertia
+						Real H = genDyn->inertia.value;
 
-            // not available in CIM -> set to 0, as actually no impact on machine equations
-            Int poleNum = 0;
-            Real nomFieldCurr = 0;
+						// not available in CIM -> set to 0, as actually no impact on machine equations
+						Int poleNum = 0;
+						Real nomFieldCurr = 0;
 
-            if (mGeneratorType == GeneratorType::FullOrder) {
-              SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is FullOrder.");
-              auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorDQTrapez>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setParametersOperationalPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
-                  Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s, Ll, Td0_t, Tq0_t, Td0_s,
-                  Tq0_s, H);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::FullOrderVBR) {
-              SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is FullOrderVBR.");
-              auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setBaseAndOperationalPerUnitParameters(
-                  ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
-                  Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s, Ll, Td0_t, Tq0_t, Td0_s,
-                  Tq0_s, H);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
-              auto gen =
-                  std::make_shared<EMT::Ph3::SynchronGenerator6aOrderVBR>(
-                      machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
-              auto gen =
-                  std::make_shared<EMT::Ph3::SynchronGenerator6bOrderVBR>(
-                      machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG5OrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator5OrderVBR.");
-              auto gen = std::make_shared<EMT::Ph3::SynchronGenerator5OrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s, 0.0);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
-              auto gen = std::make_shared<EMT::Ph3::SynchronGenerator4OrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage,
-                                                   mFrequency, H, Ld, Lq, Ll,
-                                                   Ld_t, Lq_t, Td0_t, Tq0_t);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
-              auto gen = std::make_shared<EMT::Ph3::SynchronGenerator3OrderVBR>(
-                  machine->mRID, machine->name, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage,
-                                                   mFrequency, H, Ld, Lq, Ll,
-                                                   Ld_t, Td0_t);
-              return gen;
-            }
-          }
-        }
-      }
-    } else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
-      SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is IdealVoltageSource.");
-      return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(
-          machine->mRID, machine->name, mComponentLogLevel,
-          GeneratorType::IdealVoltageSource);
-    } else if (mGeneratorType == GeneratorType::IdealCurrentSource) {
-      SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is IdealCurrentSource.");
-      return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(
-          machine->mRID, machine->name, mComponentLogLevel,
-          GeneratorType::IdealCurrentSource);
-    } else if (mGeneratorType == GeneratorType::None) {
-      throw SystemError("GeneratorType is None. Specify!");
-    } else {
-      throw SystemError("GeneratorType setting unfeasible.");
+						if (mGeneratorType == GeneratorType::FullOrder) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is FullOrder.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorDQTrapez>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setParametersOperationalPerUnit(
+							ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
+							Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s, Ll,
+							Td0_t, Tq0_t, Td0_s, Tq0_s, H);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::FullOrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is FullOrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setBaseAndOperationalPerUnitParameters(
+							ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
+							Rs, Ld, Lq, Ld_t, Lq_t, Ld_s,
+							Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6aOrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6aOrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator6aOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG6bOrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator6bOrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator6bOrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG5OrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator5OrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator5OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t,
+								Ld_s, Lq_s, Td0_s, Tq0_s, 0.0);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG4OrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator4OrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator4OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Lq_t, Td0_t, Tq0_t);
+							return gen;
+						} else if (mGeneratorType == GeneratorType::SG3OrderVBR) {
+							SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is SynchronGenerator3OrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGenerator3OrderVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setOperationalParametersPerUnit(
+								ratedPower, ratedVoltage, mFrequency, H,
+								Ld, Lq, Ll, Ld_t, Td0_t);
+							return gen;
+						}
+					}
+				}
+			}
+		} else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
+			SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is IdealVoltageSource.");
+			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel, GeneratorType::IdealVoltageSource);
+		} else if (mGeneratorType == GeneratorType::IdealCurrentSource) {
+			SPDLOG_LOGGER_DEBUG(mSLog, "    GeneratorType is IdealCurrentSource.");
+			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel, GeneratorType::IdealCurrentSource);
+		} else if (mGeneratorType == GeneratorType::None) {
+			throw SystemError("GeneratorType is None. Specify!");
+		} else {
+			throw SystemError("GeneratorType setting unfeasible.");
+		}
     }
   }
   return nullptr;
@@ -1060,18 +992,45 @@ Reader::mapEquivalentShunt(CIMPP::EquivalentShunt *shunt) {
   return cpsShunt;
 }
 
-Real Reader::determineBaseVoltageAssociatedWithEquipment(
-    CIMPP::ConductingEquipment *equipment) {
-  Real baseVoltage = 0;
+TopologicalPowerComp::Ptr Reader::mapEquivalentLinearShunt(CIMPP::LinearShuntCompensator* linearShunt){
+	
+	SPDLOG_LOGGER_INFO(mSLog, "Found linear shunt {}", linearShunt->name);
 
-  // first look for baseVolt object to determine baseVoltage
-  for (auto obj : mModel->Objects) {
-    if (CIMPP::BaseVoltage *baseVolt =
-            dynamic_cast<CIMPP::BaseVoltage *>(obj)) {
-      for (auto comp : baseVolt->ConductingEquipment) {
-        if (comp->name == equipment->name) {
-          baseVoltage =
-              unitValue(baseVolt->nominalVoltage.value, UnitMultiplier::k);
+	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(linearShunt);
+
+	auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(linearShunt->mRID, linearShunt->name, mComponentLogLevel);
+	if(mDomain == Domain::SP) {
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in SP domain.");
+		mSLog->flush();
+		cpsShunt->setParameters(linearShunt->gPerSection.value, linearShunt->bPerSection.value);
+		cpsShunt->setBaseVoltage(baseVoltage);
+	} 
+	/*elif(mDomain == Domain::DP) {
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in DP domain.");
+		auto cpsShunt = std::make_shared<DP::Ph1::capacitor(shunt->mRID, shunt->name, mComponentLogLevel);
+		cpsShunt->setParameters(shunt->g.value, shunt->b.value);
+		cpsShunt->setBaseVoltage(baseVoltage);
+	} else(mDomain == Domain::EMT) {
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in EMT domain.");
+	
+	}
+	*/
+
+	// TODO: consider number of switched sections
+	return cpsShunt;
+}
+
+Real Reader::determineBaseVoltageAssociatedWithEquipment(CIMPP::ConductingEquipment* equipment){
+	Real baseVoltage = 0;
+
+    // first look for baseVolt object to determine baseVoltage
+    for (auto obj : mModel->Objects) {
+        if (CIMPP::BaseVoltage* baseVolt = dynamic_cast<CIMPP::BaseVoltage*>(obj)) {
+            for (auto comp : baseVolt->ConductingEquipment) {
+                if (comp->name == equipment->name) {
+                    baseVoltage = unitValue(baseVolt->nominalVoltage.value,UnitMultiplier::k);
+                }
+            }
         }
       }
     }
@@ -1208,7 +1167,8 @@ std::map<String, std::vector<CPS::Real>> Reader::getPowerFlowResults() {
 			auto nodeName = flow->Terminal->TopologicalNode->name;
 			if (dynamic_cast<CIMPP::EnergyConsumer*>(conductingEquipment) 				||
 				dynamic_cast<CIMPP::ExternalNetworkInjection*>(conductingEquipment) 	||
-				dynamic_cast<CIMPP::EquivalentShunt*>(conductingEquipment)) {
+				dynamic_cast<CIMPP::EquivalentShunt*>(conductingEquipment)				||
+				dynamic_cast<CIMPP::LinearShuntCompensator*>(conductingEquipment) ) {
 
 				if (pfResults.count(nodeName)) {
 					pfResults[nodeName][2] -= flow->p.value;
