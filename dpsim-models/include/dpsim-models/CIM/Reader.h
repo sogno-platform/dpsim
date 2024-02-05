@@ -37,17 +37,18 @@ class BaseClass;
 #ifdef CGMES_BUILD
 #include <UnitMultiplier.hpp>
 namespace CIMPP {
-class SvVoltage;
-class SvPowerFlow;
-class ACLineSegment;
-class SynchronousMachine;
-class ExternalNetworkInjection;
-class EnergyConsumer;
-class PowerTransformer;
-class EquivalentShunt;
-class TopologicalNode;
-class ConductingEquipment;
-}; // namespace CIMPP
+	class SvVoltage;
+	class SvPowerFlow;
+	class ACLineSegment;
+	class SynchronousMachine;
+	class ExternalNetworkInjection;
+	class EnergyConsumer;
+	class PowerTransformer;
+	class EquivalentShunt;
+	class TopologicalNode;
+	class ConductingEquipment;
+	class LinearShuntCompensator;
+};
 #else
 #include <CIMNamespaces.hpp>
 #endif
@@ -142,6 +143,9 @@ namespace CIM {
 		TopologicalPowerComp::Ptr mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection* extnet);
 		/// Returns a shunt
 		TopologicalPowerComp::Ptr mapEquivalentShunt(CIMPP::EquivalentShunt *shunt);
+		///
+		TopologicalPowerComp::Ptr mapEquivalentLinearShunt(CIMPP::LinearShuntCompensator *linearShunt);
+		
 
 		// #### Helper Functions ####
 		/// Determine base voltage associated with object
