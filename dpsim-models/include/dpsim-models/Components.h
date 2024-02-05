@@ -53,9 +53,11 @@
 #include <dpsim-models/DP/DP_Ph1_RXLoadSwitch.h>
 #include <dpsim-models/DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
-#include <dpsim-models/DP/DP_Ph1_Resistor.h>
-#include <dpsim-models/DP/DP_Ph1_RxLine.h>
-#include <dpsim-models/DP/DP_Ph1_SVC.h>
+#include <dpsim-models/DP/DP_Ph1_Transformer.h>
+#include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
+#include <dpsim-models/DP/DP_Ph1_VoltageSourceRamp.h>
+#include <dpsim-models/DP/DP_Ph1_VoltageSourceNorton.h>
+#include <dpsim-models/DP/DP_Ph1_Shunt.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator3OrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderPCM.h>
