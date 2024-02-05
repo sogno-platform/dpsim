@@ -955,29 +955,27 @@ TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(CIMPP::EquivalentShunt* shu
 TopologicalPowerComp::Ptr Reader::mapEquivalentLinearShunt(CIMPP::LinearShuntCompensator* linearShunt){
 	
 	SPDLOG_LOGGER_INFO(mSLog, "Found linear shunt {}", linearShunt->name);
-
-	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(linearShunt);
-
-	auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(linearShunt->mRID, linearShunt->name, mComponentLogLevel);
+	
 	if(mDomain == Domain::SP) {
-		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in SP domain.");
-		mSLog->flush();
+		// TODO: consider number of switched sections
+		auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(linearShunt->mRID, linearShunt->name, mComponentLogLevel);
+		Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(linearShunt);
 		cpsShunt->setParameters(linearShunt->gPerSection.value, linearShunt->bPerSection.value);
 		cpsShunt->setBaseVoltage(baseVoltage);
-	} 
-	/*elif(mDomain == Domain::DP) {
-		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in DP domain.");
-		auto cpsShunt = std::make_shared<DP::Ph1::capacitor(shunt->mRID, shunt->name, mComponentLogLevel);
-		cpsShunt->setParameters(shunt->g.value, shunt->b.value);
-		cpsShunt->setBaseVoltage(baseVoltage);
-	} else(mDomain == Domain::EMT) {
-		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in EMT domain.");
-	
-	}
-	*/
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in SP domain.");
+		mSLog->flush();
 
-	// TODO: consider number of switched sections
-	return cpsShunt;
+		return cpsShunt;
+	} 
+	else if(mDomain == Domain::DP) {
+		// TODO: consider number of switched sections
+		auto cpsShunt = std::make_shared<DP::Ph1::Shunt>(linearShunt->mRID, linearShunt->name, mComponentLogLevel);
+		cpsShunt->setParameters(linearShunt->gPerSection.value, linearShunt->bPerSection.value);
+		SPDLOG_LOGGER_INFO(mSLog, "    Create generator in SP domain.");
+		mSLog->flush();
+
+		return cpsShunt;
+	} 
 }
 
 Real Reader::determineBaseVoltageAssociatedWithEquipment(CIMPP::ConductingEquipment* equipment){

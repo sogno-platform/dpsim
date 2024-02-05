@@ -50,6 +50,7 @@ namespace CIMPP {
 	class EquivalentShunt;
 	class TopologicalNode;
 	class ConductingEquipment;
+	class LinearShuntCompensator;
 };
 #else
 #include <CIMNamespaces.hpp>
@@ -145,6 +146,9 @@ namespace CIM {
 		TopologicalPowerComp::Ptr mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection* extnet);
 		/// Returns a shunt
 		TopologicalPowerComp::Ptr mapEquivalentShunt(CIMPP::EquivalentShunt *shunt);
+		///
+		TopologicalPowerComp::Ptr mapEquivalentLinearShunt(CIMPP::LinearShuntCompensator *linearShunt);
+		
 
 		// #### Helper Functions ####
 		/// Determine base voltage associated with object

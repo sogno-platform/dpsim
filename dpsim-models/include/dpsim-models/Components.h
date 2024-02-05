@@ -54,6 +54,7 @@
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceRamp.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceNorton.h>
+#include <dpsim-models/DP/DP_Ph1_Shunt.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorIdeal.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorTrStab.h>

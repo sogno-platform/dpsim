@@ -32,6 +32,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_VoltageSource.cpp
 	DP/DP_Ph1_VoltageSourceRamp.cpp
 	DP/DP_Ph1_VoltageSourceNorton.cpp
+	DP/DP_Ph1_Shunt.cpp
 	DP/DP_Ph1_Switch.cpp
 	DP/DP_Ph1_SynchronGeneratorIdeal.cpp
 	DP/DP_Ph1_SynchronGeneratorTrStab.cpp
