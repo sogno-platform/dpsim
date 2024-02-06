@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
-	: CompositePowerComp<Real>(uid, name, false, true, logLevel) {
+	: CompositePowerComp<Real>(uid, name, true, true, logLevel) {
 
 	mConductance = Matrix::Zero(3,3);
 	mSusceptance = Matrix::Zero(3,3);
@@ -57,7 +57,7 @@ void EMT::Ph3::Shunt::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor->setParameters(mConductance.inverse());
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 	}
 
 	if (mSusceptance(0,0)>0) {
@@ -66,7 +66,7 @@ void EMT::Ph3::Shunt::initializeFromNodesAndTerminals(Real frequency) {
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+		addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 	}
 
 	SPDLOG_LOGGER_INFO(mSLog, 
@@ -78,6 +78,14 @@ void EMT::Ph3::Shunt::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString((**mIntfVoltage)(0, 0)),
 		Logger::phasorToString((**mIntfCurrent)(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
+}
+
+void EMT::Ph3::Shunt::mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	modifiedAttributes.push_back(mRightVector);
+}
+
+void EMT::Ph3::Shunt::mnaParentPreStep(Real time, Int timeStepCount) {
+	mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::Shunt::mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

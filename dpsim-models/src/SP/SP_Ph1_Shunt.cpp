@@ -21,12 +21,11 @@ SP::Ph1::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
 	setTerminalNumber(1);
 }
 
-void SP::Ph1::Shunt::setParameters(Real conductance, Real susceptance) {
-  **mConductance = conductance;
-  **mSusceptance = susceptance;
-  SPDLOG_LOGGER_INFO(mSLog, "Conductance={} [S] Susceptance={} [Ohm] ",
-                     conductance, susceptance);
-  mParametersSet = true;
+void SP::Ph1::Shunt::setParameters(Real conductance, Real susceptance){
+	**mConductance = conductance;
+	**mSusceptance = susceptance;
+	SPDLOG_LOGGER_INFO(mSLog, "Conductance={} [S] Susceptance={} [Ohm] ", conductance, susceptance);
+	mParametersSet = true;
 }
 
 // #### Powerflow section ####
@@ -34,22 +33,17 @@ void SP::Ph1::Shunt::setBaseVoltage(Real baseVoltage) {
   mBaseVoltage = baseVoltage;
 }
 
-void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower,
-                                                Real baseOmega) {
-  SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}",
-                     **mName);
-  SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]",
-                     baseApparentPower, baseOmega);
+void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
+	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
+	SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
 
-  auto baseImpedance = (mBaseVoltage * mBaseVoltage) / baseApparentPower;
-  auto baseAdmittance = 1.0 / baseImpedance;
-  SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Admittance={} [S]",
-                     mBaseVoltage, baseAdmittance);
+	auto baseImpedance = (mBaseVoltage * mBaseVoltage) / baseApparentPower;
+	auto baseAdmittance = 1.0 / baseImpedance;
+	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Admittance={} [S]", mBaseVoltage, baseAdmittance);
 
-  **mConductancePerUnit = **mConductance / baseAdmittance;
-  **mSusceptancePerUnit = **mSusceptance / baseAdmittance;
-  SPDLOG_LOGGER_INFO(mSLog, "Susceptance={} [pu] Conductance={} [pu]",
-                     **mSusceptancePerUnit, **mConductancePerUnit);
+	**mConductancePerUnit = **mConductance / baseAdmittance;
+	**mSusceptancePerUnit = **mSusceptance / baseAdmittance;
+	SPDLOG_LOGGER_INFO(mSLog, "Susceptance={} [pu] Conductance={} [pu]", **mSusceptancePerUnit, **mConductancePerUnit);
 };
 
 void SP::Ph1::Shunt::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
@@ -85,7 +79,7 @@ void SP::Ph1::Shunt::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor->setParameters(1. / **mConductance);
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 	}
 
 	if (**mSusceptance>0) {

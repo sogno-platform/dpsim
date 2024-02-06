@@ -47,6 +47,11 @@ namespace Ph3 {
 		// #### MNA section ####
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency) final;
+		/// Add MNA pre step dependencies
+		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
+			AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) final;
+		/// MNA pre step operations
+		void mnaParentPreStep(Real time, Int timeStepCount) final;
 		/// Updates internal current variable of the component
 		void mnaCompUpdateCurrent(const Matrix& leftVector) final;
 		/// Updates internal voltage variable of the component
