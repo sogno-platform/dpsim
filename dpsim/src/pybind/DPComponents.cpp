@@ -164,6 +164,14 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "active_power"_a, "reactive_power"_a, "volt"_a)
       .def("connect", &CPS::DP::Ph1::RXLoad::connect);
 
+  py::class_<CPS::DP::Ph1::Shunt, std::shared_ptr<CPS::DP::Ph1::Shunt>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Shunt",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::DP::Ph1::Shunt::setParameters, "G"_a, "B"_a)
+      .def("connect", &CPS::DP::Ph1::Shunt::connect);
+
   py::class_<CPS::DP::Ph1::Switch, std::shared_ptr<CPS::DP::Ph1::Switch>,
              CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(
       mDPPh1, "Switch", py::multiple_inheritance())
