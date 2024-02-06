@@ -12,53 +12,53 @@ using namespace CPS;
 
 template <>
 Base::ReducedOrderSynchronGenerator<Real>::ReducedOrderSynchronGenerator(
-    String uid, String name, Logger::Level logLevel)
-    : MNASimPowerComp<Real>(uid, name, true, true, logLevel),
-      mVdq0(mAttributes->create<Matrix>("Vdq0")),
-      mIdq0(mAttributes->create<Matrix>("Idq0")),
-      mElecTorque(mAttributes->create<Real>("Te")),
-      mMechTorque(mAttributes->create<Real>("Tm")),
-      mOmMech(mAttributes->create<Real>("w_r")),
-      mThetaMech(mAttributes->create<Real>("Theta")),
-      mDelta(mAttributes->create<Real>("delta")),
-      mEf(mAttributes->create<Real>("Ef")) {
+	String uid, String name, Logger::Level logLevel)
+	: MNASimPowerComp<Real>(uid, name, true, true, logLevel),
+	mVdq0(mAttributes->create<Matrix>("Vdq0")),
+	mIdq0(mAttributes->create<Matrix>("Idq0")),
+	mPower(mAttributes->create<Complex>("S")),
+	mElecTorque(mAttributes->create<Real>("Te")),
+	mMechTorque(mAttributes->create<Real>("Tm")),
+	mOmMech(mAttributes->create<Real>("w_r")),
+	mThetaMech(mAttributes->create<Real>("Theta")),
+	mDelta(mAttributes->create<Real>("delta")),
+	mEf(mAttributes->create<Real>("Ef")) {
 
-  mSimTime = 0.0;
+	mSimTime = 0.0;
 
-  // declare state variables
-  **mVdq0 = Matrix::Zero(3, 1);
-  **mIdq0 = Matrix::Zero(3, 1);
+	// declare state variables
+	**mVdq0 = Matrix::Zero(3,1);
+	**mIdq0 = Matrix::Zero(3,1);
 
-  // default model is Norton equivalent
-  mModelAsNortonSource = true;
-  SPDLOG_LOGGER_DEBUG(this->mSLog,
-                      "SG per default modelled as Norton equivalent");
+	// default model is Norton equivalent
+	mModelAsNortonSource = true;
+	SPDLOG_LOGGER_DEBUG(this->mSLog, "SG per default modelled as Norton equivalent");
 }
 
 template <>
 Base::ReducedOrderSynchronGenerator<Complex>::ReducedOrderSynchronGenerator(
-    String uid, String name, Logger::Level logLevel)
-    : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
-      mVdq(mAttributes->create<Matrix>("Vdq0")),
-      mIdq(mAttributes->create<Matrix>("Idq0")),
-      mElecTorque(mAttributes->create<Real>("Te")),
-      mMechTorque(mAttributes->create<Real>("Tm")),
-      mOmMech(mAttributes->create<Real>("w_r")),
-      mThetaMech(mAttributes->create<Real>("Theta")),
-      mDelta(mAttributes->create<Real>("delta")),
-      mEf(mAttributes->create<Real>("Ef")) {
+	String uid, String name, Logger::Level logLevel)
+	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
+	mVdq(mAttributes->create<Matrix>("Vdq0")),
+	mIdq(mAttributes->create<Matrix>("Idq0")),
+	mPower(mAttributes->create<Complex>("S")),
+	mElecTorque(mAttributes->create<Real>("Te")),
+	mMechTorque(mAttributes->create<Real>("Tm")),
+	mOmMech(mAttributes->create<Real>("w_r")),
+	mThetaMech(mAttributes->create<Real>("Theta")),
+	mDelta(mAttributes->create<Real>("delta")),
+	mEf(mAttributes->create<Real>("Ef")) {
 
-  mSimTime = 0.0;
+	mSimTime = 0.0;
 
-  // declare state variables
-  ///FIXME: The mVdq0 and mVdq member variables are mutually exclusive and carry the same attribute name. Maybe they can be unified?
-  **mVdq = Matrix::Zero(2, 1);
-  **mIdq = Matrix::Zero(2, 1);
+	// declare state variables
+	///FIXME: The mVdq0 and mVdq member variables are mutually exclusive and carry the same attribute name. Maybe they can be unified?
+	**mVdq = Matrix::Zero(2,1);
+	**mIdq = Matrix::Zero(2,1);
 
-  // default model is Norton equivalent
-  mModelAsNortonSource = true;
-  SPDLOG_LOGGER_DEBUG(this->mSLog,
-                      "SG per default modelled as Norton equivalent");
+	// default model is Norton equivalent
+	mModelAsNortonSource = true;
+	SPDLOG_LOGGER_DEBUG(this->mSLog, "SG per default modelled as Norton equivalent");
 }
 
 template <typename VarType>
@@ -314,102 +314,105 @@ void Base::ReducedOrderSynchronGenerator<VarType>::setInitialValues(
 }
 
 template <>
-void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
-    Real frequency) {
+void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(Real frequency) {
 
-  this->updateMatrixNodeIndices();
+	this->updateMatrixNodeIndices();
 
-  if (!mInitialValuesSet)
-    this->setInitialValues(-this->terminal(0)->singlePower(),
-                           -this->terminal(0)->singlePower().real(),
-                           this->initialSingleVoltage(0));
+	if(!mInitialValuesSet)
+		this->setInitialValues(-this->terminal(0)->singlePower(), -this->terminal(0)->singlePower().real(), this->initialSingleVoltage(0));
 
-  // Initialize mechanical torque
-  **mMechTorque = mInitMechPower / mNomPower;
-  mMechTorque_prev = **mMechTorque;
+	// Initialize mechanical torque
+	**mMechTorque = mInitMechPower / mNomPower;
+	mMechTorque_prev = **mMechTorque;
 
-  // calculate steady state machine emf (i.e. voltage behind synchronous reactance)
-  Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
+	// calculate steady state machine emf (i.e. voltage behind synchronous reactance)
+	Complex Eq0 = mInitVoltage + Complex(0, mLq) * mInitCurrent;
 
-  // Load angle
-  **mDelta = Math::phase(Eq0);
+	// Load angle
+	**mDelta = Math::phase(Eq0);
 
-  // convert currrents to dq reference frame
-  (**mIdq0)(0, 0) = Math::abs(mInitCurrent) * sin(**mDelta - mInitCurrentAngle);
-  (**mIdq0)(1, 0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
+	// convert currrents to dq reference frame
+	(**mIdq0)(0,0) = Math::abs(mInitCurrent) * sin(**mDelta - mInitCurrentAngle);
+	(**mIdq0)(1,0) = Math::abs(mInitCurrent) * cos(**mDelta - mInitCurrentAngle);
 
-  // convert voltages to dq reference frame
-  (**mVdq0)(0, 0) = Math::abs(mInitVoltage) * sin(**mDelta - mInitVoltageAngle);
-  (**mVdq0)(1, 0) = Math::abs(mInitVoltage) * cos(**mDelta - mInitVoltageAngle);
+	// convert voltages to dq reference frame
+	(**mVdq0)(0,0) = Math::abs(mInitVoltage) * sin(**mDelta - mInitVoltageAngle);
+	(**mVdq0)(1,0) = Math::abs(mInitVoltage) * cos(**mDelta - mInitVoltageAngle);
 
-  // calculate Ef
-  **mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq0)(0, 0);
-  mEf_prev = **mEf;
+	// calculate Ef
+	**mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq0)(0,0);
+	mEf_prev = **mEf;
 
-  // initial electrical torque
-  **mElecTorque =
-      (**mVdq0)(0, 0) * (**mIdq0)(0, 0) + (**mVdq0)(1, 0) * (**mIdq0)(1, 0);
+	// initial electrical power
+	**mPower = Complex((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0),
+					   (**mVdq0)(1,0) * (**mIdq0)(0,0) - (**mVdq0)(0,0) * (**mIdq0)(1,0));
 
-  // Initialize omega mech with nominal system frequency
-  **mOmMech = mNomOmega / mBase_OmMech;
+	// initial electrical torque
+	**mElecTorque = (**mPower).real();
 
-  // initialize theta and calculate transform matrix
-  **mThetaMech = **mDelta - PI / 2.;
+	// Initialize omega mech with nominal system frequency
+	**mOmMech = mNomOmega / mBase_OmMech;
 
-  // Initialize controllers
-  if (mHasPSS) {
-    if (!mHasExciter) {
-      SPDLOG_LOGGER_ERROR(
-          this->mSLog,
-          "\nPSS can not be used without Exciter! PSS will be ignored!");
-      mHasPSS = false;
-    } else {
-      mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq0)(0, 0),
-                       (**mVdq0)(1, 0));
-    }
-  }
-  if (mHasExciter)
-    mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+	// initialize theta and calculate transform matrix
+	**mThetaMech = **mDelta - PI / 2.;
 
-  if (mHasTurbine) {
-    if (!mHasGovernor) {
-      SPDLOG_LOGGER_ERROR(this->mSLog, "\nTurbine can not be used without "
-                                       "Governor! Exciter will be ignored!");
-      mHasTurbine = false;
-    } else {
-      mTurbine->initialize(**mMechTorque);
-    }
-  }
-  if (mHasGovernor)
-    mGovernor->initialize(**mMechTorque);
+	// Initialize controllers
+	if (mHasPSS) {
+		if (!mHasExciter) {
+			SPDLOG_LOGGER_ERROR(this->mSLog, "\nPSS can not be used without Exciter! PSS will be ignored!");
+			mHasPSS = false;
+		} else {
+			mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq0)(0,0), (**mVdq0)(1,0));
+		}
+	}
+	if (mHasExciter) 
+		mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+	if (mHasTurbine) {
+		if (!mHasGovernor) {
+			SPDLOG_LOGGER_ERROR(this->mSLog, "\nTurbine can not be used without Governor! Exciter will be ignored!");
+			mHasTurbine = false;
+		} else {
+			mTurbine->initialize(**mMechTorque);
+		}
+	}
+	if (mHasGovernor)
+		mGovernor->initialize(**mMechTorque);
+		
+	// set initial interface current
+	(**mIntfCurrent)(0,0) = (mInitCurrent * mBase_I).real();
+	(**mIntfCurrent)(1,0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_B).real();
+	(**mIntfCurrent)(2,0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_C).real();
 
-  // set initial interface current
-  (**mIntfCurrent)(0, 0) = (mInitCurrent * mBase_I).real();
-  (**mIntfCurrent)(1, 0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_B).real();
-  (**mIntfCurrent)(2, 0) = (mInitCurrent * mBase_I * SHIFT_TO_PHASE_C).real();
+	// set initial interface voltage
+	(**mIntfVoltage)(0,0) = (mInitVoltage * mBase_V).real();
+	(**mIntfVoltage)(1,0) = (mInitVoltage * mBase_V * SHIFT_TO_PHASE_B).real();
+	(**mIntfVoltage)(2,0) = (mInitVoltage * mBase_V * SHIFT_TO_PHASE_C).real();
+	
+	SPDLOG_LOGGER_DEBUG(this->mSLog,
+		"\n--- Initialization from power flow  ---"
+		"\nInitial Vd (per unit): {:f}"
+		"\nInitial Vq (per unit): {:f}"
+		"\nInitial Id (per unit): {:f}"
+		"\nInitial Iq (per unit): {:f}"
+		"\nInitial Ef (per unit): {:f}"
+		"\nInitial mechanical torque (per unit): {:f}"
+		"\nInitial electrical torque (per unit): {:f}"
+		"\nInitial initial mechanical theta (per unit): {:f}"
+        "\nInitial delta (per unit): {:f} (= {:f}°)"
+		"\n--- Initialization from power flow finished ---",
 
-  // set initial interface voltage
-  (**mIntfVoltage)(0, 0) = (mInitVoltage * mBase_V).real();
-  (**mIntfVoltage)(1, 0) = (mInitVoltage * mBase_V * SHIFT_TO_PHASE_B).real();
-  (**mIntfVoltage)(2, 0) = (mInitVoltage * mBase_V * SHIFT_TO_PHASE_C).real();
-
-  SPDLOG_LOGGER_DEBUG(this->mSLog,
-                      "\n--- Initialization from power flow  ---"
-                      "\nInitial Vd (per unit): {:f}"
-                      "\nInitial Vq (per unit): {:f}"
-                      "\nInitial Id (per unit): {:f}"
-                      "\nInitial Iq (per unit): {:f}"
-                      "\nInitial Ef (per unit): {:f}"
-                      "\nInitial mechanical torque (per unit): {:f}"
-                      "\nInitial electrical torque (per unit): {:f}"
-                      "\nInitial initial mechanical theta (per unit): {:f}"
-                      "\nInitial delta (per unit): {:f} (= {:f}°)"
-                      "\n--- Initialization from power flow finished ---",
-
-                      (**mVdq0)(0, 0), (**mVdq0)(1, 0), (**mIdq0)(0, 0),
-                      (**mIdq0)(1, 0), **mEf, **mMechTorque, **mElecTorque,
-                      **mThetaMech, **mDelta, **mDelta * 180 / PI);
-  this->mSLog->flush();
+		(**mVdq0)(0,0),
+		(**mVdq0)(1,0),
+		(**mIdq0)(0,0),
+		(**mIdq0)(1,0),
+		**mEf,
+		**mMechTorque,
+		**mElecTorque,
+		**mThetaMech,
+        **mDelta,
+        **mDelta * 180 / PI
+	);
+	this->mSLog->flush();
 }
 
 template <>
@@ -442,8 +445,12 @@ void Base::ReducedOrderSynchronGenerator<Complex>::initializeFromNodesAndTermina
 	**mEf = Math::abs(Eq0) + (mLd - mLq) * (**mIdq)(0,0);
 	mEf_prev = **mEf;
 
+	// initial electrical power
+	**mPower = Complex((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0),
+					   (**mVdq)(1,0) * (**mIdq)(0,0) - (**mVdq)(0,0) * (**mIdq)(1,0));
+
 	// initial electrical torque
-	**mElecTorque = (**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0);
+	**mElecTorque = (**mPower).real();
 
 	// Initialize omega mech with nominal system frequency
 	**mOmMech = mNomOmega / mBase_OmMech;
@@ -526,99 +533,75 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompInitialize(
 }
 
 template <>
-void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(
-    Real time, Int timeStepCount) {
-  mSimTime = time;
+void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(Real time, Int timeStepCount) {
+	mSimTime = time;
 
-  // Calculate mechanical torque at t=k
-  // input is omega at time t=k, output is mech. torque at time t=k
-  if (mHasTurbine && mHasGovernor) {
-    mMechTorque_prev = **mMechTorque;
-    **mMechTorque =
-        mTurbine->step(mGovernor->step(**mOmMech, mTimeStep), mTimeStep);
-  }
-  if (!mHasTurbine && mHasGovernor) {
-    mMechTorque_prev = **mMechTorque;
-    **mMechTorque = mGovernor->step(**mOmMech, mTimeStep);
-  }
+	// update governor variables
+	if (mHasTurbine && mHasGovernor) {
+		mMechTorque_prev = **mMechTorque;
+		**mMechTorque = mTurbine->step(mGovernor->step(**mOmMech, mTimeStep), mTimeStep);
+	}
+	if (!mHasTurbine && mHasGovernor) {
+		mMechTorque_prev = **mMechTorque;
+		**mMechTorque = mGovernor->step(**mOmMech, mTimeStep);
+	}
+	
+	// calculate mechanical variables at t=k+1 with forward euler
+	**mPower = Complex((**mVdq)(0,0) * (**mIdq)(0,0) + (**mVdq)(1,0) * (**mIdq)(1,0),
+					   (**mVdq)(1,0) * (**mIdq)(0,0) - (**mVdq)(0,0) * (**mIdq)(1,0));
+	**mElecTorque = (**mPower).real();
+	//**mElecTorque = (**mPower).real() / **mOmMech;
+	**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+	**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+	**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 
-  // Calculate electrical torque at t=k
-  **mElecTorque =
-      (**mVdq)(0, 0) * (**mIdq)(0, 0) + (**mVdq)(1, 0) * (**mIdq)(1, 0);
-
-  // calculate v_pss at time k
-  // inputs are: mOmMech, mElecTorque, mVdq at time t=k
-  if (mHasPSS)
-    mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0, 0), (**mVdq)(1, 0),
-                       mTimeStep);
-
-  // calculate e_fd at time k+1, inputs are at t=k
-  if (mHasExciter) {
-    mEf_prev = **mEf;
-    **mEf = mExciter->step((**mVdq)(0, 0), (**mVdq)(1, 0), mTimeStep, mVpss);
-  }
-
-  // calculate mechanical variables at t=k+1 with forward euler
-  **mOmMech = **mOmMech +
-              mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
-  //**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque) / **mOmMech);
-  **mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-  **mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
-
-  // model specific calculation of electrical vars
-  stepInPerUnit();
-
-  // stamp model specific right side vector after calculation of electrical vars
-  (**mRightVector).setZero();
-  mnaApplyRightSideVectorStamp(**mRightVector);
+	// update exciter and PSS variables
+	if (mHasPSS)
+		mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0,0), (**mVdq)(1,0), mTimeStep);
+	if (mHasExciter) {
+		mEf_prev = **mEf;
+		**mEf = mExciter->step((**mVdq)(0,0), (**mVdq)(1,0), mTimeStep, mVpss);		
+	}
+	
+	stepInPerUnit();
+	(**mRightVector).setZero();
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <>
-void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(
-    Real time, Int timeStepCount) {
-  mSimTime = time;
+void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(Real time, Int timeStepCount) {
+	mSimTime = time;
+	
+	// update governor variables
+	if (mHasTurbine && mHasGovernor) {
+		mMechTorque_prev = **mMechTorque;
+		**mMechTorque = mTurbine->step(mGovernor->step(**mOmMech, mTimeStep), mTimeStep);
+	}
+	if (!mHasTurbine && mHasGovernor) {
+		mMechTorque_prev = **mMechTorque;
+		**mMechTorque = mGovernor->step(**mOmMech, mTimeStep);
+	}
 
-  // Calculate mechanical torque at t=k
-  // input is omega at time t=k, output is mech. torque at time t=k
-  if (mHasTurbine && mHasGovernor) {
-    mMechTorque_prev = **mMechTorque;
-    **mMechTorque =
-        mTurbine->step(mGovernor->step(**mOmMech, mTimeStep), mTimeStep);
-  }
-  if (!mHasTurbine && mHasGovernor) {
-    mMechTorque_prev = **mMechTorque;
-    **mMechTorque = mGovernor->step(**mOmMech, mTimeStep);
-  }
+	// calculate mechanical variables at t=k+1 with forward euler
+	**mPower = Complex((**mVdq0)(0,0) * (**mIdq0)(0,0) + (**mVdq0)(1,0) * (**mIdq0)(1,0),
+					   (**mVdq0)(1,0) * (**mIdq0)(0,0) - (**mVdq0)(0,0) * (**mIdq0)(1,0));
+	**mElecTorque = (**mPower).real();
+	//**mElecTorque = (**mPower).real() / **mOmMech;
+	**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+	**mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+	**mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 
-  // Calculate electrical torque at t=k
-  **mElecTorque =
-      (**mVdq0)(0, 0) * (**mIdq0)(0, 0) + (**mVdq0)(1, 0) * (**mIdq0)(1, 0);
+	// update exciter and PSS variables
+	if (mHasPSS)
+		mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq0)(0,0), (**mVdq0)(1,0), mTimeStep);
+	if (mHasExciter) {
+		mEf_prev = **mEf;
+		**mEf = mExciter->step((**mVdq0)(0,0), (**mVdq0)(1,0), mTimeStep, mVpss);	
+	}
 
-  // calculate v_pss at time k
-  // inputs are: mOmMech, mElecTorque, mVdq at time t=k
-  if (mHasPSS)
-    mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq0)(0, 0),
-                       (**mVdq0)(1, 0), mTimeStep);
-
-  // calculate e_fd at time k+1, inputs are at t=k
-  if (mHasExciter) {
-    mEf_prev = **mEf;
-    **mEf = mExciter->step((**mVdq0)(0, 0), (**mVdq0)(1, 0), mTimeStep, mVpss);
-  }
-
-  // calculate mechanical variables at t=k+1 with forward euler
-  **mOmMech = **mOmMech +
-              mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
-  //**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque) / **mOmMech);
-  **mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-  **mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
-
-  // model specific calculation of electrical vars
-  stepInPerUnit();
-
-  // stamp model specific right side vector after calculation of electrical vars
-  (**mRightVector).setZero();
-  mnaApplyRightSideVectorStamp(**mRightVector);
+	stepInPerUnit();
+	(**mRightVector).setZero();
+	mnaApplyRightSideVectorStamp(**mRightVector);
 }
 
 template <typename VarType>
