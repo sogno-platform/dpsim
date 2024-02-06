@@ -434,7 +434,7 @@ class Reader:
                                         H=H, Ld=Ld, Lq=Lq, L0=Ll, Ld_t=Ld_t, Lq_t=Lq_t, Td0_t=Td0_t, Tq0_t=Tq0_t,
                                         Ld_s=Ld_s, Lq_s=Lq_s, Td0_s=Td0_s, Tq0_s=Tq0_s, Taa=0)
             elif (gen_model==6):
-                gen = self.dpsimpy_components.SynchronGenerator6aOrderVBR(gen_name, self.log_level)
+                gen = self.dpsimpy_components.SynchronGenerator6bOrderVBR(gen_name, self.log_level)
                 gen.set_operational_parameters_per_unit(nom_power=gen_baseS, nom_voltage=gen_baseV, nom_frequency=self.mpc_freq, 
                                         H=H, Ld=Ld, Lq=Lq, L0=Ll, Ld_t=Ld_t, Lq_t=Lq_t, Td0_t=Td0_t, Tq0_t=Tq0_t,
                                         Ld_s=Ld_s, Lq_s=Lq_s, Td0_s=Td0_s, Tq0_s=Tq0_s, Taa=0)		
@@ -584,42 +584,11 @@ class Reader:
             self.dpsimpy_comp_dict[shunt_name] = [shunt]
             self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)]])
         else:
-            # convert conductance->resistance and calculate equivalent inductance/capacitance
-            r = 0
-            if (gs != 0):
-                r = 1 / gs
-                if (self.domain==Domain.EMT):
-                    r = dpsimpy.Math.single_phase_parameter_to_three_phase(r)
-                shunt_name = "Shunt_Res_N" + bus_index
-                shunt_res = self.dpsimpy_components.Resistor(shunt_name, self.log_level)
-                shunt_res.set_parameters(r)
-                self.dpsimpy_comp_dict[shunt_name] = [shunt_res]
-                self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)], self.dpsimpy_components.SimNode.gnd])
-            
-            # convert susceptance->reactance and calculate equivalent inductance/capacitance
-            x = 1 / bs
-            c = 0
-            l = 0
-            if (bs!=0):
-                # In Matpower Bs is the injected reactive power 
-                if (bs>0):
-                    c = 1 / (self.mpc_omega * x)
-                    if (self.domain==Domain.EMT):
-                        c = dpsimpy.Math.single_phase_parameter_to_three_phase(c)
-                    shunt_name = "Shunt_Cap_N" + bus_index
-                    shunt_cap = self.dpsimpy_components.Capacitor(shunt_name, self.log_level)
-                    shunt_cap.set_parameters(c)
-                    self.dpsimpy_comp_dict[shunt_name] = [shunt_cap]
-                    self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)], self.dpsimpy_components.SimNode.gnd]) 
-                else:
-                    l = -x / self.mpc_omega
-                    if (self.domain==Domain.EMT):
-                        l = dpsimpy.Math.single_phase_parameter_to_three_phase(l)
-                    shunt_name = "ShuntInd_N" + bus_index
-                    shunt_ind = self.dpsimpy_components.Inductor(shunt_name, self.log_level)
-                    shunt_ind.set_parameters(l)
-                    self.dpsimpy_comp_dict[shunt_name] = [shunt_ind]
-                    self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)], self.dpsimpy_components.SimNode.gnd]) 
+            shunt_name = "Shunt_N" + bus_index
+            shunt_res = self.dpsimpy_components.Shunt(shunt_name, self.log_level)
+            shunt_res.set_parameters(gs, bs)
+            self.dpsimpy_comp_dict[shunt_name] = [shunt_res]
+            self.dpsimpy_comp_dict[shunt_name].append([self.dpsimpy_busses_dict[self.get_node_name(bus_index)]])
         
     def map_network_injection(self, index, bus_index):
         
