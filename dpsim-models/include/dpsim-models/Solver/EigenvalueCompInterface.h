@@ -7,8 +7,8 @@ namespace CPS
     class EigenvalueCompInterface
     {
     public:
-        typedef std::shared_ptr<EigenvalueCompInterface> Ptr;
-        typedef std::vector<Ptr> List;
+        using Ptr = std::shared_ptr<EigenvalueCompInterface>;
+        using List = std::vector<Ptr>;
 
         /// Stamp component into branch<->node incidence matrix used for eigenvalue extraction.
         virtual void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) = 0;

@@ -5,12 +5,11 @@ namespace CPS
 {
     template <typename VarType>
     /// Interface to be implemented by all dynamic components taking part in eigenvalue extraction.
-    class EigenvalueDynamicCompInterface :
-        public EigenvalueCompInterface
+    class EigenvalueDynamicCompInterface : public EigenvalueCompInterface
     {
     public:
-        typedef std::shared_ptr<EigenvalueDynamicCompInterface> Ptr;
-        typedef std::vector<Ptr> List;
+        using Ptr = std::shared_ptr<EigenvalueDynamicCompInterface>;
+        using List = std::vector<Ptr>;
 
         /// Stamp component into sign matrix used for eigenvalue extraction.
         virtual void stampSignMatrix(MatrixVar<VarType> &signMatrix, Complex coeffDP) = 0;
