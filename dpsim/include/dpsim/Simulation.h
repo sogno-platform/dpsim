@@ -78,23 +78,25 @@ protected:
   /// (Real) time needed for the timesteps
   std::vector<Real> mStepTimes;
 
-  // #### Solver Settings ####
-  ///
-  CPS::Domain mDomain = CPS::Domain::DP;
-  ///
-  Solver::Type mSolverType = Solver::Type::MNA;
-  ///
-  Solver::Behaviour mSolverBehaviour = Solver::Behaviour::Simulation;
-  ///
-  Solver::List mSolvers;
-  ///
-  DirectLinearSolverImpl mDirectImpl = DirectLinearSolverImpl::Undef;
-  ///
-  DirectLinearSolverConfiguration mDirectLinearSolverConfiguration;
-  ///
-  Bool mInitFromNodesAndTerminals = true;
-  /// Enable recomputation of system matrix during simulation
-  Bool mSystemMatrixRecomputation = false;
+		// #### Solver Settings ####
+		///
+		CPS::Domain mDomain = CPS::Domain::DP;
+		///
+		Solver::Type mSolverType = Solver::Type::MNA;
+		///
+		Solver::Behaviour mSolverBehaviour = Solver::Behaviour::Simulation;
+		///
+		Solver::List mSolvers;
+		///
+		DirectLinearSolverImpl mDirectImpl = DirectLinearSolverImpl::Undef;
+		///
+		DirectLinearSolverConfiguration mDirectLinearSolverConfiguration;
+		///
+		Bool mInitFromNodesAndTerminals = true;
+		/// Enable recomputation of system matrix during simulation
+		Bool mSystemMatrixRecomputation = false;
+		/// 
+		Bool mIsEigenvalueExtractionEnabled = false;
 
   /// If tearing components exist, the Diakoptics
   /// solver is selected automatically.
@@ -272,8 +274,5 @@ public:
 		void logIdObjAttribute(const String &comp, const String &attr);
 		/// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
 		void logAttribute(String name, CPS::AttributeBase::Ptr attr);
-
-		private:
-		Bool mIsEigenvalueExtractionEnabled = false;
 	};
 }
