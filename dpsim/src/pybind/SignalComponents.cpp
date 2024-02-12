@@ -75,6 +75,63 @@ void addSignalComponents(py::module_ mSignal) {
              CPS::Base::ExciterParameters>(mSignal, "ExciterStaticParameters",
                                            py::multiple_inheritance())
       .def(py::init())
+      .def_readwrite("Tr", &CPS::Signal::ExciterStaticParameters::Tr)
+      .def_readwrite("Ta", &CPS::Signal::ExciterStaticParameters::Ta)
+      .def_readwrite("Tb", &CPS::Signal::ExciterStaticParameters::Tb)
+      .def_readwrite("Te", &CPS::Signal::ExciterStaticParameters::Te)
+      .def_readwrite("Ka", &CPS::Signal::ExciterStaticParameters::Ka)
+      .def_readwrite("MaxEfd", &CPS::Signal::ExciterStaticParameters::MaxEfd)
+      .def_readwrite("MinEfd", &CPS::Signal::ExciterStaticParameters::MinEfd)
+      .def_readwrite("Kbc", &CPS::Signal::ExciterStaticParameters::Kbc);
+  py::class_<CPS::Signal::ExciterDC1Parameters,
+             std::shared_ptr<CPS::Signal::ExciterDC1Parameters>,
+             CPS::Base::ExciterParameters>(mSignal, "ExciterDC1Parameters",
+                                           py::multiple_inheritance())
+      .def(py::init())
+      .def_readwrite("Tr", &CPS::Signal::ExciterDC1Parameters::Tr)
+      .def_readwrite("Tb", &CPS::Signal::ExciterDC1Parameters::Tb)
+      .def_readwrite("Tc", &CPS::Signal::ExciterDC1Parameters::Tc)
+      .def_readwrite("Ta", &CPS::Signal::ExciterDC1Parameters::Ta)
+      .def_readwrite("Ka", &CPS::Signal::ExciterDC1Parameters::Ka)
+      .def_readwrite("Tef", &CPS::Signal::ExciterDC1Parameters::Tef)
+      .def_readwrite("Kef", &CPS::Signal::ExciterDC1Parameters::Kef)
+      .def_readwrite("Tf", &CPS::Signal::ExciterDC1Parameters::Tf)
+      .def_readwrite("Kf", &CPS::Signal::ExciterDC1Parameters::Kf)
+      .def_readwrite("Aef", &CPS::Signal::ExciterDC1Parameters::Aef)
+      .def_readwrite("Bef", &CPS::Signal::ExciterDC1Parameters::Bef)
+      .def_readwrite("MaxVa", &CPS::Signal::ExciterDC1Parameters::MaxVa)
+      .def_readwrite("MinVa", &CPS::Signal::ExciterDC1Parameters::MinVa);
+  py::class_<CPS::Signal::ExciterDC1SimpParameters,
+             std::shared_ptr<CPS::Signal::ExciterDC1SimpParameters>,
+             CPS::Base::ExciterParameters>(mSignal, "ExciterDC1SimpParameters",
+                                           py::multiple_inheritance())
+      .def(py::init())
+      .def_readwrite("Tr", &CPS::Signal::ExciterDC1SimpParameters::Tr)
+      .def_readwrite("Ta", &CPS::Signal::ExciterDC1SimpParameters::Ta)
+      .def_readwrite("Ka", &CPS::Signal::ExciterDC1SimpParameters::Ka)
+      .def_readwrite("Tef", &CPS::Signal::ExciterDC1SimpParameters::Tef)
+      .def_readwrite("Kef", &CPS::Signal::ExciterDC1SimpParameters::Kef)
+      .def_readwrite("Tf", &CPS::Signal::ExciterDC1SimpParameters::Tf)
+      .def_readwrite("Kf", &CPS::Signal::ExciterDC1SimpParameters::Kf)
+      .def_readwrite("Aef", &CPS::Signal::ExciterDC1SimpParameters::Aef)
+      .def_readwrite("Bef", &CPS::Signal::ExciterDC1SimpParameters::Bef)
+      .def_readwrite("MaxVa", &CPS::Signal::ExciterDC1SimpParameters::MaxVa)
+      .def_readwrite("MinVa", &CPS::Signal::ExciterDC1SimpParameters::MinVa);
+  py::class_<CPS::Signal::ExciterST1Parameters,
+             std::shared_ptr<CPS::Signal::ExciterST1Parameters>,
+             CPS::Base::ExciterParameters>(mSignal, "ExciterST1Parameters",
+                                           py::multiple_inheritance())
+      .def(py::init())
+      .def_readwrite("Tr", &CPS::Signal::ExciterST1Parameters::Tr)
+      .def_readwrite("Ka", &CPS::Signal::ExciterST1Parameters::Ka)
+      .def_readwrite("MaxVa", &CPS::Signal::ExciterST1Parameters::MaxVa)
+      .def_readwrite("MinVa", &CPS::Signal::ExciterST1Parameters::MinVa);
+
+  py::class_<CPS::Signal::ExciterStaticParameters,
+             std::shared_ptr<CPS::Signal::ExciterStaticParameters>,
+             CPS::Base::ExciterParameters>(mSignal, "ExciterStaticParameters",
+                                           py::multiple_inheritance())
+      .def(py::init())
       .def_readwrite("Ta", &CPS::Signal::ExciterStaticParameters::Ta)
       .def_readwrite("Tb", &CPS::Signal::ExciterStaticParameters::Tb)
       .def_readwrite("Te", &CPS::Signal::ExciterStaticParameters::Te)
