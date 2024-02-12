@@ -170,22 +170,100 @@ where $v_h(k=0)$, $v_{ef}(k=0)$ are calculated using the power flow analysis and
 
 ### Static Exciter
 
-The exciter has two inputs $ \Delta u = u _{ref} – u_{h}$, where $u_{h}$ ist the measured terminal voltage. The second input $u_{s}$, or also as $v_{pss}$ is the signal of PSS.
-
-For the initialization of exciter $u_{ref}$ is unknown. Generator terminal voltage $v_{h}$ from power flow and generators EMF $e_{fd}$ computed at the generator initialization. At the initialization PSS output $u_{s}$ ist set to $0$, as steady state is assumed. Setting Laplace variable $s={0}$ steady state is assumed and unknown $u_{ref}$ can be calculated.
-
-For the step function the lead lag block $\frac{1+sT_A}{1+sT_B}$ is represented as two parallel transfer functions $ \frac{T_A}{T_B}+ \frac{T_B-T_A}{T_B} \frac{1}{1+sT_B} $. This lead lag block provides system stabilization by transient gain reduction. Exciter machine is represented by $\frac{1}{1+sT_E}$ and a proportional controller by $K_A$.
-
-In the .cpp file of this exciter a wind-up can activated.
-
 <center>
 <figure margin=30%>
-    <img src="./images/ExciterStatic.jpg" width=65% alt="DC1_exciter">
+    <img src="./images/ExciterStatic.drawio.svg" width=70% alt="Exciter static">
     <figcaption>Fig. 3: Control diagram of the Static Exciter </br>
-                Source: A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler, "Transmission system stability assessment within an integrated grid development process"
+                Adapted from [7]
     </figcaption>
 </figure>
 </center>
+The control diagram of this is depicted in Fig. 3. It can be observed as a simplified version of the DC1 type exciter which is componsed only by the regulator, the amplifier and an optional transducer. To discretize the lead-lag compensator using using forward euler it is better to split this block into two parallel blocks as depicted in Fig. 4.
+<center>
+<figure margin=20%>
+    <img src="./images/ExciterStatic_split.drawio.svg" width=70% alt="Exciter static split">
+    <figcaption>Fig. 4: Control diagram of the Static Exciter </br>
+    </figcaption>
+</figure>
+</center>
+where:
+
+$$
+    C_{a} = \frac{T_{a}}{T_{b}}, \quad C_{b} = \frac{T_{b}-T_{a}}{T_{b}}.
+$$
+and it is described by the following set of differential equations:
+$$
+    T_{R} \frac{d}{dt} v_{r}(t) = v_{h}(t) - v_{r}(t)
+$$
+$$
+    T_{b} \frac{d}{dt} x_{b}(t) = v_{in}(t) - x_{b}(t)
+$$
+$$
+    T_{e} \frac{d}{dt} e_{fd}(t) = K_{a} v_{e}(t) - e_{fd}(t),
+$$
+
+Then, the set of differential equations are discretized using forward euler in order to solve it numerically, which leads to the following set of algebraic equations: 
+
+$$
+    v_r(k + \Delta t) = v_r(k) + \frac{\Delta t}{T_R}  ( v_h(k) - v_r(k) ),
+$$
+$$
+    X_b(k + \Delta t) = \frac{\Delta t}{T_{b}} (v_{in}(k) - x_{b}(k)) + x_{b}(k),
+$$
+$$
+    v_e(k + \Delta t) = K_{a} (C_{b} x_{b}(k + \Delta t) + C_{a} v_{in} (k + \Delta t)) ,
+$$
+$$
+    e_{fd}(k + \Delta t) = \frac{\Delta t}{T_{e}}(v_{e(k)} - e_{fd}(k)) + e_{fd}(k).
+$$
+
+To consider the saturation of $e_{fd}$ there are two different implementations, which is automatically selected depending of value of the parameter $K_{bc}$:
+
+1. *standard ($K_{bc}=0$)*:
+
+$$
+e^{*}_{fd} = e_{fd, max} \quad \quad if \quad \quad e^{*}_{fd} > e_{fd, max} \\
+e^{*}_{fd} = e_{fd, min} \quad \quad if \quad \quad e^{*}_{fd} > e_{fd, min},
+$$
+
+where $e^{*}_{fd}$ represents the output of the exciter.
+
+2. *anti_windup* ($K_{bc}>0$): for controllers with an integral component, i.e. also for PID controllers, the so-called "windup effect" can occur when using the *standard* saturation function. A strategy for limiting the anti-windup effect is shown in Fig. 5.
+<center>
+<figure margin=20%>
+    <img src="./images/ExciterStatic_windup.drawio.svg" width=70% alt="Exciter static split">
+    <figcaption>Fig. 5: Control diagram of the Static Exciter with anti windup strategy </br>
+    </figcaption>
+</figure>
+</center>
+
+which means that the input of the differential equation describing $e_{fd}$, $v_{e}$, takes now the following form:
+
+$$
+v_{e} = C_{a} v_{in} + C_{b} x_{b} - K_{bc} (e_{fd} - e_{fd}^{*}) 
+$$
+
+The initial values of all variables, which are used in the first simulation step, are calculated assuming that the simulation starts in the steady. This is equivalent to assume that all derivative are equal to zero, which leads to:
+
+$$
+v_{r}(t=0) = v_{h}(t=0),
+$$
+
+$$
+v_{e}(t=0) = \frac{e_{fd}(t=0)}{K_{a}},
+$$
+
+$$
+v_{in}(t=0) = \frac{v_{e}(t=0)}{C_{a}+C_{b}},
+$$
+
+$$
+x_{b}(t=0) = v_{in}(t=0),
+$$
+
+$$
+v_{ref}(t=0) = v_{in}(t=0) - v_{r}(t=0)
+$$
 
 ## Power Systen Stabilizer (PSS)
 PSS is a controller of synchonous generators used to enhance damping electromechanical oscillations. The input of the PSS implemented in DPSim is the rotor speed of the machine. The PSS output is a signal used to modify the reference voltage of the AVR. At present, only one PSS is implemented in DiPSim which is a simplified version of the IEEE PSS1A type model.
@@ -245,6 +323,7 @@ $$
 $$
     v_{PSS}(k=0) = 0,
 $$
+
 where $\omega(k=0)$ is calculated after the power flow analysis and after the initialization of synchronous machines (see section initialization of SG) and normally is equal to $1.0$ (pu).
 
 
@@ -355,9 +434,10 @@ More information on below governors and turbines can be found in the book "Handb
 </br>
 
 ## References
- - "IEEE Recommended Practice for Excitation System Models for Power System Stability Studies," in IEEE Std 421.5-2016 (Revision of IEEE Std 421.5-2005) , vol., no., pp.1-207, 26 Aug. 2016, doi: 10.1109/IEEESTD.2016.7553421.
- - F. Milano, “Power system modelling and scripting,” in Power System Modelling and Scripting. London: Springer-Verlag, 2010, ISBN: 978-3-642-13669-6. doi: 10.1007/978-3-642-13669-6.
- - F. Milano, A. Manjavacas, “Frequency Variations in Power Systems: Modeling, State Estimation, and Control”. ISBN: 978-1-119-55184-3.
- - F. Milano, "Power System Analysis Toolbox: Documentation for PSAT", ISBN: 979-8573500560.
- - A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler, "Transmission system stability assessment within an integrated grid development process".
- - M. Eremia; M. Shahidehpour, "Handbook of Electrical Power System Dynamics: Modeling, Stability, and Control", https://ieeexplore.ieee.org/book/6480471
+ - [1] "IEEE Recommended Practice for Excitation System Models for Power System Stability Studies," in IEEE Std 421.5-2016 (Revision of IEEE Std 421.5-2005) , vol., no., pp.1-207, 26 Aug. 2016, doi: 10.1109/IEEESTD.2016.7553421.
+ - [2] F. Milano, “Power system modelling and scripting,” in Power System Modelling and Scripting. London: Springer-Verlag, 2010, ISBN: 978-3-642-13669-6. doi: 10.1007/978-3-642-13669-6.
+ - [3] F. Milano, A. Manjavacas, “Frequency Variations in Power Systems: Modeling, State Estimation, and Control”. ISBN: 978-1-119-55184-3.
+ - [4] F. Milano, "Power System Analysis Toolbox: Documentation for PSAT", ISBN: 979-8573500560.
+ - [5] A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler, "Transmission system stability assessment within an integrated grid development process".
+ - [6] M. Eremia; M. Shahidehpour, "Handbook of Electrical Power System Dynamics: Modeling, Stability, and Control", https://ieeexplore.ieee.org/book/6480471
+ - [7] A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler, "Transmission system stability assessment within an integrated grid development process"
