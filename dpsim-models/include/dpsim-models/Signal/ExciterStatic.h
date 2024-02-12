@@ -20,6 +20,8 @@ namespace Signal {
 		public SharedFactory<ExciterStaticParameters> {
 		
 		public:
+			/// Transducer time constant (s) (optional parameter)
+			Real Tr = 0;
 			/// Time constant of the numerator in the lead lag block (s)
 			Real Ta = 0;
 			/// Time constant of the denumerator in the lead lag block (s)
@@ -27,12 +29,15 @@ namespace Signal {
 			/// Time constant of the exciter machine (s)
 			Real Te = 0;
 			/// Proportional controller with the gain Ka
-			Real Ka=0;
+			Real Ka = 0;
 
 			/// Maximum EMF
 			Real MaxEfd = 0;
 			/// Minimum EMF
 			Real MinEfd = 0;
+
+			/// Proportional gain of anti-Windup
+			Real Kbc = 0;
 	};
 
 	/// Static Excitation System
@@ -49,22 +54,20 @@ namespace Signal {
 		Real mVref = 0;
 		/// Measured voltage at the terminal of generator (Input of the exciter) at step k
 		Real mVh = 0;
-		/// Exciter output (EMF of the generator) at step k
-		Real mEfd = 0;
-		/// Exciter output at step k+1
-		Real mEfd_next=0;
-		/// Variable for integrator Windup (input of the limiter)
-		Real mEfd_lim_in=0;
-		/// 
-		Real mEfd_lim_in_next=0;
-		/// Auxilary state variable from partial fraction decompostion (1+sT_A)/(1+sT_B) at step k
+		/// Transducer output at time k and k+1
+		Real mVr = 0;
+		Real mVr_prev = 0;
+		/// Auxilary state variable from partial fraction decompostion (1+sT_A)/(1+sT_B) at step k and k+1
 		Real mXb = 0;
-		/// Auxilary state variable from partial fraction decompostion (1+sT_A)/(1+sT_B) at step k+1
-		Real mXb_next = 0;
+		Real mXb_prev = 0;
 		/// Input of the first lead lag block at time k (=Vref-Vh+Vpss)
 		Real mVin = 0;
 		/// Input of the second lag block 1/(1+sTe)
 		Real mVe;
+		/// Exciter output (EMF of the generator) at step k+1
+		Real mEfd = 0;
+		/// Exciter output (EMF of the generator) at step k+1 after the windup
+		Real mEfdLim = 0;
 
 		/// Auxiliar parameters
 		Real mCa;
