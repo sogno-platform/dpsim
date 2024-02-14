@@ -155,31 +155,31 @@ def dpsim():
     sim.log_attribute('n2.v', n1.attr('v'))
 
     intf_config = {
-        "type": "mqtt",
-        "format": "json",
-        "host": "mqtt",
-        "in": {
-            "subscribe": "/mqtt-dpsim"
+        'type': 'mqtt',
+        'format': 'json',
+        'host': 'mqtt',
+        'in': {
+            'subscribe': '/mqtt-dpsim'
         },
-        "out": {
-            "publish": "/dpsim-mqtt"
+        'out': {
+            'publish': '/dpsim-mqtt'
         }
     }
 
     intf_config_2 = {
-        "type": "shmem",
-        "in": {
-            "name": "/shmem-dpsim"
+        'type': 'shmem',
+        'in': {
+            'name': '/shmem-dpsim'
         },
-        "out": {
-            "name": "/dpsim-shmem"
+        'out': {
+            'name': '/dpsim-shmem'
         }
     }
 
-    intf = dpsimpyvillas.InterfaceVillas(name="dpsim-mqtt", config=intf_config)
+    intf = dpsimpyvillas.InterfaceVillas(name='dpsim-mqtt', config=json.dumps(intf_config))
     sim.add_interface(intf)
 
-    intf2 = dpsimpyvillas.InterfaceVillas(name="dpsim-shmem", config=intf_config_2)
+    intf2 = dpsimpyvillas.InterfaceVillas(name='dpsim-shmem', config=json.dumps(intf_config_2))
     sim.add_interface(intf2)
     intf.import_attribute(load.attr('P'), 0)
     intf.export_attribute(n1.attr('v').derive_coeff(0,0), 0)
