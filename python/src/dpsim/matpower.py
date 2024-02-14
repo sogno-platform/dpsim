@@ -7,7 +7,7 @@ import dpsimpy
 class Reader:
 
     def __init__(self, mpc_file_path, mpc_name = 'mpc'):
-        # read input file (returns multidimensional dict)
+        # Read input file (returns multidimensional dict)
         self.mpc_raw = scipy.io.loadmat(mpc_file_path)
         self.mpc_name = mpc_name
 
@@ -58,7 +58,7 @@ class Reader:
         self.mpc_gen_data['status'] = self.mpc_gen_data['status'].astype(int)
 
         #### Branches
-        # extract only first 13 columns since following columns include results
+        # Extract only first 13 columns since following columns include results
         mpc_branch_raw = self.mpc_raw[self.mpc_name][0][0][branch_data_idx][:, :13]
 
         branch_data_header = ["fbus", "tbus", "r", "x", "b", "rateA", "rateB",
@@ -76,11 +76,11 @@ class Reader:
 
         self.process_mpc()
 
-        # return values: nodes and components
+        # Return values: nodes and components
         dpsimpy_busses_dict = {}
         dpsimpy_comp_dict = {}
 
-        # default multiplier for matpower data
+        # Default multiplier for matpower data
         mw_w = 1e6
         kv_v = 1e3
 
@@ -91,13 +91,13 @@ class Reader:
         inj = 0
 
         for index, bus in self.mpc_bus_data.iterrows():
-            # create dpsimpy busses
+            # Create dpsimpy busses
             bus = bus + 1
             bus_index = str(self.mpc_bus_data.at[index,'bus_i'])
             bus_name = bus_index
             dpsimpy_busses_dict[bus_name] = dpsimpy.sp.SimNode(bus_name, dpsimpy.PhaseType.Single)
 
-            # for each bus type create corresponding dpsimpy component
+            # For each bus type create corresponding dpsimpy component
             # 1 = PQ, 2 = PV, 3 = ref, 4 = isolated
             bus_type = self.mpc_bus_data.at[index,'type']
 
@@ -113,7 +113,7 @@ class Reader:
                 dpsimpy_comp_dict[load_name][0].set_parameters(load_p, load_q, load_baseV)
                 dpsimpy_comp_dict[load_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.PQ)
 
-                # add connections
+                # Add connections
                 dpsimpy_comp_dict[load_name].append([dpsimpy_busses_dict[bus_index]]) # [to bus]
 
             # Generators
@@ -121,21 +121,21 @@ class Reader:
                 generator = generator + 1
                 gen_name = "gen%s" %generator
 
-                # relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
+                # Relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
                 gen = self.mpc_gen_data.loc[self.mpc_gen_data['bus'] == self.mpc_bus_data.at[index,'bus_i']]
 
-                gen_baseS = gen['mBase']*mw_w # gen base MVA default is mpc.baseMVA
-                gen_baseV = self.mpc_bus_data.at[index,'baseKV']*kv_v # gen base kV
-                gen_v = gen['Vg']*gen_baseV   # gen set point voltage (gen['Vg'] in p.u.)
-                gen_p = gen['Pg']*mw_w   # gen ini. active power (gen['Pg'] in MVA)
-                # gen_q = gen['Qg']*mw_w   # gen ini. reactive power (gen['Qg'] in MVAr)
-                gen_nom_s = abs(complex(gen['Pmax'], gen['Qmax'])) # gen nominal power (set default to mpc.baseMVA ? )
+                gen_baseS = gen['mBase']*mw_w # Generator base MVA default is mpc.baseMVA
+                gen_baseV = self.mpc_bus_data.at[index,'baseKV']*kv_v # Generator base kV
+                gen_v = gen['Vg']*gen_baseV   # Generator set point voltage (gen['Vg'] in p.u.)
+                gen_p = gen['Pg']*mw_w   # Generator ini. active power (gen['Pg'] in MVA)
+                # gen_q = gen['Qg']*mw_w   # Generator ini. reactive power (gen['Qg'] in MVAr)
+                gen_nom_s = abs(complex(gen['Pmax'], gen['Qmax'])) # Generator nominal power (set default to mpc.baseMVA ?)
 
                 dpsimpy_comp_dict[gen_name] = [dpsimpy.sp.ph1.SynchronGenerator(gen_name, dpsimpy.LogLevel.info)]
                 dpsimpy_comp_dict[gen_name][0].set_parameters(gen_nom_s, gen_baseV, gen_p, gen_v, dpsimpy.PowerflowBusType.PV)
                 dpsimpy_comp_dict[gen_name][0].set_base_voltage(gen_baseV)
 
-                # add connections
+                # Add connections
                 dpsimpy_comp_dict[gen_name].append([dpsimpy_busses_dict[bus_index]]) # [to bus]
 
             # Network injection (slack bus)
@@ -143,10 +143,10 @@ class Reader:
                 inj = inj + 1
                 extnet_name = "extnet%s" %inj
 
-                # relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
+                # Relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
                 extnet = self.mpc_gen_data.loc[self.mpc_gen_data['bus'] == self.mpc_bus_data.at[index,'bus_i']]
 
-                # extnet_baseS= extnet['mBase']*mw_w # default is mpc.baseMVA
+                # extnet_baseS = extnet['mBase']*mw_w # Default is mpc.baseMVA
                 extnet_baseV = self.mpc_bus_data.at[index,'baseKV']*kv_v
                 extnet_v = extnet['Vg']*extnet_baseV
 
@@ -155,16 +155,16 @@ class Reader:
                 dpsimpy_comp_dict[extnet_name][0].set_base_voltage(extnet_baseV)
                 dpsimpy_comp_dict[extnet_name][0].modify_power_flow_bus_type(dpsimpy.PowerflowBusType.VD)
 
-                # add connections
+                # Add connections
                 dpsimpy_comp_dict[extnet_name].append([dpsimpy_busses_dict[bus_index]]) # [to bus]
 
-            #isolated
+            # Isolated
             elif bus_type == 4:
                 print("isolated bus type")
             else:
                 print("bus type error")
 
-        ### branches ####
+        ### Branches
         line = 0
         trafo = 0
         for index, branch in self.mpc_branch_data.iterrows():
@@ -191,12 +191,13 @@ class Reader:
                 line_b = self.mpc_branch_data.at[index,'b'] / line_baseZ
                 line_l = line_x / self.mpc_omega
                 line_c = line_b / self.mpc_omega
-                line_g = 0 # line conductance is not included in mpc
+                line_g = 0 # Line conductance is not included in mpc
 
                 dpsimpy_comp_dict[line_name] = [dpsimpy.sp.ph1.PiLine(line_name, dpsimpy.LogLevel.info)]
                 dpsimpy_comp_dict[line_name][0].set_parameters(line_r, line_l, line_c, line_g)
                 dpsimpy_comp_dict[line_name][0].set_base_voltage(line_tbus_baseV)
-                # add connections
+
+                # Add connections
                 dpsimpy_comp_dict[line_name].append([dpsimpy_busses_dict[str(line_fbus)], dpsimpy_busses_dict[str(line_tbus)]])
 
             # Transformers
@@ -235,7 +236,7 @@ class Reader:
                 print(transf_primary_v, transf_secondary_v, np.abs(transf_ratio), np.angle(transf_ratio), transf_r, transf_l)
                 print(transf_tbus_baseV)
 
-                # add connections
+                # Add connections
                 dpsimpy_comp_dict[transf_name].append([dpsimpy_busses_dict[str(transf_fbus)], dpsimpy_busses_dict[str(transf_tbus)]])
 
         return dpsimpy_busses_dict, dpsimpy_comp_dict

@@ -36,7 +36,7 @@ if __name__ == '__main__':
     }
     instance.copy_settings = {
         'decouple': True,
-        #'decouple': 'diakoptics',
+        # 'decouple': 'diakoptics',
         'nodes': ['BUS5', 'BUS6', 'BUS8'],
         'resistance': 100,
         'inductance': 0.16,

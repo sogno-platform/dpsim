@@ -36,7 +36,7 @@ if __name__ == '__main__':
         'log_level': 0,
     }
     instance.copy_settings = {
-        #'decouple': True,
+        # 'decouple': True,
         'decouple': 'diakoptics',
         'nodes': ['BUS5', 'BUS6', 'BUS8'],
         'resistance': 100,

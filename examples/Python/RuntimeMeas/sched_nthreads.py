@@ -24,7 +24,7 @@ def sched_nthreads(instance, threads, schedulers, size):
 if __name__ == '__main__':
     threads = range(1, 11)
     schedulers = [
-#        'sequential',
+    #    'sequential',
         'omp_level',
         'thread_level',
         'thread_level meas',
@@ -32,7 +32,7 @@ if __name__ == '__main__':
         'thread_list meas',
     ]
     size = 1
-    #size = 20
+    # size = 20
 
     name = 'sched_nthreads'
     if len(sys.argv) > 1:
