@@ -69,6 +69,10 @@ namespace Signal {
 		Real mVs_prev;
 		/// 
 		Real mOmega_prev;
+		///
+		Real mActivePower_prev;
+		///
+		Real mVh_prev;
 
 	protected:
 		/// State Variables
@@ -78,7 +82,7 @@ namespace Signal {
 		Real mV2;
 		/// Output of the second phase compensation block
 		Real mV3;
-		/// PSS output
+		/// PSS output at t=k
 		Real mVs;
 
 	public:
