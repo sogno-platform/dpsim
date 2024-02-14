@@ -55,6 +55,7 @@ void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
 	mVs = mV3 + (mParameters->T3 / mParameters->T4) * (mV2 + (mParameters->T1 / mParameters->T2) * (mParameters->Kw * omega + mParameters->Kp * activePower + mParameters->Kv * Vh + mV1));
 
 	mOmega_prev = omega;
+	mActivePower_prev = activePower;
 
 	SPDLOG_LOGGER_INFO(mSLog,
 		"\nInitial values: "
@@ -67,24 +68,28 @@ void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
 }
 
 Real Signal::PSS1A::step(Real omega, Real activePower, Real Vd, Real Vq, Real dt) {
+	// inputs are omega, Vd, Vq at and activePower at time k
 
 	// Voltage magnitude calculation
 	Real Vh = sqrt(pow(Vd, 2.) + pow(Vq, 2.));
+	mVh_prev = Vh;
 
-	// 
+	// update variables at t=k-1
 	mV1_prev = mV1;
 	mV2_prev = mV2;
 	mV3_prev = mV3;
 	mVs_prev = mVs;
 
 	// compute state variables at time k using euler forward
-	mV1 = mV1_prev - dt / mParameters->Tw * (mParameters->Kw * mOmega_prev + mParameters->Kp * activePower + mParameters->Kv * Vh + mV1_prev);
-	mV2 = mV2_prev + dt / mParameters->T2 * (mA * (mParameters->Kw * mOmega_prev + mParameters->Kp * activePower + mParameters->Kv * Vh + mV1_prev) - mV2_prev);
-	mV3 = mV3_prev + dt / mParameters->T4 * (mB * (mV2_prev + (mParameters->T1 / mParameters->T2) * (mParameters->Kw * mOmega_prev + mParameters->Kp * activePower + mParameters->Kv * Vh + mV1_prev)) - mV3_prev); 	
+	mV1 = mV1_prev - dt / mParameters->Tw * (mParameters->Kw * mOmega_prev + mParameters->Kp * mActivePower_prev + mParameters->Kv * mVh_prev + mV1_prev);
+	mV2 = mV2_prev + dt / mParameters->T2 * (mA * (mParameters->Kw * mOmega_prev + mParameters->Kp * mActivePower_prev + mParameters->Kv * mVh_prev + mV1_prev) - mV2_prev);
+	mV3 = mV3_prev + dt / mParameters->T4 * (mB * (mV2_prev + (mParameters->T1 / mParameters->T2) * (mParameters->Kw * mOmega_prev + mParameters->Kp * mActivePower_prev + mParameters->Kv * mVh_prev + mV1_prev)) - mV3_prev); 	
 
 	//
 	mVs = mV3 + (mParameters->T3 / mParameters->T4) * (mV2 + (mParameters->T1 / mParameters->T2) * (mParameters->Kw * omega + mParameters->Kp * activePower + mParameters->Kv * Vh + mV1));
 	mOmega_prev = omega;
+	mActivePower_prev = activePower;
+	mVh_prev = Vh;
 
 	// check limints of mVs
 	if (mVs > mParameters->Vs_max) 

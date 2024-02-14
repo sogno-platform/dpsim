@@ -42,9 +42,12 @@ void HydroTurbine::initialize(Real Pminit) {
 Real HydroTurbine::step(Real Pgv, Real dt){
     // the values pre calculated in the previous step are now actual values
     mX1 = mX1_next;
+    
     // Caltulating the value of the only state variable for the next step (integration) using the current
-    mX1_next = 2 * dt/mParameters->Tw * (Pgv-mX1) + mX1;
+    mX1_next = 2 * dt / mParameters->Tw * (Pgv - mX1) + mX1;
+    
     // Output is the value Pm(k) = -2*Pgv(k)+X1(k) 
     mPm = 3 * mX1 - (2 * Pgv);
+
     return mPm;
 }
