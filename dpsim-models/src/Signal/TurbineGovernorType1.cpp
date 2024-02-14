@@ -65,28 +65,39 @@ void TurbineGovernorType1::initialize(Real PmRef) {
 }
 
 Real TurbineGovernorType1::step(Real Omega, Real dt) {
+  /// output is Tm at t=k
 
-  /// Input of speed relay
+  /// update state variables at time k
+  mXg1_prev = mXg1;
+  mXg2_prev = mXg2;
+  mXg3_prev = mXg3;
+
+  /// Input of speed relay at t=k
   Real Pin = mPmRef + (mParameters->OmRef - Omega) / mParameters->R;
   if (Pin > mParameters->Pmax)
     Pin = mParameters->Pmax;
   if (Pin < mParameters->Pmin)
     Pin = mParameters->Pmin;
 
-  /// Governor
+  /// update Governor state variable at time k+1
   mXg1 = mXg1_prev + dt / mParameters->Ts * (Pin - mXg1_prev);
 
-  /// Servo
+  /// update Servo state variable at time k+1
   mXg2 = mXg2_prev +
          dt / mParameters->Tc *
              ((1 - mParameters->T3 / mParameters->Tc) * mXg1_prev - mXg2_prev);
 
-  /// Reheat
+  /// update reheat state variable at time k+1
   mXg3 = mXg3_prev +
          dt / mParameters->T5 *
              ((1 - mParameters->T4 / mParameters->T5) *
                   (mXg2_prev + mParameters->T3 / mParameters->Tc * mXg1_prev) -
               mXg3_prev);
+
+  /// Mechanical torque at time k
+  mTm = mXg3_prev +
+        mParameters->T4 / mParameters->T5 *
+            (mXg2_prev + mParameters->T3 / mParameters->Tc * mXg1_prev);
 
   /// Mechanical torque
   mTm = mXg3 + mParameters->T4 / mParameters->T5 *

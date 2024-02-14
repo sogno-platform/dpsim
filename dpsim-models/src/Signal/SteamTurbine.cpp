@@ -67,21 +67,21 @@ Real SteamTurbine::step(Real Pgv, Real dt) {
     
     // Calculate next values of state variables of turbine with forward euler high pressure
     if(mParameters->Tch == 0)
-        mPhp=Pgv;
+        mPhp = Pgv;
     else
-        mPhp_next= mPhp + dt/mParameters->Tch *(Pgv - mPhp);
+        mPhp_next= mPhp + dt / mParameters->Tch * (Pgv - mPhp);
    
     // intermidiat pressure 
     if (mParameters->Trh == 0)
         mPip = mPhp;
     else
-        mPip_next=mPip + dt / mParameters->Trh * (mPhp - mPip);
+        mPip_next = mPip + dt / mParameters->Trh * (mPhp - mPip);
     
     // lower pressure
     if (mParameters->Tco == 0)
         mPlp = mPip;
     else
-        mPlp_next=mPlp + dt / mParameters->Tco *(mPip - mPlp);
+        mPlp_next = mPlp + dt / mParameters->Tco *(mPip - mPlp);
     
     // Output
     mPm = mPhp * mParameters->Fhp + mPip * mParameters->Fip + mPlp * mParameters->Flp;
