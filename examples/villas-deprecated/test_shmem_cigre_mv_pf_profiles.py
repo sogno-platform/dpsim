@@ -1,7 +1,13 @@
 # To run this example, an MQTT broker is required
-# docker run -it -p 1883:1883 -p 9001:9001 eclipse-mosquitto
-# test message: mosquitto_pub -t 'test/topic' -m "test"
-# get messages: mosquitto_sub -v -t '#'
+#
+# Start container:
+#   docker run -it -p 1883:1883 -p 9001:9001 eclipse-mosquitto
+#
+# Send message:
+#   mosquitto_pub -t 'test/topic' -m "test"
+#
+# Get messages:
+#   mosquitto_sub -v -t '#'
 
 import glob
 import sys

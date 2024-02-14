@@ -147,7 +147,7 @@ def dpsim():
 def test_shmem_import_export():
     logging.basicConfig(format='[%(asctime)s %(name)s %(levelname)s] %(message)s', datefmt='%H:%M:%S', level=logging.INFO)
 
-    sim, intf = dpsim() #intf needs to be extracted from the dpsim-function since the interface object gets deleted otherwise leading to SegFault when starting the simulation
+    sim, intf = dpsim() # intf needs to be extracted from the dpsim-function since the interface object gets deleted otherwise leading to SegFault when starting the simulation
     node = villas()
 
     node.start()

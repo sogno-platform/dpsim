@@ -90,8 +90,8 @@ decoupled_emt = ts.frequency_shift_list(decoupled_dp, 60)
 
 for i in range(0, 6):
     varname = 'BUS' + str(i+4) + '.v'
-#varname = 'BUS4.v'
-#i = 0
+    # varname = 'BUS4.v'
+    i = 0
     pt.set_timeseries_labels(normal_emt[varname], varname + ' normal')
     pt.set_timeseries_labels(coupled_emt[varname], varname + ' coupled')
     pt.set_timeseries_labels(decoupled_emt[varname], varname + ' decoupled')

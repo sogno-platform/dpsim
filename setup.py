@@ -27,7 +27,7 @@ class CMakeBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG={extdir}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE={extdir}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
-            f"-DCMAKE_BUILD_TYPE={cfg}" # not used on MSVC, but no harm
+            f"-DCMAKE_BUILD_TYPE={cfg}" # Not used on MSVC, but no harm
         ]
 
         if platform.system() == 'Windows':

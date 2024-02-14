@@ -30,7 +30,7 @@ def test_async():
 
     start = dt.datetime.now() + dt.timedelta(seconds=4)
 
-    sim = dpsim.RealTimeSimulation(__name__, system, duration=10, timestep=0.0005)#, start_time=start)
+    sim = dpsim.RealTimeSimulation(__name__, system, duration=10, timestep=0.0005) # , start_time=start)
 
     # Start in two seconds!
     sim.start()

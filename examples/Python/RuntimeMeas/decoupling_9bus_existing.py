@@ -35,7 +35,7 @@ do_sim('normal', system)
 
 system = dpsim.load_cim(name, files, frequency=60)
 decouple_line(system, 'LINE75', 'BUS5', 'BUS7')
-#decouple_line(system, 'LINE78', 'BUS7', 'BUS8')
+# decouple_line(system, 'LINE78', 'BUS7', 'BUS8')
 decouple_line(system, 'LINE64', 'BUS6', 'BUS4')
 decouple_line(system, 'LINE89', 'BUS8', 'BUS9')
 do_sim('decoupled', system)
