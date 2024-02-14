@@ -2,7 +2,7 @@ sphinx
 sphinx_rtd_theme
 
 pytest-runner
-pytest
+pytest>=6.0
 pyyaml
 pybind11[global]
 
