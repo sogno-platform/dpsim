@@ -492,25 +492,22 @@ void Base::ReducedOrderSynchronGenerator<
   // set initial interface voltage
   (**mIntfVoltage)(0, 0) = mInitVoltage * mBase_V_RMS;
 
-  // set initial interface voltage
-  (**mIntfVoltage)(0, 0) = mInitVoltage * mBase_V_RMS;
+  SPDLOG_LOGGER_INFO(this->mSLog,
+                     "\n--- Initialization from power flow  ---"
+                     "\nInitial Vd (per unit): {:f}"
+                     "\nInitial Vq (per unit): {:f}"
+                     "\nInitial Id (per unit): {:f}"
+                     "\nInitial Iq (per unit): {:f}"
+                     "\nInitial Ef (per unit): {:f}"
+                     "\nInitial mechanical torque (per unit): {:f}"
+                     "\nInitial electrical torque (per unit): {:f}"
+                     "\nInitial initial mechanical theta (per unit): {:f}"
+                     "\nInitial delta (per unit): {:f} (= {:f}°)"
+                     "\n--- Initialization from power flow finished ---",
 
-  SPDLOG_LOGGER_DEBUG(this->mSLog,
-                      "\n--- Initialization from power flow  ---"
-                      "\nInitial Vd (per unit): {:f}"
-                      "\nInitial Vq (per unit): {:f}"
-                      "\nInitial Id (per unit): {:f}"
-                      "\nInitial Iq (per unit): {:f}"
-                      "\nInitial Ef (per unit): {:f}"
-                      "\nInitial mechanical torque (per unit): {:f}"
-                      "\nInitial electrical torque (per unit): {:f}"
-                      "\nInitial initial mechanical theta (per unit): {:f}"
-                      "\nInitial delta (per unit): {:f} (= {:f}°)"
-                      "\n--- Initialization from power flow finished ---",
-
-                      (**mVdq)(0, 0), (**mVdq)(1, 0), (**mIdq)(0, 0),
-                      (**mIdq)(1, 0), **mEf, **mMechTorque, **mElecTorque,
-                      **mThetaMech, **mDelta, **mDelta * 180 / PI);
+                     (**mVdq)(0, 0), (**mVdq)(1, 0), (**mIdq)(0, 0),
+                     (**mIdq)(1, 0), **mEf, **mMechTorque, **mElecTorque,
+                     **mThetaMech, **mDelta, **mDelta * 180 / PI);
   this->mSLog->flush();
 }
 
@@ -531,7 +528,8 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(
     Real time, Int timeStepCount) {
   mSimTime = time;
 
-  // update governor variables
+  // Calculate mechanical torque at t=k
+  // input is omega at time t=k, output is mech. torque at time t=k
   if (mHasTurbine && mHasGovernor) {
     mMechTorque_prev = **mMechTorque;
     **mMechTorque =
@@ -542,24 +540,33 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(
     **mMechTorque = mGovernor->step(**mOmMech, mTimeStep);
   }
 
-  // calculate mechanical variables at t=k+1 with forward euler
+  // Calculate electrical torque at t=k
   **mElecTorque =
       (**mVdq)(0, 0) * (**mIdq)(0, 0) + (**mVdq)(1, 0) * (**mIdq)(1, 0);
-  **mOmMech = **mOmMech +
-              mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
-  **mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
-  **mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 
-  // update exciter and PSS variables
+  // calculate v_pss at time k
+  // inputs are: mOmMech, mElecTorque, mVdq at time t=k
   if (mHasPSS)
     mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0, 0), (**mVdq)(1, 0),
                        mTimeStep);
+
+  // calculate e_fd at time k+1, inputs are at t=k
   if (mHasExciter) {
     mEf_prev = **mEf;
     **mEf = mExciter->step((**mVdq)(0, 0), (**mVdq)(1, 0), mTimeStep, mVpss);
   }
 
+  // calculate mechanical variables at t=k+1 with forward euler
+  **mOmMech = **mOmMech +
+              mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+  //**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque) / **mOmMech);
+  **mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
+  **mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
+
+  // model specific calculation of electrical vars
   stepInPerUnit();
+
+  // stamp model specific right side vector after calculation of electrical vars
   (**mRightVector).setZero();
   mnaApplyRightSideVectorStamp(**mRightVector);
 }
@@ -569,7 +576,8 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(
     Real time, Int timeStepCount) {
   mSimTime = time;
 
-  // update governor variables
+  // Calculate mechanical torque at t=k
+  // input is omega at time t=k, output is mech. torque at time t=k
   if (mHasTurbine && mHasGovernor) {
     mMechTorque_prev = **mMechTorque;
     **mMechTorque =
@@ -580,24 +588,33 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(
     **mMechTorque = mGovernor->step(**mOmMech, mTimeStep);
   }
 
-  // calculate mechanical variables at t=k+1 with forward euler
+  // Calculate electrical torque at t=k
   **mElecTorque =
-      ((**mVdq0)(0, 0) * (**mIdq0)(0, 0) + (**mVdq0)(1, 0) * (**mIdq0)(1, 0));
+      (**mVdq0)(0, 0) * (**mIdq0)(0, 0) + (**mVdq0)(1, 0) * (**mIdq0)(1, 0);
+
+  // calculate v_pss at time k
+  // inputs are: mOmMech, mElecTorque, mVdq at time t=k
+  if (mHasPSS)
+    mVpss = mPSS->step(**mOmMech, **mElecTorque, (**mVdq0)(0, 0),
+                       (**mVdq0)(1, 0), mTimeStep);
+
+  // calculate e_fd at time k+1, inputs are at t=k
+  if (mHasExciter) {
+    mEf_prev = **mEf;
+    **mEf = mExciter->step((**mVdq0)(0, 0), (**mVdq0)(1, 0), mTimeStep, mVpss);
+  }
+
+  // calculate mechanical variables at t=k+1 with forward euler
   **mOmMech = **mOmMech +
               mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque));
+  //**mOmMech = **mOmMech + mTimeStep * (1. / (2. * mH) * (mMechTorque_prev - **mElecTorque) / **mOmMech);
   **mThetaMech = **mThetaMech + mTimeStep * (**mOmMech * mBase_OmMech);
   **mDelta = **mDelta + mTimeStep * (**mOmMech - 1.) * mBase_OmMech;
 
-  // update exciter and PSS variables
-  if (mHasPSS)
-    mVpss =
-        mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0, 0), (**mVdq)(1, 0));
-  if (mHasExciter) {
-    mEf_prev = **mEf;
-    **mEf = mExciter->step((**mVdq)(0, 0), (**mVdq)(1, 0), mTimeStep, mVpss);
-  }
-
+  // model specific calculation of electrical vars
   stepInPerUnit();
+
+  // stamp model specific right side vector after calculation of electrical vars
   (**mRightVector).setZero();
   mnaApplyRightSideVectorStamp(**mRightVector);
 }

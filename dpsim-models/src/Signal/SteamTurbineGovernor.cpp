@@ -11,6 +11,10 @@ void SteamTurbineGovernor::setParameters(std::shared_ptr<Base::GovernorParameter
     
 	if (auto params = std::dynamic_pointer_cast<Signal::SteamGorvernorParameters>(parameters)){
 		mParameters = params;
+		if (mParameters->T2==0){
+			SPDLOG_LOGGER_ERROR(mSLog, "The parameter T2 can not be equal to zero!");
+			throw CPS::Exception();
+		}
 		SPDLOG_LOGGER_INFO(mSLog, 
 				"\nSteam Governor parameters:"
 				"\nOmRef: {:e}"
@@ -20,10 +24,13 @@ void SteamTurbineGovernor::setParameters(std::shared_ptr<Base::GovernorParameter
 				"\ndPmax: {:e}"
 				"\ndPmin: {:e}"
 				"\nPmax: {:e}"
-				"\nPmin: {:e}",
-				mParameters->OmRef, mParameters->R, mParameters->T2,
-				mParameters->T3, mParameters->dPmax, mParameters->dPmin,
-				mParameters->Pmax, mParameters->Pmin);
+				"\nPmin: {:e}"
+				"\nKbc: {:e}\n",
+				mParameters->OmRef, mParameters->R, 
+				mParameters->T1, mParameters->T2, mParameters->T3, 
+				mParameters->dPmax, mParameters->dPmin,
+				mParameters->Pmax, mParameters->Pmin, 
+				mParameters->Kbc);
 			mSLog->flush();
 	} else {
 		std::cout << "Type of parameters class of " << this->name() << " has to be SteamGorvernorParameters!" << std::endl;
@@ -33,18 +40,25 @@ void SteamTurbineGovernor::setParameters(std::shared_ptr<Base::GovernorParameter
 
 void SteamTurbineGovernor::initialize(Real Pref) {
 	if (Pref>=0 && Pref<=1) {
-		// Steady state at O equal to Om_ref (50Hz/60HZ)
+		// Steady state at t=0 equal to Om_ref (50Hz/60HZ)
     	mPref = Pref;
+		mDelOm = 0;
 		mDelOm_prev = 0;
-    	mDelOm = 0;
-    	mDelPgv = 0;
-		mPgv = Pref;
-		mPgv_next = Pref;
-		mPlim_in = Pref;
-		mPlim_in_next = Pref;
+		mDelOm_2prev = 0;
 		mP1 = 0;
-		mP1_next = 0;
+		mP1_prev = 0;
 		mP = 0;
+    	mDerPgv = 0;
+		mPgvLim = Pref;
+		mPgv = Pref;
+
+		if (mParameters->T1 == 0) {
+			mCa = 0;
+			mCb = 0;
+		} else {
+			mCa = mParameters->T2 / mParameters->T1;
+			mCb = (mParameters->T1 - mParameters->T2) / mParameters->T1;
+		}
 
     	SPDLOG_LOGGER_INFO(mSLog, 
 			"\nSteam Governor initial values:"
@@ -52,7 +66,7 @@ void SteamTurbineGovernor::initialize(Real Pref) {
 			"\nDelOm: {:f}"
 			"\nDelPgv: {:f}"
 			"\nPgv: {:f}",
-			mPref, mDelOm, mDelPgv, mPgv);
+			mPref, mDelOm, mDerPgv, mPgv);
 		mSLog->flush();
 	} else {
 		SPDLOG_LOGGER_INFO(mSLog, 
@@ -64,56 +78,42 @@ void SteamTurbineGovernor::initialize(Real Pref) {
 
 Real SteamTurbineGovernor::step(Real Omega, Real dt) {
 
-	// WIndup is implemented to compare the models to IAEW. If no windup is desired set Kbc=0
-	const Real cKbc=10;
-
-	const Real cA=mParameters->T2/mParameters->T1;
-	const Real cB=(mParameters->T1 - mParameters->T2) / mParameters->T1;
-
     // write the values that were calculated in the previous step
+	mDelOm_2prev = mDelOm_prev;
 	mDelOm_prev = mDelOm;
-	mPgv = mPgv_next;
-	mPlim_in = mPlim_in_next;
-	mP1 = mP1_next;
+	mP1_prev = mP1;
 
 	// Calculate the input of the governor for time step k
-	 mDelOm = mParameters->OmRef-Omega;
+	 mDelOm = mParameters->OmRef - Omega;
 
 	// Transfer function 1/R (1+sT2)/(s+T1) = 1/R (T2/T1 + (T1-T2)/T1 *1/(1+sT1)) = P(s)/delOm(s)
- 	if(mParameters->T1==0) {
-		mP = (1/mParameters->R) * (mDelOm + (mParameters->T2/dt) * (mDelOm-mDelOm_prev));
+ 	if (mParameters->T1 == 0) {
+		mP = (1 / mParameters->R) * (mDelOm_prev + (mParameters->T2 / dt) * (mDelOm_prev - mDelOm_2prev));
 	} else {
-		mP1_next = mP1+(dt/mParameters->T1) * (mDelOm*cB-mP1);
-		mP = (1/mParameters->R) * (mP1+mDelOm * cA);
+		mP1 = mP1_prev + (dt / mParameters->T1) * (mDelOm_prev * mCb - mP1_prev);
+		mP = (1 / mParameters->R) * (mP1_prev + mDelOm_prev * mCa);
 	}
 
-	// Calculate thee input of integrator in PT1 via values of controller and output of governor
-	mDelPgv = (mPref + mP - mPgv) / mParameters->T3;
-	if (mDelPgv<mParameters->dPmin)
-		mDelPgv = mParameters->dPmin;
-	if(mDelPgv>mParameters->dPmax)
-		mDelPgv = mParameters->dPmax;
+	// Calculate the input of integrator
+	mDerPgv = 1. / mParameters->T3 * (mPref + mP - mPgv);
+	// TODO: use module of Pgv?
+	if (mDerPgv < mParameters->dPmin)
+		mDerPgv = mParameters->dPmin;
+	if(mDerPgv > mParameters->dPmax)
+		mDerPgv = mParameters->dPmax;
+	mDerPgv = mDerPgv - mParameters->Kbc * (mPgvLim - mPgv);
 
-	// Calculating output of PT1 actuator, the output of the governor, without windup
-	/*
-	mPgv_next = dt * mDelPgv + mPgv;
-	if(mPgv_next<mParameters->Pmin)
-		mPgv_next = mParameters->Pmin;
-	if(mPgv_next>mParameters->Pmax)
-		mPgv_next = mParameters->Pmax; */
+	// Calculate PgvLim (before the limiter)
+	// use Pgv instead?
+	mPgvLim = mPgvLim + dt * mDerPgv;
 
-	// Calculating output of PT1 actuator, the output of the governor, including windup
-	
-	mPlim_in_next = dt *(mDelPgv - cKbc*(mPlim_in - mPgv)) + mPlim_in;
-	if(mPlim_in_next<mParameters->Pmin){
-		mPgv_next = mParameters->Pmin;
-	}
-	else if(mPlim_in_next>mParameters->Pmax){
-		mPgv_next = mParameters->Pmax;
-	}
-	else{
-		mPgv_next=mPlim_in_next;
-	}
+	// Calculating output  of the governor
+	if (mPgvLim < mParameters->Pmin)
+		mPgv = mParameters->Pmin;
+	else if (mPgvLim > mParameters->Pmax)
+		mPgv = mParameters->Pmax;
+	else
+		mPgv = mPgvLim;
 
 	return mPgv;
 }

@@ -66,7 +66,7 @@ void ExciterStatic::initialize(Real Vh_init, Real Ef_init) {
 	mVin = mVe / (mCa + mCb);
 
 	/// Initial reference value
-	mVref = mVin - mVr;
+	mVref = mVin + mVr;
 
 	/// Initial value for auxilar state variable
 	mXb = mVin;
@@ -77,10 +77,10 @@ void ExciterStatic::initialize(Real Vh_init, Real Ef_init) {
 		"\nExciter type: ExciterStatic"
 		"\nInitially set excitation system initial values:"
 		"\ninit Vh: {:e}"
-		"\ninit Ef: {:e}",
+		"\ninit Ef: {:e}"
 		"\nCalculated set poit and auxilary state variables:"
 		"\nVref : {:e}"
-		"\nXb : {:e}",
+		"\nXb : {:e}"
 		"\nVin = {:e}",
 		mVh, mEfd,
 		mVref, mXb, mVin);
@@ -103,15 +103,13 @@ Real ExciterStatic::step(Real mVd, Real mVq, Real dt, Real Vpss) {
 		mVr = mVh;
 	
 	/// Compute Vin at time k
-	mVin = mVref - mVr + Vpss;
+	mVin = mVref - mVr_prev + Vpss;
 
 	/// Compute Xb at time k+1 using euler forward
 	mXb = mXb_prev + (mVin - mXb_prev) * dt / mParameters->Tb;
 	
-	// Compute Efd at time k+1 using euler forward
-	mVe = mVin * mCa + mXb * mCb - mParameters->Kbc * (mEfd - mEfdLim);
-	
-	//Integrator for T_e time constant !with! Wind-up
+	// Compute Efd at time k using euler forward
+	mVe = mVin * mCa + mXb_prev * mCb - mParameters->Kbc * (mEfd - mEfdLim);
 	mEfd = mEfd + (dt / mParameters->Te) * (mParameters->Ka * mVe - mEfd);
 	if (mEfd > mParameters->MaxEfd)
 		mEfdLim = mParameters->MaxEfd;

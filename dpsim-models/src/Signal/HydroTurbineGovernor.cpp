@@ -28,6 +28,14 @@ void HydroTurbineGovernor::setParameters(std::shared_ptr<Base::GovernorParameter
 	    std::cout << "Type of parameters class of " << this->name() << " has to be HydroGorvernorParameters!" << std::endl;
 	    throw CPS::TypeException();
     }
+    // FIXME: Ein problem entsteht bei der Zerlegung wenn T1=t3 (gleiche polstellen, es muss eine andere Zerlegung benutzt werden)
+    if (mParameters->T1==mParameters->T3) {
+        SPDLOG_LOGGER_ERROR(mSLog, "T1 can not be equal to T3!!!");
+        throw CPS::Exception();
+    }
+
+    mCa = (mParameters->T1 - mParameters->T2) / (mParameters->T1 - mParameters->T3);
+    mCb = (mParameters->T2 - mParameters->T3) / (mParameters->T1 - mParameters->T3);
 }
 
 void HydroTurbineGovernor::initialize(Real Pref){
@@ -36,10 +44,11 @@ void HydroTurbineGovernor::initialize(Real Pref){
         mPgv=Pref;
         mPref=Pref;
         mDelOm = 0;
+        mDelOm_prev = 0;
         mX1 = 0;
-        mX1_next = 0;
+        mX1_prev = 0;
         mX2 = 0;
-        mX2_next = 0;
+        mX2_prev = 0;
         SPDLOG_LOGGER_INFO(mSLog, 
             "Hydro Governor initial values: \n"
 			"\nPref: {:f}"
@@ -57,24 +66,20 @@ void HydroTurbineGovernor::initialize(Real Pref){
 }
 
 Real HydroTurbineGovernor::step(Real Omega, Real dt){
-    // FIXME: Ein problem entsteht bei der Zerlegung wenn T1=t3 (gleiche polstellen, es muss eine andere Zerlegung benutzt werden)
-    // TODO: move cA and cB to initialize() to avoid recomputation in each simulation step
-    const Real cA = (mParameters->T1 - mParameters->T2) / (mParameters->T1 - mParameters->T3);
-    const Real cB = (mParameters->T2 - mParameters->T3) / (mParameters->T1 - mParameters->T3);
+    // write the values that were calculated in the previous step
+	mDelOm_prev = mDelOm;
+	mX1_prev = mX1;
+    mX2_prev = mX2;
     
-    //Calculation of frequency deviation
-    mDelOm=mParameters->OmRef-Omega;
-    
-    // Set the values of state variables calculated in last step as atual values for k
-    mX1=mX1_next;
-    mX2=mX2_next;
+   // Calculate the input of the governor for time step k
+	mDelOm = mParameters->OmRef - Omega;    
 
     // Calculation State variables for k+1 with integrators
-    mX1_next= mX1 + dt / mParameters->T1 * (mDelOm - mX1);
-    mX2_next= mX2 + dt / mParameters->T3 * (mDelOm - mX2);
+    mX1 = mX1_prev + dt / mParameters->T1 * (mDelOm_prev - mX1_prev);
+    mX2 = mX2_prev + dt / mParameters->T3 * (mDelOm_prev - mX2_prev);
     
     // Output of the governor before limiter, values from k are used to caltulate output Pgv(k)
-    mPgv = mPref + 1. / mParameters->R * ( mX1 * cA + mX2 * cB);
+    mPgv = mPref + 1. / mParameters->R * ( mX1 * mCa + mX2 * mCb);
 
     if (mPgv>mParameters->Pmax)
         mPgv = mParameters->Pmax;

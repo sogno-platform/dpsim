@@ -21,26 +21,29 @@ namespace Signal {
 
         public:
             /// Droop, the value 1/K in the controller K(1+sT_2)
-            Real R;
+            Real R = 0;
             /// T_1 related to the differentiator in the controlle K(1+sT_2)/(1+sT_1)
-            Real T1;
+            Real T1 = 0;
             /// T_2 related to the differentiator in the controlle K(1+sT_2)
-            Real T2;
+            Real T2 = 0;
             /// Time constant T_3 of the actuator in the Governor
-            Real T3;
+            Real T3 = 0;
         
             // ### Physical constraints ###
             /// Maximum growth rate
-            Real dPmax;
+            Real dPmax = 0;
             /// Minimum decay rate
-            Real dPmin;
+            Real dPmin = 0;
             /// Maximum mechanical power(pu)
-            Real Pmax;
+            Real Pmax = 0;
             /// Minimum mechanical power (pu)
-            Real Pmin;
+            Real Pmin = 0;
 
             /// Setpoint for omega (pu). It is adviced to choose Om_ref=1
-            Real OmRef;
+            Real OmRef = 0;
+
+            /// Proportional gain of anti-Windup
+			Real Kbc = 0;
     };
 
     /// Steam turbine governor, where Omega_ref, P_ref are constant and T_1=0
@@ -58,30 +61,26 @@ namespace Signal {
             /// Setpoint for mechanical Power (pu)
             Real mPref;
     
-            /// ### Variables at time step k-1 ###
-            Real mDelOm_prev;    
-    
-            // ### Variables at time step k ###
-            /// Delta Omega = Omega_ref-Omega_meas at k
+            // ### State Variables ###
+            /// Delta Omega = Omega_ref-Omega_meas at t=k, t=k-1 and t=k-2
             Real mDelOm;
-            /// Variable after the rate limiter and before integrator at k
-            Real mDelPgv;
-            /// The outpur of the Governor at k
-            Real mPgv;
-            /// Windup variable
+            Real mDelOm_prev;
+            Real mDelOm_2prev;
+            /// Windup variable at t=k and t=k-1
             Real mP1;
-            /// Windup variable
+            Real mP1_prev;
+            /// p at time t=k-1
             Real mP;
-            /// Windup variable
-            Real mPlim_in;
-    
-            // ### Variables at time step k+1 ###
-            /// The outpur of the PT1 with limiters at k+1 (Governor output)
-            Real mPgv_next;
-            ///
-            Real mP1_next;
-            ///
-            Real mPlim_in_next;
+            /// Derivative of Pgv at time k-1
+            Real mDerPgv;
+            /// The output of the Governor at k before the limiter
+            Real mPgvLim;
+            /// The output of the Governor at k after the limiter
+            Real mPgv;
+
+            /// Auxiliar variables
+            Real mCa;
+            Real mCb;
             
         public:
             ///

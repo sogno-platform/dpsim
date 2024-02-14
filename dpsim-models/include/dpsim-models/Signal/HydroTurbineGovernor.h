@@ -50,21 +50,24 @@ namespace Signal {
             //Setpoint for mechanical Power (pu)
             Real mPref;
 
-            // Delta Omega = Omega_ref-Omega_meas at k
+            // Delta Omega = Omega_ref-Omega_meas at k and at k-1
             Real mDelOm;
+            Real mDelOm_prev;
 
-            // State Variable of T1 PT1 at k
+            // State Variable of T1 PT1 at k and at k-1
             Real mX1;
-            // State Variable of T1 PT1 at k+1
-            Real mX1_next;
+            Real mX1_prev;
 
-            // State Variable of T3 PT1 at k
+            // State Variable of T3 PT1 at k and at k-1
             Real mX2;
-            // State Variable of T3 PT1 at k+1
-            Real mX2_next;
+            Real mX2_prev;
 
             // The outpur of the Governor at k
             Real mPgv;
+
+            /// Auxiliar variables
+            Real mCa;
+            Real mCb;
 
         public:
             ///

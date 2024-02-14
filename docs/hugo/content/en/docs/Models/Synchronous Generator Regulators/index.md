@@ -2,6 +2,7 @@
 title: "Synchronous Generator Regulators"
 linkTitle: "Synchronous Generator Regulators"
 date: 2023-01-23
+author: Martin Moraga <martin.moraga@eonerc.rwth-aachen.de>
 ---
 
 In DPSim, synchronous generator control systems are solved separately from the electric network. The outputs of the electric network (active and reactive power, node voltages, branch currents and rotor speed of synchronous generators) at time $k- \Delta t$ are used as the input of the controllers to calculate their states at time $k$. Because of the relatively slow response of the controllers, the error in the network solution due to the time delay $\Delta t$ introduced by this approach is negligible.  
@@ -12,7 +13,7 @@ In DPSim, synchronous generator control systems are solved separately from the e
 $$
     v_{ref}(t) = v_{ref,0} + v_{pss}(t)
 $$
-where $v_{ref,0}$ is initialized after the power flow computations and $v_{pss}(t)$ is the output of the (optional) PSS connected to the exciter. The output of the exciter systems is the induced emf by the field current $v_{ef}$. 
+where $v_{ref,0}$ is initialized after the power flow computations and $v_{pss}(t)$ is the output of the (optional) PSS connected to the exciter. The output of the exciter systems is the induced emf by the field current at $t=k + \Delta t$: $v_{ef}(k + \Delta t)$ (sometimes the alternative notation $e_{fd}(k + \Delta t)$ is used). 
 
 ### IEEE Type DC1 exciter model
 <center>
@@ -208,13 +209,16 @@ $$
     v_r(k + \Delta t) = v_r(k) + \frac{\Delta t}{T_R}  ( v_h(k) - v_r(k) ),
 $$
 $$
+    v_{in}(k) = v_{ref}(k) - v_{r}(k),
+$$
+$$
     X_b(k + \Delta t) = \frac{\Delta t}{T_{b}} (v_{in}(k) - x_{b}(k)) + x_{b}(k),
 $$
 $$
-    v_e(k + \Delta t) = K_{a} (C_{b} x_{b}(k + \Delta t) + C_{a} v_{in} (k + \Delta t)) ,
+    v_e(k) = K_{a} (C_{b} x_{b}(k) + C_{a} v_{in} (k)) ,
 $$
 $$
-    e_{fd}(k + \Delta t) = \frac{\Delta t}{T_{e}}(v_{e(k)} - e_{fd}(k)) + e_{fd}(k).
+    e_{fd}(k + \Delta t) = \frac{\Delta t}{T_{e}}(v_{e}(k) - e_{fd}(k)) + e_{fd}(k).
 $$
 
 To consider the saturation of $e_{fd}$ there are two different implementations, which is automatically selected depending of value of the parameter $K_{bc}$:
@@ -266,19 +270,19 @@ v_{ref}(t=0) = v_{in}(t=0) - v_{r}(t=0)
 $$
 
 ## Power Systen Stabilizer (PSS)
-PSS is a controller of synchonous generators used to enhance damping electromechanical oscillations. The input of the PSS implemented in DPSim is the rotor speed of the machine. The PSS output is a signal used to modify the reference voltage of the AVR. At present, only one PSS is implemented in DiPSim which is a simplified version of the IEEE PSS1A type model.
+PSS is a controller of synchonous generators used to enhance damping electromechanical oscillations. The input of the PSS implemented in DPSim is the rotor speed of the machine. The PSS output $v_{pss}$ at time $t=k$ is a signal used as the input of the AVR to calculate the field voltage at $t=k+\Delta t$, $v_{fd}(k+\Delta t)$. At present, only one PSS is implemented in DiPSim which is a simplified version of the IEEE PSS1A type model.
 
 ### IEEE PSS1A type PSS
 <center>
 <figure margin=30%>
     <img src="./images/PSS_Type1.png" width=65% alt="DC1_exciter">
-    <figcaption>Fig. 3: Control diagram of the PSS Type 1 </br>
+    <figcaption>Fig. 6: Control diagram of the PSS Type 1 </br>
                 Adapted from: Milano, Power System Modelling and Scripting
     </figcaption>
 </figure>
 </center>
 
-The control diagram of this PSS is depicted in Fig. 3. It includes a washout filter and two lead-lag blocks and is described by the following set of differential equations:
+The control diagram of this PSS is depicted in Fig. 6. It includes a washout filter and two lead-lag blocks and is described by the following set of differential equations:
 $$
     T_w \frac{d}{dt} v_1(t) = -(K_w \omega (t) + v_1(t)),
 $$
@@ -296,13 +300,13 @@ where $\omega (t)$ is the input signal of the PSS (rotor speed) and $v_{pss}(t)$
 
 The set of differential equations are discretized using forward euler in order to solve it numerically, which leads to the following set of algebraic equations: 
 $$
-    v_1(k+1) = v_1(k) - \frac{\Delta t}{T_w} (K_w \omega (k) + v_1(k)),
+    v_1(k + \Delta t) = v_1(k) - \frac{\Delta t}{T_w} (K_w \omega (k) + v_1(k)),
 $$
 $$
-    v_2(k+1) = v_2(k) + \frac{\Delta t}{T_2} ((1-\frac{T_1}{T_2})(K_w \omega (k) + v_1(k)) - v_2(k)),
+    v_2(k + \Delta t) = v_2(k) + \frac{\Delta t}{T_2} ((1-\frac{T_1}{T_2})(K_w \omega (k) + v_1(k)) - v_2(k)),
 $$
 $$
-    v_3(k+1) = v_3(k) + \frac{\Delta t}{T_4} ((1-\frac{T_3}{T_4})(v_2(k) + \frac{T_1}{T_2}(K_w \omega (k) + v_1(k))) - v_{pss}(k)),
+    v_3(k + \Delta t) = v_3(k) + \frac{\Delta t}{T_4} ((1-\frac{T_3}{T_4})(v_2(k) + \frac{T_1}{T_2}(K_w \omega (k) + v_1(k))) - v_{pss}(k)),
 $$
 $$
     v_{pss}(k) = v_3(k) + \frac{T_3}{T_4} (v_2(k) + \frac{T_1}{T_2} (K_w \omega (k) + v_1(k)))
@@ -328,20 +332,22 @@ where $\omega(k=0)$ is calculated after the power flow analysis and after the in
 
 
 ## Turbine Governor Models
-In DPsim there are two type of Turbine Governor implementations.  The *Turbine Governor Type 1* implements both, the turbine and the governor, in one component. In difference to that, Steam Turbine and Steam Turbine Governor are implemented as two separate classes, therefore the objects are created separately. Steam/Hydro Turbine and Steam/Hydro Turbine Governor are two blocks that has to be connected in series. 
+In DPsim there are two types of Turbine Governor implementations.  The *Turbine Governor Type 1* implements both, the turbine and the governor, in one component. In difference to that, Steam Turbine and Steam Turbine Governor are implemented as two separate classes, therefore the objects are created separately. Steam/Hydro Turbine and Steam/Hydro Turbine Governor are two blocks that has to be connected in series. 
+
+The input of the turbine governos models is the mechanical omega at time $t=k-\Delta t$ and the output is the mechanical power at time $t=k$. This variable is the used by the SG to predict the mechanical omega at time $t=k+\Delta t$.
 
 ### Turbine Governor Type 1
 <center>
 <figure margin=30%>
     <img src="./images/TG_Type1.png" width=65% alt="DC1_exciter">
-    <figcaption></br>Fig. 4: Control diagram of the turbine governor type 1 </br>
+    <figcaption></br>Fig. 7: Control diagram of the turbine governor type 1 </br>
                 Source: Milano, Power System Modelling and Scripting
     </figcaption>
 </figure>
 </center>
 </br>
 
-This model includes a governor, a servo and a reheat block. The control diagram of this governor is depicted in Fig. 4 and it is described by the following set of differential-algebraic equations:
+This model includes a governor, a servo and a reheat block. The control diagram of this governor is depicted in Fig. 7 and it is described by the following set of differential-algebraic equations:
 $$
     p_{in}(t) = p_{ref} + \frac{1}{R} (\omega_{ref} - \omega(t)),
 $$
@@ -361,77 +367,240 @@ where $\omega (t)$ is the input signal and $\tau_{m}(t)$ is the output signal of
 
 The set of differential equations are discretized using forward euler in order to solve it numerically, which leads to the following set of algebraic equations:
 $$
-    p_{in}(k) = p_{ref} + \frac{1}{R} (\omega_{ref} - \omega(k)),
+    p_{in}(k-\Delta t) = p_{ref} + \frac{1}{R} (\omega_{ref} - \omega(k-\Delta t)),
 $$
 $$
-    x_{g1}(k+1) = x_{g1}(k) + \frac{\Delta t}{T_s} (p_{in}(k) - x_{g1}(k)),
+    x_{g1}(k) = x_{g1}(k-\Delta t) + \frac{\Delta t}{T_s} (p_{in}(k-\Delta t) - x_{g1}(k-\Delta t)),
 $$
 $$
-    x_{g2}(k+1) = x_{g2}(k) + \frac{\Delta t}{T_c} ((1 - \frac{T_3}{T_c}) x_{g1}(k) - x_{g2}(k)),
+    x_{g2}(k) = x_{g2}(k-\Delta t) + \frac{\Delta t}{T_c} ((1 - \frac{T_3}{T_c}) x_{g1}(k-\Delta t) - x_{g2}(k-\Delta t)),
 $$
 $$
-    x_{g3}(k+1) = x_{g3}(k) + \frac{\Delta t}{T_5} ((1 - \frac{T_4}{T_5}) (x_{g2}(k) + \frac{T_3}{T_c} x_{g1}(k)) - x_{g3}(k)),
+    x_{g3}(k) = x_{g3}(k-\Delta t) + \frac{\Delta t}{T_5} ((1 - \frac{T_4}{T_5}) (x_{g2}(k-\Delta t) + \frac{T_3}{T_c} x_{g1}(k-\Delta t)) - x_{g3}(k-\Delta t)),
 $$
 $$
-    \tau_m(k+1) = x_{g3}(k+1) + \frac{T_4}{T_3} (x_{g2}(k+1) + \frac{T_3}{T_c} x_{g1}(k+1)),
+    \tau_m(k) = x_{g3}(k) + \frac{T_4}{T_3} (x_{g2}(k) + \frac{T_3}{T_c} x_{g1}(k)),
 $$
-Since the values of all variables for $t=k$ are known, $\tau_m(k+1)$ can be easily calculated using the discretised equations, which is carried out in the `preStep` function of the generator connected to each governor. Then, $\tau_m(k)$ is used to approximate the mechanical differential equations of the generator at time $k+1$. The valueof $\tau_m(k+1)$ is stored and used to approximate the machanical variables of the generator at time $k+2$, and so on.
+Since the values of all variables for $t=k-\Delta t$ are known, $\tau_m(k)$ can be easily calculated using the discretised equations, which is carried out in the `preStep` function of the generator connected to each governor. Then, $\tau_m(k)$ is used to approximate the mechanical differential equations of the generator at time $k+\Delta t$.
+
+### Steam Governor
+<center>
+<figure margin=30%>
+    <img src="./images/SteamGovernor.drawio.svg" width=65% alt="DC1_exciter">
+    <figcaption></br>Fig. 8: Control diagram of the steam turbine governor </br>
+                Adapted from [7]
+    </figcaption>
+</figure>
+</center>
+</br>
+
+The control diagram of this model is depicted in Fig. 8. This model gets as input the frequency (rotational speed of the generator)  deviation $\Delta\omega$ from the norminal frequency (normally $50 Hz$ or $60 Hz$) and gives the target value $p_{gv}$ to the turbine. $p_{ref}$ is the mechanical power that is produced at nominal frequency. The governor is implemented as a controller $\frac{K(1+sT_2)}{(1+sT_1)}$, where $K=1/R$ and $R$ it the droop coefficient, and a PT1 lag element with embedded limiters before and after the integrator. To avoid unnecessary dead beat behavior, complex transfer functions, with more then one pole and zero, are represented as a sum of multiple PT1 elements connected in parallel, via partial fracture decomposition, which leads to the control diagram depicted in Fig. 9.
+
+<center>
+<figure margin=30%>
+    <img src="./images/SteamGovernor_split.drawio.svg" width=90% alt="DC1_exciter">
+    <figcaption></br>Fig. 9: Control diagram of the steam turbine governor </br>
+    </figcaption>
+</figure>
+</center>
+</br>
+
+Analog to the static exciter model, this model is implemented using a anti windup strategy as shown in Fig. 10.
+<center>
+<figure margin=30%>
+    <img src="./images/SteamGovernor_windup.drawio.svg" width=90% alt="DC1_exciter">
+    <figcaption></br>Fig. 10: Control diagram of the steam turbine governor with anti windup strategy </br>
+    </figcaption>
+</figure>
+</center>
+</br>
+
+Finally, the discretized equations using forward euler of this model are given by:
+$$
+    \Delta \omega (k- \Delta t) = \omega_{ref} - \omega (k- \Delta t),
+$$
+$$
+    p_{1}(k) = p_{1}(k- \Delta t) + \frac{\Delta t}{T_{1}} (\Delta \omega (k- \Delta t) \cdot \frac{T_{1} - T_{2}}{T_{1}} - p_{1}(k- \Delta t)),
+$$
+$$
+    p(k - \Delta t) = \frac{1}{R} (p_{1}(k - \Delta t) + \Delta \omega(k- \Delta t) \cdot \frac{T_{2}}{T_{1}}),
+$$
+$$
+    \dot{p}(k-\Delta t) = \frac{1}{T_{3}}(p(k- \Delta t) + p_{ref} - p_{gv}(k- \Delta t)) - K_{bc} (P_{gv}^{*}(k- \Delta t) - P_{gv}(k- \Delta t)),
+$$
+$$
+    p_{gv}^{*}(k) = p_{gv}^{*}(k- \Delta t) + \Delta t \cdot \dot{p}(k- \Delta t),
+$$
+
+and
+
+$$
+p_{gv}(k) = p_{gv}^{*}(k) \quad \quad if \quad \quad P_{m, min} <= p_{gv}^{*}(k) <= P_{m, min}, \\
+p_{gv}(k) = P_{m, max} \quad \quad if \quad \quad p_{gv}^{*}(k) > P_{m, max}, \\
+p_{gv}(k) = P_{m, min} \quad \quad if \quad \quad p_{gv}^{*}(k) > P_{m, min}.
+$$
+
+If $T1==0$ the equation for $p_{1}(k)$ is skipped and the equation for $p(k)$ is calculated as follows:
+$$
+    p(k - \Delta t) = \frac{1}{R} (\Delta \omega(k - \Delta t) + \frac{T_{2}}{\Delta t} (\Delta \omega(k - \Delta t) - \Delta \omega(k - 2\Delta t) )).
+$$
+
+The initial values of all variables, which are used in the first simulation step, are calculated assuming that the simulation starts in the steady. This is equivalent to assume that all derivative are equal to zero and that $\Delta \omega(t=0)=0$, which leads to:
+
+$$
+    p_{1}(t=0) = 0,
+$$
+$$
+    p(t=0) = 0,
+$$
+$$
+    p_{ref} = p_{gv}(t=0),
+$$
+$$
+    p_{gv}^{*}(t=0) = p_{gv}(t=0),
+$$
 
 ### Steam Turbine
-**Note 1**: In the step function of each PT1 lag element the integrator $\frac{1}{s}$ is simulated with Forward Euler Method, it the output value for $k$ calculated in the previous step and following the Forward Euler formula calculate the value for $k+1$. To avoid unnecessary dead beat behavior, complex transfer functions, with more then one pole and zero, are represented as a sum of multiple PT1 elements connected in parallel, via partial fracture decomposition. Parallel blocks are discretized separately with the same time step. 
-
-More information on below governors and turbines can be found in the book "Handbook of Electrical Power System Dynamics: Modeling, Stability, and Control", linked below in references.
-
-**Steam Turbine** receives as input signal from Steam Turbine Governor $p_{gv}$ and as output gives the mechanical power $p_{m}$ to a synchronous generator. Steam Turbine is divided in high-pressure, intermediate-pressure and low-pressure stages. Each of them is modeled as a first order lag element with time constants $T_{CH}, T_{RH}, T_{CO}$. If a time constant is chosen to be equal to zero, the according lag element is deactivated. The total turbine mechanical power is a sum of powers provided by each stage, each fraction can be modeled with corresponding gain-factors $F_{HP}, F_{IP}, F_{LP}$. Note that the sum of gain-factors should be equal to one $F_{HP}+F_{IP}+F_{LP} = 1$.
-
 <center>
 <figure margin=30%>
-    <img src="./images/SteamTurbine.jpg" width=65% alt="DC1_exciter">
-    <figcaption></br>Fig. 4: Diagram of the steam turbine </br>
-                Source: A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler, "Transmission system stability assessment within an integrated grid development process"
+    <img src="./images/SteamTurbine.drawio.svg" width=65% alt="Steam Turbine">
+    <figcaption></br>Fig. 9: Control diagram of the steam turbine </br>
+                Adapted from [7]
     </figcaption>
 </figure>
 </center>
 </br>
 
-### Steam Turbine and Steam Turbine Governor
-**Steam turbine governor** get as input the frequency (rotational speed of the generator)  deviation $\Delta\omega$ from set-frequency ($50 Hz$ or $60 Hz$) and gives target value $p_{gv}$ to the turbine , $p_0$ is mechanical power that is produced at set-frequency. The governor is implemented as a controller $\frac{K(1+sT_2)}{(1+sT_1)}$, where $K=1/R$ with $R$-droop coefficient, and a PT1 lag element with embedded limiters before and after the integrator. The Controller is Simulated as a gain parallel to a PT1 element $\frac{K(1+sT_2)}{(1+sT_1)}=K(\frac{T_2}{T_1}+\frac{T_1-T_2}{T_1} \frac{1}{1+sT_1})$. For safety reasons in the governor output signal is limited to the range [0 pu, 1 pu].
+The control diagram of this model is depicted in Fig. 9. It receives as input signal from the Steam Governor $p_{gv}$ and as output gives the mechanical power $p_{m}$ to a synchronous generator. Steam Turbine is divided in high-pressure, intermediate-pressure and low-pressure stages. Each of them is modeled as a first order lag element with time constants $T_{CH}, T_{RH}, T_{CO}$. If a time constant is chosen to be equal to zero, the according lag element is deactivated. The total turbine mechanical power is a sum of powers provided by each stage, each fraction can be modeled with corresponding gain-factors $F_{HP}, F_{IP}, F_{LP}$. Note that the sum of gain-factors should be equal to one $F_{HP}+F_{IP}+F_{LP} = 1$. The discretized equations of this model using forward euler are given by the following equations:
 
-<center>
-<figure margin=30%>
-    <img src="./images/SteamGovernor.jpg" width=65% alt="DC1_exciter">
-    <figcaption></br>Fig. 4: Control diagram of the steam turbine governor </br>
-                Source: A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler, "Transmission system stability assessment within an integrated grid development process"
-    </figcaption>
-</figure>
-</center>
-</br>
+$$
+    p_{hp}(k) = p_{hp}(k - \Delta t) + \frac{\Delta t}{T_{CH}} (p_{gv}(k - \Delta t) - p_{hp}(k - \Delta t)),
+$$
+$$
+    p_{ip}(k) = p_{ip}(k - \Delta t) + \frac{\Delta t}{T_{RH}} (p_{hp}(k - \Delta t) - p_{ip}(k - \Delta t)),
+$$
+$$
+    p_{lp}(k) = p_{lp}(k - \Delta t) + \frac{\Delta t}{T_{CO}} (p_{ip}(k - \Delta t) - p_{lp}(k - \Delta t)),
+$$
+$$
+    p_{m}(k) = F_{FP} \cdot p_{hp}(k) + F_{ip} \cdot p_{ip}(k) + F_{LP} \cdot p_{lp}(k)
+$$
 
-### Hydro Turbine
-**Hydro Turbine** receives as input signal from Hydro Turbine Governor $p_{gv}$ and as output gives the mechanical power $p_{m}$ to a synchronous generator. The transfer function is specified by water starting time parameter $T_{w}$. The transfer function is a sum of two parallel blocks $\frac{1-sT_w}{1+0.5sT_w}=-2+\frac{3}{1+0.5sT_w}$ which is discretized separately.
-
-<center>
-<figure margin=30%>
-    <img src="./images/HydroTurbine.jpg" width=65% alt="DC1_exciter">
-    <figcaption></br>Fig. 4: Diagram of a hydro turbine </br>
-                Source: A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler, "Transmission system stability assessment within an integrated grid development process"
-    </figcaption>
-</figure>
-</center>
-</br>
+The initial values of all variables, which are used in the first simulation step, are calculated assuming that the simulation starts in the steady. This is equivalent to assume that all derivative are equal to zero, which leads to:
+$$
+    p_{hp}(t=0) = p_{gv}(t=0),
+$$
+$$
+    p_{ip}(t=0) = p_{hp}(t=0),
+$$
+$$
+    p_{lp}(t=0) = p_{iv}(t=0),
+$$
+$$
+    p_{m}(t=0) = F_{FP} \cdot p_{hp}(t=0) + F_{ip} \cdot p_{ip}(t=0) + F_{LP} \cdot p_{lp}(t=0)
+$$
 
 ### Hydro Turbine Governor
-**Hydro Turbine Governor** get as input the frequency (rotational speed of the generator)  deviation $\Delta\omega$ from set-frequency ($50 Hz$ or $60 Hz$) and gives target value $p_{gv}$ to the turbine , $p_0$ is mechanical power that is produced at set-frequency. The controller transfer Function is defined as $K\frac{1+sT_2}{(1+sT_1)(1+sT_3)}=K(\frac{T_1-T_2}{T_1-T_3} \frac{1}{1+sT_1} + \frac{T_2-T_3}{T_1-T_3} \frac{1}{1+sT_3})$, where $K=\frac{1}{R}$ and $R$ is the droop coefficient. Two parallel PT1 blocks are discretized separately, their outputs are weighted by according factors and added. The disadvantage of the parallel block representation is the error the time constants are equal, that is why is should it must apply $T_1 \neq T_2$. The sum of both blocks, the output $p_{gv}$ is limited to the range [0pu, 1pu].  
 
 <center>
 <figure margin=30%>
-    <img src="./images/HydroGovernor.jpg" width=65% alt="DC1_exciter">
-    <figcaption></br>Fig. 4: Control diagram of a hydro turbine governor </br>
-                Source: A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler, "Transmission system stability assessment within an integrated grid development process"
+    <img src="./images/HydroGovernor.drawio.svg" width=65% alt="Hydro Governor">
+    <figcaption></br>Fig. 11: Control diagram of a hydro turbine governor </br>
+                Adapted from [7]
     </figcaption>
 </figure>
 </center>
 </br>
+
+Hydro Turbine Governor get as input the frequency (rotational speed of the generator) deviation $\Delta\omega$ from the nominal frequency (normally $50 Hz$ or $60 Hz$) and gives the target value $p_{gv}$ to the turbine , $p_{ref}$ is mechanical power that is produced at nominal frequency. The controller transfer function is defined as $K\frac{1+sT_2}{(1+sT_1)(1+sT_3)}$, where $K=\frac{1}{R}$ and $R$ is the droop coefficient. The transfer function can be split into two PT1 blocks as shown in Fig. 12.
+
+<center>
+<figure margin=30%>
+    <img src="./images/HydroGovernor_split.drawio.svg" width=65% alt="Hydro Governor split">
+    <figcaption></br>Fig. 12: Control diagram of a hydro turbine governor </br>
+    </figcaption>
+</figure>
+</center>
+</br>
+
+The discretized equations of this model using forward euler are given by the following equations:
+$$
+    x_{1}(k) = x_{1}(k - \Delta t) + \frac{\Delta t}{T_{1}} (\Delta \omega(k - \Delta t) - x_{1}(k - \Delta t)),
+$$
+$$
+    x_{2}(k) = x_{2}(k - \Delta t) + \frac{\Delta t}{T_{3}} (\Delta \omega(k - \Delta t) - x_{2}(k - \Delta t)),
+$$
+$$
+    p^{*}_{gv}(k) = \frac{1}{R}(A \cdot x_{1}(k) + B \cdot x_{2}(k)) + p_{ref},
+$$
+
+where
+$$
+A = \frac{T_{1}-T_{2}}{T_{1}-T_{3}}, \quad \quad B = \frac{T_{2}-T_{3}}{T_{1}-T_{3}},
+$$
+
+and
+
+$$
+p_{gv}(k) = p_{gv}^{*}(k) \quad \quad if \quad \quad P_{m, min} <= p_{gv}^{*}(k) <= P_{m, min}, \\
+p_{gv}(k) = P_{m, max} \quad \quad if \quad \quad p_{gv}^{*}(k) > P_{m, max}, \\
+p_{gv}(k) = P_{m, min} \quad \quad if \quad \quad p_{gv}^{*}(k) > P_{m, min}.
+$$
+
+The initial values of all variables, which are used in the first simulation step, are calculated assuming that the simulation starts in the steady. This is equivalent to assume that all derivative are equal to zero and that $\Delta \omega(t=0)=0$, which leads to:
+
+$$
+    x_{1}(t=0) = 0,
+$$
+$$
+    x_{2}(t=0) = 0,
+$$
+$$
+    p_{ref} = p_{gv}(t=0),
+$$
+$$
+    p_{gv}^{*}(t=0) = p_{gv}(t=0),
+$$
+
+### Hydro Turbine
+
+<center>
+<figure margin=30%>
+    <img src="./images/HydroTurbine.drawio.svg" width=65% alt="DC1_exciter">
+    <figcaption></br>Fig. 12: Diagram of a hydro turbine </br>
+                Adapted from [7]
+    </figcaption>
+</figure>
+</center>
+</br>
+
+The control diagram of this model is depicted in Fig. 12. It receives as input signal from Hydro Turbine Governor $p_{gv}$ and as output gives the mechanical power $p_{m}$ to a synchronous generator. The transfer function is specified by water starting time parameter $T_{w}$ and can be represented as the sum of two parallel blocks as shown in Fig. 13.
+
+<center>
+<figure margin=30%>
+    <img src="./images/HydroTurbine_split.drawio.svg" width=65% alt="DC1_exciter">
+    <figcaption></br>Fig. 13: Diagram of a hydro turbine </br>
+                Adapted from [7]
+    </figcaption>
+</figure>
+</center>
+</br>
+
+The equations modelling this governor are discretized using forward euler and are given by the following equations:
+$$
+    x_{1}(k) = x_{1}(k - \Delta t) + \frac{\Delta t}{0.5 \cdot T_{W}} (p_{gv}(k - \Delta t) - x_{1}(k - \Delta t)),
+$$
+$$
+    p_{m}(k) = 3 x_{1}(k) - 2 p_{gv}(k),
+$$
+
+The initial values of the variables, which are used in the first simulation step, are calculated assuming that the simulation starts in the steady. This is equivalent to assume that all derivative are equal to zero, which leads to:
+$$
+    x_{1}(t=0) = p_{gv}(t=0),
+$$
+$$
+    p_{m}(t=0) = p_{gv}(t=0).
+$$
 
 ## References
  - [1] "IEEE Recommended Practice for Excitation System Models for Power System Stability Studies," in IEEE Std 421.5-2016 (Revision of IEEE Std 421.5-2005) , vol., no., pp.1-207, 26 Aug. 2016, doi: 10.1109/IEEESTD.2016.7553421.
