@@ -157,10 +157,10 @@ if __name__ == '__main__':
     # t_f = 1
     t_k = 0.0
     
-    # H = 0.01
+    n = int(round((t_f - t_0) / time_step))
+    t = np.around(np.linspace(t_0, t_f, n + 1), 16)
     
     N = int(round((t_f - t_0) / H))
-    
     t_m = np.around(np.linspace(t_0, t_f, N + 1), 16)
     
     m = int(H/time_step)
@@ -188,18 +188,21 @@ if __name__ == '__main__':
     # We have to assume the trajectory of y_2 extending its initial value, since we have no prior information
     y_1_m_prev = np.tile(y_1_0, m)
     
-    
-    for i in range(0, N+1):         
+    for i in range(0, N):         
         y_1_prev = y_1_m_prev[-1]
+        t_m_i = t[m*i : m*(i+1) + 1]
             
         # Extrapolation: Zero order hold
         if interp == 'zoh':
-            u_2_m = np.tile(y_1_prev, m)
+            u_2_m = np.tile(y_1_prev, m+1)
+        elif interp == 'linear':
+            f_u_2 = np.poly1d(np.polyfit([i*H-H, i*H], y_1_m_prev[-2:], 1))
+            u_2_m = f_u_2(t_m_i)
         
         # j = 0
-        y_1_m = np.zeros(m)
+        y_1_m = np.zeros(m+1)
         
-        for j in range(0, m):
+        for j in range(0, m+1):
             # Switch to S_2        
             if debug:
                 u_2_prev = sim2.get_idobj_attr("i_intf", "i_intf").derive_coeff(0,0).get()
@@ -232,7 +235,9 @@ if __name__ == '__main__':
                 print("Time t={:f}".format(t_k))
                 print("DPsim iteration: {}".format(j))
 
-        y_1_m_prev = y_1_m
+        # y_1_m_prev = y_1_m
+        y_1_m_prev = np.append(y_1_m_prev, y_1_m[-1])
+        
         if debug:
             print(y_1_m_prev)
     
