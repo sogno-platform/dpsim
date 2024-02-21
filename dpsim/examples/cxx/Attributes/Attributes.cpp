@@ -24,5 +24,9 @@ int main(int argc, char* argv[]) {
 	Real read3 = **attr; //read3 = 0.003
 	cout << "attr value: " << read3 << endl;
 
+	Attribute<Complex>::Ptr attrComplex = attr->deriveComplex();
+	Complex read4 = **attrComplex;
+	cout << "derived complex attr value: " << read4 << endl;
+
 	return 0;
 }

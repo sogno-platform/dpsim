@@ -111,6 +111,10 @@ set(INVERTER_SOURCES
 	Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp
 )
 
+set(ATTRIBUTES_SOURCES
+	Attributes/Attributes.cpp
+)
+
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry
 # also has to appear in another list in this file.
 list(APPEND TEST_SOURCES
