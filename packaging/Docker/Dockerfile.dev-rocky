@@ -117,10 +117,10 @@ RUN cd /tmp && \
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 # Python dependencies
-ADD requirements.txt .
-RUN pip3 install -U setuptools
-RUN pip3 install -U wheel
-RUN pip3 install -r requirements.txt
+ADD project.toml .
+RUN pip3 install --upgrade setuptools
+RUN pip3 install --upgrade wheel
+RUN pip3 install .[test,docs]
 
 # Remove this part in the future and use dedicated Jupyter Dockerfile
 # Activate Jupyter extensions

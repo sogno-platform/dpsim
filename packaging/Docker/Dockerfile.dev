@@ -68,9 +68,9 @@ RUN dnf -y install \
 	libnl3-devel
 
 # Python dependencies
-ADD requirements.txt .
+ADD project.toml .
 RUN pip3 install --upgrade wheel build
-RUN pip3 install -r requirements.txt
+RUN pip3 install .[test,docs]
 
 # Install CIMpp from source
 RUN cd /tmp && \

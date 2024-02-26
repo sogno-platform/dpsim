@@ -27,8 +27,8 @@ LABEL \
 COPY --from=builder /dpsim/build/*.rpm /tmp
 RUN dnf -y install /tmp/*.rpm
 
-ADD requirements.txt .
-RUN pip3 install -r requirements.txt
+ADD project.toml .
+RUN pip3 install .[test,docs]
 
 # Remove this part in the future and use dedicated Jupyter Dockerfile
 # Activate Jupyter extensions
