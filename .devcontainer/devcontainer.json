@@ -11,5 +11,19 @@
 	"runArgs": [
 		"--privileged",
 		"--security-opt=seccomp=unconfined"
-	]
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cpptools",
+				"ms-vscode.cmake-tools",
+				"ms-python.python",
+				"ms-python.black-formatter",
+				"ms-python.flake8",
+				"xaver.clang-format",
+				"llvm-vs-code-extensions.vscode-clangd",
+				"editorconfig.editorconfig"
+			]
+		}
+	}
 }
