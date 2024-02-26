@@ -41,98 +41,97 @@ Real initVoltAngle = -PI / 2;
 Real Rload = 1.92;
 
 // Initial node voltage
-auto initVoltN1 = std::vector<Complex>({
-	Complex(initTerminalVolt * cos(initVoltAngle),
-		initTerminalVolt * sin(initVoltAngle)),
-	Complex(initTerminalVolt * cos(initVoltAngle - 2 * PI / 3),
-		initTerminalVolt * sin(initVoltAngle - 2 * PI / 3)),
-	Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3),
-		initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
-
+auto initVoltN1 = std::vector<Complex>(
+    {Complex(initTerminalVolt * cos(initVoltAngle),
+             initTerminalVolt *sin(initVoltAngle)),
+     Complex(initTerminalVolt *cos(initVoltAngle - 2 * PI / 3),
+             initTerminalVolt *sin(initVoltAngle - 2 * PI / 3)),
+     Complex(initTerminalVolt *cos(initVoltAngle + 2 * PI / 3),
+             initTerminalVolt *sin(initVoltAngle + 2 * PI / 3))});
 
 void DP_SynGenDq7odODE_SteadyState(Real timeStep, Real finalTime) {
-	String simName = "DP_SynGenDq7odODE_SteadyState";
-	Logger::setLogDir("logs/"+simName);
+  String simName = "DP_SynGenDq7odODE_SteadyState";
+  Logger::setLogDir("logs/" + simName);
 
-	// Nodes
-	auto n1 = CPS::DP::SimNode::make("n1", PhaseType::ABC, initVoltN1);
+  // Nodes
+  auto n1 = CPS::DP::SimNode::make("n1", PhaseType::ABC, initVoltN1);
 
-	// Components
-	auto gen = CPS::DP::Ph3::SynchronGeneratorDQODE::make("SynGen");
-	gen->setParametersFundamentalPerUnit(
-		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt,
-		initVoltAngle, initMechPower);
+  // Components
+  auto gen = CPS::DP::Ph3::SynchronGeneratorDQODE::make("SynGen");
+  gen->setParametersFundamentalPerUnit(
+      nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr, Rs, Ll, Lmd,
+      Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, initActivePower,
+      initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 
-	auto res = CPS::DP::Ph3::SeriesResistor::make("R_load");
-	res->setParameters(Rload);
+  auto res = CPS::DP::Ph3::SeriesResistor::make("R_load");
+  res->setParameters(Rload);
 
-	// Connections
-	gen->connect({n1});
-	res->connect({CPS::DP::SimNode::GND, n1});
+  // Connections
+  gen->connect({n1});
+  res->connect({CPS::DP::SimNode::GND, n1});
 
-	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
+  auto sys =
+      SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
 
-	// Logging
-	auto logger = DataLogger::make(simName);
-	logger->logAttribute("v1", n1->attribute("v"));
-	logger->logAttribute("i_load", res->attribute("i_intf"));
+  // Logging
+  auto logger = DataLogger::make(simName);
+  logger->logAttribute("v1", n1->attribute("v"));
+  logger->logAttribute("i_load", res->attribute("i_intf"));
 
-	Simulation sim(simName, Logger::Level::info);
-	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::DP);
-	sim.addLogger(logger);
+  Simulation sim(simName, Logger::Level::info);
+  sim.setSystem(sys);
+  sim.setTimeStep(timeStep);
+  sim.setFinalTime(finalTime);
+  sim.setDomain(Domain::DP);
+  sim.addLogger(logger);
 
-	sim.run();
+  sim.run();
 }
 
 void EMT_SynGenDq7odODE_SteadyState(Real timeStep, Real finalTime) {
-	String simName = "EMT_SynGenDq7odODE_SteadyState";
-	Logger::setLogDir("logs/"+simName);
+  String simName = "EMT_SynGenDq7odODE_SteadyState";
+  Logger::setLogDir("logs/" + simName);
 
-	// Nodes
-	auto n1 = CPS::EMT::SimNode::make("n1", PhaseType::ABC, initVoltN1);
+  // Nodes
+  auto n1 = CPS::EMT::SimNode::make("n1", PhaseType::ABC, initVoltN1);
 
-	// Components
-	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQODE::make("SynGen");
-	gen->setParametersFundamentalPerUnit(
-		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt,
-		initVoltAngle, initMechPower);
+  // Components
+  auto gen = CPS::EMT::Ph3::SynchronGeneratorDQODE::make("SynGen");
+  gen->setParametersFundamentalPerUnit(
+      nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr, Rs, Ll, Lmd,
+      Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, initActivePower,
+      initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 
-	auto res = CPS::EMT::Ph3::SeriesResistor::make("R_load");
-	res->setParameters(Rload);
+  auto res = CPS::EMT::Ph3::SeriesResistor::make("R_load");
+  res->setParameters(Rload);
 
-	// Connections
-	gen->connect({n1});
-	res->connect({CPS::EMT::SimNode::GND, n1});
+  // Connections
+  gen->connect({n1});
+  res->connect({CPS::EMT::SimNode::GND, n1});
 
-	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
+  auto sys =
+      SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
 
-	// Logging
-	auto logger = DataLogger::make(simName);
-	logger->logAttribute("v1", n1->attribute("v"));
-	logger->logAttribute("i_load", res->attribute("i_intf"));
+  // Logging
+  auto logger = DataLogger::make(simName);
+  logger->logAttribute("v1", n1->attribute("v"));
+  logger->logAttribute("i_load", res->attribute("i_intf"));
 
-	Simulation sim(simName, Logger::Level::info);
-	sim.setSystem(sys);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::EMT);
-	sim.doInitFromNodesAndTerminals(false);
-	sim.addLogger(logger);
+  Simulation sim(simName, Logger::Level::info);
+  sim.setSystem(sys);
+  sim.setTimeStep(timeStep);
+  sim.setFinalTime(finalTime);
+  sim.setDomain(Domain::EMT);
+  sim.doInitFromNodesAndTerminals(false);
+  sim.addLogger(logger);
 
-	sim.run();
+  sim.run();
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 
-	Real finalTime = 0.3;
-	Real timeStep = 0.00005;
-	DP_SynGenDq7odODE_SteadyState(timeStep, finalTime);
-	EMT_SynGenDq7odODE_SteadyState(timeStep, finalTime);
+  Real finalTime = 0.3;
+  Real timeStep = 0.00005;
+  DP_SynGenDq7odODE_SteadyState(timeStep, finalTime);
+  EMT_SynGenDq7odODE_SteadyState(timeStep, finalTime);
 }

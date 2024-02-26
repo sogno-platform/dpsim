@@ -6,57 +6,52 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/CIM/Reader.h>
 #include <DPsim.h>
+#include <dpsim-models/CIM/Reader.h>
 
 using namespace std;
 using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
-
 /*
  * This example runs the powerflow for the CIGRE MV benchmark system (neglecting the tap changers of the transformers)
  */
-int main(int argc, char** argv){
+int main(int argc, char **argv) {
 
-	// Find CIM files
-	std::list<fs::path> filenames;
-	if (argc <= 1) {
-		filenames = DPsim::Utils::findFiles({
-			"Rootnet_FULL_NE_06J16h_DI.xml",
-			"Rootnet_FULL_NE_06J16h_EQ.xml",
-			"Rootnet_FULL_NE_06J16h_SV.xml",
-			"Rootnet_FULL_NE_06J16h_TP.xml"
-		}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
-	}
-	else {
-		filenames = std::list<fs::path>(argv + 1, argv + argc);
-	}
+  // Find CIM files
+  std::list<fs::path> filenames;
+  if (argc <= 1) {
+    filenames = DPsim::Utils::findFiles(
+        {"Rootnet_FULL_NE_06J16h_DI.xml", "Rootnet_FULL_NE_06J16h_EQ.xml",
+         "Rootnet_FULL_NE_06J16h_SV.xml", "Rootnet_FULL_NE_06J16h_TP.xml"},
+        "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
+  } else {
+    filenames = std::list<fs::path>(argv + 1, argv + argc);
+  }
 
-	String simName = "RT_CIGRE-MV-NoTap";
-	CPS::Real system_freq = 50;
+  String simName = "RT_CIGRE-MV-NoTap";
+  CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
-    SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
+  CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
+  SystemTopology system =
+      reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
-	auto logger = DPsim::DataLogger::make(simName);
-	for (auto node : system.mNodes)
-	{
-		logger->logAttribute(node->name(), node->attribute("v"));
-	}
+  auto logger = DPsim::DataLogger::make(simName);
+  for (auto node : system.mNodes) {
+    logger->logAttribute(node->name(), node->attribute("v"));
+  }
 
-	RealTimeSimulation sim(simName, Logger::Level::debug);
-	sim.setSystem(system);
-	sim.setTimeStep(1);
-	sim.setFinalTime(30);
-	sim.setDomain(Domain::SP);
-	sim.setSolverType(Solver::Type::NRP);
-	sim.setSolverAndComponentBehaviour(Solver::Behaviour::Simulation);
-	sim.doInitFromNodesAndTerminals(true);
-	sim.addLogger(logger);
-	sim.run();
+  RealTimeSimulation sim(simName, Logger::Level::debug);
+  sim.setSystem(system);
+  sim.setTimeStep(1);
+  sim.setFinalTime(30);
+  sim.setDomain(Domain::SP);
+  sim.setSolverType(Solver::Type::NRP);
+  sim.setSolverAndComponentBehaviour(Solver::Behaviour::Simulation);
+  sim.doInitFromNodesAndTerminals(true);
+  sim.addLogger(logger);
+  sim.run();
 
-	return 0;
+  return 0;
 }
-

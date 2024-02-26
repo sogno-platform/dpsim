@@ -13,19 +13,20 @@
 namespace CPS {
 namespace Base {
 namespace Ph1 {
-	class CurrentSource {
-	protected:
-		/// Current set point [A]
-		Complex mCurrentRef;
-		/// Source frequency [Hz]
-		Real mSrcFreq = -1;
-	public:
-		/// Sets model specific parameters
-		void setParameters(Complex currentRef, Real srcFreq = -1) {
-			mCurrentRef = currentRef;
-			mSrcFreq = srcFreq;
-		}
-	};
-}
-}
-}
+class CurrentSource {
+protected:
+  /// Current set point [A]
+  Complex mCurrentRef;
+  /// Source frequency [Hz]
+  Real mSrcFreq = -1;
+
+public:
+  /// Sets model specific parameters
+  void setParameters(Complex currentRef, Real srcFreq = -1) {
+    mCurrentRef = currentRef;
+    mSrcFreq = srcFreq;
+  }
+};
+} // namespace Ph1
+} // namespace Base
+} // namespace CPS

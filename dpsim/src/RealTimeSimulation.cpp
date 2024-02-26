@@ -15,54 +15,56 @@ using namespace CPS;
 using namespace DPsim;
 
 RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel)
-	: Simulation(name, logLevel), mTimer() {
+    : Simulation(name, logLevel), mTimer() {
 
-	//addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
-	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
+  //addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
+  //addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
 }
 
 void RealTimeSimulation::run(const Timer::StartClock::duration &startIn) {
-	run(Timer::StartClock::now() + startIn);
+  run(Timer::StartClock::now() + startIn);
 }
 
 void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
-	if (!mInitialized)
-		initialize();
+  if (!mInitialized)
+    initialize();
 
-	SPDLOG_LOGGER_INFO(mLog, "Opening interfaces.");
+  SPDLOG_LOGGER_INFO(mLog, "Opening interfaces.");
 
-	for (auto intf : mInterfaces)
-		intf->open();
+  for (auto intf : mInterfaces)
+    intf->open();
 
-	sync();
+  sync();
 
-	auto now_time = std::chrono::system_clock::to_time_t(startAt);
-	SPDLOG_LOGGER_INFO(mLog, "Starting simulation at {} (delta_T = {} seconds)",
-			  std::put_time(std::localtime(&now_time), "%F %T"),
-			  std::chrono::duration_cast<std::chrono::seconds>(startAt - Timer::StartClock::now()).count());
+  auto now_time = std::chrono::system_clock::to_time_t(startAt);
+  SPDLOG_LOGGER_INFO(mLog, "Starting simulation at {} (delta_T = {} seconds)",
+                     std::put_time(std::localtime(&now_time), "%F %T"),
+                     std::chrono::duration_cast<std::chrono::seconds>(
+                         startAt - Timer::StartClock::now())
+                         .count());
 
-	mTimer.setStartTime(startAt);
-	mTimer.setInterval(**mTimeStep);
-	mTimer.start();
+  mTimer.setStartTime(startAt);
+  mTimer.setInterval(**mTimeStep);
+  mTimer.start();
 
-	// main loop
-	do {
-		mTimer.sleep();
-		step();
+  // main loop
+  do {
+    mTimer.sleep();
+    step();
 
-		if (mTimer.ticks() == 1)
-			SPDLOG_LOGGER_INFO(mLog, "Simulation started.");
-	} while (mTime < **mFinalTime);
+    if (mTimer.ticks() == 1)
+      SPDLOG_LOGGER_INFO(mLog, "Simulation started.");
+  } while (mTime < **mFinalTime);
 
-	SPDLOG_LOGGER_INFO(mLog, "Simulation finished.");
+  SPDLOG_LOGGER_INFO(mLog, "Simulation finished.");
 
-	mScheduler->stop();
+  mScheduler->stop();
 
-	for (auto intf : mInterfaces)
-		intf->close();
+  for (auto intf : mInterfaces)
+    intf->close();
 
-	for (auto lg : mLoggers)
-		lg->close();
+  for (auto lg : mLoggers)
+    lg->close();
 
-	mTimer.stop();
+  mTimer.stop();
 }

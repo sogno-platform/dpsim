@@ -13,32 +13,38 @@
 namespace CPS {
 namespace DP {
 namespace Ph3 {
-	class SynchronGeneratorDQTrapez :
-		public SynchronGeneratorDQ,
-		public SharedFactory<SynchronGeneratorDQTrapez> {
-	public:
-		SynchronGeneratorDQTrapez(String uid, String name, Logger::Level loglevel = Logger::Level::off);
-		SynchronGeneratorDQTrapez(String name, Logger::Level loglevel = Logger::Level::off);
+class SynchronGeneratorDQTrapez
+    : public SynchronGeneratorDQ,
+      public SharedFactory<SynchronGeneratorDQTrapez> {
+public:
+  SynchronGeneratorDQTrapez(String uid, String name,
+                            Logger::Level loglevel = Logger::Level::off);
+  SynchronGeneratorDQTrapez(String name,
+                            Logger::Level loglevel = Logger::Level::off);
 
-		void setMultisamplingRate(Int rate);
+  void setMultisamplingRate(Int rate);
 
-		// #### MNA Section ####
-		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+  // #### MNA Section ####
+  void mnaCompInitialize(Real omega, Real timeStep,
+                         Attribute<Matrix>::Ptr leftVector);
 
-		/// Add MNA pre step dependencies
-		void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
-		void mnaCompPreStep(Real time, Int timeStepCount) override;
+  /// Add MNA pre step dependencies
+  void mnaCompAddPreStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes) override;
+  void mnaCompPreStep(Real time, Int timeStepCount) override;
 
-	protected:
-		///
-		Int mMultisamplingRate = 1;
+protected:
+  ///
+  Int mMultisamplingRate = 1;
 
-		// #### Trapezoidal Section ####
+  // #### Trapezoidal Section ####
 
-		/// Performs an Euler forward step with the state space model of a synchronous generator
-		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real time);
-	};
-}
-}
-}
+  /// Performs an Euler forward step with the state space model of a synchronous generator
+  /// to calculate the flux and current from the voltage vector in per unit.
+  void stepInPerUnit(Real time);
+};
+} // namespace Ph3
+} // namespace DP
+} // namespace CPS

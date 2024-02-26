@@ -13,19 +13,17 @@
 namespace CPS {
 namespace Base {
 namespace Ph1 {
-	class Capacitor {
-	public:
-		/// Capacitance [F]
-		const CPS::Attribute<Real>::Ptr mCapacitance;
+class Capacitor {
+public:
+  /// Capacitance [F]
+  const CPS::Attribute<Real>::Ptr mCapacitance;
 
-		explicit Capacitor(CPS::AttributeList::Ptr attributeList) :
-			mCapacitance(attributeList->create<Real>("C")) { };
+  explicit Capacitor(CPS::AttributeList::Ptr attributeList)
+      : mCapacitance(attributeList->create<Real>("C")){};
 
-		/// Sets model specific parameters
-		void setParameters(Real capacitance) {
-			**mCapacitance = capacitance;
-		}
-	};
-}
-}
-}
+  /// Sets model specific parameters
+  void setParameters(Real capacitance) { **mCapacitance = capacitance; }
+};
+} // namespace Ph1
+} // namespace Base
+} // namespace CPS

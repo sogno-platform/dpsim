@@ -10,14 +10,13 @@
 
 using namespace CPS;
 
-Signal::SignalGenerator::SignalGenerator(String uid, String name, Logger::Level logLevel)
+Signal::SignalGenerator::SignalGenerator(String uid, String name,
+                                         Logger::Level logLevel)
     : SimSignalComp(name, logLevel),
-    mSigOut(mAttributes->create<Complex>("sigOut")),
-    mFreq(mAttributes->createDynamic<Real>("freq")) {
+      mSigOut(mAttributes->create<Complex>("sigOut")),
+      mFreq(mAttributes->createDynamic<Real>("freq")) {
 
-    SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
+  SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
 }
 
-Complex Signal::SignalGenerator::getSignal() {
-    return **mSigOut;
-}
+Complex Signal::SignalGenerator::getSignal() { return **mSigOut; }

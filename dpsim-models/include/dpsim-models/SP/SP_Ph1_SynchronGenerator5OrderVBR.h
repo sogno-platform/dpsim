@@ -13,37 +13,39 @@
 namespace CPS {
 namespace SP {
 namespace Ph1 {
-	/// @brief Voltage-Behind-Reactance (VBR) implementation
-	/// of 5th type 2 order synchronous generator model
-	/// Ref: Milano, Documentation for PSAT version 2.1.6, June 2, 2011, chapter 17.1.2
-	class SynchronGenerator5OrderVBR :
-		public ReducedOrderSynchronGeneratorVBR,
-		public SharedFactory<SynchronGenerator5OrderVBR> {
-	public:
-		// ### Model specific elements ###
-		/// voltage behind transient reactance
-		const Attribute<Matrix>::Ptr mEdq_t;
-		/// voltage behind subtransient reactance
-		const Attribute<Matrix>::Ptr mEdq_s;
+/// @brief Voltage-Behind-Reactance (VBR) implementation
+/// of 5th type 2 order synchronous generator model
+/// Ref: Milano, Documentation for PSAT version 2.1.6, June 2, 2011, chapter 17.1.2
+class SynchronGenerator5OrderVBR
+    : public ReducedOrderSynchronGeneratorVBR,
+      public SharedFactory<SynchronGenerator5OrderVBR> {
+public:
+  // ### Model specific elements ###
+  /// voltage behind transient reactance
+  const Attribute<Matrix>::Ptr mEdq_t;
+  /// voltage behind subtransient reactance
+  const Attribute<Matrix>::Ptr mEdq_s;
 
-	protected:
-		/// history term of voltage behind the transient reactance
-		Matrix mEh_t;
-		/// history term of voltage behind the subtransient reactance
-		Matrix mEh_s;
+protected:
+  /// history term of voltage behind the transient reactance
+  Matrix mEh_t;
+  /// history term of voltage behind the subtransient reactance
+  Matrix mEh_s;
 
-	public:
-		///
-		SynchronGenerator5OrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SynchronGenerator5OrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
+public:
+  ///
+  SynchronGenerator5OrderVBR(const String &uid, const String &name,
+                             Logger::Level logLevel = Logger::Level::off);
+  ///
+  SynchronGenerator5OrderVBR(const String &name,
+                             Logger::Level logLevel = Logger::Level::off);
 
-		// #### General Functions ####
-		///
-		void specificInitialization() override;
-		///
-		void stepInPerUnit() override;
-	};
-}
-}
-}
+  // #### General Functions ####
+  ///
+  void specificInitialization() override;
+  ///
+  void stepInPerUnit() override;
+};
+} // namespace Ph1
+} // namespace SP
+} // namespace CPS

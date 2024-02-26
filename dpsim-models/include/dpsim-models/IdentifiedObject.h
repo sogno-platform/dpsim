@@ -8,56 +8,58 @@
 
 #pragma once
 
+#include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Config.h>
 #include <dpsim-models/Definitions.h>
-#include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Utils.h>
 
 namespace CPS {
-	/// Common base class of all objects which are
-	/// identified by a name and an unique identifier (UID).
-	class IdentifiedObject {
-	protected:
-		/// Attribute List
-		AttributeList::Ptr mAttributes = AttributeList::make();
-	public:
-		/// Human readable name
-		const Attribute<String>::Ptr mName;
-		/// Unique identifier
-		const Attribute<String>::Ptr mUID;
+/// Common base class of all objects which are
+/// identified by a name and an unique identifier (UID).
+class IdentifiedObject {
+protected:
+  /// Attribute List
+  AttributeList::Ptr mAttributes = AttributeList::make();
 
-		typedef std::shared_ptr<IdentifiedObject> Ptr;
-		typedef std::vector<Ptr> List;
+public:
+  /// Human readable name
+  const Attribute<String>::Ptr mName;
+  /// Unique identifier
+  const Attribute<String>::Ptr mUID;
 
-		IdentifiedObject() { }
+  typedef std::shared_ptr<IdentifiedObject> Ptr;
+  typedef std::vector<Ptr> List;
 
-		IdentifiedObject(const String &uid, const String &name) :
-				mName(mAttributes->create("name", name)),
-				mUID(mAttributes->create("uid", uid))
-			{ }
+  IdentifiedObject() {}
 
-		explicit IdentifiedObject(const String &name) :
-			IdentifiedObject(name, name) { }
+  IdentifiedObject(const String &uid, const String &name)
+      : mName(mAttributes->create("name", name)),
+        mUID(mAttributes->create("uid", uid)) {}
 
-		virtual ~IdentifiedObject() = default;
+  explicit IdentifiedObject(const String &name)
+      : IdentifiedObject(name, name) {}
 
-		/// Return pointer to an attribute.
-		AttributeBase::Ptr attribute(const String &name) const {
-			return mAttributes->attribute(name);
-		}
+  virtual ~IdentifiedObject() = default;
 
-		/// Return pointer to an attribute.
-		template<typename T>
-		typename Attribute<T>::Ptr attributeTyped(const String &name) const {
-			return mAttributes->attributeTyped<T>(name);
-		}
+  /// Return pointer to an attribute.
+  AttributeBase::Ptr attribute(const String &name) const {
+    return mAttributes->attribute(name);
+  }
 
-		const AttributeBase::Map & attributes() const { return mAttributes->attributes(); };
+  /// Return pointer to an attribute.
+  template <typename T>
+  typename Attribute<T>::Ptr attributeTyped(const String &name) const {
+    return mAttributes->attributeTyped<T>(name);
+  }
 
-		String name() { return **mName; }
-		/// Returns unique id
-		String uid() { return **mUID; }
-		/// Get component type (cross-platform)
-		String type() { return Utils::className(this); }
-	};
-}
+  const AttributeBase::Map &attributes() const {
+    return mAttributes->attributes();
+  };
+
+  String name() { return **mName; }
+  /// Returns unique id
+  String uid() { return **mUID; }
+  /// Get component type (cross-platform)
+  String type() { return Utils::className(this); }
+};
+} // namespace CPS

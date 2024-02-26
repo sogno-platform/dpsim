@@ -156,8 +156,8 @@ void Base::SynchronGenerator::applyFundamentalPerUnitParameters() {
     // mLmd*mLmd*(mLlfd + mLlkd);
 
     mInductanceMat << **mLd, mLmd, mLmd, 0, 0, 0, mLmd, mLfd, mLmd, 0, 0, 0,
-        mLmd, mLmd, mLkd, 0, 0, 0, 0, 0, 0, **mLq, mLmq, 0, 0, 0, 0, mLmq, mLkq1,
-        0, 0, 0, 0, 0, 0, **mLl;
+        mLmd, mLmd, mLkd, 0, 0, 0, 0, 0, 0, **mLq, mLmq, 0, 0, 0, 0, mLmq,
+        mLkq1, 0, 0, 0, 0, 0, 0, **mLl;
 
     mResistanceMat << **mRs, 0, 0, 0, 0, 0, 0, mRfd, 0, 0, 0, 0, 0, 0, mRkd, 0,
         0, 0, 0, 0, 0, **mRs, 0, 0, 0, 0, 0, 0, mRkq1, 0, 0, 0, 0, 0, 0, **mRs;
@@ -284,25 +284,25 @@ void Base::SynchronGenerator::initPerUnitStates() {
     mPsisr << init_psid, init_psifd, init_psikd, init_psiq, init_psiq1, 0;
   }
 
-	if (mNumDampingWindings == 2) {
-		mVsr << init_vd, init_vfd, 0, init_vq, 0, 0, 0;
-		mIsr << -init_id, init_ifd, 0, -init_iq, 0, 0, 0;
-		mPsisr << init_psid, init_psifd, init_psikd, init_psiq, init_psiq1, init_psiq2, 0;
-	}
-	else {
-		mVsr << init_vd, init_vfd, 0, init_vq, 0, 0;
-		mIsr << -init_id, init_ifd, 0, -init_iq, 0, 0;
-		mPsisr << init_psid, init_psifd, init_psikd, init_psiq, init_psiq1, 0;
-	}
+  if (mNumDampingWindings == 2) {
+    mVsr << init_vd, init_vfd, 0, init_vq, 0, 0, 0;
+    mIsr << -init_id, init_ifd, 0, -init_iq, 0, 0, 0;
+    mPsisr << init_psid, init_psifd, init_psikd, init_psiq, init_psiq1,
+        init_psiq2, 0;
+  } else {
+    mVsr << init_vd, init_vfd, 0, init_vq, 0, 0;
+    mIsr << -init_id, init_ifd, 0, -init_iq, 0, 0;
+    mPsisr << init_psid, init_psifd, init_psikd, init_psiq, init_psiq1, 0;
+  }
 
-	**mElecTorque = (mPsisr(3,0)*mIsr(0,0) - mPsisr(0,0)*mIsr(3,0));
+  **mElecTorque = (mPsisr(3, 0) * mIsr(0, 0) - mPsisr(0, 0) * mIsr(3, 0));
 
-	// Initialize controllers
-	if (mHasExciter){
-		// Note: field voltage scaled by Lmd/Rfd to transform from synchronous generator pu system
-		// to the exciter pu system
-		mExciter->initialize(init_vt_abs, (mLmd / mRfd)*init_vfd);
-	}
+  // Initialize controllers
+  if (mHasExciter) {
+    // Note: field voltage scaled by Lmd/Rfd to transform from synchronous generator pu system
+    // to the exciter pu system
+    mExciter->initialize(init_vt_abs, (mLmd / mRfd) * init_vfd);
+  }
 }
 
 void Base::SynchronGenerator::calcStateSpaceMatrixDQ() {
@@ -318,7 +318,7 @@ void Base::SynchronGenerator::calcStateSpaceMatrixDQ() {
         0, 0, 0, 0, 0;
 
     mFluxStateSpaceMat =
-        Matrix::Zero(7, 7);  // order of lambdas: ds; fd; kd; qs; kq1; kq2; 0s
+        Matrix::Zero(7, 7); // order of lambdas: ds; fd; kd; qs; kq1; kq2; 0s
     mFluxStateSpaceMat << **mRs / **mLl * mLad / **mLl - **mRs / **mLl,
         **mRs / **mLl * mLad / mLlfd, **mRs / **mLl * mLad / mLlkd, 0, 0, 0, 0,
         mRfd / mLlfd * mLad / **mLl, mRfd / mLlfd * mLad / mLlfd - mRfd / mLlfd,
@@ -333,8 +333,8 @@ void Base::SynchronGenerator::calcStateSpaceMatrixDQ() {
         mRkq2 / mLlkq2 * mLaq / mLlkq2 - mRkq2 / mLlkq2, 0, 0, 0, 0, 0, 0, 0,
         -**mRs / **mLl;
 
-    mFluxToCurrentMat = Matrix::Zero(
-        7, 7);  // need for electric torque id, iq ->1st and 4th row
+    mFluxToCurrentMat =
+        Matrix::Zero(7, 7); // need for electric torque id, iq ->1st and 4th row
     mFluxToCurrentMat << 1. / **mLl - mLad / **mLl / **mLl,
         -mLad / mLlfd / **mLl, -mLad / mLlkd / **mLl, 0, 0, 0, 0,
         -mLad / **mLl / mLlfd, 1. / mLlfd - mLad / mLlfd / mLlfd,
@@ -356,7 +356,7 @@ void Base::SynchronGenerator::calcStateSpaceMatrixDQ() {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
 
     mFluxStateSpaceMat = Matrix::Zero(6, 6);
-    mFluxStateSpaceMat <<  // same order as above; only without kq2
+    mFluxStateSpaceMat << // same order as above; only without kq2
         **mRs / **mLl * mLad / **mLl - **mRs / **mLl,
         **mRs / **mLl * mLad / mLlfd, **mRs / **mLl * mLad / mLlkd, 0, 0, 0,
         mRfd / mLlfd * mLad / **mLl, mRfd / mLlfd * mLad / mLlfd - mRfd / mLlfd,
@@ -386,16 +386,18 @@ Real Base::SynchronGenerator::calcHfromJ(Real J, Real omegaNominal,
 }
 
 void Base::SynchronGenerator::addExciter(Real Ta, Real Ka, Real Te, Real Ke,
-	Real Tf, Real Kf, Real Tr) {
-	mExciter = Signal::Exciter::make("Exciter", CPS::Logger::Level::info);
-	mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
-	mHasExciter = true;
+                                         Real Tf, Real Kf, Real Tr) {
+  mExciter = Signal::Exciter::make("Exciter", CPS::Logger::Level::info);
+  mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
+  mHasExciter = true;
 }
 
 void Base::SynchronGenerator::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
-	Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef) {
-	mTurbineGovernor = Signal::TurbineGovernor::make("TurbineGovernor", CPS::Logger::Level::info);
-	mTurbineGovernor->setParameters(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
-	mTurbineGovernor->initialize(PmRef, Tm_init);
-	mHasTurbineGovernor = true;
+                                          Real Fb, Real Fc, Real K, Real Tsr,
+                                          Real Tsm, Real Tm_init, Real PmRef) {
+  mTurbineGovernor = Signal::TurbineGovernor::make("TurbineGovernor",
+                                                   CPS::Logger::Level::info);
+  mTurbineGovernor->setParameters(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
+  mTurbineGovernor->initialize(PmRef, Tm_init);
+  mHasTurbineGovernor = true;
 }

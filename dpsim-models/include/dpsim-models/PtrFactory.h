@@ -13,23 +13,18 @@
 
 /// Curiously recurring template pattern (CRTP) to create create new shared_ptr instances.
 /// See: https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
-template<typename T>
-class SharedFactory {
+template <typename T> class SharedFactory {
 
 public:
-	template<typename... Args>
-	static std::shared_ptr<T> make(Args&&... args) {
-		return std::shared_ptr<T>(new T(std::forward<Args>(args)...));
-	}
+  template <typename... Args> static std::shared_ptr<T> make(Args &&...args) {
+    return std::shared_ptr<T>(new T(std::forward<Args>(args)...));
+  }
 };
 
-template<typename T>
-class UniqueFactory {
+template <typename T> class UniqueFactory {
 
 public:
-
-	template<typename... Args>
-	static std::unique_ptr<T> make(Args&&... args) {
-		return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-	}
+  template <typename... Args> static std::unique_ptr<T> make(Args &&...args) {
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+  }
 };

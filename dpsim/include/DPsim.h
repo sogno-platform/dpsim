@@ -7,33 +7,33 @@
  *********************************************************************************/
 
 #include <dpsim/Config.h>
-#include <dpsim/Utils.h>
 #include <dpsim/Simulation.h>
+#include <dpsim/Utils.h>
 
 #ifndef _MSC_VER
-  #include <dpsim/RealTimeSimulation.h>
+#include <dpsim/RealTimeSimulation.h>
 #endif
 
 #include <dpsim-models/Components.h>
 #include <dpsim-models/Logger.h>
 
 #ifdef WITH_CIM
-  #include <dpsim-models/CIM/Reader.h>
+#include <dpsim-models/CIM/Reader.h>
 #endif
 
 #ifdef WITH_OPENMP
-  #include <dpsim/OpenMPLevelScheduler.h>
+#include <dpsim/OpenMPLevelScheduler.h>
 #endif
 
 namespace DPsim {
-	// #### CPS for users ####
-	using SystemTopology = CPS::SystemTopology;
-	using SystemNodeList = CPS::TopologicalNode::List;
-	using SystemComponentList = CPS::IdentifiedObject::List;
-	using Logger = CPS::Logger;
-	using Domain = CPS::Domain;
-	using PhaseType = CPS::PhaseType;
+// #### CPS for users ####
+using SystemTopology = CPS::SystemTopology;
+using SystemNodeList = CPS::TopologicalNode::List;
+using SystemComponentList = CPS::IdentifiedObject::List;
+using Logger = CPS::Logger;
+using Domain = CPS::Domain;
+using PhaseType = CPS::PhaseType;
 #ifdef WITH_CIM
-	using CIMReader = CPS::CIM::Reader;
+using CIMReader = CPS::CIM::Reader;
 #endif
-}
+} // namespace DPsim

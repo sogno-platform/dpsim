@@ -8,40 +8,39 @@
 
 #pragma once
 
-#include <vector>
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Definitions.h>
+#include <vector>
 
 namespace CPS {
-	class ODEInterface {
-	public:
-		using Ptr = std::shared_ptr<ODEInterface>;
-		//typedef std::vector<Ptr> List;
+class ODEInterface {
+public:
+  using Ptr = std::shared_ptr<ODEInterface>;
+  //typedef std::vector<Ptr> List;
 
-		const CPS::AttributeList::Ptr mAttributeList;
+  const CPS::AttributeList::Ptr mAttributeList;
 
-		const CPS::Attribute<Matrix>::Ptr mOdePreState;
-		const CPS::Attribute<Matrix>::Ptr mOdePostState;
+  const CPS::Attribute<Matrix>::Ptr mOdePreState;
+  const CPS::Attribute<Matrix>::Ptr mOdePostState;
 
-		/// Use this to pass the individual components StateSpace implementation to the ODESolver class
-		using StSpFn = std::function<void(double, const double *, double *)>;
+  /// Use this to pass the individual components StateSpace implementation to the ODESolver class
+  using StSpFn = std::function<void(double, const double *, double *)>;
 
-		using JacFn = std::function<void(double, const double *, double *, double *,
-		                                 double *, double *, double *)>;
+  using JacFn = std::function<void(double, const double *, double *, double *,
+                                   double *, double *, double *)>;
 
-		// #### ODE Section ####
-		/// State Space Equation System for ODE Solver
-		virtual void odeStateSpace(double t, const double y[], double ydot[]) = 0;
+  // #### ODE Section ####
+  /// State Space Equation System for ODE Solver
+  virtual void odeStateSpace(double t, const double y[], double ydot[]) = 0;
 
-		/// Jacobian Matrix (of State Space System) needed for implicit solve
-		virtual void odeJacobian(double t, const double y[], double fy[], double J[],
-		                         double tmp1[], double tmp2[], double tmp3[]) = 0;
+  /// Jacobian Matrix (of State Space System) needed for implicit solve
+  virtual void odeJacobian(double t, const double y[], double fy[], double J[],
+                           double tmp1[], double tmp2[], double tmp3[]) = 0;
 
-	protected:
-		explicit ODEInterface(AttributeList::Ptr attrList) :
-		mAttributeList(attrList),
-		mOdePreState(attrList->create<Matrix>("ode_pre_state")),
-		mOdePostState(attrList->create<Matrix>("ode_post_state"))
-		{ }
-	};
-}
+protected:
+  explicit ODEInterface(AttributeList::Ptr attrList)
+      : mAttributeList(attrList),
+        mOdePreState(attrList->create<Matrix>("ode_pre_state")),
+        mOdePostState(attrList->create<Matrix>("ode_post_state")) {}
+};
+} // namespace CPS

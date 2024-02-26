@@ -14,55 +14,61 @@
 using namespace CPS;
 using namespace DPsim;
 
-OpenMPLevelScheduler::OpenMPLevelScheduler(Int threads, String outMeasurementFile) : mOutMeasurementFile(outMeasurementFile) {
-	if (threads >= 0)
-		mNumThreads = threads;
-	else
-		mNumThreads = omp_get_num_threads();
+OpenMPLevelScheduler::OpenMPLevelScheduler(Int threads,
+                                           String outMeasurementFile)
+    : mOutMeasurementFile(outMeasurementFile) {
+  if (threads >= 0)
+    mNumThreads = threads;
+  else
+    mNumThreads = omp_get_num_threads();
 }
 
-void OpenMPLevelScheduler::createSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges) {
-	Task::List ordered;
+void OpenMPLevelScheduler::createSchedule(const Task::List &tasks,
+                                          const Edges &inEdges,
+                                          const Edges &outEdges) {
+  Task::List ordered;
 
-	Scheduler::topologicalSort(tasks, inEdges, outEdges, ordered);
-	Scheduler::levelSchedule(ordered, inEdges, outEdges, mLevels);
+  Scheduler::topologicalSort(tasks, inEdges, outEdges, ordered);
+  Scheduler::levelSchedule(ordered, inEdges, outEdges, mLevels);
 
-	if (!mOutMeasurementFile.empty())
-		Scheduler::initMeasurements(tasks);
+  if (!mOutMeasurementFile.empty())
+    Scheduler::initMeasurements(tasks);
 }
 
 void OpenMPLevelScheduler::step(Real time, Int timeStepCount) {
-	long i, level = 0;
-	std::chrono::steady_clock::time_point start, end;
+  long i, level = 0;
+  std::chrono::steady_clock::time_point start, end;
 
-	if (!mOutMeasurementFile.empty()) {
-		#pragma omp parallel shared(time,timeStepCount) private(level, i, start, end) num_threads(mNumThreads)
-		for (level = 0; level < static_cast<long>(mLevels.size()); level++) {
-			{
-				#pragma omp for schedule(static)
-				for (i = 0; i < static_cast<long>(mLevels[level].size()); i++) {
-					start = std::chrono::steady_clock::now();
-					mLevels[level][i]->execute(time, timeStepCount);
-					end = std::chrono::steady_clock::now();
-					updateMeasurement(mLevels[level][i].get(), end-start);
-				}
-			}
-		}
-	} else {
-		#pragma omp parallel shared(time,timeStepCount) private(level, i) num_threads(mNumThreads)
-		for (level = 0; level < static_cast<long>(mLevels.size()); level++) {
-			{
-				#pragma omp for schedule(static)
-				for (i = 0; i < static_cast<long>(mLevels[level].size()); i++) {
-					mLevels[level][i]->execute(time, timeStepCount);
-				}
-			}
-		}
-	}
+  if (!mOutMeasurementFile.empty()) {
+#pragma omp parallel shared(time, timeStepCount) private(level, i, start, end) \
+    num_threads(mNumThreads)
+    for (level = 0; level < static_cast<long>(mLevels.size()); level++) {
+      {
+#pragma omp for schedule(static)
+        for (i = 0; i < static_cast<long>(mLevels[level].size()); i++) {
+          start = std::chrono::steady_clock::now();
+          mLevels[level][i]->execute(time, timeStepCount);
+          end = std::chrono::steady_clock::now();
+          updateMeasurement(mLevels[level][i].get(), end - start);
+        }
+      }
+    }
+  } else {
+#pragma omp parallel shared(time, timeStepCount) private(level, i)             \
+    num_threads(mNumThreads)
+    for (level = 0; level < static_cast<long>(mLevels.size()); level++) {
+      {
+#pragma omp for schedule(static)
+        for (i = 0; i < static_cast<long>(mLevels[level].size()); i++) {
+          mLevels[level][i]->execute(time, timeStepCount);
+        }
+      }
+    }
+  }
 }
 
 void OpenMPLevelScheduler::stop() {
-	if (!mOutMeasurementFile.empty()) {
-		writeMeasurements(mOutMeasurementFile);
-	}
+  if (!mOutMeasurementFile.empty()) {
+    writeMeasurements(mOutMeasurementFile);
+  }
 }

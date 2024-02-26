@@ -16,22 +16,23 @@
 #include <vector>
 
 namespace DPsim {
-	class SequentialScheduler : public Scheduler {
-	public:
-		SequentialScheduler(String outMeasurementFile = String(),
-			CPS::Logger::Level logLevel = CPS::Logger::Level::info)
-			: Scheduler(logLevel),
-			mOutMeasurementFile(outMeasurementFile) { }
+class SequentialScheduler : public Scheduler {
+public:
+  SequentialScheduler(String outMeasurementFile = String(),
+                      CPS::Logger::Level logLevel = CPS::Logger::Level::info)
+      : Scheduler(logLevel), mOutMeasurementFile(outMeasurementFile) {}
 
-		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
-		void step(Real time, Int timeStepCount);
-		void stop();
+  void createSchedule(const CPS::Task::List &tasks, const Edges &inEdges,
+                      const Edges &outEdges);
+  void step(Real time, Int timeStepCount);
+  void stop();
 
-	private:
-		CPS::Task::List mSchedule;
+private:
+  CPS::Task::List mSchedule;
 
-		std::unordered_map<size_t, std::vector<std::chrono::nanoseconds>> mMeasurements;
-		std::vector<std::chrono::nanoseconds> mStepMeasurements;
-		CPS::String mOutMeasurementFile;
-	};
-}
+  std::unordered_map<size_t, std::vector<std::chrono::nanoseconds>>
+      mMeasurements;
+  std::vector<std::chrono::nanoseconds> mStepMeasurements;
+  CPS::String mOutMeasurementFile;
+};
+} // namespace DPsim

@@ -7,27 +7,27 @@
  *********************************************************************************/
 #pragma once
 
+#include <DPsim.h>
 #include <iomanip>
+#include <pybind11/eigen.h>
+#include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include <pybind11/functional.h>
-#include <pybind11/eigen.h>
-#include <DPsim.h>
 
 namespace py = pybind11;
 
 template <typename T>
 py::cpp_function createAttributeSetter(const std::string name) {
-	return [name](CPS::IdentifiedObject &object, T &value) {
-		object.attributeTyped<T>(name)->set(value);
-	};
+  return [name](CPS::IdentifiedObject &object, T &value) {
+    object.attributeTyped<T>(name)->set(value);
+  };
 }
 
 template <typename T>
 py::cpp_function createAttributeGetter(const std::string name) {
-	return [name](CPS::IdentifiedObject &object) {
-		return object.attributeTyped<T>(name)->get();
-	};
+  return [name](CPS::IdentifiedObject &object) {
+    return object.attributeTyped<T>(name)->get();
+  };
 }
 
 CPS::Matrix zeroMatrix(int dim);

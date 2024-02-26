@@ -8,75 +8,75 @@
 
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <list>
-#include <unordered_map>
 #include <bitset>
+#include <iostream>
+#include <list>
 #include <memory>
+#include <unordered_map>
+#include <vector>
 
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/DirectLinearSolver.h>
 
+#include <cusolverSp.h>
 #include <magma_v2.h>
 #include <magmasparse.h>
-#include <cusolverSp.h>
 
+namespace DPsim {
+class GpuMagmaAdapter : public DirectLinearSolver {
+protected:
+  std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic>> mTransp;
+  // #### Attributes required for GPU ####
+  /// Solver-Handle
+  magma_dopts mMagmaOpts;
+  magma_queue_t mMagmaQueue;
 
-namespace DPsim
-{
-	class GpuMagmaAdapter : public DirectLinearSolver
-    {
-		protected:
+  /// Systemmatrix
+  magma_d_matrix mHostSysMat;
+  magma_d_matrix mDevSysMat;
 
-		std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic>> mTransp;
-		// #### Attributes required for GPU ####
-		/// Solver-Handle
-		magma_dopts mMagmaOpts;
-		magma_queue_t mMagmaQueue;
+  /// RHS-Vector
+  magma_d_matrix mHostRhsVec;
+  magma_d_matrix mDevRhsVec;
+  /// LHS-Vector
+  magma_d_matrix mHostLhsVec;
+  magma_d_matrix mDevLhsVec;
 
-		/// Systemmatrix
-		magma_d_matrix mHostSysMat;
-		magma_d_matrix mDevSysMat;
+  // TODO: fix mSLog for solvers (all solvers)
+  // using Solver::mSLog;
 
-		/// RHS-Vector
-		magma_d_matrix mHostRhsVec;
-		magma_d_matrix mDevRhsVec;
-		/// LHS-Vector
-		magma_d_matrix mHostLhsVec;
-		magma_d_matrix mDevLhsVec;
+  void iluPreconditioner();
 
-		// TODO: fix mSLog for solvers (all solvers)
-		// using Solver::mSLog;
+  void performFactorization(SparseMatrix &systemMatrix);
 
-		void iluPreconditioner();
+public:
+  /// Constructor with logging
+  using DirectLinearSolver::DirectLinearSolver;
 
-		void performFactorization(SparseMatrix& systemMatrix);
+  /// Destructor
+  virtual ~GpuMagmaAdapter();
 
-        public:
-		/// Constructor with logging
-		using DirectLinearSolver::DirectLinearSolver;
+  /// Constructor
+  GpuMagmaAdapter();
 
-		/// Destructor
-		virtual ~GpuMagmaAdapter();
+  /// preprocessing function pre-ordering and scaling the matrix
+  virtual void preprocessing(SparseMatrix &systemMatrix,
+                             std::vector<std::pair<UInt, UInt>>
+                                 &listVariableSystemMatrixEntries) override;
 
-		/// Constructor
-		GpuMagmaAdapter();
+  /// factorization function with partial pivoting
+  virtual void factorize(SparseMatrix &systemMatrix) override;
 
-		/// preprocessing function pre-ordering and scaling the matrix
-		virtual void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
+  /// refactorization without partial pivoting
+  virtual void refactorize(SparseMatrix &systemMatrix) override;
 
-		/// factorization function with partial pivoting
-		virtual void factorize(SparseMatrix& systemMatrix) override;
+  /// partial refactorization withouth partial pivoting
+  virtual void partialRefactorize(SparseMatrix &systemMatrix,
+                                  std::vector<std::pair<UInt, UInt>> &
+                                      listVariableSystemMatrixEntries) override;
 
-		/// refactorization without partial pivoting
-		virtual void refactorize(SparseMatrix& systemMatrix) override;
-
-		/// partial refactorization withouth partial pivoting
-		virtual void partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
-
-		/// solution function for a right hand side
-		virtual Matrix solve(Matrix& rightSideVector) override;
-    };
-}
+  /// solution function for a right hand side
+  virtual Matrix solve(Matrix &rightSideVector) override;
+};
+} // namespace DPsim

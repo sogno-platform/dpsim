@@ -13,16 +13,17 @@
 #include <vector>
 
 namespace DPsim {
-	class OpenMPLevelScheduler : public Scheduler {
-	public:
-		OpenMPLevelScheduler(Int threads = -1, String outMeasurementFile = String());
-		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
-		void step(Real time, Int timeStepCount);
-		void stop();
+class OpenMPLevelScheduler : public Scheduler {
+public:
+  OpenMPLevelScheduler(Int threads = -1, String outMeasurementFile = String());
+  void createSchedule(const CPS::Task::List &tasks, const Edges &inEdges,
+                      const Edges &outEdges);
+  void step(Real time, Int timeStepCount);
+  void stop();
 
-	private:
-		Int mNumThreads;
-		String mOutMeasurementFile;
-		std::vector<CPS::Task::List> mLevels;
-	};
+private:
+  Int mNumThreads;
+  String mOutMeasurementFile;
+  std::vector<CPS::Task::List> mLevels;
 };
+}; // namespace DPsim

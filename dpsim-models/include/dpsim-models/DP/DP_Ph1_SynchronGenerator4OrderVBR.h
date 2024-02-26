@@ -13,30 +13,32 @@
 namespace CPS {
 namespace DP {
 namespace Ph1 {
-	/// @brief Voltage-Behind-Reactance (VBR) implementation
-	/// of 4th order synchronous generator model
-	class SynchronGenerator4OrderVBR :
-		public ReducedOrderSynchronGeneratorVBR,
-		public SharedFactory<SynchronGenerator4OrderVBR> {
-	protected:
-		// #### Model specific variables ####
-		/// voltage behind transient reactance
-		const Attribute<Matrix>::Ptr mEdq_t;
-		/// history term of voltage behind the transient reactance
-		Matrix mEh_vbr;
+/// @brief Voltage-Behind-Reactance (VBR) implementation
+/// of 4th order synchronous generator model
+class SynchronGenerator4OrderVBR
+    : public ReducedOrderSynchronGeneratorVBR,
+      public SharedFactory<SynchronGenerator4OrderVBR> {
+protected:
+  // #### Model specific variables ####
+  /// voltage behind transient reactance
+  const Attribute<Matrix>::Ptr mEdq_t;
+  /// history term of voltage behind the transient reactance
+  Matrix mEh_vbr;
 
-	public:
-		///
-		SynchronGenerator4OrderVBR(const String & uid, const String & name, Logger::Level logLevel = Logger::Level::off);
-		///
-		SynchronGenerator4OrderVBR(const String & name, Logger::Level logLevel = Logger::Level::off);
+public:
+  ///
+  SynchronGenerator4OrderVBR(const String &uid, const String &name,
+                             Logger::Level logLevel = Logger::Level::off);
+  ///
+  SynchronGenerator4OrderVBR(const String &name,
+                             Logger::Level logLevel = Logger::Level::off);
 
-		// #### General Functions ####
-		/// Initializes component from power flow data
-		void specificInitialization() final;
-		///
-		void stepInPerUnit() final;
-	};
-}
-}
-}
+  // #### General Functions ####
+  /// Initializes component from power flow data
+  void specificInitialization() final;
+  ///
+  void stepInPerUnit() final;
+};
+} // namespace Ph1
+} // namespace DP
+} // namespace CPS

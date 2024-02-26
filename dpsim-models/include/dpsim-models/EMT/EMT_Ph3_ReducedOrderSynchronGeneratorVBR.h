@@ -14,57 +14,59 @@
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
-	/// @brief Base class for EMT VBR simplefied synchronous generator models
-	class ReducedOrderSynchronGeneratorVBR :
-		public Base::ReducedOrderSynchronGenerator<Real>,
-		public MNAVariableCompInterface {
+/// @brief Base class for EMT VBR simplefied synchronous generator models
+class ReducedOrderSynchronGeneratorVBR
+    : public Base::ReducedOrderSynchronGenerator<Real>,
+      public MNAVariableCompInterface {
 
-    public:
-        // Common elements of all VBR models
-        /// voltage behind reactance
-        Matrix mEvbr;
-		/// norton equivalent current of mEvbr
-		Matrix mIvbr;
+public:
+  // Common elements of all VBR models
+  /// voltage behind reactance
+  Matrix mEvbr;
+  /// norton equivalent current of mEvbr
+  Matrix mIvbr;
 
-    protected:
-        /// Resistance matrix in dq0 reference frame
-		MatrixFixedSize<3, 3> mResistanceMatrixDq0;
+protected:
+  /// Resistance matrix in dq0 reference frame
+  MatrixFixedSize<3, 3> mResistanceMatrixDq0;
 
-		/// Conductance matrix
-		MatrixFixedSize<3, 3> mConductanceMatrix;
+  /// Conductance matrix
+  MatrixFixedSize<3, 3> mConductanceMatrix;
 
-		///
-		Matrix mAbcToDq0;
-		Matrix mDq0ToAbc;
+  ///
+  Matrix mAbcToDq0;
+  Matrix mDq0ToAbc;
 
-        /// Constructor
-        ReducedOrderSynchronGeneratorVBR(const String& uid, const String& name, Logger::Level logLevel);
-        ReducedOrderSynchronGeneratorVBR(const String& name, Logger::Level logLevel);
+  /// Constructor
+  ReducedOrderSynchronGeneratorVBR(const String &uid, const String &name,
+                                   Logger::Level logLevel);
+  ReducedOrderSynchronGeneratorVBR(const String &name, Logger::Level logLevel);
 
-	  	// #### General Functions ####
-        /// Specific component initialization
-        virtual void specificInitialization() =0;
-        ///
-        void initializeResistanceMatrix() override;
-        ///
-        virtual void stepInPerUnit() override =0;
-		///
-        void calculateResistanceMatrix();
-        /// Park Transformation according to Kundur
-        Matrix get_parkTransformMatrix() const;
-		/// Inverse Park Transformation according to Kundur
-		Matrix get_inverseParkTransformMatrix() const;
+  // #### General Functions ####
+  /// Specific component initialization
+  virtual void specificInitialization() = 0;
+  ///
+  void initializeResistanceMatrix() override;
+  ///
+  virtual void stepInPerUnit() override = 0;
+  ///
+  void calculateResistanceMatrix();
+  /// Park Transformation according to Kundur
+  Matrix get_parkTransformMatrix() const;
+  /// Inverse Park Transformation according to Kundur
+  Matrix get_inverseParkTransformMatrix() const;
 
-        // ### MNA Section ###
-        void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) override;
-        void mnaCompApplyRightSideVectorStamp(Matrix& rightVector) override;
-		void mnaCompPostStep(const Matrix& leftVector) override;
-        void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+  // ### MNA Section ###
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompPostStep(const Matrix &leftVector) override;
+  void mnaCompInitialize(Real omega, Real timeStep,
+                         Attribute<Matrix>::Ptr leftVector) override;
 
-    public:
-        /// Mark that parameter changes so that system matrix is updated
-		Bool hasParameterChanged() override { return true; };
-    };
-}
-}
-}
+public:
+  /// Mark that parameter changes so that system matrix is updated
+  Bool hasParameterChanged() override { return true; };
+};
+} // namespace Ph3
+} // namespace EMT
+} // namespace CPS

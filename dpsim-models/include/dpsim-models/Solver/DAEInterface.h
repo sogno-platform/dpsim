@@ -8,21 +8,24 @@
 
 #pragma once
 
-#include<vector>
 #include <dpsim-models/Definitions.h>
+#include <vector>
 
 namespace CPS {
-	class DAEInterface {
-	public:
-		typedef std::shared_ptr<DAEInterface> Ptr;
-		typedef std::vector<Ptr> List;
+class DAEInterface {
+public:
+  typedef std::shared_ptr<DAEInterface> Ptr;
+  typedef std::vector<Ptr> List;
 
-		using ResFn = std::function<void(double, const double *, const double *, double *, std::vector<int>&)>;
+  using ResFn = std::function<void(double, const double *, const double *,
+                                   double *, std::vector<int> &)>;
 
-		// #### DAE Section ####
-		///Residual Function for DAE Solver
-		virtual void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) = 0;
-		///Voltage Getter for Components
-		virtual Complex daeInitialize()=0;
-	};
-}
+  // #### DAE Section ####
+  ///Residual Function for DAE Solver
+  virtual void daeResidual(double ttime, const double state[],
+                           const double dstate_dt[], double resid[],
+                           std::vector<int> &off) = 0;
+  ///Voltage Getter for Components
+  virtual Complex daeInitialize() = 0;
+};
+} // namespace CPS

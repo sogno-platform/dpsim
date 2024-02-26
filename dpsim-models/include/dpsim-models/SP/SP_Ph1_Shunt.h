@@ -12,43 +12,46 @@
 
 namespace CPS {
 
-namespace SP {namespace Ph1 {
+namespace SP {
+namespace Ph1 {
 
-	class Shunt : public SimPowerComp<Complex>, public SharedFactory<Shunt>, public PFSolverInterfaceBranch {
-	public:
-		/// Conductance [S]
-		const Attribute<Real>::Ptr mConductance;
-		/// Susceptance [S]
-		const Attribute<Real>::Ptr mSusceptance;
-		/// Conductance [pu]
-		const Attribute<Real>::Ptr mConductancePerUnit;
-		/// Susceptance [pu]
-		const Attribute<Real>::Ptr mSusceptancePerUnit;
-	private:
-        /// Base voltage [V]
-        Real mBaseVoltage;
+class Shunt : public SimPowerComp<Complex>,
+              public SharedFactory<Shunt>,
+              public PFSolverInterfaceBranch {
+public:
+  /// Conductance [S]
+  const Attribute<Real>::Ptr mConductance;
+  /// Susceptance [S]
+  const Attribute<Real>::Ptr mSusceptance;
+  /// Conductance [pu]
+  const Attribute<Real>::Ptr mConductancePerUnit;
+  /// Susceptance [pu]
+  const Attribute<Real>::Ptr mSusceptancePerUnit;
 
-	public:
-		/// Defines UID, name, component parameters and logging level
-		Shunt(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+private:
+  /// Base voltage [V]
+  Real mBaseVoltage;
 
-		/// Defines name and logging level
-		Shunt(String name, Logger::Level logLevel = Logger::Level::off)
-			: Shunt(name, name, logLevel) { }
+public:
+  /// Defines UID, name, component parameters and logging level
+  Shunt(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 
-		// #### General ####
-		/// Set shunt specific parameters
-		void setParameters(Real conductance, Real susceptance);
+  /// Defines name and logging level
+  Shunt(String name, Logger::Level logLevel = Logger::Level::off)
+      : Shunt(name, name, logLevel) {}
 
-		// #### Powerflow section ####
-		/// Set base voltage
-		void setBaseVoltage(Real baseVoltage);
-		/// Initializes component from power flow data
-		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
-		/// Stamps admittance matrix
-		void pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y);
+  // #### General ####
+  /// Set shunt specific parameters
+  void setParameters(Real conductance, Real susceptance);
 
-	};
-}
-}
-}
+  // #### Powerflow section ####
+  /// Set base voltage
+  void setBaseVoltage(Real baseVoltage);
+  /// Initializes component from power flow data
+  void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
+  /// Stamps admittance matrix
+  void pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y);
+};
+} // namespace Ph1
+} // namespace SP
+} // namespace CPS

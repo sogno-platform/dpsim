@@ -8,43 +8,45 @@
 
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <list>
-#include <unordered_map>
 #include <bitset>
+#include <iostream>
+#include <list>
 #include <memory>
+#include <unordered_map>
+#include <vector>
 
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/DirectLinearSolver.h>
 
-namespace DPsim
-{
-    class DenseLUAdapter : public DirectLinearSolver
-    {
-        Eigen::PartialPivLU<Matrix> LUFactorized;
+namespace DPsim {
+class DenseLUAdapter : public DirectLinearSolver {
+  Eigen::PartialPivLU<Matrix> LUFactorized;
 
-        public:
-		/// Constructor with logging
-		using DirectLinearSolver::DirectLinearSolver;
+public:
+  /// Constructor with logging
+  using DirectLinearSolver::DirectLinearSolver;
 
-		/// Destructor
-		~DenseLUAdapter() override;
+  /// Destructor
+  ~DenseLUAdapter() override;
 
-		/// preprocessing function pre-ordering and scaling the matrix
-		void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
+  /// preprocessing function pre-ordering and scaling the matrix
+  void preprocessing(SparseMatrix &systemMatrix,
+                     std::vector<std::pair<UInt, UInt>>
+                         &listVariableSystemMatrixEntries) override;
 
-		/// factorization function with partial pivoting
-		void factorize(SparseMatrix& systemMatrix) override;
+  /// factorization function with partial pivoting
+  void factorize(SparseMatrix &systemMatrix) override;
 
-		/// refactorization without partial pivoting
-		void refactorize(SparseMatrix& systemMatrix) override;
+  /// refactorization without partial pivoting
+  void refactorize(SparseMatrix &systemMatrix) override;
 
-		/// partial refactorization withouth partial pivoting
-		void partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
+  /// partial refactorization withouth partial pivoting
+  void partialRefactorize(SparseMatrix &systemMatrix,
+                          std::vector<std::pair<UInt, UInt>>
+                              &listVariableSystemMatrixEntries) override;
 
-		/// solution function for a right hand side
-		Matrix solve(Matrix& rightSideVector) override;
-    };
-}
+  /// solution function for a right hand side
+  Matrix solve(Matrix &rightSideVector) override;
+};
+} // namespace DPsim

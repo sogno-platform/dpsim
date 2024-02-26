@@ -11,24 +11,23 @@
 #include <dpsim-models/Definitions.h>
 
 // This macro defines the tolerance used to compare double numbers
-#define DOUBLE_EPSILON 1E-12 
+#define DOUBLE_EPSILON 1E-12
 
 namespace DPsim {
-	// #### Types ####
-	using Real = CPS::Real;
-	using Complex = CPS::Complex;
-	using String = CPS::String;
-	using Bool = CPS::Bool;
-	using Int = CPS::Int;
-	using UInt = CPS::UInt;
-	using Matrix = CPS::Matrix;
-	using MatrixComp = CPS::MatrixComp;
-	using SparseMatrix = CPS::SparseMatrixRow;
-	using SparseMatrixComp = CPS::SparseMatrixCompRow;
+// #### Types ####
+using Real = CPS::Real;
+using Complex = CPS::Complex;
+using String = CPS::String;
+using Bool = CPS::Bool;
+using Int = CPS::Int;
+using UInt = CPS::UInt;
+using Matrix = CPS::Matrix;
+using MatrixComp = CPS::MatrixComp;
+using SparseMatrix = CPS::SparseMatrixRow;
+using SparseMatrixComp = CPS::SparseMatrixCompRow;
 
-	template<typename T>
-	using MatrixVar = CPS::MatrixVar<T>;
+template <typename T> using MatrixVar = CPS::MatrixVar<T>;
 
-	class SolverException { };
-	class UnsupportedSolverException { };
-}
+class SolverException {};
+class UnsupportedSolverException {};
+} // namespace DPsim

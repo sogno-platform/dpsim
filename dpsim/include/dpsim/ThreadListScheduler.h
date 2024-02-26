@@ -11,13 +11,16 @@
 #include <dpsim/ThreadScheduler.h>
 
 namespace DPsim {
-	class ThreadListScheduler : public ThreadScheduler {
-	public:
-		ThreadListScheduler(Int threads = 1, String outMeasurementFile = String(), String inMeasurementFile = String(), Bool useConditionVariables = false);
+class ThreadListScheduler : public ThreadScheduler {
+public:
+  ThreadListScheduler(Int threads = 1, String outMeasurementFile = String(),
+                      String inMeasurementFile = String(),
+                      Bool useConditionVariables = false);
 
-		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
+  void createSchedule(const CPS::Task::List &tasks, const Edges &inEdges,
+                      const Edges &outEdges);
 
-	private:
-		String mInMeasurementFile;
-	};
+private:
+  String mInMeasurementFile;
 };
+}; // namespace DPsim
