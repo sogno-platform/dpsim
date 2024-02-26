@@ -1,0 +1,9 @@
+# Author: Steffen Vogel <steffen.vogel@opal-rt.com>
+# SPDX-FileCopyrightText: 2024 OPAL-RT Germany GmbH
+# SPDX-License-Identifier: MPL-2.0
+---
+BasedOnStyle: LLVM
+
+# Disable automatic line-breaks in comments
+# as this breaks SPDX headers
+ReflowComments: false
