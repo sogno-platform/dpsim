@@ -29,7 +29,7 @@ namespace Ph1 {
 		///
 		SynchronGenerator4OrderPCM(const String& name, Logger::Level logLevel = Logger::Level::off);
 		///
-		SimPowerComp<Complex>::Ptr clone(const String& name);
+		SimPowerComp<Complex>::Ptr clone(String name) override;
 
 		// #### General Functions ####
 		///

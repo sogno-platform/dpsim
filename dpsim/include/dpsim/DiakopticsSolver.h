@@ -93,7 +93,7 @@ namespace DPsim {
 		void initMatrices();
 		void applyTearComponentStamp(UInt compIdx);
 
-		void log(Real time);
+		void log(Real time, Int timeStepCount) override;
 
 	public:
 
