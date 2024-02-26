@@ -8,52 +8,57 @@
 
 #pragma once
 
-#include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNATearInterface.h>
+#include <dpsim-models/Base/Base_Ph3_Resistor.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
-#include <dpsim-models/Base/Base_Ph3_Resistor.h>
+#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
-	namespace SP {
-		namespace Ph3 {
-			///
-			class Resistor :
-				public MNASimPowerComp<Complex>,
-				public Base::Ph3::Resistor,
-				public MNATearInterface,
-				public SharedFactory<Resistor> {
+namespace SP {
+namespace Ph3 {
+///
+class Resistor : public MNASimPowerComp<Complex>,
+                 public Base::Ph3::Resistor,
+                 public MNATearInterface,
+                 public SharedFactory<Resistor> {
 
-			public:
-				/// Defines UID, name and logging level
-				Resistor(String uid, String name, Logger::Level logLevel = Logger::Level::off);
-				/// Defines name and logging level
-				Resistor(String name, Logger::Level logLevel = Logger::Level::off)
-					: Resistor(name, name, logLevel) { }
+public:
+  /// Defines UID, name and logging level
+  Resistor(String uid, String name,
+           Logger::Level logLevel = Logger::Level::off);
+  /// Defines name and logging level
+  Resistor(String name, Logger::Level logLevel = Logger::Level::off)
+      : Resistor(name, name, logLevel) {}
 
-				SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name);
 
-				// #### General ####
-				/// Initializes component from power flow data
-				void initializeFromNodesAndTerminals(Real frequency);
+  // #### General ####
+  /// Initializes component from power flow data
+  void initializeFromNodesAndTerminals(Real frequency);
 
-				// #### MNA section ####
-				///
-				void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-				/// Stamps system matrix
-				void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
-				///
-				void mnaCompUpdateVoltage(const Matrix& leftVector);
-				///
-				void mnaCompUpdateCurrent(const Matrix& leftVector);
+  // #### MNA section ####
+  ///
+  void mnaCompInitialize(Real omega, Real timeStep,
+                         Attribute<Matrix>::Ptr leftVector);
+  /// Stamps system matrix
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
+  ///
+  void mnaCompUpdateVoltage(const Matrix &leftVector);
+  ///
+  void mnaCompUpdateCurrent(const Matrix &leftVector);
 
-				void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
-				/// Add MNA post step dependencies
-				void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-				// #### MNA Tear Section ####
-				void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
-
-			};
-		}
-	}
-}
+  void mnaCompPostStep(Real time, Int timeStepCount,
+                       Attribute<Matrix>::Ptr &leftVector) override;
+  /// Add MNA post step dependencies
+  void
+  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+                                 AttributeBase::List &attributeDependencies,
+                                 AttributeBase::List &modifiedAttributes,
+                                 Attribute<Matrix>::Ptr &leftVector) override;
+  // #### MNA Tear Section ####
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix);
+};
+} // namespace Ph3
+} // namespace SP
+} // namespace CPS

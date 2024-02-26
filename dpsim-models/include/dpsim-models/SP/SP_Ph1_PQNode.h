@@ -10,33 +10,26 @@
 
 #include <dpsim-models/SimPowerComp.h>
 
-
 namespace CPS {
 namespace SP {
 namespace Ph1 {
 
-	class PQNode: public SimPowerComp<Complex>, public SharedFactory<PQNode>{
-	public:
-		const Attribute<Real>::Ptr mPowerNom;
-		const Attribute<Real>::Ptr mReactivePowerNom;
-		const Attribute<Real>::Ptr mPower;
-		const Attribute<Real>::Ptr mReactivePower;
+class PQNode : public SimPowerComp<Complex>, public SharedFactory<PQNode> {
+public:
+  const Attribute<Real>::Ptr mPowerNom;
+  const Attribute<Real>::Ptr mReactivePowerNom;
+  const Attribute<Real>::Ptr mPower;
+  const Attribute<Real>::Ptr mReactivePower;
 
-		PQNode(String uid, String name,
-			Logger::Level logLevel = Logger::Level::off);
+  PQNode(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 
-        PQNode(String uid, String name, Real power, Real reactive_power,
-            Logger::Level logLevel = Logger::Level::off);
+  PQNode(String uid, String name, Real power, Real reactive_power,
+         Logger::Level logLevel = Logger::Level::off);
 
+  void initializeFromTerminal();
+  void setPerUnitSystem();
+};
 
-		void initializeFromTerminal();
-		void setPerUnitSystem();
-
-	};
-
-
-
-
-}
-}
-}
+} // namespace Ph1
+} // namespace SP
+} // namespace CPS

@@ -8,59 +8,67 @@
 
 #pragma once
 
-#include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNASwitchInterface.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Base/Base_Ph1_Switch.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
-#include <dpsim-models/Base/Base_Ph1_Switch.h>
+#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/MNASwitchInterface.h>
 
 namespace CPS {
 namespace DP {
 namespace Ph3 {
-	/// \brief Dynamic phasor three-phase switch
-	///
-	/// The switch can be opened and closed.
-	/// Each state has a specific resistance value.
-	/// For this model, the resistance model is the same for all phases and
-	/// only in series.
-	class SeriesSwitch :
-		public MNASimPowerComp<Complex>,
-		public Base::Ph1::Switch,
-		public SharedFactory<SeriesSwitch>,
-		public MNASwitchInterface {
+/// \brief Dynamic phasor three-phase switch
+///
+/// The switch can be opened and closed.
+/// Each state has a specific resistance value.
+/// For this model, the resistance model is the same for all phases and
+/// only in series.
+class SeriesSwitch : public MNASimPowerComp<Complex>,
+                     public Base::Ph1::Switch,
+                     public SharedFactory<SeriesSwitch>,
+                     public MNASwitchInterface {
 
-	public:
-		/// Defines UID, name and logging level
-		SeriesSwitch(String uid, String name, Logger::Level loglevel = Logger::Level::off);
-		/// Defines name and logging level
-		SeriesSwitch(String name, Logger::Level logLevel = Logger::Level::off)
-			: SeriesSwitch(name, name, logLevel) { }
+public:
+  /// Defines UID, name and logging level
+  SeriesSwitch(String uid, String name,
+               Logger::Level loglevel = Logger::Level::off);
+  /// Defines name and logging level
+  SeriesSwitch(String name, Logger::Level logLevel = Logger::Level::off)
+      : SeriesSwitch(name, name, logLevel) {}
 
-		// #### General ####
-		/// Initializes component from power flow data
-		void initializeFromNodesAndTerminals(Real frequency);
+  // #### General ####
+  /// Initializes component from power flow data
+  void initializeFromNodesAndTerminals(Real frequency);
 
-		// #### General MNA section ####
-		///
-		void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		/// Stamps system matrix
-		void mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix);
-		/// Update interface voltage from MNA system result
-		void mnaCompUpdateVoltage(const Matrix& leftVector);
-		/// Update interface current from MNA system result
-		void mnaCompUpdateCurrent(const Matrix& leftVector);
+  // #### General MNA section ####
+  ///
+  void mnaCompInitialize(Real omega, Real timeStep,
+                         Attribute<Matrix>::Ptr leftVector);
+  /// Stamps system matrix
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
+  /// Update interface voltage from MNA system result
+  void mnaCompUpdateVoltage(const Matrix &leftVector);
+  /// Update interface current from MNA system result
+  void mnaCompUpdateCurrent(const Matrix &leftVector);
 
-		// #### MNA section for switches ####
-		/// Check if switch is closed
-		Bool mnaIsClosed();
-		/// Stamps system matrix considering the defined switch position
-		void mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx);
+  // #### MNA section for switches ####
+  /// Check if switch is closed
+  Bool mnaIsClosed();
+  /// Stamps system matrix considering the defined switch position
+  void mnaCompApplySwitchSystemMatrixStamp(Bool closed,
+                                           SparseMatrixRow &systemMatrix,
+                                           Int freqIdx);
 
-		/// Add MNA post step dependencies
-		void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
-		void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
-	};
-}
-}
-}
+  /// Add MNA post step dependencies
+  void
+  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+                                 AttributeBase::List &attributeDependencies,
+                                 AttributeBase::List &modifiedAttributes,
+                                 Attribute<Matrix>::Ptr &leftVector) override;
+  void mnaCompPostStep(Real time, Int timeStepCount,
+                       Attribute<Matrix>::Ptr &leftVector) override;
+};
+} // namespace Ph3
+} // namespace DP
+} // namespace CPS

@@ -12,30 +12,30 @@
 
 namespace CPS {
 namespace Signal {
-	/// \brief Model to generate generic signals
-	///
-	/// Abstract model to generate different types of signals.
-	/// Acts as a base class for more specific signal generator classes, such as SineWaveGenerator.
-	class SignalGenerator :
-		public SimSignalComp {
-    public:
-		typedef std::shared_ptr<SignalGenerator> Ptr;
-		typedef std::vector<Ptr> List;
+/// \brief Model to generate generic signals
+///
+/// Abstract model to generate different types of signals.
+/// Acts as a base class for more specific signal generator classes, such as SineWaveGenerator.
+class SignalGenerator : public SimSignalComp {
+public:
+  typedef std::shared_ptr<SignalGenerator> Ptr;
+  typedef std::vector<Ptr> List;
 
-		const CPS::Attribute<Complex>::Ptr mSigOut;
-		const CPS::Attribute<Real>::Ptr mFreq;
+  const CPS::Attribute<Complex>::Ptr mSigOut;
+  const CPS::Attribute<Real>::Ptr mFreq;
 
-		SignalGenerator(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  SignalGenerator(String uid, String name,
+                  Logger::Level logLevel = Logger::Level::off);
 
-		SignalGenerator(String name, Logger::Level logLevel = Logger::Level::off)
-			: SignalGenerator(name, name, logLevel) {
-				SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
-			}
+  SignalGenerator(String name, Logger::Level logLevel = Logger::Level::off)
+      : SignalGenerator(name, name, logLevel) {
+    SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
+  }
 
-		/// updates current signal
-        virtual void step(Real time) = 0;
-		/// returns current signal value without updating it
-		Complex getSignal();
-    };
-}
-}
+  /// updates current signal
+  virtual void step(Real time) = 0;
+  /// returns current signal value without updating it
+  Complex getSignal();
+};
+} // namespace Signal
+} // namespace CPS

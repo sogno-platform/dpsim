@@ -6,12 +6,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <graphviz/gvc.h>
 #include <graphviz/cgraph.h>
+#include <graphviz/gvc.h>
 #include <graphviz/gvcommon.h>
 
-#include <dpsim-models/Definitions.h>
 #include <dpsim-models/CIM/Reader.h>
+#include <dpsim-models/Definitions.h>
 
 using namespace CPS;
 using namespace CPS::CIM;
@@ -21,62 +21,63 @@ static graph_t *G;
 
 #ifndef _WIN32
 static void intr(int s) {
-	/* if interrupted we try to produce a partial rendering before exiting */
-	if (G)
-		gvRenderJobs(gvc, G);
+  /* if interrupted we try to produce a partial rendering before exiting */
+  if (G)
+    gvRenderJobs(gvc, G);
 
-	/* Note that we don't call gvFinalize() so that we don't start event-driven
+  /* Note that we don't call gvFinalize() so that we don't start event-driven
  	 * devices like -Tgtk or -Txlib */
-	exit(gvFreeContext(gvc));
+  exit(gvFreeContext(gvc));
 }
 #endif
 
 struct GVC_s {
-	GVCOMMON_t common;
+  GVCOMMON_t common;
 
-	char *config_path;
-	boolean config_found;
+  char *config_path;
+  boolean config_found;
 
-	/* gvParseArgs */
-	char **input_filenames;
+  /* gvParseArgs */
+  char **input_filenames;
 };
 
 int main(int argc, char *argv[]) {
-	int ret, i;
+  int ret, i;
 
-	argv[0] = (char *) "neato"; /* Default layout engine */
+  argv[0] = (char *)"neato"; /* Default layout engine */
 
-	gvc = gvContext();
-	gvParseArgs(gvc, argc, argv);
+  gvc = gvContext();
+  gvParseArgs(gvc, argc, argv);
 
 #ifndef _WIN32
-	signal(SIGUSR1, gvToggle);
-	signal(SIGINT, intr);
+  signal(SIGUSR1, gvToggle);
+  signal(SIGINT, intr);
 #endif
 
-	Reader reader("cimviz", Logger::Level::info);
+  Reader reader("cimviz", Logger::Level::info);
 
-	std::list<fs::path> filenames;
-	for (i = 0; gvc->input_filenames[i]; i++) {
-		filenames.emplace_back(gvc->input_filenames[i]);
-	}
+  std::list<fs::path> filenames;
+  for (i = 0; gvc->input_filenames[i]; i++) {
+    filenames.emplace_back(gvc->input_filenames[i]);
+  }
 
-	if (i == 0)
-		return 0;
+  if (i == 0)
+    return 0;
 
-	/* The remaining code is identical to GraphVizs dot.c code */
-	SystemTopology sys = reader.loadCIM(50, filenames);
-	Graph::Graph graph = sys.topologyGraph();
+  /* The remaining code is identical to GraphVizs dot.c code */
+  SystemTopology sys = reader.loadCIM(50, filenames);
+  Graph::Graph graph = sys.topologyGraph();
 
-	G = graph.mGraph;
+  G = graph.mGraph;
 
-	ret = gvLayoutJobs(gvc, G);  /* take layout engine from command line */
-	if (ret)
-		goto out;
+  ret = gvLayoutJobs(gvc, G); /* take layout engine from command line */
+  if (ret)
+    goto out;
 
-	ret = gvRenderJobs(gvc, G);
+  ret = gvRenderJobs(gvc, G);
 
-out:	gvFreeContext(gvc);
+out:
+  gvFreeContext(gvc);
 
-	return ret;
+  return ret;
 }

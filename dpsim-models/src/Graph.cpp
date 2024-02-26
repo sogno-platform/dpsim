@@ -14,87 +14,85 @@ using namespace CPS;
 using namespace CPS::Graph;
 
 CPS::Graph::Graph::Graph(const CPS::String &name, Type type, bool strict) {
-	Agdesc_t desc;
+  Agdesc_t desc;
 
-	switch (type) {
-		case Type::directed:
-			desc = strict ? Agstrictdirected : Agdirected;
-			break;
-		case Type::undirected:
-			desc = strict ? Agstrictundirected : Agundirected;
-			break;
-	}
+  switch (type) {
+  case Type::directed:
+    desc = strict ? Agstrictdirected : Agdirected;
+    break;
+  case Type::undirected:
+    desc = strict ? Agstrictundirected : Agundirected;
+    break;
+  }
 
-	mGraph = agopen((char *) name.c_str(), desc, NULL);
-	mPtr = mGraph;
-	mKind = AGRAPH;
+  mGraph = agopen((char *)name.c_str(), desc, NULL);
+  mPtr = mGraph;
+  mKind = AGRAPH;
 }
 
-CPS::Graph::Graph::~Graph() {
-	agclose(mGraph);
+CPS::Graph::Graph::~Graph() { agclose(mGraph); }
+
+void CPS::Graph::Graph::render(std::ostream &os, const CPS::String &layout,
+                               const CPS::String &format) {
+  GVC_t *gvc;
+  char *data;
+  unsigned len;
+
+  gvc = gvContext();
+
+  gvLayout(gvc, mGraph, layout.c_str());
+  gvRenderData(gvc, mGraph, format.c_str(), &data, &len);
+
+  os.write(data, len);
+
+  gvFreeRenderData(data);
+  gvFreeLayout(gvc, mGraph);
+
+  gvFreeContext(gvc);
 }
 
-void CPS::Graph::Graph::render(std::ostream &os, const CPS::String &layout, const CPS::String &format) {
-	GVC_t *gvc;
-	char *data;
-	unsigned len;
+Node *CPS::Graph::Graph::addNode(const CPS::String &name) {
+  auto n = new Node(this, name);
 
-	gvc = gvContext();
+  mNodes[name] = n;
 
-	gvLayout(gvc, mGraph, layout.c_str());
-	gvRenderData(gvc, mGraph, format.c_str(), &data, &len);
-
-	os.write(data, len);
-
-	gvFreeRenderData(data);
-	gvFreeLayout(gvc, mGraph);
-
-	gvFreeContext(gvc);
+  return n;
 }
 
-Node * CPS::Graph::Graph::addNode(const CPS::String &name) {
-	auto n = new Node(this, name);
+Edge *CPS::Graph::Graph::addEdge(const CPS::String &name, Node *head,
+                                 Node *tail) {
+  auto e = new Edge(this, name, head, tail);
 
-	mNodes[name] = n;
+  mEdges[name] = e;
 
-	return n;
+  return e;
 }
 
-Edge * CPS::Graph::Graph::addEdge(const CPS::String &name, Node *head, Node *tail) {
-	auto e = new Edge(this, name, head, tail);
+Node *CPS::Graph::Graph::node(const CPS::String &name) { return mNodes[name]; }
 
-	mEdges[name] = e;
+Edge *CPS::Graph::Graph::edge(const CPS::String &name) { return mEdges[name]; }
 
-	return e;
-}
+void CPS::Graph::Element::set(const CPS::String &key, const CPS::String &value,
+                              bool html) {
+  Agraph_t *g = agraphof(mPtr);
 
-Node * CPS::Graph::Graph::node(const CPS::String &name) {
-	return mNodes[name];
-}
+  char *d = (char *)"";
+  char *k = (char *)key.c_str();
+  char *v = (char *)value.c_str();
+  char *vd = html ? agstrdup_html(g, v) : agstrdup(g, v);
 
-Edge * CPS::Graph::Graph::edge(const CPS::String &name) {
-	return mEdges[name];
-}
-
-void CPS::Graph::Element::set(const CPS::String &key, const CPS::String &value, bool html) {
-	Agraph_t *g = agraphof(mPtr);
-
-	char *d = (char *) "";
-	char *k = (char *) key.c_str();
-	char *v = (char *) value.c_str();
-	char *vd = html ? agstrdup_html(g, v) : agstrdup(g, v);
-
-	agsafeset(mPtr, k, vd, d);
+  agsafeset(mPtr, k, vd, d);
 }
 
 CPS::Graph::Node::Node(Graph *g, const String &name) {
-	mNode = agnode(g->mGraph, (char *) name.c_str(), 1);
-	mPtr = mNode;
-	mKind = AGNODE;
+  mNode = agnode(g->mGraph, (char *)name.c_str(), 1);
+  mPtr = mNode;
+  mKind = AGNODE;
 }
 
-CPS::Graph::Edge::Edge(Graph *g, const CPS::String &name, Node *head, Node *tail) {
-	mEdge = agedge(g->mGraph, head->mNode, tail->mNode, (char *) name.c_str(), 1);
-	mPtr = mEdge;
-	mKind = AGEDGE;
+CPS::Graph::Edge::Edge(Graph *g, const CPS::String &name, Node *head,
+                       Node *tail) {
+  mEdge = agedge(g->mGraph, head->mNode, tail->mNode, (char *)name.c_str(), 1);
+  mPtr = mEdge;
+  mKind = AGEDGE;
 }

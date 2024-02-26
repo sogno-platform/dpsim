@@ -11,8 +11,8 @@
 using namespace DPsim;
 using namespace CPS::EMT::Ph3;
 
-int main(int argc, char* argv[]) {
-	/* simplified VBR model does not exist at the moment
+int main(int argc, char *argv[]) {
+  /* simplified VBR model does not exist at the moment
 
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
@@ -101,5 +101,5 @@ int main(int argc, char* argv[]) {
 
 	*/
 
-	return 0;
+  return 0;
 }

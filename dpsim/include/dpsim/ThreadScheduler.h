@@ -14,39 +14,40 @@
 #include <vector>
 
 namespace DPsim {
-	class ThreadScheduler : public Scheduler {
-	public:
-		ThreadScheduler(Int threads, String outMeasurementFile, Bool useConditionVariable);
-		virtual ~ThreadScheduler();
+class ThreadScheduler : public Scheduler {
+public:
+  ThreadScheduler(Int threads, String outMeasurementFile,
+                  Bool useConditionVariable);
+  virtual ~ThreadScheduler();
 
-		void step(Real time, Int timeStepCount);
-		virtual void stop();
+  void step(Real time, Int timeStepCount);
+  virtual void stop();
 
-	protected:
-		void finishSchedule(const Edges& inEdges);
-		void scheduleTask(int thread, CPS::Task::Ptr task);
+protected:
+  void finishSchedule(const Edges &inEdges);
+  void scheduleTask(int thread, CPS::Task::Ptr task);
 
-		Int mNumThreads;
+  Int mNumThreads;
 
-	private:
-		void doStep(Int scheduleIdx);
-		static void threadFunction(ThreadScheduler* sched, Int idx);
+private:
+  void doStep(Int scheduleIdx);
+  static void threadFunction(ThreadScheduler *sched, Int idx);
 
-		String mOutMeasurementFile;
-		Barrier mStartBarrier;
+  String mOutMeasurementFile;
+  Barrier mStartBarrier;
 
-		std::vector<std::thread> mThreads;
+  std::vector<std::thread> mThreads;
 
-		std::vector<CPS::Task::List> mTempSchedules;
-		struct ScheduleEntry {
-			CPS::Task* task;
-			Counter endCounter;
-			std::vector<Counter*> reqCounters;
-		};
-		std::vector<ScheduleEntry*> mSchedules;
+  std::vector<CPS::Task::List> mTempSchedules;
+  struct ScheduleEntry {
+    CPS::Task *task;
+    Counter endCounter;
+    std::vector<Counter *> reqCounters;
+  };
+  std::vector<ScheduleEntry *> mSchedules;
 
-		Bool mJoining = false;
-		Real mTime = 0;
-		Int mTimeStepCount = 0;
-	};
-}
+  Bool mJoining = false;
+  Real mTime = 0;
+  Int mTimeStepCount = 0;
+};
+} // namespace DPsim
