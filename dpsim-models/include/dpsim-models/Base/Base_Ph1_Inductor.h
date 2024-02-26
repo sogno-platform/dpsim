@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Definitions.h>
 
 namespace CPS {
