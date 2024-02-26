@@ -6,11 +6,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/Components.h>
-#include <dpsim-models/Definitions.h>
-#include <dpsim-models/SystemTopology.h>
-
 #pragma once
+
+#include <DPsim.h>
 
 namespace CPS {
 namespace CIM {
