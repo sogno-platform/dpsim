@@ -134,7 +134,8 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph1::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-           "closed"_a = false) // cppcheck-suppress assignBoolToPointer
+		    // cppcheck-suppress assignBoolToPointer
+           "closed"_a = false)
       .def("open", &CPS::SP::Ph1::Switch::open)
       .def("close", &CPS::SP::Ph1::Switch::close)
       .def("connect", &CPS::SP::Ph1::Switch::connect);
@@ -166,7 +167,8 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph1::varResSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-           "closed"_a = false) // cppcheck-suppress assignBoolToPointer
+		   // cppcheck-suppress assignBoolToPointer
+           "closed"_a = false)
       .def("open", &CPS::SP::Ph1::varResSwitch::open)
       .def("close", &CPS::SP::Ph1::varResSwitch::close)
       .def("set_init_parameters",
@@ -302,7 +304,8 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-           "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
+		    // cppcheck-suppress assignBoolToPointer
+           "with_trafo"_a = false)
       .def("set_parameters",
            &CPS::SP::Ph1::AvVoltageSourceInverterDQ::setParameters,
            "sys_omega"_a, "sys_volt_nom"_a, "p_ref"_a, "q_ref"_a)
@@ -333,8 +336,8 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-           "with_resistive_losses"_a =
-               false) // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
+           "with_resistive_losses"_a = false)
       .def("set_parameters",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real>(

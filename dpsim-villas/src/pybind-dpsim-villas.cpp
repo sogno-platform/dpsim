@@ -36,17 +36,15 @@ PYBIND11_MODULE(dpsimpyvillas, m) {
       .def(py::init<const CPS::String &, CPS::UInt, CPS::UInt,
                     const CPS::String &, CPS::UInt>(),
            "config"_a, "queue_length"_a = 512, "sample_length"_a = 64,
-           "name"_a = "",
-           "downsampling"_a = 1) // cppcheck-suppress assignBoolToPointer
+           "name"_a = "", "downsampling"_a = 1)
       .def(py::init<py::dict, CPS::UInt, CPS::UInt, const CPS::String &,
                     CPS::UInt>(),
            "config"_a, "queue_length"_a = 512, "sample_length"_a = 64,
-           "name"_a = "",
-           "downsampling"_a = 1) // cppcheck-suppress assignBoolToPointer
+           "name"_a = "", "downsampling"_a = 1)
       .def("import_attribute", &PyInterfaceVillas::importAttribute, "attr"_a,
-           "idx"_a, "block_on_read"_a = false,
-           "sync_on_start"_a = true) // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
+           "idx"_a, "block_on_read"_a = false, "sync_on_start"_a = true)
       .def("export_attribute", &PyInterfaceVillas::exportAttribute, "attr"_a,
-           "idx"_a, "wait_for_on_write"_a = true, "name"_a = "",
-           "unit"_a = ""); // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
+           "idx"_a, "wait_for_on_write"_a = true, "name"_a = "", "unit"_a = "");
 }
