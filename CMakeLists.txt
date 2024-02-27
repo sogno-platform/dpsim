@@ -57,6 +57,9 @@ if(MSVC)
 	add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 	add_definitions(-D_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING)
 
+	# Silence Visual Studio error C2220
+	add_definitions(-D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+
 	# Set exception handling for portability
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
 
