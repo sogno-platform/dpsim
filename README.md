@@ -1,6 +1,6 @@
 # <img src="docs/images/dpsim.png" width=40 /> DPsim
 
-[![Build & Test CentOS](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_centos.yaml/badge.svg)](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_centos.yaml)
+[![Build & Test RockyLinux](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_rocky.yaml/badge.svg)](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_rocky.yaml)
 
 [![Build & Test Fedora](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_fedora.yaml/badge.svg)](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_fedora.yaml)
 
