@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <list>
-#include <unordered_map>
 #include <bitset>
+#include <iostream>
+#include <list>
 #include <memory>
+#include <unordered_map>
+#include <vector>
 
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
@@ -22,66 +22,72 @@
 #include <cuda_runtime.h>
 #include <cusolverDn.h>
 
-#define CUDA_ERROR_HANDLER(func) {cudaError_t error; if((error = func) != cudaSuccess) std::cerr << cudaGetErrorString(error) << std::endl; }
+#define CUDA_ERROR_HANDLER(func)                                               \
+  {                                                                            \
+    cudaError_t error;                                                         \
+    if ((error = func) != cudaSuccess)                                         \
+      std::cerr << cudaGetErrorString(error) << std::endl;                     \
+  }
 
-namespace DPsim
-{
-	class GpuDenseAdapter : public DirectLinearSolver
-    {
-		protected:
+namespace DPsim {
+class GpuDenseAdapter : public DirectLinearSolver {
+protected:
+  // #### Attributes required for GPU ####
+  /// Solver-Handle
+  cusolverDnHandle_t mCusolverHandle = nullptr;
+  /// Stream
+  cudaStream_t mStream = nullptr;
 
-		// #### Attributes required for GPU ####
-		/// Solver-Handle
-		cusolverDnHandle_t mCusolverHandle = nullptr;
-		/// Stream
-		cudaStream_t mStream = nullptr;
+  /// Variables for solving one Equation-system (All pointer are device-pointer)
+  struct GpuData {
+    /// Device copy of System-Matrix
+    double *matrix;
+    /// Size of one dimension
+    UInt size;
+    /// Device copy of Vector
+    double *vector;
 
-		/// Variables for solving one Equation-system (All pointer are device-pointer)
-		struct GpuData {
-			/// Device copy of System-Matrix
-			double *matrix;
-			/// Size of one dimension
-			UInt size;
-			/// Device copy of Vector
-			double *vector;
+    /// Device-Workspace for getrf
+    double *workSpace;
+    /// Pivoting-Sequence
+    int *pivSeq;
+    /// Errorinfo
+    int *errInfo;
+  } mDeviceCopy;
 
-			/// Device-Workspace for getrf
-			double *workSpace;
-			/// Pivoting-Sequence
-			int *pivSeq;
-			/// Errorinfo
-			int *errInfo;
-		} mDeviceCopy;
+  void allocateDeviceMemory();
 
-		void allocateDeviceMemory();
+  void copySystemMatrixToDevice(Matrix systemMatrix);
 
-		void copySystemMatrixToDevice(Matrix systemMatrix);
+  void LUfactorization();
 
-		void LUfactorization();
+public:
+  /// Constructor with logging
+  using DirectLinearSolver::DirectLinearSolver;
 
-        public:
-		/// Constructor with logging
-		using DirectLinearSolver::DirectLinearSolver;
+  /// Destructor
+  virtual ~GpuDenseAdapter();
 
-		/// Destructor
-		virtual ~GpuDenseAdapter();
+  /// Constructor
+  GpuDenseAdapter();
 
-		/// Constructor
-		GpuDenseAdapter();
+  /// preprocessing function pre-ordering and scaling the matrix
+  virtual void preprocessing(SparseMatrix &systemMatrix,
+                             std::vector<std::pair<UInt, UInt>>
+                                 &listVariableSystemMatrixEntries) override;
 
-		/// preprocessing function pre-ordering and scaling the matrix
-		virtual void preprocessing(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
+  /// factorization function with partial pivoting
+  virtual void factorize(SparseMatrix &systemMatrix) override;
 
-		/// factorization function with partial pivoting
-		virtual void factorize(SparseMatrix& systemMatrix) override;
+  /// refactorization without partial pivoting
+  virtual void refactorize(SparseMatrix &systemMatrix) override;
 
-		/// refactorization without partial pivoting
-		virtual void refactorize(SparseMatrix& systemMatrix) override;
+  /// partial refactorization withouth partial pivoting
+  virtual void partialRefactorize(SparseMatrix &systemMatrix,
+                                  std::vector<std::pair<UInt, UInt>> &
+                                      listVariableSystemMatrixEntries) override;
 
-		/// partial refactorization withouth partial pivoting
-		virtual void partialRefactorize(SparseMatrix& systemMatrix, std::vector<std::pair<UInt, UInt>>& listVariableSystemMatrixEntries) override;
-
-		/// solution function for a right hand side
-		virtual Matrix solve(Matrix& rightSideVector) override;
-    };
-}
+  /// solution function for a right hand side
+  virtual Matrix solve(Matrix &rightSideVector) override;
+};
+} // namespace DPsim

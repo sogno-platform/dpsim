@@ -11,24 +11,23 @@
 using namespace DPsim;
 using namespace CPS;
 
-void EventQueue::addEvent(Event::Ptr e) {
-	mEvents.push(e);
-}
+void EventQueue::addEvent(Event::Ptr e) { mEvents.push(e); }
 
 void EventQueue::handleEvents(Real currentTime) {
-	Event::Ptr e;
+  Event::Ptr e;
 
-	while (!mEvents.empty()) {
-		e = mEvents.top();
-		// if current time larger or equal to event time, execute event
-		if ( currentTime > e->mTime || (e->mTime - currentTime) < 100e-9) {
-			e->execute();
-			std::cout << std::scientific << currentTime << ": Handle event time" << std::endl;
-			//std::cout << std::scientific << e->mTime << ": Original event time" << std::endl;
-			//std::cout << std::scientific << (e->mTime - currentTime)*1e9 << ": Difference to specified event time in ns" << std::endl;
-			mEvents.pop();
-		} else {
-			break;
-		}
-	}
+  while (!mEvents.empty()) {
+    e = mEvents.top();
+    // if current time larger or equal to event time, execute event
+    if (currentTime > e->mTime || (e->mTime - currentTime) < 100e-9) {
+      e->execute();
+      std::cout << std::scientific << currentTime << ": Handle event time"
+                << std::endl;
+      //std::cout << std::scientific << e->mTime << ": Original event time" << std::endl;
+      //std::cout << std::scientific << (e->mTime - currentTime)*1e9 << ": Difference to specified event time in ns" << std::endl;
+      mEvents.pop();
+    } else {
+      break;
+    }
+  }
 }

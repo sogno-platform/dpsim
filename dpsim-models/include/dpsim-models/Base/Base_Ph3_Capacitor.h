@@ -8,25 +8,23 @@
 
 #pragma once
 
-#include <dpsim-models/Definitions.h>
 #include <dpsim-models/AttributeList.h>
+#include <dpsim-models/Definitions.h>
 
 namespace CPS {
 namespace Base {
 namespace Ph3 {
-	class Capacitor {
-	public:
-		/// Capacitance [F]
-		const CPS::Attribute<Matrix>::Ptr mCapacitance;
+class Capacitor {
+public:
+  /// Capacitance [F]
+  const CPS::Attribute<Matrix>::Ptr mCapacitance;
 
-		explicit Capacitor(CPS::AttributeList::Ptr attributeList) :
-			mCapacitance(attributeList->create<Matrix>("C")) { };
+  explicit Capacitor(CPS::AttributeList::Ptr attributeList)
+      : mCapacitance(attributeList->create<Matrix>("C")){};
 
-		/// Sets model specific parameters
-		void setParameters(Matrix capacitance) {
-			**mCapacitance = capacitance;
-		}
-	};
-}
-}
-}
+  /// Sets model specific parameters
+  void setParameters(Matrix capacitance) { **mCapacitance = capacitance; }
+};
+} // namespace Ph3
+} // namespace Base
+} // namespace CPS

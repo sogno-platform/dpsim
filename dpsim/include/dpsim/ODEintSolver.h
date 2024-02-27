@@ -9,55 +9,54 @@
 #pragma once
 
 #include <iostream>
-#include <vector>
 #include <list>
+#include <vector>
 
-#include <dpsim/Solver.h>
-#include <dpsim-models/SystemTopology.h>
 #include <dpsim-models/Solver/ODEintInterface.h>
+#include <dpsim-models/SystemTopology.h>
+#include <dpsim/Solver.h>
 
+#include <boost/numeric/odeint/integrate/integrate_const.hpp> //ODEInt Integrator with constant time step
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp> //ODEInt Runge-Kutta stepper
-#include <boost/numeric/odeint/integrate/integrate_const.hpp>//ODEInt Integrator with constant time step
 
 namespace DPsim {
-    /// Solver class which uses ODE systems
-    class ODEintSolver : public Solver {
+/// Solver class which uses ODE systems
+class ODEintSolver : public Solver {
 
-    protected:
-        /// Pointer to current Component
-        CPS::ODEintInterface::Ptr mComponent;
-        /// Constant time step
-        Real mTimestep;
-        ///Problem Size
-        int ProbDim;
-        /// Stepper needed by ODEint
-        boost::numeric::odeint::runge_kutta4<std::vector<Real>> stepper;
-        /// Vector containing the solution at every timestep
-        std::vector<std::vector<Real>> solution;
-        /// Vector containing all timesteps
-        std::vector<Real> times;
-        ///ODE of Component
-        std::vector<CPS::ODEintInterface::stateFnc> system;
+protected:
+  /// Pointer to current Component
+  CPS::ODEintInterface::Ptr mComponent;
+  /// Constant time step
+  Real mTimestep;
+  ///Problem Size
+  int ProbDim;
+  /// Stepper needed by ODEint
+  boost::numeric::odeint::runge_kutta4<std::vector<Real>> stepper;
+  /// Vector containing the solution at every timestep
+  std::vector<std::vector<Real>> solution;
+  /// Vector containing all timesteps
+  std::vector<Real> times;
+  ///ODE of Component
+  std::vector<CPS::ODEintInterface::stateFnc> system;
 
-    private:
-        ///static pointer to current object; only one instance currently allowed
-        inline static ODEintSolver *self = nullptr;
-        /// State space of the System and corresponding static wrapper
-        static void StateSpaceWrapper( const std::vector<double> &y, std::vector<double> ydot, double t);
+private:
+  ///static pointer to current object; only one instance currently allowed
+  inline static ODEintSolver *self = nullptr;
+  /// State space of the System and corresponding static wrapper
+  static void StateSpaceWrapper(const std::vector<double> &y,
+                                std::vector<double> ydot, double t);
 
+public:
+  /// Current solution vector
+  std::vector<Real> curSolution;
+  /// Create solve object with given parameters
+  ODEintSolver(String name, CPS::ODEintInterface::Ptr comp, Real dt, Real t0);
 
-    public:
-        /// Current solution vector
-        std::vector<Real> curSolution;
-        /// Create solve object with given parameters
-        ODEintSolver(String name,CPS::ODEintInterface::Ptr comp, Real dt, Real t0);
+  /// Solve system for the current time
+  Real step(Real time);
 
-        /// Solve system for the current time
-        Real step(Real time);
+  /// Deallocate all memory
+  ~ODEintSolver();
+};
 
-        /// Deallocate all memory
-        ~ODEintSolver();
-    };
-
-}
-
+} // namespace DPsim

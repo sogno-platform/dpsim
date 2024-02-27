@@ -12,15 +12,15 @@
 #include <dpsim-models/Definitions.h>
 
 namespace CPS {
-	/// MNA interface to be used by elements that require recomputing of the system matrix
-	class MNAVariableCompInterface {
-	public:
-		typedef std::shared_ptr<MNAVariableCompInterface> Ptr;
-		typedef std::vector<Ptr> List;
-		
-		std::vector<std::pair<UInt, UInt>> mVariableSystemMatrixEntries;
+/// MNA interface to be used by elements that require recomputing of the system matrix
+class MNAVariableCompInterface {
+public:
+  typedef std::shared_ptr<MNAVariableCompInterface> Ptr;
+  typedef std::vector<Ptr> List;
 
-		/// Returns true if one of the element paramters has changed
-		virtual Bool hasParameterChanged() = 0;
-	};
-}
+  std::vector<std::pair<UInt, UInt>> mVariableSystemMatrixEntries;
+
+  /// Returns true if one of the element paramters has changed
+  virtual Bool hasParameterChanged() = 0;
+};
+} // namespace CPS

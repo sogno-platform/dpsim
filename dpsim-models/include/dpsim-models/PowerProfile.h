@@ -10,13 +10,13 @@
 #include <dpsim-models/Definitions.h>
 
 namespace CPS {
-	struct PQData {
-		Real p;
-		Real q;
-	};
+struct PQData {
+  Real p;
+  Real q;
+};
 
-	struct PowerProfile {
-		std::map<Real, PQData> pqData;
-		std::map<Real, Real> weightingFactors;
-	};
-}
+struct PowerProfile {
+  std::map<Real, PQData> pqData;
+  std::map<Real, Real> weightingFactors;
+};
+} // namespace CPS

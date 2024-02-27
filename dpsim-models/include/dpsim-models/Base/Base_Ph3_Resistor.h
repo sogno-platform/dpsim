@@ -8,24 +8,22 @@
 
 #pragma once
 
-#include <dpsim-models/Definitions.h>
 #include <dpsim-models/AttributeList.h>
+#include <dpsim-models/Definitions.h>
 namespace CPS {
 namespace Base {
 namespace Ph3 {
-	class Resistor {
-	public:
-		///Resistance [ohm]
-		const CPS::Attribute<Matrix>::Ptr mResistance;
+class Resistor {
+public:
+  ///Resistance [ohm]
+  const CPS::Attribute<Matrix>::Ptr mResistance;
 
-		explicit Resistor(CPS::AttributeList::Ptr attributeList) :
-			mResistance(attributeList->create<Matrix>("R")) { };
+  explicit Resistor(CPS::AttributeList::Ptr attributeList)
+      : mResistance(attributeList->create<Matrix>("R")){};
 
-		/// Sets model specific parameters
-		void setParameters(Matrix resistance) {
-			**mResistance = resistance;
-		}
-	};
-}
-}
-}
+  /// Sets model specific parameters
+  void setParameters(Matrix resistance) { **mResistance = resistance; }
+};
+} // namespace Ph3
+} // namespace Base
+} // namespace CPS

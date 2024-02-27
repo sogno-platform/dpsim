@@ -17,79 +17,79 @@
 
 namespace CPS {
 namespace Signal {
-	class DecouplingLineEMT :
-		public SimSignalComp,
-		public SharedFactory<DecouplingLineEMT> {
-	protected:
-		Real mDelay;
-		Real mResistance;
-		Real mInductance;
-		Real mCapacitance;
-		Real mSurgeImpedance;
+class DecouplingLineEMT : public SimSignalComp,
+                          public SharedFactory<DecouplingLineEMT> {
+protected:
+  Real mDelay;
+  Real mResistance;
+  Real mInductance;
+  Real mCapacitance;
+  Real mSurgeImpedance;
 
-		std::shared_ptr<EMT::SimNode> mNode1, mNode2;
-		std::shared_ptr<EMT::Ph1::Resistor> mRes1, mRes2;
-		std::shared_ptr<EMT::Ph1::CurrentSource> mSrc1, mSrc2;
-		Attribute<Complex>::Ptr mSrcCur1, mSrcCur2;
+  std::shared_ptr<EMT::SimNode> mNode1, mNode2;
+  std::shared_ptr<EMT::Ph1::Resistor> mRes1, mRes2;
+  std::shared_ptr<EMT::Ph1::CurrentSource> mSrc1, mSrc2;
+  Attribute<Complex>::Ptr mSrcCur1, mSrcCur2;
 
-		// Ringbuffers for the values of previous timesteps
-		// TODO make these matrix attributes
-		std::vector<Real> mVolt1, mVolt2, mCur1, mCur2;
-		UInt mBufIdx = 0;
-		UInt mBufSize;
-		Real mAlpha;
+  // Ringbuffers for the values of previous timesteps
+  // TODO make these matrix attributes
+  std::vector<Real> mVolt1, mVolt2, mCur1, mCur2;
+  UInt mBufIdx = 0;
+  UInt mBufSize;
+  Real mAlpha;
 
-		Real interpolate(std::vector<Real>& data);
-	public:
-		typedef std::shared_ptr<DecouplingLineEMT> Ptr;
+  Real interpolate(std::vector<Real> &data);
 
-		const Attribute<Real>::Ptr mSrcCur1Ref;
-		const Attribute<Real>::Ptr mSrcCur2Ref;
+public:
+  typedef std::shared_ptr<DecouplingLineEMT> Ptr;
 
-		///FIXME: workaround for dependency analysis as long as the states aren't attributes
-		const Attribute<Matrix>::Ptr mStates;
+  const Attribute<Real>::Ptr mSrcCur1Ref;
+  const Attribute<Real>::Ptr mSrcCur2Ref;
 
-		DecouplingLineEMT(String name, Logger::Level logLevel = Logger::Level::info);
+  ///FIXME: workaround for dependency analysis as long as the states aren't attributes
+  const Attribute<Matrix>::Ptr mStates;
 
-		void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2,
-			Real resistance, Real inductance, Real capacitance);
-		void initialize(Real omega, Real timeStep);
-		void step(Real time, Int timeStepCount);
-		void postStep();
-		Task::List getTasks();
-		IdentifiedObject::List getLineComponents();
+  DecouplingLineEMT(String name, Logger::Level logLevel = Logger::Level::info);
 
-		class PreStep : public Task {
-		public:
-			PreStep(DecouplingLineEMT& line) :
-				Task(**line.mName + ".MnaPreStep"), mLine(line) {
-				mPrevStepDependencies.push_back(mLine.mStates);
-				mModifiedAttributes.push_back(mLine.mSrc1->mCurrentRef);
-				mModifiedAttributes.push_back(mLine.mSrc2->mCurrentRef);
-			}
+  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2,
+                     Real resistance, Real inductance, Real capacitance);
+  void initialize(Real omega, Real timeStep);
+  void step(Real time, Int timeStepCount);
+  void postStep();
+  Task::List getTasks();
+  IdentifiedObject::List getLineComponents();
 
-			void execute(Real time, Int timeStepCount);
+  class PreStep : public Task {
+  public:
+    PreStep(DecouplingLineEMT &line)
+        : Task(**line.mName + ".MnaPreStep"), mLine(line) {
+      mPrevStepDependencies.push_back(mLine.mStates);
+      mModifiedAttributes.push_back(mLine.mSrc1->mCurrentRef);
+      mModifiedAttributes.push_back(mLine.mSrc2->mCurrentRef);
+    }
 
-		private:
-			DecouplingLineEMT& mLine;
-		};
+    void execute(Real time, Int timeStepCount);
 
-		class PostStep : public Task {
-		public:
-			PostStep(DecouplingLineEMT& line) :
-				Task(**line.mName + ".PostStep"), mLine(line) {
-				mAttributeDependencies.push_back(mLine.mRes1->mIntfVoltage);
-				mAttributeDependencies.push_back(mLine.mRes1->mIntfCurrent);
-				mAttributeDependencies.push_back(mLine.mRes2->mIntfVoltage);
-				mAttributeDependencies.push_back(mLine.mRes2->mIntfCurrent);
-				mModifiedAttributes.push_back(mLine.mStates);
-			}
+  private:
+    DecouplingLineEMT &mLine;
+  };
 
-			void execute(Real time, Int timeStepCount);
+  class PostStep : public Task {
+  public:
+    PostStep(DecouplingLineEMT &line)
+        : Task(**line.mName + ".PostStep"), mLine(line) {
+      mAttributeDependencies.push_back(mLine.mRes1->mIntfVoltage);
+      mAttributeDependencies.push_back(mLine.mRes1->mIntfCurrent);
+      mAttributeDependencies.push_back(mLine.mRes2->mIntfVoltage);
+      mAttributeDependencies.push_back(mLine.mRes2->mIntfCurrent);
+      mModifiedAttributes.push_back(mLine.mStates);
+    }
 
-		private:
-			DecouplingLineEMT& mLine;
-		};
-	};
-}
-}
+    void execute(Real time, Int timeStepCount);
+
+  private:
+    DecouplingLineEMT &mLine;
+  };
+};
+} // namespace Signal
+} // namespace CPS

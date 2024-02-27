@@ -8,35 +8,36 @@
 
 #pragma once
 
-#include <dpsim-models/Definitions.h>
 #include <dpsim-models/AttributeList.h>
+#include <dpsim-models/Definitions.h>
 namespace CPS {
 namespace Base {
 namespace Ph3 {
-	/// Dynamic Phasor Three-Phase Switch
-	class Switch {
-	public:
-		/// Resistance if switch is open [ohm]
-		const CPS::Attribute<Matrix>::Ptr mOpenResistance;
-		/// Resistance if switch is closed [ohm]
-		const CPS::Attribute<Matrix>::Ptr mClosedResistance;
-		/// Defines if Switch is open or closed
-		const CPS::Attribute<Bool>::Ptr mSwitchClosed;
+/// Dynamic Phasor Three-Phase Switch
+class Switch {
+public:
+  /// Resistance if switch is open [ohm]
+  const CPS::Attribute<Matrix>::Ptr mOpenResistance;
+  /// Resistance if switch is closed [ohm]
+  const CPS::Attribute<Matrix>::Ptr mClosedResistance;
+  /// Defines if Switch is open or closed
+  const CPS::Attribute<Bool>::Ptr mSwitchClosed;
 
-		explicit Switch(CPS::AttributeList::Ptr attributeList) :
-			mOpenResistance(attributeList->create<Matrix>("R_open")),
-			mClosedResistance(attributeList->create<Matrix>("R_closed")),
-			mSwitchClosed(attributeList->create<Bool>("is_closed")) { };
+  explicit Switch(CPS::AttributeList::Ptr attributeList)
+      : mOpenResistance(attributeList->create<Matrix>("R_open")),
+        mClosedResistance(attributeList->create<Matrix>("R_closed")),
+        mSwitchClosed(attributeList->create<Bool>("is_closed")){};
 
-		///
-		void setParameters(Matrix openResistance, Matrix closedResistance, Bool closed = false) {
-			**mOpenResistance = openResistance;
-			**mClosedResistance = closedResistance;
-			**mSwitchClosed = closed;
-		}
-		void closeSwitch() { **mSwitchClosed = true; }
-		void openSwitch() { **mSwitchClosed = false; }
-	};
-}
-}
-}
+  ///
+  void setParameters(Matrix openResistance, Matrix closedResistance,
+                     Bool closed = false) {
+    **mOpenResistance = openResistance;
+    **mClosedResistance = closedResistance;
+    **mSwitchClosed = closed;
+  }
+  void closeSwitch() { **mSwitchClosed = true; }
+  void openSwitch() { **mSwitchClosed = false; }
+};
+} // namespace Ph3
+} // namespace Base
+} // namespace CPS
