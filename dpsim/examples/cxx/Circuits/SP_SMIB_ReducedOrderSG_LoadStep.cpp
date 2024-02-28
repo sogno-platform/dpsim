@@ -128,17 +128,6 @@ int main(int argc, char *argv[]) {
       SimNode<Complex>::make("n2SP", PhaseType::Single, initialVoltage_n2);
 
   // Synchronous generator
-  auto genSP = GeneratorFactory::createGenSP(sgType, "SynGen", logLevel);
-  genSP->setOperationalParametersPerUnit(
-      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
-      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
-      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
-      syngenKundur.Tq0_s);
-  genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
-  genSP->setModelAsNortonSource(true);
-
-  // Synchronous generator
   auto genSP = Factory<SP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(
       sgType, "SynGen", logLevel);
   genSP->setOperationalParametersPerUnit(
@@ -149,6 +138,10 @@ int main(int argc, char *argv[]) {
       syngenKundur.Tq0_s);
   genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
   genSP->setModelAsNortonSource(true);
+
+  //Grid bus as Slack
+  auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
+  extnetSP->setParameters(gridParams.VnomMV);
 
   // Line
   auto lineSP = SP::Ph1::PiLine::make("PiLine", logLevel);

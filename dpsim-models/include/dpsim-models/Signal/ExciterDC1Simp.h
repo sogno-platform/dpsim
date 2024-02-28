@@ -44,65 +44,45 @@ public:
   Real MinVa = 0;
 };
 
-private:
-/// Exciter Parameters
-std::shared_ptr<ExciterDC1SimpParameters> mParameters;
-
-// ### Exciter Variables ####
-/// Reference voltage (with effect of PSS)
-Real mVref = 0;
-/// Output of voltage transducer at time k-1
-Real mVr_prev = 0;
-/// Output of stablizing feedback at time k-1
-Real mVf_prev = 0;
-/// Output of amplifier output at time k-1
-Real mVa_prev = 0;
-/// Exciter output at time k-1
-Real mEf_prev = 0;
-
-/// Input of voltage transducer
-Real mVh;
-/// Output of voltage transducer at time k-1
-Real mVr;
-/// Output of stablizing feedback at time k
-Real mVf;
-/// Input of amplifier at time k
-Real mVin;
-/// Output of amplifier at time k
-Real mVa;
-/// Amplifier output at time k
-Real mVsat;
-/// Exciter output at time k (induced emf by the field current under no-load conditions)
-Real mEf;
+/// AVR model type 1
+/// Simplified model of IEEE DC1 type exciter. It does not model the time constants
+/// Tb and Tc which are normally small and thereby ignored.
+/// Ref.: Milano - Power system modelling and scripting, page 363
 
 class ExciterDC1Simp : public Base::Exciter,
                        public SimSignalComp,
                        public SharedFactory<ExciterDC1Simp> {
 
 private:
-  // ### Exciter Parameters ####
-  /// Ampliﬁer time constant (s)
-  Real mTa;
-  /// Ampliﬁer gain (pu/pu)
-  Real mKa;
-  /// Field circuit integral deviation
-  Real mKef;
-  /// Field circuit time constant (s)
-  Real mTef;
-  /// Stabilizer gain (s pu/pu)
-  Real mKf;
-  /// Stabilizer time constant (s)
-  Real mTf;
-  /// Measurement time constant (s)
-  Real mTr;
-  /// First ceiling coefficient
-  Real mAef;
-  /// Second ceiling coefficient
-  Real mBef;
-  /// Maximum amplifier output (p.u.)
-  Real mMaxVa;
-  /// Minumum amplifier output (p.u.)
-  Real mMinVa;
+  /// Exciter Parameters
+  std::shared_ptr<ExciterDC1SimpParameters> mParameters;
+
+  // ### Exciter Variables ####
+  /// Reference voltage (with effect of PSS)
+  Real mVref = 0;
+  /// Output of voltage transducer at time k-1
+  Real mVr_prev = 0;
+  /// Output of stablizing feedback at time k-1
+  Real mVf_prev = 0;
+  /// Output of amplifier output at time k-1
+  Real mVa_prev = 0;
+  /// Exciter output at time k-1
+  Real mEf_prev = 0;
+
+  /// Input of voltage transducer
+  Real mVh;
+  /// Output of voltage transducer at time k-1
+  Real mVr;
+  /// Output of stablizing feedback at time k
+  Real mVf;
+  /// Input of amplifier at time k
+  Real mVin;
+  /// Output of amplifier at time k
+  Real mVa;
+  /// Amplifier output at time k
+  Real mVsat;
+  /// Exciter output at time k (induced emf by the field current under no-load conditions)
+  Real mEf;
 
 public:
   /// Constructor

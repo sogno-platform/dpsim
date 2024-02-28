@@ -133,17 +133,6 @@ int main(int argc, char *argv[]) {
       SimNode<Complex>::make("n2DP", PhaseType::Single, initialVoltage_n2);
 
   // Synchronous generator
-  auto genDP = GeneratorFactory::createGenDP(sgType, "SynGen", logLevel);
-  genDP->setOperationalParametersPerUnit(
-      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
-      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
-      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
-      syngenKundur.Tq0_s);
-  genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
-  genDP->setModelAsNortonSource(true);
-
-  // Synchronous generator
   auto genDP = Factory<DP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(
       sgType, "SynGen", logLevel);
   genDP->setOperationalParametersPerUnit(
@@ -154,6 +143,10 @@ int main(int argc, char *argv[]) {
       syngenKundur.Tq0_s);
   genDP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
   genDP->setModelAsNortonSource(true);
+
+  //Grid bus as Slack
+  auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", logLevel);
+  extnetDP->setParameters(gridParams.VnomMV);
 
   // Line
   auto lineDP = DP::Ph1::PiLine::make("PiLine", logLevel);

@@ -94,10 +94,6 @@ int main(int argc, char *argv[]) {
                      govKundur.Tsm, initActivePower / syngenKundur.nomPower,
                      initMechPower / syngenKundur.nomPower);
 
-  if (withExciter)
-    gen->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke,
-                    excEremia.Tf, excEremia.Kf, excEremia.Tr);
-
   std::shared_ptr<Base::Exciter> exciter = nullptr;
   if (withExciter) {
     exciter =
@@ -105,6 +101,12 @@ int main(int argc, char *argv[]) {
     exciter->setParameters(excitationEremia);
     gen->addExciter(exciter);
   }
+
+  auto fault =
+      CPS::EMT::Ph3::Switch::make("Br_fault", CPS::Logger::Level::info);
+  fault->setParameters(Math::singlePhaseParameterToThreePhase(RloadOriginal),
+                       Math::singlePhaseParameterToThreePhase(RloadNew));
+  fault->openSwitch();
 
   // Connections
   gen->connect({n1});
@@ -118,20 +120,19 @@ int main(int argc, char *argv[]) {
   logger->logAttribute("v1", n1->attribute("v"));
   logger->logAttribute("i_gen", gen->attribute("i_intf"));
   logger->logAttribute("wr_gen", gen->attribute("w_r"));
-
-  // Log further variables if exciter connected
-  if (withExciter) {
-    logger->logAttribute("vh_exc_gen", gen->mExciter->attribute("Vh"));
-    logger->logAttribute("vr_exc_gen", gen->mExciter->attribute("Vr"));
-    logger->logAttribute("vf_exc_gen", gen->mExciter->attribute("Ef"));
-  }
-
-  // Logging
-  auto logger = DataLogger::make(simName);
-  logger->logAttribute("v1", n1->attribute("v"));
-  logger->logAttribute("i_gen", gen->attribute("i_intf"));
-  logger->logAttribute("wr_gen", gen->attribute("w_r"));
   logger->logAttribute("vf_exc_gen", gen->attribute("Vfd"));
+
+  Simulation sim(simName, Logger::Level::info);
+  sim.setSystem(sys);
+  sim.setTimeStep(timeStep);
+  sim.setFinalTime(finalTime);
+  sim.doSystemMatrixRecomputation(true);
+  sim.setDomain(Domain::EMT);
+  sim.addLogger(logger);
+
+  // Events
+  auto sw1 = SwitchEvent3Ph::make(timeStepEvent, fault, true);
+  sim.addEvent(sw1);
 
   sim.run();
 }

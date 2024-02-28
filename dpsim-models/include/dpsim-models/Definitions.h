@@ -140,27 +140,6 @@ class TypeException : public Exception {};
 class InvalidAttributeException : public Exception {};
 class InvalidArgumentException : public Exception {};
 
-// ### Exceptions ###
-class Exception : public std::exception {};
-class AccessException : public Exception {};
-class TypeException : public Exception {};
-class InvalidAttributeException : public Exception {};
-class InvalidArgumentException : public Exception {};
-
-// ### Exceptions ###
-class Exception : public std::exception {};
-class AccessException : public Exception {};
-class TypeException : public Exception {};
-class InvalidAttributeException : public Exception {};
-class InvalidArgumentException : public Exception {};
-
-// ### Exceptions ###
-class Exception : public std::exception {};
-class AccessException : public Exception {};
-class TypeException : public Exception {};
-class InvalidAttributeException : public Exception {};
-class InvalidArgumentException : public Exception {};
-
 class SystemError {
 protected:
   std::error_code mErrorCode;

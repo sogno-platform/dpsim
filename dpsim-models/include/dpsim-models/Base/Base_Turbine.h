@@ -7,6 +7,7 @@
  *********************************************************************************/
 
 #pragma once
+#include <dpsim-models/Definitions.h>
 
 namespace CPS {
 namespace Base {
