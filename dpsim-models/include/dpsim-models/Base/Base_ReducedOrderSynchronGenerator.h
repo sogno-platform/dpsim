@@ -10,7 +10,10 @@
 
 #include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Base/Base_Governor.h>
+#include <dpsim-models/Base/Base_PSS.h>
 #include <dpsim-models/Base/Base_Turbine.h>
+#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
 namespace Base {
@@ -94,27 +97,28 @@ public:
   /// Add Governor/TurbineGovernor
   void addTurbine(std::shared_ptr<Base::Turbine> turbine);
 
-  /// Add Governor/TurbineGovernor
-  //void addGovernor(std::shared_ptr<CPS::Base::GovernorParameters> governorParameters, GovernorType governorType = GovernorType::TurbineGovernorType1);
-  void addGovernor(std::shared_ptr<Base::Governor> governor);
-  //Add Steam Turbine and Governor separately
-  //it is adviced to choose Pminit of turbine to mPref of the Governor by f_ref=f_n (50Hz/60Hz)
-  //void addSteamTurbine(Real Fhp, Real Fip, Real Flp, Real Tch, Real Trh, Real Tco, Real Pminit);
-  //void addSteamTurbine(std::shared_ptr<Signal::SteamTurbine> steamTurbine);
-  //Add Steam Turbine Governor
-  //void addSteamTurbineGovernor(Real OmRef, Real Pref, Real R, Real T2, Real T3,
-  //							Real dPmax, Real dPmin, Real Pmax, Real Pmin);
-  //void addSteamTurbineGovernor(std::shared_ptr<Signal::SteamTurbineGovernor> steamTurbineGovernor);
-  //Add Hydro Turbine and Governor separately
-  //it is adviced to choose Pminit of turbine to mPref of the Governor by f_ref=f_n (50Hz/60Hz)
-  //void addHydroTurbine(Real Tw, Real Pminit);
-  //void addHydroTurbine(std::shared_ptr<Signal::HydroTurbine> HydroTurbine);
-  //Add Hydrp Turbine Governor
-  //void addHydroTurbineGovernor(Real OmRef, Real Pref, Real R, Real T1, Real T2, Real T3,
-  //                             Real Pmax, Real Pmin);
-  //void addHydroTurbineGovernor(std::shared_ptr<Signal::HydroTurbineGovernor> hydroTurbineGovernor);
-
 protected:
+  using MNASimPowerComp<VarType>::mRightVector;
+  using MNASimPowerComp<VarType>::mIntfVoltage;
+  using MNASimPowerComp<VarType>::MnaPreStep;
+  using MNASimPowerComp<VarType>::MnaPostStep;
+
+  ///
+  ReducedOrderSynchronGenerator(String uid, String name,
+                                Logger::Level logLevel);
+  ///
+  void calculateVBRconstants();
+  ///
+  void calculateResistanceMatrixConstants();
+  ///
+  virtual void initializeResistanceMatrix() = 0;
+  ///
+  void initializeFromNodesAndTerminals(Real frequency);
+  /// Function to initialize the specific variables of each SG model
+  virtual void specificInitialization() = 0;
+  /// Model specific step
+  virtual void stepInPerUnit() = 0;
+
   // ### MNA Section ###
   ///
   void mnaCompInitialize(Real omega, Real timeStep,
@@ -255,32 +259,6 @@ protected:
   Bool mInitialValuesSet = false;
 
   // #### Controllers ####
-  /// Determines if Turbine and Governor are activated
-  Bool mHasTurbineGovernor = false;
-  /// Determines if Exciter is activated
-  Bool mHasExciter = false;
-  /// Signal component modelling governor control and steam turbine
-  std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
-  /// Signal component modelling voltage regulator and exciter
-  std::shared_ptr<Signal::Exciter> mExciter;
-
-  // #### Controllers ####
-  /// Determines if Turbine and Governor are activated
-  Bool mHasTurbineGovernor = false;
-  /// Determines if Exciter is activated
-  Bool mHasExciter = false;
-  /// Determines if Exciter is activated
-  Bool mHasPSS = false;
-  /// Signal component modelling governor control and steam turbine
-  std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
-  /// Signal component modelling voltage regulator and exciter
-  std::shared_ptr<Base::Exciter> mExciter;
-  /// Signal component modelling voltage regulator and exciter
-  std::shared_ptr<Signal::PSSType2> mPSS;
-  ///
-  Real mVpss = 0;
-
-  // #### Controllers ####
   /// Determines if Exciter is activated
   Bool mHasExciter = false;
   /// Determines if Exciter is activated
@@ -298,30 +276,6 @@ protected:
   std::shared_ptr<Base::Governor> mGovernor;
   /// Signal component modelling Turbine
   std::shared_ptr<Base::Turbine> mTurbine;
-
-  ///
-  Real mVpss = 0;
-
-  /// Signal component modelling voltage regulator and exciter
-  std::shared_ptr<Base::Exciter> mExciter;
-  /// Signal component modelling power system stabilizer
-  std::shared_ptr<Base::PSS> mPSS;
-  /// Signal component modelling Turbine
-  //std::shared_ptr<Signal::Turbine> mTurbine;
-  /// Signal component modelling governor control
-  std::shared_ptr<Base::Governor> mGovernor;
-
-  ///
-  Real mVpss = 0;
-
-  /// Signal component modelling voltage regulator and exciter
-  std::shared_ptr<Base::Exciter> mExciter;
-  /// Signal component modelling power system stabilizer
-  std::shared_ptr<Signal::PSS1A> mPSS;
-  /// Signal component modelling Turbine
-  //std::shared_ptr<Signal::Turbine> mTurbine;
-  /// Signal component modelling governor control
-  std::shared_ptr<Base::Governor> mGovernor;
 
   ///
   Real mVpss = 0;

@@ -155,28 +155,6 @@ int main(int argc, char *argv[]) {
       SimNode<Complex>::make("n2SP", PhaseType::Single, initialVoltage_n2);
 
   // Synchronous generator
-  auto genSP = GeneratorFactory::createGenSP(SGModel, "SynGen", logLevel);
-  genSP->setOperationalParametersPerUnit(
-      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
-      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
-      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
-      syngenKundur.Tq0_s);
-  genSP->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
-  genSP->setModelAsNortonSource(true);
-
-  // Exciter
-  std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
-  if (withExciter) {
-    exciterSP = Signal::Exciter::make("SynGen_Exciter", logLevel);
-    exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka,
-                             excitationEremia.Te, excitationEremia.Ke,
-                             excitationEremia.Tf, excitationEremia.Kf,
-                             excitationEremia.Tr);
-    genSP->addExciter(exciterSP);
-  }
-
-  // Synchronous generator
   auto genSP = Factory<SP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(
       SGModel, "SynGen", logLevel);
   genSP->setOperationalParametersPerUnit(
@@ -214,6 +192,15 @@ int main(int argc, char *argv[]) {
     genSP->addGovernor(turbineGovernorSP);
   }
 
+  // Grid bus as Slack
+  auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", logLevel);
+  extnetSP->setParameters(GridParams.VnomMV);
+
+  // Line
+  auto lineSP = SP::Ph1::PiLine::make("PiLine", logLevel);
+  lineSP->setParameters(GridParams.lineResistance, GridParams.lineInductance,
+                        GridParams.lineCapacitance, GridParams.lineConductance);
+
   //Breaker
   auto fault = CPS::SP::Ph1::Switch::make("Br_fault", logLevel);
   fault->setParameters(switchOpen, switchClosed);
@@ -239,30 +226,6 @@ int main(int argc, char *argv[]) {
   loggerSP->logAttribute("w_r", genSP->attribute("w_r"));
   loggerSP->logAttribute("Vdq0", genSP->attribute("Vdq0"));
   loggerSP->logAttribute("Idq0", genSP->attribute("Idq0"));
-  if (SGModel == "5b" || SGModel == "6a" || SGModel == "6b") {
-    loggerSP->logAttribute("Edq0_s", genSP->attribute("Edq_s"));
-    loggerSP->logAttribute("Edq0_t", genSP->attribute("Edq_t"));
-  } else {
-    loggerSP->logAttribute("Edq0", genSP->attribute("Edq_t"));
-  }
-  loggerSP->logAttribute("v1", n1SP->attribute("v"));
-  loggerSP->logAttribute("v2", n2SP->attribute("v"));
-
-  // Exciter
-  if (withExciter) {
-    loggerSP->logAttribute("Ef", exciterSP->attribute("Ef"));
-  }
-
-  // Logging
-  auto loggerSP = DataLogger::make(simNameSP, true, logDownSampling);
-  loggerSP->logAttribute("v_gen", genSP->attribute("v_intf"));
-  loggerSP->logAttribute("i_gen", genSP->attribute("i_intf"));
-  loggerSP->logAttribute("Te", genSP->attribute("Te"));
-  loggerSP->logAttribute("Ef", genSP->attribute("Ef"));
-  loggerSP->logAttribute("delta", genSP->attribute("delta"));
-  loggerSP->logAttribute("w_r", genSP->attribute("w_r"));
-  loggerSP->logAttribute("Vdq0", genSP->attribute("Vdq0"));
-  loggerSP->logAttribute("Idq0", genSP->attribute("Idq0"));
   if (SGModel == "5" || SGModel == "6a" || SGModel == "6b") {
     loggerSP->logAttribute("Edq0_s", genSP->attribute("Edq_s"));
     loggerSP->logAttribute("Edq0_t", genSP->attribute("Edq_t"));
@@ -275,6 +238,19 @@ int main(int argc, char *argv[]) {
   // Turbine Governor
   if (withTurbineGovernor)
     loggerSP->logAttribute("Tm", turbineGovernorSP->attribute("Tm"));
+
+  Simulation simSP(simNameSP, logLevel);
+  simSP.doInitFromNodesAndTerminals(true);
+  simSP.setSystem(systemSP);
+  simSP.setTimeStep(timeStep);
+  simSP.setFinalTime(finalTime);
+  simSP.setDomain(Domain::SP);
+  simSP.addLogger(loggerSP);
+  simSP.doSystemMatrixRecomputation(true);
+
+  // Events
+  auto sw1 = SwitchEvent::make(startTimeFault, fault, true);
+  simSP.addEvent(sw1);
 
   auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
   simSP.addEvent(sw2);

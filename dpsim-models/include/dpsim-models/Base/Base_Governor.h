@@ -8,30 +8,30 @@
 
 #pragma once
 
+#include <dpsim-models/Definitions.h>
+
 namespace CPS {
 namespace Base {
 
-	class GovernorParameters {
-		public:
-			GovernorParameters() { };
-			virtual ~GovernorParameters() = default;
-	 };
+class GovernorParameters {
+public:
+  GovernorParameters(){};
+  virtual ~GovernorParameters() = default;
+};
 
-	/// @brief Base model for Governors
-	class Governor {
+/// @brief Base model for Governors
+class Governor {
 
-		public:
+public:
+  ///
+  virtual void
+  setParameters(std::shared_ptr<Base::GovernorParameters> parameters) = 0;
 
-			///
-			virtual void setParameters(std::shared_ptr<Base::GovernorParameters> parameters) = 0;
+  /// Initializes Governor variables
+  virtual void initialize(Real PmRef) = 0;
 
-			/// Initializes Governor variables
-			virtual void initialize(Real PmRef) = 0;
-
-			/// @param V_pss: Output of PSS
-			virtual Real step(Real Omega, Real dt) = 0;
-	};
-}
-}
-
-
+  /// @param V_pss: Output of PSS
+  virtual Real step(Real Omega, Real dt) = 0;
+};
+} // namespace Base
+} // namespace CPS
