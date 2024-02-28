@@ -10,6 +10,9 @@
 
 #include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Base/Base_SynchronGenerator.h>
+#include <dpsim-models/EMT/EMT_Ph1_Resistor.h>
+#include <dpsim-models/EMT/EMT_Ph1_VoltageSource.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
@@ -89,13 +92,6 @@ protected:
   Real mPsimq;
   /// Magnetizing flux linkage in d axis
   Real mPsimd;
-
-  /// Phase currents in pu
-  Matrix mIabc = Matrix::Zero(3, 1);
-  ///Phase Voltages in pu
-  Matrix mVabc = Matrix::Zero(3, 1);
-  /// Subtransient voltage in pu
-  Matrix mDVabc = Matrix::Zero(3, 1);
 
   /// Phase currents in pu
   Matrix mIabc = Matrix::Zero(3, 1);

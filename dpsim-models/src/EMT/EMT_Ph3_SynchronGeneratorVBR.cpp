@@ -194,10 +194,10 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(
   mPsimq = mPsisr(3, 0);
   mPsimd = mPsisr(0, 0);
 
-  /// Init voltage excitation
-  mVfd = mVsr(1, 0);
-
   **mVfd = mVsr(1, 0);
+
+  // #### VBR Model Dynamic variables #######################################
+  CalculateAuxiliarConstants(mTimeStep * mBase_OmElec);
 
   if (mNumDampingWindings == 2)
     mPsimq = mDLmq * (mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);

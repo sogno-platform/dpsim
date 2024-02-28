@@ -100,10 +100,6 @@ int main(int argc, char *argv[]) {
     gen->addExciter(exciter);
   }
 
-  if (withExciter)
-    gen->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke,
-                    excEremia.Tf, excEremia.Kf, excEremia.Tr);
-
   auto fault =
       CPS::EMT::Ph3::Switch::make("Br_fault", CPS::Logger::Level::info);
   fault->setParameters(Math::singlePhaseParameterToThreePhase(RloadOriginal),
