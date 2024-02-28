@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/SimSignalComp.h>
 

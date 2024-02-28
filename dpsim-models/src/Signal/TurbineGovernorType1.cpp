@@ -6,7 +6,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/MathUtils.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
 
 using namespace CPS;
@@ -98,19 +97,6 @@ Real TurbineGovernorType1::step(Real Omega, Real dt) {
   mTm = mXg3_prev +
         mParameters->T4 / mParameters->T5 *
             (mXg2_prev + mParameters->T3 / mParameters->Tc * mXg1_prev);
-
-  /// Mechanical torque
-  mTm = mXg3 + mParameters->T4 / mParameters->T5 *
-                   (mXg2 + mParameters->T3 / mParameters->Tc * mXg1);
-
-  /// Reheat
-  mXg3 =
-      mXg3_prev +
-      dt / mT5 *
-          ((1 - mT4 / mT5) * (mXg2_prev + mT3 / mTc * mXg1_prev) - mXg3_prev);
-
-  /// Mechanical torque
-  mTm = mXg3 + mT4 / mT5 * (mXg2 + mT3 / mTc * mXg1);
 
   return mTm;
 }

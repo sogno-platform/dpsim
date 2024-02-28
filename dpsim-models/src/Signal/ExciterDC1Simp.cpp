@@ -55,14 +55,11 @@ void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {
                      "\ninit Ef: {:e}",
                      mVh, mEf);
 
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "Initially set excitation system initial values:"
-                     "\ninit Vh: {:e}"
-                     "\ninit Ef: {:e}",
-                     mVh, mEf);
-
   /// init value of transducer output
   mVr = mVh;
+
+  /// init value of stabilizing feedback output
+  mVf = 0.0;
 
   /// ceiling function
   mVsat = mParameters->Aef * exp(mParameters->Bef * abs(mEf));
@@ -77,8 +74,8 @@ void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {
   /// init value of amplifier input
   mVin = mVa / mParameters->Ka;
 
-  /// init value of amplifier input
-  mVin = mVa / mKa;
+  ///
+  mVref = mVr + mVin;
 
   /// check initial conditions
   if (mEf - mVa / (mVsat + mParameters->Kef))
@@ -128,9 +125,6 @@ Real ExciterDC1Simp::step(Real mVd, Real mVq, Real dt, Real Vpss) {
   // Exciter output
   mEf = mEf_prev + dt / mParameters->Tef *
                        (mVa_prev - (mVsat + mParameters->Kef) * mEf_prev);
-
-  // Exciter output
-  mEf = mEf_prev + dt / mTef * (mVa_prev - (mVsat + mKef) * mEf_prev);
 
   return mEf;
 }

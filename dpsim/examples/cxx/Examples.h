@@ -6,11 +6,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim-models/Base/Base_Exciter.h>
-#include <dpsim-models/Components.h>
-#include <dpsim-models/Definitions.h>
-#include <dpsim-models/SystemTopology.h>
-
 #pragma once
 
 #include <DPsim.h>
@@ -68,33 +63,6 @@ namespace Exciter {
 // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
 // voltage-regulator
 
-CPS::Base::ExciterParameters getExciterEremia() {
-  CPS::Base::ExciterParameters ExcitationSystemEremia;
-  ExcitationSystemEremia.Ka = 46;
-  ExcitationSystemEremia.Ta = 0.06;
-  // exciter
-  ExcitationSystemEremia.Kef = -0.0435;
-  ExcitationSystemEremia.Tef = 0.46;
-  // stabilizing feedback
-  ExcitationSystemEremia.Kf = 0.1;
-  ExcitationSystemEremia.Tf = 1;
-  // voltage transducer
-  ExcitationSystemEremia.Tr = 0.02;
-  // saturation function coefficients
-  ExcitationSystemEremia.Aef = 0.33;
-  ExcitationSystemEremia.Bef = 0.1;
-
-  ExcitationSystemEremia.MaxVr = 1.0;
-  ExcitationSystemEremia.MinVr = -0.9;
-
-  return ExcitationSystemEremia;
-}
-
-namespace Exciter {
-// Excitation system parameters (IEEE Type DC1 - simplified)
-// from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
-// voltage-regulator
-
 std::shared_ptr<CPS::Signal::ExciterDC1SimpParameters>
 getExciterParametersEremia() {
   auto excitationSystemEremia = CPS::Signal::ExciterDC1SimpParameters::make();
@@ -121,17 +89,6 @@ getExciterParametersEremia() {
   //excitationSystemEremia->Tc = 1.0;
 
   return excitationSystemEremia;
-}
-
-struct ExcitationKundur {
-  /// Exciter model used in Kundurs. It is a very simplified version of a thyristor
-  /// exciter (ST1 type) without transient gain reduction or derivative feedback
-  /// (only proportional block + terminal voltage transducer)
-  /// Ref.: Kundur,  Power System Stability and Control, p. 865
-  Real Ka = 200;
-  // voltage transducer
-  Real Tr = 0.02;
-};
 }
 
 struct ExcitationKundur {
@@ -271,26 +228,6 @@ getTurbineGovernorPSAT2() {
   return governor;
 };
 
-// Reference speed (p.u.)
-Real OmegaRef = 1.0;
-// Pilot valve droop (p.u.)
-Real R = 0.04;
-// Maximum Torque (p.u.)
-Real Tmax = 100;
-// Minimim Torque (p.u.)
-Real Tmin = 0.0;
-// Governor time constant (s)
-Real Ts = 20;
-// Servo time constant (s)
-Real Tc = 0.2;
-// Transient gain time constant (s)
-Real T3 = 0.2;
-// Power fraction time constant (s)
-Real T4 = 0.2;
-// Reheat time constant (s)
-Real T5 = 0.2;
-};
-
 struct SteamTurbine {
   //Steam Turbine implemented by HiWi in August 2023,
   //Power fraction of a high pressure stage
@@ -346,8 +283,9 @@ struct HydroTurbineGovernor {
   //Minimum mechanical power (pu)
   Real Pmin = 0;
 };
-}
-}
+
+} // namespace TurbineGovernor
+} // namespace Components
 
 namespace Grids {
 namespace CIGREHVEuropean {

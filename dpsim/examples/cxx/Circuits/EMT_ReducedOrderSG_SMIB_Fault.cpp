@@ -131,7 +131,9 @@ int main(int argc, char *argv[]) {
   auto n2EMT = SimNode<Real>::make("n2EMT", PhaseType::ABC, initialVoltage_n2);
 
   // Synchronous generator
-  auto genEMT = GeneratorFactory::createGenEMT(SGModel, "SynGen", logLevel);
+  auto genEMT =
+      Factory<EMT::Ph3::ReducedOrderSynchronGeneratorVBR>::get().create(
+          SGModel, "SynGen", logLevel);
   genEMT->setOperationalParametersPerUnit(
       syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
       syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
@@ -158,18 +160,11 @@ int main(int argc, char *argv[]) {
                        Math::singlePhaseParameterToThreePhase(switchClosed));
   fault->openSwitch();
 
-  // Synchronous generator
-  auto genEMT =
-      Factory<EMT::Ph3::ReducedOrderSynchronGeneratorVBR>::get().create(
-          SGModel, "SynGen", logLevel);
-  genEMT->setOperationalParametersPerUnit(
-      syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
-      syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,
-      syngenKundur.Lq_t, syngenKundur.Td0_t, syngenKundur.Tq0_t,
-      syngenKundur.Ld_s, syngenKundur.Lq_s, syngenKundur.Td0_s,
-      syngenKundur.Tq0_s);
-  genEMT->setInitialValues(initElecPower, initMechPower, n1PF->voltage()(0, 0));
-  genEMT->setModelAsNortonSource(true);
+  // Topology
+  genEMT->connect({n1EMT});
+  lineEMT->connect({n1EMT, n2EMT});
+  extnetEMT->connect({n2EMT});
+  fault->connect({EMT::SimNode::GND, n1EMT});
 
   auto systemEMT =
       SystemTopology(GridParams.nomFreq, SystemNodeList{n1EMT, n2EMT},
