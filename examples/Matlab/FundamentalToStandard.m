@@ -4,11 +4,11 @@ function [ Td0_t, Td0_s, Td_t, Td_s, Ld_t, Ld_s, Tq0_t, Tq0_s,...
     Laq, L1q, L2q, R1q, R2q)
 %FundamentalToStandard Transform fundamental machine parameters to standard
 %parameters
-%   The calculations are based on the classical definition. 
+%   The calculations are based on the classical definition.
 % Equations used are from Kundur p. 144 - 147
 
 % ---- Relationship between parameters used in DPSim and parameters
-% defined in Kundur: 
+% defined in Kundur:
 % Lad = Lmd
 % L1d = Llkd
 % Lfd = Llfd
@@ -52,4 +52,3 @@ Lq_s = Ll + Laq*L1q*L2q/(Laq*L1q + Laq*L2q + L1q*L2q);
 Lq_t = Ll + Laq*L1q/(Laq+L1q);
 
 end
-

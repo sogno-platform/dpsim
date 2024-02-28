@@ -4,7 +4,7 @@ services:
       context: ../../../../ #dpsim top-level folder
       dockerfile: packaging/Docker/Dockerfile.dev
     environment:
-      PYTHONPATH: /dpsim/build:/dpsim/build/Source/Python:/dpsim/Source/Python 
+      PYTHONPATH: /dpsim/build:/dpsim/build/Source/Python:/dpsim/Source/Python
     ports:
       - "8888:8888"
     volumes:

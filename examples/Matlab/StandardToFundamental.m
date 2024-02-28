@@ -18,4 +18,3 @@ R1d = (1/(Td0_s*377))*(L1d + Lad*Lfd/(Lad+Lfd));
 R1q = (Laq + L1q)/(Tq0_t*377);
 R2q = (1/(Tq0_s*377))*(L2q + Laq*L1q/(Laq+L1q));
 end
-
