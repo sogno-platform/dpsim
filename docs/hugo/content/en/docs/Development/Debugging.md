@@ -5,7 +5,7 @@ linkTitle: "Debugging"
 
 ## Mixed Python C++ Debugging
 
-### Prerequisites 
+### Prerequisites
 
 Your vscode launch.json should have two configurations, one to launch the python process and one to attach gdb:
 
@@ -35,7 +35,7 @@ Your vscode launch.json should have two configurations, one to launch the python
                         "ignoreFailures": true
                     }
                 ]
-            }        
+            }
         ]
     }
 
@@ -44,7 +44,7 @@ Make sure to adapt your PYTHONPATH variable if necessary.
 
 The C++ code has to be build in debug mode
 
-    cmake .. -DCMAKE_BUILD_TYPE=Debug 
+    cmake .. -DCMAKE_BUILD_TYPE=Debug
 
 ### Attaching C++ Debugger
 
@@ -58,7 +58,7 @@ The C++ code has to be build in debug mode
 - press play to continue Python debugging… the c++ debugger will stop at the next breakpoint
 
 You can automate this by using the vscode extension “Python C++ Debugger” and by adding this configuration to the launch.json above:
-      
+
     {
         "name": "Python C++ Debugger",
         "type": "pythoncpp",
@@ -84,7 +84,7 @@ Use the following launch.json for vscode and set the program path:
                 "name": "(gdb) Launch",
                 "type": "cppdbg",
                 "request": "launch",
-                "program": "${workspaceFolder}/dpsim/build/Examples/Cxx/example", 
+                "program": "${workspaceFolder}/dpsim/build/Examples/Cxx/example",
                 "args": [],
                 "stopAtEntry": true,
                 "cwd": "${workspaceFolder}",

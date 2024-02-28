@@ -30,7 +30,7 @@ end
 % Downsampling of reference voltage
 for row = 1:size(voltageShiftDP,1)
     if voltageRef(size(voltageRef,1),1) >= voltageShiftDP(row,1)
-        indices(row) = find(voltageRef(:,1) == voltageShiftDP(row,1),1);        
+        indices(row) = find(voltageRef(:,1) == voltageShiftDP(row,1),1);
     end
 end
 for i = 1:size(indices,2)
@@ -61,4 +61,3 @@ xlabel('time [s]')
 ylabel('voltage [V]')
 
 end
-

@@ -5,7 +5,7 @@ on:
     branches:
       - master
 
-jobs:  
+jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +36,7 @@ jobs:
     - name: Deploy dpsim-simulator / FEIN
       uses: peaceiris/actions-gh-pages@v3
       with:
-        deploy_key: ${{ secrets.HUGO_ACTIONS_DEPLOY_KEY }}  
+        deploy_key: ${{ secrets.HUGO_ACTIONS_DEPLOY_KEY }}
         external_repository: dpsim-simulator/dpsim-simulator.github.io
         publish_dir: ./docs/hugo/public
         #   keep_files: true
