@@ -1,0 +1,13 @@
+<map id="CPS::EMT::Ph3::SynchronGeneratorDQ" name="CPS::EMT::Ph3::SynchronGeneratorDQ">
+<area shape="rect" id="node1" title="Synchronous generator model in dq&#45;reference frame." alt="" coords="170,456,431,483"/>
+<area shape="rect" id="node10" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html" title=" " alt="" coords="48,532,289,573"/>
+<area shape="rect" id="node11" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_trapez.html" title=" " alt="" coords="313,532,555,573"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="99,365,281,407"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="305,261,464,303"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="227,81,425,108"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="188,157,347,199"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="249,5,403,32"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="99,261,281,303"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="5,165,148,191"/>
+<area shape="rect" id="node9" href="$class_c_p_s_1_1_base_1_1_synchron_generator.html" title="Base synchronous generator model." alt="" coords="306,373,519,399"/>
+</map>

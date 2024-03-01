@@ -1,0 +1,7 @@
+<map id="CPS::Base::Ph1::PiLine" name="CPS::Base::Ph1::PiLine">
+<area shape="rect" id="node1" title=" " alt="" coords="261,5,421,32"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="5,80,153,107"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_rx_line.html" title=" " alt="" coords="178,80,330,107"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html" title="PI&#45;line static phasor model." alt="" coords="355,80,500,107"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html" title=" " alt="" coords="524,80,675,107"/>
+</map>

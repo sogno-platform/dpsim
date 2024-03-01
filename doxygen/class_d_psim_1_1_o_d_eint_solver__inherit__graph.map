@@ -1,0 +1,4 @@
+<map id="DPsim::ODEintSolver" name="DPsim::ODEintSolver">
+<area shape="rect" id="node1" title="Solver class which uses ODE systems." alt="" coords="5,80,156,107"/>
+<area shape="rect" id="node2" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="27,5,135,32"/>
+</map>

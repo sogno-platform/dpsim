@@ -1,0 +1,10 @@
+<map id="CPS::Base::Ph3::Switch" name="CPS::Base::Ph3::Switch">
+<area shape="rect" id="node1" title="Dynamic Phasor Three&#45;Phase Switch." alt="" coords="819,152,981,179"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="483,103,643,129"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="13,111,153,137"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="217,137,356,164"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="477,203,649,229"/>
+<area shape="rect" id="node4" title=" " alt="" coords="209,5,364,61"/>
+<area shape="rect" id="node6" title=" " alt="" coords="5,161,160,217"/>
+<area shape="rect" id="node8" title=" " alt="" coords="209,192,364,248"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="CPS::Signal::FrequencyRampGenerator" name="CPS::Signal::FrequencyRampGenerator">
+<area shape="rect" id="node1" title="Model to generate signals containing a frequency ramp." alt="" coords="114,337,311,379"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_signal_1_1_signal_generator.html" title="Model to generate generic signals." alt="" coords="5,254,204,281"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="31,157,178,184"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="8,81,201,108"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,182,32"/>
+<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="229,247,415,288"/>
+<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="252,157,392,184"/>
+</map>

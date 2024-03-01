@@ -1,0 +1,12 @@
+<map id="DPsim::MnaSolverDirect&lt; VarType &gt;" name="DPsim::MnaSolverDirect&lt; VarType &gt;">
+<area shape="rect" id="node1" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="1199,90,1371,131"/>
+<area shape="rect" id="node2" href="$class_d_psim_1_1_mna_solver.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="805,56,1013,83"/>
+<area shape="rect" id="node3" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="509,5,617,32"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_system_topology.html" title=" " alt="" coords="486,56,641,83"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="477,107,649,133"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="13,57,153,84"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="217,107,356,133"/>
+<area shape="rect" id="node7" title=" " alt="" coords="209,157,364,213"/>
+<area shape="rect" id="node9" title=" " alt="" coords="5,108,160,164"/>
+<area shape="rect" id="node10" href="$class_d_psim_1_1_direct_linear_solver_configuration.html" title=" " alt="" coords="817,107,1001,149"/>
+</map>

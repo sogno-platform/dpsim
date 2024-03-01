@@ -1,0 +1,8 @@
+<map id="CPS::MNASyncGenInterface" name="CPS::MNASyncGenInterface">
+<area shape="rect" id="node1" title="Interface to be used by synchronous generators." alt="" coords="5,143,201,170"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_p_c_m.html" title="4 Order Synchronous generator model for transient stability analysis" alt="" coords="257,5,499,47"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html" title="4 Order Synchronous generator model for transient stability analysis" alt="" coords="257,71,499,112"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6_order_p_c_m.html" title="6 Order Synchronous generator model for transient stability analysis" alt="" coords="257,136,499,177"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_iter.html" title="Base class for DP VBR synchronous generator model single phase." alt="" coords="249,202,507,229"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html" title="4 Order Synchronous generator model for transient stability analysis" alt="" coords="253,253,503,295"/>
+</map>

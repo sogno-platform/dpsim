@@ -1,0 +1,18 @@
+<map id="CPS::SimSignalComp" name="CPS::SimSignalComp">
+<area shape="rect" id="node1" title=" " alt="" coords="449,233,596,260"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_signal_1_1_decoupling_line.html" title=" " alt="" coords="657,5,850,32"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html" title=" " alt="" coords="644,56,863,83"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_signal_1_1_exciter.html" title=" " alt="" coords="684,107,823,133"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_signal_1_1_f_i_r_filter.html" title=" " alt="" coords="679,157,828,184"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_signal_1_1_integrator.html" title=" " alt="" coords="672,208,835,235"/>
+<area shape="rect" id="node9" href="$class_c_p_s_1_1_signal_1_1_p_l_l.html" title=" " alt="" coords="694,259,813,285"/>
+<area shape="rect" id="node10" href="$class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html" title=" " alt="" coords="644,309,863,336"/>
+<area shape="rect" id="node11" href="$class_c_p_s_1_1_signal_1_1_signal_generator.html" title="Model to generate generic signals." alt="" coords="654,360,853,387"/>
+<area shape="rect" id="node15" href="$class_c_p_s_1_1_signal_1_1_turbine_governor.html" title="Turbine governor model to be used with synchronous generator." alt="" coords="650,411,857,437"/>
+<area shape="rect" id="node16" href="$class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html" title=" " alt="" coords="650,462,857,503"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="208,233,401,260"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,233,160,260"/>
+<area shape="rect" id="node12" href="$class_c_p_s_1_1_signal_1_1_cosine_f_m_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="911,301,1133,328"/>
+<area shape="rect" id="node13" href="$class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="923,353,1121,394"/>
+<area shape="rect" id="node14" href="$class_c_p_s_1_1_signal_1_1_sine_wave_generator.html" title="Model to generate sinusoidal signals." alt="" coords="911,419,1133,445"/>
+</map>

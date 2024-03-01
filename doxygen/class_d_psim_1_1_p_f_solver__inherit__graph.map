@@ -1,0 +1,5 @@
+<map id="DPsim::PFSolver" name="DPsim::PFSolver">
+<area shape="rect" id="node1" title="Solver class using the nonlinear powerflow (PF) formulation." alt="" coords="41,80,164,107"/>
+<area shape="rect" id="node3" href="$class_d_psim_1_1_p_f_solver_power_polar.html" title="Powerflow solver class considering power mismatch and voltages in polar coordinates." alt="" coords="5,155,200,181"/>
+<area shape="rect" id="node2" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="49,5,157,32"/>
+</map>

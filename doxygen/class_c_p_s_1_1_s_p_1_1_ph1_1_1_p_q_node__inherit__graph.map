@@ -1,0 +1,9 @@
+<map id="CPS::SP::Ph1::PQNode" name="CPS::SP::Ph1::PQNode">
+<area shape="rect" id="node1" title=" " alt="" coords="205,352,365,379"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="109,261,267,303"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="5,81,203,108"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="126,157,285,199"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,181,32"/>
+<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="291,269,477,295"/>
+<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="314,165,454,191"/>
+</map>

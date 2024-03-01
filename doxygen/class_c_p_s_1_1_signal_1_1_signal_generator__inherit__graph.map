@@ -1,0 +1,9 @@
+<map id="CPS::Signal::SignalGenerator" name="CPS::Signal::SignalGenerator">
+<area shape="rect" id="node1" title="Model to generate generic signals." alt="" coords="644,64,843,91"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_signal_1_1_cosine_f_m_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="891,5,1113,32"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="903,57,1101,98"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_signal_1_1_sine_wave_generator.html" title="Model to generate sinusoidal signals." alt="" coords="891,123,1113,149"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="449,64,596,91"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="208,64,401,91"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,64,160,91"/>
+</map>

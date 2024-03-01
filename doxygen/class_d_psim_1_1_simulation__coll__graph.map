@@ -1,0 +1,18 @@
+<map id="DPsim::Simulation" name="DPsim::Simulation">
+<area shape="rect" id="node1" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="1048,211,1181,238"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="628,31,759,58"/>
+<area shape="rect" id="node3" href="$class_shared_factory.html" title=" " alt="" coords="312,5,491,47"/>
+<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="13,13,153,39"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_system_topology.html" title=" " alt="" coords="616,93,771,119"/>
+<area shape="rect" id="node6" href="$class_d_psim_1_1_direct_linear_solver_configuration.html" title=" " alt="" coords="601,144,785,185"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="614,387,773,414"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="13,219,153,246"/>
+<area shape="rect" id="node10" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="332,253,471,279"/>
+<area shape="rect" id="node12" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="613,210,773,237"/>
+<area shape="rect" id="node15" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="609,261,778,287"/>
+<area shape="rect" id="node9" title=" " alt="" coords="324,383,479,439"/>
+<area shape="rect" id="node11" title=" " alt="" coords="5,482,160,538"/>
+<area shape="rect" id="node13" title=" " alt="" coords="324,122,479,178"/>
+<area shape="rect" id="node14" href="$class_d_psim_1_1_event_queue.html" title=" " alt="" coords="620,311,767,338"/>
+<area shape="rect" id="node16" title=" " alt="" coords="324,303,479,359"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="CPS::SP::Ph1::Shunt" name="CPS::SP::Ph1::Shunt">
+<area shape="rect" id="node1" title=" " alt="" coords="311,352,455,379"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="115,261,274,303"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="5,81,203,108"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="126,157,285,199"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,181,32"/>
+<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="298,269,467,295"/>
+<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="313,165,453,191"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_p_f_solver_interface_branch.html" title="Common base class of all Component templates." alt="" coords="492,269,700,295"/>
+</map>

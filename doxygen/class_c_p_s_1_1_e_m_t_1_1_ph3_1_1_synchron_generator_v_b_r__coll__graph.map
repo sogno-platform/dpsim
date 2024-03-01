@@ -1,0 +1,25 @@
+<map id="CPS::EMT::Ph3::SynchronGeneratorVBR" name="CPS::EMT::Ph3::SynchronGeneratorVBR">
+<area shape="rect" id="node1" title=" " alt="" coords="2673,436,2940,463"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="2411,258,2593,299"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="1988,258,2147,299"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="1383,271,1580,297"/>
+<area shape="rect" id="node11" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="1717,207,1876,249"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="967,271,1121,297"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="613,304,783,331"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="13,267,153,293"/>
+<area shape="rect" id="node9" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="235,317,373,344"/>
+<area shape="rect" id="node12" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="607,207,789,249"/>
+<area shape="rect" id="node15" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="612,95,784,121"/>
+<area shape="rect" id="node19" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="619,463,777,489"/>
+<area shape="rect" id="node8" title=" " alt="" coords="227,368,381,424"/>
+<area shape="rect" id="node10" title=" " alt="" coords="5,547,160,603"/>
+<area shape="rect" id="node17" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="1976,182,2159,223"/>
+<area shape="rect" id="node13" title=" " alt="" coords="209,187,399,243"/>
+<area shape="rect" id="node14" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="1725,343,1868,369"/>
+<area shape="rect" id="node16" title=" " alt="" coords="227,5,381,61"/>
+<area shape="rect" id="node18" href="$class_c_p_s_1_1_base_1_1_synchron_generator.html" title="Base synchronous generator model." alt="" coords="1145,445,1359,472"/>
+<area shape="rect" id="node20" title=" " alt="" coords="227,448,381,504"/>
+<area shape="rect" id="node21" href="$class_c_p_s_1_1_m_n_a_variable_comp_interface.html" title="MNA interface to be used by elements that require recomputing of the system matrix." alt="" coords="2389,461,2615,488"/>
+<area shape="rect" id="node22" href="$class_shared_factory.html" title=" " alt="" coords="2380,513,2624,554"/>
+<area shape="rect" id="node23" href="$class_shared_factory.html" title=" " alt="" coords="1997,520,2137,547"/>
+</map>

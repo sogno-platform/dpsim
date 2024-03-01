@@ -1,0 +1,4 @@
+<map id="CPS::Base::Ph3::Switch" name="CPS::Base::Ph3::Switch">
+<area shape="rect" id="node1" title="Dynamic Phasor Three&#45;Phase Switch." alt="" coords="5,5,168,32"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="7,80,166,107"/>
+</map>

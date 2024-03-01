@@ -1,0 +1,7 @@
+<map id="DPsim::RealTimeSimulation" name="DPsim::RealTimeSimulation">
+<area shape="rect" id="node1" title="Extending Simulation class by real&#45;time functionality." alt="" coords="5,337,195,364"/>
+<area shape="rect" id="node2" href="$class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="33,261,167,288"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="35,185,165,212"/>
+<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="11,95,189,136"/>
+<area shape="rect" id="node5" href="$class_shared_factory.html" title=" " alt="" coords="30,5,170,32"/>
+</map>

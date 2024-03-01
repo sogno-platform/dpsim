@@ -1,0 +1,51 @@
+<map id="CPS::MNAInterface" name="CPS::MNAInterface">
+<area shape="rect" id="node1" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="5,1145,148,1172"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="583,810,765,851"/>
+<area shape="rect" id="node33" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="583,1874,765,1915"/>
+<area shape="rect" id="node48" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" title=" " alt="" coords="197,1175,456,1201"/>
+<area shape="rect" id="node49" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="235,1109,418,1150"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" title=" " alt="" coords="822,715,1061,757"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_composite_power_comp.html" title=" " alt="" coords="844,781,1039,822"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html" title="Capacitor model." alt="" coords="857,847,1026,873"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_current_source.html" title="Dynamic phasor ideal current source." alt="" coords="841,897,1042,924"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="859,948,1024,975"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html" title="Single phase inverter model." alt="" coords="859,999,1023,1025"/>
+<area shape="rect" id="node9" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_res_ind_series.html" title="resistor inductor series element" alt="" coords="845,1049,1037,1076"/>
+<area shape="rect" id="node10" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html" title="Dynamic phasor resistor model." alt="" coords="861,1100,1022,1127"/>
+<area shape="rect" id="node11" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_v_c.html" title="SVC." alt="" coords="874,1151,1009,1177"/>
+<area shape="rect" id="node12" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="866,1201,1017,1228"/>
+<area shape="rect" id="node13" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="841,1252,1041,1279"/>
+<area shape="rect" id="node14" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html" title="Resistive dynamic phasor voltage source." alt="" coords="841,1303,1041,1345"/>
+<area shape="rect" id="node15" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="845,1369,1037,1396"/>
+<area shape="rect" id="node16" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="857,1420,1026,1447"/>
+<area shape="rect" id="node17" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="859,1471,1024,1497"/>
+<area shape="rect" id="node18" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" title=" " alt="" coords="861,1521,1022,1548"/>
+<area shape="rect" id="node19" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html" title=" " alt="" coords="842,5,1041,32"/>
+<area shape="rect" id="node20" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html" title="Dynamic phasor three&#45;phase switch." alt="" coords="847,56,1035,83"/>
+<area shape="rect" id="node21" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html" title="Synchronous generator model in dq&#45;reference frame." alt="" coords="815,107,1068,133"/>
+<area shape="rect" id="node22" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="841,157,1041,184"/>
+<area shape="rect" id="node23" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_capacitor.html" title=" " alt="" coords="858,208,1025,235"/>
+<area shape="rect" id="node24" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_inductor.html" title="Static phasor inductor model." alt="" coords="860,259,1023,285"/>
+<area shape="rect" id="node25" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html" title="Static phasor resistor model." alt="" coords="862,309,1021,336"/>
+<area shape="rect" id="node26" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="868,360,1015,387"/>
+<area shape="rect" id="node27" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="843,411,1040,437"/>
+<area shape="rect" id="node28" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="847,461,1036,488"/>
+<area shape="rect" id="node29" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="858,512,1025,539"/>
+<area shape="rect" id="node30" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="860,563,1023,589"/>
+<area shape="rect" id="node31" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html" title=" " alt="" coords="862,613,1021,640"/>
+<area shape="rect" id="node32" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="843,664,1040,691"/>
+<area shape="rect" id="node34" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" title=" " alt="" coords="822,1674,1061,1715"/>
+<area shape="rect" id="node35" href="$class_c_p_s_1_1_composite_power_comp.html" title=" " alt="" coords="844,1739,1039,1781"/>
+<area shape="rect" id="node36" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html" title="Capacitor model." alt="" coords="853,1805,1030,1832"/>
+<area shape="rect" id="node37" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html" title="Ideal current source model." alt="" coords="837,1856,1046,1883"/>
+<area shape="rect" id="node38" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="855,1907,1028,1933"/>
+<area shape="rect" id="node39" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html" title="EMT Resistor." alt="" coords="857,1957,1026,1984"/>
+<area shape="rect" id="node40" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="837,2008,1045,2035"/>
+<area shape="rect" id="node41" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html" title="Voltage source as Norton equivalent." alt="" coords="837,2059,1045,2101"/>
+<area shape="rect" id="node42" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" title="average inverter model with LC filter" alt="" coords="841,2125,1042,2166"/>
+<area shape="rect" id="node43" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="853,2191,1030,2217"/>
+<area shape="rect" id="node44" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html" title="Ideal current source model." alt="" coords="837,2241,1046,2268"/>
+<area shape="rect" id="node45" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="855,2292,1028,2319"/>
+<area shape="rect" id="node46" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html" title="EMT Resistor." alt="" coords="857,1572,1026,1599"/>
+<area shape="rect" id="node47" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html" title="EMT three&#45;phase resistor." alt="" coords="838,1623,1045,1649"/>
+</map>

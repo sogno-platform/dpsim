@@ -1,0 +1,9 @@
+<map id="CPS::Signal::SineWaveGenerator" name="CPS::Signal::SineWaveGenerator">
+<area shape="rect" id="node1" title="Model to generate sinusoidal signals." alt="" coords="119,323,341,349"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_signal_1_1_signal_generator.html" title="Model to generate generic signals." alt="" coords="5,247,204,273"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="31,157,178,184"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="8,81,201,108"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,182,32"/>
+<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="229,247,487,273"/>
+<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="288,157,428,184"/>
+</map>

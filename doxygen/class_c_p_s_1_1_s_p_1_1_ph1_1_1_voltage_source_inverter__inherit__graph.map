@@ -1,0 +1,10 @@
+<map id="CPS::SP::Ph1::VoltageSourceInverter" name="CPS::SP::Ph1::VoltageSourceInverter">
+<area shape="rect" id="node1" title=" " alt="" coords="1091,89,1288,130"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="857,23,1015,65"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="209,5,407,32"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="456,27,615,69"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,5,160,32"/>
+<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="831,89,1041,130"/>
+<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="465,96,605,123"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_p_f_solver_interface_bus.html" title="Common base class of all Component templates." alt="" coords="842,155,1030,181"/>
+</map>

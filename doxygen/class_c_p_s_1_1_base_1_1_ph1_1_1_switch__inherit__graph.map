@@ -1,0 +1,9 @@
+<map id="CPS::Base::Ph1::Switch" name="CPS::Base::Ph1::Switch">
+<area shape="rect" id="node1" title="Dynamic Phasor Three&#45;Phase Switch." alt="" coords="5,132,168,159"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="239,5,389,32"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="218,56,410,83"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html" title="Dynamic phasor three&#45;phase switch." alt="" coords="220,107,408,133"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_switch.html" title="EMT three&#45;phase switch." alt="" coords="216,157,412,184"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="241,208,387,235"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="219,259,409,285"/>
+</map>

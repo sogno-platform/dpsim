@@ -1,0 +1,14 @@
+<map id="CPS::EMT::Ph3::SynchronGeneratorIdeal" name="CPS::EMT::Ph3::SynchronGeneratorIdeal">
+<area shape="rect" id="node1" title="Ideal voltage source representing a synchronous generator." alt="" coords="375,560,617,601"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_composite_power_comp.html" title=" " alt="" coords="277,469,472,511"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="109,365,291,407"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="54,261,213,303"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="5,81,203,108"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="126,157,285,199"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,181,32"/>
+<area shape="rect" id="node9" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="289,261,471,303"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="309,165,451,191"/>
+<area shape="rect" id="node10" href="$class_c_p_s_1_1_composite_power_comp.html" title="Base class for composite power components." alt="" coords="316,365,511,407"/>
+<area shape="rect" id="node11" href="$class_shared_factory.html" title=" " alt="" coords="497,469,741,511"/>
+<area shape="rect" id="node12" href="$class_shared_factory.html" title=" " alt="" coords="549,373,689,399"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="CPS::PFSolverInterfaceBranch" name="CPS::PFSolverInterfaceBranch">
+<area shape="rect" id="node1" title="Common base class of all Component templates." alt="" coords="5,132,213,159"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_capacitor.html" title=" " alt="" coords="271,5,438,32"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html" title="PI&#45;line static phasor model." alt="" coords="282,56,427,83"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html" title=" " alt="" coords="279,107,430,133"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html" title="Static phasor resistor model." alt="" coords="275,157,434,184"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_shunt.html" title=" " alt="" coords="283,208,427,235"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html" title="Transformer that includes an inductance and resistance." alt="" coords="261,259,448,285"/>
+</map>
