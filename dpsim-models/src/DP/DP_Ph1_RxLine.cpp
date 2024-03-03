@@ -11,8 +11,8 @@
 using namespace CPS;
 
 DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
-    : Base::Ph1::PiLine(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
+    : Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(
+                                          uid, name, true, true, logLevel) {
   setVirtualNodeNumber(1);
   setTerminalNumber(2);
 

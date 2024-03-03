@@ -11,32 +11,36 @@
 using namespace CPS;
 
 SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
-    Logger::Level logLevel) : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-	mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
-	mSrcFreq(mAttributes->createDynamic<Real>("f_src")),
-	mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
-	mVoltageSetPoint(mAttributes->create<Real>("V_set")),
-	mVoltageSetPointPerUnit(mAttributes->create<Real>("V_set_pu", 1.0)),
-	mActivePowerInjection(mAttributes->create<Real>("p_inj")),
-	mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
+                                            Logger::Level logLevel)
+    : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
+      mSrcFreq(mAttributes->createDynamic<Real>("f_src")),
+      mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
+      mVoltageSetPoint(mAttributes->create<Real>("V_set")),
+      mVoltageSetPointPerUnit(mAttributes->create<Real>("V_set_pu", 1.0)),
+      mActivePowerInjection(mAttributes->create<Real>("p_inj")),
+      mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
 
-	SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", **mName, this->type());
-	mSLog->flush();
-	**mIntfVoltage = MatrixComp::Zero(1, 1);
-	**mIntfCurrent = MatrixComp::Zero(1, 1);
-	setVirtualNodeNumber(0);
-	setTerminalNumber(1);
+  SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", **mName, this->type());
+  mSLog->flush();
+  **mIntfVoltage = MatrixComp::Zero(1, 1);
+  **mIntfCurrent = MatrixComp::Zero(1, 1);
+  setVirtualNodeNumber(0);
+  setTerminalNumber(1);
 
-	// Create electrical sub components
-	mSubVoltageSource = std::make_shared<SP::Ph1::VoltageSource>(**mName + "_vs", mLogLevel);
-	addMNASubComponent(mSubVoltageSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-	SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
-	for (auto subcomp: mSubComponents)
-		SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
+  // Create electrical sub components
+  mSubVoltageSource =
+      std::make_shared<SP::Ph1::VoltageSource>(**mName + "_vs", mLogLevel);
+  addMNASubComponent(mSubVoltageSource,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
+  for (auto subcomp : mSubComponents)
+    SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
 
-	// MNA attributes
-	mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
-	mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
+  // MNA attributes
+  mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
+  mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
 }
 
 // #### Powerflow section ####
@@ -89,14 +93,16 @@ void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor,
 }
 
 void SP::Ph1::NetworkInjection::setBaseVoltage(Real baseVoltage) {
-    **mBaseVoltage = baseVoltage;
+  **mBaseVoltage = baseVoltage;
 }
 
-void SP::Ph1::NetworkInjection::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-    SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
-	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]", **mBaseVoltage);
+void SP::Ph1::NetworkInjection::calculatePerUnitParameters(
+    Real baseApparentPower, Real baseOmega) {
+  SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}",
+                     **mName);
+  SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]", **mBaseVoltage);
 
-    **mVoltageSetPointPerUnit = **mVoltageSetPoint / **mBaseVoltage;
+  **mVoltageSetPointPerUnit = **mVoltageSetPoint / **mBaseVoltage;
 
   SPDLOG_LOGGER_INFO(mSLog, "Voltage Set-Point ={} [pu]",
                      **mVoltageSetPointPerUnit);
