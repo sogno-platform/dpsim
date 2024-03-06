@@ -19,7 +19,7 @@ LABEL \
 	org.opencontainers.image.url="http://dpsim.fein-aachen.org/" \
 	org.opencontainers.image.source="https://github.com/sogno-platform/dpsim"
 
-RUN dnf -y update
+RUN dnf --refresh -y update
 RUN yum install -y epel-release
 
 # Toolchain
@@ -32,22 +32,22 @@ RUN yum install -y \
 	cppcheck
 
 # Tools needed for developement
-RUN dnf -y install \
+RUN dnf --assumeyes install \
 	doxygen graphviz \
 	gdb \
 	procps-ng
 
 # Dependencies
-RUN dnf --refresh -y install \
+RUN dnf --assumeyes install \
 	python3-devel \
 	eigen3-devel \
 	libxml2-devel \
-	graphviz-devel
+	graphviz-devel \
+	fmt-devel
 
-RUN yum install -y fmt-devel
 
 # Install some debuginfos
-RUN dnf -y debuginfo-install \
+RUN dnf --assumeyes debuginfo-install \
 	python3
 
 # Build & Install sundials

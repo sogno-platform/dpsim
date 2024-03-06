@@ -6,17 +6,17 @@ LABEL \
 	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
 	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
 
-RUN dnf -y update
+RUN dnf --assumeyes --refresh update
 
 # Toolchain
-RUN dnf -y install \
+RUN dnf --assumeyes install \
 	gcc gcc-c++ \
 	git \
 	make cmake pkgconfig \
 	python3-pip
 
 # Dependencies
-RUN dnf --refresh -y install \
+RUN dnf --assumeyes install \
 	python3-devel \
 	eigen3-devel \
 	spdlog-devel

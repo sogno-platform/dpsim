@@ -25,7 +25,7 @@ LABEL \
 	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
 
 COPY --from=builder /dpsim/build/*.rpm /tmp
-RUN dnf -y install /tmp/*.rpm
+RUN dnf --assumeyes install /tmp/*.rpm
 
 ADD project.toml .
 RUN pip3 install .[test,docs]

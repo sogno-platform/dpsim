@@ -12,10 +12,10 @@ LABEL \
 	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
 	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
 
-RUN apt-get -y update
+RUN apt-get --assume-yes update
 
 # Toolchain
-RUN apt-get -y install \
+RUN apt-get --assume-yes install \
 	gcc g++ clang \
 	git \
 	make cmake pkg-config \
@@ -23,12 +23,12 @@ RUN apt-get -y install \
 	wget
 
 # Tools needed for developement
-RUN apt-get -y install \
+RUN apt-get --assume-yes install \
 	doxygen graphviz \
 	gdb
 
 # Dependencies
-RUN apt-get -y install \
+RUN apt-get --assume-yes install \
 	python3-dev \
 	libeigen3-dev \
 	libxml2-dev \
@@ -48,7 +48,7 @@ RUN cd /tmp && \
 	make ${MAKE_OPTS} install
 
 ## Install minimal VILLASnode dependencies
-RUN apt-get -y install \
+RUN apt-get --assume-yes install \
 	libssl-dev \
 	uuid-dev \
 	libcurl4-gnutls-dev \
@@ -56,7 +56,7 @@ RUN apt-get -y install \
 	libwebsockets-dev
 
 ## Install optional VILLASnode dependencies
-RUN apt-get -y install \
+RUN apt-get --assume-yes install \
 	libmosquitto-dev \
 	libconfig-dev \
 	libnl-3-dev
@@ -101,7 +101,7 @@ RUN cd /tmp && \
 
 # Remove this part in the future and use dedicated Jupyter Dockerfile
 # Activate Jupyter extensions
-RUN apt-get -y install \
+RUN apt-get --assume-yes install \
 	npm
 
 RUN pip3 install \
