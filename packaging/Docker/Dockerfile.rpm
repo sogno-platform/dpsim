@@ -12,7 +12,7 @@ RUN rm -rf /dpsim/build && mkdir /dpsim/build
 WORKDIR /dpsim/build
 
 RUN cmake ${CMAKE_OPTS} .. \
-	-DDPSIM_BUILD_EXAMPLES=OFF
+	-DDPSIM_BUILD_EXAMPLES=OFF \
 	-DCPACK_GENERATOR=RPM
 RUN make ${MAKE_OPTS} package
 
@@ -25,18 +25,10 @@ LABEL \
 	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
 
 COPY --from=builder /dpsim/build/*.rpm /tmp
-RUN dnf -y install /tmp/*.rpm
+RUN dnf --assumeyes install /tmp/*.rpm
 
-ADD requirements.txt .
-RUN pip3 install -r requirements.txt
-
-# Remove this part in the future and use dedicated Jupyter Dockerfile
-# Activate Jupyter extensions
-ADD requirements-jupyter.txt .
-RUN pip3 install -r requirements-jupyter.txt
-RUN dnf -y --refresh install npm
-RUN jupyter nbextension enable --py widgetsnbextension
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+ADD project.toml .
+RUN pip3 install .[test,docs]
 
 # Copy example materials
 RUN mkdir dpsim
@@ -48,5 +40,3 @@ RUN find /dpsim \
 	-exec rm {} \;
 
 WORKDIR /dpsim
-EXPOSE 8888
-CMD [ "jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--LabApp.token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc" ]

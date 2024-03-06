@@ -11,22 +11,22 @@ LABEL \
 	org.opencontainers.image.url="http://dpsim.fein-aachen.org/" \
 	org.opencontainers.image.source="https://github.com/sogno-platform/dpsim"
 
-RUN dnf -y update && \
-	dnf install -y epel-release dnf-plugins-core && \
-	dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
+RUN dnf --assumeyes --refresh update
+RUN dnf --assumeyes install epel-release dnf-plugins-core && \
+	dnf --assumeyes install https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
 	dnf config-manager --set-enabled crb && \
 	dnf config-manager --set-enabled remi
 
 # CUDA dependencies
 RUN dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo && \
-	dnf --refresh -y install cuda-compiler-11-7 cuda-libraries-devel-11-7 cuda-nvprof-11-7 && \
+	dnf --assumeyes --refresh install cuda-compiler-11-7 cuda-libraries-devel-11-7 cuda-nvprof-11-7 && \
 	ln -s cuda-11.7 /usr/local/cuda
 
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 
 # Toolchain
-RUN dnf -y install \
+RUN dnf --assumeyes install \
 	git clang gdb ccache \
 	redhat-rpm-config \
 	rpmdevtools \
@@ -42,7 +42,7 @@ RUN dnf -y install \
 	gcc-gfortran
 
 # Dependencies
-RUN dnf --refresh -y install \
+RUN dnf --assumeyes install \
 	python3-devel \
 	eigen3-devel \
 	libxml2-devel \
@@ -50,7 +50,7 @@ RUN dnf --refresh -y install \
 	gsl-devel
 
 # VILLASnode dependencies
-RUN dnf -y install \
+RUN dnf --assumeyes install \
 	openssl-devel \
 	libuuid-devel \
 	libconfig-devel \
@@ -63,7 +63,7 @@ RUN dnf -y install \
 	zlib-devel
 
 # CUDARPC and dependencies
-RUN dnf install -y \
+RUN dnf --assumeyes install \
 	make bash git gcc autoconf libtool automake \
 	ncurses-devel zlib-devel binutils-devel mesa-libGL-devel \
 	libvdpau-devel mesa-libEGL-devel openssl-devel rpcbind \
@@ -81,7 +81,7 @@ ENV PATH="$PWD/cricket/bin:${PATH}"
 ENV LD_LIBRARY_PATH="$PWD/cricket/bin:${LD_LIBRARY_PATH}"
 
 # Profiling dependencies
-RUN dnf -y install \
+RUN dnf --assumeyes install \
 	graphviz \
 	libasan \
 	cppcheck \
@@ -117,14 +117,13 @@ RUN cd /tmp && \
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 # Python dependencies
-ADD requirements.txt .
-RUN pip3 install -U setuptools
-RUN pip3 install -U wheel
-RUN pip3 install -r requirements.txt
+ADD project.toml .
+RUN pip3 install --upgrade setuptools wheel
+RUN pip3 install .[test,docs]
 
 # Remove this part in the future and use dedicated Jupyter Dockerfile
 # Activate Jupyter extensions
-RUN dnf -y --refresh install npm
+RUN dnf --assumeyes install npm
 RUN pip3 install jupyter jupyter_contrib_nbextensions nbconvert nbformat
 
 EXPOSE 8888

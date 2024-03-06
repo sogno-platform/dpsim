@@ -12,10 +12,10 @@ LABEL \
 	org.opencontainers.image.url="http://dpsim.fein-aachen.org/" \
 	org.opencontainers.image.source="https://github.com/sogno-platform/dpsim"
 
-RUN dnf -y update
+RUN dnf --assumeyes --refresh update
 
 # Toolchain
-RUN dnf -y install \
+RUN dnf --assumeyes install \
 	gcc gcc-c++ clang \
 	git \
 	rpmdevtools rpm-build \
@@ -24,13 +24,13 @@ RUN dnf -y install \
 	cppcheck
 
 # Tools needed for developement
-RUN dnf -y install \
+RUN dnf --assumeyes install \
 	doxygen graphviz \
 	gdb \
 	procps-ng
 
 # Dependencies
-RUN dnf --refresh -y install \
+RUN dnf --assumeyes install \
 	python3-devel \
 	eigen3-devel \
 	libxml2-devel \
@@ -39,7 +39,7 @@ RUN dnf --refresh -y install \
 	fmt-devel
 
 # Install some debuginfos
-RUN dnf -y debuginfo-install \
+RUN dnf --assumeyes debuginfo-install \
 	python3
 
 # Build & Install sundials
@@ -54,7 +54,7 @@ RUN cd /tmp && \
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 # Install minimal VILLASnode dependencies
-RUN dnf -y install \
+RUN dnf --assumeyes install \
 	openssl-devel \
 	libuuid-devel \
 	libcurl-devel \
@@ -62,15 +62,15 @@ RUN dnf -y install \
 	libwebsockets-devel
 
 # Install optional VILLASnode dependencies
-RUN dnf -y install \
+RUN dnf --assumeyes install \
 	mosquitto-devel \
 	libconfig-devel \
 	libnl3-devel
 
 # Python dependencies
-ADD requirements.txt .
+ADD project.toml .
 RUN pip3 install --upgrade wheel build
-RUN pip3 install -r requirements.txt
+RUN pip3 install .[test,docs]
 
 # Install CIMpp from source
 RUN cd /tmp && \
@@ -97,7 +97,7 @@ RUN cd /tmp && \
 
 # Remove this part in the future and use dedicated Jupyter Dockerfile
 # Activate Jupyter extensions
-RUN dnf -y --refresh install \
+RUN dnf --assumeyes install \
 	npm
 
 RUN pip3 install \

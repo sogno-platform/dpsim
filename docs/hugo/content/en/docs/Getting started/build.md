@@ -54,7 +54,7 @@ To build everything run
     $ cmake --build .
 
 To use other libraries that are installed, use the relevant option defined in the CMakeList.txt files, for example for GSL below, and then build as usual:
-    
+
     $ cmake .. -DWITH_GSL=ON
 
 If you would like to use the Python package, it has to be added to the path.

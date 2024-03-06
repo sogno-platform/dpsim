@@ -60,4 +60,3 @@ xlabel('time [s]')
 ylabel('voltage [V]')
 
 end
-

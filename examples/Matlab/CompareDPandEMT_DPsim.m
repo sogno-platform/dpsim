@@ -2,7 +2,7 @@ clc
 clear
 %% read PLECS results
 
-Results_PLECSV = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPSim/data_synGenVBR_v.csv'); 
+Results_PLECSV = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPSim/data_synGenVBR_v.csv');
 Results_PLECSI = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPSim/data_synGenVBR_i.csv');
 
 %% Read data from DP simulation and calculate absolute value and phase
@@ -125,4 +125,3 @@ title('Currents phase C');
 legend('Current Phase c PLECS', 'DP shift c', 'DP abs c')
 xlabel('time [s]')
 ylabel('current [A]')
-

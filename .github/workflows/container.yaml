@@ -103,4 +103,3 @@ jobs:
          file: packaging/Docker/Dockerfile.manylinux
          push: true
          tags: sogno/dpsim:manylinux
-

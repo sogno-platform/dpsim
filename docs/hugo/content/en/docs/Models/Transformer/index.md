@@ -13,7 +13,7 @@ The single line diagram is depicted in the figure below.
 If node reduction is not applied, two virtual nodes are created to stamp this model into the system matrix.
 
 Furthermore, the ideal transformer has an additional equation, which requires an extension of the system matrix.
-The complete matrix stamp for the ideal transformer is 
+The complete matrix stamp for the ideal transformer is
 
 ```math
 \begin{array}{c|c c c}
@@ -33,7 +33,7 @@ i_{l} \cr
   \cr
   \cr
   0\cr
-\end{pmatrix} 
+\end{pmatrix}
 ```
 
 The variable $j$ denotes the high voltage node while $k$ is the low voltage node.

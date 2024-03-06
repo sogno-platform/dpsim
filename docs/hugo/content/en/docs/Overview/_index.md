@@ -20,4 +20,3 @@ The project is released under the terms of the [MPL 2.0](https://mozilla.org/MPL
 
 * [Getting Started]({{< ref "/docs/Getting Started/" >}} "Getting Started"): Get started with DPsim
 * [Examples]({{< ref "/docs/Examples/" >}} "Examples"): Check out some example code!
-

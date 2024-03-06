@@ -12,4 +12,4 @@ all: libdps_magma.so
 	$(CC) $(CC_FLAGS) -I../../../Include -c -fpic -o $@ $<
 
 libdps_magma.so: magma.o
-	$(CC) -shared -o $@ $< $(LD_FLAGS) 
+	$(CC) -shared -o $@ $< $(LD_FLAGS)

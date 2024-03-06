@@ -41,12 +41,12 @@ FileNameVector = ['SynGen_EMT_VBR_0.000050.csv';
 dt = 0.000050;
 %% read results from c++ simulation
 while dt <= 0.011000
-   
+
     FileName = FileNameVector(i,1:27);
     Path = strcat('../../../vsa/Results/LoadChange/DPsim/EMT/VBR/', FileName);
     Log_SynGen = csvread(Path,1);
     CurrentVector = Log_SynGen(:,1:4);
-    
+
  %% Calculate and display error
 %Cut Current and Voltage vector to get steady state results
 l=length(CurrentVector);
@@ -56,7 +56,7 @@ CurrentVector_SS = -CurrentVector(1:l_new,2);
 CurrentVector_LC = -CurrentVector(l_new:2*l_new,2);
 
 CurrentReference_reduced = zeros(l,2);
-    
+
 if l == l_Ref
     CurrentReference_reduced(:,1) = Results_Reference(:,1);
     CurrentReference_reduced(:,2) = Results_Reference(:,5);
@@ -68,8 +68,8 @@ else
     CurrentReference_reduced(n,2) = Results_Reference(m,5);
     n = n+1;
     end
-end  
- 
+end
+
 %Reference current in Steady state and after load change
 Reference_SS = CurrentReference_reduced(1:l_new,2);
 Reference_LC = CurrentReference_reduced(l_new:2*l_new,2);
@@ -100,7 +100,7 @@ disp(' ');
     ErrorVector_VBR(i) = 100*err_LC/Peak_Ref_LC;
     dtVectorVBR(i) = dt;
     i = i + 1;
-    
+
     if dt >= 0.001
         dt = dt + 0.001;
     elseif dt >= 0.0001
@@ -109,9 +109,9 @@ disp(' ');
         dt = dt + 0.000050;
     end
 end
- 
 
- 
+
+
 %% Dq Model
 
 i = 1;
@@ -128,12 +128,12 @@ FileNameVector = ['SynGen_EMT_Dq_0.000050.csv';
 
 dt = 0.000050;
 while dt <= 0.000800
-      
+
     FileName = FileNameVector(i,1:26);
     Path = strcat('../../../vsa/Results/LoadChange/DPsim/EMT/Dq/', FileName);
     Log_SynGen = csvread(Path,1);
     CurrentVector = Log_SynGen(:,1:4);
-    
+
     l=length(CurrentVector);
     l_new=round(1/3*l);
 
@@ -141,7 +141,7 @@ while dt <= 0.000800
     CurrentVector_LC = CurrentVector(l_new:2*l_new,2);
 
     CurrentReference_reduced = zeros(l,2);
-    
+
     if l == l_Ref
      CurrentReference_reduced(:,1) = Results_Reference(:,1);
      CurrentReference_reduced(:,2) = Results_Reference(:,5);
@@ -153,8 +153,8 @@ while dt <= 0.000800
             CurrentReference_reduced(n,2) = Results_Reference(m,5);
             n = n+1;
         end
-    end  
- 
+    end
+
     %Reference current in Steady state and after load change
     Reference_SS = CurrentReference_reduced(1:l_new,2);
     Reference_LC = CurrentReference_reduced(l_new:2*l_new,2);
@@ -183,7 +183,7 @@ while dt <= 0.000800
     ErrorVector_dq(i) = 100*err_LC/Peak_Ref_LC;
     dtVectordq(i) = dt;
     i = i + 1;
-    
+
     if dt >= 0.0001
         dt = dt + 0.0001;
     else
@@ -232,7 +232,7 @@ while dt <= 0.011000
             currentDP(row,col+compOffsetDP)*sin(2*pi*60*currentDP(row,1));
     end
 
-    
+
     l_DP=length(currentShiftDP);
     l_new_DP=round(1/3*l_DP);
 
@@ -240,7 +240,7 @@ while dt <= 0.011000
     CurrentVector_LC_DP = -currentShiftDP(l_new_DP:2*l_new_DP,2);
 
     CurrentReference_reduced = zeros(l_DP,2);
-    
+
     if l_DP == l_Ref
         CurrentReference_reduced(:,1) = Results_Reference(:,1);
         CurrentReference_reduced(:,2) = Results_Reference(:,5);
@@ -252,8 +252,8 @@ while dt <= 0.011000
             CurrentReference_reduced(n,2) = Results_Reference(m,5);
             n = n+1;
         end
-    end  
- 
+    end
+
     %Reference current in Steady state and after load change
     Reference_SS = CurrentReference_reduced(1:l_new_DP,2);
     Reference_LC = CurrentReference_reduced(l_new_DP:2*l_new_DP,2);
@@ -282,7 +282,7 @@ while dt <= 0.011000
     ErrorVector_VBRDP(i) = 100*err_LC_DP/Peak_Ref_LC;
     dtVectorVBRDP(i) = dt;
     i = i + 1;
-    
+
     if dt >= 0.001
         dt = dt + 0.001;
     elseif dt >= 0.0001
@@ -315,7 +315,7 @@ while dt < 0.000750
     Log_SynGen = csvread(Path,1);
     currentDP = Log_SynGen(:,1:7);
     compOffsetDP = (size(currentDP,2) - 1) / 2;
-    
+
     currentShiftDP = currentDP(:,1);
     col = 2;
     for row = 1:size(currentDP,1)
@@ -323,7 +323,7 @@ while dt < 0.000750
             currentDP(row,col+compOffsetDP)*sin(2*pi*60*currentDP(row,1));
     end
 
-    
+
     l_DP=length(currentShiftDP);
     l_new_DP=round(1/3*l_DP);
 
@@ -331,7 +331,7 @@ while dt < 0.000750
     CurrentVector_LC_DP = currentShiftDP(l_new_DP:2*l_new_DP,2);
 
     CurrentReference_reduced = zeros(l_DP,2);
-    
+
     if l_DP == l_Ref
         CurrentReference_reduced(:,1) = Results_Reference(:,1);
         CurrentReference_reduced(:,2) = Results_Reference(:,5);
@@ -343,8 +343,8 @@ while dt < 0.000750
             CurrentReference_reduced(n,2) = Results_Reference(m,5);
             n = n+1;
         end
-    end  
- 
+    end
+
     %Reference current in Steady state and after load change
     Reference_SS = CurrentReference_reduced(1:l_new_DP,2);
     Reference_LC = CurrentReference_reduced(l_new_DP:2*l_new_DP,2);
@@ -372,7 +372,7 @@ while dt < 0.000750
     ErrorVector_dqDP(i) = 100*err_LC_DP/Peak_Ref_LC;
     dtVectordqDP(i) = dt;
     i = i + 1;
-    
+
         if dt >= 0.0001
         dt = dt + 0.0001;
     else
@@ -393,7 +393,7 @@ text(dtVectorVBRDP(ie),ErrorVector_VBRDP(ie)+ 0.7,strmax,'HorizontalAlignment','
 legend({'EMT VBR','DP VBR'},'FontSize',12)
 ylabel('Error [%]','FontSize',12);
 xlabel('Time Step [s]','FontSize',12);
- 
+
 set(plot1,'LineWidth',2);
 set(plot2,'LineWidth',2);
 set(plotp,'LineWidth',2);
@@ -413,7 +413,7 @@ legend({'EMT VBR','EMT Classical'},'FontSize',12)
 ylabel('Error [%]','FontSize',12);
 xlabel('Time Step [s]','FontSize',12);
 ylim([0 16]);
- 
+
 set(plot3,'LineWidth',2);
 set(plot4,'LineWidth',2);
 
@@ -432,7 +432,7 @@ legend({'DP VBR','DP Classical'},'FontSize',12)
 ylabel('Error [%]','FontSize',12);
 xlabel('Time Step [s]','FontSize',12);
 ylim([0 2]);
- 
+
 set(plot3,'LineWidth',2);
 set(plot4,'LineWidth',2);
 

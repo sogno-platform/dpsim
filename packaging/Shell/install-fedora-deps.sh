@@ -22,18 +22,18 @@ dnf -y install \
 
 # Dependencies
 dnf --refresh -y install \
-	python3-devel \
-	eigen3-devel \
+    python3-devel \
+    eigen3-devel \
     libxml2-devel \
-	spdlog-devel \
-	graphviz-devel \
-	sundials-devel \
-	gsl-devel
+    spdlog-devel \
+    graphviz-devel \
+    sundials-devel \
+    gsl-devel
 
 # Python
-pip3 install -U setuptools
-pip3 install -U wheel
-pip3 install -r requirements.txt
+pip3 install --upgrade setuptools
+pip3 install --upgrade wheel
+pip3 install .
 
 # Activate Jupyter extensions
 dnf -y --refresh install npm
@@ -56,22 +56,22 @@ sudo ldconfig
 
 # Install CIMpp from source
 cd /tmp && \
-	git clone --recurse-submodules --depth 1 https://github.com/cim-iec/libcimpp.git && \
-	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake ${CMAKE_OPTS} .. \
+    git clone --recurse-submodules --depth 1 https://github.com/cim-iec/libcimpp.git && \
+    mkdir -p libcimpp/build && cd libcimpp/build && \
+    cmake ${CMAKE_OPTS} .. \
         -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
         -DUSE_CIM_VERSION=${CIM_VERSION} \
         -DBUILD_SHARED_LIBS=ON \
         -DBUILD_ARABICA_EXAMPLES=OFF && \
     make ${MAKE_OPTS} install && \
-	rm -rf /tmp/libcimpp
+    rm -rf /tmp/libcimpp
 
 # Install VILLASnode from source
 cd /tmp && \
-	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
-	mkdir -p villas-node/build && cd villas-node/build && \
+    git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
+    mkdir -p villas-node/build && cd villas-node/build && \
     git checkout ${VILLAS_VERSION} && \
-	cmake ${CMAKE_OPTS} .. \
+    cmake ${CMAKE_OPTS} .. \
         -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
     make ${MAKE_OPTS} install && \
-	rm -rf /tmp/villas-node
+    rm -rf /tmp/villas-node

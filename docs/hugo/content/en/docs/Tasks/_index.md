@@ -14,4 +14,3 @@ Each task should give the user
 * What this task accomplishes.
 * Instructions for the task. If it involves editing a file, running a command, or writing code, provide code-formatted example snippets to show the user what to do! If there are multiple steps, provide them as a numbered list.
 * If appropriate, links to related concept, tutorial, or example pages.
-

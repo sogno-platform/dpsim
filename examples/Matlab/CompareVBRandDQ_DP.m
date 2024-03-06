@@ -99,9 +99,9 @@ xlim([0 0.3])
 
 if abs_on == 1 && shift_on == 1
 legend({'Reference', 'DP shift VBR', 'DP abs VBR', 'DP shift Classical', 'DP abs Classical'},'FontSize',12)
-elseif abs_on == 1 && shift_on == 0       
+elseif abs_on == 1 && shift_on == 0
 legend({'Reference', 'DP abs VBR', 'DP abs Classical'},'FontSize',12)
-elseif abs_on == 0 && shift_on == 1       
+elseif abs_on == 0 && shift_on == 1
 legend({'Reference', 'DP shift VBR', 'DP shift Classical'},'FontSize',12)
 end
 
@@ -197,13 +197,11 @@ xlim([0 0.3])
 
 if abs_on == 1 && shift_on == 1
 legend({'Reference', 'DP shift VBR', 'DP abs VBR', 'DP shift Classical', 'DP abs Classical'},'FontSize',12)
-elseif abs_on == 1 && shift_on == 0       
+elseif abs_on == 1 && shift_on == 0
 legend({'Reference', 'DP abs VBR', 'DP abs Classical'},'FontSize',12)
-elseif abs_on == 0 && shift_on == 1       
+elseif abs_on == 0 && shift_on == 1
 legend({'Reference', 'DP shift VBR', 'DP shift Classical'},'FontSize',12)
 end
 
 xlabel('time [s]','FontSize',12)
 ylabel('current [A]','FontSize',12)
-
-
