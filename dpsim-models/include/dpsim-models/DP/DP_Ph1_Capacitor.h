@@ -9,36 +9,30 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph1_Capacitor.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/EigenvalueDynamicCompInterface.h>
 
 namespace CPS {
 namespace DP {
 namespace Ph1 {
-	/// \brief Capacitor model
-	///
-	/// The capacitor is represented by a DC equivalent circuit which
-	/// corresponds to one iteration of the trapezoidal integration method.
-	/// The equivalent DC circuit is a resistance in parallel with a current source.
-	/// The resistance is constant for a defined time step and system
-	/// frequency and the current source changes for each iteration.
-	class Capacitor :
-		public MNASimPowerComp<Complex>,
-		public Base::Ph1::Capacitor,
-		public SharedFactory<Capacitor>,
-		public EigenvalueDynamicCompInterface<Complex> {
-	protected:
-		/// DC equivalent current source for harmonics [A]
-		MatrixComp mEquivCurrent;
-		/// Equivalent conductance for harmonics [S]
-		MatrixComp mEquivCond;
-		/// Coefficient in front of previous voltage value for harmonics
-		MatrixComp mPrevVoltCoeff;
-	public:
-		/// Defines UID, name and logging level
-		Capacitor(String uid, String name, Logger::Level logLevel = Logger::Level::off);
-		/// Defines name, component parameters and logging level
-		Capacitor(String name, Logger::Level logLevel = Logger::Level::off)
-			: Capacitor(name, name, logLevel) { }
+/// \brief Capacitor model
+///
+/// The capacitor is represented by a DC equivalent circuit which
+/// corresponds to one iteration of the trapezoidal integration method.
+/// The equivalent DC circuit is a resistance in parallel with a current source.
+/// The resistance is constant for a defined time step and system
+/// frequency and the current source changes for each iteration.
+class Capacitor : public MNASimPowerComp<Complex>,
+                  public Base::Ph1::Capacitor,
+                  public SharedFactory<Capacitor>,
+                  public EigenvalueDynamicCompInterface<Complex> {
+protected:
+  /// DC equivalent current source for harmonics [A]
+  MatrixComp mEquivCurrent;
+  /// Equivalent conductance for harmonics [S]
+  MatrixComp mEquivCond;
+  /// Coefficient in front of previous voltage value for harmonics
+  MatrixComp mPrevVoltCoeff;
 
 public:
   /// Defines UID, name and logging level
@@ -95,32 +89,52 @@ public:
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
 
-		class MnaPostStepHarm : public CPS::Task {
-		public:
-			MnaPostStepHarm(Capacitor& capacitor, const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
-				: Task(**capacitor.mName + ".MnaPostStepHarm"),
-				mCapacitor(capacitor), mLeftVectors(leftVectors) {
-				for (UInt i = 0; i < mLeftVectors.size(); i++)
-					mAttributeDependencies.push_back(mLeftVectors[i]);
-				mModifiedAttributes.push_back(mCapacitor.attribute("v_intf"));
-				mModifiedAttributes.push_back(mCapacitor.attribute("i_intf"));
-			}
-			void execute(Real time, Int timeStepCount);
-		private:
-			Capacitor& mCapacitor;
-			std::vector< Attribute<Matrix>::Ptr > mLeftVectors;
-		};
+  class MnaPreStepHarm : public CPS::Task {
+  public:
+    MnaPreStepHarm(Capacitor &capacitor)
+        : Task(**capacitor.mName + ".MnaPreStepHarm"), mCapacitor(capacitor) {
+      // actually depends on C, but then we'd have to modify the system matrix anyway
+      mModifiedAttributes.push_back(capacitor.attribute("right_vector"));
+      mPrevStepDependencies.push_back(capacitor.attribute("i_intf"));
+      mPrevStepDependencies.push_back(capacitor.attribute("v_intf"));
+    }
+    void execute(Real time, Int timeStepCount);
 
-		// #### Implementation of eigenvalue dynamic component interface ####
-		void stampSignMatrix(MatrixVar<Complex> &signMatrix, Complex coeffDP) override;
-		void stampDiscretizationMatrix(MatrixVar<Complex> &discretizationMatrix, Complex coeffDP) override;
-		void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
-		void setBranchIdx(UInt i) override;
+  private:
+    Capacitor &mCapacitor;
+  };
 
-	private:
-		/// Branch index
-		UInt mBranchIdx;
-	};
-}
-}
-}
+  class MnaPostStepHarm : public CPS::Task {
+  public:
+    MnaPostStepHarm(Capacitor &capacitor,
+                    const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
+        : Task(**capacitor.mName + ".MnaPostStepHarm"), mCapacitor(capacitor),
+          mLeftVectors(leftVectors) {
+      for (UInt i = 0; i < mLeftVectors.size(); i++)
+        mAttributeDependencies.push_back(mLeftVectors[i]);
+      mModifiedAttributes.push_back(mCapacitor.attribute("v_intf"));
+      mModifiedAttributes.push_back(mCapacitor.attribute("i_intf"));
+    }
+    void execute(Real time, Int timeStepCount);
+
+  private:
+    Capacitor &mCapacitor;
+    std::vector<Attribute<Matrix>::Ptr> mLeftVectors;
+  };
+
+  // #### Implementation of eigenvalue dynamic component interface ####
+  void stampSignMatrix(MatrixVar<Complex> &signMatrix,
+                       Complex coeffDP) override;
+  void stampDiscretizationMatrix(MatrixVar<Complex> &discretizationMatrix,
+                                 Complex coeffDP) override;
+  void
+  stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
+  void setBranchIdx(UInt i) override;
+
+private:
+  /// Branch index
+  UInt mBranchIdx;
+};
+} // namespace Ph1
+} // namespace DP
+} // namespace CPS

@@ -10,41 +10,33 @@
 
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNATearInterface.h>
-#include <dpsim-models/Base/Base_Ph1_Inductor.h>
 #include <dpsim-models/Solver/EigenvalueDynamicCompInterface.h>
+#include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
 namespace DP {
 namespace Ph1 {
-	/// \brief Inductor
-	///
-	/// The inductor is represented by a DC equivalent circuit which corresponds to
-	/// one iteration of the trapezoidal integration method.
-	/// The equivalent DC circuit is a resistance in parallel with a current source.
-	/// The resistance is constant for a defined time step and system
-	/// frequency and the current source changes for each iteration.
-	class Inductor :
-		public MNASimPowerComp<Complex>,
-		public Base::Ph1::Inductor,
-		public MNATearInterface,
-		public SharedFactory<Inductor>,
-		public EigenvalueDynamicCompInterface<Complex> {
-	protected:
-		/// DC equivalent current source for harmonics [A]
-		MatrixComp mEquivCurrent;
-		/// Equivalent conductance for harmonics [S]
-		MatrixComp mEquivCond;
-		/// Coefficient in front of previous current value for harmonics
-		MatrixComp mPrevCurrFac;
-		///
-		void initVars(Real timeStep);
-	public:
-		/// Defines UID, name and log level
-		Inductor(String uid, String name, Logger::Level logLevel = Logger::Level::off);
-		/// Defines name and log level
-		Inductor(String name, Logger::Level logLevel = Logger::Level::off)
-			: Inductor(name, name, logLevel) { }
+/// \brief Inductor
+///
+/// The inductor is represented by a DC equivalent circuit which corresponds to
+/// one iteration of the trapezoidal integration method.
+/// The equivalent DC circuit is a resistance in parallel with a current source.
+/// The resistance is constant for a defined time step and system
+/// frequency and the current source changes for each iteration.
+class Inductor : public MNASimPowerComp<Complex>,
+                 public Base::Ph1::Inductor,
+                 public MNATearInterface,
+                 public SharedFactory<Inductor>,
+                 public EigenvalueDynamicCompInterface<Complex> {
+protected:
+  /// DC equivalent current source for harmonics [A]
+  MatrixComp mEquivCurrent;
+  /// Equivalent conductance for harmonics [S]
+  MatrixComp mEquivCond;
+  /// Coefficient in front of previous current value for harmonics
+  MatrixComp mPrevCurrFac;
+  ///
+  void initVars(Real timeStep);
 
 public:
   /// Defines UID, name and log level
@@ -116,16 +108,41 @@ public:
     }
     void execute(Real time, Int timeStepCount);
 
-		// #### Implementation of eigenvalue dynamic component interface ####
-		void stampSignMatrix(MatrixVar<Complex> &signMatrix, Complex coeffDP) override;
-		void stampDiscretizationMatrix(MatrixVar<Complex> &discretizationMatrix, Complex coeffDP) override;
-		void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
-		void setBranchIdx(UInt i) override;
+  private:
+    Inductor &mInductor;
+  };
 
-	private:
-		/// Branch index
-		UInt mBranchIdx;
-	};
-}
-}
-}
+  class MnaPostStepHarm : public Task {
+  public:
+    MnaPostStepHarm(Inductor &inductor,
+                    const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
+        : Task(**inductor.mName + ".MnaPostStepHarm"), mInductor(inductor),
+          mLeftVectors(leftVectors) {
+      for (UInt i = 0; i < mLeftVectors.size(); i++)
+        mAttributeDependencies.push_back(mLeftVectors[i]);
+      mModifiedAttributes.push_back(mInductor.attribute("v_intf"));
+      mModifiedAttributes.push_back(mInductor.attribute("i_intf"));
+    }
+    void execute(Real time, Int timeStepCount);
+
+  private:
+    Inductor &mInductor;
+    std::vector<Attribute<Matrix>::Ptr> mLeftVectors;
+  };
+
+  // #### Implementation of eigenvalue dynamic component interface ####
+  void stampSignMatrix(MatrixVar<Complex> &signMatrix,
+                       Complex coeffDP) override;
+  void stampDiscretizationMatrix(MatrixVar<Complex> &discretizationMatrix,
+                                 Complex coeffDP) override;
+  void
+  stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
+  void setBranchIdx(UInt i) override;
+
+private:
+  /// Branch index
+  UInt mBranchIdx;
+};
+} // namespace Ph1
+} // namespace DP
+} // namespace CPS

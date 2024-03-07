@@ -16,8 +16,10 @@ using namespace CPS;
 namespace DPsim {
 
 template <typename VarType>
-MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :
-	Solver(name, logLevel), mDomain(domain), mMNAEigenvalueExtractor(logLevel) {
+MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain,
+                              CPS::Logger::Level logLevel)
+    : Solver(name, logLevel), mDomain(domain),
+      mMNAEigenvalueExtractor(logLevel) {
 
   // Raw source and solution vector logging
   mLeftVectorLog = std::make_shared<DataLogger>(
@@ -95,13 +97,13 @@ template <typename VarType> void MnaSolver<VarType>::initialize() {
   SPDLOG_LOGGER_INFO(mSLog, "--- Initial system matrices and vectors ---");
   logSystemMatrices();
 
-	if (Solver::mIsEigenvalueExtractionEnabled)
-	{
-		SPDLOG_LOGGER_INFO(mSLog, "--- Initialize eigenvalue extractor ---");
-		mMNAEigenvalueExtractor.initialize(mSystem, mNumMatrixNodeIndices, Solver::mTimeStep);
-	}
+  if (Solver::mIsEigenvalueExtractionEnabled) {
+    SPDLOG_LOGGER_INFO(mSLog, "--- Initialize eigenvalue extractor ---");
+    mMNAEigenvalueExtractor.initialize(mSystem, mNumMatrixNodeIndices,
+                                       Solver::mTimeStep);
+  }
 
-	mSLog->flush();
+  mSLog->flush();
 }
 
 template <> void MnaSolver<Real>::initializeComponents() {
@@ -363,29 +365,36 @@ template <typename VarType> void MnaSolver<VarType>::identifyTopologyObjects() {
   }
 }
 
-template <typename VarType>
-void MnaSolver<VarType>::assignMatrixNodeIndices() {
-	UInt matrixNodeIndexIdx = 0;
-	for (UInt idx = 0; idx < mNodes.size(); ++idx) {
-		mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
-		SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase A of node {}", matrixNodeIndexIdx, idx);
-		++matrixNodeIndexIdx;
-		if (mNodes[idx]->phaseType() == CPS::PhaseType::ABC) {
-			mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
-			SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase B of node {}", matrixNodeIndexIdx, idx);
-			++matrixNodeIndexIdx;
-			mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
-			SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase C of node {}", matrixNodeIndexIdx, idx);
-			++matrixNodeIndexIdx;
-		}
-		// This should be true when the final network node is reached, not considering virtual nodes
-		if (idx == mNumNetNodes-1) mNumNetMatrixNodeIndices = matrixNodeIndexIdx;
-	}
-	// Total number of network nodes including virtual nodes is matrixNodeIndexIdx + 1, which is why the variable is incremented after assignment
-	mNumMatrixNodeIndices = matrixNodeIndexIdx;
-	mNumVirtualMatrixNodeIndices = mNumMatrixNodeIndices - mNumNetMatrixNodeIndices;
-	mNumHarmMatrixNodeIndices = static_cast<UInt>(mSystem.mFrequencies.size()-1) * mNumMatrixNodeIndices;
-	mNumTotalMatrixNodeIndices = static_cast<UInt>(mSystem.mFrequencies.size()) * mNumMatrixNodeIndices;
+template <typename VarType> void MnaSolver<VarType>::assignMatrixNodeIndices() {
+  UInt matrixNodeIndexIdx = 0;
+  for (UInt idx = 0; idx < mNodes.size(); ++idx) {
+    mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
+    SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase A of node {}",
+                       matrixNodeIndexIdx, idx);
+    ++matrixNodeIndexIdx;
+    if (mNodes[idx]->phaseType() == CPS::PhaseType::ABC) {
+      mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
+      SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase B of node {}",
+                         matrixNodeIndexIdx, idx);
+      ++matrixNodeIndexIdx;
+      mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
+      SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase C of node {}",
+                         matrixNodeIndexIdx, idx);
+      ++matrixNodeIndexIdx;
+    }
+    // This should be true when the final network node is reached, not considering virtual nodes
+    if (idx == mNumNetNodes - 1)
+      mNumNetMatrixNodeIndices = matrixNodeIndexIdx;
+  }
+  // Total number of network nodes including virtual nodes is matrixNodeIndexIdx + 1, which is why the variable is incremented after assignment
+  mNumMatrixNodeIndices = matrixNodeIndexIdx;
+  mNumVirtualMatrixNodeIndices =
+      mNumMatrixNodeIndices - mNumNetMatrixNodeIndices;
+  mNumHarmMatrixNodeIndices =
+      static_cast<UInt>(mSystem.mFrequencies.size() - 1) *
+      mNumMatrixNodeIndices;
+  mNumTotalMatrixNodeIndices =
+      static_cast<UInt>(mSystem.mFrequencies.size()) * mNumMatrixNodeIndices;
 
   SPDLOG_LOGGER_INFO(mSLog, "Assigned simulation nodes to topology nodes:");
   SPDLOG_LOGGER_INFO(mSLog, "Number of network simulation nodes: {:d}",
@@ -582,44 +591,43 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 template <typename VarType> Task::List MnaSolver<VarType>::getTasks() {
   Task::List l;
 
-	for (auto comp : mMNAComponents) {
-		for (auto task : comp->mnaTasks()) {
-			l.push_back(task);
-		}
-	}
-	for (auto comp : mMNAIntfSwitches) {
-		for (auto task : comp->mnaTasks()) {
-			l.push_back(task);
-		}
-	}
-	for (auto node : mNodes) {
-		for (auto task : node->mnaTasks())
-			l.push_back(task);
-	}
-	// TODO signal components should be moved out of MNA solver
-	for (auto comp : mSimSignalComps) {
-		for (auto task : comp->getTasks()) {
-			l.push_back(task);
-		}
-	}
-	if (mFrequencyParallel) {
-		for (UInt i = 0; i < mSystem.mFrequencies.size(); ++i)
-			l.push_back(createSolveTaskHarm(i));
-	} else if (mSystemMatrixRecomputation) {
-		for (auto comp : this->mMNAIntfVariableComps) {
-			for (auto task : comp->mnaTasks())
-				l.push_back(task);
-		}
-		l.push_back(createSolveTaskRecomp());
-	} else {
-		l.push_back(createSolveTask());
-		if (mIsEigenvalueExtractionEnabled)
-		{
-			l.push_back(createExtractEigenvaluesTask());
-		}
-		l.push_back(createLogTask());
-	}
-	return l;
+  for (auto comp : mMNAComponents) {
+    for (auto task : comp->mnaTasks()) {
+      l.push_back(task);
+    }
+  }
+  for (auto comp : mMNAIntfSwitches) {
+    for (auto task : comp->mnaTasks()) {
+      l.push_back(task);
+    }
+  }
+  for (auto node : mNodes) {
+    for (auto task : node->mnaTasks())
+      l.push_back(task);
+  }
+  // TODO signal components should be moved out of MNA solver
+  for (auto comp : mSimSignalComps) {
+    for (auto task : comp->getTasks()) {
+      l.push_back(task);
+    }
+  }
+  if (mFrequencyParallel) {
+    for (UInt i = 0; i < mSystem.mFrequencies.size(); ++i)
+      l.push_back(createSolveTaskHarm(i));
+  } else if (mSystemMatrixRecomputation) {
+    for (auto comp : this->mMNAIntfVariableComps) {
+      for (auto task : comp->mnaTasks())
+        l.push_back(task);
+    }
+    l.push_back(createSolveTaskRecomp());
+  } else {
+    l.push_back(createSolveTask());
+    if (mIsEigenvalueExtractionEnabled) {
+      l.push_back(createExtractEigenvaluesTask());
+    }
+    l.push_back(createLogTask());
+  }
+  return l;
 }
 
 template <typename VarType>

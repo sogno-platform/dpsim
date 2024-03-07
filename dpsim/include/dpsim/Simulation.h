@@ -78,25 +78,25 @@ protected:
   /// (Real) time needed for the timesteps
   std::vector<Real> mStepTimes;
 
-		// #### Solver Settings ####
-		///
-		CPS::Domain mDomain = CPS::Domain::DP;
-		///
-		Solver::Type mSolverType = Solver::Type::MNA;
-		///
-		Solver::Behaviour mSolverBehaviour = Solver::Behaviour::Simulation;
-		///
-		Solver::List mSolvers;
-		///
-		DirectLinearSolverImpl mDirectImpl = DirectLinearSolverImpl::Undef;
-		///
-		DirectLinearSolverConfiguration mDirectLinearSolverConfiguration;
-		///
-		Bool mInitFromNodesAndTerminals = true;
-		/// Enable recomputation of system matrix during simulation
-		Bool mSystemMatrixRecomputation = false;
-		/// 
-		Bool mIsEigenvalueExtractionEnabled = false;
+  // #### Solver Settings ####
+  ///
+  CPS::Domain mDomain = CPS::Domain::DP;
+  ///
+  Solver::Type mSolverType = Solver::Type::MNA;
+  ///
+  Solver::Behaviour mSolverBehaviour = Solver::Behaviour::Simulation;
+  ///
+  Solver::List mSolvers;
+  ///
+  DirectLinearSolverImpl mDirectImpl = DirectLinearSolverImpl::Undef;
+  ///
+  DirectLinearSolverConfiguration mDirectLinearSolverConfiguration;
+  ///
+  Bool mInitFromNodesAndTerminals = true;
+  /// Enable recomputation of system matrix during simulation
+  Bool mSystemMatrixRecomputation = false;
+  ///
+  Bool mIsEigenvalueExtractionEnabled = false;
 
   /// If tearing components exist, the Diakoptics
   /// solver is selected automatically.
@@ -163,43 +163,63 @@ public:
   /// Desctructor
   virtual ~Simulation() {}
 
-		// #### Simulation Settings ####
-		///
-		void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
-		///
-		void setTimeStep(Real timeStep) { **mTimeStep = timeStep; }
-		///
-		void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
-		///
-		void setDomain(CPS::Domain domain = CPS::Domain::DP) { mDomain = domain; }
-		///
-		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
-		///
-		void doEigenvalueExtraction(Bool isEigenvalueExtractionEnabled = true) { mIsEigenvalueExtractionEnabled = isEigenvalueExtractionEnabled; }
-		/// set solver and component to initialization or simulation behaviour
-		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) { mSolverBehaviour = behaviour; }
-		///
-		void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) { mDirectImpl = directImpl; }
-		///
-		void setDirectLinearSolverConfiguration(const DirectLinearSolverConfiguration& configuration) { mDirectLinearSolverConfiguration = configuration;	}
-		///
-		void setMaxNumberOfIterations(int maxIterations) {mMaxIterations = maxIterations;}
-		///
-		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
-		///
-		void doSplitSubnets(Bool splitSubnets = true) { **mSplitSubnets = splitSubnets; }
-		///
-		void setTearingComponents(CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List()) {
-			mTearComponents = tearComponents;
-		}
-		/// Set the scheduling method
-		void setScheduler(const std::shared_ptr<Scheduler> &scheduler) {
-			mScheduler = scheduler;
-		}
-		/// Compute phasors of different frequencies in parallel
-		void doFrequencyParallelization(Bool value) { mFreqParallel = value; }
-		///
-		void doSystemMatrixRecomputation(Bool value) { mSystemMatrixRecomputation = value; }
+  // #### Simulation Settings ####
+  ///
+  void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
+  ///
+  void setTimeStep(Real timeStep) { **mTimeStep = timeStep; }
+  ///
+  void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
+  ///
+  void setDomain(CPS::Domain domain = CPS::Domain::DP) { mDomain = domain; }
+  ///
+  void setSolverType(Solver::Type solverType = Solver::Type::MNA) {
+    mSolverType = solverType;
+  }
+  ///
+  void doEigenvalueExtraction(Bool isEigenvalueExtractionEnabled = true) {
+    mIsEigenvalueExtractionEnabled = isEigenvalueExtractionEnabled;
+  }
+  /// set solver and component to initialization or simulation behaviour
+  void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) {
+    mSolverBehaviour = behaviour;
+  }
+  ///
+  void setDirectLinearSolverImplementation(DirectLinearSolverImpl directImpl) {
+    mDirectImpl = directImpl;
+  }
+  ///
+  void setDirectLinearSolverConfiguration(
+      const DirectLinearSolverConfiguration &configuration) {
+    mDirectLinearSolverConfiguration = configuration;
+  }
+  ///
+  void setMaxNumberOfIterations(int maxIterations) {
+    mMaxIterations = maxIterations;
+  }
+  ///
+  void doInitFromNodesAndTerminals(Bool f = true) {
+    mInitFromNodesAndTerminals = f;
+  }
+  ///
+  void doSplitSubnets(Bool splitSubnets = true) {
+    **mSplitSubnets = splitSubnets;
+  }
+  ///
+  void setTearingComponents(CPS::IdentifiedObject::List tearComponents =
+                                CPS::IdentifiedObject::List()) {
+    mTearComponents = tearComponents;
+  }
+  /// Set the scheduling method
+  void setScheduler(const std::shared_ptr<Scheduler> &scheduler) {
+    mScheduler = scheduler;
+  }
+  /// Compute phasors of different frequencies in parallel
+  void doFrequencyParallelization(Bool value) { mFreqParallel = value; }
+  ///
+  void doSystemMatrixRecomputation(Bool value) {
+    mSystemMatrixRecomputation = value;
+  }
 
   // #### Initialization ####
   /// activate steady state initialization
@@ -227,16 +247,12 @@ public:
   /// Create the schedule for the independent tasks
   void schedule();
 
-		/// Schedule an event in the simulation
-		void addEvent(Event::Ptr e) {
-			mEvents.addEvent(e);
-		}
-		/// Add a new data logger
-		void addLogger(DataLogger::Ptr logger) {
-			mLoggers.push_back(logger);
-		}
-		/// Write step time measurements to log file
-		void logStepTimes(String logName);
+  /// Schedule an event in the simulation
+  void addEvent(Event::Ptr e) { mEvents.addEvent(e); }
+  /// Add a new data logger
+  void addLogger(DataLogger::Ptr logger) { mLoggers.push_back(logger); }
+  /// Write step time measurements to log file
+  void logStepTimes(String logName);
 
   /// Write LU decomposition times measurements to log file
   void logLUTimes();
@@ -271,8 +287,8 @@ public:
   CPS::AttributeBase::Ptr getIdObjAttribute(const String &comp,
                                             const String &attr);
 
-		void logIdObjAttribute(const String &comp, const String &attr);
-		/// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
-		void logAttribute(String name, CPS::AttributeBase::Ptr attr);
-	};
-}
+  void logIdObjAttribute(const String &comp, const String &attr);
+  /// CHECK: Can we store the attribute name / UID intrinsically inside the attribute?
+  void logAttribute(String name, CPS::AttributeBase::Ptr attr);
+};
+} // namespace DPsim

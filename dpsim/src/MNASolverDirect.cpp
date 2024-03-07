@@ -226,15 +226,15 @@ MnaSolverDirect<VarType>::createSolveTaskHarm(UInt freqIdx) {
 }
 
 template <typename VarType>
-std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createExtractEigenvaluesTask()
-{
-	return std::make_shared<MnaSolverDirect<VarType>::ExtractEigenvaluesTask>(*this);
+std::shared_ptr<CPS::Task>
+MnaSolverDirect<VarType>::createExtractEigenvaluesTask() {
+  return std::make_shared<MnaSolverDirect<VarType>::ExtractEigenvaluesTask>(
+      *this);
 }
 
 template <typename VarType>
-std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createLogTask()
-{
-	return std::make_shared<MnaSolverDirect<VarType>::LogTask>(*this);
+std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createLogTask() {
+  return std::make_shared<MnaSolverDirect<VarType>::LogTask>(*this);
 }
 
 template <typename VarType>
@@ -315,7 +315,7 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
   for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
     mNodes[nodeIdx]->mnaUpdateVoltage(**mLeftSideVector);
 
-	// Components' states will be updated by the post-step tasks
+  // Components' states will be updated by the post-step tasks
 }
 
 template <typename VarType>
@@ -330,6 +330,19 @@ void MnaSolverDirect<VarType>::solveWithHarmonics(Real time, Int timeStepCount,
   **mLeftSideVectorHarm[freqIdx] =
       mDirectLinearSolvers[mCurrentSwitchStatus][freqIdx]->solve(
           mRightSideVectorHarm[freqIdx]);
+}
+
+template <typename VarType>
+void MnaSolverDirect<VarType>::extractEigenvalues(Real time,
+                                                  Int timeStepCount) {
+  MnaSolver<VarType>::mMNAEigenvalueExtractor.extractEigenvalues(
+      ((Matrix)mSwitchedMatrices[mCurrentSwitchStatus][0]), time,
+      timeStepCount);
+}
+
+template <typename VarType>
+void MnaSolverDirect<VarType>::closeEigenvalueLogger() {
+  MnaSolver<VarType>::mMNAEigenvalueExtractor.closeLogger();
 }
 
 template <typename VarType> void MnaSolverDirect<VarType>::logSystemMatrices() {
@@ -394,80 +407,10 @@ template <typename VarType> void MnaSolverDirect<VarType>::logSolveTime() {
 }
 
 template <typename VarType>
-void MnaSolverDirect<VarType>::extractEigenvalues(Real time, Int timeStepCount)
-{
-	MnaSolver<VarType>::mMNAEigenvalueExtractor.extractEigenvalues(((Matrix)mSwitchedMatrices[mCurrentSwitchStatus][0]), time, timeStepCount);
-}
-
-template <typename VarType>
-void MnaSolverDirect<VarType>::closeEigenvalueLogger()
-{
-	MnaSolver<VarType>::mMNAEigenvalueExtractor.closeLogger();
-}
-
-template <typename VarType>
-void MnaSolverDirect<VarType>::logSystemMatrices() {
-	if (mFrequencyParallel) {
-		for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
-			SPDLOG_LOGGER_INFO(mSLog, "System matrix for frequency: {:d} \n{:s}", i, Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][i]));
-		}
-
-		for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i) {
-			SPDLOG_LOGGER_INFO(mSLog, "Right side vector for frequency: {:d} \n{:s}", i, Logger::matrixToString(mRightSideVectorHarm[i]));
-		}
-
-	}
-	else if (mSystemMatrixRecomputation) {
-		SPDLOG_LOGGER_INFO(mSLog, "Summarizing matrices: ");
-		SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
-		SPDLOG_LOGGER_INFO(mSLog, "Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
-		SPDLOG_LOGGER_INFO(mSLog, "Right side vector: {}", Logger::matrixToString(mRightSideVector));
-	} else {
-		if (mSwitches.size() < 1) {
-			SPDLOG_LOGGER_INFO(mSLog, "System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
-		}
-		else {
-			SPDLOG_LOGGER_INFO(mSLog, "Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
-
-			for (auto sys : mSwitchedMatrices) {
-				SPDLOG_LOGGER_INFO(mSLog, "Switching System matrix {:s} \n{:s}",
-				sys.first.to_string(), Logger::matrixToString(sys.second[0]));
-			}
-		}
-		SPDLOG_LOGGER_INFO(mSLog, "Right side vector: \n{}", mRightSideVector);
-	}
-}
-
-template<typename VarType>
-void MnaSolverDirect<VarType>::logLUTimes() {
-	logFactorizationTime();
-	logRecomputationTime();
-	logSolveTime();
-}
-
-template<typename VarType>
-void MnaSolverDirect<VarType>::logSolveTime(){
-	Real solveSum = 0.0;
-	Real solveMax = 0.0;
-	for(auto meas : mSolveTimes)
-	{
-		solveSum += meas;
-		if(meas > solveMax)
-			solveMax = meas;
-	}
-  	SPDLOG_LOGGER_INFO(mSLog, "Cumulative solve times: {:.12f}", solveSum);
-	SPDLOG_LOGGER_INFO(mSLog, "Average solve time: {:.12f}", solveSum/static_cast<double>(mSolveTimes.size()));
-	SPDLOG_LOGGER_INFO(mSLog, "Maximum solve time: {:.12f}", solveMax);
-	SPDLOG_LOGGER_INFO(mSLog, "Number of solves: {:d}", mSolveTimes.size());
-}
-
-
-template <typename VarType>
-void MnaSolverDirect<VarType>::logFactorizationTime()
-{
-	for (auto meas : mFactorizeTimes) {
-		SPDLOG_LOGGER_INFO(mSLog, "LU factorization time: {:.12f}", meas);
-	}
+void MnaSolverDirect<VarType>::logFactorizationTime() {
+  for (auto meas : mFactorizeTimes) {
+    SPDLOG_LOGGER_INFO(mSLog, "LU factorization time: {:.12f}", meas);
+  }
 }
 
 template <typename VarType>

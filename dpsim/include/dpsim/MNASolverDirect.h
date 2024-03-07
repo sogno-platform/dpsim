@@ -79,30 +79,30 @@ protected:
   /// LU factorization configuration
   DirectLinearSolverConfiguration mConfigurationInUse;
 
-		using MnaSolver<VarType>::mSwitches;
-		using MnaSolver<VarType>::mMNAIntfSwitches;
-		using MnaSolver<VarType>::mMNAComponents;
-		using MnaSolver<VarType>::mVariableComps;
-		using MnaSolver<VarType>::mMNAIntfVariableComps;
-		using MnaSolver<VarType>::mRightSideVector;
-		using MnaSolver<VarType>::mLeftSideVector;
-		using MnaSolver<VarType>::mCurrentSwitchStatus;
-		using MnaSolver<VarType>::mRightVectorStamps;
-		using MnaSolver<VarType>::mNumNetNodes;
-		using MnaSolver<VarType>::mNodes;
-		using MnaSolver<VarType>::mIsInInitialization;
-		using MnaSolver<VarType>::mRightSideVectorHarm;
-		using MnaSolver<VarType>::mLeftSideVectorHarm;
-		using MnaSolver<VarType>::mFrequencyParallel;
-		using MnaSolver<VarType>::mSLog;
-		using MnaSolver<VarType>::mSystemMatrixRecomputation;
-		using MnaSolver<VarType>::hasVariableComponentChanged;
-		using MnaSolver<VarType>::mNumRecomputations;
-		using MnaSolver<VarType>::mSyncGen;
-		using MnaSolver<VarType>::mFactorizeTimes;
-		using MnaSolver<VarType>::mSolveTimes;
-		using MnaSolver<VarType>::mRecomputationTimes;
-		using MnaSolver<VarType>::mListVariableSystemMatrixEntries;
+  using MnaSolver<VarType>::mSwitches;
+  using MnaSolver<VarType>::mMNAIntfSwitches;
+  using MnaSolver<VarType>::mMNAComponents;
+  using MnaSolver<VarType>::mVariableComps;
+  using MnaSolver<VarType>::mMNAIntfVariableComps;
+  using MnaSolver<VarType>::mRightSideVector;
+  using MnaSolver<VarType>::mLeftSideVector;
+  using MnaSolver<VarType>::mCurrentSwitchStatus;
+  using MnaSolver<VarType>::mRightVectorStamps;
+  using MnaSolver<VarType>::mNumNetNodes;
+  using MnaSolver<VarType>::mNodes;
+  using MnaSolver<VarType>::mIsInInitialization;
+  using MnaSolver<VarType>::mRightSideVectorHarm;
+  using MnaSolver<VarType>::mLeftSideVectorHarm;
+  using MnaSolver<VarType>::mFrequencyParallel;
+  using MnaSolver<VarType>::mSLog;
+  using MnaSolver<VarType>::mSystemMatrixRecomputation;
+  using MnaSolver<VarType>::hasVariableComponentChanged;
+  using MnaSolver<VarType>::mNumRecomputations;
+  using MnaSolver<VarType>::mSyncGen;
+  using MnaSolver<VarType>::mFactorizeTimes;
+  using MnaSolver<VarType>::mSolveTimes;
+  using MnaSolver<VarType>::mRecomputationTimes;
+  using MnaSolver<VarType>::mListVariableSystemMatrixEntries;
 
   // #### General
   /// Create system matrix
@@ -129,21 +129,21 @@ protected:
   /// Recomputes systems matrix
   virtual void recomputeSystemMatrix(Real time);
 
-		// #### Scheduler Task Methods ####
-		/// Create a solve task for this solver implementation
-		std::shared_ptr<CPS::Task> createSolveTask() override;
-		/// Create a solve task for this solver implementation
-		std::shared_ptr<CPS::Task> createLogTask() override;
-		/// Create a solve task for this solver implementation
-		std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
-		///  Create a task for eigenvalue extraction
-		std::shared_ptr<CPS::Task> createExtractEigenvaluesTask() override;
-		/// Logging of system matrices and source vector
-		void logSystemMatrices() override;
-		/// Solves system for single frequency
-		void solve(Real time, Int timeStepCount) override;
-		/// Solves system for multiple frequencies
-		void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) override;
+  // #### Scheduler Task Methods ####
+  /// Create a solve task for this solver implementation
+  std::shared_ptr<CPS::Task> createSolveTask() override;
+  /// Create a solve task for this solver implementation
+  std::shared_ptr<CPS::Task> createLogTask() override;
+  /// Create a solve task for this solver implementation
+  std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
+  ///  Create a task for eigenvalue extraction
+  std::shared_ptr<CPS::Task> createExtractEigenvaluesTask() override;
+  /// Logging of system matrices and source vector
+  void logSystemMatrices() override;
+  /// Solves system for single frequency
+  void solve(Real time, Int timeStepCount) override;
+  /// Solves system for multiple frequencies
+  void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) override;
 
   /// Logging of the right-hand-side solution time
   void logSolveTime();
@@ -156,25 +156,24 @@ protected:
   std::shared_ptr<DirectLinearSolver>
   createDirectSolverImplementation(CPS::Logger::Log mSLog);
 
-
-	public:
-		/// Constructor should not be called by users but by Simulation
-		/// sovlerImpl: choose the most advanced solver implementation available by default
-		MnaSolverDirect(String name,
-			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
+public:
+  /// Constructor should not be called by users but by Simulation
+  /// sovlerImpl: choose the most advanced solver implementation available by default
+  MnaSolverDirect(String name, CPS::Domain domain = CPS::Domain::DP,
+                  CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
   /// Destructor
   virtual ~MnaSolverDirect() = default;
 
-		// ### Eigenvalue extraction ###
-		/// Extract eigenvalues from power system conductance matrix
-		void extractEigenvalues(Real time, Int timeStepCount) override;
-		///
-		void closeEigenvalueLogger() override;
+  // ### Eigenvalue extraction ###
+  /// Extract eigenvalues from power system conductance matrix
+  void extractEigenvalues(Real time, Int timeStepCount) override;
+  ///
+  void closeEigenvalueLogger() override;
 
-		/// Sets the linear solver to "implementation" and creates an object
-		void setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);
+  /// Sets the linear solver to "implementation" and creates an object
+  void
+  setDirectLinearSolverImplementation(DirectLinearSolverImpl implementation);
 
   /// Sets the linear solver configuration
   void setDirectLinearSolverConfiguration(
@@ -267,33 +266,31 @@ protected:
     MnaSolverDirect<VarType> &mSolver;
   };
 
-		///
-		class ExtractEigenvaluesTask : public CPS::Task
-		{
-		public:
-			ExtractEigenvaluesTask(MnaSolverDirect<VarType> &solver) : Task(solver.mName + ".ExtractEigenvalues"), mSolver(solver)
-			{
-				mAttributeDependencies.push_back(solver.mLeftSideVector);
-				mModifiedAttributes.push_back(Scheduler::external);
-			}
+  ///
+  class ExtractEigenvaluesTask : public CPS::Task {
+  public:
+    ExtractEigenvaluesTask(MnaSolverDirect<VarType> &solver)
+        : Task(solver.mName + ".ExtractEigenvalues"), mSolver(solver) {
+      mAttributeDependencies.push_back(solver.mLeftSideVector);
+      mModifiedAttributes.push_back(Scheduler::external);
+    }
 
-			void execute(Real time, Int timeStepCount)
-			{
-				mSolver.extractEigenvalues(time, timeStepCount);
-			}
+    void execute(Real time, Int timeStepCount) {
+      mSolver.extractEigenvalues(time, timeStepCount);
+    }
 
-		private:
-			MnaSolverDirect<VarType> &mSolver;
-		};
+  private:
+    MnaSolverDirect<VarType> &mSolver;
+  };
 
-		///
-		class LogTask : public CPS::Task {
-		public:
-			LogTask(MnaSolverDirect<VarType>& solver) :
-				Task(solver.mName + ".Log"), mSolver(solver) {
-				mAttributeDependencies.push_back(solver.mLeftSideVector);
-				mModifiedAttributes.push_back(Scheduler::external);
-			}
+  ///
+  class LogTask : public CPS::Task {
+  public:
+    LogTask(MnaSolverDirect<VarType> &solver)
+        : Task(solver.mName + ".Log"), mSolver(solver) {
+      mAttributeDependencies.push_back(solver.mLeftSideVector);
+      mModifiedAttributes.push_back(Scheduler::external);
+    }
 
     void execute(Real time, Int timeStepCount) {
       mSolver.log(time, timeStepCount);

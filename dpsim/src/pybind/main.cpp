@@ -172,34 +172,45 @@ PYBIND11_MODULE(dpsimpy, m) {
                getPartialRefactorizationMethod)
       .def("get_btf", &DPsim::DirectLinearSolverConfiguration::getBTF);
 
-    py::class_<DPsim::Simulation>(m, "Simulation")
-	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("name", &DPsim::Simulation::name)
-		.def("set_time_step", &DPsim::Simulation::setTimeStep)
-		.def("set_final_time", &DPsim::Simulation::setFinalTime)
-		.def("add_logger", &DPsim::Simulation::addLogger)
-		.def("set_system", &DPsim::Simulation::setSystem)
-		.def("run", &DPsim::Simulation::run)
-		.def("set_solver", &DPsim::Simulation::setSolverType)
-		.def("set_domain", &DPsim::Simulation::setDomain)
-		.def("start", &DPsim::Simulation::start)
-		.def("next", &DPsim::Simulation::next)
-		.def("stop", &DPsim::Simulation::stop)
-		.def("get_idobj_attr", &DPsim::Simulation::getIdObjAttribute, "comp"_a, "attr"_a)
-		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a)
-		.def("log_idobj_attribute", &DPsim::Simulation::logIdObjAttribute, "comp"_a, "attr"_a)
-		.def("log_attribute", &DPsim::Simulation::logAttribute, "name"_a, "attr"_a)
-		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
-		.def("do_system_matrix_recomputation", &DPsim::Simulation::doSystemMatrixRecomputation)
-		.def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
-		.def("do_frequency_parallelization", &DPsim::Simulation::doFrequencyParallelization)
-		.def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
-		.def("add_event", &DPsim::Simulation::addEvent)
-		.def("set_solver_component_behaviour", &DPsim::Simulation::setSolverAndComponentBehaviour)
-		.def("set_direct_solver_implementation", &DPsim::Simulation::setDirectLinearSolverImplementation)
-		.def("set_direct_linear_solver_configuration", &DPsim::Simulation::setDirectLinearSolverConfiguration)
-		.def("log_lu_times", &DPsim::Simulation::logLUTimes)
-		.def("do_eigenvalue_extraction", &DPsim::Simulation::doEigenvalueExtraction);
+  py::class_<DPsim::Simulation>(m, "Simulation")
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("name", &DPsim::Simulation::name)
+      .def("set_time_step", &DPsim::Simulation::setTimeStep)
+      .def("set_final_time", &DPsim::Simulation::setFinalTime)
+      .def("add_logger", &DPsim::Simulation::addLogger)
+      .def("set_system", &DPsim::Simulation::setSystem)
+      .def("run", &DPsim::Simulation::run)
+      .def("set_solver", &DPsim::Simulation::setSolverType)
+      .def("set_domain", &DPsim::Simulation::setDomain)
+      .def("start", &DPsim::Simulation::start)
+      .def("next", &DPsim::Simulation::next)
+      .def("stop", &DPsim::Simulation::stop)
+      .def("get_idobj_attr", &DPsim::Simulation::getIdObjAttribute, "comp"_a,
+           "attr"_a)
+      .def("add_interface", &DPsim::Simulation::addInterface, "interface"_a)
+      .def("log_idobj_attribute", &DPsim::Simulation::logIdObjAttribute,
+           "comp"_a, "attr"_a)
+      .def("log_attribute", &DPsim::Simulation::logAttribute, "name"_a,
+           "attr"_a)
+      .def("do_init_from_nodes_and_terminals",
+           &DPsim::Simulation::doInitFromNodesAndTerminals)
+      .def("do_system_matrix_recomputation",
+           &DPsim::Simulation::doSystemMatrixRecomputation)
+      .def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
+      .def("do_frequency_parallelization",
+           &DPsim::Simulation::doFrequencyParallelization)
+      .def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
+      .def("add_event", &DPsim::Simulation::addEvent)
+      .def("set_solver_component_behaviour",
+           &DPsim::Simulation::setSolverAndComponentBehaviour)
+      .def("set_direct_solver_implementation",
+           &DPsim::Simulation::setDirectLinearSolverImplementation)
+      .def("set_direct_linear_solver_configuration",
+           &DPsim::Simulation::setDirectLinearSolverConfiguration)
+      .def("log_lu_times", &DPsim::Simulation::logLUTimes)
+      .def("do_eigenvalue_extraction",
+           &DPsim::Simulation::doEigenvalueExtraction);
 
   py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m,
                                                            "RealTimeSimulation")
