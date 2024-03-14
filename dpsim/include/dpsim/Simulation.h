@@ -176,7 +176,8 @@ public:
   void setSolverType(Solver::Type solverType = Solver::Type::MNA) {
     mSolverType = solverType;
   }
-  ///
+
+  /// Enable eigenvalue extraction during simulation.
   void doEigenvalueExtraction(Bool isEigenvalueExtractionEnabled = true) {
     mIsEigenvalueExtractionEnabled = isEigenvalueExtractionEnabled;
   }
