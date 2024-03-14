@@ -115,7 +115,7 @@ MatrixComp Math::returnNonZeroElements(const MatrixComp &mat) {
   return nonZeroMatrix;
 }
 
-MatrixComp Math::convertToComplex(const Matrix &realEquivalentMatrix) {
+MatrixComp Math::convertRealEquivalentToComplexMatrix(const Matrix &realEquivalentMatrix) {
   // The size of the complex matrix is half the size of the real matrix
   int size = realEquivalentMatrix.rows() / 2;
 

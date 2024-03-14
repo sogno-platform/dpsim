@@ -113,7 +113,7 @@ void MNAEigenvalueExtractor<Complex>::calculateStateMatrix(
     const Matrix &powerSystemMatrix) {
   // TODO: [Georgii] use back substitution of factorized power system matrix instead of inversion (performance)
   MatrixComp compPowerSystemMatrix =
-      CPS::Math::convertToComplex(powerSystemMatrix);
+      CPS::Math::convertRealEquivalentToComplexMatrix(powerSystemMatrix);
   MatrixComp intermediateResult =
       compPowerSystemMatrix.inverse() * mNodeBranchIncidenceMatrix;
   mStateMatrix = mSignMatrix + mDiscretizationMatrix *
