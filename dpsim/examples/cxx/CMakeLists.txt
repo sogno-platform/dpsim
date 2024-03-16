@@ -33,6 +33,7 @@ set(CIRCUIT_SOURCES
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp
+	Circuits/EMT_Ph1_Diode_test.cpp
 
 	# EMT examples with PF initialization
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
@@ -82,6 +83,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_SMIB_ReducedOrderSG_LoadStep.cpp
 	Circuits/EMT_SMIB_ReducedOrderSGIterative_LoadStep.cpp
 	Circuits/DP_SMIB_ReducedOrderSGIterative_LoadStep.cpp
+	Circuits/EMT_SMIB_4OrderSG_SSN_LoadStep.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp

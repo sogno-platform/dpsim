@@ -102,6 +102,12 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
       .def("connect", &CPS::EMT::Ph1::Inductor::connect)
       .def_property("L", createAttributeGetter<CPS::Real>("L"),
                     createAttributeSetter<CPS::Real>("L"));
+                    
+  py::class_<CPS::EMT::Ph1::Diode, std::shared_ptr<CPS::EMT::Ph1::Diode>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Diode", py::multiple_inheritance())
+      .def(py::init<std::string>())
+	 .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph1::Diode::setParameters, "I_S"_a, "V_T"_a)
+	 .def("connect", &CPS::EMT::Ph1::Diode::connect);
 }
 
 void addEMTPh3Components(py::module_ mEMTPh3) {

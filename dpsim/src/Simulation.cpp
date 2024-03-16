@@ -12,6 +12,11 @@
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/Utils.h>
+#include <dpsim-models/Utils.h>
+#include <dpsim/MNASolverFactory.h>
+#include <dpsim/PFSolverPowerPolar.h>
+#include <dpsim/DiakopticsSolver.h>
+#include <dpsim/IterativeMnaSolverDirect.h>
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
@@ -85,12 +90,16 @@ void Simulation::initialize() {
   mInitialized = true;
 }
 
-template <typename VarType> void Simulation::createSolvers() {
-  Solver::Ptr solver;
-  switch (mSolverType) {
-  case Solver::Type::MNA:
-    createMNASolver<VarType>();
-    break;
+template <typename VarType>
+void Simulation::createSolvers() {
+	Solver::Ptr solver;
+	switch (mSolverType) {
+		case Solver::Type::MNA:
+			createMNASolver<VarType>();
+			break;
+case Solver::Type::ITERATIVEMNA:
+			createIterativeMNASolver<VarType>();
+			break;
 #ifdef WITH_SUNDIALS
   case Solver::Type::DAE:
     solver = std::make_shared<DAESolver>(**mName, mSystem, **mTimeStep, 0.0);
@@ -168,6 +177,51 @@ template <typename VarType> void Simulation::createMNASolver() {
     }
     mSolvers.push_back(solver);
   }
+}
+
+template <typename VarType>
+void Simulation::createIterativeMNASolver() {
+	Solver::Ptr	 solver;
+	std::vector<SystemTopology> subnets;
+	// The Diakoptics solver splits the system at a later point.
+	// That is why the system is not split here if tear components exist.
+	if (**mSplitSubnets && mTearComponents.size() == 0)
+		mSystem.splitSubnets<VarType>(subnets);
+	else
+		subnets.push_back(mSystem);
+
+	for (UInt net = 0; net < subnets.size(); ++net) {
+		String copySuffix;
+	   	if (subnets.size() > 1)
+			copySuffix = "_" + std::to_string(net);
+
+		// TODO: In the future, here we could possibly even use different
+		// solvers for different subnets if deemed useful
+		if (mTearComponents.size() > 0) {
+			// Tear components available, use diakoptics
+			solver = std::make_shared<DiakopticsSolver<VarType>>(**mName,
+				subnets[net], mTearComponents, **mTimeStep, mLogLevel);
+			mSolvers.push_back(solver);
+		} else {
+
+			std::shared_ptr<IterativeMnaSolverDirect<VarType>> Itsolver = std::make_shared<IterativeMnaSolverDirect<VarType>>(**mName, mDomain, mLogLevel);
+			Itsolver->setDirectLinearSolverImplementation(DirectLinearSolverImpl::SparseLU);
+
+			Itsolver->setTimeStep(**mTimeStep);
+			Itsolver->doSteadyStateInit(**mSteadyStateInit);
+			Itsolver->doFrequencyParallelization(false);
+			Itsolver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
+			Itsolver->setSteadStIniAccLimit(mSteadStIniAccLimit);
+			Itsolver->setSystem(subnets[net]);
+			Itsolver->setSolverAndComponentBehaviour(mSolverBehaviour);
+			Itsolver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
+			Itsolver->doSystemMatrixRecomputation(true);
+			Itsolver->setDirectLinearSolverConfiguration(mDirectLinearSolverConfiguration);
+			Itsolver->initialize();
+
+			mSolvers.push_back(Itsolver);
+		}
+	}
 }
 
 void Simulation::sync() const {
