@@ -53,10 +53,6 @@
 #include <dpsim-models/DP/DP_Ph1_RXLoadSwitch.h>
 #include <dpsim-models/DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
-#include <dpsim-models/DP/DP_Ph1_Transformer.h>
-#include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
-#include <dpsim-models/DP/DP_Ph1_VoltageSourceRamp.h>
-#include <dpsim-models/DP/DP_Ph1_VoltageSourceNorton.h>
 #include <dpsim-models/DP/DP_Ph1_Shunt.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator3OrderVBR.h>
@@ -104,10 +100,6 @@
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesSwitch.h>
 #include <dpsim-models/EMT/EMT_Ph3_Shunt.h>
-#include <dpsim-models/EMT/EMT_Ph3_CurrentSource.h>
-#include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
-#include <dpsim-models/EMT/EMT_Ph3_VoltageSourceNorton.h>
-#include <dpsim-models/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.h>

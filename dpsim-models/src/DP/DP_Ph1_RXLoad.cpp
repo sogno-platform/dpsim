@@ -26,90 +26,97 @@ DP::Ph1::RXLoad::RXLoad(String name, Logger::Level logLevel)
     : RXLoad(name, name, logLevel) {}
 
 void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower) {
-	**mActivePower = activePower;
-	**mReactivePower = reactivePower;
-	initPowerFromTerminal = false;
+  **mActivePower = activePower;
+  **mReactivePower = reactivePower;
+  initPowerFromTerminal = false;
 
-	SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [W] Reactive Power={} [VAr]", **mActivePower, **mReactivePower);
+  SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [W] Reactive Power={} [VAr]",
+                     **mActivePower, **mReactivePower);
 }
 
-void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real nominalVoltage) {
-	setParameters(activePower, reactivePower);
-	**mNomVoltage = nominalVoltage;
-	initVoltageFromNode = false;
+void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower,
+                                    Real nominalVoltage) {
+  setParameters(activePower, reactivePower);
+  **mNomVoltage = nominalVoltage;
+  initVoltageFromNode = false;
 
-	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
+  SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 }
 
 void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
-	if(initPowerFromTerminal){
-		setParameters(
-			mTerminals[0]->singleActivePower(),
-			mTerminals[0]->singleReactivePower());
-	}
-	if (initVoltageFromNode) {
-		**mNomVoltage = std::abs(initialSingleVoltage(0));
-		SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
-	}
+  if (initPowerFromTerminal) {
+    setParameters(mTerminals[0]->singleActivePower(),
+                  mTerminals[0]->singleReactivePower());
+  }
+  if (initVoltageFromNode) {
+    **mNomVoltage = std::abs(initialSingleVoltage(0));
+    SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
+  }
 
-	if (**mActivePower != 0) {
-		mResistance = std::pow(**mNomVoltage, 2) / **mActivePower;
-		mSubResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
-		mSubResistor->setParameters(mResistance);
-		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
-		mSubResistor->initialize(mFrequencies);
-		mSubResistor->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-	}
-	else {
-		mResistance = 0;
-	}
+  if (**mActivePower != 0) {
+    mResistance = std::pow(**mNomVoltage, 2) / **mActivePower;
+    mSubResistor =
+        std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
+    mSubResistor->setParameters(mResistance);
+    mSubResistor->connect({SimNode::GND, mTerminals[0]->node()});
+    mSubResistor->initialize(mFrequencies);
+    mSubResistor->initializeFromNodesAndTerminals(frequency);
+    addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+  } else {
+    mResistance = 0;
+  }
 
-	if (**mReactivePower != 0)
-		mReactance = std::pow(**mNomVoltage, 2) / **mReactivePower;
-	else
-		mReactance = 0;
+  if (**mReactivePower != 0)
+    mReactance = std::pow(**mNomVoltage, 2) / **mReactivePower;
+  else
+    mReactance = 0;
 
-	if (mReactance > 0) {
-		mInductance = mReactance / (2.*PI*frequency);
-		mSubInductor = std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
-		mSubInductor->setParameters(mInductance);
-		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
-		mSubInductor->initialize(mFrequencies);
-		mSubInductor->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-	}
-	else if (mReactance < 0) {
-		mCapacitance = -1. / (2.*PI*frequency) / mReactance;
-		mSubCapacitor = std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap", mLogLevel);
-		mSubCapacitor->setParameters(mCapacitance);
-		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
-		mSubCapacitor->initialize(mFrequencies);
-		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-		addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-	}
+  if (mReactance > 0) {
+    mInductance = mReactance / (2. * PI * frequency);
+    mSubInductor =
+        std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
+    mSubInductor->setParameters(mInductance);
+    mSubInductor->connect({SimNode::GND, mTerminals[0]->node()});
+    mSubInductor->initialize(mFrequencies);
+    mSubInductor->initializeFromNodesAndTerminals(frequency);
+    addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  } else if (mReactance < 0) {
+    mCapacitance = -1. / (2. * PI * frequency) / mReactance;
+    mSubCapacitor =
+        std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap", mLogLevel);
+    mSubCapacitor->setParameters(mCapacitance);
+    mSubCapacitor->connect({SimNode::GND, mTerminals[0]->node()});
+    mSubCapacitor->initialize(mFrequencies);
+    mSubCapacitor->initializeFromNodesAndTerminals(frequency);
+    addMNASubComponent(mSubCapacitor,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
 
-	(**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
-	(**mIntfCurrent)(0, 0) = std::conj(Complex(**mActivePower, **mReactivePower) / (**mIntfVoltage)(0, 0));
+  (**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
+  (**mIntfCurrent)(0, 0) = std::conj(Complex(**mActivePower, **mReactivePower) /
+                                     (**mIntfVoltage)(0, 0));
 
-	SPDLOG_LOGGER_INFO(mSLog, 
-		"\n--- Initialization from powerflow ---"
-		"\nVoltage across: {:s}"
-		"\nCurrent: {:s}"
-		"\nTerminal 0 voltage: {:s}"
-		"\nResistance: {:f}"
-		"\nReactance: {:f}"
-		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString((**mIntfVoltage)(0,0)),
-		Logger::phasorToString((**mIntfCurrent)(0,0)),
-		Logger::phasorToString(initialSingleVoltage(0)),
-		mResistance,
-		mReactance);
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\n--- Initialization from powerflow ---"
+                     "\nVoltage across: {:s}"
+                     "\nCurrent: {:s}"
+                     "\nTerminal 0 voltage: {:s}"
+                     "\nResistance: {:f}"
+                     "\nReactance: {:f}"
+                     "\n--- Initialization from powerflow finished ---",
+                     Logger::phasorToString((**mIntfVoltage)(0, 0)),
+                     Logger::phasorToString((**mIntfCurrent)(0, 0)),
+                     Logger::phasorToString(initialSingleVoltage(0)),
+                     mResistance, mReactance);
 }
 
-void DP::Ph1::RXLoad::mnaCompUpdateVoltage(const Matrix& leftVector) {
-	(**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+void DP::Ph1::RXLoad::mnaCompUpdateVoltage(const Matrix &leftVector) {
+  (**mIntfVoltage)(0, 0) =
+      Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::RXLoad::mnaCompUpdateCurrent(const Matrix &leftVector) {

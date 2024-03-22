@@ -21,13 +21,7 @@ SP::Ph1::Transformer::Transformer(String uid, String name,
       mActivePowerBranch(mAttributes->create<Matrix>("p_branch_vector")),
       mReactivePowerBranch(mAttributes->create<Matrix>("q_branch_vector")),
       mActivePowerInjection(mAttributes->create<Real>("p_inj")),
-      mReactivePowerInjection(mAttributes->create<Real>("q_inj")),
-      mPrimaryCurrent(mAttributes->create<Complex>("primary_current")),
-      mSecondaryCurrent(mAttributes->create<Complex>("secondary_current")),
-      mPrimaryLV(mAttributes->create<Complex>("primary_voltage_LVside")),
-      mSecondaryLV(mAttributes->create<Complex>("secondary_voltage_LVside")) {
-
-  setTerminalNumber(2);
+      mReactivePowerInjection(mAttributes->create<Real>("q_inj")) {
 
   setTerminalNumber(2);
 
@@ -125,9 +119,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
                      "\nTerminal 1 voltage (LV side voltage): {:s}"
                      "\n--- Initialization from powerflow finished ---",
                      Logger::phasorToString((**mIntfVoltage)(0, 0)),
-                     Logger::phasorToString(**mPrimaryCurrent),
-                     Logger::complexToString(**mPrimaryCurrent),
-                     Logger::phasorToString(**mSecondaryCurrent),
+                     Logger::phasorToString((**mIntfCurrent)(0, 0)),
                      Logger::phasorToString(initialSingleVoltage(0)),
                      Logger::phasorToString(initialSingleVoltage(1)));
   mSLog->flush();
