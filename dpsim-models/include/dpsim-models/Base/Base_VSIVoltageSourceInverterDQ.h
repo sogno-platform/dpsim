@@ -12,111 +12,120 @@
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Base/Base_VSIControlDQ.h>
+#include <dpsim-models/Signal/DroopController.h>
 #include <dpsim-models/SimNode.h>
 
-namespace CPS {
-namespace Base {
+namespace CPS
+{
+	namespace Base
+	{
 
-	/// @brief Base model of average grid forming inverter
-	template <typename VarType>
-	class VSIVoltageSourceInverterDQ {
-	private:
-		/// Component logger
-		Logger::Log mLogger;
+		/// @brief Base model of average grid forming inverter
+		template <typename VarType>
+		class VSIVoltageSourceInverterDQ
+		{
+		private:
+			/// Component logger
+			Logger::Log mLogger;
 
-	protected:
-		// ### General Parameters ###
-		/// mModelAsCurrentSource=true --> Inverter is modeled as current source, otherwise as voltage source
-		Bool mModelAsCurrentSource;
-		/// Simulation step
-		Real mTimeStep;
-		/// Nominal Omega
-		Real mOmegaN;
+		protected:
+			// ### General Parameters ###
+			/// mModelAsCurrentSource=true --> Inverter is modeled as current source, otherwise as voltage source
+			Bool mModelAsCurrentSource;
+			/// Simulation step
+			Real mTimeStep;
+			/// Nominal Omega
+			Real mOmegaN;
 
-		// ### Inverter Parameters ###
-		/// Nominal frequency
-		Real mOmegaNom;
-		/// Nominal voltage
-		Real mVnom;
-		/// Voltage d reference
-		Real mVdRef;
-		/// Voltage q reference
-		Real mVqRef;
-		/// Active power reference
-		Real mPref;
+			// ### Inverter Parameters ###
+			/// Nominal frequency
+			Real mOmegaNom;
+			/// Nominal voltage
+			Real mVnom;
+			/// Voltage d reference
+			Real mVdRef;
+			/// Voltage q reference
+			Real mVqRef;
+			/// Active power reference
+			Real mPref;
 
-		// ### Inverter Flags ###
-		/// Flag for usage of interface resistor Rc
-		Bool mWithInterfaceResistor = false;
-		/// Flag for control droop usage
-		Bool mWithDroop = false;
+			// ### Inverter Flags ###
+			/// Flag for usage of interface resistor Rc
+			Bool mWithInterfaceResistor = false;
+			/// Flag for control droop usage
+			Bool mWithDroop = false;
 
-		// Filter parameters
-		Real mLf;
-		Real mCf;
-		Real mRf;
-		Real mRc;
+			// Filter parameters
+			Real mLf;
+			Real mCf;
+			Real mRf;
+			Real mRc;
 
-		// ### Inverter Variables ###
-		/// Omega
-		const Attribute<Real>::Ptr mOmega;
-		/// System angle (rotating at nominal omega)
-		const Attribute<Real>::Ptr mThetaSys;
-		/// Inverter angle (rotating at inverter omega)
-		const Attribute<Real>::Ptr mThetaInv;
-		/// Voltage/Current as control output after transformation interface
-		const Attribute<MatrixComp>::Ptr mSourceValue;
-		/// Voltage/Current as control output after transformation interface
-		const Attribute<Complex>::Ptr mSourceValue_dq;
-		/// Measured voltage in dq reference frame
-		const Attribute<Complex>::Ptr mVcap_dq;
-		/// Measured current in dq reference frame
-		const Attribute<Complex>::Ptr mIfilter_dq;
-		/// inverter terminal active power
-		const Attribute<Complex>::Ptr mPower;
+			// ### Inverter Variables ###
+			/// Omega
+			const Attribute<Real>::Ptr mOmega;
+			/// System angle (rotating at nominal omega)
+			const Attribute<Real>::Ptr mThetaSys;
+			/// Inverter angle (rotating at inverter omega)
+			const Attribute<Real>::Ptr mThetaInv;
+			/// Voltage/Current as control output after transformation interface
+			const Attribute<MatrixComp>::Ptr mSourceValue;
+			/// Voltage/Current as control output after transformation interface
+			const Attribute<Complex>::Ptr mSourceValue_dq;
+			/// Measured voltage in dq reference frame
+			const Attribute<Complex>::Ptr mVcap_dq;
+			/// Measured current in dq reference frame
+			const Attribute<Complex>::Ptr mIfilter_dq;
+			/// inverter terminal active power
+			const Attribute<Complex>::Ptr mPower;
 
-		// ### Voltage Controller Variables ###
+			// ### Voltage Controller Variables ###
 
-		// #### Controllers ####
-		/// Determines if VSI control is activated
-		Bool mWithControl = true;
-			
-		/// Signal component modelling voltage regulator and exciter
-		std::shared_ptr<Base::VSIControlDQ> mVSIController;		
+			// #### Controllers ####
+			/// Determines if VSI control is activated
+			Bool mWithControl = true;
+			/// Determines if Droop Control is activated
+			Bool mWithDroopControl = false;
 
-    public:
-		explicit VSIVoltageSourceInverterDQ(Logger::Log Log, CPS::AttributeList::Ptr attributeList,
-			Bool modelAsCurrentSource, Bool withInterfaceResistor) :
-			mLogger(Log),
-			mModelAsCurrentSource(modelAsCurrentSource),
-			mWithInterfaceResistor(withInterfaceResistor),
-			mOmega(attributeList->create<Real>("Omega", 0)),
-			mThetaSys(attributeList->create<Real>("ThetaSys", 0)),
-			mThetaInv(attributeList->create<Real>("ThetaInv", 0)),
-			mSourceValue(attributeList->create<MatrixComp>("SourceValue", MatrixComp::Zero(1,1))),
-			mSourceValue_dq(attributeList->create<Complex>("SourceValue_dq", Complex(0,0))),
-			mVcap_dq(attributeList->create<Complex>("Vcap_dq", 0)),
-			mIfilter_dq(attributeList->create<Complex>("Ifilter_dq", 0)),
-			mPower(attributeList->create<Complex>("Power", 0)){ };
+			/// Signal component modelling vsi controller (grid forming or grid following mode)
+			std::shared_ptr<Base::VSIControlDQ> mVSIController;
+			/// Signal component modelling the droop controller
+			std::shared_ptr<Signal::DroopController> mDroopController;
 
-		/// Setter for general parameters of inverter
-		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
-		/// Setter for filter parameters
-		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
+		public:
+			explicit VSIVoltageSourceInverterDQ(Logger::Log Log, CPS::AttributeList::Ptr attributeList,
+												Bool modelAsCurrentSource, Bool withInterfaceResistor) : mLogger(Log),
+																										 mModelAsCurrentSource(modelAsCurrentSource),
+																										 mWithInterfaceResistor(withInterfaceResistor),
+																										 mOmega(attributeList->create<Real>("Omega", 0)),
+																										 mThetaSys(attributeList->create<Real>("ThetaSys", 0)),
+																										 mThetaInv(attributeList->create<Real>("ThetaInv", 0)),
+																										 mSourceValue(attributeList->create<MatrixComp>("SourceValue", MatrixComp::Zero(1, 1))),
+																										 mSourceValue_dq(attributeList->create<Complex>("SourceValue_dq", Complex(0, 0))),
+																										 mVcap_dq(attributeList->create<Complex>("Vcap_dq", 0)),
+																										 mIfilter_dq(attributeList->create<Complex>("Ifilter_dq", 0)),
+																										 mPower(attributeList->create<Complex>("Power", 0)){};
 
-		// ### Controllers ###
-		/// Add VSI Controller
-		void addVSIController(std::shared_ptr<Base::VSIControlDQ> VSIController);
+			/// Setter for general parameters of inverter
+			void setParameters(Real sysOmega, Real VdRef, Real VqRef);
+			/// Setter for filter parameters
+			void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
 
-	protected:
-		///
-		virtual void createSubComponents() = 0;
-		///
-		int determineNumberOfVirtualNodes();
-		///
-		void initializeFilterVariables(const Complex & interfaceVoltage, 
-									   const Complex & interfaceCurrent,
-									   typename SimNode<VarType>::List virtualNodesList);
-    };
-}
+			// ### Controllers ###
+			/// VSI Controller
+			void addVSIController(std::shared_ptr<Base::VSIControlDQ> VSIController);
+			/// Droop Controller
+			void addDroopController(std::shared_ptr<Signal::DroopController> DroopController);
+
+		protected:
+			///
+			virtual void createSubComponents() = 0;
+			///
+			int determineNumberOfVirtualNodes();
+			///
+			void initializeFilterVariables(const Complex &interfaceVoltage,
+										   const Complex &interfaceCurrent,
+										   typename SimNode<VarType>::List virtualNodesList);
+		};
+	}
 }

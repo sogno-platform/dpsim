@@ -541,7 +541,7 @@ class Reader:
         if self.domain in [Domain.PF, Domain.SP]:
             load = self.dpsimpy_components.Load(load_name, self.log_level)
         else:
-           load = dpsimpy_components.RXLoad(load_name, self.log_level)
+           load = self.dpsimpy_components.RXLoad(load_name, self.log_level)
         load.set_parameters(load_p, load_q)
         
         if (self.domain==Domain.PF and bus_type==dpsimpy.PowerflowBusType.PQ):

@@ -8,17 +8,23 @@
 
 #pragma once
 
-namespace CPS {
-namespace Base {
+#include <dpsim-models/Definitions.h>
 
-	class VSIControlParameters {
+namespace CPS
+{
+	namespace Base
+	{
+
+		class VSIControlParameters
+		{
 		public:
-			VSIControlParameters() { };
+			VSIControlParameters(){};
 			virtual ~VSIControlParameters() = default;
-	 };
+		};
 
-	/// @brief Base model for VSI controllers in dq reference frame
-	class VSIControlDQ {
+		/// @brief Base model for VSI controllers in dq reference frame
+		class VSIControlDQ
+		{
 
 		protected:
 			///
@@ -27,20 +33,23 @@ namespace Base {
 			Bool mModelAsCurrentSource;
 
 		public:
-
 			///
 			virtual void setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) = 0;
 
+			///
+			virtual void calculateVBRconstants(){};
+
 			/// Initializes
-			virtual void initialize(const Complex& Vsref_dq, const Complex& Vcap_dq,
-									const Complex& Ifilter_dq, Real time_step, Bool modelAsCurrentSource) = 0;
+			virtual void initialize(const Complex &Vsref_dq, const Complex &Vcap_dq,
+									const Complex &Ifilter_dq, Real time_step, Bool modelAsCurrentSource) = 0;
 
 			/// Returns voltage of the voltage source if mModelAsCurrentSource=false,
 			/// and current of equivalent current source if mModelAsCurrentSource=true
-			virtual Complex step(const Complex& Vcap_dq, const Complex& Ifilter_dq) = 0;
-
-	};
+			virtual Complex step(const Complex &Vcap_dq, const Complex &Ifilter_dq) = 0;
+			virtual Complex stepVBR(const Complex &Vcap_dq, const Complex &Ifilter_dq)
+			{
+				return Complex(0, 0);
+			};
+		};
+	}
 }
-}
-
-

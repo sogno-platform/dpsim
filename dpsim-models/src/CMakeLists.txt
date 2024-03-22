@@ -52,6 +52,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_varResSwitch.cpp
 	DP/DP_Ph1_DPDQInterface.cpp
 	DP/DP_Ph1_VSIVoltageControlDQ.cpp
+	DP/DP_Ph1_VSIVoltageControlVBR.cpp
 
 	DP/DP_Ph3_VoltageSource.cpp
 	DP/DP_Ph3_Capacitor.cpp
@@ -107,6 +108,7 @@ list(APPEND MODELS_SOURCES
 	# EMT/EMT_Ph3_SynchronGeneratorVBRStandalone.cpp
 	EMT/EMT_Ph3_SynchronGeneratorTrStab.cpp
 	EMT/EMT_Ph3_VSIVoltageControlDQ.cpp
+	EMT/EMT_Ph3_VSIVoltageControlVBR.cpp
 
 	SP/SP_Ph1_VoltageSource.cpp
 	SP/SP_Ph1_Capacitor.cpp
@@ -135,12 +137,13 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph1_NetworkInjection.cpp
 	SP/SP_Ph1_SynchronGeneratorTrStab.cpp
 	SP/SP_Ph1_varResSwitch.cpp
+	SP/SP_Ph1_VSIVoltageControlDQ.cpp
+	SP/SP_Ph1_VSIVoltageControlVBR.cpp
 
 	SP/SP_Ph3_Capacitor.cpp
 	SP/SP_Ph3_Inductor.cpp
 	SP/SP_Ph3_Resistor.cpp
 	SP/SP_Ph3_VoltageSource.cpp
-	SP/SP_Ph1_VSIVoltageControlDQ.cpp
 
 	Signal/DecouplingLine.cpp
 	Signal/DecouplingLineEMT.cpp
@@ -155,6 +158,7 @@ list(APPEND MODELS_SOURCES
 	Signal/PLL.cpp
 	Signal/VCO.cpp
 	Signal/Droop.cpp
+	Signal/DroopController.cpp
 	Signal/Integrator.cpp
 	Signal/PowerControllerVSI.cpp
 	Signal/VoltageControllerVSI.cpp

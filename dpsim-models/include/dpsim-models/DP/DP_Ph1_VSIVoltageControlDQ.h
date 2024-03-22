@@ -9,12 +9,11 @@
 
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
-#include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/Base/Base_VSIVoltageSourceInverterDQ.h>
-#include <dpsim-models/Signal/VoltageControllerVSI.h>
 
 namespace CPS {
 namespace DP {
@@ -23,8 +22,8 @@ namespace Ph1 {
 		public CompositePowerComp<Complex>,
 		public Base::VSIVoltageSourceInverterDQ<Complex>,
 		public SharedFactory<VSIVoltageControlDQ> {
-	protected:
 	
+	protected:
 		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
 		std::shared_ptr<DP::Ph1::VoltageSource> mSubCtrledVoltageSource;

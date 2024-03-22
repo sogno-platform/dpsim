@@ -45,6 +45,15 @@ namespace Signal {
 		public SimSignalComp,
         public Base::VSIControlDQ,
 		public SharedFactory<VSIControlType1> {
+	
+	public:
+		/// @brief  VBR auxiliar variables
+		Real mA_VBR; 
+		Real mB_VBR; 
+		Real mB2_VBR;
+		Real mC_VBR;
+		Real mD_VBR; 
+		Real mE_VBR; 
 
     private:
         /// Controller Parameters
@@ -52,7 +61,7 @@ namespace Signal {
 		
         /// Controller variables
         /// state variable of the outer loop (d-component)
-        Attribute<Real>::Ptr mPhi_d;
+        const Attribute<Real>::Ptr mPhi_d;
         /// state variable of the outer loop (q-component)
         const Attribute<Real>::Ptr mPhi_q;
         /// state variable of the inner loop (d-component)
@@ -90,6 +99,12 @@ namespace Signal {
         /// Output
         const Attribute<Matrix>::Ptr mOutput;
 
+		/// ### VBR Auxiliar Variables ###
+		Complex mVcap_dq;
+		Complex mIfilter_dq;
+		Real mIref_d;
+		Real mIref_q;
+
     public:
         ///
         explicit VSIControlType1(const String & name, CPS::Logger::Level logLevel) : 
@@ -110,12 +125,19 @@ namespace Signal {
 	    /// Sets Parameters of the vsi controller
 	    void setParameters(std::shared_ptr<Base::VSIControlParameters> parameters) final;
 
+		/// 
+		void calculateVBRconstants() final;
+
 	    /// Initialises the initial state of the vsi controller
 	    void initialize(const Complex& Vsref_dq, const Complex& Vcap_dq, 
 						const Complex& Ifilter_dq, Real time_step, Bool modelAsCurrentSource) final;
 		
 	    /// Performs a step to update all state variables and the output
 	    Complex step(const Complex& Vcap_dq, const Complex& Ifilter_dq) final;
+
+		///
+		Complex stepVBR(const Complex& Vcap_dq, const Complex& Ifilter_dq) final;
+
     };
 
 }

@@ -27,6 +27,7 @@
 #include <dpsim-models/SP/SP_Ph1_NetworkInjection.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSource.h>
 #include <dpsim-models/SP/SP_Ph1_VSIVoltageControlDQ.h>
+#include <dpsim-models/SP/SP_Ph1_VSIVoltageControlVBR.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGeneratorTrStab.h>
 #include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGenerator3OrderVBR.h>
@@ -74,6 +75,7 @@
 #include <dpsim-models/DP/DP_Ph1_SVC.h>
 #include <dpsim-models/DP/DP_Ph1_varResSwitch.h>
 #include <dpsim-models/DP/DP_Ph1_VSIVoltageControlDQ.h>
+#include <dpsim-models/DP/DP_Ph1_VSIVoltageControlVBR.h>
 #include <dpsim-models/DP/DP_Ph3_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>
 #include <dpsim-models/DP/DP_Ph3_VoltageSource.h>
@@ -82,7 +84,7 @@
 #include <dpsim-models/DP/DP_Ph3_SeriesSwitch.h>
 #include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQTrapez.h>
 #ifdef WITH_SUNDIALS
-  #include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQODE.h>
+#include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQODE.h>
 #endif
 #include <dpsim-models/EMT/EMT_Ph1_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph1_CurrentSource.h>
@@ -97,6 +99,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h>
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlDQ.h>
+#include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_ResIndSeries.h>
@@ -115,7 +118,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQ.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQTrapez.h>
 #ifdef WITH_SUNDIALS
-  #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQODE.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQODE.h>
 #endif
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorIdeal.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorVBR.h>
@@ -152,3 +155,4 @@
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 #include <dpsim-models/Signal/VSIControlType1.h>
 #include <dpsim-models/Signal/VSIControlType2.h>
+#include <dpsim-models/Signal/DroopController.h>

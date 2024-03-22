@@ -17,16 +17,17 @@
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void addSignalComponents(py::module_ mSignal) {
+void addSignalComponents(py::module_ mSignal)
+{
 
     py::class_<CPS::TopologicalSignalComp, std::shared_ptr<CPS::TopologicalSignalComp>, CPS::IdentifiedObject>(mSignal, "TopologicalSignalComp");
-	py::class_<CPS::SimSignalComp, std::shared_ptr<CPS::SimSignalComp>, CPS::TopologicalSignalComp>(mSignal, "SimSignalComp");
+    py::class_<CPS::SimSignalComp, std::shared_ptr<CPS::SimSignalComp>, CPS::TopologicalSignalComp>(mSignal, "SimSignalComp");
 
     py::class_<CPS::Signal::DecouplingLine, std::shared_ptr<CPS::Signal::DecouplingLine>, CPS::SimSignalComp>(mSignal, "DecouplingLine", py::multiple_inheritance())
         .def(py::init<std::string>())
-		.def(py::init<std::string, CPS::Logger::Level>())
+        .def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::Signal::DecouplingLine::setParameters, "node_1"_a, "node_2"_a, "resistance"_a, "inductance"_a, "capacitance"_a)
-		.def("get_line_components", &CPS::Signal::DecouplingLine::getLineComponents);
+        .def("get_line_components", &CPS::Signal::DecouplingLine::getLineComponents);
 
     py::class_<CPS::Signal::DecouplingLineEMT, std::shared_ptr<CPS::Signal::DecouplingLineEMT>, CPS::SimSignalComp>(mSignal, "DecouplingLineEMT", py::multiple_inheritance())
         .def(py::init<std::string>())
@@ -43,7 +44,7 @@ void addSignalComponents(py::module_ mSignal) {
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
     py::class_<CPS::Signal::ExciterST1Simp, std::shared_ptr<CPS::Signal::ExciterST1Simp>, CPS::Base::Exciter>(mSignal, "ExciterST1Simp", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
-    
+
     py::class_<CPS::Signal::ExciterStaticParameters, std::shared_ptr<CPS::Signal::ExciterStaticParameters>, CPS::Base::ExciterParameters>(mSignal, "ExciterStaticParameters", py::multiple_inheritance())
         .def(py::init())
         .def_readwrite("Ta", &CPS::Signal::ExciterStaticParameters::Ta)
@@ -103,7 +104,7 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("Tw", &CPS::Signal::PSS1AParameters::Tw)
         .def_readwrite("Vs_max", &CPS::Signal::PSS1AParameters::Vs_max)
         .def_readwrite("Vs_min", &CPS::Signal::PSS1AParameters::Vs_min);
-    
+
     // Governos
     py::class_<CPS::Signal::TurbineGovernorType1, std::shared_ptr<CPS::Signal::TurbineGovernorType1>, CPS::Base::Governor>(mSignal, "TurbineGovernorType1", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
@@ -189,4 +190,15 @@ void addSignalComponents(py::module_ mSignal) {
         .def_readwrite("Cf", &CPS::Signal::VSIControlType2Parameters::Cf)
         .def_readwrite("Lf", &CPS::Signal::VSIControlType2Parameters::Lf)
         .def_readwrite("tau", &CPS::Signal::VSIControlType2Parameters::tau);
+
+    // Droop Controller
+    py::class_<CPS::Signal::DroopControllerParameters, std::shared_ptr<CPS::Signal::DroopControllerParameters>>(mSignal, "DroopControllerParameters", py::multiple_inheritance())
+        .def(py::init())
+        .def_readwrite("Kpv", &CPS::Signal::DroopControllerParameters::Tau_p)
+        .def_readwrite("Kiv", &CPS::Signal::DroopControllerParameters::Tau_l)
+        .def_readwrite("Kpc", &CPS::Signal::DroopControllerParameters::Mp)
+        .def_readwrite("Kic", &CPS::Signal::DroopControllerParameters::Pref)
+        .def_readwrite("VdRef", &CPS::Signal::DroopControllerParameters::OmegaNom);
+    py::class_<CPS::Signal::DroopController, std::shared_ptr<CPS::Signal::DroopController>>(mSignal, "DroopController", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off);
 }
