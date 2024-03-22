@@ -41,6 +41,8 @@ public:
   /// (0,0) = Id
   /// (1,0) = Iq
   const Attribute<Matrix>::Ptr mIdq;
+  /// Electrical power
+  const Attribute<Complex>::Ptr mPower;
   /// stator electrical torque
   const Attribute<Real>::Ptr mElecTorque;
   /// Mechanical torque
@@ -57,43 +59,35 @@ public:
   /// induced emf by the field current under no-load conditions at time k (p.u.)
   Real mEf_prev;
 
-		public:
-			// ### State variables [p.u.]###
-			/// dq stator terminal voltage
-			/// (0,0) = Vd
-			/// (1,0) = Vq
-			/// (2,0) = V0
-			const Attribute<Matrix>::Ptr mVdq0;
-			/// dq0 armature current
-			/// (0,0) = Id
-			/// (1,0) = Iq
-			/// (2,0) = I0
-			const Attribute<Matrix>::Ptr mIdq0;
-			/// dq stator terminal voltage
-			/// (0,0) = Vd
-			/// (1,0) = Vq
-			const Attribute<Matrix>::Ptr mVdq;
-			/// dq armature current
-			/// (0,0) = Id
-			/// (1,0) = Iq
-			const Attribute<Matrix>::Ptr mIdq;
-			/// Electrical power
-			const Attribute<Complex>::Ptr mPower;
-			/// stator electrical torque
-			const Attribute<Real>::Ptr mElecTorque;
-			/// Mechanical torque
-			const Attribute<Real>::Ptr mMechTorque;
-			Real mMechTorque_prev;
-			/// Rotor speed
-			const Attribute<Real>::Ptr mOmMech;
-			/// mechanical system angle (between d-axis and stator a-axis)
-			const Attribute<Real>::Ptr mThetaMech;
-			/// Load angle (between q-axis and stator a-axis)
-			const Attribute<Real>::Ptr mDelta;
-			/// induced emf by the field current under no-load conditions at time k+1 (p.u.)
-			const Attribute<Real>::Ptr mEf;
-			/// induced emf by the field current under no-load conditions at time k (p.u.)
-			Real mEf_prev;
+  /// Destructor - does nothing.
+  virtual ~ReducedOrderSynchronGenerator() {}
+  /// modelAsCurrentSource=true --> SG is modeled as current source, otherwise as voltage source
+  /// Both implementations are equivalent, but the current source implementation is more efficient
+  virtual void setModelAsNortonSource(Bool modelAsCurrentSource);
+  ///
+  void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
+  /// Initialization for 3 Order SynGen
+  void setOperationalParametersPerUnit(Real nomPower, Real nomVolt,
+                                       Real nomFreq, Real H, Real Ld, Real Lq,
+                                       Real L0, Real Ld_t, Real Td0_t);
+  /// Initialization for 4 Order SynGen
+  void setOperationalParametersPerUnit(Real nomPower, Real nomVolt,
+                                       Real nomFreq, Real H, Real Ld, Real Lq,
+                                       Real L0, Real Ld_t, Real Lq_t,
+                                       Real Td0_t, Real Tq0_t);
+  /// Initialization for 6 Order SynGen
+  /// Taa=0 for 6b Order SynGen
+  void setOperationalParametersPerUnit(Real nomPower, Real nomVolt,
+                                       Real nomFreq, Real H, Real Ld, Real Lq,
+                                       Real L0, Real Ld_t, Real Lq_t,
+                                       Real Td0_t, Real Tq0_t, Real Ld_s,
+                                       Real Lq_s, Real Td0_s, Real Tq0_s,
+                                       Real Taa = 0);
+  ///
+  void setInitialValues(Complex initComplexElectricalPower,
+                        Real initMechanicalPower, Complex initTerminalVoltage);
+  ///
+  void scaleInertiaConstant(Real scalingFactor);
 
   // ### Controllers ###
   /// Add automatic voltage regulator
@@ -108,15 +102,11 @@ public:
   /// Add Governor/TurbineGovernor
   void addTurbine(std::shared_ptr<Base::Turbine> turbine);
 
-			// ### Controllers ###
-			/// Add automatic voltage regulator
-			void addExciter(std::shared_ptr<Base::Exciter> exciter);
-			/// Add power system stabilizer
-			void addPSS(std::shared_ptr<Base::PSS> PSS);
-			/// Add Governor/TurbineGovernor
-			void addGovernor(std::shared_ptr<Base::Governor> governor);
-			/// Add Governor/TurbineGovernor
-			void addTurbine(std::shared_ptr<Base::Turbine> turbine);
+protected:
+  using MNASimPowerComp<VarType>::mRightVector;
+  using MNASimPowerComp<VarType>::mIntfVoltage;
+  using MNASimPowerComp<VarType>::MnaPreStep;
+  using MNASimPowerComp<VarType>::MnaPostStep;
 
   ///
   ReducedOrderSynchronGenerator(String uid, String name,

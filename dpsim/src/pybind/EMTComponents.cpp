@@ -105,157 +105,156 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
 }
 
 void addEMTPh3Components(py::module_ mEMTPh3) {
-	py::class_<CPS::EMT::Ph3::VoltageSource, std::shared_ptr<CPS::EMT::Ph3::VoltageSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "VoltageSource", py::multiple_inheritance())
-        .def(py::init<std::string>())
-		.def(py::init<std::string, CPS::Logger::Level>())
-        .def("set_parameters", py::overload_cast<CPS::MatrixComp, CPS::Real>(&CPS::EMT::Ph3::VoltageSource::setParameters), "V_ref"_a, "f_src"_a = 50)
-		.def("connect", &CPS::EMT::Ph3::VoltageSource::connect)
-		.def_property("V_ref", createAttributeGetter<CPS::MatrixComp>("V_ref"), createAttributeSetter<CPS::MatrixComp>("V_ref"))
-		.def_property("f_src", createAttributeGetter<CPS::Real>("f_src"), createAttributeSetter<CPS::Real>("f_src"));
+  py::class_<CPS::EMT::Ph3::VoltageSource,
+             std::shared_ptr<CPS::EMT::Ph3::VoltageSource>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "VoltageSource",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           py::overload_cast<CPS::MatrixComp, CPS::Real>(
+               &CPS::EMT::Ph3::VoltageSource::setParameters),
+           "V_ref"_a, "f_src"_a = 50)
+      .def("connect", &CPS::EMT::Ph3::VoltageSource::connect)
+      .def_property("V_ref", createAttributeGetter<CPS::MatrixComp>("V_ref"),
+                    createAttributeSetter<CPS::MatrixComp>("V_ref"))
+      .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
+                    createAttributeSetter<CPS::Real>("f_src"));
 
-	py::class_<CPS::EMT::Ph3::Resistor, std::shared_ptr<CPS::EMT::Ph3::Resistor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Resistor", py::multiple_inheritance())
-        .def(py::init<std::string>())
-		.def(py::init<std::string, CPS::Logger::Level>())
-        .def("set_parameters", &CPS::EMT::Ph3::Resistor::setParameters, "R"_a)
-		.def("connect", &CPS::EMT::Ph3::Resistor::connect);;
+  py::class_<CPS::EMT::Ph3::Resistor, std::shared_ptr<CPS::EMT::Ph3::Resistor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Resistor",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph3::Resistor::setParameters, "R"_a)
+      .def("connect", &CPS::EMT::Ph3::Resistor::connect);
+  ;
 
-	py::class_<CPS::EMT::Ph3::Capacitor, std::shared_ptr<CPS::EMT::Ph3::Capacitor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Capacitor", py::multiple_inheritance())
-        .def(py::init<std::string>())
-		.def(py::init<std::string, CPS::Logger::Level>())
-        .def("set_parameters", &CPS::EMT::Ph3::Capacitor::setParameters, "C"_a)
-		.def("connect", &CPS::EMT::Ph3::Capacitor::connect);
+  py::class_<CPS::EMT::Ph3::Capacitor,
+             std::shared_ptr<CPS::EMT::Ph3::Capacitor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Capacitor",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph3::Capacitor::setParameters, "C"_a)
+      .def("connect", &CPS::EMT::Ph3::Capacitor::connect);
 
-	py::class_<CPS::EMT::Ph3::Inductor, std::shared_ptr<CPS::EMT::Ph3::Inductor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Inductor", py::multiple_inheritance())
-        .def(py::init<std::string>())
-		.def(py::init<std::string, CPS::Logger::Level>())
-        .def("set_parameters", &CPS::EMT::Ph3::Inductor::setParameters, "L"_a)
-		.def("connect", &CPS::EMT::Ph3::Inductor::connect);
+  py::class_<CPS::EMT::Ph3::Inductor, std::shared_ptr<CPS::EMT::Ph3::Inductor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Inductor",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph3::Inductor::setParameters, "L"_a)
+      .def("connect", &CPS::EMT::Ph3::Inductor::connect);
 
-	py::class_<CPS::EMT::Ph3::ResIndSeries, std::shared_ptr<CPS::EMT::Ph3::ResIndSeries>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "ResInductor", py::multiple_inheritance())
-        .def(py::init<std::string>())
-		.def(py::init<std::string, CPS::Logger::Level>())
-        .def("set_parameters", &CPS::EMT::Ph3::ResIndSeries::setParameters, "R"_a, "L"_a)
-		.def("connect", &CPS::EMT::Ph3::ResIndSeries::connect);
+  py::class_<CPS::EMT::Ph3::ResIndSeries,
+             std::shared_ptr<CPS::EMT::Ph3::ResIndSeries>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "ResInductor",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph3::ResIndSeries::setParameters, "R"_a,
+           "L"_a)
+      .def("connect", &CPS::EMT::Ph3::ResIndSeries::connect);
 
-	py::class_<CPS::EMT::Ph3::NetworkInjection, std::shared_ptr<CPS::EMT::Ph3::NetworkInjection>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "NetworkInjection", py::multiple_inheritance())
-        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_parameters", py::overload_cast<CPS::MatrixComp, CPS::Real>(&CPS::EMT::Ph3::NetworkInjection::setParameters), "V_ref"_a, "f_src"_a=50)
-		.def("connect", &CPS::EMT::Ph3::NetworkInjection::connect);
+  py::class_<CPS::EMT::Ph3::NetworkInjection,
+             std::shared_ptr<CPS::EMT::Ph3::NetworkInjection>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "NetworkInjection",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           py::overload_cast<CPS::MatrixComp, CPS::Real>(
+               &CPS::EMT::Ph3::NetworkInjection::setParameters),
+           "V_ref"_a, "f_src"_a = 50)
+      .def("connect", &CPS::EMT::Ph3::NetworkInjection::connect);
 
-	py::class_<CPS::EMT::Ph3::PiLine, std::shared_ptr<CPS::EMT::Ph3::PiLine>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "PiLine", py::multiple_inheritance())
-        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("set_parameters", &CPS::EMT::Ph3::PiLine::setParameters, "series_resistance"_a, "series_inductance"_a, "parallel_capacitance"_a=zeroMatrix(3), "parallel_conductance"_a=zeroMatrix(3))
-		.def("connect", &CPS::EMT::Ph3::PiLine::connect);
+  py::class_<CPS::EMT::Ph3::PiLine, std::shared_ptr<CPS::EMT::Ph3::PiLine>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "PiLine",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::Ph3::PiLine::setParameters,
+           "series_resistance"_a, "series_inductance"_a,
+           "parallel_capacitance"_a = zeroMatrix(3),
+           "parallel_conductance"_a = zeroMatrix(3))
+      .def("connect", &CPS::EMT::Ph3::PiLine::connect);
 
-	py::class_<CPS::EMT::Ph3::RXLoad, std::shared_ptr<CPS::EMT::Ph3::RXLoad>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "RXLoad", py::multiple_inheritance())
-        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_power", py::overload_cast<CPS::Matrix, CPS::Matrix>(&CPS::EMT::Ph3::RXLoad::setParameters), "active_power"_a, "reactive_power"_a)
-        .def("set_parameters", py::overload_cast<CPS::Matrix, CPS::Matrix, CPS::Real>(&CPS::EMT::Ph3::RXLoad::setParameters), "active_power"_a, "reactive_power"_a, "volt"_a)
-		.def("connect", &CPS::EMT::Ph3::RXLoad::connect);
+  py::class_<CPS::EMT::Ph3::RXLoad, std::shared_ptr<CPS::EMT::Ph3::RXLoad>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "RXLoad",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_power",
+           py::overload_cast<CPS::Matrix, CPS::Matrix>(
+               &CPS::EMT::Ph3::RXLoad::setParameters),
+           "active_power"_a, "reactive_power"_a)
+      .def("set_parameters",
+           py::overload_cast<CPS::Matrix, CPS::Matrix, CPS::Real>(
+               &CPS::EMT::Ph3::RXLoad::setParameters),
+           "active_power"_a, "reactive_power"_a, "volt"_a)
+      .def("connect", &CPS::EMT::Ph3::RXLoad::connect);
 
-	py::class_<CPS::EMT::Ph3::Shunt, std::shared_ptr<CPS::EMT::Ph3::Shunt>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Shunt", py::multiple_inheritance())
-        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("set_parameters", py::overload_cast<CPS::Real, CPS::Real>(&CPS::EMT::Ph3::Shunt::setParameters), "G"_a, "B"_a)
-		.def("connect", &CPS::EMT::Ph3::Shunt::connect);
+  py::class_<CPS::EMT::Ph3::Shunt, std::shared_ptr<CPS::EMT::Ph3::Shunt>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Shunt",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           py::overload_cast<CPS::Real, CPS::Real>(
+               &CPS::EMT::Ph3::Shunt::setParameters),
+           "G"_a, "B"_a)
+      .def("connect", &CPS::EMT::Ph3::Shunt::connect);
 
-	py::class_<CPS::EMT::Ph3::Switch, std::shared_ptr<CPS::EMT::Ph3::Switch>, CPS::SimPowerComp<CPS::Real>, CPS::Base::Ph3::Switch>(mEMTPh3, "Switch", py::multiple_inheritance())
-        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("set_parameters", &CPS::EMT::Ph3::Switch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false) // cppcheck-suppress assignBoolToPointer
-		.def("open", &CPS::EMT::Ph3::Switch::openSwitch)
-		.def("close", &CPS::EMT::Ph3::Switch::closeSwitch)
-		.def("connect", &CPS::EMT::Ph3::Switch::connect);
+  py::class_<CPS::EMT::Ph3::Switch, std::shared_ptr<CPS::EMT::Ph3::Switch>,
+             CPS::SimPowerComp<CPS::Real>, CPS::Base::Ph3::Switch>(
+      mEMTPh3, "Switch", py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::Ph3::Switch::setParameters,
+           "open_resistance"_a, "closed_resistance"_a,
+           "closed"_a = false) // cppcheck-suppress assignBoolToPointer
+      .def("open", &CPS::EMT::Ph3::Switch::openSwitch)
+      .def("close", &CPS::EMT::Ph3::Switch::closeSwitch)
+      .def("connect", &CPS::EMT::Ph3::Switch::connect);
 
-	py::class_<CPS::EMT::Ph3::SynchronGeneratorDQTrapez, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQTrapez", py::multiple_inheritance())
-        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_parameters_operational_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setParametersOperationalPerUnit,
-			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ld"_a, "Lq"_a, "Ld_t"_a, "Lq_t"_a, "Ld_s"_a,
-			"Lq_s"_a, "Ll"_a, "Td0_t"_a, "Tq0_t"_a, "Td0_s"_a, "Tq0_s"_a, "inertia"_a)
-		.def("set_parameters_fundamental_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setParametersFundamentalPerUnit,
-			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ll"_a, "Lmd"_a, "Lmq"_a, "Rfd"_a, "Llfd"_a,
-			"Rkd"_a, "Llkd"_a, "Rkq1"_a, "Llkq1"_a, "Rkq2"_a, "Llkq2"_a, "inertia"_a, "init_active_power"_a, "init_reactive_power"_a,
-			"init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a)
-		.def("apply_parameters_from_json", [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez> syngen, const CPS::String json) {
-				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
-			})
-		.def("set_initial_values", &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setInitialValues,
-			"init_active_power"_a, "init_reactive_power"_a,
-			"init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a);
+  py::class_<CPS::EMT::Ph3::SynchronGeneratorDQTrapez,
+             std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQTrapez",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters_operational_per_unit",
+           &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::
+               setParametersOperationalPerUnit,
+           "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a,
+           "nom_field_cur"_a, "Rs"_a, "Ld"_a, "Lq"_a, "Ld_t"_a, "Lq_t"_a,
+           "Ld_s"_a, "Lq_s"_a, "Ll"_a, "Td0_t"_a, "Tq0_t"_a, "Td0_s"_a,
+           "Tq0_s"_a, "inertia"_a)
+      .def("set_parameters_fundamental_per_unit",
+           &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::
+               setParametersFundamentalPerUnit,
+           "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a,
+           "nom_field_cur"_a, "Rs"_a, "Ll"_a, "Lmd"_a, "Lmq"_a, "Rfd"_a,
+           "Llfd"_a, "Rkd"_a, "Llkd"_a, "Rkq1"_a, "Llkq1"_a, "Rkq2"_a,
+           "Llkq2"_a, "inertia"_a, "init_active_power"_a,
+           "init_reactive_power"_a, "init_terminal_volt"_a, "init_volt_angle"_a,
+           "init_mech_power"_a)
+      .def("apply_parameters_from_json",
+           [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez> syngen,
+              const CPS::String json) {
+             DPsim::Utils::applySynchronousGeneratorParametersFromJson(
+                 json::parse(json), syngen);
+           })
+      .def("set_initial_values",
+           &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setInitialValues,
+           "init_active_power"_a, "init_reactive_power"_a,
+           "init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a);
 
   py::class_<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR,
              std::shared_ptr<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>,
              CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>>(
       mEMTPh3, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance());
-  .def("set_base_parameters",
-       &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::setBaseParameters,
-       "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
-      .def("set_initial_values",
-           &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::setInitialValues,
-           "init_complex_electrical_power"_a, "init_mechanical_power"_a,
-           "init_complex_terminal_voltage"_a)
-      .def("scale_inertia_constant",
-           &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::
-               scaleInertiaConstant,
-           "scaling_factor"_a)
-      .def("set_model_as_current_source",
-           &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::
-               setModelAsCurrentSource,
-           "model_as_current_source"_a);
-  .def("add_exciter",
-       py::overload_cast<CPS::Base::ExciterParameters, CPS::ExciterType>(
-           &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::addExciter),
-       "exciter_parameters"_a, "exciter_type"_a = CPS::ExciterType::DC1Simp)
-      .def("add_pss",
-           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real>(
-               &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::addPSS),
-           "Kp"_a, "Kv"_a, "Kw"_a, "T1"_a, "T2"_a, "T3"_a, "T4"_a, "Vs_max"_a,
-           "Vs_min"_a, "Tw"_a, "dt"_a)
-      .def("add_governor",
-           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real>(
-               &CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR::addGovernor),
-           "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Tmin"_a, "Tmax"_a,
-           "OmRef"_a);
-
-	py::class_<CPS::EMT::Ph3::SynchronGenerator3OrderVBR, std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator3OrderVBR>, CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>(mEMTPh3, "SynchronGenerator3OrderVBR", py::multiple_inheritance())
-		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::EMT::Ph3::SynchronGenerator3OrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Td0_t"_a);
-
-	py::class_<CPS::EMT::Ph3::SynchronGenerator4OrderVBR, std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator4OrderVBR>, CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>(mEMTPh3, "SynchronGenerator4OrderVBR", py::multiple_inheritance())
-		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::EMT::Ph3::SynchronGenerator4OrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a);
-
-	py::class_<CPS::EMT::Ph3::SynchronGenerator5OrderVBR, std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator5OrderVBR>, CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>(mEMTPh3, "SynchronGenerator5OrderVBR", py::multiple_inheritance())
-		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::EMT::Ph3::SynchronGenerator5OrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a, "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a);	
-
-	py::class_<CPS::EMT::Ph3::SynchronGenerator6aOrderVBR, std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator6aOrderVBR>, CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>(mEMTPh3, "SynchronGenerator6aOrderVBR", py::multiple_inheritance())
-		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::EMT::Ph3::SynchronGenerator6aOrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a, "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a);
-
-	py::class_<CPS::EMT::Ph3::SynchronGenerator6bOrderVBR, std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator6bOrderVBR>, CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>(mEMTPh3, "SynchronGenerator6bOrderVBR", py::multiple_inheritance())
-		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_operational_parameters_per_unit", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::EMT::Ph3::SynchronGenerator6bOrderVBR::setOperationalParametersPerUnit), "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a, "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a, "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a=0);
-
-	#ifdef WITH_SUNDIALS
-
-	py::class_<CPS::EMT::Ph3::SynchronGeneratorDQODE, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQODE>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQODE", py::multiple_inheritance())
-        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_parameters_operational_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQODE::setParametersOperationalPerUnit,
-			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ld"_a, "Lq"_a, "Ld_t"_a, "Lq_t"_a, "Ld_s"_a,
-			"Lq_s"_a, "Ll"_a, "Td0_t"_a, "Tq0_t"_a, "Td0_s"_a, "Tq0_s"_a, "inertia"_a)
-		.def("set_parameters_fundamental_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQODE::setParametersFundamentalPerUnit,
-			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ll"_a, "Lmd"_a, "Lmq"_a, "Rfd"_a, "Llfd"_a,
-			"Rkd"_a, "Llkd"_a, "Rkq1"_a, "Llkq1"_a, "Rkq2"_a, "Llkq2"_a, "inertia"_a, "init_active_power"_a, "init_reactive_power"_a,
-			"init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a)
-		.def("apply_parameters_from_json", [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQODE> syngen, const CPS::String json) {
-				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
-			})
-		.def("set_initial_values", &CPS::EMT::Ph3::SynchronGeneratorDQODE::setInitialValues,
-			"init_active_power"_a, "init_reactive_power"_a,
-			"init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a);
 
   py::class_<CPS::EMT::Ph3::SynchronGenerator3OrderVBR,
              std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator3OrderVBR>,
@@ -270,8 +269,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
                &CPS::EMT::Ph3::SynchronGenerator3OrderVBR::
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
-           "Lq"_a, "L0"_a, "Ld_t"_a, "Td0_t"_a)
-      .def("connect", &CPS::EMT::Ph3::SynchronGenerator3OrderVBR::connect);
+           "Lq"_a, "L0"_a, "Ld_t"_a, "Td0_t"_a);
 
   py::class_<CPS::EMT::Ph3::SynchronGenerator4OrderVBR,
              std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator4OrderVBR>,
@@ -286,8 +284,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
                &CPS::EMT::Ph3::SynchronGenerator4OrderVBR::
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
-           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
-      .def("connect", &CPS::EMT::Ph3::SynchronGenerator4OrderVBR::connect);
+           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a);
 
   py::class_<CPS::EMT::Ph3::SynchronGenerator5OrderVBR,
              std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator5OrderVBR>,
@@ -304,8 +301,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
-           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
-      .def("connect", &CPS::EMT::Ph3::SynchronGenerator5OrderVBR::connect);
+           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a);
 
   py::class_<CPS::EMT::Ph3::SynchronGenerator6aOrderVBR,
              std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator6aOrderVBR>,
@@ -322,8 +318,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
-           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
-      .def("connect", &CPS::EMT::Ph3::SynchronGenerator6aOrderVBR::connect);
+           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a);
 
   py::class_<CPS::EMT::Ph3::SynchronGenerator6bOrderVBR,
              std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator6bOrderVBR>,
@@ -340,8 +335,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
-           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a = 0)
-      .def("connect", &CPS::EMT::Ph3::SynchronGenerator6bOrderVBR::connect);
+           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a = 0);
 
 #ifdef WITH_SUNDIALS
 
@@ -388,8 +382,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-           // cppcheck-suppress assignBoolToPointer
-           "with_trafo"_a = false)
+           "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
       .def("set_parameters",
            &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::setParameters,
            "sys_omega"_a, "sys_volt_nom"_a, "p_ref"_a, "q_ref"_a)
@@ -446,8 +439,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::EMT::Ph3::SeriesSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-           // cppcheck-suppress assignBoolToPointer
-           "closed"_a = false)
+           "closed"_a = false) // cppcheck-suppress assignBoolToPointer
       .def("open", &CPS::EMT::Ph3::SeriesSwitch::open)
       .def("close", &CPS::EMT::Ph3::SeriesSwitch::close)
       .def("connect", &CPS::EMT::Ph3::SeriesSwitch::connect);

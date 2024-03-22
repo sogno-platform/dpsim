@@ -40,21 +40,29 @@ SP::Ph1::Transformer::Transformer(String uid, String name,
   **mReactivePowerBranch = Matrix::Zero(2, 1);
 }
 
+void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
+                                         Real nomVoltageEnd2, Real ratioAbs,
+                                         Real ratioPhase, Real resistance,
+                                         Real inductance) {
 
-void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
-	Real ratioPhase, Real resistance, Real inductance) {
+  // Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
+  Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2,
+                                        ratioAbs, ratioPhase, resistance,
+                                        inductance);
 
-	// Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
-	Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
+  mRatioAbs = std::abs(**mRatio);
+  mRatioPhase = std::arg(**mRatio);
+  mParametersSet = true;
 
-	mRatioAbs = std::abs(**mRatio);
-	mRatioPhase = std::arg(**mRatio);
-	mParametersSet = true;
-	
-	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", **mNominalVoltageEnd1, **mNominalVoltageEnd2);
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H] (referred to primary side)", **mResistance, **mInductance);
-    SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [/] Phase Shift={} [deg]", std::abs(**mRatio), std::arg(**mRatio));
-	mSLog->flush();
+  SPDLOG_LOGGER_INFO(
+      mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
+      **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+  SPDLOG_LOGGER_INFO(
+      mSLog, "Resistance={} [Ohm] Inductance={} [H] (referred to primary side)",
+      **mResistance, **mInductance);
+  SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [/] Phase Shift={} [deg]",
+                     std::abs(**mRatio), std::arg(**mRatio));
+  mSLog->flush();
 }
 
 void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
@@ -76,6 +84,9 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
   mImpedance = {**mResistance, mReactance};
   SPDLOG_LOGGER_INFO(mSLog, "Impedance={} [Ohm] (referred to primary side)",
                      mImpedance);
+  SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
+                     mReactance);
+  mSLog->flush();
 
   // Component parameters are referred to higher voltage side.
   // Switch terminals to have terminal 0 at higher voltage side
@@ -130,63 +141,77 @@ void SP::Ph1::Transformer::setBaseVoltage(Real baseVoltage) {
   **mBaseVoltage = baseVoltage;
 }
 
-void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}", **mName);
-    mBaseApparentPower = baseApparentPower;
-	mBaseOmega = baseOmega;
-    SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
+void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower,
+                                                      Real baseOmega) {
+  SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}",
+                     **mName);
+  mBaseApparentPower = baseApparentPower;
+  mBaseOmega = baseOmega;
+  SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]",
+                     baseApparentPower, baseOmega);
 
-	mBaseImpedance = **mBaseVoltage * **mBaseVoltage / mBaseApparentPower;
-	mBaseAdmittance = 1.0 / mBaseImpedance;
-	mBaseCurrent = baseApparentPower / (**mBaseVoltage * sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
-	SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]", **mBaseVoltage, mBaseImpedance);
+  mBaseImpedance = **mBaseVoltage * **mBaseVoltage / mBaseApparentPower;
+  mBaseAdmittance = 1.0 / mBaseImpedance;
+  mBaseCurrent = baseApparentPower /
+                 (**mBaseVoltage *
+                  sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
+  SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]",
+                     **mBaseVoltage, mBaseImpedance);
 
-	mResistancePerUnit = **mResistance / mBaseImpedance;
-	mReactance = mNominalOmega * **mInductance;
-	mReactancePerUnit = mReactance / mBaseImpedance;
-    SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [pu]  Reactance={} [pu]", mResistancePerUnit, mReactancePerUnit);
+  mResistancePerUnit = **mResistance / mBaseImpedance;
+  mReactance = mNominalOmega * **mInductance;
+  mReactancePerUnit = mReactance / mBaseImpedance;
+  SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [pu]  Reactance={} [pu]",
+                     mResistancePerUnit, mReactancePerUnit);
 
-	mBaseInductance = mBaseImpedance / mBaseOmega;
-	mInductancePerUnit = **mInductance / mBaseInductance;
-	// omega per unit=1, hence 1.0*mInductancePerUnit.
-	mLeakagePerUnit = Complex(mResistancePerUnit,1.*mInductancePerUnit);
-	SPDLOG_LOGGER_INFO(mSLog, "Leakage Impedance={} [pu] ", mLeakagePerUnit);
+  mBaseInductance = mBaseImpedance / mBaseOmega;
+  mInductancePerUnit = **mInductance / mBaseInductance;
+  // omega per unit=1, hence 1.0*mInductancePerUnit.
+  mLeakagePerUnit = Complex(mResistancePerUnit, 1. * mInductancePerUnit);
+  SPDLOG_LOGGER_INFO(mSLog, "Leakage Impedance={} [pu] ", mLeakagePerUnit);
 
-    mRatioAbsPerUnit = mRatioAbs / **mNominalVoltageEnd1 * **mNominalVoltageEnd2;
-    SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [pu]", mRatioAbsPerUnit);
-	mSLog->flush();
+  mRatioAbsPerUnit = mRatioAbs / **mNominalVoltageEnd1 * **mNominalVoltageEnd2;
+  SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [pu]", mRatioAbsPerUnit);
+  mSLog->flush();
 }
 
-void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
-	// calculate matrix stamp
-	mY_element = MatrixComp(2, 2);
-	Complex y = Complex(1, 0) / mLeakagePerUnit;
+void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(
+    SparseMatrixCompRow &Y) {
+  // calculate matrix stamp
+  mY_element = MatrixComp(2, 2);
+  Complex y = Complex(1, 0) / mLeakagePerUnit;
 
-	mY_element(0, 0) = y;
-	mY_element(0, 1) = -y*mRatioAbsPerUnit;
-	mY_element(1, 0) = -y*mRatioAbsPerUnit;
-	mY_element(1, 1) = y*std::pow(mRatioAbsPerUnit, 2);
+  mY_element(0, 0) = y;
+  mY_element(0, 1) = -y * mRatioAbsPerUnit;
+  mY_element(1, 0) = -y * mRatioAbsPerUnit;
+  mY_element(1, 1) = y * std::pow(mRatioAbsPerUnit, 2);
 
-	//check for inf or nan
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
-			if (std::isinf(mY_element.coeff(i, j).real()) || std::isinf(mY_element.coeff(i, j).imag())) {
-				std::cout << mY_element << std::endl;
-				std::cout << "Zl:" << y << std::endl;
-				std::cout << "tap:" << mRatioAbsPerUnit << std::endl;
-				std::stringstream ss;
-				ss << "Transformer>>" << this->name() << ": infinite or nan values in the element Y at: " << i << "," << j;
-				throw std::invalid_argument(ss.str());
-			}
+  //check for inf or nan
+  for (int i = 0; i < 2; i++)
+    for (int j = 0; j < 2; j++)
+      if (std::isinf(mY_element.coeff(i, j).real()) ||
+          std::isinf(mY_element.coeff(i, j).imag())) {
+        std::cout << mY_element << std::endl;
+        std::cout << "Zl:" << y << std::endl;
+        std::cout << "tap:" << mRatioAbsPerUnit << std::endl;
+        std::stringstream ss;
+        ss << "Transformer>>" << this->name()
+           << ": infinite or nan values in the element Y at: " << i << "," << j;
+        throw std::invalid_argument(ss.str());
+      }
 
-	//set the circuit matrix values
-	Y.coeffRef(this->matrixNodeIndex(0), this->matrixNodeIndex(0)) += mY_element.coeff(0, 0);
-	Y.coeffRef(this->matrixNodeIndex(0), this->matrixNodeIndex(1)) += mY_element.coeff(0, 1);
-	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(1)) += mY_element.coeff(1, 1);
-	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(0)) += mY_element.coeff(1, 0);
+  //set the circuit matrix values
+  Y.coeffRef(this->matrixNodeIndex(0), this->matrixNodeIndex(0)) +=
+      mY_element.coeff(0, 0);
+  Y.coeffRef(this->matrixNodeIndex(0), this->matrixNodeIndex(1)) +=
+      mY_element.coeff(0, 1);
+  Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(1)) +=
+      mY_element.coeff(1, 1);
+  Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(0)) +=
+      mY_element.coeff(1, 0);
 
-	SPDLOG_LOGGER_INFO(mSLog, "#### Y matrix stamping: {}", mY_element);
-	mSLog->flush();
+  SPDLOG_LOGGER_INFO(mSLog, "#### Y matrix stamping: {}", mY_element);
+  mSLog->flush();
 }
 
 void SP::Ph1::Transformer::updateBranchFlow(VectorComp &current,
@@ -204,33 +229,9 @@ void SP::Ph1::Transformer::storeNodalInjection(Complex powerInjection) {
 MatrixComp SP::Ph1::Transformer::Y_element() { return mY_element; }
 
 // #### MNA Section ####
-void SP::Ph1::Transformer::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateMatrixNodeIndices();
-
-}
-
-void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
-	SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
-	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), 1. / mImpedance);
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-			(Complex(1, 0) / mImpedance).real(), (Complex(1, 0) / mImpedance).imag(), matrixNodeIndex(0), matrixNodeIndex(0));
-	}
-	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), std::pow(**mRatio,2) / mImpedance );
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-			(std::pow(**mRatio,2) / mImpedance).real(), (std::pow(**mRatio,2) / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
-	}
-	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -**mRatio / mImpedance );
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-			(-**mRatio / mImpedance).real(), (-**mRatio / mImpedance).imag(), matrixNodeIndex(0), matrixNodeIndex(1));
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -**mRatio / mImpedance );
-		SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-			(-**mRatio / mImpedance).real(), (-**mRatio / mImpedance).imag(), matrixNodeIndex(1), matrixNodeIndex(0));
-	}
-
-	mSLog->flush();
+void SP::Ph1::Transformer::mnaCompInitialize(
+    Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+  updateMatrixNodeIndices();
 }
 
 void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
@@ -281,16 +282,25 @@ void SP::Ph1::Transformer::mnaCompAddPostStepDependencies(
   modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix& leftVector) {
-	// v0 - v1
-	(**mIntfVoltage)(0, 0) = 0.0;
-	if (terminalNotGrounded(0))
-		(**mIntfVoltage)(0, 0) += Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
-	if (terminalNotGrounded(1)) 
-		(**mIntfVoltage)(0, 0) -= Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) * **mRatio;
+void SP::Ph1::Transformer::mnaCompPostStep(Real time, Int timeStepCount,
+                                           Attribute<Matrix>::Ptr &leftVector) {
+  this->mnaUpdateVoltage(**leftVector);
+  this->mnaUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix& leftVector) {
-	// primary side current flowing into node 0
-	(**mIntfCurrent)(0, 0) = -(**mIntfVoltage)(0, 0) / mImpedance;
+void SP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
+  // v0 - v1
+  (**mIntfVoltage)(0, 0) = 0.0;
+  if (terminalNotGrounded(0))
+    (**mIntfVoltage)(0, 0) +=
+        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+  if (terminalNotGrounded(1))
+    (**mIntfVoltage)(0, 0) -=
+        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)) *
+        **mRatio;
+}
+
+void SP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
+  // primary side current flowing into node 0
+  (**mIntfCurrent)(0, 0) = -(**mIntfVoltage)(0, 0) / mImpedance;
 }
