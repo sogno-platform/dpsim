@@ -29,25 +29,27 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SeriesSwitch::clone(String name) {
 
 void EMT::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
-	Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
+  Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
 
-	Complex phasorA = (initialSingleVoltage(1) - initialSingleVoltage(0)) * RMS3PH_TO_PEAK1PH;
-	(**mIntfVoltage)(0, 0) = phasorA.real();
-	(**mIntfVoltage)(1, 0) = Complex(phasorA * SHIFT_TO_PHASE_B).real();
-	(**mIntfVoltage)(2, 0) = Complex(phasorA * SHIFT_TO_PHASE_C).real();
+  Complex phasorA =
+      (initialSingleVoltage(1) - initialSingleVoltage(0)) * RMS3PH_TO_PEAK1PH;
+  (**mIntfVoltage)(0, 0) = phasorA.real();
+  (**mIntfVoltage)(1, 0) = Complex(phasorA * SHIFT_TO_PHASE_B).real();
+  (**mIntfVoltage)(2, 0) = Complex(phasorA * SHIFT_TO_PHASE_C).real();
 
-	**mIntfCurrent = **mIntfVoltage / impedance;
+  **mIntfCurrent = **mIntfVoltage / impedance;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow ---"
-		"\nVoltage across amplitude and phase: \n{}"
-		"\nCurrent amplitude and phase: \n{}"
-		"\nTerminal 0 voltage amplitude and phase: \n{}"
-		"\nTerminal 1 voltage amplitude and phase: \n{}"
-		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorMatrixToString(**mIntfVoltage),
-		Logger::phasorMatrixToString(**mIntfCurrent),
-		Logger::phasorMatrixToString(initialVoltage(0)),
-		Logger::phasorMatrixToString(initialVoltage(1)));
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\n--- Initialization from powerflow ---"
+                     "\nVoltage across amplitude and phase: \n{}"
+                     "\nCurrent amplitude and phase: \n{}"
+                     "\nTerminal 0 voltage amplitude and phase: \n{}"
+                     "\nTerminal 1 voltage amplitude and phase: \n{}"
+                     "\n--- Initialization from powerflow finished ---",
+                     Logger::phasorMatrixToString(**mIntfVoltage),
+                     Logger::phasorMatrixToString(**mIntfCurrent),
+                     Logger::phasorMatrixToString(initialVoltage(0)),
+                     Logger::phasorMatrixToString(initialVoltage(1)));
 }
 
 void EMT::Ph3::SeriesSwitch::mnaCompInitialize(

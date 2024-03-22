@@ -308,10 +308,15 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("__str__", &getAttributeList);
 
 #ifdef WITH_CIM
-	py::class_<CPS::CIM::Reader>(m, "CIMReader")
-		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info, "comploglevel"_a = CPS::Logger::Level::off)
-		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM)
-		.def("get_powerflow_results", &CPS::CIM::Reader::getPowerFlowResults);
+  py::class_<CPS::CIM::Reader>(m, "CIMReader")
+      .def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(),
+           "name"_a, "loglevel"_a = CPS::Logger::Level::info,
+           "comploglevel"_a = CPS::Logger::Level::off)
+      .def("loadCIM", (CPS::SystemTopology(CPS::CIM::Reader::*)(
+                          CPS::Real, const std::list<CPS::String> &,
+                          CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &
+                          CPS::CIM::Reader::loadCIM)
+      .def("get_powerflow_results", &CPS::CIM::Reader::getPowerFlowResults);
 #endif
 
   py::class_<CPS::CSVReader>(m, "CSVReader")
