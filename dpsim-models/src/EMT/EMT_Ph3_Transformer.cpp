@@ -12,8 +12,9 @@ using namespace CPS;
 
 EMT::Ph3::Transformer::Transformer(String uid, String name,
                                    Logger::Level logLevel)
-    : Base::Ph3::Transformer(mAttributes),
-      MNASimPowerComp<Real>(uid, name, true, true, logLevel) {
+    : Base::Ph3::Transformer(mAttributes), MNASimPowerComp<Real>(uid, name,
+                                                                 true, true,
+                                                                 logLevel) {
 
   //
   mPhaseType = PhaseType::ABC;

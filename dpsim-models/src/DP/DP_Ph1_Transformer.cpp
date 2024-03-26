@@ -12,8 +12,9 @@ using namespace CPS;
 
 DP::Ph1::Transformer::Transformer(String uid, String name,
                                   Logger::Level logLevel)
-    : Base::Ph1::Transformer(mAttributes),
-      MNASimPowerComp<Complex>(uid, name, true, true, logLevel) {
+    : Base::Ph1::Transformer(mAttributes), MNASimPowerComp<Complex>(uid, name,
+                                                                    true, true,
+                                                                    logLevel) {
 
   //
   setTerminalNumber(2);
