@@ -13,8 +13,9 @@ using namespace CPS;
 EMT::Ph3::Transformer::Transformer(String uid, String name,
                                    Logger::Level logLevel,
                                    Bool withResistiveLosses)
-    : Base::Ph3::Transformer(mAttributes),
-      CompositePowerComp<Real>(uid, name, true, true, logLevel) {
+    : Base::Ph3::Transformer(mAttributes), CompositePowerComp<Real>(uid, name,
+                                                                    true, true,
+                                                                    logLevel) {
   mPhaseType = PhaseType::ABC;
   if (withResistiveLosses)
     setVirtualNodeNumber(3);

@@ -11,8 +11,8 @@
 using namespace CPS;
 
 SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-    : Base::Ph1::PiLine(mAttributes),
-      CompositePowerComp<Complex>(uid, name, false, true, logLevel),
+    : Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(
+                                          uid, name, false, true, logLevel),
       mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
       mCurrent(mAttributes->create<MatrixComp>("current_vector")),
       mActivePowerBranch(mAttributes->create<Matrix>("p_branch_vector")),
