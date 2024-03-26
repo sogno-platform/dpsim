@@ -41,7 +41,7 @@ void MNAEigenvalueExtractor<VarType>::setParameters(
 template <typename VarType>
 void MNAEigenvalueExtractor<VarType>::identifyEigenvalueComponents(
     const CPS::IdentifiedObject::List &components) {
-  // TODO: [Georgii] throw exception if topology contains components that do not implement EigenvalueCompInterface
+  // TODO: throw exception if topology contains components that do not implement EigenvalueCompInterface
   for (auto comp : components) {
     auto eigenvalueComponent =
         std::dynamic_pointer_cast<CPS::EigenvalueCompInterface>(comp);
@@ -100,7 +100,7 @@ void MNAEigenvalueExtractor<VarType>::extractEigenvalues(
 template <>
 void MNAEigenvalueExtractor<Real>::calculateStateMatrix(
     const Matrix &powerSystemMatrix) {
-  // TODO: [Georgii] use back substitution of factorized power system matrix instead of inversion (performance)
+  // TODO: use right hand side solving of factorized power system matrix instead of inversion (performance).
   Matrix intermediateResult =
       powerSystemMatrix.inverse() * mNodeBranchIncidenceMatrix;
   mStateMatrix = mSignMatrix + mDiscretizationMatrix *
@@ -111,7 +111,7 @@ void MNAEigenvalueExtractor<Real>::calculateStateMatrix(
 template <>
 void MNAEigenvalueExtractor<Complex>::calculateStateMatrix(
     const Matrix &powerSystemMatrix) {
-  // TODO: [Georgii] use back substitution of factorized power system matrix instead of inversion (performance)
+  // TODO: use right hand side solving of factorized power system matrix instead of inversion (performance).
   MatrixComp compPowerSystemMatrix =
       CPS::Math::convertRealEquivalentToComplexMatrix(powerSystemMatrix);
   MatrixComp intermediateResult =
@@ -126,7 +126,7 @@ void MNAEigenvalueExtractor<VarType>::computeDiscreteEigenvalues() {
   auto discreteEigenvaluesIncludingZeros = mStateMatrix.eigenvalues();
   **mDiscreteEigenvalues =
       CPS::Math::returnNonZeroElements(discreteEigenvaluesIncludingZeros);
-  // TODO: [Georgii] filter out eigenvalues = -1 + 0i to avoid division by zero in recoverEigenvalues()
+  // TODO: filter out eigenvalues = -1 + 0i to avoid division by zero in recoverEigenvalues().
 }
 
 template <> void MNAEigenvalueExtractor<Real>::recoverEigenvalues() {

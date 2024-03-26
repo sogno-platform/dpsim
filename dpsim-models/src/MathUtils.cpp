@@ -97,7 +97,7 @@ Real Math::realFromVectorElement(const Matrix &mat, Matrix::Index row) {
   return mat(row, 0);
 }
 
-// TODO: [Georgii] resize existing matrix instead of creating a new one (performance, memory)
+// TODO: consider resizing existing matrix instead of creating a new one (performance, memory)
 MatrixComp Math::returnNonZeroElements(const MatrixComp &mat) {
   Eigen::Matrix<bool, Eigen::Dynamic, Eigen::Dynamic> mask =
       (mat.array().abs() > 1e-14);
