@@ -11,8 +11,9 @@ using namespace CPS;
 
 SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(
     String uid, String name, Logger::Level logLevel)
-    : Base::SynchronGenerator(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+    : Base::SynchronGenerator(mAttributes), CompositePowerComp<Complex>(
+                                                uid, name, true, true,
+                                                logLevel),
       mEp(mAttributes->create<Complex>("Ep")),
       mEp_abs(mAttributes->create<Real>("Ep_mag")),
       mEp_phase(mAttributes->create<Real>("Ep_phase")),

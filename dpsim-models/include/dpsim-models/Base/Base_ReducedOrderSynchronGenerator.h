@@ -100,8 +100,6 @@ public:
 protected:
   using MNASimPowerComp<VarType>::mRightVector;
   using MNASimPowerComp<VarType>::mIntfVoltage;
-  using MNASimPowerComp<VarType>::MnaPreStep;
-  using MNASimPowerComp<VarType>::MnaPostStep;
 
   ///
   ReducedOrderSynchronGenerator(String uid, String name,

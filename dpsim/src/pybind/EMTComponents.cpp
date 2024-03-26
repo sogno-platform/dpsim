@@ -225,7 +225,10 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "init_active_power"_a, "init_reactive_power"_a,
            "init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a);
 
-	py::class_<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR, std::shared_ptr<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>, CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>>(mEMTPh3, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance());
+  py::class_<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR,
+             std::shared_ptr<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>,
+             CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>>(
+      mEMTPh3, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance());
 
   py::class_<CPS::EMT::Ph3::SynchronGenerator3OrderVBR,
              std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator3OrderVBR>,
