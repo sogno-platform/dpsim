@@ -12,6 +12,7 @@
 
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
 #include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Solver/EigenvalueCompInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -20,7 +21,8 @@ namespace Ph1 {
 /// EMT Resistor
 class Resistor : public MNASimPowerComp<Real>,
                  public Base::Ph1::Resistor,
-                 public SharedFactory<Resistor> {
+                 public SharedFactory<Resistor>,
+                 public EigenvalueCompInterface {
 protected:
 public:
   /// Defines UID, name, component parameters and logging level
@@ -56,6 +58,14 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
+
+  // #### Implementation of eigenvalue component interface ####
+  void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) final;
+  void setBranchIdx(UInt i) final;
+
+private:
+  /// Branch index
+  UInt mBranchIdx;
 };
 } // namespace Ph1
 } // namespace EMT
