@@ -9,7 +9,7 @@
 #pragma once
 
 #include <list>
-#include <map>
+#include <vector>
 
 #include <dpsim-models/Components.h>
 #include <dpsim-models/Definitions.h>
@@ -47,6 +47,7 @@ class PowerTransformer;
 class EquivalentShunt;
 class TopologicalNode;
 class ConductingEquipment;
+class LinearShuntCompensator;
 }; // namespace CIMPP
 #else
 #include <CIMNamespaces.hpp>
@@ -64,8 +65,6 @@ private:
   Logger::Level mComponentLogLevel;
   /// Model from CIM++
   CIMModel *mModel;
-  /// All components after mapping
-  IdentifiedObject::List mComponents;
   /// System frequency (has to be given to convert between reactances
   /// in CIM and inductances used inside the simulation)
   Real mFrequency;
@@ -146,6 +145,9 @@ private:
   mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection *extnet);
   /// Returns a shunt
   TopologicalPowerComp::Ptr mapEquivalentShunt(CIMPP::EquivalentShunt *shunt);
+  ///
+  TopologicalPowerComp::Ptr
+  mapEquivalentLinearShunt(CIMPP::LinearShuntCompensator *linearShunt);
 
   // #### Helper Functions ####
   /// Determine base voltage associated with object
@@ -185,6 +187,10 @@ public:
   void setShuntConductance(Real v);
   /// If set, some components like loads include protection switches
   void useProtectionSwitches(Bool value = true);
+
+  //
+  ///
+  std::map<String, std::vector<CPS::Real>> getPowerFlowResults();
 };
 } // namespace CIM
 } // namespace CPS

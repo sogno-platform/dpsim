@@ -31,7 +31,7 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
   if (withTrafo) {
     setVirtualNodeNumber(4);
     mConnectionTransformer = EMT::Ph3::Transformer::make(
-        **mName + "_trans", **mName + "_trans", mLogLevel, false);
+        **mName + "_trans", **mName + "_trans", mLogLevel);
     addMNASubComponent(mConnectionTransformer,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -40,10 +40,6 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
   }
   mWithConnectionTransformer = withTrafo;
   setTerminalNumber(1);
-
-  SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", type(), name);
-  **mIntfVoltage = Matrix::Zero(3, 1);
-  **mIntfCurrent = Matrix::Zero(3, 1);
 
   // Create electrical sub components
   mSubResistorF = EMT::Ph3::Resistor::make(**mName + "_resF", mLogLevel);
@@ -135,7 +131,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(
     // TODO: resistive losses neglected so far (mWithResistiveLosses=false)
     mConnectionTransformer->setParameters(
         mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2,
-        mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase,
+        mTransformerRatioAbs, mTransformerRatioPhase,
         CPS::Math::singlePhaseParameterToThreePhase(mTransformerResistance),
         CPS::Math::singlePhaseParameterToThreePhase(mTransformerInductance));
 }

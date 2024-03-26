@@ -2,10 +2,29 @@
 #include <dpsim-models/Logger.h>
 #include <map>
 
+#include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
+#include <dpsim-models/DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator3OrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderPCM.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator6aOrderVBR.h>
+#include <dpsim-models/DP/DP_Ph1_SynchronGenerator6bOrderVBR.h>
+#include <dpsim-models/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.h>
+#include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/SP/SP_Ph1_SynchronGenerator3OrderVBR.h>
+#include <dpsim-models/SP/SP_Ph1_SynchronGenerator4OrderVBR.h>
+#include <dpsim-models/SP/SP_Ph1_SynchronGenerator6aOrderVBR.h>
+#include <dpsim-models/SP/SP_Ph1_SynchronGenerator6bOrderVBR.h>
+#include <dpsim-models/Signal/ExciterDC1.h>
+#include <dpsim-models/Signal/ExciterDC1Simp.h>
+#include <dpsim-models/Signal/ExciterST1Simp.h>
 
 #pragma once
 
@@ -38,7 +57,6 @@ public:
   }
 
   std::vector<std::string> getItems() {
-
     std::vector<std::string> items;
     for (auto g : functionMap) {
       items.push_back(g.first);
@@ -59,7 +77,6 @@ public:
   }
 
   void registerExciter(const std::string &type, Creator<BaseClass> *Fn) {
-
     functionMap[type] = Fn;
   }
 
@@ -83,6 +100,26 @@ public:
     Factory<BaseClass>::get().registerExciter(type, Fn);
   }
 };
+
+namespace ExciterFactory {
+void registerExciters() {
+  FactoryRegistration<CPS::Base::Exciter> _ExciterDC1(
+      "DC1", new DerivedCreator<CPS::Signal::ExciterDC1, CPS::Base::Exciter>);
+  FactoryRegistration<CPS::Base::Exciter> _ExciterDC1Simp(
+      "DC1Simp",
+      new DerivedCreator<CPS::Signal::ExciterDC1Simp, CPS::Base::Exciter>);
+  FactoryRegistration<CPS::Base::Exciter> _ExciterST1Simp(
+      "ST1",
+      new DerivedCreator<CPS::Signal::ExciterST1Simp, CPS::Base::Exciter>);
+}
+} // namespace ExciterFactory
+
+namespace PSSFactory {
+void registerExciters() {
+  FactoryRegistration<CPS::Base::PSS> _PSS1A(
+      "PSS1A", new DerivedCreator<CPS::Signal::PSS1A, CPS::Base::PSS>);
+}
+} // namespace PSSFactory
 
 namespace SynchronGeneratorFactory {
 namespace SP {
@@ -114,6 +151,12 @@ void registerSynchronGenerators() {
 namespace DP {
 namespace Ph1 {
 void registerSynchronGenerators() {
+  FactoryRegistration<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR> _3OrderSP(
+      "3", new DerivedCreator<CPS::DP::Ph1::SynchronGenerator3OrderVBR,
+                              CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>);
+  FactoryRegistration<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR> _4OrderSP(
+      "4", new DerivedCreator<CPS::DP::Ph1::SynchronGenerator4OrderVBR,
+                              CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>);
   FactoryRegistration<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>
       _4OrderDPIter(
           "4PCM", new DerivedCreator<
@@ -124,6 +167,16 @@ void registerSynchronGenerators() {
                    new DerivedCreator<
                        CPS::DP::Ph1::SynchronGenerator4OrderTPM,
                        CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>);
+  FactoryRegistration<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>
+      _6aOrderSP(
+          "6a",
+          new DerivedCreator<CPS::DP::Ph1::SynchronGenerator6aOrderVBR,
+                             CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>);
+  FactoryRegistration<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>
+      _6bOrderSP(
+          "6b",
+          new DerivedCreator<CPS::DP::Ph1::SynchronGenerator6bOrderVBR,
+                             CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>);
   FactoryRegistration<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>
       _6OrderDPIter(
           "6PCM", new DerivedCreator<
@@ -132,4 +185,32 @@ void registerSynchronGenerators() {
 }
 } // namespace Ph1
 } // namespace DP
+
+namespace EMT {
+namespace Ph3 {
+void registerSynchronGenerators() {
+  FactoryRegistration<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>
+      _3OrderSP(
+          "3",
+          new DerivedCreator<CPS::EMT::Ph3::SynchronGenerator3OrderVBR,
+                             CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>);
+  FactoryRegistration<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>
+      _4OrderSP(
+          "4",
+          new DerivedCreator<CPS::EMT::Ph3::SynchronGenerator4OrderVBR,
+                             CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>);
+  FactoryRegistration<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>
+      _6aOrderSP(
+          "6a",
+          new DerivedCreator<CPS::EMT::Ph3::SynchronGenerator6aOrderVBR,
+                             CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>);
+  FactoryRegistration<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>
+      _6bOrderSP(
+          "6b",
+          new DerivedCreator<CPS::EMT::Ph3::SynchronGenerator6bOrderVBR,
+                             CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>);
+}
+} // namespace Ph3
+} // namespace EMT
+
 } // namespace SynchronGeneratorFactory

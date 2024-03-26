@@ -58,8 +58,105 @@ struct MachineParameters {
 };
 } // namespace SynchronousGeneratorKundur
 
-namespace GovernorKundur {
-struct Parameters {
+namespace Exciter {
+// Excitation system parameters (IEEE Type DC1 - simplified)
+// from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
+// voltage-regulator
+
+std::shared_ptr<CPS::Signal::ExciterDC1SimpParameters>
+getExciterParametersEremia() {
+  auto excitationSystemEremia = CPS::Signal::ExciterDC1SimpParameters::make();
+  excitationSystemEremia->Ka = 46;
+  excitationSystemEremia->Ta = 0.06;
+  // exciter
+  excitationSystemEremia->Kef = -0.0435;
+  excitationSystemEremia->Tef = 0.46;
+  // stabilizing feedback
+  excitationSystemEremia->Kf = 0.1;
+  excitationSystemEremia->Tf = 1;
+  // voltage transducer
+  excitationSystemEremia->Tr = 0.02;
+  // saturation function coefficients
+  excitationSystemEremia->Aef = 0.33;
+  excitationSystemEremia->Bef = 0.1;
+
+  //
+  excitationSystemEremia->MaxVa = 1.0;
+  excitationSystemEremia->MinVa = -0.9;
+
+  // DC1 additional parameters
+  //excitationSystemEremia->Tb = 10;
+  //excitationSystemEremia->Tc = 1.0;
+
+  return excitationSystemEremia;
+}
+
+struct ExcitationKundur {
+  /// Exciter model used in Kundurs. It is a very simplified version of a thyristor
+  /// exciter (ST1 type) without transient gain reduction or derivative feedback
+  /// (only proportional block + terminal voltage transducer)
+  /// Ref.: Kundur,  Power System Stability and Control, p. 865
+  Real Ka = 200;
+  // voltage transducer
+  Real Tr = 0.02;
+};
+} // namespace Exciter
+
+namespace PowerSystemStabilizer {
+std::shared_ptr<CPS::Signal::PSS1AParameters> getPSS1AParametersPSAT() {
+  // Power system stabilizer type 2
+  // Taken from from PSAT - example d_anderson_farmer Gen2
+  auto PSSA1PSAT = CPS::Signal::PSS1AParameters::make();
+  /// Stabilizer gain for active power (pu/pu)
+  PSSA1PSAT->Kp = 0;
+  /// Stabilizer gain for bus voltage magnitude (pu/pu)
+  PSSA1PSAT->Kv = 0;
+  /// Stabilizer gain for omega gain (pu/pu)
+  PSSA1PSAT->Kw = 15;
+  /// First stabilizer time constant (s)
+  PSSA1PSAT->T1 = 0.1;
+  /// Second stabilizer time constant (s)
+  PSSA1PSAT->T2 = 0.01;
+  /// Thrid stabilizer time constant (s)
+  PSSA1PSAT->T3 = 0.12;
+  /// Fourth stabilizer time constant (s)
+  PSSA1PSAT->T4 = 0.01;
+  /// Max stabilizer output signal (pu)
+  PSSA1PSAT->Vs_max = 0.1;
+  /// Min stabilizer output signal (pu)
+  PSSA1PSAT->Vs_min = -0.1;
+  /// Wash-out time constant (s)
+  PSSA1PSAT->Tw = 10;
+
+  return PSSA1PSAT;
+};
+
+struct PSSKundur {
+  /// Power system stabilizer consisting of three blocks: a phase compensation
+  /// block, a signal washout block, and a gain block
+  /// Ref: Kundur, Power System Stability and Control, p. 865
+
+  /// Stabilizer gain for active power (pu/pu)
+  Real Kp = 0;
+  /// Stabilizer gain for bus voltage magnitude (pu/pu)
+  Real Kv = 0;
+  /// Stabilizer gain for omega gain (pu/pu)
+  Real Kw = 9.5;
+  /// First stabilizer time constant (s)
+  Real T1 = 0.154;
+  /// Second stabilizer time constant (s)
+  Real T2 = 0.033;
+  /// Max stabilizer output signal (pu)
+  Real Vs_max = 0.2;
+  /// Min stabilizer output signal (pu)
+  Real Vs_min = -0.2;
+  /// Wash-out time constant (s)
+  Real Tw = 1.41;
+};
+} // namespace PowerSystemStabilizer
+
+namespace TurbineGovernor {
+struct GovernorKundur {
   // Turbine model parameters (tandem compound single reheat steam turbine, fossil-fuelled)
   // from P. Kundur, "Power System Stability and Control", 1994, p. 427
   Real Ta_t = 0.3; // T_CH
@@ -75,74 +172,120 @@ struct Parameters {
   Real Tsr = 0.1;
   Real Tsm = 0.3;
 };
-} // namespace GovernorKundur
 
-namespace ExcitationSystemEremia {
-struct Parameters {
-  // Excitation system parameters (IEEE Type DC1A)
-  // from M. Eremia, "Handbook of Electrical Power System Dynamics", 2013, p.96 and 106
-  // voltage-regulator
-  Real Ka = 46;
-  Real Ta = 0.06;
-  // exciter
-  Real Ke = -0.0435;
-  Real Te = 0.46;
-  // stabilizing feedback
-  Real Kf = 0.1;
-  Real Tf = 1;
-  // voltage transducer
-  Real Tr = 0.02;
-};
-} // namespace ExcitationSystemEremia
-
-namespace TurbineGovernor {
-struct TurbineGovernorPSAT1 {
+std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters>
+getTurbineGovernorPSAT1() {
   // Turbine Governor type 1
   // Taken from from PSAT - example d_014_pss_l14
-
+  auto governor = CPS::Signal::TurbineGovernorType1Parameters::make();
   // Reference speed (p.u.)
-  Real OmegaRef = 1.0;
+  governor->OmRef = 1.0;
   // Pilot valve droop (p.u.)
-  Real R = 0.02;
+  governor->R = 0.02;
   // Maximum Torque (p.u.)
-  Real Tmax = 1.2;
+  governor->Pmax = 1.2;
   // Minimim Torque (p.u.)
-  Real Tmin = 0.3;
+  governor->Pmin = 0.3;
   // Governor time constant (s)
-  Real Ts = 0.1;
+  governor->Ts = 0.1;
   // Servo time constant (s)
-  Real Tc = 0.45;
+  governor->Tc = 0.45;
   // Transient gain time constant (s)
-  Real T3 = 0.0;
+  governor->T3 = 0.0;
   // Power fraction time constant (s)
-  Real T4 = 12.0;
+  governor->T4 = 12.0;
   // Reheat time constant (s)
-  Real T5 = 50.0;
+  governor->T5 = 50.0;
+
+  return governor;
 };
 
-struct TurbineGovernorPSAT2 {
+std::shared_ptr<CPS::Signal::TurbineGovernorType1Parameters>
+getTurbineGovernorPSAT2() {
   // Turbine Governor type 1
   // Taken from PSAT - example d_anderson_farmer
+  auto governor = CPS::Signal::TurbineGovernorType1Parameters::make();
 
   // Reference speed (p.u.)
-  Real OmegaRef = 1.0;
+  governor->OmRef = 1.0;
   // Pilot valve droop (p.u.)
-  Real R = 0.04;
+  governor->R = 0.04;
   // Maximum Torque (p.u.)
-  Real Tmax = 100;
+  governor->Pmax = 100;
   // Minimim Torque (p.u.)
-  Real Tmin = 0.0;
+  governor->Pmin = 0.0;
   // Governor time constant (s)
-  Real Ts = 20;
+  governor->Ts = 20;
   // Servo time constant (s)
-  Real Tc = 0.2;
+  governor->Tc = 0.2;
   // Transient gain time constant (s)
-  Real T3 = 0.2;
+  governor->T3 = 0.2;
   // Power fraction time constant (s)
-  Real T4 = 0.2;
+  governor->T4 = 0.2;
   // Reheat time constant (s)
-  Real T5 = 0.2;
+  governor->T5 = 0.2;
+
+  return governor;
 };
+
+struct SteamTurbine {
+  //Steam Turbine implemented by HiWi in August 2023,
+  //Power fraction of a high pressure stage
+  Real Fhp = 0.3;
+  //Power fraction of an intermediate pressure stage
+  Real Fip = 0.3;
+  // Power fraction of a low pressure stage
+  Real Flp = 0.4;
+  //Time constant of main inlet volume and steam chest (s)
+  Real Tch = 0.1;
+  // Time constant of reheater (s)
+  Real Trh = 4;
+  // Time constant of cross over piping and LP inlet volumes (s)
+  Real Tco = 0.3;
+};
+
+struct SteamTurbineGovernor {
+  //Steam Turbine Governor implemented by Hiwi in August 2023,
+  //Values taken from previous examples
+  Real OmRef = 1.0;
+  //Pilot valve droop (p.u.)
+  Real R = 0.04;
+  //Controller time constant (s)
+  Real T1 = 0;
+  //Controller time constant (s)
+  Real T2 = 0.2;
+  // Servo time constant (s)
+  Real T3 = 0.1;
+  // Maximum power increase (p.u.) (depends on time step, here 1e-3)
+  Real delPmax = 50;
+  // Minimim power (p.u.) (depends on time step, here 1e-3)
+  Real delPmin = -50;
+  // Maximum power (p.u.)
+  Real Pmax = 1;
+  // Minimim power (p.u.)
+  Real Pmin = 0;
+};
+
+struct HydroTurbine {
+  //Water Starting time
+  Real Tw = 0.1;
+};
+
+struct HydroTurbineGovernor {
+  //Om Ref for the Governor, nequivalent in pu for 50Hz or 60Hz
+  Real OmRef = 1;
+  // Droop
+  Real R = 0.04;
+  //Time Constants of Controller
+  Real T1 = 0.12;
+  Real T2 = 1.2;
+  Real T3 = 12;
+  //Maximum mechanical power(pu)
+  Real Pmax = 1;
+  //Minimum mechanical power (pu)
+  Real Pmin = 0;
+};
+
 } // namespace TurbineGovernor
 } // namespace Components
 
@@ -178,6 +321,8 @@ namespace KundurExample1 {
 // P. Kundur, "Power System Stability and Control", Example 13.2, pp. 864-869.
 struct Network {
   Real nomVoltage = 400e3;
+  Real nomFreq = 60;
+  Real nomOmega = nomFreq * 2 * PI;
 };
 
 struct Gen {
@@ -187,8 +332,20 @@ struct Gen {
   Real XpdPU = 0.3;
   Real RsPU = 0;
   Real D = 1.0;
+  Real initActivePower = 0.9 * nomPower;
+  Real initMechPower = 0.9 * nomPower;
+  Real setPointVoltage = nomVoltage;
 };
+
 struct Line1 {
+  // Vnom = 400kV
+  Real lineResistance = 0.0721;
+  Real lineReactance = 36.0360;
+  Real lineSusceptance = 0;
+  Real lineConductance = 0;
+};
+
+struct Line2 {
   // Vnom = 400kV
   Real lineResistance = 0.0721;
   Real lineReactance = 36.0360;
@@ -283,7 +440,7 @@ struct ScenarioConfig3 {
       VnomMV * Complex(cos(initVoltAngle), sin(initVoltAngle));
 
   //
-  Real SwitchClosed = 0.1;
+  Real SwitchClosed = 10;
   Real SwitchOpen = 1e6;
 };
 

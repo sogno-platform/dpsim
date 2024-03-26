@@ -113,6 +113,9 @@ TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass *obj) {
   if (CIMPP::EquivalentShunt *shunt =
           dynamic_cast<CIMPP::EquivalentShunt *>(obj))
     return mapEquivalentShunt(shunt);
+  if (CIMPP::LinearShuntCompensator *linearShunt =
+          dynamic_cast<CIMPP::LinearShuntCompensator *>(obj))
+    return mapEquivalentLinearShunt(linearShunt);
 
   return nullptr;
 }
@@ -380,8 +383,10 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment *line) {
 
   // By default there is always a small conductance to ground to
   // avoid problems with floating nodes.
-  Real capacitance = mShuntCapacitorValue;
-  Real conductance = mShuntConductanceValue;
+  //Real capacitance = mShuntCapacitorValue;
+  //Real conductance = mShuntConductanceValue;
+  Real capacitance = 0;
+  Real conductance = 0;
 
   if (line->bch.value > 1e-9 && !mSetShuntCapacitor)
     capacitance = Real(line->bch.value / mOmega);
@@ -500,17 +505,15 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
   Real ratedPower = unitValue(end1->ratedS.value, UnitMultiplier::M);
   Real voltageNode1 = unitValue(end1->ratedU.value, UnitMultiplier::k);
   Real voltageNode2 = unitValue(end2->ratedU.value, UnitMultiplier::k);
-
   Real ratioAbsNominal = voltageNode1 / voltageNode2;
-  Real ratioAbs = ratioAbsNominal;
 
   // use normalStep from RatioTapChanger
+  Real branch_ratio = 1;
   if (end1->RatioTapChanger) {
-    ratioAbs =
-        voltageNode1 / voltageNode2 *
-        (1 + (end1->RatioTapChanger->normalStep -
-              end1->RatioTapChanger->neutralStep) *
-                 end1->RatioTapChanger->stepVoltageIncrement.value / 100);
+    branch_ratio = 1 + (end1->RatioTapChanger->normalStep -
+                        end1->RatioTapChanger->neutralStep) *
+                           end1->RatioTapChanger->stepVoltageIncrement.value /
+                           100;
   }
 
   // if corresponding SvTapStep available, use instead tap position from there
@@ -518,13 +521,13 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
     for (auto obj : mModel->Objects) {
       auto tapStep = dynamic_cast<CIMPP::SvTapStep *>(obj);
       if (tapStep && tapStep->TapChanger == end1->RatioTapChanger) {
-        ratioAbs =
-            voltageNode1 / voltageNode2 *
-            (1 + (tapStep->position - end1->RatioTapChanger->neutralStep) *
-                     end1->RatioTapChanger->stepVoltageIncrement.value / 100);
+        branch_ratio =
+            1 + (tapStep->position - end1->RatioTapChanger->neutralStep) *
+                    end1->RatioTapChanger->stepVoltageIncrement.value / 100;
       }
     }
   }
+  Real ratioAbs = branch_ratio * ratioAbsNominal;
 
   // TODO: To be extracted from cim class
   Real ratioPhase = 0;
@@ -533,17 +536,21 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
   Real resistance = 0;
   Real inductance = 0;
   if (voltageNode1 >= voltageNode2 && abs(end1->x.value) > 1e-12) {
-    inductance = end1->x.value / mOmega;
-    resistance = end1->r.value;
+    inductance = end1->x.value / mOmega * std::pow(branch_ratio, 2);
+    resistance = end1->r.value * std::pow(branch_ratio, 2);
   } else if (voltageNode1 >= voltageNode2 && abs(end2->x.value) > 1e-12) {
-    inductance = end2->x.value / mOmega * std::pow(ratioAbsNominal, 2);
-    resistance = end2->r.value * std::pow(ratioAbsNominal, 2);
+    inductance = end2->x.value / mOmega * std::pow(ratioAbsNominal, 2) *
+                 std::pow(branch_ratio, 2);
+    resistance = end2->r.value * std::pow(ratioAbsNominal, 2) *
+                 std::pow(branch_ratio, 2);
   } else if (voltageNode2 > voltageNode1 && abs(end2->x.value) > 1e-12) {
-    inductance = end2->x.value / mOmega;
-    resistance = end2->r.value;
+    inductance = end2->x.value / mOmega / std::pow(branch_ratio, 2);
+    resistance = end2->r.value / std::pow(branch_ratio, 2);
   } else if (voltageNode2 > voltageNode1 && abs(end1->x.value) > 1e-12) {
-    inductance = end1->x.value / mOmega / std::pow(ratioAbsNominal, 2);
-    resistance = end1->r.value / std::pow(ratioAbsNominal, 2);
+    inductance = end1->x.value / mOmega / std::pow(ratioAbsNominal, 2) /
+                 std::pow(branch_ratio, 2);
+    resistance = end1->r.value / std::pow(ratioAbsNominal, 2) /
+                 std::pow(branch_ratio, 2);
   }
 
   if (mDomain == Domain::EMT) {
@@ -554,10 +561,9 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
           CPS::Math::singlePhaseParameterToThreePhase(inductance);
       Bool withResistiveLosses = resistance > 0;
       auto transformer = std::make_shared<EMT::Ph3::Transformer>(
-          trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-      transformer->setParameters(voltageNode1, voltageNode2, ratedPower,
-                                 ratioAbs, ratioPhase, resistance_3ph,
-                                 inductance_3ph);
+          trans->mRID, trans->name, mComponentLogLevel);
+      transformer->setParameters(voltageNode1, voltageNode2, ratioAbs,
+                                 ratioPhase, resistance_3ph, inductance_3ph);
       return transformer;
     } else {
       SPDLOG_LOGGER_INFO(mSLog, "    Transformer for EMT not implemented yet");
@@ -572,11 +578,10 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
     transformer->setBaseVoltage(baseVolt);
     return transformer;
   } else {
-    Bool withResistiveLosses = resistance > 0;
     auto transformer = std::make_shared<DP::Ph1::Transformer>(
-        trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-    transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs,
-                               ratioPhase, resistance, inductance);
+        trans->mRID, trans->name, mComponentLogLevel);
+    transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase,
+                               resistance, inductance);
     return transformer;
   }
 }
@@ -590,6 +595,7 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
     if (mGeneratorType == GeneratorType::TransientStability ||
         mGeneratorType == GeneratorType::SG6aOrderVBR ||
         mGeneratorType == GeneratorType::SG6bOrderVBR ||
+        mGeneratorType == GeneratorType::SG5OrderVBR ||
         mGeneratorType == GeneratorType::SG4OrderVBR ||
         mGeneratorType == GeneratorType::SG3OrderVBR ||
         mGeneratorType == GeneratorType::SG4OrderPCM ||
@@ -896,6 +902,7 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
         mGeneratorType == GeneratorType::FullOrderVBR ||
         mGeneratorType == GeneratorType::SG3OrderVBR ||
         mGeneratorType == GeneratorType::SG4OrderVBR ||
+        mGeneratorType == GeneratorType::SG5OrderVBR ||
         mGeneratorType == GeneratorType::SG6aOrderVBR ||
         mGeneratorType == GeneratorType::SG6bOrderVBR) {
 
@@ -1083,15 +1090,78 @@ Reader::mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection *extnet) {
 
 TopologicalPowerComp::Ptr
 Reader::mapEquivalentShunt(CIMPP::EquivalentShunt *shunt) {
+
   SPDLOG_LOGGER_INFO(mSLog, "Found shunt {}", shunt->name);
 
-  Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(shunt);
+  if (mDomain == Domain::SP) {
+    auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(shunt->mRID, shunt->name,
+                                                     mComponentLogLevel);
+    Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(shunt);
+    cpsShunt->setParameters(shunt->g.value, shunt->b.value);
+    cpsShunt->setBaseVoltage(baseVoltage);
+    SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in SP domain.");
+    return cpsShunt;
+  } else if (mDomain == Domain::DP) {
+    // TODO: consider number of switched sections
+    auto cpsShunt = std::make_shared<DP::Ph1::Shunt>(shunt->mRID, shunt->name,
+                                                     mComponentLogLevel);
+    cpsShunt->setParameters(shunt->g.value, shunt->b.value);
+    SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in DP domain.");
+    mSLog->flush();
 
-  auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(shunt->mRID, shunt->name,
-                                                   mComponentLogLevel);
-  cpsShunt->setParameters(shunt->g.value, shunt->b.value);
-  cpsShunt->setBaseVoltage(baseVoltage);
-  return cpsShunt;
+    return cpsShunt;
+  } else {
+    // TODO: consider number of switched sections
+    auto cpsShunt = std::make_shared<EMT::Ph3::Shunt>(shunt->mRID, shunt->name,
+                                                      mComponentLogLevel);
+    cpsShunt->setParameters(shunt->g.value, shunt->b.value);
+    SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in EMT domain.");
+    mSLog->flush();
+
+    return cpsShunt;
+  }
+}
+
+TopologicalPowerComp::Ptr
+Reader::mapEquivalentLinearShunt(CIMPP::LinearShuntCompensator *linearShunt) {
+
+  SPDLOG_LOGGER_INFO(mSLog, "Found linear shunt {}", linearShunt->name);
+
+  if (mDomain == Domain::SP) {
+    // TODO: consider number of switched sections
+    auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(
+        linearShunt->mRID, linearShunt->name, mComponentLogLevel);
+    Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(linearShunt);
+    cpsShunt->setParameters(linearShunt->gPerSection.value,
+                            linearShunt->bPerSection.value);
+    cpsShunt->setBaseVoltage(baseVoltage);
+    SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in SP domain.");
+    mSLog->flush();
+
+    return cpsShunt;
+  } else if (mDomain == Domain::DP) {
+    // TODO: consider number of switched sections
+    auto cpsShunt = std::make_shared<DP::Ph1::Shunt>(
+        linearShunt->mRID, linearShunt->name, mComponentLogLevel);
+    cpsShunt->setParameters(linearShunt->gPerSection.value,
+                            linearShunt->bPerSection.value);
+    SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in DP domain.");
+    mSLog->flush();
+
+    return cpsShunt;
+  } else {
+    // TODO: consider number of switched sections
+    auto cpsShunt = std::make_shared<EMT::Ph3::Shunt>(
+        linearShunt->mRID, linearShunt->name, mComponentLogLevel);
+    cpsShunt->setParameters(linearShunt->gPerSection.value,
+                            linearShunt->bPerSection.value);
+    SPDLOG_LOGGER_INFO(mSLog, "    Create Shunt in EMT domain.");
+    mSLog->flush();
+
+    return cpsShunt;
+  }
+
+  return nullptr;
 }
 
 Real Reader::determineBaseVoltageAssociatedWithEquipment(
@@ -1198,6 +1268,72 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode *topNode) {
                          term->mRID, equipment->mRID);
     }
   }
+}
+
+std::map<String, std::vector<CPS::Real>> Reader::getPowerFlowResults() {
+  // Return map as table: (nodeName, vector)
+  // where vector[0] = Vm [kV]
+  //		 vector[1] = Va [°]
+  //		 vector[1] = P [MW]
+  //		 vector[1] = Q [MVAr]
+
+  std::map<String, std::vector<CPS::Real>> pfResults;
+
+  // Collect SvVoltage information
+  for (auto obj : mModel->Objects) {
+    // Check if object is of class SvVoltage
+    if (CIMPP::SvVoltage *volt = dynamic_cast<CIMPP::SvVoltage *>(obj)) {
+
+      CIMPP::TopologicalNode *node = volt->TopologicalNode;
+      if (!node) {
+        SPDLOG_LOGGER_WARN(
+            mSLog, "SvVoltage references missing Topological Node, ignoring");
+        continue;
+      }
+      auto nodeName = node->name;
+      Real voltageAbs = volt->v.value;
+      try {
+        SPDLOG_LOGGER_INFO(mSLog, "    Angle={}", (float)volt->angle.value);
+      } catch (ReadingUninitializedField *e) {
+        volt->angle.value = 0;
+        std::cerr << "Uninitialized Angle for SVVoltage at "
+                  << volt->TopologicalNode->name << ".Setting default value of "
+                  << volt->angle.value << std::endl;
+      }
+      Real voltagePhase = volt->angle.value;
+
+      std::vector<CPS::Real> data{voltageAbs, voltagePhase, 0.0, 0.0};
+      pfResults[nodeName] = data;
+    }
+  }
+
+  // Collect SvPowerFlow information
+  for (auto obj : mModel->Objects) {
+    if (CIMPP::SvPowerFlow *flow = dynamic_cast<CIMPP::SvPowerFlow *>(obj)) {
+
+      auto conductingEquipment = flow->Terminal->ConductingEquipment;
+      auto nodeName = flow->Terminal->TopologicalNode->name;
+      if (dynamic_cast<CIMPP::EnergyConsumer *>(conductingEquipment) ||
+          dynamic_cast<CIMPP::ExternalNetworkInjection *>(
+              conductingEquipment) ||
+          dynamic_cast<CIMPP::EquivalentShunt *>(conductingEquipment) ||
+          dynamic_cast<CIMPP::LinearShuntCompensator *>(conductingEquipment)) {
+
+        if (pfResults.count(nodeName)) {
+          pfResults[nodeName][2] -= flow->p.value;
+          pfResults[nodeName][3] -= flow->q.value;
+        }
+      } else if (dynamic_cast<CIMPP::SynchronousMachine *>(
+                     conductingEquipment)) {
+        if (pfResults.count(nodeName)) {
+          pfResults[nodeName][2] -= flow->p.value;
+          pfResults[nodeName][3] -= flow->q.value;
+        }
+      }
+    }
+  }
+
+  return pfResults;
 }
 
 template void

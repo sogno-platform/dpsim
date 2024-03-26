@@ -315,7 +315,8 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("loadCIM", (CPS::SystemTopology(CPS::CIM::Reader::*)(
                           CPS::Real, const std::list<CPS::String> &,
                           CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &
-                          CPS::CIM::Reader::loadCIM);
+                          CPS::CIM::Reader::loadCIM)
+      .def("get_powerflow_results", &CPS::CIM::Reader::getPowerFlowResults);
 #endif
 
   py::class_<CPS::CSVReader>(m, "CSVReader")

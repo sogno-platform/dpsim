@@ -13,8 +13,8 @@ using namespace CPS;
 SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
                         Real resistance, Real inductance,
                         Logger::Level logLevel)
-    : Base::Ph1::PiLine(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+    : Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(
+                                          uid, name, true, true, logLevel),
       mBaseVoltage(mAttributes->create<Real>("base_Voltage", baseVoltage)),
       mInductance(mAttributes->create<Real>("L_series")),
       mActivePowerInjection(mAttributes->create<Real>("p_inj")),
@@ -37,8 +37,8 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 }
 
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
-    : Base::Ph1::PiLine(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+    : Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(
+                                          uid, name, true, true, logLevel),
       mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
       mInductance(mAttributes->create<Real>("L_series")),
       mActivePowerInjection(mAttributes->create<Real>("p_inj")),

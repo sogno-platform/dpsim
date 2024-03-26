@@ -8,9 +8,11 @@
 
 #pragma once
 
+#include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Base/Base_Governor.h>
+#include <dpsim-models/Base/Base_PSS.h>
+#include <dpsim-models/Base/Base_Turbine.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Signal/Exciter.h>
-#include <dpsim-models/Signal/TurbineGovernorType1.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -39,6 +41,8 @@ public:
   /// (0,0) = Id
   /// (1,0) = Iq
   const Attribute<Matrix>::Ptr mIdq;
+  /// Electrical power
+  const Attribute<Complex>::Ptr mPower;
   /// stator electrical torque
   const Attribute<Real>::Ptr mElecTorque;
   /// Mechanical torque
@@ -82,19 +86,18 @@ public:
   ///
   void setInitialValues(Complex initComplexElectricalPower,
                         Real initMechanicalPower, Complex initTerminalVoltage);
-
-  /// Add governor and turbine
-  void addGovernor(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R,
-                   Real Pmin, Real Pmax, Real OmRef, Real TmRef);
-  void
-  addGovernor(std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor);
-  /// Add voltage regulator and exciter
-  void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf,
-                  Real Tr);
-  void addExciter(std::shared_ptr<Signal::Exciter> exciter);
-
-  /// ### Setters ###
+  ///
   void scaleInertiaConstant(Real scalingFactor);
+
+  // ### Controllers ###
+  /// Add automatic voltage regulator
+  void addExciter(std::shared_ptr<Base::Exciter> exciter);
+  /// Add power system stabilizer
+  void addPSS(std::shared_ptr<Base::PSS> PSS);
+  /// Add Governor/TurbineGovernor
+  void addGovernor(std::shared_ptr<Base::Governor> governor);
+  /// Add Governor/TurbineGovernor
+  void addTurbine(std::shared_ptr<Base::Turbine> turbine);
 
 protected:
   using MNASimPowerComp<VarType>::mRightVector;
@@ -139,6 +142,8 @@ protected:
   virtual void mnaCompPostStep(const Matrix &leftVector) = 0;
   /// Stamps system matrix
   virtual void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) = 0;
+
+  // Model flags
   /// Model flag indicating whether the machine is modelled as Norton or Thevenin equivalent
   Bool mModelAsNortonSource;
   // Model flag indicating the SG order to be used
@@ -256,17 +261,30 @@ protected:
   Bool mInitialValuesSet = false;
 
   // #### Controllers ####
-  /// Determines if Turbine and Governor are activated
-  Bool mHasTurbineGovernor = false;
   /// Determines if Exciter is activated
   Bool mHasExciter = false;
-  /// Signal component modelling governor control and steam turbine
-  std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
+  /// Determines if Exciter is activated
+  Bool mHasPSS = false;
+  //Determines if generator has a turbine
+  Bool mHasTurbine = false;
+  //Determines if turbine has a Governor/TurbineGovernor
+  Bool mHasGovernor = false;
+
   /// Signal component modelling voltage regulator and exciter
-  std::shared_ptr<Signal::Exciter> mExciter;
+  std::shared_ptr<Base::Exciter> mExciter;
+  /// Signal component modelling power system stabilizer
+  std::shared_ptr<Base::PSS> mPSS;
+  /// Signal component modelling governor control
+  std::shared_ptr<Base::Governor> mGovernor;
+  /// Signal component modelling Turbine
+  std::shared_ptr<Base::Turbine> mTurbine;
+
+  ///
+  Real mVpss = 0;
 
   ///
   Real mTimeStep;
+  ///
   Real mSimTime;
 };
 } // namespace Base
