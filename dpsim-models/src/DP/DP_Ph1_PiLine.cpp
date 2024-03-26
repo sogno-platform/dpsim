@@ -11,8 +11,8 @@
 using namespace CPS;
 
 DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-    : Base::Ph1::PiLine(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
+    : Base::Ph1::PiLine(mAttributes), CompositePowerComp<Complex>(
+                                          uid, name, true, true, logLevel) {
   setTerminalNumber(2);
 
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
