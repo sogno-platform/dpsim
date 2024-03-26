@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <dpsim-models/Base/Base_SynchronGenerator.h>
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Base/Base_SynchronGenerator.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 #include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>

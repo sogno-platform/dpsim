@@ -12,27 +12,25 @@
 namespace CPS {
 namespace Base {
 
-	class TurbineParameters {
-		public:
-			TurbineParameters() { };
-			virtual ~TurbineParameters() = default;
-	 };
+class TurbineParameters {
+public:
+  TurbineParameters(){};
+  virtual ~TurbineParameters() = default;
+};
 
-	/// @brief Base model for Turbine
-	class Turbine {
+/// @brief Base model for Turbine
+class Turbine {
 
-		public:
+public:
+  ///
+  virtual void
+  setParameters(std::shared_ptr<Base::TurbineParameters> parameters) = 0;
 
-			///
-			virtual void setParameters(std::shared_ptr<Base::TurbineParameters> parameters) = 0;
+  /// Initializes Turbine variables
+  virtual void initialize(Real PmInit) = 0;
 
-			/// Initializes Turbine variables
-			virtual void initialize(Real PmInit) = 0;
-
-			/// 
-			virtual Real step(Real Pgv, Real dt) = 0;
-	};
-}
-}
-
-
+  ///
+  virtual Real step(Real Pgv, Real dt) = 0;
+};
+} // namespace Base
+} // namespace CPS
