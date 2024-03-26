@@ -211,11 +211,25 @@ void addDPPh1Components(py::module_ mDPPh1) {
           "ref_omega_name"_a = "w_r", "ref_omage_comp"_a,
           "ref_delta_name"_a = "delta_r", "ref_delta_comp"_a);
 
-	py::class_<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR, std::shared_ptr<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>, CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>(mDPPh1, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance())
-		.def("set_base_parameters", &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setBaseParameters, "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
-		.def("set_initial_values", &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setInitialValues, "init_complex_electrical_power"_a, "init_mechanical_power"_a, "init_complex_terminal_voltage"_a)
-		.def("scale_inertia_constant", &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::scaleInertiaConstant, "scaling_factor"_a)
-		.def("set_model_as_norton_source", &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setModelAsNortonSource, "model_as_norton_source"_a);
+  py::class_<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR,
+             std::shared_ptr<CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR>,
+             CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>(
+      mDPPh1, "ReducedOrderSynchronGeneratorVBR", py::multiple_inheritance())
+      .def("set_base_parameters",
+           &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setBaseParameters,
+           "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a)
+      .def("set_initial_values",
+           &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::setInitialValues,
+           "init_complex_electrical_power"_a, "init_mechanical_power"_a,
+           "init_complex_terminal_voltage"_a)
+      .def(
+          "scale_inertia_constant",
+          &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::scaleInertiaConstant,
+          "scaling_factor"_a)
+      .def("set_model_as_norton_source",
+           &CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR::
+               setModelAsNortonSource,
+           "model_as_norton_source"_a);
 
   py::class_<CPS::DP::Ph1::SynchronGenerator3OrderVBR,
              std::shared_ptr<CPS::DP::Ph1::SynchronGenerator3OrderVBR>,
