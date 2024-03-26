@@ -9,25 +9,25 @@ In parallel to simulating a power system, DPsim allows to extract eigenvalues of
 
 
 ## Equations
-``discreteEigenvalues`` $z$ are computed from discretized state matrix $A_{d}$, that in EMT domain is calculated from:
+``discreteEigenvalues`` $\mathbf{z}$ are computed from discretized state matrix $A_{d}$, that in EMT domain is calculated from:
 
 $$
-A_{d}=S-G_{bb}A_{bn}G_{nn}^{-1} {A_{nb}}
+\mathbf{A}_{d}=\mathbf{S}+\mathbf{G}_{b}\mathbf{A}_{bn}\mathbf{G}^{-1} \mathbf{A}_{nb}
 $$
 
-where  $S$ is a sign matrix, $G_{bb}$ is a discretization matrix, $G_{nn}$ is a Modified Nodal Analysis (MNA) power system conductance matrix,  $A_{bn}$ and $A_{nb}$ are <i>branch x node</i> and <i>node x branch</i> incidence matrices respectively. 
+where $\mathbf{S}$ is a sign matrix, $\mathbf{G}_{b}$ is a discretization matrix, $\mathbf{G}$ is a Modified Nodal Analysis (MNA) power system conductance matrix,  $\mathbf{A}_{bn}$ and $\mathbf{A}_{nb}$ are <i>branch x node</i> and <i>node x branch</i> incidence matrices respectively. 
 
-The matrix $G_{nn}$ is available from power system MNA model. To prepare the rest of the matrices, each power system component needs to be stamped into $A_{bn}$ and $A_{nb}$, while dynamic components also need to be stamped into $S$ and $G_{bb}$ matrices.
+The MNA power system conductance matrix $\mathbf{G}$ is available from power system MNA model. To prepare the rest of the matrices, each power system component needs to be stamped into $\mathbf{A}_{bn}$ and $\mathbf{A}_{nb}$, while dynamic components also need to be stamped into $\mathbf{S}$ and $\mathbf{G}_{b}$ matrices.
 
 
-``eigenvalues`` $\lambda$ of the time-continuous state-space model matrix $A$ can then be recovered from ``discreteEigenvalues`` $z$. Assuming the Trapezoidal rule of discretization in EMT domain, the equation is:
+``eigenvalues`` $\mathbf{\lambda}$ of the time-continuous state-space model matrix $A$ can then be recovered from ``discreteEigenvalues`` $\mathbf{z}$. Assuming the Trapezoidal rule of discretization in EMT domain, the equation is:
 
 $$
-\lambda=\frac{2}{\Delta t} \frac{z - 1}{z + 1}
+\mathbf{\lambda}=\frac{2}{\Delta t} \frac{\mathbf{z} - 1}{\mathbf{z} + 1}
 $$
 
 
 ## Implementation
 
 The ``MNAEigenvalueExtractor`` class is a template class responsible for extracting eigenvalues.
-The ``EigenvalueCompInterface`` and ``EigenvalueDynamicCompInterface`` are interfaces to be implemented by all components participating in eigenvalue extraction. These interfaces provide the signatures of the functions that are used to stamp a component into the matrices $A_{bn}$, $A_{nb}$, $S$ and $G_{bb}$. 
+The ``EigenvalueCompInterface`` and ``EigenvalueDynamicCompInterface`` are interfaces to be implemented by all components participating in eigenvalue extraction. These interfaces provide the signatures of the functions that are used to stamp a component into the matrices $\mathbf{A}_{bn}$, $\mathbf{A}_{nb}$, $\mathbf{S}$ and $\mathbf{G}_{b}$. 
