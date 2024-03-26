@@ -95,7 +95,7 @@ protected:
   Bool mInitFromNodesAndTerminals = true;
   /// Enable recomputation of system matrix during simulation
   Bool mSystemMatrixRecomputation = false;
-  ///
+  /// Enable eigenvalue extraction during simulation
   Bool mIsEigenvalueExtractionEnabled = false;
 
   /// If tearing components exist, the Diakoptics
