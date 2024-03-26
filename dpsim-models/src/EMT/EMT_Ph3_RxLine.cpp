@@ -14,8 +14,8 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
-    : Base::Ph3::PiLine(mAttributes),
-      CompositePowerComp<Real>(uid, name, true, true, logLevel) {
+    : Base::Ph3::PiLine(mAttributes), CompositePowerComp<Real>(uid, name, true,
+                                                               true, logLevel) {
   mPhaseType = PhaseType::ABC;
   setVirtualNodeNumber(1);
   setTerminalNumber(2);

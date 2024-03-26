@@ -11,8 +11,8 @@
 using namespace CPS;
 
 EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-    : Base::Ph3::PiLine(mAttributes),
-      CompositePowerComp<Real>(uid, name, true, true, logLevel) {
+    : Base::Ph3::PiLine(mAttributes), CompositePowerComp<Real>(uid, name, true,
+                                                               true, logLevel) {
   mPhaseType = PhaseType::ABC;
   setTerminalNumber(2);
 

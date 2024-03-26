@@ -12,8 +12,9 @@ using namespace CPS;
 
 DP::Ph1::VoltageSourceNorton::VoltageSourceNorton(String uid, String name,
                                                   Logger::Level logLevel)
-    : Base::Ph1::VoltageSource(mAttributes),
-      MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
+    : Base::Ph1::VoltageSource(mAttributes), MNASimPowerComp<Complex>(
+                                                 uid, name, true, true,
+                                                 logLevel),
       mResistance(mAttributes->create<Real>("R")) {
   setTerminalNumber(2);
   **mIntfVoltage = MatrixComp::Zero(1, 1);
