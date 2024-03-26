@@ -8,41 +8,46 @@
 
 #pragma once
 
-#include <dpsim-models/Base/Base_Ph3_Resistor.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/MNATearInterface.h>
+
 namespace CPS {
-namespace EMT {
-namespace Ph3 {
-/// EMT Resistor
-class Resistor : public MNASimPowerComp<Real>,
-                 public Base::Ph3::Resistor,
-                 public SharedFactory<Resistor> {
-protected:
+namespace SP {
+namespace Ph1 {
+/// Static phasor ResIndSeries model (only implemented for dynamic simulations!)
+class ResIndSeries : public MNASimPowerComp<Complex>,
+                     public MNATearInterface,
+                     public SharedFactory<ResIndSeries> {
+private:
+  /// Impedance
+  Complex mImpedance;
+
 public:
-  /// Defines UID, name, component parameters and logging level
-  Resistor(String uid, String name,
-           Logger::Level logLevel = Logger::Level::off);
-  /// Defines name, component parameters and logging level
-  Resistor(String name, Logger::Level logLevel = Logger::Level::off)
-      : Resistor(name, name, logLevel) {}
+  /// Inductance [H]
+  const Attribute<Real>::Ptr mInductance;
+  ///Resistance [ohm]
+  const Attribute<Real>::Ptr mResistance;
+  /// Defines UID, name and logging level
+  ResIndSeries(String uid, String name,
+               Logger::Level logLevel = Logger::Level::off);
+  /// Defines name and logging level
+  ResIndSeries(String name, Logger::Level logLevel = Logger::Level::off)
+      : ResIndSeries(name, name, logLevel) {}
+
+  SimPowerComp<Complex>::Ptr clone(String name);
 
   // #### General ####
-  ///
-  SimPowerComp<Real>::Ptr clone(String name);
+  /// Sets model specific parameters
+  void setParameters(Real resistance, Real inductance);
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
-  /// enable DP to EMT bach transformation
-  void enableBackShift();
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
-  /// Initializes internal variables of the component
+  /// Initializes MNA specific variables
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftSideVector) override;
+                         Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override {}
   /// Update interface voltage from MNA system result
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// Update interface current from MNA system result
@@ -56,7 +61,10 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
+
+  // #### MNA Tear Section ####
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
 };
-} // namespace Ph3
-} // namespace EMT
+} // namespace Ph1
+} // namespace SP
 } // namespace CPS

@@ -139,6 +139,16 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "parallel_capacitance"_a = 0, "parallel_conductance"_a = 0)
       .def("connect", &CPS::DP::Ph1::PiLine::connect);
 
+  py::class_<CPS::DP::Ph1::ResIndSeries,
+             std::shared_ptr<CPS::DP::Ph1::ResIndSeries>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "ResInductor",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph1::ResIndSeries::setParameters, "R"_a,
+           "L"_a)
+      .def("connect", &CPS::DP::Ph1::ResIndSeries::connect);
+
   py::class_<CPS::DP::Ph1::RXLoad, std::shared_ptr<CPS::DP::Ph1::RXLoad>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "RXLoad",
                                               py::multiple_inheritance())
@@ -155,7 +165,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::DP::Ph1::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::DP::Ph1::Switch::open)
       .def("close", &CPS::DP::Ph1::Switch::close)
@@ -169,7 +179,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::DP::Ph1::varResSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::DP::Ph1::varResSwitch::open)
       .def("close", &CPS::DP::Ph1::varResSwitch::close)
@@ -363,7 +373,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "with_trafo"_a = false)
       .def("set_parameters",
            &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setParameters,
@@ -403,23 +413,16 @@ void addDPPh1Components(py::module_ mDPPh1) {
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off)
-      .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
-           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		   // cppcheck-suppress assignBoolToPointer
-           "with_resistive_losses"_a =
-               false)
+      .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
+           "name"_a,
+           "loglevel"_a =
+               CPS::Logger::Level::off) // cppcheck-suppress assignBoolToPointer
       .def("set_parameters",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real>(
                &CPS::DP::Ph1::Transformer::setParameters),
            "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a,
            "ratio_phase"_a, "resistance"_a, "inductance"_a)
-      .def("set_parameters",
-           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real>(
-               &CPS::DP::Ph1::Transformer::setParameters),
-           "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a,
-           "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
       .def("connect", &CPS::DP::Ph1::Transformer::connect);
 }
 
@@ -481,7 +484,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::DP::Ph3::SeriesSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::DP::Ph3::SeriesSwitch::open)
       .def("close", &CPS::DP::Ph3::SeriesSwitch::close)

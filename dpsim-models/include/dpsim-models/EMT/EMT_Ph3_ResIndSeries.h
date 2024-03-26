@@ -8,32 +8,46 @@
 
 #pragma once
 
-#include <dpsim-models/Base/Base_Ph3_Resistor.h>
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
+
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
-/// EMT Resistor
-class Resistor : public MNASimPowerComp<Real>,
-                 public Base::Ph3::Resistor,
-                 public SharedFactory<Resistor> {
+/// EMT ResIndSeries
+/// Assumption: non diagonal terms are equal to zero, Z00=Z11=Z22
+class ResIndSeries : public MNASimPowerComp<Real>,
+                     public SharedFactory<ResIndSeries> {
 protected:
-public:
-  /// Defines UID, name, component parameters and logging level
-  Resistor(String uid, String name,
-           Logger::Level logLevel = Logger::Level::off);
-  /// Defines name, component parameters and logging level
-  Resistor(String name, Logger::Level logLevel = Logger::Level::off)
-      : Resistor(name, name, logLevel) {}
+  /// DC equivalent current source [A]
+  Matrix mEquivCurrent;
+  /// Equivalent conductance [S]
+  Real mEquivCond;
+  /// Coefficient in front of previous current value
+  Real mPrevCurrFac;
 
-  // #### General ####
+public:
+  /// Inductance [H]
+  const Attribute<Matrix>::Ptr mInductance;
+  ///Resistance [ohm]
+  const Attribute<Matrix>::Ptr mResistance;
+  /// Defines UID, name, component parameters and logging level
+  ResIndSeries(String uid, String name,
+               Logger::Level logLevel = Logger::Level::off);
+  /// Defines name, component parameters and logging level
+  ResIndSeries(String name, Logger::Level logLevel = Logger::Level::off)
+      : ResIndSeries(name, name, logLevel) {}
   ///
   SimPowerComp<Real>::Ptr clone(String name);
+
+  // #### General ####
+  /// Sets model specific parameters
+  void setParameters(Matrix resistanceMatrix, Matrix inductanceMatrix);
+
+  /// Initializes auxiliar variables
+  void initVars(Real timeStep);
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
-  /// enable DP to EMT bach transformation
-  void enableBackShift();
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// Initializes internal variables of the component
@@ -42,14 +56,21 @@ public:
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override {}
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// Update interface voltage from MNA system result
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// Update interface current from MNA system result
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
+  /// MNA pre step operations
+  void mnaCompPreStep(Real time, Int timeStepCount) override;
   /// MNA pre and post step operations
   void mnaCompPostStep(Real time, Int timeStepCount,
                        Attribute<Matrix>::Ptr &leftVector) override;
+  /// Add MNA pre step dependencies
+  void mnaCompAddPreStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes) override;
   /// add MNA pre and post step dependencies
   void
   mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,

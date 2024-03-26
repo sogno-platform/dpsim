@@ -18,6 +18,7 @@
 #include <dpsim-models/SP/SP_Ph1_PiLine.h>
 #include <dpsim-models/SP/SP_Ph1_RXLine.h>
 #include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/SP/SP_Ph1_ResIndSeries.h>
 #include <dpsim-models/SP/SP_Ph1_Shunt.h>
 #include <dpsim-models/SP/SP_Ph1_SolidStateTransformer.h>
 #include <dpsim-models/SP/SP_Ph1_Switch.h>
@@ -50,6 +51,7 @@
 #include <dpsim-models/DP/DP_Ph1_RXLoad.h>
 #include <dpsim-models/DP/DP_Ph1_RXLoadSwitch.h>
 #include <dpsim-models/DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
 #include <dpsim-models/DP/DP_Ph1_SVC.h>
@@ -94,6 +96,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/EMT/EMT_Ph3_ResIndSeries.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesSwitch.h>
