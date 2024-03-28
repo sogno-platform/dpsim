@@ -77,6 +77,25 @@ SimPowerComp<Real>::Ptr EMT::Ph3::CurrentSource::clone(String name) {
   return copy;
 }
 
+void EMT::Ph3::CurrentSource::setParameters(MatrixComp voltageRef,
+                                            Real srcFreq) {
+  auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
+  // Complex(1,0) is used as initialPhasor, since magnitude and phase of V_ref are taken into account by updateVoltage
+  srcSigSine->mFreq->setReference(mSrcFreq);
+  srcSigSine->setParameters(Complex(1, 0), srcFreq);
+  mSrcSig = srcSigSine;
+
+  **mCurrentRef = voltageRef;
+
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\nVoltage reference phasor [V]: {:s}"
+                     "\nFrequency [Hz]: {:s}",
+                     Logger::matrixCompToString(voltageRef),
+                     Logger::realToString(srcFreq));
+
+  mParametersSet = true;
+}
+
 void EMT::Ph3::CurrentSource::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
