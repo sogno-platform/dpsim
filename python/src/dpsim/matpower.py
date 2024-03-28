@@ -631,6 +631,52 @@ class Reader:
 
         self.system = dpsimpy.SystemTopology(self.mpc_freq, system_nodes, system_comp)
     
+    def create_cosim_topologies(self, cosim_params):
+        topologies = []
+        for topologie_idx in range(cosim_params["number_topologies"]):
+            system_comp = []
+            system_nodes = []
+            
+            for key, value in self.dpsimpy_comp_dict.items():
+                dpsim_component = value[0]
+                connection_nodes = value[1]
+                
+                # check if this component should be added to this topology
+                belong_to_topology=True
+                for node in connection_nodes:                        
+                    # check if node is in node list
+                    if node.name() not in cosim_params["nodes"][topologie_idx]:
+                        belong_to_topology=False
+                if not belong_to_topology:
+                    continue
+                # add component to component list
+                system_comp.append(dpsim_component)
+                
+                # add node to node list
+                for node in connection_nodes:
+                    if node in system_nodes:
+                        continue
+                    else:
+                        system_nodes.append(node)
+                        
+                
+                # check if component is connected to split_node
+                for node in connection_nodes:
+                    if (cosim_params["split_node"] == node.name()):               
+                        # add voltage/current source
+                        eq_component=None
+                        if (cosim_params["eq_component"][topologie_idx]=="VS"):
+                            eq_component = self.dpsimpy_components.VoltageSource("VS_"+node.name(), self.log_level)
+                        elif (cosim_params["eq_component"][topologie_idx]=="CS"):
+                            eq_component = self.dpsimpy_components.CurrentSource("CS_"+node.name(), self.log_level)
+                        eq_component.connect([self.dpsimpy_components.SimNode.gnd, node])
+                        system_comp.append(eq_component)
+            
+            topologies.append(dpsimpy.SystemTopology(self.mpc_freq, system_nodes, system_comp))
+
+        return topologies
+        
+        
     def load_mpc(self, frequency=60, domain=Domain.PF, with_pss=True, with_avr=True, with_tg=True):
         """
         Read mpc files and create DPsim topology
