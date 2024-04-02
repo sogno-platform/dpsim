@@ -634,8 +634,11 @@ class Reader:
     def create_cosim_topologies(self, cosim_params):
         topologies = []
         for topologie_idx in range(cosim_params["number_topologies"]):
+            dpsimpy.Logger.set_log_dir('logs/' + cosim_params["sim_names"][topologie_idx])
+            
             system_comp = []
             system_nodes = []
+            eq_component=None
             
             for key, value in self.dpsimpy_comp_dict.items():
                 dpsim_component = value[0]
@@ -661,16 +664,17 @@ class Reader:
                         
                 
                 # check if component is connected to split_node
-                for node in connection_nodes:
-                    if (cosim_params["split_node"] == node.name()):               
-                        # add voltage/current source
-                        eq_component=None
-                        if (cosim_params["eq_component"][topologie_idx]=="VS"):
-                            eq_component = self.dpsimpy_components.VoltageSource("VS_"+node.name(), self.log_level)
-                        elif (cosim_params["eq_component"][topologie_idx]=="CS"):
-                            eq_component = self.dpsimpy_components.CurrentSource("CS_"+node.name(), self.log_level)
-                        eq_component.connect([self.dpsimpy_components.SimNode.gnd, node])
-                        system_comp.append(eq_component)
+                if eq_component is None:
+                    for node in connection_nodes:
+                        if (cosim_params["split_node"] == node.name()):               
+                            # add voltage/current source
+                            eq_component=None
+                            if (cosim_params["eq_component"][topologie_idx]=="VS"):
+                                eq_component = self.dpsimpy_components.VoltageSource("VS_"+node.name(), self.log_level)
+                            elif (cosim_params["eq_component"][topologie_idx]=="CS"):
+                                eq_component = self.dpsimpy_components.CurrentSource("CS_"+node.name(), self.log_level)
+                            eq_component.connect([self.dpsimpy_components.SimNode.gnd, node])
+                            system_comp.append(eq_component)
             
             topologies.append(dpsimpy.SystemTopology(self.mpc_freq, system_nodes, system_comp))
 
