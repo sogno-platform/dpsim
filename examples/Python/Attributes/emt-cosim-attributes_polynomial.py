@@ -1,8 +1,8 @@
 import sys
 import os.path
 import logging
-
 import dpsimpy
+
 import numpy as np
 import argparse
 
@@ -32,8 +32,8 @@ def set_dpsim1(t_s, t_f, u_1_0, logger_prefix):
     r_line.set_parameters(r_line_r)
     
     # Initial conditions
-    n1.set_initial_voltage(5)
-    n2.set_initial_voltage(u_1_0)
+    n1.set_initial_voltage(5 * dpsimpy.PEAK1PH_TO_RMS3PH)
+    n2.set_initial_voltage(u_1_0 * dpsimpy.PEAK1PH_TO_RMS3PH)
 
     # Connections
     r_1.connect([gnd, n1])
@@ -96,7 +96,7 @@ def set_dpsim2(t_s, t_f, logger_prefix):
     r_load.set_parameters(r_load_r)
     
     # Initial conditions
-    n2.set_initial_voltage(2.0)
+    n2.set_initial_voltage(2.0 * dpsimpy.PEAK1PH_TO_RMS3PH)
     
     # Connections
     ecs.connect([gnd, n2])
