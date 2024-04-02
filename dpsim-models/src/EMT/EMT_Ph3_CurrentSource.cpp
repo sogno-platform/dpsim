@@ -23,9 +23,37 @@ EMT::Ph3::CurrentSource::CurrentSource(String uid, String name,
   **mIntfCurrent = Matrix::Zero(3, 1);
 }
 
+void EMT::Ph3::CurrentSource::setParameters(MatrixComp currentRef,
+                                            Real srcFreq) {
+  auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
+  // Complex(1,0) is used as initialPhasor, since magnitude and phase of I_ref are taken into account by updateCurrent
+  srcSigSine->mFreq->setReference(mSrcFreq);
+  srcSigSine->setParameters(Complex(1, 0), srcFreq);
+  mSrcSig = srcSigSine;
+
+  **mCurrentRef = currentRef;
+
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\nCurrent reference phasor [V]: {:s}"
+                     "\nFrequency [Hz]: {:s}",
+                     Logger::matrixCompToString(currentRef),
+                     Logger::realToString(srcFreq));
+
+  mParametersSet = true;
+}
+
 void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
   SPDLOG_LOGGER_INFO(
       mSLog, "\n--- Initialization from node voltages and terminal ---");
+
+  // IntfVoltage initialization for each phase
+  MatrixComp vInitABC = Matrix::Zero(3, 1);
+  vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(1) -
+                   RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
+  vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
+  vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
+  **mIntfVoltage = vInitABC.real();
+
   if (!mParametersSet) {
     auto srcSigSine =
         Signal::SineWaveGenerator::make(**mName + "_sw", Logger::Level::off);
@@ -34,6 +62,7 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
     mSrcSig = srcSigSine;
 
     Complex v_ref = initialSingleVoltage(1) - initialSingleVoltage(0);
+    //TODO: set initial power using init_from_powerflow!
     Complex s_ref = terminal(1)->singlePower() - terminal(0)->singlePower();
 
     // Current flowing from T1 to T0 (rms value)
@@ -58,6 +87,7 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
                        Logger::complexToString(terminal(0)->singlePower()),
                        Logger::complexToString(terminal(1)->singlePower()));
   } else {
+    **mIntfCurrent = RMS_TO_PEAK * (**mCurrentRef).real();
     SPDLOG_LOGGER_INFO(
         mSLog,
         "\nInitialization from node voltages and terminal omitted (parameter "
@@ -68,32 +98,6 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
   SPDLOG_LOGGER_INFO(
       mSLog, "\n--- Initialization from node voltages and terminal ---");
   mSLog->flush();
-}
-
-SimPowerComp<Real>::Ptr EMT::Ph3::CurrentSource::clone(String name) {
-  auto copy = CurrentSource::make(name, mLogLevel);
-  // TODO: implement setParameters
-  // copy->setParameters(attributeTyped<MatrixComp>("I_ref")->get(), attributeTyped<Real>("f_src")->get());
-  return copy;
-}
-
-void EMT::Ph3::CurrentSource::setParameters(MatrixComp voltageRef,
-                                            Real srcFreq) {
-  auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
-  // Complex(1,0) is used as initialPhasor, since magnitude and phase of V_ref are taken into account by updateVoltage
-  srcSigSine->mFreq->setReference(mSrcFreq);
-  srcSigSine->setParameters(Complex(1, 0), srcFreq);
-  mSrcSig = srcSigSine;
-
-  **mCurrentRef = voltageRef;
-
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "\nVoltage reference phasor [V]: {:s}"
-                     "\nFrequency [Hz]: {:s}",
-                     Logger::matrixCompToString(voltageRef),
-                     Logger::realToString(srcFreq));
-
-  mParametersSet = true;
 }
 
 void EMT::Ph3::CurrentSource::mnaCompInitialize(
@@ -125,12 +129,13 @@ void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
   if (mSrcSig != nullptr) {
     mSrcSig->step(time);
     for (int i = 0; i < 3; i++) {
-      (**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs((**mCurrentRef)(i, 0)) *
+      (**mIntfCurrent)(i, 0) = RMS3PH_TO_PEAK1PH *
+                               Math::abs((**mCurrentRef)(i, 0)) *
                                cos(Math::phase(mSrcSig->getSignal()) +
                                    Math::phase((**mCurrentRef)(i, 0)));
     }
   } else {
-    **mIntfCurrent = RMS_TO_PEAK * (**mCurrentRef).real();
+    **mIntfCurrent = RMS3PH_TO_PEAK1PH * (**mCurrentRef).real();
   }
   SPDLOG_LOGGER_DEBUG(mSLog, "\nUpdate current: {:s}",
                       Logger::matrixToString(**mIntfCurrent));
