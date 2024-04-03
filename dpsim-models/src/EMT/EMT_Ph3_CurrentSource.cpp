@@ -129,8 +129,7 @@ void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
   if (mSrcSig != nullptr) {
     mSrcSig->step(time);
     for (int i = 0; i < 3; i++) {
-      (**mIntfCurrent)(i, 0) = RMS3PH_TO_PEAK1PH *
-                               Math::abs((**mCurrentRef)(i, 0)) *
+      (**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs((**mCurrentRef)(i, 0)) *
                                cos(Math::phase(mSrcSig->getSignal()) +
                                    Math::phase((**mCurrentRef)(i, 0)));
     }
@@ -147,7 +146,7 @@ void EMT::Ph3::CurrentSource::mnaCompAddPreStepDependencies(
     AttributeBase::List &modifiedAttributes) {
   attributeDependencies.push_back(mCurrentRef);
   modifiedAttributes.push_back(mRightVector);
-  modifiedAttributes.push_back(mIntfVoltage);
+  modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void EMT::Ph3::CurrentSource::mnaCompPreStep(Real time, Int timeStepCount) {

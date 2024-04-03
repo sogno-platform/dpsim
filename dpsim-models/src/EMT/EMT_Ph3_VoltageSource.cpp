@@ -187,6 +187,8 @@ void EMT::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp(
   Math::setVectorElement(rightVector,
                          mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
                          (**mIntfVoltage)(2, 0));
+  SPDLOG_LOGGER_DEBUG(mSLog, "\nmnaCompApplyRightSideVectorStamp Voltage: {:s}",
+                      Logger::matrixToString(**mIntfVoltage));
 }
 
 void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
