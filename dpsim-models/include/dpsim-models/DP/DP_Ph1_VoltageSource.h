@@ -36,6 +36,8 @@ namespace Ph1 {
 /// as unkown and it is taken into account for the equation of node j as
 /// positve and for the equation of node k as negative. Moreover
 /// a new equation ej - ek = V is added to the problem.
+/// Obs.: The current is considering positive when it is flowing out of the negative terminal (terminal[0])
+/// and flowing into the positive terminal (terminal[1]) of the source
 class VoltageSource : public MNASimPowerComp<Complex>,
                       public DAEInterface,
                       public SharedFactory<VoltageSource> {
@@ -46,6 +48,7 @@ private:
   CPS::Signal::SignalGenerator::Ptr mSrcSig;
 
 public:
+  /// mVoltageRef is the 3Ph RMS Voltage
   const CPS::Attribute<Complex>::Ptr mVoltageRef;
   const CPS::Attribute<Real>::Ptr mSrcFreq;
 

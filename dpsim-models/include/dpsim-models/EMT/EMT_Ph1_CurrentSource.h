@@ -18,10 +18,12 @@ namespace Ph1 {
 /// \brief Ideal current source model
 ///
 /// A positive current is flowing out of
-/// node1 and into node2.
+/// node1 and into node2 (e.g. current is flowing out of the positive terminal
+/// (terminal 1) of the source)
 class CurrentSource : public MNASimPowerComp<Real>,
                       public SharedFactory<CurrentSource> {
 public:
+  /// mCurrentRef is the Peak-to-Peak reference current
   const Attribute<Complex>::Ptr mCurrentRef;
   const Attribute<Real>::Ptr mSrcFreq;
 
@@ -34,6 +36,7 @@ public:
 
   SimPowerComp<Real>::Ptr clone(String name);
 
+  /// currentRef is the Peak-to-Peak current
   void setParameters(Complex currentRef, Real srcFreq = -1);
   // #### General ####
   /// Initializes component from power flow data

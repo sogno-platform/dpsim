@@ -142,20 +142,20 @@ void DP::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     if (terminalNotGrounded(0)) {
-      Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
-                             matrixNodeIndex(0), Complex(-1, 0), mNumFreqs,
-                             freq);
-      Math::setMatrixElement(systemMatrix, matrixNodeIndex(0),
-                             mVirtualNodes[0]->matrixNodeIndex(),
-                             Complex(-1, 0), mNumFreqs, freq);
+      Math::addToMatrixElement(
+          systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0),
+          Complex(-1, 0), mNumFreqs, freq);
+      Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
+                               mVirtualNodes[0]->matrixNodeIndex(),
+                               Complex(-1, 0), mNumFreqs, freq);
     }
     if (terminalNotGrounded(1)) {
-      Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
-                             matrixNodeIndex(1), Complex(1, 0), mNumFreqs,
-                             freq);
-      Math::setMatrixElement(systemMatrix, matrixNodeIndex(1),
-                             mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0),
-                             mNumFreqs, freq);
+      Math::addToMatrixElement(
+          systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1),
+          Complex(1, 0), mNumFreqs, freq);
+      Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
+                               mVirtualNodes[0]->matrixNodeIndex(),
+                               Complex(1, 0), mNumFreqs, freq);
     }
 
     SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freq);
@@ -181,16 +181,18 @@ void DP::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(
 void DP::Ph1::VoltageSource::mnaCompApplySystemMatrixStampHarm(
     SparseMatrixRow &systemMatrix, Int freqIdx) {
   if (terminalNotGrounded(0)) {
-    Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
-                           matrixNodeIndex(0), Complex(-1, 0));
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(0),
-                           mVirtualNodes[0]->matrixNodeIndex(), Complex(-1, 0));
+    Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
+                             matrixNodeIndex(0), Complex(-1, 0));
+    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
+                             mVirtualNodes[0]->matrixNodeIndex(),
+                             Complex(-1, 0));
   }
   if (terminalNotGrounded(1)) {
-    Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
-                           matrixNodeIndex(1), Complex(1, 0));
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1),
-                           mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
+    Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
+                             matrixNodeIndex(1), Complex(1, 0));
+    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
+                             mVirtualNodes[0]->matrixNodeIndex(),
+                             Complex(1, 0));
   }
 
   SPDLOG_LOGGER_INFO(mSLog, "-- Stamp frequency {:d} ---", freqIdx);

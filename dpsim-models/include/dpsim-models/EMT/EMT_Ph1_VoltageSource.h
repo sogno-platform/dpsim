@@ -22,6 +22,7 @@ namespace Ph1 {
 /// as unkown and it is taken into account for the equation of node j as positve and for the equation
 /// of node k as negative. Moreover
 /// a new equation ej - ek = V is added to the problem.
+/// Obs.: The current is considering positive when it is flowing out of the positive terminal (terminal 1) of the source
 class VoltageSource : public MNASimPowerComp<Real>,
                       public SharedFactory<VoltageSource> {
 private:
@@ -31,6 +32,7 @@ protected:
   void updateVoltage(Real time);
 
 public:
+  /// mVoltageRef is the Peak-to-Peak reference voltage
   const Attribute<Complex>::Ptr mVoltageRef;
   const Attribute<Real>::Ptr mSrcFreq;
   /// Defines UID, name and logging level
@@ -40,6 +42,7 @@ public:
   VoltageSource(String name, Logger::Level logLevel = Logger::Level::off)
       : VoltageSource(name, name, logLevel) {}
 
+  /// voltageRef is the Peak-to-Peak voltage
   void setParameters(Complex voltageRef, Real srcFreq = -1);
 
   SimPowerComp<Real>::Ptr clone(String name);

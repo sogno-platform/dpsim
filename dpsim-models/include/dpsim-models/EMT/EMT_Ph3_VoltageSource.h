@@ -25,6 +25,7 @@ namespace Ph3 {
 /// as unkown and it is taken into account for the equation of node j as positve and for the equation
 /// of node k as negative. Moreover
 /// a new equation ej - ek = V is added to the problem.
+/// Obs.: The current is considering positive when it is flowing out of the positive terminal (terminal 1) of the source
 class VoltageSource : public MNASimPowerComp<Real>,
                       public SharedFactory<VoltageSource> {
 private:
@@ -38,6 +39,7 @@ protected:
   void updateVoltage(Real time);
 
 public:
+  /// 3ph RMS reference voltage
   const CPS::Attribute<MatrixComp>::Ptr mVoltageRef;
   const CPS::Attribute<Real>::Ptr mSrcFreq;
 

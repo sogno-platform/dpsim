@@ -646,12 +646,13 @@ class Reader:
                 
                 # check if this component should be added to this topology
                 belong_to_topology=True
-                for node in connection_nodes:                        
+                for node in connection_nodes:
                     # check if node is in node list
                     if node.name() not in cosim_params["nodes"][topologie_idx]:
                         belong_to_topology=False
                 if not belong_to_topology:
                     continue
+                
                 # add component to component list
                 system_comp.append(dpsim_component)
                 

@@ -32,13 +32,6 @@ void EMT::Ph3::CurrentSource::setParameters(MatrixComp currentRef,
   mSrcSig = srcSigSine;
 
   **mCurrentRef = currentRef;
-
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "\nCurrent reference phasor [V]: {:s}"
-                     "\nFrequency [Hz]: {:s}",
-                     Logger::matrixCompToString(currentRef),
-                     Logger::realToString(srcFreq));
-
   mParametersSet = true;
 }
 
@@ -61,38 +54,38 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
     srcSigSine->setParameters(Complex(1, 0), frequency);
     mSrcSig = srcSigSine;
 
-    Complex v_ref = initialSingleVoltage(1) - initialSingleVoltage(0);
+    Complex v_init = initialSingleVoltage(1) - initialSingleVoltage(0);
     //TODO: set initial power using init_from_powerflow!
-    Complex s_ref = terminal(1)->singlePower() - terminal(0)->singlePower();
+    Complex s_init = terminal(1)->singlePower() - terminal(0)->singlePower();
 
     // Current flowing from T1 to T0 (rms value)
-    Complex i_ref = std::conj(s_ref / v_ref / sqrt(3.));
+    Complex i_ref = std::conj(s_init / v_init / sqrt(3.));
 
     **mCurrentRef = CPS::Math::singlePhaseVariableToThreePhase(i_ref);
     mSrcFreq->setReference(mSrcSig->attributeTyped<Real>("freq"));
 
     SPDLOG_LOGGER_INFO(mSLog,
                        "\nReference current: {:s}"
-                       "\nReference voltage: {:s}"
-                       "\nReference power: {:s}"
+                       "\nInitial voltage: {:s}"
+                       "\nInitial 3ph power: {:s}"
                        "\nTerminal 0 voltage: {:s}"
                        "\nTerminal 1 voltage: {:s}"
                        "\nTerminal 0 power: {:s}"
                        "\nTerminal 1 power: {:s}",
                        Logger::phasorToString(i_ref),
-                       Logger::phasorToString(v_ref),
-                       Logger::complexToString(s_ref),
+                       Logger::phasorToString(v_init),
+                       Logger::complexToString(s_init),
                        Logger::phasorToString(initialSingleVoltage(0)),
                        Logger::phasorToString(initialSingleVoltage(1)),
                        Logger::complexToString(terminal(0)->singlePower()),
                        Logger::complexToString(terminal(1)->singlePower()));
   } else {
-    **mIntfCurrent = RMS_TO_PEAK * (**mCurrentRef).real();
+    **mIntfCurrent = RMS3PH_TO_PEAK1PH * (**mCurrentRef).real();
     SPDLOG_LOGGER_INFO(
         mSLog,
         "\nInitialization from node voltages and terminal omitted (parameter "
         "already set)."
-        "\nReference voltage: {:s}",
+        "\nReference current: {:s}",
         Logger::matrixCompToString(attributeTyped<MatrixComp>("I_ref")->get()));
   }
   SPDLOG_LOGGER_INFO(
@@ -107,20 +100,21 @@ void EMT::Ph3::CurrentSource::mnaCompInitialize(
 
 void EMT::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
-  if (terminalNotGrounded(1)) {
-    Math::setVectorElement(rightVector, matrixNodeIndex(1, 0),
-                           -(**mIntfCurrent)(0, 0));
-    Math::setVectorElement(rightVector, matrixNodeIndex(1, 1),
-                           -(**mIntfCurrent)(1, 0));
-    Math::setVectorElement(rightVector, matrixNodeIndex(1, 2),
-                           -(**mIntfCurrent)(2, 0));
-  }
+  // current flows out of terminal 0 and flows into terminal 1
   if (terminalNotGrounded(0)) {
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),
-                           (**mIntfCurrent)(0, 0));
+                           -(**mIntfCurrent)(0, 0));
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 1),
-                           (**mIntfCurrent)(1, 0));
+                           -(**mIntfCurrent)(1, 0));
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 2),
+                           -(**mIntfCurrent)(2, 0));
+  }
+  if (terminalNotGrounded(1)) {
+    Math::setVectorElement(rightVector, matrixNodeIndex(1, 0),
+                           (**mIntfCurrent)(0, 0));
+    Math::setVectorElement(rightVector, matrixNodeIndex(1, 1),
+                           (**mIntfCurrent)(1, 0));
+    Math::setVectorElement(rightVector, matrixNodeIndex(1, 2),
                            (**mIntfCurrent)(2, 0));
   }
 }
@@ -129,7 +123,8 @@ void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
   if (mSrcSig != nullptr) {
     mSrcSig->step(time);
     for (int i = 0; i < 3; i++) {
-      (**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs((**mCurrentRef)(i, 0)) *
+      (**mIntfCurrent)(i, 0) = RMS3PH_TO_PEAK1PH *
+                               Math::abs((**mCurrentRef)(i, 0)) *
                                cos(Math::phase(mSrcSig->getSignal()) +
                                    Math::phase((**mCurrentRef)(i, 0)));
     }

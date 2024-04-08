@@ -21,9 +21,12 @@ namespace Ph1 {
 /// A positive current is flowing out of node1 and into node2.
 /// In case of a dynamic phasor simulation, a frequency different
 /// from zero is added on top of the system frequency.
+/// Obs.: The current is considering positive when it is flowing out of the negative terminal (terminal[0])
+/// and flowing into the positive terminal (terminal[1]) of the source
 class CurrentSource : public MNASimPowerComp<Complex>,
                       public SharedFactory<CurrentSource> {
 public:
+  /// mCurrentRef is the 3Ph RMS current
   const Attribute<Complex>::Ptr mCurrentRef;
   /// Defines UID, name and logging level
   CurrentSource(String uid, String name,

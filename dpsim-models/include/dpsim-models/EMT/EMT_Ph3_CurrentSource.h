@@ -46,13 +46,13 @@ public:
   // #### General ####
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency);
-  /// Setter for reference voltage
+  /// Setter for reference current (3ph RMS)
   void setParameters(MatrixComp currentRef, Real srcFreq = 50.0);
   /// Setter for reference signal of type frequency ramp
-  //void setParameters(MatrixComp voltageRef, Real freqStart, Real rocof,
+  //void setParameters(MatrixComp currentRef, Real freqStart, Real rocof,
   //                   Real timeStart, Real duration, bool smoothRamp = true){};
   /// Setter for reference signal of type cosine frequency modulation
-  //void setParameters(MatrixComp voltageRef, Real modulationFrequency,
+  //void setParameters(MatrixComp currentRef, Real modulationFrequency,
   //                   Real modulationAmplitude, Real baseFrequency = 50.0,
   //                   bool zigzag = false){};
 

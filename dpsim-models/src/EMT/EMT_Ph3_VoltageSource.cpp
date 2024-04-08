@@ -33,12 +33,6 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef,
 
   **mVoltageRef = voltageRef;
 
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "\nVoltage reference phasor [V]: {:s}"
-                     "\nFrequency [Hz]: {:s}",
-                     Logger::matrixCompToString(voltageRef),
-                     Logger::realToString(srcFreq));
-
   mParametersSet = true;
 }
 
