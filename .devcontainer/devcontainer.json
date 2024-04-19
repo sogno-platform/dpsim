@@ -1,6 +1,6 @@
 {
 	"name": "DPsim",
-	"image": "sogno/dpsim:dev",
+	"image": "sogno/dpsim:dev-vscode",
 	// uncomment to build devcontainer image locally
 	// "build": {
 	// 	"dockerfile": "../packaging/Docker/Dockerfile.dev",
