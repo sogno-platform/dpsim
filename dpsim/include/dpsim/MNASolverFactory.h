@@ -59,14 +59,18 @@ public:
 
   /// sovlerImpl: choose the most advanced solver implementation available by default
   template <typename VarType>
-  static std::shared_ptr<MnaSolver<VarType>>
-  factory(String name, CPS::Domain domain = CPS::Domain::DP,
-          CPS::Logger::Level logLevel = CPS::Logger::Level::info,
-          DirectLinearSolverImpl implementation = DirectLinearSolverImpl::KLU,
-          String pluginName = "plugin.so") {
+  static std::shared_ptr<MnaSolver<VarType>> factory(
+      String name, CPS::Domain domain = CPS::Domain::DP,
+      CPS::Logger::Level logLevel = CPS::Logger::Level::info,
+      DirectLinearSolverImpl implementation = mSupportedSolverImpls().back(),
+      String pluginName = "plugin.so") {
     //To avoid regression we use KLU in case of undefined implementation
     if (implementation == DirectLinearSolverImpl::Undef) {
+#ifdef WITH_KLU
       implementation = DirectLinearSolverImpl::KLU;
+#else
+      implementation = mSupportedSolverImpls().back();
+#endif
     }
     CPS::Logger::Log log = CPS::Logger::get(
         "MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
