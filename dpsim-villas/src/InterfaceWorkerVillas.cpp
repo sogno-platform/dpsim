@@ -42,6 +42,8 @@ void InterfaceWorkerVillas::open() {
   json_error_t error;
   json_t *config = json_loads(mNodeConfig.c_str(), 0, &error);
   if (config == nullptr) {
+    SPDLOG_LOGGER_ERROR(mLog, "Error: Failed to parse node config! Error: {}",
+                        error.text);
     throw JsonError(config, error);
   }
 
