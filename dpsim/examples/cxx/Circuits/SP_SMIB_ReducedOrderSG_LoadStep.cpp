@@ -1,6 +1,6 @@
 #include "../Examples.h"
-#include "../GeneratorFactory.h"
 #include <DPsim.h>
+#include <dpsim-models/Factory.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -18,6 +18,9 @@ Examples::Components::SynchronousGeneratorKundur::MachineParameters
     syngenKundur;
 
 int main(int argc, char *argv[]) {
+
+  // initiaize factories
+  SynchronGeneratorFactory::SP::Ph1::registerSynchronGenerators();
 
   // Simulation parameters
   String simName = "SP_SMIB_ReducedOrderSG_LoadStep";
@@ -125,7 +128,8 @@ int main(int argc, char *argv[]) {
       SimNode<Complex>::make("n2SP", PhaseType::Single, initialVoltage_n2);
 
   // Synchronous generator
-  auto genSP = GeneratorFactory::createGenSP(sgType, "SynGen", logLevel);
+  auto genSP = Factory<SP::Ph1::ReducedOrderSynchronGeneratorVBR>::get().create(
+      sgType, "SynGen", logLevel);
   genSP->setOperationalParametersPerUnit(
       syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, H,
       syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ll, syngenKundur.Ld_t,

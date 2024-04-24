@@ -11,7 +11,7 @@
 #include <dpsim-models/Base/Base_Ph3_PiLine.h>
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
-#include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph3_ResIndSeries.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
@@ -26,10 +26,8 @@ class PiLine : public CompositePowerComp<Real>,
                public Base::Ph3::PiLine,
                public SharedFactory<PiLine> {
 protected:
-  /// Series Inductance submodel
-  std::shared_ptr<Inductor> mSubSeriesInductor;
-  /// Series Resistor submodel
-  std::shared_ptr<Resistor> mSubSeriesResistor;
+  /// Series Resistor-Inductance submodel
+  std::shared_ptr<ResIndSeries> mSubSeriesElement;
   /// Parallel Resistor submodel at Terminal 0
   std::shared_ptr<Resistor> mSubParallelResistor0;
   // Parallel Capacitor submodel at Terminal 0

@@ -34,6 +34,8 @@ protected:
   Matrix mCapacitance;
   ///
   Bool initPowerFromTerminal = true;
+  ///
+  Bool initVoltageFromNode = true;
   /// Internal inductor
   std::shared_ptr<EMT::Ph3::Inductor> mSubInductor;
   /// Internal capacitor
@@ -53,12 +55,15 @@ public:
   /// Defines name, component parameters and logging level
   RXLoad(String name, Logger::Level logLevel = Logger::Level::off);
   /// Defines name, component parameters and logging level
-  RXLoad(String name, Matrix activePower, Matrix reactivePower, Real volt,
-         Logger::Level logLevel = Logger::Level::off);
+  RXLoad(String name, Matrix activePower, Matrix reactivePower,
+         Real nominalVoltage, Logger::Level logLevel = Logger::Level::off);
 
   // #### General ####
   ///
-  void setParameters(Matrix activePower, Matrix reactivePower, Real volt);
+  void setParameters(Matrix activePower, Matrix reactivePower);
+  ///
+  void setParameters(Matrix activePower, Matrix reactivePower,
+                     Real nominalVoltage);
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency);
 

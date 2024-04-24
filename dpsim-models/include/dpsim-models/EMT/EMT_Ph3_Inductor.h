@@ -43,36 +43,36 @@ public:
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) final;
 
   // #### MNA section ####
   /// Initializes internal variables of the component
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector) override;
+                         Attribute<Matrix>::Ptr leftVector) final;
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) final;
   /// Update interface voltage from MNA system result
-  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
+  void mnaCompUpdateVoltage(const Matrix &leftVector) final;
   /// Update interface current from MNA system result
-  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
+  void mnaCompUpdateCurrent(const Matrix &leftVector) final;
   /// MNA pre step operations
-  void mnaCompPreStep(Real time, Int timeStepCount) override;
+  void mnaCompPreStep(Real time, Int timeStepCount) final;
   /// MNA post step operations
   void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) override;
+                       Attribute<Matrix>::Ptr &leftVector) final;
   /// Add MNA pre step dependencies
-  void mnaCompAddPreStepDependencies(
-      AttributeBase::List &prevStepDependencies,
-      AttributeBase::List &attributeDependencies,
-      AttributeBase::List &modifiedAttributes) override;
+  void
+  mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
+                                AttributeBase::List &attributeDependencies,
+                                AttributeBase::List &modifiedAttributes) final;
   /// Add MNA post step dependencies
   void
   mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) override;
+                                 Attribute<Matrix>::Ptr &leftVector) final;
 };
 } // namespace Ph3
 } // namespace EMT

@@ -8,9 +8,8 @@
 
 #pragma once
 
-#include <dpsim-models/MNASimPowerComp.h>
-
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
+#include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
@@ -57,7 +56,8 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector);
-  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix);
+  //
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
 };
 } // namespace Ph1
 } // namespace SP

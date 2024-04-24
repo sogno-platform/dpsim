@@ -31,10 +31,10 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
   if (withTrafo) {
     setVirtualNodeNumber(4);
     mConnectionTransformer = SP::Ph1::Transformer::make(
-        **mName + "_trans", **mName + "_trans", mLogLevel, false);
+        **mName + "_trans", **mName + "_trans", mLogLevel);
     addMNASubComponent(mConnectionTransformer,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
   } else {
     setVirtualNodeNumber(3);
   }
@@ -132,11 +132,10 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(
                      mTransformerRatioAbs, mTransformerRatioPhase);
 
   if (mWithConnectionTransformer)
-    // TODO: resistive losses neglected so far (mWithResistiveLosses=false)
     mConnectionTransformer->setParameters(
         mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2,
-        mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase,
-        mTransformerResistance, mTransformerInductance);
+        mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance,
+        mTransformerInductance);
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters(

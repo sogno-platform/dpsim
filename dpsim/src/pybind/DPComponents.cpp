@@ -117,6 +117,16 @@ void addDPPh1Components(py::module_ mDPPh1) {
       .def_property("L", createAttributeGetter<CPS::Real>("L"),
                     createAttributeSetter<CPS::Real>("L"));
 
+  py::class_<CPS::DP::Ph1::ResIndSeries,
+             std::shared_ptr<CPS::DP::Ph1::ResIndSeries>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "ResInductor",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph1::ResIndSeries::setParameters, "R"_a,
+           "L"_a)
+      .def("connect", &CPS::DP::Ph1::ResIndSeries::connect);
+
   py::class_<CPS::DP::Ph1::NetworkInjection,
              std::shared_ptr<CPS::DP::Ph1::NetworkInjection>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "NetworkInjection",
@@ -144,9 +154,23 @@ void addDPPh1Components(py::module_ mDPPh1) {
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::DP::Ph1::RXLoad::setParameters,
+      .def("set_power",
+           py::overload_cast<CPS::Real, CPS::Real>(
+               &CPS::DP::Ph1::RXLoad::setParameters),
+           "active_power"_a, "reactive_power"_a)
+      .def("set_parameters",
+           py::overload_cast<CPS::Real, CPS::Real, CPS::Real>(
+               &CPS::DP::Ph1::RXLoad::setParameters),
            "active_power"_a, "reactive_power"_a, "volt"_a)
       .def("connect", &CPS::DP::Ph1::RXLoad::connect);
+
+  py::class_<CPS::DP::Ph1::Shunt, std::shared_ptr<CPS::DP::Ph1::Shunt>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Shunt",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::DP::Ph1::Shunt::setParameters, "G"_a, "B"_a)
+      .def("connect", &CPS::DP::Ph1::Shunt::connect);
 
   py::class_<CPS::DP::Ph1::Switch, std::shared_ptr<CPS::DP::Ph1::Switch>,
              CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(
@@ -155,8 +179,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::DP::Ph1::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
-           "closed"_a = false)
+           "closed"_a = false) // cppcheck-suppress assignBoolToPointer
       .def("open", &CPS::DP::Ph1::Switch::open)
       .def("close", &CPS::DP::Ph1::Switch::close)
       .def("connect", &CPS::DP::Ph1::Switch::connect);
@@ -169,8 +192,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::DP::Ph1::varResSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
-           "closed"_a = false)
+           "closed"_a = false) // cppcheck-suppress assignBoolToPointer
       .def("open", &CPS::DP::Ph1::varResSwitch::open)
       .def("close", &CPS::DP::Ph1::varResSwitch::close)
       .def("set_init_parameters",
@@ -229,8 +251,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
                &CPS::DP::Ph1::SynchronGenerator3OrderVBR::
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
-           "Lq"_a, "L0"_a, "Ld_t"_a, "Td0_t"_a)
-      .def("connect", &CPS::DP::Ph1::SynchronGenerator3OrderVBR::connect);
+           "Lq"_a, "L0"_a, "Ld_t"_a, "Td0_t"_a);
 
   py::class_<CPS::DP::Ph1::SynchronGenerator4OrderVBR,
              std::shared_ptr<CPS::DP::Ph1::SynchronGenerator4OrderVBR>,
@@ -245,8 +266,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
                &CPS::DP::Ph1::SynchronGenerator4OrderVBR::
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
-           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
-      .def("connect", &CPS::DP::Ph1::SynchronGenerator4OrderVBR::connect);
+           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a);
 
   py::class_<CPS::DP::Ph1::SynchronGenerator5OrderVBR,
              std::shared_ptr<CPS::DP::Ph1::SynchronGenerator5OrderVBR>,
@@ -263,8 +283,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
-           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
-      .def("connect", &CPS::DP::Ph1::SynchronGenerator5OrderVBR::connect);
+           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a);
 
   py::class_<CPS::DP::Ph1::SynchronGenerator6aOrderVBR,
              std::shared_ptr<CPS::DP::Ph1::SynchronGenerator6aOrderVBR>,
@@ -281,8 +300,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
-           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
-      .def("connect", &CPS::DP::Ph1::SynchronGenerator6aOrderVBR::connect);
+           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a);
 
   py::class_<CPS::DP::Ph1::SynchronGenerator6bOrderVBR,
              std::shared_ptr<CPS::DP::Ph1::SynchronGenerator6bOrderVBR>,
@@ -299,8 +317,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
-           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a = 0)
-      .def("connect", &CPS::DP::Ph1::SynchronGenerator6bOrderVBR::connect);
+           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a = 0);
 
   py::class_<CPS::DP::Ph1::SynchronGenerator4OrderTPM,
              std::shared_ptr<CPS::DP::Ph1::SynchronGenerator4OrderTPM>,
@@ -316,8 +333,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
                &CPS::DP::Ph1::SynchronGenerator4OrderTPM::
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
-           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
-      .def("connect", &CPS::DP::Ph1::SynchronGenerator4OrderTPM::connect);
+           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a);
 
   py::class_<CPS::DP::Ph1::SynchronGenerator4OrderPCM,
              std::shared_ptr<CPS::DP::Ph1::SynchronGenerator4OrderPCM>,
@@ -363,8 +379,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		   // cppcheck-suppress assignBoolToPointer
-           "with_trafo"_a = false)
+           "with_trafo"_a = false) // cppcheck-suppress assignBoolToPointer
       .def("set_parameters",
            &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setParameters,
            "sys_omega"_a, "sys_volt_nom"_a, "p_ref"_a, "q_ref"_a)
@@ -403,23 +418,16 @@ void addDPPh1Components(py::module_ mDPPh1) {
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off)
-      .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
-           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		   // cppcheck-suppress assignBoolToPointer
-           "with_resistive_losses"_a =
-               false)
+      .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
+           "name"_a,
+           "loglevel"_a =
+               CPS::Logger::Level::off) // cppcheck-suppress assignBoolToPointer
       .def("set_parameters",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real>(
                &CPS::DP::Ph1::Transformer::setParameters),
            "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a,
            "ratio_phase"_a, "resistance"_a, "inductance"_a)
-      .def("set_parameters",
-           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real>(
-               &CPS::DP::Ph1::Transformer::setParameters),
-           "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a,
-           "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
       .def("connect", &CPS::DP::Ph1::Transformer::connect);
 }
 
@@ -481,7 +489,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::DP::Ph3::SeriesSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::DP::Ph3::SeriesSwitch::open)
       .def("close", &CPS::DP::Ph3::SeriesSwitch::close)
