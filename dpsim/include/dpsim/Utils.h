@@ -17,6 +17,7 @@
 
 #include <cstdlib>
 #include <list>
+#include <nlohmann/json.hpp>
 #include <vector>
 
 #include <dpsim-models/Components.h>
@@ -26,7 +27,6 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/Solver.h>
 #include <dpsim/Timer.h>
-#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
