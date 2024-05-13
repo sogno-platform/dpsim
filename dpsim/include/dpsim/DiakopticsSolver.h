@@ -94,7 +94,7 @@ private:
   void initMatrices();
   void applyTearComponentStamp(UInt compIdx);
 
-  void log(Real time);
+  void log(Real time, Int timeStepCount) override;
 
 public:
   /// Currents through the removed network (as "seen" from the other subnets)

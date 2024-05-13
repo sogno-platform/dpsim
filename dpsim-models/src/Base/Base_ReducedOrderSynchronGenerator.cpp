@@ -471,6 +471,10 @@ void Base::ReducedOrderSynchronGenerator<
 }
 
 template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<
+    VarType>::mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) {}
+
+template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 

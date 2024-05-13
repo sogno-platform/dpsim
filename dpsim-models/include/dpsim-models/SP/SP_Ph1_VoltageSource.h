@@ -112,7 +112,7 @@ public:
   void daeResidual(double ttime, const double state[], const double dstate_dt[],
                    double resid[], std::vector<int> &off);
   ///Voltage Getter
-  Complex daeInitialize();
+  Complex daeInitialize() override;
 };
 } // namespace Ph1
 } // namespace SP

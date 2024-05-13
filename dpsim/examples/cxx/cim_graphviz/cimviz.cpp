@@ -35,7 +35,7 @@ struct GVC_s {
   GVCOMMON_t common;
 
   char *config_path;
-  boolean config_found;
+  bool config_found;
 
   /* gvParseArgs */
   char **input_filenames;

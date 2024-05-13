@@ -46,11 +46,11 @@ public:
 
   // #### General ####
   /// Return new instance with the same parameters
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
   /// Initializes state variables considering the number of frequencies
-  void initialize(Matrix frequencies);
+  void initialize(Matrix frequencies) override;
   /// Initializes states from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// Initializes MNA specific variables
@@ -60,9 +60,9 @@ public:
       Real omega, Real timeStep,
       std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
-                                         Int freqIdx);
+                                         Int freqIdx) override;
   /// Stamps right side (source) vector
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   void mnaCompApplyRightSideVectorStampHarm(Matrix &rightVector) override;
@@ -90,10 +90,10 @@ public:
                                  Attribute<Matrix>::Ptr &leftVector) override;
 
   // #### Tearing methods ####
-  void mnaTearInitialize(Real omega, Real timestep);
-  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix);
-  void mnaTearApplyVoltageStamp(Matrix &voltageVector);
-  void mnaTearPostStep(Complex voltage, Complex current);
+  void mnaTearInitialize(Real omega, Real timestep) override;
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
+  void mnaTearApplyVoltageStamp(Matrix &voltageVector) override;
+  void mnaTearPostStep(Complex voltage, Complex current) override;
 
   class MnaPreStepHarm : public Task {
   public:
