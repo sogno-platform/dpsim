@@ -49,17 +49,17 @@ public:
   PiLine(String name, Logger::Level logLevel = Logger::Level::off)
       : PiLine(name, name, logLevel) {}
 
-  SimPowerComp<Complex>::Ptr clone(String copySuffix);
+  SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// Updates internal current variable of the component
-  void mnaCompUpdateCurrent(const Matrix &leftVector);
+  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// Updates internal voltage variable of the component
-  void mnaCompUpdateVoltage(const Matrix &leftVector);
+  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// MNA pre and post step operations
   void mnaParentPreStep(Real time, Int timeStepCount) override;
   void mnaParentPostStep(Real time, Int timeStepCount,
@@ -75,11 +75,11 @@ public:
                                    AttributeBase::List &modifiedAttributes,
                                    Attribute<Matrix>::Ptr &leftVector) override;
 
-  MNAInterface::List mnaTearGroundComponents();
-  void mnaTearInitialize(Real omega, Real timeStep);
-  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix);
-  void mnaTearApplyVoltageStamp(Matrix &voltageVector);
-  void mnaTearPostStep(Complex voltage, Complex current);
+  MNAInterface::List mnaTearGroundComponents() override;
+  void mnaTearInitialize(Real omega, Real timeStep) override;
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
+  void mnaTearApplyVoltageStamp(Matrix &voltageVector) override;
+  void mnaTearPostStep(Complex voltage, Complex current) override;
 };
 } // namespace Ph1
 } // namespace DP

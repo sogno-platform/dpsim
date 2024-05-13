@@ -30,21 +30,21 @@ public:
   Resistor(String name, Logger::Level logLevel = Logger::Level::off)
       : Resistor(name, name, logLevel) {}
 
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
   // #### MNA section ####
   ///
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector);
+                         Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   ///
-  void mnaCompUpdateVoltage(const Matrix &leftVector);
+  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   ///
-  void mnaCompUpdateCurrent(const Matrix &leftVector);
+  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
 
   /// Add MNA post step dependencies
   void

@@ -38,7 +38,7 @@ jobs:
         key: build-cache-rocky-${{ github.sha }}
 
   linux-rocky-clang:
-    name: Build on Rocky Linux
+    name: Build on Rocky Linux using Clang
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev-rocky
     steps:

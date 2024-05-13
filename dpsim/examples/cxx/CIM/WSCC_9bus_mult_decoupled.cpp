@@ -20,7 +20,6 @@ void multiply_decoupled(SystemTopology &sys, int copies, Real resistance,
                         Real inductance, Real capacitance) {
 
   sys.multiply(copies);
-  int counter = 0;
   std::vector<String> nodes = {"BUS5", "BUS8", "BUS6"};
 
   for (auto orig_node : nodes) {
@@ -41,7 +40,6 @@ void multiply_decoupled(SystemTopology &sys, int copies, Real resistance,
           capacitance, Logger::Level::info);
       sys.addComponent(line);
       sys.addComponents(line->getLineComponents());
-      counter++;
     }
   }
 }

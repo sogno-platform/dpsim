@@ -37,22 +37,22 @@ public:
 
   void setParameters(Complex current);
 
-  SimPowerComp<Complex>::Ptr clone(String copySuffix);
+  SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   ///
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector);
+                         Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) {}
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override {}
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   ///
-  void mnaCompUpdateVoltage(const Matrix &leftVector);
+  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
 
   /// Add MNA pre step dependencies
   void mnaCompAddPreStepDependencies(

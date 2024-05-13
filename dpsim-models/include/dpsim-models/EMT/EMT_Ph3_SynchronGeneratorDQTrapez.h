@@ -24,7 +24,7 @@ public:
 
   // #### MNA Section ####
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector);
+                         Attribute<Matrix>::Ptr leftVector) override;
   void mnaCompPreStep(Real time, Int timeStepCount) override;
 
   /// Add MNA pre step dependencies

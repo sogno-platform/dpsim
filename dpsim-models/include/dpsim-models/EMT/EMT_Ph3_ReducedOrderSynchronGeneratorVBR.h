@@ -44,7 +44,7 @@ protected:
 
   // #### General Functions ####
   /// Specific component initialization
-  virtual void specificInitialization() = 0;
+  virtual void specificInitialization() override = 0;
   ///
   void initializeResistanceMatrix() override;
   ///
