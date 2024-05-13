@@ -58,7 +58,7 @@ public:
   Transformer(String name, Logger::Level logLevel = Logger::Level::off)
       : Transformer(name, name, logLevel) {}
 
-  SimPowerComp<Real>::Ptr clone(String name);
+  SimPowerComp<Real>::Ptr clone(String name) override;
 
   // #### General ####
   /// Defines component parameters
@@ -66,7 +66,7 @@ public:
                      Real ratioAbs, Real ratioPhase, Matrix resistance,
                      Matrix inductance);
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// Initializes internal variables of the component

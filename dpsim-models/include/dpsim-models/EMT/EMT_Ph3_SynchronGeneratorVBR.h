@@ -223,7 +223,7 @@ public:
   void initialize(Matrix frequencies) override;
 
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   /// Initializes states in per unit or stator referred variables depending on the setting of the state type.
   /// Function parameters have to be given in real units.
@@ -231,7 +231,7 @@ public:
 
   /// Initializes internal variables of the component
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector);
+                         Attribute<Matrix>::Ptr leftVector) override;
 
   /// Performs an Euler forward step with the state space model of a synchronous generator
   /// to calculate the flux and current from the voltage vector in per unit.
@@ -258,24 +258,25 @@ public:
 
   // #### MNA section ####
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// MNA pre step operations
-  void mnaCompPreStep(Real time, Int timeStepCount);
+  void mnaCompPreStep(Real time, Int timeStepCount) override;
   /// MNA post step operations
   void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector);
+                       Attribute<Matrix>::Ptr &leftVector) override;
   /// Add MNA pre step dependencies
-  void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
-                                     AttributeBase::List &attributeDependencies,
-                                     AttributeBase::List &modifiedAttributes);
+  void mnaCompAddPreStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes) override;
   /// Add MNA post step dependencies
   void
   mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector);
+                                 Attribute<Matrix>::Ptr &leftVector) override;
   /// Mark that parameter changes so that system matrix is updated
   Bool hasParameterChanged() override { return true; }
 };

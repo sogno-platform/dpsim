@@ -56,9 +56,7 @@ public:
   virtual ~SimPowerComp() {}
 
   /// Returns a modified copy of the component with the given suffix added to the name and without
-  /// connected nodes / terminals
-  /// DEPRECATED: This method should be removed
-  virtual Ptr clone(String name);
+  virtual typename SimPowerComp<VarType>::Ptr clone(String name);
 
   // #### Terminals ####
   /// Returns nominal number of Terminals for this component type.

@@ -44,11 +44,11 @@ public:
            Real nomVolt, Logger::Level logLevel = Logger::Level::off);
 
   void setParameters(Real activePower, Real reactivePower, Real nomVolt);
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// MNA pre and post step operations

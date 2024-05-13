@@ -73,7 +73,7 @@ public:
   SynchronGenerator4OrderTPM(String name,
                              Logger::Level logLevel = Logger::Level::off);
   ///
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General Functions ####
   /// Initializes component from power flow data

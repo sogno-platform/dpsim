@@ -69,7 +69,7 @@ public:
   /// Initialize state matrices with size according to phase type and frequency number
   void initialize(Matrix frequencies);
   /// Returns matrix index for specified phase
-  UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single);
+  UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single) override;
   /// Returns all matrix indices
   std::vector<UInt> matrixNodeIndices() override;
   ///

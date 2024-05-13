@@ -37,7 +37,7 @@ public:
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
   /// Sets model specific parameters
   void setParameters(Real activePower, Real reactivePower, Real nomVolt,
                      Real openResistance, Real closedResistance,

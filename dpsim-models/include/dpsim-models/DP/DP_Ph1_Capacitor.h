@@ -40,13 +40,13 @@ public:
   Capacitor(String name, Logger::Level logLevel = Logger::Level::off)
       : Capacitor(name, name, logLevel) {}
 
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
   ///
-  void initialize(Matrix frequencies);
+  void initialize(Matrix frequencies) override;
 
   // #### MNA section ####
   /// Initializes internal variables of the component
@@ -56,9 +56,9 @@ public:
       Real omega, Real timeStep,
       std::vector<Attribute<Matrix>::Ptr> leftVector) override;
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
-                                         Int freqIdx);
+                                         Int freqIdx) override;
   /// Stamps right side (source) vector
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   void mnaCompApplyRightSideVectorStampHarm(Matrix &rightVector) override;

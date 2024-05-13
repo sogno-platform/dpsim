@@ -555,7 +555,7 @@ public:
     throw TypeException();
   }
 
-  virtual std::shared_ptr<T> asRawPointer() { return this->mData; }
+  virtual std::shared_ptr<T> asRawPointer() override { return this->mData; }
 
   virtual void appendDependencies(AttributeBase::Set *deps) override {
     deps->insert(this->shared_from_this());
@@ -649,7 +649,7 @@ public:
     }
   }
 
-  virtual std::shared_ptr<T> asRawPointer() {
+  virtual std::shared_ptr<T> asRawPointer() override {
     for (typename AttributeUpdateTaskBase<T>::Ptr task : updateTasksOnGet) {
       task->executeUpdate(this->mData);
     }

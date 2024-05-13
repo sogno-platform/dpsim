@@ -36,11 +36,11 @@ public:
   RxLine(String name, Logger::Level logLevel = Logger::Level::off)
       : RxLine(name, name, logLevel) {}
 
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;

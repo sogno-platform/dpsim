@@ -99,8 +99,6 @@ public:
 protected:
   using MNASimPowerComp<VarType>::mRightVector;
   using MNASimPowerComp<VarType>::mIntfVoltage;
-  using MNASimPowerComp<VarType>::MnaPreStep;
-  using MNASimPowerComp<VarType>::MnaPostStep;
 
   ///
   ReducedOrderSynchronGenerator(String uid, String name,
@@ -112,7 +110,7 @@ protected:
   ///
   virtual void initializeResistanceMatrix() = 0;
   ///
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
   /// Function to initialize the specific variables of each SG model
   virtual void specificInitialization() = 0;
   /// Model specific step
@@ -138,7 +136,8 @@ protected:
                        Attribute<Matrix>::Ptr &leftVector) final;
   virtual void mnaCompPostStep(const Matrix &leftVector) = 0;
   /// Stamps system matrix
-  virtual void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) = 0;
+  virtual void
+  mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override = 0;
   /// Model flag indicating whether the machine is modelled as Norton or Thevenin equivalent
   Bool mModelAsNortonSource;
   // Model flag indicating the SG order to be used

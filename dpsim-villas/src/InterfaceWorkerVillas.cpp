@@ -42,6 +42,8 @@ void InterfaceWorkerVillas::open() {
   json_error_t error;
   json_t *config = json_loads(mNodeConfig.c_str(), 0, &error);
   if (config == nullptr) {
+    SPDLOG_LOGGER_ERROR(mLog, "Error: Failed to parse node config! Error: {}",
+                        error.text);
     throw JsonError(config, error);
   }
 
@@ -321,7 +323,7 @@ void InterfaceWorkerVillas::writeValuesToEnv(
     //Check if the remaining packets form a complete set
     if (((long)updatedAttrs.size()) ==
         std::count_if(mExports.cbegin(), mExports.cend(),
-                      [this](auto x) { return std::get<2>(x); })) {
+                      [](auto x) { return std::get<2>(x); })) {
       for (const auto &packet : updatedAttrs) {
         std::get<0>(mExports[packet.attributeId])(packet.value, sample);
       }

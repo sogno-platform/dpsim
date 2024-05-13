@@ -49,11 +49,11 @@ public:
   NetworkInjection(String name, Complex voltage,
                    Logger::Level logLevel = Logger::Level::off);
   ///
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
   /// Setter for reference voltage and frequency with a sine wave generator
   /// This will initialize the values of mVoltageRef and mSrcFreq to match the given parameters
   /// However, the attributes can be modified during the simulation to dynamically change the magnitude, frequency, and phase of the sine wave.
@@ -97,9 +97,9 @@ public:
   // #### DAE Section ####
   /// Residual function for DAE Solver
   void daeResidual(double ttime, const double state[], const double dstate_dt[],
-                   double resid[], std::vector<int> &off);
+                   double resid[], std::vector<int> &off) override;
   ///Voltage Getter
-  Complex daeInitialize();
+  Complex daeInitialize() override;
 };
 } // namespace Ph1
 } // namespace DP

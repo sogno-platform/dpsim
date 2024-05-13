@@ -105,7 +105,7 @@ protected:
   virtual void setSolution() = 0;
 
   /// Initialization of the solver
-  void initialize();
+  void initialize() override;
   /// Initialization of individual components
   void initializeComponents();
   /// Assignment of matrix indices for nodes
@@ -135,7 +135,7 @@ protected:
     return result.str();
   };
   ///
-  CPS::Task::List getTasks();
+  CPS::Task::List getTasks() override;
   // determines power flow bus type for each node according to the components attached to it.
 public:
   /// Constructor to be used in simulation examples.
