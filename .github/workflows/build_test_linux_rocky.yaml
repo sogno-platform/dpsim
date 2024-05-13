@@ -37,6 +37,37 @@ jobs:
         path: ${{ github.workspace }}/build
         key: build-cache-rocky-${{ github.sha }}
 
+  linux-rocky-clang:
+    name: Build on Rocky Linux
+    runs-on: ubuntu-latest
+    container: sogno/dpsim:dev-rocky
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Create Build Environment
+      run: mkdir build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake $GITHUB_WORKSPACE -DFETCH_SPDLOG=ON -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
+
+    - name: Build every target
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake --build .
+      env:
+        MAKEFLAGS: "-j2"
+
+    - name: Cache build directory
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-rocky-${{ github.sha }}
+
   profiling:
     name: Build with Profiling options
     runs-on: ubuntu-latest
