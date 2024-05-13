@@ -101,12 +101,14 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a286d8fdf955e014f900b9788138b47fe">SynchronGeneratorIdeal</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a286d8fdf955e014f900b9788138b47fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name, component parameters and logging level. <br /></td></tr>
 <tr class="separator:a286d8fdf955e014f900b9788138b47fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ffe9b7589405b854b43a16b541d860f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a8ffe9b7589405b854b43a16b541d860f">clone</a> (String name)</td></tr>
-<tr class="separator:a8ffe9b7589405b854b43a16b541d860f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ea30c52c0ff01f16885febd89a137b2"><td class="memItemLeft" align="right" valign="top"><a id="a6ea30c52c0ff01f16885febd89a137b2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a6ea30c52c0ff01f16885febd89a137b2">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:a6ea30c52c0ff01f16885febd89a137b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:a6ea30c52c0ff01f16885febd89a137b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7804571ffd167d2a3a5957b427a4da7d"><td class="memItemLeft" align="right" valign="top"><a id="a7804571ffd167d2a3a5957b427a4da7d"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a7804571ffd167d2a3a5957b427a4da7d">clone</a> (String name) override</td></tr>
+<tr class="memdesc:a7804571ffd167d2a3a5957b427a4da7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:a7804571ffd167d2a3a5957b427a4da7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cac49537a99952aa8c29a167d8ecc4d"><td class="memItemLeft" align="right" valign="top"><a id="a5cac49537a99952aa8c29a167d8ecc4d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a5cac49537a99952aa8c29a167d8ecc4d">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a5cac49537a99952aa8c29a167d8ecc4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:a5cac49537a99952aa8c29a167d8ecc4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77505ab084faa4c4a4e925bdf0599ced"><td class="memItemLeft" align="right" valign="top"><a id="a77505ab084faa4c4a4e925bdf0599ced"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a77505ab084faa4c4a4e925bdf0599ced">mnaParentPreStep</a> (Real time, Int timeStepCount) override</td></tr>
 <tr class="memdesc:a77505ab084faa4c4a4e925bdf0599ced"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA pre step operations. <br /></td></tr>
@@ -636,39 +638,7 @@ AttributeList::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <div class="textblock"><p>Ideal voltage source representing a synchronous generator. </p>
 
 <p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_ideal_8h_source.html#l00019">19</a> of file <a class="el" href="_d_p___ph1___synchron_generator_ideal_8h_source.html">DP_Ph1_SynchronGeneratorIdeal.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8ffe9b7589405b854b43a16b541d860f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ffe9b7589405b854b43a16b541d860f">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr DP::Ph1::SynchronGeneratorIdeal::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_ideal_8cpp_source.html#l00027">27</a> of file <a class="el" href="_d_p___ph1___synchron_generator_ideal_8cpp_source.html">DP_Ph1_SynchronGeneratorIdeal.cpp</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a1a0fe2acc3b86a0c6d561d8ea67f83d5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1a0fe2acc3b86a0c6d561d8ea67f83d5">&#9670;&nbsp;</a></span>mVoltageRef</h2>
 

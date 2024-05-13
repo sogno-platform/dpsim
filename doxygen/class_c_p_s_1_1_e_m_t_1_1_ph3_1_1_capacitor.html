@@ -101,12 +101,14 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html#a803f80fef893cdd59e882c90ecee4278">Capacitor</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a803f80fef893cdd59e882c90ecee4278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name and logging level. <br /></td></tr>
 <tr class="separator:a803f80fef893cdd59e882c90ecee4278"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f710a4c7f4117db05de889ddcbc5c3f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html#a9f710a4c7f4117db05de889ddcbc5c3f">clone</a> (String name)</td></tr>
-<tr class="separator:a9f710a4c7f4117db05de889ddcbc5c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e89419c15a7933663c8401a05670033"><td class="memItemLeft" align="right" valign="top"><a id="a0e89419c15a7933663c8401a05670033"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html#a0e89419c15a7933663c8401a05670033">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:a0e89419c15a7933663c8401a05670033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:a0e89419c15a7933663c8401a05670033"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf8bc20763b2d3b28d7c5e83100e1134"><td class="memItemLeft" align="right" valign="top"><a id="aaf8bc20763b2d3b28d7c5e83100e1134"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html#aaf8bc20763b2d3b28d7c5e83100e1134">clone</a> (String name) override</td></tr>
+<tr class="memdesc:aaf8bc20763b2d3b28d7c5e83100e1134"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:aaf8bc20763b2d3b28d7c5e83100e1134"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0f0ea7d0570e527f1b33b41eb878269"><td class="memItemLeft" align="right" valign="top"><a id="ae0f0ea7d0570e527f1b33b41eb878269"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html#ae0f0ea7d0570e527f1b33b41eb878269">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:ae0f0ea7d0570e527f1b33b41eb878269"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:ae0f0ea7d0570e527f1b33b41eb878269"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d271760f8d13f44f0a3060384a09e1a"><td class="memItemLeft" align="right" valign="top"><a id="a9d271760f8d13f44f0a3060384a09e1a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html#a9d271760f8d13f44f0a3060384a09e1a">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
 <tr class="memdesc:a9d271760f8d13f44f0a3060384a09e1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component. <br /></td></tr>
@@ -605,39 +607,7 @@ const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt;
 <p>The capacitor is represented by a DC equivalent circuit which corresponds to one iteration of the trapezoidal integration method. The equivalent DC circuit is a resistance in paralel with a current source. The resistance is constant for a defined time step and system frequency and the current source changes for each iteration. </p>
 
 <p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___capacitor_8h_source.html#l00025">25</a> of file <a class="el" href="_e_m_t___ph3___capacitor_8h_source.html">EMT_Ph3_Capacitor.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9f710a4c7f4117db05de889ddcbc5c3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f710a4c7f4117db05de889ddcbc5c3f">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr EMT::Ph3::Capacitor::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___capacitor_8cpp_source.html#l00023">23</a> of file <a class="el" href="_e_m_t___ph3___capacitor_8cpp_source.html">EMT_Ph3_Capacitor.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/EMT/<a class="el" href="_e_m_t___ph3___capacitor_8h_source.html">EMT_Ph3_Capacitor.h</a></li>
 <li>/__w/dpsim/dpsim/dpsim-models/src/EMT/<a class="el" href="_e_m_t___ph3___capacitor_8cpp_source.html">EMT_Ph3_Capacitor.cpp</a></li>
 </ul>

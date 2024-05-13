@@ -241,7 +241,9 @@ const Task::List &amp;&#160;</td><td class="memItemRight" valign="bottom"><a cla
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#ad97a21c4d5a81ee87bbe4ac3c3667dc0">~SimPowerComp</a> ()</td></tr>
 <tr class="memdesc:ad97a21c4d5a81ee87bbe4ac3c3667dc0 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does not do anything. <br /></td></tr>
 <tr class="separator:ad97a21c4d5a81ee87bbe4ac3c3667dc0 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top">virtual Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">clone</a> (String name)</td></tr>
+<tr class="memitem:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="aece14c8b452b060e0c959432d2e11cb9"></a>
+virtual <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; VarType &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">clone</a> (String name)</td></tr>
+<tr class="memdesc:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
 <tr class="separator:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a286f0e8f00f8328a87d37e2c67b16f5b inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="a286f0e8f00f8328a87d37e2c67b16f5b"></a>
 UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a286f0e8f00f8328a87d37e2c67b16f5b">terminalNumber</a> ()</td></tr>
@@ -516,10 +518,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>calculateResistanceMa
 <tr class="memitem:ae4dc66e80e357f19e90cf88a1de0d0bb"><td class="memItemLeft" align="right" valign="top"><a id="ae4dc66e80e357f19e90cf88a1de0d0bb"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeResistanceMatrix</b> ()=0</td></tr>
 <tr class="separator:ae4dc66e80e357f19e90cf88a1de0d0bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6df759a115d903620dd3eb42af955d3d"><td class="memItemLeft" align="right" valign="top"><a id="a6df759a115d903620dd3eb42af955d3d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a6df759a115d903620dd3eb42af955d3d">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:a6df759a115d903620dd3eb42af955d3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes. <br /></td></tr>
-<tr class="separator:a6df759a115d903620dd3eb42af955d3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96d14085a96451c304a1efbcc265c90d"><td class="memItemLeft" align="right" valign="top"><a id="a96d14085a96451c304a1efbcc265c90d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a96d14085a96451c304a1efbcc265c90d">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a96d14085a96451c304a1efbcc265c90d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes. <br /></td></tr>
+<tr class="separator:a96d14085a96451c304a1efbcc265c90d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31a36f0f60185b0e326aec732c4b2aaa"><td class="memItemLeft" align="right" valign="top"><a id="a31a36f0f60185b0e326aec732c4b2aaa"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a31a36f0f60185b0e326aec732c4b2aaa">specificInitialization</a> ()=0</td></tr>
 <tr class="memdesc:a31a36f0f60185b0e326aec732c4b2aaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to initialize the specific variables of each SG model. <br /></td></tr>
@@ -548,10 +550,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompPostStep</b> (
 <tr class="memitem:a39f7cfcd90529c34c78f16951c1396be"><td class="memItemLeft" align="right" valign="top"><a id="a39f7cfcd90529c34c78f16951c1396be"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompPostStep</b> (const Matrix &amp;leftVector)=0</td></tr>
 <tr class="separator:a39f7cfcd90529c34c78f16951c1396be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59e76bd65258938e23057c15401a8105"><td class="memItemLeft" align="right" valign="top"><a id="a59e76bd65258938e23057c15401a8105"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a59e76bd65258938e23057c15401a8105">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)=0</td></tr>
-<tr class="memdesc:a59e76bd65258938e23057c15401a8105"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
-<tr class="separator:a59e76bd65258938e23057c15401a8105"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adac9c4f5abac41f729bf84897a4cfa35"><td class="memItemLeft" align="right" valign="top"><a id="adac9c4f5abac41f729bf84897a4cfa35"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#adac9c4f5abac41f729bf84897a4cfa35">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix) override=0</td></tr>
+<tr class="memdesc:adac9c4f5abac41f729bf84897a4cfa35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
+<tr class="separator:adac9c4f5abac41f729bf84897a4cfa35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>

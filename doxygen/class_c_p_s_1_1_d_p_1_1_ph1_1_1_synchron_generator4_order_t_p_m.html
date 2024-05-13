@@ -99,8 +99,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a96718e5bd88c54c478cc3e9822ecef5f"><td class="memItemLeft" align="right" valign="top"><a id="a96718e5bd88c54c478cc3e9822ecef5f"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>SynchronGenerator4OrderTPM</b> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="separator:a96718e5bd88c54c478cc3e9822ecef5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a616d52507c93d444cd5243e27fe82cfc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a616d52507c93d444cd5243e27fe82cfc">clone</a> (String name)</td></tr>
-<tr class="separator:a616d52507c93d444cd5243e27fe82cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e72906de2dfb956bd3b841b44e99130"><td class="memItemLeft" align="right" valign="top"><a id="a1e72906de2dfb956bd3b841b44e99130"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a1e72906de2dfb956bd3b841b44e99130">clone</a> (String name) override</td></tr>
+<tr class="memdesc:a1e72906de2dfb956bd3b841b44e99130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:a1e72906de2dfb956bd3b841b44e99130"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7883984999f768f42eaec5440b595c4a"><td class="memItemLeft" align="right" valign="top"><a id="a7883984999f768f42eaec5440b595c4a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a7883984999f768f42eaec5440b595c4a">specificInitialization</a> () override</td></tr>
 <tr class="memdesc:a7883984999f768f42eaec5440b595c4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
@@ -973,10 +975,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>calculateVBRconstants
 <tr class="memitem:a963a6a96847d9875fa37f082e8e3f9b4 inherit pro_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="memItemLeft" align="right" valign="top"><a id="a963a6a96847d9875fa37f082e8e3f9b4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>calculateResistanceMatrixConstants</b> ()</td></tr>
 <tr class="separator:a963a6a96847d9875fa37f082e8e3f9b4 inherit pro_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6df759a115d903620dd3eb42af955d3d inherit pro_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="memItemLeft" align="right" valign="top"><a id="a6df759a115d903620dd3eb42af955d3d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromNodesAndTerminals</b> (Real frequency)</td></tr>
-<tr class="memdesc:a6df759a115d903620dd3eb42af955d3d inherit pro_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes. <br /></td></tr>
-<tr class="separator:a6df759a115d903620dd3eb42af955d3d inherit pro_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96d14085a96451c304a1efbcc265c90d inherit pro_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="memItemLeft" align="right" valign="top"><a id="a96d14085a96451c304a1efbcc265c90d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromNodesAndTerminals</b> (Real frequency) override</td></tr>
+<tr class="memdesc:a96d14085a96451c304a1efbcc265c90d inherit pro_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes. <br /></td></tr>
+<tr class="separator:a96d14085a96451c304a1efbcc265c90d inherit pro_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a885170c1ae88b18282913ec2f7916ece inherit pro_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="memItemLeft" align="right" valign="top"><a id="a885170c1ae88b18282913ec2f7916ece"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompInitialize</b> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
 <tr class="separator:a885170c1ae88b18282913ec2f7916ece inherit pro_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1005,39 +1007,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompPostStep</b> (
 <p>This model is based on Eremia section 2.1.6. Modeling approach: thevenin prediction method </p>
 
 <p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator4_order_t_p_m_8h_source.html#l00022">22</a> of file <a class="el" href="_d_p___ph1___synchron_generator4_order_t_p_m_8h_source.html">DP_Ph1_SynchronGenerator4OrderTPM.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a616d52507c93d444cd5243e27fe82cfc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a616d52507c93d444cd5243e27fe82cfc">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr DP::Ph1::SynchronGenerator4OrderTPM::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator4_order_t_p_m_8cpp_source.html#l00035">35</a> of file <a class="el" href="_d_p___ph1___synchron_generator4_order_t_p_m_8cpp_source.html">DP_Ph1_SynchronGenerator4OrderTPM.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/DP/<a class="el" href="_d_p___ph1___synchron_generator4_order_t_p_m_8h_source.html">DP_Ph1_SynchronGenerator4OrderTPM.h</a></li>
 <li>/__w/dpsim/dpsim/dpsim-models/src/DP/<a class="el" href="_d_p___ph1___synchron_generator4_order_t_p_m_8cpp_source.html">DP_Ph1_SynchronGenerator4OrderTPM.cpp</a></li>
 </ul>

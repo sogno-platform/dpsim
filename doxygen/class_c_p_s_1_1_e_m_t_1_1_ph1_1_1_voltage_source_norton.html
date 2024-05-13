@@ -103,38 +103,40 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#aa52e060f96725475703a3b3685bb5b30">VoltageSourceNorton</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:aa52e060f96725475703a3b3685bb5b30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name and logging level. <br /></td></tr>
 <tr class="separator:aa52e060f96725475703a3b3685bb5b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8d3d0d17727651b010b5394f157ce8b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#ae8d3d0d17727651b010b5394f157ce8b">clone</a> (String name)</td></tr>
-<tr class="separator:ae8d3d0d17727651b010b5394f157ce8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d3de3ca69c3c0142a3036ef503f97ae"><td class="memItemLeft" align="right" valign="top"><a id="a1d3de3ca69c3c0142a3036ef503f97ae"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a1d3de3ca69c3c0142a3036ef503f97ae">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:a1d3de3ca69c3c0142a3036ef503f97ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:a1d3de3ca69c3c0142a3036ef503f97ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a208303cdbb5d5b716807556f44a0dd0d"><td class="memItemLeft" align="right" valign="top"><a id="a208303cdbb5d5b716807556f44a0dd0d"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a208303cdbb5d5b716807556f44a0dd0d">clone</a> (String name) override</td></tr>
+<tr class="memdesc:a208303cdbb5d5b716807556f44a0dd0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:a208303cdbb5d5b716807556f44a0dd0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38b0fbebd137ccf2130d1b21446bbf64"><td class="memItemLeft" align="right" valign="top"><a id="a38b0fbebd137ccf2130d1b21446bbf64"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a38b0fbebd137ccf2130d1b21446bbf64">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a38b0fbebd137ccf2130d1b21446bbf64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:a38b0fbebd137ccf2130d1b21446bbf64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1a286353190318621bc829750554f2e"><td class="memItemLeft" align="right" valign="top"><a id="ae1a286353190318621bc829750554f2e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters</b> (Complex voltage, Real srcFreq, Real resistance)</td></tr>
 <tr class="separator:ae1a286353190318621bc829750554f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae930d1b5279086cde9414990700c87d7"><td class="memItemLeft" align="right" valign="top"><a id="ae930d1b5279086cde9414990700c87d7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setVoltageRef</b> (Complex voltage) const</td></tr>
 <tr class="separator:ae930d1b5279086cde9414990700c87d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad700532b83a5ac48e6f119739d7f7568"><td class="memItemLeft" align="right" valign="top"><a id="ad700532b83a5ac48e6f119739d7f7568"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#ad700532b83a5ac48e6f119739d7f7568">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector)</td></tr>
-<tr class="memdesc:ad700532b83a5ac48e6f119739d7f7568"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component. <br /></td></tr>
-<tr class="separator:ad700532b83a5ac48e6f119739d7f7568"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad06ffe837bb8b5eaf6496fa491e1c60"><td class="memItemLeft" align="right" valign="top"><a id="aad06ffe837bb8b5eaf6496fa491e1c60"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#aad06ffe837bb8b5eaf6496fa491e1c60">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)</td></tr>
-<tr class="memdesc:aad06ffe837bb8b5eaf6496fa491e1c60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
-<tr class="separator:aad06ffe837bb8b5eaf6496fa491e1c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a820af0364dae91426fe575f2fc7f35c5"><td class="memItemLeft" align="right" valign="top"><a id="a820af0364dae91426fe575f2fc7f35c5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a820af0364dae91426fe575f2fc7f35c5">mnaCompApplyRightSideVectorStamp</a> (Matrix &amp;rightVector)</td></tr>
-<tr class="memdesc:a820af0364dae91426fe575f2fc7f35c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector. <br /></td></tr>
-<tr class="separator:a820af0364dae91426fe575f2fc7f35c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a285e0cd906d4ba4434db0c8af25254cd"><td class="memItemLeft" align="right" valign="top"><a id="a285e0cd906d4ba4434db0c8af25254cd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a285e0cd906d4ba4434db0c8af25254cd">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:a285e0cd906d4ba4434db0c8af25254cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system result. <br /></td></tr>
-<tr class="separator:a285e0cd906d4ba4434db0c8af25254cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a130d9f68ce08cde7d341d7cfc3ae381e"><td class="memItemLeft" align="right" valign="top"><a id="a130d9f68ce08cde7d341d7cfc3ae381e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a130d9f68ce08cde7d341d7cfc3ae381e">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:a130d9f68ce08cde7d341d7cfc3ae381e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface current from MNA system result. <br /></td></tr>
-<tr class="separator:a130d9f68ce08cde7d341d7cfc3ae381e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a808a0d1e4aca67abcbfd7ded327f36cd"><td class="memItemLeft" align="right" valign="top"><a id="a808a0d1e4aca67abcbfd7ded327f36cd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a808a0d1e4aca67abcbfd7ded327f36cd">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
+<tr class="memdesc:a808a0d1e4aca67abcbfd7ded327f36cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component. <br /></td></tr>
+<tr class="separator:a808a0d1e4aca67abcbfd7ded327f36cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68a9b104b568e9f5bc63a714cdf012bf"><td class="memItemLeft" align="right" valign="top"><a id="a68a9b104b568e9f5bc63a714cdf012bf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a68a9b104b568e9f5bc63a714cdf012bf">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix) override</td></tr>
+<tr class="memdesc:a68a9b104b568e9f5bc63a714cdf012bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
+<tr class="separator:a68a9b104b568e9f5bc63a714cdf012bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13de74259b67b9a237b630fd401b7081"><td class="memItemLeft" align="right" valign="top"><a id="a13de74259b67b9a237b630fd401b7081"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a13de74259b67b9a237b630fd401b7081">mnaCompApplyRightSideVectorStamp</a> (Matrix &amp;rightVector) override</td></tr>
+<tr class="memdesc:a13de74259b67b9a237b630fd401b7081"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector. <br /></td></tr>
+<tr class="separator:a13de74259b67b9a237b630fd401b7081"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43dcb29dcc0b33fbb21df8eede8d0fa5"><td class="memItemLeft" align="right" valign="top"><a id="a43dcb29dcc0b33fbb21df8eede8d0fa5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a43dcb29dcc0b33fbb21df8eede8d0fa5">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:a43dcb29dcc0b33fbb21df8eede8d0fa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system result. <br /></td></tr>
+<tr class="separator:a43dcb29dcc0b33fbb21df8eede8d0fa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d5476462b13c5091419509320d83a2"><td class="memItemLeft" align="right" valign="top"><a id="a76d5476462b13c5091419509320d83a2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a76d5476462b13c5091419509320d83a2">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:a76d5476462b13c5091419509320d83a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface current from MNA system result. <br /></td></tr>
+<tr class="separator:a76d5476462b13c5091419509320d83a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80bb6d4a54032ecee4e15f8bb354f460"><td class="memItemLeft" align="right" valign="top"><a id="a80bb6d4a54032ecee4e15f8bb354f460"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompPreStep</b> (Real time, Int timeStepCount) override</td></tr>
 <tr class="separator:a80bb6d4a54032ecee4e15f8bb354f460"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -627,39 +629,7 @@ static std::shared_ptr&lt; VoltageSourceNorton &gt;&#160;</td><td class="memItem
 <div class="textblock"><p>Voltage source as Norton equivalent. </p>
 
 <p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___voltage_source_norton_8h_source.html#l00019">19</a> of file <a class="el" href="_e_m_t___ph1___voltage_source_norton_8h_source.html">EMT_Ph1_VoltageSourceNorton.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae8d3d0d17727651b010b5394f157ce8b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8d3d0d17727651b010b5394f157ce8b">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr EMT::Ph1::VoltageSourceNorton::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___voltage_source_norton_8cpp_source.html#l00023">23</a> of file <a class="el" href="_e_m_t___ph1___voltage_source_norton_8cpp_source.html">EMT_Ph1_VoltageSourceNorton.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/EMT/<a class="el" href="_e_m_t___ph1___voltage_source_norton_8h_source.html">EMT_Ph1_VoltageSourceNorton.h</a></li>
 <li>/__w/dpsim/dpsim/dpsim-models/src/EMT/<a class="el" href="_e_m_t___ph1___voltage_source_norton_8cpp_source.html">EMT_Ph1_VoltageSourceNorton.cpp</a></li>
 </ul>

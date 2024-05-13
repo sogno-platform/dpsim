@@ -101,12 +101,14 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#aed87eb50027b73d66fa83ac0d3f66d02">Inductor</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:aed87eb50027b73d66fa83ac0d3f66d02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name and logging level. <br /></td></tr>
 <tr class="separator:aed87eb50027b73d66fa83ac0d3f66d02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfa6112cb74848c75e85fed454d0ba74"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#adfa6112cb74848c75e85fed454d0ba74">clone</a> (String name)</td></tr>
-<tr class="separator:adfa6112cb74848c75e85fed454d0ba74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2092bad307060af3616506b7613abfb1"><td class="memItemLeft" align="right" valign="top"><a id="a2092bad307060af3616506b7613abfb1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#a2092bad307060af3616506b7613abfb1">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:a2092bad307060af3616506b7613abfb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:a2092bad307060af3616506b7613abfb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3db00a5a0057e0b987af3df3def2c394"><td class="memItemLeft" align="right" valign="top"><a id="a3db00a5a0057e0b987af3df3def2c394"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#a3db00a5a0057e0b987af3df3def2c394">clone</a> (String name) override</td></tr>
+<tr class="memdesc:a3db00a5a0057e0b987af3df3def2c394"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:a3db00a5a0057e0b987af3df3def2c394"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acadaa07b1b2239b80b33ba3d62d73b20"><td class="memItemLeft" align="right" valign="top"><a id="acadaa07b1b2239b80b33ba3d62d73b20"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#acadaa07b1b2239b80b33ba3d62d73b20">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:acadaa07b1b2239b80b33ba3d62d73b20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:acadaa07b1b2239b80b33ba3d62d73b20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fd37aae4408fb9be241d8d664ce7c3b"><td class="memItemLeft" align="right" valign="top"><a id="a0fd37aae4408fb9be241d8d664ce7c3b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#a0fd37aae4408fb9be241d8d664ce7c3b">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
 <tr class="memdesc:a0fd37aae4408fb9be241d8d664ce7c3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component. <br /></td></tr>
@@ -605,39 +607,7 @@ const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt;
 <p>The inductor is represented by a DC equivalent circuit which corresponds to one iteration of the trapezoidal integration method. The equivalent DC circuit is a resistance in paralel with a current source. The resistance is constant for a defined time step and system frequency and the current source changes for each iteration. </p>
 
 <p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___inductor_8h_source.html#l00025">25</a> of file <a class="el" href="_e_m_t___ph3___inductor_8h_source.html">EMT_Ph3_Inductor.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="adfa6112cb74848c75e85fed454d0ba74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adfa6112cb74848c75e85fed454d0ba74">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr EMT::Ph3::Inductor::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___inductor_8cpp_source.html#l00023">23</a> of file <a class="el" href="_e_m_t___ph3___inductor_8cpp_source.html">EMT_Ph3_Inductor.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/EMT/<a class="el" href="_e_m_t___ph3___inductor_8h_source.html">EMT_Ph3_Inductor.h</a></li>
 <li>/__w/dpsim/dpsim/dpsim-models/src/EMT/<a class="el" href="_e_m_t___ph3___inductor_8cpp_source.html">EMT_Ph3_Inductor.cpp</a></li>
 </ul>

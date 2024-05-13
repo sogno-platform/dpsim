@@ -95,25 +95,27 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html#a473736f39746e9d52ee165d5bd21e132">SeriesResistor</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a473736f39746e9d52ee165d5bd21e132"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name and logging level. <br /></td></tr>
 <tr class="separator:a473736f39746e9d52ee165d5bd21e132"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2752ae2c4526b3ac78fcfcbad2739be6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html#a2752ae2c4526b3ac78fcfcbad2739be6">clone</a> (String name)</td></tr>
-<tr class="separator:a2752ae2c4526b3ac78fcfcbad2739be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb88c420681cbe67d76e5e18a4438b70"><td class="memItemLeft" align="right" valign="top"><a id="aeb88c420681cbe67d76e5e18a4438b70"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html#aeb88c420681cbe67d76e5e18a4438b70">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:aeb88c420681cbe67d76e5e18a4438b70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:aeb88c420681cbe67d76e5e18a4438b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f204795e982821aa88e35552658e96d"><td class="memItemLeft" align="right" valign="top"><a id="a3f204795e982821aa88e35552658e96d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompInitialize</b> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector)</td></tr>
-<tr class="separator:a3f204795e982821aa88e35552658e96d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f311b095280857e612f1e10d70befa3"><td class="memItemLeft" align="right" valign="top"><a id="a4f311b095280857e612f1e10d70befa3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html#a4f311b095280857e612f1e10d70befa3">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)</td></tr>
-<tr class="memdesc:a4f311b095280857e612f1e10d70befa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
-<tr class="separator:a4f311b095280857e612f1e10d70befa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b6877ec5c0fead6f42d7930ae54fd54"><td class="memItemLeft" align="right" valign="top"><a id="a4b6877ec5c0fead6f42d7930ae54fd54"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompUpdateVoltage</b> (const Matrix &amp;leftVector)</td></tr>
-<tr class="separator:a4b6877ec5c0fead6f42d7930ae54fd54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91b0ff5901bbb119343458ad0bb88c24"><td class="memItemLeft" align="right" valign="top"><a id="a91b0ff5901bbb119343458ad0bb88c24"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompUpdateCurrent</b> (const Matrix &amp;leftVector)</td></tr>
-<tr class="separator:a91b0ff5901bbb119343458ad0bb88c24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33838d46b14daf1682e2b43619132cec"><td class="memItemLeft" align="right" valign="top"><a id="a33838d46b14daf1682e2b43619132cec"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html#a33838d46b14daf1682e2b43619132cec">clone</a> (String name) override</td></tr>
+<tr class="memdesc:a33838d46b14daf1682e2b43619132cec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:a33838d46b14daf1682e2b43619132cec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ca5a1afbbac04d52bb145e8647f60cf"><td class="memItemLeft" align="right" valign="top"><a id="a1ca5a1afbbac04d52bb145e8647f60cf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html#a1ca5a1afbbac04d52bb145e8647f60cf">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a1ca5a1afbbac04d52bb145e8647f60cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:a1ca5a1afbbac04d52bb145e8647f60cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb2f11fc72c641e04c6397b4ff1d6196"><td class="memItemLeft" align="right" valign="top"><a id="afb2f11fc72c641e04c6397b4ff1d6196"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompInitialize</b> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
+<tr class="separator:afb2f11fc72c641e04c6397b4ff1d6196"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abee4d2c935a5f8480f3a3785e39726ab"><td class="memItemLeft" align="right" valign="top"><a id="abee4d2c935a5f8480f3a3785e39726ab"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html#abee4d2c935a5f8480f3a3785e39726ab">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix) override</td></tr>
+<tr class="memdesc:abee4d2c935a5f8480f3a3785e39726ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
+<tr class="separator:abee4d2c935a5f8480f3a3785e39726ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c6d08e7c7093097321dc41e2f930903"><td class="memItemLeft" align="right" valign="top"><a id="a8c6d08e7c7093097321dc41e2f930903"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompUpdateVoltage</b> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="separator:a8c6d08e7c7093097321dc41e2f930903"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76f7938627b76f840b46fbfa05db3c8a"><td class="memItemLeft" align="right" valign="top"><a id="a76f7938627b76f840b46fbfa05db3c8a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompUpdateCurrent</b> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="separator:a76f7938627b76f840b46fbfa05db3c8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ef2d98660602f4df583f60ff967d013"><td class="memItemLeft" align="right" valign="top"><a id="a4ef2d98660602f4df583f60ff967d013"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html#a4ef2d98660602f4df583f60ff967d013">mnaCompAddPostStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector) override</td></tr>
 <tr class="memdesc:a4ef2d98660602f4df583f60ff967d013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA post step dependencies. <br /></td></tr>
@@ -578,39 +580,7 @@ AttributeList::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="_d_p___ph3___series_resistor_8h_source.html#l00021">21</a> of file <a class="el" href="_d_p___ph3___series_resistor_8h_source.html">DP_Ph3_SeriesResistor.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2752ae2c4526b3ac78fcfcbad2739be6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2752ae2c4526b3ac78fcfcbad2739be6">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr DP::Ph3::SeriesResistor::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___series_resistor_8cpp_source.html#l00022">22</a> of file <a class="el" href="_d_p___ph3___series_resistor_8cpp_source.html">DP_Ph3_SeriesResistor.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/DP/<a class="el" href="_d_p___ph3___series_resistor_8h_source.html">DP_Ph3_SeriesResistor.h</a></li>
 <li>/__w/dpsim/dpsim/dpsim-models/src/DP/<a class="el" href="_d_p___ph3___series_resistor_8cpp_source.html">DP_Ph3_SeriesResistor.cpp</a></li>
 </ul>

@@ -104,28 +104,30 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9fec19b6e29b34e2f75efe4538af6619"><td class="memItemLeft" align="right" valign="top"><a id="a9fec19b6e29b34e2f75efe4538af6619"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters</b> (Complex voltageRef, Real srcFreq=-1)</td></tr>
 <tr class="separator:a9fec19b6e29b34e2f75efe4538af6619"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfbd2b9ea2a6abc9ba8b5979defdb80e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#abfbd2b9ea2a6abc9ba8b5979defdb80e">clone</a> (String name)</td></tr>
-<tr class="separator:abfbd2b9ea2a6abc9ba8b5979defdb80e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab54286fd88b37db3d877352bb27fa96a"><td class="memItemLeft" align="right" valign="top"><a id="ab54286fd88b37db3d877352bb27fa96a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#ab54286fd88b37db3d877352bb27fa96a">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:ab54286fd88b37db3d877352bb27fa96a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:ab54286fd88b37db3d877352bb27fa96a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a882c0b31a320ac1def7fe1f2bac35dcc"><td class="memItemLeft" align="right" valign="top"><a id="a882c0b31a320ac1def7fe1f2bac35dcc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#a882c0b31a320ac1def7fe1f2bac35dcc">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector)</td></tr>
-<tr class="memdesc:a882c0b31a320ac1def7fe1f2bac35dcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component. <br /></td></tr>
-<tr class="separator:a882c0b31a320ac1def7fe1f2bac35dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adefa4658e1a69f2ed99281c17258d5fc"><td class="memItemLeft" align="right" valign="top"><a id="adefa4658e1a69f2ed99281c17258d5fc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#adefa4658e1a69f2ed99281c17258d5fc">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)</td></tr>
-<tr class="memdesc:adefa4658e1a69f2ed99281c17258d5fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
-<tr class="separator:adefa4658e1a69f2ed99281c17258d5fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e862ff5e0875d05243efd6b11630fac"><td class="memItemLeft" align="right" valign="top"><a id="a5e862ff5e0875d05243efd6b11630fac"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#a5e862ff5e0875d05243efd6b11630fac">mnaCompApplyRightSideVectorStamp</a> (Matrix &amp;rightVector)</td></tr>
-<tr class="memdesc:a5e862ff5e0875d05243efd6b11630fac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector. <br /></td></tr>
-<tr class="separator:a5e862ff5e0875d05243efd6b11630fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28df858064265ea9abeb68ddab2a7b4d"><td class="memItemLeft" align="right" valign="top"><a id="a28df858064265ea9abeb68ddab2a7b4d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#a28df858064265ea9abeb68ddab2a7b4d">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:a28df858064265ea9abeb68ddab2a7b4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns current through the component. <br /></td></tr>
-<tr class="separator:a28df858064265ea9abeb68ddab2a7b4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7d67d30de94a4784c3d90c9d2a11f73"><td class="memItemLeft" align="right" valign="top"><a id="ad7d67d30de94a4784c3d90c9d2a11f73"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#ad7d67d30de94a4784c3d90c9d2a11f73">clone</a> (String name) override</td></tr>
+<tr class="memdesc:ad7d67d30de94a4784c3d90c9d2a11f73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:ad7d67d30de94a4784c3d90c9d2a11f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e67e14eff0cec56a17a180a2c688ab4"><td class="memItemLeft" align="right" valign="top"><a id="a5e67e14eff0cec56a17a180a2c688ab4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#a5e67e14eff0cec56a17a180a2c688ab4">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a5e67e14eff0cec56a17a180a2c688ab4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:a5e67e14eff0cec56a17a180a2c688ab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0af08e0bbc53da05e60f21b20519954c"><td class="memItemLeft" align="right" valign="top"><a id="a0af08e0bbc53da05e60f21b20519954c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#a0af08e0bbc53da05e60f21b20519954c">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
+<tr class="memdesc:a0af08e0bbc53da05e60f21b20519954c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component. <br /></td></tr>
+<tr class="separator:a0af08e0bbc53da05e60f21b20519954c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d4f67ee652a109f5c7c8ef79b01fdda"><td class="memItemLeft" align="right" valign="top"><a id="a2d4f67ee652a109f5c7c8ef79b01fdda"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#a2d4f67ee652a109f5c7c8ef79b01fdda">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix) override</td></tr>
+<tr class="memdesc:a2d4f67ee652a109f5c7c8ef79b01fdda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
+<tr class="separator:a2d4f67ee652a109f5c7c8ef79b01fdda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3a3dbb8ac42d6a44220c9c2863c261e"><td class="memItemLeft" align="right" valign="top"><a id="ab3a3dbb8ac42d6a44220c9c2863c261e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#ab3a3dbb8ac42d6a44220c9c2863c261e">mnaCompApplyRightSideVectorStamp</a> (Matrix &amp;rightVector) override</td></tr>
+<tr class="memdesc:ab3a3dbb8ac42d6a44220c9c2863c261e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector. <br /></td></tr>
+<tr class="separator:ab3a3dbb8ac42d6a44220c9c2863c261e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2efd287ba958110c8054425a4f5e2db"><td class="memItemLeft" align="right" valign="top"><a id="aa2efd287ba958110c8054425a4f5e2db"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#aa2efd287ba958110c8054425a4f5e2db">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:aa2efd287ba958110c8054425a4f5e2db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns current through the component. <br /></td></tr>
+<tr class="separator:aa2efd287ba958110c8054425a4f5e2db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24f51b9f6b309c580179e6cf1ce1480a"><td class="memItemLeft" align="right" valign="top"><a id="a24f51b9f6b309c580179e6cf1ce1480a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompPreStep</b> (Real time, Int timeStepCount) override</td></tr>
 <tr class="separator:a24f51b9f6b309c580179e6cf1ce1480a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -596,39 +598,7 @@ AttributeList::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <p>This model uses modified nodal analysis to represent an ideal voltage source. For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover a new equation ej - ek = V is added to the problem. </p>
 
 <p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___voltage_source_8h_source.html#l00025">25</a> of file <a class="el" href="_e_m_t___ph1___voltage_source_8h_source.html">EMT_Ph1_VoltageSource.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="abfbd2b9ea2a6abc9ba8b5979defdb80e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfbd2b9ea2a6abc9ba8b5979defdb80e">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr EMT::Ph1::VoltageSource::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___voltage_source_8cpp_source.html#l00031">31</a> of file <a class="el" href="_e_m_t___ph1___voltage_source_8cpp_source.html">EMT_Ph1_VoltageSource.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/EMT/<a class="el" href="_e_m_t___ph1___voltage_source_8h_source.html">EMT_Ph1_VoltageSource.h</a></li>
 <li>/__w/dpsim/dpsim/dpsim-models/src/EMT/<a class="el" href="_e_m_t___ph1___voltage_source_8cpp_source.html">EMT_Ph1_VoltageSource.cpp</a></li>
 </ul>

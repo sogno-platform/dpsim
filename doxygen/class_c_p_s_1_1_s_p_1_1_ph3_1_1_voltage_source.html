@@ -105,41 +105,43 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#aea0c78aa0d125a65d7df57cea5cd141b">VoltageSource</a> (String name, Complex voltage, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:aea0c78aa0d125a65d7df57cea5cd141b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name, component parameters and logging level. <br /></td></tr>
 <tr class="separator:aea0c78aa0d125a65d7df57cea5cd141b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2220d09aaeecbea4b199bdf9f2b61902"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a2220d09aaeecbea4b199bdf9f2b61902">clone</a> (String name)</td></tr>
-<tr class="separator:a2220d09aaeecbea4b199bdf9f2b61902"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17b32970c4a9faf60ff78d63dd0099ce"><td class="memItemLeft" align="right" valign="top"><a id="a17b32970c4a9faf60ff78d63dd0099ce"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a17b32970c4a9faf60ff78d63dd0099ce">clone</a> (String name) override</td></tr>
+<tr class="memdesc:a17b32970c4a9faf60ff78d63dd0099ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:a17b32970c4a9faf60ff78d63dd0099ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a333a6519d54e67a06d76b7ccd42c4177"><td class="memItemLeft" align="right" valign="top"><a id="a333a6519d54e67a06d76b7ccd42c4177"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters</b> (Complex voltageRef)</td></tr>
 <tr class="separator:a333a6519d54e67a06d76b7ccd42c4177"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafa155e3e3133879b3457983a261cf0a"><td class="memItemLeft" align="right" valign="top"><a id="aafa155e3e3133879b3457983a261cf0a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#aafa155e3e3133879b3457983a261cf0a">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:aafa155e3e3133879b3457983a261cf0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:aafa155e3e3133879b3457983a261cf0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03fc73956c62566d44868e213ffb2d17"><td class="memItemLeft" align="right" valign="top"><a id="a03fc73956c62566d44868e213ffb2d17"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a03fc73956c62566d44868e213ffb2d17">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a03fc73956c62566d44868e213ffb2d17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:a03fc73956c62566d44868e213ffb2d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35087b519fa455a14172ca397a360660"><td class="memItemLeft" align="right" valign="top"><a id="a35087b519fa455a14172ca397a360660"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setSourceValue</b> (Complex voltage)</td></tr>
 <tr class="separator:a35087b519fa455a14172ca397a360660"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63cd84cf007d73af141409a9225adc63"><td class="memItemLeft" align="right" valign="top"><a id="a63cd84cf007d73af141409a9225adc63"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompInitialize</b> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector)</td></tr>
-<tr class="separator:a63cd84cf007d73af141409a9225adc63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59372436da4026bb945350351c6ddfea"><td class="memItemLeft" align="right" valign="top"><a id="a59372436da4026bb945350351c6ddfea"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a59372436da4026bb945350351c6ddfea">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)</td></tr>
-<tr class="memdesc:a59372436da4026bb945350351c6ddfea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
-<tr class="separator:a59372436da4026bb945350351c6ddfea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d577efbffc2273318f59d6d047e72c3"><td class="memItemLeft" align="right" valign="top"><a id="a8d577efbffc2273318f59d6d047e72c3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a8d577efbffc2273318f59d6d047e72c3">mnaCompApplyRightSideVectorStamp</a> (Matrix &amp;rightVector)</td></tr>
-<tr class="memdesc:a8d577efbffc2273318f59d6d047e72c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector. <br /></td></tr>
-<tr class="separator:a8d577efbffc2273318f59d6d047e72c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55252bf7ed95a8c4a6488ccc71e006ef"><td class="memItemLeft" align="right" valign="top"><a id="a55252bf7ed95a8c4a6488ccc71e006ef"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a55252bf7ed95a8c4a6488ccc71e006ef">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:a55252bf7ed95a8c4a6488ccc71e006ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns current through the component. <br /></td></tr>
-<tr class="separator:a55252bf7ed95a8c4a6488ccc71e006ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b5217e146097ec6beec4540abf8175b"><td class="memItemLeft" align="right" valign="top"><a id="a8b5217e146097ec6beec4540abf8175b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a8b5217e146097ec6beec4540abf8175b">daeResidual</a> (double ttime, const double state[], const double dstate_dt[], double resid[], std::vector&lt; int &gt; &amp;off)</td></tr>
-<tr class="memdesc:a8b5217e146097ec6beec4540abf8175b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Residual function for DAE Solver. <br /></td></tr>
-<tr class="separator:a8b5217e146097ec6beec4540abf8175b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76cdc622aef700d4024e6690abb9bb72"><td class="memItemLeft" align="right" valign="top"><a id="a76cdc622aef700d4024e6690abb9bb72"></a>
-Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a76cdc622aef700d4024e6690abb9bb72">daeInitialize</a> ()</td></tr>
-<tr class="memdesc:a76cdc622aef700d4024e6690abb9bb72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage Getter. <br /></td></tr>
-<tr class="separator:a76cdc622aef700d4024e6690abb9bb72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03b1a84468299982e14118b5271853a5"><td class="memItemLeft" align="right" valign="top"><a id="a03b1a84468299982e14118b5271853a5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompInitialize</b> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
+<tr class="separator:a03b1a84468299982e14118b5271853a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad07a71abb7157b7f933f0ff03d7e2037"><td class="memItemLeft" align="right" valign="top"><a id="ad07a71abb7157b7f933f0ff03d7e2037"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#ad07a71abb7157b7f933f0ff03d7e2037">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix) override</td></tr>
+<tr class="memdesc:ad07a71abb7157b7f933f0ff03d7e2037"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
+<tr class="separator:ad07a71abb7157b7f933f0ff03d7e2037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac18280fbf2badb9f812bac351b628782"><td class="memItemLeft" align="right" valign="top"><a id="ac18280fbf2badb9f812bac351b628782"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#ac18280fbf2badb9f812bac351b628782">mnaCompApplyRightSideVectorStamp</a> (Matrix &amp;rightVector) override</td></tr>
+<tr class="memdesc:ac18280fbf2badb9f812bac351b628782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector. <br /></td></tr>
+<tr class="separator:ac18280fbf2badb9f812bac351b628782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0208b9d32cc5e8b9112d1f7bc0a9f15f"><td class="memItemLeft" align="right" valign="top"><a id="a0208b9d32cc5e8b9112d1f7bc0a9f15f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a0208b9d32cc5e8b9112d1f7bc0a9f15f">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:a0208b9d32cc5e8b9112d1f7bc0a9f15f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns current through the component. <br /></td></tr>
+<tr class="separator:a0208b9d32cc5e8b9112d1f7bc0a9f15f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bd95f8345932a9646aaab835e17e8dc"><td class="memItemLeft" align="right" valign="top"><a id="a1bd95f8345932a9646aaab835e17e8dc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a1bd95f8345932a9646aaab835e17e8dc">daeResidual</a> (double ttime, const double state[], const double dstate_dt[], double resid[], std::vector&lt; int &gt; &amp;off) override</td></tr>
+<tr class="memdesc:a1bd95f8345932a9646aaab835e17e8dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Residual function for DAE Solver. <br /></td></tr>
+<tr class="separator:a1bd95f8345932a9646aaab835e17e8dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a0106c38a101709cb659c2c3b7f5680"><td class="memItemLeft" align="right" valign="top"><a id="a0a0106c38a101709cb659c2c3b7f5680"></a>
+Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html#a0a0106c38a101709cb659c2c3b7f5680">daeInitialize</a> () override</td></tr>
+<tr class="memdesc:a0a0106c38a101709cb659c2c3b7f5680"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage Getter. <br /></td></tr>
+<tr class="separator:a0a0106c38a101709cb659c2c3b7f5680"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a651fd7bf7837f27a4162fa055c6dce45"><td class="memItemLeft" align="right" valign="top"><a id="a651fd7bf7837f27a4162fa055c6dce45"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompPreStep</b> (Real time, Int timeStepCount) override</td></tr>
 <tr class="separator:a651fd7bf7837f27a4162fa055c6dce45"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -611,39 +613,7 @@ AttributeList::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <p>This model uses modified nodal analysis to represent an ideal voltage source. For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover a new equation ej - ek = V is added to the problem. </p>
 
 <p class="definition">Definition at line <a class="el" href="_s_p___ph3___voltage_source_8h_source.html#l00026">26</a> of file <a class="el" href="_s_p___ph3___voltage_source_8h_source.html">SP_Ph3_VoltageSource.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2220d09aaeecbea4b199bdf9f2b61902"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2220d09aaeecbea4b199bdf9f2b61902">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr SP::Ph3::VoltageSource::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_s_p___ph3___voltage_source_8cpp_source.html#l00024">24</a> of file <a class="el" href="_s_p___ph3___voltage_source_8cpp_source.html">SP_Ph3_VoltageSource.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/SP/<a class="el" href="_s_p___ph3___voltage_source_8h_source.html">SP_Ph3_VoltageSource.h</a></li>
 <li>/__w/dpsim/dpsim/dpsim-models/src/SP/<a class="el" href="_s_p___ph3___voltage_source_8cpp_source.html">SP_Ph3_VoltageSource.cpp</a></li>
 </ul>

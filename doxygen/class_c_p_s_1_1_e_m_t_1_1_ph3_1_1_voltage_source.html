@@ -101,12 +101,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af8bf6b61501b5bfb8b2a68d9ce9ed1d9"><td class="memItemLeft" align="right" valign="top"><a id="af8bf6b61501b5bfb8b2a68d9ce9ed1d9"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>VoltageSource</b> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="separator:af8bf6b61501b5bfb8b2a68d9ce9ed1d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a8ce4eb250b9b43c319ad3a57f6aa39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source.html#a6a8ce4eb250b9b43c319ad3a57f6aa39">clone</a> (String name)</td></tr>
-<tr class="separator:a6a8ce4eb250b9b43c319ad3a57f6aa39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31346db0106c8d1bab40dc652fd8aa14"><td class="memItemLeft" align="right" valign="top"><a id="a31346db0106c8d1bab40dc652fd8aa14"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source.html#a31346db0106c8d1bab40dc652fd8aa14">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:a31346db0106c8d1bab40dc652fd8aa14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:a31346db0106c8d1bab40dc652fd8aa14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa2e97a786300664fd421112163cc8e9"><td class="memItemLeft" align="right" valign="top"><a id="aaa2e97a786300664fd421112163cc8e9"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source.html#aaa2e97a786300664fd421112163cc8e9">clone</a> (String name) override</td></tr>
+<tr class="memdesc:aaa2e97a786300664fd421112163cc8e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:aaa2e97a786300664fd421112163cc8e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a328f3f3e78ad8fe3a9129e32eb446976"><td class="memItemLeft" align="right" valign="top"><a id="a328f3f3e78ad8fe3a9129e32eb446976"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source.html#a328f3f3e78ad8fe3a9129e32eb446976">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a328f3f3e78ad8fe3a9129e32eb446976"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:a328f3f3e78ad8fe3a9129e32eb446976"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3de5f5fd6d1d6796dee9938a4ad30faf"><td class="memItemLeft" align="right" valign="top"><a id="a3de5f5fd6d1d6796dee9938a4ad30faf"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source.html#a3de5f5fd6d1d6796dee9938a4ad30faf">setParameters</a> (MatrixComp voltageRef, Real srcFreq=50.0)</td></tr>
 <tr class="memdesc:a3de5f5fd6d1d6796dee9938a4ad30faf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for reference voltage and frequency with a sine wave generator. <br /></td></tr>
@@ -607,39 +609,7 @@ AttributeList::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <p>This model uses modified nodal analysis to represent an ideal voltage source. For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover a new equation ej - ek = V is added to the problem. </p>
 
 <p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___voltage_source_8h_source.html#l00028">28</a> of file <a class="el" href="_e_m_t___ph3___voltage_source_8h_source.html">EMT_Ph3_VoltageSource.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6a8ce4eb250b9b43c319ad3a57f6aa39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a8ce4eb250b9b43c319ad3a57f6aa39">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr EMT::Ph3::VoltageSource::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___voltage_source_8cpp_source.html#l00109">109</a> of file <a class="el" href="_e_m_t___ph3___voltage_source_8cpp_source.html">EMT_Ph3_VoltageSource.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/EMT/<a class="el" href="_e_m_t___ph3___voltage_source_8h_source.html">EMT_Ph3_VoltageSource.h</a></li>
 <li>/__w/dpsim/dpsim/dpsim-models/src/EMT/<a class="el" href="_e_m_t___ph3___voltage_source_8cpp_source.html">EMT_Ph3_VoltageSource.cpp</a></li>
 </ul>

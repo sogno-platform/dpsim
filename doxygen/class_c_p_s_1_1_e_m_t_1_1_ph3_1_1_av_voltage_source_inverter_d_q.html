@@ -105,10 +105,10 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#a0fc28bcdb636f73b696576612e1e21ba">AvVoltageSourceInverterDQ</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, Logger::Level logLevel=Logger::Level::off, Bool withTrafo=false)</td></tr>
 <tr class="memdesc:a0fc28bcdb636f73b696576612e1e21ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines UID, name, logging level and connection trafo existence. <br /></td></tr>
 <tr class="separator:a0fc28bcdb636f73b696576612e1e21ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4a27f244b5917cc4d9157ad6b63dd1c"><td class="memItemLeft" align="right" valign="top"><a id="aa4a27f244b5917cc4d9157ad6b63dd1c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#aa4a27f244b5917cc4d9157ad6b63dd1c">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:aa4a27f244b5917cc4d9157ad6b63dd1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:aa4a27f244b5917cc4d9157ad6b63dd1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c787cdfd0018a377955bc862f7ab370"><td class="memItemLeft" align="right" valign="top"><a id="a5c787cdfd0018a377955bc862f7ab370"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#a5c787cdfd0018a377955bc862f7ab370">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a5c787cdfd0018a377955bc862f7ab370"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:a5c787cdfd0018a377955bc862f7ab370"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a3e214da67b7c95299863f4f965eae1"><td class="memItemLeft" align="right" valign="top"><a id="a8a3e214da67b7c95299863f4f965eae1"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#a8a3e214da67b7c95299863f4f965eae1">setParameters</a> (Real sysOmega, Real sysVoltNom, Real Pref, Real Qref)</td></tr>
 <tr class="memdesc:a8a3e214da67b7c95299863f4f965eae1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for gengit eral parameters of inverter. <br /></td></tr>
@@ -342,7 +342,9 @@ const Task::List &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mna
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#ad97a21c4d5a81ee87bbe4ac3c3667dc0">~SimPowerComp</a> ()</td></tr>
 <tr class="memdesc:ad97a21c4d5a81ee87bbe4ac3c3667dc0 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does not do anything. <br /></td></tr>
 <tr class="separator:ad97a21c4d5a81ee87bbe4ac3c3667dc0 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top">virtual Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">clone</a> (String name)</td></tr>
+<tr class="memitem:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="aece14c8b452b060e0c959432d2e11cb9"></a>
+virtual <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">clone</a> (String name)</td></tr>
+<tr class="memdesc:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
 <tr class="separator:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a286f0e8f00f8328a87d37e2c67b16f5b inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="a286f0e8f00f8328a87d37e2c67b16f5b"></a>
 UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a286f0e8f00f8328a87d37e2c67b16f5b">terminalNumber</a> ()</td></tr>

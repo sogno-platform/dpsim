@@ -100,33 +100,33 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#af037136a1f3308e3c519d5f467e84e10">SeriesSwitch</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:af037136a1f3308e3c519d5f467e84e10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name and logging level. <br /></td></tr>
 <tr class="separator:af037136a1f3308e3c519d5f467e84e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7a2d2f2c125f539709326c807564c2e"><td class="memItemLeft" align="right" valign="top"><a id="ad7a2d2f2c125f539709326c807564c2e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#ad7a2d2f2c125f539709326c807564c2e">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:ad7a2d2f2c125f539709326c807564c2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:ad7a2d2f2c125f539709326c807564c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f7f3e1e3d5030cc17dc823416962eff"><td class="memItemLeft" align="right" valign="top"><a id="a3f7f3e1e3d5030cc17dc823416962eff"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompInitialize</b> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector)</td></tr>
-<tr class="separator:a3f7f3e1e3d5030cc17dc823416962eff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace16c4397aa98d42f7182c9885682d32"><td class="memItemLeft" align="right" valign="top"><a id="ace16c4397aa98d42f7182c9885682d32"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#ace16c4397aa98d42f7182c9885682d32">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)</td></tr>
-<tr class="memdesc:ace16c4397aa98d42f7182c9885682d32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
-<tr class="separator:ace16c4397aa98d42f7182c9885682d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a603326d6def575aff5b2d4e86a9e5b84"><td class="memItemLeft" align="right" valign="top"><a id="a603326d6def575aff5b2d4e86a9e5b84"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#a603326d6def575aff5b2d4e86a9e5b84">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:a603326d6def575aff5b2d4e86a9e5b84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system result. <br /></td></tr>
-<tr class="separator:a603326d6def575aff5b2d4e86a9e5b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8325be29ba807d96236a5e3c98074b5d"><td class="memItemLeft" align="right" valign="top"><a id="a8325be29ba807d96236a5e3c98074b5d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#a8325be29ba807d96236a5e3c98074b5d">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:a8325be29ba807d96236a5e3c98074b5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface current from MNA system result. <br /></td></tr>
-<tr class="separator:a8325be29ba807d96236a5e3c98074b5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e35c111dce1823693f497b711e98db6"><td class="memItemLeft" align="right" valign="top"><a id="a9e35c111dce1823693f497b711e98db6"></a>
-Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#a9e35c111dce1823693f497b711e98db6">mnaIsClosed</a> ()</td></tr>
-<tr class="memdesc:a9e35c111dce1823693f497b711e98db6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if switch is closed. <br /></td></tr>
-<tr class="separator:a9e35c111dce1823693f497b711e98db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd8a6521b90531977719b2a813ed7162"><td class="memItemLeft" align="right" valign="top"><a id="abd8a6521b90531977719b2a813ed7162"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#abd8a6521b90531977719b2a813ed7162">mnaCompApplySwitchSystemMatrixStamp</a> (Bool closed, SparseMatrixRow &amp;systemMatrix, Int freqIdx)</td></tr>
-<tr class="memdesc:abd8a6521b90531977719b2a813ed7162"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix considering the defined switch position. <br /></td></tr>
-<tr class="separator:abd8a6521b90531977719b2a813ed7162"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5261fa547c82352e1f9aed283da8665b"><td class="memItemLeft" align="right" valign="top"><a id="a5261fa547c82352e1f9aed283da8665b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#a5261fa547c82352e1f9aed283da8665b">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a5261fa547c82352e1f9aed283da8665b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:a5261fa547c82352e1f9aed283da8665b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a592e6933161d8c27d18416cbcdd9bbc5"><td class="memItemLeft" align="right" valign="top"><a id="a592e6933161d8c27d18416cbcdd9bbc5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompInitialize</b> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
+<tr class="separator:a592e6933161d8c27d18416cbcdd9bbc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59911d23e23f34042377c7c79d2b02fa"><td class="memItemLeft" align="right" valign="top"><a id="a59911d23e23f34042377c7c79d2b02fa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#a59911d23e23f34042377c7c79d2b02fa">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix) override</td></tr>
+<tr class="memdesc:a59911d23e23f34042377c7c79d2b02fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
+<tr class="separator:a59911d23e23f34042377c7c79d2b02fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9252d348d4f34de99e74a61713db3b7e"><td class="memItemLeft" align="right" valign="top"><a id="a9252d348d4f34de99e74a61713db3b7e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#a9252d348d4f34de99e74a61713db3b7e">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:a9252d348d4f34de99e74a61713db3b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system result. <br /></td></tr>
+<tr class="separator:a9252d348d4f34de99e74a61713db3b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e11c0fca32c2de68c37e035629f862e"><td class="memItemLeft" align="right" valign="top"><a id="a9e11c0fca32c2de68c37e035629f862e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#a9e11c0fca32c2de68c37e035629f862e">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:a9e11c0fca32c2de68c37e035629f862e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface current from MNA system result. <br /></td></tr>
+<tr class="separator:a9e11c0fca32c2de68c37e035629f862e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f1a0d9e4840371ce20afb5127e9f0a6"><td class="memItemLeft" align="right" valign="top"><a id="a6f1a0d9e4840371ce20afb5127e9f0a6"></a>
+Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#a6f1a0d9e4840371ce20afb5127e9f0a6">mnaIsClosed</a> () override</td></tr>
+<tr class="memdesc:a6f1a0d9e4840371ce20afb5127e9f0a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if switch is closed. <br /></td></tr>
+<tr class="separator:a6f1a0d9e4840371ce20afb5127e9f0a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8d10cb9e50516a393498969c4dce347"><td class="memItemLeft" align="right" valign="top"><a id="ab8d10cb9e50516a393498969c4dce347"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#ab8d10cb9e50516a393498969c4dce347">mnaCompApplySwitchSystemMatrixStamp</a> (Bool closed, SparseMatrixRow &amp;systemMatrix, Int freqIdx) override</td></tr>
+<tr class="memdesc:ab8d10cb9e50516a393498969c4dce347"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix considering the defined switch position. <br /></td></tr>
+<tr class="separator:ab8d10cb9e50516a393498969c4dce347"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1b8904e0337dec79a851b3aef7274ef"><td class="memItemLeft" align="right" valign="top"><a id="ac1b8904e0337dec79a851b3aef7274ef"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html#ac1b8904e0337dec79a851b3aef7274ef">mnaCompAddPostStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector) override</td></tr>
 <tr class="memdesc:ac1b8904e0337dec79a851b3aef7274ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA post step dependencies. <br /></td></tr>
@@ -248,7 +248,9 @@ const Task::List &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mna
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#ad97a21c4d5a81ee87bbe4ac3c3667dc0">~SimPowerComp</a> ()</td></tr>
 <tr class="memdesc:ad97a21c4d5a81ee87bbe4ac3c3667dc0 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does not do anything. <br /></td></tr>
 <tr class="separator:ad97a21c4d5a81ee87bbe4ac3c3667dc0 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top">virtual Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">clone</a> (String name)</td></tr>
+<tr class="memitem:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="aece14c8b452b060e0c959432d2e11cb9"></a>
+virtual <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">clone</a> (String name)</td></tr>
+<tr class="memdesc:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
 <tr class="separator:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a286f0e8f00f8328a87d37e2c67b16f5b inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="a286f0e8f00f8328a87d37e2c67b16f5b"></a>
 UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a286f0e8f00f8328a87d37e2c67b16f5b">terminalNumber</a> ()</td></tr>

@@ -105,11 +105,13 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#adc6e4efb6a16b35f95125ce81987b791">VoltageSource</a> (String name, Complex voltage, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:adc6e4efb6a16b35f95125ce81987b791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name, component parameters and logging level. <br /></td></tr>
 <tr class="separator:adc6e4efb6a16b35f95125ce81987b791"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27a445017c6b58c34aa16f16ed6c2be7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a27a445017c6b58c34aa16f16ed6c2be7">clone</a> (String name)</td></tr>
-<tr class="separator:a27a445017c6b58c34aa16f16ed6c2be7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a585c16acb40919857e95ccb90b8b9fd3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a585c16acb40919857e95ccb90b8b9fd3">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:a585c16acb40919857e95ccb90b8b9fd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data.  <a href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a585c16acb40919857e95ccb90b8b9fd3">More...</a><br /></td></tr>
-<tr class="separator:a585c16acb40919857e95ccb90b8b9fd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba0286d5a51765d59ae36c153ea0baaf"><td class="memItemLeft" align="right" valign="top"><a id="aba0286d5a51765d59ae36c153ea0baaf"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#aba0286d5a51765d59ae36c153ea0baaf">clone</a> (String name) override</td></tr>
+<tr class="memdesc:aba0286d5a51765d59ae36c153ea0baaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:aba0286d5a51765d59ae36c153ea0baaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9567c8528f5c0530a827ee550c13cdc6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a9567c8528f5c0530a827ee550c13cdc6">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a9567c8528f5c0530a827ee550c13cdc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data.  <a href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a9567c8528f5c0530a827ee550c13cdc6">More...</a><br /></td></tr>
+<tr class="separator:a9567c8528f5c0530a827ee550c13cdc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae014b9279cb72ad475421d46a5bf57b7"><td class="memItemLeft" align="right" valign="top"><a id="ae014b9279cb72ad475421d46a5bf57b7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setSourceValue</b> (Complex voltage)</td></tr>
 <tr class="separator:ae014b9279cb72ad475421d46a5bf57b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,14 +153,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a66e7a8dd652b1467bf29c7e5619e66d7">mnaCompAddPostStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector) override</td></tr>
 <tr class="memdesc:a66e7a8dd652b1467bf29c7e5619e66d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA post step dependencies. <br /></td></tr>
 <tr class="separator:a66e7a8dd652b1467bf29c7e5619e66d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8b1342c38e64f21d96e7aa958c5760d"><td class="memItemLeft" align="right" valign="top"><a id="ae8b1342c38e64f21d96e7aa958c5760d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#ae8b1342c38e64f21d96e7aa958c5760d">daeResidual</a> (double ttime, const double state[], const double dstate_dt[], double resid[], std::vector&lt; int &gt; &amp;off)</td></tr>
-<tr class="memdesc:ae8b1342c38e64f21d96e7aa958c5760d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Residual function for DAE Solver. <br /></td></tr>
-<tr class="separator:ae8b1342c38e64f21d96e7aa958c5760d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9047e75b5f540856d2b064291d289109"><td class="memItemLeft" align="right" valign="top"><a id="a9047e75b5f540856d2b064291d289109"></a>
-Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a9047e75b5f540856d2b064291d289109">daeInitialize</a> ()</td></tr>
-<tr class="memdesc:a9047e75b5f540856d2b064291d289109"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage Getter. <br /></td></tr>
-<tr class="separator:a9047e75b5f540856d2b064291d289109"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec11443067236e1867094a82e8d42582"><td class="memItemLeft" align="right" valign="top"><a id="aec11443067236e1867094a82e8d42582"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#aec11443067236e1867094a82e8d42582">daeResidual</a> (double ttime, const double state[], const double dstate_dt[], double resid[], std::vector&lt; int &gt; &amp;off) override</td></tr>
+<tr class="memdesc:aec11443067236e1867094a82e8d42582"><td class="mdescLeft">&#160;</td><td class="mdescRight">Residual function for DAE Solver. <br /></td></tr>
+<tr class="separator:aec11443067236e1867094a82e8d42582"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33558ef202461de25bafc8476d4c1552"><td class="memItemLeft" align="right" valign="top"><a id="a33558ef202461de25bafc8476d4c1552"></a>
+Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a33558ef202461de25bafc8476d4c1552">daeInitialize</a> () override</td></tr>
+<tr class="memdesc:a33558ef202461de25bafc8476d4c1552"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage Getter. <br /></td></tr>
+<tr class="separator:a33558ef202461de25bafc8476d4c1552"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a></td></tr>
 <tr class="memitem:ab9f66bb4639c7d0d73b47cef6be789c5 inherit pub_methods_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="ab9f66bb4639c7d0d73b47cef6be789c5"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ab9f66bb4639c7d0d73b47cef6be789c5">MNASimPowerComp</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, Bool hasPreStep, Bool hasPostStep, Logger::Level logLevel)</td></tr>
@@ -621,39 +623,8 @@ AttributeList::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="
 
 <p class="definition">Definition at line <a class="el" href="_s_p___ph1___voltage_source_8h_source.html#l00039">39</a> of file <a class="el" href="_s_p___ph1___voltage_source_8h_source.html">SP_Ph1_VoltageSource.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a27a445017c6b58c34aa16f16ed6c2be7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27a445017c6b58c34aa16f16ed6c2be7">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr SP::Ph1::VoltageSource::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___voltage_source_8cpp_source.html#l00024">24</a> of file <a class="el" href="_s_p___ph1___voltage_source_8cpp_source.html">SP_Ph1_VoltageSource.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a585c16acb40919857e95ccb90b8b9fd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a585c16acb40919857e95ccb90b8b9fd3">&#9670;&nbsp;</a></span>initializeFromNodesAndTerminals()</h2>
+<a id="a9567c8528f5c0530a827ee550c13cdc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9567c8528f5c0530a827ee550c13cdc6">&#9670;&nbsp;</a></span>initializeFromNodesAndTerminals()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -671,7 +642,7 @@ AttributeList::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

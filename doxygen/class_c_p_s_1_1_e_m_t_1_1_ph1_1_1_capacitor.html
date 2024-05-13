@@ -101,32 +101,34 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#a2654a80470bc94b60fbf1d9a95c01eaf">Capacitor</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a2654a80470bc94b60fbf1d9a95c01eaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name and logging level. <br /></td></tr>
 <tr class="separator:a2654a80470bc94b60fbf1d9a95c01eaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa518df3f46234f14f920aaf73c55892f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#aa518df3f46234f14f920aaf73c55892f">clone</a> (String name)</td></tr>
-<tr class="separator:aa518df3f46234f14f920aaf73c55892f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66a62d1815f5033b0c6f33a917d93e0f"><td class="memItemLeft" align="right" valign="top"><a id="a66a62d1815f5033b0c6f33a917d93e0f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#a66a62d1815f5033b0c6f33a917d93e0f">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:a66a62d1815f5033b0c6f33a917d93e0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
-<tr class="separator:a66a62d1815f5033b0c6f33a917d93e0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2f283e50954d6731bade4811856408d"><td class="memItemLeft" align="right" valign="top"><a id="ac2f283e50954d6731bade4811856408d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#ac2f283e50954d6731bade4811856408d">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector)</td></tr>
-<tr class="memdesc:ac2f283e50954d6731bade4811856408d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component. <br /></td></tr>
-<tr class="separator:ac2f283e50954d6731bade4811856408d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa87c8b4f15a74f1c81c7967730460149"><td class="memItemLeft" align="right" valign="top"><a id="aa87c8b4f15a74f1c81c7967730460149"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#aa87c8b4f15a74f1c81c7967730460149">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)</td></tr>
-<tr class="memdesc:aa87c8b4f15a74f1c81c7967730460149"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
-<tr class="separator:aa87c8b4f15a74f1c81c7967730460149"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07a24ea33b35cc06ee4e3d1f69eea373"><td class="memItemLeft" align="right" valign="top"><a id="a07a24ea33b35cc06ee4e3d1f69eea373"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#a07a24ea33b35cc06ee4e3d1f69eea373">mnaCompApplyRightSideVectorStamp</a> (Matrix &amp;rightVector)</td></tr>
-<tr class="memdesc:a07a24ea33b35cc06ee4e3d1f69eea373"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector. <br /></td></tr>
-<tr class="separator:a07a24ea33b35cc06ee4e3d1f69eea373"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f9437dd6dcd96612a2c47ced96f4c87"><td class="memItemLeft" align="right" valign="top"><a id="a4f9437dd6dcd96612a2c47ced96f4c87"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#a4f9437dd6dcd96612a2c47ced96f4c87">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:a4f9437dd6dcd96612a2c47ced96f4c87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system result. <br /></td></tr>
-<tr class="separator:a4f9437dd6dcd96612a2c47ced96f4c87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4e63a263ed0495e57f904dbd57d6a41"><td class="memItemLeft" align="right" valign="top"><a id="ad4e63a263ed0495e57f904dbd57d6a41"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#ad4e63a263ed0495e57f904dbd57d6a41">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:ad4e63a263ed0495e57f904dbd57d6a41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface current from MNA system result. <br /></td></tr>
-<tr class="separator:ad4e63a263ed0495e57f904dbd57d6a41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ef1dd99272af7be2db2d20c8953e466"><td class="memItemLeft" align="right" valign="top"><a id="a4ef1dd99272af7be2db2d20c8953e466"></a>
+<a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#a4ef1dd99272af7be2db2d20c8953e466">clone</a> (String name) override</td></tr>
+<tr class="memdesc:a4ef1dd99272af7be2db2d20c8953e466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
+<tr class="separator:a4ef1dd99272af7be2db2d20c8953e466"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a53da3c07de58b6abf118609757479a"><td class="memItemLeft" align="right" valign="top"><a id="a0a53da3c07de58b6abf118609757479a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#a0a53da3c07de58b6abf118609757479a">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a0a53da3c07de58b6abf118609757479a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
+<tr class="separator:a0a53da3c07de58b6abf118609757479a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa811b8c3be2eb1b9d38c66bbe09a2a47"><td class="memItemLeft" align="right" valign="top"><a id="aa811b8c3be2eb1b9d38c66bbe09a2a47"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#aa811b8c3be2eb1b9d38c66bbe09a2a47">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
+<tr class="memdesc:aa811b8c3be2eb1b9d38c66bbe09a2a47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component. <br /></td></tr>
+<tr class="separator:aa811b8c3be2eb1b9d38c66bbe09a2a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeae890260aeae26faf4e72a06587e15d"><td class="memItemLeft" align="right" valign="top"><a id="aeae890260aeae26faf4e72a06587e15d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#aeae890260aeae26faf4e72a06587e15d">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix) override</td></tr>
+<tr class="memdesc:aeae890260aeae26faf4e72a06587e15d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix. <br /></td></tr>
+<tr class="separator:aeae890260aeae26faf4e72a06587e15d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6aca4939466a53417d2cf6147fc94679"><td class="memItemLeft" align="right" valign="top"><a id="a6aca4939466a53417d2cf6147fc94679"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#a6aca4939466a53417d2cf6147fc94679">mnaCompApplyRightSideVectorStamp</a> (Matrix &amp;rightVector) override</td></tr>
+<tr class="memdesc:a6aca4939466a53417d2cf6147fc94679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector. <br /></td></tr>
+<tr class="separator:a6aca4939466a53417d2cf6147fc94679"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9844ee8bc63fb00b1de8d4458cf5be83"><td class="memItemLeft" align="right" valign="top"><a id="a9844ee8bc63fb00b1de8d4458cf5be83"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#a9844ee8bc63fb00b1de8d4458cf5be83">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:a9844ee8bc63fb00b1de8d4458cf5be83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system result. <br /></td></tr>
+<tr class="separator:a9844ee8bc63fb00b1de8d4458cf5be83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a714168fe013325193806425b71db15f7"><td class="memItemLeft" align="right" valign="top"><a id="a714168fe013325193806425b71db15f7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#a714168fe013325193806425b71db15f7">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:a714168fe013325193806425b71db15f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface current from MNA system result. <br /></td></tr>
+<tr class="separator:a714168fe013325193806425b71db15f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9859a0124f5260404c6f4ad2cde8b6f"><td class="memItemLeft" align="right" valign="top"><a id="aa9859a0124f5260404c6f4ad2cde8b6f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompPreStep</b> (Real time, Int timeStepCount) override</td></tr>
 <tr class="separator:aa9859a0124f5260404c6f4ad2cde8b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -603,39 +605,7 @@ const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt;
 <p>The capacitor is represented by a DC equivalent circuit which corresponds to one iteration of the trapezoidal integration method. The equivalent DC circuit is a resistance in paralel with a current source. The resistance is constant for a defined time step and system frequency and the current source changes for each iteration. </p>
 
 <p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___capacitor_8h_source.html#l00025">25</a> of file <a class="el" href="_e_m_t___ph1___capacitor_8h_source.html">EMT_Ph1_Capacitor.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa518df3f46234f14f920aaf73c55892f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa518df3f46234f14f920aaf73c55892f">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr EMT::Ph1::Capacitor::clone </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns a modified copy of the component with the given suffix added to the name and without connected nodes / terminals DEPRECATED: This method should be removed </p>
-
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___capacitor_8cpp_source.html#l00022">22</a> of file <a class="el" href="_e_m_t___ph1___capacitor_8cpp_source.html">EMT_Ph1_Capacitor.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/EMT/<a class="el" href="_e_m_t___ph1___capacitor_8h_source.html">EMT_Ph1_Capacitor.h</a></li>
 <li>/__w/dpsim/dpsim/dpsim-models/src/EMT/<a class="el" href="_e_m_t___ph1___capacitor_8cpp_source.html">EMT_Ph1_Capacitor.cpp</a></li>
 </ul>

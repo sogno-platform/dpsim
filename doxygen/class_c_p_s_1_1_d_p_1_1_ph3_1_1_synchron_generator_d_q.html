@@ -98,10 +98,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af8f52d42f9c9264654c5750b6b573b5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37ccc73351116685189cc870e0f98605"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a37ccc73351116685189cc870e0f98605">initialize</a> (Real omega, Real timeStep)</td></tr>
 <tr class="separator:a37ccc73351116685189cc870e0f98605"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34f88a5a3b1e28a384af613daeb0100c"><td class="memItemLeft" align="right" valign="top"><a id="a34f88a5a3b1e28a384af613daeb0100c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a34f88a5a3b1e28a384af613daeb0100c">initialize</a> (Matrix frequencies)</td></tr>
-<tr class="memdesc:a34f88a5a3b1e28a384af613daeb0100c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize components with correct network frequencies. <br /></td></tr>
-<tr class="separator:a34f88a5a3b1e28a384af613daeb0100c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8279ef096d42865565fa62f57ea023d"><td class="memItemLeft" align="right" valign="top"><a id="ac8279ef096d42865565fa62f57ea023d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#ac8279ef096d42865565fa62f57ea023d">initialize</a> (Matrix frequencies) override</td></tr>
+<tr class="memdesc:ac8279ef096d42865565fa62f57ea023d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize components with correct network frequencies. <br /></td></tr>
+<tr class="separator:ac8279ef096d42865565fa62f57ea023d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cac8ddc0bdc1e6ddcb1a5e717a27f2a"><td class="memItemLeft" align="right" valign="top"><a id="a7cac8ddc0bdc1e6ddcb1a5e717a27f2a"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>electricalTorque</b> () const</td></tr>
 <tr class="separator:a7cac8ddc0bdc1e6ddcb1a5e717a27f2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,22 +115,22 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>rotorPosition</b> () 
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a10ed96b82e7b2ce57a9fb501609e38b1">step</a> (MatrixComp &amp;voltage, Real time)</td></tr>
 <tr class="memdesc:a10ed96b82e7b2ce57a9fb501609e38b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates flux and current from the voltage vector. <br /></td></tr>
 <tr class="separator:a10ed96b82e7b2ce57a9fb501609e38b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a732728809653bc480139022b6998d0b0"><td class="memItemLeft" align="right" valign="top"><a id="a732728809653bc480139022b6998d0b0"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a732728809653bc480139022b6998d0b0">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr)=0</td></tr>
-<tr class="memdesc:a732728809653bc480139022b6998d0b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of component. <br /></td></tr>
-<tr class="separator:a732728809653bc480139022b6998d0b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9be0e849c1ba4c51b89c418accf2e814"><td class="memItemLeft" align="right" valign="top"><a id="a9be0e849c1ba4c51b89c418accf2e814"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a9be0e849c1ba4c51b89c418accf2e814">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr) override=0</td></tr>
+<tr class="memdesc:a9be0e849c1ba4c51b89c418accf2e814"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of component. <br /></td></tr>
+<tr class="separator:a9be0e849c1ba4c51b89c418accf2e814"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac482b0303dfe9d94f2cd9c7128f13fb1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#ac482b0303dfe9d94f2cd9c7128f13fb1">mnaStep</a> (Matrix &amp;systemMatrix, Matrix &amp;rightVector, Matrix &amp;leftVector, Real time)</td></tr>
 <tr class="separator:ac482b0303dfe9d94f2cd9c7128f13fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a931b3cc8be900eeb6387f07ad69ba5bb"><td class="memItemLeft" align="right" valign="top"><a id="a931b3cc8be900eeb6387f07ad69ba5bb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompApplyRightSideVectorStamp</b> (Matrix &amp;rightVector)</td></tr>
-<tr class="separator:a931b3cc8be900eeb6387f07ad69ba5bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bc02904b4e56e066286d340ac742649"><td class="memItemLeft" align="right" valign="top"><a id="a5bc02904b4e56e066286d340ac742649"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompApplySystemMatrixStamp</b> (SparseMatrixRow &amp;systemMatrix)</td></tr>
-<tr class="separator:a5bc02904b4e56e066286d340ac742649"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9c56bb3ad20d2ac4a5ea4cd2f008f55"><td class="memItemLeft" align="right" valign="top"><a id="ae9c56bb3ad20d2ac4a5ea4cd2f008f55"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#ae9c56bb3ad20d2ac4a5ea4cd2f008f55">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:ae9c56bb3ad20d2ac4a5ea4cd2f008f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves calculated voltage from simulation for next step. <br /></td></tr>
-<tr class="separator:ae9c56bb3ad20d2ac4a5ea4cd2f008f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad063aed9e8967547eea687835fbc9fef"><td class="memItemLeft" align="right" valign="top"><a id="ad063aed9e8967547eea687835fbc9fef"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompApplyRightSideVectorStamp</b> (Matrix &amp;rightVector) override</td></tr>
+<tr class="separator:ad063aed9e8967547eea687835fbc9fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44887b4da756d4c23a5b39b2b08744e7"><td class="memItemLeft" align="right" valign="top"><a id="a44887b4da756d4c23a5b39b2b08744e7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaCompApplySystemMatrixStamp</b> (SparseMatrixRow &amp;systemMatrix) override</td></tr>
+<tr class="separator:a44887b4da756d4c23a5b39b2b08744e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8261256d8c28c6b0e1a72b9ae68ee4be"><td class="memItemLeft" align="right" valign="top"><a id="a8261256d8c28c6b0e1a72b9ae68ee4be"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a8261256d8c28c6b0e1a72b9ae68ee4be">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:a8261256d8c28c6b0e1a72b9ae68ee4be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves calculated voltage from simulation for next step. <br /></td></tr>
+<tr class="separator:a8261256d8c28c6b0e1a72b9ae68ee4be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a979468e6807fa35d06f0cff8d7af12cb"><td class="memItemLeft" align="right" valign="top"><a id="a979468e6807fa35d06f0cff8d7af12cb"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a979468e6807fa35d06f0cff8d7af12cb">mnaCompAddPostStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector) override</td></tr>
 <tr class="memdesc:a979468e6807fa35d06f0cff8d7af12cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA post step dependencies. <br /></td></tr>
@@ -252,7 +252,9 @@ const Task::List &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mna
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#ad97a21c4d5a81ee87bbe4ac3c3667dc0">~SimPowerComp</a> ()</td></tr>
 <tr class="memdesc:ad97a21c4d5a81ee87bbe4ac3c3667dc0 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does not do anything. <br /></td></tr>
 <tr class="separator:ad97a21c4d5a81ee87bbe4ac3c3667dc0 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top">virtual Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">clone</a> (String name)</td></tr>
+<tr class="memitem:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="aece14c8b452b060e0c959432d2e11cb9"></a>
+virtual <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">clone</a> (String name)</td></tr>
+<tr class="memdesc:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without. <br /></td></tr>
 <tr class="separator:aece14c8b452b060e0c959432d2e11cb9 inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a286f0e8f00f8328a87d37e2c67b16f5b inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memItemLeft" align="right" valign="top"><a id="a286f0e8f00f8328a87d37e2c67b16f5b"></a>
 UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a286f0e8f00f8328a87d37e2c67b16f5b">terminalNumber</a> ()</td></tr>
