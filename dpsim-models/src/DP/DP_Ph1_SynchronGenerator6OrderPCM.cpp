@@ -33,7 +33,7 @@ DP::Ph1::SynchronGenerator6OrderPCM::SynchronGenerator6OrderPCM(
     : SynchronGenerator6OrderPCM(name, name, logLevel) {}
 
 SimPowerComp<Complex>::Ptr
-DP::Ph1::SynchronGenerator6OrderPCM::clone(const String &name) {
+DP::Ph1::SynchronGenerator6OrderPCM::clone(String name) {
   auto copy = SynchronGenerator6OrderPCM::make(name, mLogLevel);
 
   return copy;

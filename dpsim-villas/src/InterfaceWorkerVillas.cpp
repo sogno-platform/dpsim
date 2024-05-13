@@ -323,7 +323,7 @@ void InterfaceWorkerVillas::writeValuesToEnv(
     //Check if the remaining packets form a complete set
     if (((long)updatedAttrs.size()) ==
         std::count_if(mExports.cbegin(), mExports.cend(),
-                      [this](auto x) { return std::get<2>(x); })) {
+                      [](auto x) { return std::get<2>(x); })) {
       for (const auto &packet : updatedAttrs) {
         std::get<0>(mExports[packet.attributeId])(packet.value, sample);
       }

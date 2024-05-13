@@ -258,7 +258,7 @@ Graph::Graph Simulation::dependencyGraph() {
 
   auto getColor = [](Task::Ptr task) -> String {
     static std::map<std::type_index, String> colorMap;
-    auto tid = std::type_index(typeid(*task.get()));
+    auto tid = std::type_index(typeid(task.get()));
 
     if (colorMap.find(tid) != colorMap.end()) {
       colorMap[tid] =

@@ -68,7 +68,7 @@ public:
                           Logger::Level logLevel = Logger::Level::off)
       : SynchronGeneratorTrStab(name, name, logLevel) {}
 
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General Functions ####
   /// Flags to modify model behavior
@@ -89,7 +89,7 @@ public:
   ///
   void step(Real time);
   ///
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA Functions ####
   /// Initializes variables of component

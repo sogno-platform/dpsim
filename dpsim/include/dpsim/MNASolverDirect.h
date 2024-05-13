@@ -169,7 +169,7 @@ public:
 
   /// Sets the linear solver configuration
   void setDirectLinearSolverConfiguration(
-      DirectLinearSolverConfiguration &configuration);
+      DirectLinearSolverConfiguration &configuration) override;
 
   /// log LU decomposition times
   void logLUTimes() override;

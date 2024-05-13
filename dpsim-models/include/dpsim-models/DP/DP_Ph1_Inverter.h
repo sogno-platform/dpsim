@@ -95,9 +95,9 @@ public:
 
   // #### General ####
   ///
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
   ///
-  void initialize(Matrix frequencies);
+  void initialize(Matrix frequencies) override;
   ///
   void setParameters(const std::vector<Int> &carrierHarms,
                      const std::vector<Int> &modulHarms, Real inputVoltage,
@@ -108,17 +108,19 @@ public:
   // #### MNA Functions ####
   /// Initializes internal variables of the component
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector);
-  void mnaCompInitializeHarm(Real omega, Real timeStep,
-                             std::vector<Attribute<Matrix>::Ptr> leftVectors);
+                         Attribute<Matrix>::Ptr leftVector) override;
+  void mnaCompInitializeHarm(
+      Real omega, Real timeStep,
+      std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
-                                         Int freqIdx);
+                                         Int freqIdx) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
-  void mnaCompApplyRightSideVectorStampHarm(Matrix &rightVector);
-  void mnaCompApplyRightSideVectorStampHarm(Matrix &sourceVector, Int freqIdx);
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStampHarm(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStampHarm(Matrix &sourceVector,
+                                            Int freqIdx) override;
   /// Add MNA pre step dependencies
   void mnaCompAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,

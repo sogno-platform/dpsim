@@ -459,19 +459,19 @@ void DiakopticsSolver<VarType>::PostSolveTask::execute(Real time,
   }
 }
 
-template <> void DiakopticsSolver<Real>::log(Real time) {
+template <> void DiakopticsSolver<Real>::log(Real time, Int timeStepCount) {
   mLeftVectorLog->logEMTNodeValues(time, mLeftSideVector);
   mRightVectorLog->logEMTNodeValues(time, mRightSideVector);
 }
 
-template <> void DiakopticsSolver<Complex>::log(Real time) {
+template <> void DiakopticsSolver<Complex>::log(Real time, Int timeStepCount) {
   mLeftVectorLog->logPhasorNodeValues(time, mLeftSideVector);
   mRightVectorLog->logPhasorNodeValues(time, mRightSideVector);
 }
 
 template <typename VarType>
 void DiakopticsSolver<VarType>::LogTask::execute(Real time, Int timeStepCount) {
-  mSolver.log(time);
+  mSolver.log(time, timeStepCount);
 }
 
 template class DiakopticsSolver<Real>;

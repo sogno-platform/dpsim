@@ -41,16 +41,16 @@ public:
   VoltageSourceRamp(String name, Logger::Level logLevel = Logger::Level::off)
       : VoltageSourceRamp(name, name, logLevel) {}
 
-  SimPowerComp<Real>::Ptr clone(String name);
+  SimPowerComp<Real>::Ptr clone(String name) override;
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) {}
+  void initializeFromNodesAndTerminals(Real frequency) override {}
   ///
   void setParameters(Complex voltage, Complex addVoltage, Real srcFreq,
                      Real addSrcFreq, Real switchTime, Real rampTime);
   ///
-  void initialize(Matrix frequencies);
+  void initialize(Matrix frequencies) override;
 
   // #### MNA section ####
   void mnaParentPreStep(Real time, Int timeStepCount) override;

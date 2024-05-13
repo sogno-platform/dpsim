@@ -66,7 +66,7 @@ public:
                           Logger::Level logLevel = Logger::Level::off)
       : SynchronGeneratorTrStab(name, name, logLevel) {}
 
-  SimPowerComp<Real>::Ptr clone(String name);
+  SimPowerComp<Real>::Ptr clone(String name) override;
 
   ///
   Matrix parkTransformPowerInvariant(Real theta, const Matrix &fabc);
@@ -90,7 +90,7 @@ public:
   ///
   void step(Real time);
   ///
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA Functions ####
   /// Initializes variables of component

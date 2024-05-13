@@ -27,6 +27,8 @@ public:
   typedef std::shared_ptr<MNASyncGenInterface> Ptr;
   typedef std::vector<Ptr> List;
 
+  virtual ~MNASyncGenInterface(){};
+
   // Solver functions
   ///
   virtual void correctorStep() = 0;

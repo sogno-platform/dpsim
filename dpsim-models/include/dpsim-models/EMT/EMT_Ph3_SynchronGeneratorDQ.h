@@ -74,12 +74,12 @@ public:
   void applyParametersOperationalPerUnit();
 
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
   /// Initializes internal states and matrix
   void initializeMatrixAndStates();
 
   ///
-  void initialize(Matrix frequencies);
+  void initialize(Matrix frequencies) override;
   ///
   Real electricalTorque() const;
   ///
@@ -93,14 +93,14 @@ public:
   // #### MNA Functions ####
   /// Initializes variables of component
   virtual void mnaCompInitialize(Real omega, Real timeStep,
-                                 Attribute<Matrix>::Ptr) = 0;
+                                 Attribute<Matrix>::Ptr) override = 0;
   ///
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   ///
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
 
   /// Retrieves calculated voltage from simulation for next step
-  virtual void mnaCompUpdateVoltage(const Matrix &leftVector);
+  virtual void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   void mnaCompPostStep(Real time, Int timeStepCount,
                        Attribute<Matrix>::Ptr &leftVector) override;
 

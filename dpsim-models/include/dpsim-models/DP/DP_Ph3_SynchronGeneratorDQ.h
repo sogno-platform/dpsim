@@ -61,7 +61,7 @@ public:
   /// Function parameters have to be given in Real units.
   void initialize(Real omega, Real timeStep);
   ///
-  void initialize(Matrix frequencies);
+  void initialize(Matrix frequencies) override;
   ///
   Real electricalTorque() const;
   ///
@@ -74,18 +74,18 @@ public:
   // #### MNA Functions ####
   /// Initializes variables of component
   virtual void mnaCompInitialize(Real omega, Real timeStep,
-                                 Attribute<Matrix>::Ptr) = 0;
+                                 Attribute<Matrix>::Ptr) override = 0;
   /// Performs with the model of a synchronous generator
   /// to calculate the flux and current from the voltage vector.
   void mnaStep(Matrix &systemMatrix, Matrix &rightVector, Matrix &leftVector,
                Real time);
   ///
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   ///
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
 
   /// Retrieves calculated voltage from simulation for next step
-  virtual void mnaCompUpdateVoltage(const Matrix &leftVector);
+  virtual void mnaCompUpdateVoltage(const Matrix &leftVector) override;
 
   /// Add MNA post step dependencies
   void

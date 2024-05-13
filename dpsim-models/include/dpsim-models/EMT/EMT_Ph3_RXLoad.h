@@ -60,7 +60,7 @@ public:
   ///
   void setParameters(Matrix activePower, Matrix reactivePower, Real volt);
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;

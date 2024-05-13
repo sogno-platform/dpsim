@@ -43,10 +43,10 @@ public:
   CurrentSource(String name, Logger::Level logLevel = Logger::Level::off)
       : CurrentSource(name, name, logLevel) {}
 
-  SimPowerComp<Real>::Ptr clone(String name);
+  SimPowerComp<Real>::Ptr clone(String name) override;
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
   /// Setter for reference voltage
   void setParameters(MatrixComp voltageRef, Real srcFreq = 50.0);
   /// Setter for reference signal of type frequency ramp

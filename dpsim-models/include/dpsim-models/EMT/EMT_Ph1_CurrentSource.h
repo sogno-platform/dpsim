@@ -32,23 +32,23 @@ public:
   CurrentSource(String name, Logger::Level logLevel = Logger::Level::off)
       : CurrentSource(name, name, logLevel) {}
 
-  SimPowerComp<Real>::Ptr clone(String name);
+  SimPowerComp<Real>::Ptr clone(String name) override;
 
   void setParameters(Complex currentRef, Real srcFreq = -1);
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) {}
+  void initializeFromNodesAndTerminals(Real frequency) override {}
 
   // #### MNA section ####
   /// Initializes internal variables of the component
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector);
+                         Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) {}
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override {}
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   ///
-  void mnaCompUpdateVoltage(const Matrix &leftVector);
+  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
 
   void updateState(Real time);
 
