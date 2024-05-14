@@ -1,11 +1,21 @@
 FROM ubuntu:latest
 
-RUN apt update
-RUN apt install -y git golang curl sudo
-RUN curl -fsSL https://deb.nodesource.com/setup_19.x | sudo -E bash - && \
-    sudo apt-get install -y nodejs
+RUN apt-get --assume-yes update
+RUN apt-get --assume-yes install \
+		git \
+		golang \
+		curl \
+		sudo
+
+RUN curl -fsSL https://deb.nodesource.com/setup_19.x | \
+	sudo -E bash - && \
+	sudo apt-get --assume-yes install \
+		nodejs
+
 RUN go install -tags extended github.com/gohugoio/hugo@latest
+
 RUN cp /root/go/bin/hugo /usr/bin/hugo
+
 EXPOSE 1313/tcp
 
 WORKDIR /dpsim/docs/hugo

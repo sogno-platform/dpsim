@@ -1,4 +1,4 @@
-name: Publish dpsim package to PyPi
+name: Publish DPsim package to Python Package Index (PyPI)
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-publish-sdist:
-    name: Build dpsim sdist and publish to PyPi
+    name: Build DPsim source distribution and publish to PyPi
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
     steps:
@@ -18,7 +18,7 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Build dpsim source dist
+    - name: Build DPsim source distribution
       shell: bash
       run: python3 -m build --sdist --outdir dist/
 
@@ -35,9 +35,8 @@ jobs:
       with:
         password: ${{ secrets.PYPI_API_TOKEN }}
 
-
   build-and-publish-wheels:
-    name: Build dpsim wheels and publish to PyPi
+    name: Build DPsim wheels and publish to PyPI
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout
@@ -45,11 +44,7 @@ jobs:
       with:
         submodules: recursive
 
-    # - name: Build manylinux docker image # Remove this step as soon as the image is published on docker hub
-    #   shell: bash
-    #   run: docker build . --file packaging/Docker/Dockerfile.manylinux -t sogno/dpsim:manylinux
-
-    - name: Build dpsim wheels for all supported python versions
+    - name: Build DPsim wheels for all supported Python versions
       uses: pypa/cibuildwheel@v2.11.2
       with:
         output-dir: dist

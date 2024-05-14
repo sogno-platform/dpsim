@@ -91,7 +91,7 @@ sim.addInterface(intf);
 This method will add two new [Tasks]({{< ref "./Scheduling/index.md" >}}) to the simulation. The interface's `PreStep` task is set to modify all attributes that are imported from the environment and is therefore scheduled to execute before any other simulation tasks that depend on these attributes.
 The interface's `PostStep` task is set to depend on all attributes that are exported to the environment and is therefore scheduled to execute after any other simulation tasks that might modify these attributes. To prevent the scheduler from just dropping the `PostStep` task since it does not modify any attributes and is therefore not seen as relevant to the simulation, the task is set to modify the `Scheduler::external` attribute.
 Note that the execution of these tasks might not necessarily coincide with the point in time at which the values are actually written out to or read from the environment.
-This is because the interface internally spawns two new threads for exchanging data with the environment and then uses a **lock-free queue** for communication between these reader and writer threads, and the simulation. Because of this, time-intensive import or export operations will not block 
+This is because the interface internally spawns two new threads for exchanging data with the environment and then uses a **lock-free queue** for communication between these reader and writer threads, and the simulation. Because of this, time-intensive import or export operations will not block
 the main simulation thread unless this is explicitly configured in the interface's `importAttribute` and `exportAttribute` methods.
 
 ## Synchronizing the Simulation with the Environment

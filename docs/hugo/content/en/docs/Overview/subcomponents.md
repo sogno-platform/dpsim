@@ -22,7 +22,7 @@ should be stamped into the system `rightVector`:
 DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	: Base::Ph1::PiLine(mAttributes),
     // Call the constructor of CompositePowerComp and enable automatic pre- and post-step creation
-    CompositePowerComp<Complex>(uid, name, true, true, logLevel) 
+    CompositePowerComp<Complex>(uid, name, true, true, logLevel)
 {
 	//...
 }
@@ -31,7 +31,7 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	//...
 	// Create series sub components
 	mSubSeriesResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
-	
+
     // Setup mSubSeriesResistor...
 
     // Register the resistor as a subcomponent. The resistor's pre- and post-step will be called before the pre- and post-step of the parent,
@@ -39,7 +39,7 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 	addMNASubComponent(mSubSeriesResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
 	mSubSeriesInductor = std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
-	
+
     // Setup mSubSeriesInductor...
 
     // Register the inductor as a subcomponent. The inductor's pre- and post-step will be called before the pre- and post-step of the parent,

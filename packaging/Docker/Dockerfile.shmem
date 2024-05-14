@@ -23,6 +23,7 @@ EXPOSE 1883
 
 WORKDIR /
 RUN chmod +x /dpsim/configs/shmem_CIGRE_MV_PF/start_Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.sh
-RUN dnf install procps -y
+RUN dnf --assumeyes install \
+	procps
 
 CMD ["sh", "-c", "sleep 5 && cd /dpsim && ./configs/shmem_CIGRE_MV_PF/start_Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.sh"]
