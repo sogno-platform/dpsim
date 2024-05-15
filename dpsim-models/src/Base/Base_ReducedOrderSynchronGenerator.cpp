@@ -364,12 +364,12 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
           "\nPSS can not be used without Exciter! PSS will be ignored!");
       mHasPSS = false;
     } else {
-      mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq0)(0, 0),
-                       (**mVdq0)(1, 0));
+      mPSS->initializeFromPowerFlow(**mOmMech, **mElecTorque, (**mVdq0)(0, 0),
+                                    (**mVdq0)(1, 0));
     }
   }
   if (mHasExciter)
-    mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+    mExciter->initializeFromPowerFlow(Math::abs(mInitVoltage), **mEf);
 
   if (mHasTurbine) {
     if (!mHasGovernor) {
@@ -377,11 +377,11 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
                                        "Governor! Exciter will be ignored!");
       mHasTurbine = false;
     } else {
-      mTurbine->initialize(**mMechTorque);
+      mTurbine->initializeFromPowerFlow(**mMechTorque);
     }
   }
   if (mHasGovernor)
-    mGovernor->initialize(**mMechTorque);
+    mGovernor->initializeFromPowerFlow(**mMechTorque);
 
   // set initial interface current
   (**mIntfCurrent)(0, 0) = (mInitCurrent * mBase_I).real();
@@ -463,23 +463,23 @@ void Base::ReducedOrderSynchronGenerator<
           "\nPSS can not be used without Exciter! PSS will be ignored!");
       mHasPSS = false;
     } else {
-      mPSS->initialize(**mOmMech, **mElecTorque, (**mVdq)(0, 0),
-                       (**mVdq)(1, 0));
+      mPSS->initializeFromPowerFlow(**mOmMech, **mElecTorque, (**mVdq)(0, 0),
+                                    (**mVdq)(1, 0));
     }
   }
   if (mHasExciter)
-    mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+    mExciter->initializeFromPowerFlow(Math::abs(mInitVoltage), **mEf);
   if (mHasTurbine) {
     if (!mHasGovernor) {
       SPDLOG_LOGGER_ERROR(this->mSLog, "\nTurbine can not be used without "
                                        "Governor! Exciter will be ignored!");
       mHasTurbine = false;
     } else {
-      mTurbine->initialize(**mMechTorque);
+      mTurbine->initializeFromPowerFlow(**mMechTorque);
     }
   }
   if (mHasGovernor)
-    mGovernor->initialize(**mMechTorque);
+    mGovernor->initializeFromPowerFlow(**mMechTorque);
 
   // set initial value of current
   (**mIntfCurrent)(0, 0) = mInitCurrent * mBase_I_RMS;

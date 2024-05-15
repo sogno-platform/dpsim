@@ -28,7 +28,7 @@ public:
   setParameters(std::shared_ptr<Base::ExciterParameters> parameters) = 0;
 
   /// Initializes exciter variables
-  virtual void initialize(Real Vh_init, Real Ef_init) = 0;
+  virtual void initializeFromPowerFlow(Real Vh_init, Real Ef_init) = 0;
 
   /// @param V_pss: Output of PSS
   virtual Real step(Real Vd, Real Vq, Real dt, Real Vpss = 0) = 0;

@@ -28,7 +28,7 @@ public:
   setParameters(std::shared_ptr<Base::GovernorParameters> parameters) = 0;
 
   /// Initializes Governor variables
-  virtual void initialize(Real PmRef) = 0;
+  virtual void initializeFromPowerFlow(Real PmRef) = 0;
 
   /// @param V_pss: Output of PSS
   virtual Real step(Real Omega, Real dt) = 0;

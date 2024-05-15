@@ -41,7 +41,7 @@ void SteamTurbineGovernor::setParameters(
   }
 }
 
-void SteamTurbineGovernor::initialize(Real Pref) {
+void SteamTurbineGovernor::initializeFromPowerFlow(Real Pref) {
   if (Pref >= 0 && Pref <= 1) {
     // Steady state at t=0 equal to Om_ref (50Hz/60HZ)
     mPref = Pref;

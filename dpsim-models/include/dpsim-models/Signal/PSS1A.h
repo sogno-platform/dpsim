@@ -91,7 +91,8 @@ public:
   /// Initializes PSS parameters
   void setParameters(std::shared_ptr<Base::PSSParameters> parameters) final;
   /// Initializes PSS state variables
-  void initialize(Real omega, Real activePower, Real Vd, Real Vq) final;
+  void initializeFromPowerFlow(Real omega, Real activePower, Real Vd,
+                               Real Vq) final;
   ///
   Real step(Real omega, Real activePower, Real Vd, Real Vq, Real dt) final;
 };

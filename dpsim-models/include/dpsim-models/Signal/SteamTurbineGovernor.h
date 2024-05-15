@@ -94,7 +94,7 @@ public:
   setParameters(std::shared_ptr<Base::GovernorParameters> parameters) final;
 
   /// Initialises the initial state of the turbine
-  void initialize(Real Pref) final;
+  void initializeFromPowerFlow(Real Pref) final;
 
   /// Performs a step to update all state variables and the output
   Real step(Real Omega, Real dt) final;

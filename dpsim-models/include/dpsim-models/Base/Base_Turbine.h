@@ -27,7 +27,7 @@ public:
   setParameters(std::shared_ptr<Base::TurbineParameters> parameters) = 0;
 
   /// Initializes Turbine variables
-  virtual void initialize(Real PmInit) = 0;
+  virtual void initializeFromPowerFlow(Real PmInit) = 0;
 
   ///
   virtual Real step(Real Pgv, Real dt) = 0;

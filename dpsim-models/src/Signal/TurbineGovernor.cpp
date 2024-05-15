@@ -37,7 +37,7 @@ void TurbineGovernor::setParameters(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb,
                      mK, mTsr, mTsm);
 }
 
-void TurbineGovernor::initialize(Real PmRef, Real Tm_init) {
+void TurbineGovernor::initializeFromPowerFlow(Real PmRef, Real Tm_init) {
   mTm = Tm_init;
   T1 = (1 - mFa) * PmRef;
   T2 = mFa * PmRef;

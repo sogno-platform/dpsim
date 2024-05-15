@@ -44,7 +44,7 @@ void HydroTurbineGovernor::setParameters(
       (mParameters->T2 - mParameters->T3) / (mParameters->T1 - mParameters->T3);
 }
 
-void HydroTurbineGovernor::initialize(Real Pref) {
+void HydroTurbineGovernor::initializeFromPowerFlow(Real Pref) {
 
   if (Pref >= mParameters->Pmin && Pref <= mParameters->Pmax) {
     mPgv = Pref;

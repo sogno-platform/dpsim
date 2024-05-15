@@ -82,7 +82,7 @@ public:
   void
   setParameters(std::shared_ptr<Base::GovernorParameters> parameters) final;
   ///
-  void initialize(Real PmRef) final;
+  void initializeFromPowerFlow(Real PmRef) final;
   /// Performs an step to update field voltage value
   Real step(Real Omega, Real dt) final;
 };

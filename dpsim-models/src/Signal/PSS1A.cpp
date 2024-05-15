@@ -47,7 +47,8 @@ void Signal::PSS1A::setParameters(
   }
 }
 
-void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
+void Signal::PSS1A::initializeFromPowerFlow(Real omega, Real activePower,
+                                            Real Vd, Real Vq) {
 
   // Voltage magnitude calculation
   Real Vh = sqrt(pow(Vd, 2.) + pow(Vq, 2.));

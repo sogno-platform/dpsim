@@ -44,7 +44,7 @@ void TurbineGovernorType1::setParameters(
   }
 }
 
-void TurbineGovernorType1::initialize(Real PmRef) {
+void TurbineGovernorType1::initializeFromPowerFlow(Real PmRef) {
   mPmRef = PmRef;
   mXg1 = PmRef;
   mXg2 = (1 - mParameters->T3 / mParameters->Tc) * mXg1;

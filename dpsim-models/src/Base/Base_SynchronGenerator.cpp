@@ -302,7 +302,7 @@ void Base::SynchronGenerator::initPerUnitStates() {
   if (mHasExciter) {
     // Note: field voltage scaled by Lmd/Rfd to transform from synchronous generator pu system
     // to the exciter pu system
-    mExciter->initialize(init_vt_abs, (mLmd / mRfd) * init_vfd);
+    mExciter->initializeFromPowerFlow(init_vt_abs, (mLmd / mRfd) * init_vfd);
   }
 }
 

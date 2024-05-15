@@ -65,7 +65,7 @@ public:
   void setParameters(std::shared_ptr<Base::TurbineParameters> parameters) final;
 
   /// Initialises the initial state of the turbine
-  void initialize(Real Pminit) final;
+  void initializeFromPowerFlow(Real Pminit) final;
 
   /// Performs a step to update all state variables and the output
   Real step(Real Pgv, Real dt) final;

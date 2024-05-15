@@ -41,7 +41,7 @@ void SteamTurbine::setParameters(
   }
 }
 
-void SteamTurbine::initialize(Real Pminit) {
+void SteamTurbine::initializeFromPowerFlow(Real Pminit) {
   if (Pminit >= 0 && Pminit <= 1) {
     //steady state values
     mPhp = Pminit;

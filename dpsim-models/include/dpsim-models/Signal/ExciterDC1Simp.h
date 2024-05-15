@@ -91,7 +91,7 @@ public:
   /// Initializes exciter parameters
   void setParameters(std::shared_ptr<Base::ExciterParameters> parameters) final;
   /// Initializes exciter variables
-  void initialize(Real Vh_init, Real Vf_init) final;
+  void initializeFromPowerFlow(Real Vh_init, Real Vf_init) final;
   /// Performs an step to update field voltage value
   Real step(Real mVd, Real mVq, Real dt, Real Vpss = 0) final;
 };

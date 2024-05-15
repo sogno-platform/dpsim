@@ -24,7 +24,7 @@ void HydroTurbine::setParameters(
   }
 }
 
-void HydroTurbine::initialize(Real Pminit) {
+void HydroTurbine::initializeFromPowerFlow(Real Pminit) {
   if (Pminit >= 0 && Pminit <= 1) {
     //steady state values
     mPm = Pminit;
