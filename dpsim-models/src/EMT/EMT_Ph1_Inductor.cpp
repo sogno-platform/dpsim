@@ -57,18 +57,9 @@ void EMT::Ph1::Inductor::mnaCompInitialize(Real omega, Real timeStep,
 
 void EMT::Ph1::Inductor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  if (terminalNotGrounded(0))
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
-                             matrixNodeIndex(0), mEquivCond);
-  if (terminalNotGrounded(1))
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
-                             matrixNodeIndex(1), mEquivCond);
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
-                             matrixNodeIndex(1), -mEquivCond);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
-                             matrixNodeIndex(0), -mEquivCond);
-  }
+  MNAStampUtils::stampConductance(mEquivCond, systemMatrix, matrixNodeIndex(0),
+                                  matrixNodeIndex(1), terminalNotGrounded(0),
+                                  terminalNotGrounded(1));
 }
 
 void EMT::Ph1::Inductor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
