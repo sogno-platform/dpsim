@@ -107,94 +107,9 @@ void DP::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep,
 
 void DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-
-  if (terminalNotGrounded(0)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 0), mEquivCond(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 1), mEquivCond(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 2), mEquivCond(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 0), mEquivCond(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 1), mEquivCond(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 2), mEquivCond(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 0), mEquivCond(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 1), mEquivCond(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 2), mEquivCond(2, 2));
-  }
-  if (terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(1, 0), mEquivCond(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(1, 1), mEquivCond(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(1, 2), mEquivCond(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(1, 0), mEquivCond(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(1, 1), mEquivCond(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(1, 2), mEquivCond(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(1, 0), mEquivCond(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(1, 1), mEquivCond(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(1, 2), mEquivCond(2, 2));
-  }
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(1, 0), -mEquivCond(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(1, 1), -mEquivCond(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(1, 2), -mEquivCond(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(1, 0), -mEquivCond(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(1, 1), -mEquivCond(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(1, 2), -mEquivCond(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(1, 0), -mEquivCond(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(1, 1), -mEquivCond(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(1, 2), -mEquivCond(2, 2));
-
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(0, 0), -mEquivCond(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(0, 1), -mEquivCond(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(0, 2), -mEquivCond(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(0, 0), -mEquivCond(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(0, 1), -mEquivCond(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(0, 2), -mEquivCond(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(0, 0), -mEquivCond(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(0, 1), -mEquivCond(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(0, 2), -mEquivCond(2, 2));
-  }
-
-  // if (terminalNotGrounded(0))
-  // 	mLog.debug() << "Add " << mEquivCond << " to system at " << matrixNodeIndex(0) << "," << matrixNodeIndex(0) << std::endl;
-  // if (terminalNotGrounded(1))
-  // 	mLog.debug() << "Add " << mEquivCond << " to system at " << matrixNodeIndex(1) << "," << matrixNodeIndex(1) << std::endl;
-  // if (terminalNotGrounded(0)  &&  terminalNotGrounded(1))
-  // 	mLog.debug() << "Add " << -mEquivCond << " to system at " << matrixNodeIndex(0) << "," << matrixNodeIndex(1) << std::endl
-  // 				 << "Add " << -mEquivCond << " to system at " << matrixNodeIndex(1) << "," << matrixNodeIndex(0) << std::endl;
+  MNAStampUtils::stampAdmittanceMatrix(
+      mEquivCond, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
+      terminalNotGrounded(0), terminalNotGrounded(1));
 }
 
 void DP::Ph3::Inductor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
