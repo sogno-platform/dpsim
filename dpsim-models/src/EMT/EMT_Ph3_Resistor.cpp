@@ -69,93 +69,12 @@ void EMT::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep,
 
 void EMT::Ph3::Resistor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-
   Matrix conductance = Matrix::Zero(3, 3);
   Math::invertMatrix(**mResistance, conductance);
 
-  // Set diagonal entries
-  if (terminalNotGrounded(0)) {
-    // set upper left block, 3x3 entries
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 0), conductance(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 1), conductance(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 2), conductance(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 0), conductance(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 1), conductance(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 2), conductance(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 0), conductance(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 1), conductance(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 2), conductance(2, 2));
-  }
-  if (terminalNotGrounded(1)) {
-    // set buttom right block, 3x3 entries
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(1, 0), conductance(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(1, 1), conductance(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(1, 2), conductance(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(1, 0), conductance(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(1, 1), conductance(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(1, 2), conductance(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(1, 0), conductance(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(1, 1), conductance(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(1, 2), conductance(2, 2));
-  }
-  // Set off diagonal blocks, 2x3x3 entries
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(1, 0), -conductance(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(1, 1), -conductance(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(1, 2), -conductance(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(1, 0), -conductance(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(1, 1), -conductance(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(1, 2), -conductance(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(1, 0), -conductance(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(1, 1), -conductance(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(1, 2), -conductance(2, 2));
-
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(0, 0), -conductance(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(0, 1), -conductance(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(0, 2), -conductance(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(0, 0), -conductance(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(0, 1), -conductance(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(0, 2), -conductance(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(0, 0), -conductance(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(0, 1), -conductance(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(0, 2), -conductance(2, 2));
-  }
+  MNAStampUtils::stampConductanceMatrix(
+      conductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
+      terminalNotGrounded(0), terminalNotGrounded(1));
 
   SPDLOG_LOGGER_INFO(mSLog, "\nConductance matrix: {:s}",
                      Logger::matrixToString(conductance));
