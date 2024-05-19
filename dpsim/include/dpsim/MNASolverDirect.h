@@ -136,6 +136,8 @@ protected:
   std::shared_ptr<CPS::Task> createLogTask() override;
   /// Create a solve task for this solver implementation
   std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
+  ///  Create a task for eigenvalue extraction
+  std::shared_ptr<CPS::Task> createExtractEigenvaluesTask() override;
   /// Logging of system matrices and source vector
   void logSystemMatrices() override;
   /// Solves system for single frequency
@@ -162,6 +164,12 @@ public:
 
   /// Destructor
   virtual ~MnaSolverDirect() = default;
+
+  // ### Eigenvalue extraction ###
+  /// Extract eigenvalues from power system conductance matrix
+  void extractEigenvalues(Real time, Int timeStepCount) override;
+  ///
+  void closeEigenvalueLogger() override;
 
   /// Sets the linear solver to "implementation" and creates an object
   void
@@ -252,6 +260,23 @@ public:
     void execute(Real time, Int timeStepCount) {
       mSolver.solveWithSystemMatrixRecomputation(time, timeStepCount);
       mSolver.log(time, timeStepCount);
+    }
+
+  private:
+    MnaSolverDirect<VarType> &mSolver;
+  };
+
+  ///
+  class ExtractEigenvaluesTask : public CPS::Task {
+  public:
+    ExtractEigenvaluesTask(MnaSolverDirect<VarType> &solver)
+        : Task(solver.mName + ".ExtractEigenvalues"), mSolver(solver) {
+      mAttributeDependencies.push_back(solver.mLeftSideVector);
+      mModifiedAttributes.push_back(Scheduler::external);
+    }
+
+    void execute(Real time, Int timeStepCount) {
+      mSolver.extractEigenvalues(time, timeStepCount);
     }
 
   private:
