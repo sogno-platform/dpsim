@@ -18,7 +18,8 @@ namespace DPsim {
 template <typename VarType>
 MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain,
                               CPS::Logger::Level logLevel)
-    : Solver(name, logLevel), mDomain(domain) {
+    : Solver(name, logLevel), mDomain(domain),
+      mMNAEigenvalueExtractor(logLevel) {
 
   // Raw source and solution vector logging
   mLeftVectorLog = std::make_shared<DataLogger>(
@@ -95,6 +96,12 @@ template <typename VarType> void MnaSolver<VarType>::initialize() {
   SPDLOG_LOGGER_INFO(mSLog, "--- Initialization finished ---");
   SPDLOG_LOGGER_INFO(mSLog, "--- Initial system matrices and vectors ---");
   logSystemMatrices();
+
+  if (Solver::mIsEigenvalueExtractionEnabled) {
+    SPDLOG_LOGGER_INFO(mSLog, "--- Initialize eigenvalue extractor ---");
+    mMNAEigenvalueExtractor.initialize(mSystem, mNumMatrixNodeIndices,
+                                       Solver::mTimeStep);
+  }
 
   mSLog->flush();
 }
@@ -615,6 +622,9 @@ template <typename VarType> Task::List MnaSolver<VarType>::getTasks() {
     l.push_back(createSolveTaskRecomp());
   } else {
     l.push_back(createSolveTask());
+    if (mIsEigenvalueExtractionEnabled) {
+      l.push_back(createExtractEigenvaluesTask());
+    }
     l.push_back(createLogTask());
   }
   return l;

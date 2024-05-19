@@ -226,6 +226,13 @@ MnaSolverDirect<VarType>::createSolveTaskHarm(UInt freqIdx) {
 }
 
 template <typename VarType>
+std::shared_ptr<CPS::Task>
+MnaSolverDirect<VarType>::createExtractEigenvaluesTask() {
+  return std::make_shared<MnaSolverDirect<VarType>::ExtractEigenvaluesTask>(
+      *this);
+}
+
+template <typename VarType>
 std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createLogTask() {
   return std::make_shared<MnaSolverDirect<VarType>::LogTask>(*this);
 }
@@ -323,6 +330,19 @@ void MnaSolverDirect<VarType>::solveWithHarmonics(Real time, Int timeStepCount,
   **mLeftSideVectorHarm[freqIdx] =
       mDirectLinearSolvers[mCurrentSwitchStatus][freqIdx]->solve(
           mRightSideVectorHarm[freqIdx]);
+}
+
+template <typename VarType>
+void MnaSolverDirect<VarType>::extractEigenvalues(Real time,
+                                                  Int timeStepCount) {
+  MnaSolver<VarType>::mMNAEigenvalueExtractor.extractEigenvalues(
+      ((Matrix)mSwitchedMatrices[mCurrentSwitchStatus][0]), time,
+      timeStepCount);
+}
+
+template <typename VarType>
+void MnaSolverDirect<VarType>::closeEigenvalueLogger() {
+  MnaSolver<VarType>::mMNAEigenvalueExtractor.closeLogger();
 }
 
 template <typename VarType> void MnaSolverDirect<VarType>::logSystemMatrices() {

@@ -95,6 +95,8 @@ protected:
   Bool mInitFromNodesAndTerminals = true;
   /// Enable recomputation of system matrix during simulation
   Bool mSystemMatrixRecomputation = false;
+  /// Enable eigenvalue extraction during simulation
+  Bool mIsEigenvalueExtractionEnabled = false;
 
   /// If tearing components exist, the Diakoptics
   /// solver is selected automatically.
@@ -173,6 +175,11 @@ public:
   ///
   void setSolverType(Solver::Type solverType = Solver::Type::MNA) {
     mSolverType = solverType;
+  }
+
+  /// Enable eigenvalue extraction during simulation.
+  void doEigenvalueExtraction(Bool isEigenvalueExtractionEnabled = true) {
+    mIsEigenvalueExtractionEnabled = isEigenvalueExtractionEnabled;
   }
   /// set solver and component to initialization or simulation behaviour
   void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) {
