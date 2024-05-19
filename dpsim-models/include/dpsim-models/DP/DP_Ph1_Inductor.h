@@ -10,6 +10,7 @@
 
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
 #include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Solver/EigenvalueDynamicCompInterface.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
@@ -25,7 +26,8 @@ namespace Ph1 {
 class Inductor : public MNASimPowerComp<Complex>,
                  public Base::Ph1::Inductor,
                  public MNATearInterface,
-                 public SharedFactory<Inductor> {
+                 public SharedFactory<Inductor>,
+                 public EigenvalueDynamicCompInterface<Complex> {
 protected:
   /// DC equivalent current source for harmonics [A]
   MatrixComp mEquivCurrent;
@@ -127,6 +129,19 @@ public:
     Inductor &mInductor;
     std::vector<Attribute<Matrix>::Ptr> mLeftVectors;
   };
+
+  // #### Implementation of eigenvalue dynamic component interface ####
+  void stampSignMatrix(MatrixVar<Complex> &signMatrix,
+                       Complex coeffDP) override;
+  void stampDiscretizationMatrix(MatrixVar<Complex> &discretizationMatrix,
+                                 Complex coeffDP) override;
+  void
+  stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
+  void setBranchIdx(UInt i) override;
+
+private:
+  /// Branch index
+  UInt mBranchIdx;
 };
 } // namespace Ph1
 } // namespace DP

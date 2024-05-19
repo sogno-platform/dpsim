@@ -307,3 +307,15 @@ Complex DP::Ph1::VoltageSource::daeInitialize() {
   (**mIntfVoltage)(0, 0) = mSrcSig->getSignal();
   return mSrcSig->getSignal();
 }
+
+void DP::Ph1::VoltageSource::stampBranchNodeIncidenceMatrix(
+    Matrix &branchNodeIncidenceMatrix) {
+  if (terminalNotGrounded(0)) {
+    branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(0)) = 1.0;
+  }
+  if (terminalNotGrounded(1)) {
+    branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(1)) = -1.0;
+  }
+}
+
+void DP::Ph1::VoltageSource::setBranchIdx(UInt i) { mBranchIdx = i; }
