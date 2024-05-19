@@ -208,7 +208,9 @@ PYBIND11_MODULE(dpsimpy, m) {
            &DPsim::Simulation::setDirectLinearSolverImplementation)
       .def("set_direct_linear_solver_configuration",
            &DPsim::Simulation::setDirectLinearSolverConfiguration)
-      .def("log_lu_times", &DPsim::Simulation::logLUTimes);
+      .def("log_lu_times", &DPsim::Simulation::logLUTimes)
+      .def("do_eigenvalue_extraction",
+           &DPsim::Simulation::doEigenvalueExtraction);
 
   py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m,
                                                            "RealTimeSimulation")
