@@ -155,9 +155,8 @@ public:
   Complex daeInitialize() override;
 
   // #### Implementation of eigenvalue component interface ####
-  void
-  stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
-  void setBranchIdx(UInt i) override;
+  void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) final;
+  void setBranchIdx(UInt i) final;
 
 private:
   /// Branch index

@@ -123,13 +123,11 @@ public:
   };
 
   // #### Implementation of eigenvalue dynamic component interface ####
-  void stampSignMatrix(MatrixVar<Complex> &signMatrix,
-                       Complex coeffDP) override;
+  void stampSignMatrix(MatrixVar<Complex> &signMatrix, Complex coeffDP) final;
   void stampDiscretizationMatrix(MatrixVar<Complex> &discretizationMatrix,
-                                 Complex coeffDP) override;
-  void
-  stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
-  void setBranchIdx(UInt i) override;
+                                 Complex coeffDP) final;
+  void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) final;
+  void setBranchIdx(UInt i) final;
 
 private:
   /// Branch index
