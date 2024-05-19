@@ -150,9 +150,9 @@ public:
   // #### DAE Section ####
   /// Residual function for DAE Solver
   void daeResidual(double ttime, const double state[], const double dstate_dt[],
-                   double resid[], std::vector<int> &off);
+                   double resid[], std::vector<int> &off) override;
   ///Voltage Getter
-  Complex daeInitialize();
+  Complex daeInitialize() override;
 
   // #### Implementation of eigenvalue component interface ####
   void
