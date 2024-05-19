@@ -12,6 +12,7 @@
 
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
 #include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Solver/EigenvalueCompInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -20,7 +21,8 @@ namespace Ph1 {
 /// EMT Resistor
 class Resistor : public MNASimPowerComp<Real>,
                  public Base::Ph1::Resistor,
-                 public SharedFactory<Resistor> {
+                 public SharedFactory<Resistor>,
+                 public EigenvalueCompInterface {
 protected:
 public:
   /// Defines UID, name, component parameters and logging level
@@ -39,15 +41,15 @@ public:
   // #### MNA section ####
   /// Initializes internal variables of the component
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftSideVector) override;
+                         Attribute<Matrix>::Ptr leftSideVector);
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override {}
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {}
   /// Update interface voltage from MNA system result
-  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
+  void mnaCompUpdateVoltage(const Matrix &leftVector);
   /// Update interface current from MNA system result
-  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
+  void mnaCompUpdateCurrent(const Matrix &leftVector);
   void mnaCompPostStep(Real time, Int timeStepCount,
                        Attribute<Matrix>::Ptr &leftVector) override;
   /// Add MNA post step dependencies
@@ -56,6 +58,14 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
+
+  // #### Implementation of eigenvalue component interface ####
+  void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) final;
+  void setBranchIdx(UInt i) final;
+
+private:
+  /// Branch index
+  UInt mBranchIdx;
 };
 } // namespace Ph1
 } // namespace EMT

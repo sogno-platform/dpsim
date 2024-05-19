@@ -72,6 +72,18 @@ void EMT::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(
   }
 }
 
+void EMT::Ph1::VoltageSource::stampBranchNodeIncidenceMatrix(
+    Matrix &branchNodeIncidenceMatrix) {
+  if (terminalNotGrounded(0)) {
+    branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(0)) = 1.0;
+  }
+  if (terminalNotGrounded(1)) {
+    branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(1)) = -1.0;
+  }
+}
+
+void EMT::Ph1::VoltageSource::setBranchIdx(UInt i) { mBranchIdx = i; }
+
 void EMT::Ph1::VoltageSource::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
   Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(),
@@ -84,7 +96,7 @@ void EMT::Ph1::VoltageSource::updateVoltage(Real time) {
   if (srcFreq > 0)
     (**mIntfVoltage)(0, 0) =
         Math::abs(voltageRef) *
-        cos((time)*2. * PI * srcFreq + Math::phase(voltageRef));
+        cos((time) * 2. * PI * srcFreq + Math::phase(voltageRef));
   else
     (**mIntfVoltage)(0, 0) = voltageRef.real();
 }

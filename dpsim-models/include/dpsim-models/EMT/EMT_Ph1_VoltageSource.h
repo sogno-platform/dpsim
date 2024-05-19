@@ -9,6 +9,8 @@
 #pragma once
 
 #include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Solver/EigenvalueCompInterface.h>
+#include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -23,7 +25,8 @@ namespace Ph1 {
 /// of node k as negative. Moreover
 /// a new equation ej - ek = V is added to the problem.
 class VoltageSource : public MNASimPowerComp<Real>,
-                      public SharedFactory<VoltageSource> {
+                      public SharedFactory<VoltageSource>,
+                      public EigenvalueCompInterface {
 private:
   Real mTimeStep;
 
@@ -74,6 +77,13 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
+  // #### Implementation of eigenvalue component interface ####
+  void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) final;
+  void setBranchIdx(UInt i) final;
+
+private:
+  /// Branch index
+  UInt mBranchIdx;
 };
 } // namespace Ph1
 } // namespace EMT
