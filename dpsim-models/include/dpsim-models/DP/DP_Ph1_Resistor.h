@@ -11,6 +11,7 @@
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/DAEInterface.h>
+#include <dpsim-models/Solver/EigenvalueCompInterface.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
@@ -21,7 +22,8 @@ class Resistor : public MNASimPowerComp<Complex>,
                  public Base::Ph1::Resistor,
                  public MNATearInterface,
                  public DAEInterface,
-                 public SharedFactory<Resistor> {
+                 public SharedFactory<Resistor>,
+                 public EigenvalueCompInterface {
 public:
   /// Defines UID, name and logging level
   Resistor(String uid, String name,
@@ -89,6 +91,15 @@ public:
                    double resid[], std::vector<int> &off);
   ///Voltage Getter
   Complex daeInitialize();
+
+  // #### Implementation of eigenvalue component interface ####
+  void
+  stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
+  void setBranchIdx(UInt i) override;
+
+private:
+  /// Branch index
+  UInt mBranchIdx;
 };
 } // namespace Ph1
 } // namespace DP

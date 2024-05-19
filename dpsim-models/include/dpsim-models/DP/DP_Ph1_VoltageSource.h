@@ -14,6 +14,7 @@
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Solver/DAEInterface.h>
+#include <dpsim-models/Solver/EigenvalueCompInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -38,7 +39,8 @@ namespace Ph1 {
 /// a new equation ej - ek = V is added to the problem.
 class VoltageSource : public MNASimPowerComp<Complex>,
                       public DAEInterface,
-                      public SharedFactory<VoltageSource> {
+                      public SharedFactory<VoltageSource>,
+                      public EigenvalueCompInterface {
 private:
   ///
   void updateVoltage(Real time);
@@ -148,9 +150,18 @@ public:
   // #### DAE Section ####
   /// Residual function for DAE Solver
   void daeResidual(double ttime, const double state[], const double dstate_dt[],
-                   double resid[], std::vector<int> &off) override;
+                   double resid[], std::vector<int> &off);
   ///Voltage Getter
-  Complex daeInitialize() override;
+  Complex daeInitialize();
+
+  // #### Implementation of eigenvalue component interface ####
+  void
+  stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) override;
+  void setBranchIdx(UInt i) override;
+
+private:
+  /// Branch index
+  UInt mBranchIdx;
 };
 } // namespace Ph1
 } // namespace DP
