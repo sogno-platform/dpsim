@@ -54,6 +54,8 @@ public:
                             std::string pattern);
 
   // #### to string methods ####
+  template <typename VarType>
+  static String matrixVarToString(const MatrixVar<VarType> &mat);
   static String matrixToString(const Matrix &mat);
   static String matrixCompToString(const MatrixComp &mat);
   static String sparseMatrixToString(const SparseMatrix &mat);

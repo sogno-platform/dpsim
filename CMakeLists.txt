@@ -59,6 +59,8 @@ if(MSVC)
 
 	# Silence Visual Studio error C2220
 	add_definitions(-D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+	
+	add_compile_options(/bigobj) # Fixes error C1128 for compiling MNAEigenvalueExtractor with MSVC compiler.
 
 	# Set exception handling for portability
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")

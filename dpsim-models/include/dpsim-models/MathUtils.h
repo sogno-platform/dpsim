@@ -56,12 +56,17 @@ public:
 
   static Real realFromVectorElement(const Matrix &mat, Matrix::Index row);
 
-  // #### Matric Operations ####
+  // #### Matrix Operations ####
   //
   // | Re-Re(row,col)_harm1 | Im-Re(row,col)_harm1 | Interharmonics harm1-harm2
   // | Re-Im(row,col)_harm1 | Im-Im(row,col)_harm1 | Interharmonics harm1-harm2
   // | Interharmonics harm1-harm2                  | Re(row,col)_harm2 | Re(row,col)_harm2 |
   // | Interharmonics harm1-harm2                  | Im(row,col)_harm2 | Im(row,col)_harm2 |
+
+  static MatrixComp returnNonZeroElements(const MatrixComp &mat);
+
+  static MatrixComp convertRealEquivalentToComplexMatrix(const Matrix &realEquivalentMatrix);
+
   static void setMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
                                Matrix::Index column, Complex value,
                                Int maxFreq = 1, Int freqIdx = 0);
