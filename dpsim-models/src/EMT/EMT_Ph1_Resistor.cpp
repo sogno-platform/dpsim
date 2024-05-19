@@ -88,3 +88,15 @@ void EMT::Ph1::Resistor::mnaCompUpdateVoltage(const Matrix &leftVector) {
 void EMT::Ph1::Resistor::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / **mResistance;
 }
+
+void EMT::Ph1::Resistor::stampBranchNodeIncidenceMatrix(
+    Matrix &branchNodeIncidenceMatrix) {
+  if (terminalNotGrounded(0)) {
+    branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(0)) = 1.0;
+  }
+  if (terminalNotGrounded(1)) {
+    branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(1)) = -1.0;
+  }
+}
+
+void EMT::Ph1::Resistor::setBranchIdx(UInt i) { mBranchIdx = i; }
