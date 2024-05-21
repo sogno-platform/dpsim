@@ -66,10 +66,11 @@ DAESolver::DAESolver(String name, const CPS::SystemTopology &system, Real dt,
   }
 
   std::cout << "Nodes Setup Done" << std::endl;
-  initialize(t0);
+  mT0 = t0;
+  initialize();
 }
 
-void DAESolver::initialize(Real t0) {
+void DAESolver::initialize() {
   int ret;
   int counter = 0;
   realtype *sval = NULL, *s_dtval = NULL;
@@ -148,27 +149,22 @@ void DAESolver::initialize(Real t0) {
   std::cout << "Define Userdata" << std::endl;
   // This passes the solver instance as the user_data argument to the residual functions
   ret = IDASetUserData(mem, this);
-  //	if (check_flag(&ret, "IDASetUserData", 1)) {
-  //		throw CPS::Exception();
-  //	}
+
   std::cout << "Call IDAInit" << std::endl;
 
-  ret = IDAInit(mem, &DAESolver::residualFunctionWrapper, t0, state, dstate_dt);
-  //	if (check_flag(&ret, "IDAInit", 1)) {
-  //		throw CPS::Exception();
-  //	}
+  ret =
+      IDAInit(mem, &DAESolver::residualFunctionWrapper, mT0, state, dstate_dt);
+
   std::cout << "Call IDATolerances" << std::endl;
   ret = IDASStolerances(mem, rtol, abstol);
-  // 	if (check_flag(&ret, "IDASStolerances", 1)) {
-  //		throw CPS::Exception();
-  //	}
+
   std::cout << "Call IDA Solver Stuff" << std::endl;
   // Allocate and connect Matrix A and solver LS to IDA
   A = SUNDenseMatrix(mNEQ, mNEQ);
   LS = SUNDenseLinearSolver(state, A);
   ret = IDADlsSetLinearSolver(mem, LS, A);
 
-  //Optional IDA input functions
+  //TODO: Optional IDA input functions
   //ret = IDASetMaxNumSteps(mem, -1);  //Max. number of timesteps until tout (-1 = unlimited)
   //ret = IDASetMaxConvFails(mem, 100); //Max. number of convergence failures at one step
   (void)ret;

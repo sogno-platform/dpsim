@@ -94,7 +94,7 @@ private:
   void initMatrices();
   void applyTearComponentStamp(UInt compIdx);
 
-  void log(Real time, Int timeStepCount);
+  void log(Real time, Int timeStepCount) override;
 
 public:
   /// Currents through the removed network (as "seen" from the other subnets)
@@ -107,7 +107,7 @@ public:
                    CPS::IdentifiedObject::List tearComponents, Real timeStep,
                    CPS::Logger::Level logLevel);
 
-  CPS::Task::List getTasks();
+  CPS::Task::List getTasks() override;
 
   class SubnetSolveTask : public CPS::Task {
   public:

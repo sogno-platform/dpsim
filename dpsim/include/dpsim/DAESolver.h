@@ -42,6 +42,9 @@ protected:
   /// Nodes of the Problem
   CPS::SimNode<Complex>::List mNodes;
 
+  // Initial time t0
+  Real mT0;
+
   // IDA simulation variables
   /// Memory block allocated by IDA
   void *mem = NULL;
@@ -72,14 +75,15 @@ protected:
 
 public:
   /// Create solve object with given parameters
-  DAESolver(String name, const CPS::SystemTopology &system, Real dt, Real t0);
+  DAESolver(String name, const CPS::SystemTopology &system, Real dt, Real mT0);
   /// Deallocate all memory
   ~DAESolver();
-  /// Initialize Components & Nodes with inital values
-  void initialize(Real t0);
+  /// Initialize Components & Nodes with initial values
+  void initialize() final;
+
   /// Solve system for the current time
   Real step(Real time);
 
-  CPS::Task::List getTasks();
+  CPS::Task::List getTasks() override;
 };
 } // namespace DPsim

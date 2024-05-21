@@ -45,7 +45,7 @@ public:
 
   // #### MNA Section ####
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector);
+                         Attribute<Matrix>::Ptr leftVector) override;
 
   /// Add MNA pre step dependencies
   void mnaCompPreStep(Real time, Int timeStepCount) override;
@@ -73,11 +73,11 @@ protected:
 
   /// Defines the ODE-System which shall be solved
   void odeStateSpace(double t, const double y[],
-                     double ydot[]); // ODE-Class approach
+                     double ydot[]) override; // ODE-Class approach
 
   /// Jacobian corresponding to the StateSpace system, needed for implicit solve
   void odeJacobian(double t, const double y[], double fy[], double J[],
-                   double tmp1[], double tmp2[], double tmp3[]);
+                   double tmp1[], double tmp2[], double tmp3[]) override;
 
   void odePreStep();
   void odePostStep();
