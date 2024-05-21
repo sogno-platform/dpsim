@@ -7,17 +7,23 @@ on:
 
 jobs:
   linux-fedora-dpsimpy:
-    name: Build dpsimpy on Fedora Linux
+    name: Build dpsimpy and tests examples on Fedora Linux
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: recursive
 
     - name: Create Build Environment
       run: mkdir build
+
+    - name: Setup build directory cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-fedora-dir-cache-${{ github.ref }}
 
     - name: Configure CMake
       shell: bash
@@ -27,15 +33,13 @@ jobs:
     - name: Build dpsimpy and test examples
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake --build . --target dpsimpy --target tests --target dpsimpyvillas
-      env:
-        MAKEFLAGS: "-j2"
+      run: cmake --build . --target dpsimpy --target tests --target dpsimpyvillas --parallel $(nproc)
 
     - name: Archive build directory
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ${{ github.workspace }}/build
-        name: build-cache
+        name: build-fedora-examples-cache-${{ github.sha }}
         retention-days: 1
 
   linux-fedora-examples:
@@ -45,28 +49,26 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: recursive
 
     - name: Restore build archive
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
-       name: build-cache
+       name: build-fedora-examples-cache-${{ github.sha }}
        path: ${{ github.workspace }}/build
 
     - name: Build every target
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake --build .
-      env:
-        MAKEFLAGS: "-j2"
+      run: cmake --build . --parallel $(nproc)
 
     - name: Archive build directory
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ${{ github.workspace }}/build
-        name: build-cache
+        name: build-cache-examples-cpp-${{ github.sha }}
         retention-days: 1
 
 ## Tests ##
@@ -77,12 +79,12 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Restore build archive
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
-       name: build-cache
+       name: build-fedora-examples-cache-${{ github.sha }}
        path: ${{ github.workspace }}/build
 
     - name: Prepare binary permissions
@@ -99,6 +101,10 @@ jobs:
       working-directory: ${{ github.workspace }}
       run: ls -l ./build/dpsim/examples/cxx/
 
+    - name: Install parallel testing
+      shell: bash
+      run: pip install pytest-xdist
+
     - name: Run pytest
       shell: bash
       working-directory: ${{ github.workspace }}
@@ -106,12 +112,12 @@ jobs:
         PYTHONPATH: "${{ github.workspace }}/build"
       run: |
         cp -r python/src/dpsim build/
-        pytest -v examples/Notebooks
+        pytest -v examples/Notebooks -n auto
 
     - name: Archive notebook outputs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: pytest-output
+        name: pytest-output-${{ github.sha }}
         path: outputs/examples/Notebooks/
 
   compare-notebook-results:
@@ -120,13 +126,13 @@ jobs:
     needs: [test-jupyter-notebooks]
     steps:
     - name: Download new notebook results
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
-       name: pytest-output
+       name: pytest-output-${{ github.sha }}
        path: ${{ github.workspace }}/notebooks-new
 
     - name: Download master notebook results
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ github.workspace }}/notebooks-master
         key: notebook-output-cache-master-${{ github.sha }}
@@ -134,7 +140,7 @@ jobs:
           notebook-output-cache-master-
 
     - name: Download previous commit notebook results
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ github.workspace }}/notebooks-previous
         key: notebook-output-cache-commit-${{ github.ref }}-${{ github.sha }}
@@ -165,15 +171,15 @@ jobs:
         cp -R ${{ github.workspace }}/notebooks-new ${{ github.workspace }}/notebooks-master
 
   test-binaries:
-    name: Execute Example
+    name: Execute WSCC 9 bus example
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
     needs: [linux-fedora-examples]
     steps:
     - name: Restore build archive
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
-       name: build-cache
+       name: build-cache-examples-cpp-${{ github.sha }}
        path: ${{ github.workspace }}/build
 
     - name: Prepare binary permissions
@@ -194,7 +200,7 @@ jobs:
     #needs: [linux-fedora]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Run cppcheck
       working-directory: ${{ github.workspace }}
@@ -202,7 +208,7 @@ jobs:
       id: cppcheck
       run: |
         set -o pipefail
-        cppcheck --max-configs=32 -j 32 --inline-suppr --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++17 -I dpsim/include/ -I dpsim-models/include/ -I dpsim-villas/include dpsim/src/ dpsim-models/src/ dpsim-villas/src/ 2>&1 | tee cppcheck-output.log
+        cppcheck --max-configs=32 -j $(nproc) --inline-suppr --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++17 -I dpsim/include/ -I dpsim-models/include/ -I dpsim-villas/include dpsim/src/ dpsim-models/src/ dpsim-villas/src/ 2>&1 | tee cppcheck-output.log
       continue-on-error: true
 
     - name: Print cppcheck errors
@@ -262,7 +268,7 @@ jobs:
 
   test-villas-examples-1:
     name: Run dpsim-mqtt VILLASnode example
-    needs: [linux-fedora-dpsimpy]
+    needs: [linux-fedora-examples]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: examples/villas/docker-compose-tests
@@ -274,7 +280,7 @@ jobs:
 
   test-villas-examples-2:
     name: Run dpsim-mqtt-import-export VILLASnode example
-    needs: [linux-fedora-dpsimpy]
+    needs: [linux-fedora-examples]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: examples/villas/docker-compose-tests
@@ -284,7 +290,7 @@ jobs:
 
   test-villas-examples-3:
     name: Run dpsim-mqtt-import-export-MIMO VILLASnode example
-    needs: [linux-fedora-dpsimpy]
+    needs: [linux-fedora-examples]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: examples/villas/docker-compose-tests
@@ -295,7 +301,7 @@ jobs:
 
   test-villas-examples-4:
     name: Run dpsim-file VILLASnode example
-    needs: [linux-fedora-dpsimpy]
+    needs: [linux-fedora-examples]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: examples/villas/docker-compose-tests
@@ -306,7 +312,7 @@ jobs:
 
   test-villas-examples-5:
     name: Run mqtt-cigre-mv-pf-profiles VILLASnode example
-    needs: [linux-fedora-dpsimpy]
+    needs: [linux-fedora-examples]
     uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: examples/villas/docker-compose-tests
