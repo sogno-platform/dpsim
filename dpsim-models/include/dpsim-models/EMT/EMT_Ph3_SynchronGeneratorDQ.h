@@ -91,9 +91,7 @@ public:
   void step(Matrix &voltage, Real time);
 
   // #### MNA Functions ####
-  /// Initializes variables of component
-  virtual void mnaCompInitialize(Real omega, Real timeStep,
-                                 Attribute<Matrix>::Ptr) override = 0;
+
   ///
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   ///

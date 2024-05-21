@@ -73,8 +73,9 @@ public:
 
   // #### MNA Functions ####
   /// Initializes variables of component
-  virtual void mnaCompInitialize(Real omega, Real timeStep,
-                                 Attribute<Matrix>::Ptr) override = 0;
+  virtual void
+  mnaCompInitialize(Real omega, Real timeStep,
+                    Attribute<Matrix>::Ptr leftVector) override = 0;
   /// Performs with the model of a synchronous generator
   /// to calculate the flux and current from the voltage vector.
   void mnaStep(Matrix &systemMatrix, Matrix &rightVector, Matrix &leftVector,
