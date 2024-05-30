@@ -53,7 +53,7 @@ void SP::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep,
 
 void SP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  MatrixComp conductance = Matrix::Zero(3, 3);
+  MatrixFixedSizeComp<3, 3> conductance = Matrix::Zero(3, 3);
   conductance.real() = (**mResistance).inverse();
 
   MNAStampUtils::stampAdmittanceMatrix(

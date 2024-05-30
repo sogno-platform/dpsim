@@ -69,8 +69,8 @@ void EMT::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep,
 
 void EMT::Ph3::Resistor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  Matrix conductance = Matrix::Zero(3, 3);
-  Math::invertMatrix(**mResistance, conductance);
+  MatrixFixedSize<3, 3> conductance = Matrix::Zero(3, 3);
+  conductance = (**mResistance).inverse();
 
   MNAStampUtils::stampConductanceMatrix(
       conductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
