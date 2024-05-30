@@ -95,26 +95,26 @@ Collaboration diagram for DPsim::DAESolver:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:adf5603c6bc019e5efb346cbcd28fdec1"><td class="memItemLeft" align="right" valign="top"><a id="adf5603c6bc019e5efb346cbcd28fdec1"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#adf5603c6bc019e5efb346cbcd28fdec1">DAESolver</a> (String name, const <a class="el" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system, Real dt, Real t0)</td></tr>
-<tr class="memdesc:adf5603c6bc019e5efb346cbcd28fdec1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create solve object with given parameters. <br /></td></tr>
-<tr class="separator:adf5603c6bc019e5efb346cbcd28fdec1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa106d6b154d1afb1dffcf2ca05d017cf"><td class="memItemLeft" align="right" valign="top"><a id="aa106d6b154d1afb1dffcf2ca05d017cf"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#aa106d6b154d1afb1dffcf2ca05d017cf">DAESolver</a> (String name, const <a class="el" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system, Real dt, Real mT0)</td></tr>
+<tr class="memdesc:aa106d6b154d1afb1dffcf2ca05d017cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create solve object with given parameters. <br /></td></tr>
+<tr class="separator:aa106d6b154d1afb1dffcf2ca05d017cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9883d637f808f05263dace05a8761e84"><td class="memItemLeft" align="right" valign="top"><a id="a9883d637f808f05263dace05a8761e84"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a9883d637f808f05263dace05a8761e84">~DAESolver</a> ()</td></tr>
 <tr class="memdesc:a9883d637f808f05263dace05a8761e84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocate all memory. <br /></td></tr>
 <tr class="separator:a9883d637f808f05263dace05a8761e84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a010160301fa5ee46925ab19d8f8e3910"><td class="memItemLeft" align="right" valign="top"><a id="a010160301fa5ee46925ab19d8f8e3910"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a010160301fa5ee46925ab19d8f8e3910">initialize</a> (Real t0)</td></tr>
-<tr class="memdesc:a010160301fa5ee46925ab19d8f8e3910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize Components &amp; Nodes with inital values. <br /></td></tr>
-<tr class="separator:a010160301fa5ee46925ab19d8f8e3910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab741458f52cae64ea769962d0ec5b2b"><td class="memItemLeft" align="right" valign="top"><a id="aab741458f52cae64ea769962d0ec5b2b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#aab741458f52cae64ea769962d0ec5b2b">initialize</a> () final</td></tr>
+<tr class="memdesc:aab741458f52cae64ea769962d0ec5b2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize Components &amp; Nodes with initial values. <br /></td></tr>
+<tr class="separator:aab741458f52cae64ea769962d0ec5b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a378f1542c04293d3c2621b62db1061ad"><td class="memItemLeft" align="right" valign="top"><a id="a378f1542c04293d3c2621b62db1061ad"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a378f1542c04293d3c2621b62db1061ad">step</a> (Real time)</td></tr>
 <tr class="memdesc:a378f1542c04293d3c2621b62db1061ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve system for the current time. <br /></td></tr>
 <tr class="separator:a378f1542c04293d3c2621b62db1061ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d9c8345b52a1aa4e097b44421a475b0"><td class="memItemLeft" align="right" valign="top"><a id="a5d9c8345b52a1aa4e097b44421a475b0"></a>
-CPS::Task::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a5d9c8345b52a1aa4e097b44421a475b0">getTasks</a> ()</td></tr>
-<tr class="memdesc:a5d9c8345b52a1aa4e097b44421a475b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get tasks for scheduler. <br /></td></tr>
-<tr class="separator:a5d9c8345b52a1aa4e097b44421a475b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a565800dde7f5fa518924447ab4e4b5c5"><td class="memItemLeft" align="right" valign="top"><a id="a565800dde7f5fa518924447ab4e4b5c5"></a>
+CPS::Task::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a565800dde7f5fa518924447ab4e4b5c5">getTasks</a> () override</td></tr>
+<tr class="memdesc:a565800dde7f5fa518924447ab4e4b5c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get tasks for scheduler. <br /></td></tr>
+<tr class="separator:a565800dde7f5fa518924447ab4e4b5c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_d_psim_1_1_solver"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_d_psim_1_1_solver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td></tr>
 <tr class="memitem:a43f3a5b98bf07a364645fa5f8193a5e7 inherit pub_methods_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="a43f3a5b98bf07a364645fa5f8193a5e7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Solver</b> (String name, CPS::Logger::Level logLevel)</td></tr>
@@ -131,9 +131,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setSystem</b>
 <tr class="memitem:acaca0ec55e6c02924c09da8de629912e inherit pub_methods_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="acaca0ec55e6c02924c09da8de629912e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>doSystemMatrixRecomputation</b> (Bool value)</td></tr>
 <tr class="separator:acaca0ec55e6c02924c09da8de629912e inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e851429fec0ddfaf3b20be40ab4cad3 inherit pub_methods_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="a8e851429fec0ddfaf3b20be40ab4cad3"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>initialize</b> ()</td></tr>
-<tr class="separator:a8e851429fec0ddfaf3b20be40ab4cad3 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67ae1b76aa257df267fd660c8c542813 inherit pub_methods_class_d_psim_1_1_solver"><td class="memItemLeft" align="right" valign="top"><a id="a67ae1b76aa257df267fd660c8c542813"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a67ae1b76aa257df267fd660c8c542813">doSteadyStateInit</a> (Bool f)</td></tr>
 <tr class="memdesc:a67ae1b76aa257df267fd660c8c542813 inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">activate steady state initialization <br /></td></tr>
@@ -208,6 +205,9 @@ CPS::IdentifiedObject::List&#160;</td><td class="memItemRight" valign="bottom"><
 <a class="el" href="class_c_p_s_1_1_sim_node.html">CPS::SimNode</a>&lt; Complex &gt;::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a9d8b80d7da956319cac5f7924693c888">mNodes</a></td></tr>
 <tr class="memdesc:a9d8b80d7da956319cac5f7924693c888"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nodes of the Problem. <br /></td></tr>
 <tr class="separator:a9d8b80d7da956319cac5f7924693c888"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3946084f3ebb52bece88134b4e7322fc"><td class="memItemLeft" align="right" valign="top"><a id="a3946084f3ebb52bece88134b4e7322fc"></a>
+Real&#160;</td><td class="memItemRight" valign="bottom"><b>mT0</b></td></tr>
+<tr class="separator:a3946084f3ebb52bece88134b4e7322fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0631888e2f108db71b08c2ed0006a297"><td class="memItemLeft" align="right" valign="top"><a id="a0631888e2f108db71b08c2ed0006a297"></a>
 void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a0631888e2f108db71b08c2ed0006a297">mem</a> = NULL</td></tr>
 <tr class="memdesc:a0631888e2f108db71b08c2ed0006a297"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory block allocated by IDA. <br /></td></tr>
