@@ -71,7 +71,7 @@ void SP::Ph1::Capacitor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   MNAStampUtils::stampAdmittance(mSusceptance, systemMatrix, matrixNodeIndex(0),
                                  matrixNodeIndex(1), terminalNotGrounded(0),
-                                 terminalNotGrounded(1));
+                                 terminalNotGrounded(1), mSLog);
 }
 
 void SP::Ph1::Capacitor::mnaCompAddPostStepDependencies(

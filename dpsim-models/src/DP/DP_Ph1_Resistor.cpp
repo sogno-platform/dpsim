@@ -77,9 +77,9 @@ void DP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(
   Complex conductance = Complex(1. / **mResistance, 0);
 
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
-    MNAStampUtils::stampAdmittance(conductance, systemMatrix, matrixNodeIndex(0),
-                    matrixNodeIndex(1), terminalNotGrounded(0),
-                    terminalNotGrounded(1), mNumFreqs, freq);
+    MNAStampUtils::stampAdmittance(
+        conductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
+        terminalNotGrounded(0), terminalNotGrounded(1), mSLog, mNumFreqs, freq);
   }
 }
 
@@ -88,8 +88,8 @@ void DP::Ph1::Resistor::mnaCompApplySystemMatrixStampHarm(
   Complex conductance = Complex(1. / **mResistance, 0);
 
   MNAStampUtils::stampAdmittance(conductance, systemMatrix, matrixNodeIndex(0),
-                  matrixNodeIndex(1), terminalNotGrounded(0),
-                  terminalNotGrounded(1));
+                                 matrixNodeIndex(1), terminalNotGrounded(0),
+                                 terminalNotGrounded(1), mSLog);
 }
 
 void DP::Ph1::Resistor::mnaCompAddPostStepDependencies(

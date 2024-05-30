@@ -59,7 +59,7 @@ void EMT::Ph1::Inductor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   MNAStampUtils::stampConductance(mEquivCond, systemMatrix, matrixNodeIndex(0),
                                   matrixNodeIndex(1), terminalNotGrounded(0),
-                                  terminalNotGrounded(1));
+                                  terminalNotGrounded(1), mSLog);
 }
 
 void EMT::Ph1::Inductor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {

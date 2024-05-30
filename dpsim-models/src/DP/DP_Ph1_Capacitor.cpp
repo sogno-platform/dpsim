@@ -123,18 +123,19 @@ void DP::Ph1::Capacitor::mnaCompInitializeHarm(
 void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
-    MNAStampUtils::stampAdmittance(mEquivCond(freq, 0), systemMatrix,
-                                   matrixNodeIndex(0), matrixNodeIndex(1),
-                                   terminalNotGrounded(0),
-                                   terminalNotGrounded(1), mNumFreqs, freq);
+    MNAStampUtils::stampAdmittance(
+        mEquivCond(freq, 0), systemMatrix, matrixNodeIndex(0),
+        matrixNodeIndex(1), terminalNotGrounded(0), terminalNotGrounded(1),
+        mSLog, mNumFreqs, freq);
   }
 }
 
 void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStampHarm(
     SparseMatrixRow &systemMatrix, Int freqIdx) {
-  MNAStampUtils::stampAdmittance(
-      mEquivCond(freqIdx, 0), systemMatrix, matrixNodeIndex(0),
-      matrixNodeIndex(1), terminalNotGrounded(0), terminalNotGrounded(1));
+  MNAStampUtils::stampAdmittance(mEquivCond(freqIdx, 0), systemMatrix,
+                                 matrixNodeIndex(0), matrixNodeIndex(1),
+                                 terminalNotGrounded(0), terminalNotGrounded(1),
+                                 mSLog);
 }
 
 void DP::Ph1::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
