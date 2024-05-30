@@ -92,7 +92,7 @@ void EMT::Ph3::Inductor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   MNAStampUtils::stampConductanceMatrix(
       mEquivCond, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
-      terminalNotGrounded(0), terminalNotGrounded(1));
+      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
 
   SPDLOG_LOGGER_INFO(mSLog, "\nEquivalent Conductance: {:s}",
                      Logger::matrixToString(mEquivCond));

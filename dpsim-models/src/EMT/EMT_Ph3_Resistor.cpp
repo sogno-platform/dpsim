@@ -74,7 +74,7 @@ void EMT::Ph3::Resistor::mnaCompApplySystemMatrixStamp(
 
   MNAStampUtils::stampConductanceMatrix(
       conductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
-      terminalNotGrounded(0), terminalNotGrounded(1));
+      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
 
   SPDLOG_LOGGER_INFO(mSLog, "\nConductance matrix: {:s}",
                      Logger::matrixToString(conductance));

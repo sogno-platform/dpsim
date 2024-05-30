@@ -109,7 +109,7 @@ void SP::Ph1::Resistor::mnaCompApplySystemMatrixStamp(
 
   MNAStampUtils::stampAdmittance(conductance, systemMatrix, matrixNodeIndex(0),
                                  matrixNodeIndex(1), terminalNotGrounded(0),
-                                 terminalNotGrounded(1));
+                                 terminalNotGrounded(1), mSLog);
 }
 
 void SP::Ph1::Resistor::mnaCompAddPostStepDependencies(

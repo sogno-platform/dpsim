@@ -109,7 +109,7 @@ void DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   MNAStampUtils::stampAdmittanceMatrix(
       mEquivCond, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
-      terminalNotGrounded(0), terminalNotGrounded(1));
+      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
 }
 
 void DP::Ph3::Inductor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {

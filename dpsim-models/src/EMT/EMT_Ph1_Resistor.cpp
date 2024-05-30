@@ -54,7 +54,7 @@ void EMT::Ph1::Resistor::mnaCompApplySystemMatrixStamp(
   Real conductance = 1. / **mResistance;
   MNAStampUtils::stampConductance(conductance, systemMatrix, matrixNodeIndex(0),
                                   matrixNodeIndex(1), terminalNotGrounded(0),
-                                  terminalNotGrounded(1));
+                                  terminalNotGrounded(1), mSLog);
 }
 
 void EMT::Ph1::Resistor::mnaCompAddPostStepDependencies(
