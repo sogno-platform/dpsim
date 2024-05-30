@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include <dpsim-models/MNAStampUtils.h>
 #include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
-#include <dpsim-models/MNAStampUtils.h>
 
 namespace CPS {
 
