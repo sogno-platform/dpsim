@@ -11,15 +11,19 @@
 using namespace CPS;
 
 EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-    : Base::Ph3::PiLine(mAttributes), CompositePowerComp<Real>(uid, name, true,
-                                                               true, logLevel) {
+    : Base::Ph3::PiLine(mAttributes),
+      CompositePowerComp<Real>(uid, name, true, true, logLevel),
+      mParallelCurrentNode0(mAttributes->create<Matrix>("ParallelCurrentNode0",
+                                                        Matrix::Zero(3, 1))),
+      mParallelCurrentNode1(mAttributes->create<Matrix>("ParallelCurrentNode1",
+                                                        Matrix::Zero(3, 1))) {
   mPhaseType = PhaseType::ABC;
   setTerminalNumber(2);
 
-  SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
   **mIntfVoltage = Matrix::Zero(3, 1);
   **mIntfCurrent = Matrix::Zero(3, 1);
 
+  SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
   mSLog->flush();
 }
 
@@ -115,18 +119,40 @@ void EMT::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
 
+  // intialize parallel current Node 0
+  **mParallelCurrentNode0 = Matrix::Zero(3, 1);
+  if ((**mParallelCond)(0, 0) > 0) {
+    **mParallelCurrentNode0 += mSubParallelResistor0->intfCurrent();
+  }
+  if ((**mParallelCap)(0, 0) > 0) {
+    **mParallelCurrentNode0 += mSubParallelCapacitor0->intfCurrent();
+  }
+
+  // intialize parallel current Node 1
+  **mParallelCurrentNode1 = Matrix::Zero(3, 1);
+  if ((**mParallelCond)(0, 0) > 0) {
+    **mParallelCurrentNode1 += mSubParallelResistor1->intfCurrent();
+  }
+  if ((**mParallelCap)(0, 0) > 0) {
+    **mParallelCurrentNode1 += mSubParallelCapacitor1->intfCurrent();
+  }
+
   SPDLOG_LOGGER_DEBUG(mSLog,
                       "\n--debug--"
                       "\n seriesRes: {:s}"
                       "\n seriesInd: {:s}"
                       "\n Impedance: {:s}"
                       "\n vInit: {:s}"
-                      "\n iInit: {:s}",
+                      "\n iInit: {:s}"
+                      "\n mParallelCurrentNode0: {:s}"
+                      "\n mParallelCurrentNode1: {:s}",
                       Logger::matrixToString(**mSeriesRes),
                       Logger::matrixToString(**mSeriesInd),
                       Logger::matrixCompToString(impedance),
                       Logger::matrixCompToString(vInitABC),
-                      Logger::matrixCompToString(iInit));
+                      Logger::matrixCompToString(iInit),
+                      Logger::matrixToString(**mParallelCurrentNode0),
+                      Logger::matrixToString(**mParallelCurrentNode1));
 
   SPDLOG_LOGGER_INFO(
       mSLog,
@@ -150,6 +176,8 @@ void EMT::Ph3::PiLine::mnaParentAddPreStepDependencies(
   prevStepDependencies.push_back(mIntfCurrent);
   prevStepDependencies.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mRightVector);
+  prevStepDependencies.push_back(mParallelCurrentNode0);
+  prevStepDependencies.push_back(mParallelCurrentNode1);
 }
 
 void EMT::Ph3::PiLine::mnaParentPreStep(Real time, Int timeStepCount) {
@@ -164,6 +192,8 @@ void EMT::Ph3::PiLine::mnaParentAddPostStepDependencies(
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mIntfCurrent);
+  modifiedAttributes.push_back(mParallelCurrentNode0);
+  modifiedAttributes.push_back(mParallelCurrentNode1);
 }
 
 void EMT::Ph3::PiLine::mnaParentPostStep(Real time, Int timeStepCount,
@@ -198,4 +228,22 @@ void EMT::Ph3::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
 
 void EMT::Ph3::PiLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
   **mIntfCurrent = mSubSeriesElement->intfCurrent();
+
+  // update parallel currents Node 0
+  **mParallelCurrentNode0 = Matrix::Zero(3, 1);
+  if ((**mParallelCond)(0, 0) > 0) {
+    **mParallelCurrentNode0 += mSubParallelResistor0->intfCurrent();
+  }
+  if ((**mParallelCap)(0, 0) > 0) {
+    **mParallelCurrentNode0 += mSubParallelCapacitor0->intfCurrent();
+  }
+
+  // update parallel currents Node 1
+  **mParallelCurrentNode1 = Matrix::Zero(3, 1);
+  if ((**mParallelCond)(0, 0) > 0) {
+    **mParallelCurrentNode1 += mSubParallelResistor1->intfCurrent();
+  }
+  if ((**mParallelCap)(0, 0) > 0) {
+    **mParallelCurrentNode1 += mSubParallelCapacitor1->intfCurrent();
+  }
 }

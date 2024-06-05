@@ -85,7 +85,9 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
         mSLog,
         "\nInitialization from node voltages and terminal omitted (parameter "
         "already set)."
+        "\nInitial current: {:s}"
         "\nReference current: {:s}",
+        Logger::matrixCompToString(**mIntfCurrent),
         Logger::matrixCompToString(attributeTyped<MatrixComp>("I_ref")->get()));
   }
   SPDLOG_LOGGER_INFO(

@@ -48,6 +48,10 @@ public:
 
   SimPowerComp<Real>::Ptr clone(String copySuffix);
 
+  //
+  Attribute<MatrixVar<CPS::Real>>::Ptr mParallelCurrentNode0;
+  Attribute<MatrixVar<CPS::Real>>::Ptr mParallelCurrentNode1;
+
   // #### General ####
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency);
