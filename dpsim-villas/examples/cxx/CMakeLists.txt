@@ -10,11 +10,14 @@ list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
 list(APPEND LIBRARIES "jansson")
 list(APPEND LIBRARIES "uuid")
 list(APPEND LIBRARIES "villas-common")
+list(APPEND LIBRARIES "villas-fpga")
+list(APPEND LIBRARIES "xil")
 list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 
 set(SHMEM_SOURCES
 	FileExample.cpp
 	MqttExample.cpp
+	FpgaExample.cpp
 	SharedMemExample.cpp
 	#ShmemExample.cpp
 	#ShmemDistributedReference.cpp
@@ -27,11 +30,7 @@ set(SHMEM_SOURCES
 )
 
 if(WITH_CIM)
-	set(CIM_SHMEM_SOURCES
-		#Shmem_WSCC-9bus.cpp
-		#Shmem_WSCC-9bus_Ctrl.cpp
-		#Shmem_WSCC-9bus_CtrlDist.cpp
-	)
+	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 endif()
 
 foreach(SOURCE ${SHMEM_SOURCES} ${CIM_SHMEM_SOURCES})
