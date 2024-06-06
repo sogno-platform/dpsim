@@ -43,7 +43,8 @@ PYBIND11_MODULE(dpsimpyvillas, m) {
            "name"_a = "", "downsampling"_a = 1)
       .def("import_attribute", &PyInterfaceVillas::importAttribute, "attr"_a,
            // cppcheck-suppress assignBoolToPointer
-           "idx"_a, "block_on_read"_a = false, "sync_on_start"_a = true)
+           "idx"_a, "block_on_read"_a = false, "sync_on_start"_a = true,
+           "name"_a = "", "unit"_a = "")
       .def("export_attribute", &PyInterfaceVillas::exportAttribute, "attr"_a,
            // cppcheck-suppress assignBoolToPointer
            "idx"_a, "wait_for_on_write"_a = true, "name"_a = "", "unit"_a = "");
