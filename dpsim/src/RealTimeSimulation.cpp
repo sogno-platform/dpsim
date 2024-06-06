@@ -14,6 +14,9 @@
 using namespace CPS;
 using namespace DPsim;
 
+RealTimeSimulation::RealTimeSimulation(String name, CommandLineArgs &args)
+    : Simulation(name, args), mTimer(){};
+
 RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel)
     : Simulation(name, logLevel), mTimer() {
 
