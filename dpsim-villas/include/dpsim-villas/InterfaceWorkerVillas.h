@@ -65,11 +65,14 @@ public:
       std::vector<Interface::AttributePacket> &updatedAttrs) override;
 
   virtual void configureImport(UInt attributeId, const std::type_info &type,
-                               UInt idx);
+                               UInt idx, const String &name = "",
+                               const String &unit = "");
   virtual void configureExport(UInt attributeId, const std::type_info &type,
                                UInt idx, Bool waitForOnWrite,
                                const String &name = "",
                                const String &unit = "");
+
+  void printSignals() const;
 
 private:
   void prepareNode();

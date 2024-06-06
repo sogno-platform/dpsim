@@ -16,11 +16,12 @@ InterfaceVillas::InterfaceVillas(const String &nodeConfig, UInt queueLength,
 
 void InterfaceVillas::importAttribute(CPS::AttributeBase::Ptr attr, UInt idx,
                                       Bool blockOnRead,
-                                      Bool syncOnSimulationStart) {
+                                      Bool syncOnSimulationStart,
+                                      const String &name, const String &unit) {
   Interface::addImport(attr, blockOnRead, syncOnSimulationStart);
   std::dynamic_pointer_cast<InterfaceWorkerVillas>(mInterfaceWorker)
       ->configureImport((UInt)mImportAttrsDpsim.size() - 1, attr->getType(),
-                        idx);
+                        idx, name, unit);
 }
 
 void InterfaceVillas::exportAttribute(CPS::AttributeBase::Ptr attr, UInt idx,
@@ -30,6 +31,11 @@ void InterfaceVillas::exportAttribute(CPS::AttributeBase::Ptr attr, UInt idx,
   std::dynamic_pointer_cast<InterfaceWorkerVillas>(mInterfaceWorker)
       ->configureExport((UInt)mExportAttrsDpsim.size() - 1, attr->getType(),
                         idx, waitForOnWrite, name, unit);
+}
+
+void InterfaceVillas::printVillasSignals() const {
+  std::dynamic_pointer_cast<InterfaceWorkerVillas>(mInterfaceWorker)
+      ->printSignals();
 }
 
 } // namespace DPsim
