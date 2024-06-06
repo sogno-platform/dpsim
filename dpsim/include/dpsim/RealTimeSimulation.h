@@ -24,6 +24,7 @@ protected:
   Timer mTimer;
 
 public:
+  RealTimeSimulation(String name, CommandLineArgs &args);
   /// Standard constructor
   RealTimeSimulation(String name,
                      CPS::Logger::Level logLevel = CPS::Logger::Level::info);
