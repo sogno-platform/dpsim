@@ -5,10 +5,10 @@
 #include <dpsim-models/PtrFactory.h>
 #include <dpsim/Interface.h>
 
-#include <villas/exceptions.hpp>
 #include <villas/kernel/rt.hpp>
-#include <villas/memory.hpp>
 #include <villas/node.hpp>
+#include <villas/node/exceptions.hpp>
+#include <villas/node/memory.hpp>
 #include <villas/pool.hpp>
 #include <villas/sample.hpp>
 #include <villas/signal.hpp>
