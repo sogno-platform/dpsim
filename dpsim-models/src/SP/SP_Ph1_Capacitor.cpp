@@ -69,39 +69,9 @@ void SP::Ph1::Capacitor::mnaCompInitialize(Real omega, Real timeStep,
 
 void SP::Ph1::Capacitor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-
-  if (terminalNotGrounded(0)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
-                             matrixNodeIndex(0), mSusceptance);
-  }
-  if (terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
-                             matrixNodeIndex(1), mSusceptance);
-  }
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
-                             matrixNodeIndex(1), -mSusceptance);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
-                             matrixNodeIndex(0), -mSusceptance);
-  }
-
-  SPDLOG_LOGGER_INFO(mSLog, "-- Matrix Stamp ---");
-  if (terminalNotGrounded(0))
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-                       mSusceptance.real(), mSusceptance.imag(),
-                       matrixNodeIndex(0), matrixNodeIndex(0));
-  if (terminalNotGrounded(1))
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-                       mSusceptance.real(), mSusceptance.imag(),
-                       matrixNodeIndex(1), matrixNodeIndex(1));
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-                       -mSusceptance.real(), -mSusceptance.imag(),
-                       matrixNodeIndex(0), matrixNodeIndex(1));
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:e}+j{:e} to system at ({:d},{:d})",
-                       -mSusceptance.real(), -mSusceptance.imag(),
-                       matrixNodeIndex(1), matrixNodeIndex(0));
-  }
+  MNAStampUtils::stampAdmittance(mSusceptance, systemMatrix, matrixNodeIndex(0),
+                                 matrixNodeIndex(1), terminalNotGrounded(0),
+                                 terminalNotGrounded(1), mSLog);
 }
 
 void SP::Ph1::Capacitor::mnaCompAddPostStepDependencies(

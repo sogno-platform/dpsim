@@ -90,88 +90,9 @@ void EMT::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep,
 
 void EMT::Ph3::Inductor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  if (terminalNotGrounded(0)) {
-    // set upper left block, 3x3 entries
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 0), mEquivCond(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 1), mEquivCond(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 2), mEquivCond(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 0), mEquivCond(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 1), mEquivCond(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 2), mEquivCond(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 0), mEquivCond(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 1), mEquivCond(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 2), mEquivCond(2, 2));
-  }
-  if (terminalNotGrounded(1)) {
-    // set buttom right block, 3x3 entries
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(1, 0), mEquivCond(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(1, 1), mEquivCond(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(1, 2), mEquivCond(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(1, 0), mEquivCond(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(1, 1), mEquivCond(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(1, 2), mEquivCond(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(1, 0), mEquivCond(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(1, 1), mEquivCond(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(1, 2), mEquivCond(2, 2));
-  }
-  // Set off diagonal blocks, 2x3x3 entries
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(1, 0), -mEquivCond(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(1, 1), -mEquivCond(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(1, 2), -mEquivCond(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(1, 0), -mEquivCond(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(1, 1), -mEquivCond(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(1, 2), -mEquivCond(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(1, 0), -mEquivCond(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(1, 1), -mEquivCond(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(1, 2), -mEquivCond(2, 2));
-
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(0, 0), -mEquivCond(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(0, 1), -mEquivCond(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(0, 2), -mEquivCond(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(0, 0), -mEquivCond(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(0, 1), -mEquivCond(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(0, 2), -mEquivCond(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(0, 0), -mEquivCond(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(0, 1), -mEquivCond(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(0, 2), -mEquivCond(2, 2));
-  }
+  MNAStampUtils::stampConductanceMatrix(
+      mEquivCond, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
+      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
 
   SPDLOG_LOGGER_INFO(mSLog, "\nEquivalent Conductance: {:s}",
                      Logger::matrixToString(mEquivCond));

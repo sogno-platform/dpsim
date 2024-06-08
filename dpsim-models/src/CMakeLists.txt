@@ -1,6 +1,7 @@
 add_library(dpsim-models STATIC
 	Logger.cpp
 	MathUtils.cpp
+	MNAStampUtils.cpp
 	Attribute.cpp
 	TopologicalNode.cpp
 	TopologicalTerminal.cpp

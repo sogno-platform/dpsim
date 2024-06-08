@@ -52,34 +52,9 @@ void EMT::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep,
 void EMT::Ph1::Resistor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   Real conductance = 1. / **mResistance;
-  // Set diagonal entries
-  if (terminalNotGrounded(0))
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
-                             matrixNodeIndex(0), conductance);
-  if (terminalNotGrounded(1))
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
-                             matrixNodeIndex(1), conductance);
-  // Set off diagonal entries
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
-                             matrixNodeIndex(1), -conductance);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
-                             matrixNodeIndex(0), -conductance);
-  }
-
-  if (terminalNotGrounded(0))
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", conductance,
-                       matrixNodeIndex(0), matrixNodeIndex(0));
-  if (terminalNotGrounded(1))
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", conductance,
-                       matrixNodeIndex(1), matrixNodeIndex(1));
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -conductance,
-                       matrixNodeIndex(0), matrixNodeIndex(1));
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:f} to system at ({:d},{:d})", -conductance,
-                       matrixNodeIndex(1), matrixNodeIndex(0));
-  }
-  mSLog->flush();
+  MNAStampUtils::stampConductance(conductance, systemMatrix, matrixNodeIndex(0),
+                                  matrixNodeIndex(1), terminalNotGrounded(0),
+                                  terminalNotGrounded(1), mSLog);
 }
 
 void EMT::Ph1::Resistor::mnaCompAddPostStepDependencies(
