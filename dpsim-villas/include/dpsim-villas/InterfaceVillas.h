@@ -5,10 +5,10 @@
 #include <dpsim-models/PtrFactory.h>
 #include <dpsim/Interface.h>
 
-#include <villas/exceptions.hpp>
 #include <villas/kernel/rt.hpp>
-#include <villas/memory.hpp>
 #include <villas/node.hpp>
+#include <villas/node/exceptions.hpp>
+#include <villas/node/memory.hpp>
 #include <villas/pool.hpp>
 #include <villas/sample.hpp>
 #include <villas/signal.hpp>
@@ -39,7 +39,8 @@ public:
   /// @param syncOnSimulationStart Whether the simulation should block before the first timestep until this attribute has been updated
   void importAttribute(CPS::AttributeBase::Ptr attr, UInt idx,
                        Bool blockOnRead = false,
-                       Bool syncOnSimulationStart = true);
+                       Bool syncOnSimulationStart = true,
+                       const String &name = "", const String &unit = "");
 
   /// @brief configure an attribute export
   /// @param attr the attribute which's value should be exported
@@ -50,5 +51,7 @@ public:
   void exportAttribute(CPS::AttributeBase::Ptr attr, UInt idx,
                        Bool waitForOnWrite, const String &name = "",
                        const String &unit = "");
+
+  void printVillasSignals() const;
 };
 } // namespace DPsim

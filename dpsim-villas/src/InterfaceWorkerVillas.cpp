@@ -109,6 +109,7 @@ void InterfaceWorkerVillas::prepareNode() {
                         ret);
     std::exit(1);
   }
+  SPDLOG_LOGGER_INFO(mLog, "Node: {}", mNode->getNameFull());
 
   mNode->getFactory()->start(
       nullptr); //We have no SuperNode, so just hope type_start doesnt use it...
@@ -141,8 +142,12 @@ void InterfaceWorkerVillas::setupNodeSignals() {
     idx++;
   }
 
-  node::SignalList::Ptr nodeInputSignals = mNode->getInputSignals(false);
-  nodeInputSignals->clear();
+  node::SignalList::Ptr nodeInputSignals = mNode->getInputSignals(true);
+  if (nodeInputSignals == nullptr) {
+    nodeInputSignals = std::make_shared<node::SignalList>();
+  } else {
+    nodeInputSignals->clear();
+  }
   idx = 0;
   for (const auto &[id, signal] : mImportSignals) {
     while (id > idx) {
@@ -488,7 +493,8 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId,
 
 void InterfaceWorkerVillas::configureImport(UInt attributeId,
                                             const std::type_info &type,
-                                            UInt idx) {
+                                            UInt idx, const String &name,
+                                            const String &unit) {
   if (mOpened) {
     if (mLog != nullptr) {
       SPDLOG_LOGGER_WARN(mLog, "InterfaceVillas has already been opened! "
@@ -518,7 +524,7 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId,
         },
         0);
     mImportSignals[idx] =
-        std::make_shared<node::Signal>("", "", node::SignalType::INTEGER);
+        std::make_shared<node::Signal>(name, unit, node::SignalType::INTEGER);
   } else if (type == typeid(Real)) {
     mImports.emplace_back(
         [idx, log](Sample *smp) -> AttributeBase::Ptr {
@@ -531,7 +537,7 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId,
         },
         0);
     mImportSignals[idx] =
-        std::make_shared<node::Signal>("", "", node::SignalType::FLOAT);
+        std::make_shared<node::Signal>(name, unit, node::SignalType::FLOAT);
   } else if (type == typeid(Complex)) {
     mImports.emplace_back(
         [idx, log](Sample *smp) -> AttributeBase::Ptr {
@@ -544,7 +550,7 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId,
         },
         0);
     mImportSignals[idx] =
-        std::make_shared<node::Signal>("", "", node::SignalType::COMPLEX);
+        std::make_shared<node::Signal>(name, unit, node::SignalType::COMPLEX);
   } else if (type == typeid(Bool)) {
     mImports.emplace_back(
         [idx, log](Sample *smp) -> AttributeBase::Ptr {
@@ -557,11 +563,31 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId,
         },
         0);
     mImportSignals[idx] =
-        std::make_shared<node::Signal>("", "", node::SignalType::BOOLEAN);
+        std::make_shared<node::Signal>(name, unit, node::SignalType::BOOLEAN);
   } else {
     if (mLog != nullptr) {
       SPDLOG_LOGGER_WARN(mLog, "Unsupported attribute type! Interface "
                                "configuration will remain unchanged!");
     }
+  }
+}
+
+void InterfaceWorkerVillas::printSignals() const {
+  SPDLOG_LOGGER_INFO(
+      mLog,
+      "InterfaceWorkerVillas Settings: Queue Length: {}, Sample Length: {}",
+      mQueueLength, mSampleLength);
+  SPDLOG_LOGGER_INFO(mLog, "Export signals:");
+  for (const auto &[id, signal] : mExportSignals) {
+    SPDLOG_LOGGER_INFO(mLog, "ID: {}, Name: {}, Unit: {}, Type: {}", id,
+                       signal->name, signal->unit,
+                       node::signalTypeToString(signal->type));
+  }
+
+  SPDLOG_LOGGER_INFO(mLog, "Import signals:");
+  for (const auto &[id, signal] : mImportSignals) {
+    SPDLOG_LOGGER_INFO(mLog, "ID: {}, Name: {}, Unit: {}, Type: {}", id,
+                       signal->name, signal->unit,
+                       node::signalTypeToString(signal->type));
   }
 }
