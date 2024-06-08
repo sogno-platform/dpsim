@@ -95,12 +95,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acbe2e3a001ca4acf292fd7acbce7af57"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_villas.html#acbe2e3a001ca4acf292fd7acbce7af57">InterfaceVillas</a> (const String &amp;nodeConfig, UInt queueLength=512, UInt sampleLength=64, const String &amp;name=&quot;&quot;, UInt downsampling=1)</td></tr>
 <tr class="memdesc:acbe2e3a001ca4acf292fd7acbce7af57"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a new <a class="el" href="class_d_psim_1_1_interface_villas.html" title="Interface type that can be used to import and export simulation attributes over any node type support...">InterfaceVillas</a> instance  <a href="class_d_psim_1_1_interface_villas.html#acbe2e3a001ca4acf292fd7acbce7af57">More...</a><br /></td></tr>
 <tr class="separator:acbe2e3a001ca4acf292fd7acbce7af57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea616ec799709e41363c7784c1f2fbad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_villas.html#aea616ec799709e41363c7784c1f2fbad">importAttribute</a> (<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr, UInt idx, Bool blockOnRead=false, Bool syncOnSimulationStart=true)</td></tr>
-<tr class="memdesc:aea616ec799709e41363c7784c1f2fbad"><td class="mdescLeft">&#160;</td><td class="mdescRight">configure an attribute import  <a href="class_d_psim_1_1_interface_villas.html#aea616ec799709e41363c7784c1f2fbad">More...</a><br /></td></tr>
-<tr class="separator:aea616ec799709e41363c7784c1f2fbad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c2e1ea51d448fee5bec37f636fa761f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_villas.html#a7c2e1ea51d448fee5bec37f636fa761f">importAttribute</a> (<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr, UInt idx, Bool blockOnRead=false, Bool syncOnSimulationStart=true, const String &amp;name=&quot;&quot;, const String &amp;unit=&quot;&quot;)</td></tr>
+<tr class="memdesc:a7c2e1ea51d448fee5bec37f636fa761f"><td class="mdescLeft">&#160;</td><td class="mdescRight">configure an attribute import  <a href="class_d_psim_1_1_interface_villas.html#a7c2e1ea51d448fee5bec37f636fa761f">More...</a><br /></td></tr>
+<tr class="separator:a7c2e1ea51d448fee5bec37f636fa761f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7b387d207f2d9d9a9db5b6708a49b4f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_villas.html#ae7b387d207f2d9d9a9db5b6708a49b4f">exportAttribute</a> (<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr, UInt idx, Bool waitForOnWrite, const String &amp;name=&quot;&quot;, const String &amp;unit=&quot;&quot;)</td></tr>
 <tr class="memdesc:ae7b387d207f2d9d9a9db5b6708a49b4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">configure an attribute export  <a href="class_d_psim_1_1_interface_villas.html#ae7b387d207f2d9d9a9db5b6708a49b4f">More...</a><br /></td></tr>
 <tr class="separator:ae7b387d207f2d9d9a9db5b6708a49b4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f8d2672ec0e57255e8b7483e5e851e3"><td class="memItemLeft" align="right" valign="top"><a id="a5f8d2672ec0e57255e8b7483e5e851e3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>printVillasSignals</b> () const</td></tr>
+<tr class="separator:a5f8d2672ec0e57255e8b7483e5e851e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_d_psim_1_1_interface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_d_psim_1_1_interface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td></tr>
 <tr class="memitem:a9b9d732b46459964a8b367574104167f inherit pub_methods_class_d_psim_1_1_interface"><td class="memItemLeft" align="right" valign="top"><a id="a9b9d732b46459964a8b367574104167f"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Interface</b> (std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_interface_worker.html">InterfaceWorker</a> &gt; intf, const String &amp;name=&quot;&quot;, UInt downsampling=1)</td></tr>
@@ -335,12 +338,12 @@ std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; AttributePacket &g
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_interface_villas_8cpp_source.html#l00026">26</a> of file <a class="el" href="_interface_villas_8cpp_source.html">InterfaceVillas.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_interface_villas_8cpp_source.html#l00027">27</a> of file <a class="el" href="_interface_villas_8cpp_source.html">InterfaceVillas.cpp</a>.</p>
 
 </div>
 </div>
-<a id="aea616ec799709e41363c7784c1f2fbad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea616ec799709e41363c7784c1f2fbad">&#9670;&nbsp;</a></span>importAttribute()</h2>
+<a id="a7c2e1ea51d448fee5bec37f636fa761f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c2e1ea51d448fee5bec37f636fa761f">&#9670;&nbsp;</a></span>importAttribute()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -367,7 +370,19 @@ std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; AttributePacket &g
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">Bool&#160;</td>
-          <td class="paramname"><em>syncOnSimulationStart</em> = <code>true</code>&#160;</td>
+          <td class="paramname"><em>syncOnSimulationStart</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const String &amp;&#160;</td>
+          <td class="paramname"><em>name</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const String &amp;&#160;</td>
+          <td class="paramname"><em>unit</em> = <code>&quot;&quot;</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
