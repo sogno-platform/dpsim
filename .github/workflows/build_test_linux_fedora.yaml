@@ -118,7 +118,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: pytest-output-${{ github.sha }}
-        path: outputs/examples/Notebooks/
+        path: outputs/
 
   compare-notebook-results:
     name: Compare Notebook results
