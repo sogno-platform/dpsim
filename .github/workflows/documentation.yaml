@@ -23,8 +23,8 @@ jobs:
 
     - name: Make reference docs
       run: |
-        make --parallel $(nproc) -C build docs
-        make --parallel $(nproc) -C build docs_cxx
+        make --jobs $(nproc) -C build docs
+        make --jobs $(nproc) -C build docs_cxx
 
     - name: Copy reference
       run: |
