@@ -12,12 +12,18 @@ jobs:
     container: sogno/dpsim:dev-rocky
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: recursive
 
     - name: Create Build Environment
       run: mkdir build
+
+    - name: Cache build directory
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-rocky-${{ github.ref }}
 
     - name: Configure CMake
       shell: bash
@@ -27,15 +33,7 @@ jobs:
     - name: Build every target
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake --build .
-      env:
-        MAKEFLAGS: "-j2"
-
-    - name: Cache build directory
-      uses: actions/cache@v3
-      with:
-        path: ${{ github.workspace }}/build
-        key: build-cache-rocky-${{ github.sha }}
+      run: cmake --build . --parallel $(nproc)
 
   linux-rocky-clang:
     name: Build on Rocky Linux using Clang
@@ -43,12 +41,18 @@ jobs:
     container: sogno/dpsim:dev-rocky
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: recursive
 
     - name: Create Build Environment
       run: mkdir build
+
+    - name: Cache build directory
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-rocky-clang-${{ github.ref }}
 
     - name: Configure CMake
       shell: bash
@@ -58,15 +62,8 @@ jobs:
     - name: Build every target
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake --build .
-      env:
-        MAKEFLAGS: "-j2"
+      run: cmake --build . --parallel $(nproc)
 
-    - name: Cache build directory
-      uses: actions/cache@v3
-      with:
-        path: ${{ github.workspace }}/build
-        key: build-cache-rocky-${{ github.sha }}
 
   profiling:
     name: Build with Profiling options
@@ -74,12 +71,18 @@ jobs:
     container: sogno/dpsim:dev-rocky
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: recursive
 
     - name: Create Build Environment
       run: mkdir build
+
+    - name: Cache build directory
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-rocky-profiling-${{ github.ref }}
 
     - name: Configure CMake
       shell: bash
@@ -89,15 +92,8 @@ jobs:
     - name: Build every target
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake --build .
-      env:
-        MAKEFLAGS: "-j2"
+      run: cmake --build . --parallel $(nproc)
 
-    - name: Cache build directory
-      uses: actions/cache@v3
-      with:
-        path: ${{ github.workspace }}/build
-        key: build-cache-rocky-profiling-${{ github.sha }}
 
 ## Tests ##
   test-examples-1:

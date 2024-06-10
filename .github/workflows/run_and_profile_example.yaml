@@ -1,7 +1,7 @@
 name: Run the profiler for an example
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       path:
         description: 'Path to the example to be run'
@@ -17,13 +17,13 @@ jobs:
   profiling-examples:
     name: Run example with profiling
     runs-on: ubuntu-latest
-    container: sogno/dpsim:dev-centos
+    container: sogno/dpsim:dev-rocky
     steps:
     - name: Restore Cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ github.workspace }}/build
-        key: build-cache-centos-profiling-${{ github.sha }}
+        key: build-cache-rocky-profiling-${{ github.sha }}
 
     - name: Run Binary
       run: ${{ inputs.path }} 2>&1 | tee output.log
@@ -40,7 +40,7 @@ jobs:
       run: gprof ${{ inputs.path }} | gprof2dot -s | dot -Tpng -o profiling.png || true
 
     - name: Archive profiler output
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: profiler-output-${{ inputs.name }}
         path: |

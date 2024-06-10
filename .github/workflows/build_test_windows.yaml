@@ -11,13 +11,23 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
 
-    - id: build
+    - name: Create build folder
       run: |
         cd ${{ github.workspace }}
         mkdir build
+
+    - name: Setup build directory cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-windows-cache-${{ github.ref }}
+
+    - name: Build DPsim
+      run: |
+        cd ${{ github.workspace }}
         cd build
         git describe --tags --abbrev=0 --match "v*"
         cmake -DWITH_PYBIND=OFF ..
-        cmake --build . --target dpsim
+        cmake --build . --target dpsim --parallel
