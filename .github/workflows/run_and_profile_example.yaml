@@ -1,7 +1,7 @@
 name: Run the profiler for an example
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       path:
         description: 'Path to the example to be run'
