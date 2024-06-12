@@ -65,33 +65,9 @@ void EMT::Ph3::SeriesSwitch::mnaCompApplySystemMatrixStamp(
   Real conductance =
       (**mIsClosed) ? 1. / **mClosedResistance : 1. / **mOpenResistance;
 
-  // Set diagonal entries
-  if (terminalNotGrounded(0))
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0),
-                             matrixNodeIndices(0), conductance);
-  if (terminalNotGrounded(1))
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1),
-                             matrixNodeIndices(1), conductance);
-  // Set off diagonal entries
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0),
-                             matrixNodeIndices(1), -conductance);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1),
-                             matrixNodeIndices(0), -conductance);
-  }
-
-  if (terminalNotGrounded(0))
-    SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance,
-                       matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
-  if (terminalNotGrounded(1))
-    SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance,
-                       matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance,
-                       matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
-    SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance,
-                       matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
-  }
+  MNAStampUtils::stampConductanceAs3x3ScalarMatrix(
+      conductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
+      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
 }
 
 void EMT::Ph3::SeriesSwitch::mnaCompApplySwitchSystemMatrixStamp(
@@ -99,33 +75,9 @@ void EMT::Ph3::SeriesSwitch::mnaCompApplySwitchSystemMatrixStamp(
   Real conductance =
       (closed) ? 1. / **mClosedResistance : 1. / **mOpenResistance;
 
-  // Set diagonal entries
-  if (terminalNotGrounded(0))
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0),
-                             matrixNodeIndices(0), conductance);
-  if (terminalNotGrounded(1))
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1),
-                             matrixNodeIndices(1), conductance);
-  // Set off diagonal entries
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0),
-                             matrixNodeIndices(1), -conductance);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1),
-                             matrixNodeIndices(0), -conductance);
-  }
-
-  if (terminalNotGrounded(0))
-    SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance,
-                       matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
-  if (terminalNotGrounded(1))
-    SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance,
-                       matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance,
-                       matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
-    SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", -conductance,
-                       matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
-  }
+  MNAStampUtils::stampConductanceAs3x3ScalarMatrix(
+      conductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
+      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
 }
 
 void EMT::Ph3::SeriesSwitch::mnaCompAddPostStepDependencies(
