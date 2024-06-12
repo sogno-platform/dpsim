@@ -20,7 +20,7 @@ template <typename VarType>
 MnaSolverPlugin<VarType>::MnaSolverPlugin(String pluginName, String name,
                                           CPS::Domain domain,
                                           CPS::Logger::Level logLevel)
-    : MnaSolverDirect<VarType>(name, domain, logLevel), mPluginName(pluginName),
+    : MnaSolverMerged<VarType>(name, domain, logLevel), mPluginName(pluginName),
       mPlugin(nullptr), mDlHandle(nullptr) {}
 
 template <typename VarType> MnaSolverPlugin<VarType>::~MnaSolverPlugin() {

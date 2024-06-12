@@ -11,8 +11,7 @@
 #include <dpsim/DataLogger.h>
 #include <dpsim/DenseLUAdapter.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
-#include <dpsim/MNASolver.h>
-#include <dpsim/MNASolverDirect.h>
+#include <dpsim/MNASolverMerged.h>
 #include <dpsim/SparseLUAdapter.h>
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
@@ -59,7 +58,7 @@ public:
 
   /// sovlerImpl: choose the most advanced solver implementation available by default
   template <typename VarType>
-  static std::shared_ptr<MnaSolver<VarType>> factory(
+  static std::shared_ptr<MnaSolverMerged<VarType>> factory(
       String name, CPS::Domain domain = CPS::Domain::DP,
       CPS::Logger::Level logLevel = CPS::Logger::Level::info,
       DirectLinearSolverImpl implementation = mSupportedSolverImpls().back(),
@@ -76,21 +75,19 @@ public:
         "MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
 
     switch (implementation) {
-    /* TODO: have only one "solver" object of type MnaSolverDirect and only use setDirectLinearSolverImplementation in the switch-case.
-		 * This is not done now, since MnaSolverDirect and MnaSolver are distinct classes - and someone might add another subclass of MnaSolver
-		 * to the project (MnaSolverIterative?). It is planned to merge MnaSolverDirect and MnaSolver anyway, so this won't happen. */
+    // TODO: have only one "solver" object of type MnaSolverMerged and only use setDirectLinearSolverImplementation in the switch-case.
     case DirectLinearSolverImpl::SparseLU: {
       log->info("creating SparseLUAdapter solver implementation");
-      std::shared_ptr<MnaSolverDirect<VarType>> sparseSolver =
-          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      std::shared_ptr<MnaSolverMerged<VarType>> sparseSolver =
+          std::make_shared<MnaSolverMerged<VarType>>(name, domain, logLevel);
       sparseSolver->setDirectLinearSolverImplementation(
           DirectLinearSolverImpl::SparseLU);
       return sparseSolver;
     }
     case DirectLinearSolverImpl::DenseLU: {
       log->info("creating DenseLUAdapter solver implementation");
-      std::shared_ptr<MnaSolverDirect<VarType>> denseSolver =
-          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      std::shared_ptr<MnaSolverMerged<VarType>> denseSolver =
+          std::make_shared<MnaSolverMerged<VarType>>(name, domain, logLevel);
       denseSolver->setDirectLinearSolverImplementation(
           DirectLinearSolverImpl::DenseLU);
       return denseSolver;
@@ -98,8 +95,8 @@ public:
 #ifdef WITH_KLU
     case DirectLinearSolverImpl::KLU: {
       log->info("creating KLUAdapter solver implementation");
-      std::shared_ptr<MnaSolverDirect<VarType>> kluSolver =
-          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      std::shared_ptr<MnaSolverMerged<VarType>> kluSolver =
+          std::make_shared<MnaSolverMerged<VarType>>(name, domain, logLevel);
       kluSolver->setDirectLinearSolverImplementation(
           DirectLinearSolverImpl::KLU);
       return kluSolver;
@@ -108,8 +105,8 @@ public:
 #ifdef WITH_CUDA
     case DirectLinearSolverImpl::CUDADense: {
       log->info("creating GpuDenseAdapter solver implementation");
-      std::shared_ptr<MnaSolverDirect<VarType>> gpuDenseSolver =
-          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      std::shared_ptr<MnaSolverMerged<VarType>> gpuDenseSolver =
+          std::make_shared<MnaSolverMerged<VarType>>(name, domain, logLevel);
       gpuDenseSolver->setDirectLinearSolverImplementation(
           DirectLinearSolverImpl::CUDADense);
       return gpuDenseSolver;
@@ -117,8 +114,8 @@ public:
 #ifdef WITH_CUDA_SPARSE
     case DirectLinearSolverImpl::CUDASparse: {
       log->info("creating GpuSparseAdapter solver implementation");
-      std::shared_ptr<MnaSolverDirect<VarType>> gpuSparseSolver =
-          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      std::shared_ptr<MnaSolverMerged<VarType>> gpuSparseSolver =
+          std::make_shared<MnaSolverMerged<VarType>>(name, domain, logLevel);
       gpuSparseSolver->setDirectLinearSolverImplementation(
           DirectLinearSolverImpl::CUDASparse);
       return gpuSparseSolver;
@@ -127,8 +124,8 @@ public:
 #ifdef WITH_MAGMA
     case DirectLinearSolverImpl::CUDAMagma: {
       log->info("creating GpuMagmaAdapter solver implementation");
-      std::shared_ptr<MnaSolverDirect<VarType>> gpuMagmaSolver =
-          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      std::shared_ptr<MnaSolverMerged<VarType>> gpuMagmaSolver =
+          std::make_shared<MnaSolverMerged<VarType>>(name, domain, logLevel);
       gpuMagmaSolver->setDirectLinearSolverImplementation(
           DirectLinearSolverImpl::CUDAMagma);
       return gpuMagmaSolver;

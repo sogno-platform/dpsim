@@ -14,7 +14,7 @@
 namespace DPsim {
 
 template <typename VarType>
-class MnaSolverPlugin : public MnaSolverDirect<VarType> {
+class MnaSolverPlugin : public MnaSolverMerged<VarType> {
 protected:
   using Solver::mSLog;
   String mPluginName;
