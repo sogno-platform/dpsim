@@ -31,6 +31,18 @@ public:
       UInt node2Index, Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
       const Logger::Log &mSLog, Int maxFreq = 1, Int freqIdx = 0);
 
+  /// Stamps conductance as a 3x3 scalar matrix (a diagonal matrix, where all diagonal elements are equal to conductance).
+  static void stampConductanceAs3x3ScalarMatrix(
+      Real conductance, SparseMatrixRow &mat, UInt node1Index, UInt node2Index,
+      Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
+      const Logger::Log &mSLog);
+
+  /// Stamps admittance as a 3x3 scalar matrix (a diagonal matrix, where all diagonal elements are equal to admittance).
+  static void stampAdmittanceAs3x3ScalarMatrix(
+      Complex admittance, SparseMatrixRow &mat, UInt node1Index,
+      UInt node2Index, Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
+      const Logger::Log &mSLog, Int maxFreq = 1, Int freqIdx = 0);
+
 private:
   template <typename T>
   static void stampValue(T value, SparseMatrixRow &mat, UInt node1Index,
@@ -44,6 +56,14 @@ private:
                           Bool isTerminal1NotGrounded,
                           Bool isTerminal2NotGrounded, Int maxFreq, Int freqIdx,
                           const Logger::Log &mSLog);
+
+  template <typename T>
+  static void stampValueAsScalarMatrix(T value, UInt sizeOfScalarMatrix,
+                                       SparseMatrixRow &mat, UInt node1Index,
+                                       UInt node2Index,
+                                       Bool isTerminal1NotGrounded,
+                                       Bool isTerminal2NotGrounded, Int maxFreq,
+                                       Int freqIdx, const Logger::Log &mSLog);
 
   template <typename T>
   static void stampValueNoConditions(T value, SparseMatrixRow &mat,

@@ -22,8 +22,7 @@ void MNAStampUtils::stampAdmittance(Complex admittance, SparseMatrixRow &mat,
                                     const Logger::Log &mSLog, Int maxFreq,
                                     Int freqIdx) {
   SPDLOG_LOGGER_DEBUG(
-      mSLog, "Start stamping admittance for frequency index {:d}...",
-      freqIdx);
+      mSLog, "Start stamping admittance for frequency index {:d}...", freqIdx);
 
   stampValue(admittance, mat, node1Index, node2Index, isTerminal1NotGrounded,
              isTerminal2NotGrounded, maxFreq, freqIdx, mSLog);
@@ -50,13 +49,42 @@ void MNAStampUtils::stampAdmittanceMatrix(
     UInt node2Index, Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
     const Logger::Log &mSLog, Int maxFreq, Int freqIdx) {
   SPDLOG_LOGGER_DEBUG(
-      mSLog,
-      "Start stamping admittance matrix for frequency index {:d}...",
+      mSLog, "Start stamping admittance matrix for frequency index {:d}...",
       freqIdx);
 
   stampMatrix(admittanceMat, mat, node1Index, node2Index,
               isTerminal1NotGrounded, isTerminal2NotGrounded, maxFreq, freqIdx,
               mSLog);
+
+  SPDLOG_LOGGER_DEBUG(mSLog, "Stamping completed.");
+}
+
+void MNAStampUtils::stampConductanceAs3x3ScalarMatrix(
+    Real conductance, SparseMatrixRow &mat, UInt node1Index, UInt node2Index,
+    Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
+    const Logger::Log &mSLog) {
+  SPDLOG_LOGGER_DEBUG(mSLog,
+                      "Start stamping conductance as 3x3 scalar matrix...");
+
+  stampValueAsScalarMatrix(conductance, 3, mat, node1Index, node2Index,
+                           isTerminal1NotGrounded, isTerminal2NotGrounded, 1, 0,
+                           mSLog);
+
+  SPDLOG_LOGGER_DEBUG(mSLog, "Stamping completed.");
+}
+
+void MNAStampUtils::stampAdmittanceAs3x3ScalarMatrix(
+    Complex admittance, SparseMatrixRow &mat, UInt node1Index, UInt node2Index,
+    Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
+    const Logger::Log &mSLog, Int maxFreq, Int freqIdx) {
+  SPDLOG_LOGGER_DEBUG(mSLog,
+                      "Start stamping admittance as 3x3 scalar matrix for "
+                      "frequency index {:d}...",
+                      freqIdx);
+
+  stampValueAsScalarMatrix(admittance, 3, mat, node1Index, node2Index,
+                           isTerminal1NotGrounded, isTerminal2NotGrounded,
+                           maxFreq, freqIdx, mSLog);
 
   SPDLOG_LOGGER_DEBUG(mSLog, "Stamping completed.");
 }
@@ -115,6 +143,29 @@ void MNAStampUtils::stampMatrix(const MatrixVar<T> &matrix,
 }
 
 template <typename T>
+void MNAStampUtils::stampValueAsScalarMatrix(
+    T value, UInt sizeOfScalarMatrix, SparseMatrixRow &mat, UInt node1Index,
+    UInt node2Index, Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
+    Int maxFreq, Int freqIdx, const Logger::Log &mSLog) {
+  if (isTerminal1NotGrounded && isTerminal2NotGrounded) {
+    for (UInt i = 0; i < sizeOfScalarMatrix; i++) {
+      stampValueNoConditions(value, mat, node1Index + i, node2Index + i,
+                             maxFreq, freqIdx, mSLog);
+    }
+  } else if (isTerminal1NotGrounded) {
+    for (UInt i = 0; i < sizeOfScalarMatrix; i++) {
+      stampValueOnDiagonalNoConditions(value, mat, node1Index + i, maxFreq,
+                                       freqIdx, mSLog);
+    }
+  } else if (isTerminal2NotGrounded) {
+    for (UInt i = 0; i < sizeOfScalarMatrix; i++) {
+      stampValueOnDiagonalNoConditions(value, mat, node2Index + i, maxFreq,
+                                       freqIdx, mSLog);
+    }
+  }
+}
+
+template <typename T>
 void MNAStampUtils::stampValueNoConditions(T value, SparseMatrixRow &mat,
                                            UInt node1Index, UInt node2Index,
                                            Int maxFreq, Int freqIdx,
@@ -152,7 +203,8 @@ void MNAStampUtils::addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
                                        Matrix::Index column, Real value,
                                        Int maxFreq, Int freqIdx,
                                        const Logger::Log &mSLog) {
-  SPDLOG_LOGGER_DEBUG(mSLog, "- Adding {:s} to system matrix element ({:d},{:d})",
+  SPDLOG_LOGGER_DEBUG(mSLog,
+                      "- Adding {:s} to system matrix element ({:d},{:d})",
                       Logger::realToString(value), row, column);
 
   Math::addToMatrixElement(mat, row, column, value);
@@ -162,7 +214,8 @@ void MNAStampUtils::addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
                                        Matrix::Index column, Complex value,
                                        Int maxFreq, Int freqIdx,
                                        const Logger::Log &mSLog) {
-  SPDLOG_LOGGER_DEBUG(mSLog, "- Adding {:s} to system matrix element ({:d},{:d})",
+  SPDLOG_LOGGER_DEBUG(mSLog,
+                      "- Adding {:s} to system matrix element ({:d},{:d})",
                       Logger::complexToString(value), row, column);
 
   Math::addToMatrixElement(mat, row, column, value, maxFreq, freqIdx);
