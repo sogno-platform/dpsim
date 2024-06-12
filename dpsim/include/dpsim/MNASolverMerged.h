@@ -151,9 +151,6 @@ protected:
   /// LU factorization configuration
   DirectLinearSolverConfiguration mConfigurationInUse;
 
-  /// Constructor should not be called by users but by Simulation
-  MnaSolverMerged(String name, CPS::Domain domain = CPS::Domain::DP,
-            CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
   /// Initialization of individual components
   void initializeComponents();
