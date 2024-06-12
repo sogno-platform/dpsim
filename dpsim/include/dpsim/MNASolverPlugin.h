@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <dpsim/MNASolverDirect.h>
+#include <dpsim/MNASolverMerged.h>
 #include <dpsim/MNASolverDynInterface.h>
 
 namespace DPsim {

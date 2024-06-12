@@ -11,6 +11,7 @@
 #include <bitset>
 #include <iostream>
 #include <list>
+#include <memory>
 #include <unordered_map>
 #include <vector>
 
@@ -24,6 +25,23 @@
 #include <dpsim/Config.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
+#include <dpsim/DenseLUAdapter.h>
+#include <dpsim/DirectLinearSolver.h>
+#include <dpsim/DirectLinearSolverConfiguration.h>
+#ifdef WITH_KLU
+#include <dpsim/KLUAdapter.h>
+#endif
+#include <dpsim/SparseLUAdapter.h>
+#ifdef WITH_CUDA
+#include <dpsim/GpuDenseAdapter.h>
+#ifdef WITH_CUDA_SPARSE
+#include <dpsim/GpuSparseAdapter.h>
+#endif
+#ifdef WITH_MAGMA
+#include <dpsim/GpuMagmaAdapter.h>
+#endif
+#endif
+
 
 /* std::size_t is the largest data type. No container can store
  * more than std::size_t elements. Define the number of switches
@@ -218,7 +236,7 @@ protected:
   /// Logging of system matrices and source vector
   void logSystemMatrices();
   /// Solves system for single frequency
-  void solve(Real time, Int timeStepCount);
+  virtual void solve(Real time, Int timeStepCount);
   /// Solves system for multiple frequencies
   void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx);
 

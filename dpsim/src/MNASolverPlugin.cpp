@@ -70,7 +70,7 @@ void MnaSolverPlugin<VarType>::recomputeSystemMatrix(Real time) {
 }
 
 template <typename VarType> void MnaSolverPlugin<VarType>::initialize() {
-  MnaSolver<VarType>::initialize();
+  MnaSolverMerged<VarType>::initialize();
   int size = this->mRightSideVector.rows();
   auto hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
   int nnz = hMat[0].nonZeros();

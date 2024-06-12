@@ -853,7 +853,7 @@ void MnaSolverMerged<VarType>::solve(Real time, Int timeStepCount) {
     mRightSideVector += *stamp;
 
   if (!mIsInInitialization)
-    MnaSolver<VarType>::updateSwitchStatus();
+    updateSwitchStatus();
 
   if (mSwitchedMatrices.size() > 0) {
     auto start = std::chrono::steady_clock::now();
@@ -890,7 +890,7 @@ void MnaSolverMerged<VarType>::solve(Real time, Int timeStepCount) {
         mRightSideVector.setZero();
 
         if (!mIsInInitialization)
-          MnaSolver<VarType>::updateSwitchStatus();
+          updateSwitchStatus();
 
         for (auto syncGen : mSyncGen)
           syncGen->correctorStep();
