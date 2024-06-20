@@ -1,0 +1,114 @@
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# @m-mirz and @dinkelbachjan will be requested for
+# review when someone opens a pull request.
+* @m-mirz @dinkelbachjan
+
+# Order is important; the last matching pattern takes the most
+# precedence. When someone opens a pull request that only
+# modifies the following files, only the following members
+# and not the global owner(s) will be requested for a review.
+
+/.clang-format @stv0g @m-mirz
+/.devcontainer @stv0g @m-mirz
+/.dockerignore @stv0g
+/.editorconfig @stv0g @m-mirz
+/.git-blame-ignore-revs @stv0g
+/.github @m-mirz @leonardocarreras @stv0g
+/.gitignore @stv0g @m-mirz
+/cmake @stv0g
+/cmake/FindMAGMA.cmake @n-eiling
+/configs/shmem_cosim/ @stv0g
+/dpsim-models/include/dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h @martinmoraga
+/dpsim-models/include/dpsim-models/CIM/Reader.h @gnakti
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_SynchronGenerator3OrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_SynchronGenerator5OrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_SynchronGenerator6aOrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_SynchronGenerator6bOrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_SynchronGeneratorTrStab.h @gnakti
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_varResSwitch.h @gnakti
+/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_SynchronGenerator5OrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGenerator3OrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGenerator4OrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGenerator5OrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGenerator6aOrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGenerator6bOrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGeneratorTrStab.h @gnakti
+/dpsim-models/include/dpsim-models/SP/SP_Ph1_varResSwitch.h @gnakti
+/dpsim-models/src/Base/Base_ReducedOrderSynchronGenerator.cpp @martinmoraga
+/dpsim-models/src/CIM/Reader.cpp @gnakti
+/dpsim-models/src/DP/DP_Ph1_SynchronGenerator3OrderVBR.cpp @martinmoraga
+/dpsim-models/src/DP/DP_Ph1_SynchronGenerator4OrderVBR.cpp @martinmoraga
+/dpsim-models/src/DP/DP_Ph1_SynchronGenerator5OrderVBR.cpp @martinmoraga
+/dpsim-models/src/DP/DP_Ph1_SynchronGenerator6aOrderVBR.cpp @martinmoraga
+/dpsim-models/src/DP/DP_Ph1_SynchronGenerator6bOrderVBR.cpp @martinmoraga
+/dpsim-models/src/DP/DP_Ph1_SynchronGeneratorTrStab.cpp @gnakti
+/dpsim-models/src/DP/DP_Ph1_varResSwitch.cpp @gnakti
+/dpsim-models/src/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.cpp @martinmoraga
+/dpsim-models/src/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.cpp @martinmoraga
+/dpsim-models/src/EMT/EMT_Ph3_SynchronGenerator5OrderVBR.cpp @martinmoraga
+/dpsim-models/src/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.cpp @martinmoraga
+/dpsim-models/src/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.cpp @martinmoraga
+/dpsim-models/src/SP/SP_Ph1_SynchronGenerator3OrderVBR.cpp @martinmoraga
+/dpsim-models/src/SP/SP_Ph1_SynchronGenerator4OrderVBR.cpp @martinmoraga
+/dpsim-models/src/SP/SP_Ph1_SynchronGenerator5OrderVBR.cpp @martinmoraga
+/dpsim-models/src/SP/SP_Ph1_SynchronGenerator6aOrderVBR.cpp @martinmoraga
+/dpsim-models/src/SP/SP_Ph1_SynchronGenerator6bOrderVBR.cpp @martinmoraga
+/dpsim-models/src/SP/SP_Ph1_SynchronGeneratorTrStab.cpp @gnakti
+/dpsim-models/src/SP/SP_Ph1_varResSwitch.cpp @gnakti
+/dpsim-villas/ @stv0g
+/dpsim-villas/examples/cxx/FpgaExample.cpp @n-eiling
+/dpsim/examples/cxx/CIM @gnakti
+/dpsim/examples/cxx/Circuits @gnakti
+/dpsim/examples/cxx/Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp @martinmoraga
+/dpsim/examples/cxx/Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp @martinmoraga
+/dpsim/examples/cxx/Circuits/DP_SMIB_ReducedOrderSG_LoadStep.cpp @martinmoraga
+/dpsim/examples/cxx/Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp @martinmoraga
+/dpsim/examples/cxx/Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp @martinmoraga
+/dpsim/examples/cxx/Circuits/EMT_SMIB_ReducedOrderSG_LoadStep.cpp @martinmoraga
+/dpsim/examples/cxx/Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp @martinmoraga
+/dpsim/examples/cxx/Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp @martinmoraga
+/dpsim/examples/cxx/Circuits/SP_SMIB_ReducedOrderSG_LoadStep.cpp @martinmoraga
+/dpsim/examples/cxx/Examples.h @gnakti
+/dpsim/include/dpsim/GpuDenseAdapter.h @n-eiling
+/dpsim/include/dpsim/GpuMagmaAdapter.h @n-eiling
+/dpsim/include/dpsim/GpuSparseAdapter.h @n-eiling
+/dpsim/include/dpsim/MNASolverDynInterface.h @n-eiling
+/dpsim/include/dpsim/MNASolverFactory.h @n-eiling
+/dpsim/include/dpsim/MNASolverPlugin.h @n-eiling
+/dpsim/include/dpsim/PFSolver.h @gnakti
+/dpsim/include/dpsim/PFSolverPowerPolar.h @gnakti
+/dpsim/include/Utils.h @n-eiling
+/dpsim/src/GpuDenseAdapter.cpp @n-eiling
+/dpsim/src/GpuMagmaAdapter.cpp @n-eiling
+/dpsim/src/GpuSparseAdapter.cpp @n-eiling
+/dpsim/src/MNASolverPlugin.cpp @n-eiling
+/dpsim/src/PFSolver.cpp @gnakti
+/dpsim/src/PFSolverPowerPolar.cpp @gnakti
+/dpsim/src/pybind @stv0g
+/dpsim/src/SolverPlugins @n-eiling
+/dpsim/src/Utils.h @n-eiling
+/examples/Notebooks/Circuits @gnakti
+/examples/Notebooks/Circuits/SP_Validation_ReducedOrderSG_VBR_SMIB_Fault_withPSAT.ipynb @martinmoraga
+/examples/Notebooks/Grids @gnakti
+/examples/villas @stv0g @pipeacosta
+/examples/villas-deprecated @stv0g
+/gitlab-ci.yml @stv0g
+/packaging @m-mirz
+/packaging/Docker @stv0g
+/packaging/Docker/Dockerfile.dev-rocky @n-eiling
+/pyproject.toml @stv0g
+/pytest.ini @stv0g
+/python @gnakti @stv0g
+/README.md @m-mirz
+/requirements-manylinux.txt @dinkelbachjan
+/requirements.txt @m-mirz @stv0g
+/setup.cfg @m-mirz @stv0g
+/setup.py @m-mirz @stv0g
+/sonar-project.properties @m-mirz
+CMakeLists.txt @m-mirz
