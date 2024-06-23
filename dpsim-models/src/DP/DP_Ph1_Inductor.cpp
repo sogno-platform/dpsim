@@ -285,25 +285,24 @@ void DP::Ph1::Inductor::mnaTearPostStep(Complex voltage, Complex current) {
   (**mIntfCurrent)(0, 0) = mEquivCond(0, 0) * voltage + mEquivCurrent(0, 0);
 }
 
-void DP::Ph1::Inductor::stampSignMatrix(MatrixVar<Complex> &signMatrix,
+void DP::Ph1::Inductor::stampSignMatrix(UInt branchIdx,
+                                        MatrixVar<Complex> &signMatrix,
                                         Complex coeffDP) {
-  signMatrix(mBranchIdx, mBranchIdx) = coeffDP;
+  signMatrix(branchIdx, branchIdx) = coeffDP;
 }
 
 void DP::Ph1::Inductor::stampDiscretizationMatrix(
-    MatrixVar<Complex> &discretizationMatrix, Complex coeffDP) {
-  discretizationMatrix(mBranchIdx, mBranchIdx) =
+    UInt branchIdx, MatrixVar<Complex> &discretizationMatrix, Complex coeffDP) {
+  discretizationMatrix(branchIdx, branchIdx) =
       mEquivCond(0, 0) * (1.0 + coeffDP);
 }
 
 void DP::Ph1::Inductor::stampBranchNodeIncidenceMatrix(
-    Matrix &branchNodeIncidenceMatrix) {
+    UInt branchIdx, Matrix &branchNodeIncidenceMatrix) {
   if (terminalNotGrounded(0)) {
-    branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(0)) = 1.0;
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(0)) = 1.0;
   }
   if (terminalNotGrounded(1)) {
-    branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(1)) = -1.0;
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(1)) = -1.0;
   }
 }
-
-void DP::Ph1::Inductor::setBranchIdx(UInt i) { mBranchIdx = i; }

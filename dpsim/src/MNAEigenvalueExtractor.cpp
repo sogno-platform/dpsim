@@ -15,7 +15,6 @@ void MNAEigenvalueExtractor<VarType>::initialize(
     Real timeStep) {
   setParameters(topology, timeStep);
   identifyEigenvalueComponents(topology.mComponents);
-  setBranchIndices();
   createEmptyEigenvalueMatrices(numMatrixNodeIndices);
   stampEigenvalueMatrices();
   mLogger.setLogAttributes(mEigenvalues, mDiscreteEigenvalues);
@@ -42,32 +41,26 @@ template <typename VarType>
 void MNAEigenvalueExtractor<VarType>::identifyEigenvalueComponents(
     const CPS::IdentifiedObject::List &components) {
   // TODO: throw exception if topology contains components that do not implement EigenvalueCompInterface
-  for (auto comp : components) {
+  UInt branchIdx = 0;
+  for (auto component : components) {
     auto eigenvalueComponent =
-        std::dynamic_pointer_cast<CPS::EigenvalueCompInterface>(comp);
+        std::dynamic_pointer_cast<CPS::EigenvalueCompInterface>(component);
     if (eigenvalueComponent) {
-      mEigenvalueComponents.push_back(eigenvalueComponent);
+      mEigenvalueComponentToBranchIdx[eigenvalueComponent] = branchIdx;
       auto eigenvalueDynamicComponent = std::dynamic_pointer_cast<
-          CPS::EigenvalueDynamicCompInterface<VarType>>(comp);
+          CPS::EigenvalueDynamicCompInterface<VarType>>(component);
       if (eigenvalueDynamicComponent) {
         mEigenvalueDynamicComponents.push_back(eigenvalueDynamicComponent);
       }
+      branchIdx++;
     }
-  }
-}
-
-template <typename VarType>
-void MNAEigenvalueExtractor<VarType>::setBranchIndices() {
-  int size = mEigenvalueComponents.size();
-  for (int i = 0; i < size; i++) {
-    mEigenvalueComponents[i]->setBranchIdx(i);
   }
 }
 
 template <typename VarType>
 void MNAEigenvalueExtractor<VarType>::createEmptyEigenvalueMatrices(
     UInt numMatrixNodeIndices) {
-  int nBranches = mEigenvalueComponents.size();
+  int nBranches = mEigenvalueComponentToBranchIdx.size();
   mSignMatrix = MatrixVar<VarType>::Zero(nBranches, nBranches);
   mDiscretizationMatrix = MatrixVar<VarType>::Zero(nBranches, nBranches);
   mBranchNodeIncidenceMatrix = Matrix::Zero(nBranches, numMatrixNodeIndices);
@@ -78,13 +71,17 @@ void MNAEigenvalueExtractor<VarType>::createEmptyEigenvalueMatrices(
 
 template <typename VarType>
 void MNAEigenvalueExtractor<VarType>::stampEigenvalueMatrices() {
-  for (auto comp : mEigenvalueComponents) {
-    comp->stampBranchNodeIncidenceMatrix(mBranchNodeIncidenceMatrix);
+  for (const auto &compToBranchIdx : mEigenvalueComponentToBranchIdx) {
+    auto comp = compToBranchIdx.first;
+    UInt branchIdx = compToBranchIdx.second;
+    comp->stampBranchNodeIncidenceMatrix(branchIdx, mBranchNodeIncidenceMatrix);
   }
   mNodeBranchIncidenceMatrix = mBranchNodeIncidenceMatrix.transpose();
-  for (auto dynamicComp : mEigenvalueDynamicComponents) {
-    dynamicComp->stampSignMatrix(mSignMatrix, mCoeffDP);
-    dynamicComp->stampDiscretizationMatrix(mDiscretizationMatrix, mCoeffDP);
+  for (const auto &dynamicComp : mEigenvalueDynamicComponents) {
+    UInt branchIdx = mEigenvalueComponentToBranchIdx[dynamicComp];
+    dynamicComp->stampSignMatrix(branchIdx, mSignMatrix, mCoeffDP);
+    dynamicComp->stampDiscretizationMatrix(branchIdx, mDiscretizationMatrix,
+                                           mCoeffDP);
   }
 }
 

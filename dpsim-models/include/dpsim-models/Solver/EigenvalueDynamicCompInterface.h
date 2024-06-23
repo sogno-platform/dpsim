@@ -10,11 +10,12 @@ public:
   using List = std::vector<Ptr>;
 
   /// Stamp component into sign matrix used for eigenvalue extraction.
-  virtual void stampSignMatrix(MatrixVar<VarType> &signMatrix,
+  virtual void stampSignMatrix(UInt branchIdx, MatrixVar<VarType> &signMatrix,
                                Complex coeffDP) = 0;
   /// Stamp component into discretization matrix used for eigenvalue extraction.
   virtual void
-  stampDiscretizationMatrix(MatrixVar<VarType> &discretizationMatrix,
+  stampDiscretizationMatrix(UInt branchIdx,
+                            MatrixVar<VarType> &discretizationMatrix,
                             Complex coeffDP) = 0;
 };
 } // namespace CPS
