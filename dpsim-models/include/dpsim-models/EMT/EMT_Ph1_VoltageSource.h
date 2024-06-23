@@ -11,7 +11,6 @@
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/EigenvalueCompInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
-#include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
 namespace EMT {
@@ -78,12 +77,8 @@ public:
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
   // #### Implementation of eigenvalue component interface ####
-  void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) final;
-  void setBranchIdx(UInt i) final;
-
-private:
-  /// Branch index
-  UInt mBranchIdx;
+  void stampBranchNodeIncidenceMatrix(UInt branchIdx,
+                                      Matrix &branchNodeIncidenceMatrix) final;
 };
 } // namespace Ph1
 } // namespace EMT

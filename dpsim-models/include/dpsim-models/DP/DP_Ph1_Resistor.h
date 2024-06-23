@@ -41,8 +41,9 @@ public:
   // #### MNA section ####
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
-  void mnaCompInitializeHarm(Real omega, Real timeStep,
-                             std::vector<Attribute<Matrix>::Ptr> leftVector) override;
+  void mnaCompInitializeHarm(
+      Real omega, Real timeStep,
+      std::vector<Attribute<Matrix>::Ptr> leftVector) override;
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps system matrix considering the frequency index
@@ -93,12 +94,8 @@ public:
   Complex daeInitialize() override;
 
   // #### Implementation of eigenvalue component interface ####
-  void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) final;
-  void setBranchIdx(UInt i) final;
-
-private:
-  /// Branch index
-  UInt mBranchIdx;
+  void stampBranchNodeIncidenceMatrix(UInt branchIdx,
+                                      Matrix &branchNodeIncidenceMatrix) final;
 };
 } // namespace Ph1
 } // namespace DP

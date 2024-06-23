@@ -17,7 +17,8 @@ public:
   void closeLogger();
 
 private:
-  CPS::EigenvalueCompInterface::List mEigenvalueComponents;
+  std::map<CPS::EigenvalueCompInterface::Ptr, UInt>
+      mEigenvalueComponentToBranchIdx;
   typename CPS::EigenvalueDynamicCompInterface<VarType>::List
       mEigenvalueDynamicComponents;
   Real mTimeStep;
@@ -35,7 +36,6 @@ private:
   void setParameters(const CPS::SystemTopology &topology, Real timeStep);
   void
   identifyEigenvalueComponents(const CPS::IdentifiedObject::List &components);
-  void setBranchIndices();
   void createEmptyEigenvalueMatrices(UInt numMatrixNodeIndices);
   void stampEigenvalueMatrices();
   void calculateStateMatrix(const Matrix &powerSystemMatrix);

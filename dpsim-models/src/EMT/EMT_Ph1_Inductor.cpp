@@ -117,24 +117,23 @@ void EMT::Ph1::Inductor::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = mEquivCond * (**mIntfVoltage)(0, 0) + mEquivCurrent;
 }
 
-void EMT::Ph1::Inductor::stampSignMatrix(MatrixVar<Real> &signMatrix,
+void EMT::Ph1::Inductor::stampSignMatrix(UInt branchIdx,
+                                         MatrixVar<Real> &signMatrix,
                                          Complex coeffDP) {
-  signMatrix(mBranchIdx, mBranchIdx) = 1.0;
+  signMatrix(branchIdx, branchIdx) = 1.0;
 }
 
 void EMT::Ph1::Inductor::stampDiscretizationMatrix(
-    MatrixVar<Real> &discretizationMatrix, Complex coeffDP) {
-  discretizationMatrix(mBranchIdx, mBranchIdx) = 2 * mEquivCond;
+    UInt branchIdx, MatrixVar<Real> &discretizationMatrix, Complex coeffDP) {
+  discretizationMatrix(branchIdx, branchIdx) = 2 * mEquivCond;
 }
 
 void EMT::Ph1::Inductor::stampBranchNodeIncidenceMatrix(
-    Matrix &branchNodeIncidenceMatrix) {
+    UInt branchIdx, Matrix &branchNodeIncidenceMatrix) {
   if (terminalNotGrounded(0)) {
-    branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(0)) = 1.0;
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(0)) = 1.0;
   }
   if (terminalNotGrounded(1)) {
-    branchNodeIncidenceMatrix(mBranchIdx, matrixNodeIndex(1)) = -1.0;
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(1)) = -1.0;
   }
 }
-
-void EMT::Ph1::Inductor::setBranchIdx(UInt i) { mBranchIdx = i; }

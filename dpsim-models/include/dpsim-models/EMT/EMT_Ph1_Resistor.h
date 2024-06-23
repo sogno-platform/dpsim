@@ -60,12 +60,8 @@ public:
                                  Attribute<Matrix>::Ptr &leftVector) override;
 
   // #### Implementation of eigenvalue component interface ####
-  void stampBranchNodeIncidenceMatrix(Matrix &branchNodeIncidenceMatrix) final;
-  void setBranchIdx(UInt i) final;
-
-private:
-  /// Branch index
-  UInt mBranchIdx;
+  void stampBranchNodeIncidenceMatrix(UInt branchIdx,
+                                      Matrix &branchNodeIncidenceMatrix) final;
 };
 } // namespace Ph1
 } // namespace EMT
