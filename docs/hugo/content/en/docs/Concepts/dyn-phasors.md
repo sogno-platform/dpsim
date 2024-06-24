@@ -12,7 +12,7 @@ Further research topics include fault and stability analysis under unbalanced co
 
 ## Bandpass Signals and Baseband Representation
 
-Although here, dynamic phasors are presented as a power system modelling tool, it should be noted that the concept is also known in other domains, for example, microwave and communications engineering [Maas2003, Suarez2009, Haykin2009, Proakis2001].
+Although here, dynamic phasors are presented as a power system modelling tool, it should be noted that the concept is also known in other domains, for example, microwave and communications engineering [Maas2003](https://ieeexplore.ieee.org/document/9100822), [Suarez2009](https://ieeexplore.ieee.org/book/5236646), [Haykin2009](https://isbnsearch.org/isbn/9780471697909), [Proakis2001](https://isbnsearch.org/isbn/0131589326).
 In these domains, the approach is often denoted as base band representation or complex envelope.
 Another common term coming from power electrical engineering is shifted frequency analysis (SFA).
 In the following, the general approach of dynamic phasors for power system simulation is explained starting from the idea of bandpass signals.
