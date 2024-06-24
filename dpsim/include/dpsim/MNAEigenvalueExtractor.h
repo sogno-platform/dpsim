@@ -2,6 +2,7 @@
 
 #include <dpsim-models/Solver/EigenvalueDynamicCompInterface.h>
 #include <dpsim-models/SystemTopology.h>
+#include <dpsim/EigenvalueUtils.h>
 #include <dpsim/MNAEigenvalueLogger.h>
 
 namespace DPsim {
