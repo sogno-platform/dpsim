@@ -110,7 +110,7 @@ void MNAEigenvalueExtractor<Complex>::calculateStateMatrix(
     const Matrix &powerSystemMatrix) {
   // TODO: use right hand side solving of factorized power system matrix instead of inversion (performance).
   MatrixComp compPowerSystemMatrix =
-      CPS::Math::convertRealEquivalentToComplexMatrix(powerSystemMatrix);
+      EigenvalueUtils::convertRealEquivalentToComplexMatrix(powerSystemMatrix);
   MatrixComp intermediateResult =
       compPowerSystemMatrix.inverse() * mNodeBranchIncidenceMatrix;
   mStateMatrix = mSignMatrix - mDiscretizationMatrix *
@@ -122,7 +122,7 @@ template <typename VarType>
 void MNAEigenvalueExtractor<VarType>::computeDiscreteEigenvalues() {
   auto discreteEigenvaluesIncludingZeros = mStateMatrix.eigenvalues();
   **mDiscreteEigenvalues =
-      CPS::Math::returnNonZeroElements(discreteEigenvaluesIncludingZeros);
+      EigenvalueUtils::returnNonZeroElements(discreteEigenvaluesIncludingZeros);
   // TODO: filter out eigenvalues = -1 + 0i to avoid division by zero in recoverEigenvalues().
 }
 

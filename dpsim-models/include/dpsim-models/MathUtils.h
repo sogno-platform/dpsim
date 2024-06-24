@@ -63,10 +63,6 @@ public:
   // | Interharmonics harm1-harm2                  | Re(row,col)_harm2 | Re(row,col)_harm2 |
   // | Interharmonics harm1-harm2                  | Im(row,col)_harm2 | Im(row,col)_harm2 |
 
-  static MatrixComp returnNonZeroElements(const MatrixComp &mat);
-
-  static MatrixComp convertRealEquivalentToComplexMatrix(const Matrix &realEquivalentMatrix);
-
   static void setMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
                                Matrix::Index column, Complex value,
                                Int maxFreq = 1, Int freqIdx = 0);

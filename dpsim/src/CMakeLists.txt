@@ -5,6 +5,7 @@ set(DPSIM_SOURCES
 	MNASolverDirect.cpp
 	MNAEigenvalueExtractor.cpp
 	MNAEigenvalueLogger.cpp
+	EigenvalueUtils.cpp
 	DenseLUAdapter.cpp
 	SparseLUAdapter.cpp
 	DirectLinearSolverConfiguration.cpp
