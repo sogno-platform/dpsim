@@ -135,13 +135,15 @@ protected:
   /// The data loggers
   DataLogger::List mLoggers;
 
-  /// Helper function for constructors
-  void create();
-  /// Create solvers depending on simulation settings
-  template <typename VarType> void createSolvers();
-  /// Subroutine for MNA only because there are many MNA options
-  template <typename VarType> void createMNASolver();
-  /// Prepare schedule for simulation
+	/// Helper function for constructors
+	void create();
+	/// Create solvers depending on simulation settings
+	template <typename VarType> void createSolvers();
+	/// Subroutine for MNA only because there are many MNA options
+	template <typename VarType> void createMNASolver();
+
+	template <typename VarType> void createIterativeMNASolver();
+	// Prepare schedule for simulation
   void prepSchedule();
 
   /// ### SynGen Interface ###

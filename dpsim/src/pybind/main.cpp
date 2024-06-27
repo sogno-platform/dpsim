@@ -296,16 +296,96 @@ PYBIND11_MODULE(dpsimpy, m) {
              logger.logAttribute(names, comp.attribute(attr));
            });
 
-  py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(
-      m, "IdentifiedObject")
-      .def("name", &CPS::IdentifiedObject::name)
-      /// CHECK: It would be nicer if all the attributes of an IdObject were bound as properties so they show up in the documentation and auto-completion.
-      /// I don't know if this is possible to do because it depends on if the attribute map is filled before or after the code in this file is run.
-      /// Manually adding the attributes would of course be possible but very tedious to do for all existing components / attributes
-      .def("attr", &CPS::IdentifiedObject::attribute, "name"_a)
-      .def("print_attribute_list", &printAttributes)
-      .def("print_attribute", &printAttribute, "attribute_name"_a)
-      .def("__str__", &getAttributeList);
+	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
+		.def("name", &CPS::IdentifiedObject::name)
+		/// CHECK: It would be nicer if all the attributes of an IdObject were bound as properties so they show up in the documentation and auto-completion.
+		/// I don't know if this is possible to do because it depends on if the attribute map is filled before or after the code in this file is run.
+		/// Manually adding the attributes would of course be possible but very tedious to do for all existing components / attributes
+		.def("attr", &CPS::IdentifiedObject::attribute, "name"_a)
+		.def("print_attribute_list", &printAttributes)
+		.def("print_attribute", &printAttribute, "attribute_name"_a)
+		.def("__str__", &getAttributeList);
+
+	//Enums
+
+	py::enum_<DPsim::Solver::Behaviour>(m, "SolverBehaviour")
+		.value("Initialization", DPsim::Solver::Behaviour::Initialization)
+		.value("Simulation", DPsim::Solver::Behaviour::Simulation);
+
+	py::enum_<CPS::Domain>(m, "Domain")
+		.value("SP", CPS::Domain::SP)
+		.value("DP", CPS::Domain::DP)
+		.value("EMT", CPS::Domain::EMT);
+
+	py::enum_<CPS::PhaseType>(m, "PhaseType")
+		.value("A", CPS::PhaseType::A)
+		.value("B", CPS::PhaseType::B)
+		.value("C", CPS::PhaseType::C)
+		.value("ABC", CPS::PhaseType::ABC)
+		.value("Single", CPS::PhaseType::Single);
+
+	py::enum_<CPS::PowerflowBusType>(m, "PowerflowBusType")
+		.value("PV", CPS::PowerflowBusType::PV)
+		.value("PQ", CPS::PowerflowBusType::PQ)
+		.value("VD", CPS::PowerflowBusType::VD)
+		.value("None", CPS::PowerflowBusType::None);
+
+	py::enum_<CPS::GeneratorType>(m, "GeneratorType")
+		.value("PVNode", CPS::GeneratorType::PVNode)
+		.value("TransientStability", CPS::GeneratorType::TransientStability)
+		.value("IdealVoltageSource", CPS::GeneratorType::IdealVoltageSource)
+		.value("SG3OrderVBR", CPS::GeneratorType::SG3OrderVBR)
+		.value("SG4OrderVBR", CPS::GeneratorType::SG4OrderVBR)
+		.value("SG6aOrderVBR", CPS::GeneratorType::SG6aOrderVBR)
+		.value("SG6bOrderVBR", CPS::GeneratorType::SG6bOrderVBR)
+		.value("FullOrderVBR", CPS::GeneratorType::FullOrderVBR)
+		.value("FullOrder", CPS::GeneratorType::FullOrder)
+		.value("NONE", CPS::GeneratorType::None);
+
+	py::enum_<DPsim::Solver::Type>(m, "Solver")
+		.value("MNA", DPsim::Solver::Type::MNA)
+		.value("ITERATIVEMNA", DPsim::Solver::Type::ITERATIVEMNA)
+		.value("DAE", DPsim::Solver::Type::DAE)
+		.value("NRP", DPsim::Solver::Type::NRP);
+
+	py::enum_<DPsim::DirectLinearSolverImpl>(m, "DirectLinearSolverImpl")
+		.value("Undef", DPsim::DirectLinearSolverImpl::Undef)
+		.value("DenseLU", DPsim::DirectLinearSolverImpl::DenseLU)
+		.value("SparseLU", DPsim::DirectLinearSolverImpl::SparseLU)
+		.value("KLU", DPsim::DirectLinearSolverImpl::KLU)
+		.value("CUDADense", DPsim::DirectLinearSolverImpl::CUDADense)
+		.value("CUDASparse", DPsim::DirectLinearSolverImpl::CUDASparse)
+		.value("CUDAMagma", DPsim::DirectLinearSolverImpl::CUDAMagma);
+
+	py::enum_<DPsim::SCALING_METHOD>(m, "scaling_method")
+		.value("no_scaling", DPsim::SCALING_METHOD::NO_SCALING)
+		.value("sum_scaling", DPsim::SCALING_METHOD::SUM_SCALING)
+		.value("max_scaling", DPsim::SCALING_METHOD::MAX_SCALING);
+
+	py::enum_<DPsim::FILL_IN_REDUCTION_METHOD>(m, "fill_in_reduction_method")
+		.value("amd", DPsim::FILL_IN_REDUCTION_METHOD::AMD)
+		.value("amd_nv", DPsim::FILL_IN_REDUCTION_METHOD::AMD_NV)
+		.value("amd_ra", DPsim::FILL_IN_REDUCTION_METHOD::AMD_RA)
+		.value("colamd", DPsim::FILL_IN_REDUCTION_METHOD::COLAMD);
+
+	py::enum_<DPsim::PARTIAL_REFACTORIZATION_METHOD>(m, "partial_refactorization_method")
+		.value("no_partial_refactorization", DPsim::PARTIAL_REFACTORIZATION_METHOD::NO_PARTIAL_REFACTORIZATION)
+		.value("factorization_path", DPsim::PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH)
+		.value("refactorization_restart", DPsim::PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART);
+
+	py::enum_<DPsim::USE_BTF>(m, "use_btf")
+		.value("no_btf", DPsim::USE_BTF::NO_BTF)
+		.value("do_btf", DPsim::USE_BTF::DO_BTF);
+
+	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
+		.value("AUTO", CPS::CSVReader::Mode::AUTO)
+		.value("MANUAL", CPS::CSVReader::Mode::MANUAL);
+
+	py::enum_<CPS::CSVReader::DataFormat>(m, "CSVReaderFormat")
+		.value("HHMMSS", CPS::CSVReader::DataFormat::HHMMSS)
+		.value("SECONDS", CPS::CSVReader::DataFormat::SECONDS)
+		.value("HOURS", CPS::CSVReader::DataFormat::HOURS)
+		.value("MINUTES", CPS::CSVReader::DataFormat::MINUTES);
 
 #ifdef WITH_CIM
   py::class_<CPS::CIM::Reader>(m, "CIMReader")
