@@ -69,6 +69,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph1_VoltageSource.cpp
 	EMT/EMT_Ph1_VoltageSourceRamp.cpp
 	EMT/EMT_Ph1_VoltageSourceNorton.cpp
+	EMT/EMT_Ph1_Switch.cpp
 
 	EMT/EMT_Ph3_CurrentSource.cpp
 	EMT/EMT_Ph3_VoltageSource.cpp
@@ -101,6 +102,11 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_SynchronGeneratorIdeal.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorVBRStandalone.cpp
 	EMT/EMT_Ph3_SynchronGeneratorTrStab.cpp
+
+	EMT/EMT_Ph3_SSN_Capacitor.cpp
+	EMT/EMT_Ph3_SSN_Inductor.cpp
+	EMT/EMT_Ph1_SSN_Full_Serial_RLC.cpp
+	EMT/EMT_Ph3_SSN_Full_Serial_RLC.cpp
 
 	SP/SP_Ph1_VoltageSource.cpp
 	SP/SP_Ph1_Capacitor.cpp

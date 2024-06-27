@@ -33,6 +33,9 @@ set(CIRCUIT_SOURCES
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp
+	Circuits/EMT_Ph3_LinearSampleCircuit.cpp
+	Circuits/EMT_Ph3_LinearSampleCircuitSSN.cpp
+	Circuits/EMT_Ph1_Switch_R1.cpp
 
 	# EMT examples with PF initialization
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
@@ -132,6 +135,9 @@ list(APPEND TEST_SOURCES
 	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FrequencyRamp_CosineFM.cpp
 	Circuits/DP_SMIB_ReducedOrderSG_LoadStep.cpp
 	Circuits/DP_SMIB_ReducedOrderSGIterative_LoadStep.cpp
+	Circuits/EMT_Ph3_LinearSampleCircuit.cpp
+	Circuits/EMT_Ph3_LinearSampleCircuitSSN.cpp
+	Circuits/EMT_Ph1_Switch_R1.cpp
 )
 
 if(WITH_SUNDIALS)
