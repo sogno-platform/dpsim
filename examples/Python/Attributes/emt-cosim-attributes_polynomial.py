@@ -21,6 +21,9 @@ def set_dpsim1(t_s, t_f, u_1_0, vs_cond, logger_prefix):
     sim_name = "S1"
 
     gnd = dpsimpy.emt.SimNode.gnd
+
+    if with_vs:
+        n0 = dpsimpy.emt.SimNode("n0")
     n1 = dpsimpy.emt.SimNode("n1")
     n2 = dpsimpy.emt.SimNode("n2")
 
@@ -41,6 +44,7 @@ def set_dpsim1(t_s, t_f, u_1_0, vs_cond, logger_prefix):
     # Initial conditions
     if with_vs:
         # This adds a transient at t=0
+        n0.set_initial_voltage(1 * dpsimpy.PEAK1PH_TO_RMS3PH)
         n1.set_initial_voltage(0 * dpsimpy.PEAK1PH_TO_RMS3PH)
     else:
         n1.set_initial_voltage(5 * dpsimpy.PEAK1PH_TO_RMS3PH)
@@ -49,15 +53,17 @@ def set_dpsim1(t_s, t_f, u_1_0, vs_cond, logger_prefix):
 
     # Connections
     if with_vs:
-        v_s.connect([n1, gnd])
+        v_s.connect([gnd, n0])
+        r_1.connect([n0, n1])
+    else:
+        r_1.connect([gnd, n1])
 
-    r_1.connect([gnd, n1])
     r_line.connect([n2, n1])
     c_1.connect([gnd, n1])
-    evs.connect([gnd, n2])
+    evs.connect([n2, gnd])
 
     if with_vs:
-        sys = dpsimpy.SystemTopology(50, [gnd, n1, n2], [v_s, evs, r_1, c_1, r_line])
+        sys = dpsimpy.SystemTopology(50, [gnd, n0, n1, n2], [v_s, evs, r_1, c_1, r_line])
     else:
         sys = dpsimpy.SystemTopology(50, [gnd, n1, n2], [evs, r_1, c_1, r_line])
 
@@ -79,12 +85,14 @@ def set_dpsim1(t_s, t_f, u_1_0, vs_cond, logger_prefix):
     sim.add_logger(logger)
 
     if with_vs:
+        n0_v0 = np.array([1.0])
         n1_v0 = np.array([0.0])
+        ir_1_0 = (n0_v0 - n1_v0) / r_1_r
     else:
         n1_v0 = np.array([5.0])
+        ir_1_0 = n1_v0 / r_1_r
     n2_v0 = np.array([u_1_0])
 
-    ir_1_0 = n1_v0 / r_1_r
     i_r_line_0 = (n1_v0 - n2_v0) / r_line_r
 
     r_1.set_intf_voltage(n1_v0)
@@ -219,7 +227,10 @@ if __name__ == '__main__':
     y_1 = y_1_0
 
     # We have to assume the trajectory of y_2 extending its initial value, since we have no prior information
-    y_1_m_prev = np.tile(y_1_0, m)
+    # y_1_m_prev = np.tile(y_1_0, m)
+
+    # This one as computed in Matlab
+    y_1_m_prev = np.array([30.108, y_1_0])
 
     for i in range(0, N):
         y_1_prev = y_1_m_prev[-1]
