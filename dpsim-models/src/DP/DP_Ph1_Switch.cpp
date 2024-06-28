@@ -107,3 +107,13 @@ void DP::Ph1::Switch::mnaCompPostStep(Real time, Int timeStepCount,
   mnaCompUpdateVoltage(**leftVector);
   mnaCompUpdateCurrent(**leftVector);
 }
+
+void DP::Ph1::Switch::stampBranchNodeIncidenceMatrix(
+    UInt branchIdx, Matrix &branchNodeIncidenceMatrix) {
+  if (terminalNotGrounded(0)) {
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(0)) = 1.0;
+  }
+  if (terminalNotGrounded(1)) {
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(1)) = -1.0;
+  }
+}

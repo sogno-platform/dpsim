@@ -84,7 +84,7 @@ void EMT::Ph1::VoltageSource::updateVoltage(Real time) {
   if (srcFreq > 0)
     (**mIntfVoltage)(0, 0) =
         Math::abs(voltageRef) *
-        cos((time)*2. * PI * srcFreq + Math::phase(voltageRef));
+        cos((time) * 2. * PI * srcFreq + Math::phase(voltageRef));
   else
     (**mIntfVoltage)(0, 0) = voltageRef.real();
 }
@@ -120,4 +120,14 @@ void EMT::Ph1::VoltageSource::mnaCompPostStep(
 void EMT::Ph1::VoltageSource::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = Math::realFromVectorElement(
       leftVector, mVirtualNodes[0]->matrixNodeIndex());
+}
+
+void EMT::Ph1::VoltageSource::stampBranchNodeIncidenceMatrix(
+    UInt branchIdx, Matrix &branchNodeIncidenceMatrix) {
+  if (terminalNotGrounded(0)) {
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(0)) = 1.0;
+  }
+  if (terminalNotGrounded(1)) {
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(1)) = -1.0;
+  }
 }

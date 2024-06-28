@@ -295,3 +295,25 @@ void DP::Ph1::Capacitor::mnaCompUpdateCurrentHarm() {
                         Logger::phasorToString((**mIntfCurrent)(0, freq)));
   }
 }
+
+void DP::Ph1::Capacitor::stampSignMatrix(UInt branchIdx,
+                                         MatrixVar<Complex> &signMatrix,
+                                         Complex coeffDP) {
+  signMatrix(branchIdx, branchIdx) = -1.0;
+}
+
+void DP::Ph1::Capacitor::stampDiscretizationMatrix(
+    UInt branchIdx, MatrixVar<Complex> &discretizationMatrix, Complex coeffDP) {
+  discretizationMatrix(branchIdx, branchIdx) =
+      -mEquivCond(0, 0) * (1.0 + coeffDP);
+}
+
+void DP::Ph1::Capacitor::stampBranchNodeIncidenceMatrix(
+    UInt branchIdx, Matrix &branchNodeIncidenceMatrix) {
+  if (terminalNotGrounded(0)) {
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(0)) = 1.0;
+  }
+  if (terminalNotGrounded(1)) {
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(1)) = -1.0;
+  }
+}
