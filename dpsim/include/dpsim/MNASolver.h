@@ -63,8 +63,8 @@ namespace DPsim {
   Plugin
 };
 /// Solver class using Modified Nodal Analysis (MNA).
-template <typename VarType> class MnaSolver : public Solver {
-protected:
+template <typename VarType> class MnaSolver final: public Solver {
+private:
   // #### General simulation settings ####
   /// Simulation domain, which can be dynamic phasor (DP) or EMT
   CPS::Domain mDomain;
@@ -130,8 +130,6 @@ protected:
   UInt mSwitchTimeIndex = 0;
   /// Vector of switch times
   std::vector<SwitchConfiguration> mSwitchEvents;
-  /// Collects the status of switches to select correct system matrix
-  void updateSwitchStatus();
 
   // #### Attributes related to logging ####
   /// Last simulation time step when log was updated
@@ -173,7 +171,7 @@ protected:
   /// Initialization of individual components
   void initializeComponents();
   /// Initialization of system matrices and source vector
-  virtual void initializeSystem();
+  void initializeSystem();
   /// Initialization of system matrices and source vector
   void initializeSystemWithParallelFrequencies();
   /// Initialization of system matrices and source vector
@@ -195,6 +193,9 @@ protected:
   /// Create system matrix
   void createEmptySystemMatrix();
 
+  /// Collects the status of switches to select correct system matrix
+  void updateSwitchStatus();
+
   // #### Methods for precomputed switch matrices (optionally with parallel frequencies) ####
   /// Sets all entries in the matrix with the given switch index to zero
   void switchedMatrixEmpty(std::size_t index);
@@ -204,15 +205,11 @@ protected:
   void switchedMatrixStamp(
       std::size_t index,
       std::vector<std::shared_ptr<CPS::MNAInterface>> &comp);
-/// Applies a component and switch stamp to the matrix with the given switch index
-  virtual void switchedMatrixStamp(std::size_t swIdx, Int freqIdx,
-                                   CPS::MNAInterface::List &components,
-                                   CPS::MNASwitchInterface::List &switches) {}
 
-    /// Checks whether the status of variable MNA elements has changed
+  /// Checks whether the status of variable MNA elements has changed
   Bool hasVariableComponentChanged();
 
-// #### Methods for system recomputation over time ####
+  // #### Methods for system recomputation over time ####
   /// Stamps components into the variable system matrix
   void stampVariableSystemMatrix();
   /// Solves the system with variable system matrix
@@ -221,7 +218,7 @@ protected:
   /// Create a solve task for recomputation solver
   std::shared_ptr<CPS::Task> createSolveTaskRecomp();
   /// Recomputes systems matrix
-  virtual void recomputeSystemMatrix(Real time);
+  void recomputeSystemMatrix(Real time);
 
   // #### Scheduler Task Methods ####
   /// Create a solve task for this solver implementation
@@ -232,11 +229,11 @@ protected:
   std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx);
 
   /// Logs left and right vector
-  virtual void log(Real time, Int timeStepCount) override;
+  void log(Real time, Int timeStepCount) final;
   /// Logging of system matrices and source vector
   void logSystemMatrices();
   /// Solves system for single frequency
-  virtual void solve(Real time, Int timeStepCount);
+  void solve(Real time, Int timeStepCount);
   /// Solves system for multiple frequencies
   void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx);
 
@@ -271,17 +268,17 @@ public:
   std::vector<CPS::Attribute<Matrix>::Ptr> mLeftSideVectorHarm;
 
   /// Calls subroutines to set up everything that is required before simulation
-  virtual void initialize() override;
+  void initialize() final;
 
   // #### Setter and Getter ####
   ///
-  virtual void setSystem(const CPS::SystemTopology &system) override;
+  void setSystem(const CPS::SystemTopology &system) final;
   ///
   Matrix &leftSideVector() { return **mLeftSideVector; }
   ///
   Matrix &rightSideVector() { return mRightSideVector; }
   ///
-  virtual CPS::Task::List getTasks() override;
+  CPS::Task::List getTasks() final;
 
   /// Sets the linear solver to "implementation" and creates an object
   void
@@ -289,10 +286,10 @@ public:
 
   /// Sets the linear solver configuration
   void setDirectLinearSolverConfiguration(
-      DirectLinearSolverConfiguration &configuration) override;
+      DirectLinearSolverConfiguration &configuration) final;
 
   /// log LU decomposition times
-  void logLUTimes() override;
+  void logLUTimes() final;
 
   /// ### SynGen Interface ###
   int mIter = 0;
