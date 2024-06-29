@@ -1,7 +1,7 @@
 set(DPSIM_SOURCES
 	Simulation.cpp
 	RealTimeSimulation.cpp
-	MNASolverMerged.cpp
+	MNASolver.cpp
 	DenseLUAdapter.cpp
 	SparseLUAdapter.cpp
 	DirectLinearSolverConfiguration.cpp

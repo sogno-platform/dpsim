@@ -63,7 +63,7 @@ namespace DPsim {
   Plugin
 };
 /// Solver class using Modified Nodal Analysis (MNA).
-template <typename VarType> class MnaSolverMerged : public Solver {
+template <typename VarType> class MnaSolver : public Solver {
 protected:
   // #### General simulation settings ####
   /// Simulation domain, which can be dynamic phasor (DP) or EMT
@@ -254,11 +254,11 @@ protected:
 public:
   /// Constructor should not be called by users but by Simulation
   /// solverImpl: choose the most advanced solver implementation available by default
-    MnaSolverMerged(String name, CPS::Domain domain = CPS::Domain::DP,
+    MnaSolver(String name, CPS::Domain domain = CPS::Domain::DP,
                   CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
   /// Destructor
-  virtual ~MnaSolverMerged() {
+  virtual ~MnaSolver() {
     if (mSystemMatrixRecomputation)
       SPDLOG_LOGGER_INFO(mSLog, "Number of system matrix recomputations: {:}",
                          mNumRecomputations);
@@ -301,7 +301,7 @@ public:
   ///
   class SolveTask : public CPS::Task {
   public:
-    SolveTask(MnaSolverMerged<VarType> &solver)
+    SolveTask(MnaSolver<VarType> &solver)
         : Task(solver.mName + ".Solve"), mSolver(solver) {
 
       for (auto it : solver.mMNAComponents) {
@@ -319,13 +319,13 @@ public:
     }
 
   private:
-    MnaSolverMerged<VarType> &mSolver;
+    MnaSolver<VarType> &mSolver;
   };
 
   ///
   class SolveTaskHarm : public CPS::Task {
   public:
-    SolveTaskHarm(MnaSolverMerged<VarType> &solver, UInt freqIdx)
+    SolveTaskHarm(MnaSolver<VarType> &solver, UInt freqIdx)
         : Task(solver.mName + ".Solve"), mSolver(solver), mFreqIdx(freqIdx) {
 
       for (auto it : solver.mMNAComponents) {
@@ -345,14 +345,14 @@ public:
     }
 
   private:
-    MnaSolverMerged<VarType> &mSolver;
+    MnaSolver<VarType> &mSolver;
     UInt mFreqIdx;
   };
 
   ///
   class SolveTaskRecomp : public CPS::Task {
   public:
-    SolveTaskRecomp(MnaSolverMerged<VarType> &solver)
+    SolveTaskRecomp(MnaSolver<VarType> &solver)
         : Task(solver.mName + ".Solve"), mSolver(solver) {
 
       for (auto it : solver.mMNAComponents) {
@@ -375,13 +375,13 @@ public:
     }
 
   private:
-    MnaSolverMerged<VarType> &mSolver;
+    MnaSolver<VarType> &mSolver;
   };
 
   ///
   class LogTask : public CPS::Task {
   public:
-    LogTask(MnaSolverMerged<VarType> &solver)
+    LogTask(MnaSolver<VarType> &solver)
         : Task(solver.mName + ".Log"), mSolver(solver) {
       mAttributeDependencies.push_back(solver.mLeftSideVector);
       mModifiedAttributes.push_back(Scheduler::external);
@@ -392,7 +392,7 @@ public:
     }
 
   private:
-    MnaSolverMerged<VarType> &mSolver;
+    MnaSolver<VarType> &mSolver;
   };
 };
 } // namespace DPsim

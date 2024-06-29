@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include <dpsim/MNASolverMerged.h>
+#include <dpsim/MNASolver.h>
 #include <dpsim/MNASolverDynInterface.h>
 
 namespace DPsim {
 
 template <typename VarType>
-class MnaSolverPlugin : public MnaSolverMerged<VarType> {
+class MnaSolverPlugin : public MnaSolver<VarType> {
 protected:
   using Solver::mSLog;
   String mPluginName;

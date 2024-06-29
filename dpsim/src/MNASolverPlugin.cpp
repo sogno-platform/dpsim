@@ -20,7 +20,7 @@ template <typename VarType>
 MnaSolverPlugin<VarType>::MnaSolverPlugin(String pluginName, String name,
                                           CPS::Domain domain,
                                           CPS::Logger::Level logLevel)
-    : MnaSolverMerged<VarType>(name, domain, logLevel), mPluginName(pluginName),
+    : MnaSolver<VarType>(name, domain, logLevel), mPluginName(pluginName),
       mPlugin(nullptr), mDlHandle(nullptr) {}
 
 template <typename VarType> MnaSolverPlugin<VarType>::~MnaSolverPlugin() {
@@ -70,7 +70,7 @@ void MnaSolverPlugin<VarType>::recomputeSystemMatrix(Real time) {
 }
 
 template <typename VarType> void MnaSolverPlugin<VarType>::initialize() {
-  MnaSolverMerged<VarType>::initialize();
+  MnaSolver<VarType>::initialize();
   int size = this->mRightSideVector.rows();
   auto hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
   int nnz = hMat[0].nonZeros();

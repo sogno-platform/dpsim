@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <dpsim/MNASolverMerged.h>
+#include <dpsim/MNASolver.h>
 #include <dpsim/SequentialScheduler.h>
 #include <memory>
 
@@ -16,7 +16,7 @@ using namespace CPS;
 namespace DPsim {
 
 template <typename VarType>
-MnaSolverMerged<VarType>::MnaSolverMerged(String name, CPS::Domain domain,
+MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain,
                               CPS::Logger::Level logLevel)
     : Solver(name, logLevel), mDomain(domain) {
   mImplementationInUse = DirectLinearSolverImpl::KLU;
@@ -28,11 +28,11 @@ MnaSolverMerged<VarType>::MnaSolverMerged(String name, CPS::Domain domain,
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::setSystem(const CPS::SystemTopology &system) {
+void MnaSolver<VarType>::setSystem(const CPS::SystemTopology &system) {
   mSystem = system;
 }
 
-template <typename VarType> void MnaSolverMerged<VarType>::initialize() {
+template <typename VarType> void MnaSolver<VarType>::initialize() {
   // TODO: check that every system matrix has the same dimensions
   SPDLOG_LOGGER_INFO(mSLog, "---- Start initialization ----");
 
@@ -99,7 +99,7 @@ template <typename VarType> void MnaSolverMerged<VarType>::initialize() {
   mSLog->flush();
 }
 
-template <> void MnaSolverMerged<Real>::initializeComponents() {
+template <> void MnaSolver<Real>::initializeComponents() {
   SPDLOG_LOGGER_INFO(mSLog, "-- Initialize components from power flow");
 
   CPS::MNAInterface::List allMNAComps;
@@ -138,7 +138,7 @@ template <> void MnaSolverMerged<Real>::initializeComponents() {
     mNodes[nodeIdx]->initialize();
 }
 
-template <> void MnaSolverMerged<Complex>::initializeComponents() {
+template <> void MnaSolver<Complex>::initializeComponents() {
   SPDLOG_LOGGER_INFO(mSLog, "-- Initialize components from power flow");
 
   CPS::MNAInterface::List allMNAComps;
@@ -195,7 +195,7 @@ template <> void MnaSolverMerged<Complex>::initializeComponents() {
   }
 }
 
-template <typename VarType> void MnaSolverMerged<VarType>::initializeSystem() {
+template <typename VarType> void MnaSolver<VarType>::initializeSystem() {
   SPDLOG_LOGGER_INFO(mSLog,
                      "-- Initialize MNA system matrices and source vector");
   mRightSideVector.setZero();
@@ -215,7 +215,7 @@ template <typename VarType> void MnaSolverMerged<VarType>::initializeSystem() {
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::initializeSystemWithParallelFrequencies() {
+void MnaSolver<VarType>::initializeSystemWithParallelFrequencies() {
   // iterate over all possible switch state combinations and frequencies
   for (std::size_t sw = 0; sw < (1ULL << mSwitches.size()); ++sw) {
     for (Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
@@ -235,7 +235,7 @@ void MnaSolverMerged<VarType>::initializeSystemWithParallelFrequencies() {
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::initializeSystemWithPrecomputedMatrices() {
+void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
   // iterate over all possible switch state combinations
   for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
     switchedMatrixEmpty(i);
@@ -266,7 +266,7 @@ void MnaSolverMerged<VarType>::initializeSystemWithPrecomputedMatrices() {
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::initializeSystemWithVariableMatrix() {
+void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
 
   // Collect index pairs of varying matrix entries from components
   for (auto varElem : mVariableComps)
@@ -293,7 +293,7 @@ void MnaSolverMerged<VarType>::initializeSystemWithVariableMatrix() {
 }
 
 template <typename VarType>
-Bool MnaSolverMerged<VarType>::hasVariableComponentChanged() {
+Bool MnaSolver<VarType>::hasVariableComponentChanged() {
   for (auto varElem : mVariableComps) {
     if (varElem->hasParameterChanged()) {
       auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(varElem);
@@ -306,13 +306,13 @@ Bool MnaSolverMerged<VarType>::hasVariableComponentChanged() {
   return false;
 }
 
-template <typename VarType> void MnaSolverMerged<VarType>::updateSwitchStatus() {
+template <typename VarType> void MnaSolver<VarType>::updateSwitchStatus() {
   for (UInt i = 0; i < mSwitches.size(); ++i) {
     mCurrentSwitchStatus.set(i, mSwitches[i]->mnaIsClosed());
   }
 }
 
-template <typename VarType> void MnaSolverMerged<VarType>::identifyTopologyObjects() {
+template <typename VarType> void MnaSolver<VarType>::identifyTopologyObjects() {
   for (auto baseNode : mSystem.mNodes) {
     // Add nodes to the list and ignore ground nodes.
     if (!baseNode->isGround()) {
@@ -358,7 +358,7 @@ template <typename VarType> void MnaSolverMerged<VarType>::identifyTopologyObjec
   }
 }
 
-template <typename VarType> void MnaSolverMerged<VarType>::assignMatrixNodeIndices() {
+template <typename VarType> void MnaSolver<VarType>::assignMatrixNodeIndices() {
   UInt matrixNodeIndexIdx = 0;
   for (UInt idx = 0; idx < mNodes.size(); ++idx) {
     mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
@@ -398,12 +398,12 @@ template <typename VarType> void MnaSolverMerged<VarType>::assignMatrixNodeIndic
                      mNumHarmMatrixNodeIndices);
 }
 
-template <> void MnaSolverMerged<Real>::createEmptyVectors() {
+template <> void MnaSolver<Real>::createEmptyVectors() {
   mRightSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
   **mLeftSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
 }
 
-template <> void MnaSolverMerged<Complex>::createEmptyVectors() {
+template <> void MnaSolver<Complex>::createEmptyVectors() {
   if (mFrequencyParallel) {
     for (Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
       mRightSideVectorHarm.push_back(
@@ -419,7 +419,7 @@ template <> void MnaSolverMerged<Complex>::createEmptyVectors() {
   }
 }
 
-template <typename VarType> void MnaSolverMerged<VarType>::collectVirtualNodes() {
+template <typename VarType> void MnaSolver<VarType>::collectVirtualNodes() {
   // We have not added virtual nodes yet so the list has only network nodes
   mNumNetNodes = (UInt)mNodes.size();
   // virtual nodes are placed after network nodes
@@ -479,7 +479,7 @@ template <typename VarType> void MnaSolverMerged<VarType>::collectVirtualNodes()
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::steadyStateInitialization() {
+void MnaSolver<VarType>::steadyStateInitialization() {
   SPDLOG_LOGGER_INFO(mSLog, "--- Run steady-state initialization ---");
 
   DataLogger initLeftVectorLog(mName + "_InitLeftVector",
@@ -581,7 +581,7 @@ void MnaSolverMerged<VarType>::steadyStateInitialization() {
   SPDLOG_LOGGER_INFO(mSLog, "--- Finished steady-state initialization ---");
 }
 
-template <typename VarType> Task::List MnaSolverMerged<VarType>::getTasks() {
+template <typename VarType> Task::List MnaSolver<VarType>::getTasks() {
   Task::List l;
 
   for (auto comp : mMNAComponents) {
@@ -621,7 +621,7 @@ template <typename VarType> Task::List MnaSolverMerged<VarType>::getTasks() {
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::log(Real time, Int timeStepCount) {
+void MnaSolver<VarType>::log(Real time, Int timeStepCount) {
   if (mLogLevel == Logger::Level::off)
     return;
 
@@ -635,18 +635,18 @@ void MnaSolverMerged<VarType>::log(Real time, Int timeStepCount) {
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::switchedMatrixEmpty(std::size_t index) {
+void MnaSolver<VarType>::switchedMatrixEmpty(std::size_t index) {
   mSwitchedMatrices[std::bitset<SWITCH_NUM>(index)][0].setZero();
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::switchedMatrixEmpty(std::size_t swIdx,
+void MnaSolver<VarType>::switchedMatrixEmpty(std::size_t swIdx,
                                                    Int freqIdx) {
   mSwitchedMatrices[std::bitset<SWITCH_NUM>(swIdx)][freqIdx].setZero();
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::switchedMatrixStamp(
+void MnaSolver<VarType>::switchedMatrixStamp(
     std::size_t index, std::vector<std::shared_ptr<CPS::MNAInterface>> &comp) {
   auto bit = std::bitset<SWITCH_NUM>(index);
   auto &sys = mSwitchedMatrices[bit][0];
@@ -667,7 +667,7 @@ void MnaSolverMerged<VarType>::switchedMatrixStamp(
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::stampVariableSystemMatrix() {
+void MnaSolver<VarType>::stampVariableSystemMatrix() {
 
   this->mDirectLinearSolverVariableSystemMatrix =
       createDirectSolverImplementation(mSLog);
@@ -718,7 +718,7 @@ void MnaSolverMerged<VarType>::stampVariableSystemMatrix() {
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::solveWithSystemMatrixRecomputation(
+void MnaSolver<VarType>::solveWithSystemMatrixRecomputation(
     Real time, Int timeStepCount) {
   // Reset source vector
   mRightSideVector.setZero();
@@ -748,7 +748,7 @@ void MnaSolverMerged<VarType>::solveWithSystemMatrixRecomputation(
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::recomputeSystemMatrix(Real time) {
+void MnaSolver<VarType>::recomputeSystemMatrix(Real time) {
   // Start from base matrix
   mVariableSystemMatrix = mBaseSystemMatrix;
 
@@ -771,7 +771,7 @@ void MnaSolverMerged<VarType>::recomputeSystemMatrix(Real time) {
   ++mNumRecomputations;
 }
 
-template <> void MnaSolverMerged<Real>::createEmptySystemMatrix() {
+template <> void MnaSolver<Real>::createEmptySystemMatrix() {
   if (mSwitches.size() > SWITCH_NUM)
     throw SystemError("Too many Switches.");
 
@@ -791,7 +791,7 @@ template <> void MnaSolverMerged<Real>::createEmptySystemMatrix() {
   }
 }
 
-template <> void MnaSolverMerged<Complex>::createEmptySystemMatrix() {
+template <> void MnaSolver<Complex>::createEmptySystemMatrix() {
   if (mSwitches.size() > SWITCH_NUM)
     throw SystemError("Too many Switches.");
 
@@ -822,29 +822,29 @@ template <> void MnaSolverMerged<Complex>::createEmptySystemMatrix() {
 }
 
 template <typename VarType>
-std::shared_ptr<CPS::Task> MnaSolverMerged<VarType>::createSolveTask() {
-  return std::make_shared<MnaSolverMerged<VarType>::SolveTask>(*this);
+std::shared_ptr<CPS::Task> MnaSolver<VarType>::createSolveTask() {
+  return std::make_shared<MnaSolver<VarType>::SolveTask>(*this);
 }
 
 template <typename VarType>
-std::shared_ptr<CPS::Task> MnaSolverMerged<VarType>::createSolveTaskRecomp() {
-  return std::make_shared<MnaSolverMerged<VarType>::SolveTaskRecomp>(*this);
+std::shared_ptr<CPS::Task> MnaSolver<VarType>::createSolveTaskRecomp() {
+  return std::make_shared<MnaSolver<VarType>::SolveTaskRecomp>(*this);
 }
 
 template <typename VarType>
 std::shared_ptr<CPS::Task>
-MnaSolverMerged<VarType>::createSolveTaskHarm(UInt freqIdx) {
-  return std::make_shared<MnaSolverMerged<VarType>::SolveTaskHarm>(*this,
+MnaSolver<VarType>::createSolveTaskHarm(UInt freqIdx) {
+  return std::make_shared<MnaSolver<VarType>::SolveTaskHarm>(*this,
                                                                    freqIdx);
 }
 
 template <typename VarType>
-std::shared_ptr<CPS::Task> MnaSolverMerged<VarType>::createLogTask() {
-  return std::make_shared<MnaSolverMerged<VarType>::LogTask>(*this);
+std::shared_ptr<CPS::Task> MnaSolver<VarType>::createLogTask() {
+  return std::make_shared<MnaSolver<VarType>::LogTask>(*this);
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::solve(Real time, Int timeStepCount) {
+void MnaSolver<VarType>::solve(Real time, Int timeStepCount) {
   // Reset source vector
   mRightSideVector.setZero();
 
@@ -925,7 +925,7 @@ void MnaSolverMerged<VarType>::solve(Real time, Int timeStepCount) {
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::solveWithHarmonics(Real time, Int timeStepCount,
+void MnaSolver<VarType>::solveWithHarmonics(Real time, Int timeStepCount,
                                                   Int freqIdx) {
   mRightSideVectorHarm[freqIdx].setZero();
 
@@ -938,7 +938,7 @@ void MnaSolverMerged<VarType>::solveWithHarmonics(Real time, Int timeStepCount,
           mRightSideVectorHarm[freqIdx]);
 }
 
-template <typename VarType> void MnaSolverMerged<VarType>::logSystemMatrices() {
+template <typename VarType> void MnaSolver<VarType>::logSystemMatrices() {
   if (mFrequencyParallel) {
     for (UInt i = 0; i < mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)].size();
          ++i) {
@@ -978,13 +978,13 @@ template <typename VarType> void MnaSolverMerged<VarType>::logSystemMatrices() {
   }
 }
 
-template <typename VarType> void MnaSolverMerged<VarType>::logLUTimes() {
+template <typename VarType> void MnaSolver<VarType>::logLUTimes() {
   logFactorizationTime();
   logRecomputationTime();
   logSolveTime();
 }
 
-template <typename VarType> void MnaSolverMerged<VarType>::logSolveTime() {
+template <typename VarType> void MnaSolver<VarType>::logSolveTime() {
   Real solveSum = 0.0;
   Real solveMax = 0.0;
   for (auto meas : mSolveTimes) {
@@ -1000,14 +1000,14 @@ template <typename VarType> void MnaSolverMerged<VarType>::logSolveTime() {
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::logFactorizationTime() {
+void MnaSolver<VarType>::logFactorizationTime() {
   for (auto meas : mFactorizeTimes) {
     SPDLOG_LOGGER_INFO(mSLog, "LU factorization time: {:.12f}", meas);
   }
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::logRecomputationTime() {
+void MnaSolver<VarType>::logRecomputationTime() {
   Real recompSum = 0.0;
   Real recompMax = 0.0;
   for (auto meas : mRecomputationTimes) {
@@ -1030,7 +1030,7 @@ void MnaSolverMerged<VarType>::logRecomputationTime() {
 
 template <typename VarType>
 std::shared_ptr<DirectLinearSolver>
-MnaSolverMerged<VarType>::createDirectSolverImplementation(
+MnaSolver<VarType>::createDirectSolverImplementation(
     CPS::Logger::Log mSLog) {
   switch (this->mImplementationInUse) {
   case DirectLinearSolverImpl::DenseLU:
@@ -1059,18 +1059,18 @@ MnaSolverMerged<VarType>::createDirectSolverImplementation(
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::setDirectLinearSolverImplementation(
+void MnaSolver<VarType>::setDirectLinearSolverImplementation(
     DirectLinearSolverImpl implementation) {
   this->mImplementationInUse = implementation;
 }
 
 template <typename VarType>
-void MnaSolverMerged<VarType>::setDirectLinearSolverConfiguration(
+void MnaSolver<VarType>::setDirectLinearSolverConfiguration(
     DirectLinearSolverConfiguration &configuration) {
   this->mConfigurationInUse = configuration;
 }
 
 } // namespace DPsim
 
-template class DPsim::MnaSolverMerged<Real>;
-template class DPsim::MnaSolverMerged<Complex>;
+template class DPsim::MnaSolver<Real>;
+template class DPsim::MnaSolver<Complex>;
