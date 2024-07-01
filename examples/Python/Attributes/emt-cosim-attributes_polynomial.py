@@ -228,9 +228,7 @@ if __name__ == '__main__':
 
     # We have to assume the trajectory of y_2 extending its initial value, since we have no prior information
     # y_1_m_prev = np.tile(y_1_0, m)
-
-    # This one as computed in Matlab
-    y_1_m_prev = np.array([30.108, y_1_0])
+    y_1_m_prev = np.array([complex(0, 0), y_1_0])
 
     for i in range(0, N):
         y_1_prev = y_1_m_prev[-1]
