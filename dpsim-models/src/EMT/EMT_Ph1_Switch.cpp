@@ -10,10 +10,6 @@
 
 using namespace CPS;
 
-// !!! TODO: 	Adaptions to use in EMT_Ph1 models phase-to-ground peak variables
-// !!! 			with initialization from phase-to-phase RMS variables
-
-///FIXME: Inconsistent naming in ph1 and p3 switches: (mIsClosed, mSwitchClosed)
 
 EMT::Ph1::Switch::Switch(String uid, String name, Logger::Level logLevel)
 	: MNASimPowerComp<Real>(uid, name, false, true, logLevel), Base::Ph1::Switch(mAttributes) {
@@ -63,20 +59,9 @@ void EMT::Ph1::Switch::mnaCompApplySystemMatrixStamp(SparseMatrixRow& systemMatr
 	conductance = (**mIsClosed) ?
 		1./(**mClosedResistance) : 1./(**mOpenResistance);
 
-	// Set diagonal entries
-	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), conductance);
-	}
-	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), conductance);
-	}
-	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), -conductance);
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), -conductance);
-	}
-	SPDLOG_LOGGER_TRACE(mSLog, 
-		"\nConductance matrix: {:s}",
-		Logger::realToString(conductance));
+  	MNAStampUtils::stampConductance(conductance, systemMatrix, matrixNodeIndex(0),
+                                  matrixNodeIndex(1), terminalNotGrounded(0),
+                                  terminalNotGrounded(1), mSLog);
 }
 
 void EMT::Ph1::Switch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMatrixRow& systemMatrix, Int freqIdx) {
@@ -85,23 +70,9 @@ void EMT::Ph1::Switch::mnaCompApplySwitchSystemMatrixStamp(Bool closed, SparseMa
 	conductance = (closed) ?
 		1./(**mClosedResistance) : 1./(**mOpenResistance);
 
-	// Set diagonal entries
-	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), conductance);
-
-	}
-	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), conductance);
-	}
-	// Set off diagonal blocks, 2x3x3 entries
-	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), -conductance);
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), -conductance);
-	}
-
-	SPDLOG_LOGGER_TRACE(mSLog, 
-		"\nConductance matrix: {:s}",
-		Logger::realToString(conductance));
+ 	MNAStampUtils::stampConductance(conductance, systemMatrix, matrixNodeIndex(0),
+                                matrixNodeIndex(1), terminalNotGrounded(0),
+                                terminalNotGrounded(1), mSLog);
 }
 
 void EMT::Ph1::Switch::mnaCompApplyRightSideVectorStamp(Matrix& rightVector) { }
