@@ -9,9 +9,11 @@ import argparse
 base = os.path.splitext(os.path.basename(sys.argv[0]))[0]
 log = logging.getLogger(base)
 
-def set_dpsim1(t_s, t_f, u_1_0, vs_cond, logger_prefix):
 
-    with_vs = vs_cond == 'True'
+def set_dpsim1(t_s, t_f, u_1_0, num_vs, logger_prefix):
+
+    with_vs_1 = num_vs > 0
+    with_vs_2 = num_vs > 1
 
     r_1_r = 0.1
     c_1_c = 1
@@ -22,14 +24,17 @@ def set_dpsim1(t_s, t_f, u_1_0, vs_cond, logger_prefix):
 
     gnd = dpsimpy.emt.SimNode.gnd
 
-    if with_vs:
+    if with_vs_1:
         n0 = dpsimpy.emt.SimNode("n0")
+        v_s_1 = dpsimpy.emt.ph1.VoltageSource("v_s_1")
+
+    if with_vs_2:
+        v_s_1.set_parameters(V_ref=complex(2, 0), f_src=50)
+    elif with_vs_1:
+        v_s_1.set_parameters(V_ref=complex(1, 0), f_src=50)
+
     n1 = dpsimpy.emt.SimNode("n1")
     n2 = dpsimpy.emt.SimNode("n2")
-
-    if with_vs:
-        v_s = dpsimpy.emt.ph1.VoltageSource("v_s")
-        v_s.set_parameters(V_ref=complex(1, 0), f_src=50)
 
     evs = dpsimpy.emt.ph1.VoltageSource("v_intf", dpsimpy.LogLevel.info)
     evs.set_parameters(u_1_0)
@@ -42,9 +47,13 @@ def set_dpsim1(t_s, t_f, u_1_0, vs_cond, logger_prefix):
     r_line.set_parameters(r_line_r)
 
     # Initial conditions
-    if with_vs:
-        # This adds a transient at t=0
+    if with_vs_2:
+        n0.set_initial_voltage(2 * dpsimpy.PEAK1PH_TO_RMS3PH)
+    elif with_vs_1:
         n0.set_initial_voltage(1 * dpsimpy.PEAK1PH_TO_RMS3PH)
+
+    if with_vs_1:
+        # This adds a transient at t=0
         n1.set_initial_voltage(0 * dpsimpy.PEAK1PH_TO_RMS3PH)
     else:
         n1.set_initial_voltage(5 * dpsimpy.PEAK1PH_TO_RMS3PH)
@@ -52,18 +61,18 @@ def set_dpsim1(t_s, t_f, u_1_0, vs_cond, logger_prefix):
     n2.set_initial_voltage(u_1_0 * dpsimpy.PEAK1PH_TO_RMS3PH)
 
     # Connections
-    if with_vs:
-        v_s.connect([gnd, n0])
+    if with_vs_1:
+        v_s_1.connect([gnd, n0])
         r_1.connect([n0, n1])
     else:
         r_1.connect([gnd, n1])
 
-    r_line.connect([n2, n1])
-    c_1.connect([gnd, n1])
-    evs.connect([n2, gnd])
+    r_line.connect([n1, n2])
+    c_1.connect([n1, gnd])
+    evs.connect([gnd, n2])
 
-    if with_vs:
-        sys = dpsimpy.SystemTopology(50, [gnd, n0, n1, n2], [v_s, evs, r_1, c_1, r_line])
+    if with_vs_1:
+        sys = dpsimpy.SystemTopology(50, [gnd, n0, n1, n2], [v_s_1, evs, r_1, c_1, r_line])
     else:
         sys = dpsimpy.SystemTopology(50, [gnd, n1, n2], [evs, r_1, c_1, r_line])
 
@@ -84,33 +93,39 @@ def set_dpsim1(t_s, t_f, u_1_0, vs_cond, logger_prefix):
 
     sim.add_logger(logger)
 
-    if with_vs:
-        n0_v0 = np.array([1.0])
-        n1_v0 = np.array([0.0])
-        ir_1_0 = (n0_v0 - n1_v0) / r_1_r
-    else:
-        n1_v0 = np.array([5.0])
-        ir_1_0 = n1_v0 / r_1_r
-    n2_v0 = np.array([u_1_0])
+    # TODO: set_intf methods are not working, but they're neccesary mostly when num_vs = 0
+    # if with_vs_2:
+    #     n0_v0 = np.array([2.0])
+    # elif with_vs_1:
+    #     n0_v0 = np.array([1.0])
 
-    i_r_line_0 = (n1_v0 - n2_v0) / r_line_r
+    # if with_vs_1:
+    #     n1_v0 = np.array([0.0])
+    #     ir_1_0 = (n0_v0 - n1_v0) / r_1_r
+    # else:
+    #     n1_v0 = np.array([5.0])
+    #     ir_1_0 = n1_v0 / r_1_r
+    # n2_v0 = np.array([u_1_0])
 
-    r_1.set_intf_voltage(n1_v0)
-    r_1.set_intf_current(ir_1_0)
-    c_1.set_intf_voltage(n1_v0)
-    c_1.set_intf_current(ir_1_0 - i_r_line_0)
-    r_line.set_intf_voltage(n1_v0 - n2_v0)
-    r_line.set_intf_current(i_r_line_0)
+    # i_r_line_0 = (n1_v0 - n2_v0) / r_line_r
 
-    evs.set_intf_voltage(n2_v0)
-    evs.set_intf_current(i_r_line_0)
+    # r_1.set_intf_voltage(n1_v0)
+    # r_1.set_intf_current(ir_1_0)
+    # c_1.set_intf_voltage(n1_v0)
+    # c_1.set_intf_current(ir_1_0 - i_r_line_0)
+    # r_line.set_intf_voltage(n1_v0 - n2_v0)
+    # r_line.set_intf_current(i_r_line_0)
+
+    # evs.set_intf_voltage(n2_v0)
+    # evs.set_intf_current(i_r_line_0)
 
     return sim
 
 
-def set_dpsim2(t_s, t_f, vs_cond, logger_prefix):
+def set_dpsim2(t_s, t_f, num_vs, logger_prefix):
 
-    with_vs = vs_cond == 'True'
+    with_vs_1 = num_vs > 0
+    with_vs_2 = num_vs > 1
 
     r_load_r = 1.0
     c_2_c = 1.0
@@ -121,6 +136,11 @@ def set_dpsim2(t_s, t_f, vs_cond, logger_prefix):
     gnd = dpsimpy.emt.SimNode.gnd
     n2 = dpsimpy.emt.SimNode("n2")
 
+    if with_vs_2:
+        n3 = dpsimpy.emt.SimNode("n3")
+        v_s_2 = dpsimpy.emt.ph1.VoltageSource("v_s_2")
+        v_s_2.set_parameters(V_ref=complex(np.sqrt(2)/2, np.sqrt(2)/2), f_src=50)
+
     ecs = dpsimpy.emt.ph1.CurrentSource("i_intf", dpsimpy.LogLevel.info)
     c_2 = dpsimpy.emt.ph1.Capacitor("c_2", dpsimpy.LogLevel.info)
     c_2.set_parameters(c_2_c)
@@ -128,17 +148,27 @@ def set_dpsim2(t_s, t_f, vs_cond, logger_prefix):
     r_load.set_parameters(r_load_r)
 
     # Initial conditions
-    if with_vs:
+    if with_vs_1:
         n2.set_initial_voltage(0.0 * dpsimpy.PEAK1PH_TO_RMS3PH)
+        if with_vs_2:
+            n3.set_initial_voltage(np.cos(np.pi/4) * dpsimpy.PEAK1PH_TO_RMS3PH)
     else:
         n2.set_initial_voltage(2.0 * dpsimpy.PEAK1PH_TO_RMS3PH)
 
     # Connections
     ecs.connect([gnd, n2])
-    c_2.connect([gnd, n2])
-    r_load.connect([gnd, n2])
+    c_2.connect([n2, gnd])
 
-    sys = dpsimpy.SystemTopology(50, [gnd, n2], [ecs, c_2, r_load])
+    if with_vs_2:
+        v_s_2.connect([gnd, n3])
+        r_load.connect([n2, n3])
+    else:
+        r_load.connect([gnd, n2])
+
+    if with_vs_2:
+        sys = dpsimpy.SystemTopology(50, [gnd, n2, n3], [ecs, c_2, r_load, v_s_2])
+    else:
+        sys = dpsimpy.SystemTopology(50, [gnd, n2], [ecs, c_2, r_load])
 
     sim = dpsimpy.Simulation(sim_name, loglevel=dpsimpy.LogLevel.debug)
     sim.set_domain(dpsimpy.Domain.EMT)
@@ -155,21 +185,28 @@ def set_dpsim2(t_s, t_f, vs_cond, logger_prefix):
 
     sim.add_logger(logger)
 
+    # TODO: set_intf methods are not working, but they're neccesary mostly when num_vs = 0
     # Initialize currents and voltages
-    if with_vs:
-        n2_v0 = [0.0]
-    else:
-        n2_v0 = [2.0]
+    # if with_vs_1:
+    #     n2_v0 = np.array([0.0])
+    # else:
+    #     n2_v0 = np.array([2.0])
 
-    i_r_load_0 = [n2_v0[0] / r_load_r]
+    # if with_vs_2:
+    #     n3_v0 = np.array([np.cos(np.pi/4)])
+    #     i_r_load_0 = (n3_v0 - n2_v0) / r_load_r
+    #     r_load.set_intf_voltage(n3_v0 - n2_v0)
+    # else:
+    #     i_r_load_0 = [n2_v0 / r_load_r]
+    #     r_load.set_intf_voltage(n2_v0)
 
-    r_load.set_intf_voltage(n2_v0)
-    r_load.set_intf_current(i_r_load_0)
-    c_2.set_intf_voltage([n2_v0])
+    # r_load.set_intf_current(i_r_load_0)
+    # c_2.set_intf_voltage([n2_v0])
 
-    ecs.set_intf_voltage(n2_v0)
+    # ecs.set_intf_voltage(n2_v0)
 
     return sim
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -178,7 +215,7 @@ if __name__ == '__main__':
     parser.add_argument('-H', '--macro-step', type=float, required=True)
     parser.add_argument('-i', '--interp', default='zoh')
     parser.add_argument('-p', '--prefix', default='')
-    parser.add_argument('--vs', default=False)
+    parser.add_argument('--num-vs', default=0)
     parser.add_argument('-d', '--debug', type=bool, default=False)
 
     args = parser.parse_args()
@@ -188,7 +225,7 @@ if __name__ == '__main__':
     H = args.macro_step
     interp = args.interp
     prefix = args.prefix
-    with_vs = args.vs
+    num_vs = int(args.num_vs)
     debug = args.debug
 
     logging.basicConfig(format='[%(asctime)s %(name)s %(levelname)s] %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
@@ -208,7 +245,7 @@ if __name__ == '__main__':
     print(m)
 
     # Initialization of S_2 and communication y_2_0 -> S_1
-    sim2 = set_dpsim2(time_step, t_f, with_vs, prefix)
+    sim2 = set_dpsim2(time_step, t_f, num_vs, prefix)
     sim2.start()
     y_2_0 = sim2.get_idobj_attr("i_intf", "v_intf").derive_coeff(0,0).get()
 
@@ -217,7 +254,7 @@ if __name__ == '__main__':
 
     # Communication y_2_0 -> S_1 and initialization of S_1
     u_1_0 = y_2_0
-    sim1 = set_dpsim1(time_step, t_f, u_1_0, with_vs, prefix)
+    sim1 = set_dpsim1(time_step, t_f, u_1_0, num_vs, prefix)
     sim1.start()
     y_1_0 = sim1.get_idobj_attr("v_intf", "i_intf").derive_coeff(0,0).get()
 
@@ -228,7 +265,7 @@ if __name__ == '__main__':
 
     # We have to assume the trajectory of y_2 extending its initial value, since we have no prior information
     # y_1_m_prev = np.tile(y_1_0, m)
-    y_1_m_prev = np.array([complex(0, 0), y_1_0])
+    y_1_m_prev = np.array([0.0, y_1_0])
 
     for i in range(0, N):
         y_1_prev = y_1_m_prev[-1]
