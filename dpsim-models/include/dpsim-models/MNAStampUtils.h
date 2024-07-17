@@ -26,6 +26,15 @@ public:
                                      Bool isTerminal2NotGrounded,
                                      const Logger::Log &mSLog);
 
+  static void stamp3x3ConductanceMatrixBetween2Nodes(
+      const Matrix &conductanceMat, SparseMatrixRow &mat, UInt node1Index,
+      UInt node2Index, const Logger::Log &mSLog);
+
+  static void stamp3x3ConductanceMatrixNodeToGround(const Matrix &conductanceMat,
+                                             SparseMatrixRow &mat,
+                                             UInt nodeIndex,
+                                             const Logger::Log &mSLog);
+
   static void stampAdmittanceMatrix(
       const MatrixComp &admittanceMat, SparseMatrixRow &mat, UInt node1Index,
       UInt node2Index, Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
@@ -56,6 +65,19 @@ private:
                           Bool isTerminal1NotGrounded,
                           Bool isTerminal2NotGrounded, Int maxFreq, Int freqIdx,
                           const Logger::Log &mSLog);
+
+  template <typename T>
+  static void stampMatrixBetween2Nodes(const MatrixVar<T> &matrix,
+                                       UInt sizeOfMatrix, SparseMatrixRow &mat,
+                                       UInt node1Index, UInt node2Index,
+                                       Int maxFreq, Int freqIdx,
+                                       const Logger::Log &mSLog);
+
+  template <typename T>
+  static void stampMatrixNodeToGround(const MatrixVar<T> &matrix,
+                                      UInt sizeOfMatrix, SparseMatrixRow &mat,
+                                      UInt nodeIndex, Int maxFreq, Int freqIdx,
+                                      const Logger::Log &mSLog);
 
   template <typename T>
   static void stampValueAsScalarMatrix(T value, UInt sizeOfScalarMatrix,

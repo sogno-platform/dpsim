@@ -44,6 +44,29 @@ void MNAStampUtils::stampConductanceMatrix(const Matrix &conductanceMat,
   SPDLOG_LOGGER_DEBUG(mSLog, "Stamping completed.");
 }
 
+void MNAStampUtils::stamp3x3ConductanceMatrixBetween2Nodes(
+    const Matrix &conductanceMat, SparseMatrixRow &mat, UInt node1Index,
+    UInt node2Index, const Logger::Log &mSLog) {
+  SPDLOG_LOGGER_DEBUG(
+      mSLog, "Start stamping 3x3 conductance matrix between two nodes...");
+
+  stampMatrixBetween2Nodes(conductanceMat, 3, mat, node1Index, node2Index, 1, 0,
+                           mSLog);
+
+  SPDLOG_LOGGER_DEBUG(mSLog, "Stamping completed.");
+}
+
+void MNAStampUtils::stamp3x3ConductanceMatrixNodeToGround(
+    const Matrix &conductanceMat, SparseMatrixRow &mat, UInt nodeIndex,
+    const Logger::Log &mSLog) {
+  SPDLOG_LOGGER_DEBUG(
+      mSLog, "Start stamping 3x3 conductance matrix from node to ground...");
+
+  stampMatrixNodeToGround(conductanceMat, 3, mat, nodeIndex, 1, 0, mSLog);
+
+  SPDLOG_LOGGER_DEBUG(mSLog, "Stamping completed.");
+}
+
 void MNAStampUtils::stampAdmittanceMatrix(
     const MatrixComp &admittanceMat, SparseMatrixRow &mat, UInt node1Index,
     UInt node2Index, Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
@@ -119,25 +142,40 @@ void MNAStampUtils::stampMatrix(const MatrixVar<T> &matrix,
   }
 
   if (isTerminal1NotGrounded && isTerminal2NotGrounded) {
-    for (UInt i = 0; i < numRows; i++) {
-      for (UInt j = 0; j < numCols; j++) {
-        stampToMatrix(matrix(i, j), mat, node1Index + i, node1Index + j,
-                      node2Index + i, node2Index + j, maxFreq, freqIdx, mSLog);
-      }
-    }
+    stampMatrixBetween2Nodes(matrix, numRows, mat, node1Index, node2Index,
+                             maxFreq, freqIdx, mSLog);
   } else if (isTerminal1NotGrounded) {
-    for (UInt i = 0; i < numRows; i++) {
-      for (UInt j = 0; j < numCols; j++) {
-        addToMatrixElement(mat, node1Index + i, node1Index + j, matrix(i, j),
-                           maxFreq, freqIdx, mSLog);
-      }
-    }
+    stampMatrixNodeToGround(matrix, numRows, mat, node1Index, maxFreq, freqIdx,
+                            mSLog);
   } else if (isTerminal2NotGrounded) {
-    for (UInt i = 0; i < numRows; i++) {
-      for (UInt j = 0; j < numCols; j++) {
-        addToMatrixElement(mat, node2Index + i, node2Index + j, matrix(i, j),
-                           maxFreq, freqIdx, mSLog);
-      }
+    stampMatrixNodeToGround(matrix, numRows, mat, node2Index, maxFreq, freqIdx,
+                            mSLog);
+  }
+}
+
+template <typename T>
+void MNAStampUtils::stampMatrixBetween2Nodes(const MatrixVar<T> &matrix,
+                                             UInt sizeOfMatrix,
+                                             SparseMatrixRow &mat,
+                                             UInt node1Index, UInt node2Index,
+                                             Int maxFreq, Int freqIdx,
+                                             const Logger::Log &mSLog) {
+  for (UInt i = 0; i < sizeOfMatrix; i++) {
+    for (UInt j = 0; j < sizeOfMatrix; j++) {
+      stampToMatrix(matrix(i, j), mat, node1Index + i, node1Index + j,
+                    node2Index + i, node2Index + j, maxFreq, freqIdx, mSLog);
+    }
+  }
+}
+
+template <typename T>
+void MNAStampUtils::stampMatrixNodeToGround(
+    const MatrixVar<T> &matrix, UInt sizeOfMatrix, SparseMatrixRow &mat,
+    UInt nodeIndex, Int maxFreq, Int freqIdx, const Logger::Log &mSLog) {
+  for (UInt i = 0; i < sizeOfMatrix; i++) {
+    for (UInt j = 0; j < sizeOfMatrix; j++) {
+      addToMatrixElement(mat, nodeIndex + i, nodeIndex + j, matrix(i, j),
+                         maxFreq, freqIdx, mSLog);
     }
   }
 }
