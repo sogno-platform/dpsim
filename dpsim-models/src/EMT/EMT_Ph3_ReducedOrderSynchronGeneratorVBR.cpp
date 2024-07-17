@@ -184,25 +184,8 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
 
   if (mModelAsNortonSource) {
-    // Stamp conductance matrix
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 0), mConductanceMatrix(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 1), mConductanceMatrix(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 2), mConductanceMatrix(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 0), mConductanceMatrix(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 1), mConductanceMatrix(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 2), mConductanceMatrix(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 0), mConductanceMatrix(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 1), mConductanceMatrix(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 2), mConductanceMatrix(2, 2));
+    MNAStampUtils::stamp3x3ConductanceMatrixNodeToGround(
+        mConductanceMatrix, systemMatrix, matrixNodeIndex(0), mSLog);
   } else {
     // Stamp voltage source
     Math::addToMatrixElement(
@@ -225,121 +208,10 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(
         mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), 1);
 
     // Stamp conductance matrix
-
-    // set upper left block, 3x3 entries
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             mConductanceMatrix(0, 0));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             mConductanceMatrix(0, 1));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             mConductanceMatrix(0, 2));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             mConductanceMatrix(1, 0));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             mConductanceMatrix(1, 1));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             mConductanceMatrix(1, 2));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             mConductanceMatrix(2, 0));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             mConductanceMatrix(2, 1));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             mConductanceMatrix(2, 2));
-
-    // set buttom right block, 3x3 entries
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 0), mConductanceMatrix(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 1), mConductanceMatrix(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 2), mConductanceMatrix(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 0), mConductanceMatrix(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 1), mConductanceMatrix(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 2), mConductanceMatrix(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 0), mConductanceMatrix(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 1), mConductanceMatrix(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 2), mConductanceMatrix(2, 2));
-
-    // Set off diagonal blocks
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             matrixNodeIndex(0, 0), -mConductanceMatrix(0, 0));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             matrixNodeIndex(0, 1), -mConductanceMatrix(0, 1));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             matrixNodeIndex(0, 2), -mConductanceMatrix(0, 2));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             matrixNodeIndex(0, 0), -mConductanceMatrix(1, 0));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             matrixNodeIndex(0, 1), -mConductanceMatrix(1, 1));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             matrixNodeIndex(0, 2), -mConductanceMatrix(1, 2));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             matrixNodeIndex(0, 0), -mConductanceMatrix(2, 0));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             matrixNodeIndex(0, 1), -mConductanceMatrix(2, 1));
-    Math::addToMatrixElement(systemMatrix,
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             matrixNodeIndex(0, 2), -mConductanceMatrix(2, 2));
-
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             -mConductanceMatrix(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             -mConductanceMatrix(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             -mConductanceMatrix(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             -mConductanceMatrix(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             -mConductanceMatrix(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             -mConductanceMatrix(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                             -mConductanceMatrix(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                             -mConductanceMatrix(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             -mConductanceMatrix(2, 2));
+    MNAStampUtils::stamp3x3ConductanceMatrixBetween2Nodes(
+        mConductanceMatrix, systemMatrix,
+        mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(0),
+        mSLog);
   }
 }
 
