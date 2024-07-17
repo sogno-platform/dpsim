@@ -258,27 +258,8 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPreStep(Real time,
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   if (terminalNotGrounded(0)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 0), mConductanceMat(0, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 1), mConductanceMat(0, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 2), mConductanceMat(0, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 0), mConductanceMat(1, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 1), mConductanceMat(1, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 2), mConductanceMat(1, 2));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 0), mConductanceMat(2, 0));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 1), mConductanceMat(2, 1));
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 2), mConductanceMat(2, 2));
-    // SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
-    // SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,1), matrixNodeIndex(0,1));
-    // SPDLOG_LOGGER_INFO(mSLog, "Add {} to {}, {}", conductance, matrixNodeIndex(0,2), matrixNodeIndex(0,2));
+    MNAStampUtils::stamp3x3ConductanceMatrixNodeToGround(
+        mConductanceMat, systemMatrix, matrixNodeIndex(0), mSLog);
   }
 }
 
