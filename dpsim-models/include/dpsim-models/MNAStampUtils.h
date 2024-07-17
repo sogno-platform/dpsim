@@ -66,23 +66,9 @@ private:
                                        Int freqIdx, const Logger::Log &mSLog);
 
   template <typename T>
-  static void stampValueNoConditions(T value, SparseMatrixRow &mat,
-                                     UInt node1Index, UInt node2Index,
-                                     Int maxFreq, Int freqIdx,
-                                     const Logger::Log &mSLog);
-
-  template <typename T>
-  static void stampValueOnDiagonalNoConditions(T value, SparseMatrixRow &mat,
-                                               UInt nodeIndex, Int maxFreq,
-                                               Int freqIdx,
-                                               const Logger::Log &mSLog);
-
-  template <typename T>
-  static void stampValueOffDiagonalNoConditions(T value, SparseMatrixRow &mat,
-                                                UInt node1Index,
-                                                UInt node2Index, Int maxFreq,
-                                                Int freqIdx,
-                                                const Logger::Log &mSLog);
+  static void stampToMatrix(T value, SparseMatrixRow &mat, UInt row1,
+                            UInt column1, UInt row2, UInt column2, Int maxFreq,
+                            Int freqIdx, const Logger::Log &mSLog);
 
   static void addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
                                  Matrix::Index column, Real value, Int maxFreq,
