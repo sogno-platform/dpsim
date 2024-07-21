@@ -284,3 +284,25 @@ void DP::Ph1::Inductor::mnaTearPostStep(Complex voltage, Complex current) {
   (**mIntfVoltage)(0, 0) = voltage;
   (**mIntfCurrent)(0, 0) = mEquivCond(0, 0) * voltage + mEquivCurrent(0, 0);
 }
+
+void DP::Ph1::Inductor::stampSignMatrix(UInt branchIdx,
+                                        MatrixVar<Complex> &signMatrix,
+                                        Complex coeffDP) {
+  signMatrix(branchIdx, branchIdx) = coeffDP;
+}
+
+void DP::Ph1::Inductor::stampDiscretizationMatrix(
+    UInt branchIdx, MatrixVar<Complex> &discretizationMatrix, Complex coeffDP) {
+  discretizationMatrix(branchIdx, branchIdx) =
+      mEquivCond(0, 0) * (1.0 + coeffDP);
+}
+
+void DP::Ph1::Inductor::stampBranchNodeIncidenceMatrix(
+    UInt branchIdx, Matrix &branchNodeIncidenceMatrix) {
+  if (terminalNotGrounded(0)) {
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(0)) = 1.0;
+  }
+  if (terminalNotGrounded(1)) {
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(1)) = -1.0;
+  }
+}

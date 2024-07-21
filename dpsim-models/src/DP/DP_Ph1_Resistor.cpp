@@ -205,3 +205,13 @@ void DP::Ph1::Resistor::daeResidual(double ttime, const double state[],
 }
 
 Complex DP::Ph1::Resistor::daeInitialize() { return (**mIntfVoltage)(0, 0); }
+
+void DP::Ph1::Resistor::stampBranchNodeIncidenceMatrix(
+    UInt branchIdx, Matrix &branchNodeIncidenceMatrix) {
+  if (terminalNotGrounded(0)) {
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(0)) = 1.0;
+  }
+  if (terminalNotGrounded(1)) {
+    branchNodeIncidenceMatrix(branchIdx, matrixNodeIndex(1)) = -1.0;
+  }
+}

@@ -10,6 +10,7 @@
 
 #include <dpsim-models/Base/Base_Ph1_Capacitor.h>
 #include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Solver/EigenvalueDynamicCompInterface.h>
 
 namespace CPS {
 namespace DP {
@@ -23,7 +24,8 @@ namespace Ph1 {
 /// frequency and the current source changes for each iteration.
 class Capacitor : public MNASimPowerComp<Complex>,
                   public Base::Ph1::Capacitor,
-                  public SharedFactory<Capacitor> {
+                  public SharedFactory<Capacitor>,
+                  public EigenvalueDynamicCompInterface<Complex> {
 protected:
   /// DC equivalent current source for harmonics [A]
   MatrixComp mEquivCurrent;
@@ -119,6 +121,15 @@ public:
     Capacitor &mCapacitor;
     std::vector<Attribute<Matrix>::Ptr> mLeftVectors;
   };
+
+  // #### Implementation of eigenvalue dynamic component interface ####
+  void stampSignMatrix(UInt branchIdx, MatrixVar<Complex> &signMatrix,
+                       Complex coeffDP) final;
+  void stampDiscretizationMatrix(UInt branchIdx,
+                                 MatrixVar<Complex> &discretizationMatrix,
+                                 Complex coeffDP) final;
+  void stampBranchNodeIncidenceMatrix(UInt branchIdx,
+                                      Matrix &branchNodeIncidenceMatrix) final;
 };
 } // namespace Ph1
 } // namespace DP

@@ -23,6 +23,7 @@
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
 #include <dpsim/Config.h>
 #include <dpsim/DataLogger.h>
+#include <dpsim/MNAEigenvalueExtractor.h>
 #include <dpsim/Solver.h>
 
 /* std::size_t is the largest data type. No container can store
@@ -120,6 +121,9 @@ protected:
   /// LU refactorization measurements
   std::vector<Real> mRecomputationTimes;
 
+  // #### Eigenvalue extraction ####
+  MNAEigenvalueExtractor<VarType> mMNAEigenvalueExtractor;
+
   /// Constructor should not be called by users but by Simulation
   MnaSolver(String name, CPS::Domain domain = CPS::Domain::DP,
             CPS::Logger::Level logLevel = CPS::Logger::Level::info);
@@ -181,6 +185,8 @@ protected:
   virtual std::shared_ptr<CPS::Task> createLogTask() = 0;
   /// Create a solve task for this solver implementation
   virtual std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) = 0;
+  /// Create a task for eigenvalues extraction
+  virtual std::shared_ptr<CPS::Task> createExtractEigenvaluesTask() = 0;
 
   // #### Scheduler Task Methods ####
   /// Solves system for single frequency
