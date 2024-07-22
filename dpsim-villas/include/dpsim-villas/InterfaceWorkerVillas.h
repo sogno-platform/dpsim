@@ -22,7 +22,7 @@ class InterfaceWorkerVillas : public InterfaceWorker,
 
 public:
   using Ptr = std::shared_ptr<InterfaceWorkerVillas>;
-  using Sample = struct node::Sample;
+  using Sample = node::Sample;
 
   static UInt villasPriority;
   static UInt villasAffinity;
