@@ -86,10 +86,12 @@ def set_dpsim1(t_s, t_f, u_1_0, num_vs, logger_prefix):
     dpsimpy.Logger.set_log_dir('logs/' + logger_prefix + '_' + sim_name)
 
     logger = dpsimpy.Logger(sim_name)
-    logger.log_attribute('v1', 'v', n1)
-    logger.log_attribute('v2', 'v', n2)
-    logger.log_attribute('i', 'i_intf', evs)
-    logger.log_attribute('ir', 'i_intf', r_line)
+    logger.log_attribute('v_1', 'v', n1)
+    logger.log_attribute('v_2', 'v', n2)
+    logger.log_attribute('v_intf', 'v_intf', evs)
+    logger.log_attribute('v_ref', 'V_ref', evs)
+    logger.log_attribute('i_intf', 'i_intf', evs)
+    logger.log_attribute('i_r_line', 'i_intf', r_line)
 
     sim.add_logger(logger)
 
@@ -179,9 +181,10 @@ def set_dpsim2(t_s, t_f, num_vs, logger_prefix):
     dpsimpy.Logger.set_log_dir('logs/' + logger_prefix + '_' + sim_name)
 
     logger = dpsimpy.Logger(sim_name)
-    logger.log_attribute('v2', 'v', n2)
-    logger.log_attribute('ecs.i', 'i_intf', ecs)
-    logger.log_attribute('ecs.v', 'v_intf', ecs)
+    logger.log_attribute('v_2', 'v', n2)
+    logger.log_attribute('i_intf', 'i_intf', ecs)
+    logger.log_attribute('i_ref', 'I_ref', ecs)
+    logger.log_attribute('v_intf', 'v_intf', ecs)
 
     sim.add_logger(logger)
 
@@ -213,7 +216,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--timestep', type=float, required=True)
     parser.add_argument('-e', '--end', type=float, required=True)
     parser.add_argument('-H', '--macro-step', type=float, required=True)
-    parser.add_argument('-i', '--interp', default='zoh')
+    parser.add_argument('-i', '--interp', default='none')
     parser.add_argument('-p', '--prefix', default='')
     parser.add_argument('--num-vs', default=0)
     parser.add_argument('-d', '--debug', type=bool, default=False)
@@ -227,6 +230,11 @@ if __name__ == '__main__':
     prefix = args.prefix
     num_vs = int(args.num_vs)
     debug = args.debug
+
+    if interp == 'none':
+        NO_EXTRAP = True
+    else:
+        NO_EXTRAP = False
 
     logging.basicConfig(format='[%(asctime)s %(name)s %(levelname)s] %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
 
@@ -267,58 +275,80 @@ if __name__ == '__main__':
     # y_1_m_prev = np.tile(y_1_0, m)
     y_1_m_prev = np.array([0.0, y_1_0])
 
-    for i in range(0, N):
-        y_1_prev = y_1_m_prev[-1]
-        t_m_i = t[m*i : m*(i+1) + 1]
-
-        # Extrapolation: Zero order hold
-        if interp == 'zoh':
-            u_2_m = np.tile(y_1_prev, m+1)
-        elif interp == 'linear':
-            f_u_2 = np.poly1d(np.polyfit([i*H-H, i*H], y_1_m_prev[-2:], 1))
-            u_2_m = f_u_2(t_m_i)
-
-        # j = 0
-        y_1_m = np.zeros(m+1)
-
-        for j in range(0, m+1):
-            # Switch to S_2
-            if debug:
-                u_2_prev = sim2.get_idobj_attr("i_intf", "i_intf").derive_coeff(0,0).get()
-                print("Input value in S2 before set: {:f}".format(u_2_prev))
-
-            u_2 = u_2_m[j]
+    if NO_EXTRAP:
+        
+        while t_k <= t_f:
+            u_2 = y_1
             sim2.get_idobj_attr("i_intf", "I_ref").set(complex(u_2,0))
-
-            if debug:
-                u_2_test = sim2.get_idobj_attr("i_intf", "I_ref").get()
-                print("Input value in S2 after set: {:f}".format(u_2_test))
-
             sim2.next()
             y_2 = sim2.get_idobj_attr("i_intf", "v_intf").derive_coeff(0,0).get()
-
-            if debug:
-                print("Output value from S2: {:f}".format(y_2))
-
+            
             u_1 = y_2
 
             sim1.get_idobj_attr("v_intf", "V_ref").set(complex(u_1,0))
             t_k = sim1.next()
             y_1 = sim1.get_idobj_attr("v_intf", "i_intf").derive_coeff(0,0).get()
 
-            y_1_m[j] = y_1
-            # j += 1
+    else:
+
+        for i in range(0, N):
+            y_1_prev = y_1_m_prev[-1]
+            t_m_i = t[m*i : m*(i+1) + 1]
+
+            # Extrapolation: Zero order hold
+            if interp == 'zoh':
+                u_2_m = np.tile(y_1_prev, m+1)
+            elif interp == 'linear':
+                f_u_2 = np.poly1d(np.polyfit([i*H-H, i*H], y_1_m_prev[-2:], 1))
+                u_2_m = f_u_2(t_m_i)
+
+            # j = 0
+            y_1_m = np.zeros(m+1)
+            y_2_m = np.zeros(m+1)
+
+            # Switch to S_2
+            for j in range(0, m+1):
+                if debug:
+                    u_2_prev = sim2.get_idobj_attr("i_intf", "i_intf").derive_coeff(0,0).get()
+                    print("Input value in S2 before set: {:f}".format(u_2_prev))
+
+                u_2 = u_2_m[j]
+
+                sim2.get_idobj_attr("i_intf", "I_ref").set(complex(u_2,0))
+
+                if debug:
+                    u_2_test = sim2.get_idobj_attr("i_intf", "I_ref").get()
+                    print("Input value in S2 after set: {:f}".format(u_2_test))
+
+                sim2.next()
+                y_2 = sim2.get_idobj_attr("i_intf", "v_intf").derive_coeff(0,0).get()
+                y_2_m[j] = y_2
+
+                if debug:
+                    print("Output value from S2: {:f}".format(y_2))
+
+            # Switch to S_1
+            u_1_m = y_2_m
+            for j in range(0, m+1):
+                u_1 = u_1_m[j]
+
+                sim1.get_idobj_attr("v_intf", "V_ref").set(complex(u_1,0))
+                t_k = sim1.next()
+                y_1 = sim1.get_idobj_attr("v_intf", "i_intf").derive_coeff(0,0).get()
+
+                y_1_m[j] = y_1
+                # j += 1
+
+                if debug:
+                    print("Output value from S1: {:f}".format(y_1))
+                    print("Time t={:f}".format(t_k))
+                    print("DPsim iteration: {}".format(j))
+
+            # y_1_m_prev = y_1_m
+            y_1_m_prev = np.append(y_1_m_prev, y_1_m[-1])
 
             if debug:
-                print("Output value from S1: {:f}".format(y_1))
-                print("Time t={:f}".format(t_k))
-                print("DPsim iteration: {}".format(j))
-
-        # y_1_m_prev = y_1_m
-        y_1_m_prev = np.append(y_1_m_prev, y_1_m[-1])
-
-        if debug:
-            print(y_1_m_prev)
+                print(y_1_m_prev)
 
     sim2.stop()
     sim1.stop()
