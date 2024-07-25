@@ -19,7 +19,6 @@ def set_dpsim1(t_s, t_f, u_1_0, num_vs, logger_prefix):
     c_1_c = 1
     r_line_r = 0.1
 
-    # sim_name = "EMTCosimAttributes1"
     sim_name = "S1"
 
     gnd = dpsimpy.emt.SimNode.gnd
@@ -95,31 +94,30 @@ def set_dpsim1(t_s, t_f, u_1_0, num_vs, logger_prefix):
 
     sim.add_logger(logger)
 
-    # TODO: set_intf methods are not working, but they're neccesary mostly when num_vs = 0
-    # if with_vs_2:
-    #     n0_v0 = np.array([2.0])
-    # elif with_vs_1:
-    #     n0_v0 = np.array([1.0])
+    if with_vs_2:
+        n0_v0 = np.array([2.0])
+    elif with_vs_1:
+        n0_v0 = np.array([1.0])
 
-    # if with_vs_1:
-    #     n1_v0 = np.array([0.0])
-    #     ir_1_0 = (n0_v0 - n1_v0) / r_1_r
-    # else:
-    #     n1_v0 = np.array([5.0])
-    #     ir_1_0 = n1_v0 / r_1_r
-    # n2_v0 = np.array([u_1_0])
+    if with_vs_1:
+        n1_v0 = np.array([0.0])
+        ir_1_0 = (n0_v0 - n1_v0) / r_1_r
+    else:
+        n1_v0 = np.array([5.0])
+        ir_1_0 = n1_v0 / r_1_r
+    n2_v0 = np.array([u_1_0])
 
-    # i_r_line_0 = (n1_v0 - n2_v0) / r_line_r
+    i_r_line_0 = (n1_v0 - n2_v0) / r_line_r
 
-    # r_1.set_intf_voltage(n1_v0)
-    # r_1.set_intf_current(ir_1_0)
-    # c_1.set_intf_voltage(n1_v0)
-    # c_1.set_intf_current(ir_1_0 - i_r_line_0)
-    # r_line.set_intf_voltage(n1_v0 - n2_v0)
-    # r_line.set_intf_current(i_r_line_0)
+    r_1.set_intf_voltage(n1_v0)
+    r_1.set_intf_current(ir_1_0)
+    c_1.set_intf_voltage(n1_v0)
+    c_1.set_intf_current(ir_1_0 - i_r_line_0)
+    r_line.set_intf_voltage(n1_v0 - n2_v0)
+    r_line.set_intf_current(i_r_line_0)
 
-    # evs.set_intf_voltage(n2_v0)
-    # evs.set_intf_current(i_r_line_0)
+    evs.set_intf_voltage(n2_v0)
+    evs.set_intf_current(i_r_line_0)
 
     return sim
 
@@ -132,7 +130,6 @@ def set_dpsim2(t_s, t_f, num_vs, logger_prefix):
     r_load_r = 1.0
     c_2_c = 1.0
 
-    # sim_name = "EMTCosimAttributes2"
     sim_name = "S2"
 
     gnd = dpsimpy.emt.SimNode.gnd
@@ -188,25 +185,24 @@ def set_dpsim2(t_s, t_f, num_vs, logger_prefix):
 
     sim.add_logger(logger)
 
-    # TODO: set_intf methods are not working, but they're neccesary mostly when num_vs = 0
     # Initialize currents and voltages
-    # if with_vs_1:
-    #     n2_v0 = np.array([0.0])
-    # else:
-    #     n2_v0 = np.array([2.0])
+    if with_vs_1:
+        n2_v0 = np.array([0.0])
+    else:
+        n2_v0 = np.array([2.0])
 
-    # if with_vs_2:
-    #     n3_v0 = np.array([np.cos(np.pi/4)])
-    #     i_r_load_0 = (n3_v0 - n2_v0) / r_load_r
-    #     r_load.set_intf_voltage(n3_v0 - n2_v0)
-    # else:
-    #     i_r_load_0 = [n2_v0 / r_load_r]
-    #     r_load.set_intf_voltage(n2_v0)
+    if with_vs_2:
+        n3_v0 = np.array([np.cos(np.pi/4)])
+        i_r_load_0 = (n3_v0 - n2_v0) / r_load_r
+        r_load.set_intf_voltage(n3_v0 - n2_v0)
+    else:
+        i_r_load_0 = [n2_v0 / r_load_r]
+        r_load.set_intf_voltage(n2_v0)
 
-    # r_load.set_intf_current(i_r_load_0)
-    # c_2.set_intf_voltage([n2_v0])
+    r_load.set_intf_current(i_r_load_0)
+    c_2.set_intf_voltage([n2_v0])
 
-    # ecs.set_intf_voltage(n2_v0)
+    ecs.set_intf_voltage(n2_v0)
 
     return sim
 
@@ -238,9 +234,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(format='[%(asctime)s %(name)s %(levelname)s] %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
 
-    # time_step = 0.001
     t_0 = 0.0
-    # t_f = 1
     t_k = 0.0
 
     n = int(round((t_f - t_0) / time_step))
@@ -293,21 +287,21 @@ if __name__ == '__main__':
 
         for i in range(0, N):
             y_1_prev = y_1_m_prev[-1]
-            t_m_i = t[m*i : m*(i+1) + 1]
+            t_m_i = t[m*i : m*(i+1)]
 
             # Extrapolation: Zero order hold
             if interp == 'zoh':
-                u_2_m = np.tile(y_1_prev, m+1)
+                u_2_m = np.tile(y_1_prev, m)
             elif interp == 'linear':
                 f_u_2 = np.poly1d(np.polyfit([i*H-H, i*H], y_1_m_prev[-2:], 1))
                 u_2_m = f_u_2(t_m_i)
 
             # j = 0
-            y_1_m = np.zeros(m+1)
-            y_2_m = np.zeros(m+1)
+            y_1_m = np.zeros(m)
+            y_2_m = np.zeros(m)
 
             # Switch to S_2
-            for j in range(0, m+1):
+            for j in range(0, m):
                 if debug:
                     u_2_prev = sim2.get_idobj_attr("i_intf", "i_intf").derive_coeff(0,0).get()
                     print("Input value in S2 before set: {:f}".format(u_2_prev))
@@ -329,7 +323,7 @@ if __name__ == '__main__':
 
             # Switch to S_1
             u_1_m = y_2_m
-            for j in range(0, m+1):
+            for j in range(0, m):
                 u_1 = u_1_m[j]
 
                 sim1.get_idobj_attr("v_intf", "V_ref").set(complex(u_1,0))
@@ -337,7 +331,6 @@ if __name__ == '__main__':
                 y_1 = sim1.get_idobj_attr("v_intf", "i_intf").derive_coeff(0,0).get()
 
                 y_1_m[j] = y_1
-                # j += 1
 
                 if debug:
                     print("Output value from S1: {:f}".format(y_1))
