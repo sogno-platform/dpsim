@@ -353,6 +353,7 @@ public:
   AttributeBase::Ptr cloneValueOntoNewAttribute() override {
     return AttributePointer<AttributeBase>(
         AttributeStatic<T>::make(this->get()));
+    //TODO: This is in the real time path. We should not use heap here.
   };
 
   /**

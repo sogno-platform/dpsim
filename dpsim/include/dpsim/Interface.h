@@ -12,8 +12,6 @@
 #include <dpsim/Interface.h>
 #include <dpsim/Scheduler.h>
 
-#include <readerwriterqueue.h>
-
 namespace DPsim {
 
 class InterfaceWorker;
@@ -23,53 +21,25 @@ class Interface : public SharedFactory<Interface> {
 public:
   typedef std::shared_ptr<Interface> Ptr;
 
-  using AttributePacket = struct AttributePacket {
-    CPS::AttributeBase::Ptr value;
-    UInt
-        attributeId; //Used to identify the attribute. Defined by the position in the `mExportAttrsDpsim` and `mImportAttrsDpsim` lists
-    UInt
-        sequenceId; //Increasing ID used to discern multiple consecutive updates of a single attribute
-    unsigned char flags; //Bit 0 set: Close interface
+  Interface(const String &name = "", spdlog::level::level_enum logLevel =
+                                         spdlog::level::level_enum::info)
+      : mName(name), mOpened(false) {
+    mLog = CPS::Logger::get("Interface", logLevel);
   };
 
-  enum AttributePacketFlags {
-    PACKET_NO_FLAGS = 0,
-    PACKET_CLOSE_INTERFACE = 1,
-  };
-
-  Interface(std::shared_ptr<InterfaceWorker> intf, const String &name = "",
-            UInt downsampling = 1)
-      : mInterfaceWorker(intf), mName(name), mDownsampling(downsampling),
-        mOpened(false) {
-    mQueueDpsimToInterface = std::make_shared<
-        moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
-    mQueueInterfaceToDpsim = std::make_shared<
-        moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
-  };
-
-  virtual void open();
-  virtual void close();
-
-  // Function used in the interface's simulation task to read all imported attributes from the queue
-  // Called once before every simulation timestep
-  virtual void pushDpsimAttrsToQueue();
-  // Function used in the interface's simulation task to write all exported attributes to the queue
-  // Called once after every simulation timestep
-  virtual void popDpsimAttrsFromQueue(bool isSync = false);
+  virtual void open() = 0;
+  virtual void close() = 0;
 
   // Function called by the Simulation to perform interface synchronization
-  virtual void syncExports();
+  virtual void syncExports() = 0;
   /// Function called by the Simulation to perform interface synchronization
-  virtual void syncImports();
+  virtual void syncImports() = 0;
 
-  virtual CPS::Task::List getTasks();
+  virtual CPS::Task::List getTasks() = 0;
 
-  void setLogger(CPS::Logger::Log log);
+  virtual void setLogger(CPS::Logger::Log log);
 
-  virtual ~Interface() {
-    if (mOpened)
-      close();
-  }
+  virtual String &getName() { return mName; }
 
   // Attributes used in the DPsim simulation. Should only be accessed by the dpsim-thread
   // Tuple attributes: Attribute to be imported, Current sequenceID, blockOnRead, syncOnSimulationStart
@@ -78,91 +48,16 @@ public:
   // Tuple attributes: Attribute to be exported, Current Sequence ID
   std::vector<std::tuple<CPS::AttributeBase::Ptr, UInt>> mExportAttrsDpsim;
 
+  virtual void addImport(CPS::AttributeBase::Ptr attr, bool blockOnRead = false,
+                         bool syncOnSimulationStart = true);
+  virtual void addExport(CPS::AttributeBase::Ptr attr);
+
 protected:
-  std::shared_ptr<InterfaceWorker> mInterfaceWorker;
   CPS::Logger::Log mLog;
   String mName;
   bool mSyncOnSimulationStart;
   UInt mCurrentSequenceDpsimToInterface = 1;
   UInt mNextSequenceInterfaceToDpsim = 1;
-  UInt mDownsampling;
   std::atomic<bool> mOpened;
-  std::thread mInterfaceWriterThread;
-  std::thread mInterfaceReaderThread;
-
-  std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
-      mQueueDpsimToInterface;
-  std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
-      mQueueInterfaceToDpsim;
-
-  virtual void addImport(CPS::AttributeBase::Ptr attr, bool blockOnRead = false,
-                         bool syncOnSimulationStart = true);
-  virtual void addExport(CPS::AttributeBase::Ptr attr);
-
-public:
-  class WriterThread {
-  private:
-    std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
-        mQueueDpsimToInterface;
-    std::shared_ptr<InterfaceWorker> mInterfaceWorker;
-
-  public:
-    WriterThread(
-        std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
-            queueDpsimToInterface,
-        std::shared_ptr<InterfaceWorker> intf)
-        : mQueueDpsimToInterface(queueDpsimToInterface),
-          mInterfaceWorker(intf){};
-    void operator()() const;
-  };
-
-  class ReaderThread {
-  private:
-    std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
-        mQueueInterfaceToDpsim;
-    std::shared_ptr<InterfaceWorker> mInterfaceWorker;
-    std::atomic<bool> &mOpened;
-
-  public:
-    ReaderThread(
-        std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
-            queueInterfaceToDpsim,
-        std::shared_ptr<InterfaceWorker> intf, std::atomic<bool> &opened)
-        : mQueueInterfaceToDpsim(queueInterfaceToDpsim), mInterfaceWorker(intf),
-          mOpened(opened){};
-    void operator()() const;
-  };
-
-  class PreStep : public CPS::Task {
-  public:
-    explicit PreStep(Interface &intf)
-        : Task(intf.mName + ".Read"), mIntf(intf) {
-      for (const auto &[attr, _seqId, _blockOnRead, _syncOnStart] :
-           intf.mImportAttrsDpsim) {
-        mModifiedAttributes.push_back(attr);
-      }
-    }
-
-    void execute(Real time, Int timeStepCount) override;
-
-  private:
-    Interface &mIntf;
-  };
-
-  class PostStep : public CPS::Task {
-  public:
-    explicit PostStep(Interface &intf)
-        : Task(intf.mName + ".Write"), mIntf(intf) {
-      for (const auto &[attr, _seqId] : intf.mExportAttrsDpsim) {
-        mAttributeDependencies.push_back(attr);
-      }
-      mModifiedAttributes.push_back(Scheduler::external);
-    }
-
-    void execute(Real time, Int timeStepCount) override;
-
-  private:
-    Interface &mIntf;
-  };
 };
 } // namespace DPsim

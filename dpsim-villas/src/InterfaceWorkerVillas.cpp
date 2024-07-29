@@ -26,12 +26,16 @@ UInt InterfaceWorkerVillas::villasHugePages = 100;
 
 InterfaceWorkerVillas::InterfaceWorkerVillas(const String &nodeConfig,
                                              UInt queueLength,
-                                             UInt sampleLength)
+                                             UInt sampleLength,
+                                             spdlog::level::level_enum logLevel)
     : InterfaceWorker(), mNodeConfig(nodeConfig), mQueueLength(queueLength),
-      mSampleLength(sampleLength) {}
+      mSampleLength(sampleLength) {
+  mLog = CPS::Logger::get("InterfaceWorkerVillas", logLevel, logLevel);
+}
 
 void InterfaceWorkerVillas::open() {
   SPDLOG_LOGGER_INFO(mLog, "Opening InterfaceWorkerVillas...");
+  logging.setLevel(mLog->level());
 
   if (!InterfaceWorkerVillas::villasInitialized) {
     SPDLOG_LOGGER_INFO(mLog, "Initializing Villas...");
@@ -186,7 +190,7 @@ void InterfaceWorkerVillas::close() {
 }
 
 void InterfaceWorkerVillas::readValuesFromEnv(
-    std::vector<Interface::AttributePacket> &updatedAttrs) {
+    std::vector<InterfaceQueued::AttributePacket> &updatedAttrs) {
   Sample *sample = nullptr;
   int ret = 0;
   bool shouldRead = false;
@@ -243,9 +247,9 @@ void InterfaceWorkerVillas::readValuesFromEnv(
         for (UInt i = 0; i < mImports.size(); i++) {
           auto importedAttr = std::get<0>(mImports[i])(sample);
           if (!importedAttr.isNull()) {
-            updatedAttrs.emplace_back(Interface::AttributePacket{
+            updatedAttrs.emplace_back(InterfaceQueued::AttributePacket{
                 importedAttr, i, mCurrentSequenceInterfaceToDpsim,
-                Interface::AttributePacketFlags::PACKET_NO_FLAGS});
+                InterfaceQueued::AttributePacketFlags::PACKET_NO_FLAGS});
             mCurrentSequenceInterfaceToDpsim++;
           }
         }
@@ -284,7 +288,7 @@ void InterfaceWorkerVillas::readValuesFromEnv(
 }
 
 void InterfaceWorkerVillas::writeValuesToEnv(
-    std::vector<Interface::AttributePacket> &updatedAttrs) {
+    std::vector<InterfaceQueued::AttributePacket> &updatedAttrs) {
   //Update export sequence IDs
   for (const auto &packet : updatedAttrs) {
     if (std::get<1>(mExports[packet.attributeId]) < packet.sequenceId) {
