@@ -10,6 +10,7 @@
 
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Signal/CosineFMGenerator.h>
+#include <dpsim-models/Signal/DCGenerator.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
