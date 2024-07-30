@@ -199,7 +199,8 @@ int main(int argc, char *argv[]) {
   Simulation sim(args.name, args);
   sim.setSystem(sys);
   sim.addInterface(intf);
-  //sim.addLogger(logger);
+  // If you want to add loggging (slows down the execution) add
+  // sim.addLogger(logger);
   sim.run();
 
   CPS::Logger::get("FpgaExample")->info("Simulation finished.");

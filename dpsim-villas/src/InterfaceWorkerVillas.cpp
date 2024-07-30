@@ -289,14 +289,14 @@ void InterfaceWorkerVillas::readValuesFromEnv(
 
 void InterfaceWorkerVillas::writeValuesToEnv(
     std::vector<InterfaceQueued::AttributePacket> &updatedAttrs) {
-  //Update export sequence IDs
+  // Update export sequence IDs
   for (const auto &packet : updatedAttrs) {
     if (std::get<1>(mExports[packet.attributeId]) < packet.sequenceId) {
       std::get<1>(mExports[packet.attributeId]) = packet.sequenceId;
     }
   }
 
-  //Remove outdated packets
+  // Remove outdated packets
   auto beginOutdated = std::remove_if(
       updatedAttrs.begin(), updatedAttrs.end(), [this](auto packet) {
         return std::get<1>(mExports[packet.attributeId]) > packet.sequenceId;

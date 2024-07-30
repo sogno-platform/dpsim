@@ -138,8 +138,8 @@ void InterfaceVillasQueueless::open() {
   createNode();
   createSignals();
 
-  mNode->getFactory()->start(
-      nullptr); //We have no SuperNode, so just hope type_start doesnt use it...
+  // We have no SuperNode, so just hope type_start doesn't use it...
+  mNode->getFactory()->start(nullptr);
 
   auto ret = mNode->start();
   if (ret < 0) {
@@ -343,17 +343,17 @@ void InterfaceVillasQueueless::writeToVillas() {
           "Failed to write samples to InterfaceVillas. Write returned code {}",
           ret);
 
-    /* Don't throw here, because we managed to send something */
+    // Don't throw here, because we managed to send something
   }
 }
 
 void InterfaceVillasQueueless::syncImports() {
-  //Block on read until all attributes with syncOnSimulationStart are read
+  // Block on read until all attributes with syncOnSimulationStart are read
   mSequenceToDpsim = this->readFromVillas();
 }
 
 void InterfaceVillasQueueless::syncExports() {
-  //Just push all the attributes
+  // Just push all the attributes
   this->writeToVillas();
 }
 
