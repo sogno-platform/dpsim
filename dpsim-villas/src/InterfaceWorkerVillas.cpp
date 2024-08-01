@@ -35,7 +35,7 @@ InterfaceWorkerVillas::InterfaceWorkerVillas(const String &nodeConfig,
 
 void InterfaceWorkerVillas::open() {
   SPDLOG_LOGGER_INFO(mLog, "Opening InterfaceWorkerVillas...");
-  logging.setLevel(mLog->level());
+  Log::getInstance().setLevel(mLog->level());
 
   if (!InterfaceWorkerVillas::villasInitialized) {
     SPDLOG_LOGGER_INFO(mLog, "Initializing Villas...");
