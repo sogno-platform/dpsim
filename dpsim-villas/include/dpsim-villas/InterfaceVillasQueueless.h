@@ -1,4 +1,7 @@
-// SPDX-License-Identifier: Apache-2.0
+/* Author: Niklas Eiling <niklas.eiling@eonerc.rwth-aachen.de>
+ * SPDX-FileCopyrightText: 2023-2024 Niklas Eiling <niklas.eiling@eonerc.rwth-aachen.de>
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
 #pragma once
 
@@ -44,7 +47,7 @@ public:
 
   // Function called by the Simulation to perform interface synchronization
   virtual void syncExports() override;
-  /// Function called by the Simulation to perform interface synchronization
+  // Function called by the Simulation to perform interface synchronization
   virtual void syncImports() override;
 
   virtual CPS::Task::List getTasks() override;

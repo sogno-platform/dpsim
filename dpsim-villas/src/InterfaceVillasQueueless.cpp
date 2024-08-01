@@ -1,15 +1,18 @@
-// SPDX-License-Identifier: Apache-2.0
+/* Author: Niklas Eiling <niklas.eiling@eonerc.rwth-aachen.de>
+ * SPDX-FileCopyrightText: 2023-2024 Niklas Eiling <niklas.eiling@eonerc.rwth-aachen.de>
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
-#include "villas/node/memory.hpp"
-#include "villas/node/memory_type.hpp"
-#include "villas/path.hpp"
-#include "villas/signal_type.hpp"
 #include <dpsim-villas/InterfaceVillasQueueless.h>
 #include <dpsim-villas/InterfaceWorkerVillas.h>
 #include <memory>
 #include <spdlog/spdlog.h>
 #include <typeinfo>
 #include <villas/node.h>
+#include <villas/node/memory.hpp>
+#include <villas/node/memory_type.hpp>
+#include <villas/path.hpp>
+#include <villas/signal_type.hpp>
 
 using namespace CPS;
 using namespace villas;
