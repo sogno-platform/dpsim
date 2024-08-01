@@ -3,8 +3,10 @@
 #pragma once
 
 #include <dpsim-models/PtrFactory.h>
+#include <dpsim/InterfaceQueued.h>
 #include <dpsim/InterfaceWorker.h>
 
+#include <spdlog/common.h>
 #include <villas/kernel/rt.hpp>
 #include <villas/node.hpp>
 #include <villas/node/exceptions.hpp>
@@ -53,16 +55,22 @@ private:
   std::map<int, node::Signal::Ptr> mImportSignals;
 
 public:
-  InterfaceWorkerVillas(const String &nodeConfig, UInt queueLenght = 512,
-                        UInt sampleLenght = 64);
+  InterfaceWorkerVillas(
+      const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64,
+      spdlog::level::level_enum logLevel = spdlog::level::level_enum::info);
 
   void open() override;
   void close() override;
 
   void readValuesFromEnv(
-      std::vector<Interface::AttributePacket> &updatedAttrs) override;
+      std::vector<InterfaceQueued::AttributePacket> &updatedAttrs) override;
+  void readValuesFromEnv(
+      std::vector<std::tuple<CPS::AttributeBase::Ptr, UInt, bool, bool>>
+          &updatedAttrs);
   void writeValuesToEnv(
-      std::vector<Interface::AttributePacket> &updatedAttrs) override;
+      std::vector<InterfaceQueued::AttributePacket> &updatedAttrs) override;
+  void writeValuesToEnv(
+      std::vector<std::tuple<CPS::AttributeBase::Ptr, UInt>> &updatedAttrs);
 
   virtual void configureImport(UInt attributeId, const std::type_info &type,
                                UInt idx, const String &name = "",

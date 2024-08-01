@@ -10,6 +10,7 @@
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/Interface.h>
+#include <dpsim/InterfaceQueued.h>
 #include <dpsim/Scheduler.h>
 
 namespace DPsim {
@@ -33,8 +34,8 @@ public:
          * Should be used to read values from the environment and push them into `updatedAttrs`
          * `updatedAttrs` will always be empty when this function is invoked
          */
-  virtual void
-  readValuesFromEnv(std::vector<Interface::AttributePacket> &updatedAttrs) = 0;
+  virtual void readValuesFromEnv(
+      std::vector<InterfaceQueued::AttributePacket> &updatedAttrs) = 0;
 
   /**
 		 * Function that will be called on loop in its separate thread.
@@ -42,8 +43,8 @@ public:
          * The `updatedAttrs` list will not be cleared by the caller in between function calls
          * When this function is called, `updatedAttrs` will include at least one value
 		 */
-  virtual void
-  writeValuesToEnv(std::vector<Interface::AttributePacket> &updatedAttrs) = 0;
+  virtual void writeValuesToEnv(
+      std::vector<InterfaceQueued::AttributePacket> &updatedAttrs) = 0;
 
   /**
          * Open the interface and set up the connection to the environment
