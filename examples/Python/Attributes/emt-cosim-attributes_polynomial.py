@@ -243,7 +243,7 @@ if __name__ == '__main__':
     N = int(round((t_f - t_0) / H))
     t_m = np.around(np.linspace(t_0, t_f, N + 1), 16)
 
-    m = int(H/time_step)
+    m = int(round(H/time_step))
     print(m)
 
     # Initialization of S_2 and communication y_2_0 -> S_1
