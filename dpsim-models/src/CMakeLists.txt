@@ -30,6 +30,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_Resistor.cpp
 	DP/DP_Ph1_Transformer.cpp
 	DP/DP_Ph1_VoltageSource.cpp
+	DP/DP_Ph1_ProfileVoltageSource.cpp
 	DP/DP_Ph1_VoltageSourceRamp.cpp
 	DP/DP_Ph1_VoltageSourceNorton.cpp
 	DP/DP_Ph1_Switch.cpp
@@ -153,6 +154,7 @@ list(APPEND MODELS_SOURCES
 	Signal/CosineFMGenerator.cpp
 	Signal/DCGenerator.cpp
 )
+list(APPEND MODELS_INCLUDE_DIRS "/home/eiling/projects/villas-node/build/lib/formats")
 
 if(WITH_CIM)
 	list(APPEND MODELS_SOURCES CIM/Reader.cpp)
