@@ -12,7 +12,11 @@ using namespace CPS;
 
 DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
     : Base::Ph1::PiLine(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
+      CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mParallelCurrentNode0(mAttributes->create<MatrixComp>("ParallelCurrentNode0",
+                                                      MatrixComp::Zero(1, 1))),
+      mParallelCurrentNode1(mAttributes->create<MatrixComp>("ParallelCurrentNode1",
+                                                      MatrixComp::Zero(1, 1))) {
   setTerminalNumber(2);
 
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
@@ -88,6 +92,24 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
 
+    // intialize parallel current Node 0
+  **mParallelCurrentNode0 = Matrix::Zero(1, 1);
+  if (**mParallelCond > 0) {
+    **mParallelCurrentNode0 += mSubParallelResistor0->intfCurrent();
+  }
+  if (**mParallelCap > 0) {
+    **mParallelCurrentNode0 += mSubParallelCapacitor0->intfCurrent();
+  }
+
+  // intialize parallel current Node 1
+  **mParallelCurrentNode1 = Matrix::Zero(1, 1);
+  if (**mParallelCond > 0) {
+    **mParallelCurrentNode1 += mSubParallelResistor1->intfCurrent();
+  }
+  if (**mParallelCap > 0) {
+    **mParallelCurrentNode1 += mSubParallelCapacitor1->intfCurrent();
+  }
+
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
                      "\nVoltage across: {:s}"
@@ -98,7 +120,9 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
                      Logger::phasorToString((**mIntfVoltage)(0, 0)),
                      Logger::phasorToString((**mIntfCurrent)(0, 0)),
                      Logger::phasorToString(initialSingleVoltage(0)),
-                     Logger::phasorToString(initialSingleVoltage(1)));
+                     Logger::phasorToString(initialSingleVoltage(1)),
+                     Logger::phasorToString((**mParallelCurrentNode0)(0, 0)),
+                     Logger::phasorToString((**mParallelCurrentNode1)(0, 0)));
 }
 
 void DP::Ph1::PiLine::mnaParentAddPreStepDependencies(
@@ -109,6 +133,8 @@ void DP::Ph1::PiLine::mnaParentAddPreStepDependencies(
   prevStepDependencies.push_back(mIntfCurrent);
   prevStepDependencies.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mRightVector);
+  prevStepDependencies.push_back(mParallelCurrentNode0);
+  prevStepDependencies.push_back(mParallelCurrentNode1);
 }
 
 void DP::Ph1::PiLine::mnaParentPreStep(Real time, Int timeStepCount) {
@@ -125,6 +151,8 @@ void DP::Ph1::PiLine::mnaParentAddPostStepDependencies(
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mIntfCurrent);
+  modifiedAttributes.push_back(mParallelCurrentNode0);
+  modifiedAttributes.push_back(mParallelCurrentNode1);
 }
 
 void DP::Ph1::PiLine::mnaParentPostStep(Real time, Int timeStepCount,
@@ -147,6 +175,24 @@ void DP::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
 
 void DP::Ph1::PiLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = mSubSeriesElement->intfCurrent()(0, 0);
+
+  // update parallel currents Node 0
+  **mParallelCurrentNode0 = Matrix::Zero(1, 1);
+  if (**mParallelCond > 0) {
+    **mParallelCurrentNode0 += mSubParallelResistor0->intfCurrent();
+  }
+  if (**mParallelCap > 0) {
+    **mParallelCurrentNode0 += mSubParallelCapacitor0->intfCurrent();
+  }
+
+  // update parallel currents Node 1
+  **mParallelCurrentNode1 = Matrix::Zero(1, 1);
+  if (**mParallelCond > 0) {
+    **mParallelCurrentNode1 += mSubParallelResistor1->intfCurrent();
+  }
+  if (**mParallelCap > 0) {
+    **mParallelCurrentNode1 += mSubParallelCapacitor1->intfCurrent();
+  }
 }
 
 MNAInterface::List DP::Ph1::PiLine::mnaTearGroundComponents() {

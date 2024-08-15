@@ -47,6 +47,10 @@ public:
   PiLine(String name, Logger::Level logLevel = Logger::Level::off)
       : PiLine(name, name, logLevel) {}
 
+  //
+  Attribute<MatrixVar<CPS::Complex>>::Ptr mParallelCurrentNode0;
+  Attribute<MatrixVar<CPS::Complex>>::Ptr mParallelCurrentNode1;
+  
   // #### General ####
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency);

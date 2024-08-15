@@ -26,6 +26,8 @@ class CurrentSource : public MNASimPowerComp<Real>,
 private:
   ///
   CPS::Signal::SignalGenerator::Ptr mSrcSig;
+  ///
+  Real mTimeStep;
 
 protected:
   // Updates current according to reference phasor and frequency

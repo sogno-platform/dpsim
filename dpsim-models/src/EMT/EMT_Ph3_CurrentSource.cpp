@@ -98,6 +98,8 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 void EMT::Ph3::CurrentSource::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
+
+  mTimeStep = timeStep;
 }
 
 void EMT::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp(
