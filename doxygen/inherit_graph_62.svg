@@ -79,99 +79,99 @@
 <path fill="none" stroke="midnightblue" d="M442.26,-250C459.93,-250 479.48,-250 497.78,-250"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="442.09,-246.5 432.09,-250 442.09,-253.5 442.09,-246.5"/>
 </g>
-<!-- Node330 -->
+<!-- Node331 -->
 <g id="node6" class="node">
-<title>Node330</title>
+<title>Node331</title>
 <g id="a_node6"><a xlink:href="class_d_psim_1_1_solver.html" target="_top" xlink:title="Base class for more specific solvers such as MNA, ODE or IDA.">
 <polygon fill="none" stroke="black" points="178.5,-95.5 178.5,-114.5 259.5,-114.5 259.5,-95.5 178.5,-95.5"/>
 <text text-anchor="middle" x="219" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::Solver</text>
 </a>
 </g>
 </g>
-<!-- Node330&#45;&gt;Node2 -->
+<!-- Node331&#45;&gt;Node2 -->
 <g id="edge6" class="edge">
-<title>Node330&#45;&gt;Node2</title>
+<title>Node331&#45;&gt;Node2</title>
 <path fill="none" stroke="midnightblue" d="M234.88,-122.17C250.53,-139.26 276.65,-165.17 304,-181 310.57,-184.8 317.79,-188.11 325.1,-190.97"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="237.36,-119.69 228.08,-114.57 232.14,-124.36 237.36,-119.69"/>
 </g>
-<!-- Node331 -->
+<!-- Node332 -->
 <g id="node7" class="node">
-<title>Node331</title>
+<title>Node332</title>
 <g id="a_node7"><a xlink:href="class_d_psim_1_1_d_a_e_solver.html" target="_top" xlink:title="Solver class which uses Differential Algebraic Equation(DAE) systems.">
 <polygon fill="none" stroke="black" points="332,-152.5 332,-171.5 432,-171.5 432,-152.5 332,-152.5"/>
 <text text-anchor="middle" x="382" y="-159.5" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::DAESolver</text>
 </a>
 </g>
 </g>
-<!-- Node330&#45;&gt;Node331 -->
+<!-- Node331&#45;&gt;Node332 -->
 <g id="edge5" class="edge">
-<title>Node330&#45;&gt;Node331</title>
+<title>Node331&#45;&gt;Node332</title>
 <path fill="none" stroke="midnightblue" d="M247.97,-119.21C264.07,-126.99 284.84,-136.36 304,-143 314.28,-146.56 325.55,-149.73 336.21,-152.42"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="249.13,-115.88 238.61,-114.61 246.05,-122.16 249.13,-115.88"/>
 </g>
-<!-- Node332 -->
+<!-- Node333 -->
 <g id="node8" class="node">
-<title>Node332</title>
+<title>Node333</title>
 <g id="a_node8"><a xlink:href="class_d_psim_1_1_mna_solver.html" target="_top" xlink:title="Solver class using Modified Nodal Analysis (MNA).">
 <polygon fill="none" stroke="black" points="304,-114.5 304,-133.5 460,-133.5 460,-114.5 304,-114.5"/>
 <text text-anchor="middle" x="382" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::MnaSolver&lt; VarType &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node330&#45;&gt;Node332 -->
+<!-- Node331&#45;&gt;Node333 -->
 <g id="edge7" class="edge">
-<title>Node330&#45;&gt;Node332</title>
+<title>Node331&#45;&gt;Node333</title>
 <path fill="none" stroke="midnightblue" d="M269.87,-110.89C280.68,-112.16 292.36,-113.54 303.95,-114.91"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="270.14,-107.39 259.8,-109.7 269.32,-114.34 270.14,-107.39"/>
 </g>
-<!-- Node335 -->
+<!-- Node336 -->
 <g id="node11" class="node">
-<title>Node335</title>
+<title>Node336</title>
 <g id="a_node11"><a xlink:href="class_d_psim_1_1_o_d_e_solver.html" target="_top" xlink:title="Solver class for ODE (Ordinary Differential Equation) systems.">
 <polygon fill="none" stroke="black" points="331.5,-76.5 331.5,-95.5 432.5,-95.5 432.5,-76.5 331.5,-76.5"/>
 <text text-anchor="middle" x="382" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::ODESolver</text>
 </a>
 </g>
 </g>
-<!-- Node330&#45;&gt;Node335 -->
+<!-- Node331&#45;&gt;Node336 -->
 <g id="edge10" class="edge">
-<title>Node330&#45;&gt;Node335</title>
+<title>Node331&#45;&gt;Node336</title>
 <path fill="none" stroke="midnightblue" d="M269.74,-99.13C289.3,-96.82 311.72,-94.18 331.28,-91.87"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="269.32,-95.66 259.8,-100.3 270.14,-102.61 269.32,-95.66"/>
 </g>
-<!-- Node336 -->
+<!-- Node337 -->
 <g id="node12" class="node">
-<title>Node336</title>
+<title>Node337</title>
 <g id="a_node12"><a xlink:href="class_d_psim_1_1_o_d_eint_solver.html" target="_top" xlink:title="Solver class which uses ODE systems.">
 <polygon fill="none" stroke="black" points="325.5,-38.5 325.5,-57.5 438.5,-57.5 438.5,-38.5 325.5,-38.5"/>
 <text text-anchor="middle" x="382" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::ODEintSolver</text>
 </a>
 </g>
 </g>
-<!-- Node330&#45;&gt;Node336 -->
+<!-- Node331&#45;&gt;Node337 -->
 <g id="edge11" class="edge">
-<title>Node330&#45;&gt;Node336</title>
+<title>Node331&#45;&gt;Node337</title>
 <path fill="none" stroke="midnightblue" d="M247.97,-90.79C264.07,-83.01 284.84,-73.64 304,-67 314.28,-63.44 325.55,-60.27 336.21,-57.58"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="246.05,-87.84 238.61,-95.39 249.13,-94.12 246.05,-87.84"/>
 </g>
-<!-- Node337 -->
+<!-- Node338 -->
 <g id="node13" class="node">
-<title>Node337</title>
+<title>Node338</title>
 <g id="a_node13"><a xlink:href="class_d_psim_1_1_p_f_solver.html" target="_top" xlink:title="Solver class using the nonlinear powerflow (PF) formulation.">
 <polygon fill="none" stroke="black" points="336,-0.5 336,-19.5 428,-19.5 428,-0.5 336,-0.5"/>
 <text text-anchor="middle" x="382" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::PFSolver</text>
 </a>
 </g>
 </g>
-<!-- Node330&#45;&gt;Node337 -->
+<!-- Node331&#45;&gt;Node338 -->
 <g id="edge12" class="edge">
-<title>Node330&#45;&gt;Node337</title>
+<title>Node331&#45;&gt;Node338</title>
 <path fill="none" stroke="midnightblue" d="M234.41,-87.69C249.85,-70.28 275.95,-43.92 304,-29 313.73,-23.83 324.89,-20.03 335.65,-17.26"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="231.61,-85.58 227.72,-95.44 236.91,-90.15 231.61,-85.58"/>
 </g>
-<!-- Node333 -->
+<!-- Node334 -->
 <g id="node9" class="node">
-<title>Node333</title>
+<title>Node334</title>
 <g id="a_node9"><a xlink:href="class_d_psim_1_1_mna_solver_direct.html" target="_top" xlink:title="Solver class using Modified Nodal Analysis (MNA).">
 <polygon fill="none" stroke="black" points="504.5,-109 504.5,-139 633.5,-139 633.5,-109 504.5,-109"/>
 <text text-anchor="start" x="512.5" y="-127" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::MnaSolverDirect</text>
@@ -179,15 +179,15 @@
 </a>
 </g>
 </g>
-<!-- Node332&#45;&gt;Node333 -->
+<!-- Node333&#45;&gt;Node334 -->
 <g id="edge8" class="edge">
-<title>Node332&#45;&gt;Node333</title>
+<title>Node333&#45;&gt;Node334</title>
 <path fill="none" stroke="midnightblue" d="M470.22,-124C481.77,-124 493.44,-124 504.49,-124"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="470.12,-120.5 460.12,-124 470.12,-127.5 470.12,-120.5"/>
 </g>
-<!-- Node334 -->
+<!-- Node335 -->
 <g id="node10" class="node">
-<title>Node334</title>
+<title>Node335</title>
 <g id="a_node10"><a xlink:href="class_d_psim_1_1_mna_solver_plugin.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="678,-109 678,-139 808,-139 808,-109 678,-109"/>
 <text text-anchor="start" x="686" y="-127" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::MnaSolverPlugin</text>
@@ -195,24 +195,24 @@
 </a>
 </g>
 </g>
-<!-- Node333&#45;&gt;Node334 -->
+<!-- Node334&#45;&gt;Node335 -->
 <g id="edge9" class="edge">
-<title>Node333&#45;&gt;Node334</title>
+<title>Node334&#45;&gt;Node335</title>
 <path fill="none" stroke="midnightblue" d="M643.84,-124C655.16,-124 666.76,-124 677.84,-124"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="643.56,-120.5 633.56,-124 643.56,-127.5 643.56,-120.5"/>
 </g>
-<!-- Node338 -->
+<!-- Node339 -->
 <g id="node14" class="node">
-<title>Node338</title>
+<title>Node339</title>
 <g id="a_node14"><a xlink:href="class_d_psim_1_1_p_f_solver_power_polar.html" target="_top" xlink:title="Powerflow solver class considering power mismatch and voltages in polar coordinates.">
 <polygon fill="none" stroke="black" points="496,-0.5 496,-19.5 642,-19.5 642,-0.5 496,-0.5"/>
 <text text-anchor="middle" x="569" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::PFSolverPowerPolar</text>
 </a>
 </g>
 </g>
-<!-- Node337&#45;&gt;Node338 -->
+<!-- Node338&#45;&gt;Node339 -->
 <g id="edge13" class="edge">
-<title>Node337&#45;&gt;Node338</title>
+<title>Node338&#45;&gt;Node339</title>
 <path fill="none" stroke="midnightblue" d="M438.32,-10C456.38,-10 476.71,-10 495.82,-10"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="438.26,-6.5 428.26,-10 438.26,-13.5 438.26,-6.5"/>
 </g>

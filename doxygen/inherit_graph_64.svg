@@ -62,9 +62,9 @@
 <path fill="none" stroke="midnightblue" d="M478.25,-37.5C486.89,-37.5 495.57,-37.5 503.75,-37.5"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="478.16,-34 468.16,-37.5 478.16,-41 478.16,-34"/>
 </g>
-<!-- Node278 -->
+<!-- Node279 -->
 <g id="node5" class="node">
-<title>Node278</title>
+<title>Node279</title>
 <g id="a_node5"><a xlink:href="class_shared_factory.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="179,-0.5 179,-30.5 314,-30.5 314,-0.5 179,-0.5"/>
 <text text-anchor="start" x="187" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">SharedFactory&lt; Interface</text>
@@ -72,9 +72,9 @@
 </a>
 </g>
 </g>
-<!-- Node278&#45;&gt;Node2 -->
+<!-- Node279&#45;&gt;Node2 -->
 <g id="edge4" class="edge">
-<title>Node278&#45;&gt;Node2</title>
+<title>Node279&#45;&gt;Node2</title>
 <path fill="none" stroke="midnightblue" d="M324.27,-26.02C332.92,-27.21 341.62,-28.4 349.97,-29.55"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="324.55,-22.53 314.17,-24.64 323.6,-29.46 324.55,-22.53"/>
 </g>

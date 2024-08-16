@@ -44,8 +44,8 @@
 <area shape="rect" id="node43" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html" title="Ideal current source model." alt="" coords="1361,289,1570,316"/>
 <area shape="rect" id="node44" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="1379,340,1552,367"/>
 <area shape="rect" id="node45" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html" title="EMT Resistor." alt="" coords="1381,5,1550,32"/>
-<area shape="rect" id="node46" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="1361,391,1569,417"/>
-<area shape="rect" id="node47" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html" title="Voltage source as Norton equivalent." alt="" coords="1361,57,1569,98"/>
-<area shape="rect" id="node48" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" title="average inverter model with LC filter" alt="" coords="1365,122,1566,163"/>
-<area shape="rect" id="node49" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="1377,188,1554,215"/>
+<area shape="rect" id="node46" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_switch.html" title="One phase EMT switch." alt="" coords="1386,391,1545,417"/>
+<area shape="rect" id="node47" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="1361,56,1569,83"/>
+<area shape="rect" id="node48" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html" title="Voltage source as Norton equivalent." alt="" coords="1361,107,1569,149"/>
+<area shape="rect" id="node49" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" title="average inverter model with LC filter" alt="" coords="1365,173,1566,214"/>
 </map>
