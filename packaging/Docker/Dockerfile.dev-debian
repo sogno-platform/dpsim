@@ -1,7 +1,7 @@
 FROM debian:11
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-ARG VILLAS_VERSION=411b0ad49e2629ad41c6918d2a6c51e9a72220b4
+ARG VILLAS_VERSION=18cdd2a6364d05fbf413ca699616cd324abfcb54
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -59,7 +59,9 @@ RUN apt-get -y install \
 RUN apt-get -y install \
 	libmosquitto-dev \
 	libconfig-dev \
-	libnl-3-dev
+	libnl-3-dev \
+	protobuf-dev \
+	libprotobuf-c-dev
 
 ## Install libiec61850 from source
 RUN cd /tmp && \

@@ -16,7 +16,6 @@
 #include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 #include <filesystem>
-#include <villas/formats/protobuf.hpp>
 #include <villas/sample.hpp>
 
 namespace CPS {

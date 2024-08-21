@@ -30,7 +30,6 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_Resistor.cpp
 	DP/DP_Ph1_Transformer.cpp
 	DP/DP_Ph1_VoltageSource.cpp
-	DP/DP_Ph1_ProfileVoltageSource.cpp
 	DP/DP_Ph1_VoltageSourceRamp.cpp
 	DP/DP_Ph1_VoltageSourceNorton.cpp
 	DP/DP_Ph1_Switch.cpp
@@ -179,6 +178,10 @@ endif()
 if(WITH_GSL)
 	list(APPEND MODELS_INCLUDE_DIRS ${GSL_INCLUDE_DIRS})
 	list(APPEND MODELS_LIBRARIES ${GSL_LIBRARIES})
+endif()
+
+if(WITH_VILLAS)
+	list(APPEND MODELS_SOURCES DP/DP_Ph1_ProfileVoltageSource.cpp)
 endif()
 
 target_link_libraries(dpsim-models PUBLIC ${MODELS_LIBRARIES})

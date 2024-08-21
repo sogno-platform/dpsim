@@ -11,7 +11,7 @@
 #include <iostream>
 #include <memory>
 #include <villas/format.hpp>
-#include <villas/formats/protobuf.hpp>
+#include <villas/formats/villas.pb-c.h>
 #include <villas/signal_list.hpp>
 #include <villas/signal_type.hpp>
 
