@@ -55,8 +55,13 @@ public:
   virtual void printVillasSignals() const;
 
   virtual ~InterfaceVillasQueueless() {
-    if (mOpened)
-      close();
+    if (mOpened) {
+      try {
+        close();
+      } catch (const std::exception &e) {
+        SPDLOG_LOGGER_ERROR(mLog, "Error closing interface: {}", e.what());
+      }
+    }
   }
 
 protected:

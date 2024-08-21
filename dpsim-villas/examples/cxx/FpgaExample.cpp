@@ -116,7 +116,7 @@ SystemTopology loopbackTopology(CommandLineArgs &args,
 
   // Components
   auto vs = VoltageSource::make("v_s");
-  vs->setParameters(Complex(10, 0), 0);
+  vs->setParameters(10.);
   auto rl = Resistor::make("r_l");
   rl->setParameters(1);
 
@@ -147,7 +147,7 @@ SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> int
 
   // Components
   auto vs = VoltageSource::make("v_s");
-  vs->setParameters(Complex(1, 0), 50);
+  vs->setParameters(1.);
   auto rs = Resistor::make("r_s");
   rs->setParameters(1);
 
