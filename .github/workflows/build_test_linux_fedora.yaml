@@ -45,13 +45,21 @@ jobs:
   linux-fedora-examples:
     name: Build Cxx examples on Fedora Linux
     runs-on: ubuntu-latest
-    needs: [linux-fedora-dpsimpy]
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
       uses: actions/checkout@v4
       with:
         submodules: recursive
+
+    - name: Create Build Environment
+      run: mkdir build
+
+    - name: Setup build directory cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-fedora-dir-example-cache-${{ github.ref }}
 
     - name: Configure CMake
       shell: bash
@@ -196,7 +204,6 @@ jobs:
     name: Scan Sourcecode with Cppcheck
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
-    #needs: [linux-fedora]
     steps:
     - name: Checkout
       uses: actions/checkout@v4
