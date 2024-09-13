@@ -32,7 +32,7 @@ jobs:
        path: ${{ github.workspace }}/build
 
     - name: Start containers
-      run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose up -d
+      run: cd ${{ inputs.compose_file_path }} && docker compose -p dpsim-compose up -d
 
     - name: Run container commands
       timeout-minutes: 5
@@ -42,4 +42,4 @@ jobs:
 
     - name: Stop containers
       if: ${{ always() }}
-      run: cd ${{ inputs.compose_file_path }} && docker-compose -p dpsim-compose down
+      run: cd ${{ inputs.compose_file_path }} && docker compose -p dpsim-compose down
