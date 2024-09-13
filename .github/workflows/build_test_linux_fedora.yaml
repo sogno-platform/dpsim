@@ -53,11 +53,10 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Restore build archive
-      uses: actions/download-artifact@v4
-      with:
-       name: build-fedora-examples-cache-${{ github.sha }}
-       path: ${{ github.workspace }}/build
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE 
 
     - name: Build every target
       shell: bash
