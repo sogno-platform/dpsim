@@ -73,12 +73,13 @@ DAESolver::DAESolver(String name, const CPS::SystemTopology &system, Real dt,
 void DAESolver::initialize() {
   int ret;
   int counter = 0;
-  realtype *sval = NULL, *s_dtval = NULL;
+  SUNContext_Create(SUN_COMM_NULL, &mSundialsContext);
+  sunrealtype *sval = NULL, *s_dtval = NULL;
   std::cout << "Init states" << std::endl;
 
   // Allocate state vectors
-  state = N_VNew_Serial(mNEQ);
-  dstate_dt = N_VNew_Serial(mNEQ);
+  state = N_VNew_Serial(mNEQ, mSundialsContext);
+  dstate_dt = N_VNew_Serial(mNEQ, mSundialsContext);
 
   std::cout << "State Init done" << std::endl;
   std::cout << "Pointer Init" << std::endl;
@@ -139,11 +140,11 @@ void DAESolver::initialize() {
   std::cout << std::endl;
 
   std::cout << "Init Tolerances" << std::endl;
-  rtol = RCONST(1.0e-10);  // Set relative tolerance
-  abstol = RCONST(1.0e-4); // Set absolute error
+  rtol = SUN_RCONST(1.0e-10);  // Set relative tolerance
+  abstol = SUN_RCONST(1.0e-4); // Set absolute error
   std::cout << "Init Tolerances done" << std::endl;
 
-  mem = IDACreate();
+  mem = IDACreate(mSundialsContext);
   if (mem != NULL)
     std::cout << "Memory Ok" << std::endl;
   std::cout << "Define Userdata" << std::endl;
@@ -160,9 +161,9 @@ void DAESolver::initialize() {
 
   std::cout << "Call IDA Solver Stuff" << std::endl;
   // Allocate and connect Matrix A and solver LS to IDA
-  A = SUNDenseMatrix(mNEQ, mNEQ);
-  LS = SUNDenseLinearSolver(state, A);
-  ret = IDADlsSetLinearSolver(mem, LS, A);
+  A = SUNDenseMatrix(mNEQ, mNEQ, mSundialsContext);
+  LS = SUNLinSol_Dense(state, A, mSundialsContext);
+  ret = IDASetLinearSolver(mem, LS, A);
 
   //TODO: Optional IDA input functions
   //ret = IDASetMaxNumSteps(mem, -1);  //Max. number of timesteps until tout (-1 = unlimited)
@@ -170,7 +171,7 @@ void DAESolver::initialize() {
   (void)ret;
 }
 
-int DAESolver::residualFunctionWrapper(realtype ttime, N_Vector state,
+int DAESolver::residualFunctionWrapper(sunrealtype ttime, N_Vector state,
                                        N_Vector dstate_dt, N_Vector resid,
                                        void *user_data) {
   DAESolver *self = reinterpret_cast<DAESolver *>(user_data);
@@ -178,7 +179,7 @@ int DAESolver::residualFunctionWrapper(realtype ttime, N_Vector state,
   return self->residualFunction(ttime, state, dstate_dt, resid);
 }
 
-int DAESolver::residualFunction(realtype ttime, N_Vector state,
+int DAESolver::residualFunction(sunrealtype ttime, N_Vector state,
                                 N_Vector dstate_dt, N_Vector resid) {
   mOffsets[0] = 0; // Reset Offset
   mOffsets[1] = 0; // Reset Offset
@@ -237,5 +238,5 @@ DAESolver::~DAESolver() {
   N_VDestroy(state);
   N_VDestroy(dstate_dt);
   SUNLinSolFree(LS);
-  SUNMatDestroy(A);
+  SUNMatDestroy_Dense(A);
 }

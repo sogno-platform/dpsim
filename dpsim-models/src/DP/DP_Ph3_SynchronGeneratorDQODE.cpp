@@ -115,7 +115,7 @@ void DP::Ph3::SynchronGeneratorDQODE::odeStateSpace(double t, const double y[],
   /* Auxiliary variables to compute
 	 * T_e= lambda_d * i_q - lambda_q * i_d
 	 * needed for omega:  */
-  realtype i_d = 0, i_q = 0;
+  sunrealtype i_d = 0, i_q = 0;
   // Compute new currents (depending on updated fluxes)
   for (int i = 0; i < mDim - 2; i++) {
     i_d += mFluxToCurrentMat(0, i) * y[i];
@@ -145,7 +145,7 @@ void DP::Ph3::SynchronGeneratorDQODE::odeJacobian(double t, const double y[],
   //theta-row:
   J[(mDim - 2) * (mDim - 2) + mDim - 1] = 1 * mBase_OmMech;
 
-  realtype i_d = 0, i_q = 0;
+  sunrealtype i_d = 0, i_q = 0;
 
   for (int i = 0; i < mDim - 2; i++) {
     i_d += mFluxToCurrentMat(0, i) * y[i];

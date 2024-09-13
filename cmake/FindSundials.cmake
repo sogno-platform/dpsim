@@ -3,7 +3,7 @@ if (WIN32)
 else()
 	find_path(SUNDIALS_INCLUDE_DIR
 		NAMES sundials_version.h
-		PATH_SUFFIXES sundials
+		PATH_SUFFIXES include
 	)
 
 	find_library(SUNDIALS_ARKODE_LIBRARY
@@ -30,6 +30,18 @@ else()
 		NAMES sundials_kinsol
 	)
 
+	find_library(SUNDIALS_NVECSERIAL_LIBRARY
+		NAMES sundials_nvecserial
+	)
+
+	find_library(SUNDIALS_NVECOPENMP_LIBRARY
+		NAMES sundials_nvecopenmp
+	)
+
+	find_library(SUNDIALS_NVECPTHREADS_LIBRARY
+		NAMES sundials_nvecpthreads
+	)
+
 	set(SUNDIALS_LIBRARIES
 		${SUNDIALS_ARKODE_LIBRARY}
 		${SUNDIALS_CVODE_LIBRARY}
@@ -37,10 +49,11 @@ else()
 		${SUNDIALS_IDA_LIBRARY}
 		${SUNDIALS_IDAS_LIBRARY}
 		${SUNDIALS_KINSOL_LIBRARY}
+		${SUNDIALS_NVECSERIAL_LIBRARY}
 	)
 
 	include(FindPackageHandleStandardArgs)
-	find_package_handle_standard_args(Sundials DEFAULT_MSG SUNDIALS_ARKODE_LIBRARY SUNDIALS_INCLUDE_DIR)
+	find_package_handle_standard_args(Sundials DEFAULT_MSG SUNDIALS_LIBRARIES SUNDIALS_INCLUDE_DIR)
 
 	mark_as_advanced(SUNDIALS_INCLUDE_DIR)
 endif()

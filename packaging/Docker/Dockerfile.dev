@@ -45,7 +45,7 @@ RUN dnf -y debuginfo-install \
 
 # Build & Install sundials
 RUN cd /tmp && \
-	git clone --branch v3.2.1 --recurse-submodules --depth 1 https://github.com/LLNL/sundials.git && \
+	git clone --branch v7.1.1 --recurse-submodules --depth 1 https://github.com/LLNL/sundials.git && \
 	mkdir -p sundials/build && cd sundials/build && \
 	cmake ${CMAKE_OPTS} .. \
 		-DCMAKE_BUILD_TYPE=Release && \

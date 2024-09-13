@@ -12,17 +12,17 @@
 #include <list>
 #include <vector>
 
+#include <ida/ida.h>
+#include <sundials/sundials_context.h>
+#include <nvector/nvector_serial.h>
+#include <sundials/sundials_types.h>
+#include <sunlinsol/sunlinsol_dense.h>
+
 #include <dpsim/Solver.h>
 
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/SystemTopology.h>
-
-#include <ida/ida.h>
-#include <ida/ida_direct.h>
-#include <nvector/nvector_serial.h>
-#include <sundials/sundials_types.h>
-#include <sunlinsol/sunlinsol_dense.h>
 
 namespace DPsim {
 
@@ -45,6 +45,9 @@ protected:
   // Initial time t0
   Real mT0;
 
+  // Sundials context
+  SUNContext mSundialsContext;
+
   // IDA simulation variables
   /// Memory block allocated by IDA
   void *mem = NULL;
@@ -53,11 +56,11 @@ protected:
   /// Derivates of the state vector with respect to time
   N_Vector dstate_dt = NULL;
   /// Time IDA reached while solving
-  realtype tret;
+  sunrealtype tret;
   /// Scalar absolute tolerance
-  realtype abstol;
+  sunrealtype abstol;
   /// Relative tolerance
-  realtype rtol;
+  sunrealtype rtol;
   /// Template Jacobian Matrix
   SUNMatrix A = NULL;
   /// Linear solver object
@@ -67,10 +70,10 @@ protected:
   std::vector<CPS::DAEInterface::ResFn> mResidualFunctions;
 
   /// Residual Function of entire System
-  static int residualFunctionWrapper(realtype ttime, N_Vector state,
+  static int residualFunctionWrapper(sunrealtype ttime, N_Vector state,
                                      N_Vector dstate_dt, N_Vector resid,
                                      void *user_data);
-  int residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt,
+  int residualFunction(sunrealtype ttime, N_Vector state, N_Vector dstate_dt,
                        N_Vector resid);
 
 public:

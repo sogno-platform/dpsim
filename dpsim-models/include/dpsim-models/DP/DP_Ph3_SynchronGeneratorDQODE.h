@@ -12,9 +12,9 @@
 
 #ifdef WITH_SUNDIALS
 #include <arkode/arkode.h>             // Prototypes for ARKode fcts., consts
-#include <arkode/arkode_direct.h>      /* access to ARKDls interface				   */
+//#include <arkode/arkode_direct.h>      /* access to ARKDls interface				   */
 #include <nvector/nvector_serial.h>    // Serial N_Vector types, fcts., macros
-#include <sundials/sundials_types.h>   /* def. of type 'realtype' */
+#include <sundials/sundials_types.h>   /* def. of type 'sunsunrealtype' */
 #include <sunlinsol/sunlinsol_dense.h> /* access to dense SUNLinearSolver		  */
 #include <sunmatrix/sunmatrix_dense.h> /* access to dense SUNMatrix						*/
 

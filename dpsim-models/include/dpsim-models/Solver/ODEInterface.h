@@ -10,13 +10,11 @@
 
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Definitions.h>
-#include <vector>
 
 namespace CPS {
 class ODEInterface {
 public:
   using Ptr = std::shared_ptr<ODEInterface>;
-  //typedef std::vector<Ptr> List;
 
   const CPS::AttributeList::Ptr mAttributeList;
 

@@ -12,10 +12,10 @@
 
 #include <dpsim-models/Solver/ODEInterface.h>
 
-#include <arkode/arkode.h> // prototypes for ARKode fcts., consts. and includes sundials_types.h
-#include <arkode/arkode_direct.h>      // access to ARKDls interface
-#include <nvector/nvector_serial.h>    // access to serial N_Vector
+#include <arkode/arkode_arkstep.h> // prototypes for ARKode fcts., consts. and includes sundials_types.h
+#include <nvector/nvector_serial.h> // access to serial N_Vector
 #include <sunlinsol/sunlinsol_dense.h> // access to dense SUNLinearSolver
+#include <sundials/sundials_context.h>
 #include <sunmatrix/sunmatrix_dense.h> // access to dense SUNMatrix
 
 //using namespace CPS; // led to problems
@@ -47,11 +47,14 @@ protected:
   /// Constant time step
   Real mTimestep;
 
+  /// Sundials Context
+  SUNContext mSundialsContext;
+
   // Same tolerance for each component regardless of system characteristics
   /// Relative tolerance
-  realtype reltol = RCONST(1.0e-6);
+  sunrealtype reltol = SUN_RCONST(1.0e-6);
   /// Scalar absolute tolerance
-  realtype abstol = RCONST(1.0e-10);
+  sunrealtype abstol = SUN_RCONST(1.0e-10);
 
   // TODO: Variables for implicit solve?
   /// Template Jacobian Matrix (implicit solver)
@@ -67,14 +70,14 @@ protected:
   CPS::ODEInterface::JacFn mJacFunction;
 
   /// use wrappers similar to DAE_Solver
-  static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot,
+  static int StateSpaceWrapper(sunrealtype t, N_Vector y, N_Vector ydot,
                                void *user_data);
-  int StateSpace(realtype t, N_Vector y, N_Vector ydot);
+  int StateSpace(sunrealtype t, N_Vector y, N_Vector ydot);
 
-  static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
+  static int JacobianWrapper(sunrealtype t, N_Vector y, N_Vector fy, SUNMatrix J,
                              void *user_data, N_Vector tmp1, N_Vector tmp2,
                              N_Vector tmp3);
-  int Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, N_Vector tmp1,
+  int Jacobian(sunrealtype t, N_Vector y, N_Vector fy, SUNMatrix J, N_Vector tmp1,
                N_Vector tmp2, N_Vector tmp3);
   /// ARKode- standard error detection function; in DAE-solver not detection function is used -> for efficiency purposes?
   int check_flag(void *flagvalue, const std::string &funcname, int opt);
