@@ -75,7 +75,7 @@ public:
   // #### Solver settings ####
   /// Solver types:
   /// Modified Nodal Analysis, Differential Algebraic, Newton Raphson
-  enum class Type { MNA, DAE, NRP };
+  enum class Type { MNA, ITERATIVEMNA, DAE, NRP };
   ///
   void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
   ///

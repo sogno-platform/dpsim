@@ -141,7 +141,9 @@ protected:
   template <typename VarType> void createSolvers();
   /// Subroutine for MNA only because there are many MNA options
   template <typename VarType> void createMNASolver();
-  /// Prepare schedule for simulation
+
+  template <typename VarType> void createIterativeMNASolver();
+  // Prepare schedule for simulation
   void prepSchedule();
 
   /// ### SynGen Interface ###
