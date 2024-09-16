@@ -188,7 +188,7 @@ template <typename VarType> void Simulation::createIterativeMNASolver() {
   Itsolver->doFrequencyParallelization(false);
   Itsolver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
   Itsolver->setSteadStIniAccLimit(mSteadStIniAccLimit);
-  Itsolver->setSystem(subnets[net]);
+  Itsolver->setSystem(mSystem);
   Itsolver->setSolverAndComponentBehaviour(mSolverBehaviour);
   Itsolver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
   Itsolver->doSystemMatrixRecomputation(true);
