@@ -1,5 +1,7 @@
 # This example demonstrates the export of values calculated by dpsim to a file using the VILLASnode interface
 
+import json
+
 import dpsimpy
 import dpsimpyvillas
 
@@ -39,16 +41,16 @@ sim.set_system(sys)
 sim.set_time_step(time_step)
 sim.set_final_time(final_time)
 
-file_config = '''{
-        "type": "file",
-        "format": "csv",
-        "uri": "logs/output.csv",
-        "out": {
-            "flush": true
-        }
-}'''
+intf_config = {
+    'type': 'file',
+    'format': 'csv',
+    'uri': 'logs/output.csv',
+    'out': {
+        'flush': True
+    }
+}
 
-intf = dpsimpyvillas.InterfaceVillas(file_config, name='dpsim-file')
+intf = dpsimpyvillas.InterfaceVillas(name='dpsim-file', config=json.dumps(intf_config))
 intf.export_attribute(evs.attr('i_intf').derive_coeff(0, 0), 0)
 
 sim.add_interface(intf)

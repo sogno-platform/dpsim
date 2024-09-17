@@ -1,6 +1,8 @@
 # This example demonstrates the export of values calculated by dpsim to a MQTT broker using the VILLASnode interface
 # Note, that dpsim also expects to read a (complex) reference voltage from MQTT, so the simulation will block on every timestep until this value is provided 
 
+import json
+
 import dpsimpy
 import dpsimpyvillas
 
@@ -40,19 +42,19 @@ sim.set_system(sys)
 sim.set_time_step(time_step)
 sim.set_final_time(final_time)
 
-mqtt_config = '''{
-        "type": "mqtt",
-        "format": "json",
-        "host": "mqtt",
-        "in": {
-            "subscribe": "/mqtt-dpsim"
-        },
-        "out": {
-            "publish": "/dpsim-mqtt"
-        }
-}'''
+intf_config = {
+    'type': 'mqtt',
+    'format': 'json',
+    'host': 'mqtt',
+    'in': {
+        'subscribe': '/mqtt-dpsim'
+    },
+    'out': {
+        'publish': '/dpsim-mqtt'
+    }
+}
 
-intf = dpsimpyvillas.InterfaceVillas(name='dpsim-mqtt', config=mqtt_config)
+intf = dpsimpyvillas.InterfaceVillas(name='dpsim-mqtt', config=json.dumps(intf_config))
 intf.import_attribute(evs.attr('V_ref'), 0, True)
 intf.export_attribute(r12.attr('i_intf').derive_coeff(0, 0), 0)
 

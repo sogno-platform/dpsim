@@ -12,9 +12,8 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 #include <dpsim-models/Logger.h>
-#include <dpsim-villas/InterfaceWorkerVillas.h>
-#include <villas/path.hpp>
 #include <villas/signal_list.hpp>
+// #include <villas/path.hpp>
 
 using namespace CPS;
 using namespace DPsim;
@@ -31,10 +30,10 @@ InterfaceWorkerVillas::InterfaceWorkerVillas(const String &nodeConfig,
       mSampleLength(sampleLength) {}
 
 void InterfaceWorkerVillas::open() {
-  SPDLOG_LOGGER_INFO(mLog, "Opening InterfaceWorkerVillas...");
+  SPDLOG_LOGGER_INFO(mLog, "Opening VILLASnode interface worker.");
 
   if (!InterfaceWorkerVillas::villasInitialized) {
-    SPDLOG_LOGGER_INFO(mLog, "Initializing Villas...");
+    SPDLOG_LOGGER_INFO(mLog, "Initializing VILLASnode.");
     initVillas();
     InterfaceWorkerVillas::villasInitialized = true;
   }
@@ -60,24 +59,24 @@ void InterfaceWorkerVillas::open() {
   ret = mNode->parse(config);
   if (ret < 0) {
     SPDLOG_LOGGER_ERROR(mLog,
-                        "Error: Node in InterfaceVillas failed to parse "
+                        "Error: Node in VILLASnode interface failed to parse "
                         "config. Parse returned code {}",
                         ret);
     std::exit(1);
   }
   ret = mNode->check();
   if (ret < 0) {
-    SPDLOG_LOGGER_ERROR(
-        mLog,
-        "Error: Node in InterfaceVillas failed check. Check returned code {}",
-        ret);
+    SPDLOG_LOGGER_ERROR(mLog,
+                        "Error: Node in VILLASnode interface failed check. "
+                        "Check returned code {}",
+                        ret);
     std::exit(1);
   }
 
-  SPDLOG_LOGGER_INFO(mLog, "Preparing VILLASNode instance...");
+  SPDLOG_LOGGER_INFO(mLog, "Preparing VILLASnode node instance.");
   setupNodeSignals();
   prepareNode();
-  SPDLOG_LOGGER_INFO(mLog, "Node is ready to send / receive data!");
+  SPDLOG_LOGGER_INFO(mLog, "VILLASnode node is ready to send / receive data!");
   mOpened = true;
 
   mSequence = 0;
@@ -95,8 +94,8 @@ void InterfaceWorkerVillas::prepareNode() {
                             sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLength));
   if (ret < 0) {
     SPDLOG_LOGGER_ERROR(mLog,
-                        "Error: InterfaceVillas failed to init sample pool. "
-                        "pool_init returned code {}",
+                        "Error: VILLASnode interface failed to init sample "
+                        "pool. pool_init returned code {}",
                         ret);
     std::exit(1);
   }
@@ -104,21 +103,21 @@ void InterfaceWorkerVillas::prepareNode() {
   ret = mNode->prepare();
   if (ret < 0) {
     SPDLOG_LOGGER_ERROR(mLog,
-                        "Error: Node in InterfaceVillas failed to prepare. "
-                        "Prepare returned code {}",
+                        "Error: Node in VILLASnode interface failed to "
+                        "prepare. Prepare returned code {}",
                         ret);
     std::exit(1);
   }
   SPDLOG_LOGGER_INFO(mLog, "Node: {}", mNode->getNameFull());
 
   mNode->getFactory()->start(
-      nullptr); //We have no SuperNode, so just hope type_start doesnt use it...
+      nullptr); // We have no SuperNode, so just hope type_start doesnt use it...
 
   ret = mNode->start();
   if (ret < 0) {
     SPDLOG_LOGGER_ERROR(mLog,
-                        "Fatal error: failed to start node in InterfaceVillas. "
-                        "Start returned code {}",
+                        "Fatal error: failed to start node in VILLASnode "
+                        "interface. Start returned code {}",
                         ret);
     close();
     std::exit(1);
@@ -126,10 +125,10 @@ void InterfaceWorkerVillas::prepareNode() {
 }
 
 void InterfaceWorkerVillas::setupNodeSignals() {
-  mNode->out.path = new node::Path();
-  mNode->out.path->signals = std::make_shared<node::SignalList>();
-  node::SignalList::Ptr nodeOutputSignals =
-      mNode->out.path->getOutputSignals(false);
+  // mNode->out.path = new node::Path();
+  // mNode->out.path->signals = std::make_shared<node::SignalList>();
+  // node::SignalList::Ptr nodeOutputSignals = mNode->out.path->getOutputSignals(false);
+  node::SignalList::Ptr nodeOutputSignals = mNode->out.signals;
   nodeOutputSignals->clear();
   int idx = 0;
   for (const auto &[id, signal] : mExportSignals) {
@@ -161,21 +160,21 @@ void InterfaceWorkerVillas::setupNodeSignals() {
 }
 
 void InterfaceWorkerVillas::close() {
-  SPDLOG_LOGGER_INFO(mLog, "Closing InterfaceVillas...");
+  SPDLOG_LOGGER_INFO(mLog, "Closing VILLASnode interface.");
   int ret = mNode->stop();
   if (ret < 0) {
-    SPDLOG_LOGGER_ERROR(
-        mLog,
-        "Error: failed to stop node in InterfaceVillas. Stop returned code {}",
-        ret);
+    SPDLOG_LOGGER_ERROR(mLog,
+                        "Error: failed to stop node in VILLASnode interface. "
+                        "Stop returned code {}",
+                        ret);
     std::exit(1);
   }
   mOpened = false;
   ret = node::pool_destroy(&mSamplePool);
   if (ret < 0) {
     SPDLOG_LOGGER_ERROR(mLog,
-                        "Error: failed to destroy SamplePool in "
-                        "InterfaceVillas. pool_destroy returned code {}",
+                        "Error: failed to destroy SamplePool in VILLASnode "
+                        "interface. pool_destroy returned code {}",
                         ret);
     std::exit(1);
   }
@@ -205,7 +204,7 @@ void InterfaceWorkerVillas::readValuesFromEnv(
       if (ret < 0) {
         SPDLOG_LOGGER_ERROR(mLog,
                             "Fatal error: failed to read sample from "
-                            "InterfaceVillas. Poll returned code {}",
+                            "VILLASnode interface. Poll returned code {}",
                             ret);
         close();
         std::exit(1);
@@ -222,7 +221,7 @@ void InterfaceWorkerVillas::readValuesFromEnv(
         }
       }
     } else {
-      //If the node does not support pollFds just do a blocking read
+      // If the node does not support pollFds just do a blocking read
       shouldRead = true;
     }
 
@@ -233,7 +232,7 @@ void InterfaceWorkerVillas::readValuesFromEnv(
       if (ret < 0) {
         SPDLOG_LOGGER_ERROR(mLog,
                             "Fatal error: failed to read sample from "
-                            "InterfaceVillas. Read returned code {}",
+                            "VILLASnode interface. Read returned code {}",
                             ret);
         close();
         std::exit(1);
@@ -251,8 +250,8 @@ void InterfaceWorkerVillas::readValuesFromEnv(
         }
 
         if (!pollFds.empty()) {
-          //Manually clear the event file descriptor since Villas does not do that for some reason
-          //See https://github.com/VILLASframework/node/issues/309
+          // Manually clear the event file descriptor since VILLASnode does not do that for some reason
+          // See https://github.com/VILLASframework/node/issues/309
           uint64_t result = 0;
           ret = (int)::read(pollFds[0], &result, 8);
           if (ret < 0) {
@@ -285,14 +284,14 @@ void InterfaceWorkerVillas::readValuesFromEnv(
 
 void InterfaceWorkerVillas::writeValuesToEnv(
     std::vector<Interface::AttributePacket> &updatedAttrs) {
-  //Update export sequence IDs
+  // Update export sequence IDs
   for (const auto &packet : updatedAttrs) {
     if (std::get<1>(mExports[packet.attributeId]) < packet.sequenceId) {
       std::get<1>(mExports[packet.attributeId]) = packet.sequenceId;
     }
   }
 
-  //Remove outdated packets
+  // Remove outdated packets
   auto beginOutdated = std::remove_if(
       updatedAttrs.begin(), updatedAttrs.end(), [this](auto packet) {
         return std::get<1>(mExports[packet.attributeId]) > packet.sequenceId;
@@ -306,17 +305,17 @@ void InterfaceWorkerVillas::writeValuesToEnv(
   try {
     sample = node::sample_alloc(&mSamplePool);
     if (sample == nullptr) {
-      SPDLOG_LOGGER_ERROR(mLog, "InterfaceVillas could not allocate a new "
+      SPDLOG_LOGGER_ERROR(mLog, "VILLASnode interface could not allocate a new "
                                 "sample! Not sending any data!");
       return;
     }
 
-    sample->signals = mNode->getOutputSignals(false);
+    sample->signals = mNode->out.signals;
     auto beginExported = std::remove_if(
         updatedAttrs.begin(), updatedAttrs.end(),
         [this, &sampleFilled, &sample](auto packet) {
           if (!std::get<2>(mExports[packet.attributeId])) {
-            //Write attribute to sample ASAP
+            // Write attribute to sample ASAP
             std::get<0>(mExports[packet.attributeId])(packet.value, sample);
             sampleFilled = true;
             return true;
@@ -325,7 +324,7 @@ void InterfaceWorkerVillas::writeValuesToEnv(
         });
     updatedAttrs.erase(beginExported, updatedAttrs.end());
 
-    //Check if the remaining packets form a complete set
+    // Check if the remaining packets form a complete set
     if (((long)updatedAttrs.size()) ==
         std::count_if(mExports.cbegin(), mExports.cend(),
                       [](auto x) { return std::get<2>(x); })) {
@@ -349,8 +348,8 @@ void InterfaceWorkerVillas::writeValuesToEnv(
       } while (ret == 0);
       if (ret < 0)
         SPDLOG_LOGGER_ERROR(mLog,
-                            "Failed to write samples to InterfaceVillas. Write "
-                            "returned code {}",
+                            "Failed to write samples to VILLASnode interface. "
+                            "Write returned code {}",
                             ret);
 
       sample_copy(mLastSample, sample);
@@ -370,10 +369,10 @@ void InterfaceWorkerVillas::writeValuesToEnv(
     sample_decref(sample);
 
     if (ret < 0)
-      SPDLOG_LOGGER_ERROR(
-          mLog,
-          "Failed to write samples to InterfaceVillas. Write returned code {}",
-          ret);
+      SPDLOG_LOGGER_ERROR(mLog,
+                          "Failed to write samples to VILLASnode interface. "
+                          "Write returned code {}",
+                          ret);
 
     /* Don't throw here, because we managed to send something */
   }
@@ -393,7 +392,7 @@ void InterfaceWorkerVillas::configureExport(UInt attributeId,
                                             const String &unit) {
   if (mOpened) {
     if (mLog != nullptr) {
-      SPDLOG_LOGGER_WARN(mLog, "InterfaceVillas has already been opened! "
+      SPDLOG_LOGGER_WARN(mLog, "VILLASnode interface has already been opened! "
                                "Configuration will remain unchanged.");
     }
     return;
@@ -497,7 +496,7 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId,
                                             const String &unit) {
   if (mOpened) {
     if (mLog != nullptr) {
-      SPDLOG_LOGGER_WARN(mLog, "InterfaceVillas has already been opened! "
+      SPDLOG_LOGGER_WARN(mLog, "VILLASnode interface has already been opened! "
                                "Configuration will remain unchanged.");
     }
     return;
