@@ -68,6 +68,8 @@ public:
   void initialize();
   /// Initialize state matrices with size according to phase type and frequency number
   void initialize(Matrix frequencies);
+  ///
+  std::shared_ptr<TopologicalNode> clone() const override;
   /// Returns matrix index for specified phase
   UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single);
   /// Returns all matrix indices

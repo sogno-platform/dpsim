@@ -3,6 +3,7 @@ import numpy as np
 import scipy.io
 from enum import Enum
 import dpsimpy
+import copy
 
 # define dpsimpy domains
 class Domain(Enum):
@@ -639,7 +640,12 @@ class Reader:
             system_comp = []
             system_nodes = []
             eq_component=None
-            
+            split_node_added = False
+
+            # self.system.multiply(1)
+            # num_subnets = self.system.check_topology_subnets()
+            # assert(num_subnets == 2)
+
             for key, value in self.dpsimpy_comp_dict.items():
                 dpsim_component = value[0]
                 connection_nodes = value[1]
@@ -658,23 +664,39 @@ class Reader:
                 
                 # add node to node list
                 for node in connection_nodes:
-                    if node in system_nodes:
-                        continue
+                    if (cosim_params["split_node"] == node.name()) and not split_node_added:
+                        # print('Here the split node, which must be deep copied')
+
+                        if (self.domain == Domain.EMT):      
+                            # intf_node = self.dpsimpy_components.SimNode(node.name(), dpsimpy.PhaseType.ABC)
+                            # intf_node.set_initial_voltage(node.attr('voltage_init').get())
+                            intf_node = copy.deepcopy(node)
+                        else:
+                            intf_node = self.dpsimpy_components.SimNode(node.name(), dpsimpy.PhaseType.Single)
+
+                        system_nodes.append(intf_node)
+                        split_node_added = True
+                    
                     else:
-                        system_nodes.append(node)
+                        if node in system_nodes:
+                            continue
+                        else:
+                            system_nodes.append(node)
                         
                 
                 # check if component is connected to split_node
                 if eq_component is None:
                     for node in connection_nodes:
-                        if (cosim_params["split_node"] == node.name()):               
+                        if (cosim_params["split_node"] == node.name()):
                             # add voltage/current source
                             eq_component=None
                             if (cosim_params["eq_component"][topologie_idx]=="VS"):
                                 eq_component = self.dpsimpy_components.VoltageSource("VS_"+node.name(), self.log_level)
                             elif (cosim_params["eq_component"][topologie_idx]=="CS"):
                                 eq_component = self.dpsimpy_components.CurrentSource("CS_"+node.name(), self.log_level)
-                            eq_component.connect([self.dpsimpy_components.SimNode.gnd, node])
+                            eq_component.connect([self.dpsimpy_components.SimNode.gnd, intf_node])
+                            # eq_component.connect([self.dpsimpy_components.SimNode.gnd, node])
+                            print('Added ' + cosim_params["eq_component"][topologie_idx] + ' to topology ' + str(topologie_idx))
                             system_comp.append(eq_component)
             
             topologies.append(dpsimpy.SystemTopology(self.mpc_freq, system_nodes, system_comp))

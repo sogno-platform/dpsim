@@ -261,6 +261,10 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
       .def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow,
            "systemPF"_a, "domain"_a);
+     //  .def("multiply", &DPsim::SystemTopology::multiply);
+     //  .def("check_topology_subnets",
+     //       py::overload_cast<std::unordered_map<CPS::SimNode<CPS::Real>::Ptr, int>>(
+     //           &DPsim::SystemTopology::checkTopologySubnets));
 
   py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m,
                                                                   "Interface");
@@ -348,7 +352,10 @@ PYBIND11_MODULE(dpsimpy, m) {
              CPS::IdentifiedObject>(m, "TopologicalNode")
       .def("initial_single_voltage",
            &CPS::TopologicalNode::initialSingleVoltage,
-           "phase_type"_a = CPS::PhaseType::Single);
+           "phase_type"_a = CPS::PhaseType::Single)
+      .def("__deepcopy__", [](const CPS::TopologicalNode &self, py::dict){
+        return self.clone();
+      });
 
   py::class_<CPS::TopologicalTerminal,
              std::shared_ptr<CPS::TopologicalTerminal>, CPS::IdentifiedObject>(

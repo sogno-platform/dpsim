@@ -33,6 +33,9 @@ public:
   virtual ~TopologicalNode() {}
 
   ///
+  virtual std::shared_ptr<TopologicalNode> clone() const = 0;
+
+  ///
   Bool isGround() const;
   ///
   MatrixComp initialVoltage() const;

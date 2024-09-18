@@ -30,6 +30,7 @@ SimNode<VarType>::SimNode(String uid, String name,
   }
 }
 
+
 template <typename VarType>
 SimNode<VarType>::SimNode(PhaseType phaseType)
     : SimNode("gnd", "gnd", {0, 0, 0}, phaseType, {0, 0, 0}) {
@@ -52,6 +53,13 @@ template <> void SimNode<Complex>::initialize() {
     (**mVoltage)(2, 0) = (**mInitialVoltage)(2, 0);
   }
 }
+
+  template <typename VarType> 
+  std::shared_ptr<TopologicalNode> SimNode<VarType>::clone() const {
+    auto nodeCpy = SimNode<VarType>::make(*mName, mPhaseType);
+    nodeCpy->setInitialVoltage(this->singleVoltage());
+    return nodeCpy;
+   };
 
 template <typename VarType>
 void SimNode<VarType>::initialize(Matrix frequencies) {
