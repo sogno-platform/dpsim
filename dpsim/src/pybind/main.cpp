@@ -353,9 +353,19 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("initial_single_voltage",
            &CPS::TopologicalNode::initialSingleVoltage,
            "phase_type"_a = CPS::PhaseType::Single);
-    //   .def("__deepcopy__", [](const CPS::TopologicalNode &self, py::dict){
+    //   .def("__deepcopy__", [](CPS::TopologicalNode &self, py::dict){
     //     return self.clone();
     //   });
+
+  py::class_<CPS::SimNode<CPS::Complex>,
+             std::shared_ptr<CPS::SimNode<CPS::Complex>>,
+             CPS::TopologicalNode>(m, "SimNodeComplex")
+      .def("clone", &CPS::SimNode<CPS::Complex>::clone);
+
+  py::class_<CPS::SimNode<CPS::Real>,
+             std::shared_ptr<CPS::SimNode<CPS::Real>>,
+             CPS::TopologicalNode>(m, "SimNodeReal")
+      .def("clone", &CPS::SimNode<CPS::Real>::clone);
 
   py::class_<CPS::TopologicalTerminal,
              std::shared_ptr<CPS::TopologicalTerminal>, CPS::IdentifiedObject>(

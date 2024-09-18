@@ -55,9 +55,9 @@ template <> void SimNode<Complex>::initialize() {
 }
 
   template <typename VarType> 
-  std::shared_ptr<SimNode<VarType>> clone(std::shared_ptr<SimNode<VarType>> SrcNodePtr) {
-    auto nodeCpy = SimNode<VarType>::make(SrcNodePtr->name() + "_cpy", SrcNodePtr->phaseType());
-    nodeCpy->setInitialVoltage(SrcNodePtr->singleVoltage());
+  std::shared_ptr<SimNode<VarType>> SimNode<VarType>::clone() {
+    auto nodeCpy = SimNode<VarType>::make(this->name(), this->phaseType());
+    nodeCpy->setInitialVoltage(this->initialVoltage());
     return nodeCpy;
    };
 
@@ -76,6 +76,7 @@ VarType SimNode<VarType>::singleVoltage(PhaseType phaseType) {
   else if (phaseType == PhaseType::C)
     return (**mVoltage)(2, 0);
   else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
+    std::cout << (**mVoltage)(0, 0) << std::endl;
     return (**mVoltage)(0, 0);
 }
 

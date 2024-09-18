@@ -69,7 +69,7 @@ public:
   /// Initialize state matrices with size according to phase type and frequency number
   void initialize(Matrix frequencies);
   ///
-  std::shared_ptr<SimNode<VarType>> clone(std::shared_ptr<SimNode<VarType>> SrcNodePtr);
+  std::shared_ptr<SimNode<VarType>> clone();
   /// Returns matrix index for specified phase
   UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single);
   /// Returns all matrix indices

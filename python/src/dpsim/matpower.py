@@ -671,6 +671,7 @@ class Reader:
                             # intf_node = self.dpsimpy_components.SimNode(node.name(), dpsimpy.PhaseType.ABC)
                             # intf_node.set_initial_voltage(node.attr('voltage_init').get())
                             intf_node = copy.deepcopy(node)
+                            # intf_node = node.clone()
                         else:
                             intf_node = self.dpsimpy_components.SimNode(node.name(), dpsimpy.PhaseType.Single)
 
