@@ -9,4 +9,3 @@ dependencies:
   - gsl
   - pybind11
   - eigen
-prefix: /Users/stv0g/opt/miniconda3/envs/dpsim
