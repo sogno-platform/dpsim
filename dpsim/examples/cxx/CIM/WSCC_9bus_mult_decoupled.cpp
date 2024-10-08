@@ -67,19 +67,19 @@ void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads,
     sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
 
   // Logging
-  //auto logger = DataLogger::make(simName);
-  //for (Int cop = 1; cop <= copies; cop++) {
-  //	for (Int bus  = 1; bus <= 9; bus++) {
-  //		String attrName = "v" + std::to_string(bus) + "_" + std::to_string(cop);
-  //		String nodeName = "BUS" + std::to_string(bus) + "_" + std::to_string(cop);
-  //		if (cop == 1) {
-  //			attrName = "v" + std::to_string(bus);
-  //			nodeName = "BUS" + std::to_string(bus);
-  //		}
-  //		logger->logAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
-  //	}
-  //}
-  //sim.addLogger(logger);
+  auto logger = DataLogger::make(simName);
+  for (Int cop = 1; cop <= copies; cop++) {
+  	for (Int bus  = 1; bus <= 9; bus++) {
+  		String attrName = "v" + std::to_string(bus) + "_" + std::to_string(cop);
+  		String nodeName = "BUS" + std::to_string(bus) + "_" + std::to_string(cop);
+  		if (cop == 1) {
+  			attrName = "v" + std::to_string(bus);
+  			nodeName = "BUS" + std::to_string(bus);
+  		}
+  		logger->logAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
+  	}
+  }
+  sim.addLogger(logger);
 
   //std::ofstream of1("topology_graph.svg");
   //sys.topologyGraph().render(of1));
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
   filenames = DPsim::Utils::findFiles(
       {"WSCC-09_RX_DI.xml", "WSCC-09_RX_EQ.xml", "WSCC-09_RX_SV.xml",
        "WSCC-09_RX_TP.xml"},
-      "build/_deps/cim-data-src/WSCC-09/WSCC-09_RX", "CIMPATH");
+      "../../../build/_deps/cim-data-src/WSCC-09/WSCC-09_RX", "CIMPATH");
 
   //for (Int copies = 0; copies < 10; copies++) {
   //	for (Int threads = 0; threads <= 12; threads = threads+2)
