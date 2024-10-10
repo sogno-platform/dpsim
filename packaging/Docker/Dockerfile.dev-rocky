@@ -116,15 +116,15 @@ RUN cd /tmp && \
 # CIMpp and VILLASnode are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
-# Python dependencies
-ADD requirements.txt .
-RUN pip3 install -U setuptools
-RUN pip3 install -U wheel
-RUN pip3 install -r requirements.txt
+# # Python dependencies
+# ADD requirements.txt .
+# RUN pip3 install -U setuptools
+# RUN pip3 install -U wheel
+# RUN pip3 install -r requirements.txt
 
-# Remove this part in the future and use dedicated Jupyter Dockerfile
-# Activate Jupyter extensions
-RUN dnf -y --refresh install npm
-RUN pip3 install jupyter jupyter_contrib_nbextensions nbconvert nbformat
+# # Remove this part in the future and use dedicated Jupyter Dockerfile
+# # Activate Jupyter extensions
+# RUN dnf -y --refresh install npm
+# RUN pip3 install jupyter jupyter_contrib_nbextensions nbconvert nbformat
 
 EXPOSE 8888

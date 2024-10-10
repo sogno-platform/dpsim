@@ -1,6 +1,7 @@
 set(DPSIM_VILLAS_SOURCES
 	InterfaceVillas.cpp
 	InterfaceWorkerVillas.cpp
+	InterfaceVillasQueueless.cpp
 )
 
 add_library(dpsim-villas ${DPSIM_VILLAS_SOURCES})

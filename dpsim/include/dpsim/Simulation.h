@@ -247,6 +247,8 @@ public:
   void addLogger(DataLogger::Ptr logger) { mLoggers.push_back(logger); }
   /// Write step time measurements to log file
   void logStepTimes(String logName);
+  /// Check for overruns
+  void checkForOverruns(String logName);
 
   /// Write LU decomposition times measurements to log file
   void logLUTimes();

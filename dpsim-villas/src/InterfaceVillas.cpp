@@ -9,10 +9,11 @@ namespace DPsim {
 
 InterfaceVillas::InterfaceVillas(const String &nodeConfig, UInt queueLength,
                                  UInt sampleLength, const String &name,
-                                 UInt downsampling)
-    : Interface(
-          InterfaceWorkerVillas::make(nodeConfig, queueLength, sampleLength),
-          name, downsampling) {}
+                                 UInt downsampling,
+                                 spdlog::level::level_enum logLevel)
+    : InterfaceQueued(InterfaceWorkerVillas::make(nodeConfig, queueLength,
+                                                  sampleLength, logLevel),
+                      name, downsampling) {}
 
 void InterfaceVillas::importAttribute(CPS::AttributeBase::Ptr attr, UInt idx,
                                       Bool blockOnRead,

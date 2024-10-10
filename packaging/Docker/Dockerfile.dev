@@ -1,7 +1,7 @@
 FROM fedora:36 AS base
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-ARG VILLAS_VERSION=411b0ad49e2629ad41c6918d2a6c51e9a72220b4
+ARG VILLAS_VERSION=18cdd2a6364d05fbf413ca699616cd324abfcb54
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -65,7 +65,9 @@ RUN dnf -y install \
 RUN dnf -y install \
 	mosquitto-devel \
 	libconfig-devel \
-	libnl3-devel
+	libnl3-devel \
+	protobuf-devel \
+	protobuf-c-devel
 
 # Python dependencies
 ADD requirements.txt .

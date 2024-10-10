@@ -149,6 +149,8 @@ void KLUAdapter::partialRefactorize(
 }
 
 Matrix KLUAdapter::solve(Matrix &rightSideVector) {
+  // TODO: this calls malloc, which is not allowed in the simulation loop
+  // We should preallocate this buffer.
   Matrix x = rightSideVector;
 
   /* number of right hands sides
