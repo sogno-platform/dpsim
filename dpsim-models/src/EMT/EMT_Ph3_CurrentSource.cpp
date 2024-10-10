@@ -22,6 +22,30 @@ EMT::Ph3::CurrentSource::CurrentSource(String uid, String name,
   **mIntfVoltage = Matrix::Zero(3, 1);
   **mIntfCurrent = Matrix::Zero(3, 1);
 }
+SimPowerComp<Real>::Ptr EMT::Ph3::CurrentSource::clone(String name) {
+  auto copy = CurrentSource::make(name, mLogLevel);
+  copy->setParameters(attributeTyped<MatrixComp>("I_ref")->get(),
+                      attributeTyped<Real>("f_src")->get());
+  return copy;
+}
+
+void EMT::Ph3::CurrentSource::setParameters(MatrixComp currentRef,
+                                            Real srcFreq) {
+  auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
+  // Complex(1,0) is used as initialPhasor for signal generator as only phase is used
+  srcSigSine->setParameters(Complex(1, 0), srcFreq);
+  mSrcSig = srcSigSine;
+
+  **mCurrentRef = currentRef;
+  mSrcFreq->setReference(mSrcSig->mFreq);
+
+  mSLog->info("\nCurrent reference phasor [I]: {:s}"
+              "\nFrequency [Hz]: {:s}",
+              Logger::matrixCompToString(currentRef),
+              Logger::realToString(srcFreq));
+
+  mParametersSet = true;
+}
 
 void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
   SPDLOG_LOGGER_INFO(
@@ -68,13 +92,6 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
   SPDLOG_LOGGER_INFO(
       mSLog, "\n--- Initialization from node voltages and terminal ---");
   mSLog->flush();
-}
-
-SimPowerComp<Real>::Ptr EMT::Ph3::CurrentSource::clone(String name) {
-  auto copy = CurrentSource::make(name, mLogLevel);
-  // TODO: implement setParameters
-  // copy->setParameters(attributeTyped<MatrixComp>("I_ref")->get(), attributeTyped<Real>("f_src")->get());
-  return copy;
 }
 
 void EMT::Ph3::CurrentSource::mnaCompInitialize(

@@ -1,70 +1,62 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
+
 #pragma once
 
+#include <dpsim-models/Base/Base_Ph3_Capacitor.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Signal/CosineFMGenerator.h>
-#include <dpsim-models/Signal/FrequencyRampGenerator.h>
-#include <dpsim-models/Signal/SignalGenerator.h>
-#include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
-/// \brief Ideal current source model
+namespace SSN {
+/// \brief Capacitor model
 ///
-/// This model uses modified nodal analysis to represent an ideal current source.
-/// This involves the stamping of the current to the right side vector.
-class CurrentSource : public MNASimPowerComp<Real>,
-                      public SharedFactory<CurrentSource> {
-private:
-  ///
-  CPS::Signal::SignalGenerator::Ptr mSrcSig;
-
-protected:
-  // Updates current according to reference phasor and frequency
-  void updateCurrent(Real time);
-
+/// The SSN-capacitor is represented by a DC equivalent circuit which
+/// corresponds to one iteration of the trapezoidal integration method.
+/// The equivalent DC circuit is a resistance in series with a voltage
+/// source (real voltage source). The resistance is constant for a defined
+/// time step and system frequency and the voltage source changes for each
+/// iteration. This component is meant to show an I-type SSN model
+/// implementation based on a simple example element. The RC model should be
+/// used over this if focussing on SSN model implementation is not the
+/// circuit's goal since this model increases the system matrix dimensions
+/// by 1x1 (added virtual node, real voltage source MNA scheme).
+class Capacitor final : public MNASimPowerComp<Real>,
+                        public Base::Ph3::Capacitor,
+                        public SharedFactory<Capacitor> {
 public:
-  const Attribute<MatrixComp>::Ptr mCurrentRef;
-  const Attribute<Real>::Ptr mSrcFreq;
-  const Attribute<Complex>::Ptr mSigOut;
-
   /// Defines UID, name and logging level
-  CurrentSource(String uid, String name,
-                Logger::Level logLevel = Logger::Level::off);
-  ///
-  CurrentSource(String name, Logger::Level logLevel = Logger::Level::off)
-      : CurrentSource(name, name, logLevel) {}
+  Capacitor(String uid, String name,
+            Logger::Level logLevel = Logger::Level::off);
+  /// Defines name and logging level
+  Capacitor(String name, Logger::Level logLevel = Logger::Level::off)
+      : Capacitor(name, name, logLevel) {}
 
   SimPowerComp<Real>::Ptr clone(String name) override;
+
   // #### General ####
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
-  /// Setter for reference current
-  void setParameters(MatrixComp currentRef, Real srcFreq = 50.0);
-  /// Setter for reference signal of type frequency ramp
-  void setParameters(MatrixComp currentRef, Real freqStart, Real rocof,
-                     Real timeStart, Real duration, bool smoothRamp = true);
-  /// Setter for reference signal of type cosine frequency modulation
-  void setParameters(MatrixComp currentRef, Real modulationFrequency,
-                     Real modulationAmplitude, Real baseFrequency = 50.0,
-                     bool zigzag = false);
 
   // #### MNA section ####
   /// Initializes internal variables of the component
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
+  /// Stamps system matrix
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
-  /// Returns voltage through the component
+  /// Update interface voltage from MNA system result
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
+  /// Update interface current from MNA system result
+  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// MNA pre step operations
   void mnaCompPreStep(Real time, Int timeStepCount) override;
   /// MNA post step operations
@@ -81,7 +73,14 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
+
+private:
+  Matrix mDufourBKHat = Matrix::Zero(3, 3);
+  Matrix mDufourWKN = Matrix::Zero(3, 3);
+  //rightsideVector history term
+  Matrix mHistoricVoltage = Matrix::Zero(3, 1);
 };
+} // namespace SSN
 } // namespace Ph3
 } // namespace EMT
 } // namespace CPS

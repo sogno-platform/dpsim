@@ -102,13 +102,18 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
       .def("connect", &CPS::EMT::Ph1::Inductor::connect)
       .def_property("L", createAttributeGetter<CPS::Real>("L"),
                     createAttributeSetter<CPS::Real>("L"));
-	
-  py::class_<CPS::EMT::Ph1::Switch, std::shared_ptr<CPS::EMT::Ph1::Switch>, CPS::SimPowerComp<CPS::Real>, CPS::Base::Ph1::Switch>(mEMTPh1, "Switch", py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::Ph1::Switch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false) // cppcheck-suppress assignBoolToPointer
+
+  py::class_<CPS::EMT::Ph1::Switch, std::shared_ptr<CPS::EMT::Ph1::Switch>,
+             CPS::SimPowerComp<CPS::Real>, CPS::Base::Ph1::Switch>(
+      mEMTPh1, "Switch", py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::Ph1::Switch::setParameters,
+           "open_resistance"_a, "closed_resistance"_a,
+           "closed"_a = false) // cppcheck-suppress assignBoolToPointer
       .def("open", &CPS::EMT::Ph1::Switch::open)
       .def("close", &CPS::EMT::Ph1::Switch::close)
-	 .def("connect", &CPS::EMT::Ph1::Switch::connect);
+      .def("connect", &CPS::EMT::Ph1::Switch::connect);
 }
 
 void addEMTPh3Components(py::module_ mEMTPh3) {
@@ -128,6 +133,21 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
                     createAttributeSetter<CPS::Real>("f_src"));
 
+  py::class_<CPS::EMT::Ph3::CurrentSource,
+             std::shared_ptr<CPS::EMT::Ph3::CurrentSource>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "CurrentSource",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           py::overload_cast<CPS::MatrixComp, CPS::Real>(
+               &CPS::EMT::Ph3::CurrentSource::setParameters),
+           "I_ref"_a, "f_src"_a = 50)
+      .def("connect", &CPS::EMT::Ph3::VoltageSource::connect)
+      .def_property("I_ref", createAttributeGetter<CPS::MatrixComp>("I_ref"),
+                    createAttributeSetter<CPS::MatrixComp>("V_ref"))
+      .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
+                    createAttributeSetter<CPS::Real>("f_src"));
 
   py::class_<CPS::EMT::Ph3::Resistor, std::shared_ptr<CPS::EMT::Ph3::Resistor>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Resistor",
@@ -136,7 +156,6 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters", &CPS::EMT::Ph3::Resistor::setParameters, "R"_a)
       .def("connect", &CPS::EMT::Ph3::Resistor::connect);
-  
 
   py::class_<CPS::EMT::Ph3::Capacitor,
              std::shared_ptr<CPS::EMT::Ph3::Capacitor>,
@@ -194,7 +213,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::EMT::Ph3::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		   // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::EMT::Ph3::Switch::openSwitch)
       .def("close", &CPS::EMT::Ph3::Switch::closeSwitch)
@@ -369,7 +388,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		    // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "with_trafo"_a = false)
       .def("set_parameters",
            &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::setParameters,
@@ -402,9 +421,8 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
-		   // cppcheck-suppress assignBoolToPointer
-           "with_resistive_losses"_a =
-               false)
+           // cppcheck-suppress assignBoolToPointer
+           "with_resistive_losses"_a = false)
       .def("set_parameters", &CPS::EMT::Ph3::Transformer::setParameters,
            "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a,
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
@@ -428,9 +446,26 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::EMT::Ph3::SeriesSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
-		    // cppcheck-suppress assignBoolToPointer
+           // cppcheck-suppress assignBoolToPointer
            "closed"_a = false)
       .def("open", &CPS::EMT::Ph3::SeriesSwitch::open)
       .def("close", &CPS::EMT::Ph3::SeriesSwitch::close)
       .def("connect", &CPS::EMT::Ph3::SeriesSwitch::connect);
+
+  py::class_<CPS::EMT::Ph3::SSN::Full_Serial_RLC,
+             std::shared_ptr<CPS::EMT::Ph3::SSN::Full_Serial_RLC>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Full_Serial_RLC",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::EMT::Ph3::SSN::Full_Serial_RLC::setParameters, "R"_a, "L"_a,
+           "C"_a)
+      .def("connect", &CPS::EMT::Ph3::SSN::Full_Serial_RLC::connect)
+      .def_property("R", createAttributeGetter<CPS::Real>("R"),
+                    createAttributeSetter<CPS::Real>("R"))
+      .def_property("L", createAttributeGetter<CPS::Real>("L"),
+                    createAttributeSetter<CPS::Real>("L"))
+      .def_property("C", createAttributeGetter<CPS::Real>("C"),
+                    createAttributeSetter<CPS::Real>("C"));
 }
