@@ -5,5 +5,6 @@ var searchData=
   ['factory_168',['factory',['../class_d_psim_1_1_mna_solver_factory.html#ad88d9bdfcc5743205935c0a2db9c24ac',1,'DPsim::MnaSolverFactory']]],
   ['factoryregistration_169',['FactoryRegistration',['../class_factory_registration.html',1,'']]],
   ['firfilter_170',['FIRFilter',['../class_c_p_s_1_1_signal_1_1_f_i_r_filter.html',1,'CPS::Signal']]],
-  ['frequencyrampgenerator_171',['FrequencyRampGenerator',['../class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html',1,'CPS::Signal']]]
+  ['frequencyrampgenerator_171',['FrequencyRampGenerator',['../class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html',1,'CPS::Signal']]],
+  ['full_5fserial_5frlc_172',['Full_Serial_RLC',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html',1,'CPS::EMT::Ph3::SSN::Full_Serial_RLC'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ae57c6ea3ebb505dfdd9074cd2ae86ed5',1,'CPS::EMT::Ph3::SSN::Full_Serial_RLC::Full_Serial_RLC(String uid, String name, Logger::Level logLevel=Logger::Level::off)'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#a73abb57af4e9b5b0d904eceb64c91693',1,'CPS::EMT::Ph3::SSN::Full_Serial_RLC::Full_Serial_RLC(String name, Logger::Level logLevel=Logger::Level::off)']]]
 ];

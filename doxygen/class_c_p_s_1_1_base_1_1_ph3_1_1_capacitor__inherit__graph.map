@@ -1,6 +1,8 @@
 <map id="CPS::Base::Ph3::Capacitor" name="CPS::Base::Ph3::Capacitor">
-<area shape="rect" id="node1" title=" " alt="" coords="197,5,378,32"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="5,80,175,107"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="199,80,376,107"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="400,80,567,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,115,187,141"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="239,5,408,32"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="235,56,412,83"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html" title="Capacitor model." alt="" coords="252,107,395,149"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html" title="Full_Serial_RLC." alt="" coords="252,173,395,214"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="240,239,407,265"/>
 </map>

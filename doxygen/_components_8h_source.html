@@ -179,30 +179,33 @@ $(function() {
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQTrapez.h&gt;</span></div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_VoltageSource.h&gt;</span></div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_VoltageSourceNorton.h&gt;</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#ifdef WITH_SUNDIALS</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQODE.h&gt;</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_NetworkInjection.h&gt;</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_PiLine.h&gt;</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_RXLoad.h&gt;</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_RxLine.h&gt;</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_Switch.h&gt;</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SynchronGeneratorIdeal.h&gt;</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SynchronGeneratorTrStab.h&gt;</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SynchronGeneratorVBR.h&gt;</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_Transformer.h&gt;</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/CosineFMGenerator.h&gt;</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/DecouplingLine.h&gt;</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/DecouplingLineEMT.h&gt;</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/Exciter.h&gt;</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/FIRFilter.h&gt;</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/FrequencyRampGenerator.h&gt;</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/Integrator.h&gt;</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/SignalGenerator.h&gt;</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/SineWaveGenerator.h&gt;</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/TurbineGovernor.h&gt;</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/TurbineGovernorType1.h&gt;</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SSN_Capacitor.h&gt;</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SSN_Inductor.h&gt;</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SSN_Full_Serial_RLC.h&gt;</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#ifdef WITH_SUNDIALS</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQODE.h&gt;</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_NetworkInjection.h&gt;</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_PiLine.h&gt;</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_RXLoad.h&gt;</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_RxLine.h&gt;</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_Switch.h&gt;</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SynchronGeneratorIdeal.h&gt;</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SynchronGeneratorTrStab.h&gt;</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_SynchronGeneratorVBR.h&gt;</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_Transformer.h&gt;</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/CosineFMGenerator.h&gt;</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/DecouplingLine.h&gt;</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/DecouplingLineEMT.h&gt;</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/Exciter.h&gt;</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/FIRFilter.h&gt;</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/FrequencyRampGenerator.h&gt;</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/Integrator.h&gt;</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/SignalGenerator.h&gt;</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/SineWaveGenerator.h&gt;</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/TurbineGovernor.h&gt;</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/Signal/TurbineGovernorType1.h&gt;</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

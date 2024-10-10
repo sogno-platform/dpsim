@@ -95,24 +95,24 @@ var sectionId = 'dynsection-0';
 <path fill="none" stroke="midnightblue" d="M68.53,-852.63C135.85,-769.31 425,-411.45 488.24,-333.17"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="65.8,-850.44 62.24,-860.42 71.25,-854.84 65.8,-850.44"/>
 </g>
-<!-- Node111 -->
+<!-- Node114 -->
 <g id="node48" class="node">
-<title>Node111</title>
+<title>Node114</title>
 <g id="a_node48"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="144,-838.5 144,-857.5 338,-857.5 338,-838.5 144,-838.5"/>
 <text text-anchor="middle" x="241" y="-845.5" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SynchronGeneratorVBR</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node111 -->
+<!-- Node1&#45;&gt;Node114 -->
 <g id="edge47" class="edge">
-<title>Node1&#45;&gt;Node111</title>
+<title>Node1&#45;&gt;Node114</title>
 <path fill="none" stroke="midnightblue" d="M117.38,-862.54C131.02,-860.92 145.63,-859.19 159.83,-857.51"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="116.68,-859.1 107.16,-863.75 117.5,-866.05 116.68,-859.1"/>
 </g>
-<!-- Node112 -->
+<!-- Node115 -->
 <g id="node49" class="node">
-<title>Node112</title>
+<title>Node115</title>
 <g id="a_node49"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
 <polygon fill="none" stroke="red" points="172.5,-877 172.5,-907 309.5,-907 309.5,-877 172.5,-877"/>
 <text text-anchor="start" x="180.5" y="-895" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNASimPowerComp</text>
@@ -120,9 +120,9 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node112 -->
+<!-- Node1&#45;&gt;Node115 -->
 <g id="edge48" class="edge">
-<title>Node1&#45;&gt;Node112</title>
+<title>Node1&#45;&gt;Node115</title>
 <path fill="none" stroke="midnightblue" d="M117.36,-877.45C135.03,-879.55 154.33,-881.84 172.27,-883.97"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="117.5,-873.95 107.16,-876.25 116.68,-880.9 117.5,-873.95"/>
 </g>
@@ -793,16 +793,16 @@ var sectionId = 'dynsection-0';
 <path fill="none" stroke="midnightblue" d="M510.28,-343.07C523.57,-381.51 554.43,-454.49 607,-492 616.24,-498.59 627.2,-503.09 638.32,-506.15"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="513.48,-341.58 507,-333.2 506.84,-343.8 513.48,-341.58"/>
 </g>
-<!-- Node112&#45;&gt;Node2 -->
+<!-- Node115&#45;&gt;Node2 -->
 <g id="edge49" class="edge">
-<title>Node112&#45;&gt;Node2</title>
+<title>Node115&#45;&gt;Node2</title>
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M319.64,-894.63C352.06,-899.24 388.31,-909.43 415,-931 470.58,-975.93 491.68,-1065.14 498.11,-1100.78"/>
 <polygon fill="orange" stroke="orange" points="320.08,-891.15 309.72,-893.37 319.2,-898.1 320.08,-891.15"/>
 <text text-anchor="middle" x="385.5" y="-934" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; Complex &gt;</text>
 </g>
-<!-- Node112&#45;&gt;Node70 -->
+<!-- Node115&#45;&gt;Node70 -->
 <g id="edge50" class="edge">
-<title>Node112&#45;&gt;Node70</title>
+<title>Node115&#45;&gt;Node70</title>
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M319.17,-879.2C326.01,-875.98 332.44,-871.97 338,-867 422.64,-791.28 485.65,-413.35 498.21,-333.02"/>
 <polygon fill="orange" stroke="orange" points="317.55,-876.09 309.63,-883.13 320.21,-882.56 317.55,-876.09"/>
 <text text-anchor="middle" x="385.5" y="-843" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; Real &gt;</text>

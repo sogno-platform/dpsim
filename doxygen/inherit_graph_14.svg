@@ -8,9 +8,9 @@
  viewBox="0.00 0.00 410.00 142.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 138)">
 <title>Graphical Class Hierarchy</title>
-<!-- Node76 -->
+<!-- Node78 -->
 <g id="node1" class="node">
-<title>Node76</title>
+<title>Node78</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="none" stroke="#bfbfbf" points="0,-57.5 0,-76.5 82,-76.5 82,-57.5 0,-57.5"/>
 <text text-anchor="middle" x="41" y="-64.5" font-family="Helvetica,sans-Serif" font-size="10.00">std::exception</text>
@@ -26,9 +26,9 @@
 </a>
 </g>
 </g>
-<!-- Node76&#45;&gt;Node0 -->
+<!-- Node78&#45;&gt;Node0 -->
 <g id="edge1" class="edge">
-<title>Node76&#45;&gt;Node0</title>
+<title>Node78&#45;&gt;Node0</title>
 <path fill="none" stroke="midnightblue" d="M92.36,-67C100.9,-67 109.69,-67 117.97,-67"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="92.11,-63.5 82.11,-67 92.11,-70.5 92.11,-63.5"/>
 </g>
