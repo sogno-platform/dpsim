@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
+import subprocess
 import asyncio
-import dpsim
+import dpsimpy
 import glob
 import time
 import logging
-from dpsim.Event import Event
 
 import villas.dataprocessing.readtools as rt
 import villas.dataprocessing.plottools as pt
@@ -13,41 +13,64 @@ from villas.dataprocessing.timeseries import TimeSeries as ts
 import matplotlib.pyplot as plt
 
 def decouple_line(sys, line, node1, node2):
-    orig_line = system.components[line]
+    orig_line = system.component(line)
     sys.remove_component(line)
-    sys.add_decoupling_line(line, sys.nodes[node1], sys.nodes[node2], orig_line.R_series, orig_line.L_series, orig_line.C_parallel)
+    R_line = orig_line.attr('R_series').get()
+    L_line = orig_line.attr('L_series').get()
+    C_line = orig_line.attr('C_parallel').get()
+
+    line = dpsimpy.signal.DecouplingLine('dline_' + node1 + '_' + node2,
+                                         dpsimpy.LogLevel.info)
+    line.set_parameters(sys.node(node1), sys.node(node2), R_line, L_line, C_line)
+
+    # TODO: Probably interestingn to add the line this way
+    # sys.add_decoupling_line(line, node1, node2, R_line, L_line, C_line)
+
+    sys.add_component(line)
+    sys.add_components(line.get_line_components())
 
 def do_sim(name, system):
-    logger = dpsim.Logger(name)
-    logger.log_attribute(system.nodes['BUS5'], 'v')
-    logger.log_attribute(system.nodes['BUS6'], 'v')
-    logger.log_attribute(system.nodes['BUS8'], 'v')
+    logger = dpsimpy.Logger(name)
 
-    sim = dpsim.Simulation(name, system, timestep=0.0001, duration=0.1, init_steady_state=False, pbar=False, split_subnets=True)
+    logger.log_attribute('BUS5.V', 'v', system.node('BUS5'))
+    logger.log_attribute('BUS6.V', 'v', system.node('BUS6'))
+    logger.log_attribute('BUS8.V', 'v', system.node('BUS8'))
+
+    sim = dpsimpy.Simulation(name, dpsimpy.LogLevel.debug)
+    sim.set_system(system)
+    sim.set_time_step(0.0001)
+    sim.set_final_time(0.1)
+    # sim.do_steady_state_init(False)
+    sim.do_split_subnets(True)
+    sim.do_init_from_nodes_and_terminals(True)
     sim.add_logger(logger)
     sim.run()
 
 name = 'WSCC-9bus'
 
-files = glob.glob('../dpsim/examples/CIM/WSCC-09/*.xml')
-system = dpsim.load_cim(name, files, frequency=60)
+dpsim_root_dir = subprocess.Popen(['git', 'rev-parse', '--show-toplevel'], stdout=subprocess.PIPE).communicate()[0].rstrip().decode('utf-8')
+
+files = glob.glob(dpsim_root_dir + '/build/_deps/cim-data-src/WSCC-09/WSCC-09/*.xml')
+reader_normal = dpsimpy.CIMReader(name)
+system = reader_normal.loadCIM(60, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
 do_sim('normal', system)
 
-system = dpsim.load_cim(name, files, frequency=60)
+reader_decoupled = dpsimpy.CIMReader(name)
+system = reader_decoupled.loadCIM(60, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
 decouple_line(system, 'LINE75', 'BUS5', 'BUS7')
 #decouple_line(system, 'LINE78', 'BUS7', 'BUS8')
 decouple_line(system, 'LINE64', 'BUS6', 'BUS4')
 decouple_line(system, 'LINE89', 'BUS8', 'BUS9')
 do_sim('decoupled', system)
 
-normal_dp = rt.read_timeseries_dpsim("Logs/normal.csv")
+normal_dp = rt.read_timeseries_dpsim("logs/normal.csv")
 normal_emt = ts.frequency_shift_list(normal_dp, 60)
 
-decoupled_dp = rt.read_timeseries_dpsim("Logs/decoupled.csv")
+decoupled_dp = rt.read_timeseries_dpsim("logs/decoupled.csv")
 decoupled_emt = ts.frequency_shift_list(decoupled_dp, 60)
 
 for i, v in enumerate([5, 6, 8]):
-    varname = 'BUS' + str(v) + '.v'
+    varname = 'BUS' + str(v) + '.V_shift'
     pt.set_timeseries_labels(normal_emt[varname], varname + ' normal')
     pt.set_timeseries_labels(decoupled_emt[varname], varname + ' decoupled')
     pt.plot_timeseries(i+1, normal_emt[varname])
