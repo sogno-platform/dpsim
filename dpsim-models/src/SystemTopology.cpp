@@ -243,6 +243,14 @@ void SystemTopology::reset() {
   // }
 }
 
+void SystemTopology::removeComponent(const String &name) {
+  for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
+    if ((*it)->name() == name) {
+      mComponents.erase(it);
+    }
+  }
+}
+
 template <typename VarType>
 void SystemTopology::splitSubnets(std::vector<SystemTopology> &splitSystems) {
   std::unordered_map<typename SimNode<VarType>::Ptr, int> subnet;
