@@ -16,6 +16,7 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 	mOmegaN(mAttributes->create<Real>("Omega_nom")),
 	mVdRef(mAttributes->create<Real>("VdRef")),
 	mVqRef(mAttributes->create<Real>("VqRef")),
+	mPRef(mAttributes->create<Real>("PRef")),
 	mVcd(mAttributes->create<Real>("Vc_d", 0)),
 	mVcq(mAttributes->create<Real>("Vc_q", 0)),
 	mIrcd(mAttributes->create<Real>("Irc_d", 0)),
@@ -24,7 +25,8 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 	mElecPassivePower(mAttributes->create<Real>("Q_elec", 0)),
 	mVsref(mAttributes->create<MatrixComp>("Vsref", MatrixComp::Zero(1,1))),
 	mVs(mAttributes->createDynamic<MatrixComp>("Vs")),
-	mVCOOutput(mAttributes->createDynamic<Matrix>("vco_output")),
+	mDroopOutput(mAttributes->createDynamic<Real>("droop_output")),
+	mVCOOutput(mAttributes->createDynamic<Real>("vco_output")),
 	mVoltagectrlInputs(mAttributes->createDynamic<Matrix>("voltagectrl_inputs")),
 	mVoltagectrlOutputs(mAttributes->createDynamic<Matrix>("voltagectrl_outputs")),
 	mVoltagectrlStates(mAttributes->createDynamic<Matrix>("voltagectrl_states")) {
@@ -58,20 +60,25 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 	addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
 	//Log subcomponents
-	SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
+	SPDLOG_LOGGER_INFO(mSLog,"Electrical subcomponents: ");
 	for (auto subcomp: mSubComponents)
-		SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
+		SPDLOG_LOGGER_INFO(mSLog,"- {}", subcomp->name());
 
 	// Create control sub components
+	mDroop = Signal::Droop::make(**mName + "_Droop", mLogLevel);
 	mVCO = Signal::VCO::make(**mName + "_VCO", mLogLevel);
 	mVoltageControllerVSI = Signal::VoltageControllerVSI::make(**mName + "_VoltageControllerVSI", mLogLevel);
 
 	// Sub voltage source
 	mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
 
-	// VCO
-	mVCO->mInputRef->setReference(mOmegaN);
-	mVCOOutput->setReference(mVCO->mOutputCurr);
+	// Droop block
+	mDroop->mInputRef->setReference(mElecActivePower); // maybe mPref ?
+	mDroopOutput->setReference(mDroop->mOutputRef);
+
+    // VCO block
+    mVCO->mInputRef->setReference(mDroopOutput);
+	mVCOOutput->setReference(mVCO->mOutputRef);
 
 	// Voltage controller
 	// input references
@@ -86,18 +93,23 @@ DP::Ph1::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logge
 	mVoltagectrlOutputs->setReference(mVoltageControllerVSI->mOutputCurr);
 }
 
-void DP::Ph1::VSIVoltageControlDQ::setParameters(Real sysOmega, Real VdRef, Real VqRef) {
+//setter target voltage and power
+void DP::Ph1::VSIVoltageControlDQ::setParameters(Real Omega, Real VdRef, Real VqRef, Real Pref) {
 	mParametersSet = true;
 
-	SPDLOG_LOGGER_INFO(mSLog, "General Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog, "Nominal Omega={} [1/s]", sysOmega);
-	SPDLOG_LOGGER_INFO(mSLog, "VdRef={} [V] VqRef={} [V]", VdRef, VqRef);
+	SPDLOG_LOGGER_INFO(mSLog,"General Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog,"Nominal Omega={} [1/s]", Omega);
+	SPDLOG_LOGGER_INFO(mSLog,"VdRef={} [V] VqRef={} [V]", VdRef, VqRef);
 
 	mVoltageControllerVSI->setParameters(VdRef, VqRef);
+	mVCO->setParameters(Omega);
+	mDroop->setParameters(Pref, Omega);
 
-	**mOmegaN = sysOmega;
+	**mOmegaN = Omega;
 	**mVdRef = VdRef;
 	**mVqRef = VqRef;
+	**mPRef= Pref;
+
 }
 
 void DP::Ph1::VSIVoltageControlDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, 
@@ -105,34 +117,37 @@ void DP::Ph1::VSIVoltageControlDQ::setTransformerParameters(Real nomVoltageEnd1,
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower,
 	ratioAbs, ratioPhase, resistance, inductance);
 
-	SPDLOG_LOGGER_INFO(mSLog, "Connection Transformer Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);
-	SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power = {} [VA]", mTransformerRatedPower);
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]", mTransformerResistance, mTransformerInductance);
-    SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
+	SPDLOG_LOGGER_INFO(mSLog,"Connection Transformer Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog,"Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);
+	SPDLOG_LOGGER_INFO(mSLog,"Rated Apparent Power = {} [VA]", mTransformerRatedPower);
+	SPDLOG_LOGGER_INFO(mSLog,"Resistance={} [Ohm] Inductance={} [H]", mTransformerResistance, mTransformerInductance);
+    SPDLOG_LOGGER_INFO(mSLog,"Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
 
 	if (mWithConnectionTransformer)
 		// TODO: resistive losses neglected so far (mWithResistiveLosses=false)
 		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance, mTransformerInductance);
 }
 
-void DP::Ph1::VSIVoltageControlDQ::setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega) {
+void DP::Ph1::VSIVoltageControlDQ::setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega,
+	Real m_p, Real tau_p, Real tau_l ) {
 
 	SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
 	SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_p = {}, K_i = {}", Kp_voltageCtrl, Ki_voltageCtrl);
 	SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_p = {}, K_i = {}", Kp_currCtrl, Ki_currCtrl);
 	SPDLOG_LOGGER_INFO(mSLog, "VCO: Omega_Nom = {}", Omega);
+	SPDLOG_LOGGER_INFO(mSLog, "Droop Control: M_p = {}, Tau_p = {}, Tau_l  = {}", m_p, tau_p, tau_l);
 
-	mVCO->setParameters(Omega);
+	mDroop->setControllerParameters(m_p, tau_p, tau_l);
 	mVoltageControllerVSI->setControllerParameters(Kp_voltageCtrl, Ki_voltageCtrl, Kp_currCtrl, Ki_currCtrl, Omega);
 }
 
+// setter for internal filter parameters
 void DP::Ph1::VSIVoltageControlDQ::setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc) {
 	Base::AvVoltageSourceInverterDQ::setFilterParameters(Lf, Cf, Rf, Rc);
 
-	SPDLOG_LOGGER_INFO(mSLog, "Filter Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog, "Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
-	SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
+	SPDLOG_LOGGER_INFO(mSLog,"Filter Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog,"Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
+	SPDLOG_LOGGER_INFO(mSLog,"Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
 
 	mSubResistorC->setParameters(mRc);
 	mSubResistorF->setParameters(mRf);
@@ -143,9 +158,9 @@ void DP::Ph1::VSIVoltageControlDQ::setFilterParameters(Real Lf, Real Cf, Real Rf
 //Overload function of Voltage Controller --> set start values of states
 void DP::Ph1::VSIVoltageControlDQ::setInitialStateValues(Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit) {
 
-	SPDLOG_LOGGER_INFO(mSLog, "Initial State Value Parameters:");
-	SPDLOG_LOGGER_INFO(mSLog, "Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
-	SPDLOG_LOGGER_INFO(mSLog, "Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
+	SPDLOG_LOGGER_INFO(mSLog,"Initial State Value Parameters:");
+	SPDLOG_LOGGER_INFO(mSLog,"Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
+	SPDLOG_LOGGER_INFO(mSLog,"Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
 
 	mVoltageControllerVSI->setInitialStateValues(phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
 }
@@ -205,37 +220,73 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
 
+	
 	if(mWithConnectionTransformer)
 	{
 		// Initialize control subcomponents
 		Complex vcdq, ircdq;
-		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->initialSingleVoltage(), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
-		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
+		Real theta = std::arg(mVirtualNodes[3]->initialSingleVoltage());
+		// TODO: use DPDQ interface!!!
+		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->initialSingleVoltage(), theta, 0);
+		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), theta, 0);
 
 		**mVcd = vcdq.real();
 		**mVcq = vcdq.imag();
 		**mIrcd = ircdq.real();
 		**mIrcq = ircdq.imag();
 
-		// VCO input
-		mVCO->setInitialValues(**mVcq, std::arg(mVirtualNodes[3]->initialSingleVoltage()), std::arg(mVirtualNodes[3]->initialSingleVoltage()));
+		**mElecActivePower= **mIrcd * **mVcd + **mIrcq * **mVcq;
+
+		Matrix matrixInputInit = Matrix::Zero(3,1);
+		Matrix matrixStateInit = Matrix::Zero(1,1);
+		Matrix matrixOutputInit = Matrix::Zero(1,1);
+
+		matrixInputInit(0,0)= **mElecActivePower;
+		matrixInputInit(1,0)= **mPRef;
+		matrixInputInit(2,0)= **mOmegaN;
+		matrixStateInit(0,0) = **mOmegaN;
+		matrixOutputInit(0,0) = **mOmegaN;
+
+		// Droop and VCO input
+		// Input: [PowerInst, PowerSet, omegaNom] //State: [omega] // Output: [omega]
+		mDroop->setInitialStateValues(matrixInputInit, matrixStateInit, matrixOutputInit);
+		// Input: [OmegaSet] //State: [theta] // Output: [theta]
+        mVCO->setInitialValues(**mDroopOutput, theta, theta);
 	}
-	else{
+	else
+	{
 		// Initialize control subcomponents
 		Complex vcdq, ircdq;
-		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->initialSingleVoltage(), std::arg(mVirtualNodes[2]->initialSingleVoltage()), 0);
-		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), std::arg(mVirtualNodes[2]->initialSingleVoltage()), 0);
+		Real theta = std::arg(mVirtualNodes[2]->initialSingleVoltage());
+		// TODO: use DPDQ interface!!!
+		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->initialSingleVoltage(), theta, 0);
+		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), theta, 0);
 
 		**mVcd = vcdq.real();
 		**mVcq = vcdq.imag();
 		**mIrcd = ircdq.real();
 		**mIrcq = ircdq.imag();
 
-		// VCO input
-		mVCO->setInitialValues(**mVcq, std::arg(mVirtualNodes[2]->initialSingleVoltage()), std::arg(mVirtualNodes[2]->initialSingleVoltage()));
-	}
+		// Droop and VCO initialisation
+		**mElecActivePower= **mIrcd * **mVcd + **mIrcq * **mVcq;
 
-	SPDLOG_LOGGER_INFO(mSLog, 
+		Matrix matrixInputInit = Matrix::Zero(3,1);
+		Matrix matrixStateInit = Matrix::Zero(1,1);
+		Matrix matrixOutputInit = Matrix::Zero(1,1);
+
+		matrixInputInit(0,0)= **mElecActivePower;
+		matrixInputInit(1,0)= **mPRef;
+		matrixInputInit(2,0)= **mOmegaN;
+		matrixStateInit(0,0) = **mOmegaN;
+		matrixOutputInit(0,0) = **mOmegaN;
+
+		// Droop and VCO input
+		// Input: [PowerInst, PowerSet, omegaNom] //State: [omega] // Output: [omega]
+		mDroop->setInitialStateValues(matrixInputInit, matrixStateInit, matrixOutputInit);
+		// Input: [OmegaSet] //State: [theta] // Output: [theta]
+        mVCO->setInitialValues(**mDroopOutput, theta, theta);
+	}
+	SPDLOG_LOGGER_INFO(mSLog,
 		"\n--- Initialization from powerflow ---"
 		"\nInterface voltage across: {:s}"
 		"\nInterface current: {:s}"
@@ -252,8 +303,8 @@ void DP::Ph1::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequenc
 		Logger::phasorToString(mVirtualNodes[1]->initialSingleVoltage()),
 		Logger::phasorToString(mVirtualNodes[2]->initialSingleVoltage()));
 		if (mWithConnectionTransformer)
-			SPDLOG_LOGGER_INFO(mSLog, "\nVirtual node 3 initial voltage: {:s}", Logger::phasorToString(mVirtualNodes[3]->initialSingleVoltage()));
-		SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow finished ---");
+			SPDLOG_LOGGER_INFO(mSLog,"\nVirtual node 3 initial voltage: {:s}", Logger::phasorToString(mVirtualNodes[3]->initialSingleVoltage()));
+		SPDLOG_LOGGER_INFO(mSLog,"\n--- Initialization from powerflow finished ---");
 }
 
 void DP::Ph1::VSIVoltageControlDQ::mnaParentInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -261,6 +312,7 @@ void DP::Ph1::VSIVoltageControlDQ::mnaParentInitialize(Real omega, Real timeStep
 
 	// initialize state space controller
 	mVoltageControllerVSI->initializeStateSpaceModel(omega, timeStep, leftVector);
+	mDroop->setSimulationParameters(timeStep);
 	mVCO->setSimulationParameters(timeStep);
 
 	// TODO: these are actually no MNA tasks
@@ -270,18 +322,21 @@ void DP::Ph1::VSIVoltageControlDQ::mnaParentInitialize(Real omega, Real timeStep
 
 void DP::Ph1::VSIVoltageControlDQ::addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
+	mDroop->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mVCO->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mVoltageControllerVSI->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 }
 
 void DP::Ph1::VSIVoltageControlDQ::controlPreStep(Real time, Int timeStepCount) {
 	// add pre-step of subcomponents
+	mDroop->signalPreStep(time, timeStepCount);
 	mVCO->signalPreStep(time, timeStepCount);
 	mVoltageControllerVSI->signalPreStep(time, timeStepCount);
 }
 
 void DP::Ph1::VSIVoltageControlDQ::addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add step dependencies of subcomponents
+	mDroop->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mVCO->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mVoltageControllerVSI->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	// add step dependencies of component itself
@@ -296,12 +351,14 @@ void DP::Ph1::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 
 	if(mWithConnectionTransformer)
 	{
-		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), (**mVCO->mOutputPrev)(0,0), mThetaN);
-		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), (**mVCO->mOutputPrev)(0,0), mThetaN);
+		// TODO: use DPDQ interface!!!
+		vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), (**mVCO->mOutputPrev)(0,0), 0);
+		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), (**mVCO->mOutputPrev)(0,0), 0);
 	}
 	else{
-		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->singleVoltage(), (**mVCO->mOutputPrev)(0,0), mThetaN);
-		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), (**mVCO->mOutputPrev)(0,0), mThetaN);
+		// TODO: use DPDQ interface!!!
+		vcdq = Math::rotatingFrame2to1(mVirtualNodes[2]->singleVoltage(), (**mVCO->mOutputPrev)(0,0), 0);
+		ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0), (**mVCO->mOutputPrev)(0,0), 0);
 	
 	}
 
@@ -311,11 +368,15 @@ void DP::Ph1::VSIVoltageControlDQ::controlStep(Real time, Int timeStepCount) {
 	**mIrcq = ircdq.imag();
 
 	// add step of subcomponents
+	mDroop->signalStep(time, timeStepCount);
 	mVCO->signalStep(time, timeStepCount);
 	mVoltageControllerVSI->signalStep(time, timeStepCount);
 
 	// Transformation interface backward
-	(**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(0, 0), mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(1, 0)), mThetaN, (**mVCO->mOutputPrev)(0,0));
+	// (**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(0, 0), mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(1, 0)), mThetaN, (**mVCO->mOutputPrev)(0,0));
+	// TODO: use DPDQ interface!!!
+	(**mVsref)(0,0) = Math::rotatingFrame2to1(Complex(mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(0, 0), mVoltageControllerVSI->attributeTyped<Matrix>("output_curr")->get()(1, 0)), 0, (**mVCO->mOutputCurr)(0,0));
+
 
 	// Update nominal system angle
 	mThetaN = mThetaN + mTimeStep * **mOmegaN;
