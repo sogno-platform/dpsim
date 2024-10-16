@@ -17,6 +17,7 @@
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_Transformer.h>
 #include <dpsim-models/Base/Base_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/Signal/Droop.h>
 #include <dpsim-models/Signal/VCO.h>
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 
@@ -41,9 +42,11 @@ namespace Ph1 {
 
 
 		// ### Control Subcomponents ###
+		/// Droop
+		std::shared_ptr<Signal::Droop> mDroop;
 		/// VCO
 		std::shared_ptr<Signal::VCO> mVCO;
-		/// Power Controller
+		/// Voltage Controller
 		std::shared_ptr<Signal::VoltageControllerVSI> mVoltageControllerVSI;
 
 		// ### Electrical Subcomponents ###
@@ -65,6 +68,10 @@ namespace Ph1 {
 		/// Flag for controller usage
 		Bool mWithControl=true;
 
+		// #### solver ####
+		///
+		std::vector<const Matrix*> mRightVectorStamps;
+
 	public:
 		// ### General Parameters ###
 
@@ -74,6 +81,9 @@ namespace Ph1 {
 		const Attribute<Real>::Ptr mVdRef;
 		/// Voltage q reference
 		const Attribute<Real>::Ptr mVqRef;
+		/// Active power reference
+		const Attribute<Real>::Ptr mPRef;
+
 
 		// ### Inverter Interfacing Variables ###
 		// Control inputs
@@ -85,8 +95,10 @@ namespace Ph1 {
 		const Attribute<Real>::Ptr mIrcd;
 		/// Measured current q-axis in local reference frame
 		const Attribute<Real>::Ptr mIrcq;
+
 		const Attribute<Real>::Ptr mElecActivePower;
 		const Attribute<Real>::Ptr mElecPassivePower;
+
 		// Control outputs
 		/// Voltage as control output after transformation interface
 		const Attribute<MatrixComp>::Ptr mVsref;
@@ -94,8 +106,11 @@ namespace Ph1 {
 		// Sub voltage source
 		const Attribute<MatrixComp>::Ptr mVs;
 
+		// Droop
+		const Attribute<Real>::Ptr mDroopOutput;
+
 		// VCO
-		const Attribute<Matrix>::Ptr mVCOOutput;
+		const Attribute<Real>::Ptr mVCOOutput;
 
 		// input, state and output vector for logging
 		const Attribute<Matrix>::Ptr mVoltagectrlInputs;
@@ -112,9 +127,9 @@ namespace Ph1 {
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
 		/// Setter for general parameters of inverter
-		void setParameters(Real sysOmega, Real VdRef, Real VqRef);
-		/// Setter for parameters of control loops
-		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega);
+		void setParameters(Real Omega, Real VdRef, Real VqRef, Real Pref);
+		/// Setter for parameters of VCO and Droop control blocks
+		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega, Real taup, Real taui, Real mp);
 		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
@@ -122,7 +137,10 @@ namespace Ph1 {
 		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
 		/// Setter for initial values applied in controllers
 		void setInitialStateValues(Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
+
 		void withControl(Bool controlOn) { mWithControl = controlOn; };
+
+		// DP to complex??
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
@@ -173,7 +191,6 @@ namespace Ph1 {
 		private:
 			VSIVoltageControlDQ& mVSIVoltageControlDQ;
 		};
-
 	};
 }
 }
