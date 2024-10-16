@@ -76,11 +76,11 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 	// Sub voltage source
 	mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
 
-	// Droop
+	// Droop block
 	mDroop->mInputRef->setReference(mElecActivePower); // maybe mPref ?
 	mDroopOutput->setReference(mDroop->mOutputRef);
 
-    // VCO
+    // VCO block
     mVCO->mInputRef->setReference(mDroopOutput);
 	mVCOOutput->setReference(mVCO->mOutputRef);
 
@@ -97,7 +97,7 @@ EMT::Ph3::VSIVoltageControlDQ::VSIVoltageControlDQ(String uid, String name, Logg
 	mVoltagectrlOutputs->setReference(mVoltageControllerVSI->mOutputCurr);
 }
 
-//setter goal voltage and frequency
+//setter target voltage and power
 void EMT::Ph3::VSIVoltageControlDQ::setParameters(Real Omega, Real VdRef, Real VqRef, Real Pref) {
 	mParametersSet = true;
 
@@ -119,7 +119,6 @@ void EMT::Ph3::VSIVoltageControlDQ::setParameters(Real Omega, Real VdRef, Real V
 //setter for transformer if used
 void EMT::Ph3::VSIVoltageControlDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, 
 	Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
-	
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower,
 	ratioAbs, ratioPhase, resistance, inductance);
 
@@ -271,7 +270,7 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 		mDroop->setInitialStateValues(matrixInputInit, matrixStateInit, matrixOutputInit);
 		// Input: [OmegaSet] //State: [theta] // Output: [theta]
         mVCO->setInitialValues(**mDroopOutput, theta, theta);
-	} 
+	}
 	else
 	{
 		// Initialize control subcomponents
@@ -286,7 +285,7 @@ void EMT::Ph3::VSIVoltageControlDQ::initializeFromNodesAndTerminals(Real frequen
 		**mIrcd = ircdq(0, 0);
 		**mIrcq = ircdq(1, 0);
 
-	    // Droop and VCO initialisation
+		// Droop and VCO initialisation
 		**mElecActivePower= **mIrcd * **mVcd + **mIrcq * **mVcq;
 
 		Matrix matrixInputInit = Matrix::Zero(3,1);

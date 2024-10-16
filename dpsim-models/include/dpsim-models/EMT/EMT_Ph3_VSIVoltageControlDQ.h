@@ -36,7 +36,6 @@ namespace Ph3 {
 		Real mVnom;
 		/// Simulation step
 		Real mTimeStep;
-		/// Active power reference
 
 		// ### Control Subcomponents ###
 		/// Droop
@@ -125,8 +124,8 @@ namespace Ph3 {
 		void initializeFromNodesAndTerminals(Real frequency);
 		/// Setter for general parameters of inverter
 		void setParameters(Real Omega, Real VdRef, Real VqRef, Real Pref);
-		/// Setter for parameters of VCO control loops
-		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega, Real taup, Real taui, Real mp );
+		/// Setter for parameters of VCO and Droop control blocks
+		void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega, Real taup, Real taui, Real mp);
 		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 			Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
