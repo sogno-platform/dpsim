@@ -59,11 +59,9 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{linePF, extnetPF, loadPF});
 	
 	// Logging
-	
 	auto loggerPF = DataLogger::make(simNamePF);
 	loggerPF->logAttribute("v1", n1PF->attribute("v"));
 	loggerPF->logAttribute("v2", n2PF->attribute("v"));
-	
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -118,17 +116,15 @@ int main(int argc, char* argv[]) {
 	pv->terminal(0)->setPower(initial3PhPowerVSI);
 
 	// Logging
-
-	
 	auto loggerEMT = DataLogger::make(simNameEMT);
 	loggerEMT->logAttribute("Controlled_source_PV", pv->attribute("Vs"));
 	loggerEMT->logAttribute("Voltage_terminal_PV", n1EMT->attribute("v"));
 	loggerEMT->logAttribute("Voltage_PCC", n2EMT->attribute("v"));
-	loggerEMT->logAttribute("Strom_PV", pv->attribute("i_intf"));
+	loggerEMT->logAttribute("Current_terminal_PV", pv->attribute("i_intf"));
 	loggerEMT->logAttribute("VCO_output", pv->attribute("vco_output"));
 	loggerEMT->logAttribute("P_elec", pv->attribute("P_elec"));
 	loggerEMT->logAttribute("Q_elec", pv->attribute("Q_elec"));
-	
+
 
 	
 	// Simulation
