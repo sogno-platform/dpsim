@@ -52,11 +52,11 @@ dpsim_root_dir = subprocess.Popen(['git', 'rev-parse', '--show-toplevel'], stdou
 
 files = glob.glob(dpsim_root_dir + '/build/_deps/cim-data-src/WSCC-09/WSCC-09/*.xml')
 reader_normal = dpsimpy.CIMReader(name)
-system = reader_normal.loadCIM(60, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
+system = reader_normal.loadCIM(60, files, dpsimpy.Domain.DP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.IdealVoltageSource)
 do_sim('normal', system)
 
 reader_decoupled = dpsimpy.CIMReader(name)
-system = reader_decoupled.loadCIM(60, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
+system = reader_decoupled.loadCIM(60, files, dpsimpy.Domain.DP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.IdealVoltageSource)
 decouple_line(system, 'LINE75', 'BUS5', 'BUS7')
 #decouple_line(system, 'LINE78', 'BUS7', 'BUS8')
 decouple_line(system, 'LINE64', 'BUS6', 'BUS4')
