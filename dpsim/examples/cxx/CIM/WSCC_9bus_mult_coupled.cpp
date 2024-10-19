@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
   filenames = DPsim::Utils::findFiles(
       {"WSCC-09_RX_DI.xml", "WSCC-09_RX_EQ.xml", "WSCC-09_RX_SV.xml",
        "WSCC-09_RX_TP.xml"},
-      "../../../build/_deps/cim-data-src/WSCC-09/WSCC-09_RX", "CIMPATH");
+      "build/_deps/cim-data-src/WSCC-09/WSCC-09_RX", "CIMPATH");
 
   //for (Int copies = 0; copies < 20; copies++) {
   //	for (Int threads = 0; threads <= 12; threads = threads+2)
