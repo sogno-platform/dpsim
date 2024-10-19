@@ -191,6 +191,8 @@ if(WITH_CIM)
 		CIM/WSCC_9bus_mult_decoupled.cpp
 		CIM/WSCC_9bus_mult_coupled.cpp
 		CIM/WSCC_9bus_mult_diakoptics.cpp
+		CIM/WSCC_9bus_split_decoupled.cpp
+		CIM/WSCC_9bus_split_decoupled_EMT.cpp
 
 		# CIGRE MV examples
 		CIM/PF_CIGRE_MV_withDG.cpp
