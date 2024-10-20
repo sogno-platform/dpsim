@@ -51,7 +51,7 @@ public:
   /// Defines name, component parameters and logging level
   RXLoad(String name, Logger::Level logLevel = Logger::Level::off);
 
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
   /// Initialize component from power flow data
