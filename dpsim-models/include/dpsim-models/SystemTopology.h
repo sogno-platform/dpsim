@@ -147,6 +147,10 @@ public:
   /// Copy the whole topology the given number of times and add the resulting components and nodes to the topology.
   void multiply(Int numberCopies);
 
+  /// @brief Remove system component
+  /// @param name name of the component
+  void removeComponent(const String &name);
+
   ///
   template <typename VarType>
   int checkTopologySubnets(

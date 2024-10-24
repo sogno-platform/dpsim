@@ -64,7 +64,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE 
+      run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE
 
     - name: Build every target
       shell: bash
@@ -199,6 +199,12 @@ jobs:
 
     - name: Run Binaries 2/2
       run: ./build/dpsim/examples/cxx/WSCC_9bus_mult_decoupled
+
+    - name: Run Binaries 2/2
+      run: ./build/dpsim/examples/cxx/WSCC_9bus_split_decoupled
+
+    - name: Run Binaries 2/2
+      run: ./build/dpsim/examples/cxx/WSCC_9bus_split_decoupled_EMT
 
   cpp-check:
     name: Scan Sourcecode with Cppcheck

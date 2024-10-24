@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
   SystemTopology sys =
       reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single,
                       CPS::GeneratorType::IdealVoltageSource);
-  sys.initWithPowerflow(systemPF, CPS::Domain::EMT);
+  sys.initWithPowerflow(systemPF, CPS::Domain::DP);
 
   // Logging
   auto logger = DataLogger::make(simName);
