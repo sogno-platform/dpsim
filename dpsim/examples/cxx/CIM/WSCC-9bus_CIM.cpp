@@ -30,11 +30,11 @@ int main(int argc, char *argv[]) {
                                  "build/_deps/cim-data-src/WSCC-09/WSCC-09_RX",
                                  "CIMPATH");
     timeStep = 100e-6;
-    finalTime = 0.5;
+    finalTime = 0.1;
   } else {
     filenames = std::list<fs::path>(argv + 1, argv + argc);
-    // timeStep = args.timeStep;
-    // finalTime = args.duration;
+    timeStep = args.timeStep;
+    finalTime = args.duration;
   }
 
   // ----- POWERFLOW FOR INITIALIZATION -----
@@ -88,10 +88,10 @@ int main(int argc, char *argv[]) {
   logger->logAttribute("v9", sys.node<SimNode>("BUS9")->attribute("v"));
 
   // log generator's current
-  // for (auto comp : sys.mComponents) {
-  //   if (std::dynamic_pointer_cast<CPS::DP::Ph1::SynchronGeneratorIdeal>(comp))
-  //     logger->logAttribute(comp->name() + ".I", comp->attribute("i_intf"));
-  // }
+  for (auto comp : sys.mComponents) {
+    if (std::dynamic_pointer_cast<CPS::DP::Ph1::SynchronGeneratorIdeal>(comp))
+      logger->logAttribute(comp->name() + ".I", comp->attribute("i_intf"));
+  }
 
   Simulation sim(simName, Logger::Level::info);
   sim.setSystem(sys);
