@@ -107,7 +107,6 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_SSN_Full_Serial_RLC.cpp
 
 	SP/SP_Ph1_VoltageSource.cpp
-	SP/SP_Ph1_CurrentSource.cpp
 	SP/SP_Ph1_Capacitor.cpp
 	SP/SP_Ph1_Inductor.cpp
 	SP/SP_Ph1_Resistor.cpp
