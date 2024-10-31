@@ -34,6 +34,8 @@ protected:
   Matrix mCapacitance;
   ///
   Bool initPowerFromTerminal = true;
+  /// If set to true, the reactance is in series with the resistor. Otherwise it is parallel to the resistor.
+  Bool mReactanceInSeries;
   /// Internal inductor
   std::shared_ptr<EMT::Ph3::Inductor> mSubInductor;
   /// Internal capacitor
@@ -58,7 +60,7 @@ public:
 
   // #### General ####
   ///
-  void setParameters(Matrix activePower, Matrix reactivePower, Real volt);
+  void setParameters(Matrix activePower, Matrix reactivePower, Real volt, bool reactanceInSeries = false);
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 
