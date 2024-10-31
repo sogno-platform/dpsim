@@ -198,9 +198,13 @@ CPS::Task::List InterfaceVillasQueueless::getTasks() {
 
 void InterfaceVillasQueueless::PreStep::execute(Real time, Int timeStepCount) {
   auto seqnum = mIntf.readFromVillas();
+  static size_t overrunCounter = 0;
   if (seqnum != mIntf.mSequenceToDpsim + 1) {
-    SPDLOG_LOGGER_WARN(mIntf.mLog, "{} Overrun(s) detected!",
-                       seqnum - mIntf.mSequenceToDpsim - 1);
+    overrunCounter++;
+  }
+  if (overrunCounter > 10000) {
+    SPDLOG_LOGGER_WARN(mIntf.mLog, "{} Overrun(s) detected!", overrunCounter);
+    overrunCounter = 0;
   }
   mIntf.mSequenceToDpsim = seqnum;
 }
