@@ -32,6 +32,9 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
   if (!mInitialized)
     initialize();
 
+  for (auto lg : mLoggers)
+    lg->start();
+
   SPDLOG_LOGGER_INFO(mLog, "Opening interfaces.");
 
   for (auto intf : mInterfaces)
@@ -67,7 +70,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
     intf->close();
 
   for (auto lg : mLoggers)
-    lg->close();
+    lg->stop();
 
   mTimer.stop();
 }
