@@ -1,4 +1,5 @@
-/* A data logger for real-time simulation data logging.
+/* An interface for data loggers for simulation data
+ * logging.
  *
  * Author: Niklas Eiling <niklas.eiling@eonerc.rwth-aachen.de>
  * SPDX-FileCopyrightText: 2024 Niklas Eiling <niklas.eiling@eonerc.rwth-aachen.de>
