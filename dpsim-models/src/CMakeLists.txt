@@ -70,6 +70,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph1_VoltageSourceRamp.cpp
 	EMT/EMT_Ph1_VoltageSourceNorton.cpp
 	EMT/EMT_Ph1_Switch.cpp
+	EMT/EMT_Ph1_ExponentialDiode.cpp
 
 	EMT/EMT_Ph3_CurrentSource.cpp
 	EMT/EMT_Ph3_VoltageSource.cpp

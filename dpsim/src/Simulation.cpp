@@ -7,6 +7,7 @@
 
 #include <dpsim-models/Utils.h>
 #include <dpsim/DiakopticsSolver.h>
+#include <dpsim/IterativeMnaSolverDirect.h>
 #include <dpsim/MNASolverFactory.h>
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/SequentialScheduler.h>
@@ -91,6 +92,9 @@ template <typename VarType> void Simulation::createSolvers() {
   case Solver::Type::MNA:
     createMNASolver<VarType>();
     break;
+  case Solver::Type::ITERATIVEMNA:
+    createIterativeMNASolver<VarType>();
+    break;
 #ifdef WITH_SUNDIALS
   case Solver::Type::DAE:
     solver = std::make_shared<DAESolver>(**mName, mSystem, **mTimeStep, 0.0);
@@ -168,6 +172,31 @@ template <typename VarType> void Simulation::createMNASolver() {
     }
     mSolvers.push_back(solver);
   }
+}
+
+template <typename VarType> void Simulation::createIterativeMNASolver() {
+  Solver::Ptr solver;
+
+  std::shared_ptr<IterativeMnaSolverDirect<VarType>> Itsolver =
+      std::make_shared<IterativeMnaSolverDirect<VarType>>(**mName, mDomain,
+                                                          mLogLevel);
+  Itsolver->setDirectLinearSolverImplementation(
+      DirectLinearSolverImpl::SparseLU);
+
+  Itsolver->setTimeStep(**mTimeStep);
+  Itsolver->doSteadyStateInit(**mSteadyStateInit);
+  Itsolver->doFrequencyParallelization(false);
+  Itsolver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
+  Itsolver->setSteadStIniAccLimit(mSteadStIniAccLimit);
+  Itsolver->setSystem(mSystem);
+  Itsolver->setSolverAndComponentBehaviour(mSolverBehaviour);
+  Itsolver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
+  Itsolver->doSystemMatrixRecomputation(true);
+  Itsolver->setDirectLinearSolverConfiguration(
+      mDirectLinearSolverConfiguration);
+  Itsolver->initialize();
+
+  mSolvers.push_back(Itsolver);
 }
 
 void Simulation::sync() const {
