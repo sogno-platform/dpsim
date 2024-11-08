@@ -202,7 +202,7 @@ void Simulation::prepSchedule() {
     mTasks.push_back(logger->getTask());
   }
   if (!mScheduler) {
-    mScheduler = std::make_shared<SequentialScheduler>();
+    mScheduler = std::make_shared<SequentialScheduler>("taskTimes");
   }
   mScheduler->resolveDeps(mTasks, mTaskInEdges, mTaskOutEdges);
 }
@@ -429,6 +429,21 @@ void Simulation::logStepTimes(String logName) {
   }
   SPDLOG_LOGGER_INFO(mLog, "Average step time: {:.9f}",
                      stepTimeSum / mStepTimes.size());
+}
+
+void Simulation::checkForOverruns(String logName) {
+  auto stepTimeLog = Logger::get(logName, Logger::Level::info);
+  Logger::setLogPattern(stepTimeLog, "%v");
+  stepTimeLog->info("overruns");
+
+  int overruns = 0;
+  for (auto meas : mStepTimes) {
+    if (meas > **mTimeStep) {
+      overruns++;
+      SPDLOG_LOGGER_INFO(mLog, "overrun detected {}: {:.9f}", overruns, meas);
+    }
+  }
+  SPDLOG_LOGGER_INFO(mLog, "Detected {} overruns.", overruns);
 }
 
 void Simulation::logLUTimes() {

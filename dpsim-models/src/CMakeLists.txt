@@ -151,7 +151,9 @@ list(APPEND MODELS_SOURCES
 	Signal/SignalGenerator.cpp
 	Signal/FrequencyRampGenerator.cpp
 	Signal/CosineFMGenerator.cpp
+	Signal/DCGenerator.cpp
 )
+list(APPEND MODELS_INCLUDE_DIRS "/home/eiling/projects/villas-node/build/lib/formats")
 
 if(WITH_CIM)
 	list(APPEND MODELS_SOURCES CIM/Reader.cpp)
@@ -176,6 +178,10 @@ endif()
 if(WITH_GSL)
 	list(APPEND MODELS_INCLUDE_DIRS ${GSL_INCLUDE_DIRS})
 	list(APPEND MODELS_LIBRARIES ${GSL_LIBRARIES})
+endif()
+
+if(WITH_VILLAS)
+	list(APPEND MODELS_SOURCES DP/DP_Ph1_ProfileVoltageSource.cpp)
 endif()
 
 target_link_libraries(dpsim-models PUBLIC ${MODELS_LIBRARIES})

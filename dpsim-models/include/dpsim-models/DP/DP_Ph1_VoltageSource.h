@@ -10,6 +10,7 @@
 
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Signal/CosineFMGenerator.h>
+#include <dpsim-models/Signal/DCGenerator.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
@@ -79,6 +80,10 @@ public:
   void setParameters(Complex initialPhasor, Real modulationFrequency,
                      Real modulationAmplitude, Real baseFrequency = 0.0,
                      bool zigzag = false);
+  /// Setter for reference voltage with a real valued generator
+  /// This will initialize the values of mVoltageRef to match the given parameters
+  /// However, the attributes can be modified during the simulation to dynamically change the value of the output voltage.
+  void setParameters(Real voltageRef);
 
   // #### MNA Section ####
   /// Initializes internal variables of the component

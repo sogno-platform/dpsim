@@ -4,6 +4,6 @@
 ---
 BasedOnStyle: LLVM
 
-# Disable automatic line-breaks in comments
-# as this breaks SPDX headers
-ReflowComments: false
+# Increase ColumnLimit to avoid breaking SPDX headers
+ColumnLimit: 200
+
