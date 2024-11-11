@@ -98,9 +98,6 @@ if(WITH_OPENMP)
 	list(APPEND DPSIM_LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
 
-list(APPEND DPSIM_INCLUDE_DIRS "/home/eiling/projects/villas-node/common/include")
-
-
 add_library(dpsim ${DPSIM_SOURCES})
 target_link_libraries(dpsim PUBLIC ${DPSIM_LIBRARIES})
 target_include_directories(dpsim PUBLIC ${DPSIM_INCLUDE_DIRS})

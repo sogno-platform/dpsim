@@ -181,9 +181,6 @@ SystemTopology buildTopology(CommandLineArgs &args, std::shared_ptr<Interface> i
     logger->logAttribute("a_i", load->mIntfCurrent->deriveCoeff<Real>(0, 0));
     logger->logAttribute("b_i", load->mIntfCurrent->deriveCoeff<Real>(1, 0));
     logger->logAttribute("c_i", load->mIntfCurrent->deriveCoeff<Real>(2, 0));
-    // logger->logAttribute("seq_to_dpsim", seqToDPsimAttribute);
-    // logger->logAttribute("seq_from_rtds", seqFromRTDSAttribute);
-    // logger->logAttribute("seq_from_dpsim", seqFromDPsimAttribute);
   }
 
   return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, bus}, SystemComponentList{vs, load});
