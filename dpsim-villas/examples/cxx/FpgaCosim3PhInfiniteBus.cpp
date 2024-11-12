@@ -143,13 +143,15 @@ SystemTopology buildTopology(CommandLineArgs &args, std::shared_ptr<Interface> i
 
   // Components
   auto vs = Ph3::VoltageSource::make("vs");
-  vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(230e3 / sqrt(3), 0)), 50);
+  vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(230e3, 0)), 50);
 
   auto r = Ph3::Resistor::make("R");
   r->setParameters(Matrix{{10.4275, 0, 0}, {0, 10.4275, 0}, {0, 0, 10.4275}});
 
   auto l = Ph3::Inductor::make("L");
   l->setParameters(Matrix{{0.325101, 0, 0}, {0, 0.325101, 0}, {0, 0, 0.325101}});
+  auto r2 = Ph3::Resistor::make("R2");
+  r2->setParameters(Matrix{{5.29e6, 0, 0}, {0, 5.29e6, 0}, {0, 0, 5.29e6}});
 
   auto cs = Ph3::ControlledCurrentSource::make("cs");
   cs->setParameters(Matrix{{0.0}, {0.0}, {0.0}});
@@ -158,6 +160,7 @@ SystemTopology buildTopology(CommandLineArgs &args, std::shared_ptr<Interface> i
   vs->connect({SimNode::GND, bus1});
   r->connect({bus1, bus2});
   l->connect({bus2, bus3});
+  r2->connect({bus2, bus3});
   cs->connect({bus3, SimNode::GND});
 
   // Interface
@@ -192,7 +195,7 @@ SystemTopology buildTopology(CommandLineArgs &args, std::shared_ptr<Interface> i
     logger->logAttribute("c_i", cs->mIntfCurrent->deriveCoeff<Real>(2, 0));
   }
 
-  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, bus1, bus2, bus3}, SystemComponentList{vs, cs, r, l});
+  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, bus1, bus2, bus3}, SystemComponentList{vs, cs, r, l, r2});
 }
 
 int main(int argc, char *argv[]) {
