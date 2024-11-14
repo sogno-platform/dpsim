@@ -22,11 +22,8 @@ using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 const std::string buildFpgaConfig(CommandLineArgs &args) {
-  // std::filesystem::path fpgaIpPath =
-  //     "/usr/local/etc/villas/node/etc/fpga/vc707-xbar-pcie-dino/"
-  //     "vc707-xbar-pcie-dino-v2.json";
-  std::filesystem::path fpgaIpPath = "/home/eiling/projects/villas-node/etc/fpga/vc707-xbar-pcie-dino/"
-                                     "vc707-xbar-pcie.json";
+  std::filesystem::path fpgaIpPath = "/usr/local/etc/villas/node/etc/fpga/vc707-xbar-pcie-dino/"
+                                     "vc707-xbar-pcie-dino.json";
 
   if (args.options.find("ips") != args.options.end()) {
     fpgaIpPath = std::filesystem::path(args.getOptionString("ips"));
