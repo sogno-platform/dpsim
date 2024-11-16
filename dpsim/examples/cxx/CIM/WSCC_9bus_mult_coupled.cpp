@@ -87,19 +87,19 @@ void simulateCoupled(std::list<fs::path> filenames, CommandLineArgs &args,
     sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
 
   // Logging
-  //auto logger = DataLogger::make(simName);
-  //for (Int cop = 1; cop <= copies; cop++) {
-  //	for (Int bus  = 1; bus <= 9; bus++) {
-  //		String attrName = "v" + std::to_string(bus) + "_" + std::to_string(cop);
-  //		String nodeName = "BUS" + std::to_string(bus) + "_" + std::to_string(cop);
-  //		if (cop == 1) {
-  //			attrName = "v" + std::to_string(bus);
-  //			nodeName = "BUS" + std::to_string(bus);
-  //		}
-  //		logger->logAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
-  //	}
-  //}
-  //sim.addLogger(logger);
+  auto logger = DataLogger::make(simName);
+  for (Int cop = 1; cop <= copies; cop++) {
+  	for (Int bus  = 1; bus <= 9; bus++) {
+  		String attrName = "v" + std::to_string(bus) + "_" + std::to_string(cop);
+  		String nodeName = "BUS" + std::to_string(bus) + "_" + std::to_string(cop);
+  		if (cop == 1) {
+  			attrName = "v" + std::to_string(bus);
+  			nodeName = "BUS" + std::to_string(bus);
+  		}
+  		logger->logAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
+  	}
+  }
+  sim.addLogger(logger);
 
   sim.run();
   sim.logStepTimes(simName + "_step_times");

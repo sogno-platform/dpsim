@@ -200,6 +200,8 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
       .def("do_frequency_parallelization",
            &DPsim::Simulation::doFrequencyParallelization)
+      .def("do_split_subnets",
+           &DPsim::Simulation::doSplitSubnets)
       .def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
       .def("add_event", &DPsim::Simulation::addEvent)
       .def("set_solver_component_behaviour",
@@ -260,7 +262,10 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
       .def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
       .def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow,
-           "systemPF"_a, "domain"_a);
+           "systemPF"_a, "domain"_a)
+      .def("add_component", &DPsim::SystemTopology::addComponent)
+      .def("add_components", &DPsim::SystemTopology::addComponents)
+      .def("remove_component", &DPsim::SystemTopology::removeComponent);
 
   py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m,
                                                                   "Interface");
