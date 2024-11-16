@@ -153,7 +153,6 @@ list(APPEND MODELS_SOURCES
 	Signal/CosineFMGenerator.cpp
 	Signal/DCGenerator.cpp
 )
-list(APPEND MODELS_INCLUDE_DIRS "/home/eiling/projects/villas-node/build/lib/formats")
 
 if(WITH_CIM)
 	list(APPEND MODELS_SOURCES CIM/Reader.cpp)
