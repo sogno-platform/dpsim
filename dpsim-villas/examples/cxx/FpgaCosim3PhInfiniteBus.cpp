@@ -15,6 +15,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph3_NetworkInjection.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/SimNode.h>
 #include <dpsim-villas/InterfaceVillas.h>
@@ -80,7 +81,7 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
       {{
         "name": "VC",
         "type": "float",
-        "unit": "A",
+        "unit": "V",
         "builtin": false
       }},
       {{
