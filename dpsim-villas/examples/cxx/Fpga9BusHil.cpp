@@ -4,9 +4,6 @@
  * SPDX-FileCopyrightText: 2024 Niklas Eiling <niklas.eiling@eonerc.rwth-aachen.de>
  * SPDX-License-Identifier: Apache-2.0
  */
-
-#include "dpsim-models/EMT/EMT_Ph3_RXLoad.h"
-#include "dpsim/Definitions.h"
 #include <filesystem>
 #include <fstream>
 
@@ -15,9 +12,11 @@
 #include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
 #include <dpsim-models/DP/DP_Ph1_ProfileVoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
+#include <dpsim-models/EMT/EMT_Ph3_RXLoad.h>
 #include <dpsim-models/SimNode.h>
 #include <dpsim-villas/InterfaceVillas.h>
 #include <dpsim-villas/InterfaceVillasQueueless.h>
+#include <dpsim/Definitions.h>
 #include <dpsim/Event.h>
 #include <dpsim/RealTimeDataLogger.h>
 #include <dpsim/Utils.h>
@@ -28,7 +27,7 @@ using namespace CPS::EMT;
 using namespace CPS::EMT::Ph1;
 
 const std::string buildFpgaConfig(CommandLineArgs &args) {
-  std::filesystem::path fpgaIpPath = "/home/eiling/projects/villas-node/etc/fpga/vc707-xbar-pcie/"
+  std::filesystem::path fpgaIpPath = "/usr/local/etc/villas/node/etc/fpga/vc707-xbar-pcie/"
                                      "vc707-xbar-pcie.json";
 
   if (args.options.find("ips") != args.options.end()) {
@@ -88,8 +87,7 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
 SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
   std::string simName = "Fpga9BusHil";
 
-  std::list<fs::path> filenames =
-      Utils::findFiles({"WSCC-09_Dyn_Full_DI.xml", "WSCC-09_Dyn_Full_EQ.xml", "WSCC-09_Dyn_Full_SV.xml", "WSCC-09_Dyn_Full_TP.xml"}, "build/_deps/cim-data-src/WSCC-09/WSCC-09_Dyn_Full", "CIMPATH");
+  std::list<fs::path> filenames = Utils::findFiles({"WSCC-09_DI.xml", "WSCC-09_EQ.xml", "WSCC-09_SV.xml", "WSCC-09_TP.xml"}, "build/_deps/cim-data-src/WSCC-09/WSCC-09", "CIMPATH");
 
   // ----- POWERFLOW FOR INITIALIZATION -----
   // read original network topology
@@ -118,7 +116,7 @@ SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> int
 
   // ----- DYNAMIC SIMULATION -----
   CPS::CIM::Reader reader2(simName);
-  SystemTopology sys = reader2.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC, CPS::GeneratorType::FullOrder);
+  SystemTopology sys = reader2.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC, CPS::GeneratorType::IdealVoltageSource);
 
   sys.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
@@ -146,14 +144,22 @@ SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> int
   // Interface
   auto seqnumAttribute = CPS::AttributeStatic<Int>::make(0);
   auto current = CPS::AttributeStatic<Real>::make(0);
+
+  auto scaledOutputVoltage = CPS::AttributeDynamic<Real>::make(0);
+  auto updateFn =
+      std::make_shared<CPS::AttributeUpdateTask<Real, Real>::Actor>([](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Real>::Ptr dependency) { *dependent = *dependency / 230000; });
+  scaledOutputVoltage->addTask(CPS::UpdateTaskKind::UPDATE_ON_GET,
+                               CPS::AttributeUpdateTask<Real, Real>::make(CPS::UpdateTaskKind::UPDATE_ON_GET, *updateFn, sys.node<SimNode>("BUS6")->mVoltage->deriveCoeff<Real>(0, 0)));
+
   intf->addImport(seqnumAttribute, true, true);
   intf->addImport(current, true, true);
   // intf->addImport(cs->mCurrentRef->deriveReal(), true, true);
-  intf->addExport(sys.node<SimNode>("BUS6")->mVoltage->deriveCoeff<Real>(0, 0));
+  intf->addExport(scaledOutputVoltage);
 
   // Logger
   if (logger) {
-    // logger->logAttribute("cs", cs->mCurrentRef->deriveReal());
+    logger->logAttribute("v_scaled", scaledOutputVoltage);
+    logger->logAttribute("cs", current);
     logger->logAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
     logger->logAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
     logger->logAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));
