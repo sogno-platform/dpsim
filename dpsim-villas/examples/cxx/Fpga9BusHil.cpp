@@ -10,8 +10,6 @@
 #include <DPsim.h>
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
-#include <dpsim-models/DP/DP_Ph1_ProfileVoltageSource.h>
-#include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_RXLoad.h>
 #include <dpsim-models/SimNode.h>
 #include <dpsim-villas/InterfaceVillas.h>
@@ -84,9 +82,9 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
   return config;
 }
 
-SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
+std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>> hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
   std::string simName = "Fpga9BusHil";
-
+  auto events = std::make_shared<std::vector<Event::Ptr>>();
   std::list<fs::path> filenames = Utils::findFiles({"WSCC-09_DI.xml", "WSCC-09_EQ.xml", "WSCC-09_SV.xml", "WSCC-09_TP.xml"}, "build/_deps/cim-data-src/WSCC-09/WSCC-09", "CIMPATH");
 
   // ----- POWERFLOW FOR INITIALIZATION -----
@@ -120,46 +118,77 @@ SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> int
 
   sys.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
-  // Extend topology with switch
-  // auto sw = Ph1::Switch::make("StepLoad");
-  // sw->setParameters(1e9, 0.1);
-  // sw->connect({SimNode::GND, sys.node<SimNode>("BUS6")});
-  // sw->open();
-  // sys.addComponent(sw);
-
-  // sys.component<CPS::SimPowerComp>("BUS1")->
-
-  // auto cs = Ph1::CurrentSource::make("cs");
-  // cs->setParameters(Complex(0, 0));
-  // cs->connect({SimNode::GND, sys.node<SimNode>("BUS6")});
-
-  // sys.addComponent(cs);
-
   sys.component<CPS::EMT::Ph3::RXLoad>("LOAD5")->setParameters(Matrix({{125e6, 0, 0}, {0, 125e6, 0}, {0, 0, 125e6}}), Matrix({{90e6, 0, 0}, {0, 90e6, 0}, {0, 0, 90e6}}), 230e3, true);
 
   sys.component<CPS::EMT::Ph3::RXLoad>("LOAD8")->setParameters(Matrix({{100e6, 0, 0}, {0, 100e6, 0}, {0, 0, 100e6}}), Matrix({{30e6, 0, 0}, {0, 30e6, 0}, {0, 0, 30e6}}), 230e3, true);
 
   sys.component<CPS::EMT::Ph3::RXLoad>("LOAD6")->setParameters(Matrix({{90e6, 0, 0}, {0, 90e6, 0}, {0, 0, 90e6}}), Matrix({{30e6, 0, 0}, {0, 30e6, 0}, {0, 0, 30e6}}), 230e3, true);
 
+  auto cs = Ph1::CurrentSource::make("cs");
+  cs->setParameters(Complex(0, 0));
+  cs->connect({SimNode::GND, sys.node<SimNode>("BUS6")});
+
+  sys.addComponent(cs);
+
   // Interface
   auto seqnumAttribute = CPS::AttributeStatic<Int>::make(0);
-  auto current = CPS::AttributeStatic<Real>::make(0);
+  // auto current = CPS::AttributeStatic<Real>::make(0);
 
   auto scaledOutputVoltage = CPS::AttributeDynamic<Real>::make(0);
-  auto updateFn =
-      std::make_shared<CPS::AttributeUpdateTask<Real, Real>::Actor>([](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Real>::Ptr dependency) { *dependent = *dependency / 230000; });
+  // We scale the voltage so we map the nominal voltage in the simulation (230kV) to a nominal real peak voltage
+  // of 15V. The amplifier has a gain of 20, so the voltage before the amplifier is 1/20 of the voltage at the load.
+  constexpr double voltage_scale = 15. * 1.414 / (230e3 * 20.);
+  auto updateFn = std::make_shared<CPS::AttributeUpdateTask<Real, Real>::Actor>([](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Real>::Ptr dependency) {
+    *dependent = *dependency * voltage_scale;
+    if (*dependent > 1.) {
+      *dependent = 1.;
+    } else if (*dependent < -1.) {
+      *dependent = -1.;
+    }
+  });
   scaledOutputVoltage->addTask(CPS::UpdateTaskKind::UPDATE_ON_GET,
                                CPS::AttributeUpdateTask<Real, Real>::make(CPS::UpdateTaskKind::UPDATE_ON_GET, *updateFn, sys.node<SimNode>("BUS6")->mVoltage->deriveCoeff<Real>(0, 0)));
+  auto voltageInterfaceActive = CPS::AttributeStatic<CPS::Bool>::make(false);
+  auto voltageActiveFn = std::make_shared<CPS::AttributeUpdateTask<Real, Bool>::Actor>([](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Bool>::Ptr dependency) {
+    if (!*dependency) {
+      *dependent = 0.;
+    }
+  });
+  scaledOutputVoltage->addTask(CPS::UpdateTaskKind::UPDATE_ON_GET, CPS::AttributeUpdateTask<Real, Bool>::make(CPS::UpdateTaskKind::UPDATE_ON_GET, *voltageActiveFn, voltageInterfaceActive));
+  // We activate the voltage interface after 2 seconds to allow the current sensors to stabilize.
+  auto activeVoltageEvent = AttributeEvent<Bool>::make(2., voltageInterfaceActive, true);
+  events->push_back(activeVoltageEvent);
+
+  // We scale the current using a gain so that we get a load in the simulation in the MVA range.
+  // Additionally, the current sensor (LXSR 6-NPS) has a sensitivity of 0.1042 V/A (from datasheet),
+  // we are using 3 turns, and we measured an offset voltage of -2.5268 V.
+  constexpr double current_scale = 100. / (3. * 0.1042);
+  constexpr double current_offset = -2.5268;
+  auto scaledCurrent = CPS::AttributeDynamic<Real>::make(0);
+  auto closedLoop = CPS::AttributeStatic<CPS::Bool>::make(false);
+  auto currentScaleFn = std::make_shared<CPS::AttributeUpdateTask<Real, Bool>::Actor>([](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Bool>::Ptr dependency) {
+    if (!*dependency) {
+      *dependent = 0.;
+    } else {
+      *dependent = (*dependent + current_offset) * current_scale;
+    }
+  });
+  scaledCurrent->addTask(CPS::UpdateTaskKind::UPDATE_ON_SET, CPS::AttributeUpdateTask<Real, Bool>::make(CPS::UpdateTaskKind::UPDATE_ON_SET, *currentScaleFn, closedLoop));
+  auto closeLoopEvent = AttributeEvent<Bool>::make(2., closedLoop, true);
+  events->push_back(closeLoopEvent);
+
+  auto currentCopyFn = std::make_shared<CPS::AttributeUpdateTask<Real, Complex>::Actor>(
+      [](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Complex>::Ptr dependency) { dependency->set(Complex(*dependent, 0)); });
+  scaledCurrent->addTask(CPS::UpdateTaskKind::UPDATE_ON_SET, CPS::AttributeUpdateTask<Real, Complex>::make(CPS::UpdateTaskKind::UPDATE_ON_SET, *currentCopyFn, cs->mCurrentRef));
 
   intf->addImport(seqnumAttribute, true, true);
-  intf->addImport(current, true, true);
-  // intf->addImport(cs->mCurrentRef->deriveReal(), true, true);
+  intf->addImport(scaledCurrent, true, true);
   intf->addExport(scaledOutputVoltage);
 
   // Logger
   if (logger) {
-    logger->logAttribute("v_scaled", scaledOutputVoltage);
-    logger->logAttribute("cs", current);
+    logger->logAttribute("interfaceVoltage", scaledOutputVoltage);
+    logger->logAttribute("interfaceCurrent", scaledCurrent);
     logger->logAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
     logger->logAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
     logger->logAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));
@@ -169,11 +198,8 @@ SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> int
     logger->logAttribute("v7", sys.node<SimNode>("BUS7")->attribute("v"));
     logger->logAttribute("v8", sys.node<SimNode>("BUS8")->attribute("v"));
     logger->logAttribute("v9", sys.node<SimNode>("BUS9")->attribute("v"));
-    // logger->logAttribute("wr_1", sys.component<CPS::EMT::Ph3::SynchronGeneratorDQTrapez>("GEN1")->attribute("w_r"));
-    // logger->logAttribute("wr_2", sys.component<CPS::EMT::Ph3::SynchronGeneratorDQTrapez>("GEN2")->attribute("w_r"));
-    // logger->logAttribute("wr_3", sys.component<CPS::EMT::Ph3::SynchronGeneratorDQTrapez>("GEN3")->attribute("w_r"));
   }
-  return sys;
+  return {sys, events};
 }
 
 int main(int argc, char *argv[]) {
@@ -188,12 +214,15 @@ int main(int argc, char *argv[]) {
     logger = RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
   }
 
-  auto sys = hilTopology(args, intf, logger);
+  auto topo = hilTopology(args, intf, logger);
 
   Simulation sim(args.name, args);
-  sim.setSystem(sys);
+  sim.setSystem(topo.first);
   sim.addInterface(intf);
   sim.setLogStepTimes(false);
+  for (auto event : *topo.second) {
+    sim.addEvent(event);
+  }
 
   if (log) {
     sim.addLogger(logger);
@@ -203,7 +232,5 @@ int main(int argc, char *argv[]) {
 
   CPS::Logger::get("FpgaExample")->info("Simulation finished.");
   sim.logStepTimes("FpgaExample");
-  sys.renderToFile("Fpga9BusHil.svg");
-  // std::ofstream of("task_dependencies.svg");
-  // sim.dependencyGraph().render(of);
+  topo.first.renderToFile("Fpga9BusHil.svg");
 }
