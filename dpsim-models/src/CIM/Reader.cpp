@@ -1189,6 +1189,10 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode *topNode) {
       }
 
       auto pfEquipment = mPowerflowEquipment.at(equipment->mRID);
+      if (pfEquipment == nullptr) {
+        SPDLOG_LOGGER_ERROR(mSLog, "Equipment {} is null in equipment list", equipment->mRID);
+        throw SystemError("Equipment is null in equipment list.");
+      }
       std::dynamic_pointer_cast<SimPowerComp<VarType>>(pfEquipment)
           ->setTerminalAt(std::dynamic_pointer_cast<SimTerminal<VarType>>(
                               mPowerflowTerminals[term->mRID]),

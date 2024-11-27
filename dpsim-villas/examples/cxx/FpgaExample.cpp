@@ -12,10 +12,14 @@
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
 #include <dpsim-models/DP/DP_Ph1_ProfileVoltageSource.h>
+#include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/SimNode.h>
 #include <dpsim-villas/InterfaceVillas.h>
 #include <dpsim-villas/InterfaceVillasQueueless.h>
+#include <dpsim/Event.h>
+#include <dpsim/RealTimeDataLogger.h>
 #include <dpsim/Utils.h>
+#include <memory>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -28,17 +32,11 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
   if (args.options.find("ips") != args.options.end()) {
     fpgaIpPath = std::filesystem::path(args.getOptionString("ips"));
   }
-  std::string loopbackConfig = fmt::format(
-      R"STRING(
-      "queuelen": 1024,
-      "samplelen": 1024,
-      "mode": "polling"
-    )STRING");
   std::string cardConfig = fmt::format(
       R"STRING("card": {{
       "interface": "pcie",
       "id": "10ee:7021",
-      "slot": "0000:88:00.0",
+      "slot": "0000:89:00.0",
       "do_reset": true,
       "ips": "{}",
       "polling": true
@@ -60,15 +58,11 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
         "builtin": false
       }}],
       "hooks": [{{
-        "type": "dp",
-        "signal": "from_dpsim",
-        "f0": {},
-        "dt": {},
-        "harmonics": [0],
-        "inverse": true
+        "type": "cast",
+        "new_type": "float",
+        "signal": "from_dpsim"
       }}]
-    }})STRING",
-      args.sysFreq, args.timeStep);
+    }})STRING");
   std::string signalInConfig = fmt::format(
       R"STRING("in": {{
       "signals": [{{
@@ -84,15 +78,11 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
         "builtin": false
       }}],
       "hooks": [{{
-        "type": "dp",
-        "signal": "to_dpsim",
-        "f0": {},
-        "dt": {},
-        "harmonics": [0],
-        "inverse": false
+        "type": "cast",
+        "new_type": "complex",
+        "signal": "to_dpsim"
       }}]
-    }})STRING",
-      args.sysFreq, args.timeStep);
+    }})STRING");
   const std::string config = fmt::format(
       R"STRING({{
     "type": "fpga",
@@ -105,9 +95,7 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
   return config;
 }
 
-SystemTopology loopbackTopology(CommandLineArgs &args,
-                                std::shared_ptr<Interface> intf,
-                                std::shared_ptr<DataLogger> logger) {
+SystemTopology loopbackTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
   // Nodes
   auto n1 = SimNode::make("n1");
 
@@ -137,14 +125,14 @@ SystemTopology loopbackTopology(CommandLineArgs &args,
                         SystemComponentList{vs, rl});
 }
 
-SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLogger> logger) {
+SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
   // Nodes
   auto n1 = SimNode::make("n1");
   auto n2 = SimNode::make("n2");
 
   // Components
   auto vs = VoltageSource::make("v_s");
-  vs->setParameters(1.);
+  vs->setParameters(Complex(1, 0), 50);
   auto rs = Resistor::make("r_s");
   rs->setParameters(1);
 
@@ -172,7 +160,7 @@ SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> int
   return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, n1, n2}, SystemComponentList{vs, rs, cs});
 }
 
-SystemTopology profileTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLogger> logger) {
+SystemTopology profileTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
   // Nodes
   auto n1 = SimNode::make("n1");
   auto n2 = SimNode::make("n2");
@@ -206,9 +194,7 @@ SystemTopology profileTopology(CommandLineArgs &args, std::shared_ptr<Interface>
   return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, n1, n2}, SystemComponentList{vs, rs, cs});
 }
 
-SystemTopology getTopology(CommandLineArgs &args,
-                           std::shared_ptr<Interface> intf,
-                           std::shared_ptr<DataLogger> logger) {
+SystemTopology getTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
   if (args.options.find("topology") != args.options.end()) {
     std::string topology = args.getOptionString("topology");
     if (topology == "hil") {
@@ -222,21 +208,59 @@ SystemTopology getTopology(CommandLineArgs &args,
   return hilTopology(args, intf, logger);
 }
 
+std::shared_ptr<Event> getEvent(CommandLineArgs &args, SystemTopology &sys) {
+  std::string topology = "hil";
+  if (args.options.find("topology") != args.options.end()) {
+    topology = args.getOptionString("topology");
+  }
+  if (args.options.find("event") != args.options.end()) {
+    std::string event = args.getOptionString("event");
+    if (event == "frequencyDrop") {
+      if (topology != "hil") {
+        throw std::runtime_error("frequencyDrop event only supported for topology \"hil\".");
+      }
+      auto vs = std::dynamic_pointer_cast<VoltageSource>(sys.mComponents[0]);
+      return AttributeEvent<Real>::make(3, vs->mSrcFreq, 45.);
+    }
+    if (event == "voltageDrop") {
+      if (topology != "hil") {
+        throw std::runtime_error("voltageDrop event only supported for topology \"hil\".");
+      }
+      auto vs = std::dynamic_pointer_cast<VoltageSource>(sys.mComponents[0]);
+      return AttributeEvent<Real>::make(3, vs->mVoltageRef->deriveReal(), 0.7);
+    }
+  }
+  return nullptr;
+}
+
 int main(int argc, char *argv[]) {
   CommandLineArgs args(argc, argv, "FpgaExample", 0.01, 10 * 60, 5.);
   CPS::Logger::setLogDir("logs/" + args.name);
+  bool log = args.options.find("log") != args.options.end() && args.getOptionBool("log");
 
   auto intf = std::make_shared<InterfaceVillasQueueless>(
       buildFpgaConfig(args), "FpgaExample", spdlog::level::off);
-  auto logger = DataLogger::make(args.name);
+  std::filesystem::path logFilename = "logs/" + args.name + "/FpgaExample.csv";
+  std::shared_ptr<DataLoggerInterface> logger = nullptr;
+  if (log) {
+    logger = RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
+  }
 
-  auto sys = getTopology(args, intf, nullptr);
+  auto sys = getTopology(args, intf, logger);
 
   Simulation sim(args.name, args);
   sim.setSystem(sys);
   sim.addInterface(intf);
-  // If you want to add loggging (slows down the execution) add
-  // sim.addLogger(logger);
+  sim.setLogStepTimes(false);
+
+  auto event = getEvent(args, sys);
+  if (event) {
+    sim.addEvent(event);
+  }
+
+  if (log) {
+    sim.addLogger(logger);
+  }
   sim.run();
 
   CPS::Logger::get("FpgaExample")->info("Simulation finished.");

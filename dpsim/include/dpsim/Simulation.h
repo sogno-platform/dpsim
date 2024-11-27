@@ -77,6 +77,8 @@ protected:
   CPS::Logger::Level mLogLevel;
   /// (Real) time needed for the timesteps
   std::vector<Real> mStepTimes;
+  /// activate collection of step times
+  Bool mLogStepTimes = true;
 
   // #### Solver Settings ####
   ///
@@ -133,7 +135,7 @@ protected:
   };
 
   /// The data loggers
-  DataLogger::List mLoggers;
+  DataLoggerInterface::List mLoggers;
 
   /// Helper function for constructors
   void create();
@@ -214,6 +216,9 @@ public:
   void doSystemMatrixRecomputation(Bool value) {
     mSystemMatrixRecomputation = value;
   }
+  /// If logStepTimes is enabled, the time needed for every timesteps is logged
+  /// and can be written to a file or the console using logStepTimes()
+  void setLogStepTimes(Bool f) { mLogStepTimes = f; }
 
   // #### Initialization ####
   /// activate steady state initialization
@@ -244,7 +249,7 @@ public:
   /// Schedule an event in the simulation
   void addEvent(Event::Ptr e) { mEvents.addEvent(e); }
   /// Add a new data logger
-  void addLogger(DataLogger::Ptr logger) { mLoggers.push_back(logger); }
+  void addLogger(DataLoggerInterface::Ptr logger) { mLoggers.push_back(logger); }
   /// Write step time measurements to log file
   void logStepTimes(String logName);
   /// Check for overruns

@@ -243,12 +243,18 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
     MnaSolver<VarType>::updateSwitchStatus();
 
   if (mSwitchedMatrices.size() > 0) {
-    auto start = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point start;
+    if (Solver::mLogSolveTimes)
+      start = std::chrono::steady_clock::now();
+
     **mLeftSideVector =
         mDirectLinearSolvers[mCurrentSwitchStatus][0]->solve(mRightSideVector);
-    auto end = std::chrono::steady_clock::now();
-    std::chrono::duration<Real> diff = end - start;
-    mSolveTimes.push_back(diff.count());
+
+    if (Solver::mLogSolveTimes) {
+      auto end = std::chrono::steady_clock::now();
+      std::chrono::duration<Real> diff = end - start;
+      mSolveTimes.push_back(diff.count());
+    }
   }
 
   // CHECK: Is this really required? Or can operations actually become part of

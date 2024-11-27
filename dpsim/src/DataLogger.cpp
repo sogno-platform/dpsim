@@ -13,13 +13,9 @@
 
 using namespace DPsim;
 
-DataLogger::DataLogger(Bool enabled)
-    : mLogFile(), mEnabled(enabled), mDownsampling(1) {
-  mLogFile.setstate(std::ios_base::badbit);
-}
+DataLogger::DataLogger(Bool enabled) : DataLoggerInterface(), mLogFile(), mEnabled(enabled), mDownsampling(1) { mLogFile.setstate(std::ios_base::badbit); }
 
-DataLogger::DataLogger(String name, Bool enabled, UInt downsampling)
-    : mName(name), mEnabled(enabled), mDownsampling(downsampling) {
+DataLogger::DataLogger(String name, Bool enabled, UInt downsampling) : DataLoggerInterface(), mName(name), mEnabled(enabled), mDownsampling(downsampling) {
   if (!mEnabled)
     return;
 
@@ -27,11 +23,9 @@ DataLogger::DataLogger(String name, Bool enabled, UInt downsampling)
 
   if (mFilename.has_parent_path() && !fs::exists(mFilename.parent_path()))
     fs::create_directory(mFilename.parent_path());
-
-  open();
 }
 
-void DataLogger::open() {
+void DataLogger::start() {
   mLogFile =
       std::ofstream(mFilename, std::ios_base::out | std::ios_base::trunc);
   if (!mLogFile.is_open()) {
@@ -41,7 +35,7 @@ void DataLogger::open() {
   }
 }
 
-void DataLogger::close() { mLogFile.close(); }
+void DataLogger::stop() { mLogFile.close(); }
 
 void DataLogger::setColumnNames(std::vector<String> names) {
   if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
@@ -140,119 +134,8 @@ void DataLogger::log(Real time, Int timeStepCount) {
   mLogFile << '\n';
 }
 
-void DataLogger::Step::execute(Real time, Int timeStepCount) {
-  mLogger.log(time, timeStepCount);
-}
+void DataLogger::Step::execute(Real time, Int timeStepCount) { mLogger.log(time, timeStepCount); }
 
 CPS::Task::Ptr DataLogger::getTask() {
   return std::make_shared<DataLogger::Step>(*this);
-}
-
-void DataLogger::logAttribute(const std::vector<String> &name,
-                              CPS::AttributeBase::Ptr attr) {
-  if (auto attrMatrix =
-          std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(attr.getPtr())) {
-    if ((**attrMatrix).rows() == 1 && (**attrMatrix).cols() == 1) {
-      logAttribute(name[0], attrMatrix->deriveCoeff<CPS::Real>(0, 0));
-    } else if ((**attrMatrix).cols() == 1) {
-      for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
-        logAttribute(name[k], attrMatrix->deriveCoeff<CPS::Real>(k, 0));
-      }
-    } else {
-      for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
-        for (UInt l = 0; l < (**attrMatrix).cols(); ++l) {
-          logAttribute(name[k * (**attrMatrix).cols() + l],
-                       attrMatrix->deriveCoeff<CPS::Real>(k, l));
-        }
-      }
-    }
-  } else if (auto attrMatrix =
-                 std::dynamic_pointer_cast<CPS::Attribute<MatrixComp>>(
-                     attr.getPtr())) {
-    if ((**attrMatrix).rows() == 1 && (**attrMatrix).cols() == 1) {
-      logAttribute(name[0], attrMatrix->deriveCoeff<CPS::Complex>(0, 0));
-    } else if ((**attrMatrix).cols() == 1) {
-      for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
-        logAttribute(name[k], attrMatrix->deriveCoeff<CPS::Complex>(k, 0));
-      }
-    } else {
-      for (UInt k = 0; k < (**attrMatrix).rows(); ++k) {
-        for (UInt l = 0; l < (**attrMatrix).cols(); ++l) {
-          logAttribute(name[k * (**attrMatrix).cols() + l],
-                       attrMatrix->deriveCoeff<CPS::Complex>(k, l));
-        }
-      }
-    }
-  }
-}
-
-void DataLogger::logAttribute(const String &name, CPS::AttributeBase::Ptr attr,
-                              UInt rowsMax, UInt colsMax) {
-  if (auto attrReal =
-          std::dynamic_pointer_cast<CPS::Attribute<Real>>(attr.getPtr())) {
-    mAttributes[name] = attrReal;
-  } else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(
-                 attr.getPtr())) {
-    mAttributes[name + ".re"] = attrComp->deriveReal();
-    mAttributes[name + ".im"] = attrComp->deriveImag();
-  } else if (auto attrMatrix =
-                 std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(
-                     attr.getPtr())) {
-    UInt rows = static_cast<UInt>((**attrMatrix).rows());
-    UInt cols = static_cast<UInt>((**attrMatrix).cols());
-    if (rowsMax == 0 || rowsMax > rows)
-      rowsMax = rows;
-    if (colsMax == 0 || colsMax > cols)
-      colsMax = cols;
-    if (rows == 1 && cols == 1) {
-      mAttributes[name] = attrMatrix->deriveCoeff<Real>(0, 0);
-    } else if (cols == 1) {
-      for (UInt k = 0; k < rowsMax; ++k) {
-        mAttributes[name + "_" + std::to_string(k)] =
-            attrMatrix->deriveCoeff<Real>(k, 0);
-      }
-    } else {
-      for (UInt k = 0; k < rowsMax; ++k) {
-        for (UInt l = 0; l < colsMax; ++l) {
-          mAttributes[name + "_" + std::to_string(k) + "_" +
-                      std::to_string(l)] = attrMatrix->deriveCoeff<Real>(k, l);
-        }
-      }
-    }
-  } else if (auto attrMatrix =
-                 std::dynamic_pointer_cast<CPS::Attribute<MatrixComp>>(
-                     attr.getPtr())) {
-    UInt rows = static_cast<UInt>((**attrMatrix).rows());
-    UInt cols = static_cast<UInt>((**attrMatrix).cols());
-    if (rowsMax == 0 || rowsMax > rows)
-      rowsMax = rows;
-    if (colsMax == 0 || colsMax > cols)
-      colsMax = cols;
-    if (rows == 1 && cols == 1) {
-      mAttributes[name + ".re"] =
-          attrMatrix->deriveCoeff<Complex>(0, 0)->deriveReal();
-      mAttributes[name + ".im"] =
-          attrMatrix->deriveCoeff<Complex>(0, 0)->deriveImag();
-    } else if (cols == 1) {
-      for (UInt k = 0; k < rowsMax; ++k) {
-        mAttributes[name + "_" + std::to_string(k) + ".re"] =
-            attrMatrix->deriveCoeff<Complex>(k, 0)->deriveReal();
-        mAttributes[name + "_" + std::to_string(k) + ".im"] =
-            attrMatrix->deriveCoeff<Complex>(k, 0)->deriveImag();
-      }
-    } else {
-      for (UInt k = 0; k < rowsMax; ++k) {
-        for (UInt l = 0; l < colsMax; ++l) {
-          mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l) +
-                      ".re"] =
-              attrMatrix->deriveCoeff<Complex>(k, l)->deriveReal();
-          mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l) +
-                      ".im"] =
-              attrMatrix->deriveCoeff<Complex>(k, l)->deriveImag();
-        }
-      }
-    }
-  } else {
-    mAttributes[name] = attr;
-  }
 }

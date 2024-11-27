@@ -92,10 +92,14 @@
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h>
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
+#include <dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_Capacitor.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_Full_Serial_RLC.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesSwitch.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h>
@@ -108,9 +112,6 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQTrapez.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSourceNorton.h>
-#include <dpsim-models/EMT/EMT_Ph3_SSN_Capacitor.h>
-#include <dpsim-models/EMT/EMT_Ph3_SSN_Inductor.h>
-#include <dpsim-models/EMT/EMT_Ph3_SSN_Full_Serial_RLC.h>
 #ifdef WITH_SUNDIALS
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQODE.h>
 #endif

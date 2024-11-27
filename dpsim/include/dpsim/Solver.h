@@ -39,6 +39,8 @@ protected:
   String mName;
   /// Logging level
   CPS::Logger::Level mLogLevel;
+  /// Collect step time for logging
+  Bool mLogSolveTimes = true;
   /// Logger
   CPS::Logger::Log mSLog;
   /// Time step for fixed step solvers
@@ -88,6 +90,8 @@ public:
   void doSystemMatrixRecomputation(Bool value) {
     mSystemMatrixRecomputation = value;
   }
+
+  void setLogSolveTimes(Bool value) { mLogSolveTimes = value; }
 
   // #### Initialization ####
   ///
