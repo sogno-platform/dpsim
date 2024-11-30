@@ -114,6 +114,16 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
       .def("open", &CPS::EMT::Ph1::Switch::open)
       .def("close", &CPS::EMT::Ph1::Switch::close)
       .def("connect", &CPS::EMT::Ph1::Switch::connect);
+
+  py::class_<CPS::EMT::Ph1::ExponentialDiode,
+             std::shared_ptr<CPS::EMT::Ph1::ExponentialDiode>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "ExponentialDiode",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph1::ExponentialDiode::setParameters,
+           "I_S"_a, "V_T"_a)
+      .def("connect", &CPS::EMT::Ph1::ExponentialDiode::connect);
 }
 
 void addEMTPh3Components(py::module_ mEMTPh3) {

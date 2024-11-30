@@ -82,6 +82,7 @@
 #endif
 #include <dpsim-models/EMT/EMT_Ph1_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph1_CurrentSource.h>
+#include <dpsim-models/EMT/EMT_Ph1_ExponentialDiode.h>
 #include <dpsim-models/EMT/EMT_Ph1_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph1_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph1_VoltageSource.h>
