@@ -33,11 +33,12 @@ void EMT_Ph1_ExponentialDiode() {
   // Topology
   load->connect(SimNode::List{n1, n2});
 
-  expDiode->connect(SimNode::List{
-      SimNode::GND,
-      n2}); //Looking at the diode's current flow direction, always
-            //connect by listing the output/low voltage side first
-            //and the input/high voltage side second
+  expDiode->connect(SimNode::List{n2, SimNode::GND}); //Connect diode in the
+                                                      //forward direction, i.e.
+                                                      //from anode (+) to
+                                                      //cathode (-)
+                                                      //Diode Equation:
+  //I_D = (**mI_S) * (-1.0) * (expf((**mIntfVoltage)(0, 0) / (**mV_T)) - 1.)
 
   vs0->connect(SimNode::List{SimNode::GND, n1});
 

@@ -137,7 +137,7 @@ void EMT::Ph1::ExponentialDiode::mnaCompUpdateVoltage(
 void EMT::Ph1::ExponentialDiode::mnaCompUpdateCurrent(
     const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) =
-      (**mI_S) * (expf((**mIntfVoltage)(0, 0) / (**mV_T)) - 1.);
+      (**mI_S) * (expf((-1.0) * (**mIntfVoltage)(0, 0) / (**mV_T)) - 1.);
 }
 
 void EMT::Ph1::ExponentialDiode::iterationUpdate(const Matrix &leftVector) {
@@ -160,7 +160,7 @@ void EMT::Ph1::ExponentialDiode::iterationUpdate(const Matrix &leftVector) {
 void EMT::Ph1::ExponentialDiode::calculateNonlinearFunctionResult() {
 
   (**mIntfCurrent)(0, 0) =
-      (**mI_S) * (expf((**mIntfVoltage)(0, 0) / (**mV_T)) - 1.);
+      (**mI_S) * (expf((-1.0) * (**mIntfVoltage)(0, 0) / (**mV_T)) - 1.);
 
   if (terminalNotGrounded(1)) {
     Math::setVectorElement(**mNonlinearFunctionStamp, matrixNodeIndex(1, 0),
@@ -174,5 +174,5 @@ void EMT::Ph1::ExponentialDiode::calculateNonlinearFunctionResult() {
 
 void EMT::Ph1::ExponentialDiode::updateJacobian() {
   Jacobian(0, 0) =
-      (**mI_S / (**mV_T)) * expf((**mIntfVoltage)(0, 0) / (**mV_T));
+      (**mI_S / (**mV_T)) *(-1.0) * expf((-1.0) * (**mIntfVoltage)(0, 0) / (**mV_T));
 }
