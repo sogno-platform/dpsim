@@ -143,6 +143,7 @@ list(APPEND MODELS_SOURCES
 	Signal/DecouplingLine.cpp
 	Signal/DecouplingLineEMT.cpp
 	Signal/DecouplingLineEMT_Ph3.cpp
+	Signal/DecouplingIdealTransformerEMT.cpp
 	Signal/Exciter.cpp
 	Signal/FIRFilter.cpp
 	Signal/TurbineGovernor.cpp
