@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include "dpsim-models/Signal/DecouplingIdealTransformerEMT.h"
 #include <fstream>
 #include <iostream>
 #include <list>
@@ -20,7 +21,7 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
                     const IdentifiedObject::List &componentsAt2) {
   SimNode<Real>::List newNodes;
   SimPowerComp<Real>::List newComponents;
-  
+
   auto intfNode = sys.node<EMT::SimNode>(nodeName);
   std::shared_ptr<TopologicalNode> nodeCopy1Topo = intfNode->clone(nodeName + "_1");
   std::shared_ptr<TopologicalNode> nodeCopy2Topo = intfNode->clone(nodeName + "_2");
@@ -30,7 +31,7 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
 
   newNodes.push_back(nodeCopy1);
   newNodes.push_back(nodeCopy2);
-  
+
   for (auto genComp : componentsAt1) {
     auto comp = std::dynamic_pointer_cast<SimPowerComp<Real>>(genComp);
     std::cout << "Cloning component: " << comp->name() << std::endl;
@@ -46,9 +47,9 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
         nodeCopies.push_back(comp->node(nNode));
       }
     }
-    
+
     compCopy->connect(nodeCopies);
-    
+
     // update the terminal powers for powerflow initialization
     for (UInt nTerminal = 0; nTerminal < comp->terminalNumber();
           nTerminal++) {
@@ -56,8 +57,8 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
     }
     newComponents.push_back(compCopy);
     sys.removeComponent(comp->name());
-  }  
-  
+  }
+
   for (auto genComp : componentsAt2) {
     auto comp = std::dynamic_pointer_cast<SimPowerComp<Real>>(genComp);
     std::cout << "Cloning component: " << comp->name() << std::endl;
@@ -73,7 +74,7 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
         nodeCopies.push_back(comp->node(nNode));
       }
     }
-    
+
     compCopy->connect(nodeCopies);
 
     // update the terminal powers for powerflow initialization
@@ -86,11 +87,16 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
   }
 
   sys.removeNode(nodeName);
-    
+
   for (auto node : newNodes)
     sys.addNode(node);
   for (auto comp : newComponents)
     sys.addComponent(comp);
+
+  auto idealTrafo = Signal::DecouplingIdealTransformerEMT::make("itm_" + nodeName,
+                                                                Logger::Level::debug);
+  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.0002);
+  sys.addComponent(idealTrafo);
 }
 
 void doSim(String &name, SystemTopology &sys, Int threads, bool isDecoupled = false) {
@@ -180,7 +186,7 @@ int main(int argc, char *argv[]) {
   components2.push_back(line89);
   auto load8 = systemDecoupled.component<EMT::Ph3::RXLoad>("LOAD8");
   components2.push_back(load8);
-  
+
   decoupleNode(systemDecoupled, "BUS8", components1, components2);
   // decouple_line(system, "LINE78", "BUS7", "BUS8");
   // String dline_64 = decoupleLine(systemDecoupled, "LINE64", "BUS6", "BUS4");
