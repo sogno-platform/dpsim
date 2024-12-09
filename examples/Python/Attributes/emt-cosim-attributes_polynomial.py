@@ -141,6 +141,8 @@ def set_dpsim2(t_s, t_f, num_vs, logger_prefix):
         v_s_2.set_parameters(V_ref=complex(np.sqrt(2)/2, np.sqrt(2)/2), f_src=50)
 
     ecs = dpsimpy.emt.ph1.CurrentSource("i_intf", dpsimpy.LogLevel.info)
+    # ecs.set_parameters(30.0)
+    
     c_2 = dpsimpy.emt.ph1.Capacitor("c_2", dpsimpy.LogLevel.info)
     c_2.set_parameters(c_2_c)
     r_load = dpsimpy.emt.ph1.Resistor("r_load", dpsimpy.LogLevel.info)
@@ -213,6 +215,7 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--end', type=float, required=True)
     parser.add_argument('-H', '--macro-step', type=float, required=True)
     parser.add_argument('-i', '--interp', default='none')
+    parser.add_argument('--y1-prev', type=float, default=0)
     parser.add_argument('-p', '--prefix', default='')
     parser.add_argument('--num-vs', default=0)
     parser.add_argument('-d', '--debug', type=bool, default=False)
@@ -223,9 +226,14 @@ if __name__ == '__main__':
     t_f = args.end
     H = args.macro_step
     interp = args.interp
+    y_1_prev = args.y1_prev
     prefix = args.prefix
     num_vs = int(args.num_vs)
     debug = args.debug
+
+    if interp == 'linear' and y_1_prev is None:
+        print('Error: Linear extrapolation requires initial previous value!')
+        exit(1)
 
     if interp == 'none':
         NO_EXTRAP = True
@@ -266,15 +274,20 @@ if __name__ == '__main__':
     y_1 = y_1_0
 
     # We have to assume the trajectory of y_2 extending its initial value, since we have no prior information
-    # y_1_m_prev = np.tile(y_1_0, m)
-    y_1_m_prev = np.array([0.0, y_1_0])
+    y_1_m_prev = np.tile(y_1_0, m)
+    # y_1_m_prev = np.array([y_1_prev, y_1_0])
+    # y_1_m_prev = np.array([0.0, y_1_0])
 
     if NO_EXTRAP:
         
         while t_k <= t_f:
             u_2 = y_1
             sim2.get_idobj_attr("i_intf", "I_ref").set(complex(u_2,0))
-            sim2.next()
+            
+            if t_k == 0.0:
+                sim2.start()
+            else:
+                sim2.next()
             y_2 = sim2.get_idobj_attr("i_intf", "v_intf").derive_coeff(0,0).get()
             
             u_1 = y_2
@@ -287,7 +300,7 @@ if __name__ == '__main__':
 
         for i in range(0, N):
             y_1_prev = y_1_m_prev[-1]
-            t_m_i = t[m*i : m*(i+1)]
+            t_m_i = t[m*(i)+1:m*(i+1)+1]
 
             # Extrapolation: Zero order hold
             if interp == 'zoh':
@@ -314,7 +327,10 @@ if __name__ == '__main__':
                     u_2_test = sim2.get_idobj_attr("i_intf", "I_ref").get()
                     print("Input value in S2 after set: {:f}".format(u_2_test))
 
-                sim2.next()
+                if i == 0 and j == 0:
+                    t_k_2 = sim2.start()
+                else:
+                    t_k_2 = sim2.next()
                 y_2 = sim2.get_idobj_attr("i_intf", "v_intf").derive_coeff(0,0).get()
                 y_2_m[j] = y_2
 
