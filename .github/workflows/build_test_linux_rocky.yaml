@@ -2,6 +2,8 @@ name: Build & Test RockyLinux
 
 on:
   push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 ## Build ##
 
