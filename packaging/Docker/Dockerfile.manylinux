@@ -6,6 +6,7 @@
 FROM quay.io/pypa/manylinux_2_28_x86_64
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
+ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
 ARG VILLAS_VERSION=18cdd2a6364d05fbf413ca699616cd324abfcb54
 
 ARG CMAKE_OPTS
@@ -52,7 +53,7 @@ RUN dnf -y debuginfo-install \
 
 # Build & Install sundials
 RUN cd /tmp && \
-	git clone --branch v3.2.1 --recurse-submodules --depth 1 https://github.com/LLNL/sundials.git && \
+	git clone --branch v3.2.1 --recurse-submodules https://github.com/LLNL/sundials.git && \
 	mkdir -p sundials/build && cd sundials/build && \
 	cmake ${CMAKE_OPTS} .. \
 		-DCMAKE_BUILD_TYPE=Release && \
@@ -68,8 +69,9 @@ RUN pip3 install -r requirements-manylinux.txt
 
 # Install CIMpp from source
 RUN cd /tmp && \
-	git clone --recurse-submodules --depth 1 https://github.com/cim-iec/libcimpp.git && \
+	git clone --recurse-submodules https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
+	git checkout ${CIMPP_COMMIT} && \
 	cmake ${CMAKE_OPTS} .. \
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
 		-DUSE_CIM_VERSION=${CIM_VERSION} \

@@ -1,6 +1,7 @@
 FROM debian:11
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
+ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
 ARG VILLAS_VERSION=18cdd2a6364d05fbf413ca699616cd324abfcb54
 
 ARG CMAKE_OPTS
@@ -80,8 +81,9 @@ RUN pip3 install -r requirements.txt
 
 ## Install CIMpp from source
 RUN cd /tmp && \
-	git clone --recurse-submodules --depth 1 https://github.com/cim-iec/libcimpp.git && \
+	git clone --recurse-submodules https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
+	git checkout ${CIMPP_COMMIT} && \
 	cmake ${CMAKE_OPTS} .. \
 		-DBUILD_SHARED_LIBS=ON \
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib \

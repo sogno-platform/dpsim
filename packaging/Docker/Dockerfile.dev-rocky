@@ -1,6 +1,7 @@
 FROM rockylinux:9
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
+ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -93,6 +94,7 @@ RUN pip3 install gprof2dot
 RUN cd /tmp && \
 	git clone --recurse-submodules https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
+	git checkout ${CIMPP_COMMIT} && \
 	cmake ${CMAKE_OPTS} ..\
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
 		-DUSE_CIM_VERSION=${CIM_VERSION} \
