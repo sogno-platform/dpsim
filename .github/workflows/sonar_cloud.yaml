@@ -6,51 +6,86 @@ on:
     branches:
       - master
   pull_request:
-      types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened]
+
 jobs:
   sonarcloud:
     name: Prepare and run Sonar Scan
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
+    outputs:
+      skip: ${{ steps.check-token.outputs.skip }} # Output to indicate if the job was skipped
     env:
-      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
+      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
     steps:
-    - name: Fetch repository
-      uses: actions/checkout@v4
-      with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
-        fetch-depth: 0
-    - name: Setup Node 20
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-    - name: Install sonar-scanner and build-wrapper
-      uses: sonarsource/sonarcloud-github-c-cpp@v2
-    - name: Create Build Folder
-      run: mkdir build
-    - name: Setup build directory cache
-      uses: actions/cache@v4
-      with:
-        path: ${{ github.workspace }}/build
-        key: wrapper-dir-cache-${{ github.ref }}
-    - name: Setup sonar cache
-      uses: actions/cache@v4
-      with:
-        path: |
-          .scannerwork
-          sonar-cache
-        key: sonar-cache-${{ github.ref }}
-    - name: Configure CMake
-      shell: bash
-      working-directory: ${{ github.workspace }}/build
-      run: |
-        cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE
-    - name: Run build-wrapper
-      run: |
-        build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/ -j $(nproc)
-    - name: Run sonar-scanner
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        sonar-scanner --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
+      - name: Check for SONAR_TOKEN
+        id: check_token
+        run: |
+          if [ -z "${{ secrets.SONAR_TOKEN }}" ]; then
+            echo "SONAR_TOKEN is not set. Skipping the job."
+            echo "::set-output name=skip::true"
+          else
+            echo "::set-output name=skip::false"
+          fi
+
+      - name: Skip Job if Token is Missing
+        if: steps.check_token.outputs.skip == 'true'
+        run: |
+          echo "Skipping the SonarCloud analysis due to missing SONAR_TOKEN."
+          exit 0
+
+      - name: Fetch repository
+        if: steps.check_token.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 20
+        if: steps.check_token.outputs.skip != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install sonar-scanner and build-wrapper
+        if: steps.check_token.outputs.skip != 'true'
+        uses: sonarsource/sonarcloud-github-c-cpp@v2
+
+      - name: Create Build Folder
+        if: steps.check_token.outputs.skip != 'true'
+        run: mkdir build
+
+      - name: Setup build directory cache
+        if: steps.check_token.outputs.skip != 'true'
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/build
+          key: wrapper-dir-cache-${{ github.ref }}
+
+      - name: Setup sonar cache
+        if: steps.check_token.outputs.skip != 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            .scannerwork
+            sonar-cache
+          key: sonar-cache-${{ github.ref }}
+
+      - name: Configure CMake
+        if: steps.check_token.outputs.skip != 'true'
+        shell: bash
+        working-directory: ${{ github.workspace }}/build
+        run: |
+          cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE
+
+      - name: Run build-wrapper
+        if: steps.check_token.outputs.skip != 'true'
+        run: |
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/ -j $(nproc)
+
+      - name: Run sonar-scanner
+        if: steps.check_token.outputs.skip != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
