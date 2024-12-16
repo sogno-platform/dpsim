@@ -7,6 +7,7 @@
  *********************************************************************************/
 
 #include "dpsim-models/Definitions.h"
+#include <algorithm>
 #include <dpsim-models/Signal/DecouplingIdealTransformerEMT.h>
 #include <iostream>
 #include <string>
@@ -30,40 +31,39 @@ DecouplingIdealTransformerEMT::DecouplingIdealTransformerEMT(String name, Logger
 
 void DecouplingIdealTransformerEMT::setParameters(SimNode<Real>::Ptr node1,
                                       SimNode<Real>::Ptr node2,
-                                      Real delay) {
+                                      Real delay, Eigen::MatrixXd voltageSrcIntfCurr) {
 
   mNode1 = node1;
   mNode2 = node2;
 
   mDelay = delay;
   mVoltageSrc->setParameters(0);
-  mVoltageSrc->connect({node1, SimNode<Real>::GND});
+  mVoltageSrcIntfCurr = voltageSrcIntfCurr;
+  mVoltageSrc->connect({SimNode<Real>::GND, node1});
   mCurrentSrc->setParameters(0);
-  mCurrentSrc->connect({node2, SimNode<Real>::GND});
+  mCurrentSrc->connect({SimNode<Real>::GND, node2});
 }
 
 void DecouplingIdealTransformerEMT::initialize(Real omega, Real timeStep) {
   if (mDelay < timeStep)
     throw SystemError("Timestep too large for decoupling");
 
-  mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
+  // mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
+
+  mBufSize = std::max(extrapolationDegree, static_cast<UInt>(ceil(mDelay / timeStep)));
   mAlpha = 1 - (mBufSize - mDelay / timeStep);
   SPDLOG_LOGGER_INFO(mSLog, "bufsize {} alpha {}", mBufSize, mAlpha);
 
-
-  Complex volt1 = mNode1->initialSingleVoltage();
-  Complex volt2 = mNode2->initialSingleVoltage();
+  mVoltageSrc->setIntfCurrent(mVoltageSrcIntfCurr);
   Complex cur1 = mVoltageSrc->mIntfCurrent->get()(0);
-  Complex cur2 = mCurrentSrc->mIntfCurrent->get()(0);
+  Complex volt2 = mNode2->initialSingleVoltage() * RMS3PH_TO_PEAK1PH;
 
-  SPDLOG_LOGGER_INFO(mSLog, "initial voltages: v_k {} v_m {}", volt1, volt2);
-  SPDLOG_LOGGER_INFO(mSLog, "initial currents: i_km {} i_mk {}", cur1, cur2);
+  SPDLOG_LOGGER_INFO(mSLog, "initial current: i_1 {}", cur1);
+  SPDLOG_LOGGER_INFO(mSLog, "initial voltage: v_2 {}", volt2);
 
   // Resize ring buffers and initialize
-  mVolt1.resize(mBufSize, volt1.real());
-  mVolt2.resize(mBufSize, volt2.real());
-  mCur1.resize(mBufSize, cur1.real());
-  mCur2.resize(mBufSize, cur2.real());
+  mCur1.resize(mBufSize, cur1.real()); // TODO: add initial value to setParameters?
+  mVol2.resize(mBufSize, volt2.real());
 }
 
 Real DecouplingIdealTransformerEMT::interpolate(std::vector<Real> &data) {
@@ -74,10 +74,8 @@ Real DecouplingIdealTransformerEMT::interpolate(std::vector<Real> &data) {
 }
 
 void DecouplingIdealTransformerEMT::step(Real time, Int timeStepCount) {
-  Real volt1 = interpolate(mVolt1);
-  Real volt2 = interpolate(mVolt2);
-  Real cur1 = interpolate(mCur1);
-  Real cur2 = interpolate(mCur2);
+  Real volt1 = interpolate(mVol2);
+  Real cur2 = interpolate(mCur1);
 
   if (timeStepCount == 0) {
     // initialization
@@ -98,10 +96,8 @@ void DecouplingIdealTransformerEMT::PreStep::execute(Real time, Int timeStepCoun
 
 void DecouplingIdealTransformerEMT::postStep() {
   // Update ringbuffers with new values
-  mVolt1[mBufIdx] = mVoltageSrc->intfVoltage()(0, 0);
-  mVolt2[mBufIdx] = mCurrentSrc->intfVoltage()(0, 0);
   mCur1[mBufIdx] = mVoltageSrc->intfCurrent()(0, 0);
-  mCur2[mBufIdx] = mCurrentSrc->intfCurrent()(0, 0);
+  mVol2[mBufIdx] = -mCurrentSrc->intfVoltage()(0, 0);
 
   mBufIdx++;
   if (mBufIdx == mBufSize)
@@ -115,4 +111,8 @@ void DecouplingIdealTransformerEMT::PostStep::execute(Real time, Int timeStepCou
 Task::List DecouplingIdealTransformerEMT::getTasks() {
   return Task::List(
       {std::make_shared<PreStep>(*this), std::make_shared<PostStep>(*this)});
+}
+
+IdentifiedObject::List DecouplingIdealTransformerEMT::getComponents() {
+  return IdentifiedObject::List({mVoltageSrc, mCurrentSrc});
 }

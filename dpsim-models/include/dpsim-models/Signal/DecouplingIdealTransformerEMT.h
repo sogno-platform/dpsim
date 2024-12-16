@@ -8,10 +8,12 @@
 
 #pragma once
 
-#include "dpsim-models/EMT/EMT_Ph1_VoltageSource.h"
 #include <vector>
 
+#include "dpsim-models/Definitions.h"
+#include "dpsim-models/EMT/EMT_Ph1_VoltageSource.h"
 #include <dpsim-models/EMT/EMT_Ph1_CurrentSource.h>
+#include <dpsim-models/EMT/EMT_Ph1_Resistor.h>
 #include <dpsim-models/SimSignalComp.h>
 #include <dpsim-models/Task.h>
 
@@ -29,10 +31,17 @@ protected:
 
   // Ringbuffers for the values of previous timesteps
   // TODO make these matrix attributes
-  std::vector<Real> mVolt1, mVolt2, mCur1, mCur2;
+  std::vector<Real> mCur1, mVol2;
+
+  // Copy of the most recent elements of the ring buffers
+  // They are used to perform extrapolation
+  std::vector<Real> mCur1Extrap, mVol2Extrap;
+
   UInt mBufIdx = 0;
   UInt mBufSize;
   Real mAlpha;
+  UInt extrapolationDegree = 0;
+  Eigen::MatrixXd mVoltageSrcIntfCurr;
 
   Real interpolate(std::vector<Real> &data);
 
@@ -47,11 +56,12 @@ public:
 
   DecouplingIdealTransformerEMT(String name, Logger::Level logLevel = Logger::Level::info);
 
-  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2, Real delay);
+  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2, Real delay, Eigen::MatrixXd voltageSrcIntfCurr);
   void initialize(Real omega, Real timeStep);
   void step(Real time, Int timeStepCount);
   void postStep();
   Task::List getTasks();
+  IdentifiedObject::List getComponents();
 
   class PreStep : public Task {
   public:
