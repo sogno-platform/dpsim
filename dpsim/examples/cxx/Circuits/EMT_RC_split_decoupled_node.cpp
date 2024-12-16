@@ -20,7 +20,7 @@ using namespace DPsim;
 using namespace CPS;
 
 void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedObject::List &componentsAt1,
-                    const IdentifiedObject::List &componentsAt2) {
+                    const IdentifiedObject::List &componentsAt2, Eigen::MatrixXd irLine_0) {
   SimNode<Real>::List newNodes;
   SimPowerComp<Real>::List newComponents;
 
@@ -97,8 +97,9 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
 
   auto idealTrafo = Signal::DecouplingIdealTransformerEMT::make("itm_" + nodeName,
                                                                 Logger::Level::debug);
-  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.003);
+  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.003, irLine_0);
   sys.addComponent(idealTrafo);
+  sys.addComponents(idealTrafo->getComponents());
 }
 
 void doSim(String &name, SystemTopology &sys, Int threads, bool isDecoupled = false) {
@@ -135,19 +136,8 @@ void doSim(String &name, SystemTopology &sys, Int threads, bool isDecoupled = fa
   sim.logStepTimes(name + "_step_times");
 }
 
-SystemTopology buildTopology(String &name) {
-  float r1_r = 0.1;
-	float c1_c = 1;
-	float rLine_r = 0.1;
-	float r3_r = 1;
-	float c2_c = 1;
-
-  // Initial conditions, given by the problem
-  Eigen::MatrixXd n1_v0(1,1);
-  n1_v0(0,0) = 5.0 * PEAK1PH_TO_RMS3PH;
-  Eigen::MatrixXd n2_v0(1,1);
-  n2_v0(0,0) = 2.0 * PEAK1PH_TO_RMS3PH;
-
+SystemTopology buildTopology(String &name, float r1_r, float c1_c, float rLine_r, float r3_r,
+                             float c2_c, Eigen::MatrixXd n1_v0, Eigen::MatrixXd n2_v0) {
   CPS::Logger::setLogDir("logs/" + name);
 
   // Nodes
@@ -167,8 +157,8 @@ SystemTopology buildTopology(String &name) {
 	auto c2 = EMT::Ph1::Capacitor::make("c_2");
 	c2->setParameters(c2_c);
 
-	n1->setInitialVoltage(n1_v0);
-	n2->setInitialVoltage(n2_v0);
+	n1->setInitialVoltage(n1_v0 * PEAK1PH_TO_RMS3PH);
+	n2->setInitialVoltage(n2_v0 * PEAK1PH_TO_RMS3PH);
 
 	// Topology
 	r1->connect({ n1, gnd });
@@ -198,19 +188,39 @@ int main(int argc, char *argv[]) {
   std::cout << "Simulate with " << numThreads
             << " threads, sequence number " << numSeq << std::endl;
 
+  float r1_r_1 = 0.1;
+	float c1_c_1 = 1;
+	float rLine_r_1 = 0.1;
+	float r3_r_1 = 1;
+	float c2_c_1 = 1;
+
+  // Initial conditions, given by the problem
+  Eigen::MatrixXd n1_v0_1(1,1);
+  n1_v0_1(0,0) = 5.0;
+  Eigen::MatrixXd n2_v0_1(1,1);
+  n2_v0_1(0,0) = 2.0;
+
+  Eigen::MatrixXd irLine_0_1(1,1);
+	irLine_0_1(0,0) = (n1_v0_1(0,0) - n2_v0_1(0,0)) / rLine_r_1;
+
   // Monolithic Simulation
   String simNameMonolithic = "RC_monolithic_EMT";
   Logger::setLogDir("logs/" + simNameMonolithic);
-  SystemTopology systemMonolithic = buildTopology(simNameMonolithic);
+  SystemTopology systemMonolithic = buildTopology(simNameMonolithic, r1_r_1, c1_c_1,
+                                          rLine_r_1, r3_r_1, c2_c_1, n1_v0_1,
+                                          n2_v0_1);
 
   doSim(simNameMonolithic, systemMonolithic, 0);
 
   // Decoupled Simulation
   String simNameDecoupled = "RC_split_decoupled_EMT_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
   Logger::setLogDir("logs/" + simNameDecoupled);
-  SystemTopology systemDecoupled = buildTopology(simNameDecoupled);
+  SystemTopology systemDecoupled = buildTopology(simNameDecoupled, r1_r_1, c1_c_1,
+                                          rLine_r_1, r3_r_1, c2_c_1, n1_v0_1,
+                                          n2_v0_1);
 
   IdentifiedObject::List components1;
+
   auto rLine = systemDecoupled.component<EMT::Ph1::Resistor>("r_line");
   components1.push_back(rLine);
 
@@ -220,7 +230,7 @@ int main(int argc, char *argv[]) {
   auto r3 = systemDecoupled.component<EMT::Ph1::Resistor>("r_3");
   components2.push_back(r3);
 
-  decoupleNode(systemDecoupled, "n2", components1, components2);
+  decoupleNode(systemDecoupled, "n2", components1, components2, irLine_0_1);
   // decouple_line(system, "LINE78", "BUS7", "BUS8");
   // String dline_64 = decoupleLine(systemDecoupled, "LINE64", "BUS6", "BUS4");
   // String dline_89 = decoupleLine(systemDecoupled, "LINE89", "BUS8", "BUS9");
