@@ -141,8 +141,6 @@ def set_dpsim2(t_s, t_f, num_vs, logger_prefix):
         v_s_2.set_parameters(V_ref=complex(np.sqrt(2)/2, np.sqrt(2)/2), f_src=50)
 
     ecs = dpsimpy.emt.ph1.CurrentSource("i_intf", dpsimpy.LogLevel.info)
-    # ecs.set_parameters(30.0)
-
     c_2 = dpsimpy.emt.ph1.Capacitor("c_2", dpsimpy.LogLevel.info)
     c_2.set_parameters(c_2_c)
     r_load = dpsimpy.emt.ph1.Resistor("r_load", dpsimpy.LogLevel.info)
@@ -215,7 +213,6 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--end', type=float, required=True)
     parser.add_argument('-H', '--macro-step', type=float, required=True)
     parser.add_argument('-m', '--method', default='none')
-    parser.add_argument('--y1-prev', type=float, default=0)
     parser.add_argument('-p', '--prefix', default='')
     parser.add_argument('--num-vs', default=0)
     parser.add_argument('-d', '--debug', type=bool, default=False)
@@ -226,14 +223,9 @@ if __name__ == '__main__':
     t_f = args.end
     H = args.macro_step
     method = args.method
-    y_1_prev = args.y1_prev
     prefix = args.prefix
     num_vs = int(args.num_vs)
     debug = args.debug
-
-    if method == 'extrapolation-linear' and y_1_prev is None:
-        print('Error: Linear extrapolation requires initial previous value!')
-        exit(1)
 
     if method == 'none':
         NO_EXTRAP = True
@@ -272,11 +264,13 @@ if __name__ == '__main__':
         print("Output value from S1: {:f}".format(y_1_0))
 
     y_1 = y_1_0
+    y_2 = y_2_0
 
     # We have to assume the trajectory of y_2 extending its initial value, since we have no prior information
-    # y_1_m_prev = np.tile(y_1_0, m)
-    y_1_m_prev = np.array([y_1_prev, y_1_0])
+    y_1_m_prev = np.tile(y_1_0, m)
+    y_2_m_prev = np.tile(y_2_0, m)
     # y_1_m_prev = np.array([0.0, y_1_0])
+    # y_2_m_prev = np.array([0.0, y_2_0])
 
     if NO_EXTRAP:
 
@@ -284,10 +278,10 @@ if __name__ == '__main__':
             u_2 = y_1
             sim2.get_idobj_attr("i_intf", "I_ref").set(complex(u_2,0))
 
-            # if t_k == 0.0:
-            #     sim2.start()
-            # else:
-            sim2.next()
+            if t_k == 0.0:
+                sim2.start()
+            else:
+                sim2.next()
             y_2 = sim2.get_idobj_attr("i_intf", "v_intf").derive_coeff(0,0).get()
 
             u_1 = y_2
@@ -300,20 +294,42 @@ if __name__ == '__main__':
 
         for i in range(0, N):
             y_1_prev = y_1_m_prev[-1]
+            y_2_prev = y_2_m_prev[-1]
             t_m_i = t[m*(i)+1:m*(i+1)+1]
 
             # Extrapolation: Zero order hold
             if method == 'extrapolation-zoh':
+                u_1_m = np.tile(y_2_prev, m)
                 u_2_m = np.tile(y_1_prev, m)
             elif method == 'extrapolation-linear':
+                f_u_1 = np.poly1d(np.polyfit([i*H-H, i*H], y_2_m_prev[-2:], 1))
+                u_1_m = f_u_1(t_m_i)
+
                 f_u_2 = np.poly1d(np.polyfit([i*H-H, i*H], y_1_m_prev[-2:], 1))
                 u_2_m = f_u_2(t_m_i)
+
             elif method == 'delay':
+                u_1_m = y_2_m_prev
                 u_2_m = y_1_m_prev
 
             # j = 0
             y_1_m = np.zeros(m)
             y_2_m = np.zeros(m)
+
+            # Switch to S_1
+            for j in range(0, m):
+                u_1 = u_1_m[j]
+
+                sim1.get_idobj_attr("v_intf", "V_ref").set(complex(u_1,0))
+                t_k = sim1.next()
+                y_1 = sim1.get_idobj_attr("v_intf", "i_intf").derive_coeff(0,0).get()
+
+                y_1_m[j] = y_1
+
+                if debug:
+                    print("Output value from S1: {:f}".format(y_1))
+                    print("Time t={:f}".format(t_k))
+                    print("DPsim iteration: {}".format(j))
 
             # Switch to S_2
             for j in range(0, m):
@@ -330,35 +346,21 @@ if __name__ == '__main__':
                     print("Input value in S2 after set: {:f}".format(u_2_test))
 
                 # if i == 0 and j == 0:
-                #     t_k_2 = sim2.start()
+                #     sim2.start()
                 # else:
-                t_k_2 = sim2.next()
+                sim2.next()
                 y_2 = sim2.get_idobj_attr("i_intf", "v_intf").derive_coeff(0,0).get()
                 y_2_m[j] = y_2
 
                 if debug:
                     print("Output value from S2: {:f}".format(y_2))
 
-            # Switch to S_1
-            u_1_m = y_2_m
-            for j in range(0, m):
-                u_1 = u_1_m[j]
-
-                sim1.get_idobj_attr("v_intf", "V_ref").set(complex(u_1,0))
-                t_k = sim1.next()
-                y_1 = sim1.get_idobj_attr("v_intf", "i_intf").derive_coeff(0,0).get()
-
-                y_1_m[j] = y_1
-
-                if debug:
-                    print("Output value from S1: {:f}".format(y_1))
-                    print("Time t={:f}".format(t_k))
-                    print("DPsim iteration: {}".format(j))
-
             if method == 'delay':
                 y_1_m_prev = y_1_m
+                y_2_m_prev = y_2_m
             else:
                 y_1_m_prev = np.append(y_1_m_prev, y_1_m[-1])
+                y_2_m_prev = np.append(y_2_m_prev, y_2_m[-1])
 
             if debug:
                 print(y_1_m_prev)
