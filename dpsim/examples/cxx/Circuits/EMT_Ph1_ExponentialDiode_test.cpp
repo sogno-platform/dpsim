@@ -25,10 +25,10 @@ void EMT_Ph1_ExponentialDiode() {
 
   auto expDiode = Ph1::ExponentialDiode::make("ExponentialDiode");
   expDiode->setParameters(
-      0.000001, 0.027); //Calling this is optional. If this method call
+      1.0e-12, 25.852e-3); //Calling this is optional. If this method call
                         //is omitted, the diode will get the following
                         //values by default:
-                        //I_S = 0.000001 (A) and V_T = 0.027 (V).
+                        //I_S = 1.0e-12 (A) and V_T = 25.852e-3 (V).
 
   // Topology
   load->connect(SimNode::List{n1, n2});
@@ -38,7 +38,7 @@ void EMT_Ph1_ExponentialDiode() {
                                                       //from anode (+) to
                                                       //cathode (-)
                                                       //Diode Equation:
-  //I_D = (**mI_S) * (-1.0) * (expf((**mIntfVoltage)(0, 0) / (**mV_T)) - 1.)
+  //I_D = (**mI_S) * (expf((**mIntfVoltage)(0, 0) / (**mV_T)) - 1.)
 
   vs0->connect(SimNode::List{SimNode::GND, n1});
 
