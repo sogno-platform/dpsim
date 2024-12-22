@@ -1,7 +1,0 @@
-gcc
-gcc-c++
-clang
-make
-cmake
-pkgconfig
-cppcheck
