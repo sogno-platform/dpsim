@@ -78,6 +78,9 @@ endif()
 include(CheckSymbolExists)
 check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
 check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
+if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+	add_compile_options(-flto -march=native -Ofast)
+endif()
 
 # Get version info and buildid from Git
 include(GetVersion)
@@ -168,6 +171,7 @@ endif()
 
 if(WITH_PROFILING)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+	list(APPEND DPSIM_CXX_FLAGS "-pg")
 endif()
 
 if(WITH_ASAN)
