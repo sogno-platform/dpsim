@@ -7,10 +7,12 @@
 #include <filesystem>
 #include <fstream>
 
+#include "../examples/cxx/Examples.h"
 #include <DPsim.h>
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_RXLoad.h>
+#include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorVBR.h>
 #include <dpsim-models/SimNode.h>
 #include <dpsim-villas/InterfaceVillas.h>
 #include <dpsim-villas/InterfaceVillasQueueless.h>
@@ -23,6 +25,9 @@
 using namespace DPsim;
 using namespace CPS::EMT;
 using namespace CPS::EMT::Ph1;
+
+const CPS::CIM::Examples::Components::GovernorKundur::Parameters govKundur;
+const CPS::CIM::Examples::Components::ExcitationSystemEremia::Parameters excEremia;
 
 const std::string buildFpgaConfig(CommandLineArgs &args) {
   std::filesystem::path fpgaIpPath = "/usr/local/etc/villas/node/etc/fpga/vc707-xbar-pcie/"
@@ -85,7 +90,8 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
 std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>> hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
   std::string simName = "Fpga9BusHil";
   auto events = std::make_shared<std::vector<Event::Ptr>>();
-  std::list<fs::path> filenames = Utils::findFiles({"WSCC-09_DI.xml", "WSCC-09_EQ.xml", "WSCC-09_SV.xml", "WSCC-09_TP.xml"}, "build/_deps/cim-data-src/WSCC-09/WSCC-09", "CIMPATH");
+  std::list<fs::path> filenames =
+      Utils::findFiles({"WSCC-09_Dyn_Full_DI.xml", "WSCC-09_Dyn_Full_EQ.xml", "WSCC-09_Dyn_Full_SV.xml", "WSCC-09_Dyn_Full_TP.xml"}, "build/_deps/cim-data-src/WSCC-09/WSCC-09_Dyn_Full", "CIMPATH");
 
   // ----- POWERFLOW FOR INITIALIZATION -----
   // read original network topology
@@ -114,7 +120,7 @@ std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>> hilTopology(
 
   // ----- DYNAMIC SIMULATION -----
   CPS::CIM::Reader reader2(simName);
-  SystemTopology sys = reader2.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC, CPS::GeneratorType::IdealVoltageSource);
+  SystemTopology sys = reader2.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC, CPS::GeneratorType::FullOrderVBR);
 
   sys.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
@@ -123,6 +129,16 @@ std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>> hilTopology(
   sys.component<CPS::EMT::Ph3::RXLoad>("LOAD8")->setParameters(Matrix({{100e6, 0, 0}, {0, 100e6, 0}, {0, 0, 100e6}}), Matrix({{30e6, 0, 0}, {0, 30e6, 0}, {0, 0, 30e6}}), 230e3, true);
 
   sys.component<CPS::EMT::Ph3::RXLoad>("LOAD6")->setParameters(Matrix({{90e6, 0, 0}, {0, 90e6, 0}, {0, 0, 90e6}}), Matrix({{30e6, 0, 0}, {0, 30e6, 0}, {0, 0, 30e6}}), 230e3, true);
+
+  auto gen1 = sys.component<CPS::EMT::Ph3::SynchronGeneratorVBR>("GEN1");
+  gen1->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa, govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr, govKundur.Tsm, 1, 1);
+  gen1->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke, excEremia.Tf, excEremia.Kf, excEremia.Tr);
+  auto gen2 = sys.component<CPS::EMT::Ph3::SynchronGeneratorVBR>("GEN2");
+  gen2->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa, govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr, govKundur.Tsm, 1, 1);
+  gen2->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke, excEremia.Tf, excEremia.Kf, excEremia.Tr);
+  auto gen3 = sys.component<CPS::EMT::Ph3::SynchronGeneratorVBR>("GEN3");
+  gen3->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa, govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr, govKundur.Tsm, 1, 1);
+  gen3->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke, excEremia.Tf, excEremia.Kf, excEremia.Tr);
 
   auto cs = Ph1::CurrentSource::make("cs");
   cs->setParameters(Complex(0, 0));
@@ -163,7 +179,7 @@ std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>> hilTopology(
   // Additionally, the current sensor (LXSR 6-NPS) has a sensitivity of 0.1042 V/A (from datasheet),
   // we are using 3 turns, and we measured an offset voltage of -2.5268 V.
   constexpr double current_scale = 100. / (3. * 0.1042);
-  constexpr double current_offset = -2.5268;
+  constexpr double current_offset = -2.483036;
   auto scaledCurrent = CPS::AttributeDynamic<Real>::make(0);
   auto closedLoop = CPS::AttributeStatic<CPS::Bool>::make(false);
   auto currentScaleFn = std::make_shared<CPS::AttributeUpdateTask<Real, Bool>::Actor>([](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Bool>::Ptr dependency) {
@@ -220,6 +236,7 @@ int main(int argc, char *argv[]) {
   sim.setSystem(topo.first);
   sim.addInterface(intf);
   sim.setLogStepTimes(false);
+  sim.doSystemMatrixRecomputation(true);
   for (auto event : *topo.second) {
     sim.addEvent(event);
   }
