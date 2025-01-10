@@ -20,7 +20,16 @@ using namespace DPsim;
 using namespace CPS;
 
 void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedObject::List &componentsAt1,
-                    const IdentifiedObject::List &componentsAt2, Eigen::MatrixXd irLine_0) {
+                    const IdentifiedObject::List &componentsAt2, String method, Eigen::MatrixXd irLine_0) {
+
+  CPS::Signal::CouplingMethod cosimMethod;
+  if (method == "delay")
+    cosimMethod = CPS::Signal::CouplingMethod::DELAY;
+  else if (method == "extrapolation-zoh")
+    cosimMethod = CPS::Signal::CouplingMethod::EXTRAPOLATION_ZOH;
+  else if (method == "extrapolation-linear")
+    cosimMethod = CPS::Signal::CouplingMethod::EXTRAPOLATION_LINEAR;
+
   SimNode<Real>::List newNodes;
   SimPowerComp<Real>::List newComponents;
 
@@ -97,7 +106,7 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
 
   auto idealTrafo = Signal::DecouplingIdealTransformerEMT::make("itm_" + nodeName,
                                                                 Logger::Level::debug);
-  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.003, irLine_0);
+  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.003, cosimMethod, irLine_0);
   sys.addComponent(idealTrafo);
   sys.addComponents(idealTrafo->getComponents());
 }
@@ -179,14 +188,18 @@ int main(int argc, char *argv[]) {
 
   Int numThreads = 0;
   Int numSeq = 0;
+  String cosimMethod = "delay";
 
   if (args.options.find("threads") != args.options.end())
     numThreads = args.getOptionInt("threads");
   if (args.options.find("seq") != args.options.end())
     numSeq = args.getOptionInt("seq");
+  if (args.options.find("method") != args.options.end())
+    cosimMethod = args.getOptionInt("method");
 
   std::cout << "Simulate with " << numThreads
-            << " threads, sequence number " << numSeq << std::endl;
+            << " threads, sequence number " << numSeq
+            << ", co-simulation method " << cosimMethod << std::endl;
 
   float r1_r_1 = 0.1;
 	float c1_c_1 = 1;
@@ -230,10 +243,6 @@ int main(int argc, char *argv[]) {
   auto r3 = systemDecoupled.component<EMT::Ph1::Resistor>("r_3");
   components2.push_back(r3);
 
-  decoupleNode(systemDecoupled, "n2", components1, components2, irLine_0_1);
-  // decouple_line(system, "LINE78", "BUS7", "BUS8");
-  // String dline_64 = decoupleLine(systemDecoupled, "LINE64", "BUS6", "BUS4");
-  // String dline_89 = decoupleLine(systemDecoupled, "LINE89", "BUS8", "BUS9");
-
+  decoupleNode(systemDecoupled, "n2", components1, components2, cosimMethod, irLine_0_1);
   doSim(simNameDecoupled, systemDecoupled, numThreads, true);
 }
