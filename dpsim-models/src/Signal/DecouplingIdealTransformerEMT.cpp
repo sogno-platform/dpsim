@@ -31,12 +31,18 @@ DecouplingIdealTransformerEMT::DecouplingIdealTransformerEMT(String name, Logger
 
 void DecouplingIdealTransformerEMT::setParameters(SimNode<Real>::Ptr node1,
                                       SimNode<Real>::Ptr node2,
-                                      Real delay, Eigen::MatrixXd voltageSrcIntfCurr) {
+                                      Real delay, CouplingMethod method, Eigen::MatrixXd voltageSrcIntfCurr) {
 
   mNode1 = node1;
   mNode2 = node2;
 
   mDelay = delay;
+  mCouplingMethod = method;
+
+  if (mCouplingMethod == CouplingMethod::EXTRAPOLATION_LINEAR) {
+    mExtrapolationDegree = 1;
+  }
+
   mVoltageSrc->setParameters(0);
   mVoltageSrcIntfCurr = voltageSrcIntfCurr;
   mVoltageSrc->connect({SimNode<Real>::GND, node1});
@@ -50,7 +56,7 @@ void DecouplingIdealTransformerEMT::initialize(Real omega, Real timeStep) {
 
   // mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
 
-  mBufSize = std::max(extrapolationDegree, static_cast<UInt>(ceil(mDelay / timeStep)));
+  mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
   mAlpha = 1 - (mBufSize - mDelay / timeStep);
   SPDLOG_LOGGER_INFO(mSLog, "bufsize {} alpha {}", mBufSize, mAlpha);
 
@@ -64,28 +70,42 @@ void DecouplingIdealTransformerEMT::initialize(Real omega, Real timeStep) {
   // Resize ring buffers and initialize
   mCur1.resize(mBufSize, cur1.real()); // TODO: add initial value to setParameters?
   mVol2.resize(mBufSize, volt2.real());
+
+  mCur1Extrap.resize(mExtrapolationDegree + 1, cur1.real());
+  mVol2Extrap.resize(mExtrapolationDegree + 1, volt2.real());
 }
 
 Real DecouplingIdealTransformerEMT::interpolate(std::vector<Real> &data) {
-  // linear interpolation of the nearest values
   Real c1 = data[mBufIdx];
   Real c2 = mBufIdx == mBufSize - 1 ? data[0] : data[mBufIdx + 1];
   return mAlpha * c1 + (1 - mAlpha) * c2;
 }
 
-void DecouplingIdealTransformerEMT::step(Real time, Int timeStepCount) {
-  Real volt1 = interpolate(mVol2);
-  Real cur2 = interpolate(mCur1);
-
-  if (timeStepCount == 0) {
-    // initialization
-    **mSrcVoltageRef = volt1;
-    **mSrcCurrentRef = cur2;
+Real DecouplingIdealTransformerEMT::extrapolate(std::vector<Real> &data) {
+  if (mCouplingMethod == CouplingMethod::EXTRAPOLATION_LINEAR) {
+    Real c1 = data[mMacroBufIdx];
+    Real c2 = mMacroBufIdx == mExtrapolationDegree ? data[0] : data[mMacroBufIdx + 1];
+    Real delayFraction = (mDelay*(mBufIdx+1)) / static_cast<float>(mBufSize);
+    Real tEval = mDelay + delayFraction;
+    return ((c2 - c1)/mDelay) * tEval + c1;
   } else {
-    // Update currents
-    **mSrcVoltageRef = volt1;
-    **mSrcCurrentRef = cur2;
+    return data[mMacroBufIdx];
   }
+}
+
+void DecouplingIdealTransformerEMT::step(Real time, Int timeStepCount) {
+  Real volt1, cur2;
+  if (mCouplingMethod == CouplingMethod::DELAY) {
+    volt1 = interpolate(mVol2);
+    cur2 = interpolate(mCur1);
+  } else {
+    volt1 = extrapolate(mVol2Extrap);
+    cur2 = extrapolate(mCur1Extrap);
+  }
+
+    // Update voltage and current
+  **mSrcVoltageRef = volt1;
+  **mSrcCurrentRef = cur2;
   mSrcVoltage->set(**mSrcVoltageRef);
   mSrcCurrent->set(**mSrcCurrentRef);
 }
@@ -100,8 +120,15 @@ void DecouplingIdealTransformerEMT::postStep() {
   mVol2[mBufIdx] = -mCurrentSrc->intfVoltage()(0, 0);
 
   mBufIdx++;
-  if (mBufIdx == mBufSize)
+  if (mBufIdx == mBufSize) {
+    mCur1Extrap[mMacroBufIdx] = mCur1[mBufIdx - 1];
+    mVol2Extrap[mMacroBufIdx] = mVol2[mBufIdx - 1];
+    mMacroBufIdx++;
+    if (mMacroBufIdx == mExtrapolationDegree + 1) {
+      mMacroBufIdx = 0;
+    }
     mBufIdx = 0;
+  }
 }
 
 void DecouplingIdealTransformerEMT::PostStep::execute(Real time, Int timeStepCount) {
