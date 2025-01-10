@@ -19,6 +19,13 @@
 
 namespace CPS {
 namespace Signal {
+
+enum CouplingMethod {
+    DELAY,
+    EXTRAPOLATION_ZOH,
+    EXTRAPOLATION_LINEAR
+};
+
 class DecouplingIdealTransformerEMT : public SimSignalComp,
                           public SharedFactory<DecouplingIdealTransformerEMT> {
 protected:
@@ -38,12 +45,15 @@ protected:
   std::vector<Real> mCur1Extrap, mVol2Extrap;
 
   UInt mBufIdx = 0;
+  UInt mMacroBufIdx = 0;
   UInt mBufSize;
   Real mAlpha;
-  UInt extrapolationDegree = 0;
+  CouplingMethod mCouplingMethod;
+  UInt mExtrapolationDegree = 0;
   Eigen::MatrixXd mVoltageSrcIntfCurr;
 
   Real interpolate(std::vector<Real> &data);
+  Real extrapolate(std::vector<Real> &data);
 
 public:
   typedef std::shared_ptr<DecouplingIdealTransformerEMT> Ptr;
@@ -56,7 +66,7 @@ public:
 
   DecouplingIdealTransformerEMT(String name, Logger::Level logLevel = Logger::Level::info);
 
-  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2, Real delay, Eigen::MatrixXd voltageSrcIntfCurr);
+  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2, Real delay, CouplingMethod method, Eigen::MatrixXd voltageSrcIntfCurr);
   void initialize(Real omega, Real timeStep);
   void step(Real time, Int timeStepCount);
   void postStep();
