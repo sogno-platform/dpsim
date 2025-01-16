@@ -41,6 +41,7 @@ public:
 
   DataLogger(Bool enabled = true);
   DataLogger(String name, Bool enabled = true, UInt downsampling = 1);
+  virtual ~DataLogger(){};
 
   virtual void start() override;
   virtual void stop() override;
