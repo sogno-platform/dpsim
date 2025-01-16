@@ -604,7 +604,7 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
         if (CIMPP::SynchronousMachineTimeConstantReactance *genDyn =
                 dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance *>(
                     obj)) {
-          if (genDyn->SynchronousMachine->mRID.value == machine->mRID.value) {
+          if (genDyn->SynchronousMachine->mRID == machine->mRID) {
             // stator
             Real Rs = genDyn->statorResistance.value;
             Real Ll = genDyn->statorLeakageReactance.value;
@@ -740,7 +740,7 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
         if (CIMPP::SynchronousMachineTimeConstantReactance *genDyn =
                 dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance *>(
                     obj)) {
-          if (genDyn->SynchronousMachine->mRID.value == machine->mRID.value) {
+          if (genDyn->SynchronousMachine->mRID == machine->mRID) {
             // stator
             Real Rs = genDyn->statorResistance.value;
             Real Ll = genDyn->statorLeakageReactance.value;
@@ -829,7 +829,7 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
         if (CIMPP::GeneratingUnit *genUnit =
                 dynamic_cast<CIMPP::GeneratingUnit *>(obj)) {
           for (auto syncGen : genUnit->RotatingMachine) {
-            if (syncGen->mRID.value == machine->mRID.value) {
+            if (syncGen->mRID == machine->mRID) {
               // Check whether relevant input data are set, otherwise set default values
               Real setPointActivePower = 0;
               Real setPointVoltage = 0;
@@ -907,7 +907,7 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
         if (CIMPP::SynchronousMachineTimeConstantReactance *genDyn =
                 dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance *>(
                     obj)) {
-          if (genDyn->SynchronousMachine->mRID.value == machine->mRID.value) {
+          if (genDyn->SynchronousMachine->mRID == machine->mRID) {
 
             // stator
             Real Rs = genDyn->statorResistance.value;
@@ -1103,7 +1103,7 @@ Real Reader::determineBaseVoltageAssociatedWithEquipment(
     if (CIMPP::BaseVoltage *baseVolt =
             dynamic_cast<CIMPP::BaseVoltage *>(obj)) {
       for (auto comp : baseVolt->ConductingEquipment) {
-        if (comp->name.value == equipment->name.value) {
+        if (comp->name == equipment->name) {
           baseVoltage =
               unitValue(baseVolt->nominalVoltage.value, UnitMultiplier::k);
         }
@@ -1116,7 +1116,7 @@ Real Reader::determineBaseVoltageAssociatedWithEquipment(
       if (CIMPP::TopologicalNode *topNode =
               dynamic_cast<CIMPP::TopologicalNode *>(obj)) {
         for (auto term : topNode->Terminal) {
-          if (term->ConductingEquipment->name.value == equipment->name.value) {
+          if (term->ConductingEquipment->name == equipment->name) {
             baseVoltage = unitValue(topNode->BaseVoltage->nominalVoltage.value,
                                     UnitMultiplier::k);
           }
