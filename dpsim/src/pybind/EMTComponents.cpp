@@ -140,7 +140,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
-           py::overload_cast<CPS::MatrixComp, CPS::Real>(
+           py::overload_cast<CPS::Matrix>(
                &CPS::EMT::Ph3::ControlledVoltageSource::setParameters),
            "V_ref"_a)
       .def("connect", &CPS::EMT::Ph3::ControlledVoltageSource::connect)
