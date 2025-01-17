@@ -93,9 +93,12 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
   for (auto comp : newComponents)
     sys.addComponent(comp);
 
+  Eigen::MatrixXd i_0(1,1);
+  i_0(0,0) = 0;
+
   auto idealTrafo = Signal::DecouplingIdealTransformerEMT::make("itm_" + nodeName,
                                                                 Logger::Level::debug);
-  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.0002);
+  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.0002, i_0);
   sys.addComponent(idealTrafo);
 }
 

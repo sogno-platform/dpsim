@@ -31,7 +31,7 @@ DecouplingIdealTransformerEMT::DecouplingIdealTransformerEMT(String name, Logger
 
 void DecouplingIdealTransformerEMT::setParameters(SimNode<Real>::Ptr node1,
                                       SimNode<Real>::Ptr node2,
-                                      Real delay, CouplingMethod method, Eigen::MatrixXd voltageSrcIntfCurr) {
+                                      Real delay, Eigen::MatrixXd voltageSrcIntfCurr, CouplingMethod method = CouplingMethod::DELAY) {
 
   mNode1 = node1;
   mNode2 = node2;
