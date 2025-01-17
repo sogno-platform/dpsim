@@ -20,7 +20,7 @@ using namespace DPsim;
 using namespace CPS;
 
 void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedObject::List &componentsAt1,
-                    const IdentifiedObject::List &componentsAt2, String method, Eigen::MatrixXd irLine_0) {
+                    const IdentifiedObject::List &componentsAt2, Real ITMDelay, String method, Eigen::MatrixXd irLine_0) {
 
   CPS::Signal::CouplingMethod cosimMethod;
   if (method == "delay")
@@ -106,12 +106,12 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
 
   auto idealTrafo = Signal::DecouplingIdealTransformerEMT::make("itm_" + nodeName,
                                                                 Logger::Level::debug);
-  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.003, cosimMethod, irLine_0);
+  idealTrafo->setParameters(nodeCopy1, nodeCopy2, ITMDelay, irLine_0, cosimMethod);
   sys.addComponent(idealTrafo);
   sys.addComponents(idealTrafo->getComponents());
 }
 
-void doSim(String &name, SystemTopology &sys, Int threads, bool isDecoupled = false) {
+void doSim(String &name, SystemTopology &sys, Int threads, Real ts, bool isDecoupled = false) {
 
   // Logging
   auto logger = DataLogger::make(name);
@@ -129,7 +129,7 @@ void doSim(String &name, SystemTopology &sys, Int threads, bool isDecoupled = fa
 
   Simulation sim(name, Logger::Level::debug);
   sim.setSystem(sys);
-  sim.setTimeStep(0.001);
+  sim.setTimeStep(ts);
   sim.setFinalTime(1.0);
   sim.setDomain(Domain::EMT);
   sim.doSplitSubnets(true);
@@ -188,14 +188,21 @@ int main(int argc, char *argv[]) {
 
   Int numThreads = 0;
   Int numSeq = 0;
+  Real timeStep = 0.00005;
+  Real delay;
   String cosimMethod = "delay";
+  String prefix;
 
   if (args.options.find("threads") != args.options.end())
     numThreads = args.getOptionInt("threads");
-  if (args.options.find("seq") != args.options.end())
-    numSeq = args.getOptionInt("seq");
+  if (args.timeStep)
+    timeStep = args.timeStep;
+  if (args.options.find("delay") != args.options.end())
+    delay = args.getOptionReal("delay");
   if (args.options.find("method") != args.options.end())
-    cosimMethod = args.getOptionInt("method");
+    cosimMethod = args.getOptionString("method");
+  if (args.options.find("prefix") != args.options.end())
+    prefix = args.getOptionString("prefix");
 
   std::cout << "Simulate with " << numThreads
             << " threads, sequence number " << numSeq
@@ -217,16 +224,16 @@ int main(int argc, char *argv[]) {
 	irLine_0_1(0,0) = (n1_v0_1(0,0) - n2_v0_1(0,0)) / rLine_r_1;
 
   // Monolithic Simulation
-  String simNameMonolithic = "RC_monolithic_EMT";
+  String simNameMonolithic = "EMT_RC_monolithic";
   Logger::setLogDir("logs/" + simNameMonolithic);
   SystemTopology systemMonolithic = buildTopology(simNameMonolithic, r1_r_1, c1_c_1,
                                           rLine_r_1, r3_r_1, c2_c_1, n1_v0_1,
                                           n2_v0_1);
 
-  doSim(simNameMonolithic, systemMonolithic, 0);
+  doSim(simNameMonolithic, systemMonolithic, 0, timeStep);
 
   // Decoupled Simulation
-  String simNameDecoupled = "RC_split_decoupled_EMT_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
+  String simNameDecoupled = "EMT_RC_split_decoupled_" + prefix + "_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
   Logger::setLogDir("logs/" + simNameDecoupled);
   SystemTopology systemDecoupled = buildTopology(simNameDecoupled, r1_r_1, c1_c_1,
                                           rLine_r_1, r3_r_1, c2_c_1, n1_v0_1,
@@ -243,6 +250,6 @@ int main(int argc, char *argv[]) {
   auto r3 = systemDecoupled.component<EMT::Ph1::Resistor>("r_3");
   components2.push_back(r3);
 
-  decoupleNode(systemDecoupled, "n2", components1, components2, cosimMethod, irLine_0_1);
-  doSim(simNameDecoupled, systemDecoupled, numThreads, true);
+  decoupleNode(systemDecoupled, "n2", components1, components2, delay, cosimMethod, irLine_0_1);
+  doSim(simNameDecoupled, systemDecoupled, numThreads, timeStep, true);
 }
