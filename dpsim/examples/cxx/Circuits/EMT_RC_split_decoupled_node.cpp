@@ -189,7 +189,7 @@ int main(int argc, char *argv[]) {
   Int numThreads = 0;
   Int numSeq = 0;
   Real timeStep = 0.00005;
-  Real delay;
+  Real delay = 0.0001;
   String cosimMethod = "delay";
   String prefix;
 
