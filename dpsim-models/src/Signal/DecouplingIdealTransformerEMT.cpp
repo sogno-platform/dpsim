@@ -51,13 +51,15 @@ void DecouplingIdealTransformerEMT::setParameters(SimNode<Real>::Ptr node1,
 }
 
 void DecouplingIdealTransformerEMT::initialize(Real omega, Real timeStep) {
-  if (mDelay < timeStep)
-    throw SystemError("Timestep too large for decoupling");
-
-  // mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
-
-  mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
-  mAlpha = 1 - (mBufSize - mDelay / timeStep);
+  if (mDelay <= 0) {
+    mDelay = 0;
+    mBufSize = 1;
+    mAlpha = 1;
+  }
+  else {
+    mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
+    mAlpha = 1 - (mBufSize - mDelay / timeStep);
+  }
   SPDLOG_LOGGER_INFO(mSLog, "bufsize {} alpha {}", mBufSize, mAlpha);
 
   mVoltageSrc->setIntfCurrent(mVoltageSrcIntfCurr);
