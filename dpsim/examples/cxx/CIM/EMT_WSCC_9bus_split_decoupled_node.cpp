@@ -6,6 +6,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include "dpsim-models/EMT/EMT_Ph3_PiLine.h"
+#include "dpsim-models/EMT/EMT_Ph3_RXLoad.h"
+#include "dpsim-models/IdentifiedObject.h"
 #include "dpsim-models/Signal/DecouplingIdealTransformerEMT.h"
 #include <fstream>
 #include <iostream>
@@ -98,21 +101,19 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
 
   auto idealTrafo = Signal::DecouplingIdealTransformerEMT::make("itm_" + nodeName,
                                                                 Logger::Level::debug);
-  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.0002, i_0);
+  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0, i_0);
   sys.addComponent(idealTrafo);
+  sys.addComponents(idealTrafo->getComponents());
 }
 
 void doSim(String &name, SystemTopology &sys, Int threads, bool isDecoupled = false) {
 
   // Logging
   auto logger = DataLogger::make(name);
-  // logger->logAttribute("BUS5.v", sys.node<EMT::SimNode>("BUS5")->attribute("v"));
-  // logger->logAttribute("BUS6.v", sys.node<EMT::SimNode>("BUS6")->attribute("v"));
-  // logger->logAttribute("BUS8.v", sys.node<EMT::SimNode>("BUS8")->attribute("v"));
-  for (Int bus  = 1; bus <= 9; bus++) {
+  for (Int bus = 1; bus <= 9; bus++) {
     String attrName = "v" + std::to_string(bus);
     String nodeName;
-    if (isDecoupled && bus==8) {
+    if (isDecoupled && (bus==5 || bus==6 || bus==8)) {
       continue;
     } else {
       nodeName = "BUS" + std::to_string(bus);
@@ -121,6 +122,10 @@ void doSim(String &name, SystemTopology &sys, Int threads, bool isDecoupled = fa
   }
 
   if (isDecoupled) {
+    logger->logAttribute("v5_1", sys.node<EMT::SimNode>("BUS5_1")->attribute("v"));
+    logger->logAttribute("v5_2", sys.node<EMT::SimNode>("BUS5_2")->attribute("v"));
+    logger->logAttribute("v6_1", sys.node<EMT::SimNode>("BUS5_1")->attribute("v"));
+    logger->logAttribute("v6_2", sys.node<EMT::SimNode>("BUS5_2")->attribute("v"));
     logger->logAttribute("v8_1", sys.node<EMT::SimNode>("BUS8_1")->attribute("v"));
     logger->logAttribute("v8_2", sys.node<EMT::SimNode>("BUS8_2")->attribute("v"));
   }
@@ -174,26 +179,44 @@ int main(int argc, char *argv[]) {
   doSim(simNameMonolithic, systemMonolithic, 0);
 
   // Decoupled Simulation
-  String simNameDecoupled = "WSCC_9bus_split_decoupled_EMT_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
+  String simNameDecoupled = "WSCC_9bus_split_decoupled_node_EMT_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
   Logger::setLogDir("logs/" + simNameDecoupled);
   CIM::Reader readerDecoupled(simNameDecoupled, Logger::Level::debug, Logger::Level::debug);
   SystemTopology systemDecoupled = readerDecoupled.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC,
                                    CPS::GeneratorType::IdealVoltageSource);
 
-  IdentifiedObject::List components1;
+  IdentifiedObject::List components5_1;
+  auto line75 = systemDecoupled.component<EMT::Ph3::PiLine>("LINE75");
+  components5_1.push_back(line75);
+
+  IdentifiedObject::List components5_2;
+  auto line54 = systemDecoupled.component<EMT::Ph3::PiLine>("LINE54");
+  components5_2.push_back(line54);
+  auto load5 = systemDecoupled.component<EMT::Ph3::RXLoad>("LOAD5");
+  components5_2.push_back(load5);
+
+  IdentifiedObject::List components6_1;
+  auto line96 = systemDecoupled.component<EMT::Ph3::PiLine>("LINE96");
+  components6_1.push_back(line96);
+
+  IdentifiedObject::List components6_2;
+  auto line64 = systemDecoupled.component<EMT::Ph3::PiLine>("LINE64");
+  components6_2.push_back(line64);
+  auto load6 = systemDecoupled.component<EMT::Ph3::RXLoad>("LOAD6");
+  components6_2.push_back(load6);
+
+  IdentifiedObject::List components8_1;
   auto line78 = systemDecoupled.component<EMT::Ph3::PiLine>("LINE78");
-  components1.push_back(line78);
+  components8_1.push_back(line78);
 
-  IdentifiedObject::List components2;
+  IdentifiedObject::List components8_2;
   auto line89 = systemDecoupled.component<EMT::Ph3::PiLine>("LINE89");
-  components2.push_back(line89);
+  components8_2.push_back(line89);
   auto load8 = systemDecoupled.component<EMT::Ph3::RXLoad>("LOAD8");
-  components2.push_back(load8);
+  components8_2.push_back(load8);
 
-  decoupleNode(systemDecoupled, "BUS8", components1, components2);
-  // decouple_line(system, "LINE78", "BUS7", "BUS8");
-  // String dline_64 = decoupleLine(systemDecoupled, "LINE64", "BUS6", "BUS4");
-  // String dline_89 = decoupleLine(systemDecoupled, "LINE89", "BUS8", "BUS9");
-
+  decoupleNode(systemDecoupled, "BUS5", components5_1, components5_2);
+  decoupleNode(systemDecoupled, "BUS6", components6_1, components6_2);
+  decoupleNode(systemDecoupled, "BUS8", components8_1, components8_2);
   doSim(simNameDecoupled, systemDecoupled, numThreads, true);
 }
