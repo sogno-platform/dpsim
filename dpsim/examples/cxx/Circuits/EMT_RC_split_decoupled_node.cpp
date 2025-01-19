@@ -11,6 +11,9 @@
 #include "dpsim-models/EMT/EMT_Ph1_Resistor.h"
 #include "dpsim-models/Signal/DecouplingIdealTransformerEMT.h"
 #include "dpsim-models/SimNode.h"
+#include <csignal>
+#include <cstdlib>
+#include <exception>
 #include <iostream>
 
 #include <DPsim.h>
@@ -23,12 +26,17 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
                     const IdentifiedObject::List &componentsAt2, Real ITMDelay, String method, Eigen::MatrixXd irLine_0) {
 
   CPS::Signal::CouplingMethod cosimMethod;
-  if (method == "delay")
-    cosimMethod = CPS::Signal::CouplingMethod::DELAY;
-  else if (method == "extrapolation-zoh")
-    cosimMethod = CPS::Signal::CouplingMethod::EXTRAPOLATION_ZOH;
-  else if (method == "extrapolation-linear")
-    cosimMethod = CPS::Signal::CouplingMethod::EXTRAPOLATION_LINEAR;
+  try {
+    if (method == "delay")
+      cosimMethod = CPS::Signal::CouplingMethod::DELAY;
+    else if (method == "extrapolation-zoh")
+      cosimMethod = CPS::Signal::CouplingMethod::EXTRAPOLATION_ZOH;
+    else if (method == "extrapolation-linear")
+      cosimMethod = CPS::Signal::CouplingMethod::EXTRAPOLATION_LINEAR;
+  } catch (std::exception &e) {
+    std::cout << "Invalid co-simulation method " << method << " " << e.what();
+    exit(1);
+  }
 
   SimNode<Real>::List newNodes;
   SimPowerComp<Real>::List newComponents;
