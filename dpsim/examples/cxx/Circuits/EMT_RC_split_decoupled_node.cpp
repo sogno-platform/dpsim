@@ -13,7 +13,6 @@
 #include "dpsim-models/SimNode.h"
 #include <csignal>
 #include <cstdlib>
-#include <exception>
 #include <iostream>
 
 #include <DPsim.h>
@@ -25,18 +24,12 @@ using namespace CPS;
 void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedObject::List &componentsAt1,
                     const IdentifiedObject::List &componentsAt2, Real ITMDelay, String method, Eigen::MatrixXd irLine_0) {
 
-  CPS::Signal::CouplingMethod cosimMethod;
-  try {
-    if (method == "delay")
-      cosimMethod = CPS::Signal::CouplingMethod::DELAY;
-    else if (method == "extrapolation-zoh")
-      cosimMethod = CPS::Signal::CouplingMethod::EXTRAPOLATION_ZOH;
-    else if (method == "extrapolation-linear")
-      cosimMethod = CPS::Signal::CouplingMethod::EXTRAPOLATION_LINEAR;
-  } catch (std::exception &e) {
-    std::cout << "Invalid co-simulation method " << method << " " << e.what();
-    exit(1);
-  }
+  CPS::Signal::CouplingMethod cosimMethod = CPS::Signal::CouplingMethod::DELAY;
+
+  if (method == "extrapolation-zoh")
+    cosimMethod = CPS::Signal::CouplingMethod::EXTRAPOLATION_ZOH;
+  else if (method == "extrapolation-linear")
+    cosimMethod = CPS::Signal::CouplingMethod::EXTRAPOLATION_LINEAR;
 
   SimNode<Real>::List newNodes;
   SimPowerComp<Real>::List newComponents;
