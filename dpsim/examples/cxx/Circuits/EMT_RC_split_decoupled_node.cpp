@@ -192,7 +192,7 @@ int main(int argc, char *argv[]) {
   Real timeStep = 0.00005;
   Real delay = 0.0001;
   String cosimMethod = "delay";
-  String prefix;
+  String prefix = "1e-4";
 
   if (args.options.find("threads") != args.options.end())
     numThreads = args.getOptionInt("threads");
