@@ -81,9 +81,10 @@ RUN pip3 install -r requirements.txt
 
 ## Install CIMpp from source
 RUN cd /tmp && \
-	git clone --recurse-submodules https://github.com/cim-iec/libcimpp.git && \
+	git clone https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
 	git checkout ${CIMPP_COMMIT} && \
+	git submodule update --init && \
 	cmake ${CMAKE_OPTS} .. \
 		-DBUILD_SHARED_LIBS=ON \
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib \
