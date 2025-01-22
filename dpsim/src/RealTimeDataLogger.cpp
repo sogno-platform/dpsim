@@ -4,10 +4,12 @@
  * SPDX-FileCopyrightText: 2024 Niklas Eiling <niklas.eiling@eonerc.rwth-aachen.de>
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "dpsim-models/Attribute.h"
 #include <iomanip>
 
 #include <dpsim-models/Logger.h>
 #include <dpsim/RealTimeDataLogger.h>
+#include <memory>
 
 using namespace DPsim;
 
@@ -61,7 +63,11 @@ void RealTimeDataLogger::log(Real time, Int timeStepCount) {
   mCurrentAttribute = 1;
 
   for (auto it : mAttributes) {
-    mAttributeData[mCurrentRow][mCurrentAttribute++] = **(it.second);
+    if (it.second->getType() == typeid(Real)) {
+      mAttributeData[mCurrentRow][mCurrentAttribute++] = **std::dynamic_pointer_cast<std::shared_ptr<CPS::Attribute<Real>>>(it.second.getPtr());
+    } else if (it.second->getType() == typeid(Int)) {
+      mAttributeData[mCurrentRow][mCurrentAttribute++] = **std::dynamic_pointer_cast<std::shared_ptr<CPS::Attribute<Int>>>(it.second.getPtr());
+    }
   }
 }
 

@@ -20,7 +20,7 @@ namespace DPsim {
 
 class DataLoggerInterface {
 protected:
-  std::map<String, CPS::Attribute<Real>::Ptr> mAttributes;
+  std::map<String, CPS::AttributeBase::Ptr> mAttributes;
 
 public:
   typedef std::shared_ptr<DataLoggerInterface> Ptr;
@@ -39,6 +39,8 @@ public:
     } else if (auto attrComp = std::dynamic_pointer_cast<CPS::Attribute<Complex>>(attr.getPtr())) {
       mAttributes[name + ".re"] = attrComp->deriveReal();
       mAttributes[name + ".im"] = attrComp->deriveImag();
+    } else if (auto attrInt = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr.getPtr())) {
+      mAttributes[name] = attrInt;
     } else if (auto attrMatrix = std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(attr.getPtr())) {
       UInt rows = static_cast<UInt>((**attrMatrix).rows());
       UInt cols = static_cast<UInt>((**attrMatrix).cols());
@@ -83,7 +85,7 @@ public:
         }
       }
     } else {
-      throw std::runtime_error("DataLoggerInterface: Unknown attribute type");
+      throw std::runtime_error("DataLoggerInterface: Unknown attribute type for attribute " + name);
     }
   }
 
