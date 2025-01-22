@@ -26,6 +26,9 @@ DataLogger::DataLogger(String name, Bool enabled, UInt downsampling) : DataLogge
 }
 
 void DataLogger::start() {
+  if (!mEnabled)
+    return;
+
   mLogFile =
       std::ofstream(mFilename, std::ios_base::out | std::ios_base::trunc);
   if (!mLogFile.is_open()) {

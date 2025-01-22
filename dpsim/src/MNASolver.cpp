@@ -35,6 +35,8 @@ void MnaSolver<VarType>::setSystem(const CPS::SystemTopology &system) {
 template <typename VarType> void MnaSolver<VarType>::initialize() {
   // TODO: check that every system matrix has the same dimensions
   SPDLOG_LOGGER_INFO(mSLog, "---- Start initialization ----");
+  mLeftVectorLog->start();
+  mRightVectorLog->start();
 
   // Register attribute for solution vector
   ///FIXME: This is kinda ugly... At least we should somehow unify mLeftSideVector and mLeftSideVectorHarm.
