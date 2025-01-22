@@ -153,6 +153,7 @@ template <typename VarType> void Simulation::createMNASolver() {
                                                   mLogLevel, mDirectImpl,
                                                   mSolverPluginName);
       solver->setTimeStep(**mTimeStep);
+      solver->setLogSolveTimes(mLogStepTimes);
       solver->doSteadyStateInit(**mSteadyStateInit);
       solver->doFrequencyParallelization(mFreqParallel);
       solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
@@ -202,7 +203,7 @@ void Simulation::prepSchedule() {
     mTasks.push_back(logger->getTask());
   }
   if (!mScheduler) {
-    mScheduler = std::make_shared<SequentialScheduler>("taskTimes");
+    mScheduler = std::make_shared<SequentialScheduler>();
   }
   mScheduler->resolveDeps(mTasks, mTaskInEdges, mTaskOutEdges);
 }
@@ -339,6 +340,9 @@ void Simulation::start() {
   if (!mInitialized)
     initialize();
 
+  for (auto lg : mLoggers)
+    lg->start();
+
   SPDLOG_LOGGER_INFO(mLog, "Opening interfaces.");
 
   for (auto intf : mInterfaces)
@@ -377,7 +381,7 @@ void Simulation::stop() {
     intf->close();
 
   for (auto lg : mLoggers)
-    lg->close();
+    lg->stop();
 
   SPDLOG_LOGGER_INFO(mLog, "Simulation finished.");
   mLog->flush();
@@ -403,7 +407,10 @@ void Simulation::run() {
 }
 
 Real Simulation::step() {
-  auto start = std::chrono::steady_clock::now();
+  std::chrono::steady_clock::time_point start;
+  if (mLogStepTimes) {
+    start = std::chrono::steady_clock::now();
+  }
 
   mEvents.handleEvents(mTime);
   mScheduler->step(mTime, mTimeStepCount);
@@ -411,14 +418,20 @@ Real Simulation::step() {
   mTime += **mTimeStep;
   ++mTimeStepCount;
 
-  auto end = std::chrono::steady_clock::now();
-  std::chrono::duration<double> diff = end - start;
-  mStepTimes.push_back(diff.count());
+  if (mLogStepTimes) {
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> diff = end - start;
+    mStepTimes.push_back(diff.count());
+  }
   return mTime;
 }
 
 void Simulation::logStepTimes(String logName) {
   auto stepTimeLog = Logger::get(logName, Logger::Level::info);
+  if (!mLogStepTimes) {
+    SPDLOG_LOGGER_WARN(mLog, "Collection of step times has been disabled.");
+    return;
+  }
   Logger::setLogPattern(stepTimeLog, "%v");
   stepTimeLog->info("step_time");
 

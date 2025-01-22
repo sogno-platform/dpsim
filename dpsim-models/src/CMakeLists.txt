@@ -73,6 +73,8 @@ list(APPEND MODELS_SOURCES
 
 	EMT/EMT_Ph3_CurrentSource.cpp
 	EMT/EMT_Ph3_VoltageSource.cpp
+	EMT/EMT_Ph3_ControlledCurrentSource.cpp
+	EMT/EMT_Ph3_ControlledVoltageSource.cpp
 	EMT/EMT_Ph3_Inductor.cpp
 	EMT/EMT_Ph3_Capacitor.cpp
 	EMT/EMT_Ph3_AvVoltageSourceInverterDQ.cpp

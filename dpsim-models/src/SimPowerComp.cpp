@@ -270,6 +270,9 @@ void SimPowerComp<VarType>::connect(typename SimNode<VarType>::List nodes) {
     return;
   }
   for (UInt i = 0; i < nodes.size(); i++) {
+    if (nodes[i] == nullptr) {
+      throw SystemError(fmt::format("Node is nullptr for Component {}", **mName));
+    }
     String name = **mName + "_T" + std::to_string(i);
     typename SimTerminal<VarType>::Ptr terminal =
         SimTerminal<VarType>::make(name);

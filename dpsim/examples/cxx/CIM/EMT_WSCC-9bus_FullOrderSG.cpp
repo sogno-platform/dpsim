@@ -26,9 +26,7 @@ int main(int argc, char *argv[]) {
   CommandLineArgs args(argc, argv);
   if (argc <= 1) {
     filenames =
-        Utils::findFiles({"WSCC-09_Dyn_Full_DI.xml", "WSCC-09_Dyn_Full_EQ.xml",
-                          "WSCC-09_Dyn_Full_SV.xml", "WSCC-09_Dyn_Full_TP.xml"},
-                         "/cimdata/WSCC-09_Dyn_Full", "CIMPATH");
+        Utils::findFiles({"WSCC-09_Dyn_Full_DI.xml", "WSCC-09_Dyn_Full_EQ.xml", "WSCC-09_Dyn_Full_SV.xml", "WSCC-09_Dyn_Full_TP.xml"}, "build/_deps/cim-data-src/WSCC-09/WSCC-09_Dyn_Full", "CIMPATH");
     timeStep = 10e-6;
     finalTime = 0.1;
   } else {

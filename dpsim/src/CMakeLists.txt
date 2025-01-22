@@ -12,6 +12,7 @@ set(DPSIM_SOURCES
 	Timer.cpp
 	Event.cpp
 	DataLogger.cpp
+	RealTimeDataLogger.cpp
 	Scheduler.cpp
 	SequentialScheduler.cpp
 	ThreadScheduler.cpp
@@ -80,6 +81,7 @@ if(WITH_CUDA)
 			GpuMagmaAdapter.cpp
 			)
 		list(APPEND DPSIM_LIBRARIES ${MAGMA_LIBRARIES})
+		list(APPEND DPSIM_LIBRARIES ${CUDA_cusparse_LIBRARY})
 		list(APPEND DPSIM_INCLUDE_DIRS ${MAGMA_INCLUDE_DIR})
 	endif()
 	if(WITH_CUDA_SPARSE)

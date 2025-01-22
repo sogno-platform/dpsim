@@ -18,6 +18,9 @@ set(SHMEM_SOURCES
 	FileExample.cpp
 	MqttExample.cpp
 	FpgaExample.cpp
+	FpgaCosim3PhInfiniteBus.cpp
+	FpgaCosimulation.cpp
+	Fpga9BusHil.cpp
 	SharedMemExample.cpp
 	#ShmemExample.cpp
 	#ShmemDistributedReference.cpp

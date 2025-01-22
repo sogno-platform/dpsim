@@ -61,5 +61,7 @@ public:
   String uid() { return **mUID; }
   /// Get component type (cross-platform)
   String type() { return Utils::className(this); }
+  // Returns a description of the object
+  virtual String description() { return ""; }
 };
 } // namespace CPS

@@ -133,6 +133,20 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
                     createAttributeSetter<CPS::Real>("f_src"));
 
+  py::class_<CPS::EMT::Ph3::ControlledVoltageSource,
+             std::shared_ptr<CPS::EMT::Ph3::ControlledVoltageSource>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "ControlledVoltageSource",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           py::overload_cast<CPS::Matrix>(
+               &CPS::EMT::Ph3::ControlledVoltageSource::setParameters),
+           "V_ref"_a)
+      .def("connect", &CPS::EMT::Ph3::ControlledVoltageSource::connect)
+      .def_property("V_ref", createAttributeGetter<CPS::MatrixComp>("V_ref"),
+                    createAttributeSetter<CPS::MatrixComp>("V_ref"));
+
   py::class_<CPS::EMT::Ph3::CurrentSource,
              std::shared_ptr<CPS::EMT::Ph3::CurrentSource>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "CurrentSource",
@@ -197,13 +211,11 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "parallel_conductance"_a = zeroMatrix(3))
       .def("connect", &CPS::EMT::Ph3::PiLine::connect);
 
-  py::class_<CPS::EMT::Ph3::RXLoad, std::shared_ptr<CPS::EMT::Ph3::RXLoad>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "RXLoad",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::Ph3::RXLoad::setParameters,
-           "active_power"_a, "reactive_power"_a, "volt"_a)
+  py::class_<CPS::EMT::Ph3::RXLoad, std::shared_ptr<CPS::EMT::Ph3::RXLoad>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "RXLoad", py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::Ph3::RXLoad::setParameters, "active_power"_a, "reactive_power"_a, "volt"_a,
+           // cppcheck-suppress assignBoolToPointer
+           "reactance_in_series"_a = false)
       .def("connect", &CPS::EMT::Ph3::RXLoad::connect);
 
   py::class_<CPS::EMT::Ph3::Switch, std::shared_ptr<CPS::EMT::Ph3::Switch>,

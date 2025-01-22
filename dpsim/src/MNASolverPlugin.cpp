@@ -72,8 +72,15 @@ void MnaSolverPlugin<VarType>::recomputeSystemMatrix(Real time) {
 template <typename VarType> void MnaSolverPlugin<VarType>::initialize() {
   MnaSolver<VarType>::initialize();
   int size = this->mRightSideVector.rows();
-  auto hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
-  int nnz = hMat[0].nonZeros();
+  std::vector<SparseMatrix> hMat;
+  int nnz = 0;
+  if (this->mSystemMatrixRecomputation) {
+    SPDLOG_LOGGER_ERROR(this->mSLog, "System matrix recomputation not supported");
+    return;
+  } else {
+    hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
+    nnz = hMat[0].nonZeros();
+  }
 
   struct dpsim_mna_plugin *(*get_mna_plugin)(const char *);
 
