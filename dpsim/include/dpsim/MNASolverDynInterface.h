@@ -25,6 +25,6 @@ struct dpsim_mna_plugin {
   void (*cleanup)(void);
 };
 
-extern struct dpsim_mna_plugin *get_mna_plugin(const char *name);
+extern "C" struct dpsim_mna_plugin *get_mna_plugin(const char *name);
 
 #endif
