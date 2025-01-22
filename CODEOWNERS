@@ -61,8 +61,7 @@
 /dpsim-models/src/SP/SP_Ph1_SynchronGenerator6bOrderVBR.cpp @martinmoraga
 /dpsim-models/src/SP/SP_Ph1_SynchronGeneratorTrStab.cpp @gnakti
 /dpsim-models/src/SP/SP_Ph1_varResSwitch.cpp @gnakti
-/dpsim-villas/ @stv0g
-/dpsim-villas/examples/cxx/FpgaExample.cpp @n-eiling
+/dpsim-villas/ @n-eiling @stv0g
 /dpsim/examples/cxx/CIM @gnakti
 /dpsim/examples/cxx/Circuits @gnakti
 /dpsim/examples/cxx/Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp @martinmoraga
