@@ -486,8 +486,10 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 
   DataLogger initLeftVectorLog(mName + "_InitLeftVector",
                                mLogLevel != CPS::Logger::Level::off);
+  initLeftVectorLog.start();
   DataLogger initRightVectorLog(mName + "_InitRightVector",
                                 mLogLevel != CPS::Logger::Level::off);
+  initRightVectorLog.start();
 
   TopologicalPowerComp::Behaviour initBehaviourPowerComps =
       TopologicalPowerComp::Behaviour::Initialization;
