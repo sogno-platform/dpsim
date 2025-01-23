@@ -69,7 +69,7 @@ RUN pip3 install -r requirements-manylinux.txt
 
 # Install CIMpp from source
 RUN cd /tmp && \
-	git clone https://github.com/cim-iec/libcimpp.git && \
+	git clone https://github.com/sogno-platform/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
 	git checkout ${CIMPP_COMMIT} && \
 	git submodule update --init && \
