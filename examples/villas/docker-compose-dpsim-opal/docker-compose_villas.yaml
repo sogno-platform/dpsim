@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  node:
+    container_name: villas
+    image: registry.git.rwth-aachen.de/acs/public/villas/node:node-fix-multiple-sources
+    ports: 
+      - "12008:12008/udp"
+      - "10009:10009/udp"
+    volumes:
+      - ./demo.conf:/etc/node/demo.conf
+    command:
+      - node
+      - /etc/node/demo.conf

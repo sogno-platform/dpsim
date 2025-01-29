@@ -1,0 +1,844 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load .dockerignore
+#1 transferring context: 72B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 624B done
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/sogno/dpsim:dev
+#3 DONE 1.7s
+
+#4 [1/8] FROM docker.io/sogno/dpsim:dev@sha256:1cc9b91f52d169cb1dd9f54a3e8fa6828cc257fc89f6ee55f42e2ee76a534b08
+#4 resolve docker.io/sogno/dpsim:dev@sha256:1cc9b91f52d169cb1dd9f54a3e8fa6828cc257fc89f6ee55f42e2ee76a534b08 0.0s done
+#4 sha256:1cc9b91f52d169cb1dd9f54a3e8fa6828cc257fc89f6ee55f42e2ee76a534b08 3.71kB / 3.71kB done
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 0B / 234.14MB 0.1s
+#4 sha256:a1621bbd3d35ffe8173e90669eca370bdc390a5824f7d4ea5afe1523078c9c94 8.98kB / 8.98kB done
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 0B / 253.96MB 0.3s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 30.53MB / 234.14MB 0.5s
+#4 sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 0B / 146.19MB 0.5s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 47.19MB / 234.14MB 0.6s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 13.63MB / 253.96MB 0.6s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 27.26MB / 253.96MB 0.7s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 76.55MB / 234.14MB 0.8s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 47.19MB / 253.96MB 0.8s
+#4 sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 36.70MB / 146.19MB 0.8s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 102.76MB / 234.14MB 1.0s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 74.45MB / 253.96MB 1.0s
+#4 sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 59.77MB / 146.19MB 1.0s
+#4 sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 75.50MB / 146.19MB 1.1s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 116.39MB / 234.14MB 1.2s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 96.47MB / 253.96MB 1.2s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 128.97MB / 234.14MB 1.3s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 117.44MB / 253.96MB 1.3s
+#4 sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 100.66MB / 146.19MB 1.3s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 152.30MB / 234.14MB 1.5s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 146.80MB / 253.96MB 1.5s
+#4 sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 125.37MB / 146.19MB 1.5s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 164.63MB / 234.14MB 1.6s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 160.24MB / 253.96MB 1.6s
+#4 sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 140.51MB / 146.19MB 1.6s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 183.09MB / 234.14MB 1.7s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 181.40MB / 253.96MB 1.7s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 199.06MB / 234.14MB 1.8s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 198.87MB / 253.96MB 1.8s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 216.01MB / 253.96MB 1.9s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 227.54MB / 234.14MB 2.1s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 235.93MB / 253.96MB 2.1s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 253.96MB / 253.96MB 2.2s
+#4 sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 146.19MB / 146.19MB 3.9s done
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 234.14MB / 234.14MB 7.2s
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 253.96MB / 253.96MB 7.2s
+#4 sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 234.14MB / 234.14MB 7.2s done
+#4 extracting sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d
+#4 ...
+
+#5 [internal] load build context
+#5 transferring context: 27.12MB 10.0s
+#5 ...
+
+#4 [1/8] FROM docker.io/sogno/dpsim:dev@sha256:1cc9b91f52d169cb1dd9f54a3e8fa6828cc257fc89f6ee55f42e2ee76a534b08
+#4 sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 253.96MB / 253.96MB 10.7s done
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 0B / 150.03MB 10.8s
+#4 sha256:1510c679033441c1870d2d66a3b76022332a9ce1c33233e990821e38b3dd83ea 0B / 71.10MB 10.8s
+#4 sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 0B / 127.76MB 10.8s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 7.53MB / 150.03MB 11.0s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 19.92MB / 150.03MB 11.1s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 38.80MB / 150.03MB 11.2s
+#4 sha256:1510c679033441c1870d2d66a3b76022332a9ce1c33233e990821e38b3dd83ea 16.57MB / 71.10MB 11.2s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 57.26MB / 150.03MB 11.3s
+#4 sha256:1510c679033441c1870d2d66a3b76022332a9ce1c33233e990821e38b3dd83ea 29.08MB / 71.10MB 11.3s
+#4 sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 7.34MB / 127.76MB 11.3s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 71.30MB / 150.03MB 11.4s
+#4 sha256:1510c679033441c1870d2d66a3b76022332a9ce1c33233e990821e38b3dd83ea 48.23MB / 71.10MB 11.4s
+#4 sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 22.02MB / 127.76MB 11.4s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 90.18MB / 150.03MB 11.5s
+#4 sha256:1510c679033441c1870d2d66a3b76022332a9ce1c33233e990821e38b3dd83ea 63.96MB / 71.10MB 11.5s
+#4 sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 32.51MB / 127.76MB 11.5s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 110.10MB / 150.03MB 11.6s
+#4 sha256:1510c679033441c1870d2d66a3b76022332a9ce1c33233e990821e38b3dd83ea 71.10MB / 71.10MB 11.6s
+#4 sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 48.23MB / 127.76MB 11.6s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 121.63MB / 150.03MB 11.8s
+#4 sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 75.50MB / 127.76MB 11.8s
+#4 sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 91.23MB / 127.76MB 11.9s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 131.07MB / 150.03MB 12.1s
+#4 sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 103.81MB / 127.76MB 12.1s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 140.51MB / 150.03MB 12.3s
+#4 sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 127.76MB / 127.76MB 12.3s
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 150.03MB / 150.03MB 12.5s
+#4 sha256:1510c679033441c1870d2d66a3b76022332a9ce1c33233e990821e38b3dd83ea 71.10MB / 71.10MB 12.6s done
+#4 extracting sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 5.1s
+#4 extracting sha256:41dc6d0c7a75cb6d2fa365cf398186ebf098442d7b090a6d3fe8b078d580e83d 5.3s done
+#4 sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 127.76MB / 127.76MB 14.4s done
+#4 extracting sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77
+#4 sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 150.03MB / 150.03MB 16.0s done
+#4 sha256:55f9fd2363caa2006d9c781b1df7e140bfa04428e17fbaba9e5eed357a0d44fc 0B / 204B 16.2s
+#4 sha256:5a84c6e2b10488eb030f885f984c11ae2cfd41e1c4f51282bc6ea9af7ffbe7f4 0B / 16.76MB 16.2s
+#4 sha256:46d822e71d74b0cf9a488c44fad0054973f7fcc42877caa099e128ee535ad2c9 0B / 13.77MB 16.2s
+#4 sha256:46d822e71d74b0cf9a488c44fad0054973f7fcc42877caa099e128ee535ad2c9 9.44MB / 13.77MB 16.4s
+#4 sha256:55f9fd2363caa2006d9c781b1df7e140bfa04428e17fbaba9e5eed357a0d44fc 204B / 204B 16.5s
+#4 sha256:46d822e71d74b0cf9a488c44fad0054973f7fcc42877caa099e128ee535ad2c9 13.77MB / 13.77MB 16.5s
+#4 sha256:55f9fd2363caa2006d9c781b1df7e140bfa04428e17fbaba9e5eed357a0d44fc 204B / 204B 16.5s done
+#4 sha256:5a84c6e2b10488eb030f885f984c11ae2cfd41e1c4f51282bc6ea9af7ffbe7f4 16.76MB / 16.76MB 16.7s
+#4 sha256:46d822e71d74b0cf9a488c44fad0054973f7fcc42877caa099e128ee535ad2c9 13.77MB / 13.77MB 16.5s done
+#4 sha256:e14d86ccaf5fca2380424a4c2e7e54f89415cd2a9db0fdb0686b5a2f01a42b56 0B / 372.93kB 16.7s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 0B / 248.87MB 16.7s
+#4 sha256:e14d86ccaf5fca2380424a4c2e7e54f89415cd2a9db0fdb0686b5a2f01a42b56 372.93kB / 372.93kB 16.8s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 24.12MB / 248.87MB 16.9s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 42.99MB / 248.87MB 17.1s
+#4 sha256:5a84c6e2b10488eb030f885f984c11ae2cfd41e1c4f51282bc6ea9af7ffbe7f4 16.76MB / 16.76MB 17.1s done
+#4 sha256:e14d86ccaf5fca2380424a4c2e7e54f89415cd2a9db0fdb0686b5a2f01a42b56 372.93kB / 372.93kB 17.1s done
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 75.50MB / 248.87MB 17.3s
+#4 sha256:79c48aa120cf42b13b79dbe9d3724fa9ef6500180f1fe3e57e605c0be9a696c2 0B / 2.29MB 17.3s
+#4 sha256:0082e04824d8d5a532f8d1f2aa0e31482105cf90a0c4f2b0a9f411f11896bc0f 0B / 29.93MB 17.3s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 97.52MB / 248.87MB 17.4s
+#4 sha256:79c48aa120cf42b13b79dbe9d3724fa9ef6500180f1fe3e57e605c0be9a696c2 2.29MB / 2.29MB 17.5s
+#4 sha256:0082e04824d8d5a532f8d1f2aa0e31482105cf90a0c4f2b0a9f411f11896bc0f 7.34MB / 29.93MB 17.5s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 113.24MB / 248.87MB 17.6s
+#4 sha256:0082e04824d8d5a532f8d1f2aa0e31482105cf90a0c4f2b0a9f411f11896bc0f 21.63MB / 29.93MB 17.6s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 133.17MB / 248.87MB 17.8s
+#4 sha256:79c48aa120cf42b13b79dbe9d3724fa9ef6500180f1fe3e57e605c0be9a696c2 2.29MB / 2.29MB 17.6s done
+#4 sha256:0082e04824d8d5a532f8d1f2aa0e31482105cf90a0c4f2b0a9f411f11896bc0f 29.93MB / 29.93MB 17.8s
+#4 sha256:434b1f613e456eaa9e0985a0b0682414b2f22a529b3f5916f3af50d527355d03 0B / 87.05MB 17.8s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 145.75MB / 248.87MB 17.9s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 160.43MB / 248.87MB 18.0s
+#4 sha256:434b1f613e456eaa9e0985a0b0682414b2f22a529b3f5916f3af50d527355d03 6.29MB / 87.05MB 18.0s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 178.26MB / 248.87MB 18.1s
+#4 sha256:0082e04824d8d5a532f8d1f2aa0e31482105cf90a0c4f2b0a9f411f11896bc0f 29.93MB / 29.93MB 18.0s done
+#4 sha256:434b1f613e456eaa9e0985a0b0682414b2f22a529b3f5916f3af50d527355d03 20.97MB / 87.05MB 18.1s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 218.10MB / 248.87MB 18.3s
+#4 sha256:434b1f613e456eaa9e0985a0b0682414b2f22a529b3f5916f3af50d527355d03 57.67MB / 87.05MB 18.3s
+#4 sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 1.05MB / 148.57MB 18.3s
+#4 ...
+
+#5 [internal] load build context
+#5 transferring context: 133.23MB 18.3s done
+#5 DONE 18.3s
+
+#4 [1/8] FROM docker.io/sogno/dpsim:dev@sha256:1cc9b91f52d169cb1dd9f54a3e8fa6828cc257fc89f6ee55f42e2ee76a534b08
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 236.98MB / 248.87MB 18.4s
+#4 sha256:434b1f613e456eaa9e0985a0b0682414b2f22a529b3f5916f3af50d527355d03 78.64MB / 87.05MB 18.4s
+#4 sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 15.73MB / 148.57MB 18.4s
+#4 sha256:434b1f613e456eaa9e0985a0b0682414b2f22a529b3f5916f3af50d527355d03 87.05MB / 87.05MB 18.6s
+#4 sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 48.23MB / 148.57MB 18.6s
+#4 sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 61.87MB / 148.57MB 18.7s
+#4 sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 72.35MB / 148.57MB 18.8s
+#4 sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 97.52MB / 148.57MB 19.0s
+#4 sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 111.15MB / 148.57MB 19.1s
+#4 sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 125.57MB / 148.57MB 19.2s
+#4 sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 143.65MB / 148.57MB 19.3s
+#4 extracting sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 5.1s
+#4 sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 248.87MB / 248.87MB 21.8s done
+#4 sha256:434b1f613e456eaa9e0985a0b0682414b2f22a529b3f5916f3af50d527355d03 87.05MB / 87.05MB 22.7s done
+#4 sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 148.57MB / 148.57MB 23.8s done
+#4 extracting sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 10.2s
+#4 extracting sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 15.6s
+#4 extracting sha256:6dee770fbede05a6eae4963dcec9f82e78843bf37682bcd49d582d35d5ab3f77 16.8s done
+#4 extracting sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 0.1s
+#4 extracting sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 5.4s
+#4 extracting sha256:ced02d403c1979d096ed9a105943868fd7199f7bc459e5bf9b6931f0c18bab56 9.3s done
+#4 extracting sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c
+#4 extracting sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 5.1s
+#4 extracting sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 10.1s
+#4 extracting sha256:0d7496c736761587fb3fc2abd3376232af95d5bda08c86fcc195b513a69a1b3c 15.0s done
+#4 extracting sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7
+#4 extracting sha256:b18efdbf356572bbdcdf53d1be20bc813f6507a918c9cbcae1bb3db7a93f5ba7 2.7s done
+#4 extracting sha256:1510c679033441c1870d2d66a3b76022332a9ce1c33233e990821e38b3dd83ea
+#4 extracting sha256:1510c679033441c1870d2d66a3b76022332a9ce1c33233e990821e38b3dd83ea 3.6s done
+#4 extracting sha256:46d822e71d74b0cf9a488c44fad0054973f7fcc42877caa099e128ee535ad2c9
+#4 extracting sha256:46d822e71d74b0cf9a488c44fad0054973f7fcc42877caa099e128ee535ad2c9 0.7s done
+#4 extracting sha256:5a84c6e2b10488eb030f885f984c11ae2cfd41e1c4f51282bc6ea9af7ffbe7f4
+#4 extracting sha256:5a84c6e2b10488eb030f885f984c11ae2cfd41e1c4f51282bc6ea9af7ffbe7f4 0.9s done
+#4 extracting sha256:55f9fd2363caa2006d9c781b1df7e140bfa04428e17fbaba9e5eed357a0d44fc done
+#4 extracting sha256:e14d86ccaf5fca2380424a4c2e7e54f89415cd2a9db0fdb0686b5a2f01a42b56 0.1s done
+#4 extracting sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e
+#4 extracting sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 5.1s
+#4 extracting sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 10.1s
+#4 extracting sha256:5ee9abf2c74a020836cdfaf9519fc6dec0b0d2dd20fa8331fabe2a0b353ba19e 14.9s done
+#4 extracting sha256:79c48aa120cf42b13b79dbe9d3724fa9ef6500180f1fe3e57e605c0be9a696c2
+#4 extracting sha256:79c48aa120cf42b13b79dbe9d3724fa9ef6500180f1fe3e57e605c0be9a696c2 1.0s done
+#4 extracting sha256:0082e04824d8d5a532f8d1f2aa0e31482105cf90a0c4f2b0a9f411f11896bc0f
+#4 extracting sha256:0082e04824d8d5a532f8d1f2aa0e31482105cf90a0c4f2b0a9f411f11896bc0f 2.7s done
+#4 extracting sha256:434b1f613e456eaa9e0985a0b0682414b2f22a529b3f5916f3af50d527355d03
+#4 extracting sha256:434b1f613e456eaa9e0985a0b0682414b2f22a529b3f5916f3af50d527355d03 5.0s
+#4 extracting sha256:434b1f613e456eaa9e0985a0b0682414b2f22a529b3f5916f3af50d527355d03 5.5s done
+#4 extracting sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 0.1s
+#4 extracting sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 5.1s
+#4 extracting sha256:d4baa33ac27d065237ed1883181ac44b355bdb94f037e3044a849e678ddc940e 6.9s done
+#4 DONE 101.6s
+
+#6 [2/8] RUN adduser     --comment "Default user"     --uid 1000     jovyan
+#6 DONE 18.3s
+
+#7 [3/8] COPY . /home/jovyan/dpsim
+#7 DONE 2.6s
+
+#8 [4/8] RUN chown -R 1000 /home/jovyan
+#8 DONE 51.5s
+
+#9 [5/8] RUN rm -rf /home/jovyan/dpsim/build && mkdir /home/jovyan/dpsim/build
+#9 DONE 0.8s
+
+#10 [6/8] WORKDIR /home/jovyan/dpsim
+#10 DONE 0.4s
+
+#11 [7/8] RUN python3 -m build --wheel
+#11 0.635 * Creating isolated environment: venv+pip...
+#11 3.990 * Installing packages in isolated environment:
+#11 5.842   - setuptools>=42
+#11 5.842 * Getting build dependencies for wheel...
+#11 6.150 * Installing packages in isolated environment:
+#11 7.001   - pytest-runner
+#11 7.001   - wheel
+#11 7.001 * Building wheel...
+#11 7.141 /tmp/build-env-euwx5bas/lib64/python3.10/site-packages/setuptools/_distutils/dist.py:270: UserWarning: Unknown distribution option: 'tests_require'
+#11 7.141   warnings.warn(msg)
+#11 7.190 running bdist_wheel
+#11 7.197 running build
+#11 7.197 running build_py
+#11 7.205 creating build/lib.linux-x86_64-cpython-310/dpsim
+#11 7.205 copying python/src/dpsim/__init__.py -> build/lib.linux-x86_64-cpython-310/dpsim
+#11 7.205 copying python/src/dpsim/matpower.py -> build/lib.linux-x86_64-cpython-310/dpsim
+#11 7.206 running build_ext
+#11 7.372 -- The CXX compiler identification is GNU 12.2.1
+#11 7.396 -- Detecting CXX compiler ABI info
+#11 7.623 -- Detecting CXX compiler ABI info - done
+#11 7.640 -- Check for working CXX compiler: /usr/bin/c++ - skipped
+#11 7.641 -- Detecting CXX compile features
+#11 7.641 -- Detecting CXX compile features - done
+#11 7.644 -- Performing Test CXX_SUPPORTS_WERROR
+#11 7.863 -- Performing Test CXX_SUPPORTS_WERROR - Success
+#11 7.864 -- Looking for timerfd_create
+#11 8.125 -- Looking for timerfd_create - found
+#11 8.126 -- Looking for getopt_long
+#11 8.346 -- Looking for getopt_long - found
+#11 8.408 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+#11 8.650 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+#11 8.652 -- Found Threads: TRUE  
+#11 8.664 -- Found Sundials: /usr/local/lib64/libsundials_arkode.so  
+#11 9.149 -- Found OpenMP_CXX: -fopenmp (found version "4.5") 
+#11 9.151 -- Found OpenMP: TRUE (found version "4.5")  
+#11 9.157 CUDA_TOOLKIT_ROOT_DIR not found or specified
+#11 9.169 -- Could NOT find CUDA (missing: CUDA_TOOLKIT_ROOT_DIR CUDA_NVCC_EXECUTABLE CUDA_INCLUDE_DIRS CUDA_CUDART_LIBRARY) 
+#11 9.173 -- Could NOT find GSL (missing: GSL_LIBRARY GSL_INCLUDE_DIR) 
+#11 9.176 -- Found Graphviz: /usr/lib64/libcgraph.so  
+#11 9.178 -- Found VILLASnode: /usr/local/lib64/libvillas.so  
+#11 9.182 -- Could NOT find MAGMA (missing: MAGMA_LIBRARIES MAGMA_INCLUDE_DIR) 
+#11 10.26 -- Found Python3: /tmp/build-env-euwx5bas/bin/python3.10 (found version "3.10.11") found components: Interpreter Development Development.Module Development.Embed 
+#11 10.27 -- Found Filesystem: stdc++fs  
+#11 12.04 -- The C compiler identification is GNU 12.2.1
+#11 12.05 -- Detecting C compiler ABI info
+#11 12.24 -- Detecting C compiler ABI info - done
+#11 12.26 -- Check for working C compiler: /usr/bin/cc - skipped
+#11 12.26 -- Detecting C compile features
+#11 12.26 -- Detecting C compile features - done
+#11 12.26 -- Performing Test HAVE_FPIC
+#11 12.45 -- Performing Test HAVE_FPIC - Success
+#11 12.45 -- Performing Test HAVE_QSTD_C99
+#11 12.55 -- Performing Test HAVE_QSTD_C99 - Failed
+#11 12.57 -- Looking for complex.h
+#11 12.77 -- Looking for complex.h - found
+#11 12.77 -- Looking for fenv.h
+#11 12.96 -- Looking for fenv.h - found
+#11 12.96 -- Looking for ceil in m
+#11 13.17 -- Looking for ceil in m - found
+#11 13.17 -- Looking for feenableexcept
+#11 13.35 -- Looking for feenableexcept - found
+#11 13.35 -- Looking for _controlfp
+#11 13.45 -- Looking for _controlfp - not found
+#11 13.45 -- Check size of _C_double_complex
+#11 13.54 -- Check size of _C_double_complex - failed
+#11 13.56 -- Performing Test COMPILER_HAS_HIDDEN_VISIBILITY
+#11 13.80 -- Performing Test COMPILER_HAS_HIDDEN_VISIBILITY - Success
+#11 13.80 -- Performing Test COMPILER_HAS_HIDDEN_INLINE_VISIBILITY
+#11 14.03 -- Performing Test COMPILER_HAS_HIDDEN_INLINE_VISIBILITY - Success
+#11 14.03 -- Performing Test COMPILER_HAS_DEPRECATED_ATTR
+#11 14.27 -- Performing Test COMPILER_HAS_DEPRECATED_ATTR - Success
+#11 14.29 -- The following OPTIONAL packages have been found:
+#11 14.29 
+#11 14.29  * Sundials
+#11 14.29  * OpenMP
+#11 14.29  * Graphviz
+#11 14.29  * VILLASnode
+#11 14.29  * Python3
+#11 14.29 
+#11 14.29 -- The following REQUIRED packages have been found:
+#11 14.29 
+#11 14.29  * Threads
+#11 14.29  * Filesystem
+#11 14.29  * Eigen3 (required version >= 3.0)
+#11 14.29 
+#11 14.29 -- The following OPTIONAL packages have not been found:
+#11 14.29 
+#11 14.29  * CUDA
+#11 14.29  * GSL
+#11 14.29  * MAGMA
+#11 14.29 
+#11 14.29 -- CIM Version: CGMES_2.4.15_16FEB2016
+#11 14.30 -- Found CIMpp: /usr/local/lib64/libcimppCGMES_2.4.15_16FEB2016.so  
+#11 14.34 -- Performing Test HAS_FLTO
+#11 14.69 -- Performing Test HAS_FLTO - Success
+#11 23.29 -- Found Sphinx: /usr/local/bin/sphinx-build  
+#11 23.33 -- Found Doxygen: /usr/bin/doxygen (found version "1.9.1") found components: doxygen dot 
+#11 23.39 -- Building DPsim:
+#11 23.39 -- Feature summary for DPsim
+#11 23.39 -- The following features have been enabled:
+#11 23.39 
+#11 23.39  * CIM, Loading Common Information Model (CIM) files
+#11 23.39  * Graphviz, Graphviz graphs
+#11 23.39  * JSON, JSON library
+#11 23.39  * MNASolverPlugin, MNASolver Plugins
+#11 23.39  * OpenMP, OpenMP-based parallelisation
+#11 23.39  * PyBind, PyBind module
+#11 23.39  * RealTime, Extended real-time features
+#11 23.39  * Sundials, Sundials solvers
+#11 23.39  * VILLASnode, Interface DPsim solvers via VILLASnode interfaces
+#11 23.39  * KLU, Use custom KLU module
+#11 23.39 
+#11 23.39 -- The following OPTIONAL packages have been found:
+#11 23.39 
+#11 23.39  * Sundials, Sundials solvers
+#11 23.39  * OpenMP, OpenMP-based parallelisation
+#11 23.39  * Graphviz, Graphviz graphs
+#11 23.39  * VILLASnode, Interface DPsim solvers via VILLASnode interfaces
+#11 23.39  * Python3
+#11 23.39  * CIMpp
+#11 23.39  * Sphinx
+#11 23.39  * Doxygen
+#11 23.39 
+#11 23.39 -- The following REQUIRED packages have been found:
+#11 23.39 
+#11 23.39  * Filesystem
+#11 23.39  * Eigen3 (required version >= 3.0)
+#11 23.39  * Threads
+#11 23.39  * spdlog (required version >= 1.5.0)
+#11 23.39  * fmt (required version >= 6.1.2)
+#11 23.39 
+#11 23.39 -- The following features have been disabled:
+#11 23.39 
+#11 23.39  * CUDA, CUDA-based parallelisation
+#11 23.39  * GSL, GNU Scientific library
+#11 23.39  * MAGMA, MAGMA features
+#11 23.39 
+#11 23.39 -- The following OPTIONAL packages have not been found:
+#11 23.39 
+#11 23.39  * CUDA, CUDA-based parallelisation
+#11 23.39  * GSL, GNU Scientific library
+#11 23.39  * MAGMA, MAGMA features
+#11 23.39 
+#11 23.39 --   VERSION:         1.1.1
+#11 23.39 --   RELEASE:         1.mybinder_release.20250130git3e73e5c
+#11 23.39 --   GIT_REV:         3e73e5c
+#11 23.39 --   GIT_BRANCH:      mybinder
+#11 23.39 --   VARIANT:         release
+#11 23.39 --   BUILD_ID:        v1.1.1-3e73e5c-release
+#11 23.39 --   BUILD_DATE:      20250130
+#11 23.40 -- Configuring done (16.2s)
+#11 24.19 -- Generating done (0.8s)
+#11 24.21 CMake Warning:
+#11 24.21   Manually-specified variables were not used by the project:
+#11 24.21 
+#11 24.21     CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG
+#11 24.21     PYTHON_EXECUTABLE
+#11 24.21 
+#11 24.21 
+#11 24.21 -- Build files have been written to: /home/jovyan/dpsim/build/temp.linux-x86_64-cpython-310
+#11 24.39 [  0%] Building C object _deps/klu-module-build/CMakeFiles/suitesparseconfig.dir/SuiteSparse_config/SuiteSparse_config.c.o
+#11 24.40 [  0%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Logger.cpp.o
+#11 24.40 [  0%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/MNAStampUtils.cpp.o
+#11 24.40 [  0%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/MathUtils.cpp.o
+#11 24.48 [  1%] Linking C static library ../../libsuitesparseconfig.a
+#11 24.57 [  1%] Built target suitesparseconfig
+#11 24.59 [  3%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Attribute.cpp.o
+#11 26.66 [  3%] Generating AMD/Source/amd_valid_dl.c
+#11 26.69 [  3%] Generating AMD/Source/amd_1_di.c
+#11 26.73 [  3%] Generating AMD/Source/amd_1_dl.c
+#11 26.77 [  3%] Generating AMD/Source/amd_2_di.c
+#11 26.81 [  3%] Generating AMD/Source/amd_2_dl.c
+#11 26.86 [  3%] Generating AMD/Source/amd_aat_di.c
+#11 26.91 [  5%] Generating AMD/Source/amd_aat_dl.c
+#11 26.93 [  6%] Generating AMD/Source/amd_control_di.c
+#11 26.94 [  6%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/TopologicalNode.cpp.o
+#11 26.96 [  6%] Generating AMD/Source/amd_control_dl.c
+#11 26.99 [  6%] Generating AMD/Source/amd_defaults_di.c
+#11 27.02 [  6%] Generating AMD/Source/amd_defaults_dl.c
+#11 27.05 [  6%] Generating AMD/Source/amd_dump_di.c
+#11 27.08 [  6%] Generating AMD/Source/amd_dump_dl.c
+#11 27.11 [  6%] Generating AMD/Source/amd_global_di.c
+#11 27.14 [  6%] Generating AMD/Source/amd_global_dl.c
+#11 27.17 [  6%] Generating AMD/Source/amd_info_di.c
+#11 27.20 [  6%] Generating AMD/Source/amd_info_dl.c
+#11 27.24 [  6%] Generating AMD/Source/amd_order_di.c
+#11 27.27 [  8%] Generating AMD/Source/amd_order_dl.c
+#11 27.30 [ 10%] Generating AMD/Source/amd_post_tree_di.c
+#11 27.32 [ 10%] Generating AMD/Source/amd_post_tree_dl.c
+#11 27.34 [ 10%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/TopologicalTerminal.cpp.o
+#11 27.35 [ 10%] Generating AMD/Source/amd_postorder_di.c
+#11 27.37 [ 10%] Generating AMD/Source/amd_postorder_dl.c
+#11 27.41 [ 10%] Generating AMD/Source/amd_preprocess_di.c
+#11 27.44 [ 10%] Generating AMD/Source/amd_preprocess_dl.c
+#11 27.48 [ 10%] Generating AMD/Source/amd_valid_di.c
+#11 27.53 [ 10%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_1_di.c.o
+#11 27.62 [ 12%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_2_di.c.o
+#11 27.83 [ 12%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_aat_di.c.o
+#11 27.93 [ 12%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_control_di.c.o
+#11 28.00 [ 12%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_defaults_di.c.o
+#11 28.07 [ 12%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_dump_di.c.o
+#11 28.19 [ 12%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_global_di.c.o
+#11 28.22 [ 13%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_info_di.c.o
+#11 28.31 [ 13%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_order_di.c.o
+#11 28.39 [ 13%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_post_tree_di.c.o
+#11 28.46 [ 13%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_postorder_di.c.o
+#11 28.53 [ 13%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_preprocess_di.c.o
+#11 28.61 [ 13%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_valid_di.c.o
+#11 28.68 [ 15%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_1_dl.c.o
+#11 28.76 [ 15%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_2_dl.c.o
+#11 28.93 [ 15%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_aat_dl.c.o
+#11 29.01 [ 15%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_control_dl.c.o
+#11 29.09 [ 15%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_defaults_dl.c.o
+#11 29.16 [ 15%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_dump_dl.c.o
+#11 29.23 [ 17%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_global_dl.c.o
+#11 29.27 [ 17%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_info_dl.c.o
+#11 29.36 [ 17%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_order_dl.c.o
+#11 29.44 [ 17%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_post_tree_dl.c.o
+#11 29.50 [ 17%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_postorder_dl.c.o
+#11 29.60 [ 17%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_preprocess_dl.c.o
+#11 29.67 [ 18%] Building C object _deps/klu-module-build/CMakeFiles/amd.dir/AMD/Source/amd_valid_dl.c.o
+#11 29.67 [ 18%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SimNode.cpp.o
+#11 29.72 [ 18%] Linking C static library ../../libamd.a
+#11 29.84 [ 18%] Built target amd
+#11 29.87 [ 18%] Generating COLAMD/Source/colamd_dl.c
+#11 29.90 [ 18%] Generating COLAMD/Source/colamd_di.c
+#11 29.93 [ 18%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SimPowerComp.cpp.o
+#11 29.97 [ 20%] Building C object _deps/klu-module-build/CMakeFiles/colamd.dir/COLAMD/Source/colamd_di.c.o
+#11 30.10 [ 20%] Building C object _deps/klu-module-build/CMakeFiles/colamd.dir/COLAMD/Source/colamd_dl.c.o
+#11 30.25 [ 20%] Linking C static library ../../libcolamd.a
+#11 30.37 [ 20%] Built target colamd
+#11 30.40 [ 20%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/MNASimPowerComp.cpp.o
+#11 31.42 [ 22%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/CompositePowerComp.cpp.o
+#11 33.11 [ 22%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SystemTopology.cpp.o
+#11 33.77 [ 22%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/CSVReader.cpp.o
+#11 34.42 [ 22%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Base/Base_ReducedOrderSynchronGenerator.cpp.o
+#11 34.81 [ 24%] Generating BTF/Source/btf_strongcomp_dl.c
+#11 34.85 [ 24%] Generating BTF/Source/btf_maxtrans_di.c
+#11 34.89 [ 24%] Generating BTF/Source/btf_maxtrans_dl.c
+#11 34.93 [ 24%] Generating BTF/Source/btf_order_di.c
+#11 34.97 [ 24%] Generating BTF/Source/btf_order_dl.c
+#11 35.00 [ 24%] Generating BTF/Source/btf_strongcomp_di.c
+#11 35.07 [ 24%] Building C object _deps/klu-module-build/CMakeFiles/btf.dir/BTF/Source/btf_maxtrans_di.c.o
+#11 35.15 [ 24%] Building C object _deps/klu-module-build/CMakeFiles/btf.dir/BTF/Source/btf_order_di.c.o
+#11 35.23 [ 24%] Building C object _deps/klu-module-build/CMakeFiles/btf.dir/BTF/Source/btf_strongcomp_di.c.o
+#11 35.29 [ 24%] Building C object _deps/klu-module-build/CMakeFiles/btf.dir/BTF/Source/btf_maxtrans_dl.c.o
+#11 35.36 [ 24%] Building C object _deps/klu-module-build/CMakeFiles/btf.dir/BTF/Source/btf_order_dl.c.o
+#11 35.42 [ 25%] Building C object _deps/klu-module-build/CMakeFiles/btf.dir/BTF/Source/btf_strongcomp_dl.c.o
+#11 35.50 [ 25%] Linking C static library ../../libbtf.a
+#11 35.60 [ 25%] Built target btf
+#11 35.63 [ 25%] Generating KLU/Source/klu_tsolve_dl.c
+#11 35.65 [ 25%] Generating KLU/Source/klu_analyze_di.c
+#11 35.68 [ 25%] Generating KLU/Source/klu_analyze_dl.c
+#11 35.74 [ 25%] Generating KLU/Source/klu_analyze_given_di.c
+#11 35.78 [ 25%] Generating KLU/Source/klu_analyze_given_dl.c
+#11 35.81 [ 25%] Generating KLU/Source/klu_compute_path_di.c
+#11 35.84 [ 27%] Generating KLU/Source/klu_compute_path_dl.c
+#11 35.86 [ 27%] Generating KLU/Source/klu_defaults_di.c
+#11 35.91 [ 27%] Generating KLU/Source/klu_defaults_dl.c
+#11 35.94 [ 29%] Generating KLU/Source/klu_di.c
+#11 35.97 [ 29%] Generating KLU/Source/klu_diagnostics_di.c
+#11 36.01 [ 29%] Generating KLU/Source/klu_diagnostics_dl.c
+#11 36.04 [ 29%] Generating KLU/Source/klu_dl.c
+#11 36.09 [ 31%] Generating KLU/Source/klu_dump_di.c
+#11 36.12 [ 31%] Generating KLU/Source/klu_dump_dl.c
+#11 36.15 [ 31%] Generating KLU/Source/klu_extract_di.c
+#11 36.18 [ 31%] Generating KLU/Source/klu_extract_dl.c
+#11 36.22 [ 31%] Generating KLU/Source/klu_factor_di.c
+#11 36.25 [ 31%] Generating KLU/Source/klu_factor_dl.c
+#11 36.30 [ 31%] Generating KLU/Source/klu_free_numeric_di.c
+#11 36.35 [ 32%] Generating KLU/Source/klu_free_numeric_dl.c
+#11 36.38 [ 32%] Generating KLU/Source/klu_free_symbolic_di.c
+#11 36.42 [ 32%] Generating KLU/Source/klu_free_symbolic_dl.c
+#11 36.46 [ 32%] Generating KLU/Source/klu_kernel_di.c
+#11 36.49 [ 32%] Generating KLU/Source/klu_kernel_dl.c
+#11 36.54 [ 34%] Generating KLU/Source/klu_memory_di.c
+#11 36.57 [ 34%] Generating KLU/Source/klu_memory_dl.c
+#11 36.61 [ 34%] Generating KLU/Source/klu_partial_factorization_path_di.c
+#11 36.65 [ 34%] Generating KLU/Source/klu_partial_factorization_path_dl.c
+#11 36.73 [ 34%] Generating KLU/Source/klu_partial_refactorization_restart_di.c
+#11 36.77 [ 36%] Generating KLU/Source/klu_partial_refactorization_restart_dl.c
+#11 36.82 [ 36%] Generating KLU/Source/klu_print_di.c
+#11 36.85 [ 36%] Generating KLU/Source/klu_print_dl.c
+#11 36.88 [ 36%] Generating KLU/Source/klu_refactor_di.c
+#11 36.93 [ 36%] Generating KLU/Source/klu_refactor_dl.c
+#11 36.97 [ 36%] Generating KLU/Source/klu_scale_di.c
+#11 37.01 [ 36%] Generating KLU/Source/klu_scale_dl.c
+#11 37.05 [ 37%] Generating KLU/Source/klu_solve_di.c
+#11 37.08 [ 37%] Generating KLU/Source/klu_solve_dl.c
+#11 37.11 [ 37%] Generating KLU/Source/klu_sort_di.c
+#11 37.14 [ 37%] Generating KLU/Source/klu_sort_dl.c
+#11 37.19 [ 37%] Generating KLU/Source/klu_tsolve_di.c
+#11 37.25 [ 39%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_di.c.o
+#11 37.37 [ 39%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_analyze_di.c.o
+#11 37.43 [ 39%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Base/Base_SynchronGenerator.cpp.o
+#11 37.47 [ 39%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_analyze_given_di.c.o
+#11 37.56 [ 39%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_compute_path_di.c.o
+#11 37.67 [ 39%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_defaults_di.c.o
+#11 37.75 [ 39%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_diagnostics_di.c.o
+#11 37.84 [ 41%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_dump_di.c.o
+#11 37.92 [ 41%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_extract_di.c.o
+#11 38.00 [ 41%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_factor_di.c.o
+#11 38.09 [ 41%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_free_numeric_di.c.o
+#11 38.21 [ 41%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_free_symbolic_di.c.o
+#11 38.25 [ 41%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_kernel_di.c.o
+#11 38.29 [ 41%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Base/Base_AvVoltageSourceInverterDQ.cpp.o
+#11 38.34 [ 43%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_memory_di.c.o
+#11 38.43 [ 43%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_print_di.c.o
+#11 38.52 [ 44%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Base/Base_AvVoltageSourceInverterDQWithStateSpace.cpp.o
+#11 38.53 [ 44%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_partial_factorization_path_di.c.o
+#11 38.62 [ 44%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_partial_refactorization_restart_di.c.o
+#11 38.73 [ 44%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_refactor_di.c.o
+#11 38.82 [ 44%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_scale_di.c.o
+#11 38.89 [ 46%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_solve_di.c.o
+#11 38.99 [ 46%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_sort_di.c.o
+#11 39.07 [ 46%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_tsolve_di.c.o
+#11 39.16 [ 46%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_dl.c.o
+#11 39.25 [ 46%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_analyze_dl.c.o
+#11 39.36 [ 46%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_analyze_given_dl.c.o
+#11 39.46 [ 48%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_compute_path_dl.c.o
+#11 39.56 [ 48%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_defaults_dl.c.o
+#11 39.62 [ 48%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_diagnostics_dl.c.o
+#11 39.71 [ 48%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_dump_dl.c.o
+#11 39.77 [ 48%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_extract_dl.c.o
+#11 39.86 [ 48%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_factor_dl.c.o
+#11 39.95 [ 50%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_free_numeric_dl.c.o
+#11 40.03 [ 50%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_free_symbolic_dl.c.o
+#11 40.10 [ 50%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_kernel_dl.c.o
+#11 40.21 [ 50%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_memory_dl.c.o
+#11 40.29 [ 50%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_print_dl.c.o
+#11 40.38 [ 50%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_partial_factorization_path_dl.c.o
+#11 40.47 [ 51%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_partial_refactorization_restart_dl.c.o
+#11 40.56 [ 51%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_refactor_dl.c.o
+#11 40.63 [ 51%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_Capacitor.cpp.o
+#11 40.67 [ 51%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_scale_dl.c.o
+#11 40.77 [ 51%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_solve_dl.c.o
+#11 40.87 [ 51%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_sort_dl.c.o
+#11 40.91 [ 51%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_CurrentSource.cpp.o
+#11 40.94 [ 51%] Building C object _deps/klu-module-build/CMakeFiles/klu.dir/KLU/Source/klu_tsolve_dl.c.o
+#11 41.05 [ 53%] Linking C static library ../../libklu.a
+#11 41.17 [ 53%] Built target klu
+#11 41.19 [ 53%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_Inductor.cpp.o
+#11 41.93 [ 53%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_PiLine.cpp.o
+#11 44.77 [ 53%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_RxLine.cpp.o
+#11 44.97 [ 55%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_RXLoad.cpp.o
+#11 45.29 [ 55%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_RXLoadSwitch.cpp.o
+#11 46.15 [ 55%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_PQLoadCS.cpp.o
+#11 48.87 [ 55%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_Resistor.cpp.o
+#11 49.13 [ 55%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_Transformer.cpp.o
+#11 49.36 [ 55%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_VoltageSource.cpp.o
+#11 50.33 [ 56%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_VoltageSourceRamp.cpp.o
+#11 52.89 [ 56%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_VoltageSourceNorton.cpp.o
+#11 53.59 [ 56%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_Switch.cpp.o
+#11 53.82 [ 56%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_SynchronGeneratorIdeal.cpp.o
+#11 54.20 [ 56%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_SynchronGeneratorTrStab.cpp.o
+#11 56.91 [ 56%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.cpp.o
+#11 57.61 [ 58%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_SynchronGenerator3OrderVBR.cpp.o
+#11 57.85 [ 58%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_SynchronGenerator4OrderVBR.cpp.o
+#11 58.66 [ 58%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_SynchronGenerator4OrderPCM.cpp.o
+#11 60.67 [ 58%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_SynchronGenerator4OrderTPM.cpp.o
+#11 61.42 [ 58%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_SynchronGenerator5OrderVBR.cpp.o
+#11 61.54 [ 58%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_SynchronGenerator6OrderPCM.cpp.o
+#11 61.97 [ 60%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_SynchronGenerator6aOrderVBR.cpp.o
+#11 64.22 [ 60%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_SynchronGenerator6bOrderVBR.cpp.o
+#11 65.45 [ 60%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_Inverter.cpp.o
+#11 65.68 [ 60%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_AvVoltageSourceInverterDQ.cpp.o
+#11 66.86 [ 60%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_NetworkInjection.cpp.o
+#11 67.88 [ 60%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_varResSwitch.cpp.o
+#11 69.65 [ 62%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_DPDQInterface.cpp.o
+#11 70.37 [ 62%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph3_VoltageSource.cpp.o
+#11 71.23 [ 62%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph3_Capacitor.cpp.o
+#11 71.30 [ 62%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph3_Inductor.cpp.o
+#11 71.91 [ 62%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph3_Resistor.cpp.o
+#11 73.60 [ 62%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph3_SeriesResistor.cpp.o
+#11 77.90 [ 63%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph3_SeriesSwitch.cpp.o
+#11 77.94 [ 63%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph3_SynchronGeneratorDQ.cpp.o
+#11 78.92 [ 63%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph3_SynchronGeneratorDQTrapez.cpp.o
+#11 79.57 [ 63%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph1_Capacitor.cpp.o
+#11 82.02 [ 63%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph1_CurrentSource.cpp.o
+#11 82.90 [ 63%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph1_Inductor.cpp.o
+#11 83.43 [ 65%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph1_Resistor.cpp.o
+#11 83.48 [ 65%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph1_VoltageSource.cpp.o
+#11 85.36 [ 65%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph1_VoltageSourceRamp.cpp.o
+#11 86.85 [ 65%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph1_VoltageSourceNorton.cpp.o
+#11 87.29 [ 65%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph1_Switch.cpp.o
+#11 87.45 [ 65%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_CurrentSource.cpp.o
+#11 88.72 [ 67%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_VoltageSource.cpp.o
+#11 90.17 [ 67%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_ControlledCurrentSource.cpp.o
+#11 91.33 [ 67%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_ControlledVoltageSource.cpp.o
+#11 91.89 [ 67%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_Inductor.cpp.o
+#11 93.16 [ 67%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_Capacitor.cpp.o
+#11 94.06 [ 67%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_AvVoltageSourceInverterDQ.cpp.o
+#11 95.39 [ 68%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp.o
+#11 99.14 [ 68%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_Resistor.cpp.o
+#11 99.75 [ 68%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SeriesResistor.cpp.o
+#11 100.3 [ 68%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SeriesSwitch.cpp.o
+#11 101.7 [ 68%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_VoltageSourceNorton.cpp.o
+#11 103.9 [ 68%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_PiLine.cpp.o
+#11 104.6 [ 70%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_RxLine.cpp.o
+#11 105.4 [ 70%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_RXLoad.cpp.o
+#11 106.3 [ 70%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_NetworkInjection.cpp.o
+#11 110.7 [ 70%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_Transformer.cpp.o
+#11 112.2 [ 70%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_Switch.cpp.o
+#11 112.9 [ 70%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.cpp.o
+#11 114.4 [ 72%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.cpp.o
+#11 117.7 [ 72%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.cpp.o
+#11 118.4 [ 72%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGenerator5OrderVBR.cpp.o
+#11 118.9 [ 72%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.cpp.o
+#11 119.6 [ 72%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.cpp.o
+#11 122.2 [ 72%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGeneratorDQ.cpp.o
+#11 122.3 [ 74%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGenerator4OrderPCM.cpp.o
+#11 123.8 [ 74%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGeneratorDQTrapez.cpp.o
+#11 124.0 [ 74%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGeneratorVBR.cpp.o
+#11 126.3 [ 74%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGeneratorIdeal.cpp.o
+#11 127.3 [ 74%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGeneratorTrStab.cpp.o
+#11 127.7 [ 74%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SSN_Capacitor.cpp.o
+#11 130.6 [ 75%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SSN_Inductor.cpp.o
+#11 132.5 [ 75%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SSN_Full_Serial_RLC.cpp.o
+#11 132.6 [ 75%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_VoltageSource.cpp.o
+#11 135.0 [ 75%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_Capacitor.cpp.o
+#11 137.3 [ 75%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_Inductor.cpp.o
+#11 139.1 [ 75%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_Resistor.cpp.o
+#11 139.3 [ 77%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_AvVoltageSourceInverterDQ.cpp.o
+#11 140.2 [ 77%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_RXLine.cpp.o
+#11 141.3 [ 77%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_VoltageSourceInverter.cpp.o
+#11 143.4 [ 77%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_PiLine.cpp.o
+#11 144.0 [ 77%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_Load.cpp.o
+#11 144.0 [ 77%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_Switch.cpp.o
+#11 144.7 [ 77%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_Transformer.cpp.o
+#11 148.0 [ 79%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_SolidStateTransformer.cpp.o
+#11 148.1 [ 79%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_Shunt.cpp.o
+#11 148.2 [ 79%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_SynchronGenerator.cpp.o
+#11 149.5 [ 79%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.cpp.o
+#11 151.8 [ 79%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_SynchronGenerator3OrderVBR.cpp.o
+#11 151.8 [ 79%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_SynchronGenerator4OrderVBR.cpp.o
+#11 152.0 [ 81%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_SynchronGenerator5OrderVBR.cpp.o
+#11 155.4 [ 81%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_SynchronGenerator6aOrderVBR.cpp.o
+#11 155.9 [ 81%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_SynchronGenerator6bOrderVBR.cpp.o
+#11 156.1 [ 81%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_PQNode.cpp.o
+#11 156.2 [ 81%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_PVNode.cpp.o
+#11 159.6 [ 81%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_VDNode.cpp.o
+#11 159.6 [ 82%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_NetworkInjection.cpp.o
+#11 159.9 [ 82%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_SynchronGeneratorTrStab.cpp.o
+#11 160.4 [ 82%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph1_varResSwitch.cpp.o
+#11 162.3 [ 82%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph3_Capacitor.cpp.o
+#11 163.8 [ 82%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph3_Inductor.cpp.o
+#11 164.0 [ 82%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph3_Resistor.cpp.o
+#11 164.3 [ 84%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/SP/SP_Ph3_VoltageSource.cpp.o
+#11 166.3 [ 84%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/DecouplingLine.cpp.o
+#11 167.6 [ 84%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/DecouplingLineEMT.cpp.o
+#11 169.2 [ 84%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/Exciter.cpp.o
+#11 171.9 [ 84%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/FIRFilter.cpp.o
+#11 172.0 [ 84%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/TurbineGovernor.cpp.o
+#11 172.0 [ 86%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/TurbineGovernorType1.cpp.o
+#11 172.7 [ 86%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/PLL.cpp.o
+#11 175.0 [ 86%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/Integrator.cpp.o
+#11 175.2 [ 86%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/PowerControllerVSI.cpp.o
+#11 175.6 [ 86%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/SineWaveGenerator.cpp.o
+#11 177.6 [ 86%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/SignalGenerator.cpp.o
+#11 178.8 [ 87%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/FrequencyRampGenerator.cpp.o
+#11 179.4 [ 87%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/CosineFMGenerator.cpp.o
+#11 180.0 [ 87%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Signal/DCGenerator.cpp.o
+#11 181.2 [ 87%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/CIM/Reader.cpp.o
+#11 181.9 [ 87%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/Graph.cpp.o
+#11 182.5 [ 87%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph3_SynchronGeneratorDQODE.cpp.o
+#11 183.6 [ 89%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/EMT/EMT_Ph3_SynchronGeneratorDQODE.cpp.o
+#11 184.0 [ 89%] Building CXX object dpsim-models/src/CMakeFiles/dpsim-models.dir/DP/DP_Ph1_ProfileVoltageSource.cpp.o
+#11 188.8 [ 89%] Linking CXX static library libdpsim-models.a
+#11 193.8 [ 89%] Built target dpsim-models
+#11 193.9 [ 89%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/MNASolverDirect.cpp.o
+#11 193.9 [ 89%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/Simulation.cpp.o
+#11 193.9 [ 91%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/RealTimeSimulation.cpp.o
+#11 193.9 [ 91%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/MNASolver.cpp.o
+#11 199.7 [ 91%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/DenseLUAdapter.cpp.o
+#11 199.8 [ 91%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/SparseLUAdapter.cpp.o
+#11 199.9 [ 91%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/DirectLinearSolverConfiguration.cpp.o
+#11 202.1 [ 93%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/PFSolver.cpp.o
+#11 202.4 [ 93%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/PFSolverPowerPolar.cpp.o
+#11 203.8 [ 93%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/Utils.cpp.o
+#11 206.4 [ 93%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/Timer.cpp.o
+#11 207.9 [ 93%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/Event.cpp.o
+#11 208.7 [ 93%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/DataLogger.cpp.o
+#11 210.2 [ 94%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/RealTimeDataLogger.cpp.o
+#11 210.8 [ 94%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/Scheduler.cpp.o
+#11 211.3 [ 94%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/SequentialScheduler.cpp.o
+#11 212.8 [ 94%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/ThreadScheduler.cpp.o
+#11 214.5 [ 94%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/ThreadLevelScheduler.cpp.o
+#11 215.0 [ 94%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/ThreadListScheduler.cpp.o
+#11 215.2 [ 96%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/DiakopticsSolver.cpp.o
+#11 215.7 [ 96%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/Interface.cpp.o
+#11 217.3 [ 96%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/InterfaceQueued.cpp.o
+#11 218.0 [ 96%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/MNASolverPlugin.cpp.o
+#11 218.2 [ 96%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/DAESolver.cpp.o
+#11 221.0 [ 96%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/ODESolver.cpp.o
+#11 221.2 [ 98%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/KLUAdapter.cpp.o
+#11 223.2 [ 98%] Building CXX object dpsim/src/CMakeFiles/dpsim.dir/OpenMPLevelScheduler.cpp.o
+#11 225.8 [ 98%] Linking CXX static library libdpsim.a
+#11 226.8 [ 98%] Built target dpsim
+#11 226.9 [ 98%] Building CXX object dpsim/src/pybind/CMakeFiles/dpsimpy.dir/SPComponents.cpp.o
+#11 226.9 [ 98%] Building CXX object dpsim/src/pybind/CMakeFiles/dpsimpy.dir/DPComponents.cpp.o
+#11 226.9 [ 98%] Building CXX object dpsim/src/pybind/CMakeFiles/dpsimpy.dir/EMTComponents.cpp.o
+#11 226.9 [ 98%] Building CXX object dpsim/src/pybind/CMakeFiles/dpsimpy.dir/SignalComponents.cpp.o
+#11 236.4 [ 98%] Building CXX object dpsim/src/pybind/CMakeFiles/dpsimpy.dir/BaseComponents.cpp.o
+#11 241.6 [100%] Building CXX object dpsim/src/pybind/CMakeFiles/dpsimpy.dir/main.cpp.o
+#11 242.3 [100%] Building CXX object dpsim/src/pybind/CMakeFiles/dpsimpy.dir/Utils.cpp.o
+#11 243.2 [100%] Building CXX object dpsim/src/pybind/CMakeFiles/dpsimpy.dir/Attributes.cpp.o
+#11 258.7 [100%] Linking CXX shared module /home/jovyan/dpsim/build/lib.linux-x86_64-cpython-310/dpsimpy.cpython-310-x86_64-linux-gnu.so
+#11 264.1 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h:20:7: warning: virtual table of type ‘struct ReducedOrderSynchronGenerator’ violates one definition rule [-Wodr]
+#11 264.1    20 | class ReducedOrderSynchronGenerator : public MNASimPowerComp<VarType> {
+#11 264.1       |       ^
+#11 264.1 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h:20: note: the conflicting type defined in another translation unit has virtual table with more entries
+#11 264.1    20 | class ReducedOrderSynchronGenerator : public MNASimPowerComp<VarType> {
+#11 264.1       | 
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h:20:7: warning: virtual table of type ‘struct ReducedOrderSynchronGenerator’ violates one definition rule [-Wodr]
+#11 264.2    20 | class ReducedOrderSynchronGenerator : public MNASimPowerComp<VarType> {
+#11 264.2       |       ^
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h:20: note: the conflicting type defined in another translation unit has virtual table with more entries
+#11 264.2    20 | class ReducedOrderSynchronGenerator : public MNASimPowerComp<VarType> {
+#11 264.2       | 
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:266:7: warning: virtual table of type ‘struct Attribute’ violates one definition rule [-Wodr]
+#11 264.2   266 | class Attribute : public AttributeBase,
+#11 264.2       |       ^
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:266:7: note: the conflicting type defined in another translation unit
+#11 264.2   266 | class Attribute : public AttributeBase,
+#11 264.2       |       ^
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:193:30: note: virtual method ‘getDependencies’
+#11 264.2   193 |   virtual AttributeBase::Set getDependencies() final {
+#11 264.2       |                              ^
+#11 264.2 <built-in>: note: ought to match virtual method ‘__cxa_pure_virtual’ but does not
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:266:7: warning: virtual table of type ‘struct Attribute’ violates one definition rule [-Wodr]
+#11 264.2   266 | class Attribute : public AttributeBase,
+#11 264.2       |       ^
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:266:7: note: the conflicting type defined in another translation unit
+#11 264.2   266 | class Attribute : public AttributeBase,
+#11 264.2       |       ^
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:193:30: note: virtual method ‘getDependencies’
+#11 264.2   193 |   virtual AttributeBase::Set getDependencies() final {
+#11 264.2       |                              ^
+#11 264.2 <built-in>: note: ought to match virtual method ‘__cxa_pure_virtual’ but does not
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:266:7: warning: virtual table of type ‘struct Attribute’ violates one definition rule [-Wodr]
+#11 264.2   266 | class Attribute : public AttributeBase,
+#11 264.2       |       ^
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:266:7: note: the conflicting type defined in another translation unit
+#11 264.2   266 | class Attribute : public AttributeBase,
+#11 264.2       |       ^
+#11 264.2 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:193:30: note: virtual method ‘getDependencies’
+#11 264.2   193 |   virtual AttributeBase::Set getDependencies() final {
+#11 264.2       |                              ^
+#11 264.2 <built-in>: note: ought to match virtual method ‘__cxa_pure_virtual’ but does not
+#11 269.4 lto-wrapper: warning: using serial compilation of 100 LTRANS jobs
+#11 269.4 lto-wrapper: note: see the ‘-flto’ option documentation for more information
+#11 382.8 [100%] Built target dpsimpy
+#11 382.9 [  1%] Built target suitesparseconfig
+#11 383.0 [  5%] Built target btf
+#11 383.0 [  6%] Built target colamd
+#11 383.0 [ 22%] Built target amd
+#11 383.1 [ 48%] Built target klu
+#11 383.5 [ 89%] Built target dpsim-models
+#11 383.6 [ 98%] Built target dpsim
+#11 383.7 [ 98%] Building CXX object dpsim-villas/src/CMakeFiles/dpsim-villas.dir/InterfaceVillas.cpp.o
+#11 383.7 [ 98%] Building CXX object dpsim-villas/src/CMakeFiles/dpsim-villas.dir/InterfaceWorkerVillas.cpp.o
+#11 383.7 [ 98%] Building CXX object dpsim-villas/src/CMakeFiles/dpsim-villas.dir/InterfaceVillasQueueless.cpp.o
+#11 388.3 [100%] Linking CXX static library libdpsim-villas.a
+#11 388.4 [100%] Built target dpsim-villas
+#11 388.5 [100%] Building CXX object dpsim-villas/CMakeFiles/dpsimpyvillas.dir/src/pybind-dpsim-villas.cpp.o
+#11 394.5 [100%] Linking CXX shared module /home/jovyan/dpsim/build/lib.linux-x86_64-cpython-310/dpsimpyvillas.cpython-310-x86_64-linux-gnu.so
+#11 394.9 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:266:7: warning: virtual table of type ‘struct Attribute’ violates one definition rule [-Wodr]
+#11 394.9   266 | class Attribute : public AttributeBase,
+#11 394.9       |       ^
+#11 394.9 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:266:7: note: the conflicting type defined in another translation unit
+#11 394.9 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:193:30: note: virtual method ‘getDependencies’
+#11 394.9   193 |   virtual AttributeBase::Set getDependencies() final {
+#11 394.9       |                              ^
+#11 394.9 <built-in>: note: ought to match virtual method ‘__cxa_pure_virtual’ but does not
+#11 394.9 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:266:7: warning: virtual table of type ‘struct Attribute’ violates one definition rule [-Wodr]
+#11 394.9   266 | class Attribute : public AttributeBase,
+#11 394.9       |       ^
+#11 394.9 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:266:7: note: the conflicting type defined in another translation unit
+#11 394.9 /home/jovyan/dpsim/dpsim-models/include/dpsim-models/Attribute.h:193:30: note: virtual method ‘getDependencies’
+#11 394.9   193 |   virtual AttributeBase::Set getDependencies() final {
+#11 394.9       |                              ^
+#11 394.9 <built-in>: note: ought to match virtual method ‘__cxa_pure_virtual’ but does not
+#11 395.3 lto-wrapper: warning: using serial compilation of 9 LTRANS jobs
+#11 395.3 lto-wrapper: note: see the ‘-flto’ option documentation for more information
+#11 408.7 [100%] Built target dpsimpyvillas
+#11 408.7 building CMake extension in Release configuration
+#11 408.7 cmake /home/jovyan/dpsim -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/jovyan/dpsim/build/lib.linux-x86_64-cpython-310 -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG=/home/jovyan/dpsim/build/lib.linux-x86_64-cpython-310 -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=/home/jovyan/dpsim/build/lib.linux-x86_64-cpython-310 -DPYTHON_EXECUTABLE=/tmp/build-env-euwx5bas/bin/python -DCMAKE_BUILD_TYPE=Release
+#11 408.7 cmake --build . --target dpsimpy dpsimpyvillas -- -j4
+#11 408.7 installing to build/bdist.linux-x86_64/wheel
+#11 408.7 running install
+#11 408.8 running install_lib
+#11 408.8 creating build/bdist.linux-x86_64/wheel
+#11 408.8 creating build/bdist.linux-x86_64/wheel/dpsim
+#11 408.8 copying build/lib.linux-x86_64-cpython-310/dpsim/__init__.py -> build/bdist.linux-x86_64/wheel/./dpsim
+#11 408.8 copying build/lib.linux-x86_64-cpython-310/dpsim/matpower.py -> build/bdist.linux-x86_64/wheel/./dpsim
+#11 408.8 copying build/lib.linux-x86_64-cpython-310/dpsimpy.cpython-310-x86_64-linux-gnu.so -> build/bdist.linux-x86_64/wheel/.
+#11 408.8 copying build/lib.linux-x86_64-cpython-310/dpsimpyvillas.cpython-310-x86_64-linux-gnu.so -> build/bdist.linux-x86_64/wheel/.
+#11 408.8 running install_egg_info
+#11 408.8 running egg_info
+#11 408.8 creating dpsim.egg-info
+#11 408.8 writing dpsim.egg-info/PKG-INFO
+#11 408.8 writing dependency_links to dpsim.egg-info/dependency_links.txt
+#11 408.8 writing top-level names to dpsim.egg-info/top_level.txt
+#11 408.8 writing manifest file 'dpsim.egg-info/SOURCES.txt'
+#11 408.8 reading manifest file 'dpsim.egg-info/SOURCES.txt'
+#11 408.8 adding license file 'LICENSE'
+#11 408.8 writing manifest file 'dpsim.egg-info/SOURCES.txt'
+#11 408.8 Copying dpsim.egg-info to build/bdist.linux-x86_64/wheel/./dpsim-1.1.1-py3.10.egg-info
+#11 408.8 running install_scripts
+#11 408.8 creating build/bdist.linux-x86_64/wheel/dpsim-1.1.1.dist-info/WHEEL
+#11 408.8 creating '/home/jovyan/dpsim/dist/.tmp-ubxs0quk/dpsim-1.1.1-cp310-cp310-linux_x86_64.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+#11 409.1 adding 'dpsimpy.cpython-310-x86_64-linux-gnu.so'
+#11 409.2 adding 'dpsimpyvillas.cpython-310-x86_64-linux-gnu.so'
+#11 409.2 adding 'dpsim/__init__.py'
+#11 409.2 adding 'dpsim/matpower.py'
+#11 409.2 adding 'dpsim-1.1.1.dist-info/LICENSE'
+#11 409.2 adding 'dpsim-1.1.1.dist-info/METADATA'
+#11 409.2 adding 'dpsim-1.1.1.dist-info/WHEEL'
+#11 409.2 adding 'dpsim-1.1.1.dist-info/top_level.txt'
+#11 409.2 adding 'dpsim-1.1.1.dist-info/RECORD'
+#11 409.2 removing build/bdist.linux-x86_64/wheel
+#11 409.3 Successfully built dpsim-1.1.1-cp310-cp310-linux_x86_64.whl
+#11 DONE 409.5s
+
+#12 [8/8] RUN python3 -m pip install ./dist/dpsim*
+#12 0.831 Defaulting to user installation because normal site-packages is not writeable
+#12 0.864 Processing ./dist/dpsim-1.1.1-cp310-cp310-linux_x86_64.whl
+#12 1.774 Installing collected packages: dpsim
+#12 1.839 Successfully installed dpsim-1.1.1
+#12 DONE 2.5s
+
+#13 exporting to image
+#13 exporting layers
+#13 exporting layers 4.3s done
+#13 writing image sha256:be4eeae82eabee78149c2acfac528af8710a66c323bcfad7c065460926485448 done
+#13 naming to docker.io/sogno/dpsim:latest 0.0s done
+#13 DONE 4.3s
