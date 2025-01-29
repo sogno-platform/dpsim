@@ -71,7 +71,7 @@ RUN dnf -y install \
 	protobuf-c-devel
 
 # Python dependencies
-ADD requirements.txt .
+COPY requirements.txt .
 RUN pip3 install --upgrade wheel build
 RUN pip3 install -r requirements.txt
 
