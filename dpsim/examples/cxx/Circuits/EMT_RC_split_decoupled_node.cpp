@@ -9,7 +9,7 @@
 #include "dpsim-models/Definitions.h"
 #include "dpsim-models/EMT/EMT_Ph1_Capacitor.h"
 #include "dpsim-models/EMT/EMT_Ph1_Resistor.h"
-#include "dpsim-models/Signal/DecouplingIdealTransformerEMT.h"
+#include "dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph1.h"
 #include "dpsim-models/SimNode.h"
 #include <csignal>
 #include <cstdlib>
@@ -22,7 +22,8 @@ using namespace DPsim;
 using namespace CPS;
 
 void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedObject::List &componentsAt1,
-                    const IdentifiedObject::List &componentsAt2, Real ITMDelay, String method, Eigen::MatrixXd irLine_0) {
+                  const IdentifiedObject::List &componentsAt2, Real ITMDelay, String method,
+                  Eigen::MatrixXd irLine_0, Real i_inf_0) {
 
   CPS::Signal::CouplingMethod cosimMethod = CPS::Signal::CouplingMethod::DELAY;
 
@@ -46,13 +47,11 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
 
   for (auto genComp : componentsAt1) {
     auto comp = std::dynamic_pointer_cast<SimPowerComp<Real>>(genComp);
-    std::cout << "Cloning component: " << comp->name() << std::endl;
     auto compCopy = comp->clone(comp->name());
 
     SimNode<Real>::List nodeCopies;
     for (UInt nNode = 0; nNode < comp->terminalNumber(); nNode++) {
       String origNodeName = comp->node(nNode)->name();
-      std::cout << "Processing components' node " << origNodeName << std::endl;
       if (origNodeName == nodeName) {
         nodeCopies.push_back(nodeCopy1);
       } else {
@@ -73,13 +72,11 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
 
   for (auto genComp : componentsAt2) {
     auto comp = std::dynamic_pointer_cast<SimPowerComp<Real>>(genComp);
-    std::cout << "Cloning component: " << comp->name() << std::endl;
     auto compCopy = comp->clone(comp->name());
 
     SimNode<Real>::List nodeCopies;
     for (UInt nNode = 0; nNode < comp->terminalNumber(); nNode++) {
       String origNodeName = comp->node(nNode)->name();
-      std::cout << "Processing components' node " << origNodeName << std::endl;
       if (origNodeName == nodeName) {
         nodeCopies.push_back(nodeCopy2);
       } else {
@@ -105,9 +102,9 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
   for (auto comp : newComponents)
     sys.addComponent(comp);
 
-  auto idealTrafo = Signal::DecouplingIdealTransformerEMT::make("itm_" + nodeName,
+  auto idealTrafo = Signal::DecouplingIdealTransformer_EMT_Ph1::make("itm_" + nodeName,
                                                                 Logger::Level::debug);
-  idealTrafo->setParameters(nodeCopy1, nodeCopy2, ITMDelay, irLine_0, cosimMethod);
+  idealTrafo->setParameters(nodeCopy1, nodeCopy2, ITMDelay, irLine_0, i_inf_0, cosimMethod);
   sys.addComponent(idealTrafo);
   sys.addComponents(idealTrafo->getComponents());
 }
@@ -122,8 +119,10 @@ void doSim(String &name, SystemTopology &sys, Int threads, Real ts, bool isDecou
   if (isDecoupled) {
     logger->logAttribute("v_2_1", sys.node<EMT::SimNode>("n2_1")->attribute("v"));
     logger->logAttribute("v_2_2", sys.node<EMT::SimNode>("n2_2")->attribute("v"));
-    logger->logAttribute("i_ref", sys.component<Signal::DecouplingIdealTransformerEMT>("itm_n2")->attribute("i_src"), 1, 1);
-    logger->logAttribute("v_ref", sys.component<Signal::DecouplingIdealTransformerEMT>("itm_n2")->attribute("v_src"), 1, 1);
+    logger->logAttribute("i_intf", sys.component<Signal::DecouplingIdealTransformer_EMT_Ph1>("itm_n2")->attribute("i_intf"), 1, 1);
+    logger->logAttribute("i_ref", sys.component<Signal::DecouplingIdealTransformer_EMT_Ph1>("itm_n2")->attribute("i_ref"), 1, 1);
+    logger->logAttribute("v_intf", sys.component<Signal::DecouplingIdealTransformer_EMT_Ph1>("itm_n2")->attribute("v_intf"), 1, 1);
+    logger->logAttribute("v_ref", sys.component<Signal::DecouplingIdealTransformer_EMT_Ph1>("itm_n2")->attribute("v_ref"), 1, 1);
   } else {
 	  logger->logAttribute("v_2", sys.node<EMT::SimNode>("n2")->attribute("v"));
   }
@@ -131,7 +130,7 @@ void doSim(String &name, SystemTopology &sys, Int threads, Real ts, bool isDecou
   Simulation sim(name, Logger::Level::debug);
   sim.setSystem(sys);
   sim.setTimeStep(ts);
-  sim.setFinalTime(1.0);
+  sim.setFinalTime(1.2);
   sim.setDomain(Domain::EMT);
   sim.doSplitSubnets(true);
   sim.doInitFromNodesAndTerminals(true);
@@ -172,7 +171,7 @@ SystemTopology buildTopology(String &name, float r1_r, float c1_c, float rLine_r
 
 	// Topology
 	r1->connect({ n1, gnd });
-	rLine->connect({ n1, n2 });
+	rLine->connect({ n2, n1 });
 	c1->connect({ n1, gnd });
 	r3->connect({ n2, gnd });
 	c2->connect({ n2, gnd });
@@ -191,6 +190,7 @@ int main(int argc, char *argv[]) {
   Int numSeq = 0;
   Real timeStep = 0.00005;
   Real delay = 0.0001;
+  Real i_intf_0 = 0;
   String cosimMethod = "delay";
   String prefix = "1e-4";
 
@@ -200,6 +200,8 @@ int main(int argc, char *argv[]) {
     timeStep = args.timeStep;
   if (args.options.find("delay") != args.options.end())
     delay = args.getOptionReal("delay");
+  if (args.options.find("i-intf-0") != args.options.end())
+    i_intf_0 = args.getOptionReal("i-intf-0");
   if (args.options.find("method") != args.options.end())
     cosimMethod = args.getOptionString("method");
   if (args.options.find("prefix") != args.options.end())
@@ -223,6 +225,9 @@ int main(int argc, char *argv[]) {
 
   Eigen::MatrixXd irLine_0_1(1,1);
 	irLine_0_1(0,0) = (n1_v0_1(0,0) - n2_v0_1(0,0)) / rLine_r_1;
+
+  // Eigen::MatrixXd ir3_0_1(1,1);
+	// ir3_0_1(0,0) = (n2_v0_1(0,0)) / r3_r_1;
 
   // Monolithic Simulation
   String simNameMonolithic = "EMT_RC_monolithic";
@@ -248,9 +253,11 @@ int main(int argc, char *argv[]) {
   IdentifiedObject::List components2;
   auto c2 = systemDecoupled.component<EMT::Ph1::Capacitor>("c_2");
   components2.push_back(c2);
+  // c2->setIntfVoltage(n2_v0_1);
   auto r3 = systemDecoupled.component<EMT::Ph1::Resistor>("r_3");
+  // r3->setIntfCurrent(ir3_0_1);
   components2.push_back(r3);
 
-  decoupleNode(systemDecoupled, "n2", components1, components2, delay, cosimMethod, irLine_0_1);
+  decoupleNode(systemDecoupled, "n2", components1, components2, delay, cosimMethod, irLine_0_1, i_intf_0);
   doSim(simNameDecoupled, systemDecoupled, numThreads, timeStep, true);
 }
