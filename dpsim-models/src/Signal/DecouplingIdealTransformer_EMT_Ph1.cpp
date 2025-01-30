@@ -8,7 +8,7 @@
 
 #include "dpsim-models/Definitions.h"
 #include <algorithm>
-#include <dpsim-models/Signal/DecouplingIdealTransformerEMT.h>
+#include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph1.h>
 #include <iostream>
 #include <string>
 
@@ -16,11 +16,13 @@ using namespace CPS;
 using namespace CPS::EMT::Ph1;
 using namespace CPS::Signal;
 
-DecouplingIdealTransformerEMT::DecouplingIdealTransformerEMT(String name, Logger::Level logLevel)
+DecouplingIdealTransformer_EMT_Ph1::DecouplingIdealTransformer_EMT_Ph1(String name, Logger::Level logLevel)
     : SimSignalComp(name, name, logLevel),
       mStates(mAttributes->create<Matrix>("states")),
-      mSrcVoltageRef(mAttributes->create<Real>("v_src")),
-      mSrcCurrentRef(mAttributes->create<Real>("i_src")) {
+      mSourceVoltageIntfVoltage(mAttributes->create<Real>("v_intf")),
+      mSourceVoltageIntfCurrent(mAttributes->create<Real>("i_intf")),
+      mSrcVoltageRef(mAttributes->create<Real>("v_ref")),
+      mSrcCurrentRef(mAttributes->create<Real>("i_ref")) {
 
   mVoltageSrc = VoltageSource::make(name + "_v", logLevel);
   mCurrentSrc = CurrentSource::make(name + "_i", logLevel);
@@ -29,9 +31,10 @@ DecouplingIdealTransformerEMT::DecouplingIdealTransformerEMT(String name, Logger
   mSrcCurrent = mCurrentSrc->mCurrentRef;
 }
 
-void DecouplingIdealTransformerEMT::setParameters(SimNode<Real>::Ptr node1,
+void DecouplingIdealTransformer_EMT_Ph1::setParameters(SimNode<Real>::Ptr node1,
                                       SimNode<Real>::Ptr node2,
-                                      Real delay, Eigen::MatrixXd voltageSrcIntfCurr, CouplingMethod method) {
+                                      Real delay, Eigen::MatrixXd voltageSrcIntfCurr,
+                                      Real current1Extrap0, CouplingMethod method) {
 
   mNode1 = node1;
   mNode2 = node2;
@@ -45,12 +48,13 @@ void DecouplingIdealTransformerEMT::setParameters(SimNode<Real>::Ptr node1,
 
   mVoltageSrc->setParameters(0);
   mVoltageSrcIntfCurr = voltageSrcIntfCurr;
+  mCurrent1Extrap0 = current1Extrap0;
   mVoltageSrc->connect({SimNode<Real>::GND, node1});
   mCurrentSrc->setParameters(0);
   mCurrentSrc->connect({SimNode<Real>::GND, node2});
 }
 
-void DecouplingIdealTransformerEMT::initialize(Real omega, Real timeStep) {
+void DecouplingIdealTransformer_EMT_Ph1::initialize(Real omega, Real timeStep) {
   if (mDelay <= 0) {
     mDelay = 0;
     mBufSize = 1;
@@ -69,21 +73,48 @@ void DecouplingIdealTransformerEMT::initialize(Real omega, Real timeStep) {
   SPDLOG_LOGGER_INFO(mSLog, "initial current: i_1 {}", cur1);
   SPDLOG_LOGGER_INFO(mSLog, "initial voltage: v_2 {}", volt2);
 
+  **mSrcVoltageRef = volt2.real();
+  **mSrcCurrentRef = cur1.real();
+  mVoltageSrc->setParameters(**mSrcVoltageRef);
+  mCurrentSrc->setParameters(**mSrcCurrentRef);
+
+  Eigen::MatrixXd mSourceCurrentIntfVoltage(1,1);
+  mSourceCurrentIntfVoltage(0,0) = volt2.real();
+  mCurrentSrc->setIntfVoltage(mSourceCurrentIntfVoltage);
+
+  mVoltageSrc->setIntfVoltage(mSourceCurrentIntfVoltage);
+  mVoltageSrc->setIntfCurrent(mVoltageSrcIntfCurr);
+
+  // mSrcVoltage->set(**mSrcVoltageRef);
+  // mSrcCurrent->set(**mSrcCurrentRef);
+  **mSourceVoltageIntfVoltage = volt2.real();
+  **mSourceVoltageIntfCurrent = mVoltageSrc->intfCurrent()(0, 0);
+
   // Resize ring buffers and initialize
-  mCur1.resize(mBufSize, cur1.real()); // TODO: add initial value to setParameters?
+  mCur1.resize(mBufSize, cur1.real());
   mVol2.resize(mBufSize, volt2.real());
 
-  mCur1Extrap.resize(mExtrapolationDegree + 1, cur1.real());
+  // Eigen::MatrixXd frequencies(1,1);
+  // frequencies(0,0) = 50.0;
+  // mVoltageSrc->initialize(frequencies);
+
+  SPDLOG_LOGGER_INFO(mSLog, "Verify initial current: i_1 {}", mCurrentSrc->intfCurrent()(0, 0));
+  SPDLOG_LOGGER_INFO(mSLog, "Verify initial voltage: v_2 {}", mVoltageSrc->intfVoltage()(0, 0));
+
+  mCur1Extrap.resize(mExtrapolationDegree + 1, 0);
+  mCur1Extrap[0] = mCurrent1Extrap0;
+  mCur1Extrap[1] = mVoltageSrcIntfCurr(0, 0);
+  std::cout << "mCur1Extrap: " << mCur1Extrap[0] << " " << mCur1Extrap[1] << std::endl;
   mVol2Extrap.resize(mExtrapolationDegree + 1, volt2.real());
 }
 
-Real DecouplingIdealTransformerEMT::interpolate(std::vector<Real> &data) {
+Real DecouplingIdealTransformer_EMT_Ph1::interpolate(std::vector<Real> &data) {
   Real c1 = data[mBufIdx];
   Real c2 = mBufIdx == mBufSize - 1 ? data[0] : data[mBufIdx + 1];
   return mAlpha * c1 + (1 - mAlpha) * c2;
 }
 
-Real DecouplingIdealTransformerEMT::extrapolate(std::vector<Real> &data) {
+Real DecouplingIdealTransformer_EMT_Ph1::extrapolate(std::vector<Real> &data) {
   if (mCouplingMethod == CouplingMethod::EXTRAPOLATION_LINEAR) {
     Real c1 = data[mMacroBufIdx];
     Real c2 = mMacroBufIdx == mExtrapolationDegree ? data[0] : data[mMacroBufIdx + 1];
@@ -95,7 +126,7 @@ Real DecouplingIdealTransformerEMT::extrapolate(std::vector<Real> &data) {
   }
 }
 
-void DecouplingIdealTransformerEMT::step(Real time, Int timeStepCount) {
+void DecouplingIdealTransformer_EMT_Ph1::step(Real time, Int timeStepCount) {
   Real volt1, cur2;
   if (mCouplingMethod == CouplingMethod::DELAY) {
     volt1 = interpolate(mVol2);
@@ -105,18 +136,21 @@ void DecouplingIdealTransformerEMT::step(Real time, Int timeStepCount) {
     cur2 = extrapolate(mCur1Extrap);
   }
 
-    // Update voltage and current
+  // Update voltage and current
   **mSrcVoltageRef = volt1;
   **mSrcCurrentRef = cur2;
+  **mSourceVoltageIntfVoltage = mVoltageSrc->intfVoltage()(0, 0);
+  **mSourceVoltageIntfCurrent = mVoltageSrc->intfCurrent()(0, 0);
+
   mSrcVoltage->set(**mSrcVoltageRef);
   mSrcCurrent->set(**mSrcCurrentRef);
 }
 
-void DecouplingIdealTransformerEMT::PreStep::execute(Real time, Int timeStepCount) {
+void DecouplingIdealTransformer_EMT_Ph1::PreStep::execute(Real time, Int timeStepCount) {
   mITM.step(time, timeStepCount);
 }
 
-void DecouplingIdealTransformerEMT::postStep() {
+void DecouplingIdealTransformer_EMT_Ph1::postStep() {
   // Update ringbuffers with new values
   mCur1[mBufIdx] = mVoltageSrc->intfCurrent()(0, 0);
   mVol2[mBufIdx] = -mCurrentSrc->intfVoltage()(0, 0);
@@ -133,15 +167,15 @@ void DecouplingIdealTransformerEMT::postStep() {
   }
 }
 
-void DecouplingIdealTransformerEMT::PostStep::execute(Real time, Int timeStepCount) {
+void DecouplingIdealTransformer_EMT_Ph1::PostStep::execute(Real time, Int timeStepCount) {
   mITM.postStep();
 }
 
-Task::List DecouplingIdealTransformerEMT::getTasks() {
+Task::List DecouplingIdealTransformer_EMT_Ph1::getTasks() {
   return Task::List(
       {std::make_shared<PreStep>(*this), std::make_shared<PostStep>(*this)});
 }
 
-IdentifiedObject::List DecouplingIdealTransformerEMT::getComponents() {
+IdentifiedObject::List DecouplingIdealTransformer_EMT_Ph1::getComponents() {
   return IdentifiedObject::List({mVoltageSrc, mCurrentSrc});
 }
