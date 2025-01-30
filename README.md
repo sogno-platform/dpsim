@@ -20,7 +20,8 @@ DPsim is a solver library for dynamic power system simulation.
 - It can load models in the IEC61970 CIM / CGMES XML format.
 - It can be interfaced to a variety of protocols and interfaces via [VILLASnode](https://fein-aachen.org/projects/villas-node/).
 
-## Getting started using binder
+## Getting started using Binder
+
 Click the badge below to explore the interactive Jupyter notebooks in your browser:
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/sogno-platform/dpsim/mybinder?labpath=examples%2FNotebooks%2FQuickstart+Guide.ipynb)
