@@ -8,16 +8,18 @@ ARG ip
 ARG port
 ARG NB_USER=jovyan
 ARG NB_UID=1000
-ENV USER ${NB_USER}
-ENV NB_UID ${NB_UID}
-ENV HOME /home/${NB_USER}
+ENV USER=${NB_USER}
+ENV NB_UID=${NB_UID}
+ENV HOME=/home/${NB_USER}
 
 RUN adduser \
-    --comment "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
+	--comment "Default user" \
+	--uid ${NB_UID} \
+	${NB_USER}
 
 COPY . ${HOME}/dpsim
+ENV PATH="${HOME}/.local/bin:${PATH}"
+RUN python3 -m pip install notebook jupyterlab jupyterhub
 USER root
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
