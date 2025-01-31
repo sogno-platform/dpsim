@@ -24,7 +24,7 @@ DPsim is a solver library for dynamic power system simulation.
 
 Click the badge below to explore the interactive Jupyter notebooks in your browser:
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/sogno-platform/dpsim/mybinder?labpath=examples%2FNotebooks%2FQuickstart+Guide.ipynb)
+[![Binder](https://2i2c.mybinder.org/badge_logo.svg)](https://2i2c.mybinder.org/v2/gh/sogno-platform/dpsim/mybinder?urlpath=%2Fdoc%2Ftree%2Fexamples%2FIndex.ipynb)
 
 ## Documentation
 
