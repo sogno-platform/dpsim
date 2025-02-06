@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  
+
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -51,6 +51,7 @@ jobs:
     permissions:
       pages: write
       id-token: write
+      contents: write
 
     steps:
     - uses: actions/checkout@v4
@@ -95,3 +96,5 @@ jobs:
         publish_dir: ./public
         #   keep_files: true
         publish_branch: gh-pages
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
