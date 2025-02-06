@@ -22,11 +22,11 @@ public CompositePowerComp<Real>,
 public SharedFactory<HalfDecouplingLine> {
 protected:
 
-  Real mDelay;
+  Matrix mDelay= Matrix::Zero(3, 3);
   Matrix mResistance= Matrix::Zero(3, 3);
   Matrix mInductance= Matrix::Zero(3, 3);
   Matrix mCapacitance= Matrix::Zero(3, 3);
-  Real mSurgeImpedance= 0;
+  Matrix mSurgeImpedance= Matrix::Zero(3, 3);
 
   // ### Electrical Subcomponents ###
   /// Controlled current source
@@ -46,12 +46,12 @@ protected:
   // Real interpolate(std::vector<Real> &data);
 
 public:
-  // typedef std::shared_ptr<HalfDecouplingLine> Ptr;
 
   const Attribute<Matrix>::Ptr mSrcCtrledCurrent;
+  const Attribute<Matrix>::Ptr mSrcRes;
   const Attribute<Matrix>::Ptr mReceivingVolt;
   const Attribute<Matrix>::Ptr mReceivingCur;
-  const Attribute<Matrix>::Ptr mSendingVoltage;
+  const Attribute<Matrix>::Ptr mSendingVolt;
   const Attribute<Matrix>::Ptr mSendingCur;
 
   /// Defines UID, name and logging level
