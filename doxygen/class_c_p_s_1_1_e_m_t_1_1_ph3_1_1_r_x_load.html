@@ -106,9 +106,12 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#a7669a064f6514bbf571773d6e907ec2a">RXLoad</a> (String name, Matrix activePower, Matrix reactivePower, Real volt, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a7669a064f6514bbf571773d6e907ec2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name, component parameters and logging level. <br /></td></tr>
 <tr class="separator:a7669a064f6514bbf571773d6e907ec2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad992ef47e86f6b6d6e76870d4389d4cc"><td class="memItemLeft" align="right" valign="top"><a id="ad992ef47e86f6b6d6e76870d4389d4cc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters</b> (Matrix activePower, Matrix reactivePower, Real volt)</td></tr>
-<tr class="separator:ad992ef47e86f6b6d6e76870d4389d4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4016733017a86baa96b1820e4e7aa47"><td class="memItemLeft" align="right" valign="top"><a id="ae4016733017a86baa96b1820e4e7aa47"></a>
+virtual String&#160;</td><td class="memItemRight" valign="bottom"><b>description</b> () override</td></tr>
+<tr class="separator:ae4016733017a86baa96b1820e4e7aa47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28405422f22c2b260d8bb6a394d2bb40"><td class="memItemLeft" align="right" valign="top"><a id="a28405422f22c2b260d8bb6a394d2bb40"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters</b> (Matrix activePower, Matrix reactivePower, Real volt, bool reactanceInSeries=false)</td></tr>
+<tr class="separator:a28405422f22c2b260d8bb6a394d2bb40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1527d2409dd1dfdbe88e698ba61adcc"><td class="memItemLeft" align="right" valign="top"><a id="aa1527d2409dd1dfdbe88e698ba61adcc"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#aa1527d2409dd1dfdbe88e698ba61adcc">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
 <tr class="memdesc:aa1527d2409dd1dfdbe88e698ba61adcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
@@ -551,6 +554,10 @@ Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memitem:a5a55e11833b79d183af4521fd51083c7"><td class="memItemLeft" align="right" valign="top"><a id="a5a55e11833b79d183af4521fd51083c7"></a>
 Bool&#160;</td><td class="memItemRight" valign="bottom"><b>initPowerFromTerminal</b> = true</td></tr>
 <tr class="separator:a5a55e11833b79d183af4521fd51083c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26dfd5adfa6ed5d66631b48c60cc3586"><td class="memItemLeft" align="right" valign="top"><a id="a26dfd5adfa6ed5d66631b48c60cc3586"></a>
+Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#a26dfd5adfa6ed5d66631b48c60cc3586">mReactanceInSeries</a></td></tr>
+<tr class="memdesc:a26dfd5adfa6ed5d66631b48c60cc3586"><td class="mdescLeft">&#160;</td><td class="mdescRight">If set to true, the reactance is in series with the resistor. Otherwise it is parallel to the resistor. <br /></td></tr>
+<tr class="separator:a26dfd5adfa6ed5d66631b48c60cc3586"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3416ce41e9832680a9232fc81d98dc4d"><td class="memItemLeft" align="right" valign="top"><a id="a3416ce41e9832680a9232fc81d98dc4d"></a>
 std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html">EMT::Ph3::Inductor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#a3416ce41e9832680a9232fc81d98dc4d">mSubInductor</a></td></tr>
 <tr class="memdesc:a3416ce41e9832680a9232fc81d98dc4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal inductor. <br /></td></tr>

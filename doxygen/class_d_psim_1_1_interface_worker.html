@@ -90,10 +90,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b> = std::share
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af7f8133339bdd531353d924b33de1b69"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker.html#af7f8133339bdd531353d924b33de1b69">readValuesFromEnv</a> (std::vector&lt; Interface::AttributePacket &gt; &amp;updatedAttrs)=0</td></tr>
-<tr class="separator:af7f8133339bdd531353d924b33de1b69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e42aa54204123299b1e04fb457f9d14"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker.html#a6e42aa54204123299b1e04fb457f9d14">writeValuesToEnv</a> (std::vector&lt; Interface::AttributePacket &gt; &amp;updatedAttrs)=0</td></tr>
-<tr class="separator:a6e42aa54204123299b1e04fb457f9d14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a777f4be15b259e0067c7fdbec62dd07f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker.html#a777f4be15b259e0067c7fdbec62dd07f">readValuesFromEnv</a> (std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;updatedAttrs)=0</td></tr>
+<tr class="separator:a777f4be15b259e0067c7fdbec62dd07f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4eb7974757ddbc17e3d4f1a648af0b2e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker.html#a4eb7974757ddbc17e3d4f1a648af0b2e">writeValuesToEnv</a> (std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;updatedAttrs)=0</td></tr>
+<tr class="separator:a4eb7974757ddbc17e3d4f1a648af0b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a740c3066458bfd670460be6327b818a5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker.html#a740c3066458bfd670460be6327b818a5">open</a> ()=0</td></tr>
 <tr class="separator:a740c3066458bfd670460be6327b818a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a3e6b9a78baa09a532a9e01694f6786"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker.html#a7a3e6b9a78baa09a532a9e01694f6786">close</a> ()=0</td></tr>
@@ -116,7 +116,7 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_interface_worker_8h_source.html#l00017">17</a> of file <a class="el" href="_interface_worker_8h_source.html">InterfaceWorker.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_interface_worker_8h_source.html#l00018">18</a> of file <a class="el" href="_interface_worker_8h_source.html">InterfaceWorker.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a7a3e6b9a78baa09a532a9e01694f6786"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a3e6b9a78baa09a532a9e01694f6786">&#9670;&nbsp;</a></span>close()</h2>
@@ -174,8 +174,8 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
 
 </div>
 </div>
-<a id="af7f8133339bdd531353d924b33de1b69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af7f8133339bdd531353d924b33de1b69">&#9670;&nbsp;</a></span>readValuesFromEnv()</h2>
+<a id="a777f4be15b259e0067c7fdbec62dd07f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a777f4be15b259e0067c7fdbec62dd07f">&#9670;&nbsp;</a></span>readValuesFromEnv()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -186,7 +186,7 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
         <tr>
           <td class="memname">virtual void DPsim::InterfaceWorker::readValuesFromEnv </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; Interface::AttributePacket &gt; &amp;&#160;</td>
+          <td class="paramtype">std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;&#160;</td>
           <td class="paramname"><em>updatedAttrs</em></td><td>)</td>
           <td></td>
         </tr>
@@ -199,12 +199,12 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
 </div><div class="memdoc">
 <p>Function that will be called on loop in its separate thread. Should be used to read values from the environment and push them into <code>updatedAttrs</code> <code>updatedAttrs</code> will always be empty when this function is invoked </p>
 
-<p>Implemented in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html#ab13c64d71b8fea89d454507de0bb0b62">DPsim::InterfaceWorkerVillas</a>.</p>
+<p>Implemented in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html#ae073163e4947d2952a3fae317cb3addf">DPsim::InterfaceWorkerVillas</a>.</p>
 
 </div>
 </div>
-<a id="a6e42aa54204123299b1e04fb457f9d14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e42aa54204123299b1e04fb457f9d14">&#9670;&nbsp;</a></span>writeValuesToEnv()</h2>
+<a id="a4eb7974757ddbc17e3d4f1a648af0b2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4eb7974757ddbc17e3d4f1a648af0b2e">&#9670;&nbsp;</a></span>writeValuesToEnv()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -215,7 +215,7 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
         <tr>
           <td class="memname">virtual void DPsim::InterfaceWorker::writeValuesToEnv </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; Interface::AttributePacket &gt; &amp;&#160;</td>
+          <td class="paramtype">std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;&#160;</td>
           <td class="paramname"><em>updatedAttrs</em></td><td>)</td>
           <td></td>
         </tr>
@@ -228,7 +228,7 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
 </div><div class="memdoc">
 <p>Function that will be called on loop in its separate thread. Should be used to read values from <code>updatedAttrs</code> and write them to the environment The <code>updatedAttrs</code> list will not be cleared by the caller in between function calls When this function is called, <code>updatedAttrs</code> will include at least one value </p>
 
-<p>Implemented in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a1e11ecd0954c304e9215476bb64b3361">DPsim::InterfaceWorkerVillas</a>.</p>
+<p>Implemented in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html#aa3f9bbc452144c608802d937099c56b8">DPsim::InterfaceWorkerVillas</a>.</p>
 
 </div>
 </div>

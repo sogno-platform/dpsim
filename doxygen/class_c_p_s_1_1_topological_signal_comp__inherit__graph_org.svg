@@ -167,34 +167,34 @@
 <path fill="none" stroke="midnightblue" d="M404.65,-175.16C421.37,-157.72 449.48,-131.34 479,-116.5 486.74,-112.61 495.31,-109.5 503.88,-107.01"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="401.68,-173.22 397.41,-182.92 406.79,-178 401.68,-173.22"/>
 </g>
-<!-- Node15 -->
-<g id="node15" class="node">
-<title>Node15</title>
-<g id="a_node15"><a xlink:href="class_c_p_s_1_1_signal_1_1_turbine_governor.html" target="_top" xlink:title="Turbine governor model to be used with synchronous generator.">
-<polygon fill="none" stroke="black" points="483.5,-50 483.5,-69 638.5,-69 638.5,-50 483.5,-50"/>
-<text text-anchor="middle" x="561" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::TurbineGovernor</text>
-</a>
-</g>
-</g>
-<!-- Node3&#45;&gt;Node15 -->
-<g id="edge14" class="edge">
-<title>Node3&#45;&gt;Node15</title>
-<path fill="none" stroke="midnightblue" d="M398.56,-173.67C412.59,-148.01 441.24,-102.51 479,-78.5 485.09,-74.62 491.9,-71.54 498.9,-69.08"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="395.34,-172.27 393.76,-182.74 401.53,-175.54 395.34,-172.27"/>
-</g>
 <!-- Node16 -->
 <g id="node16" class="node">
 <title>Node16</title>
-<g id="a_node16"><a xlink:href="class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="483.5,-0.5 483.5,-30.5 638.5,-30.5 638.5,-0.5 483.5,-0.5"/>
-<text text-anchor="start" x="491.5" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::TurbineGovernor</text>
-<text text-anchor="middle" x="561" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">Type1</text>
+<g id="a_node16"><a xlink:href="class_c_p_s_1_1_signal_1_1_turbine_governor.html" target="_top" xlink:title="Turbine governor model to be used with synchronous generator.">
+<polygon fill="none" stroke="black" points="483.5,-50 483.5,-69 638.5,-69 638.5,-50 483.5,-50"/>
+<text text-anchor="middle" x="561" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::TurbineGovernor</text>
 </a>
 </g>
 </g>
 <!-- Node3&#45;&gt;Node16 -->
 <g id="edge15" class="edge">
 <title>Node3&#45;&gt;Node16</title>
+<path fill="none" stroke="midnightblue" d="M398.56,-173.67C412.59,-148.01 441.24,-102.51 479,-78.5 485.09,-74.62 491.9,-71.54 498.9,-69.08"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="395.34,-172.27 393.76,-182.74 401.53,-175.54 395.34,-172.27"/>
+</g>
+<!-- Node17 -->
+<g id="node17" class="node">
+<title>Node17</title>
+<g id="a_node17"><a xlink:href="class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html" target="_top" xlink:title=" ">
+<polygon fill="none" stroke="black" points="483.5,-0.5 483.5,-30.5 638.5,-30.5 638.5,-0.5 483.5,-0.5"/>
+<text text-anchor="start" x="491.5" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::TurbineGovernor</text>
+<text text-anchor="middle" x="561" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">Type1</text>
+</a>
+</g>
+</g>
+<!-- Node3&#45;&gt;Node17 -->
+<g id="edge16" class="edge">
+<title>Node3&#45;&gt;Node17</title>
 <path fill="none" stroke="midnightblue" d="M395.3,-173C406.74,-140.66 434,-75.99 479,-40.5 483.85,-36.67 489.29,-33.43 495,-30.68"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="391.93,-172.04 392.02,-182.64 398.56,-174.3 391.93,-172.04"/>
 </g>
@@ -202,47 +202,62 @@
 <g id="node12" class="node">
 <title>Node12</title>
 <g id="a_node12"><a xlink:href="class_c_p_s_1_1_signal_1_1_cosine_f_m_generator.html" target="_top" xlink:title="Model to generate signals containing a frequency ramp.">
-<polygon fill="none" stroke="black" points="679,-132 679,-151 846,-151 846,-132 679,-132"/>
-<text text-anchor="middle" x="762.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::CosineFMGenerator</text>
+<polygon fill="none" stroke="black" points="679,-148 679,-167 846,-167 846,-148 679,-148"/>
+<text text-anchor="middle" x="762.5" y="-155" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::CosineFMGenerator</text>
 </a>
 </g>
 </g>
 <!-- Node11&#45;&gt;Node12 -->
 <g id="edge11" class="edge">
 <title>Node11&#45;&gt;Node12</title>
-<path fill="none" stroke="midnightblue" d="M615.43,-109.28C647.64,-116.39 688.12,-125.32 718.3,-131.97"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="615.81,-105.78 605.29,-107.05 614.3,-112.62 615.81,-105.78"/>
+<path fill="none" stroke="midnightblue" d="M623.53,-109.74C630.2,-111.71 636.81,-113.96 643,-116.5 660.35,-123.62 661.64,-131.42 679,-138.5 688.25,-142.28 698.41,-145.39 708.34,-147.92"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="624.33,-106.33 613.76,-107.05 622.47,-113.08 624.33,-106.33"/>
 </g>
 <!-- Node13 -->
 <g id="node13" class="node">
 <title>Node13</title>
-<g id="a_node13"><a xlink:href="class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html" target="_top" xlink:title="Model to generate signals containing a frequency ramp.">
-<polygon fill="none" stroke="black" points="688.5,-82.5 688.5,-112.5 836.5,-112.5 836.5,-82.5 688.5,-82.5"/>
-<text text-anchor="start" x="696.5" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::FrequencyRamp</text>
-<text text-anchor="middle" x="762.5" y="-89.5" font-family="Helvetica,sans-Serif" font-size="10.00">Generator</text>
+<g id="a_node13"><a xlink:href="class_c_p_s_1_1_signal_1_1_d_c_generator.html" target="_top" xlink:title="Model to generate sinusoidal signals.">
+<polygon fill="none" stroke="black" points="695,-110 695,-129 830,-129 830,-110 695,-110"/>
+<text text-anchor="middle" x="762.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::DCGenerator</text>
 </a>
 </g>
 </g>
 <!-- Node11&#45;&gt;Node13 -->
 <g id="edge12" class="edge">
 <title>Node11&#45;&gt;Node13</title>
-<path fill="none" stroke="midnightblue" d="M645.91,-97.5C660.04,-97.5 674.59,-97.5 688.42,-97.5"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="645.72,-94 635.72,-97.5 645.72,-101 645.72,-94"/>
+<path fill="none" stroke="midnightblue" d="M645.79,-106.74C662.1,-108.54 679,-110.4 694.68,-112.13"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="646.04,-103.25 635.72,-105.63 645.28,-110.2 646.04,-103.25"/>
 </g>
 <!-- Node14 -->
 <g id="node14" class="node">
 <title>Node14</title>
-<g id="a_node14"><a xlink:href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html" target="_top" xlink:title="Model to generate sinusoidal signals.">
-<polygon fill="none" stroke="black" points="679,-44 679,-63 846,-63 846,-44 679,-44"/>
-<text text-anchor="middle" x="762.5" y="-51" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::SineWaveGenerator</text>
+<g id="a_node14"><a xlink:href="class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html" target="_top" xlink:title="Model to generate signals containing a frequency ramp.">
+<polygon fill="none" stroke="black" points="688.5,-60.5 688.5,-90.5 836.5,-90.5 836.5,-60.5 688.5,-60.5"/>
+<text text-anchor="start" x="696.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::FrequencyRamp</text>
+<text text-anchor="middle" x="762.5" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">Generator</text>
 </a>
 </g>
 </g>
 <!-- Node11&#45;&gt;Node14 -->
 <g id="edge13" class="edge">
 <title>Node11&#45;&gt;Node14</title>
-<path fill="none" stroke="midnightblue" d="M615.43,-85.72C647.64,-78.61 688.12,-69.68 718.3,-63.03"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="614.3,-82.38 605.29,-87.95 615.81,-89.22 614.3,-82.38"/>
+<path fill="none" stroke="midnightblue" d="M645.91,-88.25C660.04,-86.69 674.59,-85.08 688.42,-83.56"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="645.28,-84.8 635.72,-89.37 646.04,-91.75 645.28,-84.8"/>
+</g>
+<!-- Node15 -->
+<g id="node15" class="node">
+<title>Node15</title>
+<g id="a_node15"><a xlink:href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html" target="_top" xlink:title="Model to generate sinusoidal signals.">
+<polygon fill="none" stroke="black" points="679,-22 679,-41 846,-41 846,-22 679,-22"/>
+<text text-anchor="middle" x="762.5" y="-29" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::SineWaveGenerator</text>
+</a>
+</g>
+</g>
+<!-- Node11&#45;&gt;Node15 -->
+<g id="edge14" class="edge">
+<title>Node11&#45;&gt;Node15</title>
+<path fill="none" stroke="midnightblue" d="M627.08,-84.89C632.57,-83.03 637.95,-80.91 643,-78.5 661.29,-69.76 660.69,-59.2 679,-50.5 687.1,-46.65 696.02,-43.56 704.92,-41.08"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="625.65,-81.67 617.13,-87.95 627.71,-88.36 625.65,-81.67"/>
 </g>
 </g>
 </svg>

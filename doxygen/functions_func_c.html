@@ -105,7 +105,7 @@ $(function() {
 </li>
 <li>Capacitor()
 : <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html#a3a5e098982be8fac296dbeeb4589d5d9">CPS::DP::Ph1::Capacitor</a>
-, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#acf1955f642ff79f1e50f0002d3420260">CPS::DP::Ph3::Capacitor</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#a559a5c5f03c51fb179cfdcddca572c9a">CPS::DP::Ph3::Capacitor</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html#a4726619c8de14eb1e2b0661692ba97e3">CPS::EMT::Ph1::Capacitor</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html#a11cdc58c682c13ff8f778e6b77135f12">CPS::EMT::Ph3::Capacitor</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html#a505e5adce700fd118cafd5a2027baebf">CPS::EMT::Ph3::SSN::Capacitor</a>
@@ -117,6 +117,9 @@ $(function() {
 </li>
 <li>checkConvergence()
 : <a class="el" href="class_d_psim_1_1_p_f_solver.html#a7e1d270a50382feb080ba969bacbc5c6">DPsim::PFSolver</a>
+</li>
+<li>checkForOverruns()
+: <a class="el" href="class_d_psim_1_1_simulation.html#ac10bc2156280a3fe995d1f8c148c9ab8">DPsim::Simulation</a>
 </li>
 <li>clearAllTasks()
 : <a class="el" href="class_c_p_s_1_1_attribute_dynamic.html#a5205aa615398dcd5468fa3e692878e3e">CPS::AttributeDynamic&lt; T &gt;</a>
@@ -131,9 +134,11 @@ $(function() {
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a053f85def1c9b60ab6de17f9d0664f20">CPS::DP::Ph1::NetworkInjection</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#a14faaf2d72d38ef8ffbb7c73a5b24bdf">CPS::DP::Ph1::PiLine</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a6982fb80a1fa2da2663fcfd4e5b50683">CPS::DP::Ph1::PQLoadCS</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html#afc81a715b3d63ff4e88bac8413f51150">CPS::DP::Ph1::ProfileVoltageSource</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_res_ind_series.html#ae23ca3a75c0c417bef963a0b6086fbd9">CPS::DP::Ph1::ResIndSeries</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html#a769120235f5baaa32df014017629ee6e">CPS::DP::Ph1::Resistor</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_rx_line.html#a8c062df6b1a42a0ae8b17bce249a671e">CPS::DP::Ph1::RxLine</a>
+, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a2b9c0623722b43cab26851d7b08d3b64">CPS::DP::Ph1::RXLoad</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#a2948c158f401e831cf11aa685f67b2e2">CPS::DP::Ph1::Switch</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_p_c_m.html#a0df6eb8a2c123fcac7bf3b368d7b5224">CPS::DP::Ph1::SynchronGenerator4OrderPCM</a>
 , <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a1e72906de2dfb956bd3b841b44e99130">CPS::DP::Ph1::SynchronGenerator4OrderTPM</a>
@@ -159,6 +164,8 @@ $(function() {
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#a208303cdbb5d5b716807556f44a0dd0d">CPS::EMT::Ph1::VoltageSourceNorton</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_ramp.html#af78311a31d35364d691543683abea883">CPS::EMT::Ph1::VoltageSourceRamp</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html#aaf8bc20763b2d3b28d7c5e83100e1134">CPS::EMT::Ph3::Capacitor</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_current_source.html#a1d705aaaea140548cfda93f4cfe52b50">CPS::EMT::Ph3::ControlledCurrentSource</a>
+, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_voltage_source.html#aca32a486a80c3460b6bd68de06a0fe27">CPS::EMT::Ph3::ControlledVoltageSource</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ae15cdfc780a1dcf0d3b5151f9d143ead">CPS::EMT::Ph3::CurrentSource</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#a3db00a5a0057e0b987af3df3def2c394">CPS::EMT::Ph3::Inductor</a>
 , <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html#a99860f8b65f8f51b3a10273aadef562c">CPS::EMT::Ph3::NetworkInjection</a>
@@ -224,6 +231,12 @@ $(function() {
 </li>
 <li>connectComponentToNodes()
 : <a class="el" href="class_c_p_s_1_1_system_topology.html#aa490a261e78e12cb418e742393f46b9a">CPS::SystemTopology</a>
+</li>
+<li>ControlledCurrentSource()
+: <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_current_source.html#afc3c48457e8d67fb7ce7cda14ac6f716">CPS::EMT::Ph3::ControlledCurrentSource</a>
+</li>
+<li>ControlledVoltageSource()
+: <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_voltage_source.html#aa60fcfeeaa5d61888d90f1557543c2e4">CPS::EMT::Ph3::ControlledVoltageSource</a>
 </li>
 <li>controlPreStep()
 : <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#ad314b12937b612268b70c20e2dd34191">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a>

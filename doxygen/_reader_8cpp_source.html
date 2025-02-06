@@ -1257,21 +1257,25 @@ $(function() {
 <div class="line"><a name="l01189"></a><span class="lineno"> 1189</span>&#160;      }</div>
 <div class="line"><a name="l01190"></a><span class="lineno"> 1190</span>&#160; </div>
 <div class="line"><a name="l01191"></a><span class="lineno"> 1191</span>&#160;      <span class="keyword">auto</span> pfEquipment = mPowerflowEquipment.at(equipment-&gt;mRID);</div>
-<div class="line"><a name="l01192"></a><span class="lineno"> 1192</span>&#160;      std::dynamic_pointer_cast&lt;SimPowerComp&lt;VarType&gt;&gt;(pfEquipment)</div>
-<div class="line"><a name="l01193"></a><span class="lineno"> 1193</span>&#160;          -&gt;setTerminalAt(std::dynamic_pointer_cast&lt;<a class="code" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal&lt;VarType&gt;</a>&gt;(</div>
-<div class="line"><a name="l01194"></a><span class="lineno"> 1194</span>&#160;                              mPowerflowTerminals[term-&gt;mRID]),</div>
-<div class="line"><a name="l01195"></a><span class="lineno"> 1195</span>&#160;                          term-&gt;sequenceNumber - 1);</div>
-<div class="line"><a name="l01196"></a><span class="lineno"> 1196</span>&#160; </div>
-<div class="line"><a name="l01197"></a><span class="lineno"> 1197</span>&#160;      SPDLOG_LOGGER_INFO(mSLog, <span class="stringliteral">&quot;        Added Terminal {} to Equipment {}&quot;</span>,</div>
-<div class="line"><a name="l01198"></a><span class="lineno"> 1198</span>&#160;                         term-&gt;mRID, equipment-&gt;mRID);</div>
-<div class="line"><a name="l01199"></a><span class="lineno"> 1199</span>&#160;    }</div>
-<div class="line"><a name="l01200"></a><span class="lineno"> 1200</span>&#160;  }</div>
-<div class="line"><a name="l01201"></a><span class="lineno"> 1201</span>&#160;}</div>
-<div class="line"><a name="l01202"></a><span class="lineno"> 1202</span>&#160; </div>
-<div class="line"><a name="l01203"></a><span class="lineno"> 1203</span>&#160;<span class="keyword">template</span> <span class="keywordtype">void</span></div>
-<div class="line"><a name="l01204"></a><span class="lineno"> 1204</span>&#160;Reader::processTopologicalNode&lt;Real&gt;(CIMPP::TopologicalNode *topNode);</div>
-<div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;<span class="keyword">template</span> <span class="keywordtype">void</span></div>
-<div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160;Reader::processTopologicalNode&lt;Complex&gt;(CIMPP::TopologicalNode *topNode);</div>
+<div class="line"><a name="l01192"></a><span class="lineno"> 1192</span>&#160;      <span class="keywordflow">if</span> (pfEquipment == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l01193"></a><span class="lineno"> 1193</span>&#160;        SPDLOG_LOGGER_ERROR(mSLog, <span class="stringliteral">&quot;Equipment {} is null in equipment list&quot;</span>, equipment-&gt;mRID);</div>
+<div class="line"><a name="l01194"></a><span class="lineno"> 1194</span>&#160;        <span class="keywordflow">throw</span> <a class="code" href="class_c_p_s_1_1_system_error.html">SystemError</a>(<span class="stringliteral">&quot;Equipment is null in equipment list.&quot;</span>);</div>
+<div class="line"><a name="l01195"></a><span class="lineno"> 1195</span>&#160;      }</div>
+<div class="line"><a name="l01196"></a><span class="lineno"> 1196</span>&#160;      std::dynamic_pointer_cast&lt;SimPowerComp&lt;VarType&gt;&gt;(pfEquipment)</div>
+<div class="line"><a name="l01197"></a><span class="lineno"> 1197</span>&#160;          -&gt;setTerminalAt(std::dynamic_pointer_cast&lt;<a class="code" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal&lt;VarType&gt;</a>&gt;(</div>
+<div class="line"><a name="l01198"></a><span class="lineno"> 1198</span>&#160;                              mPowerflowTerminals[term-&gt;mRID]),</div>
+<div class="line"><a name="l01199"></a><span class="lineno"> 1199</span>&#160;                          term-&gt;sequenceNumber - 1);</div>
+<div class="line"><a name="l01200"></a><span class="lineno"> 1200</span>&#160; </div>
+<div class="line"><a name="l01201"></a><span class="lineno"> 1201</span>&#160;      SPDLOG_LOGGER_INFO(mSLog, <span class="stringliteral">&quot;        Added Terminal {} to Equipment {}&quot;</span>,</div>
+<div class="line"><a name="l01202"></a><span class="lineno"> 1202</span>&#160;                         term-&gt;mRID, equipment-&gt;mRID);</div>
+<div class="line"><a name="l01203"></a><span class="lineno"> 1203</span>&#160;    }</div>
+<div class="line"><a name="l01204"></a><span class="lineno"> 1204</span>&#160;  }</div>
+<div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;}</div>
+<div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160; </div>
+<div class="line"><a name="l01207"></a><span class="lineno"> 1207</span>&#160;<span class="keyword">template</span> <span class="keywordtype">void</span></div>
+<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;Reader::processTopologicalNode&lt;Real&gt;(CIMPP::TopologicalNode *topNode);</div>
+<div class="line"><a name="l01209"></a><span class="lineno"> 1209</span>&#160;<span class="keyword">template</span> <span class="keywordtype">void</span></div>
+<div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160;Reader::processTopologicalNode&lt;Complex&gt;(CIMPP::TopologicalNode *topNode);</div>
 <div class="ttc" id="aclass_c_p_s_1_1_c_i_m_1_1_invalid_topology_html"><div class="ttname"><a href="class_c_p_s_1_1_c_i_m_1_1_invalid_topology.html">CPS::CIM::InvalidTopology</a></div><div class="ttdef"><b>Definition:</b> <a href="_reader_8h_source.html#l00057">Reader.h:57</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_c_i_m_1_1_reader_html_a276f3231f7e53c32713e51817f51ddc9"><div class="ttname"><a href="class_c_p_s_1_1_c_i_m_1_1_reader.html#a276f3231f7e53c32713e51817f51ddc9">CPS::CIM::Reader::setShuntConductance</a></div><div class="ttdeci">void setShuntConductance(Real v)</div><div class="ttdoc">set shunt conductance value</div><div class="ttdef"><b>Definition:</b> <a href="_reader_8cpp_source.html#l00050">Reader.cpp:50</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_c_i_m_1_1_reader_html_a450d6c419d1fc7845d5b402ab2094ce7"><div class="ttname"><a href="class_c_p_s_1_1_c_i_m_1_1_reader.html#a450d6c419d1fc7845d5b402ab2094ce7">CPS::CIM::Reader::loadCIM</a></div><div class="ttdeci">SystemTopology loadCIM(Real systemFrequency, const fs::path &amp;filename, Domain domain=Domain::DP, PhaseType phase=PhaseType::Single, GeneratorType genType=GeneratorType::None)</div><div class="ttdoc">Parses data from CIM files into the CPS data structure.</div><div class="ttdef"><b>Definition:</b> <a href="_reader_8cpp_source.html#l00209">Reader.cpp:209</a></div></div>

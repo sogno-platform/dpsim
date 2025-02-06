@@ -74,86 +74,94 @@ $(function() {
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;dpsim-models/PtrFactory.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;dpsim/InterfaceWorker.h&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;villas/kernel/rt.hpp&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;villas/node.hpp&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;villas/node/exceptions.hpp&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;villas/node/memory.hpp&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;villas/pool.hpp&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;villas/sample.hpp&gt;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;villas/signal.hpp&gt;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;villas/signal_list.hpp&gt;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">using namespace </span>villas;</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;dpsim/InterfaceQueued.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;dpsim/InterfaceWorker.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;spdlog/common.h&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;villas/kernel/rt.hpp&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;villas/node.hpp&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;villas/node/exceptions.hpp&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;villas/node/memory.hpp&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;villas/pool.hpp&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;villas/sample.hpp&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;villas/signal.hpp&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;villas/signal_list.hpp&gt;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_d_psim.html">DPsim</a> {</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_worker_villas.html">   20</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_d_psim_1_1_interface_worker_villas.html">InterfaceWorkerVillas</a> : <span class="keyword">public</span> <a class="code" href="class_d_psim_1_1_interface_worker.html">InterfaceWorker</a>,</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                              <span class="keyword">public</span> <a class="code" href="class_shared_factory.html">SharedFactory</a>&lt;InterfaceWorkerVillas&gt; {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <span class="keyword">using</span> Ptr = std::shared_ptr&lt;InterfaceWorkerVillas&gt;;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <span class="keyword">using</span> Sample = <span class="keyword">struct </span>node::Sample;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <span class="keyword">static</span> UInt villasPriority;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  <span class="keyword">static</span> UInt villasAffinity;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keyword">static</span> UInt villasHugePages;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="keyword">static</span> Bool villasInitialized;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  std::vector&lt;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;      std::tuple&lt;std::function&lt;<a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>(Sample *)&gt;, UInt&gt;&gt;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      mImports;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  std::vector&lt;std::tuple&lt;std::function&lt;void(<a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, Sample *)&gt;,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                         UInt, Bool&gt;&gt;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;      mExports;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <span class="comment">// VILLASnode node to send / receive data to / from</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  String mNodeConfig;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  node::Node *mNode;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordtype">int</span> mQueueLength;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordtype">int</span> mSampleLength;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  node::Pool mSamplePool;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  Sample *mLastSample;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keywordtype">int</span> mSequence;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  std::map&lt;int, node::Signal::Ptr&gt; mExportSignals;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  std::map&lt;int, node::Signal::Ptr&gt; mImportSignals;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <a class="code" href="class_d_psim_1_1_interface_worker_villas.html">InterfaceWorkerVillas</a>(<span class="keyword">const</span> String &amp;nodeConfig, UInt queueLenght = 512,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                        UInt sampleLenght = 64);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keywordtype">void</span> open() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keywordtype">void</span> close() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">using namespace </span>villas;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_d_psim.html">DPsim</a> {</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_worker_villas.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_d_psim_1_1_interface_worker_villas.html">InterfaceWorkerVillas</a> : <span class="keyword">public</span> <a class="code" href="class_d_psim_1_1_interface_worker.html">InterfaceWorker</a>,</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                              <span class="keyword">public</span> <a class="code" href="class_shared_factory.html">SharedFactory</a>&lt;InterfaceWorkerVillas&gt; {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="keyword">using</span> Ptr = std::shared_ptr&lt;InterfaceWorkerVillas&gt;;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <span class="keyword">using</span> Sample = <span class="keyword">struct </span>node::Sample;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keyword">static</span> UInt villasPriority;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="keyword">static</span> UInt villasAffinity;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  <span class="keyword">static</span> UInt villasHugePages;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="keyword">static</span> Bool villasInitialized;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  std::vector&lt;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      std::tuple&lt;std::function&lt;<a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>(Sample *)&gt;, UInt&gt;&gt;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      mImports;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  std::vector&lt;std::tuple&lt;std::function&lt;void(<a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, Sample *)&gt;,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                         UInt, Bool&gt;&gt;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      mExports;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="comment">// VILLASnode node to send / receive data to / from</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  String mNodeConfig;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  node::Node *mNode;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordtype">int</span> mQueueLength;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keywordtype">int</span> mSampleLength;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  node::Pool mSamplePool;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  Sample *mLastSample;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keywordtype">int</span> mSequence;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  std::map&lt;int, node::Signal::Ptr&gt; mExportSignals;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  std::map&lt;int, node::Signal::Ptr&gt; mImportSignals;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <a class="code" href="class_d_psim_1_1_interface_worker_villas.html">InterfaceWorkerVillas</a>(</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      <span class="keyword">const</span> String &amp;nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64,</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      spdlog::level::level_enum logLevel = spdlog::level::level_enum::info);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keywordtype">void</span> readValuesFromEnv(</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      std::vector&lt;Interface::AttributePacket&gt; &amp;updatedAttrs) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordtype">void</span> writeValuesToEnv(</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      std::vector&lt;Interface::AttributePacket&gt; &amp;updatedAttrs) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> configureImport(UInt attributeId, <span class="keyword">const</span> std::type_info &amp;type,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                               UInt idx, <span class="keyword">const</span> String &amp;name = <span class="stringliteral">&quot;&quot;</span>,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                               <span class="keyword">const</span> String &amp;unit = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> configureExport(UInt attributeId, <span class="keyword">const</span> std::type_info &amp;type,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                               UInt idx, Bool waitForOnWrite,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                               <span class="keyword">const</span> String &amp;name = <span class="stringliteral">&quot;&quot;</span>,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                               <span class="keyword">const</span> String &amp;unit = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keywordtype">void</span> open() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keywordtype">void</span> close() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordtype">void</span> readValuesFromEnv(</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      std::vector&lt;InterfaceQueued::AttributePacket&gt; &amp;updatedAttrs) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keywordtype">void</span> readValuesFromEnv(</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      std::vector&lt;std::tuple&lt;CPS::AttributeBase::Ptr, UInt, bool, bool&gt;&gt;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;          &amp;updatedAttrs);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keywordtype">void</span> writeValuesToEnv(</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      std::vector&lt;InterfaceQueued::AttributePacket&gt; &amp;updatedAttrs) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordtype">void</span> writeValuesToEnv(</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      std::vector&lt;std::tuple&lt;CPS::AttributeBase::Ptr, UInt&gt;&gt; &amp;updatedAttrs);</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keywordtype">void</span> printSignals() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keywordtype">void</span> prepareNode();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="keywordtype">void</span> setupNodeSignals();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keywordtype">void</span> initVillas() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;};</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;} <span class="comment">// namespace DPsim</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> configureImport(UInt attributeId, <span class="keyword">const</span> std::type_info &amp;type,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                               UInt idx, <span class="keyword">const</span> String &amp;name = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                               <span class="keyword">const</span> String &amp;unit = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> configureExport(UInt attributeId, <span class="keyword">const</span> std::type_info &amp;type,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                               UInt idx, Bool waitForOnWrite,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                               <span class="keyword">const</span> String &amp;name = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                               <span class="keyword">const</span> String &amp;unit = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="keywordtype">void</span> printSignals() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keywordtype">void</span> prepareNode();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keywordtype">void</span> setupNodeSignals();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="keywordtype">void</span> initVillas() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;};</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;} <span class="comment">// namespace DPsim</span></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_pointer_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributePointer</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00046">Attribute.h:46</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_interface_worker_html"><div class="ttname"><a href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></div><div class="ttdef"><b>Definition:</b> <a href="_interface_worker_8h_source.html#l00017">InterfaceWorker.h:17</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_interface_worker_villas_html"><div class="ttname"><a href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></div><div class="ttdef"><b>Definition:</b> <a href="_interface_worker_villas_8h_source.html#l00020">InterfaceWorkerVillas.h:21</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_worker_html"><div class="ttname"><a href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></div><div class="ttdef"><b>Definition:</b> <a href="_interface_worker_8h_source.html#l00018">InterfaceWorker.h:18</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_worker_villas_html"><div class="ttname"><a href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></div><div class="ttdef"><b>Definition:</b> <a href="_interface_worker_villas_8h_source.html#l00022">InterfaceWorkerVillas.h:23</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition:</b> <a href="_ptr_factory_8h_source.html#l00016">PtrFactory.h:16</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition:</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

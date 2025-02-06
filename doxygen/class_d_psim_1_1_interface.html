@@ -66,21 +66,19 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_d_psim_1_1_interface-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">DPsim::Interface Class Reference</div>  </div>
+<div class="title">DPsim::Interface Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
 Inheritance diagram for DPsim::Interface:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_interface__inherit__graph.svg" width="202" height="355"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_interface__inherit__graph.svg" width="435" height="431"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -90,81 +88,39 @@ Collaboration diagram for DPsim::Interface:</div>
 </div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_1_1_post_step.html">PostStep</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_1_1_pre_step.html">PreStep</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_1_1_reader_thread.html">ReaderThread</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_1_1_writer_thread.html">WriterThread</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a0a1bcc498440ec065c5d99198ac5f21d"><td class="memItemLeft" align="right" valign="top"><a id="a0a1bcc498440ec065c5d99198ac5f21d"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>AttributePacketFlags</b> { <b>PACKET_NO_FLAGS</b> = 0
-, <b>PACKET_CLOSE_INTERFACE</b> = 1
- }</td></tr>
-<tr class="separator:a0a1bcc498440ec065c5d99198ac5f21d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace8b0d4b3ba7141eddac4ffd2e3f9ade"><td class="memItemLeft" align="right" valign="top"><a id="ace8b0d4b3ba7141eddac4ffd2e3f9ade"></a>
 typedef std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_interface.html">Interface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b></td></tr>
 <tr class="separator:ace8b0d4b3ba7141eddac4ffd2e3f9ade"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa97ba36320f7240bbbf8c7bb882aba24"><td class="memItemLeft" align="right" valign="top"><a id="aa97ba36320f7240bbbf8c7bb882aba24"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>AttributePacket</b> = struct AttributePacket { <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> value</td></tr>
-<tr class="separator:aa97ba36320f7240bbbf8c7bb882aba24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9b9d732b46459964a8b367574104167f"><td class="memItemLeft" align="right" valign="top"><a id="a9b9d732b46459964a8b367574104167f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Interface</b> (std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_interface_worker.html">InterfaceWorker</a> &gt; intf, const String &amp;name=&quot;&quot;, UInt downsampling=1)</td></tr>
-<tr class="separator:a9b9d732b46459964a8b367574104167f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc479fa58b1a54a58bde60ebeb314928"><td class="memItemLeft" align="right" valign="top"><a id="afc479fa58b1a54a58bde60ebeb314928"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>open</b> ()</td></tr>
-<tr class="separator:afc479fa58b1a54a58bde60ebeb314928"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade88dcd637c182606f401f98a51474f6"><td class="memItemLeft" align="right" valign="top"><a id="ade88dcd637c182606f401f98a51474f6"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>close</b> ()</td></tr>
-<tr class="separator:ade88dcd637c182606f401f98a51474f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23a6535e8dbd51942734129edaa8b366"><td class="memItemLeft" align="right" valign="top"><a id="a23a6535e8dbd51942734129edaa8b366"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>pushDpsimAttrsToQueue</b> ()</td></tr>
-<tr class="separator:a23a6535e8dbd51942734129edaa8b366"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9adf3c9abb795b979529a5342c664d5a"><td class="memItemLeft" align="right" valign="top"><a id="a9adf3c9abb795b979529a5342c664d5a"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>popDpsimAttrsFromQueue</b> (bool isSync=false)</td></tr>
-<tr class="separator:a9adf3c9abb795b979529a5342c664d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad983eb4cb47ea8e9c16ec19b9e674886"><td class="memItemLeft" align="right" valign="top"><a id="ad983eb4cb47ea8e9c16ec19b9e674886"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>syncExports</b> ()</td></tr>
-<tr class="separator:ad983eb4cb47ea8e9c16ec19b9e674886"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae87da6134637272f86a1b53872228370"><td class="memItemLeft" align="right" valign="top"><a id="ae87da6134637272f86a1b53872228370"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#ae87da6134637272f86a1b53872228370">syncImports</a> ()</td></tr>
-<tr class="memdesc:ae87da6134637272f86a1b53872228370"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function called by the <a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> to perform interface synchronization. <br /></td></tr>
-<tr class="separator:ae87da6134637272f86a1b53872228370"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1729412a24c14f13e9a320a8086a9b4a"><td class="memItemLeft" align="right" valign="top"><a id="a1729412a24c14f13e9a320a8086a9b4a"></a>
-virtual CPS::Task::List&#160;</td><td class="memItemRight" valign="bottom"><b>getTasks</b> ()</td></tr>
-<tr class="separator:a1729412a24c14f13e9a320a8086a9b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7ff184a7ead2918ca54d461d7087bb1"><td class="memItemLeft" align="right" valign="top"><a id="af7ff184a7ead2918ca54d461d7087bb1"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Interface</b> (const String &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</td></tr>
+<tr class="separator:af7ff184a7ead2918ca54d461d7087bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1abfbf3041ad0216706049969b1f469d"><td class="memItemLeft" align="right" valign="top"><a id="a1abfbf3041ad0216706049969b1f469d"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>open</b> ()=0</td></tr>
+<tr class="separator:a1abfbf3041ad0216706049969b1f469d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c1f8e9e588cac5322b12203338ad7da"><td class="memItemLeft" align="right" valign="top"><a id="a1c1f8e9e588cac5322b12203338ad7da"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>close</b> ()=0</td></tr>
+<tr class="separator:a1c1f8e9e588cac5322b12203338ad7da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa472b392a5d172437ba75d788bdd0d39"><td class="memItemLeft" align="right" valign="top"><a id="aa472b392a5d172437ba75d788bdd0d39"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>syncExports</b> ()=0</td></tr>
+<tr class="separator:aa472b392a5d172437ba75d788bdd0d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b4b1bc175d633d5ef379b416e1fc833"><td class="memItemLeft" align="right" valign="top"><a id="a7b4b1bc175d633d5ef379b416e1fc833"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a7b4b1bc175d633d5ef379b416e1fc833">syncImports</a> ()=0</td></tr>
+<tr class="memdesc:a7b4b1bc175d633d5ef379b416e1fc833"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function called by the <a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> to perform interface synchronization. <br /></td></tr>
+<tr class="separator:a7b4b1bc175d633d5ef379b416e1fc833"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af59ef83a2129ca0e459bf54d4cd563f2"><td class="memItemLeft" align="right" valign="top"><a id="af59ef83a2129ca0e459bf54d4cd563f2"></a>
+virtual CPS::Task::List&#160;</td><td class="memItemRight" valign="bottom"><b>getTasks</b> ()=0</td></tr>
+<tr class="separator:af59ef83a2129ca0e459bf54d4cd563f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84d521b290775ce69bc442e7ce4175eb"><td class="memItemLeft" align="right" valign="top"><a id="a84d521b290775ce69bc442e7ce4175eb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setLogger</b> (CPS::Logger::Log log)</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setLogger</b> (CPS::Logger::Log log)</td></tr>
 <tr class="separator:a84d521b290775ce69bc442e7ce4175eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a7f2733ff034e9b5af550c2d20e8d6671"><td class="memItemLeft" align="right" valign="top"><a id="a7f2733ff034e9b5af550c2d20e8d6671"></a>
-UInt&#160;</td><td class="memItemRight" valign="bottom"><b>attributeId</b></td></tr>
-<tr class="separator:a7f2733ff034e9b5af550c2d20e8d6671"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24cfbda163428e5335ccaac64558efbb"><td class="memItemLeft" align="right" valign="top"><a id="a24cfbda163428e5335ccaac64558efbb"></a>
-UInt&#160;</td><td class="memItemRight" valign="bottom"><b>sequenceId</b></td></tr>
-<tr class="separator:a24cfbda163428e5335ccaac64558efbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add90dbe9820979b9deface2437019b86"><td class="memItemLeft" align="right" valign="top"><a id="add90dbe9820979b9deface2437019b86"></a>
-unsigned char&#160;</td><td class="memItemRight" valign="bottom"><b>flags</b></td></tr>
-<tr class="separator:add90dbe9820979b9deface2437019b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33a81c7c3de33abb899eedfff741acd2"><td class="memItemLeft" align="right" valign="top"><a id="a33a81c7c3de33abb899eedfff741acd2"></a>
-std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt, bool, bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mImportAttrsDpsim</b></td></tr>
-<tr class="separator:a33a81c7c3de33abb899eedfff741acd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0bc158390ed482f079bb79798860eb3"><td class="memItemLeft" align="right" valign="top"><a id="af0bc158390ed482f079bb79798860eb3"></a>
-std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mExportAttrsDpsim</b></td></tr>
-<tr class="separator:af0bc158390ed482f079bb79798860eb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
+<tr class="memitem:af8056a760f5b4e8ce40f5e9fe17a9bbb"><td class="memItemLeft" align="right" valign="top"><a id="af8056a760f5b4e8ce40f5e9fe17a9bbb"></a>
+virtual String &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> ()</td></tr>
+<tr class="separator:af8056a760f5b4e8ce40f5e9fe17a9bbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b00acb09b792e3352ff76ae817f696d"><td class="memItemLeft" align="right" valign="top"><a id="a6b00acb09b792e3352ff76ae817f696d"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addImport</b> (<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr, bool blockOnRead=false, bool syncOnSimulationStart=true)</td></tr>
 <tr class="separator:a6b00acb09b792e3352ff76ae817f696d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,11 +128,17 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addImport</b>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addExport</b> (<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr)</td></tr>
 <tr class="separator:ab7799cc7e87df1920e55288a84063497"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a33a81c7c3de33abb899eedfff741acd2"><td class="memItemLeft" align="right" valign="top"><a id="a33a81c7c3de33abb899eedfff741acd2"></a>
+std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt, bool, bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mImportAttrsDpsim</b></td></tr>
+<tr class="separator:a33a81c7c3de33abb899eedfff741acd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0bc158390ed482f079bb79798860eb3"><td class="memItemLeft" align="right" valign="top"><a id="af0bc158390ed482f079bb79798860eb3"></a>
+std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mExportAttrsDpsim</b></td></tr>
+<tr class="separator:af0bc158390ed482f079bb79798860eb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:aeb14cb220c790438e86f845f2bc8841a"><td class="memItemLeft" align="right" valign="top"><a id="aeb14cb220c790438e86f845f2bc8841a"></a>
-std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_interface_worker.html">InterfaceWorker</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mInterfaceWorker</b></td></tr>
-<tr class="separator:aeb14cb220c790438e86f845f2bc8841a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac147df20daebd31b0ae90182f0191a5c"><td class="memItemLeft" align="right" valign="top"><a id="ac147df20daebd31b0ae90182f0191a5c"></a>
 CPS::Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><b>mLog</b></td></tr>
 <tr class="separator:ac147df20daebd31b0ae90182f0191a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,24 +154,9 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceDpsim
 <tr class="memitem:a35f39d4546ff58e41152b5c66a78cf14"><td class="memItemLeft" align="right" valign="top"><a id="a35f39d4546ff58e41152b5c66a78cf14"></a>
 UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mNextSequenceInterfaceToDpsim</b> = 1</td></tr>
 <tr class="separator:a35f39d4546ff58e41152b5c66a78cf14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d04def715e4c9897fb6d0057511f651"><td class="memItemLeft" align="right" valign="top"><a id="a1d04def715e4c9897fb6d0057511f651"></a>
-UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mDownsampling</b></td></tr>
-<tr class="separator:a1d04def715e4c9897fb6d0057511f651"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46f7fd95003532d77c6a965280c2c3a0"><td class="memItemLeft" align="right" valign="top"><a id="a46f7fd95003532d77c6a965280c2c3a0"></a>
 std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mOpened</b></td></tr>
 <tr class="separator:a46f7fd95003532d77c6a965280c2c3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c36099cfed8ad0cd558a527d6f60946"><td class="memItemLeft" align="right" valign="top"><a id="a1c36099cfed8ad0cd558a527d6f60946"></a>
-std::thread&#160;</td><td class="memItemRight" valign="bottom"><b>mInterfaceWriterThread</b></td></tr>
-<tr class="separator:a1c36099cfed8ad0cd558a527d6f60946"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a897690d715f8fe601190b4f6c68f47ae"><td class="memItemLeft" align="right" valign="top"><a id="a897690d715f8fe601190b4f6c68f47ae"></a>
-std::thread&#160;</td><td class="memItemRight" valign="bottom"><b>mInterfaceReaderThread</b></td></tr>
-<tr class="separator:a897690d715f8fe601190b4f6c68f47ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24d446fc8671acceaea968b7f4db8d6d"><td class="memItemLeft" align="right" valign="top"><a id="a24d446fc8671acceaea968b7f4db8d6d"></a>
-std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; AttributePacket &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mQueueDpsimToInterface</b></td></tr>
-<tr class="separator:a24d446fc8671acceaea968b7f4db8d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fee3fc86a2e618b1a1433b0ab655140"><td class="memItemLeft" align="right" valign="top"><a id="a5fee3fc86a2e618b1a1433b0ab655140"></a>
-std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; AttributePacket &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mQueueInterfaceToDpsim</b></td></tr>
-<tr class="separator:a5fee3fc86a2e618b1a1433b0ab655140"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -220,7 +167,7 @@ static std::shared_ptr&lt; Interface &gt;&#160;</td><td class="memItemRight" val
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_interface_8h_source.html#l00021">21</a> of file <a class="el" href="_interface_8h_source.html">Interface.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_interface_8h_source.html#l00019">19</a> of file <a class="el" href="_interface_8h_source.html">Interface.h</a>.</p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/__w/dpsim/dpsim/dpsim/include/dpsim/<a class="el" href="_interface_8h_source.html">Interface.h</a></li>
 <li>/__w/dpsim/dpsim/dpsim/src/<a class="el" href="_interface_8cpp_source.html">Interface.cpp</a></li>

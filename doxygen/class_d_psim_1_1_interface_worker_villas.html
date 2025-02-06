@@ -102,17 +102,23 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b> = std::share
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0d69e84a534316b2fa695dca0c9d8458"><td class="memItemLeft" align="right" valign="top"><a id="a0d69e84a534316b2fa695dca0c9d8458"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>InterfaceWorkerVillas</b> (const String &amp;nodeConfig, UInt queueLenght=512, UInt sampleLenght=64)</td></tr>
-<tr class="separator:a0d69e84a534316b2fa695dca0c9d8458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29259a404a37611d22f3f26b8c741ae3"><td class="memItemLeft" align="right" valign="top"><a id="a29259a404a37611d22f3f26b8c741ae3"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>InterfaceWorkerVillas</b> (const String &amp;nodeConfig, UInt queueLenght=512, UInt sampleLenght=64, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</td></tr>
+<tr class="separator:a29259a404a37611d22f3f26b8c741ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fecbf348f751d0eeaca4a79bfd4a5cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a7fecbf348f751d0eeaca4a79bfd4a5cd">open</a> () override</td></tr>
 <tr class="separator:a7fecbf348f751d0eeaca4a79bfd4a5cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72cb1f35a612281678f1419cb701d5a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a72cb1f35a612281678f1419cb701d5a6">close</a> () override</td></tr>
 <tr class="separator:a72cb1f35a612281678f1419cb701d5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab13c64d71b8fea89d454507de0bb0b62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#ab13c64d71b8fea89d454507de0bb0b62">readValuesFromEnv</a> (std::vector&lt; Interface::AttributePacket &gt; &amp;updatedAttrs) override</td></tr>
-<tr class="separator:ab13c64d71b8fea89d454507de0bb0b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e11ecd0954c304e9215476bb64b3361"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a1e11ecd0954c304e9215476bb64b3361">writeValuesToEnv</a> (std::vector&lt; Interface::AttributePacket &gt; &amp;updatedAttrs) override</td></tr>
-<tr class="separator:a1e11ecd0954c304e9215476bb64b3361"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae073163e4947d2952a3fae317cb3addf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#ae073163e4947d2952a3fae317cb3addf">readValuesFromEnv</a> (std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;updatedAttrs) override</td></tr>
+<tr class="separator:ae073163e4947d2952a3fae317cb3addf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58c7e9d507f89a08a7c57666a456b36f"><td class="memItemLeft" align="right" valign="top"><a id="a58c7e9d507f89a08a7c57666a456b36f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>readValuesFromEnv</b> (std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt, bool, bool &gt;&gt; &amp;updatedAttrs)</td></tr>
+<tr class="separator:a58c7e9d507f89a08a7c57666a456b36f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3f9bbc452144c608802d937099c56b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#aa3f9bbc452144c608802d937099c56b8">writeValuesToEnv</a> (std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;updatedAttrs) override</td></tr>
+<tr class="separator:aa3f9bbc452144c608802d937099c56b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72760a29a2aea3e514354beceb64f63c"><td class="memItemLeft" align="right" valign="top"><a id="a72760a29a2aea3e514354beceb64f63c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeValuesToEnv</b> (std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt &gt;&gt; &amp;updatedAttrs)</td></tr>
+<tr class="separator:a72760a29a2aea3e514354beceb64f63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef5e8459ba1c353b4dbffa088b86e308"><td class="memItemLeft" align="right" valign="top"><a id="aef5e8459ba1c353b4dbffa088b86e308"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>configureImport</b> (UInt attributeId, const std::type_info &amp;type, UInt idx, const String &amp;name=&quot;&quot;, const String &amp;unit=&quot;&quot;)</td></tr>
 <tr class="separator:aef5e8459ba1c353b4dbffa088b86e308"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,7 +161,7 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_interface_worker_villas_8h_source.html#l00020">20</a> of file <a class="el" href="_interface_worker_villas_8h_source.html">InterfaceWorkerVillas.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_interface_worker_villas_8h_source.html#l00022">22</a> of file <a class="el" href="_interface_worker_villas_8h_source.html">InterfaceWorkerVillas.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a72cb1f35a612281678f1419cb701d5a6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a72cb1f35a612281678f1419cb701d5a6">&#9670;&nbsp;</a></span>close()</h2>
@@ -183,7 +189,7 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
 
 <p>Implements <a class="el" href="class_d_psim_1_1_interface_worker.html#a7a3e6b9a78baa09a532a9e01694f6786">DPsim::InterfaceWorker</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_interface_worker_villas_8cpp_source.html#l00163">163</a> of file <a class="el" href="_interface_worker_villas_8cpp_source.html">InterfaceWorkerVillas.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_interface_worker_villas_8cpp_source.html#l00167">167</a> of file <a class="el" href="_interface_worker_villas_8cpp_source.html">InterfaceWorkerVillas.cpp</a>.</p>
 
 </div>
 </div>
@@ -213,12 +219,12 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
 
 <p>Implements <a class="el" href="class_d_psim_1_1_interface_worker.html#a740c3066458bfd670460be6327b818a5">DPsim::InterfaceWorker</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_interface_worker_villas_8cpp_source.html#l00033">33</a> of file <a class="el" href="_interface_worker_villas_8cpp_source.html">InterfaceWorkerVillas.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_interface_worker_villas_8cpp_source.html#l00036">36</a> of file <a class="el" href="_interface_worker_villas_8cpp_source.html">InterfaceWorkerVillas.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ab13c64d71b8fea89d454507de0bb0b62"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab13c64d71b8fea89d454507de0bb0b62">&#9670;&nbsp;</a></span>readValuesFromEnv()</h2>
+<a id="ae073163e4947d2952a3fae317cb3addf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae073163e4947d2952a3fae317cb3addf">&#9670;&nbsp;</a></span>readValuesFromEnv()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,7 +235,7 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
         <tr>
           <td class="memname">void InterfaceWorkerVillas::readValuesFromEnv </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; Interface::AttributePacket &gt; &amp;&#160;</td>
+          <td class="paramtype">std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;&#160;</td>
           <td class="paramname"><em>updatedAttrs</em></td><td>)</td>
           <td></td>
         </tr>
@@ -242,14 +248,14 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
 </div><div class="memdoc">
 <p>Function that will be called on loop in its separate thread. Should be used to read values from the environment and push them into <code>updatedAttrs</code> <code>updatedAttrs</code> will always be empty when this function is invoked </p>
 
-<p>Implements <a class="el" href="class_d_psim_1_1_interface_worker.html#af7f8133339bdd531353d924b33de1b69">DPsim::InterfaceWorker</a>.</p>
+<p>Implements <a class="el" href="class_d_psim_1_1_interface_worker.html#a777f4be15b259e0067c7fdbec62dd07f">DPsim::InterfaceWorker</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_interface_worker_villas_8cpp_source.html#l00188">188</a> of file <a class="el" href="_interface_worker_villas_8cpp_source.html">InterfaceWorkerVillas.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_interface_worker_villas_8cpp_source.html#l00192">192</a> of file <a class="el" href="_interface_worker_villas_8cpp_source.html">InterfaceWorkerVillas.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a1e11ecd0954c304e9215476bb64b3361"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e11ecd0954c304e9215476bb64b3361">&#9670;&nbsp;</a></span>writeValuesToEnv()</h2>
+<a id="aa3f9bbc452144c608802d937099c56b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3f9bbc452144c608802d937099c56b8">&#9670;&nbsp;</a></span>writeValuesToEnv()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -260,7 +266,7 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
         <tr>
           <td class="memname">void InterfaceWorkerVillas::writeValuesToEnv </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; Interface::AttributePacket &gt; &amp;&#160;</td>
+          <td class="paramtype">std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;&#160;</td>
           <td class="paramname"><em>updatedAttrs</em></td><td>)</td>
           <td></td>
         </tr>
@@ -273,9 +279,9 @@ UInt&#160;</td><td class="memItemRight" valign="bottom"><b>mCurrentSequenceInter
 </div><div class="memdoc">
 <p>Function that will be called on loop in its separate thread. Should be used to read values from <code>updatedAttrs</code> and write them to the environment The <code>updatedAttrs</code> list will not be cleared by the caller in between function calls When this function is called, <code>updatedAttrs</code> will include at least one value </p>
 
-<p>Implements <a class="el" href="class_d_psim_1_1_interface_worker.html#a6e42aa54204123299b1e04fb457f9d14">DPsim::InterfaceWorker</a>.</p>
+<p>Implements <a class="el" href="class_d_psim_1_1_interface_worker.html#a4eb7974757ddbc17e3d4f1a648af0b2e">DPsim::InterfaceWorker</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_interface_worker_villas_8cpp_source.html#l00286">286</a> of file <a class="el" href="_interface_worker_villas_8cpp_source.html">InterfaceWorkerVillas.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_interface_worker_villas_8cpp_source.html#l00290">290</a> of file <a class="el" href="_interface_worker_villas_8cpp_source.html">InterfaceWorkerVillas.cpp</a>.</p>
 
 </div>
 </div>
