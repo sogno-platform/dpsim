@@ -40,20 +40,20 @@ void decoupleLine(SystemTopology &sys, const String &lineName, const String &nod
   //   std::cerr << e.what() << '\n';
   // }
 
-  auto HalfDecouplingLineA = EMT::Ph3::HalfDecouplingLine::make("dlineA_", Logger::Level::debug);
-  auto HalfDecouplingLineB = EMT::Ph3::HalfDecouplingLine::make("dlineB", Logger::Level::debug);
+  auto HalfDecouplingLineA = EMT::Ph3::HalfDecouplingLine::make(nameDLineA, Logger::Level::debug);
+  auto HalfDecouplingLineB = EMT::Ph3::HalfDecouplingLine::make(nameDLineB, Logger::Level::debug);
 
+  sys.addComponent(HalfDecouplingLineA);
+  HalfDecouplingLineA->connect({CPS::SimNode<Real>::GND, sys.node<CPS::SimNode<Real>>(node1)});
   HalfDecouplingLineA->setParameters(Rline, Lline, Cline,
                        HalfDecouplingLineB->attributeTyped<Matrix>("sending_volt"),
                        HalfDecouplingLineB->attributeTyped<Matrix>("sending_cur"));
-  sys.addComponent(HalfDecouplingLineA);
-  HalfDecouplingLineA->connect({CPS::SimNode<Real>::GND, sys.node<CPS::SimNode<Real>>(node1)});
 
+  sys.addComponent(HalfDecouplingLineB);
+  HalfDecouplingLineB->connect({CPS::SimNode<Real>::GND, sys.node<CPS::SimNode<Real>>(node2)});
   HalfDecouplingLineB->setParameters(Rline, Lline, Cline,
                        HalfDecouplingLineA->attributeTyped<Matrix>("sending_volt"),
                        HalfDecouplingLineA->attributeTyped<Matrix>("sending_cur"));
-  sys.addComponent(HalfDecouplingLineB);
-  HalfDecouplingLineB->connect({CPS::SimNode<Real>::GND, sys.node<CPS::SimNode<Real>>(node2)});
 }
 
 void doSim(String &name, SystemTopology &sys, Int threads) {
@@ -116,14 +116,14 @@ int main(int argc, char *argv[]) {
   doSim(simNameMonolithic, systemMonolithic, 0);
 
   // Decoupled Simulation
-  String simNameDecoupledHalf = "WSCC_9bus_split_decoupledHalf_EMT_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
+  String simNameDecoupledHalf = "WSCC_9bus_split_decoupledHalfComp_EMT_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
   Logger::setLogDir("logs/" + simNameDecoupledHalf);
   CIM::Reader readerDecoupled(simNameDecoupledHalf, Logger::Level::debug, Logger::Level::debug);
   SystemTopology systemDecoupled = readerDecoupled.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC,
                                    CPS::GeneratorType::IdealVoltageSource);
 
   String* dline_75[2];
-  decoupleLine(systemDecoupled, "LINE75", "BUS5", "BUS7", dline_75);
+  decoupleLine(systemDecoupled, "LINE75", "BUS7", "BUS5", dline_75);
   // decouple_line(system, "LINE78", "BUS7", "BUS8");
   String* dline_64[2];
   decoupleLine(systemDecoupled, "LINE64", "BUS6", "BUS4", dline_64);
