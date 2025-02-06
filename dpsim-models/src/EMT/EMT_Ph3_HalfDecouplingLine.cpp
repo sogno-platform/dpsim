@@ -12,10 +12,11 @@ using namespace CPS;
 
 EMT::Ph3::HalfDecouplingLine::HalfDecouplingLine(String uid, String name, Logger::Level logLevel)
     :CompositePowerComp<Real>(uid, name, true, true, logLevel),
-      mSrcCtrledCurrent(mAttributes->create<Matrix>("i_src_ctrl")),
+      mSrcCtrledCurrent(mAttributes->create<Matrix>("i_src_ctrl", Matrix::Zero(3, 1))),
+      mSrcRes(mAttributes->create<Matrix>("src_res", Matrix::Zero(3, 3))),
       mReceivingVolt(mAttributes->createDynamic<Matrix>("receiving_volt")),
       mReceivingCur(mAttributes->createDynamic<Matrix>("receiving_cur")),
-      mSendingVoltage(mAttributes->create<Matrix>("sending_volt")),
+      mSendingVolt(mAttributes->create<Matrix>("sending_volt")),
       mSendingCur(mAttributes->create<Matrix>("sending_cur")) {
 
   mSubRes = EMT::Ph3::Resistor::make(**mName + "_r", mLogLevel);
@@ -27,8 +28,9 @@ EMT::Ph3::HalfDecouplingLine::HalfDecouplingLine(String uid, String name, Logger
   // Pre-step of the subcontrolled current source is handled explicitly in mnaParentPreStep
   addMNASubComponent(mSubCtrledCurrentSource, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  // addMNASubComponent(mSubCtrledCurrentSource, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
+  //                    MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   
-  mSrcCtrledCurrent->setReference(mSubCtrledCurrentSource->mCurrentRef);
 
   mPhaseType = PhaseType::ABC;
   setVirtualNodeNumber(0);
@@ -47,16 +49,25 @@ void EMT::Ph3::HalfDecouplingLine::setParameters(
   mResistance = resistance;
   mInductance = inductance;
   mCapacitance = capacitance;
-  mSurgeImpedance = sqrt(inductance(0,0) / capacitance(0,0));
 
-  mDelay = sqrt(inductance(0,0) * capacitance(0,0));
+  mSurgeImpedance << sqrt(inductance(0,0) / capacitance(0,0)), 0, 0,
+                      0, sqrt(inductance(1,1) / capacitance(1,1)), 0,
+                      0, 0, sqrt(inductance(2,2) / capacitance(2,2));
+
+  mDelay << sqrt(inductance(0,0) * capacitance(0,0)), 0, 0,
+            0, sqrt(inductance(1,1) * capacitance(1,1)), 0,
+            0, 0, sqrt(inductance(2,2) * capacitance(2,2));
+
+   **mSrcRes << (mSurgeImpedance(0,0) + mResistance(0,0) / 4), 0, 0,
+                0, (mSurgeImpedance(1,1) + mResistance(1,1) / 4), 0,
+                0, 0, (mSurgeImpedance(2,2) + mResistance(2,2) / 4);
 
   SPDLOG_LOGGER_INFO(mSLog, "surge impedance: {}", mSurgeImpedance);
   SPDLOG_LOGGER_INFO(mSLog, "delay: {}", mDelay);
 
-  mSubCtrledCurrentSource->setParameters(Matrix::Zero(3, 1));
+  mSubCtrledCurrentSource->setParameters(**mSrcCtrledCurrent);
   mSubCtrledCurrentSource->connect({mTerminals[0]->node(), SimNode::GND});
-  mSubRes->setParameters(Math::singlePhaseParameterToThreePhase(mSurgeImpedance + mResistance(0,0) / 4));
+  mSubRes->setParameters(**mSrcRes);
   mSubRes->connect({mTerminals[0]->node(), SimNode::GND});
 
   mParametersSet = true;
@@ -69,6 +80,31 @@ void EMT::Ph3::HalfDecouplingLine::initializeFromNodesAndTerminals(Real frequenc
   // mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
   // mAlpha = 1 - (mBufSize - mDelay / timeStep);
   // SPDLOG_LOGGER_INFO(mSLog, "bufsize {} alpha {}", mBufSize, mAlpha);
+
+  // Initialization based on static PI-line model
+  MatrixComp vInit = MatrixComp::Zero(3, 1);
+  vInit(0, 0) = initialSingleVoltage(0); // rms value
+  vInit(1, 0) = vInit(0, 0) * SHIFT_TO_PHASE_B;
+  vInit(2, 0) = vInit(0, 0) * SHIFT_TO_PHASE_C;
+
+  MatrixComp iInit = MatrixComp::Zero(3, 1);
+  // Complex sInit = terminal(0)->singlePower(); // returns zero
+
+  // iInit(0, 0) = std::conj(sInit / vInit(0, 0) / sqrt(3.));  // rms value
+  // iInit(1, 0) = std::conj(sInit / vInit(1, 0) / sqrt(3.));
+  // iInit(2, 0) = std::conj(sInit / vInit(2, 0) / sqrt(3.));
+
+  **mIntfVoltage = vInit.real();
+  **mIntfCurrent = iInit.real();
+
+  // Initialize electrical subcomponents
+  for (auto subcomp : mSubComponents) {
+    subcomp->initialize(mFrequencies);
+    subcomp->initializeFromNodesAndTerminals(frequency);
+  }
+
+  **mSendingVolt= **mIntfVoltage;
+  **mSendingCur= **mIntfCurrent;
 
   // // Initialization based on static PI-line model
   // Complex volt1 = mNode1->initialSingleVoltage();
@@ -91,7 +127,9 @@ void EMT::Ph3::HalfDecouplingLine::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
+  prevStepDependencies.push_back(mIntfCurrent);
   prevStepDependencies.push_back(mIntfVoltage);
+  modifiedAttributes.push_back(mRightVector);
 }
 
 void EMT::Ph3::HalfDecouplingLine::mnaParentAddPostStepDependencies(
@@ -101,29 +139,41 @@ void EMT::Ph3::HalfDecouplingLine::mnaParentAddPostStepDependencies(
     Attribute<Matrix>::Ptr &leftVector) {
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfVoltage);
+  modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void EMT::Ph3::HalfDecouplingLine::Step(Real time) {
-  // calculate 
+void EMT::Ph3::HalfDecouplingLine::Step(Real time) { 
 
-  // Real denom =
-  //     (mSurgeImpedance + mResistance / 4) * (mSurgeImpedance + mResistance / 4);
+  **mSendingVolt= **mIntfVoltage;
+  **mSendingCur= **mIntfCurrent;
 
-  // // Calculate current
-  // **mSrcCurRef = -mSurgeImpedance / denom *
-  //                     (**mReceivingVolt + (mSurgeImpedance - mResistance / 4) * **mReceivingCur) -
-  //                 mResistance / 4 / denom *
-  //                     (**mSendingVoltage + (mSurgeImpedance - mResistance / 4) * **mSendingVoltage);
+  Matrix denom = Matrix::Zero(3,3);
+  
+  denom << (mSurgeImpedance(0,0) + mResistance(0,0) / 4) * (mSurgeImpedance(0,0) + mResistance(0,0) / 4), 0, 0,
+            0, (mSurgeImpedance(1,1) + mResistance(1,1) / 4) * (mSurgeImpedance(1,1) + mResistance(1,1) / 4), 0,
+            0, 0, (mSurgeImpedance(2,2) + mResistance(2,2) / 4) * (mSurgeImpedance(2,2) + mResistance(2,2) / 4);
+
+
+  // Calculate current
+  (**mSrcCtrledCurrent)(0,0) = -mSurgeImpedance(0,0) / denom(0,0) *
+                      ((**mReceivingVolt)(0,0) + (mSurgeImpedance(0,0) - mResistance(0,0) / 4) * (**mReceivingCur)(0,0)) -
+                  mResistance(0,0) / 4 / denom(0,0) *
+                      ((**mSendingVolt)(0,0) + (mSurgeImpedance(0,0) - mResistance(0,0) / 4) * (**mSendingVolt)(0,0));
+                      
+  (**mSrcCtrledCurrent)(1,0) = -mSurgeImpedance(1,1) / denom(1,1) *
+                      ((**mReceivingVolt)(1,0) + (mSurgeImpedance(1,1) - mResistance(1,1) / 4) * (**mReceivingCur)(1,0)) -
+                  mResistance(1,1) / 4 / denom(1,1) *
+                      ((**mSendingVolt)(1,0) + (mSurgeImpedance(1,1) - mResistance(1,1) / 4) * (**mSendingVolt)(1,0));
+                      
+  (**mSrcCtrledCurrent)(2,0) = -mSurgeImpedance(2,2) / denom(2,2) *
+                      ((**mReceivingVolt)(2,0) + (mSurgeImpedance(2,2) - mResistance(2,2) / 4) * (**mReceivingCur)(2,0)) -
+                  mResistance(2,2) / 4 / denom(2,2) *
+                      ((**mSendingVolt)(2,0) + (mSurgeImpedance(2,2) - mResistance(2,2) / 4) * (**mSendingVolt)(2,0));
+
+  mSubCtrledCurrentSource->mCurrentRef->set(**mSrcCtrledCurrent);
 }
 
 void EMT::Ph3::HalfDecouplingLine::mnaParentPreStep(Real time, Int timeStepCount) {
-  // // Pre-step of the subcontrolled current source is handled explicitly in mnaParentPreStep
-  // addMNASubComponent(mSubCtrledCurrentSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-  //                    MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-  // // pre-step of subcomponents - controlled source
-  // std::dynamic_pointer_cast<MNAInterface>(mSubCtrledCurrentSource)
-  //     ->mnaPreStep(time, timeStepCount);
-  
   // pre-step of composite component
   Step(time);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
