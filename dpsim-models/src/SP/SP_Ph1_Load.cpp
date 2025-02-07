@@ -36,8 +36,10 @@ void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower,
   **mReactivePower = reactivePower;
   **mNomVoltage = nominalVoltage;
 
-  SPDLOG_LOGGER_INFO(mSLog, "Active Power={} [W] Reactive Power={} [VAr]",
-                     **mActivePower, **mReactivePower);
+  SPDLOG_LOGGER_INFO(
+      mSLog,
+      "Active Power={}[W]\nReactive Power={} [VAr]\nNominal Voltage={} [V]",
+      **mActivePower, **mReactivePower, **mNomVoltage);
   mSLog->flush();
 
   mParametersSet = true;
