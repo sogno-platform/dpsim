@@ -27,6 +27,8 @@ public:
     mLog = CPS::Logger::get("Interface", logLevel);
   };
 
+  virtual ~Interface() = default;
+
   virtual void open() = 0;
   virtual void close() = 0;
 
