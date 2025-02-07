@@ -90,6 +90,14 @@ RUN dnf -y install \
 	qt5-qtbase qt5-qtsvg
 RUN pip3 install gprof2dot
 
+# Build & Install sundials
+RUN cd /tmp && \
+	git clone --branch v3.2.1 --recurse-submodules --depth 1 https://github.com/LLNL/sundials.git && \
+	mkdir -p sundials/build && cd sundials/build && \
+	cmake ${CMAKE_OPTS} .. \
+		-DCMAKE_BUILD_TYPE=Release && \
+	make ${MAKE_OPTS} install
+
 # Install CIMpp from source
 RUN cd /tmp && \
 	git clone https://github.com/sogno-platform/libcimpp.git && \
@@ -116,14 +124,25 @@ RUN cd /tmp && \
 		-DBUILD_SHARED_LIBS=on && \
 	make ${MAKE_OPTS} install && rm -rf /tmp/magma-2.6.0
 
+# Install VILLASnode from source
+RUN cd /tmp && \
+	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
+	mkdir -p villas-node/build && cd villas-node/build && \
+	git checkout ${VILLAS_VERSION} && \
+	cmake ${CMAKE_OPTS} .. \
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+		-DDOWNLOAD_GO=OFF && \
+	make ${MAKE_OPTS} install && \
+	rm -rf /tmp/villas-node
+
 # CIMpp and VILLASnode are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 # # Python dependencies
-# ADD requirements.txt .
-# RUN pip3 install -U setuptools
-# RUN pip3 install -U wheel
-# RUN pip3 install -r requirements.txt
+COPY requirements.txt requirements.txt
+RUN pip3 install -U setuptools
+RUN pip3 install -U wheel
+RUN pip3 install -r requirements.txt
 
 # # Remove this part in the future and use dedicated Jupyter Dockerfile
 # # Activate Jupyter extensions
