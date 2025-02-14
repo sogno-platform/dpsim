@@ -274,8 +274,10 @@ if __name__ == '__main__':
     y_1 = y_1_0
 
     # We have to assume the trajectory of y_2 extending its initial value, since we have no prior information
-    # y_1_m_prev = np.tile(y_1_0, m)
-    y_1_m_prev = np.array([y_1_prev, y_1_0])
+    if method == "extrapolation-linear":
+        y_1_m_prev = np.array([y_1_prev, y_1_0])
+    else:
+        y_1_m_prev = np.tile(y_1_0, m)
     # y_1_m_prev = np.array([0.0, y_1_0])
 
     if NO_EXTRAP:

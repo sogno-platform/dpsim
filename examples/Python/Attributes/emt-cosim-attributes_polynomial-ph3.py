@@ -258,7 +258,7 @@ if __name__ == '__main__':
 
         for i in range(0, N):
             y_1_prev = y_1_m_prev[:,-1]
-            t_m_i = t[m*i : m*(i+1)]
+            t_m_i = t[m*i+1: m*(i+1)+1]
 
             # Extrapolation: Zero order hold
             if interp == 'zoh':
