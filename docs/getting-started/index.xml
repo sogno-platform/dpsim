@@ -1,4 +1,70 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Getting Started</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/</link><description>Recent content in Getting Started on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno-platform.github.io/dpsim/docs/getting-started/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Build</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</link><pubDate>Wed, 03 May 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Getting Started</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/</link><description>Recent content in Getting Started on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno-platform.github.io/dpsim/docs/getting-started/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Real-Time</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/real-time/</link><pubDate>Thu, 13 Feb 2025 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/real-time/</guid><description>
+&lt;p>This page describes recommended techniques to optimize the host operating system for real-time execution of DPsim.&lt;/p>
+&lt;p>DPsim supports real-time execution, where the simulation time equals the real or wall clock time, on any system.
+However, without modifying system parameters the minimum time step reliably achievable will not be in the range of microseconds.
+This is due to operating system noise and other processes interfering with the simulation.
+With proper tuning, we have achieved real-time time steps as low as 5 us synchronized to a FPGA using VILLASnode.
+Synchronizing the time step to an external source is only necessary, when very high time step accuracy, with maximum deviations in the nanoseconds, is required.&lt;/p>
+&lt;h2 id="operating-system-and-kernel">Operating System and Kernel&lt;/h2>
+&lt;p>Using a Linux kernel with the &lt;code>PREEMPT_RT&lt;/code> feature improves latency when issuing system calls and enables the FIFO scheduler that lets us avoid preemption during the real-time simulation.&lt;/p>
+&lt;p>Most distributions offer a binary package for a &lt;code>PREEMPT_RT&lt;/code> enabled kernel. For example on Rocky Linux:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo dnf --enablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>rt install kernel-rt kernel-rt-devel
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>More aggressive tuning can involve isolating a set of cores for exclusive use by the real-time simulation.
+This way, the kernel will not schedule any processes on these cores.
+Add the kernel parameters &lt;code>isolcpus&lt;/code> and &lt;code>nohz_full&lt;/code> using, for example, &lt;code>grubby&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo grubby --update-kernel&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ALL --args&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;isolcpus=9,11,13,15 nohz_full=9,11,13,15&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Something similar, but less invasive and non-permanent can be achieved using &lt;code>tuna&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo tuna isolate -c 9,11,13,15
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To avoid real-time throttling to cause overruns disable this feature:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo bash -c &lt;span style="color:#4e9a06">&amp;#34;echo -1 &amp;gt; /proc/sys/kernel/sched_rt_runtime_us&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Note that this is not persistent when rebooting.&lt;/p>
+&lt;h2 id="simulation-model-tuning">Simulation Model Tuning&lt;/h2>
+&lt;p>Real time capable models cannot issue any system calls during simulation as the context switch to the kernel introduces unacceptable latencies.
+This means models cannot allocate memory, use mutexes or other interupt-driven synchronization primitives, read or write data from files.
+You should turn off logging, when time steps in the low milliseconds are desired.
+There is a &lt;code>RealTimeDataLogger&lt;/code> that can be used to output simulation results in these cases.
+Note however, that this logger pre-allocated the memory required for all of the logging required during simulations.
+Your machine may run out of memory, when the simulation is long or you log too many signals.&lt;/p>
+&lt;p>You can increase the performance of your simulation by adding the &lt;code>-flto&lt;/code> and &lt;code>-march=native&lt;/code> compiler flags:&lt;/p>
+&lt;pre tabindex="0">&lt;code>diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8801cbe8d..4a2843269 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -79,7 +79,7 @@ include(CheckSymbolExists)
+check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
+check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
+if(CMAKE_BUILD_TYPE STREQUAL &amp;#34;Release&amp;#34; OR CMAKE_BUILD_TYPE STREQUAL &amp;#34;RelWithDebInfo&amp;#34;)
+- add_compile_options(-flto -march=native -Ofast)
++ add_compile_options( -Ofast)
+endif()
+# Get version info and buildid from Git
+&lt;/code>&lt;/pre>&lt;h2 id="running-a-real-time-simulation">Running a Real-Time Simulation&lt;/h2>
+&lt;p>Before running a simulation, you can run the following commands as root:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;evacuating cores&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tuna isolate -c 9,11,13,15
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;disabling RT throttling&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> -1 &amp;gt; /proc/sys/kernel/sched_rt_runtime_us
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;stopping systemd services&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl stop polkit
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl stop containerd
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl stop crond
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl stop chronyd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As a reference, real-time simulation examples are provided in the &lt;code>dpsim/examples/cxx&lt;/code> and &lt;code>dpsim-villas/examples/cxx&lt;/code> folder of the DPsim repository.&lt;/p>
+&lt;p>To benefit from the &lt;code>PREEMPT_RT&lt;/code> feature and the isolated cores, the simulation has to be started using the &lt;code>chrt&lt;/code> command to set the scheduling policy and priority, and the &lt;code>taskset&lt;/code> command to pin the process to the isolated cores.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="http://man7.org/linux/man-pages/man1/chrt.1.html">chrt man-page&lt;/a>&lt;/li>
+&lt;li>&lt;a href="http://man7.org/linux/man-pages/man1/taskset.1.html">taskset man-page&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>In the following example, we set the FIFO scheduling policy with the highest priority (99) and pin the execution of the simulation to CPU cores 9,11,13,15 which have been reserved previously (see above).&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># the simple RT_DP_CS_R_1 simulation&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>taskset -c 9,11,13,15 chrt -f &lt;span style="color:#0000cf;font-weight:bold">99&lt;/span> build/dpsim/examples/cxx/RT_DP_CS_R_1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Cosimulation using VILLASnode, FPGA synchronized time step, and exchanging data via Aurora interface.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Here we need sudo, to interact with the FPGA. We disable logging (log=false) and set the time step to 50 us (-t 0.00005).&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo taskset -c 9,11,13,15 chrt -f &lt;span style="color:#0000cf;font-weight:bold">99&lt;/span> build/dpsim-villas/examples/cxx/FpgaCosim3PhInfiniteBus -o &lt;span style="color:#000">log&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">false&lt;/span> -t 0.00005 -d &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Build</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</link><pubDate>Wed, 03 May 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</guid><description>
 &lt;h2 id="docker-based">Docker based&lt;/h2>
 &lt;p>Clone the repository&lt;/p>
 &lt;pre>&lt;code>$ git clone git@github.com:sogno-platform/dpsim.git
@@ -160,40 +226,4 @@ In case it is not activated, run:&lt;/p>
 &lt;pre>&lt;code>$ pip install dpsim
 &lt;/code>&lt;/pre>
 &lt;h2 id="from-source">From Source&lt;/h2>
-&lt;p>To build and install DPsim from the source files, please refer to the build section.&lt;/p></description></item><item><title>Docs: Real-Time</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/real-time/</link><pubDate>Thu, 05 Jan 2017 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/real-time/</guid><description>
-&lt;p>This page describes recommended techniques to optimize the host operating system for real-time execution of DPsim.&lt;/p>
-&lt;p>In principle, real-time execution is supported on all platforms.
-However, we recommend to use an optimized Linux installation.&lt;/p>
-&lt;h2 id="operating-system-and-kernel">Operating System and Kernel&lt;/h2>
-&lt;p>For minimum latency several kernel and driver settings can be optimized.&lt;/p>
-&lt;p>To get started, we recommend the &lt;a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_MRG/2/html/Realtime_Tuning_Guide/index.html">Redhat Real-time Tuning Guide&lt;/a>.&lt;/p>
-&lt;p>A &lt;a href="https://rt.wiki.kernel.org/index.php/Main_Page">PREEMPT_RT patched Linux&lt;/a> kernel is recommended.
-Precompiled kernels for Fedora can be found here: &lt;a href="http://ccrma.stanford.edu/planetccrma/software/">http://ccrma.stanford.edu/planetccrma/software/&lt;/a>&lt;/p>
-&lt;p>Use the &lt;em>tuned&lt;/em> tool for improving general real-time performance.
-Please adjust the setting &lt;code>isolated_cpucores&lt;/code> according to your hardware and enable the &lt;code>realtime&lt;/code> profile as follows:&lt;/p>
-&lt;pre>&lt;code> $ dnf install tuned-profiles-realtime
-$ echo &amp;quot;realtime&amp;quot; &amp;gt; /etc/tuned/active_profile
-$ echo &amp;quot;isolated_cpucores=6-7&amp;quot; &amp;gt;&amp;gt; /etc/tuned/realtime-variables.conf
-$ systemctl enable tuned &amp;amp;&amp;amp; systemctl start tuned
-$ systemctl reboot
-&lt;/code>&lt;/pre>
-&lt;h2 id="running-a-real-time-simulation">Running a real-time simulation&lt;/h2>
-&lt;p>As a reference, real-time simulation examples are provided in the Examples/Cxx folder of the DPsim repository.&lt;/p>
-&lt;p>In order to run a real-time simulation, the simulation process must be started in a special way in order to change the execution priority, scheduler and CPU affinity.
-For this purpose the &lt;code>chrt&lt;/code> and &lt;code>taskset&lt;/code> commands are used.
-In the following example, we pin the execution of the simulation to CPU cores 6-7 which have been reserved previously by the tuned real-time profile (see above).&lt;/p>
-&lt;pre>&lt;code> $ taskset --all-tasks --cpu-list 6-7 \
-$ chrt --fifo 99 \
-$ Examples/Cxx/RT_DP_CS_R_1
-&lt;/code>&lt;/pre>
-&lt;p>More details:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="http://man7.org/linux/man-pages/man1/chrt.1.html">chrt man-page&lt;/a>&lt;/li>
-&lt;li>&lt;a href="http://man7.org/linux/man-pages/man1/taskset.1.html">taskset man-page&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="recommended-hardware">Recommended Hardware&lt;/h2>
-&lt;p>Some proposals for the selection of appropriate server hardware:&lt;/p>
-&lt;ul>
-&lt;li>Server-grade CPU, e.g. Intel Xeon. A multi-core system enables true parallel execution of several decoupled systems&lt;/li>
-&lt;li>Server-grade network cards, e.g. Intel PRO/1000. These allow offloading of UDP checksumming to the hardware&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;p>To build and install DPsim from the source files, please refer to the build section.&lt;/p></description></item></channel></rss>
