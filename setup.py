@@ -53,9 +53,9 @@ class CMakeBuild(build_ext):
             ['cmake', sourcedir] + cmake_args, cwd=self.build_temp, env=env
         )
 
-        print(' '.join(['cmake', '--build', '.', '--target', 'dpsimpy', 'dpsimpyvillas'] + build_args))
+        print(' '.join(['cmake', '--build', '.', '--target', 'dpsimpy'] + build_args))
         subprocess.check_call(
-            ['cmake', '--build', '.', '--target', 'dpsimpy', 'dpsimpyvillas'] + build_args, cwd=self.build_temp
+            ['cmake', '--build', '.', '--target', 'dpsimpy'] + build_args, cwd=self.build_temp
         )
 
 setup(
