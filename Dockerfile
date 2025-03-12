@@ -13,9 +13,9 @@ ENV NB_UID ${NB_UID}
 ENV HOME /home/${NB_USER}
 
 RUN adduser \
-    --comment "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
+	--comment "Default user" \
+	--uid ${NB_UID} \
+	${NB_USER}
 
 COPY . ${HOME}/dpsim
 USER root
@@ -23,6 +23,9 @@ RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
 RUN rm -rf ${HOME}/dpsim/build && mkdir ${HOME}/dpsim/build
 WORKDIR ${HOME}/dpsim
+
+
+RUN pip install setuptools wheel
 
 RUN python3 -m build --wheel
 RUN python3 -m pip install ./dist/dpsim*
