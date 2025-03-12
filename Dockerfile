@@ -25,7 +25,5 @@ RUN rm -rf ${HOME}/dpsim/build && mkdir ${HOME}/dpsim/build
 WORKDIR ${HOME}/dpsim
 
 
-RUN pip install setuptools wheel
-
-RUN python3 -m build --wheel
+RUN python3 -m build --wheel --no-build-isolation
 RUN python3 -m pip install ./dist/dpsim*
