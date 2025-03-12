@@ -24,6 +24,6 @@ USER ${NB_USER}
 RUN rm -rf ${HOME}/dpsim/build && mkdir ${HOME}/dpsim/build
 WORKDIR ${HOME}/dpsim
 
-
-RUN python3 -m build --wheel --no-build-isolation
+RUN curl pypi.com
+RUN python3 -m build --wheel
 RUN python3 -m pip install ./dist/dpsim*
