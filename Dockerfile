@@ -25,5 +25,5 @@ RUN rm -rf ${HOME}/dpsim/build && mkdir ${HOME}/dpsim/build
 WORKDIR ${HOME}/dpsim
 
 RUN python3 -m build --wheel
-RUN python3 -m pip install jupyterhub
+RUN python3 -m pip install notebook jupyterlab jupyterhub
 RUN python3 -m pip install ./dist/dpsim*
