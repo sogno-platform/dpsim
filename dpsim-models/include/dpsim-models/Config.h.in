@@ -16,3 +16,5 @@
 #cmakedefine WITH_NUMPY
 #cmakedefine WITH_KLU
 #cmakedefine CGMES_BUILD
+
+#cmakedefine HAVE_FMT_LEGACY_OSTREAM_FORMATTER

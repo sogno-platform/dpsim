@@ -198,6 +198,11 @@ elseif("${CMAKE_SYSTEM}" MATCHES "Darwin")
 	set(MacOS_FOUND ON)
 endif()
 
+if(fmt_VERSION VERSION_LESS "9.0.0")
+  message("Using legacy ostream formatting")
+  set(HAVE_FMT_LEGACY_OSTREAM_FORMATTER 1)
+endif()
+
 include(CMakeDependentOption)
 cmake_dependent_option(WITH_SUNDIALS        "Enable sundials solver suite"          ON  "Sundials_FOUND"   OFF)
 cmake_dependent_option(WITH_VILLAS          "Enable VILLASnode interface"           ON  "VILLASnode_FOUND" OFF)
