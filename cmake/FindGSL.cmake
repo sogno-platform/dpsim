@@ -1,4 +1,4 @@
-if (WIN32)
+if(WIN32)
 	# GSL is currently not supported for Windows
 else()
 	find_path(GSL_INCLUDE_DIR

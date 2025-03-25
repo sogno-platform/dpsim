@@ -1,4 +1,4 @@
-if (WIN32)
+if(WIN32)
 	message(STATUS "Sundials is currently not supported in Windows")
 else()
 	find_path(SUNDIALS_INCLUDE_DIR
