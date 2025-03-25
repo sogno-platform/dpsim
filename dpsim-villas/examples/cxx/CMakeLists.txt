@@ -20,7 +20,6 @@ set(SHMEM_SOURCES
 	FpgaExample.cpp
 	FpgaCosim3PhInfiniteBus.cpp
 	FpgaCosimulation.cpp
-	Fpga9BusHil.cpp
 	SharedMemExample.cpp
 	#ShmemExample.cpp
 	#ShmemDistributedReference.cpp
@@ -33,6 +32,7 @@ set(SHMEM_SOURCES
 )
 
 if(WITH_CIM)
+	list(APPEND SHMEM_SOURCES Fpga9BusHil.cpp)
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 endif()
 
