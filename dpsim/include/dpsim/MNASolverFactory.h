@@ -52,7 +52,7 @@ public:
         DirectLinearSolverImpl::DenseLU,    DirectLinearSolverImpl::SparseLU,
 #ifdef WITH_KLU
         DirectLinearSolverImpl::KLU
-#endif //WITH_KLU
+#endif // WITH_KLU
     };
     return ret;
   }
