@@ -12,6 +12,9 @@ set(PROJECT_DESCRIPTION "C++ Power System Simulation Library")
 set(PROJECT_HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
 set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 
+# Build options
+option(WITH_LTO									"Enable Link Time Optimization in Release builds" ON)
+
 # Required for dpsim_python
 if(POLICY CMP0076)
 	cmake_policy(SET CMP0076 NEW)
@@ -79,7 +82,11 @@ include(CheckSymbolExists)
 check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
 check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-	add_compile_options(-flto -march=native -Ofast)
+	add_compile_options(-march=native -Ofast)
+
+	if(WITH_LTO)
+		add_compile_options(-flto)
+	endif()
 endif()
 
 # Get version info and buildid from Git
