@@ -14,6 +14,7 @@ set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 
 # Build options
 option(WITH_LTO									"Enable Link Time Optimization in Release builds" ON)
+option(WITH_MARCH_NATIVE				"Optimize build for native host architecture" ON)
 
 # Required for dpsim_python
 if(POLICY CMP0076)
@@ -82,7 +83,11 @@ include(CheckSymbolExists)
 check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
 check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-	add_compile_options(-march=native -Ofast)
+	add_compile_options(-Ofast)
+
+	if(WITH_MARCH_NATIVE)
+		add_compile_options(-march=native)
+	endif()
 
 	if(WITH_LTO)
 		add_compile_options(-flto)
