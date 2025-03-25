@@ -13,8 +13,8 @@ set(PROJECT_HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
 set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 
 # Build options
-option(WITH_LTO									"Enable Link Time Optimization in Release builds" ON)
-option(WITH_MARCH_NATIVE				"Optimize build for native host architecture" ON)
+option(WITH_LTO									"Enable Link Time Optimization in Release builds" OFF)
+option(WITH_MARCH_NATIVE				"Optimize build for native host architecture" OFF)
 
 # Required for dpsim_python
 if(POLICY CMP0076)
