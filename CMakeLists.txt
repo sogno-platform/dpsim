@@ -75,6 +75,7 @@ endif()
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
+include(GNUInstallDirs)
 include(CheckCXXCompilerFlag)
 if(MSVC)
 	# Silence Visual Studio deprecation warnings
