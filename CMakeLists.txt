@@ -86,26 +86,19 @@ endif()
 include(GetVersion)
 GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 
-# Deprecated build options
-# TODO: Remove deprecated options in future release
-option(WITH_EIGEN_MODULE     "Fetch Eigen3 as module (deprecated option)" OFF)
-option(WITH_KLU   	     "Build with KLU as module (deprecated option)" ON)
-option(WITH_SPDLOG_SUBMODULE "Fetch spdlog as module (deprecated option)" OFF)
-option(WITH_CIM_SUBMODULE    "Fetch CIMpp as module (deprecated option)" OFF)
-option(WITH_PYBIND_MODULE    "Fetch pybind11 as module (deprecated option)" OFF)
-option(GET_GRID_DATA         "Fetch grid data (deprecated option)" ON)
-
 # Build options
-option(FETCH_EIGEN          "Fetch Eigen3 as module" ${WITH_EIGEN_MODULE})
-option(FETCH_KLU            "Fetch KLU as module" ${WITH_KLU})
-option(FETCH_SPDLOG         "Fetch spdlog as module" ${WITH_SPDLOG_SUBMODULE})
-option(FETCH_CIMPP          "Fetch CIMpp as module" ${WITH_CIM_SUBMODULE})
-option(FETCH_PYBIND         "Fetch pybind11 as module" ${WITH_PYBIND_MODULE})
-option(FETCH_GRID_DATA      "Fetch grid data" ${GET_GRID_DATA})
-option(FETCH_FILESYSTEM     "Fetch standalone implememtation of std::filesystem" OFF)
+option(FETCH_EIGEN          "Fetch Eigen3 as module" OFF)
+option(FETCH_KLU            "Fetch KLU as module" ON)
+option(FETCH_SPDLOG         "Fetch spdlog as module" OFF)
+option(FETCH_CIMPP          "Fetch CIMpp as module" OFF)
+option(FETCH_PYBIND         "Fetch pybind11 as module" OFF)
+option(FETCH_GRID_DATA      "Fetch grid data" ON)
+option(FETCH_FILESYSTEM     "Fetch standalone implementation of std::filesystem" OFF)
+
+set(WITH_KLU FETCH_KLU)
 
 option(WITH_JSON            "Include json library" ON)
-option(WITH_PROFILING       "Add `-pg` profiling flag to compiliation" OFF)
+option(WITH_PROFILING       "Add `-pg` profiling flag to compilation" OFF)
 option(WITH_ASAN            "Adds compiler flags to use the address sanitizer" OFF)
 option(WITH_TSAN            "Adds compiler flags to use the thread sanitizer" OFF)
 option(WITH_SPARSE          "Use sparse matrices in MNA-Solver"	ON)
