@@ -13,8 +13,28 @@ set(PROJECT_HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
 set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 
 # Build options
-option(WITH_LTO									"Enable Link Time Optimization in Release builds" OFF)
-option(WITH_MARCH_NATIVE				"Optimize build for native host architecture" OFF)
+option(FETCH_EIGEN          "Fetch Eigen3 as module" OFF)
+option(FETCH_KLU            "Fetch KLU as module" ON)
+option(FETCH_SPDLOG         "Fetch spdlog as module" OFF)
+option(FETCH_CIMPP          "Fetch CIMpp as module" OFF)
+option(FETCH_PYBIND         "Fetch pybind11 as module" OFF)
+option(FETCH_GRID_DATA      "Fetch grid data" ON)
+option(FETCH_FILESYSTEM     "Fetch standalone implementation of std::filesystem" OFF)
+option(FETCH_JSON           "Fetch json library as module" ON)
+
+option(WITH_LTO             "Enable Link Time Optimization in Release builds" OFF)
+option(WITH_MARCH_NATIVE    "Optimize build for native host architecture" OFF)
+option(WITH_PROFILING       "Add `-pg` profiling flag to compilation" OFF)
+option(WITH_ASAN            "Adds compiler flags to use the address sanitizer" OFF)
+option(WITH_TSAN            "Adds compiler flags to use the thread sanitizer" OFF)
+option(WITH_SPARSE          "Use sparse matrices in MNA-Solver"	ON)
+
+option(BUILD_SHARED_LIBS    "Build shared library" OFF)
+option(DPSIM_BUILD_EXAMPLES "Build C++ examples" ON)
+option(DPSIM_BUILD_DOC      "Build documentation" ON)
+
+option(CGMES_BUILD          "Build with CGMES instead of CIMpp" OFF)
+
 
 # Required for dpsim_python
 if(POLICY CMP0076)
@@ -108,36 +128,6 @@ endif()
 include(GetVersion)
 GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 
-# Deprecated build options
-# TODO: Remove deprecated options in future release
-option(WITH_EIGEN_MODULE     "Fetch Eigen3 as module (deprecated option)" OFF)
-option(WITH_KLU   	     "Build with KLU as module (deprecated option)" ON)
-option(WITH_SPDLOG_SUBMODULE "Fetch spdlog as module (deprecated option)" OFF)
-option(WITH_CIM_SUBMODULE    "Fetch CIMpp as module (deprecated option)" OFF)
-option(WITH_PYBIND_MODULE    "Fetch pybind11 as module (deprecated option)" OFF)
-option(GET_GRID_DATA         "Fetch grid data (deprecated option)" ON)
-
-# Build options
-option(FETCH_EIGEN          "Fetch Eigen3 as module" ${WITH_EIGEN_MODULE})
-option(FETCH_KLU            "Fetch KLU as module" ${WITH_KLU})
-option(FETCH_SPDLOG         "Fetch spdlog as module" ${WITH_SPDLOG_SUBMODULE})
-option(FETCH_CIMPP          "Fetch CIMpp as module" ${WITH_CIM_SUBMODULE})
-option(FETCH_PYBIND         "Fetch pybind11 as module" ${WITH_PYBIND_MODULE})
-option(FETCH_GRID_DATA      "Fetch grid data" ${GET_GRID_DATA})
-option(FETCH_FILESYSTEM     "Fetch standalone implememtation of std::filesystem" OFF)
-
-option(WITH_JSON            "Include json library" ON)
-option(WITH_PROFILING       "Add `-pg` profiling flag to compiliation" OFF)
-option(WITH_ASAN            "Adds compiler flags to use the address sanitizer" OFF)
-option(WITH_TSAN            "Adds compiler flags to use the thread sanitizer" OFF)
-option(WITH_SPARSE          "Use sparse matrices in MNA-Solver"	ON)
-
-option(BUILD_SHARED_LIBS    "Build shared library" OFF)
-option(DPSIM_BUILD_EXAMPLES "Build C++ examples" ON)
-option(DPSIM_BUILD_DOC      "Build documentation" ON)
-
-option(CGMES_BUILD          "Build with CGMES instead of CIMpp" OFF)
-
 find_package(Threads REQUIRED)
 find_package(Sundials)
 find_package(OpenMP)
@@ -187,7 +177,7 @@ if(FETCH_GRID_DATA)
 	include(FetchGridData)
 endif()
 
-if(WITH_JSON)
+if(FETCH_JSON)
 	include(FetchJsonLibrary)
 endif()
 
@@ -226,9 +216,11 @@ cmake_dependent_option(WITH_VILLAS          "Enable VILLASnode interface"       
 cmake_dependent_option(WITH_RT              "Enable real-time features"             ON  "Linux_FOUND"      OFF)
 cmake_dependent_option(WITH_CIM             "Enable support for parsing CIM"        ON  "CIMpp_FOUND"      OFF)
 cmake_dependent_option(WITH_OPENMP          "Enable OpenMP-based parallelisation"   ON  "OPENMP_FOUND"     OFF)
+cmake_dependent_option(WITH_KLU             "Enable KLU factorization"              ON  "FETCH_KLU"        OFF)
 cmake_dependent_option(WITH_CUDA            "Enable CUDA-based parallelisation"     OFF "CUDA_FOUND"       OFF)
 cmake_dependent_option(WITH_GRAPHVIZ        "Enable Graphviz Graphs"                ON  "GRAPHVIZ_FOUND"   OFF)
 cmake_dependent_option(WITH_PYBIND          "Enable PYBIND support"                 ON  "pybind11_FOUND"   OFF)
+cmake_dependent_option(WITH_JSON            "Enable JSON library support"           ON  "FETCH_JSON"       OFF)
 cmake_dependent_option(WITH_MAGMA           "Enable MAGMA features"                 ON  "MAGMA_FOUND"      OFF)
 cmake_dependent_option(WITH_MNASOLVERPLUGIN "Enable MNASolver Plugins"              ON  "NOT WIN32"        OFF)
 
