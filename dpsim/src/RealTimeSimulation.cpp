@@ -10,6 +10,7 @@
 #include <ctime>
 #include <dpsim/RealTimeSimulation.h>
 #include <iomanip>
+#include <fmt/chrono.h>
 
 using namespace CPS;
 using namespace DPsim;
@@ -42,12 +43,8 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 
   sync();
 
-  auto now_time = std::chrono::system_clock::to_time_t(startAt);
-  SPDLOG_LOGGER_INFO(mLog, "Starting simulation at {} (delta_T = {} seconds)",
-                     std::put_time(std::localtime(&now_time), "%F %T"),
-                     std::chrono::duration_cast<std::chrono::seconds>(
-                         startAt - Timer::StartClock::now())
-                         .count());
+  SPDLOG_LOGGER_INFO(mLog, "Starting simulation at {:%Y-%m-%d %H:%M:%S} (delta_T = {} seconds)",
+                     startAt, startAt - Timer::StartClock::now());
 
   mTimer.setStartTime(startAt);
   mTimer.setInterval(**mTimeStep);

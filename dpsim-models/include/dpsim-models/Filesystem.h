@@ -13,3 +13,11 @@ namespace fs = std::experimental::filesystem;
 #include <ghc/filesystem.hpp>
 namespace fs = ghc::filesystem;
 #endif
+
+#include <spdlog/fmt/ostr.h>
+
+#if FMT_VERSION >= 90000
+template <>
+class fmt::formatter<fs::path>
+    : public fmt::ostream_formatter {};
+#endif

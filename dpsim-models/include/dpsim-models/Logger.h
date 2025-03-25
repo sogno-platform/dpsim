@@ -69,3 +69,62 @@ public:
   static String getCSVLineFromData(Real time, const MatrixComp &data);
 };
 } // namespace CPS
+
+
+#if FMT_VERSION >= 90000
+template <>
+class fmt::formatter<CPS::Complex>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::Vector>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::VectorComp>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::SparseMatrix>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::SparseMatrixRow>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::SparseMatrixComp>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::SparseMatrixCompRow>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::Matrix>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::MatrixComp>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::MatrixInt>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::MatrixRow>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::LUFactorized>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<CPS::LUFactorizedSparse>
+    : public fmt::ostream_formatter {};
+template <typename VarType>
+class fmt::formatter<CPS::MatrixVar<VarType>>
+    : public fmt::ostream_formatter {};
+template <int rows, int cols>
+class fmt::formatter<CPS::MatrixFixedSize<rows, cols>>
+    : public fmt::ostream_formatter {};
+template <int rows, int cols>
+class fmt::formatter<CPS::MatrixFixedSizeComp<rows, cols>>
+    : public fmt::ostream_formatter {};
+
+template <>
+class fmt::formatter<Eigen::Block<CPS::Matrix>>
+    : public fmt::ostream_formatter {};
+template <>
+class fmt::formatter<Eigen::Block<CPS::MatrixComp>>
+    : public fmt::ostream_formatter {};
+#endif

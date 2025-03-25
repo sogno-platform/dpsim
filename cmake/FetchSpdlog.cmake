@@ -5,7 +5,7 @@ option(SPDLOG_BUILD_EXAMPLES "Build spdlog examples" OFF)
 include(FetchContent)
 FetchContent_Declare(spdlog-module
 	GIT_REPOSITORY https://github.com/gabime/spdlog.git
-	GIT_TAG        v1.5.0
+	GIT_TAG        v1.15.0
 	GIT_SHALLOW    TRUE
 	GIT_PROGRESS   TRUE
 )
