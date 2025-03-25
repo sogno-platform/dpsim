@@ -1,24 +1,22 @@
 import os
-import re
 import sys
 import platform
 import subprocess
 
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
-from distutils.version import LooseVersion
 
 
 class CMakeExtension(Extension):
     def __init__(self, name):
         Extension.__init__(self, name, sources=[])
 
+
 class CMakeBuild(build_ext):
     def build_extension(self, ext):
 
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
 
-        debug = int(os.environ.get("DEBUG", 0)) if self.debug is None else self.debug
         cfg = 'Debug' if self.debug else 'Release'
         print('building CMake extension in %s configuration' % cfg)
 
@@ -27,7 +25,7 @@ class CMakeBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG={extdir}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE={extdir}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
-            f"-DCMAKE_BUILD_TYPE={cfg}" # not used on MSVC, but no harm
+            f"-DCMAKE_BUILD_TYPE={cfg}"  # not used on MSVC, but no harm
         ]
 
         if platform.system() == 'Windows':
@@ -57,6 +55,7 @@ class CMakeBuild(build_ext):
         subprocess.check_call(
             ['cmake', '--build', '.', '--target', 'dpsimpy'] + build_args, cwd=self.build_temp
         )
+
 
 setup(
     packages=find_packages('python/src'),
