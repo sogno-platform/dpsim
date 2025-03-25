@@ -92,8 +92,6 @@ typedef Eigen::PartialPivLU<Matrix> LUFactorized;
 ///
 typedef Eigen::SparseLU<SparseMatrix> LUFactorizedSparse;
 ///
-typedef Eigen::Matrix<Real, Eigen::Dynamic, 1> Vector;
-///
 template <typename VarType>
 using MatrixVar =
     Eigen::Matrix<VarType, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>;
