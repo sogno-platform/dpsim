@@ -13,6 +13,15 @@
 
 #define READER_CPP
 #include <dpsim-models/CIM/Reader.h>
+#include <dpsim-models/Config.h>
+
+#ifndef HAVE_FMT_LEGACY_OSTREAM_FORMATTER
+#include <fmt/ostream.h>
+
+template <>
+class fmt::formatter<fs::path>
+    : public fmt::ostream_formatter {};
+#endif
 
 using namespace CPS;
 using namespace CPS::CIM;
