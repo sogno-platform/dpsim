@@ -125,18 +125,18 @@ def dpsim():
     sim.log_attribute('n2.v', n2.attr('v'))
 
     intf_config = {
-        "type": "mqtt",
-        "format": "json",
-        "host": "mqtt",
-        "in": {
-            "subscribe": "/mqtt-dpsim"
+        'type': 'mqtt',
+        'format': 'json',
+        'host': 'mqtt',
+        'in': {
+            'subscribe': '/mqtt-dpsim'
         },
-        "out": {
-            "publish": "/dpsim-mqtt"
+        'out': {
+            'publish': '/dpsim-mqtt'
         }
     }
 
-    intf = dpsimpyvillas.InterfaceVillas(name="dpsim-mqtt", config=intf_config)
+    intf = dpsimpyvillas.InterfaceVillas(name='dpsim-mqtt', config=json.dumps(intf_config))
     intf.import_attribute(load.attr('P'), 0)
     intf.export_attribute(n1.attr('v').derive_coeff(0,0), 0)
     intf.export_attribute(n2.attr('v').derive_coeff(0,0).derive_mag(), 1)

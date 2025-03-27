@@ -4,6 +4,7 @@ import glob
 import logging
 import os
 import sys
+import json
 
 import dpsimpy
 import dpsimpyvillas
@@ -55,16 +56,18 @@ csvreader.assignLoadProfile(system, 0, 1, 300, dpsimpy.CSVReaderMode.MANUAL, dps
 logger = dpsimpy.Logger(name)
 
 # setup VILLASnode
-intf_mqtt = dpsimpyvillas.InterfaceVillas(name='MQTT', config='''{
-    "type": "mqtt",
-    "host": "mqtt",
-    "in": {
-        "subscribe": "mqtt-dpsim"
+intf_mqtt_config = {
+    'type': 'mqtt',
+    'host': 'mqtt',
+    'in': {
+        'subscribe': 'mqtt-dpsim'
     },
-    "out": {
-        "publish": "dpsim-mqtt"
+    'out': {
+        'publish': 'dpsim-mqtt'
     }
-}''')
+}
+
+intf_mqtt = dpsimpyvillas.InterfaceVillas(name='MQTT', config=json.dumps(intf_mqtt_config))
 
 # setup simulation
 sim = dpsimpy.RealTimeSimulation(name)
