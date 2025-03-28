@@ -43,7 +43,7 @@ Note that this is not persistent when rebooting.
 ## Simulation Model Tuning
 
 Real time capable models cannot issue any system calls during simulation as the context switch to the kernel introduces unacceptable latencies.
-This means models cannot allocate memory, use mutexes or other interupt-driven synchronization primitives, read or write data from files.
+This means models cannot allocate memory, use mutexes or other interrupt-driven synchronization primitives, read or write data from files.
 You should turn off logging, when time steps in the low milliseconds are desired.
 There is a `RealTimeDataLogger` that can be used to output simulation results in these cases.
 Note however, that this logger pre-allocated the memory required for all of the logging required during simulations.
@@ -59,8 +59,8 @@ index 8801cbe8d..4a2843269 100644
  check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
  check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
  if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
--       add_compile_options(-flto -march=native -Ofast)
-+       add_compile_options( -Ofast)
+-       add_compile_options(-Ofast)
++       add_compile_options(-Ofast -flto -march=native)
  endif()
 
  # Get version info and buildid from Git
