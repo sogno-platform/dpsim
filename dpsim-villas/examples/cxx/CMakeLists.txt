@@ -14,13 +14,12 @@ list(APPEND LIBRARIES "villas-fpga")
 list(APPEND LIBRARIES "xil")
 list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 
-set(SHMEM_SOURCES
+set(DPSIM_VILLAS_EXAMPLE_SOURCES
 	FileExample.cpp
 	MqttExample.cpp
 	FpgaExample.cpp
 	FpgaCosim3PhInfiniteBus.cpp
 	FpgaCosimulation.cpp
-	Fpga9BusHil.cpp
 	SharedMemExample.cpp
 	#ShmemExample.cpp
 	#ShmemDistributedReference.cpp
@@ -33,10 +32,11 @@ set(SHMEM_SOURCES
 )
 
 if(WITH_CIM)
+	list(APPEND DPSIM_VILLAS_EXAMPLE_SOURCES Fpga9BusHil.cpp)
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 endif()
 
-foreach(SOURCE ${SHMEM_SOURCES} ${CIM_SHMEM_SOURCES})
+foreach(SOURCE ${DPSIM_VILLAS_EXAMPLE_SOURCES} ${CIM_DPSIM_VILLAS_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})
