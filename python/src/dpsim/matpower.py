@@ -263,3 +263,4 @@ class Reader:
         system = dpsimpy.SystemTopology(self.mpc_freq, system_nodes, system_comp)
 
         return system
+
