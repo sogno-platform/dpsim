@@ -107,6 +107,9 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
         sol_P(pv->matrixNodeIndex()) +=
             extnet->attributeTyped<CPS::Real>("p_inj")->get() /
             mBaseApparentPower;
+        sol_Q(pv->matrixNodeIndex()) +=
+            extnet->attributeTyped<CPS::Real>("q_inj")->get() /
+            mBaseApparentPower;
         sol_V(pv->matrixNodeIndex()) =
             extnet->attributeTyped<CPS::Real>("V_set_pu")->get();
       }
