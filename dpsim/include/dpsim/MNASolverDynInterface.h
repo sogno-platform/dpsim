@@ -25,6 +25,12 @@ struct dpsim_mna_plugin {
   void (*cleanup)(void);
 };
 
-extern "C" struct dpsim_mna_plugin *get_mna_plugin(const char *name);
+#ifdef __cplusplus
+extern "C" {
+#endif
+struct dpsim_mna_plugin *get_mna_plugin(const char *name);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

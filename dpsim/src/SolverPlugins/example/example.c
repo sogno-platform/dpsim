@@ -9,7 +9,7 @@ int example_solve(double *rhs_values, double *lhs_values);
 void example_log(const char *str);
 void example_cleanup(void);
 
-static const char *PLUGIN_NAME = "plugin.so";
+static const char *PLUGIN_NAME = "plugin";
 static struct dpsim_mna_plugin example_plugin = {
     .log =
         example_log, //a properly working dpsim will override this with the spdlog logger
