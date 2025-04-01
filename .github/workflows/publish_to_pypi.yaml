@@ -3,6 +3,8 @@ name: Publish DPsim package to Python Package Index (PyPI)
 on:
   pull_request:
   push:
+    branches:
+      - master
     tags:
       - '*'
 
