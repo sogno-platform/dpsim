@@ -6,6 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#pragma once
+
 #ifndef USE_GHC_FS
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
