@@ -17,8 +17,8 @@ ShowVoltagePlots = 0;
 
 Results_Reference= csvread(['../../../vsa/Results/',TestName,'/Simulink/Voltages_and_currents.csv']);
 if strcmp(TestName,'TestExciterAndTurbine') == 1
-omega_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/omega.csv'); 
-vt_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/vt.csv'); 
+omega_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/omega.csv');
+vt_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/vt.csv');
 end
 l_Ref = length(Results_Reference);
 
@@ -138,7 +138,7 @@ set(DPabsPlotc,'LineWidth',2);
 if strcmp(GeneratorType,'VBR') == 1
 legend({'Reference', 'DP VBR abs'},'FontSize',12)
 else
- legend({'Reference', 'DP Classical abs'},'FontSize',12) 
+ legend({'Reference', 'DP Classical abs'},'FontSize',12)
 end
 xlabel('Time [s]','FontSize',12);
 ylabel('Current [A]','FontSize',12);
@@ -199,7 +199,7 @@ set(h7,'Units','centimeters');
 set(h7,'pos',[5 5 24 13])
 pos = get(h7,'Position');
 set(h7,'PaperPositionMode','Auto','PaperUnits','centimeters','PaperSize',[pos(3), pos(4)])
-% 
+%
 h8 = figure(8)
 hold off
 plotvt1 = plot(Log_SynGen(:,1),Log_SynGen(:,11));
@@ -227,10 +227,10 @@ if strcmp(GeneratorType,'VBR') == 1
     CurrentVector_LC_DP = -currentShiftDP(l_new_DP:2*l_new_DP,2);
 else
     CurrentVector_SS_DP = currentShiftDP(1:l_new_DP,2);
-    CurrentVector_LC_DP = currentShiftDP(l_new_DP:2*l_new_DP,2);  
+    CurrentVector_LC_DP = currentShiftDP(l_new_DP:2*l_new_DP,2);
 end
     CurrentReference_reduced = zeros(l_DP,2);
-    
+
     if l_DP == l_Ref
         CurrentReference_reduced(:,1) = Results_Reference(:,1);
         CurrentReference_reduced(:,2) = Results_Reference(:,5);
@@ -242,8 +242,8 @@ end
             CurrentReference_reduced(n,2) = Results_Reference(m,5);
             n = n+1;
         end
-    end  
- 
+    end
+
     %Reference current in Steady state and after load change
     Reference_SS = CurrentReference_reduced(1:l_new_DP,2);
     Reference_LC = CurrentReference_reduced(l_new_DP:2*l_new_DP,2);
@@ -269,4 +269,3 @@ end
     disp(['Root Mean-squared error ia ',TestName,': ', num2str(100*err_LC_DP/Peak_Ref_LC), ' %']);
     disp(' ');
     disp(' ');
-    

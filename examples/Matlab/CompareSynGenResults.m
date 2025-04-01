@@ -21,8 +21,8 @@ l_Ref = length(Results_Reference);
 Peak_Ref_SS = max(Results_Reference(1:l_Ref/3,5));
 Peak_Ref_LC = max(Results_Reference(l_Ref/3:2*l_Ref/3,5));
 if strcmp(TestName,'TestExciterAndTurbine') == 1
-omega_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/omega.csv'); 
-vt_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/vt.csv'); 
+omega_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/omega.csv');
+vt_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/vt.csv');
 end
 %% read results from c++ simulation
 Path = ['../../../vsa/Results/',TestName,'/DPsim/',SimulationType,'/',GeneratorType,'/'];
@@ -112,7 +112,7 @@ plot(Results_Reference(:,1),Results_Reference(:,7),'--');
 title('Current phase c');
 legend('ic DPSim','ic Simulink');
 
-if strcmp(TestName,'TestExciterAndTurbine') == 1 
+if strcmp(TestName,'TestExciterAndTurbine') == 1
 h7=figure(7)
 hold off
 plotomega1 = plot(Log_SynGen(:,1),Log_SynGen(:,6));
@@ -167,10 +167,10 @@ else
     CurrentVector_SS = CurrentVector(1:l_new,2);
     CurrentVector_LC = CurrentVector(l_new:2*l_new,2);
 end
-    
+
 
 CurrentReference_reduced = zeros(l,2);
-    
+
 if l == l_Ref
     CurrentReference_reduced(:,1) = Results_Reference(:,1);
     CurrentReference_reduced(:,2) = Results_Reference(:,5);
@@ -182,8 +182,8 @@ else
     CurrentReference_reduced(n,2) = Results_Reference(m,5);
     n = n+1;
     end
-end  
- 
+end
+
 %Reference current in Steady state and after load change
 Reference_SS = CurrentReference_reduced(1:l_new,2);
 Reference_LC = CurrentReference_reduced(l_new:2*l_new,2);

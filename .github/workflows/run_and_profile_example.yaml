@@ -27,7 +27,7 @@ jobs:
 
     - name: Run Binary
       run: ${{ inputs.path }} 2>&1 | tee output.log
-    
+
     - name: Extract metrics
       shell: bash
       working-directory: ${{ github.workspace }}
@@ -35,7 +35,7 @@ jobs:
         cat output.log |
         sed -n -E -e 's/^.*Average step time. ([0-9]+\.[0-9]+)$/step-time \1/p' |
         tee -a metrics.txt
-    
+
     - name: Run Profiler
       run: gprof ${{ inputs.path }} | gprof2dot -s | dot -Tpng -o profiling.png || true
 

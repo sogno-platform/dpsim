@@ -103,7 +103,7 @@ If we now perform the algebraic multiplication of the two terms inside the paren
 ```math
 \begin{align}
 {P}_{k} = \sum_{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}cos(\theta_{k} - \theta_{j}) + B_{kj} sin(\theta_{k} - \theta_{j}) \right ) \\
-{Q}_{k} = \sum_{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}sin(\theta_{k} - \theta_{j}) - B_{kj} cos(\theta_{k} - \theta_{j}) \right ) 
+{Q}_{k} = \sum_{j=1}^{N} \vert V_{k} \vert \vert V_{j} \vert \left ( G_{kj}sin(\theta_{k} - \theta_{j}) - B_{kj} cos(\theta_{k} - \theta_{j}) \right )
 \end{align}
 ```
 
@@ -160,7 +160,7 @@ J_{jj}^{QV} &= \frac{\partial Q_{j}(\vec{x})}{\partial \vert V_{j} \vert } = \fr
 The linear system of equations that is solved in every Newton iteration can be written in matrix form as follows:
 ```math
 \begin{align}
--\left [ \begin{array}{cccccc} 
+-\left [ \begin{array}{cccccc}
 	\frac{\partial \Delta P_{2} }{\partial \theta_{2}} & \cdots & \frac{\partial \Delta P_{2} }{\partial \theta_{N}} &
 	\frac{\partial \Delta P_{2} }{\partial \vert V_{N_{G+1}} \vert} & \cdots & \frac{\partial \Delta P_{2} }{\partial \vert V_{N} \vert}	\\
 	\vdots & \ddots & \vdots & \vdots & \ddots & \vdots	\\

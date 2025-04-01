@@ -5321,4 +5321,3 @@ de4a03b811dae2d7441302a446c25b755680a022 search in standard location for Eigen
 Former-commit-id: c9310bac6e209da1b93386e119e21f011f92cc3c
 b3397eaff3d785202d6d1333400b66891454ca9b compile examples to avoid undefined references
 Former-commit-id: 095db5bbf729884810ff9d3b4cdb805557d92e04
-
