@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-publish-sdist:
     name: Build DPsim source distribution and publish to PyPi
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
@@ -37,7 +37,7 @@ jobs:
 
   build-and-publish-wheels:
     name: Build DPsim wheels and publish to PyPI
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout
       uses: actions/checkout@v4
