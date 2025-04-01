@@ -70,4 +70,5 @@ target_link_libraries(my-scenario dpsim)
 &lt;pre>&lt;code>$ cd my-project
 $ mkdir build &amp;amp;&amp;amp; cd build
 $ cmake ..
-$ make my-scenario&lt;/code>&lt;/pre></description></item></channel></rss>
+$ make my-scenario
+&lt;/code>&lt;/pre></description></item></channel></rss>

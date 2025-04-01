@@ -85,7 +85,8 @@ Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 ]
 }
 ]
-}&lt;/code>&lt;/pre></description></item><item><title>Docs: Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</guid><description>
+}
+&lt;/code>&lt;/pre></description></item><item><title>Docs: Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</guid><description>
 &lt;p>This is a summary of general guidelines for the development of DPsim.&lt;/p>
 &lt;h2 id="scaling-of-voltages-and-currents">Scaling of Voltages and Currents&lt;/h2>
 &lt;p>Voltage quantities are expressed either as phase-to-phase RMS values (denominated as &lt;code>RMS3PH&lt;/code>) or as phase-to-ground peak values (denominated as &lt;code>PEAK1PH&lt;/code>):&lt;/p>

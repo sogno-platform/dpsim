@@ -23,7 +23,7 @@ i_{l} \cr
 \cr
 \cr
 0\cr
-\end{pmatrix} $$&lt;/div>&lt;p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
+\end{pmatrix}$$&lt;/div>&lt;p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
 $l$ indicates the inserted row and column to accommodate the relation between the two voltages at the ends of the transformer.
 The transformer ratio is defined as $T = V_{j} / V_{k}$.
 A phase shift can be introduced if $T$ is considered as a complex number.&lt;/p></description></item><item><title>Docs: Branches</title><link>https://sogno-platform.github.io/dpsim/docs/models/branches/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/branches/</guid><description>

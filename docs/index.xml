@@ -706,7 +706,7 @@ i_{l} \cr
 \cr
 \cr
 0\cr
-\end{pmatrix} $$&lt;/div>&lt;p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
+\end{pmatrix}$$&lt;/div>&lt;p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
 $l$ indicates the inserted row and column to accommodate the relation between the two voltages at the ends of the transformer.
 The transformer ratio is defined as $T = V_{j} / V_{k}$.
 A phase shift can be introduced if $T$ is considered as a complex number.&lt;/p></description></item><item><title>Docs: Create New Simulation</title><link>https://sogno-platform.github.io/dpsim/docs/tasks/create-simulation/</link><pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/tasks/create-simulation/</guid><description>
@@ -732,7 +732,8 @@ target_link_libraries(my-scenario dpsim)
 &lt;pre>&lt;code>$ cd my-project
 $ mkdir build &amp;amp;&amp;amp; cd build
 $ cmake ..
-$ make my-scenario&lt;/code>&lt;/pre></description></item><item><title>Docs: Branches</title><link>https://sogno-platform.github.io/dpsim/docs/models/branches/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/branches/</guid><description>
+$ make my-scenario
+&lt;/code>&lt;/pre></description></item><item><title>Docs: Branches</title><link>https://sogno-platform.github.io/dpsim/docs/models/branches/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/branches/</guid><description>
 &lt;h2 id="rx-line">RX-Line&lt;/h2>
 &lt;h2 id="pi-line">PI-Line&lt;/h2>
 &lt;h2 id="transformer">Transformer&lt;/h2></description></item><item><title>Docs: Dynamic Phasors</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</guid><description>
@@ -1438,7 +1439,8 @@ Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 ]
 }
 ]
-}&lt;/code>&lt;/pre></description></item><item><title>Docs: Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</guid><description>
+}
+&lt;/code>&lt;/pre></description></item><item><title>Docs: Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</guid><description>
 &lt;p>This is a summary of general guidelines for the development of DPsim.&lt;/p>
 &lt;h2 id="scaling-of-voltages-and-currents">Scaling of Voltages and Currents&lt;/h2>
 &lt;p>Voltage quantities are expressed either as phase-to-phase RMS values (denominated as &lt;code>RMS3PH&lt;/code>) or as phase-to-ground peak values (denominated as &lt;code>PEAK1PH&lt;/code>):&lt;/p>
