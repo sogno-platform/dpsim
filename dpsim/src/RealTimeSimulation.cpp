@@ -10,7 +10,7 @@
 #include <ctime>
 #include <dpsim/RealTimeSimulation.h>
 #include <iomanip>
-#include <fmt/chrono.h>
+#include <spdlog/fmt/chrono.h>
 
 using namespace CPS;
 using namespace DPsim;
