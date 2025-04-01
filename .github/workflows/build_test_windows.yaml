@@ -31,5 +31,6 @@ jobs:
         cd ${{ github.workspace }}
         cd build
         git describe --tags --abbrev=0 --match "v*"
-        cmake -DWITH_PYBIND=OFF ..
+        # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
+        cmake -DWITH_PYBIND=OFF -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
         cmake --build . --target dpsim --parallel

@@ -85,6 +85,16 @@ check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
 	add_compile_options(-Ofast)
 
+	# On Clang -Ofast enables -ffast-math which in turn enables -ffinite-math-only.
+	# This option causes all calls to functions checking for infinity or NaN to raise
+	# a warning (e.g. std::isnan).
+	# As we also set -Werror, these warnings are causing the build to fail.
+	# With this compiler option, we excplicity silence this warning.
+	check_cxx_compiler_flag("-Wno-nan-infinity-disabled" CXX_SUPPORTS_WNAN_INFINITY_DISABLED)
+	if(CXX_SUPPORTS_WNAN_INFINITY_DISABLED)
+		add_compile_options(-Wno-nan-infinity-disabled)
+	endif()
+
 	if(WITH_MARCH_NATIVE)
 		add_compile_options(-march=native)
 	endif()
