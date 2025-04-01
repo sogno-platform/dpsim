@@ -23,7 +23,7 @@ RUN dnf --refresh -y install \
 
 # Python dependencies
 ADD requirements.txt .
-RUN pip3 install --upgrade wheel build
+RUN pip3 install --upgrade wheel build setuptools
 RUN pip3 install -r requirements.txt
 
 EXPOSE 8888
