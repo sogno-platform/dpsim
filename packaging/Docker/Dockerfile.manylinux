@@ -64,7 +64,7 @@ ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 # Python dependencies
 ADD requirements-manylinux.txt .
-RUN pip3 install --upgrade wheel build
+RUN pip3 install --upgrade wheel build setuptools
 RUN pip3 install -r requirements-manylinux.txt
 
 # Install CIMpp from source
