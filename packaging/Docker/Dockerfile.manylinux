@@ -56,7 +56,8 @@ RUN cd /tmp && \
 	git clone --branch v3.2.1 --recurse-submodules https://github.com/LLNL/sundials.git && \
 	mkdir -p sundials/build && cd sundials/build && \
 	cmake ${CMAKE_OPTS} .. \
-		-DCMAKE_BUILD_TYPE=Release && \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 && \
 	make ${MAKE_OPTS} install
 
 # CIMpp and VILLASnode are installed here
@@ -100,7 +101,8 @@ RUN cd /tmp && \
 	mkdir -p spdlog/build && cd spdlog/build && \
 	cmake ${CMAKE_OPTS} .. \
 		-DCMAKE_POSITION_INDEPENDENT_CODE=True \
-		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/spdlog
 
@@ -113,7 +115,7 @@ RUN cd /tmp && \
 		-DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc \
 		-DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++ \
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
-		-DDOWNLOAD_GO=OFF && \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
 
