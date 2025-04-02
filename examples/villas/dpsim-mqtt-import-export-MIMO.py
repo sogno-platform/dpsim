@@ -76,7 +76,7 @@ def villas():
             'signal': 'sine',
             'rate': 10,
             'frequency': 0.1,
-            'amplitude': 50000,  
+            'amplitude': 50000,
             'offset': 100000
         },
     }
@@ -148,7 +148,7 @@ def dpsim():
     sim.set_time_step(0.1)
     sim.set_final_time(10)
     sim.do_init_from_nodes_and_terminals(False)
-    
+
     logger = dpsimpy.Logger(name)
     sim.add_logger(logger)
     sim.log_attribute('n1.v', n1.attr('v'))
@@ -187,7 +187,7 @@ def dpsim():
     intf2.import_attribute(load.attr('Q'), 0)
     intf2.export_attribute(n1.attr('v').derive_coeff(0,0), 0)
     intf2.export_attribute(n2.attr('v').derive_coeff(0,0).derive_mag(), 1)
-  
+
     return sim, intf, intf2
 
 def test_shmem_import_export():
