@@ -1,5 +1,5 @@
 # This example demonstrates the export of values calculated by dpsim to a MQTT broker using the VILLASnode interface
-# Note, that dpsim also expects to read a (complex) reference voltage from MQTT, so the simulation will block on every timestep until this value is provided 
+# Note, that dpsim also expects to read a (complex) reference voltage from MQTT, so the simulation will block on every timestep until this value is provided
 
 import json
 

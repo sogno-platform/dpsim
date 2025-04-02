@@ -202,7 +202,7 @@ class Measurement:
                     else:
                         data[k].append(float(v))
             return Measurement(None, xaxis, xlabel, data, filename.rstrip('.csv'), sigma)
-    
+
     def speedup(self, old, name):
         if self.xaxis != old.xaxis:
             raise ValueError("x axis mismatch")
@@ -229,7 +229,7 @@ class Measurement:
                     for k in self.sigma.keys():
                         row['sigma ' + k] = self.sigma[k][i]
                 writer.writerow(row)
-    
+
     def write_settings(self, filename):
         with open(filename, 'w') as f:
             json.dump(self.instance.__dict__, f, indent=4)
