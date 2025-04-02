@@ -6,4 +6,3 @@ BasedOnStyle: LLVM
 
 # Increase ColumnLimit to avoid breaking SPDX headers
 ColumnLimit: 200
-
