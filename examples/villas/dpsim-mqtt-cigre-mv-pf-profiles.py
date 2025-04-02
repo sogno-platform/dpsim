@@ -9,22 +9,22 @@ import json
 import dpsimpy
 import dpsimpyvillas
 
-# setup
+# Setup
 name = 'CIGRE-MV-Profiles'
 time_step = 1
 final_time = 30
 
-# setup stdout logger
+# Setup stdout logger
 base = os.path.splitext(os.path.basename(sys.argv[0]))[0]
 log = logging.getLogger(base)
 
-# read topology from CIM
-files = glob.glob('build/_deps/cim-data-src/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results/*.xml') # downloaded by CMake
+# Read topology from CIM
+files = glob.glob('build/_deps/cim-data-src/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results/*.xml') # Downloaded by CMake
 log.info('CIM files: %s', files)
 reader = dpsimpy.CIMReader(name)
 system = reader.loadCIM(50, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
 
-# map from CSV to simulation names
+# Map from CSV to simulation names
 assignList = {
     'LOAD-H-1': 'Load_H_1',
     'LOAD-H-3': 'Load_H_3',
@@ -46,13 +46,13 @@ assignList = {
     'LOAD-I-14': 'Load_I_14'
 }
 
-# read profiles from CSV
+# Read profiles from CSV
 csv_files = 'build/_deps/profile-data-src/CIGRE_MV_NoTap/load_profiles/'
 log.info('CSV files: %s', csv_files)
 csvreader = dpsimpy.CSVReader(name, csv_files, assignList, dpsimpy.LogLevel.info)
 csvreader.assignLoadProfile(system, 0, 1, 300, dpsimpy.CSVReaderMode.MANUAL, dpsimpy.CSVReaderFormat.SECONDS)
 
-# instantiate logger
+# Instantiate logger
 logger = dpsimpy.Logger(name)
 
 # setup VILLASnode
@@ -69,7 +69,7 @@ intf_mqtt_config = {
 
 intf_mqtt = dpsimpyvillas.InterfaceVillas(name='MQTT', config=json.dumps(intf_mqtt_config))
 
-# setup simulation
+# Setup simulation
 sim = dpsimpy.RealTimeSimulation(name)
 sim.set_system(system)
 sim.set_domain(dpsimpy.Domain.SP)
@@ -79,7 +79,7 @@ sim.set_final_time(final_time)
 sim.add_logger(logger)
 sim.add_interface(intf_mqtt)
 
-# setup exports
+# Setup exports
 for i in range(15):
     objname = 'N'+str(i)
     intf_mqtt.export_attribute(sim \
@@ -91,7 +91,7 @@ for i in range(15):
         .derive_coeff(0,0) \
         .derive_phase(), 2*i+1)
 
-# log exports
+# Log exports
 for node in system.nodes:
     sim.log_idobj_attribute(node.name(), 'v')
 

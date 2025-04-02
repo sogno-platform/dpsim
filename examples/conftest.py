@@ -17,7 +17,7 @@ def parse_test_params(item, spec):
 class YamlFile(pytest.File):
     def collect(self):
 
-        # we need a yaml parser, e.g. PyYAML
+        # We need a yaml parser, e.g. PyYAML
         import yaml
         raw = yaml.safe_load(self.fspath.open())
 
@@ -105,7 +105,7 @@ class JupyterNotebookExport(pytest.Item):
 
     def runtest(self):
         from traitlets.config import Config
-        #from nbconvert import HTMLExporter
+        # from nbconvert import HTMLExporter
         from nbconvert import MarkdownExporter
         from nbconvert.writers import FilesWriter
 
@@ -119,7 +119,7 @@ class JupyterNotebookExport(pytest.Item):
             'nbconvert.preprocessors.ExecutePreprocessor',
             'nbconvert.preprocessors.ExtractOutputPreprocessor'
         ]
-        #exporter = HTMLExporter(config=c)
+        # exporter = HTMLExporter(config=c)
         exporter = MarkdownExporter(config=c)
 
         os.makedirs(c.FilesWriter.build_directory, exist_ok=True)
