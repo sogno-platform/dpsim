@@ -427,6 +427,7 @@ std::list<fs::path> DPsim::Utils::findFiles(std::list<fs::path> filennames,
   return foundnames;
 }
 
+#ifdef WITH_JSON
 void DPsim::Utils::applySimulationParametersFromJson(const json config,
                                                      Simulation &sim) {
   if (config.contains("timestep"))
@@ -451,3 +452,4 @@ void DPsim::Utils::applySynchronousGeneratorParametersFromJson(
       syngen->applyParametersOperationalPerUnit();
   }
 }
+#endif

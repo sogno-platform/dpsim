@@ -14,6 +14,11 @@
 #include <dpsim/pybind/EMTComponents.h>
 #include <dpsim/pybind/Utils.h>
 
+#ifdef WITH_JSON
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+#endif
+
 namespace py = pybind11;
 using namespace pybind11::literals;
 
@@ -253,12 +258,14 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "Llkq2"_a, "inertia"_a, "init_active_power"_a,
            "init_reactive_power"_a, "init_terminal_volt"_a, "init_volt_angle"_a,
            "init_mech_power"_a)
+#ifdef WITH_JSON
       .def("apply_parameters_from_json",
            [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez> syngen,
               const CPS::String json) {
              DPsim::Utils::applySynchronousGeneratorParametersFromJson(
                  json::parse(json), syngen);
            })
+#endif
       .def("set_initial_values",
            &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setInitialValues,
            "init_active_power"_a, "init_reactive_power"_a,
@@ -379,12 +386,14 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "Llkq2"_a, "inertia"_a, "init_active_power"_a,
            "init_reactive_power"_a, "init_terminal_volt"_a, "init_volt_angle"_a,
            "init_mech_power"_a)
+#ifdef WITH_JSON
       .def("apply_parameters_from_json",
            [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQODE> syngen,
               const CPS::String json) {
              DPsim::Utils::applySynchronousGeneratorParametersFromJson(
                  json::parse(json), syngen);
            })
+#endif
       .def("set_initial_values",
            &CPS::EMT::Ph3::SynchronGeneratorDQODE::setInitialValues,
            "init_active_power"_a, "init_reactive_power"_a,

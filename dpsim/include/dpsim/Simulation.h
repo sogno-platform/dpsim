@@ -16,13 +16,10 @@
 #include <dpsim/Interface.h>
 #include <dpsim/Scheduler.h>
 #include <dpsim/Solver.h>
-#include <nlohmann/json.hpp>
 
 #ifdef WITH_GRAPHVIZ
 #include <dpsim-models/Graph.h>
 #endif
-
-using json = nlohmann::json;
 
 namespace DPsim {
 /// Forward declaration of CommandLineArgs from Utils
@@ -264,7 +261,7 @@ public:
     mInterfaces.push_back(eint);
   }
 
-#ifdef WITH_GRAPHVIZ
+#ifdef js
   ///
   CPS::Graph::Graph dependencyGraph();
 #endif
