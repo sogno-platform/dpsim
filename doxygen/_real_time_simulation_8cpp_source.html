@@ -81,70 +81,67 @@ $(function() {
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;ctime&gt;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;dpsim/RealTimeSimulation.h&gt;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;iomanip&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">using namespace </span>CPS;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">using namespace </span><a class="code" href="namespace_d_psim.html">DPsim</a>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;RealTimeSimulation::RealTimeSimulation(String name, <a class="code" href="class_d_psim_1_1_command_line_args.html">CommandLineArgs</a> &amp;args)</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    : <a class="code" href="class_d_psim_1_1_simulation.html">Simulation</a>(name, args), mTimer(){};</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html#a96ac45b8475c7eb13d66d73d6958e748">   20</a></span>&#160;RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel)</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    : <a class="code" href="class_d_psim_1_1_simulation.html">Simulation</a>(name, logLevel), mTimer() {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <span class="comment">//addAttribute&lt;Int &gt;(&quot;overruns&quot;, nullptr, [=](){ return mTimer.overruns(); }, Flags::read);</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <span class="comment">//addAttribute&lt;Int &gt;(&quot;overruns&quot;, nullptr, nullptr, Flags::read);</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html#ab3aa8190debf6f0197c09a96c7aba069">   27</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">RealTimeSimulation::run</a>(<span class="keyword">const</span> Timer::StartClock::duration &amp;startIn) {</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  <a class="code" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">run</a>(Timer::StartClock::now() + startIn);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">RealTimeSimulation::run</a>(<span class="keyword">const</span> Timer::StartClock::time_point &amp;startAt) {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="keywordflow">if</span> (!mInitialized)</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="class_d_psim_1_1_simulation.html#a6e7d1624005c861948f1a07e6986770e">initialize</a>();</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> lg : <a class="code" href="class_d_psim_1_1_simulation.html#ae9ac9cda0247820f7ca2cdfc9506c557">mLoggers</a>)</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    lg-&gt;start();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  SPDLOG_LOGGER_INFO(<a class="code" href="class_d_psim_1_1_simulation.html#af53a5d3fbcf360257ced8b7033a654d0">mLog</a>, <span class="stringliteral">&quot;Opening interfaces.&quot;</span>);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> intf : <a class="code" href="class_d_psim_1_1_simulation.html#a9b936cb2befdb516e6ef39e278522953">mInterfaces</a>)</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    intf-&gt;open();</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <a class="code" href="class_d_psim_1_1_simulation.html#a225ef7913a0d6e26e3217afe1959ee53">sync</a>();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keyword">auto</span> now_time = std::chrono::system_clock::to_time_t(startAt);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  SPDLOG_LOGGER_INFO(<a class="code" href="class_d_psim_1_1_simulation.html#af53a5d3fbcf360257ced8b7033a654d0">mLog</a>, <span class="stringliteral">&quot;Starting simulation at {} (delta_T = {} seconds)&quot;</span>,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                     std::put_time(std::localtime(&amp;now_time), <span class="stringliteral">&quot;%F %T&quot;</span>),</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                     std::chrono::duration_cast&lt;std::chrono::seconds&gt;(</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                         startAt - Timer::StartClock::now())</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                         .count());</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  mTimer.setStartTime(startAt);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  mTimer.setInterval(**<a class="code" href="class_d_psim_1_1_simulation.html#a40be48cb7e32c3705830b046bd1cf859">mTimeStep</a>);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  mTimer.start();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="comment">// main loop</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keywordflow">do</span> {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    mTimer.<a class="code" href="class_d_psim_1_1_timer.html#a6b3d6e79d249b567a71104c4091d652f">sleep</a>();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="class_d_psim_1_1_simulation.html#a3715d9008824a4e2754cac8d4f6bb2a3">step</a>();</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">if</span> (mTimer.ticks() == 1)</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      SPDLOG_LOGGER_INFO(<a class="code" href="class_d_psim_1_1_simulation.html#af53a5d3fbcf360257ced8b7033a654d0">mLog</a>, <span class="stringliteral">&quot;Simulation started.&quot;</span>);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  } <span class="keywordflow">while</span> (<a class="code" href="class_d_psim_1_1_simulation.html#ae19d32c4a69b5d90003504a28acb38ad">mTime</a> &lt; **<a class="code" href="class_d_psim_1_1_simulation.html#a79e5b01e62de7b2e2cdd48671f038430">mFinalTime</a>);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  SPDLOG_LOGGER_INFO(<a class="code" href="class_d_psim_1_1_simulation.html#af53a5d3fbcf360257ced8b7033a654d0">mLog</a>, <span class="stringliteral">&quot;Simulation finished.&quot;</span>);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <a class="code" href="class_d_psim_1_1_simulation.html#a987bfea6444e5a647924b4ea1e026e2b">mScheduler</a>-&gt;stop();</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;spdlog/fmt/chrono.h&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">using namespace </span>CPS;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">using namespace </span><a class="code" href="namespace_d_psim.html">DPsim</a>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;RealTimeSimulation::RealTimeSimulation(String name, <a class="code" href="class_d_psim_1_1_command_line_args.html">CommandLineArgs</a> &amp;args)</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    : <a class="code" href="class_d_psim_1_1_simulation.html">Simulation</a>(name, args), mTimer(){};</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html#a96ac45b8475c7eb13d66d73d6958e748">   21</a></span>&#160;RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel)</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    : <a class="code" href="class_d_psim_1_1_simulation.html">Simulation</a>(name, logLevel), mTimer() {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <span class="comment">//addAttribute&lt;Int &gt;(&quot;overruns&quot;, nullptr, [=](){ return mTimer.overruns(); }, Flags::read);</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <span class="comment">//addAttribute&lt;Int &gt;(&quot;overruns&quot;, nullptr, nullptr, Flags::read);</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html#ab3aa8190debf6f0197c09a96c7aba069">   28</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">RealTimeSimulation::run</a>(<span class="keyword">const</span> Timer::StartClock::duration &amp;startIn) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <a class="code" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">run</a>(Timer::StartClock::now() + startIn);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">RealTimeSimulation::run</a>(<span class="keyword">const</span> Timer::StartClock::time_point &amp;startAt) {</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <span class="keywordflow">if</span> (!mInitialized)</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="class_d_psim_1_1_simulation.html#a6e7d1624005c861948f1a07e6986770e">initialize</a>();</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> lg : <a class="code" href="class_d_psim_1_1_simulation.html#ae9ac9cda0247820f7ca2cdfc9506c557">mLoggers</a>)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    lg-&gt;start();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  SPDLOG_LOGGER_INFO(<a class="code" href="class_d_psim_1_1_simulation.html#af53a5d3fbcf360257ced8b7033a654d0">mLog</a>, <span class="stringliteral">&quot;Opening interfaces.&quot;</span>);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> intf : <a class="code" href="class_d_psim_1_1_simulation.html#a9b936cb2befdb516e6ef39e278522953">mInterfaces</a>)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    intf-&gt;open();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <a class="code" href="class_d_psim_1_1_simulation.html#a225ef7913a0d6e26e3217afe1959ee53">sync</a>();</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  SPDLOG_LOGGER_INFO(<a class="code" href="class_d_psim_1_1_simulation.html#af53a5d3fbcf360257ced8b7033a654d0">mLog</a>, <span class="stringliteral">&quot;Starting simulation at {:%Y-%m-%d %H:%M:%S} (delta_T = {} seconds)&quot;</span>,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                     startAt, startAt - Timer::StartClock::now());</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  mTimer.setStartTime(startAt);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  mTimer.setInterval(**<a class="code" href="class_d_psim_1_1_simulation.html#a40be48cb7e32c3705830b046bd1cf859">mTimeStep</a>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  mTimer.start();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="comment">// main loop</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordflow">do</span> {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    mTimer.<a class="code" href="class_d_psim_1_1_timer.html#a6b3d6e79d249b567a71104c4091d652f">sleep</a>();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="class_d_psim_1_1_simulation.html#a3715d9008824a4e2754cac8d4f6bb2a3">step</a>();</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">if</span> (mTimer.ticks() == 1)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      SPDLOG_LOGGER_INFO(<a class="code" href="class_d_psim_1_1_simulation.html#af53a5d3fbcf360257ced8b7033a654d0">mLog</a>, <span class="stringliteral">&quot;Simulation started.&quot;</span>);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  } <span class="keywordflow">while</span> (<a class="code" href="class_d_psim_1_1_simulation.html#ae19d32c4a69b5d90003504a28acb38ad">mTime</a> &lt; **<a class="code" href="class_d_psim_1_1_simulation.html#a79e5b01e62de7b2e2cdd48671f038430">mFinalTime</a>);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  SPDLOG_LOGGER_INFO(<a class="code" href="class_d_psim_1_1_simulation.html#af53a5d3fbcf360257ced8b7033a654d0">mLog</a>, <span class="stringliteral">&quot;Simulation finished.&quot;</span>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <a class="code" href="class_d_psim_1_1_simulation.html#a987bfea6444e5a647924b4ea1e026e2b">mScheduler</a>-&gt;stop();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> intf : <a class="code" href="class_d_psim_1_1_simulation.html#a9b936cb2befdb516e6ef39e278522953">mInterfaces</a>)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    intf-&gt;close();</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> intf : <a class="code" href="class_d_psim_1_1_simulation.html#a9b936cb2befdb516e6ef39e278522953">mInterfaces</a>)</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    intf-&gt;close();</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> lg : <a class="code" href="class_d_psim_1_1_simulation.html#ae9ac9cda0247820f7ca2cdfc9506c557">mLoggers</a>)</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    lg-&gt;stop();</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> lg : <a class="code" href="class_d_psim_1_1_simulation.html#ae9ac9cda0247820f7ca2cdfc9506c557">mLoggers</a>)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    lg-&gt;stop();</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  mTimer.<a class="code" href="class_d_psim_1_1_timer.html#a63f0eb44b27402196590a03781515dba">stop</a>();</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  mTimer.<a class="code" href="class_d_psim_1_1_timer.html#a63f0eb44b27402196590a03781515dba">stop</a>();</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
 <div class="ttc" id="aclass_d_psim_1_1_command_line_args_html"><div class="ttname"><a href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></div><div class="ttdef"><b>Definition:</b> <a href="dpsim_2include_2dpsim_2_utils_8h_source.html#l00035">Utils.h:35</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html"><div class="ttname"><a href="class_d_psim_1_1_simulation.html">DPsim::Simulation</a></div><div class="ttdoc">The Simulation holds a SystemTopology and a Solver.</div><div class="ttdef"><b>Definition:</b> <a href="_simulation_8h_source.html#l00034">Simulation.h:34</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_a225ef7913a0d6e26e3217afe1959ee53"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#a225ef7913a0d6e26e3217afe1959ee53">DPsim::Simulation::sync</a></div><div class="ttdeci">void sync() const</div><div class="ttdoc">Synchronize simulation with remotes by exchanging intial state over interfaces.</div><div class="ttdef"><b>Definition:</b> <a href="_simulation_8cpp_source.html#l00174">Simulation.cpp:174</a></div></div>
