@@ -55,13 +55,13 @@ endif()
 # Allow shadowing of CMake targets
 # As we include dependencies via add_subdirectory()
 # we import their targets into the DPsim CMake tree
-# which might cause collissions in target names.
+# which might cause collisions in target names.
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 # Select C++-Version
 # For the pybind11-python interface to compile, a minimum version of C++14 is required
 # If you need to compile using C++11, either disable the python interface or modify the source-files in Source/pybind,
-# replacing all occurences of py::overload_cast with py::detail::overload_cast_impl as specified on
+# replacing all occurrences of py::overload_cast with py::detail::overload_cast_impl as specified on
 # https://pybind11.readthedocs.io/en/stable/classes.html#overloaded-methods
 set(CMAKE_CXX_STANDARD 17)
 
@@ -111,7 +111,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebI
 	# This option causes all calls to functions checking for infinity or NaN to raise
 	# a warning (e.g. std::isnan).
 	# As we also set -Werror, these warnings are causing the build to fail.
-	# With this compiler option, we excplicity silence this warning.
+	# With this compiler option, we explicitly silence this warning.
 	check_cxx_compiler_flag("-Wno-nan-infinity-disabled" CXX_SUPPORTS_WNAN_INFINITY_DISABLED)
 	if(CXX_SUPPORTS_WNAN_INFINITY_DISABLED)
 		add_compile_options(-Wno-nan-infinity-disabled)
@@ -126,7 +126,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebI
 	endif()
 endif()
 
-# Get version info and buildid from Git
+# Get version info and commit hash from Git
 include(GetVersion)
 GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 
@@ -222,21 +222,21 @@ endif()
 
 include(CMakeDependentOption)
 cmake_dependent_option(WITH_CIM             "Enable support for parsing CIM"        ON  "CIMpp_FOUND"         OFF)
-cmake_dependent_option(WITH_CUDA            "Enable CUDA-based parallelisation"     OFF "CUDA_FOUND"          OFF)
+cmake_dependent_option(WITH_CUDA            "Enable CUDA-based parallelization"     OFF "CUDA_FOUND"          OFF)
 cmake_dependent_option(WITH_GRAPHVIZ        "Enable Graphviz Graphs"                ON  "GRAPHVIZ_FOUND"      OFF)
 cmake_dependent_option(WITH_GSL     				"Enable GSL features"           				ON  "GSL_FOUND" 				  OFF)
 cmake_dependent_option(WITH_JSON            "Enable JSON library support"           ON  "nlohmann_json_FOUND" OFF)
 cmake_dependent_option(WITH_KLU             "Enable KLU factorization"              ON  "SuiteSparse_FOUND"   OFF)
 cmake_dependent_option(WITH_MAGMA           "Enable MAGMA features"                 ON  "MAGMA_FOUND"         OFF)
 cmake_dependent_option(WITH_MNASOLVERPLUGIN "Enable MNASolver Plugins"              ON  "NOT WIN32"           OFF)
-cmake_dependent_option(WITH_OPENMP          "Enable OpenMP-based parallelisation"   ON  "OPENMP_FOUND"        OFF)
+cmake_dependent_option(WITH_OPENMP          "Enable OpenMP-based parallelization"   ON  "OPENMP_FOUND"        OFF)
 cmake_dependent_option(WITH_PYBIND          "Enable pybind support"                 ON  "pybind11_FOUND"      OFF)
 cmake_dependent_option(WITH_RT              "Enable real-time features"             ON  "Linux_FOUND"         OFF)
 cmake_dependent_option(WITH_SUNDIALS        "Enable Sundials solver suite"          ON  "Sundials_FOUND"      OFF)
 cmake_dependent_option(WITH_VILLAS          "Enable VILLASnode interface"           ON  "VILLASnode_FOUND"    OFF)
 
 if(WITH_CUDA)
-	# BEGIN OF WORKAROUND - enable cuda dynamic linking.
+	# BEGIN OF WORKAROUND - enable CUDA dynamic linking.
 	# Starting with Cmake 3.17 we can use
 	# set(CMAKE_CUDA_RUNTIME_LIBRARY_DEFAULT "SHARED") instead
 	set(CMAKE_CUDA_FLAGS "" CACHE STRING "")
@@ -248,7 +248,7 @@ if(WITH_CUDA)
 
 	enable_language(CUDA)
 
-	# BEGIN OF WORKAROUND - enable cuda dynamic linking.
+	# BEGIN OF WORKAROUND - enable CUDA dynamic linking.
 	if(CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES)
 		list(REMOVE_ITEM CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES "cudart_static")
 		list(REMOVE_ITEM CMAKE_CUDA_HOST_IMPLICIT_LINK_LIBRARIES "cudadevrt")
@@ -289,14 +289,14 @@ endif()
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	include(FeatureSummary)
 	add_feature_info(CIM             WITH_CIM             "Loading Common Information Model (CIM) files")
-	add_feature_info(CUDA            WITH_CUDA            "CUDA-based parallelisation")
+	add_feature_info(CUDA            WITH_CUDA            "CUDA-based parallelization")
 	add_feature_info(Graphviz        WITH_GRAPHVIZ        "Graphviz graphs")
 	add_feature_info(GSL             WITH_GSL             "GNU Scientific library")
 	add_feature_info(JSON            WITH_JSON            "JSON parsing")
 	add_feature_info(KLU             WITH_KLU             "Use sparse KLU factorization")
 	add_feature_info(MAGMA           WITH_MAGMA           "MAGMA features")
 	add_feature_info(MNASolverPlugin WITH_MNASOLVERPLUGIN "MNASolver Plugins")
-	add_feature_info(OpenMP          WITH_OPENMP          "OpenMP-based parallelisation")
+	add_feature_info(OpenMP          WITH_OPENMP          "OpenMP-based parallelization")
 	add_feature_info(Pybind          WITH_PYBIND          "Python extension / bindings")
 	add_feature_info(RealTime        WITH_RT              "Extended real-time features")
 	add_feature_info(Sundials        WITH_SUNDIALS        "Sundials solvers")
