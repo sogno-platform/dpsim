@@ -7,7 +7,7 @@ FROM quay.io/pypa/manylinux_2_28_x86_64
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
 ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
-ARG VILLAS_VERSION=18cdd2a6364d05fbf413ca699616cd324abfcb54
+ARG VILLAS_VERSION=84df28645077e05e5115f92ef328d688400b35b9
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -80,7 +80,6 @@ RUN cd /tmp && \
 
 # Install VILLASnode dependencies
 RUN dnf install -y \
-	hiredis-devel \
 	jansson-devel \
 	libconfig-devel \
 	libcurl-devel \
@@ -92,7 +91,6 @@ RUN dnf install -y \
 	librdmacm-devel \
 	libusb-devel \
 	libuuid-devel \
-	libwebsockets-devel \
 	lua-devel \
 	mosquitto-devel \
 	openssl-devel \
@@ -107,12 +105,10 @@ RUN cd /tmp && \
 	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
 	cd villas-node && \
 	git checkout ${VILLAS_VERSION} && \
-	sed -i 's/v0.18.4/v0.22.6/g' packaging/deps.sh && \
-	sed -i 's/1.3.7/1.3.14/g' packaging/deps.sh && \
 	DEPS_SKIP=criterion,ethercat \
 	MAKE_OPTS="" \
 	CMAKE_OPTS=-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-	bash -x packaging/deps.sh && \
+	bash packaging/deps.sh && \
 	mkdir -p build && cd build && \
 	cmake ${CMAKE_OPTS} .. \
 		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 && \
