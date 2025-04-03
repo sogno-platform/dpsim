@@ -33,7 +33,9 @@ void addAttributes(py::module_ m) {
              CPS::AttributeBase>(m, "AttributeReal")
       .def("get", &CPS::Attribute<CPS::Real>::get)
       .def("set", &CPS::Attribute<CPS::Real>::set)
-      .def("derive_scaled", &CPS::Attribute<CPS::Real>::deriveScaled);
+      .def("derive_scaled", [](CPS::Attribute<CPS::Real> &self, CPS::Real scale) {
+          return self.deriveScaled(scale);
+      });
 
   py::class_<CPS::AttributeStatic<CPS::Real>,
              CPS::AttributePointer<CPS::AttributeStatic<CPS::Real>>,
@@ -48,11 +50,21 @@ void addAttributes(py::module_ m) {
              CPS::AttributeBase>(m, "AttributeComplex")
       .def("get", &CPS::Attribute<CPS::Complex>::get)
       .def("set", &CPS::Attribute<CPS::Complex>::set)
-      .def("derive_real", &CPS::Attribute<CPS::Complex>::deriveReal)
-      .def("derive_imag", &CPS::Attribute<CPS::Complex>::deriveImag)
-      .def("derive_mag", &CPS::Attribute<CPS::Complex>::deriveMag)
-      .def("derive_phase", &CPS::Attribute<CPS::Complex>::derivePhase)
-      .def("derive_scaled", &CPS::Attribute<CPS::Complex>::deriveScaled);
+      .def("derive_real", [](CPS::Attribute<CPS::Complex> &self) {
+          return self.deriveReal();
+      })
+      .def("derive_imag", [](CPS::Attribute<CPS::Complex> &self) {
+          return self.deriveImag();
+      })
+      .def("derive_mag", [](CPS::Attribute<CPS::Complex> &self) {
+          return self.deriveMag();
+      })
+      .def("derive_phase", [](CPS::Attribute<CPS::Complex> &self) {
+          return self.derivePhase();
+      })
+      .def("derive_scaled", [](CPS::Attribute<CPS::Complex> &self, CPS::Complex scale) {
+          return self.deriveScaled(scale);
+      });
 
   py::class_<CPS::AttributeStatic<CPS::Complex>,
              CPS::AttributePointer<CPS::AttributeStatic<CPS::Complex>>,
