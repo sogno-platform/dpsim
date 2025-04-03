@@ -52,6 +52,7 @@ jobs:
   publish:
     name: Publish wheels and source distribution to PyPI
     runs-on: ubuntu-24.04
+    if: github.event_name == 'push'
     permissions:
       id-token: write
     needs:
