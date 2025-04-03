@@ -3,10 +3,9 @@ requires = ["setuptools>=42"]
 build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
-build-verbosity = "3"
-build = "[cp]p3{8,9,10,11}-manylinux_x86_64"
+build-verbosity = 3
+build = "cp3{9,10,11,12,13}-manylinux_x86_64"
 manylinux-x86_64-image = "sogno/dpsim:manylinux"
-manylinux-pypy_x86_64-image = "sogno/dpsim:manylinux"
 
 [tool.pytest.ini_options]
 filterwarnings = ["ignore::DeprecationWarning"]

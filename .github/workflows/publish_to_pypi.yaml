@@ -30,23 +30,29 @@ jobs:
         path: dist/
 
   build-wheels:
-    name: Build DPsim wheels
+    name: Build DPsim Python wheel
     runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        platform: [manylinux_x86_64]
+        python: [cp39, cp310, cp311, cp312, cp313]
     steps:
     - name: Checkout
       uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    - name: Build DPsim wheels for all supported Python versions
+    - name: Build wheel
       uses: pypa/cibuildwheel@v2.23.2
+      env:
+        CIBW_BUILD: "${{ matrix.python }}-${{ matrix.platform }}"
       with:
         output-dir: dist
 
-    - name: Archive Python wheels
+    - name: Upload wheel as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: dist-wheels
+        name: dist-wheels-${{ matrix.python }}-${{ matrix.platform }}
         path: dist/
 
   publish:
@@ -60,7 +66,7 @@ jobs:
     - build-sdist
 
     steps:
-    - name: Download artifacts from build jobs
+    - name: Download wheels from build jobs
       uses: actions/download-artifact@v4
       with:
         pattern: dist-*
