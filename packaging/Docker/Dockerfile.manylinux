@@ -7,7 +7,7 @@ FROM quay.io/pypa/manylinux_2_28_x86_64
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
 ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
-ARG VILLAS_VERSION=18cdd2a6364d05fbf413ca699616cd324abfcb54
+ARG VILLAS_VERSION=84df28645077e05e5115f92ef328d688400b35b9
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -21,18 +21,19 @@ LABEL \
 	org.opencontainers.image.source="https://github.com/sogno-platform/dpsim"
 
 RUN dnf -y update
-RUN yum install -y epel-release
+RUN dnf install -y epel-release
 
 # Toolchain
-RUN yum install -y \
-	gcc-toolset-11 clang \
-	git \
+RUN dnf install -y \
+	gcc-toolset-14 \
+	git wget \
 	rpmdevtools rpm-build \
-	make cmake pkgconfig \
+	make cmake pkgconfig libtool \
+	autoconf automake autogen libtool flex bison \
 	python3-pip \
 	cppcheck
 
-# Tools needed for developement
+# Tools needed for development
 RUN dnf -y install \
 	doxygen graphviz \
 	gdb \
@@ -45,8 +46,6 @@ RUN dnf --refresh -y install \
 	libxml2-devel \
 	graphviz-devel
 
-RUN yum install -y fmt-devel
-
 # Install some debuginfos
 RUN dnf -y debuginfo-install \
 	python3
@@ -56,15 +55,14 @@ RUN cd /tmp && \
 	git clone --branch v3.2.1 --recurse-submodules https://github.com/LLNL/sundials.git && \
 	mkdir -p sundials/build && cd sundials/build && \
 	cmake ${CMAKE_OPTS} .. \
-		-DCMAKE_BUILD_TYPE=Release && \
+		-DBUILD_SHARED_LIBS=ON \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 && \
 	make ${MAKE_OPTS} install
-
-# CIMpp and VILLASnode are installed here
-ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 # Python dependencies
 ADD requirements-manylinux.txt .
-RUN pip3 install --upgrade wheel build setuptools
+RUN pip3 install --upgrade wheel build setuptools packaging
 RUN pip3 install -r requirements-manylinux.txt
 
 # Install CIMpp from source
@@ -74,7 +72,6 @@ RUN cd /tmp && \
 	git checkout ${CIMPP_COMMIT} && \
 	git submodule update --init && \
 	cmake ${CMAKE_OPTS} .. \
-		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
 		-DUSE_CIM_VERSION=${CIM_VERSION} \
 		-DBUILD_SHARED_LIBS=ON \
 		-DBUILD_ARABICA_EXAMPLES=OFF && \
@@ -82,39 +79,38 @@ RUN cd /tmp && \
 	rm -rf /tmp/libcimpp
 
 # Install VILLASnode dependencies
-RUN yum install -y \
-	openssl-devel \
-	libuuid-devel \
-	libcurl-devel \
+RUN dnf install -y \
 	jansson-devel \
-	libwebsockets-devel \
-	mosquitto-devel \
 	libconfig-devel \
+	libcurl-devel \
+	libibverbs-devel \
+	libmodbus-devel \
+	libnice-devel \
 	libnl3-devel \
+	librdkafka-devel \
+	librdmacm-devel \
+	libusb-devel \
+	libuuid-devel \
+	lua-devel \
+	mosquitto-devel \
+	openssl-devel \
+	protobuf-c-devel \
 	protobuf-devel \
-	protobuf-c-devel
-
-# Install spdlog from source
-RUN cd /tmp && \
-	git clone --branch v1.6.1 --recurse-submodules --depth 1 https://github.com/gabime/spdlog.git && \
-	mkdir -p spdlog/build && cd spdlog/build && \
-	cmake ${CMAKE_OPTS} .. \
-		-DCMAKE_POSITION_INDEPENDENT_CODE=True \
-		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
-	make ${MAKE_OPTS} install && \
-	rm -rf /tmp/spdlog
+	nanomsg-devel \
+	zeromq-devel \
+	graphviz-devel
 
 # Install VILLASnode from source
 RUN cd /tmp && \
 	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
-	mkdir -p villas-node/build && cd villas-node/build && \
+	cd villas-node && \
 	git checkout ${VILLAS_VERSION} && \
+	DEPS_SKIP=criterion,ethercat \
+	MAKE_OPTS="" \
+	CMAKE_OPTS=-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+	bash packaging/deps.sh && \
+	mkdir -p build && cd build && \
 	cmake ${CMAKE_OPTS} .. \
-		-DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc \
-		-DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++ \
-		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
-		-DDOWNLOAD_GO=OFF && \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
-
-ENV CMAKE_OPTS="-DCMAKE_C_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/rh/gcc-toolset-11/root/usr/bin/g++"
