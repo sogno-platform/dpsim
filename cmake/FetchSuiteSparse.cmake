@@ -7,3 +7,6 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(suitesparse-module)
 
+add_library(SuiteSparse::KLU ALIAS klu)
+
+set(SuiteSparse_FOUND ON)

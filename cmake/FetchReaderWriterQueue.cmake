@@ -7,3 +7,5 @@ FetchContent_Declare(readerwriterqueue-module
 )
 
 FetchContent_MakeAvailable(readerwriterqueue-module)
+
+add_library(readerwriterqueue::readerwriterqueue ALIAS readerwriterqueue)
