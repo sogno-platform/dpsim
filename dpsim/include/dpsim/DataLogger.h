@@ -23,7 +23,8 @@
 
 namespace DPsim {
 
-class DataLogger : public DataLoggerInterface, public SharedFactory<DataLogger> {
+class DataLogger : public DataLoggerInterface,
+                   public SharedFactory<DataLogger> {
 
 protected:
   std::ofstream mLogFile;

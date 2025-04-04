@@ -27,11 +27,13 @@ using namespace CPS::EMT;
 using namespace CPS::EMT::Ph1;
 
 const CPS::CIM::Examples::Components::GovernorKundur::Parameters govKundur;
-const CPS::CIM::Examples::Components::ExcitationSystemEremia::Parameters excEremia;
+const CPS::CIM::Examples::Components::ExcitationSystemEremia::Parameters
+    excEremia;
 
 const std::string buildFpgaConfig(CommandLineArgs &args) {
-  std::filesystem::path fpgaIpPath = "/usr/local/etc/villas/node/etc/fpga/vc707-xbar-pcie/"
-                                     "vc707-xbar-pcie.json";
+  std::filesystem::path fpgaIpPath =
+      "/usr/local/etc/villas/node/etc/fpga/vc707-xbar-pcie/"
+      "vc707-xbar-pcie.json";
 
   if (args.options.find("ips") != args.options.end()) {
     fpgaIpPath = std::filesystem::path(args.getOptionString("ips"));
@@ -87,18 +89,24 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
   return config;
 }
 
-std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>> hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
+std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>>
+hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf,
+            std::shared_ptr<DataLoggerInterface> logger) {
   std::string simName = "Fpga9BusHil";
   auto events = std::make_shared<std::vector<Event::Ptr>>();
-  std::list<fs::path> filenames =
-      Utils::findFiles({"WSCC-09_Dyn_Full_DI.xml", "WSCC-09_Dyn_Full_EQ.xml", "WSCC-09_Dyn_Full_SV.xml", "WSCC-09_Dyn_Full_TP.xml"}, "build/_deps/cim-data-src/WSCC-09/WSCC-09_Dyn_Full", "CIMPATH");
+  std::list<fs::path> filenames = Utils::findFiles(
+      {"WSCC-09_Dyn_Full_DI.xml", "WSCC-09_Dyn_Full_EQ.xml",
+       "WSCC-09_Dyn_Full_SV.xml", "WSCC-09_Dyn_Full_TP.xml"},
+      "build/_deps/cim-data-src/WSCC-09/WSCC-09_Dyn_Full", "CIMPATH");
 
   // ----- POWERFLOW FOR INITIALIZATION -----
   // read original network topology
   String simNamePF = simName + "_PF";
   CPS::CIM::Reader reader(simNamePF);
-  SystemTopology systemPF = reader.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::PVNode);
-  systemPF.component<CPS::SP::Ph1::SynchronGenerator>("GEN1")->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
+  SystemTopology systemPF = reader.loadCIM(
+      60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::PVNode);
+  systemPF.component<CPS::SP::Ph1::SynchronGenerator>("GEN1")
+      ->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
 
   // define logging
   auto loggerPF = DPsim::DataLogger::make(simNamePF);
@@ -120,25 +128,42 @@ std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>> hilTopology(
 
   // ----- DYNAMIC SIMULATION -----
   CPS::CIM::Reader reader2(simName);
-  SystemTopology sys = reader2.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC, CPS::GeneratorType::FullOrderVBR);
+  SystemTopology sys =
+      reader2.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC,
+                      CPS::GeneratorType::FullOrderVBR);
 
   sys.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
-  sys.component<CPS::EMT::Ph3::RXLoad>("LOAD5")->setParameters(Matrix({{125e6, 0, 0}, {0, 125e6, 0}, {0, 0, 125e6}}), Matrix({{90e6, 0, 0}, {0, 90e6, 0}, {0, 0, 90e6}}), 230e3, true);
+  sys.component<CPS::EMT::Ph3::RXLoad>("LOAD5")->setParameters(
+      Matrix({{125e6, 0, 0}, {0, 125e6, 0}, {0, 0, 125e6}}),
+      Matrix({{90e6, 0, 0}, {0, 90e6, 0}, {0, 0, 90e6}}), 230e3, true);
 
-  sys.component<CPS::EMT::Ph3::RXLoad>("LOAD8")->setParameters(Matrix({{100e6, 0, 0}, {0, 100e6, 0}, {0, 0, 100e6}}), Matrix({{30e6, 0, 0}, {0, 30e6, 0}, {0, 0, 30e6}}), 230e3, true);
+  sys.component<CPS::EMT::Ph3::RXLoad>("LOAD8")->setParameters(
+      Matrix({{100e6, 0, 0}, {0, 100e6, 0}, {0, 0, 100e6}}),
+      Matrix({{30e6, 0, 0}, {0, 30e6, 0}, {0, 0, 30e6}}), 230e3, true);
 
-  sys.component<CPS::EMT::Ph3::RXLoad>("LOAD6")->setParameters(Matrix({{90e6, 0, 0}, {0, 90e6, 0}, {0, 0, 90e6}}), Matrix({{30e6, 0, 0}, {0, 30e6, 0}, {0, 0, 30e6}}), 230e3, true);
+  sys.component<CPS::EMT::Ph3::RXLoad>("LOAD6")->setParameters(
+      Matrix({{90e6, 0, 0}, {0, 90e6, 0}, {0, 0, 90e6}}),
+      Matrix({{30e6, 0, 0}, {0, 30e6, 0}, {0, 0, 30e6}}), 230e3, true);
 
   auto gen1 = sys.component<CPS::EMT::Ph3::SynchronGeneratorVBR>("GEN1");
-  gen1->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa, govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr, govKundur.Tsm, 1, 1);
-  gen1->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke, excEremia.Tf, excEremia.Kf, excEremia.Tr);
+  gen1->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa,
+                    govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr,
+                    govKundur.Tsm, 1, 1);
+  gen1->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke,
+                   excEremia.Tf, excEremia.Kf, excEremia.Tr);
   auto gen2 = sys.component<CPS::EMT::Ph3::SynchronGeneratorVBR>("GEN2");
-  gen2->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa, govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr, govKundur.Tsm, 1, 1);
-  gen2->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke, excEremia.Tf, excEremia.Kf, excEremia.Tr);
+  gen2->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa,
+                    govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr,
+                    govKundur.Tsm, 1, 1);
+  gen2->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke,
+                   excEremia.Tf, excEremia.Kf, excEremia.Tr);
   auto gen3 = sys.component<CPS::EMT::Ph3::SynchronGeneratorVBR>("GEN3");
-  gen3->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa, govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr, govKundur.Tsm, 1, 1);
-  gen3->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke, excEremia.Tf, excEremia.Kf, excEremia.Tr);
+  gen3->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa,
+                    govKundur.Fb, govKundur.Fc, govKundur.Kg, govKundur.Tsr,
+                    govKundur.Tsm, 1, 1);
+  gen3->addExciter(excEremia.Ta, excEremia.Ka, excEremia.Te, excEremia.Ke,
+                   excEremia.Tf, excEremia.Kf, excEremia.Tr);
 
   auto cs = Ph1::CurrentSource::make("cs");
   cs->setParameters(Complex(0, 0));
@@ -154,25 +179,37 @@ std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>> hilTopology(
   // We scale the voltage so we map the nominal voltage in the simulation (230kV) to a nominal real peak voltage
   // of 15V. The amplifier has a gain of 20, so the voltage before the amplifier is 1/20 of the voltage at the load.
   constexpr double voltage_scale = 15. * 1.414 / (230e3 * 20.);
-  auto updateFn = std::make_shared<CPS::AttributeUpdateTask<Real, Real>::Actor>([](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Real>::Ptr dependency) {
-    *dependent = *dependency * voltage_scale;
-    if (*dependent > 1.) {
-      *dependent = 1.;
-    } else if (*dependent < -1.) {
-      *dependent = -1.;
-    }
-  });
-  scaledOutputVoltage->addTask(CPS::UpdateTaskKind::UPDATE_ON_GET,
-                               CPS::AttributeUpdateTask<Real, Real>::make(CPS::UpdateTaskKind::UPDATE_ON_GET, *updateFn, sys.node<SimNode>("BUS6")->mVoltage->deriveCoeff<Real>(0, 0)));
+  auto updateFn = std::make_shared<CPS::AttributeUpdateTask<Real, Real>::Actor>(
+      [](std::shared_ptr<Real> &dependent,
+         typename CPS::Attribute<Real>::Ptr dependency) {
+        *dependent = *dependency * voltage_scale;
+        if (*dependent > 1.) {
+          *dependent = 1.;
+        } else if (*dependent < -1.) {
+          *dependent = -1.;
+        }
+      });
+  scaledOutputVoltage->addTask(
+      CPS::UpdateTaskKind::UPDATE_ON_GET,
+      CPS::AttributeUpdateTask<Real, Real>::make(
+          CPS::UpdateTaskKind::UPDATE_ON_GET, *updateFn,
+          sys.node<SimNode>("BUS6")->mVoltage->deriveCoeff<Real>(0, 0)));
   auto voltageInterfaceActive = CPS::AttributeStatic<CPS::Bool>::make(false);
-  auto voltageActiveFn = std::make_shared<CPS::AttributeUpdateTask<Real, Bool>::Actor>([](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Bool>::Ptr dependency) {
-    if (!*dependency) {
-      *dependent = 0.;
-    }
-  });
-  scaledOutputVoltage->addTask(CPS::UpdateTaskKind::UPDATE_ON_GET, CPS::AttributeUpdateTask<Real, Bool>::make(CPS::UpdateTaskKind::UPDATE_ON_GET, *voltageActiveFn, voltageInterfaceActive));
+  auto voltageActiveFn =
+      std::make_shared<CPS::AttributeUpdateTask<Real, Bool>::Actor>(
+          [](std::shared_ptr<Real> &dependent,
+             typename CPS::Attribute<Bool>::Ptr dependency) {
+            if (!*dependency) {
+              *dependent = 0.;
+            }
+          });
+  scaledOutputVoltage->addTask(CPS::UpdateTaskKind::UPDATE_ON_GET,
+                               CPS::AttributeUpdateTask<Real, Bool>::make(
+                                   CPS::UpdateTaskKind::UPDATE_ON_GET,
+                                   *voltageActiveFn, voltageInterfaceActive));
   // We activate the voltage interface after 2 seconds to allow the current sensors to stabilize.
-  auto activeVoltageEvent = AttributeEvent<Bool>::make(2., voltageInterfaceActive, true);
+  auto activeVoltageEvent =
+      AttributeEvent<Bool>::make(2., voltageInterfaceActive, true);
   events->push_back(activeVoltageEvent);
 
   // We scale the current using a gain so that we get a load in the simulation in the MVA range.
@@ -182,20 +219,33 @@ std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>> hilTopology(
   constexpr double current_offset = -2.483036;
   auto scaledCurrent = CPS::AttributeDynamic<Real>::make(0);
   auto closedLoop = CPS::AttributeStatic<CPS::Bool>::make(false);
-  auto currentScaleFn = std::make_shared<CPS::AttributeUpdateTask<Real, Bool>::Actor>([](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Bool>::Ptr dependency) {
-    if (!*dependency) {
-      *dependent = 0.;
-    } else {
-      *dependent = (*dependent + current_offset) * current_scale;
-    }
-  });
-  scaledCurrent->addTask(CPS::UpdateTaskKind::UPDATE_ON_SET, CPS::AttributeUpdateTask<Real, Bool>::make(CPS::UpdateTaskKind::UPDATE_ON_SET, *currentScaleFn, closedLoop));
+  auto currentScaleFn =
+      std::make_shared<CPS::AttributeUpdateTask<Real, Bool>::Actor>(
+          [](std::shared_ptr<Real> &dependent,
+             typename CPS::Attribute<Bool>::Ptr dependency) {
+            if (!*dependency) {
+              *dependent = 0.;
+            } else {
+              *dependent = (*dependent + current_offset) * current_scale;
+            }
+          });
+  scaledCurrent->addTask(
+      CPS::UpdateTaskKind::UPDATE_ON_SET,
+      CPS::AttributeUpdateTask<Real, Bool>::make(
+          CPS::UpdateTaskKind::UPDATE_ON_SET, *currentScaleFn, closedLoop));
   auto closeLoopEvent = AttributeEvent<Bool>::make(2., closedLoop, true);
   events->push_back(closeLoopEvent);
 
-  auto currentCopyFn = std::make_shared<CPS::AttributeUpdateTask<Real, Complex>::Actor>(
-      [](std::shared_ptr<Real> &dependent, typename CPS::Attribute<Complex>::Ptr dependency) { dependency->set(Complex(*dependent, 0)); });
-  scaledCurrent->addTask(CPS::UpdateTaskKind::UPDATE_ON_SET, CPS::AttributeUpdateTask<Real, Complex>::make(CPS::UpdateTaskKind::UPDATE_ON_SET, *currentCopyFn, cs->mCurrentRef));
+  auto currentCopyFn =
+      std::make_shared<CPS::AttributeUpdateTask<Real, Complex>::Actor>(
+          [](std::shared_ptr<Real> &dependent,
+             typename CPS::Attribute<Complex>::Ptr dependency) {
+            dependency->set(Complex(*dependent, 0));
+          });
+  scaledCurrent->addTask(
+      CPS::UpdateTaskKind::UPDATE_ON_SET,
+      CPS::AttributeUpdateTask<Real, Complex>::make(
+          CPS::UpdateTaskKind::UPDATE_ON_SET, *currentCopyFn, cs->mCurrentRef));
 
   intf->addImport(seqnumAttribute, true, true);
   intf->addImport(scaledCurrent, true, true);
@@ -219,15 +269,20 @@ std::pair<SystemTopology, std::shared_ptr<std::vector<Event::Ptr>>> hilTopology(
 }
 
 int main(int argc, char *argv[]) {
-  CommandLineArgs args(argc, argv, "Fpga9BusHil", 0.01, 10 * 60, 60., -1, CPS::Logger::Level::info, CPS::Logger::Level::off, false, false, false, CPS::Domain::EMT);
+  CommandLineArgs args(argc, argv, "Fpga9BusHil", 0.01, 10 * 60, 60., -1,
+                       CPS::Logger::Level::info, CPS::Logger::Level::off, false,
+                       false, false, CPS::Domain::EMT);
   CPS::Logger::setLogDir("logs/" + args.name);
-  bool log = args.options.find("log") != args.options.end() && args.getOptionBool("log");
+  bool log = args.options.find("log") != args.options.end() &&
+             args.getOptionBool("log");
 
-  auto intf = std::make_shared<InterfaceVillasQueueless>(buildFpgaConfig(args), "Fpga9BusHil", spdlog::level::off);
+  auto intf = std::make_shared<InterfaceVillasQueueless>(
+      buildFpgaConfig(args), "Fpga9BusHil", spdlog::level::off);
   std::filesystem::path logFilename = "logs/" + args.name + "/Fpga9BusHil.csv";
   std::shared_ptr<DataLoggerInterface> logger = nullptr;
   if (log) {
-    logger = RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
+    logger =
+        RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
   }
 
   auto topo = hilTopology(args, intf, logger);
