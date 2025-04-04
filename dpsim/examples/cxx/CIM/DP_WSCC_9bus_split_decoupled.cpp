@@ -16,7 +16,8 @@
 using namespace DPsim;
 using namespace CPS;
 
-String decoupleLine(SystemTopology &sys, const String &lineName, const String &node1, const String node2) {
+String decoupleLine(SystemTopology &sys, const String &lineName,
+                    const String &node1, const String node2) {
   auto origLine = sys.component<DP::Ph1::PiLine>(lineName);
   Real Rline = origLine->attributeTyped<Real>("R_series")->get();
   Real Lline = origLine->attributeTyped<Real>("L_series")->get();
@@ -27,9 +28,8 @@ String decoupleLine(SystemTopology &sys, const String &lineName, const String &n
   String dline_name = "dline_" + node1 + "_" + node2;
 
   auto line = Signal::DecouplingLine::make(
-    "dline_" + node1 + "_" + node2, sys.node<DP::SimNode>(node1),
-    sys.node<DP::SimNode>(node2), Rline, Lline, Cline, Logger::Level::debug
-  );
+      "dline_" + node1 + "_" + node2, sys.node<DP::SimNode>(node1),
+      sys.node<DP::SimNode>(node2), Rline, Lline, Cline, Logger::Level::debug);
   sys.addComponent(line);
   sys.addComponents(line->getLineComponents());
 
@@ -43,10 +43,11 @@ void doSim(String &name, SystemTopology &sys, Int threads) {
   // logger->logAttribute("BUS5.v", sys.node<DP::SimNode>("BUS5")->attribute("v"));
   // logger->logAttribute("BUS6.v", sys.node<DP::SimNode>("BUS6")->attribute("v"));
   // logger->logAttribute("BUS8.v", sys.node<DP::SimNode>("BUS8")->attribute("v"));
-  for (Int bus  = 1; bus <= 9; bus++) {
+  for (Int bus = 1; bus <= 9; bus++) {
     String attrName = "v" + std::to_string(bus);
     String nodeName = "BUS" + std::to_string(bus);
-    logger->logAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
+    logger->logAttribute(attrName,
+                         sys.node<DP::SimNode>(nodeName)->attribute("v"));
   }
 
   Simulation sim(name, Logger::Level::debug);
@@ -72,8 +73,7 @@ int main(int argc, char *argv[]) {
 
   std::list<fs::path> filenames;
   filenames = DPsim::Utils::findFiles(
-      {"WSCC-09_DI.xml", "WSCC-09_EQ.xml", "WSCC-09_SV.xml",
-       "WSCC-09_TP.xml"},
+      {"WSCC-09_DI.xml", "WSCC-09_EQ.xml", "WSCC-09_SV.xml", "WSCC-09_TP.xml"},
       "build/_deps/cim-data-src/WSCC-09/WSCC-09", "CIMPATH");
 
   Int numThreads = 0;
@@ -84,25 +84,30 @@ int main(int argc, char *argv[]) {
   if (args.options.find("seq") != args.options.end())
     numSeq = args.getOptionInt("seq");
 
-  std::cout << "Simulate with " << numThreads
-            << " threads, sequence number " << numSeq << std::endl;
+  std::cout << "Simulate with " << numThreads << " threads, sequence number "
+            << numSeq << std::endl;
 
   // Monolithic Simulation
   String simNameMonolithic = "WSCC-9bus_monolithic_DP";
   Logger::setLogDir("logs/" + simNameMonolithic);
-  CIM::Reader readerMonolithic(simNameMonolithic, Logger::Level::debug, Logger::Level::debug);
+  CIM::Reader readerMonolithic(simNameMonolithic, Logger::Level::debug,
+                               Logger::Level::debug);
   SystemTopology systemMonolithic =
       readerMonolithic.loadCIM(60, filenames, Domain::DP, PhaseType::Single,
-                     CPS::GeneratorType::IdealVoltageSource);
+                               CPS::GeneratorType::IdealVoltageSource);
 
   doSim(simNameMonolithic, systemMonolithic, 0);
 
   // Decoupled Simulation
-  String simNameDecoupled = "WSCC_9bus_split_decoupled_DP_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
+  String simNameDecoupled = "WSCC_9bus_split_decoupled_DP_" +
+                            std::to_string(numThreads) + "_" +
+                            std::to_string(numSeq);
   Logger::setLogDir("logs/" + simNameDecoupled);
-  CIM::Reader readerDecoupled(simNameDecoupled, Logger::Level::debug, Logger::Level::debug);
-  SystemTopology systemDecoupled = readerDecoupled.loadCIM(60, filenames, Domain::DP, PhaseType::Single,
-                                   CPS::GeneratorType::IdealVoltageSource);
+  CIM::Reader readerDecoupled(simNameDecoupled, Logger::Level::debug,
+                              Logger::Level::debug);
+  SystemTopology systemDecoupled =
+      readerDecoupled.loadCIM(60, filenames, Domain::DP, PhaseType::Single,
+                              CPS::GeneratorType::IdealVoltageSource);
 
   String dline_75 = decoupleLine(systemDecoupled, "LINE75", "BUS5", "BUS7");
   // decouple_line(system, "LINE78", "BUS7", "BUS8");

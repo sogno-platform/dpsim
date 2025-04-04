@@ -30,10 +30,10 @@ public:
       const Matrix &conductanceMat, SparseMatrixRow &mat, UInt node1Index,
       UInt node2Index, const Logger::Log &mSLog);
 
-  static void stamp3x3ConductanceMatrixNodeToGround(const Matrix &conductanceMat,
-                                             SparseMatrixRow &mat,
-                                             UInt nodeIndex,
-                                             const Logger::Log &mSLog);
+  static void
+  stamp3x3ConductanceMatrixNodeToGround(const Matrix &conductanceMat,
+                                        SparseMatrixRow &mat, UInt nodeIndex,
+                                        const Logger::Log &mSLog);
 
   static void stampAdmittanceMatrix(
       const MatrixComp &admittanceMat, SparseMatrixRow &mat, UInt node1Index,

@@ -25,8 +25,9 @@ using namespace DPsim;
 using namespace CPS::EMT;
 
 const std::string buildFpgaConfig(CommandLineArgs &args) {
-  std::filesystem::path fpgaIpPath = "/usr/local/etc/villas/node/etc/fpga/vc707-xbar-pcie-dino/"
-                                     "vc707-xbar-pcie-dino-v2.json";
+  std::filesystem::path fpgaIpPath =
+      "/usr/local/etc/villas/node/etc/fpga/vc707-xbar-pcie-dino/"
+      "vc707-xbar-pcie-dino-v2.json";
   ;
 
   if (args.options.find("ips") != args.options.end()) {
@@ -132,7 +133,9 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
   return config;
 }
 
-SystemTopology buildTopology(CommandLineArgs &args, std::shared_ptr<Interface> intfFpga, std::shared_ptr<DataLoggerInterface> logger) {
+SystemTopology buildTopology(CommandLineArgs &args,
+                             std::shared_ptr<Interface> intfFpga,
+                             std::shared_ptr<DataLoggerInterface> logger) {
   // Nodes
   auto bus = SimNode::make("bus", PhaseType::ABC);
 
@@ -155,10 +158,20 @@ SystemTopology buildTopology(CommandLineArgs &args, std::shared_ptr<Interface> i
   auto seqFromRTDSAttribute = CPS::AttributeStatic<Int>::make(0);
   auto seqFromDPsimAttribute = CPS::AttributeStatic<Int>::make(0);
   auto seqToDPsimAttribute = CPS::AttributeDynamic<Int>::make(0);
-  auto updateFn = std::make_shared<CPS::AttributeUpdateTask<Int, Int>::Actor>([](std::shared_ptr<Int> &dependent, typename CPS::Attribute<Int>::Ptr dependency) { *dependent = *dependent + 1; });
-  seqToDPsimAttribute->addTask(CPS::UpdateTaskKind::UPDATE_ON_GET, CPS::AttributeUpdateTask<Int, Int>::make(CPS::UpdateTaskKind::UPDATE_ON_GET, *updateFn, seqFromDPsimAttribute));
+  auto updateFn = std::make_shared<CPS::AttributeUpdateTask<Int, Int>::Actor>(
+      [](std::shared_ptr<Int> &dependent,
+         typename CPS::Attribute<Int>::Ptr dependency) {
+        *dependent = *dependent + 1;
+      });
+  seqToDPsimAttribute->addTask(CPS::UpdateTaskKind::UPDATE_ON_GET,
+                               CPS::AttributeUpdateTask<Int, Int>::make(
+                                   CPS::UpdateTaskKind::UPDATE_ON_GET,
+                                   *updateFn, seqFromDPsimAttribute));
   auto seqNumForRTDS = CPS::AttributeDynamic<Int>::make(0);
-  seqNumForRTDS->addTask(CPS::UpdateTaskKind::UPDATE_ON_GET, CPS::AttributeUpdateTask<Int, Int>::make(CPS::UpdateTaskKind::UPDATE_ON_GET, *updateFn, seqFromDPsimAttribute));
+  seqNumForRTDS->addTask(CPS::UpdateTaskKind::UPDATE_ON_GET,
+                         CPS::AttributeUpdateTask<Int, Int>::make(
+                             CPS::UpdateTaskKind::UPDATE_ON_GET, *updateFn,
+                             seqFromDPsimAttribute));
 
   intfFpga->addImport(seqFromRTDSAttribute, true, true);
   intfFpga->addImport(seqFromDPsimAttribute, true, true);
@@ -183,20 +196,27 @@ SystemTopology buildTopology(CommandLineArgs &args, std::shared_ptr<Interface> i
     logger->logAttribute("c_i", load->mIntfCurrent->deriveCoeff<Real>(2, 0));
   }
 
-  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, bus}, SystemComponentList{vs, load});
+  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, bus},
+                        SystemComponentList{vs, load});
 }
 
 int main(int argc, char *argv[]) {
-  CommandLineArgs args(argc, argv, "FpgaCosimulation", 0.01, 10 * 60, 60., -1, CPS::Logger::Level::info, CPS::Logger::Level::off, false, false, false, CPS::Domain::EMT);
+  CommandLineArgs args(argc, argv, "FpgaCosimulation", 0.01, 10 * 60, 60., -1,
+                       CPS::Logger::Level::info, CPS::Logger::Level::off, false,
+                       false, false, CPS::Domain::EMT);
   CPS::Logger::setLogDir("logs/" + args.name);
-  bool log = args.options.find("log") != args.options.end() && args.getOptionBool("log");
+  bool log = args.options.find("log") != args.options.end() &&
+             args.getOptionBool("log");
 
-  auto intfFpga = std::make_shared<InterfaceVillasQueueless>(buildFpgaConfig(args), "FpgaInterface", spdlog::level::off);
+  auto intfFpga = std::make_shared<InterfaceVillasQueueless>(
+      buildFpgaConfig(args), "FpgaInterface", spdlog::level::off);
 
-  std::filesystem::path logFilename = "logs/" + args.name + "/FpgaCosimulation.csv";
+  std::filesystem::path logFilename =
+      "logs/" + args.name + "/FpgaCosimulation.csv";
   std::shared_ptr<DataLoggerInterface> logger = nullptr;
   if (log) {
-    logger = RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
+    logger =
+        RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
   }
 
   auto sys = buildTopology(args, intfFpga, logger);

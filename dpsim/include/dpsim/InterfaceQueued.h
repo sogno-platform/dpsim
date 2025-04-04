@@ -21,15 +21,18 @@ namespace DPsim {
 
 class InterfaceWorker;
 
-class InterfaceQueued : public Interface, public SharedFactory<InterfaceQueued> {
+class InterfaceQueued : public Interface,
+                        public SharedFactory<InterfaceQueued> {
 
 public:
   typedef std::shared_ptr<InterfaceQueued> Ptr;
 
   using AttributePacket = struct AttributePacket {
     CPS::AttributeBase::Ptr value;
-    UInt attributeId;    // Used to identify the attribute. Defined by the position in the `mExportAttrsDpsim` and `mImportAttrsDpsim` lists
-    UInt sequenceId;     // Increasing ID used to discern multiple consecutive updates of a single attribute
+    UInt
+        attributeId; // Used to identify the attribute. Defined by the position in the `mExportAttrsDpsim` and `mImportAttrsDpsim` lists
+    UInt
+        sequenceId; // Increasing ID used to discern multiple consecutive updates of a single attribute
     unsigned char flags; // Bit 0 set: Close interface
   };
 
@@ -38,9 +41,13 @@ public:
     PACKET_CLOSE_INTERFACE = 1,
   };
 
-  InterfaceQueued(std::shared_ptr<InterfaceWorker> intf, const String &name = "", UInt downsampling = 1) : Interface(name), mInterfaceWorker(intf), mDownsampling(downsampling) {
-    mQueueDpsimToInterface = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
-    mQueueInterfaceToDpsim = std::make_shared<moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
+  InterfaceQueued(std::shared_ptr<InterfaceWorker> intf,
+                  const String &name = "", UInt downsampling = 1)
+      : Interface(name), mInterfaceWorker(intf), mDownsampling(downsampling) {
+    mQueueDpsimToInterface = std::make_shared<
+        moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
+    mQueueInterfaceToDpsim = std::make_shared<
+        moodycamel::BlockingReaderWriterQueue<AttributePacket>>();
   };
 
   virtual void open() override;
@@ -73,37 +80,51 @@ protected:
   std::thread mInterfaceWriterThread;
   std::thread mInterfaceReaderThread;
 
-  std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueDpsimToInterface;
-  std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueInterfaceToDpsim;
+  std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
+      mQueueDpsimToInterface;
+  std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
+      mQueueInterfaceToDpsim;
 
 public:
   class WriterThread {
   private:
-    std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueDpsimToInterface;
+    std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
+        mQueueDpsimToInterface;
     std::shared_ptr<InterfaceWorker> mInterfaceWorker;
 
   public:
-    WriterThread(std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> queueDpsimToInterface, std::shared_ptr<InterfaceWorker> intf)
-        : mQueueDpsimToInterface(queueDpsimToInterface), mInterfaceWorker(intf){};
+    WriterThread(
+        std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
+            queueDpsimToInterface,
+        std::shared_ptr<InterfaceWorker> intf)
+        : mQueueDpsimToInterface(queueDpsimToInterface),
+          mInterfaceWorker(intf){};
     void operator()() const;
   };
 
   class ReaderThread {
   private:
-    std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> mQueueInterfaceToDpsim;
+    std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
+        mQueueInterfaceToDpsim;
     std::shared_ptr<InterfaceWorker> mInterfaceWorker;
     std::atomic<bool> &mOpened;
 
   public:
-    ReaderThread(std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>> queueInterfaceToDpsim, std::shared_ptr<InterfaceWorker> intf, std::atomic<bool> &opened)
-        : mQueueInterfaceToDpsim(queueInterfaceToDpsim), mInterfaceWorker(intf), mOpened(opened){};
+    ReaderThread(
+        std::shared_ptr<moodycamel::BlockingReaderWriterQueue<AttributePacket>>
+            queueInterfaceToDpsim,
+        std::shared_ptr<InterfaceWorker> intf, std::atomic<bool> &opened)
+        : mQueueInterfaceToDpsim(queueInterfaceToDpsim), mInterfaceWorker(intf),
+          mOpened(opened){};
     void operator()() const;
   };
 
   class PreStep : public CPS::Task {
   public:
-    explicit PreStep(InterfaceQueued &intf) : Task(intf.getName() + ".Read"), mIntf(intf) {
-      for (const auto &[attr, _seqId, _blockOnRead, _syncOnStart] : intf.mImportAttrsDpsim) {
+    explicit PreStep(InterfaceQueued &intf)
+        : Task(intf.getName() + ".Read"), mIntf(intf) {
+      for (const auto &[attr, _seqId, _blockOnRead, _syncOnStart] :
+           intf.mImportAttrsDpsim) {
         mModifiedAttributes.push_back(attr);
       }
     }
@@ -116,7 +137,8 @@ public:
 
   class PostStep : public CPS::Task {
   public:
-    explicit PostStep(InterfaceQueued &intf) : Task(intf.getName() + ".Write"), mIntf(intf) {
+    explicit PostStep(InterfaceQueued &intf)
+        : Task(intf.getName() + ".Write"), mIntf(intf) {
       for (const auto &[attr, _seqId] : intf.mExportAttrsDpsim) {
         mAttributeDependencies.push_back(attr);
       }
