@@ -1,7 +1,7 @@
 set(LIBRARIES "dpsim")
 
 if(NOT WIN32)
-	# Needed so CIMParser and arabica (which are first compiled into static libs)
+	# Needed so CIMParser and Arabica (which are first compiled into static libs)
 	# can be included in the .so
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
@@ -64,7 +64,6 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault.cpp
-	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_JsonSyngenParams.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_DP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/EMT_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
@@ -85,13 +84,18 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_SMIB_ReducedOrderSGIterative_LoadStep.cpp
 	Circuits/DP_SMIB_ReducedOrderSGIterative_LoadStep.cpp
 
-	#3Bus System
+	# 3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
 	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
-
 )
+
+if(WITH_JSON)
+	list(APPEND CIRCUIT_SOURCES
+		Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_JsonSyngenParams.cpp
+	)
+endif()
 
 set(SYNCGEN_SOURCES
 	Components/DP_SynGenDq7odTrapez_SteadyState.cpp
