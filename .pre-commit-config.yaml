@@ -22,10 +22,12 @@ repos:
       #     - --no-sort-keys
       #     - --autofix
 
-  # - repo: https://github.com/pre-commit/mirrors-clang-format
-  #   rev: "v17.0.6"
-  #   hooks:
-  #     - id: clang-format
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: "v17.0.6"
+    hooks:
+      - id: clang-format
+        files: \.(c|cpp|h|hpp)(\.in)?$
+        args: []
 
   # - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
   #   rev: "2.7.3"
