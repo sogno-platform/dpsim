@@ -17,7 +17,6 @@
 
 #include <cstdlib>
 #include <list>
-#include <nlohmann/json.hpp>
 #include <vector>
 
 #include <dpsim-models/Components.h>
@@ -28,7 +27,10 @@
 #include <dpsim/Solver.h>
 #include <dpsim/Timer.h>
 
+#ifdef WITH_JSON
+#include <nlohmann/json.hpp>
 using json = nlohmann::json;
+#endif
 
 namespace DPsim {
 
@@ -133,10 +135,12 @@ public:
 
 namespace Utils {
 
+#ifdef WITH_JSON
 void applySimulationParametersFromJson(const json config, Simulation &sim);
 void applySynchronousGeneratorParametersFromJson(
     const json config,
     std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQ> syngen);
+#endif
 
 String encodeXml(String &data);
 

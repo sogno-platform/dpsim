@@ -29,6 +29,7 @@
 #cmakedefine WITH_MAGMA
 #cmakedefine WITH_KLU
 #cmakedefine WITH_MNASOLVERPLUGIN
+#cmakedefine WITH_JSON
 #cmakedefine CGMES_BUILD
 
 #cmakedefine HAVE_GETOPT
