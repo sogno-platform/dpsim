@@ -19,7 +19,7 @@ if(WITH_PYBIND)
 			@ONLY
 		)
 
-		# We add the path of the freshly build dpsim.so module to Python path here
+		# We add the path of the freshly build dpsimpy extension to Python path here
 		add_custom_target(docs
 			COMMAND
 				${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_BINARY_DIR}:$ENV{PYTHONPATH}
@@ -34,5 +34,9 @@ if(WITH_PYBIND)
 				dpsimpy
 		)
 
+		install(DIRECTORY ${SPHINX_HTML_DIR}
+			DESTINATION ${CMAKE_INSTALL_DOCDIR}/sphinx
+			OPTIONAL
+		)
 	endif()
 endif()

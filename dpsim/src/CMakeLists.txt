@@ -25,8 +25,8 @@ set(DPSIM_SOURCES
 
 list(APPEND DPSIM_LIBRARIES
 	dpsim-models
-	readerwriterqueue
 	filesystem
+	readerwriterqueue::readerwriterqueue
 )
 
 if(WITH_MNASOLVERPLUGIN)
@@ -57,10 +57,8 @@ if(WITH_JSON)
 endif()
 
 if(WITH_KLU)
-	list(APPEND DPSIM_LIBRARIES klu)
-	list(APPEND DPSIM_SOURCES
-		KLUAdapter.cpp
-	)
+	list(APPEND DPSIM_LIBRARIES SuiteSparse::KLU)
+	list(APPEND DPSIM_SOURCES KLUAdapter.cpp)
 endif()
 
 if(WITH_CUDA)
@@ -77,18 +75,13 @@ if(WITH_CUDA)
 	)
 
 	if(WITH_MAGMA)
-		list(APPEND DPSIM_SOURCES
-			GpuMagmaAdapter.cpp
-			)
+		list(APPEND DPSIM_SOURCES GpuMagmaAdapter.cpp)
 		list(APPEND DPSIM_LIBRARIES ${MAGMA_LIBRARIES})
 		list(APPEND DPSIM_LIBRARIES ${CUDA_cusparse_LIBRARY})
 		list(APPEND DPSIM_INCLUDE_DIRS ${MAGMA_INCLUDE_DIR})
 	endif()
 	if(WITH_CUDA_SPARSE)
-		list(APPEND DPSIM_SOURCES
-			GpuSparseAdapter.cpp
-		)
-
+		list(APPEND DPSIM_SOURCES GpuSparseAdapter.cpp)
 		list(APPEND DPSIM_LIBRARIES ${CUDA_cusparse_LIBRARY})
 	endif()
 endif()
