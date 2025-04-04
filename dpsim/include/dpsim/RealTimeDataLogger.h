@@ -21,7 +21,8 @@
 
 namespace DPsim {
 
-class RealTimeDataLogger : public DataLoggerInterface, public SharedFactory<RealTimeDataLogger> {
+class RealTimeDataLogger : public DataLoggerInterface,
+                           public SharedFactory<RealTimeDataLogger> {
 
 protected:
   std::filesystem::path mFilename;
@@ -34,7 +35,8 @@ protected:
 public:
   typedef std::shared_ptr<RealTimeDataLogger> Ptr;
 
-  RealTimeDataLogger(std::filesystem::path &filename, Real finalTime, Real timeStep);
+  RealTimeDataLogger(std::filesystem::path &filename, Real finalTime,
+                     Real timeStep);
   RealTimeDataLogger(std::filesystem::path &filename, size_t rowNumber);
 
   virtual void start() override;
@@ -46,7 +48,8 @@ public:
 
   class Step : public CPS::Task {
   public:
-    Step(RealTimeDataLogger &logger) : Task("RealTimeDataLogger.Write"), mLogger(logger) {
+    Step(RealTimeDataLogger &logger)
+        : Task("RealTimeDataLogger.Write"), mLogger(logger) {
       for (auto attr : logger.mAttributes) {
         mAttributeDependencies.push_back(attr.second);
       }

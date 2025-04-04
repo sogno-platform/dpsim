@@ -29,7 +29,8 @@ void EMT::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
   Real resistance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
 
   (**mIntfVoltage)(0, 0) =
-    RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
+      RMS3PH_TO_PEAK1PH *
+      (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / resistance;
 
   SPDLOG_LOGGER_INFO(mSLog,
@@ -41,8 +42,10 @@ void EMT::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
                      "\n--- Initialization from powerflow finished ---",
                      Logger::matrixToString(**mIntfVoltage),
                      Logger::matrixToString(**mIntfCurrent),
-                     Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0).real()),
-                     Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1).real()));
+                     Logger::phasorToString(RMS3PH_TO_PEAK1PH *
+                                            initialSingleVoltage(0).real()),
+                     Logger::phasorToString(RMS3PH_TO_PEAK1PH *
+                                            initialSingleVoltage(1).real()));
 }
 
 void EMT::Ph1::Switch::mnaCompInitialize(Real omega, Real timeStep,

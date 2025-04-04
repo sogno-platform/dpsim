@@ -200,8 +200,7 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
       .def("do_frequency_parallelization",
            &DPsim::Simulation::doFrequencyParallelization)
-      .def("do_split_subnets",
-           &DPsim::Simulation::doSplitSubnets)
+      .def("do_split_subnets", &DPsim::Simulation::doSplitSubnets)
       .def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
       .def("add_event", &DPsim::Simulation::addEvent)
       .def("set_solver_component_behaviour",
@@ -270,7 +269,9 @@ PYBIND11_MODULE(dpsimpy, m) {
   py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m,
                                                                   "Interface");
 
-  py::class_<DPsim::DataLoggerInterface, std::shared_ptr<DPsim::DataLoggerInterface>>(m, "DataLoggerInterface")
+  py::class_<DPsim::DataLoggerInterface,
+             std::shared_ptr<DPsim::DataLoggerInterface>>(m,
+                                                          "DataLoggerInterface")
       .def("log_attribute",
            py::overload_cast<const CPS::String &, CPS::AttributeBase::Ptr,
                              CPS::UInt, CPS::UInt>(
@@ -284,12 +285,14 @@ PYBIND11_MODULE(dpsimpy, m) {
            "names"_a, "attr"_a)
       /// Compatibility method. Might be removed later when the python examples have been fully adapted.;
       .def("log_attribute",
-           [](DPsim::DataLoggerInterface &logger, const std::vector<CPS::String> &names,
-              const CPS::String &attr, const CPS::IdentifiedObject &comp) {
+           [](DPsim::DataLoggerInterface &logger,
+              const std::vector<CPS::String> &names, const CPS::String &attr,
+              const CPS::IdentifiedObject &comp) {
              logger.logAttribute(names, comp.attribute(attr));
            });
 
-  py::class_<DPsim::DataLogger, DPsim::DataLoggerInterface, std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
+  py::class_<DPsim::DataLogger, DPsim::DataLoggerInterface,
+             std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
       .def(py::init<std::string>())
       .def_static("set_log_dir", &CPS::Logger::setLogDir)
       .def_static("get_log_dir", &CPS::Logger::logDir)

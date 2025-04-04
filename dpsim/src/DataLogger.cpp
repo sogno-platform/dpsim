@@ -13,9 +13,14 @@
 
 using namespace DPsim;
 
-DataLogger::DataLogger(Bool enabled) : DataLoggerInterface(), mLogFile(), mEnabled(enabled), mDownsampling(1) { mLogFile.setstate(std::ios_base::badbit); }
+DataLogger::DataLogger(Bool enabled)
+    : DataLoggerInterface(), mLogFile(), mEnabled(enabled), mDownsampling(1) {
+  mLogFile.setstate(std::ios_base::badbit);
+}
 
-DataLogger::DataLogger(String name, Bool enabled, UInt downsampling) : DataLoggerInterface(), mName(name), mEnabled(enabled), mDownsampling(downsampling) {
+DataLogger::DataLogger(String name, Bool enabled, UInt downsampling)
+    : DataLoggerInterface(), mName(name), mEnabled(enabled),
+      mDownsampling(downsampling) {
   if (!mEnabled)
     return;
 
@@ -137,7 +142,9 @@ void DataLogger::log(Real time, Int timeStepCount) {
   mLogFile << '\n';
 }
 
-void DataLogger::Step::execute(Real time, Int timeStepCount) { mLogger.log(time, timeStepCount); }
+void DataLogger::Step::execute(Real time, Int timeStepCount) {
+  mLogger.log(time, timeStepCount);
+}
 
 CPS::Task::Ptr DataLogger::getTask() {
   return std::make_shared<DataLogger::Step>(*this);

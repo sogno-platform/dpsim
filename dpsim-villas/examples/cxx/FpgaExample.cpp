@@ -26,8 +26,9 @@ using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 const std::string buildFpgaConfig(CommandLineArgs &args) {
-  std::filesystem::path fpgaIpPath = "/usr/local/etc/villas/node/etc/fpga/vc707-xbar-pcie-dino/"
-                                     "vc707-xbar-pcie-dino.json";
+  std::filesystem::path fpgaIpPath =
+      "/usr/local/etc/villas/node/etc/fpga/vc707-xbar-pcie-dino/"
+      "vc707-xbar-pcie-dino.json";
 
   if (args.options.find("ips") != args.options.end()) {
     fpgaIpPath = std::filesystem::path(args.getOptionString("ips"));
@@ -95,7 +96,9 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
   return config;
 }
 
-SystemTopology loopbackTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
+SystemTopology loopbackTopology(CommandLineArgs &args,
+                                std::shared_ptr<Interface> intf,
+                                std::shared_ptr<DataLoggerInterface> logger) {
   // Nodes
   auto n1 = SimNode::make("n1");
 
@@ -125,7 +128,9 @@ SystemTopology loopbackTopology(CommandLineArgs &args, std::shared_ptr<Interface
                         SystemComponentList{vs, rl});
 }
 
-SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
+SystemTopology hilTopology(CommandLineArgs &args,
+                           std::shared_ptr<Interface> intf,
+                           std::shared_ptr<DataLoggerInterface> logger) {
   // Nodes
   auto n1 = SimNode::make("n1");
   auto n2 = SimNode::make("n2");
@@ -157,10 +162,13 @@ SystemTopology hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> int
     logger->logAttribute("cs_i", cs->mIntfCurrent);
   }
 
-  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, n1, n2}, SystemComponentList{vs, rs, cs});
+  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, n1, n2},
+                        SystemComponentList{vs, rs, cs});
 }
 
-SystemTopology profileTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
+SystemTopology profileTopology(CommandLineArgs &args,
+                               std::shared_ptr<Interface> intf,
+                               std::shared_ptr<DataLoggerInterface> logger) {
   // Nodes
   auto n1 = SimNode::make("n1");
   auto n2 = SimNode::make("n2");
@@ -191,10 +199,13 @@ SystemTopology profileTopology(CommandLineArgs &args, std::shared_ptr<Interface>
     logger->logAttribute("cs_i", cs->mIntfCurrent);
   }
 
-  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, n1, n2}, SystemComponentList{vs, rs, cs});
+  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, n1, n2},
+                        SystemComponentList{vs, rs, cs});
 }
 
-SystemTopology getTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf, std::shared_ptr<DataLoggerInterface> logger) {
+SystemTopology getTopology(CommandLineArgs &args,
+                           std::shared_ptr<Interface> intf,
+                           std::shared_ptr<DataLoggerInterface> logger) {
   if (args.options.find("topology") != args.options.end()) {
     std::string topology = args.getOptionString("topology");
     if (topology == "hil") {
@@ -217,14 +228,16 @@ std::shared_ptr<Event> getEvent(CommandLineArgs &args, SystemTopology &sys) {
     std::string event = args.getOptionString("event");
     if (event == "frequencyDrop") {
       if (topology != "hil") {
-        throw std::runtime_error("frequencyDrop event only supported for topology \"hil\".");
+        throw std::runtime_error(
+            "frequencyDrop event only supported for topology \"hil\".");
       }
       auto vs = std::dynamic_pointer_cast<VoltageSource>(sys.mComponents[0]);
       return AttributeEvent<Real>::make(3, vs->mSrcFreq, 45.);
     }
     if (event == "voltageDrop") {
       if (topology != "hil") {
-        throw std::runtime_error("voltageDrop event only supported for topology \"hil\".");
+        throw std::runtime_error(
+            "voltageDrop event only supported for topology \"hil\".");
       }
       auto vs = std::dynamic_pointer_cast<VoltageSource>(sys.mComponents[0]);
       return AttributeEvent<Real>::make(3, vs->mVoltageRef->deriveReal(), 0.7);
@@ -236,14 +249,16 @@ std::shared_ptr<Event> getEvent(CommandLineArgs &args, SystemTopology &sys) {
 int main(int argc, char *argv[]) {
   CommandLineArgs args(argc, argv, "FpgaExample", 0.01, 10 * 60, 5.);
   CPS::Logger::setLogDir("logs/" + args.name);
-  bool log = args.options.find("log") != args.options.end() && args.getOptionBool("log");
+  bool log = args.options.find("log") != args.options.end() &&
+             args.getOptionBool("log");
 
   auto intf = std::make_shared<InterfaceVillasQueueless>(
       buildFpgaConfig(args), "FpgaExample", spdlog::level::off);
   std::filesystem::path logFilename = "logs/" + args.name + "/FpgaExample.csv";
   std::shared_ptr<DataLoggerInterface> logger = nullptr;
   if (log) {
-    logger = RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
+    logger =
+        RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
   }
 
   auto sys = getTopology(args, intf, logger);
