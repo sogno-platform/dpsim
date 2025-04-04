@@ -16,3 +16,4 @@ set_target_properties(dpsimpy
 )
 target_link_libraries(dpsimpy PRIVATE dpsim)
 target_include_directories(dpsimpy PUBLIC ${DPSIMPY_INCLUDE_DIRS})
+add_dependencies(pybind dpsimpy)
