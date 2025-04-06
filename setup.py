@@ -1,4 +1,5 @@
 import os
+import shlex
 import sys
 import platform
 import subprocess
@@ -43,19 +44,19 @@ class CMakeBuild(build_ext):
 
         env = os.environ.copy()
         if env.get('CMAKE_OPTS'):
-            cmake_args += env.get('CMAKE_OPTS').split(' ')
+            cmake_args += shlex.split(env.get('CMAKE_OPTS'))
 
         # CMakeLists.txt is in the same directory as this setup.py file
-        sourcedir = os.path.abspath(os.path.dirname(__file__))
-        print(' '.join(['cmake', sourcedir] + cmake_args))
-        subprocess.check_call(
-            ['cmake', sourcedir] + cmake_args, cwd=self.build_temp, env=env
-        )
+        source_dir = os.path.abspath(os.path.dirname(__file__))
 
-        print(' '.join(['cmake', '--build', '.', '--target', 'dpsimpy'] + build_args))
-        subprocess.check_call(
-            ['cmake', '--build', '.', '--target', 'dpsimpy'] + build_args, cwd=self.build_temp
-        )
+        cmake_cmd = ['cmake', source_dir] + cmake_args
+        build_cmd = ['cmake', '--build', '.', '--target', 'pybind'] + build_args
+
+        print(shlex.join(cmake_cmd))
+        subprocess.check_call(cmake_cmd, cwd=self.build_temp, env=env)
+
+        print(shlex.join(build_cmd))
+        subprocess.check_call(build_cmd, cwd=self.build_temp)
 
 
 setup(

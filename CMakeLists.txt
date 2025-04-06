@@ -224,6 +224,10 @@ cmake_dependent_option(WITH_JSON            "Enable JSON library support"       
 cmake_dependent_option(WITH_MAGMA           "Enable MAGMA features"                 ON  "MAGMA_FOUND"      OFF)
 cmake_dependent_option(WITH_MNASOLVERPLUGIN "Enable MNASolver Plugins"              ON  "NOT WIN32"        OFF)
 
+if(WITH_PYBIND)
+	add_custom_target(pybind COMMENT "Build Python extension with pybind")
+endif()
+
 if(WITH_CUDA)
 	# BEGIN OF WORKAROUND - enable cuda dynamic linking.
 	# Starting with Cmake 3.17 we can use
