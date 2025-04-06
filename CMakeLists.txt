@@ -75,6 +75,7 @@ endif()
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
+include(GNUInstallDirs)
 include(CheckCXXCompilerFlag)
 if(MSVC)
 	# Silence Visual Studio deprecation warnings
@@ -255,6 +256,10 @@ if(WITH_CUDA)
 	# END OF WORKAROUND
 endif()
 
+if(WITH_PYBIND)
+	set(CMAKE_INSTALL_PYTHON_SITEPACKAGESDIR "${CMAKE_INSTALL_LIBDIR}/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages")
+endif()
+
 add_subdirectory(dpsim-models)
 add_subdirectory(dpsim)
 
@@ -281,7 +286,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	add_feature_info(MAGMA           WITH_MAGMA           "MAGMA features")
 	add_feature_info(MNASolverPlugin WITH_MNASOLVERPLUGIN "MNASolver Plugins")
 	add_feature_info(OpenMP          WITH_OPENMP          "OpenMP-based parallelisation")
-	add_feature_info(PyBind          WITH_PYBIND          "PyBind module")
+	add_feature_info(Pybind          WITH_PYBIND          "Python extension / bindings")
 	add_feature_info(RealTime        WITH_RT              "Extended real-time features")
 	add_feature_info(Sundials        WITH_SUNDIALS        "Sundials solvers")
 	add_feature_info(VILLASnode      WITH_VILLAS          "Interface DPsim solvers via VILLASnode interfaces")
