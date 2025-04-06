@@ -271,221 +271,224 @@ $(function() {
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;      .def(<span class="stringliteral">&quot;do_steady_state_init&quot;</span>, &amp;<a class="code" href="class_d_psim_1_1_simulation.html#ad0698b8a719dc0db1a5a0b1327c523fa">DPsim::Simulation::doSteadyStateInit</a>)</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;      .def(<span class="stringliteral">&quot;do_frequency_parallelization&quot;</span>,</div>
 <div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;           &amp;<a class="code" href="class_d_psim_1_1_simulation.html#a05fe5a45df3a400f9863d137847b3e57">DPsim::Simulation::doFrequencyParallelization</a>)</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;      .def(<span class="stringliteral">&quot;do_split_subnets&quot;</span>,</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;           &amp;DPsim::Simulation::doSplitSubnets)</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;      .def(<span class="stringliteral">&quot;set_tearing_components&quot;</span>, &amp;DPsim::Simulation::setTearingComponents)</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;      .def(<span class="stringliteral">&quot;add_event&quot;</span>, &amp;<a class="code" href="class_d_psim_1_1_simulation.html#ad4c419f1b7baccc3eefa059b3e052e7f">DPsim::Simulation::addEvent</a>)</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;      .def(<span class="stringliteral">&quot;set_solver_component_behaviour&quot;</span>,</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;           &amp;<a class="code" href="class_d_psim_1_1_simulation.html#a7a9d71f217dfef37de2d8dcb954a4cd8">DPsim::Simulation::setSolverAndComponentBehaviour</a>)</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;      .def(<span class="stringliteral">&quot;set_direct_solver_implementation&quot;</span>,</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;           &amp;DPsim::Simulation::setDirectLinearSolverImplementation)</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;      .def(<span class="stringliteral">&quot;set_direct_linear_solver_configuration&quot;</span>,</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;           &amp;DPsim::Simulation::setDirectLinearSolverConfiguration)</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;      .def(<span class="stringliteral">&quot;log_lu_times&quot;</span>, &amp;<a class="code" href="class_d_psim_1_1_simulation.html#a1416f058f5df8fc25bdc8d628033c1f4">DPsim::Simulation::logLUTimes</a>);</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;  py::class_&lt;DPsim::RealTimeSimulation, DPsim::Simulation&gt;(m,</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;                                                           <span class="stringliteral">&quot;RealTimeSimulation&quot;</span>)</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;      .def(py::init&lt;std::string, CPS::Logger::Level&gt;(), <span class="stringliteral">&quot;name&quot;</span>_a,</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;           <span class="stringliteral">&quot;loglevel&quot;</span>_a = CPS::Logger::Level::info)</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;      .def(<span class="stringliteral">&quot;name&quot;</span>, &amp;DPsim::RealTimeSimulation::name)</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;      .def(<span class="stringliteral">&quot;set_time_step&quot;</span>, &amp;DPsim::RealTimeSimulation::setTimeStep)</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;      .def(<span class="stringliteral">&quot;set_final_time&quot;</span>, &amp;DPsim::RealTimeSimulation::setFinalTime)</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;      .def(<span class="stringliteral">&quot;add_logger&quot;</span>, &amp;<a class="code" href="class_d_psim_1_1_simulation.html#a63a4772e43122e1412acfb2f5b7b646e">DPsim::RealTimeSimulation::addLogger</a>)</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;      .def(<span class="stringliteral">&quot;set_system&quot;</span>, &amp;DPsim::RealTimeSimulation::setSystem)</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;      .def(<span class="stringliteral">&quot;run&quot;</span>,</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;           <span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span> (<a class="code" href="class_d_psim_1_1_real_time_simulation.html">DPsim::RealTimeSimulation</a>::*)(CPS::Int startIn)<span class="keyword">&gt;</span>(</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;               &amp;<a class="code" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">DPsim::RealTimeSimulation::run</a>))</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;      .def(<span class="stringliteral">&quot;set_solver&quot;</span>, &amp;DPsim::RealTimeSimulation::setSolverType)</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;      .def(<span class="stringliteral">&quot;set_domain&quot;</span>, &amp;DPsim::RealTimeSimulation::setDomain);</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;  py::class_&lt;CPS::SystemTopology, std::shared_ptr&lt;CPS::SystemTopology&gt;&gt;(</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;      m, <span class="stringliteral">&quot;SystemTopology&quot;</span>)</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;      .def(py::init&lt;CPS::Real, CPS::TopologicalNode::List,</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                    CPS::IdentifiedObject::List&gt;())</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      .def(py::init&lt;CPS::Real, CPS::Matrix, CPS::TopologicalNode::List,</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                    CPS::IdentifiedObject::List&gt;())</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      .def(py::init&lt;CPS::Real&gt;())</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;      .def(<span class="stringliteral">&quot;add&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#aa53ac68ad700fd9670a93f3f1988315b">DPsim::SystemTopology::addComponent</a>)</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      .def(<span class="stringliteral">&quot;add&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a9c818fae4148fd62e5f8177e3d541491">DPsim::SystemTopology::addComponents</a>)</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;      .def(<span class="stringliteral">&quot;node&quot;</span>, py::overload_cast&lt;std::string_view&gt;(</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                       &amp;DPsim::SystemTopology::node&lt;CPS::TopologicalNode&gt;))</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;      .def(<span class="stringliteral">&quot;node&quot;</span>, py::overload_cast&lt;CPS::UInt&gt;(</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                       &amp;DPsim::SystemTopology::node&lt;CPS::TopologicalNode&gt;))</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;      .def(<span class="stringliteral">&quot;connect_component&quot;</span>,</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;           py::overload_cast&lt;CPS::SimPowerComp&lt;CPS::Real&gt;::Ptr,</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                             CPS::SimNode&lt;CPS::Real&gt;::List&gt;(</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;               &amp;DPsim::SystemTopology::connectComponentToNodes&lt;CPS::Real&gt;))</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;      .def(<span class="stringliteral">&quot;connect_component&quot;</span>,</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;           py::overload_cast&lt;CPS::SimPowerComp&lt;CPS::Complex&gt;::Ptr,</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                             CPS::SimNode&lt;CPS::Complex&gt;::List&gt;(</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;               &amp;DPsim::SystemTopology::connectComponentToNodes&lt;CPS::Complex&gt;))</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;      .def(<span class="stringliteral">&quot;component&quot;</span>,</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;           &amp;DPsim::SystemTopology::component&lt;CPS::TopologicalPowerComp&gt;)</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;      .def(<span class="stringliteral">&quot;add_tear_component&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a646f57b58f20c228888118963ec2390e">DPsim::SystemTopology::addTearComponent</a>)</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="preprocessor">#ifdef WITH_GRAPHVIZ</span></div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;      .def(<span class="stringliteral">&quot;_repr_svg_&quot;</span>, &amp;DPsim::SystemTopology::render)</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;      .def(<span class="stringliteral">&quot;render_to_file&quot;</span>, &amp;DPsim::SystemTopology::renderToFile)</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;      .def_readwrite(<span class="stringliteral">&quot;nodes&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a75e525756db0667a2dd7e60f2c4a2bba">DPsim::SystemTopology::mNodes</a>)</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;      .def_readwrite(<span class="stringliteral">&quot;components&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a2073d2d743f71e3edb0242abdba99dc0">DPsim::SystemTopology::mComponents</a>)</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;      .def_readwrite(<span class="stringliteral">&quot;components_at_node&quot;</span>,</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                     &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#af906a2c02af3ef3ac1b6160720178e68">DPsim::SystemTopology::mComponentsAtNode</a>)</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      .def_readonly(<span class="stringliteral">&quot;tear_components&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#ad2112b6748bb48b1e4efe01c89f7ecac">DPsim::SystemTopology::mTearComponents</a>)</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;      .def(<span class="stringliteral">&quot;list_idobjects&quot;</span>, &amp;DPsim::SystemTopology::listIdObjects)</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;      .def(<span class="stringliteral">&quot;init_with_powerflow&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a42b136222d8ef2b4b9dcb521ca860ee9">DPsim::SystemTopology::initWithPowerflow</a>,</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;           <span class="stringliteral">&quot;systemPF&quot;</span>_a, <span class="stringliteral">&quot;domain&quot;</span>_a)</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;      .def(<span class="stringliteral">&quot;add_component&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#aa53ac68ad700fd9670a93f3f1988315b">DPsim::SystemTopology::addComponent</a>)</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;      .def(<span class="stringliteral">&quot;add_components&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a9c818fae4148fd62e5f8177e3d541491">DPsim::SystemTopology::addComponents</a>)</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;      .def(<span class="stringliteral">&quot;remove_component&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a4e531684191248682d03cb2fc05227bd">DPsim::SystemTopology::removeComponent</a>);</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  py::class_&lt;DPsim::Interface, std::shared_ptr&lt;DPsim::Interface&gt;&gt;(m,</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                                                                  <span class="stringliteral">&quot;Interface&quot;</span>);</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;  py::class_&lt;DPsim::DataLoggerInterface, std::shared_ptr&lt;DPsim::DataLoggerInterface&gt;&gt;(m, <span class="stringliteral">&quot;DataLoggerInterface&quot;</span>)</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;           py::overload_cast&lt;<span class="keyword">const</span> CPS::String &amp;, <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>,</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                             CPS::UInt, CPS::UInt&gt;(</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;               &amp;DPsim::DataLoggerInterface::logAttribute),</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;           <span class="stringliteral">&quot;name&quot;</span>_a, <span class="stringliteral">&quot;attr&quot;</span>_a, <span class="stringliteral">&quot;max_cols&quot;</span>_a = 0, <span class="stringliteral">&quot;max_rows&quot;</span>_a = 0)</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;           py::overload_cast&lt;<span class="keyword">const</span> std::vector&lt;CPS::String&gt; &amp;,</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                             <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>&gt;(</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;               &amp;DPsim::DataLoggerInterface::logAttribute),</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;           <span class="stringliteral">&quot;names&quot;</span>_a, <span class="stringliteral">&quot;attr&quot;</span>_a)</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;           [](<a class="code" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a> &amp;logger, <span class="keyword">const</span> std::vector&lt;CPS::String&gt; &amp;names,</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;              <span class="keyword">const</span> CPS::String &amp;attr, <span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a> &amp;comp) {</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;             logger.logAttribute(names, comp.<a class="code" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">attribute</a>(attr));</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;           });</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;  py::class_&lt;DPsim::DataLogger, DPsim::DataLoggerInterface, std::shared_ptr&lt;DPsim::DataLogger&gt;&gt;(m, <span class="stringliteral">&quot;Logger&quot;</span>)</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;      .def(py::init&lt;std::string&gt;())</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;      .def_static(<span class="stringliteral">&quot;set_log_dir&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_logger.html#a889b39f1266c4084542c57705d3147eb">CPS::Logger::setLogDir</a>)</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;      .def_static(<span class="stringliteral">&quot;get_log_dir&quot;</span>, &amp;CPS::Logger::logDir)</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;           py::overload_cast&lt;<span class="keyword">const</span> CPS::String &amp;, <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>,</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;                             CPS::UInt, CPS::UInt&gt;(</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;               &amp;DPsim::DataLogger::logAttribute),</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;           <span class="stringliteral">&quot;name&quot;</span>_a, <span class="stringliteral">&quot;attr&quot;</span>_a, <span class="stringliteral">&quot;max_cols&quot;</span>_a = 0, <span class="stringliteral">&quot;max_rows&quot;</span>_a = 0)</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;           py::overload_cast&lt;<span class="keyword">const</span> std::vector&lt;CPS::String&gt; &amp;,</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                             <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>&gt;(</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;               &amp;DPsim::DataLogger::logAttribute),</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;           <span class="stringliteral">&quot;names&quot;</span>_a, <span class="stringliteral">&quot;attr&quot;</span>_a)</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;      .def(</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;          <span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;          [](<a class="code" href="class_d_psim_1_1_data_logger.html">DPsim::DataLogger</a> &amp;logger, <span class="keyword">const</span> CPS::String &amp;name,</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;             <span class="keyword">const</span> CPS::String &amp;attr, <span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a> &amp;comp,</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;             CPS::UInt rowsMax, CPS::UInt colsMax) {</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;            logger.logAttribute(name, comp.<a class="code" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">attribute</a>(attr), rowsMax, colsMax);</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;          },</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;          <span class="stringliteral">&quot;name&quot;</span>_a, <span class="stringliteral">&quot;attr&quot;</span>_a, <span class="stringliteral">&quot;comp&quot;</span>_a, <span class="stringliteral">&quot;rows_max&quot;</span>_a = 0, <span class="stringliteral">&quot;cols_max&quot;</span>_a = 0)</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;           [](<a class="code" href="class_d_psim_1_1_data_logger.html">DPsim::DataLogger</a> &amp;logger, <span class="keyword">const</span> std::vector&lt;CPS::String&gt; &amp;names,</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;              <span class="keyword">const</span> CPS::String &amp;attr, <span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a> &amp;comp) {</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;             logger.logAttribute(names, comp.<a class="code" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">attribute</a>(attr));</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;           });</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;  py::class_&lt;CPS::IdentifiedObject, std::shared_ptr&lt;CPS::IdentifiedObject&gt;&gt;(</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;      m, <span class="stringliteral">&quot;IdentifiedObject&quot;</span>)</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;      .def(<span class="stringliteral">&quot;name&quot;</span>, &amp;CPS::IdentifiedObject::name)</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;      .def(<span class="stringliteral">&quot;attr&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">CPS::IdentifiedObject::attribute</a>, <span class="stringliteral">&quot;name&quot;</span>_a)</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;      .def(<span class="stringliteral">&quot;print_attribute_list&quot;</span>, &amp;printAttributes)</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;      .def(<span class="stringliteral">&quot;print_attribute&quot;</span>, &amp;printAttribute, <span class="stringliteral">&quot;attribute_name&quot;</span>_a)</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;      .def(<span class="stringliteral">&quot;__str__&quot;</span>, &amp;getAttributeList);</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160; </div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="preprocessor">#ifdef WITH_CIM</span></div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;  py::class_&lt;CPS::CIM::Reader&gt;(m, <span class="stringliteral">&quot;CIMReader&quot;</span>)</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;      .def(py::init&lt;std::string, CPS::Logger::Level, CPS::Logger::Level&gt;(),</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;           <span class="stringliteral">&quot;name&quot;</span>_a, <span class="stringliteral">&quot;loglevel&quot;</span>_a = CPS::Logger::Level::info,</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;           <span class="stringliteral">&quot;comploglevel&quot;</span>_a = CPS::Logger::Level::off)</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;      .def(<span class="stringliteral">&quot;loadCIM&quot;</span>, (<a class="code" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a>(<a class="code" href="class_c_p_s_1_1_c_i_m_1_1_reader.html">CPS::CIM::Reader</a>::*)(</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;                          CPS::Real, <span class="keyword">const</span> std::list&lt;CPS::String&gt; &amp;,</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;                          CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &amp;</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;                          <a class="code" href="class_c_p_s_1_1_c_i_m_1_1_reader.html#a450d6c419d1fc7845d5b402ab2094ce7">CPS::CIM::Reader::loadCIM</a>);</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160; </div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;  py::class_&lt;CPS::CSVReader&gt;(m, <span class="stringliteral">&quot;CSVReader&quot;</span>)</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;      .def(py::init&lt;std::string, <span class="keyword">const</span> std::string &amp;,</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;                    std::map&lt;std::string, std::string&gt; &amp;, CPS::Logger::Level&gt;())</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;      .def(<span class="stringliteral">&quot;assignLoadProfile&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_c_s_v_reader.html#aee322f4b844dce6629b34aaa49e2a736">CPS::CSVReader::assignLoadProfile</a>);</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160; </div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;  <span class="comment">//Base Classes</span></div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160; </div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;  py::class_&lt;<a class="code" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a>,</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;             std::shared_ptr&lt;CPS::TopologicalPowerComp&gt;, <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a>&gt;(</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;      m, <span class="stringliteral">&quot;TopologicalPowerComp&quot;</span>);</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;  py::class_&lt;CPS::SimPowerComp&lt;CPS::Complex&gt;,</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;             std::shared_ptr&lt;CPS::SimPowerComp&lt;CPS::Complex&gt;&gt;,</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;             <a class="code" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a>&gt;(m, <span class="stringliteral">&quot;SimPowerCompComplex&quot;</span>)</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;      .def(<span class="stringliteral">&quot;connect&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Complex&gt;::connect</a>)</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;      .def(<span class="stringliteral">&quot;set_intf_current&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Complex&gt;::setIntfCurrent</a>)</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;      .def(<span class="stringliteral">&quot;set_intf_voltage&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Complex&gt;::setIntfVoltage</a>)</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;      .def(<span class="stringliteral">&quot;get_terminal&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Complex&gt;::terminal</a>,</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;           <span class="stringliteral">&quot;index&quot;</span>_a);</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;  py::class_&lt;CPS::SimPowerComp&lt;CPS::Real&gt;,</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;             std::shared_ptr&lt;CPS::SimPowerComp&lt;CPS::Real&gt;&gt;,</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;             <a class="code" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a>&gt;(m, <span class="stringliteral">&quot;SimPowerCompReal&quot;</span>)</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;      .def(<span class="stringliteral">&quot;connect&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Real&gt;::connect</a>)</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;      .def(<span class="stringliteral">&quot;set_intf_current&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Real&gt;::setIntfCurrent</a>)</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;      .def(<span class="stringliteral">&quot;set_intf_voltage&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Real&gt;::setIntfVoltage</a>)</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;      .def(<span class="stringliteral">&quot;get_terminal&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Real&gt;::terminal</a>, <span class="stringliteral">&quot;index&quot;</span>_a);</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;  py::class_&lt;CPS::TopologicalNode, std::shared_ptr&lt;CPS::TopologicalNode&gt;,</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;             <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a>&gt;(m, <span class="stringliteral">&quot;TopologicalNode&quot;</span>)</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;      .def(<span class="stringliteral">&quot;initial_single_voltage&quot;</span>,</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;           &amp;CPS::TopologicalNode::initialSingleVoltage,</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;           <span class="stringliteral">&quot;phase_type&quot;</span>_a = CPS::PhaseType::Single);</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160; </div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;  py::class_&lt;<a class="code" href="class_c_p_s_1_1_topological_terminal.html">CPS::TopologicalTerminal</a>,</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;             std::shared_ptr&lt;CPS::TopologicalTerminal&gt;, <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a>&gt;(</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;      m, <span class="stringliteral">&quot;TopologicalTerminal&quot;</span>)</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;      .def(<span class="stringliteral">&quot;set_power&quot;</span>,</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;           py::overload_cast&lt;CPS::Complex&gt;(&amp;CPS::TopologicalTerminal::setPower))</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;      .def(<span class="stringliteral">&quot;set_power&quot;</span>, py::overload_cast&lt;CPS::MatrixComp&gt;(</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;                            &amp;CPS::TopologicalTerminal::setPower));</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160; </div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;  py::class_&lt;CPS::SimTerminal&lt;CPS::Complex&gt;,</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;             std::shared_ptr&lt;CPS::SimTerminal&lt;CPS::Complex&gt;&gt;,</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;             <a class="code" href="class_c_p_s_1_1_topological_terminal.html">CPS::TopologicalTerminal</a>&gt;(m, <span class="stringliteral">&quot;SimTerminalComplex&quot;</span>);</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;  py::class_&lt;CPS::SimTerminal&lt;CPS::Real&gt;,</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;             std::shared_ptr&lt;CPS::SimTerminal&lt;CPS::Real&gt;&gt;,</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;             <a class="code" href="class_c_p_s_1_1_topological_terminal.html">CPS::TopologicalTerminal</a>&gt;(m, <span class="stringliteral">&quot;SimTerminalReal&quot;</span>);</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160; </div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;  <span class="comment">//Events</span></div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;  py::module mEvent = m.def_submodule(<span class="stringliteral">&quot;event&quot;</span>, <span class="stringliteral">&quot;events&quot;</span>);</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;  py::class_&lt;DPsim::Event, std::shared_ptr&lt;DPsim::Event&gt;&gt;(mEvent, <span class="stringliteral">&quot;Event&quot;</span>);</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;  py::class_&lt;DPsim::SwitchEvent, std::shared_ptr&lt;DPsim::SwitchEvent&gt;,</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;             <a class="code" href="class_d_psim_1_1_event.html">DPsim::Event</a>&gt;(mEvent, <span class="stringliteral">&quot;SwitchEvent&quot;</span>, py::multiple_inheritance())</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;      .def(py::init&lt;CPS::Real, <span class="keyword">const</span> std::shared_ptr&lt;CPS::Base::Ph1::Switch&gt;,</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;                    CPS::Bool&gt;());</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;  py::class_&lt;DPsim::SwitchEvent3Ph, std::shared_ptr&lt;DPsim::SwitchEvent3Ph&gt;,</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;             <a class="code" href="class_d_psim_1_1_event.html">DPsim::Event</a>&gt;(mEvent, <span class="stringliteral">&quot;SwitchEvent3Ph&quot;</span>, py::multiple_inheritance())</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;      .def(py::init&lt;CPS::Real, <span class="keyword">const</span> std::shared_ptr&lt;CPS::Base::Ph3::Switch&gt;,</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;                    CPS::Bool&gt;());</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160; </div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;  <span class="comment">//Components</span></div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;  py::module mBase = m.def_submodule(<span class="stringliteral">&quot;base&quot;</span>, <span class="stringliteral">&quot;base models&quot;</span>);</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;  addBaseComponents(mBase);</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160; </div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;  py::module mDP = m.def_submodule(<span class="stringliteral">&quot;dp&quot;</span>, <span class="stringliteral">&quot;dynamic phasor models&quot;</span>);</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;  addDPComponents(mDP);</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;      .def(<span class="stringliteral">&quot;do_split_subnets&quot;</span>, &amp;DPsim::Simulation::doSplitSubnets)</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;      .def(<span class="stringliteral">&quot;set_tearing_components&quot;</span>, &amp;DPsim::Simulation::setTearingComponents)</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;      .def(<span class="stringliteral">&quot;add_event&quot;</span>, &amp;<a class="code" href="class_d_psim_1_1_simulation.html#ad4c419f1b7baccc3eefa059b3e052e7f">DPsim::Simulation::addEvent</a>)</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;      .def(<span class="stringliteral">&quot;set_solver_component_behaviour&quot;</span>,</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;           &amp;<a class="code" href="class_d_psim_1_1_simulation.html#a7a9d71f217dfef37de2d8dcb954a4cd8">DPsim::Simulation::setSolverAndComponentBehaviour</a>)</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;      .def(<span class="stringliteral">&quot;set_direct_solver_implementation&quot;</span>,</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;           &amp;DPsim::Simulation::setDirectLinearSolverImplementation)</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;      .def(<span class="stringliteral">&quot;set_direct_linear_solver_configuration&quot;</span>,</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;           &amp;DPsim::Simulation::setDirectLinearSolverConfiguration)</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;      .def(<span class="stringliteral">&quot;log_lu_times&quot;</span>, &amp;<a class="code" href="class_d_psim_1_1_simulation.html#a1416f058f5df8fc25bdc8d628033c1f4">DPsim::Simulation::logLUTimes</a>);</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;  py::class_&lt;DPsim::RealTimeSimulation, DPsim::Simulation&gt;(m,</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;                                                           <span class="stringliteral">&quot;RealTimeSimulation&quot;</span>)</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;      .def(py::init&lt;std::string, CPS::Logger::Level&gt;(), <span class="stringliteral">&quot;name&quot;</span>_a,</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;           <span class="stringliteral">&quot;loglevel&quot;</span>_a = CPS::Logger::Level::info)</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;      .def(<span class="stringliteral">&quot;name&quot;</span>, &amp;DPsim::RealTimeSimulation::name)</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;      .def(<span class="stringliteral">&quot;set_time_step&quot;</span>, &amp;DPsim::RealTimeSimulation::setTimeStep)</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;      .def(<span class="stringliteral">&quot;set_final_time&quot;</span>, &amp;DPsim::RealTimeSimulation::setFinalTime)</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;      .def(<span class="stringliteral">&quot;add_logger&quot;</span>, &amp;<a class="code" href="class_d_psim_1_1_simulation.html#a63a4772e43122e1412acfb2f5b7b646e">DPsim::RealTimeSimulation::addLogger</a>)</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;      .def(<span class="stringliteral">&quot;set_system&quot;</span>, &amp;DPsim::RealTimeSimulation::setSystem)</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;      .def(<span class="stringliteral">&quot;run&quot;</span>,</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;           <span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span> (<a class="code" href="class_d_psim_1_1_real_time_simulation.html">DPsim::RealTimeSimulation</a>::*)(CPS::Int startIn)<span class="keyword">&gt;</span>(</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;               &amp;<a class="code" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">DPsim::RealTimeSimulation::run</a>))</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;      .def(<span class="stringliteral">&quot;set_solver&quot;</span>, &amp;DPsim::RealTimeSimulation::setSolverType)</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;      .def(<span class="stringliteral">&quot;set_domain&quot;</span>, &amp;DPsim::RealTimeSimulation::setDomain);</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;  py::class_&lt;CPS::SystemTopology, std::shared_ptr&lt;CPS::SystemTopology&gt;&gt;(</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;      m, <span class="stringliteral">&quot;SystemTopology&quot;</span>)</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;      .def(py::init&lt;CPS::Real, CPS::TopologicalNode::List,</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;                    CPS::IdentifiedObject::List&gt;())</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;      .def(py::init&lt;CPS::Real, CPS::Matrix, CPS::TopologicalNode::List,</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                    CPS::IdentifiedObject::List&gt;())</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;      .def(py::init&lt;CPS::Real&gt;())</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      .def(<span class="stringliteral">&quot;add&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#aa53ac68ad700fd9670a93f3f1988315b">DPsim::SystemTopology::addComponent</a>)</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;      .def(<span class="stringliteral">&quot;add&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a9c818fae4148fd62e5f8177e3d541491">DPsim::SystemTopology::addComponents</a>)</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      .def(<span class="stringliteral">&quot;node&quot;</span>, py::overload_cast&lt;std::string_view&gt;(</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                       &amp;DPsim::SystemTopology::node&lt;CPS::TopologicalNode&gt;))</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;      .def(<span class="stringliteral">&quot;node&quot;</span>, py::overload_cast&lt;CPS::UInt&gt;(</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;                       &amp;DPsim::SystemTopology::node&lt;CPS::TopologicalNode&gt;))</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;      .def(<span class="stringliteral">&quot;connect_component&quot;</span>,</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;           py::overload_cast&lt;CPS::SimPowerComp&lt;CPS::Real&gt;::Ptr,</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                             CPS::SimNode&lt;CPS::Real&gt;::List&gt;(</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;               &amp;DPsim::SystemTopology::connectComponentToNodes&lt;CPS::Real&gt;))</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;      .def(<span class="stringliteral">&quot;connect_component&quot;</span>,</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;           py::overload_cast&lt;CPS::SimPowerComp&lt;CPS::Complex&gt;::Ptr,</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                             CPS::SimNode&lt;CPS::Complex&gt;::List&gt;(</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;               &amp;DPsim::SystemTopology::connectComponentToNodes&lt;CPS::Complex&gt;))</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;      .def(<span class="stringliteral">&quot;component&quot;</span>,</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;           &amp;DPsim::SystemTopology::component&lt;CPS::TopologicalPowerComp&gt;)</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;      .def(<span class="stringliteral">&quot;add_tear_component&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a646f57b58f20c228888118963ec2390e">DPsim::SystemTopology::addTearComponent</a>)</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="preprocessor">#ifdef WITH_GRAPHVIZ</span></div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;      .def(<span class="stringliteral">&quot;_repr_svg_&quot;</span>, &amp;DPsim::SystemTopology::render)</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;      .def(<span class="stringliteral">&quot;render_to_file&quot;</span>, &amp;DPsim::SystemTopology::renderToFile)</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;      .def_readwrite(<span class="stringliteral">&quot;nodes&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a75e525756db0667a2dd7e60f2c4a2bba">DPsim::SystemTopology::mNodes</a>)</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;      .def_readwrite(<span class="stringliteral">&quot;components&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a2073d2d743f71e3edb0242abdba99dc0">DPsim::SystemTopology::mComponents</a>)</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;      .def_readwrite(<span class="stringliteral">&quot;components_at_node&quot;</span>,</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                     &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#af906a2c02af3ef3ac1b6160720178e68">DPsim::SystemTopology::mComponentsAtNode</a>)</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      .def_readonly(<span class="stringliteral">&quot;tear_components&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#ad2112b6748bb48b1e4efe01c89f7ecac">DPsim::SystemTopology::mTearComponents</a>)</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      .def(<span class="stringliteral">&quot;list_idobjects&quot;</span>, &amp;DPsim::SystemTopology::listIdObjects)</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;      .def(<span class="stringliteral">&quot;init_with_powerflow&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a42b136222d8ef2b4b9dcb521ca860ee9">DPsim::SystemTopology::initWithPowerflow</a>,</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;           <span class="stringliteral">&quot;systemPF&quot;</span>_a, <span class="stringliteral">&quot;domain&quot;</span>_a)</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;      .def(<span class="stringliteral">&quot;add_component&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#aa53ac68ad700fd9670a93f3f1988315b">DPsim::SystemTopology::addComponent</a>)</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;      .def(<span class="stringliteral">&quot;add_components&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a9c818fae4148fd62e5f8177e3d541491">DPsim::SystemTopology::addComponents</a>)</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;      .def(<span class="stringliteral">&quot;remove_component&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_system_topology.html#a4e531684191248682d03cb2fc05227bd">DPsim::SystemTopology::removeComponent</a>);</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;  py::class_&lt;DPsim::Interface, std::shared_ptr&lt;DPsim::Interface&gt;&gt;(m,</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                                                                  <span class="stringliteral">&quot;Interface&quot;</span>);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;  py::class_&lt;<a class="code" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a>,</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;             std::shared_ptr&lt;DPsim::DataLoggerInterface&gt;&gt;(m,</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                                                          <span class="stringliteral">&quot;DataLoggerInterface&quot;</span>)</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;           py::overload_cast&lt;<span class="keyword">const</span> CPS::String &amp;, <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>,</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                             CPS::UInt, CPS::UInt&gt;(</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;               &amp;DPsim::DataLoggerInterface::logAttribute),</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;           <span class="stringliteral">&quot;name&quot;</span>_a, <span class="stringliteral">&quot;attr&quot;</span>_a, <span class="stringliteral">&quot;max_cols&quot;</span>_a = 0, <span class="stringliteral">&quot;max_rows&quot;</span>_a = 0)</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;           py::overload_cast&lt;<span class="keyword">const</span> std::vector&lt;CPS::String&gt; &amp;,</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;                             <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>&gt;(</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;               &amp;DPsim::DataLoggerInterface::logAttribute),</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;           <span class="stringliteral">&quot;names&quot;</span>_a, <span class="stringliteral">&quot;attr&quot;</span>_a)</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;           [](<a class="code" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a> &amp;logger,</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;              <span class="keyword">const</span> std::vector&lt;CPS::String&gt; &amp;names, <span class="keyword">const</span> CPS::String &amp;attr,</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;              <span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a> &amp;comp) {</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;             logger.logAttribute(names, comp.<a class="code" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">attribute</a>(attr));</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;           });</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;  py::class_&lt;<a class="code" href="class_d_psim_1_1_data_logger.html">DPsim::DataLogger</a>, <a class="code" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a>,</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;             std::shared_ptr&lt;DPsim::DataLogger&gt;&gt;(m, <span class="stringliteral">&quot;Logger&quot;</span>)</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;      .def(py::init&lt;std::string&gt;())</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;      .def_static(<span class="stringliteral">&quot;set_log_dir&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_logger.html#a889b39f1266c4084542c57705d3147eb">CPS::Logger::setLogDir</a>)</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;      .def_static(<span class="stringliteral">&quot;get_log_dir&quot;</span>, &amp;CPS::Logger::logDir)</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;           py::overload_cast&lt;<span class="keyword">const</span> CPS::String &amp;, <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>,</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;                             CPS::UInt, CPS::UInt&gt;(</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;               &amp;DPsim::DataLogger::logAttribute),</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;           <span class="stringliteral">&quot;name&quot;</span>_a, <span class="stringliteral">&quot;attr&quot;</span>_a, <span class="stringliteral">&quot;max_cols&quot;</span>_a = 0, <span class="stringliteral">&quot;max_rows&quot;</span>_a = 0)</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;           py::overload_cast&lt;<span class="keyword">const</span> std::vector&lt;CPS::String&gt; &amp;,</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;                             <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>&gt;(</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;               &amp;DPsim::DataLogger::logAttribute),</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;           <span class="stringliteral">&quot;names&quot;</span>_a, <span class="stringliteral">&quot;attr&quot;</span>_a)</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;      .def(</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;          <span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;          [](<a class="code" href="class_d_psim_1_1_data_logger.html">DPsim::DataLogger</a> &amp;logger, <span class="keyword">const</span> CPS::String &amp;name,</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;             <span class="keyword">const</span> CPS::String &amp;attr, <span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a> &amp;comp,</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;             CPS::UInt rowsMax, CPS::UInt colsMax) {</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;            logger.logAttribute(name, comp.<a class="code" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">attribute</a>(attr), rowsMax, colsMax);</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;          },</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;          <span class="stringliteral">&quot;name&quot;</span>_a, <span class="stringliteral">&quot;attr&quot;</span>_a, <span class="stringliteral">&quot;comp&quot;</span>_a, <span class="stringliteral">&quot;rows_max&quot;</span>_a = 0, <span class="stringliteral">&quot;cols_max&quot;</span>_a = 0)</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;      .def(<span class="stringliteral">&quot;log_attribute&quot;</span>,</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;           [](<a class="code" href="class_d_psim_1_1_data_logger.html">DPsim::DataLogger</a> &amp;logger, <span class="keyword">const</span> std::vector&lt;CPS::String&gt; &amp;names,</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;              <span class="keyword">const</span> CPS::String &amp;attr, <span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a> &amp;comp) {</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;             logger.logAttribute(names, comp.<a class="code" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">attribute</a>(attr));</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;           });</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;  py::class_&lt;CPS::IdentifiedObject, std::shared_ptr&lt;CPS::IdentifiedObject&gt;&gt;(</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;      m, <span class="stringliteral">&quot;IdentifiedObject&quot;</span>)</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;      .def(<span class="stringliteral">&quot;name&quot;</span>, &amp;CPS::IdentifiedObject::name)</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;      .def(<span class="stringliteral">&quot;attr&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">CPS::IdentifiedObject::attribute</a>, <span class="stringliteral">&quot;name&quot;</span>_a)</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;      .def(<span class="stringliteral">&quot;print_attribute_list&quot;</span>, &amp;printAttributes)</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;      .def(<span class="stringliteral">&quot;print_attribute&quot;</span>, &amp;printAttribute, <span class="stringliteral">&quot;attribute_name&quot;</span>_a)</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;      .def(<span class="stringliteral">&quot;__str__&quot;</span>, &amp;getAttributeList);</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="preprocessor">#ifdef WITH_CIM</span></div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;  py::class_&lt;CPS::CIM::Reader&gt;(m, <span class="stringliteral">&quot;CIMReader&quot;</span>)</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;      .def(py::init&lt;std::string, CPS::Logger::Level, CPS::Logger::Level&gt;(),</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;           <span class="stringliteral">&quot;name&quot;</span>_a, <span class="stringliteral">&quot;loglevel&quot;</span>_a = CPS::Logger::Level::info,</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;           <span class="stringliteral">&quot;comploglevel&quot;</span>_a = CPS::Logger::Level::off)</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;      .def(<span class="stringliteral">&quot;loadCIM&quot;</span>, (<a class="code" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a>(<a class="code" href="class_c_p_s_1_1_c_i_m_1_1_reader.html">CPS::CIM::Reader</a>::*)(</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;                          CPS::Real, <span class="keyword">const</span> std::list&lt;CPS::String&gt; &amp;,</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;                          CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &amp;</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                          <a class="code" href="class_c_p_s_1_1_c_i_m_1_1_reader.html#a450d6c419d1fc7845d5b402ab2094ce7">CPS::CIM::Reader::loadCIM</a>);</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;  py::class_&lt;CPS::CSVReader&gt;(m, <span class="stringliteral">&quot;CSVReader&quot;</span>)</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;      .def(py::init&lt;std::string, <span class="keyword">const</span> std::string &amp;,</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;                    std::map&lt;std::string, std::string&gt; &amp;, CPS::Logger::Level&gt;())</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;      .def(<span class="stringliteral">&quot;assignLoadProfile&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_c_s_v_reader.html#aee322f4b844dce6629b34aaa49e2a736">CPS::CSVReader::assignLoadProfile</a>);</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160; </div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;  <span class="comment">//Base Classes</span></div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;  py::class_&lt;<a class="code" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a>,</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;             std::shared_ptr&lt;CPS::TopologicalPowerComp&gt;, <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a>&gt;(</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;      m, <span class="stringliteral">&quot;TopologicalPowerComp&quot;</span>);</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;  py::class_&lt;CPS::SimPowerComp&lt;CPS::Complex&gt;,</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;             std::shared_ptr&lt;CPS::SimPowerComp&lt;CPS::Complex&gt;&gt;,</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;             <a class="code" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a>&gt;(m, <span class="stringliteral">&quot;SimPowerCompComplex&quot;</span>)</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;      .def(<span class="stringliteral">&quot;connect&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Complex&gt;::connect</a>)</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;      .def(<span class="stringliteral">&quot;set_intf_current&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Complex&gt;::setIntfCurrent</a>)</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;      .def(<span class="stringliteral">&quot;set_intf_voltage&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Complex&gt;::setIntfVoltage</a>)</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;      .def(<span class="stringliteral">&quot;get_terminal&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Complex&gt;::terminal</a>,</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;           <span class="stringliteral">&quot;index&quot;</span>_a);</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;  py::class_&lt;CPS::SimPowerComp&lt;CPS::Real&gt;,</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;             std::shared_ptr&lt;CPS::SimPowerComp&lt;CPS::Real&gt;&gt;,</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;             <a class="code" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a>&gt;(m, <span class="stringliteral">&quot;SimPowerCompReal&quot;</span>)</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;      .def(<span class="stringliteral">&quot;connect&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Real&gt;::connect</a>)</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;      .def(<span class="stringliteral">&quot;set_intf_current&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Real&gt;::setIntfCurrent</a>)</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;      .def(<span class="stringliteral">&quot;set_intf_voltage&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Real&gt;::setIntfVoltage</a>)</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;      .def(<span class="stringliteral">&quot;get_terminal&quot;</span>, &amp;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt;CPS::Real&gt;::terminal</a>, <span class="stringliteral">&quot;index&quot;</span>_a);</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;  py::class_&lt;CPS::TopologicalNode, std::shared_ptr&lt;CPS::TopologicalNode&gt;,</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;             <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a>&gt;(m, <span class="stringliteral">&quot;TopologicalNode&quot;</span>)</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;      .def(<span class="stringliteral">&quot;initial_single_voltage&quot;</span>,</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;           &amp;CPS::TopologicalNode::initialSingleVoltage,</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;           <span class="stringliteral">&quot;phase_type&quot;</span>_a = CPS::PhaseType::Single);</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;  py::class_&lt;<a class="code" href="class_c_p_s_1_1_topological_terminal.html">CPS::TopologicalTerminal</a>,</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;             std::shared_ptr&lt;CPS::TopologicalTerminal&gt;, <a class="code" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a>&gt;(</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;      m, <span class="stringliteral">&quot;TopologicalTerminal&quot;</span>)</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;      .def(<span class="stringliteral">&quot;set_power&quot;</span>,</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;           py::overload_cast&lt;CPS::Complex&gt;(&amp;CPS::TopologicalTerminal::setPower))</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;      .def(<span class="stringliteral">&quot;set_power&quot;</span>, py::overload_cast&lt;CPS::MatrixComp&gt;(</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;                            &amp;CPS::TopologicalTerminal::setPower));</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160; </div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;  py::class_&lt;CPS::SimTerminal&lt;CPS::Complex&gt;,</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;             std::shared_ptr&lt;CPS::SimTerminal&lt;CPS::Complex&gt;&gt;,</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;             <a class="code" href="class_c_p_s_1_1_topological_terminal.html">CPS::TopologicalTerminal</a>&gt;(m, <span class="stringliteral">&quot;SimTerminalComplex&quot;</span>);</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;  py::class_&lt;CPS::SimTerminal&lt;CPS::Real&gt;,</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;             std::shared_ptr&lt;CPS::SimTerminal&lt;CPS::Real&gt;&gt;,</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;             <a class="code" href="class_c_p_s_1_1_topological_terminal.html">CPS::TopologicalTerminal</a>&gt;(m, <span class="stringliteral">&quot;SimTerminalReal&quot;</span>);</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160; </div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;  <span class="comment">//Events</span></div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;  py::module mEvent = m.def_submodule(<span class="stringliteral">&quot;event&quot;</span>, <span class="stringliteral">&quot;events&quot;</span>);</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;  py::class_&lt;DPsim::Event, std::shared_ptr&lt;DPsim::Event&gt;&gt;(mEvent, <span class="stringliteral">&quot;Event&quot;</span>);</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;  py::class_&lt;DPsim::SwitchEvent, std::shared_ptr&lt;DPsim::SwitchEvent&gt;,</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;             <a class="code" href="class_d_psim_1_1_event.html">DPsim::Event</a>&gt;(mEvent, <span class="stringliteral">&quot;SwitchEvent&quot;</span>, py::multiple_inheritance())</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;      .def(py::init&lt;CPS::Real, <span class="keyword">const</span> std::shared_ptr&lt;CPS::Base::Ph1::Switch&gt;,</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;                    CPS::Bool&gt;());</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;  py::class_&lt;DPsim::SwitchEvent3Ph, std::shared_ptr&lt;DPsim::SwitchEvent3Ph&gt;,</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;             <a class="code" href="class_d_psim_1_1_event.html">DPsim::Event</a>&gt;(mEvent, <span class="stringliteral">&quot;SwitchEvent3Ph&quot;</span>, py::multiple_inheritance())</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;      .def(py::init&lt;CPS::Real, <span class="keyword">const</span> std::shared_ptr&lt;CPS::Base::Ph3::Switch&gt;,</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;                    CPS::Bool&gt;());</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160; </div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;  <span class="comment">//Components</span></div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;  py::module mBase = m.def_submodule(<span class="stringliteral">&quot;base&quot;</span>, <span class="stringliteral">&quot;base models&quot;</span>);</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;  addBaseComponents(mBase);</div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160; </div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;  py::module mEMT = m.def_submodule(<span class="stringliteral">&quot;emt&quot;</span>, <span class="stringliteral">&quot;electromagnetic-transient models&quot;</span>);</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;  addEMTComponents(mEMT);</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;  py::module mDP = m.def_submodule(<span class="stringliteral">&quot;dp&quot;</span>, <span class="stringliteral">&quot;dynamic phasor models&quot;</span>);</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;  addDPComponents(mDP);</div>
 <div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160; </div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;  py::module mSP = m.def_submodule(<span class="stringliteral">&quot;sp&quot;</span>, <span class="stringliteral">&quot;static phasor models&quot;</span>);</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;  mSP.attr(<span class="stringliteral">&quot;SimNode&quot;</span>) = mDP.attr(<span class="stringliteral">&quot;SimNode&quot;</span>);</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;  addSPComponents(mSP);</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160; </div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;  py::module mSignal = m.def_submodule(<span class="stringliteral">&quot;signal&quot;</span>, <span class="stringliteral">&quot;signal models&quot;</span>);</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;  addSignalComponents(mSignal);</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;  py::module mEMT = m.def_submodule(<span class="stringliteral">&quot;emt&quot;</span>, <span class="stringliteral">&quot;electromagnetic-transient models&quot;</span>);</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;  addEMTComponents(mEMT);</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160; </div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;  py::module mSP = m.def_submodule(<span class="stringliteral">&quot;sp&quot;</span>, <span class="stringliteral">&quot;static phasor models&quot;</span>);</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;  mSP.attr(<span class="stringliteral">&quot;SimNode&quot;</span>) = mDP.attr(<span class="stringliteral">&quot;SimNode&quot;</span>);</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;  addSPComponents(mSP);</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;<span class="preprocessor">#ifdef VERSION_INFO</span></div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;  m.attr(<span class="stringliteral">&quot;__version__&quot;</span>) = VERSION_INFO;</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;  m.attr(<span class="stringliteral">&quot;__version__&quot;</span>) = <span class="stringliteral">&quot;dev&quot;</span>;</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;}</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;  py::module mSignal = m.def_submodule(<span class="stringliteral">&quot;signal&quot;</span>, <span class="stringliteral">&quot;signal models&quot;</span>);</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;  addSignalComponents(mSignal);</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160; </div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;<span class="preprocessor">#ifdef VERSION_INFO</span></div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;  m.attr(<span class="stringliteral">&quot;__version__&quot;</span>) = VERSION_INFO;</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;  m.attr(<span class="stringliteral">&quot;__version__&quot;</span>) = <span class="stringliteral">&quot;dev&quot;</span>;</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;}</div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_pointer_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributePointer</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00046">Attribute.h:46</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_c_i_m_1_1_reader_html"><div class="ttname"><a href="class_c_p_s_1_1_c_i_m_1_1_reader.html">CPS::CIM::Reader</a></div><div class="ttdef"><b>Definition:</b> <a href="_reader_8h_source.html#l00059">Reader.h:59</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_c_i_m_1_1_reader_html_a450d6c419d1fc7845d5b402ab2094ce7"><div class="ttname"><a href="class_c_p_s_1_1_c_i_m_1_1_reader.html#a450d6c419d1fc7845d5b402ab2094ce7">CPS::CIM::Reader::loadCIM</a></div><div class="ttdeci">SystemTopology loadCIM(Real systemFrequency, const fs::path &amp;filename, Domain domain=Domain::DP, PhaseType phase=PhaseType::Single, GeneratorType genType=GeneratorType::None)</div><div class="ttdoc">Parses data from CIM files into the CPS data structure.</div><div class="ttdef"><b>Definition:</b> <a href="_reader_8cpp_source.html#l00209">Reader.cpp:209</a></div></div>
@@ -509,7 +512,7 @@ $(function() {
 <div class="ttc" id="aclass_c_p_s_1_1_system_topology_html_af906a2c02af3ef3ac1b6160720178e68"><div class="ttname"><a href="class_c_p_s_1_1_system_topology.html#af906a2c02af3ef3ac1b6160720178e68">CPS::SystemTopology::mComponentsAtNode</a></div><div class="ttdeci">std::map&lt; TopologicalNode::Ptr, TopologicalPowerComp::List &gt; mComponentsAtNode</div><div class="ttdoc">Map of network components connected to network nodes.</div><div class="ttdef"><b>Definition:</b> <a href="_system_topology_8h_source.html#l00037">SystemTopology.h:37</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_topological_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a></div><div class="ttdef"><b>Definition:</b> <a href="_topological_power_comp_8h_source.html#l00024">TopologicalPowerComp.h:24</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_topological_terminal_html"><div class="ttname"><a href="class_c_p_s_1_1_topological_terminal.html">CPS::TopologicalTerminal</a></div><div class="ttdef"><b>Definition:</b> <a href="_topological_terminal_8h_source.html#l00017">TopologicalTerminal.h:17</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_data_logger_html"><div class="ttname"><a href="class_d_psim_1_1_data_logger.html">DPsim::DataLogger</a></div><div class="ttdef"><b>Definition:</b> <a href="_data_logger_8h_source.html#l00026">DataLogger.h:26</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_data_logger_html"><div class="ttname"><a href="class_d_psim_1_1_data_logger.html">DPsim::DataLogger</a></div><div class="ttdef"><b>Definition:</b> <a href="_data_logger_8h_source.html#l00026">DataLogger.h:27</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_data_logger_interface_html"><div class="ttname"><a href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></div><div class="ttdef"><b>Definition:</b> <a href="_data_logger_interface_8h_source.html#l00021">DataLoggerInterface.h:21</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html">DPsim::DirectLinearSolverConfiguration</a></div><div class="ttdef"><b>Definition:</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00036">DirectLinearSolverConfiguration.h:36</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_event_html"><div class="ttname"><a href="class_d_psim_1_1_event.html">DPsim::Event</a></div><div class="ttdef"><b>Definition:</b> <a href="_event_8h_source.html#l00027">Event.h:27</a></div></div>
