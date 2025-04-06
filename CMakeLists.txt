@@ -304,10 +304,11 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 	feature_summary(WHAT ALL VAR enabledFeaturesText)
 
+	message(STATUS "Building ${CMAKE_PROJECT_NAME}:")
+	message(STATUS "Feature summary for DPsim")
+	message(STATUS "${enabledFeaturesText}")
+
 	if(FOUND_GIT_VERSION)
-		message(STATUS "Building ${CMAKE_PROJECT_NAME}:")
-		message(STATUS "Feature summary for DPsim")
-		message(STATUS "${enabledFeaturesText}")
 		message(STATUS "  VERSION:         ${DPSIM_VERSION}")
 		message(STATUS "  RELEASE:         ${DPSIM_RELEASE}")
 		message(STATUS "  GIT_REV:         ${DPSIM_GIT_REV}")
