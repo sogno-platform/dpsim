@@ -14,11 +14,10 @@ class CMakeExtension(Extension):
 
 class CMakeBuild(build_ext):
     def build_extension(self, ext):
-
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
 
-        cfg = 'Debug' if self.debug else 'Release'
-        print('building CMake extension in %s configuration' % cfg)
+        cfg = "Debug" if self.debug else "Release"
+        print("building CMake extension in %s configuration" % cfg)
 
         cmake_args = [
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
@@ -26,57 +25,46 @@ class CMakeBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE={extdir}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # Not used on MSVC, but no harm
-            "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+            "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
         ]
 
-        if platform.system() == 'Windows':
-            cmake_args += ['-A', 'x64']
-            build_args = ['--', '/m']
+        if platform.system() == "Windows":
+            cmake_args += ["-A", "x64"]
+            build_args = ["--", "/m"]
         else:
             if self.parallel:
-                build_args = ['--', '-j' + str(self.parallel)]
+                build_args = ["--", "-j" + str(self.parallel)]
             else:
-                build_args = ['--', '-j4']
+                build_args = ["--", "-j4"]
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
         env = os.environ.copy()
-        if env.get('CMAKE_OPTS'):
-            cmake_args += env.get('CMAKE_OPTS').split(' ')
+        if env.get("CMAKE_OPTS"):
+            cmake_args += env.get("CMAKE_OPTS").split(" ")
 
         # CMakeLists.txt is in the same directory as this setup.py file
         sourcedir = os.path.abspath(os.path.dirname(__file__))
-        print(' '.join(['cmake', sourcedir] + cmake_args))
+        print(" ".join(["cmake", sourcedir] + cmake_args))
         subprocess.check_call(
-            ['cmake', sourcedir] + cmake_args, cwd=self.build_temp, env=env
+            ["cmake", sourcedir] + cmake_args, cwd=self.build_temp, env=env
         )
 
-        print(' '.join(['cmake', '--build', '.', '--target', 'dpsimpy'] + build_args))
+        print(" ".join(["cmake", "--build", ".", "--target", "dpsimpy"] + build_args))
         subprocess.check_call(
-            ['cmake', '--build', '.', '--target', 'dpsimpy'] + build_args, cwd=self.build_temp
+            ["cmake", "--build", ".", "--target", "dpsimpy"] + build_args,
+            cwd=self.build_temp,
         )
 
 
 setup(
-    packages=find_packages('python/src'),
+    packages=find_packages("python/src"),
     package_dir={"dpsim": "python/src/dpsim"},
     python_requires=">=3.8",
-    setup_requires=[
-        'pytest-runner',
-        'wheel'
-    ],
-    tests_require=[
-        'pytest',
-        'pyyaml',
-        'nbformat',
-        'nbconvert'
-    ],
-    ext_modules=[
-        CMakeExtension('dpsimpy')
-    ],
-    cmdclass={
-        'build_ext': CMakeBuild
-    },
-    zip_safe=False
+    setup_requires=["pytest-runner", "wheel"],
+    tests_require=["pytest", "pyyaml", "nbformat", "nbconvert"],
+    ext_modules=[CMakeExtension("dpsimpy")],
+    cmdclass={"build_ext": CMakeBuild},
+    zip_safe=False,
 )
