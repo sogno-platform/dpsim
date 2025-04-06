@@ -15,12 +15,12 @@ repos:
         exclude: .devcontainer/devcontainer\.json
       - id: check-toml
       - id: check-added-large-files
-      # - id: pretty-format-json
-      #   # black has its own mind of formatting Jupyter notebooks
-      #   exclude: \.ipynb$|^.devcontainer/devcontainer\.json$|package-lock\.json$
-      #   args:
-      #     - --no-sort-keys
-      #     - --autofix
+      - id: pretty-format-json
+        # black has its own mind of formatting Jupyter notebooks
+        exclude: \.ipynb$|^.devcontainer/devcontainer\.json$|package-lock\.json$
+        args:
+          - --no-sort-keys
+          - --autofix
 
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: "v17.0.6"
