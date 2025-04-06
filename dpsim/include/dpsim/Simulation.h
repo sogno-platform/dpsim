@@ -246,7 +246,9 @@ public:
   /// Schedule an event in the simulation
   void addEvent(Event::Ptr e) { mEvents.addEvent(e); }
   /// Add a new data logger
-  void addLogger(DataLoggerInterface::Ptr logger) { mLoggers.push_back(logger); }
+  void addLogger(DataLoggerInterface::Ptr logger) {
+    mLoggers.push_back(logger);
+  }
   /// Write step time measurements to log file
   void logStepTimes(String logName);
   /// Check for overruns

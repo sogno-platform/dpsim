@@ -43,8 +43,10 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 
   sync();
 
-  SPDLOG_LOGGER_INFO(mLog, "Starting simulation at {:%Y-%m-%d %H:%M:%S} (delta_T = {} seconds)",
-                     startAt, startAt - Timer::StartClock::now());
+  SPDLOG_LOGGER_INFO(
+      mLog,
+      "Starting simulation at {:%Y-%m-%d %H:%M:%S} (delta_T = {} seconds)",
+      startAt, startAt - Timer::StartClock::now());
 
   mTimer.setStartTime(startAt);
   mTimer.setInterval(**mTimeStep);

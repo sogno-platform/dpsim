@@ -21,7 +21,8 @@ namespace Ph3 {
 ///
 /// This model uses modified nodal analysis to represent an ideal voltage source.
 /// This voltage source derives it's output purely from attributes rather than an internal signal generator.
-class ControlledVoltageSource : public MNASimPowerComp<Real>, public SharedFactory<ControlledVoltageSource> {
+class ControlledVoltageSource : public MNASimPowerComp<Real>,
+                                public SharedFactory<ControlledVoltageSource> {
 protected:
   // Updates voltage according to reference phasor and frequency
   void updateVoltage(Real time);
@@ -30,9 +31,12 @@ public:
   const CPS::Attribute<Matrix>::Ptr mVoltageRef;
 
   /// Defines UID, name and logging level
-  ControlledVoltageSource(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  ControlledVoltageSource(String uid, String name,
+                          Logger::Level logLevel = Logger::Level::off);
   ///
-  ControlledVoltageSource(String name, Logger::Level logLevel = Logger::Level::off) : ControlledVoltageSource(name, name, logLevel) {}
+  ControlledVoltageSource(String name,
+                          Logger::Level logLevel = Logger::Level::off)
+      : ControlledVoltageSource(name, name, logLevel) {}
 
   SimPowerComp<Real>::Ptr clone(String name) override;
   // #### General ####
@@ -45,7 +49,8 @@ public:
 
   // #### MNA section ####
   /// Initializes internal variables of the component
-  void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+  void mnaCompInitialize(Real omega, Real timeStep,
+                         Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
@@ -55,12 +60,19 @@ public:
   /// MNA pre step operations
   void mnaCompPreStep(Real time, Int timeStepCount) override;
   /// MNA post step operations
-  void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+  void mnaCompPostStep(Real time, Int timeStepCount,
+                       Attribute<Matrix>::Ptr &leftVector) override;
   /// Add MNA pre step dependencies
-  void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+  void mnaCompAddPreStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes) override;
   /// Add MNA post step dependencies
-  void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
-                                      Attribute<Matrix>::Ptr &leftVector) override;
+  void
+  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+                                 AttributeBase::List &attributeDependencies,
+                                 AttributeBase::List &modifiedAttributes,
+                                 Attribute<Matrix>::Ptr &leftVector) override;
 };
 } // namespace Ph3
 } // namespace EMT

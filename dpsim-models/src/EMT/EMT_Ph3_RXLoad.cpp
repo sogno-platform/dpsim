@@ -11,8 +11,11 @@
 using namespace CPS;
 
 EMT::Ph3::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
-    : CompositePowerComp<Real>(uid, name, true, true, Logger::Level::trace), mActivePower(mAttributes->create<Matrix>("P")), mReactivePower(mAttributes->create<Matrix>("Q")),
-      mNomVoltage(mAttributes->create<Real>("V_nom")), mReactanceInSeries(false) {
+    : CompositePowerComp<Real>(uid, name, true, true, Logger::Level::trace),
+      mActivePower(mAttributes->create<Matrix>("P")),
+      mReactivePower(mAttributes->create<Matrix>("Q")),
+      mNomVoltage(mAttributes->create<Real>("V_nom")),
+      mReactanceInSeries(false) {
   mPhaseType = PhaseType::ABC;
   setTerminalNumber(1);
 
@@ -45,7 +48,8 @@ EMT::Ph3::RXLoad::RXLoad(String name, Matrix activePower, Matrix reactivePower,
   initPowerFromTerminal = false;
 }
 
-void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower, Real volt, bool reactanceInSeries) {
+void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower,
+                                     Real volt, bool reactanceInSeries) {
   **mActivePower = activePower;
   **mReactivePower = reactivePower;
   mReactanceInSeries = reactanceInSeries;
@@ -107,18 +111,26 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
   **mIntfVoltage = vInitABC.real();
 
   if ((**mActivePower)(0, 0) != 0) {
-    mResistance = std::pow(**mNomVoltage / sqrt(3), 2) * (**mActivePower).inverse();
+    mResistance =
+        std::pow(**mNomVoltage / sqrt(3), 2) * (**mActivePower).inverse();
   }
 
   if ((**mReactivePower)(0, 0) != 0)
-    mReactance = std::pow(**mNomVoltage / sqrt(3), 2) * (**mReactivePower).inverse();
+    mReactance =
+        std::pow(**mNomVoltage / sqrt(3), 2) * (**mReactivePower).inverse();
   else
     mReactance = Matrix::Zero(1, 1);
 
   if (mReactanceInSeries) {
     MatrixComp impedance = MatrixComp::Zero(3, 3);
-    impedance << Complex(mResistance(0, 0), mReactance(0, 0)), Complex(mResistance(0, 1), mReactance(0, 1)), Complex(mResistance(0, 2), mReactance(0, 2)), Complex(mResistance(1, 0), mReactance(1, 0)),
-        Complex(mResistance(1, 1), mReactance(1, 1)), Complex(mResistance(1, 2), mReactance(1, 2)), Complex(mResistance(2, 0), mReactance(2, 0)), Complex(mResistance(2, 1), mReactance(2, 1)),
+    impedance << Complex(mResistance(0, 0), mReactance(0, 0)),
+        Complex(mResistance(0, 1), mReactance(0, 1)),
+        Complex(mResistance(0, 2), mReactance(0, 2)),
+        Complex(mResistance(1, 0), mReactance(1, 0)),
+        Complex(mResistance(1, 1), mReactance(1, 1)),
+        Complex(mResistance(1, 2), mReactance(1, 2)),
+        Complex(mResistance(2, 0), mReactance(2, 0)),
+        Complex(mResistance(2, 1), mReactance(2, 1)),
         Complex(mResistance(2, 2), mReactance(2, 2));
     **mIntfCurrent = (impedance.inverse() * vInitABC).real();
 
@@ -128,11 +140,13 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
     vInitTerm0(0, 0) = initialSingleVoltage(0);
     vInitTerm0(1, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_B;
     vInitTerm0(2, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_C;
-    mVirtualNodes[0]->setInitialVoltage(vInitTerm0 + mResistance * **mIntfCurrent);
+    mVirtualNodes[0]->setInitialVoltage(vInitTerm0 +
+                                        mResistance * **mIntfCurrent);
   }
 
   if ((**mActivePower)(0, 0) != 0) {
-    mSubResistor = std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
+    mSubResistor =
+        std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
     mSubResistor->setParameters(mResistance);
     if (mReactanceInSeries) {
       mSubResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
@@ -141,7 +155,8 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
     }
     mSubResistor->initialize(mFrequencies);
     mSubResistor->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+    addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
     if (!mReactanceInSeries) {
       **mIntfCurrent += mSubResistor->intfCurrent();
@@ -155,9 +170,9 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
         std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
     mSubInductor->setParameters(mInductance);
     if (mReactanceInSeries) {
-        mSubInductor->connect({SimNode::GND, mVirtualNodes[0]});
+      mSubInductor->connect({SimNode::GND, mVirtualNodes[0]});
     } else {
-        mSubInductor->connect({SimNode::GND, mTerminals[0]->node()});
+      mSubInductor->connect({SimNode::GND, mTerminals[0]->node()});
     }
     mSubInductor->initialize(mFrequencies);
     mSubInductor->initializeFromNodesAndTerminals(frequency);

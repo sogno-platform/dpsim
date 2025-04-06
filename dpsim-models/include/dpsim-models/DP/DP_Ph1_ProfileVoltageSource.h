@@ -22,7 +22,9 @@ namespace CPS {
 namespace DP {
 namespace Ph1 {
 
-class ProfileVoltageSource : public MNASimPowerComp<Complex>, public DAEInterface, public SharedFactory<ProfileVoltageSource> {
+class ProfileVoltageSource : public MNASimPowerComp<Complex>,
+                             public DAEInterface,
+                             public SharedFactory<ProfileVoltageSource> {
 private:
   ///
   void updateVoltage(Real time);
@@ -38,9 +40,13 @@ public:
   const CPS::Attribute<Complex>::Ptr mVoltage;
 
   /// Defines UID, name, component parameters and logging level
-  ProfileVoltageSource(String uid, String name, std::filesystem::path sourceFile, Logger::Level loglevel = Logger::Level::off);
+  ProfileVoltageSource(String uid, String name,
+                       std::filesystem::path sourceFile,
+                       Logger::Level loglevel = Logger::Level::off);
   /// Defines UID, name, component parameters and logging level
-  ProfileVoltageSource(String name, std::filesystem::path sourceFile, Logger::Level logLevel = Logger::Level::off) : ProfileVoltageSource(name, name, sourceFile, logLevel) {}
+  ProfileVoltageSource(String name, std::filesystem::path sourceFile,
+                       Logger::Level logLevel = Logger::Level::off)
+      : ProfileVoltageSource(name, name, sourceFile, logLevel) {}
   ///
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
@@ -52,11 +58,15 @@ public:
 
   // #### MNA Section ####
   /// Initializes internal variables of the component
-  void mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-  void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
+  void mnaCompInitialize(Real omega, Real timeStep,
+                         Attribute<Matrix>::Ptr leftVector) override;
+  void mnaCompInitializeHarm(
+      Real omega, Real timeStep,
+      std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix, Int freqIdx) override;
+  void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
+                                         Int freqIdx) override;
   /// Stamps right side (source) vector
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   void mnaCompApplyRightSideVectorStampHarm(Matrix &rightVector) override;
@@ -65,16 +75,25 @@ public:
   /// MNA pre step operations
   void mnaCompPreStep(Real time, Int timeStepCount) override;
   /// MNA post step operations
-  void mnaCompPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) override;
+  void mnaCompPostStep(Real time, Int timeStepCount,
+                       Attribute<Matrix>::Ptr &leftVector) override;
   /// Add MNA pre step dependencies
-  void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
+  void mnaCompAddPreStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes) override;
   /// Add MNA post step dependencies
-  void mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
-                                      Attribute<Matrix>::Ptr &leftVector) override;
+  void
+  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+                                 AttributeBase::List &attributeDependencies,
+                                 AttributeBase::List &modifiedAttributes,
+                                 Attribute<Matrix>::Ptr &leftVector) override;
 
   class MnaPreStepHarm : public CPS::Task {
   public:
-    MnaPreStepHarm(ProfileVoltageSource &voltageSource) : Task(**voltageSource.mName + ".MnaPreStepHarm"), mVoltageSource(voltageSource) {
+    MnaPreStepHarm(ProfileVoltageSource &voltageSource)
+        : Task(**voltageSource.mName + ".MnaPreStepHarm"),
+          mVoltageSource(voltageSource) {
       mAttributeDependencies.push_back(mVoltageSource.mVoltage);
       mModifiedAttributes.push_back(mVoltageSource.mRightVector);
       mModifiedAttributes.push_back(mVoltageSource.mIntfVoltage);
@@ -87,8 +106,10 @@ public:
 
   class MnaPostStepHarm : public CPS::Task {
   public:
-    MnaPostStepHarm(ProfileVoltageSource &voltageSource, const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
-        : Task(**voltageSource.mName + ".MnaPostStepHarm"), mVoltageSource(voltageSource), mLeftVectors(leftVectors) {
+    MnaPostStepHarm(ProfileVoltageSource &voltageSource,
+                    const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
+        : Task(**voltageSource.mName + ".MnaPostStepHarm"),
+          mVoltageSource(voltageSource), mLeftVectors(leftVectors) {
       for (UInt i = 0; i < mLeftVectors.size(); i++)
         mAttributeDependencies.push_back(mLeftVectors[i]);
       mModifiedAttributes.push_back(mVoltageSource.mIntfCurrent);
@@ -102,7 +123,8 @@ public:
 
   // #### DAE Section ####
   /// Residual function for DAE Solver
-  void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int> &off) override;
+  void daeResidual(double ttime, const double state[], const double dstate_dt[],
+                   double resid[], std::vector<int> &off) override;
   /// Voltage Getter
   Complex daeInitialize() override;
 };

@@ -422,9 +422,11 @@ Graph::Graph SystemTopology::topologyGraph() {
     std::stringstream label, tooltip;
 
     label << "<FONT POINT-SIZE=\"12\"><B>" << name << "</B></FONT><BR/>";
-    label << "<FONT POINT-SIZE=\"10\" COLOR=\"gray28\">" << type << "</FONT><BR/>";
+    label << "<FONT POINT-SIZE=\"10\" COLOR=\"gray28\">" << type
+          << "</FONT><BR/>";
     if (topoComp->description() != "") {
-      label << "<FONT POINT-SIZE=\"10\" COLOR=\"gray28\">" << topoComp->description() << "</FONT>";
+      label << "<FONT POINT-SIZE=\"10\" COLOR=\"gray28\">"
+            << topoComp->description() << "</FONT>";
     }
 
     tooltip << "Attributes:";
