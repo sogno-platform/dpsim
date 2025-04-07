@@ -325,7 +325,7 @@ void PFSolver::determineNodeBaseVoltages() {
                      std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
         baseVoltage_ = load->attributeTyped<CPS::Real>("V_nom")->get();
         SPDLOG_LOGGER_INFO(
-            mSLog, "Choose base voltage of {}V to convert pu-solution of {}.",
+            mSLog, "Choose base voltage of {} V to convert pu-solution of {}.",
             baseVoltage_, load->name(), node->name());
         break;
       } else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet =
