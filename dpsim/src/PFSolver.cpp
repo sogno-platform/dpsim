@@ -185,48 +185,48 @@ void PFSolver::determinePFBusType() {
     // determine powerflow bus types according connected type of connected components
     // only PQ type component connected -> set as PQ bus
     if (!connectedPV && connectedPQ && !connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
+      SPDLOG_LOGGER_INFO(
           mSLog, "{}: only PQ type component connected -> set as PQ bus",
           node->name());
       mPQBusIndices.push_back(node->matrixNodeIndex());
       mPQBuses.push_back(node);
     } // no component connected -> set as PQ bus (P & Q will be zero)
     else if (!connectedPV && !connectedPQ && !connectedVD) {
-      SPDLOG_LOGGER_DEBUG(mSLog, "{}: no component connected -> set as PQ bus",
-                          node->name());
+      SPDLOG_LOGGER_INFO(mSLog, "{}: no component connected -> set as PQ bus",
+                         node->name());
       mPQBusIndices.push_back(node->matrixNodeIndex());
       mPQBuses.push_back(node);
     } // only PV type component connected -> set as PV bus
     else if (connectedPV && !connectedPQ && !connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
+      SPDLOG_LOGGER_INFO(
           mSLog, "{}: only PV type component connected -> set as PV bus",
           node->name());
       mPVBusIndices.push_back(node->matrixNodeIndex());
       mPVBuses.push_back(node);
     } // PV and PQ type component connected -> set as PV bus (TODO: bus type should be modifiable by user afterwards)
     else if (connectedPV && connectedPQ && !connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
+      SPDLOG_LOGGER_INFO(
           mSLog, "{}: PV and PQ type component connected -> set as PV bus",
           node->name());
       mPVBusIndices.push_back(node->matrixNodeIndex());
       mPVBuses.push_back(node);
     } // only VD type component connected -> set as VD bus
     else if (!connectedPV && !connectedPQ && connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
+      SPDLOG_LOGGER_INFO(
           mSLog, "{}: only VD type component connected -> set as VD bus",
           node->name());
       mVDBusIndices.push_back(node->matrixNodeIndex());
       mVDBuses.push_back(node);
     } // VD and PV type component connect -> set as VD bus
     else if (connectedPV && !connectedPQ && connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
+      SPDLOG_LOGGER_INFO(
           mSLog, "{}: VD and PV type component connect -> set as VD bus",
           node->name());
       mVDBusIndices.push_back(node->matrixNodeIndex());
       mVDBuses.push_back(node);
     } // VD, PV and PQ type component connect -> set as VD bus
     else if (connectedPV && connectedPQ && connectedVD) {
-      SPDLOG_LOGGER_DEBUG(
+      SPDLOG_LOGGER_INFO(
           mSLog, "{}: VD, PV and PQ type component connect -> set as VD bus",
           node->name());
       mVDBusIndices.push_back(node->matrixNodeIndex());
@@ -320,6 +320,21 @@ void PFSolver::determineNodeBaseVoltages() {
             mSLog,
             "Choose base voltage {}V of {} to convert pu-solution of {}.",
             baseVoltage_, gen->name(), node->name());
+        break;
+      } else if (std::shared_ptr<CPS::SP::Ph1::Load> load =
+                     std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
+        baseVoltage_ = load->attributeTyped<CPS::Real>("V_nom")->get();
+        SPDLOG_LOGGER_INFO(
+            mSLog, "Choose base voltage of {} V to convert pu-solution of {}.",
+            baseVoltage_, load->name(), node->name());
+        break;
+      } else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet =
+                     std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(
+                         comp)) {
+        baseVoltage_ = extnet->attributeTyped<CPS::Real>("base_Voltage")->get();
+        SPDLOG_LOGGER_INFO(
+            mSLog, "Choose base voltage of {}V to convert pu-solution of {}.",
+            baseVoltage_, extnet->name(), node->name());
         break;
       } else {
         SPDLOG_LOGGER_WARN(mSLog, "Unable to get base voltage at {}",
