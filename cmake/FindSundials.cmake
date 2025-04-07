@@ -42,5 +42,5 @@ else()
 	include(FindPackageHandleStandardArgs)
 	find_package_handle_standard_args(Sundials DEFAULT_MSG SUNDIALS_ARKODE_LIBRARY SUNDIALS_INCLUDE_DIR)
 
-	mark_as_advanced(SUNDIALS_INCLUDE_DIR)
+	mark_as_advanced(SUNDIALS_INCLUDE_DIR SUNDIALS_LIBRARIES)
 endif()

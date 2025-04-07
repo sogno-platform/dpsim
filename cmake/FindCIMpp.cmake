@@ -6,8 +6,7 @@ message(STATUS "CIM Version: ${CIM_VERSION}")
 
 if(CIM_VERSION STREQUAL "16v29a")
 	set(USE_CIM_VERSION "IEC61970_16v29a")
-endif()
-if(CIM_VERSION STREQUAL "CGMES_2.4.15_16FEB2016")
+elseif(CIM_VERSION STREQUAL "CGMES_2.4.15_16FEB2016")
 	set(USE_CIM_VERSION "CGMES_2.4.15_16FEB2016")
 	set(CGMES_BUILD ON)
 endif()
@@ -15,17 +14,17 @@ endif()
 find_path(CIMPP_INCLUDE_DIR
 	NAMES CIMModel.hpp
 	PATH_SUFFIXES
-		cimpp/${CIM_VERSION}
-		${CIM_VERSION}
-		cimpp/${USE_CIM_VERSION}
-		${USE_CIM_VERSION}
-		include/src
+		include/cimpp/${CIM_VERSION}
+		include/cimpp/${USE_CIM_VERSION}
 )
 
 find_library(CIMPP_LIBRARY
-	NAMES cimpp${CIM_VERSION} cimpp${USE_CIM_VERSION}
+	NAMES
+		cimpp${CIM_VERSION}
+		cimpp${USE_CIM_VERSION}
 	PATH_SUFFIXES
 		lib/static
+		lib/cimpp
 )
 
 set(CIMPP_LIBRARIES
