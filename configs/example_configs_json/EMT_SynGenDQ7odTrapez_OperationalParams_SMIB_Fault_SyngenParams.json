@@ -1,17 +1,17 @@
 {
-    "name": "EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_JsonSyngenParams",
-    "options": {
-      "Rs" : 0.003,
-      "Ll" : 0.15,
-      "Ld" : 1.8099,
-      "Lq" : 1.7600,
-      "Ld_t" : 0.2999,
-      "Ld_s" : 0.2299,
-      "Lq_t" : 0.6500,
-      "Lq_s" : 0.2500,
-      "Td0_t" : 8.0669,
-      "Td0_s" : 0.0300,
-      "Tq0_t" : 0.9991,
-      "Tq0_s" : 0.0700
-    }
+  "name": "EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_JsonSyngenParams",
+  "options": {
+    "Rs": 0.003,
+    "Ll": 0.15,
+    "Ld": 1.8099,
+    "Lq": 1.76,
+    "Ld_t": 0.2999,
+    "Ld_s": 0.2299,
+    "Lq_t": 0.65,
+    "Lq_s": 0.25,
+    "Td0_t": 8.0669,
+    "Td0_s": 0.03,
+    "Tq0_t": 0.9991,
+    "Tq0_s": 0.07
+  }
 }
