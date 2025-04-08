@@ -10,7 +10,7 @@ Interfaces are subclasses of `Interface` and implement the methods `addExport` a
 This way, attributes that are imported are read from the interface before they are used in any DPsim component.
 Attributes that are exported are written to the interface after they are set by a DPsim component.
 
-## Interfacing with VILLASnode
+# Interfacing with VILLASnode
 
 > This feature requires the compilation of DPsim with the `WITH_VILLAS` feature flag. For use of the VILLASnode interface in python, the `dpsimpyvillas` target has to built in addition to the normal `dpsimpy` package.
 
@@ -38,6 +38,7 @@ The attributes given as the first parameter to these methods are attributes belo
 As an example, for exporting and importing attributes via the MQTT protocol, the VILLASnode interfaces can be configured as follows:
 
 Using C++:
+
 ```cpp
 // JSON configuration adhering to the VILLASnode documentation
 std::string mqttConfig = R"STRING({
@@ -61,6 +62,7 @@ intf->exportAttribute(r12->mIntfCurrent->deriveCoeff<Complex>(0, 0), 1, true, "v
 ```
 
 Using Python:
+
 ```python
 # JSON configuration adhering to the VILLASnode documentation
 mqtt_config = '''{
@@ -83,8 +85,10 @@ intf.import_attribute(evs.attr('V_ref'), 0, True)
 intf.export_attribute(r12.attr('i_intf').derive_coeff(0, 0), 0)
 ```
 
-## Adding an Interface to the Simulation
+# Adding an Interface to the Simulation
+
 After a new interface has been created and configured, it can be added to a simulation using the `Simulation::addInterface` method:
+
 ```cpp
 // Create and configure simulation
 RealTimeSimulation sim(simName);
@@ -105,11 +109,13 @@ Note that the execution of these tasks might not necessarily coincide with the p
 This is because the interface internally spawns two new threads for exchanging data with the environment and then uses a **lock-free queue** for communication between these reader and writer threads, and the simulation. Because of this, time-intensive import or export operations will not block
 the main simulation thread unless this is explicitly configured in the interface's `importAttribute` and `exportAttribute` methods.
 
-## Synchronizing the Simulation with the Environment
+# Synchronizing the Simulation with the Environment
+
 To allow for synchronizing the DPsim simulation with external services, the `Interface` class provides some additional configuration options in the `importAttribute` and `exportAttribute` methods. For imports, setting the `blockOnRead` parameter will completely halt the simulation at the start of
 every time step until a new value for this attribute was read from the environment. Additionally, the `syncOnSimulationStart` parameter can be set for every
 import to indicate that this attribute is used to synchronize the start of the simulation. When a simulation contains any interfaces importing attributes
 which have `syncOnSimulationStart` set, the `Simulation::sync` will be called before the first time step. This method will:
+
 - write out all attributes configured for export to the environment
 - block until all attributes with `syncOnSimulationStart` set have been read from the environment at least once
 - write out all exported attributes again
