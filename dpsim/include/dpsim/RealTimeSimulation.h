@@ -30,9 +30,9 @@ public:
                      CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
   /** Perform the main simulation loop in real time.
-		 *
-		 * @param startSynch If true, the simulation waits for the first external value before starting the timing.
-		 */
+   *
+   * @param startSynch If true, the simulation waits for the first external value before starting the timing.
+   */
   void
   run(const Timer::StartClock::duration &startIn = std::chrono::seconds(1));
 

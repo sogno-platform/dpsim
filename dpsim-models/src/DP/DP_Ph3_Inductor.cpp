@@ -198,21 +198,21 @@ void DP::Ph3::Inductor::mnaTearInitialize(Real omega, Real timeStep) {
 }
 
 void DP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
-  /*
-	Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, mEquivCond.cwiseInverse()(0,0));
-	*/
+#if 0
+  Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, mEquivCond.cwiseInverse()(0,0));
+#endif
 }
 
 void DP::Ph3::Inductor::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
-  /*
-	mEquivCurrent = mEquivCond * (**mIntfVoltage)(0,0) + mPrevCurrFac * (**mIntfCurrent)(0,0);
-	Math::addToVectorElement(voltageVector, mTearIdx, mEquivCurrent .cwiseProduct( mEquivCond.cwiseInverse()));
-	*/
+#if 0
+  mEquivCurrent = mEquivCond * (**mIntfVoltage)(0,0) + mPrevCurrFac * (**mIntfCurrent)(0,0);
+  Math::addToVectorElement(voltageVector, mTearIdx, mEquivCurrent .cwiseProduct( mEquivCond.cwiseInverse()));
+#endif
 }
 
 void DP::Ph3::Inductor::mnaTearPostStep(Complex voltage, Complex current) {
-  /*
-	**mIntfVoltage = voltage;
-	**mIntfCurrent = mEquivCond * voltage + mEquivCurrent;
-	*/
+#if 0
+  **mIntfVoltage = voltage;
+  **mIntfCurrent = mEquivCond * voltage + mEquivCurrent;
+#endif
 }

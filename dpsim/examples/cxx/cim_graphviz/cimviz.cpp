@@ -21,12 +21,12 @@ static graph_t *G;
 
 #ifndef _WIN32
 static void intr(int s) {
-  /* if interrupted we try to produce a partial rendering before exiting */
+  // If interrupted we try to produce a partial rendering before exiting.
   if (G)
     gvRenderJobs(gvc, G);
 
   /* Note that we don't call gvFinalize() so that we don't start event-driven
- 	 * devices like -Tgtk or -Txlib */
+   * devices like -Tgtk or -Txlib */
   exit(gvFreeContext(gvc));
 }
 #endif
@@ -37,14 +37,14 @@ struct GVC_s {
   char *config_path;
   bool config_found;
 
-  /* gvParseArgs */
+  // gvParseArgs
   char **input_filenames;
 };
 
 int main(int argc, char *argv[]) {
   int ret, i;
 
-  argv[0] = (char *)"neato"; /* Default layout engine */
+  argv[0] = (char *)"neato"; // Default layout engine.
 
   gvc = gvContext();
   gvParseArgs(gvc, argc, argv);
@@ -64,13 +64,13 @@ int main(int argc, char *argv[]) {
   if (i == 0)
     return 0;
 
-  /* The remaining code is identical to GraphVizs dot.c code */
+  // The remaining code is identical to GraphVizs dot.c code.
   SystemTopology sys = reader.loadCIM(50, filenames);
   Graph::Graph graph = sys.topologyGraph();
 
   G = graph.mGraph;
 
-  ret = gvLayoutJobs(gvc, G); /* take layout engine from command line */
+  ret = gvLayoutJobs(gvc, G); // Take layout engine from command line.
   if (ret)
     goto out;
 

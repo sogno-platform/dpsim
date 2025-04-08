@@ -29,9 +29,7 @@ public:
 
   const AttributeBase::Map &attributes() const { return mAttributeMap; };
 
-  /**
-		 * Creates a new static Attribute and enters a pointer to it into this Attribute Map using the provided name.
-		 * */
+  // Creates a new static Attribute and enters a pointer to it into this Attribute Map using the provided name.
   template <typename T>
   typename Attribute<T>::Ptr create(const String &name, T intitialValue = T()) {
     typename Attribute<T>::Ptr newAttr =
@@ -40,9 +38,7 @@ public:
     return newAttr;
   }
 
-  /**
-		 * Creates a new dynamic Attribute and enters a pointer to it into this Attribute Map using the provided name.
-		 * */
+  // Creates a new dynamic Attribute and enters a pointer to it into this Attribute Map using the provided name.
   template <typename T>
   typename Attribute<T>::Ptr createDynamic(const String &name) {
     typename Attribute<T>::Ptr newAttr =

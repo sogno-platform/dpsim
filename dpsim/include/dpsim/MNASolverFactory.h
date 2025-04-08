@@ -77,8 +77,9 @@ public:
 
     switch (implementation) {
     /* TODO: have only one "solver" object of type MnaSolverDirect and only use setDirectLinearSolverImplementation in the switch-case.
-		 * This is not done now, since MnaSolverDirect and MnaSolver are distinct classes - and someone might add another subclass of MnaSolver
-		 * to the project (MnaSolverIterative?). It is planned to merge MnaSolverDirect and MnaSolver anyway, so this won't happen. */
+     * This is not done now, since MnaSolverDirect and MnaSolver are distinct classes - and someone might add another subclass of MnaSolver
+     * to the project (MnaSolverIterative?). It is planned to merge MnaSolverDirect and MnaSolver anyway, so this won't happen.
+     */
     case DirectLinearSolverImpl::SparseLU: {
       log->info("creating SparseLUAdapter solver implementation");
       std::shared_ptr<MnaSolverDirect<VarType>> sparseSolver =

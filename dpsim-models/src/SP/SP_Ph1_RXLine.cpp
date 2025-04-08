@@ -31,9 +31,11 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
   **mCurrent = MatrixComp::Zero(2, 1);
   **mActivePowerBranch = Matrix::Zero(2, 1);
   **mReactivePowerBranch = Matrix::Zero(2, 1);
-  // mLog.Log(Logger::Level::DEBUG) << "Create " << this->type() << " " << name
-  // 	<< " R=" << resistance << " L=" << inductance
-  // 	 << std::endl;
+#if 0
+  mLog.Log(Logger::Level::DEBUG) << "Create " << this->type() << " " << name
+    << " R=" << resistance << " L=" << inductance
+    << std::endl;
+#endif
 }
 
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
@@ -61,18 +63,21 @@ void SP::Ph1::RXLine::setPerUnitSystem(Real baseApparentPower, Real baseOmega) {
   mBaseInductance = mBaseImpedance / mBaseOmega;
   /// I_base = S_base / V_line
   mBaseCurrent = baseApparentPower / (**mBaseVoltage * sqrt(3));
-  /*
-	mLog.Log(Logger::Level::INFO) << "#### Set Per Unit System for " << **mName << std::endl;
-	mLog.Log(Logger::Level::INFO) << " Base Voltage= " << mBaseVoltage << " [V] " << " Base Impedance= " << mBaseImpedance << " [Ohm] " << std::endl;
-	*/
+
+#if 0
+  mLog.Log(Logger::Level::INFO) << "#### Set Per Unit System for " << **mName << std::endl;
+  mLog.Log(Logger::Level::INFO) << " Base Voltage= " << mBaseVoltage << " [V] " << " Base Impedance= " << mBaseImpedance << " [Ohm] " << std::endl;
+#endif
 
   mSeriesResPerUnit = **mSeriesRes / mBaseImpedance;
   mSeriesIndPerUnit = **mInductance / mBaseInductance;
-  /*
-	mLog.Log(Logger::Level::INFO) << "Series Resistance Per Unit= " << " " << mSeriesResPerUnit << " [Ohm] "
-		<< " Series Inductance Per Unit= " << " " << mSeriesIndPerUnit << " [H] "
-		<< std::endl;
-    mLog.Log(Logger::Level::INFO)  << "r " << mSeriesResPerUnit << std::endl << "	x: " << mBaseOmega * mInductance / mBaseImpedance<<std::endl;*/
+
+#if 0
+  mLog.Log(Logger::Level::INFO) << "Series Resistance Per Unit= " << " " << mSeriesResPerUnit << " [Ohm] "
+    << " Series Inductance Per Unit= " << " " << mSeriesIndPerUnit << " [H] "
+    << std::endl;
+    mLog.Log(Logger::Level::INFO)  << "r " << mSeriesResPerUnit << std::endl << "  x: " << mBaseOmega * mInductance / mBaseImpedance<<std::endl;
+#endif
 }
 
 void SP::Ph1::RXLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
@@ -80,16 +85,17 @@ void SP::Ph1::RXLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
   int bus1 = this->matrixNodeIndex(0);
   int bus2 = this->matrixNodeIndex(1);
 
-  //dimension check
-  /* TODO: FIX
-	if (bus1 > (n - 1) || bus2 > (n - 1)) {
-		std::stringstream ss;
-		ss << "Line>>" << this->getName() << ": Wrong Y dimension: " << n;
-		throw std::invalid_argument(ss.str());
-		//std::cout << "Line>>" << Name << ": Wrong Y dimension: " << n << endl;
-		return;
-	}
-	*/
+  // Dimension check
+  // TODO: FIX
+#if 0
+  if (bus1 > (n - 1) || bus2 > (n - 1)) {
+    std::stringstream ss;
+    ss << "Line>>" << this->getName() << ": Wrong Y dimension: " << n;
+    throw std::invalid_argument(ss.str());
+    //std::cout << "Line>>" << Name << ": Wrong Y dimension: " << n << endl;
+    return;
+  }
+#endif
 
   //create the element admittance matrix
   Complex y =

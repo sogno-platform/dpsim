@@ -119,19 +119,18 @@ Real Signal::Exciter::step(Real mVd, Real mVq, Real dt) {
   return **mEf;
 }
 
-/*
+#if 0
 // Saturation function according to Viviane thesis
 Real Signal::Exciter::saturation_fcn1(Real mVd, Real mVq, Real Vref, Real dt) {
-	if (mEf <= 2.3)
-		mVse = (0.1 / 2.3)*mEf;
-	else
-		mVse = (0.33 / 3.1)*mEf;
-	mVse = mVse*mEf;
+  if (mEf <= 2.3)
+    mVse = (0.1 / 2.3)*mEf;
+  else
+    mVse = (0.33 / 3.1)*mEf;
+  mVse = mVse*mEf;
 }
 
 // Saturation function according to PSAT
 Real Signal::Exciter::saturation_fcn2() {
-	return mA * (exp(mB * abs(mEf)) - 1);
+  return mA * (exp(mB * abs(mEf)) - 1);
 }
-
-*/
+#endif

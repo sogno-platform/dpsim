@@ -55,18 +55,20 @@ protected:
 
   // TODO: Variables for implicit solve?
   /// Template Jacobian Matrix (implicit solver)
-  /*	SUNMatrix A = NULL;
-		/// Linear solver object (implicit solver)
-		SUNLinearSolver LS = NULL; */
+#if 0
+  SUNMatrix A = NULL;
+  /// Linear solver object (implicit solver)
+  SUNLinearSolver LS = NULL;
+#endif
 
-  /// reusable error-checking flag
+  /// Reusable error-checking flag
   int mFlag{0};
 
   // Similar to DAE-Solver
   CPS::ODEInterface::StSpFn mStSpFunction;
   CPS::ODEInterface::JacFn mJacFunction;
 
-  /// use wrappers similar to DAE_Solver
+  /// Use wrappers similar to DAE_Solver
   static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot,
                                void *user_data);
   int StateSpace(realtype t, N_Vector y, N_Vector ydot);

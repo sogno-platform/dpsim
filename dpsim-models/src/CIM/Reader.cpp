@@ -342,17 +342,17 @@ Reader::mapEnergyConsumer(CIMPP::EnergyConsumer *consumer) {
                                                 mComponentLogLevel);
 
     // TODO: Use EnergyConsumer.P and EnergyConsumer.Q if available, overwrite if existent SvPowerFlow data
-    /*
-		Real p = 0;
-		Real q = 0;
-		if (consumer->p.value){
-			p = unitValue(consumer->p.value,UnitMultiplier::M);
-		}
-		if (consumer->q.value){
-			q = unitValue(consumer->q.value,UnitMultiplier::M);
-		}
-		load->setParameters(p, q, 0);
-		*/
+#if 0
+    Real p = 0;
+    Real q = 0;
+    if (consumer->p.value){
+      p = unitValue(consumer->p.value,UnitMultiplier::M);
+    }
+    if (consumer->q.value){
+      q = unitValue(consumer->q.value,UnitMultiplier::M);
+    }
+    load->setParameters(p, q, 0);
+#endif
 
     // P and Q values will be set according to SvPowerFlow data
     load->modifyPowerFlowBusType(

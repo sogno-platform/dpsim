@@ -10,8 +10,8 @@
 
 using namespace CPS;
 
-// !!! TODO: 	Adaptions to use in EMT_Ph3 models phase-to-ground peak variables
-// !!! 			with initialization from phase-to-phase RMS variables
+// !!! TODO: Adaptions to use in EMT_Ph3 models phase-to-ground peak variables
+// !!!       with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::SynchronGeneratorDQODE::SynchronGeneratorDQODE(String uid,
                                                          String name,
@@ -118,8 +118,8 @@ void EMT::Ph3::SynchronGeneratorDQODE::odeStateSpace(double t, const double y[],
   ydot[mDim - 2] = y[mDim - 1] * mBase_OmMech;
 
   /* Auxiliary variables to compute
-	 * T_e= lambda_d * i_q - lambda_q * i_d
-	 * needed for omega:  */
+   * T_e= lambda_d * i_q - lambda_q * i_d
+   * needed for omega:  */
   realtype i_d = 0, i_q = 0;
   // Compute new currents (depending on updated fluxes)
   for (int i = 0; i < mDim - 2; i++) {

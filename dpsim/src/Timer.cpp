@@ -15,7 +15,7 @@
 #ifdef HAVE_TIMERFD
 #include <sys/timerfd.h>
 #include <unistd.h>
-#endif /* HAVE_TIMERFD */
+#endif // HAVE_TIMERFD
 
 using namespace DPsim;
 using CPS::SystemError;
@@ -81,14 +81,14 @@ void Timer::start() {
   mTicks = 0;
   mOverruns = 0;
 
-  /* Determine offset between clocks */
+  // Determine offset between clocks.
   auto rt = StartClock::now();
   auto steady = IntervalClock::now();
 
   /* This handles the offset between
-	* - IntervalClock (CLOCK_MONOTONIC aka std::chrono::steady_clock) and
-	* - StartClock (CLOCK_REALTIME aka std::chrono::system_clock)
-	*/
+   * - IntervalClock (CLOCK_MONOTONIC aka std::chrono::steady_clock) and
+   * - StartClock (CLOCK_REALTIME aka std::chrono::system_clock)
+   */
   auto start = mStartAt > StartTimePoint()
                    ? mStartAt.time_since_epoch() - rt.time_since_epoch() +
                          steady.time_since_epoch()

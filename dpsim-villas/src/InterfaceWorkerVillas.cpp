@@ -362,9 +362,9 @@ void InterfaceWorkerVillas::writeValuesToEnv(
     sample_decref(sample);
   } catch (const std::exception &) {
     /* We need to at least send something, so determine where exactly the
-		 * timer expired and either resend the last successfully sent sample or
-		 * just try to send this one again.
-		 * TODO: can this be handled better? */
+     * timer expired and either resend the last successfully sent sample or
+     * just try to send this one again.
+     * TODO: can this be handled better? */
     if (!done)
       sample = mLastSample;
 

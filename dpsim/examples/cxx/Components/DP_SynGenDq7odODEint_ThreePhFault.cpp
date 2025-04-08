@@ -13,13 +13,13 @@ using namespace DPsim;
 using namespace CPS::DP;
 using namespace CPS::DP::Ph3;
 
-/*###### For execution at least one command line argument is required: ###########
-	First argument: binary flag (0 or 1),
-	0: The Generator Equations are solved without using the ODE-Simulation Class
-	1: The Generator Equations are solved using the ODE-Simulation Class
-
-    This is a general Test of the ODEintSolver Class. TODO: Add ODEint Solver option to Sim_ODE interface
-	*/
+/* For execution at least one command line argument is required:
+ *  First argument: binary flag (0 or 1),
+ *  0: The Generator Equations are solved without using the ODE-Simulation Class
+ *  1: The Generator Equations are solved using the ODE-Simulation Class
+ *
+ *  This is a general Test of the ODEintSolver Class. TODO: Add ODEint Solver option to Sim_ODE interface
+ */
 
 int main(int argc, char *argv[]) {
   // Define simulation parameters

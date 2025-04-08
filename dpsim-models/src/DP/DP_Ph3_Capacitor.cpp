@@ -83,10 +83,11 @@ void DP::Ph3::Capacitor::initVars(Real omega, Real timeStep) {
       Complex(equivCondReal(2, 1), equivCondImag(2, 1)),
       Complex(equivCondReal(2, 2), equivCondImag(2, 2));
 
-  // since equivCondReal == a.inverse()
-  // and
-  /*Matrix mPrevVoltCoeffReal = a.inverse();
-	Matrix mPrevVoltCoeffImag = -b * a.inverse();*/
+  // Since equivCondReal == a.inverse() and
+#if 0
+  Matrix mPrevVoltCoeffReal = a.inverse();
+  Matrix mPrevVoltCoeffImag = -b * a.inverse();
+#endif
   Matrix mPrevVoltCoeffReal = equivCondReal;
   Matrix mPrevVoltCoeffImag = -b * equivCondReal;
 
@@ -108,32 +109,34 @@ void DP::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep,
                                            Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
   initVars(omega, timeStep);
-  //Matrix equivCondReal = 2.0 * mCapacitance / timeStep;
-  //Matrix equivCondImag = omega * mCapacitance;
-  //mEquivCond <<
-  //	Complex(equivCondReal(0, 0), equivCondImag(0, 0)),
-  //	Complex(equivCondReal(1, 0), equivCondImag(1, 0)),
-  //	Complex(equivCondReal(2, 0), equivCondImag(2, 0));
+#if 0
+  Matrix equivCondReal = 2.0 * mCapacitance / timeStep;
+  Matrix equivCondImag = omega * mCapacitance;
+  mEquivCond <<
+    Complex(equivCondReal(0, 0), equivCondImag(0, 0)),
+    Complex(equivCondReal(1, 0), equivCondImag(1, 0)),
+    Complex(equivCondReal(2, 0), equivCondImag(2, 0));
 
-  // TODO: something is wrong here -- from Ph1_Capacitor
-  /*Matrix prevVoltCoeffReal = 2.0 * mCapacitance / timeStep;
-	Matrix prevVoltCoeffImag = - omega * mCapacitance;
-	mPrevVoltCoeff = Matrix::Zero(3, 1);
-	mPrevVoltCoeff <<
-		Complex(prevVoltCoeffReal(0, 0), prevVoltCoeffImag(0, 0)),
-		Complex(prevVoltCoeffReal(1, 0), prevVoltCoeffImag(1, 0)),
-		Complex(prevVoltCoeffReal(2, 0), prevVoltCoeffImag(2, 0));
+  // TODO: Something is wrong here -- from Ph1_Capacitor
+  Matrix prevVoltCoeffReal = 2.0 * mCapacitance / timeStep;
+  Matrix prevVoltCoeffImag = - omega * mCapacitance;
+  mPrevVoltCoeff = Matrix::Zero(3, 1);
+  mPrevVoltCoeff <<
+    Complex(prevVoltCoeffReal(0, 0), prevVoltCoeffImag(0, 0)),
+    Complex(prevVoltCoeffReal(1, 0), prevVoltCoeffImag(1, 0)),
+    Complex(prevVoltCoeffReal(2, 0), prevVoltCoeffImag(2, 0));
 
-	mEquivCurrent = -**mIntfCurrent + -mPrevVoltCoeff.cwiseProduct( **mIntfVoltage);*/
-  // no need to update current now
+  mEquivCurrent = -**mIntfCurrent + -mPrevVoltCoeff.cwiseProduct( **mIntfVoltage);*/
+  // No need to update current now
   //**mIntfCurrent = mEquivCond.cwiseProduct(**mIntfVoltage) + mEquivCurrent;
 
-  // mLog.info() << "\n--- MNA Initialization ---" << std::endl
-  // 			<< "Initial voltage " << Math::abs((**mIntfVoltage)(0,0))
-  // 			<< "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl
-  // 			<< "Initial current " << Math::abs((**mIntfCurrent)(0,0))
-  // 			<< "<" << Math::phaseDeg((**mIntfCurrent)(0,0)) << std::endl
-  // 			<< "--- MNA initialization finished ---" << std::endl;
+  mLog.info() << "\n--- MNA Initialization ---" << std::endl
+        << "Initial voltage " << Math::abs((**mIntfVoltage)(0,0))
+        << "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl
+        << "Initial current " << Math::abs((**mIntfCurrent)(0,0))
+        << "<" << Math::phaseDeg((**mIntfCurrent)(0,0)) << std::endl
+        << "--- MNA initialization finished ---" << std::endl;
+#endif
 }
 
 void DP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(

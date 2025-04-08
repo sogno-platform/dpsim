@@ -45,10 +45,7 @@ public:
   Edge(Graph *g, const String &name, Node *head, Node *tail);
 };
 
-/**
-	 *
-	 * See: http://www.graphviz.org/pdf/libguide.pdf
-	 */
+// See: http://www.graphviz.org/pdf/libguide.pdf
 class Graph : public Element {
 
 protected:

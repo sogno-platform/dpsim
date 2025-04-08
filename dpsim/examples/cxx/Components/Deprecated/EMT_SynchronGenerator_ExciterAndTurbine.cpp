@@ -126,9 +126,9 @@ int main(int argc, char *argv[]) {
 #endif
   // Calculate initial values for circuit at generator connection point
 #if 0
-	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-	Real initPowerFactor = acos(initActivePower / initApparentPower);
+  Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+  Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
+  Real initPowerFactor = acos(initActivePower / initApparentPower);
 #endif
 
   sim.setSwitchTime(1, 1);

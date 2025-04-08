@@ -37,11 +37,11 @@ using namespace pybind11::literals;
 
 PYBIND11_MODULE(dpsimpy, m) {
   m.doc() = R"pbdoc(
-	DPsim Python bindings
-	-----------------------
-	The Python bindings provide access to most of the DPsim features implemented in C++.
-	It is possible to run powerflow, quasi-static, dynamic phasor and electromagnetic transient simulations
-	and to parameterize all components of the network from Python.
+  DPsim Python bindings
+  -----------------------
+  The Python bindings provide access to most of the DPsim features implemented in C++.
+  It is possible to run powerflow, quasi-static, dynamic phasor and electromagnetic transient simulations
+  and to parameterize all components of the network from Python.
     )pbdoc";
 
   //Enums
