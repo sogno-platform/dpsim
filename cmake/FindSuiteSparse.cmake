@@ -29,7 +29,7 @@ set_property(TARGET SuiteSparse::KLU PROPERTY IMPORTED_LOCATION ${SUITESPARSE_KL
 target_include_directories(SuiteSparse::KLU INTERFACE ${SUITESPARSE_INCLUDE_DIR})
 
 target_link_libraries(SuiteSparse::KLU INTERFACE
-  SuiteSparse::AMD
-  SuiteSparse::BTF
-  SuiteSparse::COLAMD
+	SuiteSparse::AMD
+	SuiteSparse::BTF
+	SuiteSparse::COLAMD
 )
