@@ -4,7 +4,8 @@ linkTitle: "Transformer"
 date: 2021-07-22
 ---
 
-## 2-Winding Transformer
+# 2-Winding Transformer
+
 The transformer model is composed of an RL-segment and an ideal transformer.
 The single line diagram is depicted in the figure below.
 

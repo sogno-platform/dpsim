@@ -28,4 +28,7 @@ A circuit can be solved using Nodal Analysis as follows
 * Write $n-1$ KCL based equations in terms of node voltage variable.
 
 The resulting equations can be written in matrix form and have to be solved for $v$.
-$$\boldsymbol{Y} \boldsymbol{v} = \boldsymbol{i}$$
+
+```math
+\boldsymbol{Y} \boldsymbol{v} = \boldsymbol{i}
+```

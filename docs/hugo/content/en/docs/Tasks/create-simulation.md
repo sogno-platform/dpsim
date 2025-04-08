@@ -8,33 +8,39 @@ description: >
 
 Here, we will show the implementation of a new simulation scenario defined in C++, which is using DPsim as a library.
 
-## Directory Structure
+# Directory Structure
 
 In the end, your directory structure should look like as follows:
 
-    my-project
-      |- CMakeLists.txt
-      |- source
-          |- my-scenario.cpp
-      |- dpsim (as submodule)
+```text
+my-project
+  |- CMakeLists.txt
+  |- source
+      |- my-scenario.cpp
+  |- dpsim (as submodule)
+```
 
-## CMake File
+# CMake File
 
-Your CMakeLists could look like this:
+Your `CMakeLists.txt` could look like this:
 
-    cmake_minimum_required(VERSION 3.5)
-    project(my-project CXX)
+```cmake
+cmake_minimum_required(VERSION 3.5)
+project(my-project CXX)
 
-    add_subdirectory(dpsim)
+add_subdirectory(dpsim)
 
-    add_executable(my-scenario source/my-scenario.cpp)
-	  target_link_libraries(my-scenario dpsim)
+add_executable(my-scenario source/my-scenario.cpp)
+target_link_libraries(my-scenario dpsim)
+```
 
-## Build the Project
+# Build the Project
 
 The build process is similar to the one of DPsim:
 
-    $ cd my-project
-    $ mkdir build && cd build
-    $ cmake ..
-    $ make my-scenario
+```shell
+cd my-project
+mkdir build && cd build
+cmake ..
+make my-scenario
+```

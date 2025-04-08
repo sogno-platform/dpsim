@@ -12,11 +12,11 @@ Users interact with the C++ simulation kernel via Python bindings, which can be 
 The DPsim simulation kernel is implemented in C++ and uses the Eigen linear algebra library. By using a system programming language like C++ and a highly optimized math library, optimal performance and real-time execution can be guaranteed.
 The integration into the [VILLASframework](https://github.com/VILLASframework/node) allows DPsim to be used in large-scale co-simulations.
 
-## Licensing
+# Licensing
 
 The project is released under the terms of the [MPL 2.0](https://mozilla.org/MPL/2.0/).
 
-## Where should I go next?
+# Where should I go next
 
 * [Getting Started]({{< ref "/docs/Getting Started/" >}} "Getting Started"): Get started with DPsim
 * [Examples]({{< ref "/docs/Examples/" >}} "Examples"): Check out some example code!
